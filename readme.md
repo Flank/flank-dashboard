@@ -15,3 +15,6 @@ flutter config --enable-web
 
 - https://flutter.dev/docs/get-started/web
 
+# Run
+
+`flutter run -d chrome`
