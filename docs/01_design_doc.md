@@ -26,3 +26,12 @@ This is similar to Gradle Enterprise except the goal is to support any build sys
 Code is submitted via pull requests. Each pull request must have 1 approval. History should be linear (no merge commits).
 
 > git config --global pull.rebase true
+
+## ZenHub / GitHub Issues
+
+Each issue should have:
+
+* Assignee
+* Milestone
+* Estimate
+* Epic
