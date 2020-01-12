@@ -12,6 +12,18 @@ Create a dashboard to track build performance, build count, build stability, and
 
 This is similar to Gradle Enterprise except the goal is to support any build system and any languge. Gradle Enterprise also lacks a dashboard feature.
 
+## Minimal Viable Product
+
+![](../design/design.png)
+
+Overll status
+
+- [x] Wireframes
+- [x] UI Design
+- [ ] Database setup
+- [ ] UI development
+- [ ] Unit & UI test development
+
 # How will the project be developed?
 
 ## Tech Stack
@@ -35,3 +47,21 @@ Each issue should have:
 * Milestone
 * Estimate
 * Epic
+
+## Architecture
+
+- CLEAN architecture (from resocoder) with States Rebuilder
+  - [Flutter TDD Clean Architecture](https://resocoder.com/2019/08/27/flutter-tdd-clean-architecture-course-1-explanation-project-structure/)
+
+![image](https://user-images.githubusercontent.com/1173057/72225104-593e9080-3536-11ea-89a4-9650cac25340.png)
+
+- States Rebuilder for state management
+  - [GIfatahTH/states_rebuilder example](https://github.com/GIfatahTH/states_rebuilder/tree/master/example)
+  - [State Management with states rebuilder part 1](https://medium.com/flutter-community/state-management-gymnastics-using-states-rebuilder-part-1-3ba3a6abf9c7)
+  - [State Management with states rebuilder part 2](https://medium.com/flutter-community/state-management-gymnastics-using-states-rebuilder-part-2-a7fa0dd7dc51)
+  - [States Rebuilder Clean Architecture Example](https://github.com/GIfatahTH/states-rebuilder-examples/tree/master/007-clean_architecture_dane_mackier_app)
+
+## Principles: Simplify. Standardize. Automate.
+
+Features should be developed in a simple and standardized way. Automation should be used to ensure application stability and developer velocity.
+
