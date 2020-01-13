@@ -35,7 +35,7 @@ Overll status
 
 ## Workflow
 
-Code is submitted via pull requests. Each pull request must have 1 approval. History should be linear (no merge commits).
+Code is submitted via pull requests from a named brach. Forks aren't used. Each pull request must have 1 approval. History should be linear (no merge commits).
 
 > git config --global pull.rebase true
 
