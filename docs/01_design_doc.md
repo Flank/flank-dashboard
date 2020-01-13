@@ -8,7 +8,7 @@ Software teams lack insight into build performance, build stability, and codebas
 
 ## Solution
 
-Create a dashboard to track build performance, build count, build stability, and code coverage. Eventually expand to include detailed performance, failure, and test visualizations.
+Create a dashboard to track build performance, build count, build stability, and code coverage. Eventually expand to include detailed performance data, build analytics, and test analytics.
 
 This is similar to Gradle Enterprise except the goal is to support any build system and any languge. Gradle Enterprise also lacks a dashboard feature.
 
@@ -16,7 +16,7 @@ This is similar to Gradle Enterprise except the goal is to support any build sys
 
 ![](../design/design.png)
 
-Overll status
+Overall status
 
 - [x] Wireframes
 - [x] UI Design
