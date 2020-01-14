@@ -56,7 +56,3 @@ NEXT:
 # Results
 
 > What was the outcome of the project?
-
-# Background
-
-> Context for understanding the project
