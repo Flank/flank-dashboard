@@ -1,1 +1,12 @@
-include: package:pedantic/analysis_options.1.8.0.yaml
+include: package:lint/analysis_options.yaml
+
+# https://github.com/passsy/dart-lint
+linter:
+  rules:
+    - unawaited_futures # https://dart-lang.github.io/linter/lints/unawaited_futures.html
+
+# https://github.com/passsy/dart-lint/blob/master/lib/analysis_options.yaml
+analyzer:
+  errors:
+    avoid_print: ignore
+    unawaited_futures: error
