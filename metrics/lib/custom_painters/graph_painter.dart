@@ -18,7 +18,7 @@ class GraphPainter extends CustomPainter
   path.quadraticBezierTo(size.width*0.85, size.height*0.93, size.width, size.height*0.60);
   path.lineTo(size.width, 0);
   path.close();
-  paint.color = AppColor.themeColor;
+  paint.color = AppColor.lightBlueColor;
   canvas.drawPath(path, paint); 
   }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/custom_painters/graph_painter.dart';
-import 'package:metrics/utils/app_colors.dart';
 import 'package:metrics/utils/scaling_info.dart';
 
 class SparklineGraphWidget extends StatefulWidget {
@@ -17,10 +16,10 @@ class _SparklineGraphWidgetState extends State<SparklineGraphWidget> {
   Widget build(BuildContext context) {
    
     return SizedBox(
-          width: 200 * ScalingInfo.scaleY,
-          height: 155 * ScalingInfo.scaleY,
+          width: 145 * ScalingInfo.scaleX,
+          height: 140 * ScalingInfo.scaleY,
           child: Card( 
-            color: AppColor.lightBlueColor,            
+      
         child:  CustomPaint( 
             isComplex: false,child: 
           Padding(

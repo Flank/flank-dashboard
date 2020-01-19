@@ -41,6 +41,6 @@ ThemeData basicTheme()
     accentColor: AppColor.whiteColor,
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppColor.themeColor,      
-    
+    cardTheme: CardTheme(color: AppColor.themeColor,elevation: 0.2),
   );
 }
