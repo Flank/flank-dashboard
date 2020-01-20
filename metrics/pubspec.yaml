@@ -63,10 +63,11 @@ flutter:
   fonts:
     - family: BebasNeue
       fonts:
-        - asset: fonts/BebasNeue-Regular.ttf         
+        - asset: fonts/BebasNeue-Regular.ttf 
     - family: Ubuntu
       fonts:
         - asset: fonts/Ubuntu-Bold.ttf
+          
           
   #
   # For details regarding fonts from package dependencies,
