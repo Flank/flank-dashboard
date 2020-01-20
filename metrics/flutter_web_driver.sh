@@ -26,6 +26,17 @@ if ! [ -f "$CHROMEDRIVER" ]; then
   unzip "$CHROMEDRIVER.zip"
 fi
 
+# Firefox Driver to run tests
+
+FIREFOXDRIVER="geckodriver"
+FIREFOXRIVER_URL="https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-macos.tar.gz"
+
+if ! [ -f "$FIREFOXDRIVER" ]; then
+  curl -L -o "$FIREFOXDRIVER.tar.gz" "$FIREFOXRIVER_URL"
+  tar -xzvf "$FIREFOXDRIVER.tar.gz"
+fi
+
+
 # Run Selenium server with Chrome Driver to run tests
 java -jar "$SELENIUM" &
 SELENIUM_PID=$!
@@ -46,8 +57,8 @@ sleep 30s
 #fi
 
 # Run separately to make sure that it works
-# TODO: It looks as first time it never connects, need to run twice - figure you why first time it's not working
-flutter drive --target=test_driver/app.dart -v --use-existing-app="http://localhost:$PORT/#/"
+
+flutter drive --target=test_driver/app.dart -v --use-existing-app="http://localhost:$PORT/#/" --browser-name="firefox"
 
 #Wait till tests runned manually and complete
 #sleep 100000s
