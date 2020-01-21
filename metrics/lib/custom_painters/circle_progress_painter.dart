@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:metrics/utils/app_colors.dart';
 import 'package:metrics/utils/scaling_info.dart';

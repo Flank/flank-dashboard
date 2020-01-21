@@ -19,24 +19,7 @@ class _BuildResultWidgetState extends State<BuildResultWidget>
   static List<Series<OrdinalSales, String>> _createSampleData() {
     final globalSalesData = [
       new OrdinalSales('2007', 3100),
-      new OrdinalSales('2008', 3500),
-      new OrdinalSales('2009', 5000),
-      new OrdinalSales('2010', 2500),
-      new OrdinalSales('2011', 3200),
-      new OrdinalSales('2012', 4500),
-      new OrdinalSales('2013', 4400),
-      new OrdinalSales('2014', 5000),
-      new OrdinalSales('2015', 5000),
-      new OrdinalSales('2016', 4500),
-      new OrdinalSales('2017', 4300),
-       new OrdinalSales('2014', 5000),
-      new OrdinalSales('2015', 5000),
-      new OrdinalSales('2016', 4500),
-      new OrdinalSales('2017', 4300),
-       new OrdinalSales('2013', 4400),
-      new OrdinalSales('2014', 5000),
-      new OrdinalSales('2015', 5000),
-      new OrdinalSales('2016', 4500),
+     
       new OrdinalSales('2017', 4300),
        new OrdinalSales('2014', 5000),
       new OrdinalSales('2015', 5000),
@@ -123,20 +106,12 @@ class _BuildResultWidgetState extends State<BuildResultWidget>
 }
 
 
-
-
-
-
-
-
-
 class CustomRoundedBars extends StatelessWidget {
   final List<Series> seriesList;
   final bool animate;
 
   CustomRoundedBars(this.seriesList, {this.animate});
 
- 
   factory CustomRoundedBars.withSampleData() {
     return new CustomRoundedBars(
       _createSampleData(),
@@ -144,7 +119,6 @@ class CustomRoundedBars extends StatelessWidget {
       animate: false,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -165,17 +139,7 @@ class CustomRoundedBars extends StatelessWidget {
   /// Create one series with sample hard coded data.
   static List<Series<OrdinalSales, String>> _createSampleData() {
     final data = [
-      new OrdinalSales('2014', 5),
-      new OrdinalSales('2015', 25),
-      new OrdinalSales('2016', 100),
-      new OrdinalSales('2017', 75),
-      new OrdinalSales('2014', 5),
-      new OrdinalSales('2015', 25),
-      new OrdinalSales('2016', 100),
-      new OrdinalSales('2017', 75),
-      new OrdinalSales('2014', 5),
-      new OrdinalSales('2015', 25),
-      new OrdinalSales('2016', 100),
+     
       new OrdinalSales('2017', 75),
       new OrdinalSales('2014', 5),
       new OrdinalSales('2015', 25),

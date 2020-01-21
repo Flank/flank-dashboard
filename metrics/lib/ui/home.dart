@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget
 
 class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-//math.Random().nextDouble()
+
   //dummy data
   final double mockDataStability =0.50;
   final double mockDataCoverage = math.Random().nextDouble();
@@ -103,8 +103,4 @@ SparklineGraphWidget(
 }
 
 
-// BuildResultWidget(),
-// SizedBox(
-//   width: 20,
-// ),
 

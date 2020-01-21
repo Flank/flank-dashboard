@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/custom_painters/circle_progress_painter.dart';
 import 'package:metrics/utils/app_keys.dart';
-import 'package:metrics/utils/app_strings.dart';
 import 'package:metrics/utils/scaling_info.dart';
 
 class CircleProgressWidget extends StatefulWidget

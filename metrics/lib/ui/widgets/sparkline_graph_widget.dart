@@ -48,7 +48,7 @@ class _SparklineGraphWidgetState extends State<SparklineGraphWidget>{
               ),
             ],),
           ),
-          // painter: GraphPainter(),     
+         
           ),     
       ),
     );
