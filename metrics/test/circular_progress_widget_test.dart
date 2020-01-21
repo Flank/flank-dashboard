@@ -3,21 +3,10 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/main.dart';
-import 'package:metrics/utils/app_strings.dart';
 
 void main() {
 
-  testWidgets('Circular Progress Bar Test', (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp());
-    await tester.pumpAndSettle();
-    var findCoverage = find.text(AppStrings.coverage);
-    var findStability = find.text(AppStrings.stability);
-    expect(findCoverage, findsWidgets);
-    expect(findStability, findsWidgets);
-  });
-  
-
-  testWidgets('Circular Progress Bar Test One Should always pass.', (WidgetTester tester) async {
+  testWidgets('Circular Progress Bar Test One pass when progress is 50%.', (WidgetTester tester) async {
     await tester.pumpWidget(MyApp());
     await tester.pumpAndSettle();
     final titlePercent = find.text('50%');

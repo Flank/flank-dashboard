@@ -24,6 +24,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   charts_flutter:
+  states_rebuilder: ^1.10.0
 
   
 dev_dependencies:
