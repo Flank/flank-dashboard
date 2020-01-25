@@ -14,7 +14,11 @@ This is similar to Gradle Enterprise except the goal is to support any build sys
 
 ## Minimal Viable Product
 
+The design should support different color themes.
+
 ![](../design/design.png)
+
+![](../design/black_theme/design.png)
 
 Overall status
 
