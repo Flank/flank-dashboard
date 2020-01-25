@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'config/driver_tests_config.dart';
 import 'util/file_utils.dart';
 
+// TODO: refactor this into a Flutter Web Driver package on pub.dev
 Future<void> main() async {
   final Directory workingDir = Directory('build');
   workingDir.createSync();
@@ -71,6 +72,7 @@ Future<Process> _startFlutterApp() async {
     'flutter',
     [
       'run',
+      '-v',
       '-d',
       'web-server',
       '-t',
@@ -87,9 +89,12 @@ Future<Process> _startFlutterApp() async {
     return consoleOut.contains('is being served at');
   });
 
+  // TODO: Save stdout/stderr output from flutterProcess to text file
+
   return flutterProcess;
 }
 
+// TODO: Support taking a configuration option: chrome or firefox for browser-name
 Future<int> _runDriverTests() async {
   final driverProcess = await Process.start(
     'flutter',
@@ -106,11 +111,12 @@ Future<int> _runDriverTests() async {
     ],
   );
 
-  driverProcess.stdout.listen((event) {
-    print(String.fromCharCodes(event));
+  // TODO: Save stdout/stderr output from driver to text file
+  driverProcess.stdout.transform(utf8.decoder).listen((event) {
+    print(event);
   });
-  driverProcess.stderr.listen((event) {
-    print(String.fromCharCodes(event));
+  driverProcess.stderr.transform(utf8.decoder).listen((event) {
+    print(event);
   });
 
   return driverProcess.exitCode;
