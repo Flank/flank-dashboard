@@ -3,8 +3,15 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
+import 'browser_name.dart';
 import 'config/driver_tests_config.dart';
+import 'drive_command.dart';
 import 'util/file_utils.dart';
+
+// Automate running Flutter Web Driver tests for Chrome and Firefox
+// https://github.com/flutter/flutter/blob/93a5b7d419d764bfcad2fea25ab6dc62d39f401a/packages/flutter_driver/lib/src/driver/web_driver.dart#L27
+
+// TODO: Why do we get 'Unhandled exception: Bad state: No element' when running the script a few times?
 
 // TODO: refactor this into a Flutter Web Driver package on pub.dev
 Future<void> main() async {
@@ -17,11 +24,11 @@ Future<void> main() async {
   await FileUtils.downloadChromeDriver(workingDirPath);
   await FileUtils.downloadFirefoxDriver(workingDirPath);
 
-  print('Running selenium $seleniumPath...');
+  print('Running $seleniumPath...');
 
   final seleniumPid = await _startSelenium(seleniumPath, workingDirPath);
 
-  print("Selenium server is up, runnig flutter application...");
+  print("Selenium server is up, running flutter application...");
 
   final flutterAppProcess = await _startFlutterApp();
 
@@ -31,10 +38,7 @@ Future<void> main() async {
 
   print("Cleaning...");
 
-  // Closing flutter application under test like this to make sure that browser window is also closed
-  // TODO: remove that as we start in headless now
-  flutterAppProcess.stdin.add('q'.codeUnits);
-
+  // TODO: Always kill pids, even if an error/exception is thrown in the script
   // Killing all processes
   Process.killPid(seleniumPid);
   Process.killPid(flutterAppProcess.pid);
@@ -43,7 +47,7 @@ Future<void> main() async {
 }
 
 Future<int> _startSelenium(String seleniumPath, String workingDir) async {
-  final seleniumProcess = await Process.start(
+  final seleniumProcess = await _processStart(
     'java',
     ['-jar', seleniumPath],
     workingDirectory: workingDir,
@@ -68,7 +72,7 @@ Future<int> _startSelenium(String seleniumPath, String workingDir) async {
 }
 
 Future<Process> _startFlutterApp() async {
-  final flutterProcess = await Process.start(
+  final flutterProcess = await _processStart(
     'flutter',
     [
       'run',
@@ -96,19 +100,14 @@ Future<Process> _startFlutterApp() async {
 
 // TODO: Support taking a configuration option: chrome or firefox for browser-name
 Future<int> _runDriverTests() async {
-  final driverProcess = await Process.start(
+  final driverProcess = await _processStart(
     'flutter',
-    [
-      'drive',
-      '--target',
-      'lib/app.dart',
-      '--driver',
-      'test_driver/app_test.dart',
-      '--use-existing-app',
-      'http://localhost:${DriverTestsConfig.port}/#',
-      '--browser-name',
-      'chrome',
-    ],
+    DriveCommand()
+        .target('lib/app.dart')
+        .driver('test_driver/app_test.dart')
+        .useExistingApp('http://localhost:${DriverTestsConfig.port}/#')
+        .noKeepAppRunning()
+        .browserName(BrowserName.chrome),
   );
 
   // TODO: Save stdout/stderr output from driver to text file
@@ -120,4 +119,20 @@ Future<int> _runDriverTests() async {
   });
 
   return driverProcess.exitCode;
+}
+
+Future<Process> _processStart(String executable, List<String> arguments,
+    {String workingDirectory,
+    Map<String, String> environment,
+    bool includeParentEnvironment: true,
+    bool runInShell: false,
+    ProcessStartMode mode: ProcessStartMode.normal}) {
+  print("$executable ${arguments.join(" ")}\n");
+
+  return Process.start(executable, arguments,
+      workingDirectory: workingDirectory,
+      environment: environment,
+      includeParentEnvironment: includeParentEnvironment,
+      runInShell: runInShell,
+      mode: mode);
 }
