@@ -4,6 +4,9 @@ import 'package:metrics/features/dashboard/domain/repositories/metrics_repositor
 class MetricsRepositoryImpl implements MetricsRepository {
   @override
   Future<Coverage> getCoverage(String projectId) {
-    return Future.delayed(Duration(seconds: 1), () => Coverage(percent: 0.2));
+    return Future.delayed(
+      const Duration(seconds: 1),
+      () => const Coverage(percent: 0.2),
+    );
   }
 }

@@ -10,7 +10,7 @@ class GetProjectCoverage extends UseCase<Coverage, ProjectIdParam> {
   GetProjectCoverage(this._repository);
 
   @override
-  Future<Coverage> call(params) {
+  Future<Coverage> call(ProjectIdParam params) {
     return _repository.getCoverage(params.projectId);
   }
 }
@@ -18,7 +18,7 @@ class GetProjectCoverage extends UseCase<Coverage, ProjectIdParam> {
 class ProjectIdParam extends Equatable {
   final String projectId;
 
-  ProjectIdParam({@required this.projectId});
+  const ProjectIdParam({@required this.projectId});
 
   @override
   List<Object> get props => [projectId];

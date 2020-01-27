@@ -8,7 +8,7 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 class InjectionContainer extends StatefulWidget {
   final Widget child;
 
-  InjectionContainer({
+  const InjectionContainer({
     Key key,
     @required this.child,
   }) : super(key: key);

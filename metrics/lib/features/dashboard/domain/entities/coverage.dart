@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 class Coverage extends Equatable {
   final double percent;
 
-  Coverage({@required this.percent})
+  const Coverage({@required this.percent})
       : assert(percent != null && percent >= 0 && percent <= 1);
 
   @override

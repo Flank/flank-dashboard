@@ -10,7 +10,7 @@ class CoverageStore {
 
   Coverage get coverage => _coverage;
 
-  void getCoverage(String projectId) async {
+  Future getCoverage(String projectId) async {
     _coverage = await _getCoverage(ProjectIdParam(projectId: projectId));
   }
 }

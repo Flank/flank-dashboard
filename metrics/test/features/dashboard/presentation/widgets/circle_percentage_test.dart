@@ -15,7 +15,7 @@ void main() {
       "Can't create widget with value more than 1.0",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          CirclePercentageTestbed(
+          const CirclePercentageTestbed(
             title: "Coverage",
             value: 30.0,
           ),
@@ -29,7 +29,7 @@ void main() {
       "Can't create widget with value less than 0",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          CirclePercentageTestbed(
+          const CirclePercentageTestbed(
             title: "Coverage",
             value: -1,
           ),
@@ -44,7 +44,7 @@ void main() {
     testWidgets(
       "Shows the coverage label",
       (WidgetTester tester) async {
-        await tester.pumpWidget(CirclePercentageTestbed());
+        await tester.pumpWidget(const CirclePercentageTestbed());
         await tester.pumpAndSettle();
 
         expect(
@@ -60,15 +60,15 @@ void main() {
     testWidgets(
       "Takes given square dimensions space",
       (WidgetTester tester) async {
-        final side = 20.0;
-        await tester.pumpWidget(CirclePercentageTestbed(
+        const side = 20.0;
+        await tester.pumpWidget(const CirclePercentageTestbed(
           height: side,
           width: side,
         ));
         await tester.pumpAndSettle();
-        final widgetSize = await tester.getSize(circlePercentageTypeFinder);
+        final widgetSize = tester.getSize(circlePercentageTypeFinder);
 
-        expect(widgetSize, Size(side, side));
+        expect(widgetSize, const Size(side, side));
       },
     );
 
@@ -89,14 +89,14 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        final titleWidget = await tester.firstWidget<Text>(
+        final titleWidget = tester.firstWidget<Text>(
           find.descendant(
             of: circlePercentageTypeFinder,
             matching: find.text('Coverage'),
           ),
         );
 
-        final valueWidget = await tester.firstWidget<Text>(
+        final valueWidget = tester.firstWidget<Text>(
           find.descendant(
             of: circlePercentageTypeFinder,
             matching: find.text('30%'),
@@ -111,17 +111,17 @@ void main() {
     testWidgets(
       "Takes square box when parent dimensions when parent height is shorter than width",
       (WidgetTester tester) async {
-        final height = 100.0;
-        final width = 200.0;
+        const height = 100.0;
+        const width = 200.0;
 
-        await tester.pumpWidget(CirclePercentageTestbed(
+        await tester.pumpWidget(const CirclePercentageTestbed(
           height: height,
           width: width,
         ));
 
         await tester.pumpAndSettle();
 
-        final widgetSize = await tester.getSize(
+        final widgetSize = tester.getSize(
           find.descendant(
             of: circlePercentageTypeFinder,
             matching: find.byType(CustomPaint),
@@ -135,17 +135,17 @@ void main() {
     testWidgets(
       "Takes square box when parent dimensions when parent height is shorter than width",
       (WidgetTester tester) async {
-        final height = 200.0;
-        final width = 100.0;
+        const height = 200.0;
+        const width = 100.0;
 
-        await tester.pumpWidget(CirclePercentageTestbed(
+        await tester.pumpWidget(const CirclePercentageTestbed(
           height: height,
           width: width,
         ));
 
         await tester.pumpAndSettle();
 
-        final widgetSize = await tester.getSize(
+        final widgetSize = tester.getSize(
           find.descendant(
             of: circlePercentageTypeFinder,
             matching: find.byType(CustomPaint),
@@ -159,20 +159,20 @@ void main() {
     testWidgets(
       "Widgets with mirrored widgth/heights take same space",
       (WidgetTester tester) async {
-        final height = 200.0;
-        final width = 100.0;
+        const height = 200.0;
+        const width = 100.0;
         final percentagePaintFinder = find.descendant(
           of: circlePercentageTypeFinder,
           matching: find.byType(CustomPaint),
         );
-        await tester.pumpWidget(CirclePercentageTestbed(
+        await tester.pumpWidget(const CirclePercentageTestbed(
           height: height,
           width: width,
         ));
         await tester.pumpAndSettle();
-        final firstWidgetSize = await tester.getSize(percentagePaintFinder);
+        final firstWidgetSize = tester.getSize(percentagePaintFinder);
 
-        await tester.pumpWidget(CirclePercentageTestbed(
+        await tester.pumpWidget(const CirclePercentageTestbed(
           height: width,
           width: height,
         ));
@@ -213,6 +213,7 @@ class CirclePercentageTestbed extends StatelessWidget {
     this.width,
   }) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
