@@ -40,8 +40,8 @@ class DashboardTestbed extends StatelessWidget {
 
 class CoverageStoreStub implements CoverageStore {
   @override
-  Coverage get coverage => Coverage(percent: 0.3);
+  Coverage get coverage => const Coverage(percent: 0.3);
 
   @override
-  void getCoverage(String projectId) {}
+  Future<void> getCoverage(String projectId) async {}
 }

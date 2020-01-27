@@ -12,7 +12,7 @@ class CirclePercentage extends StatefulWidget {
   final TextStyle titleStyle;
   final TextStyle valueStyle;
 
-  CirclePercentage({
+  const CirclePercentage({
     Key key,
     @required this.title,
     @required this.value,
@@ -37,7 +37,7 @@ class _CirclePercentageState extends State<CirclePercentage>
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 2400),
+      duration: const Duration(milliseconds: 2400),
     );
 
     _controller.animateTo(widget.value);
@@ -53,12 +53,12 @@ class _CirclePercentageState extends State<CirclePercentage>
   }
 
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
     final strokeWidth = widget.strokeWidth;
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        EdgeInsets initialPadding = _getChildPadding(constraints);
+        final initialPadding = _getChildPadding(constraints);
 
         return Align(
           alignment: Alignment.center,
@@ -139,7 +139,7 @@ class _CirclePercentageChartPainter extends CustomPainter {
   });
 
   @override
-  void paint(canvas, size) {
+  void paint(Canvas canvas, Size size) {
     final paint = Paint();
     paint
       ..color = strokeColor

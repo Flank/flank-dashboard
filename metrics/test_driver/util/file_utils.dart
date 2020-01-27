@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:http/http.dart';
 
-import '../config/driver_tests_config.dart';
+import '../common/config/driver_tests_config.dart';
 
 class FileUtils {
   static Future<String> downloadSelenium(String workingDir) async {
@@ -90,5 +90,28 @@ class FileUtils {
         Directory(fileName).createSync();
       }
     }
+  }
+
+  static void saveOutputsToFile(
+    Stream<List<int>> stdout,
+    Stream<List<int>> stderr,
+    String fileName,
+    String workingDirPath,
+  ) {
+    final File outputFile = File('$workingDirPath/$fileName.log');
+
+    if (!outputFile.existsSync()) {
+      outputFile.createSync();
+    }
+
+    // Clear file before writing to avoid appending ald logs with new one.
+    outputFile.writeAsString('');
+
+    stdout.asBroadcastStream().listen(
+          (data) => outputFile.writeAsBytes(data, mode: FileMode.append),
+        );
+    stderr.asBroadcastStream().listen(
+          (data) => outputFile.writeAsBytes(data, mode: FileMode.append),
+        );
   }
 }

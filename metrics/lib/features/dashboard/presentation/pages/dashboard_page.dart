@@ -9,35 +9,33 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          child: StateBuilder<CoverageStore>(
-            models: [Injector.getAsReactive<CoverageStore>()],
-            builder: (_, coverageStore) {
-              return Center(
-                child: coverageStore.whenConnectionState(
-                  onIdle: () => RaisedButton(
-                    child: Text("Load coverage info"),
-                    onPressed: _loadCoverageInfo,
-                  ),
-                  onWaiting: () => Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  onData: (store) => Container(
-                    alignment: Alignment.center,
-                    height: 200.0,
-                    child: CirclePercentage(
-                      title: 'COVERAGE',
-                      value: store.coverage.percent,
-                      strokeColor: Colors.grey,
-                    ),
-                  ),
-                  onError: (error) => _DashboardPlaceholder(
-                    text: "An error occured during loading: $error",
+        child: StateBuilder<CoverageStore>(
+          models: [Injector.getAsReactive<CoverageStore>()],
+          builder: (_, coverageStore) {
+            return Center(
+              child: coverageStore.whenConnectionState(
+                onIdle: () => RaisedButton(
+                  onPressed: _loadCoverageInfo,
+                  child: const Text("Load coverage info"),
+                ),
+                onWaiting: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                onData: (store) => Container(
+                  alignment: Alignment.center,
+                  height: 200.0,
+                  child: CirclePercentage(
+                    title: 'COVERAGE',
+                    value: store.coverage.percent,
+                    strokeColor: Colors.grey,
                   ),
                 ),
-              );
-            },
-          ),
+                onError: (error) => _DashboardPlaceholder(
+                  text: "An error occured during loading: $error",
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

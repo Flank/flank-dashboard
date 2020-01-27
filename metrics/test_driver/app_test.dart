@@ -11,7 +11,7 @@ void main() {
       FlutterDriver driver;
 
       setUpAll(() async {
-        driver = await FlutterDriver.connect(browser: true);
+        driver = await WebFlutterDriver.connectWeb();
       });
 
       tearDownAll(() async {
