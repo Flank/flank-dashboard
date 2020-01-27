@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:guardian/jira/model/jira_api_config.dart';
+import 'package:guardian/jira/model/jira_config.dart';
 import 'package:http/http.dart';
 
 class JiraClient {
@@ -16,11 +16,11 @@ class JiraClient {
     this.apiToken,
   });
 
-  factory JiraClient.fromConfig(JiraApiConfig apiConfig) {
+  factory JiraClient.fromConfig(JiraConfig apiConfig) {
     if (apiConfig == null) return null;
 
     return JiraClient(
-      apiBasePath: apiConfig.basePath,
+      apiBasePath: apiConfig.apiBasePath,
       userEmail: apiConfig.userEmail,
       apiToken: apiConfig.apiToken,
     );
@@ -31,12 +31,12 @@ class JiraClient {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization':
-          'Basic ' + base64Encode(utf8.encode('$userEmail:$apiToken')),
+          'Basic ${base64Encode(utf8.encode('$userEmail:$apiToken'))}',
     };
   }
 
   Future<void> openIssue(String projectId) async {
-    final path = 'rest/api/3/issue';
+    const path = 'rest/api/3/issue';
     print(projectId);
     final response = await _client.post(
       '$apiBasePath$path',

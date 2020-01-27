@@ -8,8 +8,10 @@ environment:
 
 dependencies:
   args: ^1.5.2
-  slack: ^2.0.0
   http: ^0.11.2
+  meta: ^1.1.8
+  slack: ^2.0.0
+  yaml: ^2.2.0
 
 dev_dependencies:
   lint: ^1.1.1

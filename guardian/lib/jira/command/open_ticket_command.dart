@@ -1,9 +1,9 @@
-import 'package:args/command_runner.dart';
 import 'package:guardian/jira/client/jira_client.dart';
-import 'package:guardian/jira/model/jira_api_config.dart';
+import 'package:guardian/jira/command/jira_command.dart';
+import 'package:guardian/jira/model/jira_config.dart';
 import 'package:guardian/jira/model/ticket_manage_request.dart';
 
-class OpenTicketCommand extends Command {
+class OpenTicketCommand extends JiraCommand {
   @override
   String get name => 'open';
 
@@ -11,16 +11,13 @@ class OpenTicketCommand extends Command {
   String get description => 'Opens Jira issue';
 
   OpenTicketCommand() {
-    argParser
-      ..addOption('userEmail')
-      ..addOption('apiToken')
-      ..addOption('basePath')
-      ..addOption('projectId');
+    addConfigOptionByNames(JiraConfig().toMap().keys.toList());
   }
 
   @override
   void run() {
-    final config = JiraApiConfig.fromArgs(argResults);
+    final config = JiraConfig()..readFromArgs(argResults);
+
     if (config == null) {
       print('Jira configurations are missing');
       return;

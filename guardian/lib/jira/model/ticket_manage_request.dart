@@ -9,7 +9,7 @@ class OpenTicketRequest {
 
   factory OpenTicketRequest.fromArgs(ArgResults argResults) {
     return OpenTicketRequest(
-      projectId: argResults['projectId'],
+      projectId: argResults['projectId'] as String,
     );
   }
 }

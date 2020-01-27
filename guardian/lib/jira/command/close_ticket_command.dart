@@ -1,6 +1,6 @@
-import 'package:args/command_runner.dart';
+import 'package:guardian/jira/command/jira_command.dart';
 
-class CloseTicketCommand extends Command {
+class CloseTicketCommand extends JiraCommand {
   @override
   String get name => 'close';
 
