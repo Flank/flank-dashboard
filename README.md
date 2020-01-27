@@ -1,4 +1,20 @@
-A sample command-line application.
+# Metrics 
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+Metrics project
+
+- [design/](design/)
+- [docs/](docs/)
+
+# Setup
+
+```
+flutter channel master
+flutter upgrade
+flutter config --enable-web
+```
+
+- https://flutter.dev/docs/get-started/web
+
+# Run
+
+`flutter run -d chrome`
