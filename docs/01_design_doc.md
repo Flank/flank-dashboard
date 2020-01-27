@@ -37,21 +37,6 @@ Overall status
 - [Flutter Web](https://flutter.dev/web) is the framework
 - [Adobe XD](https://www.adobe.com/products/xd.html) is the design tool because of [upcoming Flutter support](https://theblog.adobe.com/xd-flutter-plugin-generate-dart-code-design-elements/)
 
-## Workflow
-
-Code is submitted via pull requests from a named brach. Forks aren't used. Each pull request must have 1 approval. History should be linear (no merge commits).
-
-> git config --global pull.rebase true
-
-## ZenHub / GitHub Issues
-
-Each issue should have:
-
-* Assignee
-* Milestone
-* Estimate
-* Epic
-
 ## Architecture
 
 - CLEAN architecture (from resocoder) with States Rebuilder

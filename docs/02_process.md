@@ -1,0 +1,106 @@
+# GitHub Agile process
+
+> Summary of the proposed change
+
+Adopt an agile process on GitHub using ZenHub that matches established engineering best practices.
+
+# References
+
+- [ZenHub](https://www.zenhub.com/) is the project management software (install the [free extension](https://www.zenhub.com/extension))
+
+# Motivation
+
+> What problem is this project solving?
+
+Project management helps ensure the project is successful by planning work, tracking progress, and reflecting on weekly sprints for continuous improvement.
+
+# Goals
+
+> Identify success metrics and measurable goals.
+
+Meet industry standards for Agile development using 1 week sprints.
+
+# Non-Goals
+
+> Identify what's not in scope.
+
+The process should work for the team, the team shouldn't work for the process. Adjustments to the project management approach are expected.
+
+## Workflow
+
+Code is submitted via pull requests to master from a named brach. Forks aren't used. Each pull request must have 1 approval. History should be linear (no merge commits).
+
+> git config --global pull.rebase true
+
+Each pull request should be [connected to an issue](https://help.zenhub.com/support/solutions/articles/43000010350-connecting-pull-requests-to-github-issues) using ZenHub.
+
+Pull requests should have passing CI builds and be code reviewed before merging to master.
+
+## Rewrite commits into logical changes
+
+Git commits are organized into logical changes before merging to master.
+
+> You go hackety hack, hackety hack, hackety hack. When you're ready, you commit. And then you do a rebase. So what we like to do is, while you're developing locally on a branch of your own, you can have as many branches as you want. You can have your commits all organized any way you want. But when we push it into master, we want a logical change to go into our codebase. We don't want the individual steps you did. Now, there's a number of reasons for doing that. The first one, a logical change is a lot easier for other people to comprehend. If you want people to understand what you're doing, what you need to do is explain why you're doing it. That helps increase the quality of the code when someone comes and has a look at things. And second of all, if we need to yank your changes, it's a lot easier for us to do that if we can see the one logical change that went in rather than the intermediate steps, particularly if you're like me and you work on, like, two or three things at the same time. So we always just squash our commits before we run this command, arc diff.  
+> http://www.youtube.com/watch?v=HUE_yrd8tl0
+
+## ZenHub / GitHub Issues
+
+Each issue should have:
+
+* Assignee
+* Milestone
+* Estimate
+* Epic
+
+Create new issues / epics as necessary.
+
+## Estimating with story points
+
+* 3 - Small
+* 5 - Medium
+* 8 - Large
+* 13 - Extra Large
+
+If a task is larger than 13, then create multiple smaller tickets. If a task is smaller than 3, complete the task without a ticket.
+
+## Daily standup
+
+A daily asynchronous check in. Answer the following questions, with reference to the GitHub tickets.
+
+* What did you do yesterday?
+* What will you do today?
+* What is getting in your way?
+
+An example standup report:
+
+* John
+  * Yesterday I worked on #13 upgrading the lint package
+  * Today I will work on #15 setting up the CI job on bitrise
+  * No blockers
+
+## Slack chat
+
+Team members should be in a shared Slack channel to asynchronously share information.
+
+# Alternatives Considered
+
+> Summarize alternative designs (pros & cons)
+
+- Multirepo. Introduces complexity in managing the project if each project has a different repo.
+
+# Timeline
+
+> Document milestones and deadlines.
+
+DONE:
+
+  - Migrated all code to a mono repo
+  - Added new process document
+
+NEXT:
+
+  - Try the new software development process
+  
+# Results
+
+> What was the outcome of the project?
