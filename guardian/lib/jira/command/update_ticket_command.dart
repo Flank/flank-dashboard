@@ -1,6 +1,6 @@
-import 'package:args/command_runner.dart';
+import 'package:guardian/jira/command/jira_command.dart';
 
-class UpdateTicketCommand extends Command {
+class UpdateTicketCommand extends JiraCommand {
   @override
   String get name => 'update';
 

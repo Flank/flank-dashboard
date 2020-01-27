@@ -1,5 +1,6 @@
 import 'package:args/command_runner.dart';
 import 'package:guardian/slack/command/message_command.dart';
+import 'package:guardian/slack/command/slack_config_command.dart';
 
 class SlackRunner extends Command {
   @override
@@ -10,5 +11,6 @@ class SlackRunner extends Command {
 
   SlackRunner() {
     addSubcommand(MessageCommand());
+    addSubcommand(SlackConfigCommand());
   }
 }
