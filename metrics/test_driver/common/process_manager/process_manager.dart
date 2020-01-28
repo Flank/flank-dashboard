@@ -32,7 +32,7 @@ class ProcessManager {
   }
 
   /// Start the selenium server
-  /// [seleniumFileName] it the name of the selenium server file
+  /// [seleniumFileName] is the name of the selenium server file
   /// [workingDir] is the directory in which the selenium server file
   /// and driver files are placed
   Future startSelenium(String seleniumFileName, String workingDir) async {
@@ -87,7 +87,7 @@ class ProcessManager {
     });
   }
 
-  /// Starts the driver tests with the given
+  /// Starts the driver tests
   /// Specify the [browserName] param to use the custom browser driver.
   /// Default is [BrowserName.chrome]
   Future<void> startDriverTests({
