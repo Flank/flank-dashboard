@@ -32,9 +32,19 @@ Code is submitted via pull requests to master from a named brach. Forks aren't u
 
 > git config --global pull.rebase true
 
+## Pull Requests
+
+Use the [Fixes #0](https://help.github.com/en/github/managing-your-work-on-github/closing-issues-using-keywords) keyword so that the relevant issue is closed when the pull request is merged.
+
 Each pull request should be [connected to an issue](https://help.zenhub.com/support/solutions/articles/43000010350-connecting-pull-requests-to-github-issues) using ZenHub.
 
-Pull requests should have passing CI builds and be code reviewed before merging to master.
+## Merging Pull Requests
+
+* `Rebase and merge`
+  * Pull requests should have passing CI builds and be code reviewed before merging to master. If a pull request consists entirely of logical changes, use the `Rebase and merge` button. 
+
+* `Squash and merge`
+  * If the pull request contains a bunch of work in progress intermediate commits, use the`Squash and merge` button so the PR is collapsed into one logical change.
 
 ## Rewrite commits into logical changes
 
