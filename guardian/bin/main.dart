@@ -10,7 +10,6 @@ Future<void> main(List<String> arguments) async {
 
   try {
     await runner.run(arguments);
-    exit(0);
   } catch (error, stackTrace) {
     if (error is UsageException) {
       stdout.writeln(error);
