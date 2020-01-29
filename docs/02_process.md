@@ -29,12 +29,14 @@ The process should work for the team, the team shouldn't work for the process. A
 ## Workflow
 
 Code is submitted via pull requests to master from a named brach. Forks aren't used. Each pull request must have 1 approval. History should be linear (no merge commits).
-
 > git config --global pull.rebase true
 
 Each pull request should be [connected to an issue](https://help.zenhub.com/support/solutions/articles/43000010350-connecting-pull-requests-to-github-issues) using ZenHub.
 
-Pull requests should have passing CI builds and be code reviewed before merging to master.
+Pull requests should have passing CI builds and be code reviewed before merging to master.  
+  
+Code should be sufficiently documented. Use [Effective Dart: Documentation](https://dart.dev/guides/language/effective-dart/documentation) for guidance.
+
 
 ## Rewrite commits into logical changes
 
