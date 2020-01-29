@@ -26,6 +26,16 @@ Meet industry standards for Agile development using 1 week sprints.
 
 The process should work for the team, the team shouldn't work for the process. Adjustments to the project management approach are expected.
 
+## Writing bash scripts
+
+Make sure your shell script is safe by adding the following lines: 
+```bash
+#!/usr/bin/env bash
+set -euxo pipefail
+```
+
+Read more [here](https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/)
+
 ## Workflow
 
 Code is submitted via pull requests to master from a named brach. Forks aren't used. Each pull request must have 1 approval. History should be linear (no merge commits).
