@@ -37,10 +37,6 @@ Code should be sufficiently documented. Use [Effective Dart: Documentation](http
 
 Use the [Fixes #0](https://help.github.com/en/github/managing-your-work-on-github/closing-issues-using-keywords) keyword so that the relevant issue is closed when the pull request is merged.
 
-## Pull Requests
-
-Use the [Fixes #0](https://help.github.com/en/github/managing-your-work-on-github/closing-issues-using-keywords) keyword so that the relevant issue is closed when the pull request is merged.
-
 Each pull request should be [connected to an issue](https://help.zenhub.com/support/solutions/articles/43000010350-connecting-pull-requests-to-github-issues) using ZenHub.
 
 ## Merging Pull Requests
