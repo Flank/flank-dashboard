@@ -8,6 +8,7 @@ class MapTypeFormatter extends IterableTypeFormatter<Map<String, dynamic>> {
           delegateCallback,
         );
 
+  /// Formats [Map] into the YAML format.
   @override
   void format(
     Map<String, dynamic> value,

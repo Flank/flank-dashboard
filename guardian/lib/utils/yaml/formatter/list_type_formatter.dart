@@ -8,6 +8,7 @@ class ListTypeFormatter extends IterableTypeFormatter<List> {
           delegateCallback,
         );
 
+  /// Formats [List] into the YAML format.
   @override
   void format(List<dynamic> value, StringBuffer buffer, int indentationLevel) {
     buffer.write('\n');
