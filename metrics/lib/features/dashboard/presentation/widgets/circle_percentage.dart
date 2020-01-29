@@ -2,6 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+/// The widget that represents the metric percent in a circular graph.
+///
+/// This widget will be as big as possible if no constraints are given by its parent.
+/// Otherwise it will match its parent's size.
 class CirclePercentage extends StatefulWidget {
   final String title;
   final double value;
@@ -12,6 +16,18 @@ class CirclePercentage extends StatefulWidget {
   final TextStyle titleStyle;
   final TextStyle valueStyle;
 
+  /// Creates the circle graph
+  ///
+  /// The [title] and [value] must not be null
+  ///
+  /// [title] is the name of the displaying metric.
+  /// [value] is the percent value of the metric.
+  /// [padding] the padding of the [value] and [title] text inside the circle graph.
+  /// [strokeWidth] the wight of the graph's stroke.
+  /// [valueColor] the color of the part of the graph that represents the value.
+  /// [strokeColor] the color of the graph's circle itself .
+  /// [titleStyle] the [TextStyle] of the given [title].
+  /// [valueStyle] the [TextStyle] of the percent text.
   const CirclePercentage({
     Key key,
     @required this.title,
@@ -125,6 +141,7 @@ class _CirclePercentageState extends State<CirclePercentage>
   }
 }
 
+/// Paints a [CirclePercentage]
 class _CirclePercentageChartPainter extends CustomPainter {
   final double strokeWidth;
   final double percent;
