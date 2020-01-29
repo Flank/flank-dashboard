@@ -31,8 +31,9 @@ class ProcessManager {
     exit(exitCode);
   }
 
-  /// Start the selenium server
-  /// [seleniumFileName] is the name of the selenium server file
+  /// Start the selenium server.
+  ///
+  /// [seleniumFileName] is the name of the selenium server file.
   /// [workingDir] is the directory in which the selenium server file
   /// and driver files are placed
   Future startSelenium(String seleniumFileName, String workingDir) async {
@@ -87,7 +88,8 @@ class ProcessManager {
     });
   }
 
-  /// Starts the driver tests
+  /// Starts the driver tests.
+  ///
   /// Specify the [browserName] param to use the custom browser driver.
   /// Default is [BrowserName.chrome]
   Future<void> startDriverTests({
@@ -115,8 +117,9 @@ class ProcessManager {
     exitCode = await driverProcess.exitCode;
   }
 
-  /// Starts a process running the [executable] with the specified [arguments]
-  /// and adds the process pid to [_startedPids] to be able to terminate it.
+  /// Starts a process running the [executable] with the specified [arguments].
+  ///
+  /// Adds the process pid to [_startedPids] to be able to terminate it.
   /// Specify the [workingDirectory] to run the executable from this directory
   Future<Process> _processStart(
     String executable,

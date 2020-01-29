@@ -88,7 +88,7 @@ class FileUtils {
     print('Downloaded $filePath');
   }
 
-  /// Method needed to extract files from [Archive] to [workingDir]
+  /// Extracts files from [Archive] to [workingDir].
   static void _extractFromArchive(Archive archive, String workingDir) {
     for (final file in archive) {
       final fileName = file.name;
@@ -102,8 +102,8 @@ class FileUtils {
     }
   }
 
-  /// Method needed to save the process outputs from the [stderr] and [stdout]
-  /// to [fileName] in [workingDirPath] directory
+  /// Saves the process outputs from the [stderr] and [stdout]
+  /// to [fileName] in [workingDirPath] directory.
   static void saveOutputsToFile(
     Stream<List<int>> stdout,
     Stream<List<int>> stderr,

@@ -3,7 +3,8 @@ import 'package:args/args.dart';
 import '../config/browser_name.dart';
 import '../config/driver_tests_config.dart';
 
-/// Class needed to parse and provide the arguments for running the driver tests
+/// Parses and provides the arguments for running the driver tests.
+///
 /// Available arguments: working-dir, port, store-logs-to and browser-name
 class DriverTestsArgs {
   static const String _workingDirOptionName = 'working-dir';
@@ -41,7 +42,8 @@ class DriverTestsArgs {
 
     _parser.addOption(
       _browserNameOptionName,
-      help: 'Name of browser where tests will be executed. The default one is chrome',
+      help:
+          'Name of browser where tests will be executed. The default one is chrome',
       defaultsTo: 'chrome',
     );
 
