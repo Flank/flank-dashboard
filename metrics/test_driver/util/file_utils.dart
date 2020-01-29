@@ -5,7 +5,11 @@ import 'package:http/http.dart';
 
 import '../common/config/driver_tests_config.dart';
 
+/// Util class to work with files
+/// Helps to create, download and write data to files
 class FileUtils {
+  /// Checks if the selenium server file is available in [workingDir] directory
+  /// Downloads the selenium server to [workingDir] if not exists
   static Future<String> downloadSelenium(String workingDir) async {
     const seleniumFileName = 'selenium.jar';
     final selenium = "$workingDir/$seleniumFileName";
@@ -18,6 +22,8 @@ class FileUtils {
     return seleniumFileName;
   }
 
+  /// Check if the chrome driver file exists in [workingDir]
+  /// If not - downloads the chrome driver and makes it executable
   static Future<void> downloadChromeDriver(String workingDir) async {
     final chromeDriver = "$workingDir/chromedriver";
     final chromeDriverZip = "$chromeDriver.zip";
@@ -38,6 +44,8 @@ class FileUtils {
     }
   }
 
+  /// Checks if the firefox driver file exists in [workingDir]
+  /// If not - downloads it and makes it executable
   static Future<void> downloadFirefoxDriver(String workingDir) async {
     final geckoDriver = '$workingDir/geckodriver';
     final geckoDriverArchive = '$geckoDriver-v0.26.0-macos.tar.gz';
@@ -63,8 +71,9 @@ class FileUtils {
     }
   }
 
-  static Future<void> _download(String url, String fileName) async {
-    final file = File(fileName);
+  /// Downloads file from [url] and saves it to [filePath]
+  static Future<void> _download(String url, String filePath) async {
+    final file = File(filePath);
 
     if (file.existsSync()) return;
     print("Downloading $file");
@@ -76,9 +85,10 @@ class FileUtils {
 
     await file.writeAsBytes(downloadingResponse.bodyBytes);
 
-    print('Downloaded $fileName');
+    print('Downloaded $filePath');
   }
 
+  /// Extracts files from [Archive] to [workingDir].
   static void _extractFromArchive(Archive archive, String workingDir) {
     for (final file in archive) {
       final fileName = file.name;
@@ -92,6 +102,8 @@ class FileUtils {
     }
   }
 
+  /// Saves the process outputs from the [stderr] and [stdout]
+  /// to [fileName] in [workingDirPath] directory.
   static void saveOutputsToFile(
     Stream<List<int>> stdout,
     Stream<List<int>> stderr,

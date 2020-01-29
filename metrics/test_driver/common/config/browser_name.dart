@@ -1,5 +1,5 @@
-/// TODO: Is there better way to have type saftey around strings in Dart?
 ///  Name of browser where tests will be executed.
+///
 ///  Following browsers are supported: Chrome, Firefox, Safari (macOS and
 ///  iOS) and Edge. Defaults to Chrome. [chrome (default), edge, firefox,
 ///  ios-safari, safari]

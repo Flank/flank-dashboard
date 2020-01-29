@@ -29,8 +29,13 @@ The process should work for the team, the team shouldn't work for the process. A
 ## Workflow
 
 Code is submitted via pull requests to master from a named brach. Forks aren't used. Each pull request must have 1 approval. History should be linear (no merge commits).
-
 > git config --global pull.rebase true
+  
+Code should be sufficiently documented. Use [Effective Dart: Documentation](https://dart.dev/guides/language/effective-dart/documentation) for guidance.
+
+## Pull Requests
+
+Use the [Fixes #0](https://help.github.com/en/github/managing-your-work-on-github/closing-issues-using-keywords) keyword so that the relevant issue is closed when the pull request is merged.
 
 ## Pull Requests
 
