@@ -1,20 +1,20 @@
 import 'dart:io';
 
 import 'package:guardian/config/model/config.dart';
-import 'package:guardian/utils/yaml/yaml_formatter.dart';
-import 'package:guardian/utils/yaml/yaml_parser.dart';
+import 'package:guardian/utils/yaml/yaml_map_formatter.dart';
+import 'package:guardian/utils/yaml/yaml_map_parser.dart';
 
 class ConfigHelper {
-  final YamlParser yamlParser = YamlParser();
+  static const YamlMapParser yamlParser = YamlMapParser();
   final Directory configDirectory;
-  final YamlFormatter yamlFormatter;
+  final YamlMapFormatter yamlFormatter;
 
   ConfigHelper({
     Directory configDirectory,
     int yamlIndentationLength = 2,
   })  : configDirectory = configDirectory ?? _getDirectoryFromPlatform(),
-        yamlFormatter = YamlFormatter(
-          indentationLength: yamlIndentationLength,
+        yamlFormatter = YamlMapFormatter(
+          spacesPerIndentationLevel: yamlIndentationLength,
         );
 
   static Directory _getDirectoryFromPlatform() {
