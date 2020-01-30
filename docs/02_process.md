@@ -49,6 +49,10 @@ Use the [Fixes #0](https://help.github.com/en/github/managing-your-work-on-githu
 
 Each pull request should be [connected to an issue](https://help.zenhub.com/support/solutions/articles/43000010350-connecting-pull-requests-to-github-issues) using ZenHub.
 
+## Draft Pull Requests
+
+Create a [Draft Pull Request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) for PRs that are still a work in progress. Draft PRs signal to reviewers that the pull request is a work in progress.
+
 ## Merging Pull Requests
 
 * `Rebase and merge`
