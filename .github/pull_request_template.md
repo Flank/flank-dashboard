@@ -1,7 +1,7 @@
-This pull request fixes #
+Fixes #
 
 ## Checklist
 
-- [ ] Unit tests
-- [ ] Component tests (for UI widgets)
-- [ ] Driver tests (for UI widgets)
+- [ ] Unit tested
+- [ ] Component tested (for UI widgets)
+- [ ] Driver tested (for UI widgets)
