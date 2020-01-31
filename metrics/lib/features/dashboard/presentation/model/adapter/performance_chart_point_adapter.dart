@@ -4,10 +4,10 @@ import 'package:metrics/features/dashboard/presentation/model/chart_point.dart';
 /// Adapts [Build] duration to match the [ChartPoint].
 ///
 /// Represents the [_build] duration of the [Build].
-class PerformancePointAdapter implements ChartPoint {
+class PerformanceChartPointAdapter implements ChartPoint {
   final Build _build;
 
-  PerformancePointAdapter(this._build);
+  PerformanceChartPointAdapter(this._build);
 
   @override
   num get x => _build.startedAt.millisecondsSinceEpoch;

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
-import 'package:metrics/features/dashboard/presentation/model/adapter/build_point_adapter.dart';
-import 'package:metrics/features/dashboard/presentation/model/adapter/performance_point_adapter.dart';
+import 'package:metrics/features/dashboard/presentation/model/adapter/build_number_chart_point_adapter.dart';
+import 'package:metrics/features/dashboard/presentation/model/adapter/performance_chart_point_adapter.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
@@ -56,10 +56,10 @@ class CoverageStoreStub implements ProjectMetricsStore {
   }
 
   @override
-  List<BuildPointAdapter> get projectBuildMetric => [];
+  List<BuildsNumberChartPointAdapter> get projectBuildMetric => [];
 
   @override
-  List<PerformancePointAdapter> get projectPerformanceMetric => [];
+  List<PerformanceChartPointAdapter> get projectPerformanceMetric => [];
 
   @override
   int get totalBuildNumber => null;
