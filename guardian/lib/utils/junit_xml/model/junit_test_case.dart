@@ -1,22 +1,22 @@
 part of junit_xml;
 
-class Testcase {
+class JUnitTestCase {
   final String name;
   final int assertions;
   final String classname;
   final String status;
   final double time;
-  final TestcaseExecutionResult result;
-  final SystemOutData systemOut;
-  final SystemOutData systemErr;
+  final List<JUnitTestCaseExecutionResult> results;
+  final JUnitSystemOutData systemOut;
+  final JUnitSystemErrData systemErr;
 
-  Testcase({
+  JUnitTestCase({
     @required this.name,
     @required this.classname,
     this.assertions,
     this.status,
     this.time,
-    this.result,
+    this.results,
     this.systemOut,
     this.systemErr,
   });

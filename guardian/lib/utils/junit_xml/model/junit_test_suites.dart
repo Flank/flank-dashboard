@@ -1,16 +1,16 @@
 part of junit_xml;
 
-class Testsuites extends JunitXmlReportRoot {
+class JUnitTestSuites {
   final String name;
   final int disabled;
   final int errors;
   final int failures;
   final int tests;
   final double time;
-  final List<Testsuite> testsuites;
+  final List<JUnitTestSuite> testSuites;
 
-  Testsuites({
-    @required this.testsuites,
+  JUnitTestSuites({
+    @required this.testSuites,
     this.name,
     this.disabled,
     this.errors,

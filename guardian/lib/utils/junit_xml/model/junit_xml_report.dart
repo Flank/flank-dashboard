@@ -1,7 +1,7 @@
 part of junit_xml;
 
-class JunitXmlReport {
-  final JunitXmlReportRoot report;
+class JUnitXmlReport {
+  final JUnitTestSuites testSuites;
 
-  JunitXmlReport(this.report);
+  JUnitXmlReport(this.testSuites);
 }

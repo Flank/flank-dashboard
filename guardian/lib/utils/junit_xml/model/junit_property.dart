@@ -1,10 +1,10 @@
 part of junit_xml;
 
-class Property {
+class JUnitProperty {
   final String name;
   final String value;
 
-  Property({
+  JUnitProperty({
     @required this.name,
     @required this.value,
   });
