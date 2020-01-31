@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/dashboard/presentation/state/coverage_store.dart';
+import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import '../widgets/circle_percentage.dart';
@@ -9,8 +9,8 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: StateBuilder<CoverageStore>(
-          models: [Injector.getAsReactive<CoverageStore>()],
+        child: StateBuilder<ProjectMetricsStore>(
+          models: [Injector.getAsReactive<ProjectMetricsStore>()],
           builder: (_, coverageStore) {
             return Center(
               child: coverageStore.whenConnectionState(
@@ -42,7 +42,7 @@ class DashboardPage extends StatelessWidget {
   }
 
   void _loadCoverageInfo() {
-    Injector.getAsReactive<CoverageStore>()
+    Injector.getAsReactive<ProjectMetricsStore>()
         .setState((store) => store.getCoverage('projectId'));
   }
 }

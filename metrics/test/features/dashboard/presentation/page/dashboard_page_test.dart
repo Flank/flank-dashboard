@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
+import 'package:metrics/features/dashboard/presentation/model/adapter/build_point_adapter.dart';
+import 'package:metrics/features/dashboard/presentation/model/adapter/performance_point_adapter.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:metrics/features/dashboard/presentation/state/coverage_store.dart';
+import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -26,10 +28,10 @@ class DashboardTestbed extends StatelessWidget {
     return MaterialApp(
       home: Injector(
         inject: [
-          Inject<CoverageStore>(() => CoverageStoreStub()),
+          Inject<ProjectMetricsStore>(() => CoverageStoreStub()),
         ],
         initState: () {
-          Injector.getAsReactive<CoverageStore>()
+          Injector.getAsReactive<ProjectMetricsStore>()
               .setState((store) => store.getCoverage('projectId'));
         },
         builder: (BuildContext context) => DashboardPage(),
@@ -38,10 +40,27 @@ class DashboardTestbed extends StatelessWidget {
   }
 }
 
-class CoverageStoreStub implements CoverageStore {
+class CoverageStoreStub implements ProjectMetricsStore {
   @override
   Coverage get coverage => const Coverage(percent: 0.3);
 
   @override
   Future<void> getCoverage(String projectId) async {}
+
+  @override
+  int get averageBuildTime => throw UnimplementedError();
+
+  @override
+  Future getBuildMetrics(String projectId) {
+    return Future.value(null);
+  }
+
+  @override
+  List<BuildPointAdapter> get projectBuildMetric => [];
+
+  @override
+  List<PerformancePointAdapter> get projectPerformanceMetric => [];
+
+  @override
+  int get totalBuildNumber => null;
 }
