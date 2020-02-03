@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/injection_container.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:metrics/injection_container.dart';
 
 void main() => runApp(MyApp());
 
