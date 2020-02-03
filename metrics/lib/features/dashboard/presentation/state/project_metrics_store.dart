@@ -1,25 +1,25 @@
+import 'dart:math';
+
+import 'package:metrics/features/dashboard/domain/entities/build_metrics.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_project_coverage.dart';
 import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id_param.dart';
-import 'package:metrics/features/dashboard/presentation/model/adapter/build_number_chart_point_adapter.dart';
-import 'package:metrics/features/dashboard/presentation/model/adapter/performance_chart_point_adapter.dart';
 
-/// The store for the project metrics
+/// The store for the project metrics.
 ///
-/// Stores the coverage and build metrics
+/// Stores the [Coverage] and [BuildMetrics].
 class ProjectMetricsStore {
   final GetProjectCoverage _getCoverage;
   final GetBuildMetrics _getBuildMetrics;
-  List<PerformanceChartPointAdapter> _projectPerformanceMetric;
-  List<BuildsNumberChartPointAdapter> _projectBuildMetric;
-  int _averageBuildTime;
-  int _totalBuildNumber;
+  List<Point<int>> _projectPerformanceMetric;
+  List<Point<int>> _projectBuildNumberMetric;
+  BuildMetrics _buildMetrics;
   Coverage _coverage;
 
   /// Creates the project metrics store.
   ///
-  /// The [_getCoverage] and [_getBuildMetrics] use cases should not be null
+  /// The [_getCoverage] and [_getBuildMetrics] use cases should not be null.
   ProjectMetricsStore(this._getCoverage, this._getBuildMetrics)
       : assert(
           _getCoverage != null && _getBuildMetrics != null,
@@ -28,53 +28,37 @@ class ProjectMetricsStore {
 
   Coverage get coverage => _coverage;
 
-  List<PerformanceChartPointAdapter> get projectPerformanceMetric =>
-      _projectPerformanceMetric;
+  List<Point<int>> get projectPerformanceMetric => _projectPerformanceMetric;
 
-  List<BuildsNumberChartPointAdapter> get projectBuildMetric =>
-      _projectBuildMetric;
+  List<Point<int>> get projectBuildMetric => _projectBuildNumberMetric;
 
-  int get averageBuildTime => _averageBuildTime;
+  int get averageBuildTime => _buildMetrics.averageBuildTime.inMinutes;
 
-  int get totalBuildNumber => _totalBuildNumber;
+  int get totalBuildNumber => _buildMetrics.totalBuildNumber;
 
-  /// Load the coverage metric
+  /// Load the coverage metric.
   Future getCoverage(String projectId) async {
     _coverage = await _getCoverage(ProjectIdParam(projectId: projectId));
   }
 
-  /// Loads the build metrics
+  /// Loads the build metrics.
   Future getBuildMetrics(String projectId) async {
-    final projectBuilds = await _getBuildMetrics(
+    _buildMetrics = await _getBuildMetrics(
       ProjectIdParam(projectId: projectId),
     );
 
-    final averageBuildTime = projectBuilds
-            .map((build) => build.duration)
-            .reduce((value, element) => value + element)
-            .inMinutes /
-        projectBuilds.length;
+    _projectPerformanceMetric = _buildMetrics.performanceMetrics.map((metric) {
+      return Point(
+        metric.date.millisecondsSinceEpoch,
+        metric.duration.inMilliseconds,
+      );
+    }).toList();
 
-    final buildsTimeRange =
-        projectBuilds.map((build) => _trimToDay(build.startedAt)).toSet();
-
-    _totalBuildNumber = projectBuilds.length;
-    _averageBuildTime = averageBuildTime.round();
-
-    _projectPerformanceMetric = projectBuilds
-        .map((build) => PerformanceChartPointAdapter(build))
-        .toList()
-          ..sort((prev, next) => prev.x.compareTo(next.x));
-
-    _projectBuildMetric = buildsTimeRange.map((day) {
-      final builds =
-          projectBuilds.where((build) => _trimToDay(build.startedAt) == day);
-
-      return BuildsNumberChartPointAdapter(day, builds.length);
+    _projectBuildNumberMetric = _buildMetrics.buildNumberMetrics.map((metric) {
+      return Point(
+        metric.date.millisecondsSinceEpoch,
+        metric.numberOfBuilds,
+      );
     }).toList();
   }
-
-  /// Trims the date to include only the year, month and day
-  DateTime _trimToDay(DateTime buildDate) =>
-      DateTime(buildDate.year, buildDate.month, buildDate.day);
 }

@@ -1,4 +1,4 @@
-import 'package:metrics/features/dashboard/domain/entities/build.dart';
+import 'package:metrics/features/dashboard/domain/entities/build_metrics.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_project_coverage.dart';
@@ -27,11 +27,11 @@ void main() {
 
       expect(() => ProjectMetricsStore(null, null), assertionMatcher);
       expect(
-        () => ProjectMetricsStore(const GetCoverageTestbed(), null),
+        () => ProjectMetricsStore(getCoverage, null),
         assertionMatcher,
       );
       expect(
-        () => ProjectMetricsStore(null, const GetBuildMetricsTestbed()),
+        () => ProjectMetricsStore(null, getBuildMetrics),
         assertionMatcher,
       );
     });
@@ -44,73 +44,6 @@ void main() {
       await projectMetricsStore.getCoverage(projectId);
 
       expect(actualCoverage, equals(projectMetricsStore.coverage));
-    });
-  });
-
-  group("Builds data loading", () {
-    List<Build> actualBuildMetrics;
-    Build actualFirstBuild;
-    DateTime actualFirstBuildStart;
-
-    setUpAll(() async {
-      actualBuildMetrics = await getBuildMetrics(projectIdParam);
-      actualFirstBuild = actualBuildMetrics.first;
-      actualFirstBuildStart = actualFirstBuild.startedAt;
-    });
-
-    DateTime _trimToDay(DateTime actualFirstBuildStart) {
-      return DateTime(
-        actualFirstBuildStart.year,
-        actualFirstBuildStart.month,
-        actualFirstBuildStart.day,
-      );
-    }
-
-    test("Properly loads the performance points", () async {
-      await projectMetricsStore.getBuildMetrics(projectId);
-
-      final firstPerformancePoint =
-          projectMetricsStore.projectPerformanceMetric.first;
-
-      expect(
-        actualBuildMetrics.length,
-        projectMetricsStore.projectPerformanceMetric.length,
-      );
-      expect(
-        actualFirstBuildStart.millisecondsSinceEpoch,
-        firstPerformancePoint.x,
-      );
-      expect(
-        actualFirstBuild.duration.inMilliseconds,
-        firstPerformancePoint.y,
-      );
-    });
-
-    test("Properly loads the build points", () async {
-      final actualFirstBuildDay = _trimToDay(actualFirstBuildStart);
-
-      final actualFirstBuildCount = actualBuildMetrics
-          .where((build) => _trimToDay(build.startedAt) == actualFirstBuildDay)
-          .length;
-
-      final actualAverageBuildTime = (actualBuildMetrics
-                  .map((build) => build.duration)
-                  .reduce((value, element) => value + element)
-                  .inMinutes /
-              actualBuildMetrics.length)
-          .round();
-
-      await projectMetricsStore.getBuildMetrics(projectId);
-
-      final firstBuildPoint = projectMetricsStore.projectBuildMetric.first;
-      final firstBuildDay = firstBuildPoint.x;
-      final firstBuildDayCount = firstBuildPoint.y;
-
-      expect(actualFirstBuildDay.millisecondsSinceEpoch, firstBuildDay);
-      expect(firstBuildDayCount, actualFirstBuildCount);
-
-      expect(actualBuildMetrics.length, projectMetricsStore.totalBuildNumber);
-      expect(actualAverageBuildTime, projectMetricsStore.averageBuildTime);
     });
   });
 }
@@ -127,15 +60,10 @@ class GetCoverageTestbed implements GetProjectCoverage {
 }
 
 class GetBuildMetricsTestbed implements GetBuildMetrics {
-  static final Build _build = Build(
-    startedAt: DateTime.now(),
-    duration: const Duration(minutes: 10),
-  );
-
   const GetBuildMetricsTestbed();
 
   @override
-  Future<List<Build>> call(ProjectIdParam param) {
-    return Future.value([_build]);
+  Future<BuildMetrics> call(ProjectIdParam param) {
+    return Future.value(null);
   }
 }

@@ -1,9 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
-import 'package:metrics/features/dashboard/presentation/model/adapter/build_number_chart_point_adapter.dart';
-import 'package:metrics/features/dashboard/presentation/model/adapter/performance_chart_point_adapter.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
@@ -28,7 +28,7 @@ class DashboardTestbed extends StatelessWidget {
     return MaterialApp(
       home: Injector(
         inject: [
-          Inject<ProjectMetricsStore>(() => CoverageStoreStub()),
+          Inject<ProjectMetricsStore>(() => MetricsStoreStab()),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>()
@@ -40,7 +40,7 @@ class DashboardTestbed extends StatelessWidget {
   }
 }
 
-class CoverageStoreStub implements ProjectMetricsStore {
+class MetricsStoreStab implements ProjectMetricsStore {
   @override
   Coverage get coverage => const Coverage(percent: 0.3);
 
@@ -48,7 +48,7 @@ class CoverageStoreStub implements ProjectMetricsStore {
   Future<void> getCoverage(String projectId) async {}
 
   @override
-  int get averageBuildTime => throw UnimplementedError();
+  int get averageBuildTime => null;
 
   @override
   Future getBuildMetrics(String projectId) {
@@ -56,10 +56,10 @@ class CoverageStoreStub implements ProjectMetricsStore {
   }
 
   @override
-  List<BuildsNumberChartPointAdapter> get projectBuildMetric => [];
+  List<Point<int>> get projectBuildMetric => [];
 
   @override
-  List<PerformanceChartPointAdapter> get projectPerformanceMetric => [];
+  List<Point<int>> get projectPerformanceMetric => [];
 
   @override
   int get totalBuildNumber => null;

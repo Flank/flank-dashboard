@@ -16,9 +16,9 @@ class CirclePercentage extends StatefulWidget {
   final TextStyle titleStyle;
   final TextStyle valueStyle;
 
-  /// Creates the circle graph
+  /// Creates the circle graph.
   ///
-  /// The [title] and [value] must not be null
+  /// The [title] and [value] must not be null.
   ///
   /// [title] is the name of the displaying metric.
   /// [value] is the percent value of the metric.

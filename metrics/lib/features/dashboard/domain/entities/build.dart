@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 enum BuildResult { successful, canceled, failed }
 
-/// Represents the build entity
+/// Represents the build entity.
 class Build extends Equatable {
   final DateTime startedAt;
   final BuildResult result;

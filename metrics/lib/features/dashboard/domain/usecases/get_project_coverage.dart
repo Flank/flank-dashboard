@@ -3,7 +3,7 @@ import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id_param.dart';
 
-/// Use case to load the project coverage
+/// Use case to load the project coverage.
 class GetProjectCoverage extends UseCase<Coverage, ProjectIdParam> {
   final MetricsRepository _repository;
 
