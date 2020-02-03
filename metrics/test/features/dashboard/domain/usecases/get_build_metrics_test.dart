@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("Build metrics data loading", () {
-    const repository = MetricsRepositoryStabImpl();
+    const repository = MetricsRepositoryStubImpl();
     const projectIdParam = ProjectIdParam(projectId: 'projectId');
 
     final getBuildMetrics = GetBuildMetrics(repository);
@@ -76,13 +76,13 @@ void main() {
   });
 }
 
-class MetricsRepositoryStabImpl implements MetricsRepository {
+class MetricsRepositoryStubImpl implements MetricsRepository {
   static final Build _build = Build(
     startedAt: DateTime.now(),
     duration: const Duration(minutes: 10),
   );
 
-  const MetricsRepositoryStabImpl();
+  const MetricsRepositoryStubImpl();
 
   @override
   Future<Coverage> getCoverage(String projectId) {

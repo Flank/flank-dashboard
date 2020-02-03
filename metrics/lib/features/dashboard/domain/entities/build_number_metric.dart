@@ -1,4 +1,4 @@
-/// Represents the [numberOfBuilds] during some [date].
+/// Represents the [numberOfBuilds] on specified [date].
 class BuildNumberMetric {
   final DateTime date;
   final int numberOfBuilds;
