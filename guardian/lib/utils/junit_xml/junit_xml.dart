@@ -3,6 +3,8 @@ library junit_xml;
 import 'package:meta/meta.dart';
 import 'package:xml/xml.dart' as xml;
 
+part 'parser/element_parser/xml_attribute_parser.dart';
+
 part 'parser/element_parser/xml_element_parser.dart';
 
 part 'parser/element_parser/property_parser.dart';

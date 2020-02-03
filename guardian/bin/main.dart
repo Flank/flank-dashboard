@@ -24,7 +24,8 @@ Future<void> main(List<String> arguments) async {
 //    exit(1);
 //  }
 
+  const parser = JUnitXmlParser();
   final file = File('test1.xml');
-  final parser = JUnitXmlParser();
-  parser.parse(file.readAsStringSync());
+  final report = parser.parse(file.readAsStringSync());
+  print(report);
 }

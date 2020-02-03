@@ -1,5 +1,6 @@
 part of junit_xml;
 
+/// A [JUnitTestSuite] node parser.
 class TestSuiteParser extends XmlElementParser<JUnitTestSuite> {
   @override
   String get elementName => 'testsuite';
@@ -10,27 +11,15 @@ class TestSuiteParser extends XmlElementParser<JUnitTestSuite> {
 
     return JUnitTestSuite(
       name: valuesMap['name'],
-      tests: int.tryParse(valuesMap['tests']),
-      id: valuesMap['id'] != null ? int.tryParse(valuesMap['id']) : null,
-      disabled: valuesMap['disabled'] != null
-          ? int.tryParse(valuesMap['disabled'])
-          : null,
-      failures: valuesMap['failures'] != null
-          ? int.tryParse(valuesMap['failures'])
-          : null,
-      errors: valuesMap['errors'] != null
-          ? int.tryParse(valuesMap['errors'])
-          : null,
-      skipped: valuesMap['skipped'] != null
-          ? int.tryParse(valuesMap['skipped'])
-          : null,
-      time:
-          valuesMap['time'] != null ? double.tryParse(valuesMap['time']) : null,
-      timestamp: valuesMap['timestamp'] != null
-          ? DateTime.tryParse(valuesMap['timestamp'])
-          : null,
+      tests: IntAttributeValueParser().parse(valuesMap['tests']),
+      disabled: IntAttributeValueParser().tryParse(valuesMap['disabled']),
+      failures: IntAttributeValueParser().parse(valuesMap['failures']),
+      errors: IntAttributeValueParser().parse(valuesMap['errors']),
+      skipped: IntAttributeValueParser().tryParse(valuesMap['skipped']),
+      time: DoubleAttributeValueParser().parse(valuesMap['time']),
+      timestamp: DateTimeAttributeValueParser().parse(valuesMap['timestamp']),
       hostname: valuesMap['hostname'],
-      package: valuesMap['package'],
+      testLabExecutionId: valuesMap['testLabExecutionId'],
       properties: parseChild(PropertiesParser(), xmlElement),
       testCases: parseChildren(TestCaseParser(), xmlElement),
       systemOut: parseChild(SystemOutParser(), xmlElement),
@@ -47,6 +36,13 @@ class TestSuiteParser extends XmlElementParser<JUnitTestSuite> {
     return systemOutSingle &&
         systemErrSingle &&
         propertiesSingle &&
-        hasNonNullAttributes(xmlElement, ['name', 'tests']);
+        checkAttributes(xmlElement, {
+          'name': StringAttributeValueParser(),
+          'tests': IntAttributeValueParser(),
+          'errors': IntAttributeValueParser(),
+          'failures': IntAttributeValueParser(),
+          'time': DoubleAttributeValueParser(),
+          'hostname': StringAttributeValueParser(),
+        });
   }
 }

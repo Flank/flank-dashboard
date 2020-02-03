@@ -1,5 +1,6 @@
 part of junit_xml;
 
+/// A <properties> ([JUnitTestSuite.properties]) node parser.
 class PropertiesParser extends XmlElementParser<List<JUnitProperty>> {
   @override
   String get elementName => 'properties';
@@ -8,13 +9,9 @@ class PropertiesParser extends XmlElementParser<List<JUnitProperty>> {
   List<JUnitProperty> _parse(xml.XmlElement xmlElement) {
     return parseChildren(PropertyParser(), xmlElement);
   }
-
-  @override
-  bool validate(xml.XmlElement xmlElement) {
-    return true;
-  }
 }
 
+/// A [JUnitProperty] node parser.
 class PropertyParser extends XmlElementParser<JUnitProperty> {
   @override
   String get elementName => 'property';
@@ -31,6 +28,9 @@ class PropertyParser extends XmlElementParser<JUnitProperty> {
 
   @override
   bool validate(xml.XmlElement xmlElement) {
-    return hasNonNullAttributes(xmlElement, ['name', 'value']);
+    return checkAttributes(xmlElement, {
+      'name': StringAttributeValueParser(),
+      'value': StringAttributeValueParser(),
+    });
   }
 }

@@ -1,5 +1,6 @@
 part of junit_xml;
 
+/// A [JUnitTestCaseError] node parser.
 class TestCaseErrorParser extends XmlElementParser<JUnitTestCaseError> {
   @override
   String get elementName => 'error';
@@ -10,13 +11,9 @@ class TestCaseErrorParser extends XmlElementParser<JUnitTestCaseError> {
       text: xmlElement.text,
     );
   }
-
-  @override
-  bool validate(xml.XmlElement xmlElement) {
-    return true;
-  }
 }
 
+/// A [JUnitTestCaseFailure] node parser.
 class TestCaseFailureParser extends XmlElementParser<JUnitTestCaseFailure> {
   @override
   String get elementName => 'failure';
@@ -27,13 +24,9 @@ class TestCaseFailureParser extends XmlElementParser<JUnitTestCaseFailure> {
       text: xmlElement.text,
     );
   }
-
-  @override
-  bool validate(xml.XmlElement xmlElement) {
-    return true;
-  }
 }
 
+/// A [JUnitTestCaseSkipped] node parser.
 class TestCaseSkippedParser extends XmlElementParser<JUnitTestCaseSkipped> {
   @override
   String get elementName => 'skipped';
@@ -43,10 +36,5 @@ class TestCaseSkippedParser extends XmlElementParser<JUnitTestCaseSkipped> {
     return JUnitTestCaseSkipped(
       text: xmlElement.text,
     );
-  }
-
-  @override
-  bool validate(xml.XmlElement xmlElement) {
-    return true;
   }
 }

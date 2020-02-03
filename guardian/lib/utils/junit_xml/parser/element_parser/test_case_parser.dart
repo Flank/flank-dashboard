@@ -1,5 +1,6 @@
 part of junit_xml;
 
+/// A [JUnitTestCase] node parser.
 class TestCaseParser extends XmlElementParser<JUnitTestCase> {
   @override
   String get elementName => 'testcase';
@@ -10,18 +11,12 @@ class TestCaseParser extends XmlElementParser<JUnitTestCase> {
 
     return JUnitTestCase(
       name: valuesMap['name'],
-      classname: valuesMap['name'],
-      assertions: valuesMap['assertions'] != null
-          ? int.tryParse(valuesMap['assertions'])
-          : null,
-      status: valuesMap['status'],
-      time:
-          valuesMap['time'] != null ? double.tryParse(valuesMap['time']) : null,
-      results: [
-        ...parseChildren(TestCaseSkippedParser(), xmlElement),
-        ...parseChildren(TestCaseErrorParser(), xmlElement),
-        ...parseChildren(TestCaseFailureParser(), xmlElement),
-      ],
+      classname: valuesMap['classname'],
+      assertions: IntAttributeValueParser().tryParse(valuesMap['assertions']),
+      time: DoubleAttributeValueParser().tryParse(valuesMap['time']),
+      failures: parseChildren(TestCaseFailureParser(), xmlElement),
+      errors: parseChildren(TestCaseErrorParser(), xmlElement),
+      skipped: parseChild(TestCaseSkippedParser(), xmlElement),
       systemOut: parseChild(SystemOutParser(), xmlElement),
       systemErr: parseChild(SystemErrParser(), xmlElement),
     );
@@ -32,8 +27,6 @@ class TestCaseParser extends XmlElementParser<JUnitTestCase> {
     final systemOutSingle = countChildren(SystemOutParser(), xmlElement) <= 1;
     final systemErrSingle = countChildren(SystemErrParser(), xmlElement) <= 1;
 
-    return systemOutSingle &&
-        systemErrSingle &&
-        hasNonNullAttributes(xmlElement, ['name', 'classname']);
+    return systemOutSingle && systemErrSingle;
   }
 }

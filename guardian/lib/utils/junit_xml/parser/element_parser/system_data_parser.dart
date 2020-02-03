@@ -1,5 +1,6 @@
 part of junit_xml;
 
+/// A [JUnitSystemOutData] node parser.
 class SystemOutParser extends XmlElementParser<JUnitSystemOutData> {
   @override
   String get elementName => 'system-out';
@@ -8,13 +9,9 @@ class SystemOutParser extends XmlElementParser<JUnitSystemOutData> {
   JUnitSystemOutData _parse(xml.XmlElement xmlElement) {
     return JUnitSystemOutData(text: xmlElement.text);
   }
-
-  @override
-  bool validate(xml.XmlElement xmlElement) {
-    return true;
-  }
 }
 
+/// A [JUnitSystemErrData] node parser.
 class SystemErrParser extends XmlElementParser<JUnitSystemErrData> {
   @override
   String get elementName => 'system-err';
@@ -22,10 +19,5 @@ class SystemErrParser extends XmlElementParser<JUnitSystemErrData> {
   @override
   JUnitSystemErrData _parse(xml.XmlElement xmlElement) {
     return JUnitSystemErrData(text: xmlElement.text);
-  }
-
-  @override
-  bool validate(xml.XmlElement xmlElement) {
-    return true;
   }
 }
