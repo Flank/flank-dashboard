@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:metrics/features/dashboard/data/repositories/metrics_repository_impl.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
+import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_project_coverage.dart';
-import 'package:metrics/features/dashboard/presentation/state/coverage_store.dart';
+import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class InjectionContainer extends StatefulWidget {
@@ -20,10 +21,12 @@ class InjectionContainer extends StatefulWidget {
 class _InjectionContainerState extends State<InjectionContainer> {
   final MetricsRepository _repository = MetricsRepositoryImpl();
   GetProjectCoverage _getProjectCoverage;
+  GetBuildMetrics _getBuildMetrics;
 
   @override
   void initState() {
     _getProjectCoverage = GetProjectCoverage(_repository);
+    _getBuildMetrics = GetBuildMetrics(_repository);
     super.initState();
   }
 
@@ -31,7 +34,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
   Widget build(BuildContext context) {
     return Injector(
       inject: [
-        Inject<CoverageStore>(() => CoverageStore(_getProjectCoverage)),
+        Inject<ProjectMetricsStore>(
+            () => ProjectMetricsStore(_getProjectCoverage, _getBuildMetrics)),
       ],
       initState: _initCoverageStore,
       builder: (BuildContext context) => widget.child,
@@ -39,7 +43,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
   }
 
   void _initCoverageStore() {
-    Injector.getAsReactive<CoverageStore>()
+    Injector.getAsReactive<ProjectMetricsStore>()
         .setState((store) => store.getCoverage('projectId'));
   }
 }

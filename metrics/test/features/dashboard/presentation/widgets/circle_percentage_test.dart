@@ -75,11 +75,11 @@ void main() {
     testWidgets(
       "Applies styles to the title and percent texts",
       (WidgetTester tester) async {
-        final titleStyle = TextStyle(fontWeight: FontWeight.bold);
-        final valueStyle = TextStyle(color: Colors.red);
+        const titleStyle = TextStyle(fontWeight: FontWeight.bold);
+        const valueStyle = TextStyle(color: Colors.red);
 
         await tester.pumpWidget(
-          CirclePercentageTestbed(
+          const CirclePercentageTestbed(
             title: 'Coverage',
             titleStyle: titleStyle,
             valueStyle: valueStyle,
