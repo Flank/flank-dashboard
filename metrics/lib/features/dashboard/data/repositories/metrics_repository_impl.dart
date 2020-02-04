@@ -20,11 +20,6 @@ class MetricsRepositoryImpl implements MetricsRepository {
       duration: const Duration(minutes: 34),
     ),
     Build(
-      startedAt: DateTime.now().add(const Duration(days: 3, hours: 5)),
-      result: BuildResult.successful,
-      duration: const Duration(minutes: 23),
-    ),
-    Build(
       startedAt: DateTime.now().add(const Duration(days: 3)),
       result: BuildResult.successful,
       duration: const Duration(minutes: 26),
@@ -33,6 +28,11 @@ class MetricsRepositoryImpl implements MetricsRepository {
       startedAt: DateTime.now().add(const Duration(days: 3, hours: 2)),
       result: BuildResult.successful,
       duration: const Duration(minutes: 28),
+    ),
+    Build(
+      startedAt: DateTime.now().add(const Duration(days: 3, hours: 5)),
+      result: BuildResult.successful,
+      duration: const Duration(minutes: 23),
     ),
     Build(
       startedAt: DateTime.now().add(const Duration(days: 4)),

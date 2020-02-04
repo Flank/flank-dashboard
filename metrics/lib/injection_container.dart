@@ -43,7 +43,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
   }
 
   void _initCoverageStore() {
-    Injector.getAsReactive<ProjectMetricsStore>()
-        .setState((store) => store.getCoverage('projectId'));
+    const projectId = 'projectId';
+
+    Injector.getAsReactive<ProjectMetricsStore>().setState((store) async {
+      await store.getCoverage(projectId);
+      return store.getBuildMetrics(projectId);
+    });
   }
 }
