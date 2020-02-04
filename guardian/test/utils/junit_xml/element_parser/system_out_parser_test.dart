@@ -20,7 +20,7 @@ void main() {
 
       final result = systemOutParser.parse(xmlElement);
 
-      const expected = JUnitSystemErrData(text: 'Random output');
+      const expected = JUnitSystemOutData(text: 'Random output');
       expect(result, equals(expected));
     });
 
