@@ -23,20 +23,23 @@ class JUnitXmlParser {
     }
 
     final xmlDocument = xml.parse(xmlString);
-    final _testSuitesFormat = TestSuitesParser();
-    final _testSuiteFormat = TestSuiteParser();
+    final _testSuitesParser = TestSuitesParser();
+    final _testSuiteParser = TestSuiteParser();
     final rootElement = xmlDocument.rootElement;
 
     JUnitTestSuites testSuites;
 
-    if (rootElement.name.local == _testSuitesFormat.elementName) {
-      testSuites = _testSuitesFormat.parseIfValid(rootElement);
-    } else if (rootElement.name.local == _testSuiteFormat.elementName) {
+    if (rootElement.name.local == _testSuitesParser.elementName) {
+      testSuites = _testSuitesParser.parse(rootElement);
+    } else if (rootElement.name.local == _testSuiteParser.elementName) {
       testSuites = JUnitTestSuites(testSuites: [
-        _testSuiteFormat.parseIfValid(rootElement),
+        _testSuiteParser.parse(rootElement),
       ]);
     } else {
-      throw ArgumentError('The XML is not JUnit report.');
+      throw ArgumentError(
+        'The XML is not JUnit report. Root element should be one of '
+        '[<${_testSuitesParser.elementName}>, <${_testSuiteParser.elementName}>]',
+      );
     }
 
     return JUnitXmlReport(testSuites);

@@ -5,7 +5,7 @@ part of junit_xml;
 /// If only a single <testsuite> ([JUnitTestSuite]) element is present, this
 /// element can be omitted in the report but in order to maintain same structure
 /// for all reports - assume this to be required element.
-/// All fields can be omitted in the report.
+/// All properties are optional.
 class JUnitTestSuites {
   final String name;
 

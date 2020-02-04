@@ -6,7 +6,7 @@ class PropertiesParser extends XmlElementParser<List<JUnitProperty>> {
   String get elementName => 'properties';
 
   @override
-  List<JUnitProperty> _parse(xml.XmlElement xmlElement) {
+  List<JUnitProperty> mapElement(xml.XmlElement xmlElement) {
     return parseChildren(PropertyParser(), xmlElement);
   }
 }
@@ -17,7 +17,7 @@ class PropertyParser extends XmlElementParser<JUnitProperty> {
   String get elementName => 'property';
 
   @override
-  JUnitProperty _parse(xml.XmlElement xmlElement) {
+  JUnitProperty mapElement(xml.XmlElement xmlElement) {
     final valuesMap = getAttributes(xmlElement);
 
     return JUnitProperty(

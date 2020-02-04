@@ -6,17 +6,18 @@ abstract class XmlElementParser<T> {
   /// A node name this parser is able to parse.
   String get elementName;
 
-  /// Validates [xmlElement] by calling [validate] method and if valid parses it.
+  /// Parses [xmlElement] into specified type [T].
   ///
   /// Throws [ArgumentError] if element name is not equal to [elementName].
-  /// Throws [FormatException] if validation fails.
-  T parseIfValid(xml.XmlElement xmlElement) {
+  /// Throws [FormatException] if element is invalid.
+  @nonVirtual
+  T parse(xml.XmlElement xmlElement) {
     if (xmlElement.name.local != elementName) {
       throw ArgumentError('Xml elemnt name does not match format name');
     }
 
     if (validate(xmlElement)) {
-      return _parse(xmlElement);
+      return mapElement(xmlElement);
     } else {
       throw FormatException(
         'XML element is invalid:\n'
@@ -25,8 +26,9 @@ abstract class XmlElementParser<T> {
     }
   }
 
-  /// Parser [xmlElement] into specified type [T].
-  T _parse(xml.XmlElement xmlElement);
+  /// Maps [xmlElement] into specified type [T].
+  @visibleForOverriding
+  T mapElement(xml.XmlElement xmlElement);
 
   /// Validates [xmlElement].
   ///
@@ -36,6 +38,7 @@ abstract class XmlElementParser<T> {
 
   /// Counts nested nodes of [xmlElement] with name specified
   /// by [parser.elementName].
+  @nonVirtual
   int countChildren(
     XmlElementParser parser,
     xml.XmlElement xmlElement,
@@ -44,35 +47,37 @@ abstract class XmlElementParser<T> {
   }
 
   /// Delegates parsing of nested nodes of [xmlElement] to [parser].
+  @nonVirtual
   List<E> parseChildren<E>(
     XmlElementParser<E> parser,
     xml.XmlElement xmlElement,
   ) {
     return xmlElement
         .findAllElements(parser.elementName)
-        .map((element) => parser.parseIfValid(element))
+        .map((element) => parser.parse(element))
         .toList();
   }
 
   /// Delegates parsing of single nested node of [xmlElement] to [parser].
+  @nonVirtual
   E parseChild<E>(
     XmlElementParser<E> parser,
     xml.XmlElement xmlElement,
   ) {
-    final result = xmlElement
-        .findAllElements(parser.elementName)
-        .map((element) => parser.parseIfValid(element));
-    return result.isEmpty ? null : result.first;
+    final result = parseChildren<E>(parser, xmlElement);
+    return result.isEmpty ? null : result.single;
   }
 
   /// Retrieves all attributes of [xmlElement] - their names and values -
   /// into [Map].
+  @nonVirtual
   Map<String, String> getAttributes(xml.XmlElement xmlElement) {
     return {for (var a in xmlElement.attributes) a.name.local: a.value};
   }
 
   /// Checks attributes of [xmlElement] specified by [names] map keys to
   /// be presented and valid to parse.
+  @nonVirtual
   bool checkAttributes(
     xml.XmlElement xmlElement,
     Map<String, XmlAttributeValueParser> names,

@@ -6,7 +6,7 @@ class TestSuiteParser extends XmlElementParser<JUnitTestSuite> {
   String get elementName => 'testsuite';
 
   @override
-  JUnitTestSuite _parse(xml.XmlElement xmlElement) {
+  JUnitTestSuite mapElement(xml.XmlElement xmlElement) {
     final valuesMap = getAttributes(xmlElement);
 
     return JUnitTestSuite(

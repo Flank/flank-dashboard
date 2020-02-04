@@ -6,7 +6,7 @@ class TestCaseParser extends XmlElementParser<JUnitTestCase> {
   String get elementName => 'testcase';
 
   @override
-  JUnitTestCase _parse(xml.XmlElement xmlElement) {
+  JUnitTestCase mapElement(xml.XmlElement xmlElement) {
     final valuesMap = getAttributes(xmlElement);
 
     return JUnitTestCase(

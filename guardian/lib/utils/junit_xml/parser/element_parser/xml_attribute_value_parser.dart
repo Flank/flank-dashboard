@@ -11,26 +11,29 @@ abstract class XmlAttributeValueParser<T> {
   /// A parser for required values of type [T].
   ///
   /// Usually throws if parsing fails.
-  final XmlAttributeValueParseCallback<T> parseCallback;
+  final XmlAttributeValueParseCallback<T> _parseCallback;
 
   /// A parser for optional values of type [T].
   ///
   /// Usually returns null if parsing fails.
-  final XmlAttributeValueParseCallback<T> tryParseCallback;
+  final XmlAttributeValueParseCallback<T> _tryParseCallback;
 
-  XmlAttributeValueParser(this.parseCallback, this.tryParseCallback);
+  XmlAttributeValueParser(this._parseCallback, this._tryParseCallback);
 
   /// Parses required value.
+  @nonVirtual
   T parse(String value) {
-    return parseCallback?.call(value);
+    return _parseCallback?.call(value);
   }
 
   /// Parses optional value.
+  @nonVirtual
   T tryParse(String value) {
-    return value != null ? tryParseCallback?.call(value) : null;
+    return value != null ? _tryParseCallback?.call(value) : null;
   }
 
   /// Validates whether value can be parsed or not.
+  @nonVirtual
   bool canParse(String value) {
     return tryParse(value) != null;
   }
@@ -38,7 +41,21 @@ abstract class XmlAttributeValueParser<T> {
 
 /// An attribute value parser for [String] values.
 class StringAttributeValueParser extends XmlAttributeValueParser<String> {
-  StringAttributeValueParser() : super((value) => value, (value) => value);
+  StringAttributeValueParser() : super(parseString, (value) => value);
+
+  /// Parses [value] into [String].
+  ///
+  /// This method allows to match [int.parse], [DateTime.parse], etc. behavior
+  /// which throw [FormatException] on invalid input.
+  /// Null value is assumed to be invalid.
+  @visibleForTesting
+  static String parseString(String value) {
+    if (value != null) {
+      return value;
+    } else {
+      throw const FormatException('Cannot parse null String value');
+    }
+  }
 }
 
 /// An attribute value parser for [int] values.
