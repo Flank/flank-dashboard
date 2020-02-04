@@ -4,7 +4,7 @@ part of junit_xml;
 ///
 /// [name], [classname] and [time] are always presented except for empty test
 /// cases <testcase/>.
-class JUnitTestCase {
+class JUnitTestCase extends Equatable {
   /// Name of the test method.
   final String name;
 
@@ -36,7 +36,7 @@ class JUnitTestCase {
   /// Data that was written to standard error while the test was executed.
   final JUnitSystemErrData systemErr;
 
-  JUnitTestCase({
+  const JUnitTestCase({
     this.name,
     this.classname,
     this.assertions,
@@ -47,4 +47,17 @@ class JUnitTestCase {
     this.systemOut,
     this.systemErr,
   });
+
+  @override
+  List<Object> get props => [
+        name,
+        assertions,
+        classname,
+        time,
+        failures,
+        errors,
+        skipped,
+        systemOut,
+        systemErr,
+      ];
 }

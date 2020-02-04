@@ -6,7 +6,7 @@ part of junit_xml;
 /// element can be omitted in the report but in order to maintain same structure
 /// for all reports - assume this to be required element.
 /// All properties are optional.
-class JUnitTestSuites {
+class JUnitTestSuites extends Equatable {
   final String name;
 
   /// Total number of disabled tests from all test suites.
@@ -27,7 +27,7 @@ class JUnitTestSuites {
   /// Test suites list presented in the report.
   final List<JUnitTestSuite> testSuites;
 
-  JUnitTestSuites({
+  const JUnitTestSuites({
     @required this.testSuites,
     this.name,
     this.disabled,
@@ -36,4 +36,15 @@ class JUnitTestSuites {
     this.tests,
     this.time,
   });
+
+  @override
+  List<Object> get props => [
+        name,
+        disabled,
+        errors,
+        failures,
+        tests,
+        time,
+        testSuites,
+      ];
 }

@@ -4,5 +4,5 @@ part of junit_xml;
 ///
 /// [text] contains description why the test case was skipped.
 class JUnitTestCaseSkipped extends JUnitTestCaseExecutionResult {
-  JUnitTestCaseSkipped({String text}) : super(text: text);
+  const JUnitTestCaseSkipped({String text}) : super(text: text);
 }

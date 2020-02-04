@@ -4,5 +4,5 @@ part of junit_xml;
 ///
 /// [text] contains relevant data for the error (for example, a stack trace).
 class JUnitTestCaseError extends JUnitTestCaseExecutionResult {
-  JUnitTestCaseError({String text}) : super(text: text);
+  const JUnitTestCaseError({String text}) : super(text: text);
 }

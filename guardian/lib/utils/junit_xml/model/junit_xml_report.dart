@@ -1,13 +1,11 @@
 part of junit_xml;
 
 /// A class representing JUnitXML report.
-class JUnitXmlReport {
+class JUnitXmlReport extends Equatable {
   final JUnitTestSuites testSuites;
 
-  JUnitXmlReport(this.testSuites);
+  const JUnitXmlReport(this.testSuites);
 
   @override
-  String toString() {
-    return 'JUnitXmlReport { testSuites = $testSuites }';
-  }
+  List<Object> get props => [testSuites];
 }

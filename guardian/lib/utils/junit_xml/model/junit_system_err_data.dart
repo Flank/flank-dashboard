@@ -4,5 +4,5 @@ part of junit_xml;
 ///
 /// [text] contains data that was written to standard error during execution.
 class JUnitSystemErrData extends _JUnitSystemData {
-  JUnitSystemErrData({String text}) : super(text: text);
+  const JUnitSystemErrData({String text}) : super(text: text);
 }

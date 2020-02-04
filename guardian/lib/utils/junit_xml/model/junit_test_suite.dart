@@ -3,7 +3,7 @@ part of junit_xml;
 /// A class representing <testsuite> element of JUnitXML report.
 ///
 /// [name], [tests], [errors], [failures], [time] and [hostname] are required.
-class JUnitTestSuite {
+class JUnitTestSuite extends Equatable {
   /// Full (class) name of the test for non-aggregated testsuite documents.
   /// Class name without the package for aggregated testsuite documents.
   final String name;
@@ -47,7 +47,7 @@ class JUnitTestSuite {
   /// Data that was written to standard error while the test suite was executed.
   final JUnitSystemErrData systemErr;
 
-  JUnitTestSuite({
+  const JUnitTestSuite({
     @required this.name,
     @required this.tests,
     @required this.errors,
@@ -65,20 +65,20 @@ class JUnitTestSuite {
   });
 
   @override
-  String toString() {
-    return 'TestSuite {'
-        'name = $name, \n'
-        'tests = $tests, \n'
-        'disabled = $disabled, \n'
-        'errors = $errors, \n'
-        'failures = $failures, \n'
-        'skipped = $skipped, \n'
-        'time = $time, \n'
-        'timestamp = $timestamp, \n'
-        'hostname = $hostname, \n'
-        'properties = $properties, \n'
-        'testcases = $testCases, \n'
-        'systemOut = $systemOut, \n'
-        'systemErr = $systemErr \n}';
-  }
+  List<Object> get props => [
+        name,
+        tests,
+        disabled,
+        errors,
+        failures,
+        skipped,
+        time,
+        timestamp,
+        hostname,
+        testLabExecutionId,
+        properties,
+        testCases,
+        systemOut,
+        systemErr,
+      ];
 }

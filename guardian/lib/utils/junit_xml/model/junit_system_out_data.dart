@@ -4,5 +4,5 @@ part of junit_xml;
 ///
 /// [text] contains data that was written to standard out during execution.
 class JUnitSystemOutData extends _JUnitSystemData {
-  JUnitSystemOutData({String text}) : super(text: text);
+  const JUnitSystemOutData({String text}) : super(text: text);
 }

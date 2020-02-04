@@ -1,5 +1,6 @@
 library junit_xml;
 
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:xml/xml.dart' as xml;
 

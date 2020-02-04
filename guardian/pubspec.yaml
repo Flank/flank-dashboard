@@ -13,6 +13,7 @@ dependencies:
   slack: ^2.0.0
   yaml: ^2.2.0
   xml: ^3.7.0
+  equatable: ^1.0.3
 
 dev_dependencies:
   lint: ^1.1.1
