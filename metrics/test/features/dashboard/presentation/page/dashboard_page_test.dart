@@ -7,6 +7,7 @@ import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
@@ -19,6 +20,28 @@ void main() {
         expect(find.byType(CirclePercentage), findsOneWidget);
       },
     );
+
+    testWidgets(
+      'Contains SparklineGraph widgets with performance and build metrcis',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(DashboardTestbed());
+        await tester.pumpAndSettle();
+        expect(
+          find.descendant(
+            of: find.byType(SparklineGraph),
+            matching: find.text('Performance'),
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+            of: find.byType(SparklineGraph),
+            matching: find.text('Build'),
+          ),
+          findsOneWidget,
+        );
+      },
+    );
   });
 }
 
@@ -28,7 +51,7 @@ class DashboardTestbed extends StatelessWidget {
     return MaterialApp(
       home: Injector(
         inject: [
-          Inject<ProjectMetricsStore>(() => MetricsStoreStab()),
+          Inject<ProjectMetricsStore>(() => MetricsStoreStub()),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>()
@@ -40,7 +63,7 @@ class DashboardTestbed extends StatelessWidget {
   }
 }
 
-class MetricsStoreStab implements ProjectMetricsStore {
+class MetricsStoreStub implements ProjectMetricsStore {
   @override
   Coverage get coverage => const Coverage(percent: 0.3);
 
@@ -48,12 +71,10 @@ class MetricsStoreStab implements ProjectMetricsStore {
   Future<void> getCoverage(String projectId) async {}
 
   @override
-  int get averageBuildTime => null;
+  int get averageBuildTime => 20;
 
   @override
-  Future getBuildMetrics(String projectId) {
-    return Future.value(null);
-  }
+  Future getBuildMetrics(String projectId) async {}
 
   @override
   List<Point<int>> get projectBuildMetric => [];

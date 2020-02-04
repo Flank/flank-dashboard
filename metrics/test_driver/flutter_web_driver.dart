@@ -36,7 +36,11 @@ Future<void> main(List<String> arguments) async {
 
   print("Application is up, running tests...");
 
-  await processManager.startDriverTests(browserName: args.browserName);
+  await processManager
+      .startDriverTests(browserName: args.browserName)
+      .catchError((_) {
+    processManager.exitApp();
+  });
 
   processManager.exitApp();
 }
