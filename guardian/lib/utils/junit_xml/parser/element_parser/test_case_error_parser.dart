@@ -7,8 +7,6 @@ class TestCaseErrorParser extends XmlElementParser<JUnitTestCaseError> {
 
   @override
   JUnitTestCaseError mapElement(xml.XmlElement xmlElement) {
-    return JUnitTestCaseError(
-      text: xmlElement.text,
-    );
+    return JUnitTestCaseError(text: xmlElement.text);
   }
 }

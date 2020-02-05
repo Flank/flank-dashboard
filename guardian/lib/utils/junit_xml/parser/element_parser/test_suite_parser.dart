@@ -17,7 +17,7 @@ class TestSuiteParser extends XmlElementParser<JUnitTestSuite> {
       errors: IntAttributeValueParser().parse(valuesMap['errors']),
       skipped: IntAttributeValueParser().tryParse(valuesMap['skipped']),
       time: DoubleAttributeValueParser().parse(valuesMap['time']),
-      timestamp: DateTimeAttributeValueParser().parse(valuesMap['timestamp']),
+      timestamp: DateTimeAttributeValueParser().tryParse(valuesMap['timestamp']),
       hostname: valuesMap['hostname'],
       testLabExecutionId: valuesMap['testLabExecutionId'],
       properties: parseChild(PropertiesParser(), xmlElement),

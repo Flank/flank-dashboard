@@ -3,7 +3,7 @@
     <properties />
     <testcase name="testFails" classname="com.example.app.ExampleUiTest" time="0.857">
         <failure>junit.framework.AssertionFailedError: expected:&lt;true&gt; but was:&lt;false&gt;
-            junit.framework.Assert.fail(Assert.java:50)</failure>
+junit.framework.Assert.fail(Assert.java:50)</failure>
     </testcase>
     <testcase name="testPasses" classname="com.example.app.ExampleUiTest" time="0.276" />
 </testsuite>

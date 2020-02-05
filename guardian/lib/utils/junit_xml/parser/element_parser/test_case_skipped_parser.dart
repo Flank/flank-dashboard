@@ -7,8 +7,6 @@ class TestCaseSkippedParser extends XmlElementParser<JUnitTestCaseSkipped> {
 
   @override
   JUnitTestCaseSkipped mapElement(xml.XmlElement xmlElement) {
-    return JUnitTestCaseSkipped(
-      text: xmlElement.text,
-    );
+    return JUnitTestCaseSkipped(text: xmlElement.text);
   }
 }

@@ -7,8 +7,6 @@ class TestCaseFailureParser extends XmlElementParser<JUnitTestCaseFailure> {
 
   @override
   JUnitTestCaseFailure mapElement(xml.XmlElement xmlElement) {
-    return JUnitTestCaseFailure(
-      text: xmlElement.text,
-    );
+    return JUnitTestCaseFailure(text: xmlElement.text);
   }
 }

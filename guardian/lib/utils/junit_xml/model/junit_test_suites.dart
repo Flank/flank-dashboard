@@ -18,7 +18,7 @@ class JUnitTestSuites extends Equatable {
   /// Total number of failed tests from all test suites.
   final int failures;
 
-  /// Total failed tests from all test suites.
+  /// Total number of tests from all test suites.
   final int tests;
 
   /// Time in seconds to execute all test suites.

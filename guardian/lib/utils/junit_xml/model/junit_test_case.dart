@@ -17,6 +17,9 @@ class JUnitTestCase extends Equatable {
   /// Time taken (in seconds) to execute the test.
   final double time;
 
+  /// Flakiness of this test case.
+  final bool flaky;
+
   /// List with all failure nodes of test case.
   ///
   /// <failure> node can appear multiple times.
@@ -41,8 +44,9 @@ class JUnitTestCase extends Equatable {
     this.classname,
     this.assertions,
     this.time,
-    this.failures,
-    this.errors,
+    this.flaky,
+    this.failures = const [],
+    this.errors = const [],
     this.skipped,
     this.systemOut,
     this.systemErr,

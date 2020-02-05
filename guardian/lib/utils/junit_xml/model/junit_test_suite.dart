@@ -17,6 +17,9 @@ class JUnitTestSuite extends Equatable {
   /// The total number of tests in the suite that errored.
   final int errors;
 
+  /// The total number of flaky tests in the suite.
+  final int flakes;
+
   /// The total number of tests in the suite that failed.
   final int failures;
 
@@ -54,6 +57,7 @@ class JUnitTestSuite extends Equatable {
     @required this.failures,
     @required this.time,
     @required this.hostname,
+    this.flakes,
     this.disabled,
     this.skipped,
     this.timestamp,
@@ -70,6 +74,7 @@ class JUnitTestSuite extends Equatable {
         tests,
         disabled,
         errors,
+        flakes,
         failures,
         skipped,
         time,

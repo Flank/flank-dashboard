@@ -15,7 +15,7 @@ abstract class XmlAttributeValueParser<T> {
 
   /// A parser for optional values of type [T].
   ///
-  /// Usually returns null if parsing fails.
+  /// Usually returns `null` if parsing fails.
   final XmlAttributeValueParseCallback<T> _tryParseCallback;
 
   XmlAttributeValueParser(this._parseCallback, this._tryParseCallback);
@@ -47,7 +47,7 @@ class StringAttributeValueParser extends XmlAttributeValueParser<String> {
   ///
   /// This method allows to match [int.parse], [DateTime.parse], etc. behavior
   /// which throw [FormatException] on invalid input.
-  /// Null value is assumed to be invalid.
+  /// `null` value is assumed to be invalid.
   @visibleForTesting
   static String parseString(String value) {
     if (value != null) {
@@ -71,4 +71,39 @@ class DoubleAttributeValueParser extends XmlAttributeValueParser<double> {
 /// An attribute value parser for [DateTime] values.
 class DateTimeAttributeValueParser extends XmlAttributeValueParser<DateTime> {
   DateTimeAttributeValueParser() : super(DateTime.parse, DateTime.tryParse);
+}
+
+/// An attribute value parser for [bool] values.
+class BoolAttributeValueParser extends XmlAttributeValueParser<bool> {
+  BoolAttributeValueParser() : super(parseBool, tryParseBool);
+
+  /// Parses [value] into [bool].
+  ///
+  /// Throws [FormatException] if the source string cannot be parsed.
+  @visibleForTesting
+  static bool parseBool(String value) {
+    if (value == null) {
+      throw const FormatException('Cannot parse null string value to bool');
+    }
+
+    final _value = value.trim().toLowerCase();
+    if (_value != 'true' && _value != 'false') {
+      throw FormatException('Failed to parse $value into bool');
+    }
+
+    return _value == 'true';
+  }
+
+  /// Parses [value] into [bool].
+  ///
+  /// Works like [parseBool] except that this function returns `null`
+  /// where [parseBool] would throw a [FormatException].
+  @visibleForTesting
+  static bool tryParseBool(String value) {
+    try {
+      return parseBool(value);
+    } catch (e) {
+      return null;
+    }
+  }
 }

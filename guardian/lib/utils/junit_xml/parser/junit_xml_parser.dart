@@ -14,7 +14,7 @@ class JUnitXmlParser {
 
   /// Parses JUnitXML string into [JUnitXmlReport].
   ///
-  /// Throws [ArgumentError] if [xmlString] is null or is not JUnitXML report.
+  /// Throws [ArgumentError] if [xmlString] is `null` or is not JUnitXML report.
   /// Throws [xml.XmlException] if XML direct parsing is failed.
   /// Throws [FormatException] if validation for JUnit report nodes is failed.
   JUnitXmlReport parse(String xmlString) {
