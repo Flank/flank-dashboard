@@ -4,7 +4,7 @@ import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
 
-/// The widget with sparkline that represents some metric.
+/// The widget with sparkline that represents metric.
 ///
 /// This widget will fill all available space if no constraints given
 /// by it's parent.

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// The widget that resizes [text] to fill all available space if
+/// The widget that expands [text] to fill all available space if
 /// wrapped by [Flexible] widgets.
 class ExpandableText extends StatelessWidget {
   final String text;
