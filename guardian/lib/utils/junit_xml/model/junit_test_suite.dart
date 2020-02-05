@@ -62,7 +62,7 @@ class JUnitTestSuite extends Equatable {
     this.skipped,
     this.timestamp,
     this.properties,
-    this.testCases,
+    this.testCases = const [],
     this.systemOut,
     this.systemErr,
     this.testLabExecutionId,

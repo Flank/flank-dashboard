@@ -58,6 +58,7 @@ class JUnitTestCase extends Equatable {
         assertions,
         classname,
         time,
+        flaky,
         failures,
         errors,
         skipped,

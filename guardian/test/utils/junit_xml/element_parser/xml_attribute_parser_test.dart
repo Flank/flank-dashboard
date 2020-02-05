@@ -42,21 +42,57 @@ void main() {
       final parsed = parser.tryParse(value);
       expect(parsed, equals(123));
     });
+  });
 
-    group('StringAttributeValueParser', () {
-      test('parseString() should throw FormatException on null input', () {
-        const String value = null;
-        expect(
-          () => StringAttributeValueParser.parseString(value),
-          throwsFormatException,
-        );
-      });
+  group('StringAttributeValueParser', () {
+    test('parseString() should throw FormatException on null input', () {
+      const String value = null;
+      expect(
+        () => StringAttributeValueParser.parseString(value),
+        throwsFormatException,
+      );
+    });
 
-      test('parseString() should return value on non-null input', () {
-        const value = 'any';
-        final result = StringAttributeValueParser.parseString(value);
-        expect(result, equals(value));
-      });
+    test('parseString() should return value on non-null input', () {
+      const value = 'any';
+      final result = StringAttributeValueParser.parseString(value);
+      expect(result, equals(value));
+    });
+  });
+
+  group('BoolAttributeValueParser', () {
+    test('parseBool() should throw FormatException on null input', () {
+      const String value = null;
+      expect(
+        () => BoolAttributeValueParser.parseBool(value),
+        throwsFormatException,
+      );
+    });
+
+    test('parseBool() should throw FormatException on invalid input', () {
+      const String value = 'not bool';
+      expect(
+        () => BoolAttributeValueParser.parseBool(value),
+        throwsFormatException,
+      );
+    });
+
+    test('parseBool() should parse bool on valid source string', () {
+      const String value = 'true';
+      final result = BoolAttributeValueParser.parseBool(value);
+      expect(result, isTrue);
+    });
+
+    test('tryParseBool() should return null on invalid input', () {
+      const value = 'not bool';
+      final result = BoolAttributeValueParser.tryParseBool(value);
+      expect(result, isNull);
+    });
+
+    test('tryParseBool() should parse bool on valid source string', () {
+      const value = 'true';
+      final result = BoolAttributeValueParser.tryParseBool(value);
+      expect(result, isTrue);
     });
   });
 }

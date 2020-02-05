@@ -14,6 +14,7 @@ class TestCaseParser extends XmlElementParser<JUnitTestCase> {
       classname: valuesMap['classname'],
       assertions: IntAttributeValueParser().tryParse(valuesMap['assertions']),
       time: DoubleAttributeValueParser().tryParse(valuesMap['time']),
+      flaky: BoolAttributeValueParser().tryParse(valuesMap['flaky']),
       failures: parseChildren(TestCaseFailureParser(), xmlElement),
       errors: parseChildren(TestCaseErrorParser(), xmlElement),
       skipped: parseChild(TestCaseSkippedParser(), xmlElement),
