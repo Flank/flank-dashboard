@@ -12,18 +12,11 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(const SparklineGraphTestbed(title: null));
 
-      expect(tester.takeException(), isInstanceOf<AssertionError>());
+      expect(tester.takeException(), isA<AssertionError>());
 
       await tester.pumpWidget(const SparklineGraphTestbed(value: null));
 
-      expect(tester.takeException(), isInstanceOf<AssertionError>());
-
-      await tester.pumpWidget(const SparklineGraphTestbed(
-        title: null,
-        value: null,
-      ));
-
-      expect(tester.takeException(), isInstanceOf<AssertionError>());
+      expect(tester.takeException(), isA<AssertionError>());
     },
   );
 
@@ -32,7 +25,7 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(const SparklineGraphTestbed(data: null));
 
-      expect(tester.takeException(), isInstanceOf<AssertionError>());
+      expect(tester.takeException(), isA<AssertionError>());
     },
   );
 
@@ -43,7 +36,7 @@ void main() {
         strokeWidth: -1.0,
       ));
 
-      expect(tester.takeException(), isInstanceOf<AssertionError>());
+      expect(tester.takeException(), isA<AssertionError>());
     },
   );
 

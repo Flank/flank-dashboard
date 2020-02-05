@@ -16,7 +16,7 @@ class DashboardPage extends StatelessWidget {
           models: [Injector.getAsReactive<ProjectMetricsStore>()],
           builder: (_, coverageStore) {
             return coverageStore.whenConnectionState(
-              onWaiting: () => _buildProgressIndicator(),
+              onWaiting: _buildProgressIndicator,
               onError: _buildLoadingErrorPlaceholder,
               onIdle: () => RaisedButton(
                 onPressed: _loadMetrics,

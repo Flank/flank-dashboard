@@ -22,7 +22,7 @@ void main() {
     );
 
     testWidgets(
-      'Contains SparklineGraph widgets with performance and build metrcis',
+      'Contains SparklineGraph widgets with performance and build metrics',
       (WidgetTester tester) async {
         await tester.pumpWidget(DashboardTestbed());
         await tester.pumpAndSettle();
