@@ -26,6 +26,16 @@ void main() {
           await driver.waitFor(find.byType('CirclePercentage'));
         },
       );
+
+      test(
+        'Loads the build metrics and shows the sparkline graph widgets',
+        () async {
+          await driver.waitFor(find.text('Performance'));
+          await driver.waitFor(find.text('Build'));
+
+          await driver.waitFor(find.byType('SparklineGraph'));
+        },
+      );
     },
   );
 }

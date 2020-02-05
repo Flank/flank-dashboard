@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
 
 /// The widget that represents the metric percent in a circular graph.
 ///
@@ -97,19 +98,15 @@ class _CirclePercentageState extends State<CirclePercentage>
                       children: <Widget>[
                         Expanded(
                           flex: 2,
-                          child: FittedBox(
-                            child: Text(
-                              '${(_controller.value * 100).toInt()}%',
-                              style: widget.valueStyle,
-                            ),
+                          child: ExpandableText(
+                            '${(_controller.value * 100).toInt()}%',
+                            style: widget.valueStyle,
                           ),
                         ),
                         Expanded(
-                          child: FittedBox(
-                            child: Text(
-                              widget.title,
-                              style: widget.titleStyle,
-                            ),
+                          child: ExpandableText(
+                            widget.title,
+                            style: widget.titleStyle,
                           ),
                         ),
                       ],

@@ -21,7 +21,7 @@ void main() {
           ),
         );
 
-        expect(tester.takeException(), isInstanceOf<AssertionError>());
+        expect(tester.takeException(), isA<AssertionError>());
       },
     );
 
@@ -35,7 +35,7 @@ void main() {
           ),
         );
 
-        expect(tester.takeException(), isInstanceOf<AssertionError>());
+        expect(tester.takeException(), isA<AssertionError>());
       },
     );
   });

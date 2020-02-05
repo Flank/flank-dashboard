@@ -37,13 +37,19 @@ class _InjectionContainerState extends State<InjectionContainer> {
         Inject<ProjectMetricsStore>(
             () => ProjectMetricsStore(_getProjectCoverage, _getBuildMetrics)),
       ],
-      initState: _initCoverageStore,
+      initState: _initInjectorState,
       builder: (BuildContext context) => widget.child,
     );
   }
 
-  void _initCoverageStore() {
-    Injector.getAsReactive<ProjectMetricsStore>()
-        .setState((store) => store.getCoverage('projectId'));
+  void _initInjectorState() {
+    Injector.getAsReactive<ProjectMetricsStore>().setState(_initMetricsStore);
+  }
+
+  Future _initMetricsStore(ProjectMetricsStore store) async {
+    const projectId = 'projectId';
+
+    await store.getCoverage(projectId);
+    await store.getBuildMetrics(projectId);
   }
 }
