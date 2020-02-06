@@ -19,7 +19,7 @@ class MessageCommand extends SlackCommand {
   @override
   void run() {
     final url = argResults['webhookUrl'] as String;
-    
+
     if (url == null || url.isEmpty) {
       print('Webhook URL is required');
       return;

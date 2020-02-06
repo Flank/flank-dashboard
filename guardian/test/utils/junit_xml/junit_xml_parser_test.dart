@@ -132,7 +132,8 @@ void main() {
                 time: 0.857,
                 failures: [
                   JUnitTestCaseFailure(
-                    text: 'junit.framework.AssertionFailedError: expected:<true> but was:<false>\n'
+                    text:
+                        'junit.framework.AssertionFailedError: expected:<true> but was:<false>\n'
                         'junit.framework.Assert.fail(Assert.java:50)',
                   ),
                 ],
