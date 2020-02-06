@@ -2,4 +2,4 @@
 set -euxo pipefail
 
 pub get
-pub run test test/
+pub run test test/ --concurrency=1 -r expanded
