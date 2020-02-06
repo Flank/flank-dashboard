@@ -7,7 +7,7 @@ import '../test_utils/xml_string_parse_util.dart';
 
 void main() {
   group('SystemErrParser', () {
-    const text = 'Random error output';
+    const text = 'Error output';
 
     final parser = SystemErrParser();
 

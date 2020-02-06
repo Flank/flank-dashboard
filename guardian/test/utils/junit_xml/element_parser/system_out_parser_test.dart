@@ -7,7 +7,7 @@ import '../test_utils/xml_string_parse_util.dart';
 
 void main() {
   group('SystemOutParser', () {
-    const text = 'Random text output';
+    const text = 'Text output';
 
     final parser = SystemOutParser();
 

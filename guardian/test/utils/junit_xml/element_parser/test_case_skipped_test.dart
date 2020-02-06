@@ -7,7 +7,7 @@ import '../test_utils/xml_string_parse_util.dart';
 
 void main() {
   group('TestCaseSkippedParser', () {
-    const text = 'Random test case skipped';
+    const text = 'Test case skipped';
 
     final parser = TestCaseSkippedParser();
 

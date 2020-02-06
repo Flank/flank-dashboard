@@ -7,7 +7,7 @@ import '../test_utils/xml_string_parse_util.dart';
 
 void main() {
   group('TestCaseErrorParser', () {
-    const text = 'Random test case error';
+    const text = 'Test case error';
 
     final parser = TestCaseErrorParser();
 

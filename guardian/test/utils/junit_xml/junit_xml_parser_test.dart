@@ -66,11 +66,6 @@ void main() {
       },
     );
 
-    //<?xml version='1.0' encoding='UTF-8' ?>
-    //<testsuite name="" tests="1" failures="0" errors="0" skipped="0" time="2.278" timestamp="2018-09-14T20:45:55" hostname="localhost" testLabExecutionId="matrix-1234_execution-asdf">
-    //    <properties />
-    //    <testcase name="testPasses" classname="com.example.app.ExampleUiTest" time="0.328" />
-    //</testsuite>
     test('parse() should parse android_pass.xml', () {
       final result = parser.parse(androidPassTest.readAsStringSync());
 
@@ -101,15 +96,6 @@ void main() {
       expect(result, equals(expected));
     });
 
-    //<?xml version='1.0' encoding='UTF-8' ?>
-    //<testsuite name="" tests="2" failures="1" errors="0" skipped="0" time="3.87" timestamp="2018-09-09T00:16:36" hostname="localhost">
-    //    <properties />
-    //    <testcase name="testFails" classname="com.example.app.ExampleUiTest" time="0.857">
-    //        <failure>junit.framework.AssertionFailedError: expected:&lt;true&gt; but was:&lt;false&gt;
-    //junit.framework.Assert.fail(Assert.java:50)</failure>
-    //    </testcase>
-    //    <testcase name="testPasses" classname="com.example.app.ExampleUiTest" time="0.276" />
-    //</testsuite>
     test('parse() should parse android_fail.xml', () {
       final result = parser.parse(androidFailTest.readAsStringSync());
 
@@ -151,16 +137,6 @@ void main() {
       expect(result, equals(expected));
     });
 
-    //<?xml version='1.0' encoding='UTF-8'?>
-    //<testsuites>
-    //    <testsuite name='EarlGreyExampleSwiftTests' hostname='localhost' tests='2' failures='0' errors='0' time='25.892'>
-    //        <properties />
-    //        <testcase name='testBasicSelection()' classname='EarlGreyExampleSwiftTests' time='2.0' />
-    //        <testcase name='testBasicSelectionActionAssert()' classname='EarlGreyExampleSwiftTests' time='0.712' />
-    //        <system-out />
-    //        <system-err />
-    //    </testsuite>
-    //</testsuites>
     test('parse() should parse ios_pass.xml', () {
       final result = parser.parse(iosPassTest.readAsStringSync());
 
@@ -195,19 +171,6 @@ void main() {
       expect(result, equals(expected));
     });
 
-    //<?xml version='1.0' encoding='UTF-8'?>
-    //<testsuites>
-    //    <testsuite name='EarlGreyExampleSwiftTests' hostname='localhost' tests='2' failures='1' errors='0' time='25.881'>
-    //        <properties />
-    //        <testcase name='testBasicSelectionActionAssert()' classname='EarlGreyExampleSwiftTests' time='0.719' />
-    //        <testcase name='testBasicSelectionAndAction()' classname='EarlGreyExampleSwiftTests' time='0.584'>
-    //            <failure>Exception: NoMatchingElementException</failure>
-    //            <failure>failed: caught "EarlGreyInternalTestInterruptException", "Immediately halt execution of testcase"</failure>
-    //        </testcase>
-    //        <system-out />
-    //        <system-err />
-    //    </testsuite>
-    //</testsuites>
     test('parse() should parse ios_fail.xml', () {
       final result = parser.parse(iosFailTest.readAsStringSync());
 
