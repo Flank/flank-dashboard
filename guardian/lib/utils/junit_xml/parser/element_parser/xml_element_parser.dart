@@ -28,6 +28,7 @@ abstract class XmlElementParser<T> {
 
   /// Maps [xmlElement] into specified type [T].
   @visibleForOverriding
+  @visibleForTesting
   T mapElement(xml.XmlElement xmlElement);
 
   /// Validates [xmlElement].

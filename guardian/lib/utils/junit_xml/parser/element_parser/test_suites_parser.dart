@@ -10,12 +10,12 @@ class TestSuitesParser extends XmlElementParser<JUnitTestSuites> {
     final valuesMap = getAttributes(xmlElement);
 
     return JUnitTestSuites(
-      name: valuesMap['name'],
-      disabled: IntAttributeValueParser().tryParse(valuesMap['disabled']),
-      failures: IntAttributeValueParser().tryParse(valuesMap['failures']),
-      errors: IntAttributeValueParser().tryParse(valuesMap['errors']),
-      tests: IntAttributeValueParser().tryParse(valuesMap['tests']),
-      time: DoubleAttributeValueParser().tryParse(valuesMap['time']),
+      name: ValueParsers.string.tryParse(valuesMap['name']),
+      disabled: ValueParsers.int.tryParse(valuesMap['disabled']),
+      failures: ValueParsers.int.tryParse(valuesMap['failures']),
+      errors: ValueParsers.int.tryParse(valuesMap['errors']),
+      tests: ValueParsers.int.tryParse(valuesMap['tests']),
+      time: ValueParsers.double.tryParse(valuesMap['time']),
       testSuites: parseChildren<JUnitTestSuite>(TestSuiteParser(), xmlElement),
     );
   }

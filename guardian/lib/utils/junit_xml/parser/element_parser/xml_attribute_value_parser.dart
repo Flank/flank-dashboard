@@ -1,5 +1,18 @@
 part of junit_xml;
 
+abstract class ValueParsers {
+  static const StringAttributeValueParser string = StringAttributeValueParser();
+
+  static const IntAttributeValueParser int = IntAttributeValueParser();
+
+  static const DoubleAttributeValueParser double = DoubleAttributeValueParser();
+
+  static const DateTimeAttributeValueParser dateTime =
+      DateTimeAttributeValueParser();
+
+  static const BoolAttributeValueParser bool = BoolAttributeValueParser();
+}
+
 typedef XmlAttributeValueParseCallback<T> = T Function(String);
 
 /// An attribute value parser abstract class that defines parse method for
@@ -7,6 +20,7 @@ typedef XmlAttributeValueParseCallback<T> = T Function(String);
 ///
 /// May be used by [XmlElementParser] implementations in order to parse
 /// attribute values.
+@immutable
 abstract class XmlAttributeValueParser<T> {
   /// A parser for required values of type [T].
   ///
@@ -18,7 +32,7 @@ abstract class XmlAttributeValueParser<T> {
   /// Usually returns `null` if parsing fails.
   final XmlAttributeValueParseCallback<T> _tryParseCallback;
 
-  XmlAttributeValueParser(this._parseCallback, this._tryParseCallback);
+  const XmlAttributeValueParser(this._parseCallback, this._tryParseCallback);
 
   /// Parses required value.
   @nonVirtual
@@ -41,7 +55,7 @@ abstract class XmlAttributeValueParser<T> {
 
 /// An attribute value parser for [String] values.
 class StringAttributeValueParser extends XmlAttributeValueParser<String> {
-  StringAttributeValueParser() : super(parseString, (value) => value);
+  const StringAttributeValueParser() : super(parseString, _tryParseString);
 
   /// Parses [value] into [String].
   ///
@@ -56,26 +70,31 @@ class StringAttributeValueParser extends XmlAttributeValueParser<String> {
       throw const FormatException('Cannot parse null String value');
     }
   }
+
+  static String _tryParseString(String value) {
+    return value;
+  }
 }
 
 /// An attribute value parser for [int] values.
 class IntAttributeValueParser extends XmlAttributeValueParser<int> {
-  IntAttributeValueParser() : super(int.parse, int.tryParse);
+  const IntAttributeValueParser() : super(int.parse, int.tryParse);
 }
 
 /// An attribute value parser for [double] values.
 class DoubleAttributeValueParser extends XmlAttributeValueParser<double> {
-  DoubleAttributeValueParser() : super(double.parse, double.tryParse);
+  const DoubleAttributeValueParser() : super(double.parse, double.tryParse);
 }
 
 /// An attribute value parser for [DateTime] values.
 class DateTimeAttributeValueParser extends XmlAttributeValueParser<DateTime> {
-  DateTimeAttributeValueParser() : super(DateTime.parse, DateTime.tryParse);
+  const DateTimeAttributeValueParser()
+      : super(DateTime.parse, DateTime.tryParse);
 }
 
 /// An attribute value parser for [bool] values.
 class BoolAttributeValueParser extends XmlAttributeValueParser<bool> {
-  BoolAttributeValueParser() : super(parseBool, tryParseBool);
+  const BoolAttributeValueParser() : super(parseBool, tryParseBool);
 
   /// Parses [value] into [bool].
   ///

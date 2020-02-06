@@ -21,16 +21,16 @@ class PropertyParser extends XmlElementParser<JUnitProperty> {
     final valuesMap = getAttributes(xmlElement);
 
     return JUnitProperty(
-      name: valuesMap['name'],
-      value: valuesMap['value'],
+      name: ValueParsers.string.parse(valuesMap['name']),
+      value: ValueParsers.string.parse(valuesMap['value']),
     );
   }
 
   @override
   bool validate(xml.XmlElement xmlElement) {
     return checkAttributes(xmlElement, {
-      'name': StringAttributeValueParser(),
-      'value': StringAttributeValueParser(),
+      'name': ValueParsers.string,
+      'value': ValueParsers.string,
     });
   }
 }

@@ -65,4 +65,9 @@ class JUnitTestCase extends Equatable {
         systemOut,
         systemErr,
       ];
+
+  @override
+  String toString() {
+    return '$runtimeType $props';
+  }
 }

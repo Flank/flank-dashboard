@@ -1,35 +1,39 @@
 import 'package:guardian/utils/junit_xml/junit_xml.dart';
 import 'package:test/test.dart';
+import 'package:xml/xml.dart';
 
+import '../test_utils/xml_string_builder_util.dart';
 import '../test_utils/xml_string_parse_util.dart';
 
 void main() {
   group('TestSuitesParser', () {
     final parser = TestSuitesParser();
 
-    test('parse() should parse empty <testsuites> node', () {
-      const xml = '''
-        <?xml version='1.0' encoding='UTF-8'?>
-        <testsuites></testsuites>
-      ''';
-      final xmlElement = XmlStringParseUtil.parseXml(xml);
-      final result = parser.parse(xmlElement);
+    XmlElement emptyElement;
+    XmlElement testSuitesElement;
 
-      expect(result, equals(const JUnitTestSuites(testSuites: [])));
-    });
+    setUpAll(() {
+      emptyElement = XmlStringParseUtil.parseXml(
+        XmlStringBuilderUtil.emptyNodeXml('testsuites'),
+      );
 
-    test('parse() should parse <testsuites> node', () {
-      const xml = '''
+      testSuitesElement = XmlStringParseUtil.parseXml('''
         <?xml version='1.0' encoding='UTF-8'?>
         <testsuites tests="1" time="0.123">
           <testsuite name="RandomClass" tests="1" errors="0" failures="0" time="0.123" hostname="localhost">
             <testcase name="randomTestCase()" classname="RandomClass" time="0.123"/>
-            </testsuite>
+          </testsuite>
         </testsuites>
-      ''';
-      final xmlElement = XmlStringParseUtil.parseXml(xml);
-      final result = parser.parse(xmlElement);
+      ''');
+    });
 
+    test('mapElement() should map empty <testsuites> element', () {
+      final result = parser.mapElement(emptyElement);
+
+      expect(result, equals(const JUnitTestSuites(testSuites: [])));
+    });
+
+    test('mapElement() should map <testsuites> element', () {
       const expected = JUnitTestSuites(
         tests: 1,
         time: 0.123,
@@ -51,6 +55,9 @@ void main() {
           ),
         ],
       );
+
+      final result = parser.mapElement(testSuitesElement);
+
       expect(result, equals(expected));
     });
   });

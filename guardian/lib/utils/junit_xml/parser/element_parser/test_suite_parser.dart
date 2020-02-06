@@ -10,17 +10,18 @@ class TestSuiteParser extends XmlElementParser<JUnitTestSuite> {
     final valuesMap = getAttributes(xmlElement);
 
     return JUnitTestSuite(
-      name: valuesMap['name'],
-      tests: IntAttributeValueParser().parse(valuesMap['tests']),
-      disabled: IntAttributeValueParser().tryParse(valuesMap['disabled']),
-      failures: IntAttributeValueParser().parse(valuesMap['failures']),
-      errors: IntAttributeValueParser().parse(valuesMap['errors']),
-      flakes: IntAttributeValueParser().tryParse(valuesMap['flakes']),
-      skipped: IntAttributeValueParser().tryParse(valuesMap['skipped']),
-      time: DoubleAttributeValueParser().parse(valuesMap['time']),
-      timestamp: DateTimeAttributeValueParser().tryParse(valuesMap['timestamp']),
-      hostname: valuesMap['hostname'],
-      testLabExecutionId: valuesMap['testLabExecutionId'],
+      name: ValueParsers.string.parse(valuesMap['name']),
+      tests: ValueParsers.int.parse(valuesMap['tests']),
+      disabled: ValueParsers.int.tryParse(valuesMap['disabled']),
+      failures: ValueParsers.int.parse(valuesMap['failures']),
+      errors: ValueParsers.int.parse(valuesMap['errors']),
+      flakes: ValueParsers.int.tryParse(valuesMap['flakes']),
+      skipped: ValueParsers.int.tryParse(valuesMap['skipped']),
+      time: ValueParsers.double.parse(valuesMap['time']),
+      timestamp: ValueParsers.dateTime.tryParse(valuesMap['timestamp']),
+      hostname: ValueParsers.string.parse(valuesMap['hostname']),
+      testLabExecutionId:
+          ValueParsers.string.tryParse(valuesMap['testLabExecutionId']),
       properties: parseChild(PropertiesParser(), xmlElement),
       testCases: parseChildren(TestCaseParser(), xmlElement),
       systemOut: parseChild(SystemOutParser(), xmlElement),
@@ -38,12 +39,12 @@ class TestSuiteParser extends XmlElementParser<JUnitTestSuite> {
         systemErrSingle &&
         propertiesSingle &&
         checkAttributes(xmlElement, {
-          'name': StringAttributeValueParser(),
-          'tests': IntAttributeValueParser(),
-          'errors': IntAttributeValueParser(),
-          'failures': IntAttributeValueParser(),
-          'time': DoubleAttributeValueParser(),
-          'hostname': StringAttributeValueParser(),
+          'name': ValueParsers.string,
+          'tests': ValueParsers.int,
+          'errors': ValueParsers.int,
+          'failures': ValueParsers.int,
+          'time': ValueParsers.double,
+          'hostname': ValueParsers.string,
         });
   }
 }

@@ -6,23 +6,38 @@ import '../test_utils/xml_string_parse_util.dart';
 
 void main() {
   group('XmlElementParser', () {
+    final parserStub = XmlElementParserTestbed();
+
     XmlElement xmlElement;
+    XmlElement singleNestedNodeElement;
+    XmlElement noNestedNodesElement;
 
     setUpAll(() {
-      const xml = '''
+      xmlElement = XmlStringParseUtil.parseXml('''
         <?xml version='1.0' encoding='UTF-8'?>
         <stubs count="2" type="random">
           <stub name="var1" value="1"/>
           <stub name="var2" value="two"/>
         </stubs>
-      ''';
-      xmlElement = XmlStringParseUtil.parseXml(xml);
+      ''');
+
+      singleNestedNodeElement = XmlStringParseUtil.parseXml('''
+        <?xml version='1.0' encoding='UTF-8'?>
+        <stubs count="2" type="random">
+          <stub name="var1" value="1"/>
+        </stubs>
+      ''');
+
+      noNestedNodesElement = XmlStringParseUtil.parseXml('''
+        <?xml version='1.0' encoding='UTF-8'?>
+        <stubs count="2" type="random">
+        </stubs>
+      ''');
     });
 
     test(
       'getAttributes() should return map with attributes names and values',
       () {
-        final parserStub = XmlElementParserTestbed();
         const expected = {
           'count': '2',
           'type': 'random',
@@ -37,8 +52,7 @@ void main() {
     test(
       'checkAttributes() should return false if attribute is not presented',
       () {
-        final parserStub = XmlElementParserTestbed();
-        final attributes = {
+        const attributes = {
           'name': StringAttributeValueParser(),
         };
 
@@ -51,8 +65,7 @@ void main() {
     test(
       'checkAttributes() should return false if cannot parse attribute',
       () {
-        final parserStub = XmlElementParserTestbed();
-        final attributes = {
+        const attributes = {
           'type': IntAttributeValueParser(),
         };
 
@@ -63,7 +76,21 @@ void main() {
     );
 
     test(
-      'countChildren() should count nested nodes with name specified in parser',
+      'checkAttributes() should return true if attribute is present '
+      'and can be parsed',
+      () {
+        const attributes = {
+          'type': StringAttributeValueParser(),
+        };
+
+        final result = parserStub.checkAttributes(xmlElement, attributes);
+
+        expect(result, isTrue);
+      },
+    );
+
+    test(
+      'countChildren() should count nested elements with name specified in parser',
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -74,15 +101,13 @@ void main() {
     );
 
     test('validate() should return true by default', () {
-      final parserStub = XmlElementParserTestbed();
-
       final result = parserStub.validate(xmlElement);
 
       expect(result, isTrue);
     });
 
     test(
-      'parseChildren() should parse nested nodes with name specified in parser',
+      'parseChildren() should parse nested elements with name specified in parser',
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -93,8 +118,23 @@ void main() {
     );
 
     test(
-      'parseChild() should should throw StateError if there are more than '
-      'one nested node matching given name',
+      'parseChildren() should return empty list if there are no nested elements '
+      'with name specified in parser',
+      () {
+        final parserStub = XmlElementParserTestbed('stub');
+
+        final result = parserStub.parseChildren(
+          parserStub,
+          noNestedNodesElement,
+        );
+
+        expect(result, isEmpty);
+      },
+    );
+
+    test(
+      'parseChild() should throw StateError if there are more than '
+      'one nested element matching given name',
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -106,19 +146,13 @@ void main() {
     );
 
     test(
-      'parseChild() should parse single nested node '
+      'parseChild() should parse single nested element '
       'with name specified in parser',
       () {
-        const xml = '''
-          <?xml version='1.0' encoding='UTF-8'?>
-          <stubs count="2" type="random">
-            <stub name="var1" value="1"/>
-          </stubs>
-        ''';
-        final xmlElement = XmlStringParseUtil.parseXml(xml);
         final parserStub = XmlElementParserTestbed('stub');
 
-        final result = parserStub.parseChild(parserStub, xmlElement);
+        final result =
+            parserStub.parseChild(parserStub, singleNestedNodeElement);
 
         expect(result, isNotNull);
       },

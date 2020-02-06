@@ -1,12 +1,30 @@
 import 'package:guardian/utils/junit_xml/junit_xml.dart';
+import 'package:test/test.dart';
+import 'package:xml/xml.dart';
 
-import '../test_utils/xml_element_text_parser_group.dart';
+import '../test_utils/xml_string_builder_util.dart';
+import '../test_utils/xml_string_parse_util.dart';
 
 void main() {
-  xmlElementTextParserGroup<JUnitTestCaseSkipped>(
-    'TestCaseSkippedParser',
-    'skipped',
-    () => TestCaseSkippedParser(),
-    (text) => JUnitTestCaseSkipped(text: text),
-  );
+  group('TestCaseSkippedParser', () {
+    const text = 'Random test case skipped';
+
+    final parser = TestCaseSkippedParser();
+
+    XmlElement element;
+
+    setUpAll(() {
+      element = XmlStringParseUtil.parseXml(
+        XmlStringBuilderUtil.textNodeXml('skipped', text),
+      );
+    });
+
+    test('mapElement() should map <skipped> element', () {
+      const expected = JUnitTestCaseSkipped(text: text);
+
+      final result = parser.mapElement(element);
+
+      expect(result, equals(expected));
+    });
+  });
 }

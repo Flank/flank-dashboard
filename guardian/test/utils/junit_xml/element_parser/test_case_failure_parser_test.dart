@@ -1,12 +1,30 @@
 import 'package:guardian/utils/junit_xml/junit_xml.dart';
+import 'package:test/test.dart';
+import 'package:xml/xml.dart';
 
-import '../test_utils/xml_element_text_parser_group.dart';
+import '../test_utils/xml_string_builder_util.dart';
+import '../test_utils/xml_string_parse_util.dart';
 
 void main() {
-  xmlElementTextParserGroup<JUnitTestCaseFailure>(
-    'TestCaseFailureParser',
-    'failure',
-    () => TestCaseFailureParser(),
-    (text) => JUnitTestCaseFailure(text: text),
-  );
+  group('TestCaseFailureParser', () {
+    const text = 'Random test case failure';
+
+    final parser = TestCaseFailureParser();
+
+    XmlElement element;
+
+    setUpAll(() {
+      element = XmlStringParseUtil.parseXml(
+        XmlStringBuilderUtil.textNodeXml('failure', text),
+      );
+    });
+
+    test('mapElement() should map <failure> element', () {
+      const expected = JUnitTestCaseFailure(text: text);
+
+      final result = parser.mapElement(element);
+
+      expect(result, equals(expected));
+    });
+  });
 }

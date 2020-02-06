@@ -10,11 +10,11 @@ class TestCaseParser extends XmlElementParser<JUnitTestCase> {
     final valuesMap = getAttributes(xmlElement);
 
     return JUnitTestCase(
-      name: valuesMap['name'],
-      classname: valuesMap['classname'],
-      assertions: IntAttributeValueParser().tryParse(valuesMap['assertions']),
-      time: DoubleAttributeValueParser().tryParse(valuesMap['time']),
-      flaky: BoolAttributeValueParser().tryParse(valuesMap['flaky']),
+      name: ValueParsers.string.tryParse(valuesMap['name']),
+      classname: ValueParsers.string.tryParse(valuesMap['classname']),
+      assertions: ValueParsers.int.tryParse(valuesMap['assertions']),
+      time: ValueParsers.double.tryParse(valuesMap['time']),
+      flaky: ValueParsers.bool.tryParse(valuesMap['flaky']),
       failures: parseChildren(TestCaseFailureParser(), xmlElement),
       errors: parseChildren(TestCaseErrorParser(), xmlElement),
       skipped: parseChild(TestCaseSkippedParser(), xmlElement),

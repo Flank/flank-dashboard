@@ -1,66 +1,72 @@
 import 'package:guardian/utils/junit_xml/junit_xml.dart';
 import 'package:test/test.dart';
+import 'package:xml/xml.dart';
 
+import '../test_utils/xml_string_builder_util.dart';
 import '../test_utils/xml_string_parse_util.dart';
 
 void main() {
   group('PropertiesParser', () {
     final parser = PropertiesParser();
 
-    test('parse() should parse empty node as empty list of properties', () {
-      const xml = '''
-        <?xml version='1.0' encoding='UTF-8'?>
-        <properties/>
-      ''';
-      final xmlElement = XmlStringParseUtil.parseXml(xml);
-      final result = parser.parse(xmlElement);
+    XmlElement propertiesElement;
 
-      expect(result, isEmpty);
-    });
-
-    test('parse() should parse list of properties', () {
-      const xml = '''
+    setUpAll(() {
+      propertiesElement = XmlStringParseUtil.parseXml('''
         <?xml version='1.0' encoding='UTF-8'?>
         <properties>
           <property name="var1" value="1"/>
           <property name="var2" value="2"/>
         </properties>
-      ''';
-      final xmlElement = XmlStringParseUtil.parseXml(xml);
-      final result = parser.parse(xmlElement);
+      ''');
+    });
 
-      final expected = List<JUnitProperty>.generate(2, (int index) {
-        final _index = index + 1;
-        return JUnitProperty(name: 'var$_index', value: '$_index');
-      });
+    test('mapElement() should map list of properties', () {
+      const expected = [
+        JUnitProperty(name: 'var1', value: '1'),
+        JUnitProperty(name: 'var2', value: '2'),
+      ];
+
+      final result = parser.mapElement(propertiesElement);
+
       expect(result, equals(expected));
     });
   });
 
   group('PropertyParser', () {
     final parser = PropertyParser();
-    test(
-      'parse() should throw FormatException on missing required attribute(s)',
-      () {
-        const xml = '''
-          <?xml version='1.0' encoding='UTF-8'?>
-          <property/>
-        ''';
-        final xmlElement = XmlStringParseUtil.parseXml(xml);
 
-        expect(() => parser.parse(xmlElement), throwsFormatException);
-      },
-    );
+    XmlElement emptyPropertyElement;
+    XmlElement propertyElement;
 
-    test('parse() should parse property', () {
-      const xml = '''
+    setUpAll(() {
+      emptyPropertyElement = XmlStringParseUtil.parseXml(
+        XmlStringBuilderUtil.emptyNodeXml('property'),
+      );
+
+      propertyElement = XmlStringParseUtil.parseXml('''
         <?xml version='1.0' encoding='UTF-8'?>
         <property name="var1" value="1"/>
-      ''';
-      final xmlElement = XmlStringParseUtil.parseXml(xml);
-      final result = parser.parse(xmlElement);
+      ''');
+    });
 
+    test('validate() should return false on missing required attribute(s)', () {
+      final result = parser.validate(emptyPropertyElement);
+
+      expect(result, isFalse);
+    });
+
+    test('validate() should return true on valid <property> element', () {
+      final result = parser.validate(propertyElement);
+
+      expect(result, isTrue);
+    });
+
+    test('mapElement() should map <property> element', () {
       const expected = JUnitProperty(name: 'var1', value: '1');
+
+      final result = parser.mapElement(propertyElement);
+
       expect(result, equals(expected));
     });
   });

@@ -47,4 +47,9 @@ class JUnitTestSuites extends Equatable {
         time,
         testSuites,
       ];
+
+  @override
+  String toString() {
+    return '$props';
+  }
 }
