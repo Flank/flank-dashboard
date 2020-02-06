@@ -16,7 +16,7 @@ class MetricsRepositoryImpl implements MetricsRepository {
     ),
     Build(
       startedAt: DateTime.now().add(const Duration(days: 2)),
-      result: BuildResult.successful,
+      result: BuildResult.failed,
       duration: const Duration(minutes: 34),
     ),
     Build(
@@ -31,7 +31,7 @@ class MetricsRepositoryImpl implements MetricsRepository {
     ),
     Build(
       startedAt: DateTime.now().add(const Duration(days: 3, hours: 5)),
-      result: BuildResult.successful,
+      result: BuildResult.failed,
       duration: const Duration(minutes: 23),
     ),
     Build(
@@ -51,8 +51,48 @@ class MetricsRepositoryImpl implements MetricsRepository {
     ),
     Build(
       startedAt: DateTime.now().add(const Duration(days: 6)),
-      result: BuildResult.successful,
+      result: BuildResult.failed,
       duration: const Duration(minutes: 15),
+    ),
+    Build(
+      startedAt: DateTime.now().add(const Duration(days: 7, hours: 5)),
+      result: BuildResult.failed,
+      duration: const Duration(minutes: 23),
+    ),
+    Build(
+      startedAt: DateTime.now().add(const Duration(days: 8)),
+      result: BuildResult.successful,
+      duration: const Duration(minutes: 7),
+    ),
+    Build(
+      startedAt: DateTime.now().add(const Duration(days: 9)),
+      result: BuildResult.successful,
+      duration: const Duration(minutes: 18),
+    ),
+    Build(
+      startedAt: DateTime.now().add(const Duration(days: 9, hours: 3)),
+      result: BuildResult.successful,
+      duration: const Duration(minutes: 18),
+    ),
+    Build(
+      startedAt: DateTime.now().add(const Duration(days: 10, hours: 3)),
+      result: BuildResult.successful,
+      duration: const Duration(minutes: 10),
+    ),
+    Build(
+      startedAt: DateTime.now().add(const Duration(days: 11)),
+      result: BuildResult.failed,
+      duration: const Duration(minutes: 23),
+    ),
+    Build(
+      startedAt: DateTime.now().add(const Duration(days: 12)),
+      result: BuildResult.successful,
+      duration: const Duration(minutes: 16),
+    ),
+    Build(
+      startedAt: DateTime.now().add(const Duration(days: 12, hours: 3)),
+      result: BuildResult.successful,
+      duration: const Duration(minutes: 14),
     ),
   ];
 

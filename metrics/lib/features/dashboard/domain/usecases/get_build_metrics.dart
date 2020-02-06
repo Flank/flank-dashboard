@@ -2,11 +2,12 @@ import 'package:metrics/core/usecases/usecase.dart';
 import 'package:metrics/features/dashboard/domain/entities/build.dart';
 import 'package:metrics/features/dashboard/domain/entities/build_metrics.dart';
 import 'package:metrics/features/dashboard/domain/entities/build_number_metric.dart';
+import 'package:metrics/features/dashboard/domain/entities/build_result_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/performance_metric.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id_param.dart';
 
-/// Use case to load the build metrics.
+/// [UseCase] to load the project metrics.
 class GetBuildMetrics implements UseCase<BuildMetrics, ProjectIdParam> {
   final MetricsRepository _repository;
 
@@ -19,10 +20,12 @@ class GetBuildMetrics implements UseCase<BuildMetrics, ProjectIdParam> {
     final averageBuildTime = _getAverageBuildTime(builds);
     final performanceMetrics = _getPerformanceMetrics(builds);
     final buildNumberMetrics = _getBuildNumberMetrics(builds);
+    final buildResultMetrics = _getBuildResultMetrics(builds);
 
     return BuildMetrics(
       buildNumberMetrics: buildNumberMetrics,
       performanceMetrics: performanceMetrics,
+      buildResultMetrics: buildResultMetrics,
       averageBuildTime: averageBuildTime,
       totalBuildNumber: builds.length,
     );
@@ -71,6 +74,17 @@ class GetBuildMetrics implements UseCase<BuildMetrics, ProjectIdParam> {
     }).toList();
 
     return buildNumberMetrics;
+  }
+
+  /// Creates the list of [BuildResultMetric]s from the list of [Build]s.
+  List<BuildResultMetric> _getBuildResultMetrics(List<Build> builds) {
+    return builds.map((build) {
+      return BuildResultMetric(
+        date: build.startedAt,
+        duration: build.duration,
+        result: build.result,
+      );
+    }).toList();
   }
 
   /// Trims the date to include only the year, month and day.

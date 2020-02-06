@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
+import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
@@ -84,4 +85,7 @@ class MetricsStoreStub implements ProjectMetricsStore {
 
   @override
   int get totalBuildNumber => null;
+
+  @override
+  List<BuildResultBarData> get projectBuildResultMetric => [];
 }
