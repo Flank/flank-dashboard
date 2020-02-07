@@ -1,5 +1,6 @@
 import 'package:metrics/features/dashboard/domain/entities/build_metrics.dart';
 import 'package:metrics/features/dashboard/domain/entities/build_number_metric.dart';
+import 'package:metrics/features/dashboard/domain/entities/build_result_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
 import 'package:metrics/features/dashboard/domain/entities/performance_metric.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dart';
@@ -13,6 +14,7 @@ void main() {
   const projectIdParam = ProjectIdParam(projectId: projectId);
   const GetCoverageTestbed getCoverage = GetCoverageTestbed();
   const GetBuildMetricsTestbed getBuildMetrics = GetBuildMetricsTestbed();
+  BuildMetrics expectedBuildMetrics;
 
   ProjectMetricsStore projectMetricsStore;
 
@@ -22,9 +24,47 @@ void main() {
       getBuildMetrics,
     );
 
+    expectedBuildMetrics = await getBuildMetrics(projectIdParam);
     await projectMetricsStore.getCoverage(projectId);
     await projectMetricsStore.getBuildMetrics(projectId);
   });
+
+  test(
+    "Creates empty performance, build result and build number metrics from empty BuildMetrics",
+    () async {
+      final getEmptyBuildMetrics = GetEmptyBuildMetricsTestbed();
+
+      final projectMetricsStore = ProjectMetricsStore(
+        getCoverage,
+        getEmptyBuildMetrics,
+      );
+
+      await projectMetricsStore.getBuildMetrics(projectId);
+
+      expect(projectMetricsStore.projectBuildResultMetrics, isEmpty);
+      expect(projectMetricsStore.projectPerformanceMetrics, isEmpty);
+      expect(projectMetricsStore.projectBuildNumberMetrics, isEmpty);
+    },
+  );
+
+  test(
+    "Does not throws an exception when the BuildMetrics is null",
+    () async {
+      final getNullBuildMetrics = GetNullBuildMetricsTestbed();
+      final projectMetricsStore = ProjectMetricsStore(
+        getCoverage,
+        getNullBuildMetrics,
+      );
+
+      await projectMetricsStore.getBuildMetrics(projectId);
+
+      expect(projectMetricsStore.totalBuildNumber, isNull);
+      expect(projectMetricsStore.averageBuildTime, isNull);
+      expect(projectMetricsStore.projectBuildNumberMetrics, isNull);
+      expect(projectMetricsStore.projectBuildResultMetrics, isNull);
+      expect(projectMetricsStore.projectPerformanceMetrics, isNull);
+    },
+  );
 
   test("Throws an assert if one of the use cases is null", () {
     final assertionMatcher = throwsA(const TypeMatcher<AssertionError>());
@@ -47,7 +87,6 @@ void main() {
   });
 
   test("Loads the build number metrics", () async {
-    final expectedBuildMetrics = await getBuildMetrics(projectIdParam);
     final expectedBuildNumberMetrics = expectedBuildMetrics.buildNumberMetrics;
     final expectedBuildNumberMetric = expectedBuildNumberMetrics.first;
 
@@ -73,7 +112,6 @@ void main() {
   });
 
   test('Loads the performance metrics', () async {
-    final expectedBuildMetrics = await getBuildMetrics(projectIdParam);
     final expectedPerformanceMetrics = expectedBuildMetrics.performanceMetrics;
     final expectedPerformanceMetric = expectedPerformanceMetrics.first;
 
@@ -94,6 +132,29 @@ void main() {
     expect(
       performanceMetric.y,
       expectedPerformanceMetric.duration.inMilliseconds,
+    );
+  });
+
+  test('Loads the build result metrics', () async {
+    final expectedBuildResultMetrics = expectedBuildMetrics.buildResultMetrics;
+    final expectedBuildResultMetric = expectedBuildResultMetrics.first;
+
+    final buildResultMetrics = projectMetricsStore.projectBuildResultMetrics;
+    final buildResultMetric = buildResultMetrics.first;
+
+    expect(buildResultMetrics.length, expectedBuildResultMetrics.length);
+
+    expect(
+      buildResultMetric.value,
+      expectedBuildResultMetric.duration.inMilliseconds,
+    );
+    expect(
+      buildResultMetric.result,
+      expectedBuildResultMetric.result,
+    );
+    expect(
+      buildResultMetric.url,
+      expectedBuildResultMetric.url,
     );
   });
 }
@@ -121,6 +182,13 @@ class GetBuildMetricsTestbed implements GetBuildMetrics {
       BuildNumberMetric(date: DateTime.now(), numberOfBuilds: 1),
     ],
     averageBuildTime: const Duration(minutes: 3),
+    buildResultMetrics: [
+      BuildResultMetric(
+        date: DateTime.now(),
+        duration: const Duration(minutes: 14),
+        url: 'some url',
+      ),
+    ],
     totalBuildNumber: 1,
   );
 
@@ -129,5 +197,19 @@ class GetBuildMetricsTestbed implements GetBuildMetrics {
   @override
   Future<BuildMetrics> call(ProjectIdParam param) {
     return Future.value(_buildMetrics);
+  }
+}
+
+class GetEmptyBuildMetricsTestbed implements GetBuildMetrics {
+  @override
+  Future<BuildMetrics> call(ProjectIdParam param) {
+    return Future.value(BuildMetrics());
+  }
+}
+
+class GetNullBuildMetricsTestbed implements GetBuildMetrics {
+  @override
+  Future<BuildMetrics> call(ProjectIdParam param) {
+    return Future.value(null);
   }
 }

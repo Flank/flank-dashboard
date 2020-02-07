@@ -73,6 +73,30 @@ void main() {
       expect(firstBuildMetric.date, buildStartDate);
       expect(firstBuildMetric.numberOfBuilds, numberOfBuilds);
     });
+
+    test('Properly loads the build result metrics', () {
+      final buildResultMetrics = buildMetrics.buildResultMetrics;
+
+      final firstBuildResultMetric = buildResultMetrics.first;
+      final firstBuild = projectBuilds.first;
+
+      expect(firstBuildResultMetric.result, firstBuild.result);
+      expect(firstBuildResultMetric.duration, firstBuild.duration);
+      expect(firstBuildResultMetric.date, firstBuild.startedAt);
+      expect(firstBuildResultMetric.url, firstBuild.url);
+    });
+
+    test(
+      "Loads the configured number of build results",
+      () {
+        final buildResultMetrics = buildMetrics.buildResultMetrics;
+
+        expect(
+          buildResultMetrics,
+          hasLength(lessThanOrEqualTo(GetBuildMetrics.maxNumberOfBuildResults)),
+        );
+      },
+    );
   });
 }
 
@@ -91,6 +115,9 @@ class MetricsRepositoryStubImpl implements MetricsRepository {
 
   @override
   Future<List<Build>> getProjectBuilds(String projectId) {
-    return Future.value([_build]);
+    return Future.value(List.generate(
+      GetBuildMetrics.maxNumberOfBuildResults + 1,
+      (index) => _build,
+    ));
   }
 }

@@ -16,7 +16,7 @@ void main() {
     testWidgets(
       "Contains Circle percentage with coverage",
       (WidgetTester tester) async {
-        await tester.pumpWidget(DashboardTestbed());
+        await tester.pumpWidget(const DashboardTestbed());
         await tester.pumpAndSettle();
         expect(find.byType(CirclePercentage), findsOneWidget);
       },
@@ -25,7 +25,7 @@ void main() {
     testWidgets(
       'Contains SparklineGraph widgets with performance and build metrics',
       (WidgetTester tester) async {
-        await tester.pumpWidget(DashboardTestbed());
+        await tester.pumpWidget(const DashboardTestbed());
         await tester.pumpAndSettle();
         expect(
           find.descendant(
@@ -43,16 +43,42 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      "Displays an error, occured during loading the metrics data",
+      (WidgetTester tester) async {
+        const metricsStore = MetricsStoreErrorStab();
+
+        await tester.pumpWidget(const DashboardTestbed(
+          metricsStore: metricsStore,
+        ));
+
+        await tester.pumpAndSettle();
+
+        expect(
+          find.text(
+              "An error occured during loading: ${MetricsStoreErrorStab.errorMessage}"),
+          findsOneWidget,
+        );
+      },
+    );
   });
 }
 
 class DashboardTestbed extends StatelessWidget {
+  final ProjectMetricsStore metricsStore;
+
+  const DashboardTestbed({
+    Key key,
+    this.metricsStore = const MetricsStoreStub(),
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Injector(
         inject: [
-          Inject<ProjectMetricsStore>(() => MetricsStoreStub()),
+          Inject<ProjectMetricsStore>(() => metricsStore),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>()
@@ -65,6 +91,8 @@ class DashboardTestbed extends StatelessWidget {
 }
 
 class MetricsStoreStub implements ProjectMetricsStore {
+  const MetricsStoreStub();
+
   @override
   Coverage get coverage => const Coverage(percent: 0.3);
 
@@ -88,4 +116,20 @@ class MetricsStoreStub implements ProjectMetricsStore {
 
   @override
   List<Point<int>> get projectPerformanceMetrics => [];
+}
+
+class MetricsStoreErrorStab extends MetricsStoreStub {
+  static const String errorMessage = "Unknown error";
+
+  const MetricsStoreErrorStab();
+
+  @override
+  Future<void> getCoverage(String projectId) async {
+    throw errorMessage;
+  }
+
+  @override
+  Future getBuildMetrics(String projectId) async {
+    throw errorMessage;
+  }
 }
