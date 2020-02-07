@@ -69,6 +69,7 @@ class DashboardPage extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: BuildResultBarGraph(
                           data: store.projectBuildResultMetrics,
+                          title: "Build task name",
                         ),
                       ),
                     ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/features/dashboard/presentation/model/bar_data.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
 
 typedef BarBuilder<T> = Widget Function(T data);
 
@@ -11,8 +10,6 @@ typedef BarBuilder<T> = Widget Function(T data);
 /// This [Widget] will try to fill all available space defined by
 /// it's parent constraints.
 class BarGraph<T extends BarData> extends StatelessWidget {
-  final String title;
-  final TextStyle titleStyle;
   final EdgeInsets graphPadding;
   final List<T> data;
   final BarBuilder<T> barBuilder;
@@ -21,64 +18,40 @@ class BarGraph<T extends BarData> extends StatelessWidget {
 
   /// Creates the [BarGraph].
   ///
-  /// The [title] and [data] should not be null.
+  /// The [data] should not be null.
   ///
-  /// The [title] is the text displayed above the graph.
   /// [data] is the list of data to be displayed on the graph.
   /// [graphPadding] is the padding to inset the graph.
-  /// [titleStyle] the [TextStyle] of the [title] text.
   /// [onBarTap] the [ValueChanged] callback to be called on tap on bar.
-  /// [valueFunction] it the function to get the bar value from [T].
   /// [barBuilder] the function to build the bar using the [T].
   /// [graphShapeBorder] is the border of the graph.
   const BarGraph({
     Key key,
-    @required this.title,
     @required this.data,
     @required this.barBuilder,
     this.graphShapeBorder,
     this.onBarTap,
     this.graphPadding = const EdgeInsets.all(16.0),
-    this.titleStyle,
-  })  : assert(title != null),
-        assert(data != null),
+  })  : assert(data != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: ExpandableText(
-              title,
-              style: titleStyle,
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 5,
-          child: Card(
-            shape: graphShapeBorder,
-            child: Padding(
-              padding: graphPadding,
-              child: LayoutBuilder(
-                builder: (_, constraints) {
-                  final valueUnitHeight = _calculateValueHeight(constraints);
+    return Card(
+      shape: graphShapeBorder,
+      child: Padding(
+        padding: graphPadding,
+        child: LayoutBuilder(
+          builder: (_, constraints) {
+            final valueUnitHeight = _calculateValueHeight(constraints);
 
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: _createChartBars(data, valueUnitHeight),
-                  );
-                },
-              ),
-            ),
-          ),
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: _createChartBars(data, valueUnitHeight),
+            );
+          },
         ),
-      ],
+      ),
     );
   }
 
