@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/dashboard/presentation/model/bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
-
-typedef ValueFunction<T> = num Function(T data);
 
 typedef BarBuilder<T> = Widget Function(T data);
 
@@ -11,12 +10,11 @@ typedef BarBuilder<T> = Widget Function(T data);
 ///
 /// This [Widget] will try to fill all available space defined by
 /// it's parent constraints.
-class BarGraph<T> extends StatelessWidget {
+class BarGraph<T extends BarData> extends StatelessWidget {
   final String title;
   final TextStyle titleStyle;
   final EdgeInsets graphPadding;
   final List<T> data;
-  final ValueFunction<T> valueFunction;
   final BarBuilder<T> barBuilder;
   final ValueChanged<T> onBarTap;
   final ShapeBorder graphShapeBorder;
@@ -37,7 +35,6 @@ class BarGraph<T> extends StatelessWidget {
     Key key,
     @required this.title,
     @required this.data,
-    @required this.valueFunction,
     @required this.barBuilder,
     this.graphShapeBorder,
     this.onBarTap,
@@ -90,7 +87,7 @@ class BarGraph<T> extends StatelessWidget {
     if (data == null || data.isEmpty) return 0;
 
     final maxBarValue = data
-        .map((e) => valueFunction(e))
+        .map((data) => data.value)
         .reduce((value, element) => value <= element ? element : value);
 
     final valueHeight = constraints.maxHeight / maxBarValue;
@@ -105,7 +102,7 @@ class BarGraph<T> extends StatelessWidget {
     if (data == null || data.isEmpty) return bars;
 
     for (final barData in data) {
-      final barHeight = valueFunction(barData).toDouble() * valueUnitHeight;
+      final barHeight = barData.value.toDouble() * valueUnitHeight;
 
       bars.add(
         Expanded(

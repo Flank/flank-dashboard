@@ -51,7 +51,8 @@ void main() {
     final expectedBuildNumberMetrics = expectedBuildMetrics.buildNumberMetrics;
     final expectedBuildNumberMetric = expectedBuildNumberMetrics.first;
 
-    final actualBuildNumberMetrics = projectMetricsStore.projectBuildMetric;
+    final actualBuildNumberMetrics =
+        projectMetricsStore.projectBuildNumberMetrics;
     final actualBuildNumberMetric = actualBuildNumberMetrics.first;
 
     expect(
@@ -76,7 +77,7 @@ void main() {
     final expectedPerformanceMetrics = expectedBuildMetrics.performanceMetrics;
     final expectedPerformanceMetric = expectedPerformanceMetrics.first;
 
-    final performanceMetrics = projectMetricsStore.projectPerformanceMetric;
+    final performanceMetrics = projectMetricsStore.projectPerformanceMetrics;
     final performanceMetric = performanceMetrics.first;
 
     expect(performanceMetrics.length, expectedPerformanceMetrics.length);

@@ -1,12 +1,10 @@
 import 'dart:math';
 
 import 'package:metrics/features/dashboard/domain/entities/build_metrics.dart';
-import 'package:metrics/features/dashboard/domain/entities/build_result_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_project_coverage.dart';
 import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id_param.dart';
-import 'package:metrics/features/dashboard/presentation/config/dashboard_config.dart';
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 
 /// The store for the project metrics.
@@ -15,9 +13,9 @@ import 'package:metrics/features/dashboard/presentation/model/build_result_bar_d
 class ProjectMetricsStore {
   final GetProjectCoverage _getCoverage;
   final GetBuildMetrics _getBuildMetrics;
-  List<Point<int>> _projectPerformanceMetric;
-  List<Point<int>> _projectBuildNumberMetric;
-  List<BuildResultBarData> _projectBuildResultMetric;
+  List<Point<int>> _projectPerformanceMetrics;
+  List<Point<int>> _projectBuildNumberMetrics;
+  List<BuildResultBarData> _projectBuildResultMetrics;
   BuildMetrics _buildMetrics;
   Coverage _coverage;
 
@@ -32,16 +30,16 @@ class ProjectMetricsStore {
 
   Coverage get coverage => _coverage;
 
-  List<Point<int>> get projectPerformanceMetric => _projectPerformanceMetric;
+  List<Point<int>> get projectPerformanceMetrics => _projectPerformanceMetrics;
 
-  List<Point<int>> get projectBuildMetric => _projectBuildNumberMetric;
+  List<Point<int>> get projectBuildNumberMetrics => _projectBuildNumberMetrics;
 
-  List<BuildResultBarData> get projectBuildResultMetric =>
-      _projectBuildResultMetric;
+  List<BuildResultBarData> get projectBuildResultMetrics =>
+      _projectBuildResultMetrics;
 
-  int get averageBuildTime => _buildMetrics.averageBuildTime.inMinutes;
+  int get averageBuildTime => _buildMetrics?.averageBuildTime?.inMinutes;
 
-  int get totalBuildNumber => _buildMetrics.totalBuildNumber;
+  int get totalBuildNumber => _buildMetrics?.totalBuildNumber;
 
   /// Load the coverage metric.
   Future<void> getCoverage(String projectId) async {
@@ -54,21 +52,23 @@ class ProjectMetricsStore {
       ProjectIdParam(projectId: projectId),
     );
 
+    if (_buildMetrics == null) return;
+
     _getPerformanceMetrics();
     _getBuildNumberMetrics();
     _getBuildResultMetrics();
   }
 
-  /// Creates the [_projectBuildNumberMetric] from [_buildMetrics].
+  /// Creates the [_projectBuildNumberMetrics] from [_buildMetrics].
   void _getBuildNumberMetrics() {
     final buildNumberMetrics = _buildMetrics.buildNumberMetrics ?? [];
 
     if (buildNumberMetrics.isEmpty) {
-      _projectBuildNumberMetric = [];
+      _projectBuildNumberMetrics = [];
       return;
     }
 
-    _projectBuildNumberMetric = buildNumberMetrics.map((metric) {
+    _projectBuildNumberMetrics = buildNumberMetrics.map((metric) {
       return Point(
         metric.date.millisecondsSinceEpoch,
         metric.numberOfBuilds,
@@ -76,16 +76,16 @@ class ProjectMetricsStore {
     }).toList();
   }
 
-  /// Creates the [_projectPerformanceMetric] from [_buildMetrics].
+  /// Creates the [_projectPerformanceMetrics] from [_buildMetrics].
   void _getPerformanceMetrics() {
     final performanceMetrics = _buildMetrics.performanceMetrics ?? [];
 
     if (performanceMetrics.isEmpty) {
-      _projectPerformanceMetric = [];
+      _projectPerformanceMetrics = [];
       return;
     }
 
-    _projectPerformanceMetric = performanceMetrics.map((metric) {
+    _projectPerformanceMetrics = performanceMetrics.map((metric) {
       return Point(
         metric.date.millisecondsSinceEpoch,
         metric.duration.inMilliseconds,
@@ -93,23 +93,16 @@ class ProjectMetricsStore {
     }).toList();
   }
 
-  /// Creates the [_projectBuildResultMetric] from [_buildMetrics].
+  /// Creates the [_projectBuildResultMetrics] from [_buildMetrics].
   void _getBuildResultMetrics() {
-    List<BuildResultMetric> buildResults =
-        _buildMetrics.buildResultMetrics ?? [];
+    final buildResults = _buildMetrics.buildResultMetrics ?? [];
 
     if (buildResults.isEmpty) {
-      _projectBuildResultMetric = [];
+      _projectBuildResultMetrics = [];
       return;
     }
 
-    if (buildResults.length > DashboardConfig.maxNumberOfBuildResults) {
-      buildResults = buildResults.sublist(
-        buildResults.length - DashboardConfig.maxNumberOfBuildResults,
-      );
-    }
-
-    _projectBuildResultMetric = buildResults.map((result) {
+    _projectBuildResultMetrics = buildResults.map((result) {
       return BuildResultBarData(
         url: result.url,
         result: result.result,

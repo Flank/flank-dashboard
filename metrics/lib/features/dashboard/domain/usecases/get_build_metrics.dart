@@ -9,6 +9,7 @@ import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id
 
 /// [UseCase] to load the project metrics.
 class GetBuildMetrics implements UseCase<BuildMetrics, ProjectIdParam> {
+  static const int maxNumberOfBuildResults = 14;
   final MetricsRepository _repository;
 
   GetBuildMetrics(this._repository);
@@ -78,7 +79,15 @@ class GetBuildMetrics implements UseCase<BuildMetrics, ProjectIdParam> {
 
   /// Creates the list of [BuildResultMetric]s from the list of [Build]s.
   List<BuildResultMetric> _getBuildResultMetrics(List<Build> builds) {
-    return builds.map((build) {
+    List<Build> latestBuilds = builds.toList();
+
+    if (latestBuilds.length > maxNumberOfBuildResults) {
+      latestBuilds = latestBuilds.sublist(
+        latestBuilds.length - maxNumberOfBuildResults,
+      );
+    }
+
+    return latestBuilds.map((build) {
       return BuildResultMetric(
         date: build.startedAt,
         duration: build.duration,

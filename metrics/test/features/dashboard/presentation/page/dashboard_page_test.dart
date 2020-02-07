@@ -78,14 +78,14 @@ class MetricsStoreStub implements ProjectMetricsStore {
   Future getBuildMetrics(String projectId) async {}
 
   @override
-  List<Point<int>> get projectBuildMetric => [];
-
-  @override
-  List<Point<int>> get projectPerformanceMetric => [];
-
-  @override
   int get totalBuildNumber => null;
 
   @override
-  List<BuildResultBarData> get projectBuildResultMetric => [];
+  List<Point<int>> get projectBuildNumberMetrics => [];
+
+  @override
+  List<BuildResultBarData> get projectBuildResultMetrics => [];
+
+  @override
+  List<Point<int>> get projectPerformanceMetrics => [];
 }

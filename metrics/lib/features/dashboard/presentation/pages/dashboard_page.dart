@@ -1,9 +1,7 @@
 import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
-import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -46,7 +44,7 @@ class DashboardPage extends StatelessWidget {
                           Flexible(
                             child: SparklineGraph(
                               title: "Performance",
-                              data: store.projectPerformanceMetric,
+                              data: store.projectPerformanceMetrics,
                               value: '${store.averageBuildTime}M',
                               curveType: LineCurves.linear,
                               strokeColor: Colors.green,
@@ -57,7 +55,7 @@ class DashboardPage extends StatelessWidget {
                           Flexible(
                             child: SparklineGraph(
                               title: "Build",
-                              data: store.projectBuildMetric,
+                              data: store.projectBuildNumberMetrics,
                               value: '${store.totalBuildNumber}',
                               gradientColor: Colors.blue
                                   .withOpacity(_gradientColorOpacity),
@@ -69,16 +67,8 @@ class DashboardPage extends StatelessWidget {
                     Flexible(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: BarGraph(
-                          title: "Build task name",
-                          data: store.projectBuildResultMetric,
-                          valueFunction: (BuildResultBarData data) =>
-                              data.value,
-                          barBuilder: (BuildResultBarData data) {
-                            return BuildResultBar(
-                              buildResult: data,
-                            );
-                          },
+                        child: BuildResultBarGraph(
+                          data: store.projectBuildResultMetrics,
                         ),
                       ),
                     ),
