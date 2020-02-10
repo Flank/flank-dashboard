@@ -1,5 +1,10 @@
+/// A class containing result for Slack API interaction.
 class SlackResult {
+  /// Used to indicate that interaction failed.
   final bool isError;
+
+  /// Contains message with a result of interaction.
+  /// Contains error if interaction failed.
   final String message;
 
   SlackResult({
