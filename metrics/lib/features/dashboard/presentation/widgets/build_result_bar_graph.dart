@@ -5,6 +5,7 @@ import 'package:metrics/features/dashboard/presentation/model/build_result_bar_d
 import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// [BarGraph] that represents the build result metric.
 class BuildResultBarGraph extends StatelessWidget {
@@ -44,6 +45,7 @@ class BuildResultBarGraph extends StatelessWidget {
           flex: 5,
           child: BarGraph(
             data: data,
+            onBarTap: _onBarTap,
             barBuilder: (BuildResultBarData data) {
               return ColoredBar(
                 color: _getBuildResultColor(data.result),
@@ -67,5 +69,10 @@ class BuildResultBarGraph extends StatelessWidget {
       default:
         return null;
     }
+  }
+
+  /// Opens the [BuildResultBarData] url.
+  void _onBarTap(BuildResultBarData data) {
+    launch('https://google.com');
   }
 }

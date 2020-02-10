@@ -92,6 +92,7 @@ class GetBuildMetrics implements UseCase<BuildMetrics, ProjectIdParam> {
         date: build.startedAt,
         duration: build.duration,
         result: build.result,
+        url: build.url,
       );
     }).toList();
   }
