@@ -49,7 +49,7 @@ class BuildResultBarGraph extends StatelessWidget {
             barBuilder: (BuildResultBarData data) {
               return ColoredBar(
                 color: _getBuildResultColor(data.result),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(35.0),
               );
             },
           ),
