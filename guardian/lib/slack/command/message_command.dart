@@ -1,7 +1,8 @@
 import 'dart:io';
 
+import 'package:guardian/slack/client/slack_client.dart';
 import 'package:guardian/slack/command/slack_command.dart';
-import 'package:slack/io/slack.dart';
+import 'package:guardian/slack/model/slack_message.dart';
 
 class MessageCommand extends SlackCommand {
   @override
@@ -17,7 +18,7 @@ class MessageCommand extends SlackCommand {
   }
 
   @override
-  void run() {
+  Future<void> run() async {
     final url = argResults['webhookUrl'] as String;
 
     if (url == null || url.isEmpty) {
@@ -28,10 +29,11 @@ class MessageCommand extends SlackCommand {
     stdout.writeln('\nMessage body: ');
     final body = stdin.readLineSync();
 
-    final slack = Slack(url);
-    slack.send(Message(
-      body,
-      username: 'Guardian',
-    ));
+    final slack = SlackClient(webhookUrl: url);
+
+    final message = SlackMessage(text: body);
+
+    final result = await slack.sendMessage(message);
+    stdout.writeln(result);
   }
 }
