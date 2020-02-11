@@ -25,10 +25,10 @@ class SlackClient {
         body: jsonEncode(message),
       );
 
-      if (response.statusCode >= 400) {
-        return SlackResult.error('Failed to send a message: ${response.body}');
+      if (response.statusCode == 200) {
+        return SlackResult.success('Message has been sent successfully');
       } else {
-        return SlackResult.success();
+        return SlackResult.error('Failed to send a message: ${response.body}');
       }
     } catch (error) {
       return SlackResult.error('Something went wrong: $error');

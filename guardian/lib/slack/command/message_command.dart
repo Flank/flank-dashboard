@@ -34,6 +34,7 @@ class MessageCommand extends SlackCommand {
     final message = SlackMessage(text: body);
 
     final result = await slack.sendMessage(message);
-    stdout.writeln(result);
+
+    stdout.writeln(result.message);
   }
 }
