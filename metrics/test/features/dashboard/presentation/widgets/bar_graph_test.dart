@@ -76,7 +76,7 @@ void main() {
   );
 
   testWidgets(
-    'Builds all bar data in a right order',
+    'Builds all bar data from data list with the given order',
     (WidgetTester tester) async {
       await tester.pumpWidget(const BarGraphTestbed());
 
@@ -101,7 +101,7 @@ void main() {
   );
 
   testWidgets(
-    'Builds the graph bars with the right height ratio',
+    'Builds the graph bars with the height ratio equal to data value ratio',
     (WidgetTester tester) async {
       const barGraphData = [
         TestBarData(value: 1),

@@ -60,7 +60,7 @@ void main() {
       );
     });
 
-    test("Properly loads the build number metrics", () {
+    test("Loads all fields in the build number metrics", () {
       final buildStartDate = _trimToDay(firstBuild.startedAt);
 
       final numberOfBuilds = projectBuilds

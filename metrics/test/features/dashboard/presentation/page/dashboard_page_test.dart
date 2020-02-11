@@ -47,7 +47,7 @@ void main() {
     testWidgets(
       "Displays an error, occured during loading the metrics data",
       (WidgetTester tester) async {
-        const metricsStore = MetricsStoreErrorStab();
+        const metricsStore = MetricsStoreErrorStub();
 
         await tester.pumpWidget(const DashboardTestbed(
           metricsStore: metricsStore,
@@ -57,7 +57,7 @@ void main() {
 
         expect(
           find.text(
-              "An error occured during loading: ${MetricsStoreErrorStab.errorMessage}"),
+              "An error occured during loading: ${MetricsStoreErrorStub.errorMessage}"),
           findsOneWidget,
         );
       },
@@ -118,10 +118,10 @@ class MetricsStoreStub implements ProjectMetricsStore {
   List<Point<int>> get projectPerformanceMetrics => [];
 }
 
-class MetricsStoreErrorStab extends MetricsStoreStub {
+class MetricsStoreErrorStub extends MetricsStoreStub {
   static const String errorMessage = "Unknown error";
 
-  const MetricsStoreErrorStab();
+  const MetricsStoreErrorStub();
 
   @override
   Future<void> getCoverage(String projectId) async {

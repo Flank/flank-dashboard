@@ -12,6 +12,7 @@ class ColoredBar extends StatelessWidget {
   /// [padding] is the padding to inset this bar.
   /// [border] is the border decoration of this bar.
   /// [borderRadius] is the radius of the border of this bar.
+  /// [color] is the color of this bar.
   const ColoredBar({
     Key key,
     this.padding = const EdgeInsets.symmetric(horizontal: 4.0),

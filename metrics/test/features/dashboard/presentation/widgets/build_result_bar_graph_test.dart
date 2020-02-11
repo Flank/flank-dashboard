@@ -54,7 +54,7 @@ void main() {
   );
 
   testWidgets(
-    "Creates the correct number of bars",
+    "Creates the number of bars equal to the number of given BuildResultBarData",
     (WidgetTester tester) async {
       await tester.pumpWidget(const BuildResultBarGraphTestbed());
 
@@ -65,7 +65,7 @@ void main() {
   );
 
   testWidgets(
-    "Creates bars with ptoper colors",
+    "Creates bars with colors from ColorConfig corresponding to build result",
     (WidgetTester tester) async {
       await tester.pumpWidget(const BuildResultBarGraphTestbed());
 
