@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
+import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
@@ -15,7 +16,7 @@ void main() {
     testWidgets(
       "Contains Circle percentage with coverage",
       (WidgetTester tester) async {
-        await tester.pumpWidget(DashboardTestbed());
+        await tester.pumpWidget(const DashboardTestbed());
         await tester.pumpAndSettle();
         expect(find.byType(CirclePercentage), findsOneWidget);
       },
@@ -24,7 +25,7 @@ void main() {
     testWidgets(
       'Contains SparklineGraph widgets with performance and build metrics',
       (WidgetTester tester) async {
-        await tester.pumpWidget(DashboardTestbed());
+        await tester.pumpWidget(const DashboardTestbed());
         await tester.pumpAndSettle();
         expect(
           find.descendant(
@@ -42,16 +43,42 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      "Displays an error, occured during loading the metrics data",
+      (WidgetTester tester) async {
+        const metricsStore = MetricsStoreErrorStub();
+
+        await tester.pumpWidget(const DashboardTestbed(
+          metricsStore: metricsStore,
+        ));
+
+        await tester.pumpAndSettle();
+
+        expect(
+          find.text(
+              "An error occured during loading: ${MetricsStoreErrorStub.errorMessage}"),
+          findsOneWidget,
+        );
+      },
+    );
   });
 }
 
 class DashboardTestbed extends StatelessWidget {
+  final ProjectMetricsStore metricsStore;
+
+  const DashboardTestbed({
+    Key key,
+    this.metricsStore = const MetricsStoreStub(),
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Injector(
         inject: [
-          Inject<ProjectMetricsStore>(() => MetricsStoreStub()),
+          Inject<ProjectMetricsStore>(() => metricsStore),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>()
@@ -64,6 +91,8 @@ class DashboardTestbed extends StatelessWidget {
 }
 
 class MetricsStoreStub implements ProjectMetricsStore {
+  const MetricsStoreStub();
+
   @override
   Coverage get coverage => const Coverage(percent: 0.3);
 
@@ -77,11 +106,30 @@ class MetricsStoreStub implements ProjectMetricsStore {
   Future getBuildMetrics(String projectId) async {}
 
   @override
-  List<Point<int>> get projectBuildMetric => [];
-
-  @override
-  List<Point<int>> get projectPerformanceMetric => [];
-
-  @override
   int get totalBuildNumber => null;
+
+  @override
+  List<Point<int>> get projectBuildNumberMetrics => [];
+
+  @override
+  List<BuildResultBarData> get projectBuildResultMetrics => [];
+
+  @override
+  List<Point<int>> get projectPerformanceMetrics => [];
+}
+
+class MetricsStoreErrorStub extends MetricsStoreStub {
+  static const String errorMessage = "Unknown error";
+
+  const MetricsStoreErrorStub();
+
+  @override
+  Future<void> getCoverage(String projectId) async {
+    throw errorMessage;
+  }
+
+  @override
+  Future getBuildMetrics(String projectId) async {
+    throw errorMessage;
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -26,33 +27,50 @@ class DashboardPage extends StatelessWidget {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    Container(
-                      alignment: Alignment.center,
-                      height: 200.0,
-                      child: CirclePercentage(
-                        title: 'COVERAGE',
-                        value: store.coverage.percent,
-                        strokeColor: Colors.grey,
+                    Flexible(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: CirclePercentage(
+                          title: 'COVERAGE',
+                          value: store.coverage.percent,
+                          strokeColor: Colors.grey,
+                        ),
                       ),
                     ),
                     Flexible(
-                      child: SparklineGraph(
-                        title: "Performance",
-                        data: store.projectPerformanceMetric,
-                        value: '${store.averageBuildTime}M',
-                        curveType: LineCurves.linear,
-                        strokeColor: Colors.green,
-                        gradientColor:
-                            Colors.green.withOpacity(_gradientColorOpacity),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Flexible(
+                            child: SparklineGraph(
+                              title: "Performance",
+                              data: store.projectPerformanceMetrics,
+                              value: '${store.averageBuildTime}M',
+                              curveType: LineCurves.linear,
+                              strokeColor: Colors.green,
+                              gradientColor: Colors.green
+                                  .withOpacity(_gradientColorOpacity),
+                            ),
+                          ),
+                          Flexible(
+                            child: SparklineGraph(
+                              title: "Build",
+                              data: store.projectBuildNumberMetrics,
+                              value: '${store.totalBuildNumber}',
+                              gradientColor: Colors.blue
+                                  .withOpacity(_gradientColorOpacity),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Flexible(
-                      child: SparklineGraph(
-                        title: "Build",
-                        data: store.projectBuildMetric,
-                        value: '${store.totalBuildNumber}',
-                        gradientColor:
-                            Colors.blue.withOpacity(_gradientColorOpacity),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: BuildResultBarGraph(
+                          data: store.projectBuildResultMetrics,
+                          title: "Build task name",
+                        ),
                       ),
                     ),
                   ],
@@ -82,7 +100,9 @@ class DashboardPage extends StatelessWidget {
 
     Injector.getAsReactive<ProjectMetricsStore>().setState((store) async {
       await store.getCoverage(projectId);
-      return store.getBuildMetrics(projectId);
+      await store.getBuildMetrics(projectId);
+
+      return;
     });
   }
 }

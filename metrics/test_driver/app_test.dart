@@ -36,6 +36,15 @@ void main() {
           await driver.waitFor(find.byType('SparklineGraph'));
         },
       );
+
+      test(
+        'Loads the build result metrics and shows the build results widget',
+        () async{
+          await driver.waitFor(find.text('Build task name'));
+
+          await driver.waitFor(find.byType('BuildResultBarGraph'));
+        },
+      );
     },
   );
 }

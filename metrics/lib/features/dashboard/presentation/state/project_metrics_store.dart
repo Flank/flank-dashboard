@@ -5,6 +5,7 @@ import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_project_coverage.dart';
 import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id_param.dart';
+import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 
 /// The store for the project metrics.
 ///
@@ -12,8 +13,9 @@ import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id
 class ProjectMetricsStore {
   final GetProjectCoverage _getCoverage;
   final GetBuildMetrics _getBuildMetrics;
-  List<Point<int>> _projectPerformanceMetric;
-  List<Point<int>> _projectBuildNumberMetric;
+  List<Point<int>> _projectPerformanceMetrics;
+  List<Point<int>> _projectBuildNumberMetrics;
+  List<BuildResultBarData> _projectBuildResultMetrics;
   BuildMetrics _buildMetrics;
   Coverage _coverage;
 
@@ -28,36 +30,83 @@ class ProjectMetricsStore {
 
   Coverage get coverage => _coverage;
 
-  List<Point<int>> get projectPerformanceMetric => _projectPerformanceMetric;
+  List<Point<int>> get projectPerformanceMetrics => _projectPerformanceMetrics;
 
-  List<Point<int>> get projectBuildMetric => _projectBuildNumberMetric;
+  List<Point<int>> get projectBuildNumberMetrics => _projectBuildNumberMetrics;
 
-  int get averageBuildTime => _buildMetrics.averageBuildTime.inMinutes;
+  List<BuildResultBarData> get projectBuildResultMetrics =>
+      _projectBuildResultMetrics;
 
-  int get totalBuildNumber => _buildMetrics.totalBuildNumber;
+  int get averageBuildTime => _buildMetrics?.averageBuildTime?.inMinutes;
+
+  int get totalBuildNumber => _buildMetrics?.totalBuildNumber;
 
   /// Load the coverage metric.
-  Future getCoverage(String projectId) async {
+  Future<void> getCoverage(String projectId) async {
     _coverage = await _getCoverage(ProjectIdParam(projectId: projectId));
   }
 
   /// Loads the build metrics.
-  Future getBuildMetrics(String projectId) async {
+  Future<void> getBuildMetrics(String projectId) async {
     _buildMetrics = await _getBuildMetrics(
       ProjectIdParam(projectId: projectId),
     );
 
-    _projectPerformanceMetric = _buildMetrics.performanceMetrics.map((metric) {
+    if (_buildMetrics == null) return;
+
+    _getPerformanceMetrics();
+    _getBuildNumberMetrics();
+    _getBuildResultMetrics();
+  }
+
+  /// Creates the [_projectBuildNumberMetrics] from [_buildMetrics].
+  void _getBuildNumberMetrics() {
+    final buildNumberMetrics = _buildMetrics.buildNumberMetrics ?? [];
+
+    if (buildNumberMetrics.isEmpty) {
+      _projectBuildNumberMetrics = [];
+      return;
+    }
+
+    _projectBuildNumberMetrics = buildNumberMetrics.map((metric) {
+      return Point(
+        metric.date.millisecondsSinceEpoch,
+        metric.numberOfBuilds,
+      );
+    }).toList();
+  }
+
+  /// Creates the [_projectPerformanceMetrics] from [_buildMetrics].
+  void _getPerformanceMetrics() {
+    final performanceMetrics = _buildMetrics.performanceMetrics ?? [];
+
+    if (performanceMetrics.isEmpty) {
+      _projectPerformanceMetrics = [];
+      return;
+    }
+
+    _projectPerformanceMetrics = performanceMetrics.map((metric) {
       return Point(
         metric.date.millisecondsSinceEpoch,
         metric.duration.inMilliseconds,
       );
     }).toList();
+  }
 
-    _projectBuildNumberMetric = _buildMetrics.buildNumberMetrics.map((metric) {
-      return Point(
-        metric.date.millisecondsSinceEpoch,
-        metric.numberOfBuilds,
+  /// Creates the [_projectBuildResultMetrics] from [_buildMetrics].
+  void _getBuildResultMetrics() {
+    final buildResults = _buildMetrics.buildResultMetrics ?? [];
+
+    if (buildResults.isEmpty) {
+      _projectBuildResultMetrics = [];
+      return;
+    }
+
+    _projectBuildResultMetrics = buildResults.map((result) {
+      return BuildResultBarData(
+        url: result.url,
+        result: result.result,
+        value: result.duration.inMilliseconds,
       );
     }).toList();
   }
