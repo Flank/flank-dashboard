@@ -1,33 +1,26 @@
-/// A class containing result for Slack API interaction.
+/// A class containing a result for Slack API interaction.
 class SlackResult {
-  /// Used to indicate that interaction failed.
-  final bool isError;
+  /// Used to indicate that interaction is failed.
+  final bool _isError;
 
   /// Contains message with a result of interaction.
-  /// Contains error if interaction failed.
+  /// Contains error message if interaction failed.
   final String message;
 
-  SlackResult({
-    this.isError,
-    this.message,
-  });
+  bool get isError => _isError;
 
-  SlackResult.error([
-    String message,
-  ]) : this(
-          isError: true,
-          message: message,
-        );
+  bool get isSuccess => !_isError;
 
-  SlackResult.success([
-    String message,
-  ]) : this(
-          isError: false,
-          message: message,
-        );
+  SlackResult._(this._isError, this.message);
+
+  /// Creates an instance representing a failed interaction with Slack API.
+  SlackResult.error([String message]) : this._(true, message);
+
+  /// Creates an instance representing a successful interaction with Slack API.
+  SlackResult.success([String message]) : this._(false, message);
 
   @override
   String toString() {
-    return '$runtimeType {isError: $isError, message: $message}';
+    return '$runtimeType {isError: $_isError, message: $message}';
   }
 }
