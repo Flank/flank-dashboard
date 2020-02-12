@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
+import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/stability_circle_percentage.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class DashboardPage extends StatelessWidget {
-  static const double _gradientColorOpacity = 0.4;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
+      drawer: const MetricsDrawer(),
       body: SafeArea(
         child: StateBuilder<ProjectMetricsStore>(
           models: [Injector.getAsReactive<ProjectMetricsStore>()],
@@ -24,56 +26,69 @@ class DashboardPage extends StatelessWidget {
                 child: const Text("Load metrics"),
               ),
               onData: (store) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Flexible(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: CirclePercentage(
-                          title: 'COVERAGE',
-                          value: store.coverage.percent,
-                          strokeColor: Colors.grey,
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Flexible(
+                        child: Row(
+                          children: <Widget>[
+                            Flexible(
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(8.0),
+                                child: CirclePercentage(
+                                  title: 'COVERAGE',
+                                  value: store.coverage.percent,
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(8.0),
+                                child: StabilityCirclePercentage(
+                                  value: store.coverage.percent,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    Flexible(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Flexible(
-                            child: SparklineGraph(
-                              title: "Performance",
-                              data: store.projectPerformanceMetrics,
-                              value: '${store.averageBuildTime}M',
-                              curveType: LineCurves.linear,
-                              strokeColor: Colors.green,
-                              gradientColor: Colors.green
-                                  .withOpacity(_gradientColorOpacity),
+                      Flexible(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Flexible(
+                              child: SparklineGraph(
+                                title: "Performance",
+                                data: store.projectPerformanceMetrics,
+                                value: '${store.averageBuildTime}M',
+                                curveType: LineCurves.linear,
+                              ),
                             ),
-                          ),
-                          Flexible(
-                            child: SparklineGraph(
-                              title: "Build",
-                              data: store.projectBuildNumberMetrics,
-                              value: '${store.totalBuildNumber}',
-                              gradientColor: Colors.blue
-                                  .withOpacity(_gradientColorOpacity),
+                            Flexible(
+                              child: SparklineGraph(
+                                title: "Build",
+                                data: store.projectBuildNumberMetrics,
+                                value: '${store.totalBuildNumber}',
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: BuildResultBarGraph(
-                          data: store.projectBuildResultMetrics,
-                          title: "Build task name",
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: BuildResultBarGraph(
+                            data: store.projectBuildResultMetrics,
+                            title: "Build task name",
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             );

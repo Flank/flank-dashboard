@@ -14,11 +14,22 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 void main() {
   group("Dashboard configuration", () {
     testWidgets(
-      "Contains Circle percentage with coverage",
+      "Contains Circle percentage with coverage and stability",
       (WidgetTester tester) async {
         await tester.pumpWidget(const DashboardTestbed());
         await tester.pumpAndSettle();
-        expect(find.byType(CirclePercentage), findsOneWidget);
+        expect(
+          find.descendant(
+              of: find.byType(CirclePercentage),
+              matching: find.text('COVERAGE')),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+              of: find.byType(CirclePercentage),
+              matching: find.text('STABILITY')),
+          findsOneWidget,
+        );
       },
     );
 
