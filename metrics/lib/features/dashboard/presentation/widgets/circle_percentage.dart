@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
 
 /// The widget that represents the metric percent in a circular graph.
@@ -14,8 +16,10 @@ class CirclePercentage extends StatefulWidget {
   final double strokeWidth;
   final Color valueColor;
   final Color strokeColor;
+  final Color backgroundColor;
   final TextStyle titleStyle;
   final TextStyle valueStyle;
+  final double valueStrokeWidth;
 
   /// Creates the circle graph.
   ///
@@ -29,16 +33,19 @@ class CirclePercentage extends StatefulWidget {
   /// [strokeColor] the color of the graph's circle itself .
   /// [titleStyle] the [TextStyle] of the given [title].
   /// [valueStyle] the [TextStyle] of the percent text.
+  /// [backgroundColor] is the color to fill the graph.
   const CirclePercentage({
     Key key,
     @required this.title,
     @required this.value,
     this.titleStyle,
     this.valueStyle,
-    this.strokeWidth = 5.0,
+    this.strokeWidth = 2.0,
+    this.valueStrokeWidth = 5.0,
     this.padding = EdgeInsets.zero,
-    this.valueColor = Colors.blue,
-    this.strokeColor = Colors.grey,
+    this.valueColor,
+    this.strokeColor,
+    this.backgroundColor,
   })  : assert(value >= 0 && value <= 1),
         super(key: key);
 
@@ -71,7 +78,8 @@ class _CirclePercentageState extends State<CirclePercentage>
 
   @override
   Widget build(BuildContext context) {
-    final strokeWidth = widget.strokeWidth;
+    final widgetThemeData =
+        MetricsTheme.of(context).circlePercentagePrimaryTheme;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -85,11 +93,13 @@ class _CirclePercentageState extends State<CirclePercentage>
               animation: _controller,
               builder: (BuildContext context, Widget child) {
                 return CustomPaint(
-                  painter: _CirclePercentageChartPainter(
+                  painter: CirclePercentageChartPainter._(
                     percent: _controller.value,
-                    filledColor: widget.valueColor,
-                    strokeColor: widget.strokeColor,
-                    strokeWidth: strokeWidth,
+                    valueColor: _getFilledColor(widgetThemeData),
+                    strokeColor: _getStrokeColor(widgetThemeData),
+                    backgroundColor: _getBackgroundColor(widgetThemeData),
+                    strokeWidth: widget.strokeWidth,
+                    valueStrokeWidth: widget.valueStrokeWidth,
                   ),
                   child: Padding(
                     padding: initialPadding + widget.padding,
@@ -121,6 +131,18 @@ class _CirclePercentageState extends State<CirclePercentage>
     );
   }
 
+  Color _getBackgroundColor(MetricWidgetThemeData themeData) {
+    return widget.backgroundColor ?? themeData.backgroundColor;
+  }
+
+  Color _getStrokeColor(MetricWidgetThemeData themeData) {
+    return widget.strokeColor ?? themeData.accentColor;
+  }
+
+  Color _getFilledColor(MetricWidgetThemeData themeData) {
+    return widget.valueColor ?? themeData.primaryColor;
+  }
+
   EdgeInsets _getChildPadding(BoxConstraints constraints) {
     final strokeWidth = widget.strokeWidth;
 
@@ -138,18 +160,22 @@ class _CirclePercentageState extends State<CirclePercentage>
   }
 }
 
-/// Paints a [CirclePercentage]
-class _CirclePercentageChartPainter extends CustomPainter {
+/// Paints a [CirclePercentage].
+class CirclePercentageChartPainter extends CustomPainter {
   final double strokeWidth;
+  final double valueStrokeWidth;
   final double percent;
-  final Color filledColor;
+  final Color valueColor;
   final Color strokeColor;
+  final Color backgroundColor;
 
-  _CirclePercentageChartPainter({
+  CirclePercentageChartPainter._({
     this.percent,
-    this.filledColor,
+    this.valueColor,
     this.strokeWidth,
     this.strokeColor,
+    this.backgroundColor,
+    this.valueStrokeWidth,
   });
 
   @override
@@ -157,7 +183,6 @@ class _CirclePercentageChartPainter extends CustomPainter {
     final paint = Paint();
     paint
       ..color = strokeColor
-      ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
@@ -166,9 +191,19 @@ class _CirclePercentageChartPainter extends CustomPainter {
     final circleCenter = Alignment.center.alongSize(size);
     final circleRadius = diameter / 2;
 
+    if (backgroundColor != null) {
+      paint.color = backgroundColor;
+
+      canvas.drawCircle(circleCenter, circleRadius, paint);
+    }
+
+    paint.style = PaintingStyle.stroke;
+    paint.color = strokeColor;
+
     canvas.drawCircle(circleCenter, circleRadius, paint);
 
-    paint.color = filledColor;
+    paint.color = valueColor;
+    paint.strokeWidth = valueStrokeWidth;
 
     canvas.drawArc(
       Rect.fromCircle(center: circleCenter, radius: circleRadius),
@@ -180,9 +215,11 @@ class _CirclePercentageChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CirclePercentageChartPainter oldCategory) {
+  bool shouldRepaint(CirclePercentageChartPainter oldCategory) {
     return percent != oldCategory.percent ||
-        filledColor != oldCategory.filledColor ||
-        strokeWidth != oldCategory.strokeWidth;
+        valueColor != oldCategory.valueColor ||
+        strokeWidth != oldCategory.strokeWidth ||
+        backgroundColor != oldCategory.backgroundColor ||
+        valueStrokeWidth != oldCategory.valueStrokeWidth;
   }
 }

@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
@@ -14,11 +17,22 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 void main() {
   group("Dashboard configuration", () {
     testWidgets(
-      "Contains Circle percentage with coverage",
+      "Contains Circle percentage with coverage and stability",
       (WidgetTester tester) async {
         await tester.pumpWidget(const DashboardTestbed());
         await tester.pumpAndSettle();
-        expect(find.byType(CirclePercentage), findsOneWidget);
+        expect(
+          find.descendant(
+              of: find.byType(CirclePercentage),
+              matching: find.text('COVERAGE')),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+              of: find.byType(CirclePercentage),
+              matching: find.text('STABILITY')),
+          findsOneWidget,
+        );
       },
     );
 
@@ -62,15 +76,80 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      "Displays the drawer on tap on menu button",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const DashboardTestbed());
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.descendant(
+          of: find.byType(AppBar),
+          matching: find.byType(IconButton),
+        ));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(MetricsDrawer), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "Changes the widget theme on switching to dark theme in drawer",
+      (WidgetTester tester) async {
+        final themeStore = ThemeStore();
+
+        await tester.pumpWidget(DashboardTestbed(
+          themeStore: themeStore,
+        ));
+        await tester.pumpAndSettle();
+
+        final circlePercentageValueColor =
+            _getCirclePercentageValueColor(tester);
+
+        await tester.tap(find.descendant(
+          of: find.byType(AppBar),
+          matching: find.byType(IconButton),
+        ));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(CheckboxListTile));
+        await tester.pump();
+
+        final newCirclePercentageValueColor =
+            _getCirclePercentageValueColor(tester);
+
+        expect(
+          newCirclePercentageValueColor,
+          isNot(circlePercentageValueColor),
+        );
+      },
+    );
   });
+}
+
+Color _getCirclePercentageValueColor(WidgetTester tester) {
+  final circlePercentageFinder = find.descendant(
+    of: find.widgetWithText(CirclePercentage, "COVERAGE"),
+    matching: find.byType(CustomPaint),
+  );
+
+  final customPaintWidget = tester.widget<CustomPaint>(
+    circlePercentageFinder,
+  );
+
+  final painter = customPaintWidget.painter as CirclePercentageChartPainter;
+
+  return painter.valueColor;
 }
 
 class DashboardTestbed extends StatelessWidget {
   final ProjectMetricsStore metricsStore;
+  final ThemeStore themeStore;
 
   const DashboardTestbed({
     Key key,
     this.metricsStore = const MetricsStoreStub(),
+    this.themeStore,
   }) : super(key: key);
 
   @override
@@ -79,12 +158,17 @@ class DashboardTestbed extends StatelessWidget {
       home: Injector(
         inject: [
           Inject<ProjectMetricsStore>(() => metricsStore),
+          Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>()
               .setState((store) => store.getCoverage('projectId'));
+          Injector.getAsReactive<ThemeStore>()
+              .setState((store) => store.isDark = false);
         },
-        builder: (BuildContext context) => DashboardPage(),
+        builder: (BuildContext context) => MetricsThemeBuilder(
+          child: DashboardPage(),
+        ),
       ),
     );
   }

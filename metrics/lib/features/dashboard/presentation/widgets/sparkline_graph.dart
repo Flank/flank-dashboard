@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
 
 /// The widget with sparkline that represents metric.
@@ -49,8 +50,8 @@ class SparklineGraph extends StatelessWidget {
     @required this.value,
     @required this.data,
     this.curveType = LineCurves.monotone,
-    this.strokeColor = Colors.blue,
-    this.gradientColor = Colors.blue,
+    this.strokeColor,
+    this.gradientColor,
     this.graphPadding = const EdgeInsets.symmetric(vertical: 48.0),
     this.strokeWidth = 2.0,
     this.valuePadding = const EdgeInsets.all(32.0),
@@ -67,8 +68,11 @@ class SparklineGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final widgetThemeData = MetricsTheme.of(context).sparklineTheme;
+    final gradientStartColor = gradientColor ?? widgetThemeData?.accentColor;
+
     return Card(
-      color: backgroundColor,
+      color: backgroundColor ?? widgetThemeData.backgroundColor,
       shape: borderShape,
       child: Stack(
         children: <Widget>[
@@ -82,7 +86,7 @@ class SparklineGraph extends StatelessWidget {
                 curve: curveType,
                 marker: const MarkerOptions(paint: null),
                 stroke: PaintOptions.stroke(
-                  color: strokeColor,
+                  color: strokeColor ?? widgetThemeData.primaryColor,
                   strokeWidth: strokeWidth,
                 ),
                 fill: PaintOptions.fill(
@@ -91,8 +95,8 @@ class SparklineGraph extends StatelessWidget {
                     end: Alignment.bottomCenter,
                     stops: _gradientColorStops,
                     colors: [
-                      gradientColor,
-                      gradientColor.withOpacity(0.0),
+                      gradientStartColor,
+                      gradientStartColor?.withOpacity(0.0),
                     ],
                   ),
                 ),

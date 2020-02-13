@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/domain/entities/build.dart';
-import 'package:metrics/features/dashboard/presentation/config/color_config.dart';
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
@@ -65,9 +67,21 @@ void main() {
   );
 
   testWidgets(
-    "Creates bars with colors from ColorConfig corresponding to build result",
+    "Creates bars with colors from MetricsTheme corresponding to build result",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const BuildResultBarGraphTestbed());
+      const primaryColor = Colors.green;
+      const errorColor = Colors.red;
+      const cancelColor = Colors.yellow;
+
+      await tester.pumpWidget(const BuildResultBarGraphTestbed(
+        theme: MetricsThemeData(
+          buildResultTheme: BuildResultsThemeData(
+            successfulColor: primaryColor,
+            failedColor: errorColor,
+            canceledColor: cancelColor,
+          ),
+        ),
+      ));
 
       final barWidgets =
           tester.widgetList<ColoredBar>(find.byType(ColoredBar)).toList();
@@ -80,13 +94,13 @@ void main() {
 
         switch (buildResult.result) {
           case BuildResult.successful:
-            expectedBarColor = ColorConfig.accentColor;
+            expectedBarColor = primaryColor;
             break;
           case BuildResult.canceled:
-            expectedBarColor = ColorConfig.cancelColor;
+            expectedBarColor = cancelColor;
             break;
           case BuildResult.failed:
-            expectedBarColor = ColorConfig.errorColor;
+            expectedBarColor = errorColor;
             break;
         }
 
@@ -115,23 +129,28 @@ class BuildResultBarGraphTestbed extends StatelessWidget {
   final String title;
   final TextStyle titleStyle;
   final List<BuildResultBarData> data;
+  final MetricsThemeData theme;
 
   const BuildResultBarGraphTestbed({
     Key key,
     this.title = "Build result graph",
     this.data = buildResultBarTestData,
     this.titleStyle,
+    this.theme = const MetricsThemeData(),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: BuildResultBarGraph(
-            data: data,
-            title: title,
-            titleStyle: titleStyle,
+      home: MetricsTheme(
+        data: theme,
+        child: Scaffold(
+          body: Center(
+            child: BuildResultBarGraph(
+              data: data,
+              title: title,
+              titleStyle: titleStyle,
+            ),
           ),
         ),
       ),

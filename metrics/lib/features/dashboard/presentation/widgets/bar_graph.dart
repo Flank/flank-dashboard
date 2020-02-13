@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/model/bar_data.dart';
 
 typedef BarBuilder<T> = Widget Function(T data);
 
 /// Displays the bar graph with bars.
 /// built using the [barBuilder] function from [data].
-///
 ///
 /// This [Widget] will try to fill all available space defined by
 /// it's parent constraints.
@@ -15,6 +15,7 @@ class BarGraph<T extends BarData> extends StatelessWidget {
   final BarBuilder<T> barBuilder;
   final ValueChanged<T> onBarTap;
   final ShapeBorder graphShapeBorder;
+  final Color backgroundColor;
 
   /// Creates the [BarGraph].
   ///
@@ -25,6 +26,7 @@ class BarGraph<T extends BarData> extends StatelessWidget {
   /// [onBarTap] the [ValueChanged] callback to be called on tap on bar.
   /// [barBuilder] the function to build the bar using the [T].
   /// [graphShapeBorder] is the border of the graph.
+  /// [backgroundColor] is the color of graph background.
   const BarGraph({
     Key key,
     @required this.data,
@@ -32,13 +34,17 @@ class BarGraph<T extends BarData> extends StatelessWidget {
     this.graphShapeBorder,
     this.onBarTap,
     this.graphPadding = const EdgeInsets.all(16.0),
+    this.backgroundColor,
   })  : assert(data != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final widgetThemeData = MetricsTheme.of(context);
+
     return Card(
       shape: graphShapeBorder,
+      color: backgroundColor ?? widgetThemeData.barGraphBackgroundColor,
       child: Padding(
         padding: graphPadding,
         child: LayoutBuilder(

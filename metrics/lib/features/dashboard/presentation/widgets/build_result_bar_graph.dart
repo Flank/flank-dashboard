@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/domain/entities/build.dart';
-import 'package:metrics/features/dashboard/presentation/config/color_config.dart';
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
@@ -28,6 +29,8 @@ class BuildResultBarGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final widgetThemeData = MetricsTheme.of(context).buildResultTheme;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +51,7 @@ class BuildResultBarGraph extends StatelessWidget {
             onBarTap: _onBarTap,
             barBuilder: (BuildResultBarData data) {
               return ColoredBar(
-                color: _getBuildResultColor(data.result),
+                color: _getBuildResultColor(data.result, widgetThemeData),
                 borderRadius: BorderRadius.circular(35.0),
               );
             },
@@ -59,14 +62,17 @@ class BuildResultBarGraph extends StatelessWidget {
   }
 
   /// Selects the color based on [result].
-  Color _getBuildResultColor(BuildResult result) {
+  Color _getBuildResultColor(
+    BuildResult result,
+    BuildResultsThemeData themeData,
+  ) {
     switch (result) {
       case BuildResult.successful:
-        return ColorConfig.accentColor;
+        return themeData.successfulColor;
       case BuildResult.canceled:
-        return ColorConfig.cancelColor;
+        return themeData.canceledColor;
       case BuildResult.failed:
-        return ColorConfig.errorColor;
+        return themeData.failedColor;
       default:
         return null;
     }
@@ -74,6 +80,6 @@ class BuildResultBarGraph extends StatelessWidget {
 
   /// Opens the [BuildResultBarData] url.
   void _onBarTap(BuildResultBarData data) {
-    launch('https://google.com');
+    launch(data.url);
   }
 }
