@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 
 class StabilityCirclePercentage extends StatelessWidget {
   final double value;

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/dashboard/data/repositories/metrics_repository_impl.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dart';
 import 'package:metrics/features/dashboard/domain/usecases/get_project_coverage.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// Creates project stores and injects it using the [Injector] widget.

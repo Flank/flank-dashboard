@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
@@ -73,15 +75,33 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      "Displays the drawer on tap on menu button",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const DashboardTestbed());
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.descendant(
+          of: find.byType(AppBar),
+          matching: find.byType(IconButton),
+        ));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(MetricsDrawer), findsOneWidget);
+      },
+    );
   });
 }
 
 class DashboardTestbed extends StatelessWidget {
   final ProjectMetricsStore metricsStore;
+  final ThemeStore themeStore;
 
   const DashboardTestbed({
     Key key,
     this.metricsStore = const MetricsStoreStub(),
+    this.themeStore,
   }) : super(key: key);
 
   @override
@@ -90,6 +110,7 @@ class DashboardTestbed extends StatelessWidget {
       home: Injector(
         inject: [
           Inject<ProjectMetricsStore>(() => metricsStore),
+          Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>()

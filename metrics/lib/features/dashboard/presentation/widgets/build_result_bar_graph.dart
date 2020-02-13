@@ -80,6 +80,6 @@ class BuildResultBarGraph extends StatelessWidget {
 
   /// Opens the [BuildResultBarData] url.
   void _onBarTap(BuildResultBarData data) {
-    launch('https://google.com');
+    launch(data.url);
   }
 }

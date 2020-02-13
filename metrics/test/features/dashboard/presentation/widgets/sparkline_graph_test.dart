@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 
@@ -227,6 +230,32 @@ void main() {
       expect(chartLine.stroke.strokeWidth, strokeWidth);
     },
   );
+
+  testWidgets(
+    "Applies colors from the theme",
+    (WidgetTester tester) async {
+      const primaryColor = Colors.orange;
+      const accentColor = Colors.orangeAccent;
+      const backgroundColor = Colors.grey;
+
+      const theme = MetricsThemeData(
+        spakrlineTheme: MetricWidgetThemeData(
+            primaryColor: primaryColor,
+            accentColor: accentColor,
+            backgroundColor: backgroundColor),
+      );
+
+      await tester.pumpWidget(const SparklineGraphTestbed(theme: theme));
+
+      final graphCardWidget = tester.widget<Card>(find.byType(Card));
+      final lineChartWidget = tester.widget<LineChart>(find.byType(LineChart));
+      final chartLine = lineChartWidget.lines.first;
+
+      expect(graphCardWidget.color, backgroundColor);
+      expect(chartLine.stroke.color, primaryColor);
+      expect(chartLine.fill.gradient.colors.first, accentColor);
+    },
+  );
 }
 
 class SparklineGraphTestbed extends StatelessWidget {
@@ -253,17 +282,19 @@ class SparklineGraphTestbed extends StatelessWidget {
   final TextStyle valueStyle;
   final LineCurve curveType;
   final double strokeWidth;
+  final MetricsThemeData theme;
 
   const SparklineGraphTestbed({
     this.title = 'Metrics',
     this.value = '10',
     this.data = sparklineGraphTestData,
-    this.strokeColor = Colors.blue,
-    this.gradientColor = Colors.blue,
     this.valuePadding = const EdgeInsets.all(32.0),
     this.padding = const EdgeInsets.all(8.0),
     this.graphPadding = EdgeInsets.zero,
     this.strokeWidth = 2.0,
+    this.theme = const MetricsThemeData(),
+    this.strokeColor,
+    this.gradientColor,
     this.borderShape,
     this.backgroundColor,
     this.titleStyle,
@@ -275,21 +306,24 @@ class SparklineGraphTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: SparklineGraph(
-          title: title,
-          data: data,
-          value: value,
-          strokeColor: strokeColor,
-          gradientColor: gradientColor,
-          backgroundColor: backgroundColor,
-          graphPadding: graphPadding,
-          borderShape: borderShape,
-          valuePadding: valuePadding,
-          padding: padding,
-          titleStyle: titleStyle,
-          valueStyle: valueStyle,
-          curveType: curveType,
-          strokeWidth: strokeWidth,
+        body: MetricsTheme(
+          data: theme,
+          child: SparklineGraph(
+            title: title,
+            data: data,
+            value: value,
+            strokeColor: strokeColor,
+            gradientColor: gradientColor,
+            backgroundColor: backgroundColor,
+            graphPadding: graphPadding,
+            borderShape: borderShape,
+            valuePadding: valuePadding,
+            padding: padding,
+            titleStyle: titleStyle,
+            valueStyle: valueStyle,
+            curveType: curveType,
+            strokeWidth: strokeWidth,
+          ),
         ),
       ),
     );

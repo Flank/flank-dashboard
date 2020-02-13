@@ -33,6 +33,7 @@ class CirclePercentage extends StatefulWidget {
   /// [strokeColor] the color of the graph's circle itself .
   /// [titleStyle] the [TextStyle] of the given [title].
   /// [valueStyle] the [TextStyle] of the percent text.
+  /// [backgroundColor] is the color to fill the graph.
   const CirclePercentage({
     Key key,
     @required this.title,
@@ -92,7 +93,7 @@ class _CirclePercentageState extends State<CirclePercentage>
               animation: _controller,
               builder: (BuildContext context, Widget child) {
                 return CustomPaint(
-                  painter: _CirclePercentageChartPainter(
+                  painter: CirclePercentageChartPainter._(
                     percent: _controller.value,
                     valueColor: _getFilledColor(widgetThemeData),
                     strokeColor: _getStrokeColor(widgetThemeData),
@@ -159,8 +160,8 @@ class _CirclePercentageState extends State<CirclePercentage>
   }
 }
 
-/// Paints a [CirclePercentage]
-class _CirclePercentageChartPainter extends CustomPainter {
+/// Paints a [CirclePercentage].
+class CirclePercentageChartPainter extends CustomPainter {
   final double strokeWidth;
   final double valueStrokeWidth;
   final double percent;
@@ -168,7 +169,7 @@ class _CirclePercentageChartPainter extends CustomPainter {
   final Color strokeColor;
   final Color backgroundColor;
 
-  _CirclePercentageChartPainter({
+  CirclePercentageChartPainter._({
     this.percent,
     this.valueColor,
     this.strokeWidth,
@@ -214,7 +215,7 @@ class _CirclePercentageChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CirclePercentageChartPainter oldCategory) {
+  bool shouldRepaint(CirclePercentageChartPainter oldCategory) {
     return percent != oldCategory.percent ||
         valueColor != oldCategory.valueColor ||
         strokeWidth != oldCategory.strokeWidth;

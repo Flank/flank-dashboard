@@ -7,6 +7,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 
 void main() {
@@ -182,6 +185,66 @@ void main() {
         expect(firstWidgetSize, secondWidgetSize);
       },
     );
+
+    testWidgets(
+      "Applies colors from the theme",
+      (WidgetTester tester) async {
+        const primaryColor = Colors.green;
+        const accentColor = Colors.red;
+        const backgroundColor = Colors.orange;
+
+        const theme = MetricsThemeData(
+          circlePercentagePrimaryTheme: MetricWidgetThemeData(
+            primaryColor: primaryColor,
+            accentColor: accentColor,
+            backgroundColor: backgroundColor,
+          ),
+        );
+
+        await tester.pumpWidget(const CirclePercentageTestbed(theme: theme));
+        await tester.pumpAndSettle();
+
+        final customPaintWidget = tester.widget<CustomPaint>(find.descendant(
+          of: find.byType(CirclePercentage),
+          matching: find.byType(CustomPaint),
+        ));
+
+        final percentagePainter =
+            customPaintWidget.painter as CirclePercentageChartPainter;
+
+        expect(percentagePainter.valueColor, primaryColor);
+        expect(percentagePainter.backgroundColor, backgroundColor);
+        expect(percentagePainter.strokeColor, accentColor);
+      },
+    );
+
+    testWidgets(
+      "Applies stroke, value and background colors",
+      (WidgetTester tester) async {
+        const valueColor = Colors.red;
+        const strokeColor = Colors.blue;
+        const backgroundColor = Colors.grey;
+
+        await tester.pumpWidget(const CirclePercentageTestbed(
+          valueColor: valueColor,
+          strokeColor: strokeColor,
+          backgroundColor: backgroundColor,
+        ));
+        await tester.pumpAndSettle();
+
+        final circlePercentagePaintWidget = tester.widget<CustomPaint>(
+          find.descendant(
+              of: find.byType(CirclePercentage),
+              matching: find.byType(CustomPaint)),
+        );
+        final circlePercentagePainter =
+            circlePercentagePaintWidget.painter as CirclePercentageChartPainter;
+
+        expect(circlePercentagePainter.strokeColor, strokeColor);
+        expect(circlePercentagePainter.valueColor, valueColor);
+        expect(circlePercentagePainter.backgroundColor, backgroundColor);
+      },
+    );
   });
 }
 
@@ -192,11 +255,13 @@ class CirclePercentageTestbed extends StatelessWidget {
   final double strokeWidth;
   final Color valueColor;
   final Color strokeColor;
+  final Color backgroundColor;
   final AlignmentGeometry alignment;
   final double height;
   final double width;
   final TextStyle titleStyle;
   final TextStyle valueStyle;
+  final MetricsThemeData theme;
 
   const CirclePercentageTestbed({
     Key key,
@@ -205,9 +270,11 @@ class CirclePercentageTestbed extends StatelessWidget {
     this.height,
     this.strokeWidth = 5.0,
     this.padding = EdgeInsets.zero,
-    this.valueColor = Colors.blue,
-    this.strokeColor = Colors.grey,
+    this.valueColor,
+    this.strokeColor,
+    this.backgroundColor,
     this.alignment = Alignment.center,
+    this.theme = const MetricsThemeData(),
     this.titleStyle,
     this.valueStyle,
     this.width,
@@ -217,20 +284,24 @@ class CirclePercentageTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Align(
-          alignment: alignment,
-          child: Container(
-            height: height,
-            width: width,
-            child: CirclePercentage(
-              title: title,
-              value: value,
-              strokeWidth: strokeWidth,
-              valueColor: valueColor,
-              strokeColor: strokeColor,
-              padding: padding,
-              titleStyle: titleStyle,
-              valueStyle: valueStyle,
+        body: MetricsTheme(
+          data: theme,
+          child: Align(
+            alignment: alignment,
+            child: Container(
+              height: height,
+              width: width,
+              child: CirclePercentage(
+                title: title,
+                value: value,
+                strokeWidth: strokeWidth,
+                valueColor: valueColor,
+                strokeColor: strokeColor,
+                padding: padding,
+                titleStyle: titleStyle,
+                valueStyle: valueStyle,
+                backgroundColor: backgroundColor,
+              ),
             ),
           ),
         ),
