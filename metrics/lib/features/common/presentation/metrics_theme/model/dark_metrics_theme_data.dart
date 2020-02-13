@@ -18,7 +18,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             accentColor: Colors.transparent,
             backgroundColor: Color(0x5FF44336),
           ),
-          spakrlineTheme: const MetricWidgetThemeData(
+          sparklineTheme: const MetricWidgetThemeData(
             primaryColor: Colors.green,
             accentColor: Colors.green,
           ),

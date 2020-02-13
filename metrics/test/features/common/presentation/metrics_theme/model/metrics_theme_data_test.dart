@@ -23,7 +23,7 @@ void main() {
       const themeData = MetricsThemeData(
         circlePercentagePrimaryTheme: null,
         circlePercentageAccentTheme: null,
-        spakrlineTheme: null,
+        sparklineTheme: null,
         buildResultTheme: null,
       );
 

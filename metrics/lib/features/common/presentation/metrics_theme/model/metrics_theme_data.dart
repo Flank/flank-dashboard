@@ -27,7 +27,7 @@ class MetricsThemeData {
   /// Used to create the additional color configuration
   /// for the [CirclePercentage] widget.
   ///
-  /// [spakrlineTheme] is the color theme of the [SparklineGraph].
+  /// [sparklineTheme] is the color theme of the [SparklineGraph].
   /// Used to set the default colors to the [SparklineGraph].
   ///
   /// [buildResultTheme] is the color theme for the [BuildResultBarGraph].
@@ -35,14 +35,14 @@ class MetricsThemeData {
   const MetricsThemeData({
     MetricWidgetThemeData circlePercentagePrimaryTheme,
     MetricWidgetThemeData circlePercentageAccentTheme,
-    MetricWidgetThemeData spakrlineTheme,
+    MetricWidgetThemeData sparklineTheme,
     BuildResultsThemeData buildResultTheme,
     this.barGraphBackgroundColor,
   })  : circlePercentageAccentTheme =
             circlePercentageAccentTheme ?? _defaultWidgetThemeData,
         circlePercentagePrimaryTheme =
             circlePercentagePrimaryTheme ?? _defaultWidgetThemeData,
-        sparklineTheme = spakrlineTheme ?? _defaultWidgetThemeData,
+        sparklineTheme = sparklineTheme ?? _defaultWidgetThemeData,
         buildResultTheme = buildResultTheme ??
             const BuildResultsThemeData(
               canceledColor: Colors.grey,
@@ -66,7 +66,7 @@ class MetricsThemeData {
           circlePercentagePrimaryTheme ?? this.circlePercentagePrimaryTheme,
       circlePercentageAccentTheme:
           circlePercentageAccentTheme ?? this.circlePercentageAccentTheme,
-      spakrlineTheme: sparklineTheme ?? this.sparklineTheme,
+      sparklineTheme: sparklineTheme ?? this.sparklineTheme,
       buildResultTheme: buildResultTheme ?? this.buildResultTheme,
       barGraphBackgroundColor:
           barGraphBackgroundColor ?? this.barGraphBackgroundColor,

@@ -239,7 +239,7 @@ void main() {
       const backgroundColor = Colors.grey;
 
       const theme = MetricsThemeData(
-        spakrlineTheme: MetricWidgetThemeData(
+        sparklineTheme: MetricWidgetThemeData(
             primaryColor: primaryColor,
             accentColor: accentColor,
             backgroundColor: backgroundColor),

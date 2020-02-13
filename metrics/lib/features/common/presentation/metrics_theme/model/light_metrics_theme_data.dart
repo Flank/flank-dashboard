@@ -16,7 +16,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             primaryColor: Colors.purple,
             accentColor: Colors.grey,
           ),
-          spakrlineTheme: const MetricWidgetThemeData(
+          sparklineTheme: const MetricWidgetThemeData(
             primaryColor: Colors.blue,
             accentColor: Colors.blue,
           ),
