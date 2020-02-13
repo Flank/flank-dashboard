@@ -17,18 +17,4 @@ class BuildResultsThemeData {
     this.failedColor,
     this.canceledColor,
   });
-
-  /// Creates the default light color theme of the [BuildResultBarGraph].
-  ///
-  /// Used as the default value in [MetricsThemeData].
-  const BuildResultsThemeData.light()
-      : canceledColor = Colors.grey,
-        successfulColor = Colors.teal,
-        failedColor = Colors.redAccent;
-
-  /// Creates the default dark color theme of the [BuildResultBarGraph]
-  const BuildResultsThemeData.dark()
-      : canceledColor = Colors.orange,
-        successfulColor = Colors.teal,
-        failedColor = Colors.red;
 }

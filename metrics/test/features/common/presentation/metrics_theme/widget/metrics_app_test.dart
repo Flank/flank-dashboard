@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_app.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
@@ -21,8 +23,8 @@ void main() {
   testWidgets(
     'Provides the themeData corresponding to MetricsThemeType',
     (WidgetTester tester) async {
-      const darkTheme = MetricsThemeData.dark();
-      const lightTheme = MetricsThemeData.light();
+      const darkTheme = DarkMetricsThemeData();
+      const lightTheme = LightMetricsThemeData();
 
       for (final themeType in MetricsThemeType.values) {
         await tester.pumpWidget(MetricsAppTestbed(

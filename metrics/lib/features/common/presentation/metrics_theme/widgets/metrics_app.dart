@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
@@ -22,8 +24,8 @@ class MetricsApp extends StatelessWidget {
     MetricsThemeData lightTheme,
     MetricsThemeData darkTheme,
     MetricsThemeType themeType,
-  })  : lightTheme = lightTheme ?? const MetricsThemeData.light(),
-        darkTheme = darkTheme ?? const MetricsThemeData.dark(),
+  })  : lightTheme = lightTheme ?? const LightMetricsThemeData(),
+        darkTheme = darkTheme ?? const DarkMetricsThemeData(),
         themeType = themeType ?? MetricsThemeType.light,
         super(key: key);
 

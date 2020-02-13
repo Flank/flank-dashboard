@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
@@ -30,7 +31,7 @@ class MetricsThemeTestbed extends StatelessWidget {
   const MetricsThemeTestbed({
     Key key,
     this.child = const Scaffold(),
-    this.data = const MetricsThemeData.light(),
+    this.data = const LightMetricsThemeData(),
   }) : super(key: key);
 
   @override

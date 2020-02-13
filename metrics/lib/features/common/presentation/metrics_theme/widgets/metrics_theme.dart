@@ -5,8 +5,7 @@ import 'package:metrics/features/common/presentation/metrics_theme/model/metrics
 ///
 /// Notifies the subscribed widgets to rebuild when the theme is changed.
 class MetricsTheme extends InheritedWidget {
-  static const MetricsThemeData _defaultMetricsThemeData =
-      MetricsThemeData.light();
+  static const MetricsThemeData _defaultMetricsThemeData = MetricsThemeData();
 
   final MetricsThemeData data;
 

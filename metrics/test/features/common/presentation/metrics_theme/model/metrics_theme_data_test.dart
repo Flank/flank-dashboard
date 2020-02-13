@@ -24,7 +24,7 @@ void main() {
         circlePercentagePrimaryTheme: null,
         circlePercentageAccentTheme: null,
         spakrlineTheme: null,
-        buildResultThemeData: null,
+        buildResultTheme: null,
       );
 
       expect(themeData.circlePercentagePrimaryTheme, isNotNull);

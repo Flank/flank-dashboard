@@ -75,7 +75,7 @@ void main() {
 
       await tester.pumpWidget(const BuildResultBarGraphTestbed(
         theme: MetricsThemeData(
-          buildResultThemeData: BuildResultsThemeData(
+          buildResultTheme: BuildResultsThemeData(
             successfulColor: primaryColor,
             failedColor: errorColor,
             canceledColor: cancelColor,
