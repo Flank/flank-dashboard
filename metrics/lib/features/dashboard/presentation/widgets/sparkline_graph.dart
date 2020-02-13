@@ -68,7 +68,7 @@ class SparklineGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final widgetThemeData = MetricsTheme.of(context).spakrlineTheme;
+    final widgetThemeData = MetricsTheme.of(context).sparklineTheme;
     final gradientStartColor = gradientColor ?? widgetThemeData?.accentColor;
 
     return Card(

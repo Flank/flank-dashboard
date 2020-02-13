@@ -11,7 +11,7 @@ void main() {
       const themeData = MetricsThemeData();
 
       expect(themeData.buildResultTheme, isNotNull);
-      expect(themeData.spakrlineTheme, isNotNull);
+      expect(themeData.sparklineTheme, isNotNull);
       expect(themeData.circlePercentagePrimaryTheme, isNotNull);
       expect(themeData.circlePercentageAccentTheme, isNotNull);
     },
@@ -29,7 +29,7 @@ void main() {
 
       expect(themeData.circlePercentagePrimaryTheme, isNotNull);
       expect(themeData.circlePercentageAccentTheme, isNotNull);
-      expect(themeData.spakrlineTheme, isNotNull);
+      expect(themeData.sparklineTheme, isNotNull);
       expect(themeData.buildResultTheme, isNotNull);
     },
   );
@@ -61,7 +61,7 @@ void main() {
       const themeData = MetricsThemeData();
 
       final copiedTheme = themeData.copyWith(
-        spakrlineTheme: sparklineTheme,
+        sparklineTheme: sparklineTheme,
         circlePercentageAccentTheme: circlePercentageTheme,
         circlePercentagePrimaryTheme: circlePercentageTheme,
         barGraphBackgroundColor: backgroundColor,
@@ -70,7 +70,7 @@ void main() {
 
       expect(copiedTheme.circlePercentagePrimaryTheme, circlePercentageTheme);
       expect(copiedTheme.circlePercentageAccentTheme, circlePercentageTheme);
-      expect(copiedTheme.spakrlineTheme, sparklineTheme);
+      expect(copiedTheme.sparklineTheme, sparklineTheme);
       expect(copiedTheme.buildResultTheme, buildResultsTheme);
       expect(copiedTheme.barGraphBackgroundColor, backgroundColor);
     },
@@ -88,8 +88,8 @@ void main() {
         copiedTheme.barGraphBackgroundColor,
       );
       expect(
-        themeData.spakrlineTheme,
-        copiedTheme.spakrlineTheme,
+        themeData.sparklineTheme,
+        copiedTheme.sparklineTheme,
       );
       expect(
         themeData.circlePercentagePrimaryTheme,

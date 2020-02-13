@@ -37,6 +37,6 @@ class MetricsTheme extends InheritedWidget {
         oldData.circlePercentageAccentTheme !=
             data.circlePercentageAccentTheme ||
         oldData.buildResultTheme != data.buildResultTheme ||
-        oldData.spakrlineTheme != data.spakrlineTheme;
+        oldData.sparklineTheme != data.sparklineTheme;
   }
 }

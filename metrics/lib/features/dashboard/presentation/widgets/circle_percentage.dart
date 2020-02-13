@@ -218,6 +218,8 @@ class CirclePercentageChartPainter extends CustomPainter {
   bool shouldRepaint(CirclePercentageChartPainter oldCategory) {
     return percent != oldCategory.percent ||
         valueColor != oldCategory.valueColor ||
-        strokeWidth != oldCategory.strokeWidth;
+        strokeWidth != oldCategory.strokeWidth ||
+        backgroundColor != oldCategory.backgroundColor ||
+        valueStrokeWidth != oldCategory.valueStrokeWidth;
   }
 }

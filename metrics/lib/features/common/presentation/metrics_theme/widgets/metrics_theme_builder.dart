@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_app.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// Widget to rebuild the [MetricsApp] when the [ThemeStore] is changed.
 class MetricsThemeBuilder extends StatelessWidget {
+  final MetricsThemeData lightTheme;
+  final MetricsThemeData darkTheme;
   final Widget child;
 
   /// Creates the [MetricsThemeBuilder].
@@ -13,7 +18,11 @@ class MetricsThemeBuilder extends StatelessWidget {
   const MetricsThemeBuilder({
     Key key,
     this.child,
-  }) : super(key: key);
+    MetricsThemeData lightTheme,
+    MetricsThemeData darkTheme,
+  })  : lightTheme = lightTheme ?? const LightMetricsThemeData(),
+        darkTheme = darkTheme ?? const DarkMetricsThemeData(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +31,8 @@ class MetricsThemeBuilder extends StatelessWidget {
       builderWithChild: (_, themeStore, child) {
         final themeSnapshot = themeStore.snapshot.data as ThemeStore;
 
-        return MetricsApp(
-          themeType: _getThemeType(themeSnapshot),
+        return MetricsTheme(
+          data: _getThemeData(themeSnapshot),
           child: child,
         );
       },
@@ -32,11 +41,9 @@ class MetricsThemeBuilder extends StatelessWidget {
   }
 
   /// Gets the [MetricsThemeType] from the [ThemeStore].
-  MetricsThemeType _getThemeType(ThemeStore themeSnapshot) {
-    if (themeSnapshot == null) return null;
+  MetricsThemeData _getThemeData(ThemeStore themeSnapshot) {
+    if (themeSnapshot == null || !themeSnapshot.isDark) return lightTheme;
 
-    if (themeSnapshot.isDark) return MetricsThemeType.dark;
-
-    return MetricsThemeType.light;
+    return darkTheme;
   }
 }

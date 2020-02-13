@@ -12,7 +12,7 @@ class MetricsThemeData {
 
   final MetricWidgetThemeData circlePercentagePrimaryTheme;
   final MetricWidgetThemeData circlePercentageAccentTheme;
-  final MetricWidgetThemeData spakrlineTheme;
+  final MetricWidgetThemeData sparklineTheme;
   final BuildResultsThemeData buildResultTheme;
   final Color barGraphBackgroundColor;
 
@@ -42,7 +42,7 @@ class MetricsThemeData {
             circlePercentageAccentTheme ?? _defaultWidgetThemeData,
         circlePercentagePrimaryTheme =
             circlePercentagePrimaryTheme ?? _defaultWidgetThemeData,
-        spakrlineTheme = spakrlineTheme ?? _defaultWidgetThemeData,
+        sparklineTheme = spakrlineTheme ?? _defaultWidgetThemeData,
         buildResultTheme = buildResultTheme ??
             const BuildResultsThemeData(
               canceledColor: Colors.grey,
@@ -57,7 +57,7 @@ class MetricsThemeData {
   MetricsThemeData copyWith({
     MetricWidgetThemeData circlePercentagePrimaryTheme,
     MetricWidgetThemeData circlePercentageAccentTheme,
-    MetricWidgetThemeData spakrlineTheme,
+    MetricWidgetThemeData sparklineTheme,
     BuildResultsThemeData buildResultTheme,
     Color barGraphBackgroundColor,
   }) {
@@ -66,7 +66,7 @@ class MetricsThemeData {
           circlePercentagePrimaryTheme ?? this.circlePercentagePrimaryTheme,
       circlePercentageAccentTheme:
           circlePercentageAccentTheme ?? this.circlePercentageAccentTheme,
-      spakrlineTheme: spakrlineTheme ?? this.spakrlineTheme,
+      spakrlineTheme: sparklineTheme ?? this.sparklineTheme,
       buildResultTheme: buildResultTheme ?? this.buildResultTheme,
       barGraphBackgroundColor:
           barGraphBackgroundColor ?? this.barGraphBackgroundColor,
