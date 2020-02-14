@@ -26,68 +26,46 @@ class DashboardPage extends StatelessWidget {
                 child: const Text("Load metrics"),
               ),
               onData: (store) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Flexible(
-                        child: Row(
-                          children: <Widget>[
-                            Flexible(
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.all(8.0),
-                                child: CirclePercentage(
-                                  title: 'COVERAGE',
-                                  value: store.coverage.percent,
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.all(8.0),
-                                child: StabilityCirclePercentage(
-                                  value: store.coverage.percent,
-                                ),
-                              ),
-                            ),
-                          ],
+                return Center(
+                  child: Container(
+                    height: 200.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Flexible(
+                          child: CirclePercentage(
+                            title: 'COVERAGE',
+                            value: store.coverage.percent,
+                          ),
                         ),
-                      ),
-                      Flexible(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Flexible(
-                              child: SparklineGraph(
-                                title: "Performance",
-                                data: store.projectPerformanceMetrics,
-                                value: '${store.averageBuildTime}M',
-                                curveType: LineCurves.linear,
-                              ),
-                            ),
-                            Flexible(
-                              child: SparklineGraph(
-                                title: "Build",
-                                data: store.projectBuildNumberMetrics,
-                                value: '${store.totalBuildNumber}',
-                              ),
-                            ),
-                          ],
+                        Flexible(
+                          child: StabilityCirclePercentage(
+                            value: store.coverage.percent,
+                          ),
                         ),
-                      ),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        Flexible(
+                          child: SparklineGraph(
+                            title: "Performance",
+                            data: store.projectPerformanceMetrics,
+                            value: '${store.averageBuildTime}M',
+                            curveType: LineCurves.linear,
+                          ),
+                        ),
+                        Flexible(
+                          child: SparklineGraph(
+                            title: "Build",
+                            data: store.projectBuildNumberMetrics,
+                            value: '${store.totalBuildNumber}',
+                          ),
+                        ),
+                        Flexible(
                           child: BuildResultBarGraph(
                             data: store.projectBuildResultMetrics,
                             title: "Build task name",
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
