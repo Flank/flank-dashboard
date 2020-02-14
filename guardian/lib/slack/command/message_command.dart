@@ -29,7 +29,7 @@ class MessageCommand extends SlackCommand {
     stdout.writeln('\nMessage body: ');
     final body = stdin.readLineSync();
 
-    final slack = SlackClient(webhookUrl: url);
+    final slack = SlackWebhookClient(webhookUrl: url);
 
     final message = SlackMessage(text: body);
 

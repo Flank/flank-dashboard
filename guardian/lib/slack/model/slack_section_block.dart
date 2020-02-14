@@ -26,6 +26,38 @@ class SlackSectionBlock extends Equatable {
     this.fields,
   });
 
+  factory SlackSectionBlock.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
+
+    return SlackSectionBlock(
+      text: SlackTextObject.fromJson(json['text'] as Map<String, dynamic>),
+      fields: SlackTextObject.listFromJson(
+          json['fields'] as List<Map<String, dynamic>>),
+    );
+  }
+
+  static List<SlackSectionBlock> listFromJson(List<dynamic> list) {
+    return list
+        ?.map(
+            (json) => SlackSectionBlock.fromJson(json as Map<String, dynamic>))
+        ?.toList();
+  }
+
+  bool get valid {
+    final textValid = text != null && text.valid;
+    final fieldsValid = fields != null &&
+        fields.isNotEmpty &&
+        fields.every((text) => text.valid);
+
+    if (text == null) {
+      return fieldsValid;
+    } else if (fields == null) {
+      return textValid;
+    } else {
+      return textValid && fieldsValid;
+    }
+  }
+
   @override
   List<Object> get props => [text, fields];
 

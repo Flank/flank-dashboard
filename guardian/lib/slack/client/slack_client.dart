@@ -5,14 +5,14 @@ import 'package:guardian/slack/model/slack_result.dart';
 import 'package:http/http.dart';
 
 /// An adapter that makes calls to Slack API using Slack Incoming Webhooks.
-class SlackClient {
+class SlackWebhookClient {
   /// The HTTP client for making requests to Slack API.
   final Client _client;
 
   /// The Incoming Webhook URL that can be used to post messages.
   final String webhookUrl;
 
-  SlackClient({
+  SlackWebhookClient({
     this.webhookUrl,
     Client client,
   }) : _client = client ?? Client();
@@ -33,5 +33,9 @@ class SlackClient {
     } catch (error) {
       return SlackResult.error('Something went wrong: $error');
     }
+  }
+
+  void close() {
+    _client.close();
   }
 }

@@ -25,6 +25,15 @@ class SlackMessage extends Equatable {
     this.blocks,
   });
 
+  factory SlackMessage.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
+
+    return SlackMessage(
+      text: json['text'] as String,
+      blocks: SlackSectionBlock.listFromJson(json['blocks'] as List<dynamic>),
+    );
+  }
+
   @override
   List<Object> get props => [text, blocks];
 

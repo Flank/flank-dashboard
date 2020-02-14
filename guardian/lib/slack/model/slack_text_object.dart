@@ -13,6 +13,26 @@ abstract class SlackTextObject extends Equatable {
 
   const SlackTextObject(this.text);
 
+  factory SlackTextObject.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
+
+    if (json['type'] == 'plain_text') {
+      return SlackPlainTextObject.fromJson(json);
+    } else if (json['type'] == 'mrkdwn') {
+      return SlackMarkdownTextObject.fromJson(json);
+    } else {
+      return null;
+    }
+  }
+
+  static List<SlackTextObject> listFromJson(List<dynamic> list) {
+    return list
+        ?.map((json) => SlackTextObject.fromJson(json as Map<String, dynamic>))
+        ?.toList();
+  }
+
+  bool get valid => text != null && text.isNotEmpty;
+
   @override
   List<Object> get props => [text];
 
@@ -45,6 +65,15 @@ class SlackPlainTextObject extends SlackTextObject {
     this.emoji,
   }) : super(text);
 
+  factory SlackPlainTextObject.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
+
+    return SlackPlainTextObject(
+      text: json['text'] as String,
+      emoji: json['emoji'] as bool,
+    );
+  }
+
   /// Converts object into the [Map].
   ///
   /// Extends [SlackTextObject.toJson] with `type` field equals to `plain_text`.
@@ -73,6 +102,15 @@ class SlackMarkdownTextObject extends SlackTextObject {
     @required String text,
     this.verbatim,
   }) : super(text);
+
+  factory SlackMarkdownTextObject.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
+
+    return SlackMarkdownTextObject(
+      text: json['text'] as String,
+      verbatim: json['verbatim'] as bool,
+    );
+  }
 
   /// Converts object into the [Map].
   ///
