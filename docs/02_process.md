@@ -107,6 +107,15 @@ An example standup report:
 
 Team members should be in a shared Slack channel to asynchronously share information.
 
+## Dart
+
+- Follow effective dart naming guidelines
+  - https://dart.dev/guides/language/effective-dart/style
+- Follow standard directory structure for Dart
+  - https://dart.dev/guides/libraries/create-library-packages
+- Use tool folder instead of bin for private scripts
+  - https://dart.dev/tools/pub/package-layout#public-tools
+
 # Alternatives Considered
 
 > Summarize alternative designs (pros & cons)
