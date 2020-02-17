@@ -9,6 +9,12 @@ import 'package:metrics/features/dashboard/presentation/widgets/coverage_circle_
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class DashboardPage extends StatelessWidget {
+   static const String buildTaskName = 'Build task name';
+   static const String performance = 'PERFORMANCE';
+   static const String builds = 'BUILDS';
+   static const String stability = 'STABILITY';
+   static const String coverage = 'COVERAGE';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,12 +41,12 @@ class DashboardPage extends StatelessWidget {
                         Flexible(
                           child: BuildResultBarGraph(
                             data: store.projectBuildResultMetrics,
-                            title: "Build task name",
+                            title: buildTaskName,
                           ),
                         ),
                         Flexible(
                           child: SparklineGraph(
-                            title: "Performance",
+                            title: performance,
                             data: store.projectPerformanceMetrics,
                             value: '${store.averageBuildTime}M',
                             curveType: LineCurves.linear,
@@ -48,19 +54,20 @@ class DashboardPage extends StatelessWidget {
                         ),
                         Flexible(
                           child: SparklineGraph(
-                            title: "Build",
+                            title: builds,
                             data: store.projectBuildNumberMetrics,
                             value: '${store.totalBuildNumber}',
                           ),
                         ),
                         Flexible(
                           child: CirclePercentage(
-                            title: 'Stability',
+                            title: stability,
                             value: store.coverage.percent,
                           ),
                         ),
                         Flexible(
                           child: CoverageCirclePercentage(
+                            title: coverage,
                             value: store.coverage.percent,
                           ),
                         ),

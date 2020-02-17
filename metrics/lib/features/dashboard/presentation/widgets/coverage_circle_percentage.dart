@@ -3,9 +3,10 @@ import 'package:metrics/features/common/presentation/metrics_theme/widgets/metri
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 
 class CoverageCirclePercentage extends StatelessWidget {
+  final String title;
   final double value;
-
-  const CoverageCirclePercentage({Key key, @required this.value})
+  
+  const CoverageCirclePercentage({Key key, @required this.title, @required this.value})
       : super(key: key);
 
   @override
@@ -14,7 +15,7 @@ class CoverageCirclePercentage extends StatelessWidget {
         MetricsTheme.of(context).circlePercentageAccentTheme;
 
     return CirclePercentage(
-      title: 'Coverage',
+      title: title,
       value: value,
       valueColor: circlePercentageAccentTheme.primaryColor,
       strokeColor: circlePercentageAccentTheme.accentColor,
