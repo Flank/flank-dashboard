@@ -1,10 +1,10 @@
 import 'models/parser_result.dart';
 
 // eof is thus represented as a Dart string instead of an int in Golang.
+// Dart does not have a character type so each character is a string.
 const eof = '-1';
 
 /// This is a `recursive` descent parser for our basic shellword grammar.
-/// Dart does not have a character type so each character is a string.
 class Parser {
   /// Parser takes a `string` and parses out a tree of __structs__ that represent text and Expansions.
   Parser({
