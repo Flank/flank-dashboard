@@ -1,6 +1,6 @@
+import 'package:unicode/unicode.dart' as unicode;
 import 'parser.dart';
 import 'models/parser_result.dart';
-import 'package:unicode/unicode.dart' as unicode;
 
 const posixSpecialChars = [
   '!',
@@ -35,7 +35,7 @@ const escapeChar = posixEscape;
 const quoteEscapeChars = [posixEscape];
 const fieldSeperators = ['\n', '\t', ' '];
 
-// SplitPosix splits a command string into words like a posix shell would
+/// SplitPosix splits a command `string` into words like a posix shell would.
 ParserResult splitPosix(String line, [abc]) {
   var p = Parser(
       input: line,
@@ -47,7 +47,7 @@ ParserResult splitPosix(String line, [abc]) {
   return p.parse();
 }
 
-// QuotePosix returns the string such that a posix shell would parse it as a single word
+/// QuotePosix returns the `string` such that a posix shell would parse it as a single word.
 String quotePosix(String s) {
   var builder = StringBuffer();
   var needsQuotes = false;
@@ -67,6 +67,6 @@ String quotePosix(String s) {
   if (needsQuotes) {
     return '''"$builder"''';
   }
-  
+
   return builder.toString();
 }

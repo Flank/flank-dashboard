@@ -1,39 +1,27 @@
-import 'package:ShellWords/posix.dart';
+import 'package:shell_words/src/posix.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('splitPosix', () {
     test('splitPosix case 1', () {
-      expect(
-          splitPosix('true').words,
-          [
-            'true'
-          ]);
+      expect(splitPosix('true').words, ['true']);
     });
 
     test('splitPosix case 2', () {
-      expect(
-          splitPosix('simple --string "quoted"').words,
-          [
-            'simple',
-            '--string',
-            'quoted'
-          ]);
+      expect(splitPosix('simple --string "quoted"').words,
+          ['simple', '--string', 'quoted']);
     });
 
     test('splitPosix case 3', () {
-      expect(
-          splitPosix(r"""\\\""quoted" llamas 'test\''""").words,
-          [
-            r'\"quoted',
-            'llamas',
-            "test'"
-          ]);
+      expect(splitPosix(r"""\\\""quoted" llamas 'test\''""").words,
+          [r'\"quoted', 'llamas', "test'"]);
     });
 
     test('splitPosix case 4', () {
       expect(
-          splitPosix(r'''/usr/bin/bash -e -c "llamas are the \"best\" && echo 'alpacas'"''').words,
+          splitPosix(
+                  r'''/usr/bin/bash -e -c "llamas are the \"best\" && echo 'alpacas'"''')
+              .words,
           [
             '/usr/bin/bash',
             '-e',
@@ -43,62 +31,42 @@ void main() {
     });
 
     test('splitPosix case 5', () {
-      expect(
-          splitPosix(r'''"/bin"/ba'sh' -c echo\ \\\\"fo real"''').words,
-          [
-            '/bin/bash',
-            '-c',
-            r'echo \\fo real'
-          ]);
+      expect(splitPosix(r'''"/bin"/ba'sh' -c echo\ \\\\"fo real"''').words,
+          ['/bin/bash', '-c', r'echo \\fo real']);
     });
 
     test('splitPosix case 6', () {
-      expect(
-          splitPosix(r"echo 'abc'\''abc'").words,
-          [
-            'echo',
-            "abc'abc"
-          ]);
+      expect(splitPosix(r"echo 'abc'\''abc'").words, ['echo', "abc'abc"]);
     });
 
     test('splitPosix case 7', () {
-      expect(
-          splitPosix(r'echo "abc"\""abc"').words,
-          [
-            'echo',
-            'abc"abc'
-          ]);
+      expect(splitPosix(r'echo "abc"\""abc"').words, ['echo', 'abc"abc']);
     });
   });
 
-  group('quotePosix', (){
+  group('quotePosix', () {
     test('quotePosix case 1', () {
-          expect(
-              quotePosix('nothing_needed'), 'nothing_needed');
+      expect(quotePosix('nothing_needed'), 'nothing_needed');
     });
 
     test('quotePosix case 2', () {
-          expect(
-              quotePosix('/bin/bash'), '/bin/bash');
+      expect(quotePosix('/bin/bash'), '/bin/bash');
     });
 
     test('quotePosix case 3', () {
-          expect(
-              quotePosix(r'C:\bin\bash'), r'C:\\bin\\bash');
+      expect(quotePosix(r'C:\bin\bash'), r'C:\\bin\\bash');
     });
 
     test('quotePosix case 4', () {
-          expect(
-              quotePosix('this has spaces'), '"this has spaces"');
+      expect(quotePosix('this has spaces'), '"this has spaces"');
     });
 
     test('quotePosix case 5', () {
-          expect(
-              quotePosix(r'this has $pace$'), r'"this has \$pace\$"');
+      expect(quotePosix(r'this has $pace$'), r'"this has \$pace\$"');
     });
   });
 
-   group('errorCaseSplitBatch', () {
+  group('errorCaseSplitBatch', () {
     test('splitBatch case error case 1', () {
       expect(
           splitPosix(
@@ -108,18 +76,12 @@ void main() {
     });
 
     test('splitBatch case error case 2', () {
-      expect(
-          splitPosix(
-                  r'simple --string ""quo""ted"')
-              .error,
+      expect(splitPosix(r'simple --string ""quo""ted"').error,
           'Expected closing quote " at offset 26, got EOF');
     });
 
     test('splitBatch case error case 3', () {
-      expect(
-          splitPosix(
-                  r"echo ^^^^^&'")
-              .error,
+      expect(splitPosix(r"echo ^^^^^&'").error,
           "Expected closing quote ' at offset 11, got EOF");
     });
   });

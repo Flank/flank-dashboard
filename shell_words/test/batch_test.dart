@@ -1,4 +1,4 @@
-import 'package:ShellWords/batch.dart';
+import 'package:shell_words/src/batch.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -84,18 +84,12 @@ void main() {
     });
 
     test('splitBatch case error case 2', () {
-      expect(
-          splitBatch(
-                  r'simple --string ""quo""ted"')
-              .error,
+      expect(splitBatch(r'simple --string ""quo""ted"').error,
           'Expected closing quote " at offset 26, got EOF');
     });
 
     test('splitBatch case error case 3', () {
-      expect(
-          splitBatch(
-                  r"echo ^^^^^&\'")
-              .error,
+      expect(splitBatch(r"echo ^^^^^&\'").error,
           "Expected closing quote ' at offset 12, got EOF");
     });
   });
