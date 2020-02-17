@@ -10,6 +10,7 @@ import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
+import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -24,13 +25,13 @@ void main() {
         expect(
           find.descendant(
               of: find.byType(CirclePercentage),
-              matching: find.text('Coverage')),
+              matching: find.text(DashboardStrings.coverage)),
           findsOneWidget,
         );
         expect(
           find.descendant(
               of: find.byType(CirclePercentage),
-              matching: find.text('Stability')),
+              matching: find.text(DashboardStrings.coverage)),
           findsOneWidget,
         );
       },
@@ -44,14 +45,14 @@ void main() {
         expect(
           find.descendant(
             of: find.byType(SparklineGraph),
-            matching: find.text('Performance'),
+            matching: find.text(DashboardStrings.performance),
           ),
           findsOneWidget,
         );
         expect(
           find.descendant(
             of: find.byType(SparklineGraph),
-            matching: find.text('Build'),
+            matching: find.text(DashboardStrings.builds),
           ),
           findsOneWidget,
         );
@@ -70,8 +71,8 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          find.text(
-              "An error occured during loading: ${MetricsStoreErrorStub.errorMessage}"),
+          find.text(DashboardStrings.getLoadingErrorMessage(
+              '${MetricsStoreErrorStub.errorMessage}')),
           findsOneWidget,
         );
       },
@@ -129,7 +130,7 @@ void main() {
 
 Color _getCirclePercentageValueColor(WidgetTester tester) {
   final circlePercentageFinder = find.descendant(
-    of: find.widgetWithText(CirclePercentage, "Coverage"),
+    of: find.widgetWithText(CirclePercentage, DashboardStrings.coverage),
     matching: find.byType(CustomPaint),
   );
 

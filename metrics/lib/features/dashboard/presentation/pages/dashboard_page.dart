@@ -2,19 +2,14 @@ import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
+import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/coverage_circle_percentage.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class DashboardPage extends StatelessWidget {
-   static const String buildTaskName = 'Build task name';
-   static const String performance = 'PERFORMANCE';
-   static const String builds = 'BUILDS';
-   static const String stability = 'STABILITY';
-   static const String coverage = 'COVERAGE';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +24,7 @@ class DashboardPage extends StatelessWidget {
               onError: _buildLoadingErrorPlaceholder,
               onIdle: () => RaisedButton(
                 onPressed: _loadMetrics,
-                child: const Text("Load metrics"),
+                child: const Text(DashboardStrings.loadMetrics),
               ),
               onData: (store) {
                 return Center(
@@ -41,12 +36,12 @@ class DashboardPage extends StatelessWidget {
                         Flexible(
                           child: BuildResultBarGraph(
                             data: store.projectBuildResultMetrics,
-                            title: buildTaskName,
+                            title: DashboardStrings.buildTaskName,
                           ),
                         ),
                         Flexible(
                           child: SparklineGraph(
-                            title: performance,
+                            title: DashboardStrings.performance,
                             data: store.projectPerformanceMetrics,
                             value: '${store.averageBuildTime}M',
                             curveType: LineCurves.linear,
@@ -54,20 +49,19 @@ class DashboardPage extends StatelessWidget {
                         ),
                         Flexible(
                           child: SparklineGraph(
-                            title: builds,
+                            title: DashboardStrings.builds,
                             data: store.projectBuildNumberMetrics,
                             value: '${store.totalBuildNumber}',
                           ),
                         ),
                         Flexible(
                           child: CirclePercentage(
-                            title: stability,
+                            title: DashboardStrings.stability,
                             value: store.coverage.percent,
                           ),
                         ),
                         Flexible(
                           child: CoverageCirclePercentage(
-                            title: coverage,
                             value: store.coverage.percent,
                           ),
                         ),
@@ -91,7 +85,7 @@ class DashboardPage extends StatelessWidget {
 
   Widget _buildLoadingErrorPlaceholder(error) {
     return _DashboardPlaceholder(
-      text: "An error occured during loading: $error",
+      text: DashboardStrings.getLoadingErrorMessage("$error"),
     );
   }
 
