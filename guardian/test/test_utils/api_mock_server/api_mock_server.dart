@@ -13,7 +13,7 @@ abstract class ApiMockServer {
   HttpServer _server;
   StreamSubscription<HttpRequest> _requestSubscription;
 
-  /// List of available [RequestHandler]s for requests
+  /// List of available [RequestHandler]s for requests.
   List<RequestHandler> get handlers;
 
   String get url => 'http://${_server.address.host}:${_server.port}';

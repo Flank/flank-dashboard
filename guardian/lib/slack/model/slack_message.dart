@@ -25,6 +25,9 @@ class SlackMessage extends Equatable {
     this.blocks,
   });
 
+  /// Creates an instance of Slack message from decoded JSON object.
+  ///
+  /// Returns `null` if [json] is `null`.
   factory SlackMessage.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 

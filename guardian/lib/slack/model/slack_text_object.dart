@@ -13,6 +13,13 @@ abstract class SlackTextObject extends Equatable {
 
   const SlackTextObject(this.text);
 
+  /// Delegates creating text object to implementers depending on `type` of text
+  /// object from decoded JSON object.
+  ///
+  /// Delegates to [SlackPlainTextObject.fromJson] if `type` is `plain_text`
+  /// and to [SlackMarkdownTextObject.fromJson] if `mrkdwn`.
+  /// Returns `null` if [json] is `null` or if `type` is not one of:
+  /// `plain_text`, `mrkdwn`.
   factory SlackTextObject.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
@@ -25,13 +32,12 @@ abstract class SlackTextObject extends Equatable {
     }
   }
 
+  /// Creates a list of text objects from list of decoded JSON objects.
   static List<SlackTextObject> listFromJson(List<dynamic> list) {
     return list
         ?.map((json) => SlackTextObject.fromJson(json as Map<String, dynamic>))
         ?.toList();
   }
-
-  bool get valid => text != null && text.isNotEmpty;
 
   @override
   List<Object> get props => [text];
@@ -65,6 +71,10 @@ class SlackPlainTextObject extends SlackTextObject {
     this.emoji,
   }) : super(text);
 
+  /// Creates an instance of text object of `plaint_text` type from
+  /// decoded JSON object.
+  ///
+  /// Returns `null` if [json] is `null`.
   factory SlackPlainTextObject.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
@@ -103,6 +113,10 @@ class SlackMarkdownTextObject extends SlackTextObject {
     this.verbatim,
   }) : super(text);
 
+  /// Creates an instance of text object of `mrkdwn` type from
+  /// decoded JSON object.
+  ///
+  /// Returns `null` if [json] is `null`.
   factory SlackMarkdownTextObject.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 

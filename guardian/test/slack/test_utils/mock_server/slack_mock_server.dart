@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:guardian/slack/model/slack_message.dart';
 
 import '../../../test_utils/api_mock_server/api_mock_server.dart';
+import '../extensions/validate_section_block_extension.dart';
 
+/// A mock server for Slack Incoming Webhooks API.
 class SlackMockServer extends ApiMockServer {
   @override
   List<RequestHandler> get handlers => [
@@ -14,6 +16,17 @@ class SlackMockServer extends ApiMockServer {
         ),
       ];
 
+  /// Handles a 'POST' requests with [SlackMessage].
+  Future<void> _handlePost(HttpRequest request) async {
+    final slackMessage = await _messageFromRequest(request);
+
+    request.response.statusCode =
+        _validateMessage(slackMessage) ? HttpStatus.ok : HttpStatus.badRequest;
+
+    await request.response.close();
+  }
+
+  /// Transforms the [request]'s body to an instance of [SlackMessage].
   Future<SlackMessage> _messageFromRequest(HttpRequest request) async {
     if (request.contentLength == 0) {
       return null;
@@ -24,41 +37,34 @@ class SlackMockServer extends ApiMockServer {
     }
   }
 
-  String _validateMessage(SlackMessage message) {
+  /// Validates [message] from the request.
+  ///
+  /// Returns `true` if Slack Incoming Webhook API will accept the message and
+  /// `false` otherwise.
+  bool _validateMessage(SlackMessage message) {
+    // 'invalid_payload'
     if (message == null) {
-      return 'invalid_payload';
+      return false;
     }
 
     final hasText = message.text != null && message.text.isNotEmpty;
     final hasBlocks = message.blocks != null && message.blocks.isNotEmpty;
 
+    // 'invalid_payload'
     if (!hasText && !hasBlocks) {
-      return 'invalid_payload';
+      return false;
     }
 
-    if (!hasText) {
-      return 'no_text';
-    }
-
+    // 'invalid_blocks'
     if (hasBlocks && message.blocks.any((block) => !block.valid)) {
-      return 'invalid_blocks';
+      return false;
     }
 
-    return null;
-  }
-
-  Future<void> _handlePost(HttpRequest request) async {
-    final message = await _messageFromRequest(request);
-
-    final errorMessage = _validateMessage(message);
-    if (errorMessage == null) {
-      request.response.statusCode = HttpStatus.ok;
-    } else {
-      request.response
-        ..statusCode = HttpStatus.badRequest
-        ..write(errorMessage);
+    // 'no_text'
+    if (!hasText) {
+      return false;
     }
 
-    await request.response.close();
+    return true;
   }
 }

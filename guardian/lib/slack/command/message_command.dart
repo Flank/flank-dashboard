@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:guardian/slack/client/slack_client.dart';
+import 'package:guardian/slack/client/slack_webhook_client.dart';
 import 'package:guardian/slack/command/slack_command.dart';
 import 'package:guardian/slack/model/slack_message.dart';
 
@@ -12,9 +12,7 @@ class MessageCommand extends SlackCommand {
   String get description => 'Sends message to the Slack';
 
   MessageCommand() {
-    addConfigOptionByNames([
-      'webhookUrl',
-    ]);
+    addConfigOptionByNames(['webhookUrl']);
   }
 
   @override
@@ -36,5 +34,7 @@ class MessageCommand extends SlackCommand {
     final result = await slack.sendMessage(message);
 
     stdout.writeln(result.message);
+
+    slack.close();
   }
 }
