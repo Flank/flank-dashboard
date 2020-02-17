@@ -53,6 +53,13 @@ Each pull request should be [connected to an issue](https://help.zenhub.com/supp
 
 Create a [Draft Pull Request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) for PRs that are still a work in progress. Draft PRs signal to reviewers that the pull request is a work in progress.
 
+## Code Reviews
+
+Pull requests are code reviewed and approved by someone other than the author before merging.
+
+- [Google code review guidelines](https://google.github.io/eng-practices/review/reviewer/)
+- [Code review best practices](https://medium.com/@schrockn/on-code-reviews-b1c7c94d868c)
+
 ## Merging Pull Requests
 
 * `Rebase and merge`
