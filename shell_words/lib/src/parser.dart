@@ -1,12 +1,20 @@
 import 'models/parser_result.dart';
 
-// This is a recursive descent parser for our basic shellword grammar.
-// Dart does not have a character type so each character is a string.
-// eof is thus represented as a Dart string instead of an int in Golang
+// eof is thus represented as a Dart string instead of an int in Golang.
 const eof = '-1';
 
-// Parser takes a string and parses out a tree of structs that represent text and Expansions
+/// This is a `recursive` descent parser for our basic shellword grammar.
+/// Dart does not have a character type so each character is a string.
 class Parser {
+  /// Parser takes a `string` and parses out a tree of __structs__ that represent text and Expansions.
+  Parser({
+    this.input,
+    this.quoteChars,
+    this.escapeChar,
+    this.quoteEscapeChars,
+    this.fieldSeperators,
+    this.pos,
+  });
   // Input is the string to parse
   String input;
 
@@ -24,14 +32,6 @@ class Parser {
 
   // The current internal position
   int pos;
-
-  Parser(
-      {this.input,
-      this.quoteChars,
-      this.escapeChar,
-      this.quoteEscapeChars,
-      this.fieldSeperators,
-      this.pos});
 
   ParserResult parse() {
     ParserResult result;
@@ -55,14 +55,14 @@ class Parser {
       // Handle quotes
       if (isQuote(nextcharacter)) {
         var quote = scanQuote(nextcharacter);
-        if (quote['error'] != null){
+        if (quote['error'] != null) {
           return ParserResult(words: null, error: quote['error']);
-        } 
-          // Write to the buffer
-          word.write(quote['result']);
-
-        // Handle escaped characters
-      } else if (nextcharacter == escapeChar) {
+        }
+        // Write to the buffer
+        word.write(quote['result']);
+      }
+      // Handle escaped characters
+      else if (nextcharacter == escapeChar) {
         var escaped = nextCharacter();
         if (escaped != null && escaped != eof) {
           word.write(escaped);
@@ -122,17 +122,11 @@ class Parser {
     };
   }
 
-  bool isQuote(String r) {
-    return quoteChars.contains(r);
-  }
+  bool isQuote(String r) => quoteChars.contains(r);
 
-  bool isQuoteEscape(String r) {
-    return quoteEscapeChars.contains(r);
-  }
+  bool isQuoteEscape(String r) => quoteEscapeChars.contains(r);
 
-  bool isFieldSeperator(String r) {
-    return fieldSeperators.contains(r);
-  }
+  bool isFieldSeperator(String r) => fieldSeperators.contains(r);
 
   bool isDelimiter(String character) {
     return escapeChar == character ||
@@ -140,6 +134,7 @@ class Parser {
         isFieldSeperator(character);
   }
 
+  /// Scans the `String` based of the passed [Function].
   String scanUntil(Function isDelimiter) {
     var start = pos;
     String currentletter;

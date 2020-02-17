@@ -10,8 +10,9 @@ const escapeChar = batchEscape;
 const quoteEscapeChars = [batchEscape, '"'];
 const fieldSeperators = ['\n', '\t', ' '];
 
-// SplitBatch splits a command string into words like Windows CMD.EXE would
-// See https://ss64.com/nt/syntax-esc.html
+/// SplitBatch splits a command `string` into words like Windows CMD.EXE would.
+///
+///[See] (https://ss64.com/nt/syntax-esc.html)
 ParserResult splitBatch(String line) {
   var p = Parser(
       input: line,
@@ -23,7 +24,7 @@ ParserResult splitBatch(String line) {
   return p.parse();
 }
 
-// QuoteBatch returns the string such that a CMD.EXE shell would parse it as a single word
+/// QuoteBatch returns the `string` such that a CMD.EXE shell would parse it as a single word.
 String quoteBatch(String s) {
   var builder = StringBuffer();
   var needsQuotes = false;
