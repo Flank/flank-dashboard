@@ -60,6 +60,27 @@ void main() {
       expect(barContainerDecoration.borderRadius, borderRadius);
     },
   );
+
+  testWidgets(
+    "Applies the width of the bar",
+    (WidgetTester tester) async {
+      const width = 4.0;
+
+      await tester.pumpWidget(const ColoredBarTestbed(
+        width: width,
+      ));
+
+      final barContainer = tester.widget<Container>(find.descendant(
+        of: find.byType(ColoredBar),
+        matching: find.byType(Container),
+      ));
+
+      final barConstraints = barContainer.constraints;
+
+      expect(barConstraints.maxWidth, width);
+      expect(barConstraints.minWidth, width);
+    },
+  );
 }
 
 class ColoredBarTestbed extends StatelessWidget {
@@ -67,6 +88,7 @@ class ColoredBarTestbed extends StatelessWidget {
   final BorderRadiusGeometry borderRadius;
   final Border border;
   final EdgeInsets padding;
+  final double width;
 
   const ColoredBarTestbed({
     Key key,
@@ -74,6 +96,7 @@ class ColoredBarTestbed extends StatelessWidget {
     this.borderRadius,
     this.border,
     this.padding = const EdgeInsets.all(4.0),
+    this.width,
   }) : super(key: key);
 
   @override
@@ -86,6 +109,7 @@ class ColoredBarTestbed extends StatelessWidget {
             padding: padding,
             border: border,
             borderRadius: borderRadius,
+            width: width,
           ),
         ),
       ),

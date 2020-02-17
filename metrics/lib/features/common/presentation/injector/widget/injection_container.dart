@@ -49,7 +49,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
   void _initInjectorState() {
     Injector.getAsReactive<ProjectMetricsStore>().setState(_initMetricsStore);
     Injector.getAsReactive<ThemeStore>()
-        .setState((store) => store.isDark = false);
+        .setState((store) => store.isDark = true);
   }
 
   /// Initiates the [ProjectMetricsStore].

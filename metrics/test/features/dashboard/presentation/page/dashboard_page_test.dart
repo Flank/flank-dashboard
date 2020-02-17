@@ -24,13 +24,13 @@ void main() {
         expect(
           find.descendant(
               of: find.byType(CirclePercentage),
-              matching: find.text('COVERAGE')),
+              matching: find.text('Coverage')),
           findsOneWidget,
         );
         expect(
           find.descendant(
               of: find.byType(CirclePercentage),
-              matching: find.text('STABILITY')),
+              matching: find.text('Stability')),
           findsOneWidget,
         );
       },
@@ -129,7 +129,7 @@ void main() {
 
 Color _getCirclePercentageValueColor(WidgetTester tester) {
   final circlePercentageFinder = find.descendant(
-    of: find.widgetWithText(CirclePercentage, "COVERAGE"),
+    of: find.widgetWithText(CirclePercentage, "Coverage"),
     matching: find.byType(CustomPaint),
   );
 
@@ -167,7 +167,9 @@ class DashboardTestbed extends StatelessWidget {
               .setState((store) => store.isDark = false);
         },
         builder: (BuildContext context) => MetricsThemeBuilder(
-          child: DashboardPage(),
+          builder: (_, __) {
+            return DashboardPage();
+          },
         ),
       ),
     );

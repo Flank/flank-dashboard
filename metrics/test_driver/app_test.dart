@@ -21,7 +21,7 @@ void main() {
       test(
         'Loads the coverage data and shows the circle percentage widget',
         () async {
-          await driver.waitFor(find.text("COVERAGE"));
+          await driver.waitFor(find.text("Coverage"));
           await driver.waitFor(find.text("20%"));
           await driver.waitFor(find.byType('CirclePercentage'));
         },
