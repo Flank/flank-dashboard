@@ -70,7 +70,6 @@ class ProcessManager {
   /// Starts the available for testing flutter application
   Future<void> startFlutterApp() async {
     final runCommand = RunCommand()
-      ..verbose()
       ..device(Device.webServer)
       ..target('lib/app.dart')
       ..webPort(_port);
