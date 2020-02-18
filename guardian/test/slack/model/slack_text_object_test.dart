@@ -1,4 +1,7 @@
+import 'package:guardian/slack/model/slack_markdown_text_object.dart';
+import 'package:guardian/slack/model/slack_plain_text_object.dart';
 import 'package:guardian/slack/model/slack_text_object.dart';
+import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -54,57 +57,45 @@ void main() {
         expect(result, equals(expected));
       },
     );
-  });
 
-  group('SlackPlainTextObject', () {
-    const plainTextObject = SlackPlainTextObject(text: 'test');
-    const plainTextObjectMap = {'type': 'plain_text', 'text': 'test'};
+    test('validate() should result with false if text is null', () {
+      const textObject = SlackTextObjectTestbed(null);
+      final result = textObject.validate();
+
+      expect(result.isValid, isFalse);
+    });
+
+    test('validate() should result with false if text is empty', () {
+      const textObject = SlackTextObjectTestbed('');
+      final result = textObject.validate();
+
+      expect(result.isValid, isFalse);
+    });
 
     test(
-      'toJson() should return map with non-null properties of text object',
+      'validate() should result with false if text length is out of limits',
       () {
-        final map = plainTextObject.toJson();
+        const textObject = SlackTextObjectTestbed('test message');
+        final result = textObject.validate(4);
 
-        expect(map, equals(plainTextObjectMap));
+        expect(result.isValid, isFalse);
       },
     );
 
-    test('fromJson() should return null if decoded map is null', () {
-      final result = SlackPlainTextObject.fromJson(null);
-
-      expect(result, isNull);
-    });
-
-    test('fromJson() should convert map to text object', () {
-      final result = SlackPlainTextObject.fromJson(plainTextObjectMap);
-
-      expect(result, equals(plainTextObject));
-    });
-  });
-
-  group('SlackMarkdownTextObject', () {
-    const markdownTextObject = SlackMarkdownTextObject(text: 'test');
-    const markdownTextObjectMap = {'type': 'mrkdwn', 'text': 'test'};
-
     test(
-      'toJson() should return map with non-null properties of text object',
+      'validate() should result with true on valid text',
       () {
-        final map = markdownTextObject.toJson();
+        const textObject = SlackTextObjectTestbed('test');
+        final result = textObject.validate(10);
 
-        expect(map, equals(markdownTextObjectMap));
+        expect(result.isValid, isTrue);
       },
     );
-
-    test('fromJson() should return null if decoded map is null', () {
-      final result = SlackMarkdownTextObject.fromJson(null);
-
-      expect(result, isNull);
-    });
-
-    test('fromJson() should convert map to text object', () {
-      final result = SlackMarkdownTextObject.fromJson(markdownTextObjectMap);
-
-      expect(result, equals(markdownTextObject));
-    });
   });
+}
+
+/// A testbed class for abstract [SlackTextObject]. Allows to test [nonVirtual]
+/// validation.
+class SlackTextObjectTestbed extends SlackTextObject {
+  const SlackTextObjectTestbed(String text) : super(text);
 }

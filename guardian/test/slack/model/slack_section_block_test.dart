@@ -1,5 +1,6 @@
+import 'package:guardian/slack/model/slack_markdown_text_object.dart';
+import 'package:guardian/slack/model/slack_plain_text_object.dart';
 import 'package:guardian/slack/model/slack_section_block.dart';
-import 'package:guardian/slack/model/slack_text_object.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -51,6 +52,92 @@ void main() {
         final result = SlackSectionBlock.listFromJson(list);
 
         expect(result, equals(expected));
+      },
+    );
+
+    test(
+      'validate() should result with false on both text and fields missing',
+      () {
+        const sectionBlock = SlackSectionBlock();
+        final result = sectionBlock.validate();
+
+        expect(result.isValid, isFalse);
+      },
+    );
+
+    test(
+      'validate() should result with false on text with length out of limit',
+      () {
+        final sectionBlock = SlackSectionBlock(
+          text: SlackPlainTextObject(text: '1' * 3001),
+        );
+        final result = sectionBlock.validate();
+
+        expect(result.isValid, isFalse);
+      },
+    );
+
+    test(
+      'validate() should result with false if there are more than 10 fields',
+      () {
+        final sectionBlock = SlackSectionBlock(
+          fields: List.generate(
+            11,
+            (_) => const SlackPlainTextObject(text: 'test'),
+          ),
+        );
+        final result = sectionBlock.validate();
+
+        expect(result.isValid, isFalse);
+      },
+    );
+
+    test(
+      'validate() should result with false if at least one field '
+      'contains text with length out of limit',
+      () {
+        final sectionBlock = SlackSectionBlock(
+          fields: [
+            const SlackMarkdownTextObject(text: 'test'),
+            SlackMarkdownTextObject(text: '1' * 2001),
+          ],
+        );
+        final result = sectionBlock.validate();
+
+        expect(result.isValid, isFalse);
+      },
+    );
+
+    test(
+      'validate() should validate result with false if one of presented text '
+      'and fields is invalid',
+      () {
+        const sectionBlock = SlackSectionBlock(
+          text: SlackMarkdownTextObject(text: 'test'),
+          fields: [
+            SlackMarkdownTextObject(text: 'test'),
+            SlackMarkdownTextObject(text: ''),
+          ],
+        );
+        final result = sectionBlock.validate();
+
+        expect(result.isValid, isFalse);
+      },
+    );
+
+    test(
+      'validate() should validate section block',
+      () {
+        const sectionBlock = SlackSectionBlock(
+          text: SlackMarkdownTextObject(text: 'test'),
+          fields: [
+            SlackMarkdownTextObject(text: '*Field*'),
+            SlackPlainTextObject(text: 'Field'),
+          ],
+        );
+        final result = sectionBlock.validate();
+
+        expect(result.isValid, isTrue);
       },
     );
   });

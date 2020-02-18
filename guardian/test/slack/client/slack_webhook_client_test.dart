@@ -1,7 +1,7 @@
 import 'package:guardian/slack/client/slack_webhook_client.dart';
+import 'package:guardian/slack/model/slack_markdown_text_object.dart';
 import 'package:guardian/slack/model/slack_message.dart';
 import 'package:guardian/slack/model/slack_section_block.dart';
-import 'package:guardian/slack/model/slack_text_object.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/mock_server/slack_mock_server.dart';

@@ -1,7 +1,9 @@
 import 'package:args/args.dart';
 import 'package:guardian/config/model/config.dart';
 
+/// A class representing user's configurations for Slack.
 class SlackConfig extends Config {
+  /// Creates Slack configurations with `slack.yaml` filename.
   SlackConfig({
     this.webhookUrl,
   }) : super('slack.yaml');

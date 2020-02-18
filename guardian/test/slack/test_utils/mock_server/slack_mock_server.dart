@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:guardian/slack/model/slack_message.dart';
 
 import '../../../test_utils/api_mock_server/api_mock_server.dart';
-import '../extensions/validate_section_block_extension.dart';
 
 /// A mock server for Slack Incoming Webhooks API.
 class SlackMockServer extends ApiMockServer {
@@ -42,29 +41,6 @@ class SlackMockServer extends ApiMockServer {
   /// Returns `true` if Slack Incoming Webhook API will accept the message and
   /// `false` otherwise.
   bool _validateMessage(SlackMessage message) {
-    // 'invalid_payload'
-    if (message == null) {
-      return false;
-    }
-
-    final hasText = message.text != null && message.text.isNotEmpty;
-    final hasBlocks = message.blocks != null && message.blocks.isNotEmpty;
-
-    // 'invalid_payload'
-    if (!hasText && !hasBlocks) {
-      return false;
-    }
-
-    // 'invalid_blocks'
-    if (hasBlocks && message.blocks.any((block) => !block.valid)) {
-      return false;
-    }
-
-    // 'no_text'
-    if (!hasText) {
-      return false;
-    }
-
-    return true;
+    return message != null && message.validate().isValid;
   }
 }

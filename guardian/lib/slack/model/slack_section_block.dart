@@ -1,9 +1,19 @@
 import 'package:equatable/equatable.dart';
 import 'package:guardian/slack/model/slack_text_object.dart';
+import 'package:guardian/slack/model/validation_result.dart';
 
 /// A class representing Section Block element
 /// (https://api.slack.com/reference/block-kit/blocks#section)
 class SlackSectionBlock extends Equatable {
+  /// Maximum allowed number of items in [fields] array.
+  static const int _maxFieldsPerSection = 10;
+
+  /// Maximum allowed length of [SlackTextObject.text] within [fields]'s item.
+  static const int _maxFieldTextLength = 2000;
+
+  /// Maximum allowed length of [text].
+  static const int _maxSectionTextLength = 3000;
+
   /// The text for the block, in the form of a [SlackTextObject].
   ///
   /// Maximum length for the text in this field is 3000 characters.
@@ -48,6 +58,46 @@ class SlackSectionBlock extends Equatable {
 
   @override
   List<Object> get props => [text, fields];
+
+  /// Validates [SlackSectionBlock] to match following rules:
+  ///   1. Either [text] or [fields] is required.
+  ///   2. If [fields] is not presented, [text] must be not `null` and valid
+  ///      (not empty and contain up to 3000 characters).
+  ///   3. If [text] is not presented, [fields] must be not `null` and valid
+  ///      (not empty and contain up to 10 non-null items with maximum 2000
+  ///      characters each).
+  ///   4. Both [text] and [fields] must be valid if presented simultaneously.
+  ValidationResult validate() {
+    final textValidation = text?.validate(_maxSectionTextLength) ??
+        ValidationResult.invalid('Text is missing');
+
+    if (text == null) {
+      return _validateFields();
+    } else if (fields == null) {
+      return textValidation;
+    } else {
+      return textValidation.combine(_validateFields());
+    }
+  }
+
+  /// Validates [fields] to be not `null`, contain up to 10 valid and non-null
+  /// [SlackTextObject]s limited to 2000 characters.
+  ValidationResult _validateFields() {
+    if (fields == null) {
+      return ValidationResult.invalid('Text is missing');
+    } else if (fields.length > _maxFieldsPerSection) {
+      return ValidationResult.invalid(
+        'Fields is limited to contain up to 10 '
+        'items but ${fields.length} found',
+      );
+    } else {
+      return fields.fold(ValidationResult.valid(), (validation, field) {
+        final fieldValidation = field?.validate(_maxFieldTextLength) ??
+            ValidationResult.invalid('Text is missing');
+        return validation.combine(fieldValidation);
+      });
+    }
+  }
 
   /// Converts object into the [Map].
   ///
