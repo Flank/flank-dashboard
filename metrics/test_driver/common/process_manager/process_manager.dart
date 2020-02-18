@@ -4,8 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import '../../util/file_utils.dart';
-import '../command/drive_command.dart';
-import '../command/run_command.dart';
+import '../command/command.dart';
 import '../config/browser_name.dart';
 import '../config/device.dart';
 
@@ -13,6 +12,7 @@ import '../config/device.dart';
 class ProcessManager {
   static const String flutterLogsFileName = 'flutter_logs';
   static const String driverLogsFileName = 'driver_logs';
+  static const String _flutterExecutableName = 'flutter';
 
   final List<int> _startedPids = [];
   final int _port;
@@ -80,7 +80,7 @@ class ProcessManager {
     }
 
     final flutterProcess = await _processStart(
-      'flutter',
+      _flutterExecutableName,
       runCommand.buildArgs(),
     );
 
@@ -120,7 +120,7 @@ class ProcessManager {
     }
 
     final driverProcess = await _processStart(
-      'flutter',
+      _flutterExecutableName,
       driveCommand.buildArgs(),
     );
 
