@@ -1,4 +1,5 @@
 import '../config/browser_name.dart';
+import '../config/device.dart';
 
 /// Wrapper class for the 'flutter drive' command.
 ///
@@ -13,6 +14,16 @@ class DriveCommand {
 
   /// Method to create the [List] of args from the [DriveCommand] class instance
   List<String> buildArgs() => List.unmodifiable(_args);
+
+  /// --device
+  ///
+  /// Target device id or name (prefixes allowed).
+  void device(Device device) => _add('--device-id=${device.deviceId}');
+
+  /// --verbose
+  ///
+  /// Noisy logging, including all shell commands executed.
+  void verbose() => _add('--verbose');
 
   ///  --debug
   ///

@@ -11,11 +11,15 @@ class DriverTestsArgs {
   static const String _portOptionName = 'port';
   static const String _storeLogsToOptionName = 'store-logs-to';
   static const String _browserNameOptionName = 'browser-name';
+  static const String _verboseFlagName = 'verbose';
+  static const String _quietFlagName = 'quiet';
 
   String _workingDir;
   String _logsDir;
   int _port;
   BrowserName _browserName;
+  bool _verbose;
+  bool _quiet;
 
   DriverTestsArgs(List<String> args) {
     final ArgParser _parser = ArgParser();
@@ -47,14 +51,29 @@ class DriverTestsArgs {
       defaultsTo: 'chrome',
     );
 
+    _parser.addFlag(
+      _verboseFlagName,
+      help: "The verbose mode pronts all the outputs to the stdout",
+      abbr: 'v',
+    );
+
+    _parser.addFlag(
+      _quietFlagName,
+      help: 'Silences all the driver and run command ooutputs',
+    );
+
     final result = _parser.parse(args);
     final portArgString = result[_portOptionName] as String;
     final browserName = result[_browserNameOptionName] as String;
+    final verbose = result[_verboseFlagName] as bool;
+    final quiet = result[_quietFlagName] as bool;
 
     _workingDir = result[_workingDirOptionName] as String;
     _logsDir = result[_storeLogsToOptionName] as String;
     _port = int.tryParse(portArgString) ?? DriverTestsConfig.port;
     _browserName = BrowserName.fromValue(browserName) ?? BrowserName.chrome;
+    _verbose = verbose;
+    _quiet = quiet;
   }
 
   String get workDir => _workingDir;
@@ -64,4 +83,8 @@ class DriverTestsArgs {
   String get logsDir => _logsDir;
 
   BrowserName get browserName => _browserName;
+
+  bool get verbose => _verbose;
+
+  bool get quiet => _quiet;
 }

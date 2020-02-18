@@ -15,7 +15,12 @@ Future<void> main(List<String> arguments) async {
 
   final workingDirPath = workingDir.path;
 
-  final processManager = ProcessManager(args.port, logsDir.path);
+  final processManager = ProcessManager(
+    args.port,
+    logsDir.path,
+    verbose: args.verbose,
+    quiet: args.quiet,
+  );
 
   final seleniumFileName = await FileUtils.downloadSelenium(workingDirPath);
   await FileUtils.downloadChromeDriver(workingDirPath);
@@ -41,6 +46,11 @@ Future<void> main(List<String> arguments) async {
       .catchError((_) {
     processManager.exitApp();
   });
+
+  print(
+      "Flutter logs are stored in ${logsDir.absolute.uri}${ProcessManager.flutterLogsFileName}.log file");
+  print(
+      "Driver logs are stored in ${logsDir.absolute.uri}${ProcessManager.flutterLogsFileName}.log file");
 
   processManager.exitApp();
 }
