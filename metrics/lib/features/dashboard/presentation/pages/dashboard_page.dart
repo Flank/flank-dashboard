@@ -9,6 +9,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/coverage_circle_
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+/// Shows the available projects and metrics for these projects.
 class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
