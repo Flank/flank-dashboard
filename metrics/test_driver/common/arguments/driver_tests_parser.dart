@@ -55,6 +55,7 @@ class DriverTestsArgs {
       _verboseFlagName,
       help: "The verbose mode pronts all the outputs to the stdout",
       abbr: 'v',
+      defaultsTo: true,
     );
 
     _parser.addFlag(
