@@ -117,7 +117,7 @@ class FileUtils {
     }
 
     // Clear file before writing to avoid appending ald logs with new one.
-    outputFile.writeAsString('');
+    outputFile.writeAsStringSync('');
 
     stdout.asBroadcastStream().listen(
           (data) => outputFile.writeAsBytes(data, mode: FileMode.append),

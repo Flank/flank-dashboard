@@ -8,13 +8,14 @@ import '../command/command.dart';
 import '../config/browser_name.dart';
 import '../config/device.dart';
 
-/// The class needed to manage started processes and start new processes
+/// The class needed to manage started processes and start new processes.
 class ProcessManager {
   static const String flutterLogsFileName = 'flutter_logs';
   static const String driverLogsFileName = 'driver_logs';
   static const String _flutterExecutableName = 'flutter';
+  static final _quiteAppCommand = 'q'.codeUnits;
 
-  final List<int> _startedPids = [];
+  final List<Process> _startedProcesses = [];
   final int _port;
   final String _logsDir;
   final bool _verbose;
@@ -28,22 +29,28 @@ class ProcessManager {
   })  : _verbose = verbose,
         _quiet = quiet;
 
-  /// Kill all started processes and exit the app with the current [exitCode]
+  /// Kills all started processes and exit the app with the current [exitCode].
   void exitApp() {
     print("Cleaning...");
 
-    for (final pid in _startedPids) {
-      Process.killPid(pid);
+    for (final process in _startedProcesses) {
+      exitProcess(process);
     }
 
     exit(exitCode);
   }
 
+  /// Quites the process's application and kills the process.
+  void exitProcess(Process process) {
+    process.stdin.add(_quiteAppCommand);
+    process.kill();
+  }
+
   /// Start the selenium server.
   ///
   /// [seleniumFileName] is the name of the selenium server file.
-  /// [workingDir] is the directory in which the selenium server file
-  /// and driver files are placed
+  /// [workingDir] is the directory in which the selenium server file.
+  /// and driver files are placed.
   Future startSelenium(String seleniumFileName, String workingDir) async {
     await _processStart(
       'java',
@@ -67,12 +74,18 @@ class ProcessManager {
     }
   }
 
-  /// Starts the available for testing flutter application
-  Future<void> startFlutterApp() async {
+  /// Starts the available for testing flutter application.
+  ///
+  /// Returns the id of the started process.
+  Future<Process> startFlutterApp({
+    bool useSkia = false,
+    String logFileName = flutterLogsFileName,
+  }) async {
     final runCommand = RunCommand()
       ..device(Device.webServer)
       ..target('lib/app.dart')
-      ..webPort(_port);
+      ..webPort(_port)
+      ..useSkia(value: useSkia);
 
     if (_verbose) {
       runCommand.verbose();
@@ -86,23 +99,27 @@ class ProcessManager {
     final flutterOutput = flutterProcess.stdout.asBroadcastStream();
     final flutterErrors = flutterProcess.stderr.asBroadcastStream();
 
+    flutterErrors.listen((_) => _processErrorHandler(flutterProcess));
+
     _subscribeToOutput(
       flutterOutput,
       flutterErrors,
-      flutterLogsFileName,
+      logFileName,
     );
 
     await flutterOutput.firstWhere((out) {
       if (out == null || out.isEmpty) return false;
       final consoleOut = String.fromCharCodes(out);
       return consoleOut.contains('is being served at');
-    });
+    }, orElse: () => null);
+
+    return flutterProcess;
   }
 
   /// Starts the driver tests.
   ///
   /// Specify the [browserName] param to use the custom browser driver.
-  /// Default is [BrowserName.chrome]
+  /// Default is [BrowserName.chrome].
   Future<void> startDriverTests({
     BrowserName browserName = BrowserName.chrome,
   }) async {
@@ -126,6 +143,8 @@ class ProcessManager {
     final driverOutput = driverProcess.stdout.asBroadcastStream();
     final driverErrors = driverProcess.stderr.asBroadcastStream();
 
+    driverErrors.listen((error) => _processErrorHandler(driverProcess));
+
     _subscribeToOutput(
       driverOutput,
       driverErrors,
@@ -133,6 +152,12 @@ class ProcessManager {
     );
 
     exitCode = await driverProcess.exitCode;
+  }
+
+  /// Closes the application on process error.
+  Future<void> _processErrorHandler(Process process) async {
+    exitCode = await process.exitCode;
+    exitApp();
   }
 
   /// Starts listening [outputStream] and [errorStream] and saving
@@ -146,7 +171,7 @@ class ProcessManager {
   ) {
     if (!_quiet) {
       outputStream.listen(stdout.add);
-      errorStream.listen(stdout.add);
+      errorStream.listen(stderr.add);
     }
 
     FileUtils.saveOutputsToFile(
@@ -159,8 +184,8 @@ class ProcessManager {
 
   /// Starts a process running the [executable] with the specified [arguments].
   ///
-  /// Adds the process pid to [_startedPids] to be able to terminate it.
-  /// Specify the [workingDirectory] to run the executable from this directory
+  /// Adds the process pid to [_startedProcesses] to be able to terminate it.
+  /// Specify the [workingDirectory] to run the executable from this directory.
   Future<Process> _processStart(
     String executable,
     List<String> arguments, {
@@ -174,7 +199,7 @@ class ProcessManager {
       workingDirectory: workingDirectory,
     );
 
-    _startedPids.add(process.pid);
+    _startedProcesses.add(process);
 
     return process;
   }

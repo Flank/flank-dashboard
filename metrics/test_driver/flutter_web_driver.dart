@@ -5,6 +5,8 @@ import 'common/process_manager/process_manager.dart';
 import 'util/file_utils.dart';
 
 Future<void> main(List<String> arguments) async {
+  const skiaFlutterLogsFileName = 'skia_flutter_logs';
+
   final args = DriverTestsArgs(arguments);
 
   final Directory workingDir = Directory(args.workDir);
@@ -32,25 +34,33 @@ Future<void> main(List<String> arguments) async {
 
   print("Selenium server is up, running flutter application...");
 
-  await processManager.startFlutterApp().catchError((error) {
-    exitCode = 1;
-    processManager.exitApp();
-  });
+  final flutterProcess = await processManager.startFlutterApp();
 
   stdout.done.asStream().listen((_) => processManager.exitApp());
 
   print("Application is up, running tests...");
 
-  await processManager
-      .startDriverTests(browserName: args.browserName)
-      .catchError((_) {
-    processManager.exitApp();
-  });
+  await processManager.startDriverTests(browserName: args.browserName);
+
+  processManager.exitProcess(flutterProcess);
+
+  print('Running application using SKIA...');
+
+  await processManager.startFlutterApp(
+    useSkia: true,
+    logFileName: skiaFlutterLogsFileName,
+  );
+
+  await processManager.startDriverTests(browserName: args.browserName);
+
+  final logsDirUri = logsDir.absolute.uri;
 
   print(
-      "Flutter logs are stored in ${logsDir.absolute.uri}${ProcessManager.flutterLogsFileName}.log file");
+      "Flutter logs are stored in $logsDirUri${ProcessManager.flutterLogsFileName}.log file");
   print(
-      "Driver logs are stored in ${logsDir.absolute.uri}${ProcessManager.flutterLogsFileName}.log file");
+      "Flutter, runned with skia rendere, logs are stored in $logsDirUri$skiaFlutterLogsFileName.log file");
+  print(
+      "Driver logs are stored in $logsDirUri${ProcessManager.driverLogsFileName}.log file");
 
   processManager.exitApp();
 }

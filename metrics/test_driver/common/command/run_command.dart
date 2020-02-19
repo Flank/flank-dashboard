@@ -103,4 +103,10 @@ class RunCommand extends _RunCommandBase {
   /// The host port to serve the web application from.
   /// If not provided, the tool will select a random open port on the host.
   void webPort(int port) => _add('--web-port=$port');
+
+  /// --dart-define=FLUTTER_WEB_USE_SKIA=[value]
+  ///
+  /// Enables the flutter web canvas rendering backend.
+  void useSkia({bool value = true}) =>
+      _add('--dart-define=FLUTTER_WEB_USE_SKIA=$value');
 }
