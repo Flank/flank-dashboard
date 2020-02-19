@@ -60,7 +60,7 @@ class DriverTestsArgs {
 
     _parser.addFlag(
       _quietFlagName,
-      help: 'Silences all the driver and run command ooutputs',
+      help: 'Silences all the driver and run command outputs',
     );
 
     final result = _parser.parse(args);
