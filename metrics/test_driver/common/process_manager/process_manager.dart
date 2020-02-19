@@ -4,21 +4,29 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import '../../util/file_utils.dart';
-import '../command/drive_command.dart';
-import '../command/run_command.dart';
+import '../command/command.dart';
 import '../config/browser_name.dart';
 import '../config/device.dart';
 
 /// The class needed to manage started processes and start new processes
 class ProcessManager {
+  static const String flutterLogsFileName = 'flutter_logs';
+  static const String driverLogsFileName = 'driver_logs';
+  static const String _flutterExecutableName = 'flutter';
+
   final List<int> _startedPids = [];
   final int _port;
   final String _logsDir;
+  final bool _verbose;
+  final bool _quiet;
 
   ProcessManager(
     this._port,
-    this._logsDir,
-  );
+    this._logsDir, {
+    bool verbose = false,
+    bool quiet = false,
+  })  : _verbose = verbose,
+        _quiet = quiet;
 
   /// Kill all started processes and exit the app with the current [exitCode]
   void exitApp() {
@@ -62,23 +70,26 @@ class ProcessManager {
   /// Starts the available for testing flutter application
   Future<void> startFlutterApp() async {
     final runCommand = RunCommand()
-      ..verbose()
       ..device(Device.webServer)
       ..target('lib/app.dart')
       ..webPort(_port);
 
+    if (_verbose) {
+      runCommand.verbose();
+    }
+
     final flutterProcess = await _processStart(
-      'flutter',
+      _flutterExecutableName,
       runCommand.buildArgs(),
     );
 
     final flutterOutput = flutterProcess.stdout.asBroadcastStream();
+    final flutterErrors = flutterProcess.stderr.asBroadcastStream();
 
-    FileUtils.saveOutputsToFile(
+    _subscribeToOutput(
       flutterOutput,
-      flutterProcess.stderr,
-      'flutter_logs',
-      _logsDir,
+      flutterErrors,
+      flutterLogsFileName,
     );
 
     await flutterOutput.firstWhere((out) {
@@ -98,23 +109,52 @@ class ProcessManager {
     final driveCommand = DriveCommand()
       ..target('lib/app.dart')
       ..driver('test_driver/app_test.dart')
+      ..device(Device.chrome)
       ..useExistingApp('http://localhost:$_port/#')
       ..browserName(browserName)
       ..noKeepAppRunning();
 
+    if (_verbose) {
+      driveCommand.verbose();
+    }
+
     final driverProcess = await _processStart(
-      'flutter',
+      _flutterExecutableName,
       driveCommand.buildArgs(),
     );
 
-    FileUtils.saveOutputsToFile(
-      driverProcess.stdout,
-      driverProcess.stderr,
-      'drvier_logs',
-      _logsDir,
+    final driverOutput = driverProcess.stdout.asBroadcastStream();
+    final driverErrors = driverProcess.stderr.asBroadcastStream();
+
+    _subscribeToOutput(
+      driverOutput,
+      driverErrors,
+      driverLogsFileName,
     );
 
     exitCode = await driverProcess.exitCode;
+  }
+
+  /// Starts listening [outputStream] and [errorStream] and saving
+  /// the outputs to [logFileName] file.
+  ///
+  /// If is not in [_quiet] mode, writes the outputs into [stdout] and [stderr].
+  void _subscribeToOutput(
+    Stream<List<int>> outputStream,
+    Stream<List<int>> errorStream,
+    String logFileName,
+  ) {
+    if (!_quiet) {
+      outputStream.listen(stdout.add);
+      errorStream.listen(stdout.add);
+    }
+
+    FileUtils.saveOutputsToFile(
+      outputStream,
+      errorStream,
+      logFileName,
+      _logsDir,
+    );
   }
 
   /// Starts a process running the [executable] with the specified [arguments].
