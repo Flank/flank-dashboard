@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:guardian/jira/client/jira_client.dart';
 import 'package:guardian/jira/command/jira_command.dart';
 import 'package:guardian/jira/model/jira_config.dart';
-import 'package:guardian/jira/model/ticket_manage_request.dart';
+import 'package:guardian/jira/model/open_ticket_request.dart';
 
 class OpenTicketCommand extends JiraCommand {
   @override
@@ -15,19 +17,31 @@ class OpenTicketCommand extends JiraCommand {
   }
 
   @override
-  void run() {
+  Future<void> run() async {
     final config = JiraConfig()..readFromArgs(argResults);
 
     if (config == null) {
-      print('Jira configurations are missing');
+      stdout.writeln('Jira configurations are missing');
       return;
     } else if (config.nullFields.isNotEmpty) {
-      print('Missing required configurations for Jira: ${config.nullFields}');
+      stdout.writeln(
+        'Missing required configurations for Jira: ${config.nullFields}',
+      );
       return;
     }
 
     final client = JiraClient.fromConfig(config);
     final request = OpenTicketRequest.fromArgs(argResults);
-    client.openIssue(request.projectId);
+    final result = await client.openIssue(request);
+
+    if (result.isSuccess) {
+      stdout.writeln(
+        'Issue created! View ${result.result.key} at ${result.result.self}',
+      );
+    } else {
+      stderr.writeln(result.message);
+    }
+
+    client.close();
   }
 }
