@@ -6,21 +6,28 @@ import 'package:metrics/features/common/presentation/metrics_theme/store/theme_s
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+typedef ThemeBuilder = Widget Function(BuildContext context, ThemeStore store);
+
 /// Widget to rebuild the [MetricsApp] when the [ThemeStore] is changed.
 class MetricsThemeBuilder extends StatelessWidget {
   final MetricsThemeData lightTheme;
   final MetricsThemeData darkTheme;
-  final Widget child;
+  final ThemeBuilder builder;
 
   /// Creates the [MetricsThemeBuilder].
   ///
+  /// The [builder] should not be null.
+  ///
   /// Rebuilds the [MetricsApp] when the [ThemeStore] changes.
+  /// [builder] is the function used to build the child depending
+  /// on current theme store state.
   const MetricsThemeBuilder({
     Key key,
-    this.child,
+    @required this.builder,
     MetricsThemeData lightTheme,
     MetricsThemeData darkTheme,
-  })  : lightTheme = lightTheme ?? const LightMetricsThemeData(),
+  })  : assert(builder != null),
+        lightTheme = lightTheme ?? const LightMetricsThemeData(),
         darkTheme = darkTheme ?? const DarkMetricsThemeData(),
         super(key: key);
 
@@ -28,15 +35,14 @@ class MetricsThemeBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return StateBuilder(
       models: [Injector.getAsReactive<ThemeStore>()],
-      builderWithChild: (_, themeStore, child) {
+      builder: (_, themeStore) {
         final themeSnapshot = themeStore.snapshot.data as ThemeStore;
 
         return MetricsTheme(
           data: _getThemeData(themeSnapshot),
-          child: child,
+          child: builder(context, themeSnapshot),
         );
       },
-      child: child,
     );
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/model/bar_data.dart';
 
 typedef BarBuilder<T> = Widget Function(T data);
@@ -14,8 +13,6 @@ class BarGraph<T extends BarData> extends StatelessWidget {
   final List<T> data;
   final BarBuilder<T> barBuilder;
   final ValueChanged<T> onBarTap;
-  final ShapeBorder graphShapeBorder;
-  final Color backgroundColor;
 
   /// Creates the [BarGraph].
   ///
@@ -25,38 +22,28 @@ class BarGraph<T extends BarData> extends StatelessWidget {
   /// [graphPadding] is the padding to inset the graph.
   /// [onBarTap] the [ValueChanged] callback to be called on tap on bar.
   /// [barBuilder] the function to build the bar using the [T].
-  /// [graphShapeBorder] is the border of the graph.
-  /// [backgroundColor] is the color of graph background.
   const BarGraph({
     Key key,
     @required this.data,
     @required this.barBuilder,
-    this.graphShapeBorder,
     this.onBarTap,
     this.graphPadding = const EdgeInsets.all(16.0),
-    this.backgroundColor,
   })  : assert(data != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final widgetThemeData = MetricsTheme.of(context);
+    return Padding(
+      padding: graphPadding,
+      child: LayoutBuilder(
+        builder: (_, constraints) {
+          final valueUnitHeight = _calculateValueHeight(constraints);
 
-    return Card(
-      shape: graphShapeBorder,
-      color: backgroundColor ?? widgetThemeData.barGraphBackgroundColor,
-      child: Padding(
-        padding: graphPadding,
-        child: LayoutBuilder(
-          builder: (_, constraints) {
-            final valueUnitHeight = _calculateValueHeight(constraints);
-
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: _createChartBars(data, valueUnitHeight),
-            );
-          },
-        ),
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: _createChartBars(data, valueUnitHeight),
+          );
+        },
       ),
     );
   }

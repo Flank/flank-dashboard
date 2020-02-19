@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 
-class StabilityCirclePercentage extends StatelessWidget {
+class CoverageCirclePercentage extends StatelessWidget {
   final double value;
 
-  const StabilityCirclePercentage({Key key, @required this.value})
-      : super(key: key);
+  const CoverageCirclePercentage({
+    Key key,
+    @required this.value,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class StabilityCirclePercentage extends StatelessWidget {
         MetricsTheme.of(context).circlePercentageAccentTheme;
 
     return CirclePercentage(
-      title: 'STABILITY',
+      title: DashboardStrings.coverage,
       value: value,
       valueColor: circlePercentageAccentTheme.primaryColor,
       strokeColor: circlePercentageAccentTheme.accentColor,

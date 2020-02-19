@@ -50,10 +50,13 @@ class BuildResultBarGraph extends StatelessWidget {
             data: data,
             onBarTap: _onBarTap,
             barBuilder: (BuildResultBarData data) {
-              return ColoredBar(
-                padding: const EdgeInsets.symmetric(horizontal: 1.0),
-                color: _getBuildResultColor(data.result, widgetThemeData),
-                borderRadius: BorderRadius.circular(35.0),
+              return Align(
+                alignment: Alignment.center,
+                child: ColoredBar(
+                  width: 8.0,
+                  color: _getBuildResultColor(data.result, widgetThemeData),
+                  borderRadius: BorderRadius.circular(35.0),
+                ),
               );
             },
           ),

@@ -24,21 +24,6 @@ void main() {
   );
 
   testWidgets(
-    'Applies the graph shape border',
-    (WidgetTester tester) async {
-      final border = RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      );
-
-      await tester.pumpWidget(BarGraphTestbed(graphShapeBorder: border));
-
-      final graphCardWidget = tester.widget<Card>(find.byType(Card));
-
-      expect(graphCardWidget.shape, border);
-    },
-  );
-
-  testWidgets(
     'Applies graph padding',
     (WidgetTester tester) async {
       const padding = EdgeInsets.all(8.0);
@@ -80,9 +65,7 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(const BarGraphTestbed());
 
-      final barsRow = tester.widget<Row>(
-        find.descendant(of: find.byType(Card), matching: find.byType(Row)),
-      );
+      final barsRow = tester.widget<Row>(find.byType(Row));
 
       final rowWidgets = barsRow.children;
 
@@ -116,10 +99,7 @@ void main() {
         data: barGraphData,
       ));
 
-      final barsRow = tester.widget<Row>(find.descendant(
-        of: find.byType(Card),
-        matching: find.byType(Row),
-      ));
+      final barsRow = tester.widget<Row>(find.byType(Row));
 
       final barExpandedContainers = barsRow.children;
 
@@ -164,18 +144,14 @@ class BarGraphTestbed extends StatelessWidget {
   final TextStyle titleStyle;
   final EdgeInsets graphPadding;
   final List<TestBarData> data;
-  final BarBuilder<TestBarData> barBuilder;
   final ValueChanged<TestBarData> onBarTap;
-  final ShapeBorder graphShapeBorder;
 
   const BarGraphTestbed({
     Key key,
     this.title = 'title',
     this.data = graphBarTestData,
     this.graphPadding = const EdgeInsets.all(16.0),
-    this.barBuilder,
     this.titleStyle,
-    this.graphShapeBorder,
     this.onBarTap,
   }) : super(key: key);
 
@@ -187,7 +163,6 @@ class BarGraphTestbed extends StatelessWidget {
           data: data,
           graphPadding: graphPadding,
           onBarTap: onBarTap,
-          graphShapeBorder: graphShapeBorder,
           barBuilder: (TestBarData data) => GraphTestBar(
             value: data.value,
           ),

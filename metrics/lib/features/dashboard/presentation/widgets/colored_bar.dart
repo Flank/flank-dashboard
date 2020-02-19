@@ -6,6 +6,7 @@ class ColoredBar extends StatelessWidget {
   final BorderRadiusGeometry borderRadius;
   final BoxBorder border;
   final EdgeInsets padding;
+  final double width;
 
   /// Creates the [ColoredBar].
   ///
@@ -13,12 +14,14 @@ class ColoredBar extends StatelessWidget {
   /// [border] is the border decoration of this bar.
   /// [borderRadius] is the radius of the border of this bar.
   /// [color] is the color of this bar.
+  /// [width] is the width of the bar.
   const ColoredBar({
     Key key,
-    this.padding = const EdgeInsets.symmetric(horizontal: 4.0),
+    this.padding = EdgeInsets.zero,
     this.color,
     this.borderRadius,
     this.border,
+    this.width,
   }) : super(key: key);
 
   @override
@@ -26,6 +29,7 @@ class ColoredBar extends StatelessWidget {
     return Padding(
       padding: padding,
       child: Container(
+        width: width,
         decoration: BoxDecoration(
           color: color,
           borderRadius: borderRadius,

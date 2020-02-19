@@ -2,12 +2,14 @@ import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
+import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/stability_circle_percentage.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+/// Shows the available projects and metrics for these projects.
 class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class DashboardPage extends StatelessWidget {
               onError: _buildLoadingErrorPlaceholder,
               onIdle: () => RaisedButton(
                 onPressed: _loadMetrics,
-                child: const Text("Load metrics"),
+                child: const Text(DashboardStrings.loadMetrics),
               ),
               onData: (store) {
                 return Center(
@@ -33,19 +35,14 @@ class DashboardPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         Flexible(
-                          child: CirclePercentage(
-                            title: 'COVERAGE',
-                            value: store.coverage.percent,
-                          ),
-                        ),
-                        Flexible(
-                          child: StabilityCirclePercentage(
-                            value: store.coverage.percent,
+                          child: BuildResultBarGraph(
+                            data: store.projectBuildResultMetrics,
+                            title: DashboardStrings.buildTaskName,
                           ),
                         ),
                         Flexible(
                           child: SparklineGraph(
-                            title: "Performance",
+                            title: DashboardStrings.performance,
                             data: store.projectPerformanceMetrics,
                             value: '${store.averageBuildTime}M',
                             curveType: LineCurves.linear,
@@ -53,15 +50,20 @@ class DashboardPage extends StatelessWidget {
                         ),
                         Flexible(
                           child: SparklineGraph(
-                            title: "Build",
+                            title: DashboardStrings.builds,
                             data: store.projectBuildNumberMetrics,
                             value: '${store.totalBuildNumber}',
                           ),
                         ),
                         Flexible(
-                          child: BuildResultBarGraph(
-                            data: store.projectBuildResultMetrics,
-                            title: "Build task name",
+                          child: CirclePercentage(
+                            title: DashboardStrings.stability,
+                            value: store.coverage.percent,
+                          ),
+                        ),
+                        Flexible(
+                          child: CoverageCirclePercentage(
+                            value: store.coverage.percent,
                           ),
                         ),
                       ],
@@ -84,7 +86,7 @@ class DashboardPage extends StatelessWidget {
 
   Widget _buildLoadingErrorPlaceholder(error) {
     return _DashboardPlaceholder(
-      text: "An error occured during loading: $error",
+      text: DashboardStrings.getLoadingErrorMessage("$error"),
     );
   }
 

@@ -49,7 +49,7 @@ class SparklineGraph extends StatelessWidget {
     @required this.title,
     @required this.value,
     @required this.data,
-    this.curveType = LineCurves.monotone,
+    this.curveType = LineCurves.linear,
     this.strokeColor,
     this.gradientColor,
     this.graphPadding = const EdgeInsets.symmetric(vertical: 48.0),

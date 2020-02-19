@@ -92,10 +92,12 @@ class _CirclePercentageState extends State<CirclePercentage>
             child: AnimatedBuilder(
               animation: _controller,
               builder: (BuildContext context, Widget child) {
+                final valueColor = _getValueColor(widgetThemeData);
+
                 return CustomPaint(
                   painter: CirclePercentageChartPainter._(
                     percent: _controller.value,
-                    valueColor: _getFilledColor(widgetThemeData),
+                    valueColor: valueColor,
                     strokeColor: _getStrokeColor(widgetThemeData),
                     backgroundColor: _getBackgroundColor(widgetThemeData),
                     strokeWidth: widget.strokeWidth,
@@ -106,11 +108,14 @@ class _CirclePercentageState extends State<CirclePercentage>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Expanded(
-                          flex: 2,
-                          child: ExpandableText(
-                            '${(_controller.value * 100).toInt()}%',
-                            style: widget.valueStyle,
+                        DefaultTextStyle(
+                          style: TextStyle(color: valueColor),
+                          child: Expanded(
+                            flex: 2,
+                            child: ExpandableText(
+                              '${(_controller.value * 100).toInt()}%',
+                              style: widget.valueStyle,
+                            ),
                           ),
                         ),
                         Expanded(
@@ -139,7 +144,7 @@ class _CirclePercentageState extends State<CirclePercentage>
     return widget.strokeColor ?? themeData.accentColor;
   }
 
-  Color _getFilledColor(MetricWidgetThemeData themeData) {
+  Color _getValueColor(MetricWidgetThemeData themeData) {
     return widget.valueColor ?? themeData.primaryColor;
   }
 

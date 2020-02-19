@@ -11,6 +11,15 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
   testWidgets(
+    "Can't build the widget without builder",
+    (WidgetTester tester) async {
+      await tester.pumpWidget(const MetricsThemeBuilderTestbed(builder: null));
+
+      expect(tester.takeException(), isA<AssertionError>());
+    },
+  );
+
+  testWidgets(
     "Changes the theme on store changing",
     (WidgetTester tester) async {
       final store = ThemeStore();
@@ -64,12 +73,14 @@ class MetricsThemeBuilderTestbed extends StatelessWidget {
   final MetricsThemeData lightTheme;
   final MetricsThemeData darkTheme;
   final ThemeStore themeStore;
+  final ThemeBuilder builder;
 
   const MetricsThemeBuilderTestbed({
     Key key,
     this.lightTheme,
     this.darkTheme,
     this.themeStore,
+    this.builder = _builder,
   }) : super(key: key);
 
   @override
@@ -82,11 +93,15 @@ class MetricsThemeBuilderTestbed extends StatelessWidget {
           return MetricsThemeBuilder(
             lightTheme: lightTheme,
             darkTheme: darkTheme,
-            child: Container(),
+            builder: builder,
           );
         },
       ),
     );
+  }
+
+  static Widget _builder(BuildContext context, ThemeStore store) {
+    return Container();
   }
 
   void _initThemeState() {
