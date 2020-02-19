@@ -16,7 +16,7 @@ This is similar to Gradle Enterprise except the goal is to support any build sys
 
 The design should support different color themes.
 
-![](../design/design.png)
+![](../design/light_theme/design.png)
 
 ![](../design/black_theme/design.png)
 
