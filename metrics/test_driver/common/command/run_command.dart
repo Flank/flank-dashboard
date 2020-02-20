@@ -16,8 +16,8 @@ class RunCommand extends _RunCommandBase {
   ///
   /// Enable rendering using the Skia software backend.
   /// This is useful when testing Flutter on emulators.
-  /// By default, Flutter will attempt to either use OpenGL or Vulkan
-  /// and fall back to software when neither is available.
+  /// By default, Flutter will attempt to either use OpenGL or Vulkan.
+  /// Will fall back to software when neither is available.
   void enableSoftwareRendering() => _add('--enable-software-rendering');
 
   /// --skia-deterministic-rendering
@@ -59,8 +59,7 @@ class RunCommand extends _RunCommandBase {
   /// This is a special font used in tests to remove any dependencies
   /// on the font metrics. It is enabled when you use "flutter test".
   /// Set this flag when running a test using "flutter run"
-  /// for debugging purposes. This flag is only available when
-  /// running in debug mode.
+  /// for debugging purposes. This flag is only available in debug mode.
   void userTestFonts() => _add('--use-test-fonts ');
 
   void noUserTestFonts() => _add('--no-use-test-fonts ');
@@ -75,7 +74,7 @@ class RunCommand extends _RunCommandBase {
 
   /// --[no-]hot
   ///
-  /// Run with support for hot reloading. Only available for debug mode.
+  /// Run with support for hot reloading. Only available in debug mode.
   /// Not available with "--trace-startup".
   /// (defaults to on)
   void hot() => _add('--hot');
@@ -91,7 +90,7 @@ class RunCommand extends _RunCommandBase {
   /// --[no-]fast-start
   ///
   /// Whether to quickly bootstrap applications with a minimal app.
-  /// Currently this is only supported on Android devices.
+  /// Currently, this is only supported on Android devices.
   /// This option cannot be paired with --use-application-binary.
   /// (defaults to on)
   void fastStart() => _add('--fast-start');
@@ -106,7 +105,7 @@ class RunCommand extends _RunCommandBase {
 
   /// --dart-define=FLUTTER_WEB_USE_SKIA=[value]
   ///
-  /// Enables the flutter web canvas rendering backend.
+  /// Specifies whether to use Skia for rendering or not.
   void useSkia({bool value = true}) =>
       _add('--dart-define=FLUTTER_WEB_USE_SKIA=$value');
 }
