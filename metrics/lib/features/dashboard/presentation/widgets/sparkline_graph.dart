@@ -157,6 +157,14 @@ class SparklineGraph extends StatelessWidget {
     if (data == null || data.isEmpty) return null;
 
     final sortedData = data.toList()..sort();
-    return DoubleSpan(sortedData.first.toDouble(), sortedData.last.toDouble());
+
+    final min = sortedData.first.toDouble();
+    double max = sortedData.last.toDouble();
+
+    if (min == max) {
+      max++;
+    }
+
+    return DoubleSpan(min, max);
   }
 }

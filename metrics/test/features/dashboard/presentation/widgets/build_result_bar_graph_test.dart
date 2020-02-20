@@ -5,6 +5,7 @@ import 'package:metrics/features/common/presentation/metrics_theme/model/build_r
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/domain/entities/build.dart';
+import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dart';
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
@@ -60,7 +61,10 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(const BuildResultBarGraphTestbed());
 
-      final barWidgets = tester.widgetList(find.byType(ColoredBar));
+      final barWidgets = tester.widgetList(find.descendant(
+        of: find.byType(LayoutBuilder),
+        matching: find.byType(ColoredBar),
+      ));
 
       expect(barWidgets.length, buildResults.length);
     },
@@ -83,8 +87,12 @@ void main() {
         ),
       ));
 
-      final barWidgets =
-          tester.widgetList<ColoredBar>(find.byType(ColoredBar)).toList();
+      final barWidgets = tester
+          .widgetList<ColoredBar>(find.descendant(
+            of: find.byType(LayoutBuilder),
+            matching: find.byType(ColoredBar),
+          ))
+          .toList();
 
       for (int i = 0; i < buildResults.length; i++) {
         final barWidget = barWidgets[i];
@@ -106,6 +114,22 @@ void main() {
 
         expect(barWidget.color, expectedBarColor);
       }
+    },
+  );
+
+  testWidgets(
+    "Creates placeholder bars if the number of build results is less than max number of build results",
+    (WidgetTester tester) async {
+      await tester.pumpWidget(const BuildResultBarGraphTestbed());
+
+      final missingBuildResultsCount =
+          GetBuildMetrics.maxNumberOfBuildResults - buildResults.length;
+
+      final placeholderBuildBars = tester.widgetList(
+        find.byType(PlaceholderBar),
+      );
+
+      expect(placeholderBuildBars.length, missingBuildResultsCount);
     },
   );
 }
