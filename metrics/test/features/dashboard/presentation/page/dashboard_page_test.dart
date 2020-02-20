@@ -95,7 +95,7 @@ void main() {
     );
 
     testWidgets(
-      "Changes the widget theme on switching to dark theme in drawer",
+      "Changes the widget theme on switching the theme in drawer",
       (WidgetTester tester) async {
         final themeStore = ThemeStore();
 
@@ -104,8 +104,8 @@ void main() {
         ));
         await tester.pumpAndSettle();
 
-        final circlePercentageValueColor =
-            _getCirclePercentageValueColor(tester);
+        final circlePercentageTitleColor =
+            _getCirclePercentageTitleColor(tester);
 
         await tester.tap(find.descendant(
           of: find.byType(AppBar),
@@ -116,31 +116,29 @@ void main() {
         await tester.tap(find.byType(CheckboxListTile));
         await tester.pump();
 
-        final newCirclePercentageValueColor =
-            _getCirclePercentageValueColor(tester);
+        final newCirclePercentageTitleColor =
+            _getCirclePercentageTitleColor(tester);
 
         expect(
-          newCirclePercentageValueColor,
-          isNot(circlePercentageValueColor),
+          newCirclePercentageTitleColor,
+          isNot(circlePercentageTitleColor),
         );
       },
     );
   });
 }
 
-Color _getCirclePercentageValueColor(WidgetTester tester) {
+Color _getCirclePercentageTitleColor(WidgetTester tester) {
   final circlePercentageFinder = find.descendant(
     of: find.widgetWithText(CirclePercentage, DashboardStrings.coverage),
-    matching: find.byType(CustomPaint),
+    matching: find.text(DashboardStrings.coverage),
   );
 
-  final customPaintWidget = tester.widget<CustomPaint>(
+  final titleWidget = tester.widget<Text>(
     circlePercentageFinder,
   );
 
-  final painter = customPaintWidget.painter as CirclePercentageChartPainter;
-
-  return painter.valueColor;
+  return titleWidget.style?.color;
 }
 
 class DashboardTestbed extends StatelessWidget {

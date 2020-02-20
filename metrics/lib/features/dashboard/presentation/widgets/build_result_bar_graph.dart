@@ -30,6 +30,7 @@ class BuildResultBarGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final widgetThemeData = MetricsTheme.of(context).buildResultTheme;
+    final titleTextStyle = titleStyle ?? widgetThemeData.titleStyle;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -37,10 +38,10 @@ class BuildResultBarGraph extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: ExpandableText(
               title,
-              style: titleStyle,
+              style: titleTextStyle,
             ),
           ),
         ),
