@@ -14,7 +14,6 @@ class BuildResultsThemeData {
   /// [failedColor] is the color of the failed build bar.
   /// [canceledColor] is the color of the canceled build bar.
   /// [titleStyle] is the [TextStyle] of the bar graph title.
-  /// If nothing is specified the [ThemeData]'s default text color will be used.
   const BuildResultsThemeData({
     this.successfulColor,
     this.failedColor,

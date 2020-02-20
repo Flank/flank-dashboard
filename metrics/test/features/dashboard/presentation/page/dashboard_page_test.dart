@@ -95,7 +95,7 @@ void main() {
     );
 
     testWidgets(
-      "Changes the widget theme on switching the theme in drawer",
+      "Changes the widget theme on switching theme in the drawer",
       (WidgetTester tester) async {
         final themeStore = ThemeStore();
 
