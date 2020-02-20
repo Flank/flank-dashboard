@@ -80,6 +80,8 @@ class _CirclePercentageState extends State<CirclePercentage>
   Widget build(BuildContext context) {
     final widgetThemeData =
         MetricsTheme.of(context).circlePercentagePrimaryTheme;
+    final valueColor = _getValueColor(widgetThemeData);
+    final titleStyle = widget.titleStyle ?? widgetThemeData.titleStyle;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -92,8 +94,6 @@ class _CirclePercentageState extends State<CirclePercentage>
             child: AnimatedBuilder(
               animation: _controller,
               builder: (BuildContext context, Widget child) {
-                final valueColor = _getValueColor(widgetThemeData);
-
                 return CustomPaint(
                   painter: CirclePercentageChartPainter._(
                     percent: _controller.value,
@@ -121,7 +121,7 @@ class _CirclePercentageState extends State<CirclePercentage>
                         Expanded(
                           child: ExpandableText(
                             widget.title,
-                            style: widget.titleStyle,
+                            style: titleStyle,
                           ),
                         ),
                       ],

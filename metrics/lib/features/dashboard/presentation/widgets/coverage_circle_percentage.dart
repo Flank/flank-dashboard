@@ -22,6 +22,7 @@ class CoverageCirclePercentage extends StatelessWidget {
       valueColor: circlePercentageAccentTheme.primaryColor,
       strokeColor: circlePercentageAccentTheme.accentColor,
       backgroundColor: circlePercentageAccentTheme.backgroundColor,
+      titleStyle: circlePercentageAccentTheme.titleStyle,
     );
   }
 }

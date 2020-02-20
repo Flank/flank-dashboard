@@ -70,6 +70,7 @@ class SparklineGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final widgetThemeData = MetricsTheme.of(context).sparklineTheme;
     final gradientStartColor = gradientColor ?? widgetThemeData?.accentColor;
+    final titleTextStyle = titleStyle ?? widgetThemeData.titleStyle;
 
     return Card(
       color: backgroundColor ?? widgetThemeData.backgroundColor,
@@ -113,11 +114,11 @@ class SparklineGraph extends StatelessWidget {
                 Expanded(
                   child: ExpandableText(
                     title,
-                    style: titleStyle,
+                    style: titleTextStyle,
                   ),
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
