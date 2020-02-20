@@ -62,7 +62,7 @@ class ProcessManager {
 
     bool seleniumIsUp = false;
 
-    while (seleniumIsUp) {
+    while (!seleniumIsUp) {
       final seleniumResponse =
           await http.get(seleniumHealthRequest).catchError((_) => null);
 
