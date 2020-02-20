@@ -34,6 +34,7 @@ class BuildResultBarGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final widgetThemeData = MetricsTheme.of(context).buildResultTheme;
+    final titleTextStyle = titleStyle ?? widgetThemeData.titleStyle;
     final missingBarsCount =
         GetBuildMetrics.maxNumberOfBuildResults - data.length;
 
@@ -43,10 +44,10 @@ class BuildResultBarGraph extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: ExpandableText(
               title,
-              style: titleStyle,
+              style: titleTextStyle,
             ),
           ),
         ),

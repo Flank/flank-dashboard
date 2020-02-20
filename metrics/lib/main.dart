@@ -20,16 +20,12 @@ class _MyAppState extends State<MyApp> {
           final isDark = store?.isDark ?? true;
 
           return MaterialApp(
-            title: 'Flutter Demo',
+            title: 'Metrics',
             routes: {
               '/dashboard': (context) => DashboardPage(),
             },
             theme: ThemeData(
-              textTheme: const TextTheme(
-                bodyText2: TextStyle(color: Colors.white),
-              ),
               brightness: isDark ? Brightness.dark : Brightness.light,
-              scaffoldBackgroundColor: _getScaffoldBackgroundColor(isDark),
               primarySwatch: Colors.blue,
               fontFamily: 'Bebas Neue',
             ),
@@ -38,11 +34,5 @@ class _MyAppState extends State<MyApp> {
         },
       ),
     );
-  }
-
-  Color _getScaffoldBackgroundColor(bool isDark) {
-    if (isDark) return Colors.grey[850];
-
-    return const Color(0xFF334678);
   }
 }
