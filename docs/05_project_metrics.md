@@ -1,5 +1,8 @@
 # Project metrics definitions
 
+## Build Result
+Project build result - successful or failed. 
+
 ## Performance
 Average build duration (without queue time) of successful builds.
 
