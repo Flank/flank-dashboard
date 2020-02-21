@@ -7,13 +7,14 @@ import '../../util/file_utils.dart';
 import '../command/command.dart';
 import '../config/browser_name.dart';
 import '../config/device.dart';
+import 'process/flutter_process.dart';
+import 'process/process_wrapper.dart';
+import 'process/selenium_process.dart';
 
 /// Starts new processes and then manages them.
 class ProcessManager {
   static const String flutterLogsFileName = 'flutter_logs';
   static const String driverLogsFileName = 'driver_logs';
-  static const String _flutterExecutableName = 'flutter';
-  static final _quiteAppCommand = 'q'.codeUnits;
 
   final List<Process> _startedProcesses = [];
   final int _port;
@@ -34,16 +35,10 @@ class ProcessManager {
     print("Cleaning...");
 
     for (final process in _startedProcesses) {
-      exitProcess(process);
+      process.kill();
     }
 
     exit(exitCode);
-  }
-
-  /// Quits the application running in the process and then kills the process.
-  void exitProcess(Process process) {
-    process.stdin.add(_quiteAppCommand);
-    process.kill();
   }
 
   /// Start the selenium server.
@@ -52,11 +47,16 @@ class ProcessManager {
   /// [workingDir] is the directory in which the selenium server file
   /// and driver files are placed.
   Future startSelenium(String seleniumFileName, String workingDir) async {
-    await _processStart(
-      'java',
-      ['-jar', seleniumFileName],
-      workingDirectory: workingDir,
+    final args = ['-jar', seleniumFileName];
+
+    _logCommandRun(SeleniumProcess.executableName, args);
+
+    final seleniumProcess = await SeleniumProcess.start(
+      args,
+      workingDir: workingDir,
     );
+
+    _startedProcesses.add(seleniumProcess);
 
     const seleniumHealthRequest = "http://localhost:4444/wd/hub/status";
 
@@ -91,23 +91,23 @@ class ProcessManager {
       runCommand.verbose();
     }
 
-    final flutterProcess = await _processStart(
-      _flutterExecutableName,
-      runCommand.buildArgs(),
-    );
+    final args = runCommand.buildArgs();
 
-    final flutterOutput = flutterProcess.stdout.asBroadcastStream();
-    final flutterErrors = flutterProcess.stderr.asBroadcastStream();
+    _logCommandRun(FlutterProcess.executableName, args);
 
-    flutterErrors.listen((_) => _processErrorHandler(flutterProcess));
+    final flutterProcess = await FlutterProcess.start(args);
 
-    _subscribeToOutput(
-      flutterOutput,
-      flutterErrors,
+    _startedProcesses.add(flutterProcess);
+
+    flutterProcess.stderrBroadcast
+        .listen((_) => _processErrorHandler(flutterProcess));
+
+    _subscribeToProcessOutput(
+      flutterProcess,
       logFileName,
     );
 
-    await flutterOutput.firstWhere((out) {
+    await flutterProcess.stdoutBroadcast.firstWhere((out) {
       if (out == null || out.isEmpty) return false;
       final consoleOut = String.fromCharCodes(out);
       return consoleOut.contains('is being served at');
@@ -135,23 +135,28 @@ class ProcessManager {
       driveCommand.verbose();
     }
 
-    final driverProcess = await _processStart(
-      _flutterExecutableName,
-      driveCommand.buildArgs(),
-    );
+    final args = driveCommand.buildArgs();
 
-    final driverOutput = driverProcess.stdout.asBroadcastStream();
-    final driverErrors = driverProcess.stderr.asBroadcastStream();
+    _logCommandRun(FlutterProcess.executableName, args);
 
-    driverErrors.listen((error) => _processErrorHandler(driverProcess));
+    final driverProcess = await FlutterProcess.start(args);
 
-    _subscribeToOutput(
-      driverOutput,
-      driverErrors,
+    _startedProcesses.add(driverProcess);
+
+    driverProcess.stderrBroadcast
+        .asBroadcastStream()
+        .listen((error) => _processErrorHandler(driverProcess));
+
+    _subscribeToProcessOutput(
+      driverProcess,
       driverLogsFileName,
     );
 
     exitCode = await driverProcess.exitCode;
+  }
+
+  void _logCommandRun(String executable, List<String> args) {
+    print("$executable ${args.join(" ")}\n");
   }
 
   /// Closes the application on process error.
@@ -164,11 +169,13 @@ class ProcessManager {
   /// the outputs to [logFileName] file.
   ///
   /// If is not in [_quiet] mode, writes the outputs into [stdout] and [stderr].
-  void _subscribeToOutput(
-    Stream<List<int>> outputStream,
-    Stream<List<int>> errorStream,
+  void _subscribeToProcessOutput(
+    ProcessWrapper process,
     String logFileName,
   ) {
+    final outputStream = process.stdoutBroadcast;
+    final errorStream = process.stderrBroadcast;
+
     if (!_quiet) {
       outputStream.listen(stdout.add);
       errorStream.listen(stderr.add);
@@ -180,27 +187,5 @@ class ProcessManager {
       logFileName,
       _logsDir,
     );
-  }
-
-  /// Starts a process running the [executable] with the specified [arguments].
-  ///
-  /// Adds the process pid to [_startedProcesses] to be able to terminate it.
-  /// Specify the [workingDirectory] to run the executable from this directory.
-  Future<Process> _processStart(
-    String executable,
-    List<String> arguments, {
-    String workingDirectory,
-  }) async {
-    print("$executable ${arguments.join(" ")}\n");
-
-    final process = await Process.start(
-      executable,
-      arguments,
-      workingDirectory: workingDirectory,
-    );
-
-    _startedProcesses.add(process);
-
-    return process;
   }
 }

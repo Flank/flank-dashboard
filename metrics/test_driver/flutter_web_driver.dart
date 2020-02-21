@@ -42,7 +42,7 @@ Future<void> main(List<String> arguments) async {
 
   await processManager.startDriverTests(browserName: args.browserName);
 
-  processManager.exitProcess(flutterProcess);
+  flutterProcess.kill();
 
   print('Running application using SKIA...');
 
