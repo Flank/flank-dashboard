@@ -58,7 +58,7 @@ Future<void> main(List<String> arguments) async {
   print(
       "Flutter logs are stored in $logsDirUri${ProcessManager.flutterLogsFileName}.log file");
   print(
-      "Flutter, runned with skia rendere, logs are stored in $logsDirUri$skiaFlutterLogsFileName.log file");
+      "Flutter, runned with skia renderer, logs are stored in $logsDirUri$skiaFlutterLogsFileName.log file");
   print(
       "Driver logs are stored in $logsDirUri${ProcessManager.driverLogsFileName}.log file");
 

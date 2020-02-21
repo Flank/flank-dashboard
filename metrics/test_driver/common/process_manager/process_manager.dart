@@ -8,7 +8,7 @@ import '../command/command.dart';
 import '../config/browser_name.dart';
 import '../config/device.dart';
 
-/// The class needed to manage started processes and start new processes.
+/// Starts new processes and then manages them.
 class ProcessManager {
   static const String flutterLogsFileName = 'flutter_logs';
   static const String driverLogsFileName = 'driver_logs';
@@ -29,7 +29,7 @@ class ProcessManager {
   })  : _verbose = verbose,
         _quiet = quiet;
 
-  /// Kills all started processes and exit the app with the current [exitCode].
+  /// Kills all started processes and then exits the app with the current [exitCode].
   void exitApp() {
     print("Cleaning...");
 
@@ -40,7 +40,7 @@ class ProcessManager {
     exit(exitCode);
   }
 
-  /// Quites the process's application and kills the process.
+  /// Quits the application running in the process and then kills the process.
   void exitProcess(Process process) {
     process.stdin.add(_quiteAppCommand);
     process.kill();
@@ -49,7 +49,7 @@ class ProcessManager {
   /// Start the selenium server.
   ///
   /// [seleniumFileName] is the name of the selenium server file.
-  /// [workingDir] is the directory in which the selenium server file.
+  /// [workingDir] is the directory in which the selenium server file
   /// and driver files are placed.
   Future startSelenium(String seleniumFileName, String workingDir) async {
     await _processStart(
