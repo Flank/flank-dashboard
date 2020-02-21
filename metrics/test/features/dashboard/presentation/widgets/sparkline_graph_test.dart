@@ -256,6 +256,37 @@ void main() {
       expect(chartLine.fill.gradient.colors.first, accentColor);
     },
   );
+
+  testWidgets(
+    "Draws the graph even if one of the graph axes is too short",
+    (WidgetTester tester) async {
+      const graphData = [
+        Point(1, 5),
+        Point(2, 5),
+      ];
+
+      await tester.pumpWidget(const SparklineGraphTestbed(
+        data: graphData,
+      ));
+
+      expect(find.byType(SparklineGraph), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Can draw the graph with only one point",
+    (WidgetTester tester) async {
+      const graphData = [
+        Point(1, 5),
+      ];
+
+      await tester.pumpWidget(const SparklineGraphTestbed(
+        data: graphData,
+      ));
+
+      expect(find.byType(SparklineGraph), findsOneWidget);
+    },
+  );
 }
 
 class SparklineGraphTestbed extends StatelessWidget {

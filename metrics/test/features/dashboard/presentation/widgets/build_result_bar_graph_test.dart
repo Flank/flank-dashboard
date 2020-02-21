@@ -9,6 +9,7 @@ import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dar
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/placeholder_bar.dart';
 
 void main() {
   const buildResults = BuildResultBarGraphTestbed.buildResultBarTestData;
@@ -118,7 +119,7 @@ void main() {
   );
 
   testWidgets(
-    "Creates placeholder bars if the number of build results is less than max number of build results",
+    "Creates placeholder bars if the number of build results is less than the max number of build results",
     (WidgetTester tester) async {
       await tester.pumpWidget(const BuildResultBarGraphTestbed());
 

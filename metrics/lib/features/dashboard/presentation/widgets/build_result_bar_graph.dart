@@ -7,6 +7,7 @@ import 'package:metrics/features/dashboard/presentation/model/build_result_bar_d
 import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/placeholder_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// [BarGraph] that represents the build result metric.
@@ -62,7 +63,7 @@ class BuildResultBarGraph extends StatelessWidget {
                     children: List.generate(
                       missingBarsCount,
                       (index) => const Expanded(
-                        child: PlaceholderBar._(
+                        child: PlaceholderBar(
                           width: _barWidth,
                         ),
                       ),
@@ -116,34 +117,5 @@ class BuildResultBarGraph extends StatelessWidget {
   /// Opens the [BuildResultBarData] url.
   void _onBarTap(BuildResultBarData data) {
     launch(data.url);
-  }
-}
-
-/// Represents the placeholder bar.
-///
-/// Used to fill empty space in [BuildResultBarGraph].
-class PlaceholderBar extends StatelessWidget {
-  final double width;
-
-  const PlaceholderBar._({
-    Key key,
-    @required this.width,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      height: 6.0,
-      child: ColoredBar(
-        color: Colors.transparent,
-        width: width,
-        borderRadius: BorderRadius.circular(4.0),
-        border: Border.all(
-          color: Colors.grey,
-          width: 2.0,
-        ),
-      ),
-    );
   }
 }
