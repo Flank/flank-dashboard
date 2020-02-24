@@ -258,7 +258,7 @@ void main() {
   );
 
   testWidgets(
-    "Draws the graph even if one of the graph axes is too short",
+    "Draws the graph even if one of the graph data axes length is 0",
     (WidgetTester tester) async {
       const graphData = [
         Point(1, 5),

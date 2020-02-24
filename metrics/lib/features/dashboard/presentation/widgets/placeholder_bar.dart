@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
 
 /// Represents the placeholder bar of the [BarGraph].
 class PlaceholderBar extends StatelessWidget {
   final double width;
 
+  /// Creates the [PlaceholderBar].
+  ///
+  /// This bar displays the missing/empty build in [BarGraph].
+  /// [width] is the width of this bar.
   const PlaceholderBar({
     Key key,
     @required this.width,
