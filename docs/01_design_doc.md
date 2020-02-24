@@ -2,7 +2,7 @@
 
 ## Problem
 
-Software teams lack insight into build performance, build stability, and codebase quality. There's not a language agnostic build and test analytics platform to visualize data in an actionable way.
+Software teams lack insight into [project metrics](05_project_metrics.md) like build performance, build stability, and codebase quality. There's not a language agnostic build and test analytics platform to visualize data in an actionable way.
 
 # What is the scope of the project?
 
@@ -19,6 +19,8 @@ The design should support different color themes.
 ![](../design/light_theme/design.png)
 
 ![](../design/black_theme/design.png)
+
+See [metrics dashboard](06_metrics_dashboard.md) for details.
 
 Overall status
 
