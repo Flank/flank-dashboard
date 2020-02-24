@@ -1,13 +1,8 @@
-import 'package:args/args.dart';
+import 'package:guardian/jira/model/jira_entity_property.dart';
 
 class OpenTicketRequest {
   final String projectId;
+  final List<JiraEntityProperty> properties;
 
-  OpenTicketRequest({this.projectId});
-
-  factory OpenTicketRequest.fromArgs(ArgResults argResults) {
-    return OpenTicketRequest(
-      projectId: argResults['projectId'] as String,
-    );
-  }
+  OpenTicketRequest({this.projectId, this.properties});
 }

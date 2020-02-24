@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:guardian/jira/client/jira_client.dart';
+import 'package:guardian/jira/client/jira_issue_client.dart';
 import 'package:guardian/jira/model/jira_config.dart';
 import 'package:guardian/jira/model/jira_issue_transition.dart';
 import 'package:guardian/runner/command/guardian_command.dart';
@@ -13,11 +13,11 @@ abstract class JiraCommand extends GuardianCommand {
   JiraConfig get config => JiraConfig()..readFromMap(loadConfigurations());
 
   Future<JiraIssueTransition> getIssueTransitionByCategoryKey(
-    JiraClient client,
+    JiraIssueClient client,
     String issueKey,
     String key,
   ) async {
-    final transitionsResponse = await client.getTransitions(issueKey);
+    final transitionsResponse = await client.getIssueTransitions(issueKey);
     if (transitionsResponse.isSuccess) {
       final transitions = transitionsResponse.result;
 

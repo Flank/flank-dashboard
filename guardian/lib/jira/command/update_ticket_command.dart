@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:guardian/jira/client/jira_client.dart';
+import 'package:guardian/jira/client/jira_issue_client.dart';
 import 'package:guardian/jira/command/jira_command.dart';
 import 'package:guardian/jira/model/issue_transition_request.dart';
 import 'package:guardian/jira/model/jira_config.dart';
@@ -34,7 +34,7 @@ class UpdateTicketCommand extends JiraCommand {
       return;
     }
 
-    final client = JiraClient.fromConfig(config);
+    final client = JiraIssueClient.fromConfig(config);
 
     final transition =
         await getIssueTransitionByCategoryKey(client, issueKey, 'new');

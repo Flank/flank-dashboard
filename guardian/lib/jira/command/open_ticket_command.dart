@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:guardian/jira/client/jira_client.dart';
+import 'package:guardian/jira/client/jira_issue_client.dart';
 import 'package:guardian/jira/command/jira_command.dart';
 import 'package:guardian/jira/model/jira_config.dart';
+import 'package:guardian/jira/model/jira_entity_property.dart';
 import 'package:guardian/jira/model/open_ticket_request.dart';
 
 class OpenTicketCommand extends JiraCommand {
@@ -14,6 +15,7 @@ class OpenTicketCommand extends JiraCommand {
 
   OpenTicketCommand() {
     addConfigOptionByNames(JiraConfig().toMap().keys.toList());
+    argParser.addOption('testcaseKey', help: 'Key of testcase');
   }
 
   @override
@@ -28,10 +30,22 @@ class OpenTicketCommand extends JiraCommand {
         'Missing required configurations for Jira: ${config.nullFields}',
       );
       return;
+    } else if (argResults['testcaseKey'] == null) {
+      stdout.writeln('Testcase key is missing');
+      return;
     }
 
-    final client = JiraClient.fromConfig(config);
-    final request = OpenTicketRequest.fromArgs(argResults);
+    final client = JiraIssueClient.fromConfig(config);
+
+    final request = OpenTicketRequest(
+      projectId: argResults['projectId'] as String,
+      properties: [
+        JiraEntityProperty(
+          key: 'testcaseKey',
+          value: argResults['testcaseKey'],
+        ),
+      ],
+    );
     final result = await client.openIssue(request);
 
     if (result.isSuccess) {
