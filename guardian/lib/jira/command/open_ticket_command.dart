@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:guardian/jira/client/jira_issue_client.dart';
 import 'package:guardian/jira/command/jira_command.dart';
 import 'package:guardian/jira/model/jira_config.dart';
-import 'package:guardian/jira/model/jira_entity_property.dart';
 import 'package:guardian/jira/model/open_ticket_request.dart';
 
 class OpenTicketCommand extends JiraCommand {
@@ -39,12 +38,7 @@ class OpenTicketCommand extends JiraCommand {
 
     final request = OpenTicketRequest(
       projectId: argResults['projectId'] as String,
-      properties: [
-        JiraEntityProperty(
-          key: 'testcaseKey',
-          value: argResults['testcaseKey'],
-        ),
-      ],
+      testcaseKey: argResults['testcaseKey'] as String,
     );
     final result = await client.openIssue(request);
 
