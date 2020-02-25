@@ -1,22 +1,24 @@
 import 'dart:io';
 
-import 'process_wrapper.dart';
+import '../../common/process/process_wrapper.dart';
+import '../command/flutter_command.dart';
 
 /// Represents the process of `flutter` command.
 ///
 /// Wrapper for [Process] to override [kill] method.
 class FlutterProcess extends ProcessWrapper {
-  static const executableName = 'flutter';
-
   FlutterProcess._(Process process) : super(process);
 
+  /// Starts the flutter process with the given [args].
+  ///
+  /// [workingDir] specifies the directory in which the command will be running.
   static Future<FlutterProcess> start(
-    List<String> args, {
+    FlutterCommand args, {
     String workingDir,
   }) async {
     final process = await Process.start(
-      executableName,
-      args,
+      FlutterCommand.executableName,
+      args.buildArgs(),
       workingDirectory: workingDir,
     );
 

@@ -9,4 +9,5 @@ linter:
 analyzer:
   errors:
     avoid_print: ignore
+    avoid_classes_with_only_static_members: ignore
     unawaited_futures: error

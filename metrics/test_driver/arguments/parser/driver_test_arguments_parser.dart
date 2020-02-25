@@ -1,12 +1,11 @@
 import 'package:args/args.dart';
 
-import '../config/browser_name.dart';
-import '../config/driver_tests_config.dart';
+import '../../common/config/browser_name.dart';
+import '../../common/config/driver_tests_config.dart';
+import '../model/driver_test_arguments.dart';
 
-/// Parses and provides the arguments for running the driver tests.
-///
-/// Available arguments: working-dir, port, store-logs-to and browser-name
-class DriverTestsArgs {
+/// Parses the arguments for the driver tests.
+class DriverTestArgumentsParser {
   static const String _workingDirOptionName = 'working-dir';
   static const String _portOptionName = 'port';
   static const String _storeLogsToOptionName = 'store-logs-to';
@@ -14,15 +13,9 @@ class DriverTestsArgs {
   static const String _verboseFlagName = 'verbose';
   static const String _quietFlagName = 'quiet';
 
-  String _workingDir;
-  String _logsDir;
-  int _port;
-  BrowserName _browserName;
-  bool _verbose;
-  bool _quiet;
-
-  DriverTestsArgs(List<String> args) {
-    final ArgParser _parser = ArgParser();
+  /// Parses the [args] and creates the [DriverTestArguments].
+  static DriverTestArguments parseArguments(List<String> args) {
+    final _parser = ArgParser();
 
     _parser.addOption(
       _workingDirOptionName,
@@ -64,28 +57,24 @@ class DriverTestsArgs {
     );
 
     final result = _parser.parse(args);
+
     final portArgString = result[_portOptionName] as String;
-    final browserName = result[_browserNameOptionName] as String;
+    final port = int.tryParse(portArgString) ?? DriverTestsConfig.port;
+
+    final browserNameArg = result[_browserNameOptionName] as String;
+    final browserName =
+        BrowserName.fromValue(browserNameArg) ?? BrowserName.chrome;
+
     final verbose = result[_verboseFlagName] as bool;
     final quiet = result[_quietFlagName] as bool;
 
-    _workingDir = result[_workingDirOptionName] as String;
-    _logsDir = result[_storeLogsToOptionName] as String;
-    _port = int.tryParse(portArgString) ?? DriverTestsConfig.port;
-    _browserName = BrowserName.fromValue(browserName) ?? BrowserName.chrome;
-    _verbose = verbose;
-    _quiet = quiet;
+    return DriverTestArguments(
+      port: port,
+      logsDir: result[_storeLogsToOptionName] as String,
+      workingDir: result[_workingDirOptionName] as String,
+      browserName: browserName,
+      verbose: verbose,
+      quiet: quiet,
+    );
   }
-
-  String get workDir => _workingDir;
-
-  int get port => _port;
-
-  String get logsDir => _logsDir;
-
-  BrowserName get browserName => _browserName;
-
-  bool get verbose => _verbose;
-
-  bool get quiet => _quiet;
 }
