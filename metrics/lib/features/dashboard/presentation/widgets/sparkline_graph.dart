@@ -158,12 +158,12 @@ class SparklineGraph extends StatelessWidget {
   DoubleSpan _createSpan(List<num> data) {
     if (data == null || data.isEmpty) return null;
 
-    double min;
-    double max;
+    double min = data.first.toDouble();
+    double max = data.first.toDouble();
 
     for (final value in data) {
-      if (min == null || min > value) min = value.toDouble();
-      if (max == null || max < value) max = value.toDouble();
+      if (min > value) min = value.toDouble();
+      if (max < value) max = value.toDouble();
     }
 
     final axisLength = max - min;
