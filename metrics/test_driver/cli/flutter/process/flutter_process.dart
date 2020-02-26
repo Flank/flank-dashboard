@@ -4,8 +4,6 @@ import '../../common/process/process_wrapper.dart';
 import '../command/flutter_command.dart';
 
 /// Represents the process of `flutter` command.
-///
-/// Wrapper for [Process] to override [kill] method.
 class FlutterProcess extends ProcessWrapper {
   FlutterProcess._(Process process) : super(process);
 
@@ -27,10 +25,12 @@ class FlutterProcess extends ProcessWrapper {
 
   /// Kills the flutter process by sending the 'quit' command.
   ///
-  /// We need to send the command instead of terminating the process to be sure
-  /// that the application, running on web-server, will be terminated with the process.
-  /// In the case of terminating the process, the application still running on
-  /// the web-server and holds the port, specified on running.
+  /// Flutter process is different from other processes as it spawns
+  /// web-server in a separate process.
+  /// So regular [Process] kill will kill only Flutter CLI process and
+  /// leaving web-server hanging.
+  /// For now, we send 'q' command to Flutter CLI to make sure that it
+  /// shutdowns properly by killing web-server process as well.
   @override
   bool kill([ProcessSignal signal = ProcessSignal.sigterm]) {
     this.stdin.writeln('q');
