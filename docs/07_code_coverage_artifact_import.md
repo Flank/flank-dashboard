@@ -111,6 +111,48 @@ There are several ways to retrieve artifacts using Buildkite API.
 
 More information in accessing artifacts you can find in [Artifacts API documentation](https://buildkite.com/docs/apis/rest-api/artifacts). Bitrise API [documentation](https://buildkite.com/docs/apis).
 
+# CircleCI
+
+## Deploy artifacts to Buildkite
+CircleCI build job can be configured to store generated artifacts as follows:
+1. In `.circleci/config.yml` go to a job you want to configure artifacts uploading for.
+2. Add the `store_artifacts` attribute to the `steps` section of the job. There is no limitations in number of `store_artifacts` steps within one job.
+3. In `store_artifacts` specify the `path` with path to directory/file you want to deploy (see example of such file below).
+```yaml
+version: 2.1
+workflows:
+  main:
+    jobs:
+      - build
+jobs:
+  build:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Creating Code Coverage Artifact
+          command: bash coverage.sh
+      - run:
+          name: Check codecove
+          command: ls
+      - store_artifacts:
+          path: coverage/
+
+```
+
+More information in artifacts storing can be found [here](https://circleci.com/docs/2.0/artifacts/). To get more familiar with CircleCI follow this [link](https://circleci.com/docs/2.0/about-circleci/#section=welcome).
+
+## Create API Access Token
+Some CircleCI endpoints requires authorization to communicate with them. CircleCI provides an ability to create Personal API Token that allows to act through API with no limitations. The following steps may be used to create a new token:
+1. Navigate to [Personal API Tokens tab](https://account.circleci.com/tokens) under [User Settings page](https://account.circleci.com/settings/user).
+2. Press the **Create New Token** button and type token name in the popup.
+3. Proceed by pressing **Add API Token** and copy a new token (make sure to take a copy at this step as token won't be visible again).
+4. Use the token in requests by using either a Basic Auth with **Authorization**, **Circle-Token** header or another way provided in CircleCI API ([v1.1](https://circleci.com/docs/api/#get-authenticated), [v2](https://circleci.com/docs/api/v2/#authentication)).
+
+## Retrieve artifacts via API
+
+
 # Dependencies
 > What is the project blocked on?
 
