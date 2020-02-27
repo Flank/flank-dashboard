@@ -256,6 +256,74 @@ void main() {
       expect(chartLine.fill.gradient.colors.first, accentColor);
     },
   );
+
+  testWidgets(
+    "Draws the graph even if one of the graph data axes length is 0",
+    (WidgetTester tester) async {
+      const graphData = [
+        Point(1, 5),
+        Point(2, 5),
+      ];
+
+      await tester.pumpWidget(const SparklineGraphTestbed(
+        data: graphData,
+      ));
+
+      expect(find.byType(SparklineGraph), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Can draw the graph with only one point",
+    (WidgetTester tester) async {
+      const graphData = [
+        Point(1, 5),
+      ];
+
+      await tester.pumpWidget(const SparklineGraphTestbed(
+        data: graphData,
+      ));
+
+      expect(find.byType(SparklineGraph), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Correctly calculates the chart axes bounds",
+    (WidgetTester tester) async {
+      const minAxisValue = 1;
+      const maxAxisValue = 8;
+
+      const sparklineData = [
+        Point(2, 3),
+        Point(minAxisValue, maxAxisValue),
+        Point(4, minAxisValue),
+        Point(maxAxisValue, 7),
+        Point(3, 8),
+      ];
+
+      await tester.pumpWidget(const SparklineGraphTestbed(
+        data: sparklineData,
+      ));
+      await tester.pumpAndSettle();
+
+      final chartWidget = tester.widget<LineChart>(find.byType(LineChart));
+      final chartLine = chartWidget.lines.first;
+
+      final xAxis = chartLine.xAxis as ChartAxis<num>;
+      final yAxis = chartLine.yAxis as ChartAxis<num>;
+
+      final xValues = sparklineData.map((point) => point.x).toList();
+      final xAxisSpan = xAxis.spanFn(xValues);
+      final yValues = sparklineData.map((point) => point.y).toList();
+      final yAxisSpan = yAxis.spanFn(yValues);
+
+      expect(xAxisSpan.min, minAxisValue);
+      expect(xAxisSpan.max, maxAxisValue);
+      expect(yAxisSpan.min, minAxisValue);
+      expect(yAxisSpan.max, maxAxisValue);
+    },
+  );
 }
 
 class SparklineGraphTestbed extends StatelessWidget {

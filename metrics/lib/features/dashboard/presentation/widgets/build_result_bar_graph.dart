@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/domain/entities/build.dart';
+import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dart';
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/placeholder_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// [BarGraph] that represents the build result metric.
 class BuildResultBarGraph extends StatelessWidget {
+  static const _barWidth = 8.0;
+
   final List<BuildResultBarData> data;
   final String title;
   final TextStyle titleStyle;
@@ -31,6 +35,8 @@ class BuildResultBarGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final widgetThemeData = MetricsTheme.of(context).buildResultTheme;
     final titleTextStyle = titleStyle ?? widgetThemeData.titleStyle;
+    final missingBarsCount =
+        GetBuildMetrics.maxNumberOfBuildResults - data.length;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -47,19 +53,45 @@ class BuildResultBarGraph extends StatelessWidget {
         ),
         Expanded(
           flex: 5,
-          child: BarGraph(
-            data: data,
-            onBarTap: _onBarTap,
-            barBuilder: (BuildResultBarData data) {
-              return Align(
-                alignment: Alignment.center,
-                child: ColoredBar(
-                  width: 8.0,
-                  color: _getBuildResultColor(data.result, widgetThemeData),
-                  borderRadius: BorderRadius.circular(35.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Expanded(
+                  flex: missingBarsCount,
+                  child: Row(
+                    children: List.generate(
+                      missingBarsCount,
+                      (index) => const Expanded(
+                        child: PlaceholderBar(
+                          width: _barWidth,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              );
-            },
+                Expanded(
+                  flex: data.length,
+                  child: BarGraph(
+                    data: data,
+                    graphPadding: EdgeInsets.zero,
+                    onBarTap: _onBarTap,
+                    barBuilder: (BuildResultBarData data) {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: ColoredBar(
+                          width: _barWidth,
+                          color: _getBuildResultColor(
+                              data.result, widgetThemeData),
+                          borderRadius: BorderRadius.circular(35.0),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
