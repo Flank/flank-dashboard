@@ -11,6 +11,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.
 /// by it's parent.
 class SparklineGraph extends StatelessWidget {
   static const _gradientColorStops = [0.0, 0.9];
+  static const _minChartAxisLength = 1;
 
   final String title;
   final String value;
@@ -151,13 +152,25 @@ class SparklineGraph extends StatelessWidget {
     );
   }
 
-  /// Creates the [DoubleSpan] for axises.
+  /// Creates the [DoubleSpan] for axes.
   ///
   /// The [DoubleSpan] represents the visible range of the axis.
   DoubleSpan _createSpan(List<num> data) {
     if (data == null || data.isEmpty) return null;
 
-    final sortedData = data.toList()..sort();
-    return DoubleSpan(sortedData.first.toDouble(), sortedData.last.toDouble());
+    double min = data.first.toDouble();
+    double max = data.first.toDouble();
+
+    for (final value in data) {
+      if (min > value) min = value.toDouble();
+      if (max < value) max = value.toDouble();
+    }
+
+    final axisLength = max - min;
+    if (axisLength < _minChartAxisLength) {
+      max += _minChartAxisLength - axisLength;
+    }
+
+    return DoubleSpan(min, max);
   }
 }
