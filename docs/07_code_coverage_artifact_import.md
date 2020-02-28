@@ -1,8 +1,15 @@
-# Project name
+# CI artifacts import
 > Summary of the proposed change
+
+Configuring CI tool to export coverage metric as artifact to make it available through API.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
+
+- [Bitrise](https://devcenter.bitrise.io/).
+- [Buildkite](https://buildkite.com/docs/tutorials/getting-started).
+- [CircleCI](https://circleci.com/docs/).
+- [Jenkins](https://jenkins.io/doc/).
 
 # Motivation
 > What problem is this project solving?
@@ -13,13 +20,17 @@
 # Non-Goals
 > Identify what's not in scope.
 
+Implementing code coverage artifact creation is not in scope.
+
 # Design
 > Explain and diagram the technical design
->
+
 > Identify risks and edge cases
 
 # API
 > What will the proposed API look like?
+
+`CI tool` → `Artifacts storage` → `Metrics app`
 
 # Bitrise
 
@@ -292,7 +303,11 @@ More information in Jenkins API can be found [here](https://wiki.jenkins.io/disp
 # Dependencies
 > What is the project blocked on?
 
+No blockers.
+
 > What will be impacted by the project?
+
+Importing/exporting code coverage metric approaches are impacted.
 
 # Testing
 > How will the project be tested?
@@ -305,12 +320,11 @@ More information in Jenkins API can be found [here](https://wiki.jenkins.io/disp
 
 DONE:
 
-  - 
+  - Document importing code coverage artifact for all supported CI tools.
 
 NEXT:
 
   - Populate the document with missing sections.
-  - Document importing code coverage artifact for all supported CI tools.
   
 # Results
 > What was the outcome of the project?
