@@ -148,10 +148,29 @@ Some CircleCI endpoints requires authorization to communicate with them. CircleC
 1. Navigate to [Personal API Tokens tab](https://account.circleci.com/tokens) under [User Settings page](https://account.circleci.com/settings/user).
 2. Press the **Create New Token** button and type token name in the popup.
 3. Proceed by pressing **Add API Token** and copy a new token (make sure to take a copy at this step as token won't be visible again).
-4. Use the token in requests by using either a Basic Auth with **Authorization**, **Circle-Token** header or another way provided in CircleCI API ([v1.1](https://circleci.com/docs/api/#get-authenticated), [v2](https://circleci.com/docs/api/v2/#authentication)).
+4. Use the token in requests by using either a Basic Auth with **Authorization** header, **Circle-Token** header or another way provided in CircleCI API ([v1.1](https://circleci.com/docs/api/#get-authenticated), [v2](https://circleci.com/docs/api/v2/#authentication)).
 
 ## Retrieve artifacts via API
+Here are endpoints that CircleCI provides to work with builds and artifacts:
+- **GET** /api/v1.1/project/{project_slug} responses with a list of builds for the project specified by a `project_slug`. Each build has a build number (the `build_num` field) and contain a flag that states whether this build has artifacts or not (the `has_artifacts` field).
+  ```text
+  {
+    // ...
+    "build_num": <integer>,
+    "has_artifacts": <boolean>,
+    // ...
+  }
+  ```
+- **GET** api/v1.1/project/{project_slug}/{build_number}/artifacts responses with a list of artifacts generated during a build specified by a `build_number`. Each artifact has the `url` field that contains a download URL for the artifact.
+  ```text
+  {
+    // ...
+    "path": "coverage/coverage.json",
+    "url": "https://.../coverage/coverage.json"
+  }
+  ```
 
+More information about the `project_slug` parameter can be found [here](https://circleci.com/docs/2.0/api-developers-guide/#getting-started-with-the-api). CircleCI API v1.1 (current stable version) [Summary](https://circleci.com/docs/api/#summary-of-api-endpoints) and [Overview](https://circleci.com/docs/api/#api-overview).
 
 # Dependencies
 > What is the project blocked on?
