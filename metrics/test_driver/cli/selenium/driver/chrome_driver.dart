@@ -12,15 +12,14 @@ class ChromeDriver {
   static Future<void> prepare(String workingDir) async {
     final chromeDriver = "$workingDir/chromedriver";
     final chromeDriverZip = "$chromeDriver.zip";
-
-    await FileUtils.download(
-      DriverTestsConfig.chromeDriverDownloadUrl,
-      chromeDriverZip,
-    );
-
     final chromeDriverFile = File(chromeDriver);
 
     if (!chromeDriverFile.existsSync()) {
+      await FileUtils.download(
+        DriverTestsConfig.chromeDriverDownloadUrl,
+        chromeDriverZip,
+      );
+
       final ZipDecoder archive = ZipDecoder();
       final chromeDriverBytes = File(chromeDriverZip).readAsBytesSync();
 

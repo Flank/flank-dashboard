@@ -15,7 +15,7 @@ abstract class ProcessRunner {
   }
 
   /// Completes when the application is fully started.
-  Future<void> get started;
+  Future<void> isAppStarted();
 
   /// The name of the executable.
   String get executableName;

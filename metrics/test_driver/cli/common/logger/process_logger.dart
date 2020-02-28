@@ -6,13 +6,11 @@ import '../process/process_wrapper.dart';
 class ProcessLogger extends Logger {
   /// Starts listening the [outputStream] and the [errorStream] and saving
   /// the outputs to [logFileName] file.
-  ///
-  /// If is not in [_quiet] mode, writes the outputs into [stdout] and [stderr].
   static void startLogging(ProcessWrapper process, String logFileName) {
     final outputStream = process.stdoutBroadcast;
     final errorStream = process.stderrBroadcast;
 
-    final logsFile = FileUtils.createLogFile(
+    final logsFile = FileUtils.createFile(
       logFileName,
       Logger.logsDirectory.path,
     );

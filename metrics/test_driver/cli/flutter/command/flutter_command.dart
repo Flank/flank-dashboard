@@ -1,10 +1,10 @@
 import '../../../common/config/device.dart';
-import '../../common/command/command_base.dart';
+import '../../common/command/command_builder.dart';
 
 /// Base class for wrappers of the flutter command.
 ///
 /// Contains all common command params for flutter executable.
-abstract class FlutterCommand extends CommandBase {
+abstract class FlutterCommand extends CommandBuilder {
   static const executableName = 'flutter';
 
   /// --verbose

@@ -1,7 +1,7 @@
-import '../../common/command/command_base.dart';
+import '../../common/command/command_builder.dart';
 
 /// Wrapper class for the 'java -jar selenium.jar' command.
-class SeleniumCommand extends CommandBase {
+class SeleniumCommand extends CommandBuilder {
   static const String executableName = 'java';
 
   SeleniumCommand(String jarName) {
@@ -10,7 +10,7 @@ class SeleniumCommand extends CommandBase {
 
   /// --debug
   ///
-  /// Enables debug log level
+  /// Enables debug log level.
   void debug({bool debug = false}) {
     addAll(['--debug', '$debug']);
   }
@@ -28,8 +28,7 @@ class SeleniumCommand extends CommandBase {
   /// hang while a WebDriver command is running (example: driver.get(url)). If
   /// the timeout is reached while a WebDriver command is still processing,
   /// the session will quit. Minimum value is 60. An unspecified, zero, or
-  /// negative value means wait indefinitely. If a node does not specify it,
-  /// the hub value will be used.
+  /// negative value means wait indefinitely.
   void browserTimeout(int timeout) {
     addAll(['--browserTimeout', '$timeout']);
   }
@@ -45,7 +44,7 @@ class SeleniumCommand extends CommandBase {
   /// -host
   ///
   /// [hostName] IP or hostname : usually determined automatically. Most
-  /// commonly useful in exotic network configurations (e.g. network with VPN)
+  /// commonly useful in exotic network configurations (e.g. network with VPN).
   void host(String hostName) {
     addAll(['-host', hostName]);
   }
@@ -61,7 +60,7 @@ class SeleniumCommand extends CommandBase {
   /// -log
   ///
   /// [filename] the filename to use for logging. If omitted, will
-  /// log to STDOUT
+  /// log to STDOUT.
   void log(String filename) {
     addAll(['-log', filename]);
   }

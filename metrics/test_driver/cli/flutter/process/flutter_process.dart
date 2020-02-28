@@ -7,7 +7,7 @@ import '../command/flutter_command.dart';
 class FlutterProcess extends ProcessWrapper {
   FlutterProcess._(Process process) : super(process);
 
-  /// Starts the flutter process with the given [args].
+  /// Starts the flutter executable with the given [args] in separate process.
   ///
   /// [workingDir] specifies the directory in which the command will be running.
   static Future<FlutterProcess> start(

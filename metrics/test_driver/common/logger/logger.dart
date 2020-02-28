@@ -1,6 +1,7 @@
 import 'dart:io';
 
-/// Prints the outputs to the console.
+/// Logger used to log messages from different parts of the application
+/// to the appropriate output stream (std, err) or file.
 class Logger {
   static bool _quiet = false;
   static Directory _logsDirectory;
@@ -9,21 +10,21 @@ class Logger {
 
   /// Configures [Logger].
   ///
-  /// [quiet] defines whether print any logs to console or not.
+  /// [quiet] quiet mode, if true - all log messages will be ignored.
   /// [logsDirectory] defines the directory to store logs.
   static void setup({bool quiet, Directory logsDirectory}) {
     _quiet = quiet;
     _logsDirectory = logsDirectory;
   }
 
-  /// Print the [value] as the default console output.
+  /// Print the [value] as to the [stdout].
   static void log(String value) {
     if (_quiet) return;
 
     stdout.writeln(value);
   }
 
-  /// Prints the [value] as the error console output.
+  /// Prints the [value] to the [stderr].
   static void error(String value) {
     if (_quiet) return;
 

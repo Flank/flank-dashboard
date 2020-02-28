@@ -2,10 +2,16 @@ import 'dart:io';
 
 import '../cli/common/logger/process_logger.dart';
 import '../cli/common/runner/process_runner.dart';
+import '../common/logger/logger.dart';
+
+typedef ProcessErrorHandler = void Function(Process process);
 
 /// Starts new processes and then manages them.
 class ProcessManager {
   final List<Process> _startedProcesses = [];
+  final ProcessErrorHandler processErrorHandler;
+
+  ProcessManager({this.processErrorHandler});
 
   /// Runs the process using the [runner], subscribes to logs, and saves
   /// the process to be able to kill it.
@@ -18,26 +24,19 @@ class ProcessManager {
       workingDir: workingDir,
     );
 
-    final runnerFinishedFuture = runner.started;
-
     _startedProcesses.add(process);
 
-    process.stderrBroadcast.listen((error) => _processErrorHandler(process));
+    process.stderrBroadcast.listen(
+      (error) => processErrorHandler?.call(process),
+    );
 
     if (logFileName != null) {
       ProcessLogger.startLogging(process, logFileName);
     }
 
-    await runnerFinishedFuture;
+    await runner.isAppStarted();
 
     return process;
-  }
-
-  /// Closes the application on process error.
-  Future<void> _processErrorHandler(Process process) async {
-    exitCode = await process.exitCode;
-    dispose();
-    exit(exitCode);
   }
 
   /// Kills the [process].
@@ -47,7 +46,7 @@ class ProcessManager {
 
   /// Kills all started processes.
   void dispose() {
-    print("Cleaning...");
+    Logger.log("Cleaning...");
 
     for (final process in _startedProcesses) {
       kill(process);

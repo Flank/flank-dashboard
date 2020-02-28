@@ -41,7 +41,7 @@ class DriverTestArgumentsParser {
       _browserNameOptionName,
       help:
           'Name of browser where tests will be executed. The default one is chrome',
-      defaultsTo: 'chrome',
+      defaultsTo: '${BrowserName.chrome}',
     );
 
     _parser.addFlag(
@@ -67,11 +67,13 @@ class DriverTestArgumentsParser {
 
     final verbose = result[_verboseFlagName] as bool;
     final quiet = result[_quietFlagName] as bool;
+    final logsDir = result[_storeLogsToOptionName] as String;
+    final workingDir = result[_workingDirOptionName] as String;
 
     return DriverTestArguments(
       port: port,
-      logsDir: result[_storeLogsToOptionName] as String,
-      workingDir: result[_workingDirOptionName] as String,
+      logsDir: logsDir,
+      workingDir: workingDir,
       browserName: browserName,
       verbose: verbose,
       quiet: quiet,

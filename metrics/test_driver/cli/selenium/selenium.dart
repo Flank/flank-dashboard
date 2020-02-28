@@ -23,8 +23,7 @@ class Selenium {
     await _prepareDrivers(workingDir);
   }
 
-  /// Checks if the chrome and firefox drivers are available,
-  /// otherwise downloads them to [workingDir].
+  /// Checks that required drivers are prepared.
   static Future<void> _prepareDrivers(String workingDir) async {
     await FirefoxDriver.prepare(workingDir);
     await ChromeDriver.prepare(workingDir);

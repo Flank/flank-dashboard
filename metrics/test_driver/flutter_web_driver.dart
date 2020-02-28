@@ -14,12 +14,12 @@ import 'process_manager/process_manager.dart';
 /// Runs the application and driver tests for this application.
 class FlutterWebDriver {
   final DriverTestArguments _args;
-  final ProcessManager _processManager = ProcessManager();
+  ProcessManager _processManager;
 
   /// Creates the [FlutterWebDriver].
   ///
-  /// [args] is the application arguments to run with.
-  /// See [DriverTestArgumentsParser] to get all available arguments.
+  /// [args] is the application arguments used to configure testing.
+  /// See [DriverTestArgumentsParser] for all supported arguments..
   FlutterWebDriver(List<String> args)
       : _args = DriverTestArgumentsParser.parseArguments(args);
 
@@ -28,9 +28,15 @@ class FlutterWebDriver {
     final bool verbose = _args.verbose;
     final int port = _args.port;
 
-    await _prepareSelenium();
-
     _setupLogger(_args.quiet);
+
+    _processManager = ProcessManager(
+      processErrorHandler: _processErrorHandler,
+    );
+
+    _prepareWorkingDir();
+
+    await _prepareSelenium();
 
     _setupDispose();
 
@@ -44,19 +50,21 @@ class FlutterWebDriver {
     final flutterAppProcess = await _runFlutterApp(port, verbose);
 
     Logger.log("Application is up, running tests...");
-    await _runDriverTests(port, verbose);
+    await _runDriverTests(port, verbose, LogsFileConfig.driverLogsFileName);
     _processManager.kill(flutterAppProcess);
 
     Logger.log('Running application using SKIA...');
     await _runFlutterApp(port, verbose, useSkia: true);
 
     Logger.log("SKIA Application is up, running tests...");
-    await _runDriverTests(port, verbose);
+    await _runDriverTests(port, verbose, LogsFileConfig.skiaDriverLogsFileName);
 
     _tearDown();
   }
 
-  /// Handles application termination and disposes the process manager.
+  /// Listens to the [stdout] onDone event to be able to dispose the [_processManager]
+  /// if the application was terminated by the user
+  /// (user closed the console window, quit the process, etc.)
   void _setupDispose() {
     stdout.done.asStream().listen((_) => _processManager.dispose());
   }
@@ -69,14 +77,15 @@ class FlutterWebDriver {
     Logger.setup(quiet: quiet, logsDirectory: logsDir);
   }
 
-  /// Prepares the selenium server for driver tests.
-  Future<void> _prepareSelenium() async {
+  /// Checks if the working dir exists and creates it if not.
+  void _prepareWorkingDir() {
     final Directory workingDir = Directory(_args.workingDir);
     if (!workingDir.existsSync()) workingDir.createSync();
+  }
 
-    final workingDirPath = workingDir.path;
-
-    await Selenium.prepare(workingDirPath);
+  /// Prepares the selenium server for driver tests.
+  Future<void> _prepareSelenium() async {
+    await Selenium.prepare(_args.workingDir);
   }
 
   /// Runs the flutter web app on specified [port].
@@ -102,11 +111,13 @@ class FlutterWebDriver {
 
   /// Runs the driver tests.
   ///
-  /// [port] is the port on which the application is running.
+  /// [port] is the port on which the application under test is running.
   /// [verbose] defines whether print the detailed logs or not.
+  /// [logsFileName] is the name of file to store the logs
   Future<void> _runDriverTests(
     int port,
     bool verbose,
+    String logsFileName,
   ) async {
     final driverProcessRunner = FlutterDriveProcessRunner(
       port: port,
@@ -116,10 +127,17 @@ class FlutterWebDriver {
 
     final driverProcess = await _processManager.run(
       driverProcessRunner,
-      logFileName: LogsFileConfig.driverLogsFileName,
+      logFileName: logsFileName,
     );
 
     await driverProcess.exitCode;
+  }
+
+  /// Disposes the [_processManager] and exits the app
+  /// with the [process]'s exit code.
+  Future<void> _processErrorHandler(Process process) async {
+    _processManager.dispose();
+    exit(await process.exitCode);
   }
 
   /// Cleans up the driver test before finishing it.
@@ -129,13 +147,13 @@ class FlutterWebDriver {
     final logsDirUri = Logger.logsDirectory.absolute.uri;
 
     Logger.log(
-        "Flutter logs are stored in $logsDirUri${LogsFileConfig.flutterLogsFileName}.log file");
+        "Flutter logs are stored in $logsDirUri${LogsFileConfig.flutterLogsFileName} file");
     Logger.log(
-        "Driver logs are stored in $logsDirUri${LogsFileConfig.driverLogsFileName}.log file");
+        "Driver logs are stored in $logsDirUri${LogsFileConfig.driverLogsFileName} file");
     Logger.log(
-        "Flutter, ran with skia renderer, logs are stored in $logsDirUri${LogsFileConfig.skiaFlutterLogsFileName}.log file");
+        "Flutter, ran with skia renderer, logs are stored in $logsDirUri${LogsFileConfig.skiaFlutterLogsFileName} file");
     Logger.log(
-        "Driver, ran with skia renderer, logs are stored in $logsDirUri${LogsFileConfig.skiaDriverLogsFileName}.log file");
+        "Driver, ran with skia renderer, logs are stored in $logsDirUri${LogsFileConfig.skiaDriverLogsFileName} file");
 
     _processManager.dispose();
   }

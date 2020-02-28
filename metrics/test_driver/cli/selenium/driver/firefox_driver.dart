@@ -12,15 +12,14 @@ class FirefoxDriver {
   static Future<void> prepare(String workingDir) async {
     final geckoDriver = '$workingDir/geckodriver';
     final geckoDriverArchive = '$geckoDriver-v0.26.0-macos.tar.gz';
-
-    await FileUtils.download(
-      DriverTestsConfig.firefoxDriverDownloadUrl,
-      geckoDriverArchive,
-    );
-
     final geckoDriverFile = File(geckoDriver);
 
     if (!geckoDriverFile.existsSync()) {
+      await FileUtils.download(
+        DriverTestsConfig.firefoxDriverDownloadUrl,
+        geckoDriverArchive,
+      );
+
       final archiveDecoder = GZipDecoder();
       final archive = TarDecoder();
 

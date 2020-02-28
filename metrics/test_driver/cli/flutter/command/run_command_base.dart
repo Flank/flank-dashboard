@@ -93,4 +93,6 @@ abstract class RunCommandBase extends FlutterCommand {
   /// (i.e. when compiling JIT, not AOT).
   /// (defaults to on)
   void trackWidgetCreation() => add('--track-widget-creation');
+
+  void noTrackWidgetCreation() => add('--no-track-widget-creation');
 }

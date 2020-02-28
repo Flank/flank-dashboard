@@ -26,7 +26,7 @@ class SeleniumProcessRunner implements ProcessRunner {
   }
 
   @override
-  Future<void> get started async {
+  Future<void> isAppStarted() async {
     bool seleniumIsUp = false;
 
     while (!seleniumIsUp) {

@@ -5,7 +5,6 @@ import 'run_command_base.dart';
 ///
 /// https://github.com/flutter/flutter/blob/f0a175f41d67c28312025a78278d4498ee488e4e/packages/flutter_tools/lib/src/commands/drive.dart#L116
 /// flutter drive --help
-///
 /// The [DriveCommand] extends the [RunCommandBase] because we can run
 /// the flutter app and start the driver tests at once.
 /// Unfortunately, this feature is not working with web applications,

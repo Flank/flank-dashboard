@@ -18,8 +18,8 @@ class SeleniumProcess extends ProcessWrapper {
 
   /// Wraps the [process] and represents is as a [SeleniumProcess].
   SeleniumProcess._(Process process) : super(process) {
-    process.stderr.listen(_stdoutController.add);
-    process.stdout.listen(_stdoutController.add);
+    super.stderr.listen(_stdoutController.add);
+    super.stdout.listen(_stdoutController.add);
 
     _stdoutBroadcast = _stdoutController.stream.asBroadcastStream();
   }

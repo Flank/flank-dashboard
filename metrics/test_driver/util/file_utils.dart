@@ -3,16 +3,19 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:http/http.dart';
 
+import '../common/logger/logger.dart';
+
 /// Util class to work with files.
 ///
 /// Helps to create, download and write data to files.
 class FileUtils {
-  /// Downloads file from [url] and saves it to [filePath].
+  /// If the [filePath] does not exists - downloads it, using the [url].
   static Future<void> download(String url, String filePath) async {
     final file = File(filePath);
 
     if (file.existsSync()) return;
-    print("Downloading $file");
+
+    Logger.log("Downloading $file");
 
     final downloadingResponse = await get(url);
 
@@ -21,7 +24,7 @@ class FileUtils {
 
     await file.writeAsBytes(downloadingResponse.bodyBytes);
 
-    print('Downloaded $filePath');
+    Logger.log('Downloaded $filePath');
   }
 
   /// Extracts files from [Archive] to [workingDir].
@@ -38,21 +41,21 @@ class FileUtils {
     }
   }
 
-  /// Creates the empty [fileName].log file in [workingDirPath].
+  /// Creates the empty [fileName] file in [workingDirPath].
   ///
-  /// If the file is already exists - cleans the file.
-  static File createLogFile(
+  /// If [cleanContent] is true - cleans the file.
+  static File createFile(
     String fileName,
-    String workingDirPath,
-  ) {
-    final File logsFile = File('$workingDirPath/$fileName.log');
+    String workingDirPath, {
+    bool cleanContent = true,
+  }) {
+    final File logsFile = File('$workingDirPath/$fileName');
 
     if (!logsFile.existsSync()) {
       logsFile.createSync();
     }
 
-    // Clear file before writing to avoid appending ald logs with new one.
-    logsFile.writeAsStringSync('');
+    if (cleanContent) logsFile.writeAsStringSync('');
 
     return logsFile;
   }
