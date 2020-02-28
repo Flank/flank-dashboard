@@ -23,7 +23,7 @@
 
 # Bitrise
 
-## Deploy artifacts to Bitrise
+## Deploy artifacts
 Artifacts are deployed into bitrise.io with the help of the **Deploy to Bitrise.io** Step. Use the following steps to get generated files accessible within build:
 1. Generate artifacts during one of workflow steps.
 2. Insert the Deploy to Bitrise.io Step AFTER the Step(s) that generate the artifacts.
@@ -32,7 +32,7 @@ Artifacts are deployed into bitrise.io with the help of the **Deploy to Bitrise.
 
 More information [here](https://devcenter.bitrise.io/builds/build-artifacts-online/).
 
-## Create Personal Access Token for API
+## Create API Access Token
 The authorization is required to communicate with Bitrise API. For this purpose the user can generate a Personal access token.
 1. On Bitrise navigate to your [Account settings](https://www.bitrise.io/me/profile) and click on the [Security tab](https://app.bitrise.io/me/profile#/security).
 2. Scroll to the **Personal access token (BETA)** section and press the **Generate new** button.
@@ -45,14 +45,14 @@ For more detailed instructions please see [discussion](https://discuss.bitrise.i
 ## Retrieve artifacts via API
 Bitrise provides several endpoints to work with builds and artifacts. Here is a list of endpoints you can use to import code coverage artifact:
  - **GET** `/apps/{app-slug}/builds` responses with a list of builds. Each build contains `slug` field which stands for ID of this build. Select one you want to load code coverage artifact for and proceed to next endpoint.
- - **GET** `/apps/{app-slug}/builds/{build-slug}/artifacts` responses with a list of artifacts generated and deployed during the build specified by `build-slug` path parameter. Select one you need and use it `slug` field within the next endpoint.
+ - **GET** `/apps/{app-slug}/builds/{build-slug}/artifacts` responses with a list of artifacts generated and deployed during the build specified by `build-slug` path parameter. Select one you need and use its `slug` field within the next endpoint.
  - **GET** `/apps/{app-slug}/builds/{build-slug}/artifacts/{artifact-slug}` responses with an artifact description specified by `artifact-slug` path parameter. The response body contains JSON with the `expiring_download_url` field containing URL for downloading artifact.
 
 More information in accessing artifacts you can find in [documentation](https://devcenter.bitrise.io/getting-started/managing-files-on-bitrise/). Bitrise API [specification](https://api-docs.bitrise.io/#/).
 
 # Buildkite
 
-## Deploy artifacts to Buildkite
+## Deploy artifacts
 Artifacts can be uploaded automatically after a pipeline's build step finishes its execution. This requires additional configurations to the build step using either web UI on Builkite or `pipeline.yml` configuration file in your project.
 - **Using web UI**:
     1. Under the **Steps** section within pipeline settings create a new step pressing **Add** button or select an existing step from the list.
@@ -113,11 +113,12 @@ More information in accessing artifacts you can find in [Artifacts API documenta
 
 # CircleCI
 
-## Deploy artifacts to Buildkite
+## Deploy artifacts
 CircleCI build job can be configured to store generated artifacts as follows:
 1. In `.circleci/config.yml` go to a job you want to configure artifacts uploading for.
 2. Add the `store_artifacts` attribute to the `steps` section of the job. There is no limitations in number of `store_artifacts` steps within one job.
 3. In `store_artifacts` specify the `path` with path to directory/file you want to deploy (see example of such file below).
+
 ```yaml
 version: 2.1
 workflows:
@@ -138,7 +139,6 @@ jobs:
           command: ls
       - store_artifacts:
           path: coverage/
-
 ```
 
 More information in artifacts storing can be found [here](https://circleci.com/docs/2.0/artifacts/). To get more familiar with CircleCI follow this [link](https://circleci.com/docs/2.0/about-circleci/#section=welcome).
@@ -171,6 +171,123 @@ Here are endpoints that CircleCI provides to work with builds and artifacts:
   ```
 
 More information about the `project_slug` parameter can be found [here](https://circleci.com/docs/2.0/api-developers-guide/#getting-started-with-the-api). CircleCI API v1.1 (current stable version) [Summary](https://circleci.com/docs/api/#summary-of-api-endpoints) and [Overview](https://circleci.com/docs/api/#api-overview).
+
+# Jenkins
+
+## Deploy artifacts
+Jenkins build job can be configured to store generated artifacts as follows:
+1. In `Jenkinsfile` go to a stage you want to configure artifacts uploading for.
+2. Add the `post` section to the stage.
+3. Add `archiveArtifacts` step to the created `post` section with path to file or path pattern (see example below).
+
+```text
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'bash coverage.sh'
+            }
+            post {
+                always {
+                    archiveArtifacts 'coverage/*'
+                }
+            }
+        }
+    }
+}
+```
+
+For more information in storing artifacts follow Jenkins [documentation](https://jenkins.io/doc/) and this [tour](https://jenkins.io/doc/pipeline/tour/tests-and-artifacts/)
+
+## Create API Access Token
+To access Jenkins endpoints the authorization is required. You can use your username and password you've registered with within a HTTP Basic Auth. For example:
+1. Base64 encode username and password string as `username:password`.
+2. Pass the result to `Authorization` header as `Authorization: Basic <token>`.
+
+## Retrieve artifacts via API
+Here are Jenkins' endpoints to work with builds and artifacts:
+- **GET** `{jenkins_url}/api/json` responses with a master node of Jenkins that contains common information and list of jobs (aka Pipelines) available.
+  ```text
+  {
+    // ...
+    "jobs": [
+      {
+        "name": <string>,
+        // ...
+      },
+      // ...
+    ]
+  }
+  ```
+  Alternatively, you can request **GET** `{jenkins_url}/api/json?tree=jobs[name]` to fetch only list of jobs available.
+  ```text
+  {
+    "jobs": [
+      {
+        "name": <string>
+      },
+      // ...
+    ]
+  }
+  ```
+  Select desired job and proceed to next endpoints using its `name` field.
+- **GET** `{jenkins_url}/job/{job_name}/api/json` responses with a job common information that contains a list of jobs (aka Workflows) available.
+  ```text
+  {
+    // ...
+    "name": "{job_name}",
+    "jobs": [
+      {
+        "name": <string>,
+        // ...
+      },
+      // ...
+    ]
+  }
+  ```
+  Alternatively, you can request **GET** `{jenkins_url}/job/{job_name}/api/json?tree=jobs[name]` to fetch only list of jobs available within specified job. Use the `name` of desired job and proceed to retrieving builds data.
+- **GET** `{jenkins_url}/job/{job_name}/job/{subjob_name}/api/json` responses with a job common information that contains useful data about builds (first build, last build, last failed build, etc.) and a list of builds.
+  ```text
+  {
+    // ...
+    "fullName": "{job_name}/{subjob_name}",
+    "name": "{subjob_name}",
+    "builds": [
+      {
+        "number": <integer>,
+        // ...
+      },
+      // ...
+    ]
+  }
+  ```
+  Same to previous endpoints, you can request **GET** `{jenkins_url}/job/{job_name}/job/{subjob_name}/api/json?tree=builds[number]` to fetch only list of builds with numbers.
+- **GET** `{jenkins_url}/job/{job_name}/job/{subjob_name}/{build_number}/api/json` responses with a build specified by the `build_number` parameter. It also contains a list of artifacts generated during the build.
+  ```text
+  {
+    // ...
+    "number": build_number,
+    "artifacts": [
+      {
+        "displayPath": <string>,
+        "fileName": <string>,
+        "relativePath": <string>
+      },
+      // ...
+    ]
+  }
+  ```
+  You can request **GET** `{jenkins_url}/job/{job_name}/job/{subjob_name}/{build_number}/api/json?tree=artifacts[displayPath,fileName,relativePath]` to fetch only artifacts list for a build.
+- **GET** `{jenkins_url}/job/{job_name}/job/{subjob_name}/{build_number}/artifact/{relativePath}` responses with artifact found by `relativePath`. For example **GET** `{jenkins_url}/job/Test/job/master/5/artifact/coverage/coverage.json`
+
+Using the `tree` query parameter for Jenkins API we can define properties of responses within different depth level. For example, fetch all builds with their artifacts for a job: 
+```text
+GET {jenkins_url}/job/{job_name}/job/{subjob_name}/api/json?tree=name,fullName,builds[number,result,artifacts[displayPath,fileName,relativePath]]
+```
+The same possible with the `depth` query parameter but responses with fat JSON. For example, **GET** `{jenkins_url}/job/{job_name}/job/{subjob_name}/api/json?depth=1` responses with all information we've requested in the `tree` parameter above but the response size in more than 3 times larger.
+
+More information in Jenkins API can be found [here](https://wiki.jenkins.io/display/JENKINS/Remote+access+API).
 
 # Dependencies
 > What is the project blocked on?
