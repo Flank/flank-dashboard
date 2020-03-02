@@ -1,7 +1,7 @@
 # CI artifacts import
 > Summary of the proposed change
 
-Configuring CI tool to export coverage metric as artifact to make it available through API.
+Configuring CI tool to export coverage metric as an artifact to make it available through API.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -14,23 +14,32 @@ Configuring CI tool to export coverage metric as artifact to make it available t
 # Motivation
 > What problem is this project solving?
 
+Importing coverage artifacts from CI using its API.
+
 # Goals
 > Identify success metrics and measurable goals.
+
+* A CI tool can export coverage metric as an artifact.
+* Exported artifacts are accessible via the CI's API.
 
 # Non-Goals
 > Identify what's not in scope.
 
-Implementing code coverage artifact creation is not in scope.
+Implementing code coverage artifact creation is out of scope. 
 
 # Design
 > Explain and diagram the technical design
 
+`CI tool` → `Artifacts storage` → `Metrics app`
+
 > Identify risks and edge cases
+
+* The approach is sensitive to breaks/changes of CI artifacts storage and API server - if one changes the importing flow will may require changes as well. 
 
 # API
 > What will the proposed API look like?
 
-`CI tool` → `Artifacts storage` → `Metrics app`
+Add a build step to export coverage metric as artifact - so, later on, it is accessible via API from artifacts related to the build.
 
 # Bitrise
 
@@ -312,8 +321,17 @@ Importing/exporting code coverage metric approaches are impacted.
 # Testing
 > How will the project be tested?
 
+Testing implementations related to importing coverage artifacts is a testing third-party API interactions and thus requires Third-party API testing approaches described [here](03_third_party_api_testing.md).
+
 # Alternatives Considered
 > Summarize alternative designs (pros & cons)
+
+* Creating a separate CLI application for importing code coverage artifacts.
+    - Pros:
+        - No need in additional CI configurations.
+        - Coverage importing process are not impacted by CI API server.
+    - Cons:
+        - Complicates maintenance process.
 
 # Timeline
 > Document milestones and deadlines.
@@ -321,10 +339,7 @@ Importing/exporting code coverage metric approaches are impacted.
 DONE:
 
   - Document importing code coverage artifact for all supported CI tools.
-
-NEXT:
-
-  - Populate the document with missing sections.
+  - Document API interactions for importing coverage artifacts.
   
 # Results
 > What was the outcome of the project?
