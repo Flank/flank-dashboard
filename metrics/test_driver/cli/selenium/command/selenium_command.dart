@@ -4,6 +4,9 @@ import '../../common/command/command_builder.dart';
 class SeleniumCommand extends CommandBuilder {
   static const String executableName = 'java';
 
+  /// Creates the [SeleniumCommand].
+  ///
+  /// [jarName] is the name of the selenium server jar file to be run.
   SeleniumCommand(String jarName) {
     addAll(['-jar', jarName]);
   }
@@ -36,7 +39,7 @@ class SeleniumCommand extends CommandBuilder {
   /// -config
   ///
   /// [filename] JSON configuration file for the standalone server.
-  /// Overrides default values
+  /// Overrides default selenium config.
   void config(String filename) {
     addAll(['-config', filename]);
   }

@@ -19,6 +19,6 @@ abstract class FlutterCommand extends CommandBuilder {
 
   /// --machine
   ///
-  /// Outputs the information using JSON
+  /// Outputs the information using JSON.
   void machine() => add('--machine');
 }

@@ -9,9 +9,9 @@ import 'driver/firefox_driver.dart';
 class Selenium {
   static const String seleniumFileName = 'selenium.jar';
 
-  /// Checks if the selenium server file and drivers for it are available
-  /// in [workingDir] directory.
-  /// Downloads them to [workingDir] if not exists.
+  /// Prepares the selenium server and drivers for it.
+  /// Checks if the selenium server and driver files exist, and downloads
+  /// them if not.
   static Future<void> prepare(String workingDir) async {
     final selenium = "$workingDir/$seleniumFileName";
     final seleniumFile = File(selenium);

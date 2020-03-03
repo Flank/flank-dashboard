@@ -11,7 +11,7 @@ import '../command/selenium_command.dart';
 /// and create a new empty stream for stderr to be sure that logs from
 /// selenium server won't fail our app.
 class SeleniumProcess extends ProcessWrapper {
-  final Stream<List<int>> _stderr = const Stream.empty();
+  final Stream<List<int>> _emptyStream = const Stream.empty();
   final StreamController<List<int>> _stdoutController = StreamController();
 
   StreamSubscription _stderrSubscription;
@@ -42,10 +42,10 @@ class SeleniumProcess extends ProcessWrapper {
   }
 
   @override
-  Stream<List<int>> get stderr => _stderr;
+  Stream<List<int>> get stderr => _emptyStream;
 
   @override
-  Stream<List<int>> get stderrBroadcast => _stderr;
+  Stream<List<int>> get stderrBroadcast => _emptyStream;
 
   @override
   Stream<List<int>> get stdout => _stdoutController.stream;

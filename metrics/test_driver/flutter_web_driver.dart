@@ -64,7 +64,7 @@ class FlutterWebDriver {
 
   /// Listens to the [stdout] onDone event to be able to dispose the [_processManager]
   /// if the application was terminated by the user
-  /// (user closed the console window, quit the process, etc.)
+  /// (user closed the console window, quit the process, etc.).
   void _setupDispose() {
     stdout.done.asStream().listen((_) => _processManager.dispose());
   }

@@ -67,6 +67,7 @@ abstract class RunCommandBase extends FlutterCommand {
     add('--vmservice-out-file=$filePath');
   }
 
+  /// --device-vmservice-port=<[port]>
   ///
   /// Look for vmservice connections only from the specified port.
   /// Specifying port 0 (the default) will accept the first vmservice discovered.

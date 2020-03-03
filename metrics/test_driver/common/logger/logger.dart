@@ -33,6 +33,8 @@ class Logger {
 
   /// Appends the [file] with the [value].
   static void logToFile(String value, File file) {
+    if (_quiet) return;
+
     file.writeAsStringSync(value, mode: FileMode.append);
   }
 }

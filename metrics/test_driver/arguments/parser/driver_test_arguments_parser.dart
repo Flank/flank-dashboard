@@ -14,10 +14,14 @@ class DriverTestArgumentsParser {
   static const String _quietFlagName = 'quiet';
   static const String _helpFlagName = 'help';
 
-  static final _parser = ArgParser();
+  final _parser = ArgParser();
+
+  DriverTestArgumentsParser() {
+    _configureParser();
+  }
 
   /// Parses the [args] and creates the [DriverTestArguments].
-  static DriverTestArguments parseArguments(List<String> args) {
+  DriverTestArguments parseArguments(List<String> args) {
     final result = _parser.parse(args);
 
     final portArgString = result[_portOptionName] as String;
@@ -45,7 +49,7 @@ class DriverTestArgumentsParser {
   }
 
   /// Configures all available arguments.
-  static void configureParser() {
+  void _configureParser() {
     _parser.addCommand('flutter_web_driver');
 
     _parser.addFlag(
@@ -95,7 +99,7 @@ class DriverTestArgumentsParser {
     );
   }
 
-  static void showHelp() {
+  void showHelp() {
     print(_parser.usage);
   }
 }
