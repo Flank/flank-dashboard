@@ -14,12 +14,15 @@ class SeleniumProcess extends ProcessWrapper {
   final Stream<List<int>> _stderr = const Stream.empty();
   final StreamController<List<int>> _stdoutController = StreamController();
 
+  StreamSubscription _stderrSubscription;
+  StreamSubscription _stdoutSubscription;
+
   Stream<List<int>> _stdoutBroadcast;
 
   /// Wraps the [process] and represents is as a [SeleniumProcess].
   SeleniumProcess._(Process process) : super(process) {
-    super.stderr.listen(_stdoutController.add);
-    super.stdout.listen(_stdoutController.add);
+    _stderrSubscription = super.stderr.listen(_stdoutController.add);
+    _stdoutSubscription = super.stdout.listen(_stdoutController.add);
 
     _stdoutBroadcast = _stdoutController.stream.asBroadcastStream();
   }
@@ -49,4 +52,12 @@ class SeleniumProcess extends ProcessWrapper {
 
   @override
   Stream<List<int>> get stdoutBroadcast => _stdoutBroadcast;
+
+  @override
+  void dispose() {
+    _stderrSubscription?.cancel();
+    _stdoutSubscription?.cancel();
+    _stdoutController.close();
+    super.dispose();
+  }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'arguments/model/driver_test_arguments.dart';
 import 'arguments/parser/driver_test_arguments_parser.dart';
+import 'cli/common/process/process_wrapper.dart';
 import 'cli/flutter/runner/flutter_drive_process_runner.dart';
 import 'cli/flutter/runner/flutter_run_process_runner.dart';
 import 'cli/selenium/runner/selenium_process_runner.dart';
@@ -20,8 +21,7 @@ class FlutterWebDriver {
   ///
   /// [args] is the application arguments used to configure testing.
   /// See [DriverTestArgumentsParser] for all supported arguments..
-  FlutterWebDriver(List<String> args)
-      : _args = DriverTestArgumentsParser.parseArguments(args);
+  FlutterWebDriver(this._args);
 
   /// Configures environment and starts driver tests.
   Future<void> startDriverTests() async {
@@ -92,7 +92,7 @@ class FlutterWebDriver {
   ///
   /// [verbose] defines whether to print detailed logs or not.
   /// [useSkia] defines whether use the SKIA renderer or not.
-  Future<Process> _runFlutterApp(
+  Future<ProcessWrapper> _runFlutterApp(
     int port,
     bool verbose, {
     bool useSkia = false,

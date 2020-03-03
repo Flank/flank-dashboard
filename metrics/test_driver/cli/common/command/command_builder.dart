@@ -11,12 +11,14 @@ abstract class CommandBuilder {
 
   /// Adds the [arg] to the argument list.
   @protected
+  @nonVirtual
   void add(String arg) {
     _args.add(arg);
   }
 
   /// Adds all the arguments from [args] to the argument list.
   @protected
+  @nonVirtual
   void addAll(List<String> args) {
     _args.addAll(args);
   }

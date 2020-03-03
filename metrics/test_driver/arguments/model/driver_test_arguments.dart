@@ -8,6 +8,7 @@ class DriverTestArguments {
   final BrowserName browserName;
   final bool verbose;
   final bool quiet;
+  final bool showHelp;
 
   /// Creates the [DriverTestArguments].
   ///
@@ -17,6 +18,7 @@ class DriverTestArguments {
   /// [browserName] is the name of the browser, used to run the tests.
   /// [verbose] specifies whether run all commands with the `--verbose` flag or not.
   /// [quiet] disables any prints to the console.
+  /// [showHelp] specifies whether to print the usage information or not.
   DriverTestArguments({
     this.workingDir,
     this.logsDir,
@@ -24,5 +26,6 @@ class DriverTestArguments {
     this.browserName,
     this.verbose,
     this.quiet,
+    this.showHelp,
   });
 }

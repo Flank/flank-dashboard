@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:meta/meta.dart';
+
 /// Base class for [Process] wrappers.
 ///
 /// Providers the [stderrBroadcast] and [stdinBroadcast] streams to allow multi subscriptions.
@@ -13,12 +15,15 @@ abstract class ProcessWrapper implements Process {
   Stream<List<int>> _stderrBroadcast;
   Stream<List<int>> _stdoutBroadcast;
 
+  StreamSubscription _stdoutSubscription;
+  StreamSubscription _stderrSubscription;
+
   /// Creates the [ProcessWrapper] that delegates to the [_process].
   ProcessWrapper(this._process) {
-    _process.stdout.listen(_stdoutController.add);
+    _stdoutSubscription = _process.stdout.listen(_stdoutController.add);
     _stdoutBroadcast = _stdoutController.stream.asBroadcastStream();
 
-    _process.stderr.listen(_stderrController.add);
+    _stderrSubscription = _process.stderr.listen(_stderrController.add);
     _stderrBroadcast = _stderrController.stream.asBroadcastStream();
   }
 
@@ -47,4 +52,13 @@ abstract class ProcessWrapper implements Process {
 
   /// The broadcast stream of the process output.
   Stream<List<int>> get stdoutBroadcast => _stdoutBroadcast;
+
+  /// Cancels creates subscriptions and closes the [StreamController]s.
+  @mustCallSuper
+  void dispose() {
+    _stdoutSubscription?.cancel();
+    _stderrSubscription?.cancel();
+    _stderrController.close();
+    _stdoutController.close();
+  }
 }

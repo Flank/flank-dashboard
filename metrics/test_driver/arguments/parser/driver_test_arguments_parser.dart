@@ -12,50 +12,12 @@ class DriverTestArgumentsParser {
   static const String _browserNameOptionName = 'browser-name';
   static const String _verboseFlagName = 'verbose';
   static const String _quietFlagName = 'quiet';
+  static const String _helpFlagName = 'help';
+
+  static final _parser = ArgParser();
 
   /// Parses the [args] and creates the [DriverTestArguments].
   static DriverTestArguments parseArguments(List<String> args) {
-    final _parser = ArgParser();
-
-    _parser.addOption(
-      _workingDirOptionName,
-      help:
-          "The directory to save the selenium server and browser drivers files. The default is 'build'",
-      defaultsTo: '${DriverTestsConfig.defaultWorkingDirectory}',
-    );
-
-    _parser.addOption(
-      _portOptionName,
-      help: 'The port to serve the runned application from',
-      defaultsTo: '${DriverTestsConfig.port}',
-    );
-
-    _parser.addOption(
-      _storeLogsToOptionName,
-      help:
-          "The directory to store output from running application and driver tests. The default is 'build'",
-      defaultsTo: DriverTestsConfig.defaultWorkingDirectory,
-    );
-
-    _parser.addOption(
-      _browserNameOptionName,
-      help:
-          'Name of browser where tests will be executed. The default one is chrome',
-      defaultsTo: '${BrowserName.chrome}',
-    );
-
-    _parser.addFlag(
-      _verboseFlagName,
-      help: "The verbose mode pronts all the outputs to the stdout",
-      abbr: 'v',
-      defaultsTo: true,
-    );
-
-    _parser.addFlag(
-      _quietFlagName,
-      help: 'Silences all the driver and run command outputs',
-    );
-
     final result = _parser.parse(args);
 
     final portArgString = result[_portOptionName] as String;
@@ -69,6 +31,7 @@ class DriverTestArgumentsParser {
     final quiet = result[_quietFlagName] as bool;
     final logsDir = result[_storeLogsToOptionName] as String;
     final workingDir = result[_workingDirOptionName] as String;
+    final showHelp = result[_helpFlagName] as bool;
 
     return DriverTestArguments(
       port: port,
@@ -77,6 +40,62 @@ class DriverTestArgumentsParser {
       browserName: browserName,
       verbose: verbose,
       quiet: quiet,
+      showHelp: showHelp,
     );
+  }
+
+  /// Configures all available arguments.
+  static void configureParser() {
+    _parser.addCommand('flutter_web_driver');
+
+    _parser.addFlag(
+      _helpFlagName,
+      abbr: 'h',
+      help: 'Prints the usage information',
+      negatable: false,
+    );
+
+    _parser.addFlag(
+      _verboseFlagName,
+      help: "The verbose mode pronts all the outputs to the stdout.",
+      abbr: 'v',
+      defaultsTo: true,
+    );
+
+    _parser.addFlag(
+      _quietFlagName,
+      help: 'Silences all the driver and run command outputs.',
+      negatable: false,
+    );
+
+    _parser.addOption(
+      _workingDirOptionName,
+      help:
+          "The directory to save the selenium server and browser drivers files.",
+      defaultsTo: '${DriverTestsConfig.defaultWorkingDirectory}',
+    );
+
+    _parser.addOption(
+      _portOptionName,
+      help: 'The port to serve the application under tests from.',
+      defaultsTo: '${DriverTestsConfig.port}',
+    );
+
+    _parser.addOption(
+      _storeLogsToOptionName,
+      help:
+          "The directory to store output from running application and driver tests.",
+      defaultsTo: DriverTestsConfig.defaultWorkingDirectory,
+    );
+
+    _parser.addOption(
+      _browserNameOptionName,
+      help: 'Name of browser where tests will be executed.',
+      defaultsTo: '${BrowserName.chrome}',
+    );
+  }
+
+  static void showHelp() {
+    print(_parser.usage);
   }
 }
