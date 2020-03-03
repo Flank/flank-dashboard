@@ -1,7 +1,7 @@
 # CI artifacts import
 > Summary of the proposed change
 
-Configuring CI tool to export coverage metric as an artifact to make it available through API.
+Fetch code coverage data using the CI artifact API.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -14,23 +14,23 @@ Configuring CI tool to export coverage metric as an artifact to make it availabl
 # Motivation
 > What problem is this project solving?
 
-Importing coverage artifacts from CI using its API.
+Automatically collect code coverage metrics from various CI providers and build jobs.
 
 # Goals
 > Identify success metrics and measurable goals.
 
-* A CI tool can export coverage metric as an artifact.
+* CI can export coverage metric as an artifact.
 * Exported artifacts are accessible via the CI's API.
 
 # Non-Goals
 > Identify what's not in scope.
 
-Implementing code coverage artifact creation is out of scope. 
+Implementing code coverage artifact creation is out of scope because that's job specific.
 
 # Design
 > Explain and diagram the technical design
 
-`CI tool` → `Artifacts storage` → `Metrics app`
+`CI` → `Artifacts storage` → `API` → `Metrics app`
 
 > Identify risks and edge cases
 
