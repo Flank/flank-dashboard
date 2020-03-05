@@ -25,7 +25,7 @@ Automatically collect code coverage metrics from various CI providers and build 
 # Non-Goals
 > Identify what's not in scope.
 
-Implementing code coverage artifact creation is out of scope because that's job specific.
+Implementing code coverage artifact creation is out of scope because it depends on CI, job, code coverage tool and even programming language.
 
 # Design
 > Explain and diagram the technical design
@@ -108,6 +108,19 @@ The authorization is required to communicate with Buildkit API. Buildkite provid
 6. Use a new token in requests by setting `Authorization: Bearer <access token>` header.
 
 ## Retrieve artifacts via API
+The `organization_slug` is required when using the endpoints below. It identifies the organization in the URL and the Buildkite API. The organization's slug can be obtained using one of the following ways:
+1. **Using URL**. Open the [Buildkite](https://buildkite.com/) and select the organization from the dropdown menu at the left of the navigation bar. The URL will contain the slug of selected organization - `https://buildkite.com/{organization_slug}`.
+2. **Using Buildkite API**. **GET** `/organizations` responses with a list of organizations accessible for the user. Each organization object contains the `slug` field you can use in endpoints below. 
+   ```text
+   {
+     "id": "{organization_id}",
+     "url": "{organization_api_url}",
+     // ...
+     "slug": "{organization_slug}",
+     // ...
+   }
+   ```
+
 There are several ways to retrieve artifacts using Buildkite API.
 - **GET** `/organizations/{organization_slug}/builds` responses with a list of builds for the organization specified by `organization_slug`. Each build contains a list of jobs (i.e. Step execution) and each job contains a URL you can use to retrieve its artifacts.
     ```text
