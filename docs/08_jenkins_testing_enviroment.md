@@ -10,6 +10,7 @@ Deploy Jenkins testing environment to be able to integrate it with the Metrics a
 
 [Jenkins](https://jenkins.io/)  
 [Google Cloud Jenkins application](https://github.com/GoogleCloudPlatform/click-to-deploy/blob/master/k8s/jenkins/README.md)
+[Amazon AWS](https://aws.amazon.com/)
 
 # Motivation
 
@@ -35,7 +36,7 @@ The creation of the test project is not in the scope of this project.
 
 > Explain and diagram the technical design
 
-`Kubernetes Engine` -> `Jenkins Server`
+`Amazon AWS instance` -> `Jenkins Server`
 
 > Identify risks and edge cases
 
@@ -67,6 +68,15 @@ This project will be tested manually.
 
 > Summarize alternative designs (pros & cons)
 
+* Setups Jenkins server on Amazon AWS.
+    - Pros:
+         - The AWS instance is free for one year.
+         - Has an excellent [setup guide](https://d1.awsstatic.com/Projects/P5505030/aws-project_Jenkins-build-server.pdf) that explains how to create an instance and deploy the Jenkins server.
+         - Easy to maintain. You could just connect to the AWS instance and use it and use it the way that you would use a computer in front of you.
+    - Cons:
+         - You need to configure the AWS instance and firewall rules on your own, which takes a bit more time in comparison to using the Google Kubernetes deployment.
+         
+         
 * Setup Jenkins on Google Kubernetes Engine.
     - Pros:  
          - Easy to set up. The configuration process is fully automated, and it is needed just to configure Jenkins projects.
@@ -74,6 +84,7 @@ This project will be tested manually.
          - Jenkins has a [free application](https://console.cloud.google.com/marketplace/details/google/jenkins) on the Google Cloud.
     - Cons: 
          - The Kubernetes Engine is the paid feature of the Google Cloud that uses a couple of other paid features like Compute Engine.
+         - Hard to maintain because you cannot just connect to the instance with the Jenkins server to make any changes.
          
          
 * Serve the Jenkins server using the local machine and ngrok.
@@ -109,7 +120,7 @@ NEXT:
 
 > What was the outcome of the project?
 
-We decided to use the Kubernetes engine to serve the Jenkins server because this is the easies 
-and the most convenient way to set up the Jenkins testing environment.
-
-The Jenkins builds configuration is in progress.
+During the investigation of the best ways to deploy the Jenkins build server, we decided to use the Amazon AWS will be the best choice in our situation, because of a couple of reasons: 
+ * It has a free year trial.
+ * It has pretty good setup documentation. 
+ * It allows you to connect to the instance Jenkins running through the SSH, which improves the maintainability.
