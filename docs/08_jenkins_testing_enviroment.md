@@ -2,7 +2,7 @@
 
 > Summary of the proposed change
 
-Deploy Jenkins testing environment to be able to integrate it with the Metrics app.
+Deploy Jenkins testing environment to be able to integrate it with the Metrics app and be able to have a more real-world environment for testing.
 
 # References
 
@@ -40,7 +40,10 @@ The creation of the test project is not in the scope of this project.
 
 > Identify risks and edge cases
 
-Running the builds in the separate docker containers could require an additional configuration.
+Because different builds require different environments for Jenkins to run the build 
+(in our case - we need to run the builds with npm, so the Node.js is required), we need to run 
+the builds in a separate docker container and this could require an additional configuration, 
+for example, configuring the docker client, or Jenkins user roles to be able to run the docker container, etc.
 
 # API
 
@@ -74,7 +77,7 @@ This project will be tested manually.
          - Has an excellent [setup guide](https://d1.awsstatic.com/Projects/P5505030/aws-project_Jenkins-build-server.pdf) that explains how to create an instance and deploy the Jenkins server.
          - Easy to maintain. You could just connect to the AWS instance and use it and use it the way that you would use a computer in front of you.
     - Cons:
-         - You need to configure the AWS instance and firewall rules on your own, which takes a bit more time in comparison to using the Google Kubernetes deployment.
+         - You need to configure the AWS instance and firewall rules manually via the user interface (no automation available), which takes a bit more time in comparison to using the Google Kubernetes deployment.
          
          
 * Setup Jenkins on Google Kubernetes Engine.
@@ -84,24 +87,25 @@ This project will be tested manually.
          - Jenkins has a [free application](https://console.cloud.google.com/marketplace/details/google/jenkins) on the Google Cloud.
     - Cons: 
          - The Kubernetes Engine is the paid feature of the Google Cloud that uses a couple of other paid features like Compute Engine.
-         - Hard to maintain because you cannot just connect to the instance with the Jenkins server to make any changes.
+         - Hard to maintain because you cannot just SSH connect to the instance with the Jenkins server to make any changes. For connection, you need to use the "kubectl" CLI.
          
          
 * Serve the Jenkins server using the local machine and ngrok.
     - Pros:
-         - Easy to setup. You need just to run the Jenkins locally and set up the tunnel to the localhost using the ngrok.
+         - Easy to setup. You need just to run the Jenkins locally and set up the tunnel to the localhost using the ngrok for other users to be able to connect.
     - Cons: 
          - Because Jenkins stores the data (pipeline configurations, build, build artifacts, etc.) locally,
-          using the file system, the Jenkins instance should be running on one machine each time.
-         - The server will be very human-sensitive. It means that the instance of Jenkins will be available only when it is running on someone's machine.
+          using the file system, the Jenkins instance should be running on the same machine all the time.
+         - The server will be very dependent on that configured server availability (app availability, computer availability).
          
          
 * Setup Jenkins on Google Compute Engine.
     - Pros:
-         - In case the Jenkins server is running on the machine, it will be needed to just connect to this machine using SSH to make any changes to the Jenkins server.
+         - Easy to connect to the container using SSH to make any changes to the Jenkins.
     - Cons: 
-         - Pretty complicated setup mechanism.
-         - We should set up the Jenkins storage manually in some other place like [Cloud Storage](https://cloud.google.com/storage).
+         - Pretty complicated setup mechanism because we have a lot of configuration items.
+         - We should set up the Jenkins storage manually in some other place like [Cloud Storage](https://cloud.google.com/storage)
+          because the Compute Engine instance has too few memory to store all tools, required by Jenkins, and builds and artifacts on the instance.
          - The Compute Engine is a paid feature on the Google Cloud.
 
 # Timeline
@@ -120,7 +124,7 @@ NEXT:
 
 > What was the outcome of the project?
 
-During the investigation of the best ways to deploy the Jenkins build server, we decided to use the Amazon AWS will be the best choice in our situation, because of a couple of reasons: 
+During the investigation of the best ways to deploy the Jenkins build server, we decided to use the Amazon AWS because of the following reasons: 
  * It has a free year trial.
  * It has pretty good setup documentation. 
  * It allows you to connect to the instance Jenkins running through the SSH, which improves the maintainability.
