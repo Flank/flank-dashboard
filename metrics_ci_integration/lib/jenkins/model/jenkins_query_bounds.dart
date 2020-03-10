@@ -42,6 +42,8 @@ class JenkinsQueryLimits {
   }
 
   /// Creates an empty range specifier with no edges.
+  ///
+  /// Requests with no range-specifier set will fetch the full data list.
   const JenkinsQueryLimits.empty() : this._();
 
   /// Creates a range specifier for the n-th element
