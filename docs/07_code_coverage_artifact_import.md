@@ -99,8 +99,8 @@ Artifacts can be uploaded automatically after a pipeline's build step finishes i
 To get more familiar with Buildkite [pipelines](https://buildkite.com/docs/pipelines), [artifacts](https://buildkite.com/docs/pipelines/artifacts), etc. please consider to read [documentation](https://buildkite.com/docs/tutorials/getting-started).
 
 ## Create API Access Token
-The authorization is required to communicate with Buildkit API. Buildkite provides an ability to [manage](https://buildkite.com/docs/apis/managing-api-tokens) API Access Tokens and their scopes within the organization and [user settings](https://buildkite.com/user/api-access-tokens). The following steps may be used to create a new Access Token:
-1. Navigate to [user personal settings](https://buildkite.com/user/settings) and click one the [API Access Token tab](https://buildkite.com/user/api-access-tokens).
+The authorization is required to communicate with Buildkite API. Buildkite provides an ability to [manage](https://buildkite.com/docs/apis/managing-api-tokens) API Access Tokens and their scopes within the organization and [user settings](https://buildkite.com/user/api-access-tokens). The following steps may be used to create a new Access Token:
+1. Navigate to [user personal settings](https://buildkite.com/user/settings) and click on the [API Access Token tab](https://buildkite.com/user/api-access-tokens).
 2. Press the **New API Access Token** button to create a new token.
 3. On a token creating form set the Organization Access and desired **REST API Scopes** (for example, importing artifacts requires `read_builds` and `read_artifacts` scopes).
 4. Finish token creation by pressing the **Create New API Access Token** button at the bottom of the page.
