@@ -67,7 +67,7 @@ Server API changes will break the client. The above approaches test the client i
 # API
 > What will the proposed API look like?
 
-See the document in [Implementing Swapping out the server approach](04_implementing_swapping_out_server_approach.md)
+See the document in [Implementing Swapping out the server approach](04_mock_server.md)
 
 # Dependencies
 > What is the project blocked on?
