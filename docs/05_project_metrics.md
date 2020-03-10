@@ -15,4 +15,6 @@ Percentage of successful builds to total builds per week. For example, if 6 our 
 ## Coverage
 Shows the percentage of lines of code executed while running tests to total lines of code.
 
-**branch coverage** is the selected metric for code coverage. Web projects report a summary JSON from [istanbul](https://istanbul.js.org/docs/advanced/alternative-reporters/#json)
+**branch coverage** is the selected metric for code coverage. Web projects report a summary JSON `coverage/coverage-summary.json` from [istanbul](https://istanbul.js.org/docs/advanced/alternative-reporters/#json-summary)
+
+
