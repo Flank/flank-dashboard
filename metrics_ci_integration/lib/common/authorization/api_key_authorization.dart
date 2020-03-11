@@ -7,10 +7,10 @@ part of authorization;
 ///
 /// Example:
 /// ```dart
-/// const authorization = ApiKeyAuthorization('x-some-api-header', 'token');
+/// final authorization = ApiKeyAuthorization('x-some-api-header', 'token');
 /// // prints {x-some-api-header: token}
 /// print(authorization.toMap());
 /// ```
 class ApiKeyAuthorization extends AuthorizationBase {
-  const ApiKeyAuthorization(String key, String value) : super(key, value);
+  ApiKeyAuthorization(String key, String value) : super(key, value);
 }

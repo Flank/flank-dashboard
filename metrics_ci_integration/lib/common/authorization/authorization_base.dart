@@ -20,7 +20,21 @@ abstract class AuthorizationBase extends Equatable {
   @override
   List<Object> get props => [_httpHeader, _token];
 
-  const AuthorizationBase(this._httpHeader, this._token);
+  /// Creates instance with given header and token values.
+  ///
+  /// If a header is `null` or empty, throws [ArgumentError].
+  /// If a token is `null`, throws [ArgumentError].
+  AuthorizationBase(this._httpHeader, this._token) {
+    if (_httpHeader == null || _httpHeader.isEmpty) {
+      throw ArgumentError.value(
+        _httpHeader,
+        'httpHeader',
+        'cannot be null or empty',
+      );
+    } else {
+      ArgumentError.checkNotNull(_token, 'token');
+    }
+  }
 
   /// Converts the instance of this class to [Map] that can be used within an
   /// HTTP request.

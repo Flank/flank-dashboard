@@ -16,16 +16,16 @@ class JenkinsResult<T> {
 
   bool get isSuccess => !_isError;
 
-  JenkinsResult._(this._isError, this.message, this.result);
+  const JenkinsResult._(this._isError, this.message, this.result);
 
   /// Creates an instance representing a failed interaction with Jenkins API.
-  JenkinsResult.error({
+  const JenkinsResult.error({
     String message,
     T result,
   }) : this._(true, message, result);
 
   /// Creates an instance representing a successful interaction with Jenkins API.
-  JenkinsResult.success({
+  const JenkinsResult.success({
     String message,
     T result,
   }) : this._(false, message, result);

@@ -55,13 +55,17 @@ class JenkinsJob extends Equatable {
   /// Converts object into the [Map].
   /// The result can be encoded to a JSON object.
   ///
-  /// The resulting map contains that general information about the job.
+  /// The resulting map will include only non-null fields of an object it
+  /// represents and result can be encoded to a JSON object.
+  /// The resulting map contains a general information about the job.
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'fullName': fullName,
-      'url': url,
-    };
+    final json = <String, dynamic>{};
+
+    if (name != null) json['name'] = name;
+    if (fullName != null) json['fullName'] = fullName;
+    if (url != null) json['url'] = url;
+
+    return json;
   }
 
   @override

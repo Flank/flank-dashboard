@@ -5,11 +5,11 @@ part of authorization;
 ///
 /// Example:
 /// ```dart
-/// const authorization = BearerAuthorization('token');
+/// final authorization = BearerAuthorization('token');
 /// // prints {authorization: Bearer token}
 /// print(authorization.toMap());
 /// ```
 class BearerAuthorization extends AuthorizationBase {
-  const BearerAuthorization(String token)
+  BearerAuthorization(String token)
       : super(HttpHeaders.authorizationHeader, 'Bearer $token');
 }

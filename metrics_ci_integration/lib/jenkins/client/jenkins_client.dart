@@ -7,7 +7,7 @@ import 'package:ci_integration/jenkins/model/jenkins_build_artifact.dart';
 import 'package:ci_integration/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/model/jenkins_job.dart';
 import 'package:ci_integration/jenkins/model/jenkins_multi_branch_job.dart';
-import 'package:ci_integration/jenkins/model/jenkins_query_bounds.dart';
+import 'package:ci_integration/jenkins/model/jenkins_query_limits.dart';
 import 'package:ci_integration/jenkins/model/jenkins_result.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
@@ -19,12 +19,20 @@ class JenkinsClient {
 
   /// The part of the `tree` query parameter that stands for
   /// [JenkinsBuildArtifact]'s properties to fetch.
-  static const String _artifactsTreeQuery = '[fileName,relativePath]';
+  static const String _artifactsTreeQuery = 'fileName,relativePath';
 
   /// The part of the `tree` query parameter that stands for [JenkinsBuild]'s
   /// properties to fetch.
   static const String _buildTreeQuery =
-      '[number,duration,timestamp,result,url,artifacts$_artifactsTreeQuery]';
+      'number,duration,timestamp,result,url,artifacts[$_artifactsTreeQuery]';
+
+  /// The part of the `tree` query parameter that stands for [JenkinsJob]'s
+  /// properties to fetch.
+  static const String _jobBaseTreeQuery = 'name,fullName,url';
+
+  /// The part of the `tree` query parameter that extends common [JenkinsJob]'s
+  /// properties to fetch with `jobs` and `builds` to detect a job type.
+  static const String _jobTreeQuery = '$_jobBaseTreeQuery,jobs{,0},builds{,0}';
 
   /// The HTTP client for making requests to the Jenkins API.
   final Client _client = Client();
@@ -58,7 +66,8 @@ class JenkinsClient {
   ///
   /// If provided authorization method is not `null` then adds the result
   /// of [AuthorizationBase.toMap] method to headers.
-  Map<String, String> get _headers {
+  @visibleForTesting
+  Map<String, String> get headers {
     return <String, String>{
       HttpHeaders.contentTypeHeader: ContentType.json.value,
       HttpHeaders.acceptHeader: ContentType.json.value,
@@ -73,13 +82,19 @@ class JenkinsClient {
   /// so on). The [path] defaults to Jenkins JSON API path. The [treeQuery]
   /// stands for the `tree` query parameter used to specify objects' properties
   /// API should return and defaults to an empty string.
+  /// Throws [ArgumentError] is [url] is null. Throws [FormatException] if
+  /// [url] has no authority (see [Uri.authority]).
   @visibleForTesting
   String buildJenkinsApiUrl(
     String url, {
     String path = _jsonApiPath,
     String treeQuery = '',
   }) {
+    if (url == null) throw ArgumentError('URL must not be null');
+
     Uri uri = Uri.parse(url);
+    if (!uri.hasAuthority) throw const FormatException('URL is invalid');
+
     final _path = Uri.parse(path);
     final urlPathSegments = uri.pathSegments.where((s) => s.isNotEmpty);
     final additionalPathSegments =
@@ -91,7 +106,7 @@ class JenkinsClient {
         ...additionalPathSegments,
       ],
       queryParameters:
-          treeQuery == null || treeQuery.isEmpty ? {} : {'tree': treeQuery},
+          treeQuery == null || treeQuery.isEmpty ? null : {'tree': treeQuery},
     );
 
     return uri.toString();
@@ -104,7 +119,7 @@ class JenkinsClient {
   /// [successStatusCode] (defaults to [HttpStatus.ok]) this method will
   /// result with [JenkinsResult.error].
   /// Otherwise, delegates parsing [Response.body] JSON to the [parseBody] method.
-  Future<JenkinsResult<T>> _handle<T>(
+  Future<JenkinsResult<T>> _handleResponse<T>(
     Future<Response> responseFuture,
     JenkinsResult<T> Function(Map<String, dynamic>) parseBody, [
     int successStatusCode = HttpStatus.ok,
@@ -166,11 +181,11 @@ class JenkinsClient {
     final fullUrl = buildJenkinsApiUrl(
       _jenkinsUrl,
       path: '$path/api/json',
-      treeQuery: 'name,fullName,url,jobs{,0},builds{,0}',
+      treeQuery: _jobTreeQuery,
     );
 
-    return _handle<JenkinsJob>(
-      _client.get(fullUrl, headers: _headers),
+    return _handleResponse<JenkinsJob>(
+      _client.get(fullUrl, headers: headers),
       (Map<String, dynamic> json) => JenkinsResult.success(
         result: JenkinsJob.fromJson(json),
       ),
@@ -189,13 +204,11 @@ class JenkinsClient {
   }) {
     final url = buildJenkinsApiUrl(
       multiBranchJob.url,
-      treeQuery: 'name,fullName,url,'
-          'jobs[name,fullName,url,jobs{,0},builds{,0}]'
-          '${limits.toQuery()}',
+      treeQuery: '$_jobBaseTreeQuery,jobs[$_jobTreeQuery]${limits.toQuery()}',
     );
 
-    return _handle<JenkinsMultiBranchJob>(
-      _client.get(url, headers: _headers),
+    return _handleResponse<JenkinsMultiBranchJob>(
+      _client.get(url, headers: headers),
       (Map<String, dynamic> json) => JenkinsResult.success(
         result: JenkinsMultiBranchJob.fromJson(json),
       ),
@@ -214,14 +227,14 @@ class JenkinsClient {
   }) {
     final url = buildJenkinsApiUrl(
       buildingJob.url,
-      treeQuery: 'name,fullName,url,'
-          'builds$_buildTreeQuery${limits.toQuery()},'
-          'lastBuild$_buildTreeQuery,'
-          'firstBuild$_buildTreeQuery',
+      treeQuery: '$_jobBaseTreeQuery,'
+          'builds[$_buildTreeQuery]${limits.toQuery()},'
+          'lastBuild[$_buildTreeQuery],'
+          'firstBuild[$_buildTreeQuery]',
     );
 
-    return _handle<JenkinsBuildingJob>(
-      _client.get(url, headers: _headers),
+    return _handleResponse<JenkinsBuildingJob>(
+      _client.get(url, headers: headers),
       (Map<String, dynamic> json) => JenkinsResult.success(
         result: JenkinsBuildingJob.fromJson(json),
       ),
@@ -239,11 +252,11 @@ class JenkinsClient {
   }) {
     final url = buildJenkinsApiUrl(
       buildUrl,
-      treeQuery: 'artifacts$_artifactsTreeQuery${limits.toQuery()}',
+      treeQuery: 'artifacts[$_artifactsTreeQuery]${limits.toQuery()}',
     );
 
-    return _handle<List<JenkinsBuildArtifact>>(
-      _client.get(url, headers: _headers),
+    return _handleResponse<List<JenkinsBuildArtifact>>(
+      _client.get(url, headers: headers),
       (Map<String, dynamic> json) => JenkinsResult.success(
         result: JenkinsBuildArtifact.listFromJson(
             json['artifacts'] as List<dynamic>),
@@ -280,8 +293,8 @@ class JenkinsClient {
   /// Both [fetchArtifactByRelativePath] and [fetchArtifact] methods delegate
   /// fetching the artifact's content to this method.
   Future<JenkinsResult<Map<String, dynamic>>> _fetchArtifact(String url) {
-    return _handle<Map<String, dynamic>>(
-      _client.get(url, headers: _headers),
+    return _handleResponse<Map<String, dynamic>>(
+      _client.get(url, headers: headers),
       (Map<String, dynamic> json) => JenkinsResult.success(result: json),
     );
   }

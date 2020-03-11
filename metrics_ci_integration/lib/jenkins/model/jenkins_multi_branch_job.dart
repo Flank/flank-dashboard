@@ -38,13 +38,16 @@ class JenkinsMultiBranchJob extends JenkinsJob {
   /// Converts object into the [Map].
   /// The result can be encoded to a JSON object.
   ///
+  /// The resulting map will include only non-null fields of an object it
+  /// represents and can be encoded to a JSON object.
   /// Populates [JenkinsJob.toJson] with [jobs].
   @override
   Map<String, dynamic> toJson() {
-    return super.toJson()
-      ..addAll({
-        'jobs': jobs,
-      });
+    final json = super.toJson();
+
+    if (jobs != null) json['jobs'] = jobs.map((b) => b.toJson()).toList();
+
+    return json;
   }
 
   @override

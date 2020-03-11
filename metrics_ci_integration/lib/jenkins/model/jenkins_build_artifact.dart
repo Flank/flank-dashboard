@@ -38,12 +38,16 @@ class JenkinsBuildArtifact extends Equatable {
   }
 
   /// Converts object into the [Map].
-  /// The result can be encoded to a JSON object.
+  ///
+  /// The resulting map will include only non-null fields of an object it
+  /// represents and can be encoded to a JSON object.
   Map<String, dynamic> toJson() {
-    return {
-      'fileName': fileName,
-      'relativePath': relativePath,
-    };
+    final json = <String, dynamic>{};
+
+    if (fileName != null) json['fileName'] = fileName;
+    if (relativePath != null) json['relativePath'] = relativePath;
+
+    return json;
   }
 
   @override

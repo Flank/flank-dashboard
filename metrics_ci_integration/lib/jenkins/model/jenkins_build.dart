@@ -43,16 +43,22 @@ class JenkinsBuild extends Equatable {
   factory JenkinsBuild.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
+    final timestamp = json['timestamp'] == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int);
+    final duration = json['duration'] == null
+        ? null
+        : Duration(seconds: json['duration'] as int);
+
     return JenkinsBuild(
       number: json['number'] as int,
-      duration: Duration(seconds: json['duration'] as int ?? 0),
-      timestamp: json['timestamp'] == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int),
+      duration: duration,
+      timestamp: timestamp,
       result: json['result'] as String,
       url: json['url'] as String,
-      artifacts:
-          JenkinsBuildArtifact.listFromJson(json['artifacts'] as List<dynamic>),
+      artifacts: JenkinsBuildArtifact.listFromJson(
+        json['artifacts'] as List<dynamic>,
+      ),
     );
   }
 
@@ -64,16 +70,22 @@ class JenkinsBuild extends Equatable {
   }
 
   /// Converts object into the [Map].
-  /// The result can be encoded to a JSON object.
+  ///
+  /// The resulting map will include only non-null fields of an object it
+  /// represents and can be encoded to a JSON object.
   Map<String, dynamic> toJson() {
-    return {
-      'number': number,
-      'duration': duration?.inSeconds,
-      'timestamp': timestamp?.millisecondsSinceEpoch,
-      'result': result,
-      'url': url,
-      'artifacts': (artifacts ?? []).map((a) => a.toJson()).toList(),
-    };
+    final json = <String, dynamic>{};
+
+    if (number != null) json['number'] = number;
+    if (duration != null) json['duration'] = duration.inSeconds;
+    if (timestamp != null) json['timestamp'] = timestamp.millisecondsSinceEpoch;
+    if (result != null) json['result'] = result;
+    if (url != null) json['url'] = url;
+    if (artifacts != null) {
+      json['artifacts'] = artifacts.map((a) => a.toJson()).toList();
+    }
+
+    return json;
   }
 
   @override

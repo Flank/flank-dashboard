@@ -36,28 +36,30 @@ class JenkinsBuildingJob extends JenkinsJob {
       name: json['name'] as String,
       fullName: json['fullName'] as String,
       url: json['url'] as String,
-      firstBuild: json['firstBuild'] == null
-          ? null
-          : JenkinsBuild.fromJson(json['firstBuild'] as Map<String, dynamic>),
-      lastBuild: json['lastBuild'] == null
-          ? null
-          : JenkinsBuild.fromJson(json['lastBuild'] as Map<String, dynamic>),
+      firstBuild: JenkinsBuild.fromJson(
+        json['firstBuild'] as Map<String, dynamic>,
+      ),
+      lastBuild: JenkinsBuild.fromJson(
+        json['lastBuild'] as Map<String, dynamic>,
+      ),
       builds: JenkinsBuild.listFromJson(json['builds'] as List<dynamic>),
     );
   }
 
   /// Converts object into the [Map].
-  /// The result can be encoded to a JSON object.
   ///
+  /// The resulting map will include only non-null fields of an object it
+  /// represents and can be encoded to a JSON object.
   /// Populates [JenkinsJob.toJson] with building job specific fields.
   @override
   Map<String, dynamic> toJson() {
-    return super.toJson()
-      ..addAll({
-        'firstBuild': firstBuild?.toJson(),
-        'lastBuild': lastBuild?.toJson(),
-        'builds': (builds ?? []).map((b) => b.toJson()).toList(),
-      });
+    final json = super.toJson();
+
+    if (firstBuild != null) json['firstBuild'] = firstBuild.toJson();
+    if (lastBuild != null) json['lastBuild'] = lastBuild.toJson();
+    if (builds != null) json['builds'] = builds.map((b) => b.toJson()).toList();
+
+    return json;
   }
 
   @override

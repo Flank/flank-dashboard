@@ -13,14 +13,15 @@ class BasicAuthorization extends AuthorizationBase {
   BasicAuthorization(String username, String password)
       : super(
           HttpHeaders.authorizationHeader,
-          'Basic ${_encode(username, password)}',
+          'Basic ${encode(username, password)}',
         );
 
   /// Encodes [username] and [password] to a string that can be used within
   /// an HTTP request.
   ///
   /// If one of provided values is `null` then an empty string is used instead.
-  static String _encode(String username, String password) {
+  @visibleForTesting
+  static String encode(String username, String password) {
     final _username = username ?? '';
     final _password = password ?? '';
     return base64Encode(utf8.encode('$_username:$_password'));
