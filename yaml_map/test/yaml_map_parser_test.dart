@@ -1,5 +1,5 @@
-import 'file:///Users/vova.beloded/workspace/work/metrics/yaml_map/lib/src/yaml_map_parser.dart';
 import 'package:test/test.dart';
+import 'package:yaml_map/yaml_map.dart';
 
 void main() {
   group('YamlMapParser', () {
