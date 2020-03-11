@@ -1,9 +1,9 @@
-import 'package:guardian/utils/yaml/formatter/date_time_type_formatter.dart';
-import 'package:guardian/utils/yaml/formatter/list_type_formatter.dart';
-import 'package:guardian/utils/yaml/formatter/map_type_formatter.dart';
-import 'package:guardian/utils/yaml/formatter/num_type_formatter.dart';
-import 'package:guardian/utils/yaml/formatter/string_type_formatter.dart';
-import 'package:guardian/utils/yaml/formatter/type_formatter.dart';
+import 'package:yaml_map/src/formatter/date_time_type_formatter.dart';
+import 'package:yaml_map/src/formatter/list_type_formatter.dart';
+import 'package:yaml_map/src/formatter/map_type_formatter.dart';
+import 'package:yaml_map/src/formatter/num_type_formatter.dart';
+import 'package:yaml_map/src/formatter/string_type_formatter.dart';
+import 'package:yaml_map/src/formatter/type_formatter.dart';
 
 /// A utility class providing methods for formatting Dart [Map] and its content
 /// to YAML dictionary.

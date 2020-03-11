@@ -1,4 +1,4 @@
-import 'package:guardian/utils/yaml/formatter/type_formatter.dart';
+import 'package:yaml_map/src/formatter/type_formatter.dart';
 
 class StringTypeFormatter extends TypeFormatter<String> {
   /// Formats [String] into the YAML format.

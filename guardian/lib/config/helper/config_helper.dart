@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:guardian/config/model/config.dart';
-import 'package:guardian/utils/yaml/yaml_map_formatter.dart';
-import 'package:guardian/utils/yaml/yaml_map_parser.dart';
+import 'package:yaml_map/yaml_map.dart';
 
 class ConfigHelper {
   static const YamlMapParser yamlParser = YamlMapParser();

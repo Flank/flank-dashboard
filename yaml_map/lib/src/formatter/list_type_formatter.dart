@@ -1,4 +1,4 @@
-import 'package:guardian/utils/yaml/formatter/type_formatter.dart';
+import 'package:yaml_map/src/formatter/type_formatter.dart';
 
 class ListTypeFormatter extends IterableTypeFormatter<List> {
   ListTypeFormatter(int spacesPerIndentationLevel,

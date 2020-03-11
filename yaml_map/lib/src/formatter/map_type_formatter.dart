@@ -1,4 +1,5 @@
-import 'package:guardian/utils/yaml/formatter/type_formatter.dart';
+
+import 'package:yaml_map/src/formatter/type_formatter.dart';
 
 class MapTypeFormatter extends IterableTypeFormatter<Map<String, dynamic>> {
   MapTypeFormatter(int spacesPerIndentationLevel,
