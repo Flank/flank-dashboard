@@ -49,8 +49,6 @@ For instance, configuring a Docker client, or Jenkins user roles to be able to r
 
 > What will the proposed API look like?
 
-The Jenkins API is described in this article: [Jenkins remote access api](https://wiki.jenkins.io/display/JENKINS/Remote+access+API).
-
 ## Why Amazon AWS
 
 - The AWS instance is free for one year.
