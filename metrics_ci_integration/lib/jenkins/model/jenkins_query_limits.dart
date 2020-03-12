@@ -4,15 +4,13 @@ import 'package:meta/meta.dart';
 /// Jenkins API requests.
 class JenkinsQueryLimits {
   /// The lower bound of a range specified.
-  final int _lower;
+  final int lower;
 
   /// The lower bound of a range specified.
-  final int _upper;
+  final int upper;
 
   /// Creates a range specifier with given [lower] and [upper] bounds.
-  const JenkinsQueryLimits._({int lower, int upper})
-      : _lower = lower,
-        _upper = upper;
+  const JenkinsQueryLimits._({this.lower, this.upper});
 
   /// Checks [number] to be non-`null` positive integer;
   ///
@@ -25,6 +23,17 @@ class JenkinsQueryLimits {
     } else if (number.isNegative) {
       throw ArgumentError.value(number, 'number', 'must be non-negative');
     }
+  }
+
+  /// Checks [number] to be valid string representing a range-specifier edge.
+  static bool _checkValueString(
+    String number, {
+    bool allowEmpty = true,
+  }) {
+    if (number == null) return false;
+    if (allowEmpty && number.isEmpty) return true;
+    final result = int.tryParse(number);
+    return result != null && result >= 0;
   }
 
   /// Checks the range edges [begin] and [end] to be non-`null` positive
@@ -49,6 +58,39 @@ class JenkinsQueryLimits {
   ///
   /// Requests with no range-specifier set will fetch the full data list.
   const JenkinsQueryLimits.empty() : this._();
+
+  /// Parses a [query] with range-specifier to an instance of [JenkinsQueryLimits].
+  ///
+  /// Throws [FormatException] if parsing fails.
+  factory JenkinsQueryLimits.fromQuery(String query) {
+    if (query.startsWith('{') && query.endsWith('}')) {
+      final limits = query
+          .split(',')
+          .map((substring) => substring.replaceAll(RegExp(r'[\{\}]'), ''))
+          .toList();
+
+      final limitsValid = (limits.length == 1 &&
+              _checkValueString(limits.first, allowEmpty: false)) ||
+          (limits.length < 3 && limits.every(_checkValueString));
+
+      if (!limitsValid) {
+        throw FormatException('Wrong format for the range specifier $query');
+      }
+
+      if (limits.length == 1) {
+        final limit = limits.first;
+        final result = int.parse(limit);
+        return JenkinsQueryLimits.at(result);
+      } else {
+        return JenkinsQueryLimits._(
+          lower: limits[0].isEmpty ? 0 : int.parse(limits[0]),
+          upper: limits[1].isEmpty ? 0 : int.parse(limits[1]),
+        );
+      }
+    } else {
+      throw FormatException('Query is not a range specifier $query');
+    }
+  }
 
   /// Creates a range specifier for the n-th element
   /// where `n` is a given [number].
@@ -150,16 +192,16 @@ class JenkinsQueryLimits {
   ///   print(limits.toQuery()); // prints {3,10}
   /// ```
   String toQuery() {
-    if (_lower == null && _upper == null) {
+    if (lower == null && upper == null) {
       return '';
     }
 
-    if (_lower != null && _lower == _upper) {
-      return '{$_lower}';
+    if (lower != null && lower == upper) {
+      return '{$lower}';
     }
 
-    final lowerString = _lower == null ? '' : _lower.toString();
-    final upperString = _upper == null ? '' : _upper.toString();
+    final lowerString = lower == null ? '' : lower.toString();
+    final upperString = upper == null ? '' : upper.toString();
 
     return '{$lowerString,$upperString}';
   }

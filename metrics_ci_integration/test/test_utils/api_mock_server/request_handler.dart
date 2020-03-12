@@ -85,8 +85,12 @@ class RequestHandler {
   /// Otherwise, uses [pathPattern] regexp on requested path and returns `true`
   /// in case of full match.
   bool match(HttpRequest request) {
-    final path = request.uri.toString();
-    return request.method == method && pathPattern.stringMatch(path) == path;
+    final requestPath = request.uri.path.toString();
+    final matchPath = path != null && requestPath == path;
+    final matchPattern = pathPattern != null &&
+        pathPattern.stringMatch(requestPath) == requestPath;
+
+    return request.method == method && (matchPath || matchPattern);
   }
 
   /// Processes the [request] by calling [dispatcher] callback if presented.

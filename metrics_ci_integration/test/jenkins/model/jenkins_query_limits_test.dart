@@ -156,5 +156,69 @@ void main() {
         expect(actual, equals(expected));
       },
     );
+
+    test(
+      '.fromQuery() should throw FormatException if the query '
+      'is not a range-specifier',
+      () {
+        expect(
+          () => JenkinsQueryLimits.fromQuery('test'),
+          throwsFormatException,
+        );
+      },
+    );
+
+    test(
+      '.fromQuery() should throw FormatException on an empty '
+      'range-specifier {}',
+      () {
+        expect(
+          () => JenkinsQueryLimits.fromQuery('{}'),
+          throwsFormatException,
+        );
+      },
+    );
+
+    test(
+      '.fromQuery() should throw FormatException on a range-specifier for the '
+      'range with negative edges',
+      () {
+        expect(
+          () => JenkinsQueryLimits.fromQuery('{-2}'),
+          throwsFormatException,
+        );
+      },
+    );
+
+    test(
+      '.fromQuery() should throw FormatException on a range-specifier for the '
+      'range with no integer edges',
+      () {
+        expect(
+          () => JenkinsQueryLimits.fromQuery('{test,test}'),
+          throwsFormatException,
+        );
+      },
+    );
+
+    test(
+      '.fromQuery() should throw FormatException on invalid range-specifier',
+      () {
+        expect(
+          () => JenkinsQueryLimits.fromQuery('{,,3}'),
+          throwsFormatException,
+        );
+      },
+    );
+
+    test(
+      '.fromQuery() should parse a query with valid range-specifier',
+      () {
+        final limits = JenkinsQueryLimits.fromQuery('{2,3}');
+
+        expect(limits.lower, equals(2));
+        expect(limits.upper, equals(3));
+      },
+    );
   });
 }

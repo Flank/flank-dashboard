@@ -15,24 +15,29 @@ import 'package:meta/meta.dart';
 /// A client for interactions with the Jenkins API.
 class JenkinsClient {
   /// A Jenkins JSON API path.
-  static const String _jsonApiPath = '/api/json';
+  @visibleForTesting
+  static const String jsonApiPath = '/api/json';
 
   /// The part of the `tree` query parameter that stands for
   /// [JenkinsBuildArtifact]'s properties to fetch.
-  static const String _artifactsTreeQuery = 'fileName,relativePath';
+  @visibleForTesting
+  static const String artifactsTreeQuery = 'fileName,relativePath';
 
   /// The part of the `tree` query parameter that stands for [JenkinsBuild]'s
   /// properties to fetch.
-  static const String _buildTreeQuery =
-      'number,duration,timestamp,result,url,artifacts[$_artifactsTreeQuery]';
+  @visibleForTesting
+  static const String buildTreeQuery =
+      'number,duration,timestamp,result,url,artifacts[$artifactsTreeQuery]';
 
   /// The part of the `tree` query parameter that stands for [JenkinsJob]'s
   /// properties to fetch.
-  static const String _jobBaseTreeQuery = 'name,fullName,url';
+  @visibleForTesting
+  static const String jobBaseTreeQuery = 'name,fullName,url';
 
   /// The part of the `tree` query parameter that extends common [JenkinsJob]'s
   /// properties to fetch with `jobs` and `builds` to detect a job type.
-  static const String _jobTreeQuery = '$_jobBaseTreeQuery,jobs{,0},builds{,0}';
+  @visibleForTesting
+  static const String jobTreeQuery = '$jobBaseTreeQuery,jobs{,0},builds{,0}';
 
   /// The HTTP client for making requests to the Jenkins API.
   final Client _client = Client();
@@ -87,7 +92,7 @@ class JenkinsClient {
   @visibleForTesting
   String buildJenkinsApiUrl(
     String url, {
-    String path = _jsonApiPath,
+    String path = jsonApiPath,
     String treeQuery = '',
   }) {
     if (url == null) throw ArgumentError('URL must not be null');
@@ -181,7 +186,7 @@ class JenkinsClient {
     final fullUrl = buildJenkinsApiUrl(
       _jenkinsUrl,
       path: '$path/api/json',
-      treeQuery: _jobTreeQuery,
+      treeQuery: jobTreeQuery,
     );
 
     return _handleResponse<JenkinsJob>(
@@ -204,7 +209,7 @@ class JenkinsClient {
   }) {
     final url = buildJenkinsApiUrl(
       multiBranchJob.url,
-      treeQuery: '$_jobBaseTreeQuery,jobs[$_jobTreeQuery]${limits.toQuery()}',
+      treeQuery: '$jobBaseTreeQuery,jobs[$jobTreeQuery]${limits.toQuery()}',
     );
 
     return _handleResponse<JenkinsMultiBranchJob>(
@@ -227,10 +232,10 @@ class JenkinsClient {
   }) {
     final url = buildJenkinsApiUrl(
       buildingJob.url,
-      treeQuery: '$_jobBaseTreeQuery,'
-          'builds[$_buildTreeQuery]${limits.toQuery()},'
-          'lastBuild[$_buildTreeQuery],'
-          'firstBuild[$_buildTreeQuery]',
+      treeQuery: '$jobBaseTreeQuery,'
+          'builds[$buildTreeQuery]${limits.toQuery()},'
+          'lastBuild[$buildTreeQuery],'
+          'firstBuild[$buildTreeQuery]',
     );
 
     return _handleResponse<JenkinsBuildingJob>(
@@ -252,7 +257,7 @@ class JenkinsClient {
   }) {
     final url = buildJenkinsApiUrl(
       buildUrl,
-      treeQuery: 'artifacts[$_artifactsTreeQuery]${limits.toQuery()}',
+      treeQuery: 'artifacts[$artifactsTreeQuery]${limits.toQuery()}',
     );
 
     return _handleResponse<List<JenkinsBuildArtifact>>(

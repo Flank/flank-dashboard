@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'auth_credentials.dart';
 import 'request_handler.dart';
 
 export 'request_handler.dart';
@@ -16,6 +17,12 @@ abstract class ApiMockServer {
   /// A list of available [RequestHandler]s for requests.
   List<RequestHandler> get handlers;
 
+  /// A list of valid [AuthCredentials] for requests to be verified.
+  ///
+  /// The implementation defaults to returning `null` which means that no
+  /// authorization for requests is required.
+  List<AuthCredentials> get authCredentials => null;
+
   String get url => 'http://${_server.address.host}:${_server.port}';
 
   /// Starts listening for HTTP requests on the specified [host] and [port].
@@ -23,7 +30,7 @@ abstract class ApiMockServer {
   /// If no [address] is provided the default [InternetAddress.loopbackIPv4],
   /// which is effectively localhost, will be used.
   /// A [port] defaults to `0` which means that an ephemeral port will be
-  /// chosen by the system.
+  /// chosen by the system. If
   Future<void> init({
     dynamic address,
     int port = 0,
@@ -32,14 +39,22 @@ abstract class ApiMockServer {
       address ?? InternetAddress.loopbackIPv4,
       port,
     );
-    _requestSubscription = _server.listen(_handleRequest);
+    _requestSubscription = _server.listen(_handleRequest, onError: print);
   }
 
   /// Verifies that [request] is authorized.
   ///
-  /// Implementers should provide their verification if required. The default
-  /// implementation returns `true` for any request.
-  bool verifyAuthorization(HttpRequest request) => true;
+  /// Uses the [authCredentials] list of authorization data to verify a request.
+  /// Returns `true` if [request] is valid. Implementers can specify auth for
+  /// verification the mock server either overriding [authCredentials] or this
+  /// method.
+  bool verifyAuthorization(HttpRequest request) {
+    final isValid = authCredentials?.any((credentials) {
+      return credentials.verify(request.headers);
+    });
+
+    return isValid ?? true;
+  }
 
   /// Handles each HTTP request received.
   ///
