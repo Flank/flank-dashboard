@@ -1,5 +1,5 @@
-import 'package:guardian/utils/yaml/yaml_map_parser.dart';
 import 'package:test/test.dart';
+import 'package:yaml_map/yaml_map.dart';
 
 void main() {
   group('YamlMapParser', () {

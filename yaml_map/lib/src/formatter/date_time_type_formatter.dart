@@ -1,4 +1,4 @@
-import 'package:guardian/utils/yaml/formatter/type_formatter.dart';
+import 'package:yaml_map/src/formatter/type_formatter.dart';
 
 class DateTimeTypeFormatter extends TypeFormatter<DateTime> {
   /// Formats [DateTime] into the YAML format. Converts

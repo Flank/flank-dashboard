@@ -1,4 +1,4 @@
-import 'package:guardian/utils/yaml/yaml_map_formatter.dart';
+import 'package:yaml_map/src/yaml_map_formatter.dart';
 
 /// A formatter abstract class that defines format method for specified type [T]
 ///
