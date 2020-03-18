@@ -1,5 +1,5 @@
-import 'package:ci_integration/jenkins/model/jenkins_build_artifact.dart';
-import 'package:ci_integration/jenkins/model/jenkins_building_job.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:equatable/equatable.dart';
 
 /// A class representing a single Jenkins build.
@@ -69,23 +69,16 @@ class JenkinsBuild extends Equatable {
         ?.toList();
   }
 
-  /// Converts object into the [Map].
-  ///
-  /// The resulting map will include only non-null fields of an object it
-  /// represents and can be encoded to a JSON object.
+  /// Converts object into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
-    final json = <String, dynamic>{};
-
-    if (number != null) json['number'] = number;
-    if (duration != null) json['duration'] = duration.inSeconds;
-    if (timestamp != null) json['timestamp'] = timestamp.millisecondsSinceEpoch;
-    if (result != null) json['result'] = result;
-    if (url != null) json['url'] = url;
-    if (artifacts != null) {
-      json['artifacts'] = artifacts.map((a) => a.toJson()).toList();
-    }
-
-    return json;
+    return {
+      'number': number,
+      'duration': duration?.inSeconds,
+      'timestamp': timestamp?.millisecondsSinceEpoch,
+      'result': result,
+      'url': url,
+      'artifacts': artifacts?.map((a) => a.toJson())?.toList()
+    };
   }
 
   @override

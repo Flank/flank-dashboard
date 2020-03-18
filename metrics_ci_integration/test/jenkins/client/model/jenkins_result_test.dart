@@ -1,13 +1,13 @@
-import 'package:ci_integration/jenkins/model/jenkins_result.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_result.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('JenkinsResult', () {
+  group("JenkinsResult", () {
     const failed = JenkinsResult.error(message: 'Error');
     const success = JenkinsResult.success(message: 'Hooray!');
 
     test(
-      '.error() should create an instance describing the failed interaction',
+      ".error() should create an instance describing the failed interaction",
       () {
         expect(failed.isError, isTrue);
         expect(failed.message, equals('Error'));
@@ -15,7 +15,7 @@ void main() {
     );
 
     test(
-      '.success() should create an instance describing the success interaction',
+      ".success() should create an instance describing the success interaction",
       () {
         expect(success.isSuccess, isTrue);
         expect(success.message, equals('Hooray!'));

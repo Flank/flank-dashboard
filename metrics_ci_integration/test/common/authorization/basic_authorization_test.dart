@@ -5,14 +5,13 @@ import 'package:ci_integration/common/authorization/authorization.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('BasicAuthorization', () {
+  group("BasicAuthorization", () {
     const username = 'username';
     const password = 'password';
     final token = base64Encode(utf8.encode('$username:$password'));
 
     test(
-      'should create basic authorization instance with "Authorization" header '
-      'and token with "Basic" type',
+      "should create basic authorization instance with 'Authorization' header and token with 'Basic' type",
       () {
         final authorization = BasicAuthorization(username, password);
         final expected = {HttpHeaders.authorizationHeader: 'Basic $token'};
@@ -23,7 +22,7 @@ void main() {
     );
 
     test(
-      'encode() should base64 encode string with username and password',
+      ".encode() should base64 encode string with username and password",
       () {
         final encoded = BasicAuthorization.encode(username, password);
 
@@ -32,7 +31,7 @@ void main() {
     );
 
     test(
-      'encode() should consider null username as empty',
+      ".encode() should consider null username as empty",
       () {
         final encoded = BasicAuthorization.encode(null, password);
         final expected = base64Encode(utf8.encode(':$password'));
@@ -42,7 +41,7 @@ void main() {
     );
 
     test(
-      'encode() should consider null password as empty',
+      ".encode() should consider null password as empty",
       () {
         final encoded = BasicAuthorization.encode(username, null);
         final expected = base64Encode(utf8.encode('$username:'));

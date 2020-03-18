@@ -1,9 +1,9 @@
-import 'package:ci_integration/jenkins/model/jenkins_build.dart';
-import 'package:ci_integration/jenkins/model/jenkins_building_job.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('JenkinsBuildingJob', () {
+  group("JenkinsBuildingJob", () {
     Map<String, dynamic> buildingJobJson;
     JenkinsBuildingJob buildingJob;
 
@@ -28,11 +28,19 @@ void main() {
 
       const firstBuildJson = {
         'number': 1,
+        'duration': null,
+        'timestamp': null,
+        'result': null,
         'url': 'firstBuildUrl',
+        'artifacts': null,
       };
       const lastBuildJson = {
         'number': 2,
+        'duration': null,
+        'timestamp': null,
+        'result': null,
         'url': 'secondBuildUrl',
+        'artifacts': null,
       };
 
       buildingJobJson = {
@@ -45,34 +53,26 @@ void main() {
       };
     });
 
-    test('.fromJson() should return null if the given json is null', () {
+    test(".fromJson() should return null if the given json is null", () {
       final job = JenkinsBuildingJob.fromJson(null);
 
       expect(job, isNull);
     });
 
-    test('.fromJson() should create an instance from the json map', () {
+    test(".fromJson() should create an instance from the json map", () {
       final job = JenkinsBuildingJob.fromJson(buildingJobJson);
 
       expect(job, equals(buildingJob));
     });
 
-    test('toJson() should include only non-null properties', () {
-      const job = JenkinsBuildingJob(name: 'name');
-      const expected = {'name': 'name'};
-      final json = job.toJson();
-
-      expect(json, equals(expected));
-    });
-
-    test('toJson() should populate a json map with a list of jobs', () {
+    test(".toJson() should populate a json map with a list of jobs", () {
       const job = JenkinsBuildingJob(name: 'name', builds: []);
       final json = job.toJson();
 
       expect(json, containsPair('builds', isEmpty));
     });
 
-    test('toJson() should convert an instance to the json map', () {
+    test(".toJson() should convert an instance to the json map", () {
       final json = buildingJob.toJson();
 
       expect(json, equals(buildingJobJson));

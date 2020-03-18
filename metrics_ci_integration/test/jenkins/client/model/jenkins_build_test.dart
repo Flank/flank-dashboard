@@ -1,8 +1,8 @@
-import 'package:ci_integration/jenkins/model/jenkins_build.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('JenkinsBuild', () {
+  group("JenkinsBuild", () {
     final currentMillisecondsSinceEpoch = DateTime.now().millisecondsSinceEpoch;
 
     final buildJson = {
@@ -25,20 +25,20 @@ void main() {
       artifacts: const [],
     );
 
-    test('.fromJson() should return null if a given json is null', () {
+    test(".fromJson() should return null if a given json is null", () {
       final job = JenkinsBuild.fromJson(null);
 
       expect(job, isNull);
     });
 
-    test('.fromJson() should create an instance from a json map', () {
+    test(".fromJson() should create an instance from a json map", () {
       final job = JenkinsBuild.fromJson(buildJson);
 
       expect(job, equals(jenkinsBuild));
     });
 
     test(
-      '.listFromJson() should map a null list as null one',
+      ".listFromJson() should map a null list as null one",
       () {
         final jobs = JenkinsBuild.listFromJson(null);
 
@@ -47,7 +47,7 @@ void main() {
     );
 
     test(
-      '.listFromJson() should map an empty list as empty one',
+      ".listFromJson() should map an empty list as empty one",
       () {
         final jobs = JenkinsBuild.listFromJson([]);
 
@@ -56,7 +56,7 @@ void main() {
     );
 
     test(
-      '.listFromJson() should map a list of jobs json maps',
+      ".listFromJson() should map a list of jobs json maps",
       () {
         final jobs = JenkinsBuild.listFromJson([buildJson, buildJson]);
 
@@ -64,15 +64,7 @@ void main() {
       },
     );
 
-    test('toJson() should include only non-null properties', () {
-      const job = JenkinsBuild(number: 1);
-      const expected = {'number': 1};
-      final json = job.toJson();
-
-      expect(json, equals(expected));
-    });
-
-    test('toJson() should convert an instance to the json map', () {
+    test(".toJson() should convert an instance to the json map", () {
       final json = jenkinsBuild.toJson();
 
       expect(json, equals(buildJson));

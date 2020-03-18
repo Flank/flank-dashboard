@@ -2,13 +2,12 @@ import 'package:ci_integration/common/authorization/authorization.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('AuthorizationBase', () {
+  group("AuthorizationBase", () {
     const header = 'header';
     const token = 'token';
 
     test(
-      'toMap() should include provided header and token as a key and '
-      'value respectively',
+      ".toMap() should include provided header and token as a key and value respectively",
       () {
         final authorization = AuthorizationBaseTestbed(header, token);
         final expected = {header: token};
@@ -19,7 +18,7 @@ void main() {
     );
 
     test(
-      'should throw ArgumentError creating a new instance with null header',
+      "should throw ArgumentError creating a new instance with null header",
       () {
         expect(
           () => AuthorizationBaseTestbed(null, token),
@@ -29,7 +28,7 @@ void main() {
     );
 
     test(
-      'should throw ArgumentError creating a new instance with empty header',
+      "should throw ArgumentError creating a new instance with empty header",
       () {
         expect(
           () => AuthorizationBaseTestbed('', token),
@@ -39,7 +38,7 @@ void main() {
     );
 
     test(
-      'should throw ArgumentError creating a new instance with null token',
+      "should throw ArgumentError creating a new instance with null token",
       () {
         expect(
           () => AuthorizationBaseTestbed(header, null),

@@ -1,4 +1,4 @@
-import 'package:meta/meta.dart';
+import 'package:ci_integration/jenkins/client/util/number_validator.dart';
 
 /// A class representing a range specifier for array-type properties in
 /// Jenkins API requests.
@@ -12,19 +12,6 @@ class JenkinsQueryLimits {
   /// Creates a range specifier with given [lower] and [upper] bounds.
   const JenkinsQueryLimits._({this.lower, this.upper});
 
-  /// Checks [number] to be non-`null` positive integer;
-  ///
-  /// Throws [ArgumentError] if the [number] either is `null`
-  /// or [num.isNegative].
-  @visibleForTesting
-  static void checkValue(int number) {
-    if (number == null) {
-      throw ArgumentError.notNull('number');
-    } else if (number.isNegative) {
-      throw ArgumentError.value(number, 'number', 'must be non-negative');
-    }
-  }
-
   /// Checks [number] to be valid string representing a range-specifier edge.
   static bool _checkValueString(
     String number, {
@@ -34,24 +21,6 @@ class JenkinsQueryLimits {
     if (allowEmpty && number.isEmpty) return true;
     final result = int.tryParse(number);
     return result != null && result >= 0;
-  }
-
-  /// Checks the range edges [begin] and [end] to be non-`null` positive
-  /// integers and [end] to be greater than or equal to [begin].
-  ///
-  /// Throws [ArgumentError] if:
-  ///   * one of [begin] or [end] is null;
-  ///   * one of [begin] or [end] is negative;
-  ///   * [end] is less than [begin].
-  @visibleForTesting
-  static void checkRange(int begin, int end) {
-    if (begin == null || end == null) {
-      throw ArgumentError('both begin and end must be specified');
-    } else if (begin.isNegative || end.isNegative) {
-      throw ArgumentError('both begin and end must be non-negative');
-    } else if (end < begin) {
-      throw ArgumentError('end must be greater than or equal to begin');
-    }
   }
 
   /// Creates an empty range specifier with no edges.
@@ -69,9 +38,10 @@ class JenkinsQueryLimits {
           .map((substring) => substring.replaceAll(RegExp(r'[\{\}]'), ''))
           .toList();
 
-      final limitsValid = (limits.length == 1 &&
-              _checkValueString(limits.first, allowEmpty: false)) ||
-          (limits.length < 3 && limits.every(_checkValueString));
+      final limitsValid = limits.length < 3 &&
+          limits.every((limit) {
+            return _checkValueString(limit, allowEmpty: limits.length != 1);
+          });
 
       if (!limitsValid) {
         throw FormatException('Wrong format for the range specifier $query');
@@ -99,7 +69,7 @@ class JenkinsQueryLimits {
   /// For example:
   ///   * `JenkinsQueryLimits.at(3)` stands for the third element.
   factory JenkinsQueryLimits.at(int number) {
-    checkValue(number);
+    NumberValidator.checkPositive(number);
     return JenkinsQueryLimits._(lower: number, upper: number);
   }
 
@@ -110,7 +80,7 @@ class JenkinsQueryLimits {
   ///   * `JenkinsQueryLimits.startAfter(3)` stands for the range from the third
   ///     element (exclusive) to the end.
   factory JenkinsQueryLimits.startAfter(int number) {
-    checkValue(number);
+    NumberValidator.checkPositive(number);
     return JenkinsQueryLimits._(lower: number + 1);
   }
 
@@ -121,7 +91,7 @@ class JenkinsQueryLimits {
   ///   * `JenkinsQueryLimits.startAt(3)` stands for the range from the third
   ///     element (inclusive) to the end.
   factory JenkinsQueryLimits.startAt(int number) {
-    checkValue(number);
+    NumberValidator.checkPositive(number);
     return JenkinsQueryLimits._(lower: number);
   }
 
@@ -132,7 +102,7 @@ class JenkinsQueryLimits {
   ///   * `JenkinsQueryLimits.endBefore(3)` stands for the range from the begin
   ///     to the third element (exclusive).
   factory JenkinsQueryLimits.endBefore(int number) {
-    checkValue(number);
+    NumberValidator.checkPositive(number);
     return JenkinsQueryLimits._(upper: number);
   }
 
@@ -143,7 +113,7 @@ class JenkinsQueryLimits {
   ///   * `JenkinsQueryLimits.endAt(3)` stands for the range from the begin
   ///     to the third element (inclusive).
   factory JenkinsQueryLimits.endAt(int number) {
-    checkValue(number);
+    NumberValidator.checkPositive(number);
     return JenkinsQueryLimits._(upper: number + 1);
   }
 
@@ -155,7 +125,7 @@ class JenkinsQueryLimits {
   ///   * `JenkinsQueryLimits.between(3, 10)` stands for the range from the
   ///     third element (inclusive) to the tenth element (exclusive).
   factory JenkinsQueryLimits.between(int begin, int end) {
-    checkRange(begin, end);
+    NumberValidator.checkRange(begin, end);
     return JenkinsQueryLimits._(lower: begin, upper: end);
   }
 
@@ -167,7 +137,7 @@ class JenkinsQueryLimits {
   ///   * `JenkinsQueryLimits.betweenInclusive(3, 10)` stands for the range from
   ///     the third element (inclusive) to the tenth element (inclusive).
   factory JenkinsQueryLimits.betweenInclusive(int begin, int end) {
-    checkRange(begin, end);
+    NumberValidator.checkRange(begin, end);
     return JenkinsQueryLimits._(lower: begin, upper: end + 1);
   }
 
@@ -179,7 +149,7 @@ class JenkinsQueryLimits {
   ///   * `JenkinsQueryLimits.betweenInclusive(3, 10)` stands for the range from
   ///     the third element (exclusive) to the tenth element (exclusive).
   factory JenkinsQueryLimits.betweenExclusive(int begin, int end) {
-    checkRange(begin, end);
+    NumberValidator.checkRange(begin, end);
     return JenkinsQueryLimits._(lower: begin + 1, upper: end);
   }
 

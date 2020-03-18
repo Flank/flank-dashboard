@@ -1,4 +1,4 @@
-import 'package:ci_integration/jenkins/model/jenkins_build.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:equatable/equatable.dart';
 
 /// A class representing a single artifact of a [JenkinsBuild].
@@ -37,17 +37,12 @@ class JenkinsBuildArtifact extends Equatable {
         ?.toList();
   }
 
-  /// Converts object into the [Map].
-  ///
-  /// The resulting map will include only non-null fields of an object it
-  /// represents and can be encoded to a JSON object.
+  /// Converts object into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
-    final json = <String, dynamic>{};
-
-    if (fileName != null) json['fileName'] = fileName;
-    if (relativePath != null) json['relativePath'] = relativePath;
-
-    return json;
+    return {
+      'fileName': fileName,
+      'relativePath': relativePath,
+    };
   }
 
   @override

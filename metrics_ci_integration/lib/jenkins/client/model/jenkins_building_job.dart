@@ -1,6 +1,7 @@
-import 'package:ci_integration/jenkins/model/jenkins_build.dart';
-import 'package:ci_integration/jenkins/model/jenkins_job.dart';
-import 'package:meta/meta.dart';
+import 'package:ci_integration/jenkins/client/jenkins_client.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
+
+import 'jenkins_job.dart';
 
 /// A class representing a Jenkins building job.
 class JenkinsBuildingJob extends JenkinsJob {
@@ -11,6 +12,9 @@ class JenkinsBuildingJob extends JenkinsJob {
   final JenkinsBuild lastBuild;
 
   /// A list of builds performed within this job.
+  ///
+  /// Contains either a full list of builds or a part of builds
+  /// (see [JenkinsClient.fetchBuilds]).
   final List<JenkinsBuild> builds;
 
   @override
@@ -18,7 +22,7 @@ class JenkinsBuildingJob extends JenkinsJob {
       super.props..addAll([firstBuild, lastBuild, builds]);
 
   const JenkinsBuildingJob({
-    @required String name,
+    String name,
     String fullName,
     String url,
     this.firstBuild,
@@ -46,20 +50,15 @@ class JenkinsBuildingJob extends JenkinsJob {
     );
   }
 
-  /// Converts object into the [Map].
-  ///
-  /// The resulting map will include only non-null fields of an object it
-  /// represents and can be encoded to a JSON object.
-  /// Populates [JenkinsJob.toJson] with building job specific fields.
+  /// Converts object into the JSON encodable [Map].
   @override
   Map<String, dynamic> toJson() {
-    final json = super.toJson();
-
-    if (firstBuild != null) json['firstBuild'] = firstBuild.toJson();
-    if (lastBuild != null) json['lastBuild'] = lastBuild.toJson();
-    if (builds != null) json['builds'] = builds.map((b) => b.toJson()).toList();
-
-    return json;
+    return super.toJson()
+      ..addAll({
+        'firstBuild': firstBuild?.toJson(),
+        'lastBuild': lastBuild?.toJson(),
+        'builds': builds?.map((b) => b.toJson())?.toList(),
+      });
   }
 
   @override

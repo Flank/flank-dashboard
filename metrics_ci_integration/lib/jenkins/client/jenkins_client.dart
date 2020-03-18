@@ -2,50 +2,30 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ci_integration/common/authorization/authorization.dart';
-import 'package:ci_integration/jenkins/model/jenkins_build.dart';
-import 'package:ci_integration/jenkins/model/jenkins_build_artifact.dart';
-import 'package:ci_integration/jenkins/model/jenkins_building_job.dart';
-import 'package:ci_integration/jenkins/model/jenkins_job.dart';
-import 'package:ci_integration/jenkins/model/jenkins_multi_branch_job.dart';
-import 'package:ci_integration/jenkins/model/jenkins_query_limits.dart';
-import 'package:ci_integration/jenkins/model/jenkins_result.dart';
+import 'package:ci_integration/jenkins/client/config/jenkins_api_config.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_job.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_multi_branch_job.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_result.dart';
+import 'package:ci_integration/jenkins/client/util/url_utils.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
+/// A callback for parsing Jenkins API response body.
+typedef BodyParserCallback<T> = JenkinsResult<T> Function(Map<String, dynamic>);
+
 /// A client for interactions with the Jenkins API.
 class JenkinsClient {
-  /// A Jenkins JSON API path.
-  @visibleForTesting
-  static const String jsonApiPath = '/api/json';
-
-  /// The part of the `tree` query parameter that stands for
-  /// [JenkinsBuildArtifact]'s properties to fetch.
-  @visibleForTesting
-  static const String artifactsTreeQuery = 'fileName,relativePath';
-
-  /// The part of the `tree` query parameter that stands for [JenkinsBuild]'s
-  /// properties to fetch.
-  @visibleForTesting
-  static const String buildTreeQuery =
-      'number,duration,timestamp,result,url,artifacts[$artifactsTreeQuery]';
-
-  /// The part of the `tree` query parameter that stands for [JenkinsJob]'s
-  /// properties to fetch.
-  @visibleForTesting
-  static const String jobBaseTreeQuery = 'name,fullName,url';
-
-  /// The part of the `tree` query parameter that extends common [JenkinsJob]'s
-  /// properties to fetch with `jobs` and `builds` to detect a job type.
-  @visibleForTesting
-  static const String jobTreeQuery = '$jobBaseTreeQuery,jobs{,0},builds{,0}';
-
   /// The HTTP client for making requests to the Jenkins API.
   final Client _client = Client();
 
   /// The authorization method used within HTTP requests.
   final AuthorizationBase _authorization;
 
-  /// The base URL the Jenkins instance is accessible through.
+  /// The base URL of the Jenkins instance.
   final String _jenkinsUrl;
 
   /// Creates an instance of [JenkinsClient] using [jenkinsUrl] and
@@ -71,50 +51,33 @@ class JenkinsClient {
   ///
   /// If provided authorization method is not `null` then adds the result
   /// of [AuthorizationBase.toMap] method to headers.
-  @visibleForTesting
   Map<String, String> get headers {
     return <String, String>{
       HttpHeaders.contentTypeHeader: ContentType.json.value,
       HttpHeaders.acceptHeader: ContentType.json.value,
-      if (_authorization != null) ..._authorization.toMap()
+      if (_authorization != null) ..._authorization.toMap(),
     };
   }
 
-  /// Builds URL to the Jenkins API using the parts provided.
+  /// Builds URL to the Jenkins API using the parts provided. Delegates
+  /// building URL to the [UrlUtils.buildUrl] method.
   ///
   /// The [url] can be either a link to the Jenkins instance or link to an
   /// object from Jenkins (such as [JenkinsBuild.url], [JenkinsJob.url] and
   /// so on). The [path] defaults to Jenkins JSON API path. The [treeQuery]
   /// stands for the `tree` query parameter used to specify objects' properties
   /// API should return and defaults to an empty string.
-  /// Throws [ArgumentError] is [url] is null. Throws [FormatException] if
-  /// [url] has no authority (see [Uri.authority]).
-  @visibleForTesting
-  String buildJenkinsApiUrl(
+  String _buildJenkinsApiUrl(
     String url, {
-    String path = jsonApiPath,
+    String path = JenkinsApiConfig.jsonApiPath,
     String treeQuery = '',
   }) {
-    if (url == null) throw ArgumentError('URL must not be null');
-
-    Uri uri = Uri.parse(url);
-    if (!uri.hasAuthority) throw const FormatException('URL is invalid');
-
-    final _path = Uri.parse(path);
-    final urlPathSegments = uri.pathSegments.where((s) => s.isNotEmpty);
-    final additionalPathSegments =
-        _path.pathSegments.where((s) => s.isNotEmpty);
-
-    uri = uri.replace(
-      pathSegments: [
-        ...urlPathSegments,
-        ...additionalPathSegments,
-      ],
+    return UrlUtils.buildUrl(
+      url,
+      path: path,
       queryParameters:
           treeQuery == null || treeQuery.isEmpty ? null : {'tree': treeQuery},
     );
-
-    return uri.toString();
   }
 
   /// A generic method for handling HTTP responses.
@@ -122,11 +85,11 @@ class JenkinsClient {
   /// Awaits [responseFuture] and handles the result. If either the provided
   /// future throws or [HttpResponse.statusCode] is not equal to
   /// [successStatusCode] (defaults to [HttpStatus.ok]) this method will
-  /// result with [JenkinsResult.error].
-  /// Otherwise, delegates parsing [Response.body] JSON to the [parseBody] method.
+  /// result with [JenkinsResult.error]. Otherwise, delegates parsing
+  /// [Response.body] JSON to the [bodyParser] method.
   Future<JenkinsResult<T>> _handleResponse<T>(
     Future<Response> responseFuture,
-    JenkinsResult<T> Function(Map<String, dynamic>) parseBody, [
+    BodyParserCallback<T> bodyParser, [
     int successStatusCode = HttpStatus.ok,
   ]) async {
     try {
@@ -134,7 +97,7 @@ class JenkinsClient {
 
       if (response.statusCode == successStatusCode) {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
-        return parseBody(body);
+        return bodyParser(body);
       } else {
         final reason = response.body == null || response.body.isEmpty
             ? response.reasonPhrase
@@ -183,10 +146,10 @@ class JenkinsClient {
   /// Both [fetchPipeline] and [fetchPipelineByFullName] delegate fetching
   /// job to this method.
   Future<JenkinsResult<JenkinsJob>> _fetchPipeline(String path) {
-    final fullUrl = buildJenkinsApiUrl(
+    final fullUrl = _buildJenkinsApiUrl(
       _jenkinsUrl,
       path: '$path/api/json',
-      treeQuery: jobTreeQuery,
+      treeQuery: JenkinsApiConfig.jobTreeQuery,
     );
 
     return _handleResponse<JenkinsJob>(
@@ -207,9 +170,10 @@ class JenkinsClient {
     JenkinsMultiBranchJob multiBranchJob, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
-    final url = buildJenkinsApiUrl(
+    final url = _buildJenkinsApiUrl(
       multiBranchJob.url,
-      treeQuery: '$jobBaseTreeQuery,jobs[$jobTreeQuery]${limits.toQuery()}',
+      treeQuery: '${JenkinsApiConfig.jobBaseTreeQuery},'
+          'jobs[${JenkinsApiConfig.jobTreeQuery}]${limits.toQuery()}',
     );
 
     return _handleResponse<JenkinsMultiBranchJob>(
@@ -230,12 +194,12 @@ class JenkinsClient {
     JenkinsBuildingJob buildingJob, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
-    final url = buildJenkinsApiUrl(
+    final url = _buildJenkinsApiUrl(
       buildingJob.url,
-      treeQuery: '$jobBaseTreeQuery,'
-          'builds[$buildTreeQuery]${limits.toQuery()},'
-          'lastBuild[$buildTreeQuery],'
-          'firstBuild[$buildTreeQuery]',
+      treeQuery: '${JenkinsApiConfig.jobBaseTreeQuery},'
+          'builds[${JenkinsApiConfig.buildTreeQuery}]${limits.toQuery()},'
+          'lastBuild[${JenkinsApiConfig.buildTreeQuery}],'
+          'firstBuild[${JenkinsApiConfig.buildTreeQuery}]',
     );
 
     return _handleResponse<JenkinsBuildingJob>(
@@ -255,9 +219,10 @@ class JenkinsClient {
     String buildUrl, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
-    final url = buildJenkinsApiUrl(
+    final url = _buildJenkinsApiUrl(
       buildUrl,
-      treeQuery: 'artifacts[$artifactsTreeQuery]${limits.toQuery()}',
+      treeQuery: 'artifacts[${JenkinsApiConfig.artifactsTreeQuery}]'
+          '${limits.toQuery()}',
     );
 
     return _handleResponse<List<JenkinsBuildArtifact>>(
@@ -275,7 +240,7 @@ class JenkinsClient {
     String buildUrl,
     String relativePath,
   ) {
-    final url = buildJenkinsApiUrl(buildUrl, path: 'artifact/$relativePath');
+    final url = _buildJenkinsApiUrl(buildUrl, path: 'artifact/$relativePath');
 
     return _fetchArtifact(url);
   }
@@ -285,7 +250,7 @@ class JenkinsClient {
     JenkinsBuild build,
     JenkinsBuildArtifact buildArtifact,
   ) {
-    final url = buildJenkinsApiUrl(
+    final url = _buildJenkinsApiUrl(
       build.url,
       path: 'artifact/${buildArtifact.relativePath}',
     );

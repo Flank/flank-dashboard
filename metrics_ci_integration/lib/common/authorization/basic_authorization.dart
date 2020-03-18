@@ -20,7 +20,6 @@ class BasicAuthorization extends AuthorizationBase {
   /// an HTTP request.
   ///
   /// If one of provided values is `null` then an empty string is used instead.
-  @visibleForTesting
   static String encode(String username, String password) {
     final _username = username ?? '';
     final _password = password ?? '';

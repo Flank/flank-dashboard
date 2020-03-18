@@ -4,7 +4,6 @@ class JenkinsResult<T> {
   final bool _isError;
 
   /// Contains message with a result of interaction.
-  /// Contains error message if interaction failed.
   final String message;
 
   /// Contains a result of interaction.

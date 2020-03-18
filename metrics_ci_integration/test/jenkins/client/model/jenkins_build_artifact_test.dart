@@ -1,8 +1,8 @@
-import 'package:ci_integration/jenkins/model/jenkins_build_artifact.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('JenkinsBuildArtifact', () {
+  group("JenkinsBuildArtifact", () {
     const artifactJson = {
       'fileName': 'file.json',
       'relativePath': 'files/file.json',
@@ -13,20 +13,20 @@ void main() {
       relativePath: 'files/file.json',
     );
 
-    test('.fromJson() should return null if a given json is null', () {
+    test(".fromJson() should return null if a given json is null", () {
       final job = JenkinsBuildArtifact.fromJson(null);
 
       expect(job, isNull);
     });
 
-    test('.fromJson() should create an instance from a json map', () {
+    test(".fromJson() should create an instance from a json map", () {
       final job = JenkinsBuildArtifact.fromJson(artifactJson);
 
       expect(job, equals(buildArtifact));
     });
 
     test(
-      '.listFromJson() should map a null list as null one',
+      ".listFromJson() should map a null list as null one",
       () {
         final jobs = JenkinsBuildArtifact.listFromJson(null);
 
@@ -35,7 +35,7 @@ void main() {
     );
 
     test(
-      '.listFromJson() should map an empty list as empty one',
+      ".listFromJson() should map an empty list as empty one",
       () {
         final jobs = JenkinsBuildArtifact.listFromJson([]);
 
@@ -44,7 +44,7 @@ void main() {
     );
 
     test(
-      '.listFromJson() should map a list of jobs json maps',
+      ".listFromJson() should map a list of jobs json maps",
       () {
         final jobs = JenkinsBuildArtifact.listFromJson([
           artifactJson,
@@ -55,15 +55,7 @@ void main() {
       },
     );
 
-    test('toJson() should include only non-null properties', () {
-      const job = JenkinsBuildArtifact(fileName: 'file.json');
-      const expected = {'fileName': 'file.json'};
-      final json = job.toJson();
-
-      expect(json, equals(expected));
-    });
-
-    test('toJson() should convert an instance to the json map', () {
+    test(".toJson() should convert an instance to the json map", () {
       final json = buildArtifact.toJson();
 
       expect(json, equals(artifactJson));

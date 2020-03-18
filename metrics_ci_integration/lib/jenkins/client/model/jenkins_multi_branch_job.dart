@@ -1,5 +1,4 @@
-import 'package:ci_integration/jenkins/model/jenkins_job.dart';
-import 'package:meta/meta.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_job.dart';
 
 /// A class representing a Jenkins top-level job.
 ///
@@ -15,7 +14,7 @@ class JenkinsMultiBranchJob extends JenkinsJob {
   List<Object> get props => super.props..add(jobs);
 
   const JenkinsMultiBranchJob({
-    @required String name,
+    String name,
     String fullName,
     String url,
     this.jobs,
@@ -35,19 +34,13 @@ class JenkinsMultiBranchJob extends JenkinsJob {
     );
   }
 
-  /// Converts object into the [Map].
-  /// The result can be encoded to a JSON object.
-  ///
-  /// The resulting map will include only non-null fields of an object it
-  /// represents and can be encoded to a JSON object.
-  /// Populates [JenkinsJob.toJson] with [jobs].
+  /// Converts object into the JSON encodable [Map].
   @override
   Map<String, dynamic> toJson() {
-    final json = super.toJson();
-
-    if (jobs != null) json['jobs'] = jobs.map((b) => b.toJson()).toList();
-
-    return json;
+    return super.toJson()
+      ..addAll({
+        'jobs': jobs?.map((b) => b.toJson())?.toList(),
+      });
   }
 
   @override

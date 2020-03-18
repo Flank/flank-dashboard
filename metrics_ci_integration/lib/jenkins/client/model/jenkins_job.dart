@@ -1,7 +1,6 @@
-import 'package:ci_integration/jenkins/model/jenkins_building_job.dart';
-import 'package:ci_integration/jenkins/model/jenkins_multi_branch_job.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_multi_branch_job.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 /// A class representing a Jenkins job.
 ///
@@ -16,7 +15,7 @@ class JenkinsJob extends Equatable {
   List<Object> get props => [name, fullName, url];
 
   const JenkinsJob({
-    @required this.name,
+    this.name,
     this.fullName,
     this.url,
   });
@@ -52,20 +51,13 @@ class JenkinsJob extends Equatable {
         ?.toList();
   }
 
-  /// Converts object into the [Map].
-  /// The result can be encoded to a JSON object.
-  ///
-  /// The resulting map will include only non-null fields of an object it
-  /// represents and result can be encoded to a JSON object.
-  /// The resulting map contains a general information about the job.
+  /// Converts object into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
-    final json = <String, dynamic>{};
-
-    if (name != null) json['name'] = name;
-    if (fullName != null) json['fullName'] = fullName;
-    if (url != null) json['url'] = url;
-
-    return json;
+    return {
+      'name': name,
+      'fullName': fullName,
+      'url': url,
+    };
   }
 
   @override
