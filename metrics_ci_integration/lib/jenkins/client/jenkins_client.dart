@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ci_integration/common/authorization/authorization.dart';
-import 'package:ci_integration/jenkins/client/config/jenkins_api_config.dart';
+import 'package:ci_integration/jenkins/client/config/tree_query.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
@@ -19,6 +19,9 @@ typedef BodyParserCallback<T> = JenkinsResult<T> Function(Map<String, dynamic>);
 
 /// A client for interactions with the Jenkins API.
 class JenkinsClient {
+  /// A Jenkins JSON API path.
+  static const String jsonApiPath = '/api/json';
+
   /// The HTTP client for making requests to the Jenkins API.
   final Client _client = Client();
 
@@ -28,16 +31,16 @@ class JenkinsClient {
   /// The base URL of the Jenkins instance.
   final String _jenkinsUrl;
 
-  /// Creates an instance of [JenkinsClient] using [jenkinsUrl] and
+  /// Creates an instance of [JenkinsClient] using [url] and
   /// [authorization] method (see [AuthorizationBase] and implementers)
   /// provided.
   ///
-  /// [jenkinsUrl] is required. Throws [ArgumentError] if it is `null` or empty.
+  /// [url] is required. Throws [ArgumentError] if it is `null` or empty.
   JenkinsClient({
-    @required String jenkinsUrl,
+    @required String url,
     AuthorizationBase authorization,
   })  : _authorization = authorization,
-        _jenkinsUrl = jenkinsUrl {
+        _jenkinsUrl = url {
     if (_jenkinsUrl == null || _jenkinsUrl.isEmpty) {
       throw ArgumentError.value(
         _jenkinsUrl,
@@ -69,7 +72,7 @@ class JenkinsClient {
   /// API should return and defaults to an empty string.
   String _buildJenkinsApiUrl(
     String url, {
-    String path = JenkinsApiConfig.jsonApiPath,
+    String path = jsonApiPath,
     String treeQuery = '',
   }) {
     return UrlUtils.buildUrl(
@@ -149,7 +152,7 @@ class JenkinsClient {
     final fullUrl = _buildJenkinsApiUrl(
       _jenkinsUrl,
       path: '$path/api/json',
-      treeQuery: JenkinsApiConfig.jobTreeQuery,
+      treeQuery: TreeQuery.job,
     );
 
     return _handleResponse<JenkinsJob>(
@@ -172,8 +175,8 @@ class JenkinsClient {
   }) {
     final url = _buildJenkinsApiUrl(
       multiBranchJob.url,
-      treeQuery: '${JenkinsApiConfig.jobBaseTreeQuery},'
-          'jobs[${JenkinsApiConfig.jobTreeQuery}]${limits.toQuery()}',
+      treeQuery: '${TreeQuery.jobBase},'
+          'jobs[${TreeQuery.job}]${limits.toQuery()}',
     );
 
     return _handleResponse<JenkinsMultiBranchJob>(
@@ -196,10 +199,9 @@ class JenkinsClient {
   }) {
     final url = _buildJenkinsApiUrl(
       buildingJob.url,
-      treeQuery: '${JenkinsApiConfig.jobBaseTreeQuery},'
-          'builds[${JenkinsApiConfig.buildTreeQuery}]${limits.toQuery()},'
-          'lastBuild[${JenkinsApiConfig.buildTreeQuery}],'
-          'firstBuild[${JenkinsApiConfig.buildTreeQuery}]',
+      treeQuery: '${TreeQuery.jobBase},'
+          'builds[${TreeQuery.build}]${limits.toQuery()},'
+          'lastBuild[${TreeQuery.build}],firstBuild[${TreeQuery.build}]',
     );
 
     return _handleResponse<JenkinsBuildingJob>(
@@ -221,8 +223,7 @@ class JenkinsClient {
   }) {
     final url = _buildJenkinsApiUrl(
       buildUrl,
-      treeQuery: 'artifacts[${JenkinsApiConfig.artifactsTreeQuery}]'
-          '${limits.toQuery()}',
+      treeQuery: 'artifacts[${TreeQuery.artifacts}]${limits.toQuery()}',
     );
 
     return _handleResponse<List<JenkinsBuildArtifact>>(

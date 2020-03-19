@@ -7,8 +7,19 @@ import 'package:equatable/equatable.dart';
 /// Instances contain the general information about a Jenkins job, while
 /// [JenkinsBuildingJob] and [JenkinsMultiBranchJob] specifies this information.
 class JenkinsJob extends Equatable {
+  /// The name of this job.
   final String name;
+
+  /// The full name of this job.
+  ///
+  /// If this job is a top-level the full name coincides with its [name].
+  /// Otherwise, the full name consists of names of top-level jobs and its own
+  /// [name] separated by a `/`. For example, if a job with name `master` is a
+  /// part of a multi-branch pipeline with the name `test` then the full name of
+  /// `master` will be `test/master`.
   final String fullName;
+
+  /// The browsable URL to this job.
   final String url;
 
   @override

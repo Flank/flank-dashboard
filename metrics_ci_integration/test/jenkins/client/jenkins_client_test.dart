@@ -48,11 +48,11 @@ void main() {
       await jenkinsMockServer.init();
 
       unauthorizedJenkinsClient = JenkinsClient(
-        jenkinsUrl: jenkinsMockServer.url,
+        url: jenkinsMockServer.url,
       );
 
       jenkinsClient = JenkinsClient(
-        jenkinsUrl: jenkinsMockServer.url,
+        url: jenkinsMockServer.url,
         authorization: authorization,
       );
     });
@@ -66,14 +66,14 @@ void main() {
     test(
       "should throw ArgumentError creating a client instance with a null URL",
       () {
-        expect(() => JenkinsClient(jenkinsUrl: null), throwsArgumentError);
+        expect(() => JenkinsClient(url: null), throwsArgumentError);
       },
     );
 
     test(
       "should throw ArgumentError creating a client instance with an empty URL",
       () {
-        expect(() => JenkinsClient(jenkinsUrl: ''), throwsArgumentError);
+        expect(() => JenkinsClient(url: ''), throwsArgumentError);
       },
     );
 

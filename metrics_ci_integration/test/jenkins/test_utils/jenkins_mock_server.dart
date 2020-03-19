@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:api_mock_server/api_mock_server.dart';
-import 'package:ci_integration/jenkins/client/config/jenkins_api_config.dart';
+import 'package:ci_integration/jenkins/client/config/tree_query.dart';
+import 'package:ci_integration/jenkins/client/jenkins_client.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_job.dart';
@@ -15,27 +16,27 @@ class JenkinsMockServer extends ApiMockServer {
   @override
   List<RequestHandler> get handlers => [
         RequestHandler.get(
-          path: '/job/test${JenkinsApiConfig.jsonApiPath}',
+          path: '/job/test${JenkinsClient.jsonApiPath}',
           dispatcher: _multiBranchJobResponse,
         ),
         RequestHandler.get(
-          path: '/job/name/${JenkinsApiConfig.jsonApiPath}',
+          path: '/job/name/${JenkinsClient.jsonApiPath}',
           dispatcher: _notFoundResponse,
         ),
         RequestHandler.get(
-          path: '/job/test/job/master${JenkinsApiConfig.jsonApiPath}',
+          path: '/job/test/job/master${JenkinsClient.jsonApiPath}',
           dispatcher: _buildingJobResponse,
         ),
         RequestHandler.get(
-          path: '/job/test/job/dev${JenkinsApiConfig.jsonApiPath}',
+          path: '/job/test/job/dev${JenkinsClient.jsonApiPath}',
           dispatcher: _notFoundResponse,
         ),
         RequestHandler.get(
-          path: '/job/test/job/master/1${JenkinsApiConfig.jsonApiPath}',
+          path: '/job/test/job/master/1${JenkinsClient.jsonApiPath}',
           dispatcher: _artifactsResponse,
         ),
         RequestHandler.get(
-          path: '/job/test/job/master/10${JenkinsApiConfig.jsonApiPath}',
+          path: '/job/test/job/master/10${JenkinsClient.jsonApiPath}',
           dispatcher: _notFoundResponse,
         ),
         RequestHandler.get(
@@ -179,11 +180,8 @@ class JenkinsMockServer extends ApiMockServer {
   Future<void> _buildingJobResponse(HttpRequest request) async {
     String responseBody;
 
-    if (_treeQueryContains(request, JenkinsApiConfig.buildTreeQuery)) {
-      final limits = _extractLimits(
-        request,
-        'builds[${JenkinsApiConfig.buildTreeQuery}]',
-      );
+    if (_treeQueryContains(request, TreeQuery.build)) {
+      final limits = _extractLimits(request, 'builds[${TreeQuery.build}]');
       responseBody = jsonEncode(_buildBuildingJob(
         hasBuilds: true,
         limits: limits,

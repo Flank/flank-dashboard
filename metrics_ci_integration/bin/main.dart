@@ -7,12 +7,12 @@ Future<void> main(List<String> arguments) async {
   const username = 'username';
   const password = 'password';
 
-  final JenkinsClient client = JenkinsClient(
-    jenkinsUrl: 'http://localhost:8080',
+  final JenkinsClient jenkinsClient = JenkinsClient(
+    url: 'http://localhost:8080',
     authorization: BasicAuthorization(username, password),
   );
 
-  final result = await client.fetchJobs(
+  final result = await jenkinsClient.fetchJobs(
     const JenkinsMultiBranchJob(
       name: 'Test',
       url: 'http://localhost:8080/job/Test/',
@@ -21,5 +21,5 @@ Future<void> main(List<String> arguments) async {
   );
   print(result);
 
-  client.close();
+  jenkinsClient.close();
 }
