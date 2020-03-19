@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:api_mock_server/api_mock_server.dart';
 import 'package:ci_integration/jenkins/client/config/jenkins_api_config.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_multi_branch_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
-
-import '../../test_utils/api_mock_server/api_mock_server.dart';
-import '../../test_utils/api_mock_server/auth_credentials.dart';
 
 /// A mock server for the Jenkins API.
 class JenkinsMockServer extends ApiMockServer {
@@ -54,6 +53,12 @@ class JenkinsMockServer extends ApiMockServer {
         AuthCredentials(token: 'test'),
       ];
 
+  /// Creates [JenkinsMultiBranchJob] instance.
+  ///
+  /// If [hasJobs] is `true` than populates resulting object with a list of
+  /// [JenkinsJob]s. Otherwise, a list of jobs is empty. Defaults to `false`.
+  /// If [hasJobs] and [limits] is not `null` then applies limits to the list
+  /// of jobs.
   JenkinsMultiBranchJob _buildMultiBranchJob({
     bool hasJobs = false,
     JenkinsQueryLimits limits,
@@ -80,6 +85,12 @@ class JenkinsMockServer extends ApiMockServer {
     }
   }
 
+  /// Creates [JenkinsBuildingJob] instance.
+  ///
+  /// If [hasBuilds] is `true` than populates resulting object with a list of
+  /// [JenkinsBuild]s. Otherwise, a list of builds is empty. Defaults to `false`.
+  /// If [hasBuilds] and [limits] is not `null` then applies limits to the list
+  /// of builds.
   JenkinsBuildingJob _buildBuildingJob({
     bool hasBuilds = false,
     JenkinsQueryLimits limits,
@@ -129,11 +140,14 @@ class JenkinsMockServer extends ApiMockServer {
     }
   }
 
+  /// Checks whether a tree query parameter of the [request] contains [pattern].
   bool _treeQueryContains(HttpRequest request, Pattern pattern) {
     final requestQuery = request.uri.queryParameters['tree'];
     return requestQuery?.contains(pattern) ?? false;
   }
 
+  /// Parses a tree query parameter of the [request] and extracts
+  /// [JenkinsQueryLimits] that is placed [after] pattern.
   JenkinsQueryLimits _extractLimits(HttpRequest request, Pattern after) {
     final requestQuery = request.uri.queryParameters['tree'];
     final substring = requestQuery.replaceAll(after, '');
@@ -142,6 +156,7 @@ class JenkinsMockServer extends ApiMockServer {
     return match == null ? null : JenkinsQueryLimits.fromQuery(match);
   }
 
+  /// Responses with a [JenkinsMultiBranchJob] for the given [request].
   Future<void> _multiBranchJobResponse(HttpRequest request) async {
     String responseBody;
 
@@ -160,6 +175,7 @@ class JenkinsMockServer extends ApiMockServer {
     await request.response.close();
   }
 
+  /// Responses with a [JenkinsBuildingJob] for the given [request].
   Future<void> _buildingJobResponse(HttpRequest request) async {
     String responseBody;
 
@@ -181,6 +197,7 @@ class JenkinsMockServer extends ApiMockServer {
     await request.response.close();
   }
 
+  /// Responses with a list of [JenkinsBuildArtifact]s for the given [request].
   Future<void> _artifactsResponse(HttpRequest request) async {
     final _response = {
       'artifacts': [
@@ -208,6 +225,7 @@ class JenkinsMockServer extends ApiMockServer {
     await request.response.close();
   }
 
+  /// Responses with artifact content for the given [request].
   Future<void> _artifactContentResponse(HttpRequest request) async {
     const artifactContent = <String, dynamic>{
       'coverage': 80,
@@ -220,6 +238,8 @@ class JenkinsMockServer extends ApiMockServer {
     await request.response.close();
   }
 
+  /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
+  /// and closes it.
   Future<void> _notFoundResponse(HttpRequest request) async {
     request.response.statusCode = HttpStatus.notFound;
 

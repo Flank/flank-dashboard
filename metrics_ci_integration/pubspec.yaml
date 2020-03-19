@@ -1,7 +1,5 @@
 name: ci_integration
 description: A command-line application for importing CI builds to the Metrics database.
-# version: 1.0.0
-# homepage: https://www.example.com
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
@@ -15,3 +13,9 @@ dependencies:
 dev_dependencies:
   lint: ^1.1.1
   test: ^1.14.1
+  api_mock_server:
+    git:
+      url: https://github.com/software-platform/monorepo.git
+      # TODO: before PR is merged - remove the following line
+      ref: jenkins_api_integration
+      path: api_mock_server
