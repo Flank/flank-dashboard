@@ -45,7 +45,7 @@ void main() {
     JenkinsClient unauthorizedJenkinsClient;
 
     setUpAll(() async {
-      await jenkinsMockServer.init();
+      await jenkinsMockServer.start();
 
       unauthorizedJenkinsClient = JenkinsClient(
         url: jenkinsMockServer.url,

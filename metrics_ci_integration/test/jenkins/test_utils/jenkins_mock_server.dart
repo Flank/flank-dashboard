@@ -16,35 +16,51 @@ class JenkinsMockServer extends ApiMockServer {
   @override
   List<RequestHandler> get handlers => [
         RequestHandler.get(
-          path: '/job/test${JenkinsClient.jsonApiPath}',
+          pathMatcher: ExactPathMatcher(
+            '/job/test${JenkinsClient.jsonApiPath}',
+          ),
           dispatcher: _multiBranchJobResponse,
         ),
         RequestHandler.get(
-          path: '/job/name/${JenkinsClient.jsonApiPath}',
+          pathMatcher: ExactPathMatcher(
+            '/job/name/${JenkinsClient.jsonApiPath}',
+          ),
           dispatcher: _notFoundResponse,
         ),
         RequestHandler.get(
-          path: '/job/test/job/master${JenkinsClient.jsonApiPath}',
+          pathMatcher: ExactPathMatcher(
+            '/job/test/job/master${JenkinsClient.jsonApiPath}',
+          ),
           dispatcher: _buildingJobResponse,
         ),
         RequestHandler.get(
-          path: '/job/test/job/dev${JenkinsClient.jsonApiPath}',
+          pathMatcher: ExactPathMatcher(
+            '/job/test/job/dev${JenkinsClient.jsonApiPath}',
+          ),
           dispatcher: _notFoundResponse,
         ),
         RequestHandler.get(
-          path: '/job/test/job/master/1${JenkinsClient.jsonApiPath}',
+          pathMatcher: ExactPathMatcher(
+            '/job/test/job/master/1${JenkinsClient.jsonApiPath}',
+          ),
           dispatcher: _artifactsResponse,
         ),
         RequestHandler.get(
-          path: '/job/test/job/master/10${JenkinsClient.jsonApiPath}',
+          pathMatcher: ExactPathMatcher(
+            '/job/test/job/master/10${JenkinsClient.jsonApiPath}',
+          ),
           dispatcher: _notFoundResponse,
         ),
         RequestHandler.get(
-          path: '/job/test/job/master/1/artifact/coverage/coverage.json',
+          pathMatcher: ExactPathMatcher(
+            '/job/test/job/master/1/artifact/coverage/coverage.json',
+          ),
           dispatcher: _artifactContentResponse,
         ),
         RequestHandler.get(
-          path: '/job/test/job/master/1/artifact/coverage/test.json',
+          pathMatcher: ExactPathMatcher(
+            '/job/test/job/master/1/artifact/coverage/test.json',
+          ),
           dispatcher: _notFoundResponse,
         ),
       ];
