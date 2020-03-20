@@ -28,7 +28,7 @@ abstract class ApiMockServer {
   /// which is effectively localhost, will be used.
   /// A [port] defaults to `0` which means that an ephemeral port will be
   /// chosen by the system.
-  Future<void> init({
+  Future<void> start({
     dynamic address,
     int port = 0,
   }) async {
@@ -47,7 +47,7 @@ abstract class ApiMockServer {
   /// method.
   bool verifyRequest(HttpRequest request) {
     final isValid = authCredentials?.any((credentials) {
-      return credentials.verify(request.headers);
+      return request.headers.value(credentials.header) == credentials.token;
     });
 
     return isValid ?? true;

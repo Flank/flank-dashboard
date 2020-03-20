@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:api_mock_server/api_mock_server.dart';
+
 /// Handle [HttpRequest] callback definition
 typedef RequestHandleDispatcher = Future<void> Function(HttpRequest);
 
@@ -12,85 +14,68 @@ class RequestHandler {
   /// Can be one of valid HTTP methods.
   final String method;
 
-  /// Exact requested path this handler is able to process.
-  ///
-  /// Used instead of [pathPattern] if provided.
-  final String path;
-
-  /// Regular expression for the requested path and query parameters
+  /// The [PathMatcher] for the requested path and query parameters
   /// ([HttpRequest.uri]) this handler is able to process.
-  final RegExp pathPattern;
+  final PathMatcher pathMatcher;
 
   /// Callback that processes request.
   final RequestHandleDispatcher dispatcher;
 
   RequestHandler._({
-    this.path,
     this.method,
-    this.pathPattern,
+    this.pathMatcher,
     this.dispatcher,
   });
 
   /// Creates an instance of handler for the 'GET' HTTP method.
   RequestHandler.get({
-    String path,
-    RegExp pathPattern,
+    PathMatcher pathMatcher,
     RequestHandleDispatcher dispatcher,
   }) : this._(
           method: 'GET',
-          path: path,
-          pathPattern: pathPattern,
+          pathMatcher: pathMatcher,
           dispatcher: dispatcher,
         );
 
   /// Creates an instance of handler for the 'POST' HTTP method.
   RequestHandler.post({
-    String path,
-    RegExp pathPattern,
+    PathMatcher pathMatcher,
     RequestHandleDispatcher dispatcher,
   }) : this._(
           method: 'POST',
-          path: path,
-          pathPattern: pathPattern,
+          pathMatcher: pathMatcher,
           dispatcher: dispatcher,
         );
 
   /// Creates an instance of handler for the 'PUT' HTTP method.
   RequestHandler.put({
-    String path,
-    RegExp pathPattern,
+    PathMatcher pathMatcher,
     RequestHandleDispatcher dispatcher,
   }) : this._(
           method: 'PUT',
-          path: path,
-          pathPattern: pathPattern,
+          pathMatcher: pathMatcher,
           dispatcher: dispatcher,
         );
 
   /// Creates an instance of handler for the 'DELETE' HTTP method.
   RequestHandler.delete({
-    String path,
-    RegExp pathPattern,
+    PathMatcher pathMatcher,
     RequestHandleDispatcher dispatcher,
   }) : this._(
           method: 'DELETE',
-          path: path,
-          pathPattern: pathPattern,
+          pathMatcher: pathMatcher,
           dispatcher: dispatcher,
         );
 
   /// Checks whether this handler can process [request].
   ///
-  /// If [path] is provided checks whether requested path equals to it.
-  /// Otherwise, uses [pathPattern] regexp on requested path and returns `true`
-  /// in case of full match.
+  /// Returns `true` if the [HttpRequest.method] of [request] equals this
+  /// handler [method] and [pathMatcher] either `null` or [PathMatcher.match]
+  /// the [request]. Otherwise, returns `false`.
   bool match(HttpRequest request) {
     final requestPath = request.uri.path.toString();
-    final matchPath = path != null && requestPath == path;
-    final matchPattern = pathPattern != null &&
-        pathPattern.stringMatch(requestPath) == requestPath;
-
-    return request.method == method && (matchPath || matchPattern);
+    return request.method == method &&
+        (pathMatcher == null || pathMatcher.match(requestPath));
   }
 
   /// Processes the [request] by calling [dispatcher] callback if presented.
