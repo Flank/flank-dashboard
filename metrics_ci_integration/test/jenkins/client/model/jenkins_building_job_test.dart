@@ -18,8 +18,8 @@ void main() {
       );
 
       buildingJob = const JenkinsBuildingJob(
-        name: 'job',
-        fullName: 'job',
+        name: 'name',
+        fullName: 'fullName',
         url: 'url',
         builds: [lastBuild, firstBuild],
         firstBuild: firstBuild,
@@ -44,8 +44,8 @@ void main() {
       };
 
       buildingJobJson = {
-        'name': 'job',
-        'fullName': 'job',
+        'name': 'name',
+        'fullName': 'fullName',
         'url': 'url',
         'builds': [lastBuildJson, firstBuildJson],
         'firstBuild': firstBuildJson,

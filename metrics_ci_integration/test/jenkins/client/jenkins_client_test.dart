@@ -129,22 +129,22 @@ void main() {
 
     test("should fail to perform requests if not authorized", () {
       final result = unauthorizedJenkinsClient
-          .fetchPipeline('test')
+          .fetchJob('test')
           .then((result) => result.isError);
 
       expect(result, completion(isTrue));
     });
 
-    test(".fetchPipeline() should fail if a pipeline is not found", () {
+    test(".fetchJob() should fail if a job is not found", () {
       final result =
-          jenkinsClient.fetchPipeline('name').then((result) => result.isError);
+          jenkinsClient.fetchJob('name').then((result) => result.isError);
 
       expect(result, completion(isTrue));
     });
 
-    test(".fetchPipeline() should respond with a pipeline", () {
+    test(".fetchJob() should respond with a job", () {
       final result =
-          jenkinsClient.fetchPipeline('test').then((result) => result.result);
+          jenkinsClient.fetchJob('test').then((result) => result.result);
       const expected = JenkinsMultiBranchJob(
         name: 'test',
         fullName: 'test',
@@ -155,10 +155,10 @@ void main() {
     });
 
     test(
-      ".fetchPipelineByFullName() should fail if a pipeline with the given full name is not found",
+      ".fetchJobByFullName() should fail if a job with the given full name is not found",
       () {
         final result = jenkinsClient
-            .fetchPipelineByFullName('test/dev')
+            .fetchJobByFullName('test/dev')
             .then((result) => result.isError);
 
         expect(result, completion(isTrue));
@@ -166,10 +166,10 @@ void main() {
     );
 
     test(
-      ".fetchPipelineByFullName() should respond with a pipeline matching the given full name",
+      ".fetchJobByFullName() should respond with a job matching the given full name",
       () {
         final result = jenkinsClient
-            .fetchPipelineByFullName('test/master')
+            .fetchJobByFullName('test/master')
             .then((result) => result.result);
         const expected = JenkinsBuildingJob(
           name: 'master',
@@ -181,71 +181,80 @@ void main() {
       },
     );
 
-    test(".fetchJobs() should fail if a pipeline is not found", () {
-      final multiBranchJob = JenkinsMultiBranchJob(
-        name: 'name',
-        url: '${jenkinsMockServer.url}/job/name',
-      );
-      final result = jenkinsClient
-          .fetchJobs(multiBranchJob)
-          .then((result) => result.isError);
+    test(".fetchJobs() should fail if a job is not found", () {
+      final result =
+          jenkinsClient.fetchJobs('name').then((result) => result.isError);
 
       expect(result, completion(isTrue));
     });
 
     test(
-      ".fetchJobs() should respond with a pipeline populated with a list of jobs",
+      ".fetchJobs() should respond with a list of jobs",
       () {
-        final multiBranchJob = JenkinsMultiBranchJob(
-          name: 'test',
-          url: '${jenkinsMockServer.url}/job/test',
-        );
-        final result = jenkinsClient
-            .fetchJobs(multiBranchJob)
-            .then((result) => result.result);
-        const expected = JenkinsMultiBranchJob(
-          name: 'test',
-          fullName: 'test',
-          jobs: [
-            JenkinsBuildingJob(
-              name: 'master',
-              fullName: 'test/master',
-              builds: [],
-            ),
-          ],
-        );
+        final result =
+            jenkinsClient.fetchJobs('test').then((result) => result.result);
+        const expected = [
+          JenkinsBuildingJob(
+            name: 'master',
+            fullName: 'test/master',
+            builds: [],
+          ),
+        ];
 
         expect(result, completion(equals(expected)));
       },
     );
 
     test(".fetchJobs() should apply limits to request if provided", () {
-      final multiBranchJob = JenkinsMultiBranchJob(
-        name: 'test',
-        url: '${jenkinsMockServer.url}/job/test',
-      );
       final result = jenkinsClient
-          .fetchJobs(
-            multiBranchJob,
-            limits: JenkinsQueryLimits.endBefore(0),
-          )
+          .fetchJobs('test', limits: JenkinsQueryLimits.endBefore(0))
           .then((result) => result.result);
-      const expected = JenkinsMultiBranchJob(
-        name: 'test',
-        fullName: 'test',
-        jobs: [],
-      );
+      const expected = [];
 
       expect(result, completion(equals(expected)));
     });
 
-    test(".fetchBuilds() should fail if building job is not found", () {
-      final buildingJob = JenkinsBuildingJob(
-        name: 'dev',
-        url: '${jenkinsMockServer.url}/job/test/job/dev',
-      );
+    test(".fetchJobsByUrl() should fail if a job is not found", () {
       final result = jenkinsClient
-          .fetchBuilds(buildingJob)
+          .fetchJobsByUrl('${jenkinsMockServer.url}/job/name')
+          .then((result) => result.isError);
+
+      expect(result, completion(isTrue));
+    });
+
+    test(
+      ".fetchJobsByUrl() should respond with a list of jobs",
+      () {
+        final result = jenkinsClient
+            .fetchJobsByUrl('${jenkinsMockServer.url}/job/test')
+            .then((result) => result.result);
+        const expected = [
+          JenkinsBuildingJob(
+            name: 'master',
+            fullName: 'test/master',
+            builds: [],
+          ),
+        ];
+
+        expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(".fetchJobsByUrl() should apply limits to request if provided", () {
+      final result = jenkinsClient
+          .fetchJobsByUrl(
+            '${jenkinsMockServer.url}/job/test',
+            limits: JenkinsQueryLimits.endBefore(0),
+          )
+          .then((result) => result.result);
+      const expected = [];
+
+      expect(result, completion(equals(expected)));
+    });
+
+    test(".fetchBuilds() should fail if a building job is not found", () {
+      final result = jenkinsClient
+          .fetchBuilds('test/dev')
           .then((result) => result.isError);
 
       expect(result, completion(isTrue));
@@ -254,12 +263,8 @@ void main() {
     test(
       ".fetchBuilds() should respond with a building job populated with builds related data",
       () {
-        final buildingJob = JenkinsBuildingJob(
-          name: 'master',
-          url: '${jenkinsMockServer.url}/job/test/job/master',
-        );
         final result = jenkinsClient
-            .fetchBuilds(buildingJob)
+            .fetchBuilds('test/master')
             .then((result) => result.result);
 
         final expected = JenkinsBuildingJob(
@@ -277,13 +282,58 @@ void main() {
     test(
       ".fetchBuilds() should apply limits to request if provided",
       () {
-        final buildingJob = JenkinsBuildingJob(
-          name: 'master',
-          url: '${jenkinsMockServer.url}/job/test/job/master',
-        );
         final result = jenkinsClient
             .fetchBuilds(
-              buildingJob,
+              'test/master',
+              limits: JenkinsQueryLimits.endAt(1),
+            )
+            .then((result) => result.result);
+
+        final expected = JenkinsBuildingJob(
+          name: 'master',
+          fullName: 'test/master',
+          builds: [lastBuild],
+          firstBuild: firstBuild,
+          lastBuild: lastBuild,
+        );
+
+        expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(".fetchBuildsByUrl() should fail if a building job is not found", () {
+      final result = jenkinsClient
+          .fetchBuildsByUrl('${jenkinsMockServer.url}/job/test/job/dev')
+          .then((result) => result.isError);
+
+      expect(result, completion(isTrue));
+    });
+
+    test(
+      ".fetchBuildsByUrl() should respond with a building job populated with builds related data",
+      () {
+        final result = jenkinsClient
+            .fetchBuildsByUrl('${jenkinsMockServer.url}/job/test/job/master')
+            .then((result) => result.result);
+
+        final expected = JenkinsBuildingJob(
+          name: 'master',
+          fullName: 'test/master',
+          builds: [lastBuild, firstBuild],
+          firstBuild: firstBuild,
+          lastBuild: lastBuild,
+        );
+
+        expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(
+      ".fetchBuildsByUrl() should apply limits to request if provided",
+      () {
+        final result = jenkinsClient
+            .fetchBuildsByUrl(
+              '${jenkinsMockServer.url}/job/test/job/master',
               limits: JenkinsQueryLimits.endAt(1),
             )
             .then((result) => result.result);

@@ -30,7 +30,7 @@ class JenkinsBuildingJob extends JenkinsJob {
     this.builds,
   }) : super(name: name, fullName: fullName, url: url);
 
-  /// Creates an instance of building job from the decoded JSON object.
+  /// Creates an instance of a building job from the decoded JSON object.
   ///
   /// Returns `null` if [json] is `null`.
   factory JenkinsBuildingJob.fromJson(Map<String, dynamic> json) {
@@ -50,7 +50,6 @@ class JenkinsBuildingJob extends JenkinsJob {
     );
   }
 
-  /// Converts object into the JSON encodable [Map].
   @override
   Map<String, dynamic> toJson() {
     return super.toJson()

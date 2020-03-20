@@ -11,8 +11,10 @@ class JenkinsResult<T> {
   /// Generally, the parsed body from response.
   final T result;
 
+  /// Indicates if the interaction has finished with an error.
   bool get isError => _isError;
 
+  /// Indicates if the interaction has finished successfully.
   bool get isSuccess => !_isError;
 
   const JenkinsResult._(this._isError, this.message, this.result);

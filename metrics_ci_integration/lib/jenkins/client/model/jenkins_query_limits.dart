@@ -6,7 +6,7 @@ class JenkinsQueryLimits {
   /// The lower bound of a range specified.
   final int lower;
 
-  /// The lower bound of a range specified.
+  /// The upper bound of a range specified.
   final int upper;
 
   /// Creates a range specifier with given [lower] and [upper] bounds.
@@ -125,32 +125,8 @@ class JenkinsQueryLimits {
   ///   * `JenkinsQueryLimits.between(3, 10)` stands for the range from the
   ///     third element (inclusive) to the tenth element (exclusive).
   factory JenkinsQueryLimits.between(int begin, int end) {
-    NumberValidator.checkRange(begin, end);
+    NumberValidator.checkPositiveRange(begin, end);
     return JenkinsQueryLimits._(lower: begin, upper: end);
-  }
-
-  /// Creates a range specifier for the left-edged (inclusive) and
-  /// right-edged (inclusive) range.
-  ///
-  /// Specifies the `{begin,end+1}` range.
-  /// For example:
-  ///   * `JenkinsQueryLimits.betweenInclusive(3, 10)` stands for the range from
-  ///     the third element (inclusive) to the tenth element (inclusive).
-  factory JenkinsQueryLimits.betweenInclusive(int begin, int end) {
-    NumberValidator.checkRange(begin, end);
-    return JenkinsQueryLimits._(lower: begin, upper: end + 1);
-  }
-
-  /// Creates a range specifier for the left-edged (exclusive) and
-  /// right-edged (exclusive) range.
-  ///
-  /// Specifies the `{begin+1,end}` range.
-  /// For example:
-  ///   * `JenkinsQueryLimits.betweenInclusive(3, 10)` stands for the range from
-  ///     the third element (exclusive) to the tenth element (exclusive).
-  factory JenkinsQueryLimits.betweenExclusive(int begin, int end) {
-    NumberValidator.checkRange(begin, end);
-    return JenkinsQueryLimits._(lower: begin + 1, upper: end);
   }
 
   /// Converts an instance to the range specifier for Jenkins API.

@@ -32,4 +32,22 @@ class UrlUtils {
 
     return uri.toString();
   }
+
+  /// Transforms [path] replacing separators with additional path segments
+  /// specified by [replacement].
+  ///
+  /// Throws [ArgumentError] if either [path] or [replacement] is `null`.
+  /// Example:
+  /// ```dart
+  ///   const path = 'path/to/something';
+  ///   final result = splitMapJoinPathSegments(path, 'test');
+  ///   // prints `test/path/test/to/test/something`
+  ///   print(result);
+  /// ```
+  static String replacePathSeparators(String path, String replacement) {
+    ArgumentError.checkNotNull(path, 'path');
+    ArgumentError.checkNotNull(replacement, 'onMatch');
+    final _path = path.splitMapJoin('/', onMatch: (_) => '/$replacement/');
+    return '$replacement/$_path';
+  }
 }

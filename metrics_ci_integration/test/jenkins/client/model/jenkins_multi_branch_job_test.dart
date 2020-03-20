@@ -5,8 +5,8 @@ import 'package:test/test.dart';
 void main() {
   group("JenkinsMultiBranchJob", () {
     const multiBranchJobJson = {
-      'name': 'job',
-      'fullName': 'job',
+      'name': 'name',
+      'fullName': 'fullName',
       'url': 'url',
       'jobs': [
         {
@@ -18,8 +18,8 @@ void main() {
     };
 
     const multiBranchJob = JenkinsMultiBranchJob(
-      name: 'job',
-      fullName: 'job',
+      name: 'name',
+      fullName: 'fullName',
       url: 'url',
       jobs: [
         JenkinsJob(

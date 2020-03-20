@@ -1,6 +1,5 @@
 import 'package:ci_integration/common/authorization/authorization.dart';
 import 'package:ci_integration/jenkins/client/jenkins_client.dart';
-import 'package:ci_integration/jenkins/client/model/jenkins_multi_branch_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
 
 Future<void> main(List<String> arguments) async {
@@ -13,10 +12,7 @@ Future<void> main(List<String> arguments) async {
   );
 
   final result = await jenkinsClient.fetchJobs(
-    const JenkinsMultiBranchJob(
-      name: 'Test',
-      url: 'http://localhost:8080/job/Test/',
-    ),
+    'Test',
     limits: JenkinsQueryLimits.endAt(0),
   );
   print(result);

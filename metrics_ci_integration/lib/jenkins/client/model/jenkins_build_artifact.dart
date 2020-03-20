@@ -6,7 +6,8 @@ class JenkinsBuildArtifact extends Equatable {
   /// A name of this artifact file.
   final String fileName;
 
-  /// A path to this artifact.
+  /// A path to this artifact in the build's artifacts tree stored within
+  /// Jenkins instance.
   final String relativePath;
 
   @override
@@ -30,6 +31,8 @@ class JenkinsBuildArtifact extends Equatable {
   }
 
   /// Creates a list of artifacts from the [list] of decoded JSON objects.
+  ///
+  /// Returns `null` if the given list is `null`.
   static List<JenkinsBuildArtifact> listFromJson(List<dynamic> list) {
     return list
         ?.map((json) =>

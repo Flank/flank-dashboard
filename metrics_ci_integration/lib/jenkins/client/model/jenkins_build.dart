@@ -63,6 +63,8 @@ class JenkinsBuild extends Equatable {
   }
 
   /// Creates a list of Jenkins builds from the [list] of decoded JSON objects.
+  ///
+  /// Returns `null` if the given list is `null`.
   static List<JenkinsBuild> listFromJson(List<dynamic> list) {
     return list
         ?.map((json) => JenkinsBuild.fromJson(json as Map<String, dynamic>))

@@ -19,7 +19,7 @@ class NumberValidator {
   ///   * one of [begin] or [end] is null;
   ///   * one of [begin] or [end] is negative;
   ///   * [end] is less than [begin].
-  static void checkRange(int begin, int end) {
+  static void checkPositiveRange(int begin, int end) {
     if (begin == null || end == null) {
       throw ArgumentError('both begin and end must be specified');
     } else if (begin.isNegative || end.isNegative) {

@@ -20,7 +20,7 @@ class JenkinsMultiBranchJob extends JenkinsJob {
     this.jobs,
   }) : super(name: name, fullName: fullName, url: url);
 
-  /// Creates an instance of multi-branch job from the decoded JSON object.
+  /// Creates an instance of a multi-branch job from the decoded JSON object.
   ///
   /// Returns `null` if [json] is `null`.
   factory JenkinsMultiBranchJob.fromJson(Map<String, dynamic> json) {
@@ -34,7 +34,6 @@ class JenkinsMultiBranchJob extends JenkinsJob {
     );
   }
 
-  /// Converts object into the JSON encodable [Map].
   @override
   Map<String, dynamic> toJson() {
     return super.toJson()

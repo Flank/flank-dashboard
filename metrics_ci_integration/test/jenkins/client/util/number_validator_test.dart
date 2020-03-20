@@ -19,40 +19,40 @@ void main() {
     test(
       ".checkRange() should throw ArgumentError if the begin value is null",
       () {
-        expect(() => NumberValidator.checkRange(null, 1), throwsArgumentError);
+        expect(() => NumberValidator.checkPositiveRange(null, 1), throwsArgumentError);
       },
     );
 
     test(
       ".checkRange() should throw ArgumentError if the end value is null",
       () {
-        expect(() => NumberValidator.checkRange(1, null), throwsArgumentError);
+        expect(() => NumberValidator.checkPositiveRange(1, null), throwsArgumentError);
       },
     );
 
     test(
       ".checkRange() should throw ArgumentError if the begin value is negative",
       () {
-        expect(() => NumberValidator.checkRange(-1, 1), throwsArgumentError);
+        expect(() => NumberValidator.checkPositiveRange(-1, 1), throwsArgumentError);
       },
     );
 
     test(
       ".checkRange() should throw ArgumentError if the end value is negative",
       () {
-        expect(() => NumberValidator.checkRange(1, -1), throwsArgumentError);
+        expect(() => NumberValidator.checkPositiveRange(1, -1), throwsArgumentError);
       },
     );
 
     test(
       ".checkRange() should throw ArgumentError if the end value is less than the begin one",
       () {
-        expect(() => NumberValidator.checkRange(2, 1), throwsArgumentError);
+        expect(() => NumberValidator.checkPositiveRange(2, 1), throwsArgumentError);
       },
     );
 
-    test(".checkRange() should validate the given rande", () {
-      expect(() => NumberValidator.checkRange(1, 2), returnsNormally);
+    test(".checkRange() should validate the given range", () {
+      expect(() => NumberValidator.checkPositiveRange(1, 2), returnsNormally);
     });
   });
 }

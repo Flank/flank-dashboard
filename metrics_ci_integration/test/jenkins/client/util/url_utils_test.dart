@@ -68,5 +68,43 @@ void main() {
         expect(result, equals(expected));
       },
     );
+
+    test(
+      ".replacePathSeparators() should throw ArgumentError if the path is null",
+      () {
+        expect(
+          () => UrlUtils.replacePathSeparators(null, ''),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".replacePathSeparators() should throw ArgumentError if the replacement is null",
+      () {
+        expect(
+          () => UrlUtils.replacePathSeparators('', null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".replacePathSeparators() should result with path starting with the given replacement",
+      () {
+        final result = UrlUtils.replacePathSeparators('path', 'test');
+
+        expect(result, startsWith('test'));
+      },
+    );
+
+    test(
+      ".replacePathSeparators() should replace path separators with the given replacement segment",
+      () {
+        final result = UrlUtils.replacePathSeparators('path/to', 'test');
+
+        expect(result, startsWith('test/path/test/to'));
+      },
+    );
   });
 }

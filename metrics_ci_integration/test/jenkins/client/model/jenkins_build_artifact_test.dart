@@ -3,14 +3,17 @@ import 'package:test/test.dart';
 
 void main() {
   group("JenkinsBuildArtifact", () {
+    const fileName = 'file.json';
+    const relativePath = 'files/file.json';
+
     const artifactJson = {
-      'fileName': 'file.json',
-      'relativePath': 'files/file.json',
+      'fileName': fileName,
+      'relativePath': relativePath,
     };
 
     const buildArtifact = JenkinsBuildArtifact(
-      fileName: 'file.json',
-      relativePath: 'files/file.json',
+      fileName: fileName,
+      relativePath: relativePath,
     );
 
     test(".fromJson() should return null if a given json is null", () {

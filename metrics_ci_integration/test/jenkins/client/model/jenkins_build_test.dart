@@ -3,12 +3,12 @@ import 'package:test/test.dart';
 
 void main() {
   group("JenkinsBuild", () {
-    final currentMillisecondsSinceEpoch = DateTime.now().millisecondsSinceEpoch;
+    final timestamp = DateTime(2020);
 
     final buildJson = {
       'number': 1,
       'duration': 10,
-      'timestamp': currentMillisecondsSinceEpoch,
+      'timestamp': timestamp.millisecondsSinceEpoch,
       'result': 'FAILED',
       'url': 'url',
       'artifacts': [],
@@ -17,9 +17,7 @@ void main() {
     final jenkinsBuild = JenkinsBuild(
       number: 1,
       duration: const Duration(seconds: 10),
-      timestamp: DateTime.fromMillisecondsSinceEpoch(
-        currentMillisecondsSinceEpoch,
-      ),
+      timestamp: timestamp,
       result: 'FAILED',
       url: 'url',
       artifacts: const [],

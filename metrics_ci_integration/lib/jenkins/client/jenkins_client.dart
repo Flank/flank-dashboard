@@ -7,7 +7,6 @@ import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_job.dart';
-import 'package:ci_integration/jenkins/client/model/jenkins_multi_branch_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_result.dart';
 import 'package:ci_integration/jenkins/client/util/url_utils.dart';
@@ -15,7 +14,9 @@ import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
 /// A callback for parsing Jenkins API response body.
-typedef BodyParserCallback<T> = JenkinsResult<T> Function(Map<String, dynamic>);
+typedef BodyParserCallback<T> = JenkinsResult<T> Function(
+  Map<String, dynamic> body,
+);
 
 /// A client for interactions with the Jenkins API.
 class JenkinsClient {
@@ -83,7 +84,12 @@ class JenkinsClient {
     );
   }
 
-  /// A generic method for handling HTTP responses.
+  /// Converts a [JenkinsJob]'s full name to the path to this job.
+  String _jobFullNameToPath(String jobFullName) {
+    return UrlUtils.replacePathSeparators(jobFullName, 'job');
+  }
+
+  /// A method for handling Jenkins-specific HTTP responses.
   ///
   /// Awaits [responseFuture] and handles the result. If either the provided
   /// future throws or [HttpResponse.statusCode] is not equal to
@@ -92,13 +98,12 @@ class JenkinsClient {
   /// [Response.body] JSON to the [bodyParser] method.
   Future<JenkinsResult<T>> _handleResponse<T>(
     Future<Response> responseFuture,
-    BodyParserCallback<T> bodyParser, [
-    int successStatusCode = HttpStatus.ok,
-  ]) async {
+    BodyParserCallback<T> bodyParser,
+  ) async {
     try {
       final response = await responseFuture;
 
-      if (response.statusCode == successStatusCode) {
+      if (response.statusCode == HttpStatus.ok) {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
         return bodyParser(body);
       } else {
@@ -124,31 +129,30 @@ class JenkinsClient {
   /// [topLevelPipelines] is optional and defaults to an empty list.
   ///
   /// If the desired job's full name is known, consider to use
-  /// [fetchPipelineByFullName] method instead.
-  Future<JenkinsResult<JenkinsJob>> fetchPipeline(
+  /// [fetchJobByFullName] method instead.
+  Future<JenkinsResult<JenkinsJob>> fetchJob(
     String name, {
     List<String> topLevelPipelines = const [],
   }) {
     final jobs = (topLevelPipelines ?? []).toList()..add(name);
-    return _fetchPipeline('job/${jobs?.join('/job/')}');
+    return _fetchJob('job/${jobs?.join('/job/')}');
   }
 
   /// Retrieves [JenkinsJob] by provided [fullName].
   ///
   /// A Jenkins job's full name contains all top-level jobs' names in the
   /// following form: `<top-...-top-job>/.../<top-job>/<job>`. Unlike the
-  /// [fetchPipeline] method, this one will parse [fullName] to detect top-level
+  /// [fetchJob] method, this one will parse [fullName] to detect top-level
   /// jobs and build a path to the desired job.
-  Future<JenkinsResult<JenkinsJob>> fetchPipelineByFullName(String fullName) {
-    final path = fullName.splitMapJoin('/', onMatch: (_) => '/job/');
-    return _fetchPipeline('job/$path');
+  Future<JenkinsResult<JenkinsJob>> fetchJobByFullName(String fullName) {
+    return _fetchJob(_jobFullNameToPath(fullName));
   }
 
   /// Retrieves [JenkinsJob] by provided [path].
   ///
-  /// Both [fetchPipeline] and [fetchPipelineByFullName] delegate fetching
-  /// job to this method.
-  Future<JenkinsResult<JenkinsJob>> _fetchPipeline(String path) {
+  /// Both [fetchJob] and [fetchJobByFullName] delegate fetching job to this
+  /// method.
+  Future<JenkinsResult<JenkinsJob>> _fetchJob(String path) {
     final fullUrl = _buildJenkinsApiUrl(
       _jenkinsUrl,
       path: '$path/api/json',
@@ -163,47 +167,98 @@ class JenkinsClient {
     );
   }
 
-  /// Retrieves jobs for the [multiBranchJob] using its URL.
+  /// Retrieves jobs for the multi-branch job by its full name.
   ///
-  /// Results with the [JenkinsMultiBranchJob]'s instance similar to
-  /// [multiBranchJob] but with populated [JenkinsMultiBranchJob.jobs] list.
+  /// Results with a list of [JenkinsJob]s.
   /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
   /// defaults to [JenkinsQueryLimits.empty].
-  Future<JenkinsResult<JenkinsMultiBranchJob>> fetchJobs(
-    JenkinsMultiBranchJob multiBranchJob, {
+  Future<JenkinsResult<List<JenkinsJob>>> fetchJobs(
+    String multiBranchJobFullName, {
+    JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
+  }) {
+    final path = _jobFullNameToPath(multiBranchJobFullName);
+    final url = _buildJenkinsApiUrl(
+      _jenkinsUrl,
+      path: '$path$jsonApiPath',
+      treeQuery: 'jobs[${TreeQuery.job}]${limits.toQuery()}',
+    );
+    return _fetchJobs(url);
+  }
+
+  /// Retrieves jobs for the multi-branch job by its full name.
+  ///
+  /// Results with a list of [JenkinsJob]s.
+  /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
+  /// defaults to [JenkinsQueryLimits.empty].
+  Future<JenkinsResult<List<JenkinsJob>>> fetchJobsByUrl(
+    String multiBranchJobUrl, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
     final url = _buildJenkinsApiUrl(
-      multiBranchJob.url,
+      multiBranchJobUrl,
       treeQuery: '${TreeQuery.jobBase},'
           'jobs[${TreeQuery.job}]${limits.toQuery()}',
     );
+    return _fetchJobs(url);
+  }
 
-    return _handleResponse<JenkinsMultiBranchJob>(
+  /// Retrieves jobs for the multi-branch job by the given URL.
+  ///
+  /// Both [fetchJobs] and [fetchJobsByUrl] delegate fetching jobs to this
+  /// method.
+  Future<JenkinsResult<List<JenkinsJob>>> _fetchJobs(String url) {
+    return _handleResponse<List<JenkinsJob>>(
       _client.get(url, headers: headers),
-      (Map<String, dynamic> json) => JenkinsResult.success(
-        result: JenkinsMultiBranchJob.fromJson(json),
-      ),
+      (Map<String, dynamic> json) {
+        final list = json == null ? null : json['jobs'] as List<dynamic>;
+        return JenkinsResult.success(
+          result: JenkinsJob.listFromJson(list),
+        );
+      },
     );
   }
 
-  /// Retrieves builds for the [buildingJob] using its URL.
+  /// Retrieves [JenkinsBuildingJob] with builds specified by its full name.
   ///
-  /// Results with the [JenkinsBuildingJob]'s instance similar to
-  /// [buildingJob] but with populated builds-related fields.
   /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
   /// defaults to [JenkinsQueryLimits.empty].
   Future<JenkinsResult<JenkinsBuildingJob>> fetchBuilds(
-    JenkinsBuildingJob buildingJob, {
+    String buildingJobFullName, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
+    final path = _jobFullNameToPath(buildingJobFullName);
     final url = _buildJenkinsApiUrl(
-      buildingJob.url,
+      _jenkinsUrl,
+      path: '$path$jsonApiPath',
       treeQuery: '${TreeQuery.jobBase},'
           'builds[${TreeQuery.build}]${limits.toQuery()},'
           'lastBuild[${TreeQuery.build}],firstBuild[${TreeQuery.build}]',
     );
+    return _fetchBuilds(url);
+  }
 
+  /// Retrieves [JenkinsBuildingJob] with builds specified by the given URL.
+  ///
+  /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
+  /// defaults to [JenkinsQueryLimits.empty].
+  Future<JenkinsResult<JenkinsBuildingJob>> fetchBuildsByUrl(
+    String buildingJobUrl, {
+    JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
+  }) {
+    final url = _buildJenkinsApiUrl(
+      buildingJobUrl,
+      treeQuery: '${TreeQuery.jobBase},'
+          'builds[${TreeQuery.build}]${limits.toQuery()},'
+          'lastBuild[${TreeQuery.build}],firstBuild[${TreeQuery.build}]',
+    );
+    return _fetchBuilds(url);
+  }
+
+  /// Retrieves a building job by the given URL.
+  ///
+  /// Both [fetchBuilds] and [fetchBuildsByUrl] delegate fetching builds to this
+  /// method.
+  Future<JenkinsResult<JenkinsBuildingJob>> _fetchBuilds(String url) {
     return _handleResponse<JenkinsBuildingJob>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) => JenkinsResult.success(

@@ -75,28 +75,6 @@ void main() {
     );
 
     test(
-      ".betweenInclusive(n, m) should create a range specifier from the n-th element (inclusive) to the m-th element (inclusive) - {n,m+1}",
-      () {
-        final limits = JenkinsQueryLimits.betweenInclusive(1, 3);
-        const expected = '{1,4}';
-        final actual = limits.toQuery();
-
-        expect(actual, equals(expected));
-      },
-    );
-
-    test(
-      ".betweenInclusive(n, m) should create a range specifier from the n-th element (exclusive) to the m-th element (exclusive) - {n+1,m}",
-      () {
-        final limits = JenkinsQueryLimits.betweenExclusive(1, 3);
-        const expected = '{2,3}';
-        final actual = limits.toQuery();
-
-        expect(actual, equals(expected));
-      },
-    );
-
-    test(
       ".fromQuery() should throw FormatException if the query is not a range-specifier",
       () {
         expect(
