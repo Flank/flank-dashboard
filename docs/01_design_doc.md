@@ -47,6 +47,7 @@ Overall status
 ![image](https://user-images.githubusercontent.com/1173057/72225104-593e9080-3536-11ea-89a4-9650cac25340.png)
 
 - States Rebuilder for state management
+  - [States Rebuilder - Zero Boilerplate (Resocoder)](https://resocoder.com/2019/12/30/states-rebuilder-zero-boilerplate-flutter-state-management/)
   - [GIfatahTH/states_rebuilder example](https://github.com/GIfatahTH/states_rebuilder/tree/master/example)
   - [State Management with states rebuilder part 1](https://medium.com/flutter-community/state-management-gymnastics-using-states-rebuilder-part-1-3ba3a6abf9c7)
   - [State Management with states rebuilder part 2](https://medium.com/flutter-community/state-management-gymnastics-using-states-rebuilder-part-2-a7fa0dd7dc51)
