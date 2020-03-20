@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:api_mock_server/api_mock_server.dart';
 
 /// Handle [HttpRequest] callback definition.
-typedef RequestHandleDispatcher = Future<void> Function(HttpRequest);
+typedef RequestProcessor = Future<void> Function(HttpRequest);
 
 /// A class for handling HTTP requests.
 ///
@@ -19,52 +19,52 @@ class RequestHandler {
   final PathMatcher pathMatcher;
 
   /// Callback that processes request.
-  final RequestHandleDispatcher dispatcher;
+  final RequestProcessor processor;
 
   RequestHandler._({
     this.method,
     this.pathMatcher,
-    this.dispatcher,
+    this.processor,
   });
 
   /// Creates an instance of handler for the 'GET' HTTP method.
   RequestHandler.get({
     PathMatcher pathMatcher,
-    RequestHandleDispatcher dispatcher,
+    RequestProcessor dispatcher,
   }) : this._(
           method: 'GET',
           pathMatcher: pathMatcher,
-          dispatcher: dispatcher,
+          processor: dispatcher,
         );
 
   /// Creates an instance of handler for the 'POST' HTTP method.
   RequestHandler.post({
     PathMatcher pathMatcher,
-    RequestHandleDispatcher dispatcher,
+    RequestProcessor dispatcher,
   }) : this._(
           method: 'POST',
           pathMatcher: pathMatcher,
-          dispatcher: dispatcher,
+          processor: dispatcher,
         );
 
   /// Creates an instance of handler for the 'PUT' HTTP method.
   RequestHandler.put({
     PathMatcher pathMatcher,
-    RequestHandleDispatcher dispatcher,
+    RequestProcessor dispatcher,
   }) : this._(
           method: 'PUT',
           pathMatcher: pathMatcher,
-          dispatcher: dispatcher,
+          processor: dispatcher,
         );
 
   /// Creates an instance of handler for the 'DELETE' HTTP method.
   RequestHandler.delete({
     PathMatcher pathMatcher,
-    RequestHandleDispatcher dispatcher,
+    RequestProcessor dispatcher,
   }) : this._(
           method: 'DELETE',
           pathMatcher: pathMatcher,
-          dispatcher: dispatcher,
+          processor: dispatcher,
         );
 
   /// Checks whether this handler can process [request].
@@ -78,8 +78,8 @@ class RequestHandler {
         (pathMatcher == null || pathMatcher.match(requestPath));
   }
 
-  /// Processes the [request] by calling [dispatcher] callback if presented.
+  /// Processes the [request] by calling [processor] callback if presented.
   Future<void> handle(HttpRequest request) {
-    return dispatcher?.call(request);
+    return processor?.call(request);
   }
 }
