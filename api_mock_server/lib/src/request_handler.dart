@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:api_mock_server/api_mock_server.dart';
 
-/// Handle [HttpRequest] callback definition
+/// Handle [HttpRequest] callback definition.
 typedef RequestHandleDispatcher = Future<void> Function(HttpRequest);
 
 /// A class for handling HTTP requests.
