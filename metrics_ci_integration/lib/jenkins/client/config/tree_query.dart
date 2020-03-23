@@ -6,9 +6,12 @@ class TreeQuery {
   static const String artifacts = 'fileName,relativePath';
 
   /// The part of the `tree` query parameter that stands for [JenkinsBuild]'s
+  /// basic properties to fetch (does not include the `artifacts` property).
+  static const String buildBase = 'number,duration,timestamp,result,url';
+
+  /// The part of the `tree` query parameter that stands for [JenkinsBuild]'s
   /// properties to fetch.
-  static const String build =
-      'number,duration,timestamp,result,url,artifacts[$artifacts]';
+  static const String build = '$buildBase,artifacts[$artifacts]';
 
   /// The part of the `tree` query parameter that stands for [JenkinsJob]'s
   /// properties to fetch.

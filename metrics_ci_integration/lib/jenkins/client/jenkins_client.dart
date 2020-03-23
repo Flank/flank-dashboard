@@ -218,6 +218,25 @@ class JenkinsClient {
     );
   }
 
+  /// Retrieves the last [JenkinsBuild] for the building job specified
+  /// by [buildingJobFullName].
+  Future<JenkinsResult<JenkinsBuild>> fetchLastBuild(
+    String buildingJobFullName,
+  ) {
+    final path = _jobFullNameToPath(buildingJobFullName);
+    final url = _buildJenkinsApiUrl(
+      _jenkinsUrl,
+      path: '$path/lastBuild$jsonApiPath',
+      treeQuery: TreeQuery.buildBase,
+    );
+    return _handleResponse<JenkinsBuild>(
+      _client.get(url, headers: headers),
+      (json) => JenkinsResult.success(
+        result: JenkinsBuild.fromJson(json),
+      ),
+    );
+  }
+
   /// Retrieves [JenkinsBuildingJob] with builds specified by its full name.
   ///
   /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
