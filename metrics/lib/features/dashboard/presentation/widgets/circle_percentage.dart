@@ -160,8 +160,8 @@ class _CirclePercentageState extends State<CirclePercentage>
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 }
 

@@ -9,6 +9,7 @@ class DashboardStrings {
   static const String stability = 'STABILITY';
   static const String coverage = 'COVERAGE';
   static const String loadMetrics = 'Load metrics';
+  static const String noConfiguredProjects = "No configured projects";
 
   static String getLoadingErrorMessage(String errorMessage) =>
       "An error occured during loading: $errorMessage";

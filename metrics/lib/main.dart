@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
             },
             theme: ThemeData(
               brightness: isDark ? Brightness.dark : Brightness.light,
-              primarySwatch: Colors.blue,
+              primarySwatch: Colors.teal,
               fontFamily: 'Bebas Neue',
             ),
             home: DashboardPage(),

@@ -1,12 +1,10 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
-/// Wrapper class for [projectId] parameter
-class ProjectIdParam extends Equatable {
+/// Represents the project id param.
+@immutable
+class ProjectIdParam {
   final String projectId;
 
-  const ProjectIdParam({@required this.projectId});
-
-  @override
-  List<Object> get props => [projectId];
+  /// Creates the [ProjectIdParam] with the given [projectId].
+  const ProjectIdParam(this.projectId);
 }

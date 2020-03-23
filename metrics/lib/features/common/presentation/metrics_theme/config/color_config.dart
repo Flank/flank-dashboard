@@ -6,4 +6,5 @@ class ColorConfig {
   static const Color accentColor = Color(0xFFF85423);
   static const Color primaryTranslucentColor = Color(0x1D00CE96);
   static const Color accentTranslucentColor = Color(0x1DF85423);
+  static const Color darkGrey = Color(0xFF424242);
 }

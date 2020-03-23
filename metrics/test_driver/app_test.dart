@@ -20,10 +20,16 @@ void main() {
       });
 
       test(
+        'Loads the projects and shows the project tiles',
+        () async {
+          await driver.waitFor(find.byType('ProjectMetricsTile'));
+        },
+      );
+
+      test(
         'Loads the coverage data and shows the circle percentage widget',
         () async {
           await driver.waitFor(find.text(DashboardStrings.coverage));
-          await driver.waitFor(find.text("20%"));
           await driver.waitFor(find.byType('CirclePercentage'));
         },
       );

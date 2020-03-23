@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
 
 /// Represents the placeholder bar of the [BarGraph].

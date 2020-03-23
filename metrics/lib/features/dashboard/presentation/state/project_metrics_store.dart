@@ -1,91 +1,168 @@
+import 'dart:async';
 import 'dart:math';
 
-import 'package:metrics/features/dashboard/domain/entities/build_metrics.dart';
-import 'package:metrics/features/dashboard/domain/entities/coverage.dart';
-import 'package:metrics/features/dashboard/domain/usecases/get_build_metrics.dart';
-import 'package:metrics/features/dashboard/domain/usecases/get_project_coverage.dart';
+import 'package:metrics/features/dashboard/domain/entities/collections/date_time_set.dart';
+import 'package:metrics/features/dashboard/domain/entities/core/project.dart';
+import 'package:metrics/features/dashboard/domain/entities/metrics/build_number_metric.dart';
+import 'package:metrics/features/dashboard/domain/entities/metrics/build_result_metric.dart';
+import 'package:metrics/features/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
+import 'package:metrics/features/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id_param.dart';
+import 'package:metrics/features/dashboard/domain/usecases/receive_project_metrics_updates.dart';
+import 'package:metrics/features/dashboard/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
+import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:rxdart/rxdart.dart';
 
 /// The store for the project metrics.
 ///
-/// Stores the [Coverage] and [BuildMetrics].
+/// Stores the [Project]s and their [DashboardProjectMetrics].
 class ProjectMetricsStore {
-  final GetProjectCoverage _getCoverage;
-  final GetBuildMetrics _getBuildMetrics;
-  List<Point<int>> _projectPerformanceMetrics;
-  List<Point<int>> _projectBuildNumberMetrics;
-  List<BuildResultBarData> _projectBuildResultMetrics;
-  BuildMetrics _buildMetrics;
-  Coverage _coverage;
+  final ReceiveProjectUpdates _receiveProjectsUpdates;
+  final ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
+  final Map<String, StreamSubscription> _buildMetricsSubscriptions = {};
+  final BehaviorSubject<Map<String, ProjectMetricsData>>
+      _projectsMetricsSubject = BehaviorSubject();
+
+  StreamSubscription _projectsSubscription;
 
   /// Creates the project metrics store.
   ///
-  /// The [_getCoverage] and [_getBuildMetrics] use cases should not be null.
-  ProjectMetricsStore(this._getCoverage, this._getBuildMetrics)
-      : assert(
-          _getCoverage != null && _getBuildMetrics != null,
+  /// The provided use cases should not be null.
+  ProjectMetricsStore(
+    this._receiveProjectsUpdates,
+    this._receiveProjectMetricsUpdates,
+  ) : assert(
+          _receiveProjectsUpdates != null &&
+              _receiveProjectMetricsUpdates != null,
           'The use cases should not be null',
         );
 
-  Coverage get coverage => _coverage;
+  Stream<List<ProjectMetricsData>> get projectsMetrics =>
+      _projectsMetricsSubject.map((metricsMap) => metricsMap.values.toList());
 
-  List<Point<int>> get projectPerformanceMetrics => _projectPerformanceMetrics;
+  /// Subscribes to projects and its metrics.
+  Future<void> subscribeToProjects() async {
+    final projectsStream = _receiveProjectsUpdates();
+    await _projectsSubscription?.cancel();
 
-  List<Point<int>> get projectBuildNumberMetrics => _projectBuildNumberMetrics;
-
-  List<BuildResultBarData> get projectBuildResultMetrics =>
-      _projectBuildResultMetrics;
-
-  int get averageBuildTime => _buildMetrics?.averageBuildTime?.inMinutes;
-
-  int get totalBuildNumber => _buildMetrics?.totalBuildNumber;
-
-  /// Load the coverage metric.
-  Future<void> getCoverage(String projectId) async {
-    _coverage = await _getCoverage(ProjectIdParam(projectId: projectId));
+    _projectsSubscription = projectsStream.listen(_projectsListener);
   }
 
-  /// Loads the build metrics.
-  Future<void> getBuildMetrics(String projectId) async {
-    _buildMetrics = await _getBuildMetrics(
-      ProjectIdParam(projectId: projectId),
-    );
-
-    if (_buildMetrics == null) return;
-
-    _getPerformanceMetrics();
-    _getBuildNumberMetrics();
-    _getBuildResultMetrics();
-  }
-
-  /// Creates the [_projectBuildNumberMetrics] from [_buildMetrics].
-  void _getBuildNumberMetrics() {
-    final buildNumberMetrics = _buildMetrics.buildNumberMetrics ?? [];
-
-    if (buildNumberMetrics.isEmpty) {
-      _projectBuildNumberMetrics = [];
+  /// Listens to project updates.
+  void _projectsListener(List<Project> newProjects) {
+    if (newProjects == null || newProjects.isEmpty) {
+      _projectsMetricsSubject.add({});
       return;
     }
 
-    _projectBuildNumberMetrics = buildNumberMetrics.map((metric) {
+    final projectsMetrics = _projectsMetricsSubject.value ?? {};
+
+    final projectIds = newProjects.map((project) => project.id);
+    projectsMetrics.removeWhere((projectId, value) {
+      final remove = !projectIds.contains(projectId);
+      if (remove) {
+        _buildMetricsSubscriptions.remove(projectId)?.cancel();
+      }
+
+      return remove;
+    });
+
+    for (final project in newProjects) {
+      final projectId = project.id;
+
+      ProjectMetricsData projectMetrics =
+          projectsMetrics[projectId] ?? const ProjectMetricsData();
+
+      if (projectMetrics.projectName != project.name) {
+        projectMetrics = projectMetrics.copyWith(
+          projectName: project.name,
+        );
+      }
+
+      if (!projectsMetrics.containsKey(projectId)) {
+        _subscribeToBuildMetrics(projectId);
+      }
+      projectsMetrics[projectId] = projectMetrics;
+    }
+
+    _projectsMetricsSubject.add(projectsMetrics);
+  }
+
+  /// Subscribes to project metrics.
+  void _subscribeToBuildMetrics(String projectId) {
+    final buildMetricsStream = _receiveProjectMetricsUpdates(
+      ProjectIdParam(projectId),
+    );
+
+    _buildMetricsSubscriptions[projectId] =
+        buildMetricsStream.listen((metrics) {
+      _createBuildMetrics(metrics, projectId);
+    });
+  }
+
+  /// Create project metrics form [DashboardProjectMetrics].
+  void _createBuildMetrics(
+      DashboardProjectMetrics buildMetrics, String projectId) {
+    final projectsMetrics = _projectsMetricsSubject.value;
+
+    final projectMetrics = projectsMetrics[projectId];
+
+    if (projectMetrics == null || buildMetrics == null) return;
+
+    final performanceMetrics = _getPerformanceMetrics(
+      buildMetrics.performanceMetrics,
+    );
+    final buildNumberMetrics = _getBuildNumberMetrics(
+      buildMetrics.buildNumberMetrics,
+    );
+    final buildResultMetrics = _getBuildResultMetrics(
+      buildMetrics.buildResultMetrics,
+    );
+    final averageBuildDuration =
+        buildMetrics.performanceMetrics.averageBuildDuration.inMinutes;
+    final numberOfBuilds = buildMetrics.buildNumberMetrics.totalNumberOfBuilds;
+
+    projectsMetrics[projectId] = projectMetrics.copyWith(
+      performanceMetrics: performanceMetrics,
+      buildNumberMetrics: buildNumberMetrics,
+      buildResultMetrics: buildResultMetrics,
+      numberOfBuilds: numberOfBuilds,
+      averageBuildDurationInMinutes: averageBuildDuration,
+      coverage: buildMetrics.coverage,
+      stability: buildMetrics.stability,
+    );
+
+    _projectsMetricsSubject.add(projectsMetrics);
+  }
+
+  /// Creates the project build number metrics from [BuildNumberMetric].
+  List<Point<int>> _getBuildNumberMetrics(BuildNumberMetric metric) {
+    final buildNumberMetrics = metric?.buildsOnDateSet ?? DateTimeSet();
+
+    if (buildNumberMetrics.isEmpty) {
+      return [];
+    }
+
+    final buildNumberPoints = buildNumberMetrics.map((metric) {
       return Point(
         metric.date.millisecondsSinceEpoch,
         metric.numberOfBuilds,
       );
     }).toList();
+
+    return buildNumberPoints;
   }
 
-  /// Creates the [_projectPerformanceMetrics] from [_buildMetrics].
-  void _getPerformanceMetrics() {
-    final performanceMetrics = _buildMetrics.performanceMetrics ?? [];
+  /// Creates the project performance metrics from [PerformanceMetric].
+  List<Point<int>> _getPerformanceMetrics(PerformanceMetric metric) {
+    final performanceMetrics = metric?.buildsPerformance ?? DateTimeSet();
 
     if (performanceMetrics.isEmpty) {
-      _projectPerformanceMetrics = [];
-      return;
+      return [];
     }
 
-    _projectPerformanceMetrics = performanceMetrics.map((metric) {
+    return performanceMetrics.map((metric) {
       return Point(
         metric.date.millisecondsSinceEpoch,
         metric.duration.inMilliseconds,
@@ -93,21 +170,29 @@ class ProjectMetricsStore {
     }).toList();
   }
 
-  /// Creates the [_projectBuildResultMetrics] from [_buildMetrics].
-  void _getBuildResultMetrics() {
-    final buildResults = _buildMetrics.buildResultMetrics ?? [];
+  /// Creates the project build result metrics from [BuildResultMetric].
+  List<BuildResultBarData> _getBuildResultMetrics(BuildResultMetric metrics) {
+    final buildResults = metrics?.buildResults ?? [];
 
     if (buildResults.isEmpty) {
-      _projectBuildResultMetrics = [];
-      return;
+      return [];
     }
 
-    _projectBuildResultMetrics = buildResults.map((result) {
+    return buildResults.map((result) {
       return BuildResultBarData(
         url: result.url,
-        result: result.result,
+        buildStatus: result.buildStatus,
         value: result.duration.inMilliseconds,
       );
     }).toList();
+  }
+
+  /// Cancels all created subscriptions.
+  void dispose() {
+    _projectsSubscription?.cancel();
+    for (final subscription in _buildMetricsSubscriptions.values) {
+      subscription?.cancel();
+    }
+    _buildMetricsSubscriptions.clear();
   }
 }

@@ -22,10 +22,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
           sparklineTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
             accentColor: ColorConfig.primaryColor,
-            backgroundColor: Colors.transparent,
+            backgroundColor: ColorConfig.darkGrey,
           ),
           buildResultTheme: const BuildResultsThemeData(
-            canceledColor: Colors.grey,
+            canceledColor: ColorConfig.accentColor,
             successfulColor: ColorConfig.primaryColor,
             failedColor: ColorConfig.accentColor,
           ),
