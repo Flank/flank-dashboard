@@ -86,7 +86,7 @@ to be able to connect your web application with the Firestore database:
 5. If you are going to use the Firestore database from the same Firebase project, you are deploying the
  application to - skip the `Configure Firebase SDK` step. If you want to use Firestore Database
  from another Firebase project or you are going to run the application on the localhost,
- see Firebase SDK configuration document.
+ see [Firebase SDK configuration](https://github.com/software-platform/monorepo/blob/firebase_deployment_instructions/docs/10_firebase_sdk_configuration.md) document.
 6. Tap on the `Next` button and follow instructions to install the Firebase CLI.
 7. Skip the `Deploy to Firebase Hosting` and tap on the `Continue to console` to finish configuring your Firebase Web application.
  The deployment process described more detailed in
