@@ -6,14 +6,14 @@ import 'package:test/test.dart';
 void main() {
   group("JenkinsJob", () {
     const jobJson = <String, dynamic>{
-      'name': 'job',
-      'fullName': 'job',
+      'name': 'name',
+      'fullName': 'fullName',
       'url': 'url',
     };
 
     const jenkinsJob = JenkinsJob(
-      name: 'job',
-      fullName: 'job',
+      name: 'name',
+      fullName: 'fullName',
       url: 'url',
     );
 
@@ -33,7 +33,13 @@ void main() {
       ".fromJson() should create the JenkinsMultiBranchJob instance if a json map contains the 'jobs' property",
       () {
         final job = JenkinsJob.fromJson(const {
-          'jobs': [],
+          'jobs': [
+            {
+              'name': 'subjob',
+              'fullName': 'name/subjob',
+              'url': 'subjobUrl',
+            },
+          ],
           ...jobJson,
         });
 
@@ -45,7 +51,12 @@ void main() {
       ".fromJson() should create the JenkinsBuildingJob instance if a json map contains the 'builds' property",
       () {
         final job = JenkinsJob.fromJson(const {
-          'builds': [],
+          'builds': [
+            {
+              'number': 1,
+              'duration': 10,
+            },
+          ],
           ...jobJson,
         });
         expect(job, isA<JenkinsBuildingJob>());

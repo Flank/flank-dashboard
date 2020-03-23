@@ -11,6 +11,20 @@ void main() {
       expect(actual, equals(expected));
     });
 
+    test(
+      ".at(n) should throw ArgumentError trying to create a range specifier for a null number",
+      () {
+        expect(() => JenkinsQueryLimits.at(null), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".at(n) should throw ArgumentError trying to create a range specifier for a negative number",
+      () {
+        expect(() => JenkinsQueryLimits.at(-1), throwsArgumentError);
+      },
+    );
+
     test(".at(n) should create a range specifier for n-th element - {n}", () {
       final limits = JenkinsQueryLimits.at(1);
       const expected = '{1}';
@@ -20,6 +34,20 @@ void main() {
     });
 
     test(
+      ".startAfter(n) should throw ArgumentError trying to create a range specifier for a null number",
+      () {
+        expect(() => JenkinsQueryLimits.startAfter(null), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".startAfter(n) should throw ArgumentError trying to create a range specifier for a negative number",
+      () {
+        expect(() => JenkinsQueryLimits.startAfter(-1), throwsArgumentError);
+      },
+    );
+
+    test(
       ".startAfter(n) should create a range specifier from the n-th element (exclusive) to the end - {n+1,}",
       () {
         final limits = JenkinsQueryLimits.startAfter(1);
@@ -27,6 +55,20 @@ void main() {
         final actual = limits.toQuery();
 
         expect(actual, equals(expected));
+      },
+    );
+
+    test(
+      ".startAt(n) should throw ArgumentError trying to create a range specifier for a null number",
+      () {
+        expect(() => JenkinsQueryLimits.startAt(null), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".startAt(n) should throw ArgumentError trying to create a range specifier for a negative number",
+      () {
+        expect(() => JenkinsQueryLimits.startAt(-1), throwsArgumentError);
       },
     );
 
@@ -42,6 +84,20 @@ void main() {
     );
 
     test(
+      ".endBefore(n) should throw ArgumentError trying to create a range specifier for a null number",
+      () {
+        expect(() => JenkinsQueryLimits.endBefore(null), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".endBefore(n) should throw ArgumentError trying to create a range specifier for a negative number",
+      () {
+        expect(() => JenkinsQueryLimits.endBefore(-1), throwsArgumentError);
+      },
+    );
+
+    test(
       ".endBefore(n) should create a range specifier from the begin to the n-th element (exclusive) - {,n}",
       () {
         final limits = JenkinsQueryLimits.endBefore(1);
@@ -53,6 +109,20 @@ void main() {
     );
 
     test(
+      ".endAt(n) should throw ArgumentError trying to create a range specifier for a null number",
+      () {
+        expect(() => JenkinsQueryLimits.endAt(null), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".endAt(n) should throw ArgumentError trying to create a range specifier for a negative number",
+      () {
+        expect(() => JenkinsQueryLimits.endAt(-1), throwsArgumentError);
+      },
+    );
+
+    test(
       ".endAt(n) should create a range specifier from the begin to the n-th element (inclusive) - {,n+1}",
       () {
         final limits = JenkinsQueryLimits.endAt(1);
@@ -60,6 +130,41 @@ void main() {
         final actual = limits.toQuery();
 
         expect(actual, equals(expected));
+      },
+    );
+
+    test(
+      ".between(n, m) should throw ArgumentError trying to create a range specifier with a null begin edge",
+      () {
+        expect(() => JenkinsQueryLimits.between(null, 1), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".between(n, m) should throw ArgumentError trying to create a range specifier with a null end edge",
+      () {
+        expect(() => JenkinsQueryLimits.between(1, null), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".between(n, m) should throw ArgumentError trying to create a range specifier with a negative begin edge",
+      () {
+        expect(() => JenkinsQueryLimits.between(-1, 1), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".between(n, m) should throw ArgumentError trying to create a range specifier with a negative end edge",
+      () {
+        expect(() => JenkinsQueryLimits.between(1, -1), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".between(n, m) should throw ArgumentError trying to create a range specifier with an end edge less than a begin one",
+      () {
+        expect(() => JenkinsQueryLimits.between(3, 1), throwsArgumentError);
       },
     );
 

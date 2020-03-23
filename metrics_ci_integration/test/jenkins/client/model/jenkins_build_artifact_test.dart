@@ -1,20 +1,12 @@
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
 import 'package:test/test.dart';
 
+import '../../resources/jenkins_artifacts_resources.dart';
+
 void main() {
   group("JenkinsBuildArtifact", () {
-    const fileName = 'file.json';
-    const relativePath = 'files/file.json';
-
-    const artifactJson = {
-      'fileName': fileName,
-      'relativePath': relativePath,
-    };
-
-    const buildArtifact = JenkinsBuildArtifact(
-      fileName: fileName,
-      relativePath: relativePath,
-    );
+    const artifactJson = JenkinsArtifactsResources.coverageArtifactJson;
+    const buildArtifact = JenkinsArtifactsResources.coverageArtifact;
 
     test(".fromJson() should return null if a given json is null", () {
       final job = JenkinsBuildArtifact.fromJson(null);

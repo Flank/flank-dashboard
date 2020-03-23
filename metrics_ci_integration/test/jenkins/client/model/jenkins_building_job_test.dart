@@ -2,6 +2,8 @@ import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:test/test.dart';
 
+import '../../resources/jenkins_artifacts_resources.dart';
+
 void main() {
   group("JenkinsBuildingJob", () {
     Map<String, dynamic> buildingJobJson;
@@ -11,10 +13,12 @@ void main() {
       const firstBuild = JenkinsBuild(
         number: 1,
         url: 'firstBuildUrl',
+        artifacts: [JenkinsArtifactsResources.fileArtifact],
       );
       const lastBuild = JenkinsBuild(
         number: 2,
         url: 'secondBuildUrl',
+        artifacts: [JenkinsArtifactsResources.coverageArtifact],
       );
 
       buildingJob = const JenkinsBuildingJob(
@@ -32,7 +36,7 @@ void main() {
         'timestamp': null,
         'result': null,
         'url': 'firstBuildUrl',
-        'artifacts': null,
+        'artifacts': [JenkinsArtifactsResources.fileArtifactJson],
       };
       const lastBuildJson = {
         'number': 2,
@@ -40,7 +44,7 @@ void main() {
         'timestamp': null,
         'result': null,
         'url': 'secondBuildUrl',
-        'artifacts': null,
+        'artifacts': [JenkinsArtifactsResources.coverageArtifactJson],
       };
 
       buildingJobJson = {

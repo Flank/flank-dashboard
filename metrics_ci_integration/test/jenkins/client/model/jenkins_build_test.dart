@@ -1,6 +1,8 @@
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:test/test.dart';
 
+import '../../resources/jenkins_artifacts_resources.dart';
+
 void main() {
   group("JenkinsBuild", () {
     final timestamp = DateTime(2020);
@@ -11,7 +13,7 @@ void main() {
       'timestamp': timestamp.millisecondsSinceEpoch,
       'result': 'FAILED',
       'url': 'url',
-      'artifacts': [],
+      'artifacts': JenkinsArtifactsResources.artifactsJson,
     };
 
     final jenkinsBuild = JenkinsBuild(
@@ -20,7 +22,7 @@ void main() {
       timestamp: timestamp,
       result: 'FAILED',
       url: 'url',
-      artifacts: const [],
+      artifacts: JenkinsArtifactsResources.artifacts,
     );
 
     test(".fromJson() should return null if a given json is null", () {

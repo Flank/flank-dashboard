@@ -62,8 +62,10 @@ class JenkinsQueryLimits {
     }
   }
 
-  /// Creates a range specifier for the n-th element
-  /// where `n` is a given [number].
+  /// Creates a range specifier for the n-th element where `n` [number].
+  ///
+  /// The [number] must be non-negative and non-null. Otherwise,
+  /// throws the [ArgumentError].
   ///
   /// Specifies the `{number}` range.
   /// For example:
@@ -74,6 +76,9 @@ class JenkinsQueryLimits {
   }
 
   /// Creates a range specifier for the left-edged range (exclusive).
+  ///
+  /// The [number] must be non-negative and non-null. Otherwise,
+  /// throws the [ArgumentError].
   ///
   /// Specifies the `{number+1,}` range.
   /// For example:
@@ -86,6 +91,9 @@ class JenkinsQueryLimits {
 
   /// Creates a range specifier for the left-edged range (inclusive).
   ///
+  /// The [number] must be non-negative and non-null. Otherwise,
+  /// throws the [ArgumentError].
+  ///
   /// Specifies the `{number,}` range.
   /// For example:
   ///   * `JenkinsQueryLimits.startAt(3)` stands for the range from the third
@@ -96,6 +104,9 @@ class JenkinsQueryLimits {
   }
 
   /// Creates a range specifier for the right-edged range (exclusive).
+  ///
+  /// The [number] must be non-negative and non-null. Otherwise,
+  /// throws the [ArgumentError].
   ///
   /// Specifies the `{,number}` range.
   /// For example:
@@ -108,6 +119,9 @@ class JenkinsQueryLimits {
 
   /// Creates a range specifier for the right-edged range (inclusive).
   ///
+  /// The [number] must be non-negative and non-null. Otherwise,
+  /// throws the [ArgumentError].
+  ///
   /// Specifies the `{,number+1}` range.
   /// For example:
   ///   * `JenkinsQueryLimits.endAt(3)` stands for the range from the begin
@@ -119,6 +133,10 @@ class JenkinsQueryLimits {
 
   /// Creates a range specifier for the left-edged (inclusive) and
   /// right-edged (exclusive) range.
+  ///
+  /// Both [begin] and [end] must be non-negative and non-null, and the [begin]
+  /// value must be greater than or equal to [end]. Otherwise, throws
+  /// the [ArgumentError].
   ///
   /// Specifies the `{begin,end}` range.
   /// For example:

@@ -214,13 +214,16 @@ void main() {
       expect(result, completion(equals(expected)));
     });
 
-    test(".fetchJobsByUrl() should fail if a job is not found", () {
-      final result = jenkinsClient
-          .fetchJobsByUrl('${jenkinsMockServer.url}/job/name')
-          .then((result) => result.isError);
+    test(
+      ".fetchJobsByUrl() should fail if a multi-branch job is not found",
+      () {
+        final result = jenkinsClient
+            .fetchJobsByUrl('${jenkinsMockServer.url}/job/name')
+            .then((result) => result.isError);
 
-      expect(result, completion(isTrue));
-    });
+        expect(result, completion(isTrue));
+      },
+    );
 
     test(
       ".fetchJobsByUrl() should respond with a list of jobs",
