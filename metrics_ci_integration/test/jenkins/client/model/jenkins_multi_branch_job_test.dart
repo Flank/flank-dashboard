@@ -4,28 +4,34 @@ import 'package:test/test.dart';
 
 void main() {
   group("JenkinsMultiBranchJob", () {
+    const name = 'job';
+    const fullName = 'job';
+    const url = 'url';
+    const subJobName = 'subjob';
+    const subJobFullName = '$name/$subJobName';
+
     const multiBranchJobJson = {
-      'name': 'name',
-      'fullName': 'fullName',
-      'url': 'url',
+      'name': name,
+      'fullName': fullName,
+      'url': url,
       'jobs': [
         {
-          'name': 'subjob',
-          'fullName': 'job/subjob',
-          'url': 'url',
+          'name': subJobName,
+          'fullName': subJobFullName,
+          'url': url,
         },
       ],
     };
 
     const multiBranchJob = JenkinsMultiBranchJob(
-      name: 'name',
-      fullName: 'fullName',
-      url: 'url',
+      name: name,
+      fullName: fullName,
+      url: url,
       jobs: [
         JenkinsJob(
-          name: 'subjob',
-          fullName: 'job/subjob',
-          url: 'url',
+          name: subJobName,
+          fullName: subJobFullName,
+          url: url,
         ),
       ],
     );

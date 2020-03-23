@@ -230,6 +230,16 @@ void main() {
     );
 
     test(
+      ".fromQuery() should throw ArgumentError trying to parse query with a range-specifier having an end value less than a begin one",
+      () {
+        expect(
+          () => JenkinsQueryLimits.fromQuery('{3,2}'),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
       ".fromQuery() should parse a query with valid range-specifier",
       () {
         final limits = JenkinsQueryLimits.fromQuery('{2,3}');

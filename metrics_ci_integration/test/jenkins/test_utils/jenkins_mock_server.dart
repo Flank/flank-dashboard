@@ -182,9 +182,9 @@ class JenkinsMockServer extends ApiMockServer {
       responseBody = jsonEncode(_buildMultiBranchJob(
         hasJobs: true,
         limits: limits,
-      ).toJson());
+      ));
     } else {
-      responseBody = jsonEncode(_buildMultiBranchJob().toJson());
+      responseBody = jsonEncode(_buildMultiBranchJob());
     }
 
     request.response.write(responseBody);
@@ -201,9 +201,9 @@ class JenkinsMockServer extends ApiMockServer {
       responseBody = jsonEncode(_buildBuildingJob(
         hasBuilds: true,
         limits: limits,
-      ).toJson());
+      ));
     } else {
-      responseBody = jsonEncode(_buildBuildingJob().toJson());
+      responseBody = jsonEncode(_buildBuildingJob());
     }
 
     request.response.write(responseBody);

@@ -5,23 +5,27 @@ import '../../resources/jenkins_artifacts_resources.dart';
 
 void main() {
   group("JenkinsBuild", () {
+    const number = 1;
+    const duration = 10;
+    const result = 'FAILED';
+    const url = 'url';
     final timestamp = DateTime(2020);
 
     final buildJson = {
-      'number': 1,
-      'duration': 10,
+      'number': number,
+      'duration': duration,
       'timestamp': timestamp.millisecondsSinceEpoch,
-      'result': 'FAILED',
-      'url': 'url',
+      'result': result,
+      'url': url,
       'artifacts': JenkinsArtifactsResources.artifactsJson,
     };
 
     final jenkinsBuild = JenkinsBuild(
-      number: 1,
-      duration: const Duration(seconds: 10),
+      number: number,
+      duration: const Duration(seconds: duration),
       timestamp: timestamp,
-      result: 'FAILED',
-      url: 'url',
+      result: result,
+      url: url,
       artifacts: JenkinsArtifactsResources.artifacts,
     );
 

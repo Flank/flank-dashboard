@@ -52,9 +52,12 @@ class JenkinsQueryLimits {
         final result = int.parse(limit);
         return JenkinsQueryLimits.at(result);
       } else {
+        final lower = limits[0].isEmpty ? 0 : int.parse(limits[0]);
+        final upper = limits[1].isEmpty ? 0 : int.parse(limits[1]);
+        NumberValidator.checkPositiveRange(lower, upper);
         return JenkinsQueryLimits._(
-          lower: limits[0].isEmpty ? 0 : int.parse(limits[0]),
-          upper: limits[1].isEmpty ? 0 : int.parse(limits[1]),
+          lower: lower,
+          upper: upper,
         );
       }
     } else {

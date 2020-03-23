@@ -5,16 +5,20 @@ import 'package:test/test.dart';
 
 void main() {
   group("JenkinsJob", () {
+    const jobName = 'name';
+    const jobFullName = 'fullName';
+    const jobUrl = 'url';
+
     const jobJson = <String, dynamic>{
-      'name': 'name',
-      'fullName': 'fullName',
-      'url': 'url',
+      'name': jobName,
+      'fullName': jobFullName,
+      'url': jobUrl,
     };
 
     const jenkinsJob = JenkinsJob(
-      name: 'name',
-      fullName: 'fullName',
-      url: 'url',
+      name: jobName,
+      fullName: jobFullName,
+      url: jobUrl,
     );
 
     test(".fromJson() should return null if a given json is null", () {

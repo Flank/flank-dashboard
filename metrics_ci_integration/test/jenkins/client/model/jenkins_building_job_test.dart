@@ -10,47 +10,56 @@ void main() {
     JenkinsBuildingJob buildingJob;
 
     setUpAll(() {
+      const firstBuildNumber = 1;
+      const firstBuildUrl = 'firstBuildUrl';
+      const secondBuildNumber = 2;
+      const secondBuildUrl = 'secondBuildUrl';
+      const buildingJobName = 'name';
+      const buildingJobFullName = 'fullName';
+      const buildingJobUrl = 'url';
+
       const firstBuild = JenkinsBuild(
-        number: 1,
-        url: 'firstBuildUrl',
+        number: firstBuildNumber,
+        url: firstBuildUrl,
         artifacts: [JenkinsArtifactsResources.fileArtifact],
       );
       const lastBuild = JenkinsBuild(
-        number: 2,
-        url: 'secondBuildUrl',
+        number: secondBuildNumber,
+        url: secondBuildUrl,
         artifacts: [JenkinsArtifactsResources.coverageArtifact],
       );
 
       buildingJob = const JenkinsBuildingJob(
-        name: 'name',
-        fullName: 'fullName',
-        url: 'url',
+        name: buildingJobName,
+        fullName: buildingJobFullName,
+        url: buildingJobUrl,
         builds: [lastBuild, firstBuild],
         firstBuild: firstBuild,
         lastBuild: lastBuild,
       );
 
       const firstBuildJson = {
-        'number': 1,
+        'number': firstBuildNumber,
         'duration': null,
         'timestamp': null,
         'result': null,
-        'url': 'firstBuildUrl',
+        'url': firstBuildUrl,
         'artifacts': [JenkinsArtifactsResources.fileArtifactJson],
       };
+
       const lastBuildJson = {
-        'number': 2,
+        'number': secondBuildNumber,
         'duration': null,
         'timestamp': null,
         'result': null,
-        'url': 'secondBuildUrl',
+        'url': secondBuildUrl,
         'artifacts': [JenkinsArtifactsResources.coverageArtifactJson],
       };
 
       buildingJobJson = {
-        'name': 'name',
-        'fullName': 'fullName',
-        'url': 'url',
+        'name': buildingJobName,
+        'fullName': buildingJobFullName,
+        'url': buildingJobUrl,
         'builds': [lastBuildJson, firstBuildJson],
         'firstBuild': firstBuildJson,
         'lastBuild': lastBuildJson,
