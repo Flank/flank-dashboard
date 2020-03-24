@@ -89,7 +89,7 @@ to be able to connect your web application with the Firestore database:
  The deployment process described more detailed in
   [Building and deploying the application to the Firebase Hosting](#Building-and-deploying-the-application-to-the-Firebase-Hosting) section.
  
-Finaly, your Firebase project configured ant it's time to configure the Firebase SDK in your Flutter for Web application.
+Finally, your Firebase project configured ant it's time to configure the Firebase SDK in your Flutter for Web application.
 
 ## Firebase SKD configuration
 
