@@ -36,13 +36,6 @@ void main() {
       ],
     );
 
-    final lastBuildNoArtifacts = JenkinsBuild(
-      number: 2,
-      duration: const Duration(),
-      timestamp: DateTime(2000),
-      result: 'SUCCESS',
-    );
-
     final authorization = ApiKeyAuthorization(
       HttpHeaders.authorizationHeader,
       'test',
@@ -261,26 +254,6 @@ void main() {
 
       expect(result, completion(equals(expected)));
     });
-
-    test(".fetchLastBuild() should fail if a building job is not found", () {
-      final result = jenkinsClient
-          .fetchLastBuild('test/dev')
-          .then((result) => result.isError);
-
-      expect(result, completion(isTrue));
-    });
-
-    test(
-      ".fetchLastBuild() should respond with the last build for a building job specified",
-      () {
-        final result = jenkinsClient
-            .fetchLastBuild('test/master')
-            .then((result) => result.result);
-        final expected = lastBuildNoArtifacts;
-
-        expect(result, completion(equals(expected)));
-      },
-    );
 
     test(".fetchBuilds() should fail if a building job is not found", () {
       final result = jenkinsClient

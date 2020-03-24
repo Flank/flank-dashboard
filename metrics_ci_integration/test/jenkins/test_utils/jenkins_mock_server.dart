@@ -29,18 +29,6 @@ class JenkinsMockServer extends ApiMockServer {
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/job/test/job/master/lastBuild${JenkinsClient.jsonApiPath}',
-          ),
-          dispatcher: _buildResponse,
-        ),
-        RequestHandler.get(
-          pathMatcher: ExactPathMatcher(
-            '/job/test/job/dev/lastBuild${JenkinsClient.jsonApiPath}',
-          ),
-          dispatcher: _notFoundResponse,
-        ),
-        RequestHandler.get(
-          pathMatcher: ExactPathMatcher(
             '/job/test/job/master${JenkinsClient.jsonApiPath}',
           ),
           dispatcher: _buildingJobResponse,
@@ -183,16 +171,6 @@ class JenkinsMockServer extends ApiMockServer {
     final regexp = RegExp(r'\{[-\d,]+\}');
     final match = regexp.stringMatch(substring);
     return match == null ? null : JenkinsQueryLimits.fromQuery(match);
-  }
-
-  Future<void> _buildResponse(HttpRequest request) async {
-    final lastBuildJson = _buildBuildingJob(hasBuilds: true).lastBuild.toJson();
-    lastBuildJson.remove('artifacts');
-    final responseBody = jsonEncode(lastBuildJson);
-
-    request.response.write(responseBody);
-    await request.response.flush();
-    await request.response.close();
   }
 
   /// Responses with a [JenkinsMultiBranchJob] for the given [request].
