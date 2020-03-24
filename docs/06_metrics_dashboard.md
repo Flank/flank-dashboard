@@ -10,18 +10,18 @@ For metrics definitions see [metrics definitions](05_project_metrics.md).
 
 ### Performance
 - Displays Performance metric
-- Data displayed for the last 7 days
-- The text shows average build length using data from the last 14 days - on current design screens, 
+- Data displayed for the last 14 builds
+- The text shows average build length using data displayed - on current design screens, 
 it’s 20M - meaning 20 minutes
 
-### Builds
+### Builds per week
 - Displays Builds metric
-- Data displayed for the last 7 days
-- Text is the count of all builds for the last 7 days
+- Data displayed for the current week starting Monday
+- Text is the count of all builds in the date range
 
 ### Stability
 - Displays Stability metric
-- Data displayed for the last 7 days
+- Data displayed for the last 14 builds
 
 ### Coverage
 - Displays Coverage metric
