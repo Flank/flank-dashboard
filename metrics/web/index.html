@@ -15,9 +15,22 @@
     <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-<script src="/__/firebase/7.12.0/firebase-app.js"></script>
-<script src="/__/firebase/7.12.0/firebase-firestore.js"></script>
-<script src="/__/firebase/init.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js"></script>
+
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
+    authDomain: "metrics-d9c67.firebaseapp.com",
+    databaseURL: "https://metrics-d9c67.firebaseio.com",
+    projectId: "metrics-d9c67",
+    storageBucket: "metrics-d9c67.appspot.com",
+    messagingSenderId: "650500796855",
+    appId: "1:650500796855:web:65a4615a28f3d88e8bb832",
+    measurementId: "G-3DB4JFLKHQ"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
 
 <script src="main.dart.js" type="application/javascript"></script>
 </body>

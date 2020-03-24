@@ -80,25 +80,39 @@ to be able to connect your web application with the Firestore database:
  the project setting page (tap on the setting gear icon near the `Project Overview` on top of the 
  left panel and select `Project settings`).
 2. Scroll down and find `There are no apps in your project` text,
- and tap on the `</>` icon to add a new Web application to your Firebase project
+ and tap on the `</>` icon to add a new Web application to your Firebase project.
 3. Choose the app nickname and check `Also set up Firebase Hosting for this app`.
 4. Select from the dropdown menu, or create a new site for your application and tap the `Register app` to proceed.
-5. If you are going to use the Firestore database from the same Firebase project, you are deploying the
- application to - skip the `Configure Firebase SDK` step. If you want to use Firestore Database
- from another Firebase project or you are going to run the application on the localhost,
- see [Firebase SDK configuration](https://github.com/software-platform/monorepo/blob/firebase_deployment_instructions/docs/10_firebase_sdk_configuration.md) document.
+5. Skip the `Configure Firebase SDK` step. We will return to Firebase SDK configuration a bit later in [Firebase SDK configuration](#Firebase-SKD-configuration).
 6. Tap on the `Next` button and follow instructions to install the Firebase CLI.
 7. Skip the `Deploy to Firebase Hosting` and tap on the `Continue to console` to finish configuring your Firebase Web application.
  The deployment process described more detailed in
   [Building and deploying the application to the Firebase Hosting](#Building-and-deploying-the-application-to-the-Firebase-Hosting) section.
  
-If you've skipped the fifth step, and you want to run your flutter application locally:
+Finaly, your Firebase project configured ant it's time to configure the Firebase SDK in your Flutter for Web application.
 
-1. Select recently created application in the `Your apps` section in Firebase project settings.
-2. Select the `Config` under the `Firebase SDK snippet`.
-3. Replace the current `firebaseConfig` variable in `metrics/web/index.html` with the generated code.
+## Firebase SKD configuration
 
- 
+To configure the Flutter for Web application to use recently created Firestore Database follow the next steps: 
+
+1. Open the [Firebase console](https://console.firebase.google.com/), choose your project 
+and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
+2. Scroll down and find your Firebase Web Application. 
+3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
+4. Go to the `web/index.js` file in the application directory and replace this piece of code with copied code in step 3: 
+    ```
+        var firebaseConfig = {
+          apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
+          authDomain: "metrics-d9c67.firebaseapp.com",
+          databaseURL: "https://metrics-d9c67.firebaseio.com",
+          projectId: "metrics-d9c67",
+          storageBucket: "metrics-d9c67.appspot.com",
+          messagingSenderId: "650500796855",
+          appId: "1:650500796855:web:65a4615a28f3d88e8bb832",
+          measurementId: "G-3DB4JFLKHQ"
+        };
+    ```
+
 Finally, you have a configured flutter application that works with your Firebase instance.
 It's time to deploy your flutter application to the Firebase Hosting!
  
