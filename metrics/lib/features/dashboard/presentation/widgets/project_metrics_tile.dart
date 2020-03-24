@@ -65,7 +65,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                         data: widget.projectMetrics.buildResultMetrics,
                         title: DashboardStrings.buildTaskName,
                         numberOfBars:
-                            ReceiveProjectMetricsUpdates.numberOfBuildResults,
+                            ReceiveProjectMetricsUpdates.numberOfLastBuilds,
                       ),
                     ),
                   ),

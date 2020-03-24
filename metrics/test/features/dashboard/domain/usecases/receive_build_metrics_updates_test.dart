@@ -25,12 +25,12 @@ void main() {
           await receiveProjectMetricsUpdates(const ProjectIdParam(projectId))
               .first;
 
-      lastBuild = builds.last;
+      lastBuild = builds.first;
     });
 
     test("Loads all fields in the performance metrics", () {
       final performanceMetrics = projectMetrics.performanceMetrics;
-      final firstPerformanceMetric = performanceMetrics.buildsPerformance.first;
+      final firstPerformanceMetric = performanceMetrics.buildsPerformance.last;
 
       expect(
         performanceMetrics.buildsPerformance.length,
@@ -50,13 +50,19 @@ void main() {
     test("Loads all fields in the build number metrics", () {
       final buildStartDate = lastBuild.startedAt.date;
 
-      final numberOfBuildsPerFirstDate = builds
+      final timestamp = DateTime.now();
+      final weekStartDate =
+          timestamp.subtract(Duration(days: timestamp.weekday - 1)).date;
+      final thisWeekBuilds =
+          builds.where((build) => build.startedAt.isAfter(weekStartDate));
+
+      final numberOfBuildsPerFirstDate = thisWeekBuilds
           .where((element) => element.startedAt.date == buildStartDate)
           .length;
-      final totalNumberOfBuilds = builds.length;
+      final totalNumberOfBuilds = thisWeekBuilds.length;
 
       final buildNumberMetrics = projectMetrics.buildNumberMetrics;
-      final buildsPerFirstDate = buildNumberMetrics.buildsOnDateSet.first;
+      final buildsPerFirstDate = buildNumberMetrics.buildsOnDateSet.last;
 
       expect(buildsPerFirstDate.date, buildStartDate);
       expect(buildsPerFirstDate.numberOfBuilds, numberOfBuildsPerFirstDate);
@@ -66,7 +72,7 @@ void main() {
     test('Loads all fields in the build result metrics', () {
       final buildResultMetrics = projectMetrics.buildResultMetrics;
 
-      final firstBuildResult = buildResultMetrics.buildResults.first;
+      final firstBuildResult = buildResultMetrics.buildResults.last;
 
       expect(firstBuildResult.buildStatus, lastBuild.buildStatus);
       expect(firstBuildResult.duration, lastBuild.duration);
