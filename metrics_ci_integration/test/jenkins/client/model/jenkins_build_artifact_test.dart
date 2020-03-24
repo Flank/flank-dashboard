@@ -1,12 +1,14 @@
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
 import 'package:test/test.dart';
 
-import '../../resources/jenkins_artifacts_resources.dart';
+import '../test_data/jenkins_artifacts_test_data.dart';
 
 void main() {
   group("JenkinsBuildArtifact", () {
-    const artifactJson = JenkinsArtifactsResources.coverageArtifactJson;
-    const buildArtifact = JenkinsArtifactsResources.coverageArtifact;
+    const artifactJson = JenkinsArtifactsTestData.coverageArtifactJson;
+    const artifact = JenkinsArtifactsTestData.coverageArtifact;
+    const fileArtifactJson = JenkinsArtifactsTestData.fileArtifactJson;
+    const fileArtifact = JenkinsArtifactsTestData.fileArtifact;
 
     test(".fromJson() should return null if a given json is null", () {
       final job = JenkinsBuildArtifact.fromJson(null);
@@ -17,7 +19,7 @@ void main() {
     test(".fromJson() should create an instance from a json map", () {
       final job = JenkinsBuildArtifact.fromJson(artifactJson);
 
-      expect(job, equals(buildArtifact));
+      expect(job, equals(artifact));
     });
 
     test(
@@ -43,15 +45,16 @@ void main() {
       () {
         final jobs = JenkinsBuildArtifact.listFromJson([
           artifactJson,
-          artifactJson,
+          fileArtifactJson,
         ]);
+        const expected = [artifact, fileArtifact];
 
-        expect(jobs, equals([buildArtifact, buildArtifact]));
+        expect(jobs, equals(expected));
       },
     );
 
     test(".toJson() should convert an instance to the json map", () {
-      final json = buildArtifact.toJson();
+      final json = artifact.toJson();
 
       expect(json, equals(artifactJson));
     });

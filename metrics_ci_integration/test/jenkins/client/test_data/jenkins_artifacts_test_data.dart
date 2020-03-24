@@ -1,7 +1,7 @@
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
 
 /// A class providing a test data for [JenkinsBuildArtifact].
-class JenkinsArtifactsResources {
+class JenkinsArtifactsTestData {
   /// A file name for the coverage artifact.
   static const String _coverageFileName = 'coverage.json';
 

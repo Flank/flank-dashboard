@@ -1,7 +1,7 @@
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:test/test.dart';
 
-import '../../resources/jenkins_artifacts_resources.dart';
+import '../test_data/jenkins_artifacts_test_data.dart';
 
 void main() {
   group("JenkinsBuild", () {
@@ -17,7 +17,7 @@ void main() {
       'timestamp': timestamp.millisecondsSinceEpoch,
       'result': result,
       'url': url,
-      'artifacts': JenkinsArtifactsResources.artifactsJson,
+      'artifacts': JenkinsArtifactsTestData.artifactsJson,
     };
 
     final jenkinsBuild = JenkinsBuild(
@@ -26,7 +26,7 @@ void main() {
       timestamp: timestamp,
       result: result,
       url: url,
-      artifacts: JenkinsArtifactsResources.artifacts,
+      artifacts: JenkinsArtifactsTestData.artifacts,
     );
 
     test(".fromJson() should return null if a given json is null", () {
@@ -62,9 +62,32 @@ void main() {
     test(
       ".listFromJson() should map a list of jobs json maps",
       () {
-        final jobs = JenkinsBuild.listFromJson([buildJson, buildJson]);
+        const _number = number + 1;
+        const _duration = duration + 10;
+        final _timestamp = timestamp.add(const Duration(days: 1));
+        const _result = 'SUCCESS';
+        const _url = 'anotherUrl';
 
-        expect(jobs, equals([jenkinsBuild, jenkinsBuild]));
+        final anotherBuildJson = {
+          'number': _number,
+          'duration': _duration,
+          'timestamp': _timestamp.millisecondsSinceEpoch,
+          'result': _result,
+          'url': _url,
+          'artifacts': null,
+        };
+
+        final anotherBuild = JenkinsBuild(
+          number: _number,
+          duration: const Duration(seconds: _duration),
+          timestamp: _timestamp,
+          result: _result,
+          url: _url,
+        );
+
+        final jobs = JenkinsBuild.listFromJson([buildJson, anotherBuildJson]);
+
+        expect(jobs, equals([jenkinsBuild, anotherBuild]));
       },
     );
 

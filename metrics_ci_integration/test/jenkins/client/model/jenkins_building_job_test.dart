@@ -2,12 +2,14 @@ import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:test/test.dart';
 
-import '../../resources/jenkins_artifacts_resources.dart';
+import '../test_data/jenkins_artifacts_test_data.dart';
 
 void main() {
   group("JenkinsBuildingJob", () {
     Map<String, dynamic> buildingJobJson;
     JenkinsBuildingJob buildingJob;
+    Map<String, dynamic> jenkinsBuildJson;
+    JenkinsBuild jenkinsBuild;
 
     setUpAll(() {
       const firstBuildNumber = 1;
@@ -21,13 +23,16 @@ void main() {
       const firstBuild = JenkinsBuild(
         number: firstBuildNumber,
         url: firstBuildUrl,
-        artifacts: [JenkinsArtifactsResources.fileArtifact],
+        artifacts: [JenkinsArtifactsTestData.fileArtifact],
       );
+
       const lastBuild = JenkinsBuild(
         number: secondBuildNumber,
         url: secondBuildUrl,
-        artifacts: [JenkinsArtifactsResources.coverageArtifact],
+        artifacts: [JenkinsArtifactsTestData.coverageArtifact],
       );
+
+      jenkinsBuild = firstBuild;
 
       buildingJob = const JenkinsBuildingJob(
         name: buildingJobName,
@@ -44,8 +49,10 @@ void main() {
         'timestamp': null,
         'result': null,
         'url': firstBuildUrl,
-        'artifacts': [JenkinsArtifactsResources.fileArtifactJson],
+        'artifacts': [JenkinsArtifactsTestData.fileArtifactJson],
       };
+
+      jenkinsBuildJson = firstBuildJson;
 
       const lastBuildJson = {
         'number': secondBuildNumber,
@@ -53,7 +60,7 @@ void main() {
         'timestamp': null,
         'result': null,
         'url': secondBuildUrl,
-        'artifacts': [JenkinsArtifactsResources.coverageArtifactJson],
+        'artifacts': [JenkinsArtifactsTestData.coverageArtifactJson],
       };
 
       buildingJobJson = {
@@ -78,11 +85,11 @@ void main() {
       expect(job, equals(buildingJob));
     });
 
-    test(".toJson() should populate a json map with a list of jobs", () {
-      const job = JenkinsBuildingJob(name: 'name', builds: []);
+    test(".toJson() should populate a json map with a list of builds", () {
+      final job = JenkinsBuildingJob(name: 'name', builds: [jenkinsBuild]);
       final json = job.toJson();
 
-      expect(json, containsPair('builds', isEmpty));
+      expect(json, containsPair('builds', [jenkinsBuildJson]));
     });
 
     test(".toJson() should convert an instance to the json map", () {

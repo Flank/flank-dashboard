@@ -7,6 +7,7 @@ void main() {
     const name = 'job';
     const fullName = 'job';
     const url = 'url';
+    const subJobUrl = 'subJobUrl';
     const subJobName = 'subjob';
     const subJobFullName = '$name/$subJobName';
 
@@ -18,7 +19,7 @@ void main() {
         {
           'name': subJobName,
           'fullName': subJobFullName,
-          'url': url,
+          'url': subJobUrl,
         },
       ],
     };
@@ -31,7 +32,7 @@ void main() {
         JenkinsJob(
           name: subJobName,
           fullName: subJobFullName,
-          url: url,
+          url: subJobUrl,
         ),
       ],
     );

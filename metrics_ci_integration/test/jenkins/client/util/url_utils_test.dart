@@ -94,7 +94,7 @@ void main() {
       () {
         final result = UrlUtils.replacePathSeparators('path', 'test');
 
-        expect(result, startsWith('test'));
+        expect(result, equals('test/path'));
       },
     );
 
@@ -103,7 +103,7 @@ void main() {
       () {
         final result = UrlUtils.replacePathSeparators('path/to', 'test');
 
-        expect(result, startsWith('test/path/test/to'));
+        expect(result, equals('test/path/test/to'));
       },
     );
   });
