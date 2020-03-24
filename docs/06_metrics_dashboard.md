@@ -25,5 +25,4 @@ it’s 20M - meaning 20 minutes
 
 ### Coverage
 - Displays Coverage metric
-- Data displayed for the last 7 days
-- Shows a number from the last build (successful or not?)
+- Data displayed for the last successful build
