@@ -19,9 +19,12 @@ const buildStatuses = ['BuildStatus.successful', 'BuildStatus.cancelled', 'Build
 /// in range from startDate to startDate - 7 days. Defaults to current date.
 /// delay (optional) - is the delay in milliseconds between adding builds to project
 exports.seedData = functions.https.onRequest(async (req, resp) => {
+    /// Change to enable this function.
+    const inactive = true;
 
-    /// remove this to enable function.
-    return resp.status(200).send('done');
+    if (inactive){
+     return resp.status(200).send('done');
+    }
 
     const buildsCount = req.query['buildsCount'];
     const projectId = req.query['projectId'];

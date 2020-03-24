@@ -17,7 +17,7 @@ Describe the process of deployment of the Metrics application to the Firebase Ho
 
 > What problem is this project solving?
 
-The Metrics application instance with test data accessible via a link.
+The Metrics application instance accessible via a link.
 
 # Goals
 
@@ -59,7 +59,7 @@ Before you start, you should have the following installed:
 1. Go to [Firebase Console](https://console.firebase.google.com/), login if needed, and tap the `Add project` button.
 2. Enter a project name and tap the `Continue` to proceed.
 3. On the next page, select whether you want to use Firebase Analytics or not and click the `Continue`/`Create project` to proceed.
-4. Select a Firebase Analytics account if you are using one and tap the `Create project`.  
+4. If you choose to use Firebase Analytics in the previous step select a Firebase Analytics account if you are using one and tap the `Create project`. 
 
 After a couple of seconds, your project will be ready, and you'll be redirected to the project console.  
 Your next step will be to create a Firestore database: 
@@ -75,22 +75,21 @@ After a while, your database will be created, and you will see the database cons
 When your Firestore database is up, you need to add a Web application to your Firebase project,
 to be able to connect your web application with the Firestore database: 
 
-1. In the [Firebase Console](https://console.firebase.google.com/), open your project and go to
- the project setting page (tap on the setting gear icon near the `Project Overview` on top of the 
- left panel and select `Project settings`).
+1. In the [Firebase Console](https://console.firebase.google.com/), open your project and tap on the setting gear icon near the `Project Overview` on top of the 
+ left panel and select `Project settings`.
 2. Scroll down and find `There are no apps in your project` text,
  and tap on the `</>` icon to add a new Web application to your Firebase project.
 3. Choose the app nickname and check `Also set up Firebase Hosting for this app`.
-4. Select from the dropdown menu, or create a new site for your application and tap the `Register app` to proceed.
-5. Skip the `Configure Firebase SDK` step. We will return to Firebase SDK configuration a bit later in [Firebase SDK configuration](#Firebase-SKD-configuration).
+4. Enter the app nickname and make sure that `Also set up Firebase Hosting for this app` is checked.
+5. Skip the `Configure Firebase SDK` step. We will return to Firebase SDK configuration a bit later in [Firebase SDK configuration](#Firebase-SDK-configuration).
 6. Tap on the `Next` button and follow instructions to install the Firebase CLI.
 7. Skip the `Deploy to Firebase Hosting` and tap on the `Continue to console` to finish configuring your Firebase Web application.
  The deployment process described more detailed in
   [Building and deploying the application to the Firebase Hosting](#Building-and-deploying-the-application-to-the-Firebase-Hosting) section.
  
-Finally, your Firebase project configured ant it's time to configure the Firebase SDK in your Flutter for Web application.
+Finally, your Firebase project configured and it's time to configure the Firebase SDK in your Flutter for the Web application.
 
-## Firebase SKD configuration
+## Firebase SDK configuration
 
 To configure the Flutter for Web application to use recently created Firestore Database follow the next steps: 
 
@@ -98,7 +97,7 @@ To configure the Flutter for Web application to use recently created Firestore D
 and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
 2. Scroll down and find your Firebase Web Application. 
 3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
-4. Go to the `web/index.js` file in the application directory and replace this piece of code with the copied one in step 3: 
+4. Go to the `web/index.js` file in the application directory and replace the following piece of code with the copied one in step 3: 
     ```
         var firebaseConfig = {
           apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
@@ -120,8 +119,7 @@ It's time to deploy your Flutter application to the Firebase Hosting!
 ### Preparing your environment 
 Before deploying metrics application, make sure you have the correct Flutter version installed,
  by running the `flutter --version` command. You should have `v1.15.3` installed. 
-
-To switch the Flutter to the required version, you should run the `flutter version 1.15.3` command.
+If the version is different you should run the `flutter version 1.15.3` command.
 
 Also, you should enable flutter web support by running the `flutter config --enable-web` command.
 
@@ -143,8 +141,15 @@ After the deployment process finished, your application will be accessible using
 Once you've deployed the metrics application to Firebase Hosting, you can create a sample data to test the application.  
 The application reads data from 2 Firestore collections: `projects` and `build`. To create a sample data follow the next steps: 
 
-1. Deploying the `seedData` cloud function: 
-    1. Go to the `metrics/firebase/index.js` file and comment this line of code: `return resp.status(200).send('done');`.
+1. Creating projects in Firestore Database:
+    1. Go to [Firebase Console](https://console.firebase.google.com/), and select the project, created in previous steps.
+    2. Go to the database section on the left panel and tap on the `Start collection` button.
+    3. Add collection with `projects` identifier and tap `Next`. 
+    4. In the document creation window tap on the `Auto-ID` button or enter the project identifier you want.
+    5. Add a field named `name` with the `String` type and the name for your project as a value.
+
+2. Deploying the `seedData` cloud function: 
+    1. Go to the `metrics/firebase/index.js` file and change the `const inactive = true;` to `const inactive = false;` to activate the function.
     2. Open console, navigate to `metrics` directory and run the `firebase deploy --only functions`
      command to deploy this cloud function.
     3. Once the function deployment is finished, the URL will be printed to the console.
@@ -156,12 +161,10 @@ The application reads data from 2 Firestore collections: `projects` and `build`.
          property in the range from the `startDate` to `startDate - 7` days. Defaults to the current date.
         - delay (optional) - is the delay in milliseconds between adding builds to the project.
 
-2. Creating projects in Firestore Database:
-    1. Go to [Firebase Console](https://console.firebase.google.com/), and select the project, created in previous steps.
-    2. Go to the database section on the left panel and tap on the `Start collection` button.
-    3. Add collection with `projects` identifier and tap `Next`. 
-    4. In the document creation window tap on the `Auto-ID` button or enter the project identifier you want.
-    5. Add a field named `name` with the `String` type and the name for your project as a value.
+Once you've finished creating test data, you should deactivate the `seedData` cloud function. To deactivate this function, follow the next steps: 
+  1. Go to the `metrics/firebase/index.js` file and change the `inactive` constant back to `true`. 
+  2. Redeploy this function, using the `firebase deploy --only functions` command.
+
 
 # Dependencies
 
@@ -171,7 +174,7 @@ No blockers
 
 > What will be impacted by the project?
 
-Nothing will be impacted by this project.
+All the deployment process for a flutter web application(s) within the Metrics project will be impacted.
 
 # Testing
 
