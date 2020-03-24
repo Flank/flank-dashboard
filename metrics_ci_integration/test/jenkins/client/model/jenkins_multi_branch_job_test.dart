@@ -8,7 +8,7 @@ void main() {
     const fullName = 'job';
     const url = 'url';
     const subJobUrl = 'subJobUrl';
-    const subJobName = 'subjob';
+    const subJobName = 'subJob';
     const subJobFullName = '$name/$subJobName';
 
     const multiBranchJobJson = {
