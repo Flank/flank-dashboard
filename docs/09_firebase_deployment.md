@@ -2,8 +2,7 @@
 
 > Summary of the proposed change
 
-Describe the process of deployment of the Metrics application to the Firebase Hosting
- and deploying the Cloud functions needed to create test data for the application.
+Describe the process of deployment of the Metrics application to the Firebase Hosting and deploying the Cloud functions needed to create test data for the application.
 
 
 # References
@@ -11,21 +10,21 @@ Describe the process of deployment of the Metrics application to the Firebase Ho
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Getting started with Firestore](https://cloud.google.com/firestore/docs/client/get-firebase)
-- [Deploying to firebase hosting](https://firebaseopensource.com/projects/firebase/emberfire/docs/guide/deploying-to-firebase-hosting.md/)
+- [Deploying to Firebase Hosting](https://firebaseopensource.com/projects/firebase/emberfire/docs/guide/deploying-to-firebase-hosting.md/)
 - [Getting started with Firebase Cloud Functions](https://firebase.google.com/docs/functions/get-started)
 
 # Motivation
 
 > What problem is this project solving?
 
-Have the Metrics application with test data accessible using a link.
+The Metrics application instance with test data accessible via a link.
 
 # Goals
 
 > Identify success metrics and measurable goals.
 
-- Web application deployed to Firebase Hosting and available for everyone on the link.
-- Deployed Cloud functions for creating test data.
+- Web application is deployed to Firebase Hosting and available for everyone via the link.
+- The Cloud Functions required for creating test data are deployed.
 
 # Non-Goals
 
@@ -37,7 +36,7 @@ Deployment to other platforms is out of scope.
 
 > Explain and diagram the technical design
 
-`Metrics Web Source` -> `Compile` -> `Deploy` ->  `Firebase Hosting`
+`Metrics Web Source` -> `Build` -> `Deploy` ->  `Firebase Hosting`
 
 `Metrics Web Cloud Functions` -> `Deploy` -> `Firebase Cloud Functions`
 
@@ -50,17 +49,17 @@ Deployment to other platforms is out of scope.
 
 ## Before you begin
 
-You should have installed before you start: 
+Before you start, you should have the following installed:
 
 1. [Flutter](https://flutter.dev/docs/get-started/install) v1.15.3.
 2. [npm](https://www.npmjs.com/get-npm).
 
-## Creating new Firebase project.
+## Creating a new Firebase project.
 
-1. Go to [Firebase Console](https://console.firebase.google.com/), login if needed, and tap on the `Add project`.
-2. Select a project name and tap `Continue` to proceed.
+1. Go to [Firebase Console](https://console.firebase.google.com/), login if needed, and tap the `Add project` button.
+2. Enter a project name and tap the `Continue` to proceed.
 3. On the next page, select whether you want to use Firebase Analytics or not and click the `Continue`/`Create project` to proceed.
-4. Select a Firebase analytics account if you are using the Firebase Analytics and tap on `Create project`. 
+4. Select a Firebase Analytics account if you are using one and tap the `Create project`.  
 
 After a couple of seconds, your project will be ready, and you'll be redirected to the project console.  
 Your next step will be to create a Firestore database: 
@@ -99,7 +98,7 @@ To configure the Flutter for Web application to use recently created Firestore D
 and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
 2. Scroll down and find your Firebase Web Application. 
 3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
-4. Go to the `web/index.js` file in the application directory and replace this piece of code with copied code in step 3: 
+4. Go to the `web/index.js` file in the application directory and replace this piece of code with the copied one in step 3: 
     ```
         var firebaseConfig = {
           apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
@@ -113,18 +112,18 @@ and go to the project setting (tap on the setting gear icon near the `Project Ov
         };
     ```
 
-Finally, you have a configured flutter application that works with your Firebase instance.
-It's time to deploy your flutter application to the Firebase Hosting!
+Finally, you have a configured Flutter application that works with your Firebase instance.
+It's time to deploy your Flutter application to the Firebase Hosting!
  
 ## Building and deploying the application to the Firebase Hosting
 
 ### Preparing your environment 
-Before deploying metrics application, make sure you have the correct flutter version installed,
+Before deploying metrics application, make sure you have the correct Flutter version installed,
  by running the `flutter --version` command. You should have `v1.15.3` installed. 
 
-To switch the flutter to the required version, you need to run the `flutter version 1.15.3` command.
+To switch the Flutter to the required version, you should run the `flutter version 1.15.3` command.
 
-Also, you have to enable flutter web support by running the `flutter config --enable-web` command.
+Also, you should enable flutter web support by running the `flutter config --enable-web` command.
 
 ### Building and deploying Flutter application
  
@@ -133,28 +132,28 @@ Also, you have to enable flutter web support by running the `flutter config --en
  Use the same account that you used to create your Firebase project (or the one that has access to it).
 3. After you have logged in, run the `firebase use --add` command, and select the project id of the project, created in previous steps.
 4. Give an alias to your project.
-5. Run the `flutter build web` command from the root of the metrics project to builds the release version of the application.
- Recommended that you add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer.
+5. Run the `flutter build web` command from the root of the metrics project to build the release version of the application.
+ It is recommended to add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer.
 4. Run the `firebase deploy --only hosting` command to deploy an application to the Firebase Hosting.
 
 After the deployment process finished, your application will be accessible using the `Hosting URL`, printed to console.
 
-## Creating test data for deployed application
+## Creating test data for the deployed application
 
-Once you've deployed the metrics application to the Firebase Hosting, you can create a sample data to test the application.  
-The application reads data from 2 firestore collections: `projects` and `build`. To create a sample data follow the next steps: 
+Once you've deployed the metrics application to Firebase Hosting, you can create a sample data to test the application.  
+The application reads data from 2 Firestore collections: `projects` and `build`. To create a sample data follow the next steps: 
 
-1. Deploying seedData Firestore function: 
+1. Deploying the `seedData` cloud function: 
     1. Go to the `metrics/firebase/index.js` file and comment this line of code: `return resp.status(200).send('done');`.
-    2. Open console, navigate to `metrics` directory and run `firebase deploy --only functions`
+    2. Open console, navigate to `metrics` directory and run the `firebase deploy --only functions`
      command to deploy this cloud function.
-    3. Once the function deployment finished, the URL will be printed to the console.
+    3. Once the function deployment is finished, the URL will be printed to the console.
      You can trigger this function to create builds from the project, using this URL.  
-     This HTTP function has such query parameters: 
-        - buildsCount (required) - number of builds to be generated.
+     This HTTP function has the following query parameters: 
+        - buildsCount (required) - the number of builds to generate.
         - projectId (required) - the project identifier for which builds will be generated.
         - startDate (optional) - builds will be generated with 'startedAt'
-         property in the range from startDate to startDate - 7 days. Defaults to the current date.
+         property in the range from the `startDate` to `startDate - 7` days. Defaults to the current date.
         - delay (optional) - is the delay in milliseconds between adding builds to the project.
 
 2. Creating projects in Firestore Database:
@@ -168,7 +167,7 @@ The application reads data from 2 firestore collections: `projects` and `build`.
 
 > What is the project blocked on?
 
-This project has no dependencies.
+No blockers
 
 > What will be impacted by the project?
 
@@ -184,7 +183,7 @@ This project will be tested manually by opening an application using the obtaine
 
 > Summarize alternative designs (pros & cons)
 
-N/A
+No alternatives considered.
 
 # Timeline
 
@@ -192,10 +191,11 @@ N/A
 
 DONE:
 
-  - Deploy Metrics application to the Firebase Hosting.
+  - Deploy Metrics application to Firebase Hosting.
+  - Deploy the Cloud Function for creating test data. 
   
 # Results
 
 > What was the outcome of the project?
 
-The Metrics application and the Cloud function for creating test data deployed and available on the link.
+The Metrics application and the Cloud Function for creating test data are deployed and available via the links.
