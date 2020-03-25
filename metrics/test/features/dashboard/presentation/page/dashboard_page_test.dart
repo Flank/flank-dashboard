@@ -159,7 +159,6 @@ class MetricsStoreStub implements ProjectMetricsStore {
     averageBuildDurationInMinutes: 1,
     performanceMetrics: [],
     buildResultMetrics: [],
-    buildNumberMetrics: [],
   );
 
   final List<ProjectMetricsData> projectMetrics;

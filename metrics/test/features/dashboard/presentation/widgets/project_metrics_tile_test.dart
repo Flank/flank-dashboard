@@ -74,12 +74,12 @@ void main() {
   );
 
   testWidgets(
-    'Contains SparklineGraph widgets with build metric',
+    'Contains total number of builds for last 7 days',
     (WidgetTester tester) async {
       await tester.pumpWidget(const ProjectMetricsTileTestbed());
 
       expect(
-        find.widgetWithText(SparklineGraph, DashboardStrings.builds),
+        find.widgetWithText(Column, DashboardStrings.builds),
         findsOneWidget,
       );
     },
@@ -114,7 +114,6 @@ class ProjectMetricsTileTestbed extends StatelessWidget {
     numberOfBuilds: 0,
     averageBuildDurationInMinutes: 0,
     performanceMetrics: [],
-    buildNumberMetrics: [],
     buildResultMetrics: [],
   );
   final ProjectMetricsData projectMetrics;

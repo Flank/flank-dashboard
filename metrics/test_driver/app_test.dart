@@ -35,12 +35,20 @@ void main() {
       );
 
       test(
-        'Loads the build metrics and shows the sparkline graph widgets',
+        'Loads the performance metric and shows it on sparkline graph',
         () async {
           await driver.waitFor(find.text(DashboardStrings.performance));
-          await driver.waitFor(find.text(DashboardStrings.builds));
 
           await driver.waitFor(find.byType('SparklineGraph'));
+        },
+      );
+
+      test(
+        'Loads the build number metric and shows it with the title',
+        () async {
+          await driver.waitFor(find.text(DashboardStrings.builds));
+
+          await driver.waitFor(find.byType('TitledText'));
         },
       );
 

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/titled_text.dart';
 
 /// The widget with sparkline that represents metric.
 ///
@@ -109,33 +109,12 @@ class SparklineGraph extends StatelessWidget {
           ),
           Padding(
             padding: padding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: ExpandableText(
-                    title,
-                    style: titleTextStyle,
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: Padding(
-                          padding: valuePadding,
-                          child: ExpandableText(
-                            value,
-                            style: valueStyle,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            child: TitledText(
+              valuePadding: valuePadding,
+              title: title,
+              value: value,
+              titleStyle: titleTextStyle,
+              valueStyle: valueStyle,
             ),
           ),
         ],

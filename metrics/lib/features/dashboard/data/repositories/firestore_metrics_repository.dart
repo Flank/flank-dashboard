@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:metrics/features/dashboard/data/model/build_data.dart';
 import 'package:metrics/features/dashboard/data/model/project_data.dart';
 import 'package:metrics/features/dashboard/domain/entities/core/build.dart';
+import 'package:metrics/features/dashboard/domain/entities/core/build_status.dart';
 import 'package:metrics/features/dashboard/domain/entities/core/project.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
 
@@ -40,6 +41,20 @@ class FirestoreMetricsRepository implements MetricsRepository {
         .orderBy('startedAt', descending: true)
         .where('projectId', isEqualTo: projectId)
         .where('startedAt', isGreaterThanOrEqualTo: from)
+        .snapshots()
+        .map((snapshot) => snapshot.documents
+            .map((doc) => BuildData.fromJson(doc.data, doc.documentID))
+            .toList());
+  }
+
+  @override
+  Stream<List<Build>> lastSuccessfulBuildStream(String projectId) {
+    return _firestore
+        .collection('build')
+        .orderBy('startedAt', descending: true)
+        .where('projectId', isEqualTo: projectId)
+        .where('buildStatus', isEqualTo: BuildStatus.successful.toString())
+        .limit(1)
         .snapshots()
         .map((snapshot) => snapshot.documents
             .map((doc) => BuildData.fromJson(doc.data, doc.documentID))

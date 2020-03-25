@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:metrics/features/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/features/dashboard/domain/entities/core/project.dart';
-import 'package:metrics/features/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/performance_metric.dart';
@@ -113,19 +112,15 @@ class ProjectMetricsStore {
     final performanceMetrics = _getPerformanceMetrics(
       buildMetrics.performanceMetrics,
     );
-    final buildNumberMetrics = _getBuildNumberMetrics(
-      buildMetrics.buildNumberMetrics,
-    );
     final buildResultMetrics = _getBuildResultMetrics(
       buildMetrics.buildResultMetrics,
     );
     final averageBuildDuration =
         buildMetrics.performanceMetrics.averageBuildDuration.inMinutes;
-    final numberOfBuilds = buildMetrics.buildNumberMetrics.totalNumberOfBuilds;
+    final numberOfBuilds = buildMetrics.buildNumberMetrics.numberOfBuilds;
 
     projectsMetrics[projectId] = projectMetrics.copyWith(
       performanceMetrics: performanceMetrics,
-      buildNumberMetrics: buildNumberMetrics,
       buildResultMetrics: buildResultMetrics,
       numberOfBuilds: numberOfBuilds,
       averageBuildDurationInMinutes: averageBuildDuration,
@@ -134,24 +129,6 @@ class ProjectMetricsStore {
     );
 
     _projectsMetricsSubject.add(projectsMetrics);
-  }
-
-  /// Creates the project build number metrics from [BuildNumberMetric].
-  List<Point<int>> _getBuildNumberMetrics(BuildNumberMetric metric) {
-    final buildNumberMetrics = metric?.buildsOnDateSet ?? DateTimeSet();
-
-    if (buildNumberMetrics.isEmpty) {
-      return [];
-    }
-
-    final buildNumberPoints = buildNumberMetrics.map((metric) {
-      return Point(
-        metric.date.millisecondsSinceEpoch,
-        metric.numberOfBuilds,
-      );
-    }).toList();
-
-    return buildNumberPoints;
   }
 
   /// Creates the project performance metrics from [PerformanceMetric].

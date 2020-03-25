@@ -14,7 +14,6 @@ class ProjectMetricsData {
   final int numberOfBuilds;
   final int averageBuildDurationInMinutes;
   final List<Point<int>> performanceMetrics;
-  final List<Point<int>> buildNumberMetrics;
   final List<BuildResultBarData> buildResultMetrics;
 
   /// Creates the [ProjectMetricsData].
@@ -26,7 +25,6 @@ class ProjectMetricsData {
   /// [numberOfBuilds] is the number of builds the [buildNumberMetrics] are based on.
   /// [averageBuildDurationInMinutes] is the average duration in minutes of the single build.
   /// [performanceMetrics] is metric that represents the duration of the builds.
-  /// [buildNumberMetrics] is the metric that represents the number of builds during some period of time.
   /// [buildResultMetrics] is the metric that represents the results of the builds.
   const ProjectMetricsData({
     this.projectId,
@@ -36,7 +34,6 @@ class ProjectMetricsData {
     this.numberOfBuilds,
     this.averageBuildDurationInMinutes,
     this.performanceMetrics,
-    this.buildNumberMetrics,
     this.buildResultMetrics,
   });
 
@@ -49,7 +46,6 @@ class ProjectMetricsData {
     int numberOfBuilds,
     int averageBuildDurationInMinutes,
     List<Point<int>> performanceMetrics,
-    List<Point<int>> buildNumberMetrics,
     List<BuildResultBarData> buildResultMetrics,
   }) {
     return ProjectMetricsData(
@@ -61,7 +57,6 @@ class ProjectMetricsData {
       averageBuildDurationInMinutes:
           averageBuildDurationInMinutes ?? this.averageBuildDurationInMinutes,
       performanceMetrics: performanceMetrics ?? this.performanceMetrics,
-      buildNumberMetrics: buildNumberMetrics ?? this.buildNumberMetrics,
       buildResultMetrics: buildResultMetrics ?? this.buildResultMetrics,
     );
   }

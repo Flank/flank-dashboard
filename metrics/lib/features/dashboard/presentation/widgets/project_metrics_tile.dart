@@ -8,6 +8,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/coverage_circle_
 import 'package:metrics/features/dashboard/presentation/widgets/loading_builder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/titled_text.dart';
 
 /// Displays the project name and it's metrics.
 class ProjectMetricsTile extends StatefulWidget {
@@ -84,14 +85,18 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   ),
                   Flexible(
                     child: LoadingBuilder(
-                      isLoading:
-                          widget.projectMetrics.buildNumberMetrics == null,
-                      loadingPlaceholder: const LoadingPlaceholder(),
-                      builder: (_) => SparklineGraph(
-                        title: DashboardStrings.builds,
-                        data: widget.projectMetrics.buildNumberMetrics,
-                        value: '${widget.projectMetrics.numberOfBuilds}',
-                      ),
+                      isLoading: widget.projectMetrics.numberOfBuilds == null,
+                      builder: (_) {
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TitledText(
+                              title: DashboardStrings.builds,
+                              value: '${widget.projectMetrics.numberOfBuilds}',
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   LoadingBuilder(

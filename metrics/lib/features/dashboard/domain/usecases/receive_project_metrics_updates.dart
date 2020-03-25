@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:metrics/core/usecases/usecase.dart';
 import 'package:metrics/features/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/features/dashboard/domain/entities/core/build.dart';
@@ -7,7 +9,6 @@ import 'package:metrics/features/dashboard/domain/entities/metrics/build_number_
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_result_metric.dart';
-import 'package:metrics/features/dashboard/domain/entities/metrics/builds_on_date.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
@@ -19,6 +20,7 @@ import 'package:rxdart/rxdart.dart';
 class ReceiveProjectMetricsUpdates
     implements UseCase<Stream<DashboardProjectMetrics>, ProjectIdParam> {
   static const int numberOfLastBuilds = 14;
+  static const Duration buildsLoadingPeriod = Duration(days: 7);
 
   final MetricsRepository _repository;
 
@@ -34,15 +36,19 @@ class ReceiveProjectMetricsUpdates
       numberOfLastBuilds,
     );
 
-    final weekStartDate = _getWeekStartDate();
     final projectBuildsInPeriod = _repository.projectBuildsFromDateStream(
       projectId,
-      weekStartDate,
+      DateTime.now().subtract(buildsLoadingPeriod).date,
     );
 
-    return CombineLatestStream.combine2(
+    final lastSuccessfulBuildStream = _repository.lastSuccessfulBuildStream(
+      projectId,
+    );
+
+    return CombineLatestStream.combine3(
       lastBuildsStream,
       projectBuildsInPeriod,
+      lastSuccessfulBuildStream,
       _mergeBuilds,
     ).map((builds) => _mapToBuildMetrics(
           builds,
@@ -50,18 +56,22 @@ class ReceiveProjectMetricsUpdates
         ));
   }
 
-  /// Merges 2 [List]s of [Build]s into a single list by id.
+  /// Merges 3 [List]s of [Build]s into a single list by id.
   List<Build> _mergeBuilds(
     List<Build> latestBuilds,
     List<Build> buildsInPeriod,
+    List<Build> lastSuccessfulBuild,
   ) {
-    final builds = buildsInPeriod.toList();
+    final buildsSet = LinkedHashSet<Build>(
+      equals: (build1, build2) => build1?.id == build2?.id,
+      hashCode: (build) => build?.id.hashCode,
+    );
 
-    for (final latestBuild in latestBuilds) {
-      if (buildsInPeriod.any((build) => build.id == latestBuild.id)) continue;
+    buildsSet.addAll(latestBuilds);
+    buildsSet.addAll(buildsInPeriod);
+    buildsSet.addAll(lastSuccessfulBuild);
 
-      builds.add(latestBuild);
-    }
+    final builds = buildsSet.toList();
 
     builds.sort((prev, next) => prev.startedAt.compareTo(next.startedAt));
 
@@ -152,41 +162,13 @@ class ReceiveProjectMetricsUpdates
 
   /// Calculates the [BuildNumberMetric] from [builds].
   BuildNumberMetric _getBuildNumberMetrics(List<Build> builds) {
-    final Map<DateTime, int> buildNumberMap = {};
-
-    final weekStartDate = _getWeekStartDate();
+    final buildsPeriodStart = DateTime.now().subtract(buildsLoadingPeriod);
     final thisWeekBuilds = builds
-        .where((element) => element.startedAt.isAfter(weekStartDate))
+        .where((element) => element.startedAt.isAfter(buildsPeriodStart))
         .toList();
 
-    final buildsOnDateSet = DateTimeSet<BuildsOnDate>();
-
-    if (thisWeekBuilds.isEmpty) {
-      return BuildNumberMetric(
-        buildsOnDateSet: buildsOnDateSet,
-      );
-    }
-
-    for (final build in thisWeekBuilds) {
-      final dayOfBuild = build.startedAt.date;
-
-      if (buildNumberMap.containsKey(dayOfBuild)) {
-        buildNumberMap[dayOfBuild]++;
-      } else {
-        buildNumberMap[dayOfBuild] = 1;
-      }
-    }
-
-    for (final entry in buildNumberMap.entries) {
-      buildsOnDateSet.add(BuildsOnDate(
-        date: entry.key,
-        numberOfBuilds: entry.value,
-      ));
-    }
-
     return BuildNumberMetric(
-      buildsOnDateSet: buildsOnDateSet,
-      totalNumberOfBuilds: thisWeekBuilds.length,
+      numberOfBuilds: thisWeekBuilds.length,
     );
   }
 
@@ -215,12 +197,5 @@ class ReceiveProjectMetricsUpdates
     );
 
     return Percent(successfulBuilds.length / builds.length);
-  }
-
-  /// Gets the date of Monday of this week.
-  DateTime _getWeekStartDate() {
-    final timestamp = DateTime.now();
-
-    return timestamp.subtract(Duration(days: timestamp.weekday - 1)).date;
   }
 }
