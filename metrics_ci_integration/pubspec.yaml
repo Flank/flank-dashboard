@@ -16,6 +16,4 @@ dev_dependencies:
   api_mock_server:
     git:
       url: https://github.com/software-platform/monorepo.git
-      # TODO: before PR is merged - remove the following line
-      ref: jenkins_api_integration
       path: api_mock_server
