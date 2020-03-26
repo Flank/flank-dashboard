@@ -1,0 +1,10 @@
+source:
+  jenkins:
+    url: sample_url
+    username: username
+    password: password
+    job_name: test_project
+destination:
+  firestore:
+    firestore_project_id: firestoreId
+    metrics_project_id: id
