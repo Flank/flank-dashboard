@@ -1,13 +1,11 @@
 import 'package:meta/meta.dart';
 
-/// Represents the firestore destination configuration.
+/// Represents the firestore configuration.
 class FirestoreConfig {
-  /// The firebase project identifier that defines which instance of
-  /// firebase used to store loaded metrics.
+  /// The firebase project identifier.
   final String firebaseProjectId;
 
-  /// The firestore metrics project identifier that defines where to save metrics,
-  /// loaded from the CI.
+  /// The firestore metrics project identifier.
   final String metricsProjectId;
 
   /// Creates the [FirestoreConfig] with the given [metricsProjectId].

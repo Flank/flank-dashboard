@@ -4,14 +4,20 @@ import 'package:test/test.dart';
 void main() {
   group("JenkinsConfig", () {
     test(
-      "can't be created with null url or buildJobId",
+      "can't be created with null url",
+      () {
+        expect(
+          () => JenkinsConfig(jobName: 'jobId', url: null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "can't be created with null jobName",
       () {
         expect(
           () => JenkinsConfig(url: 'url', jobName: null),
-          throwsArgumentError,
-        );
-        expect(
-          () => JenkinsConfig(jobName: 'jobId', url: null),
           throwsArgumentError,
         );
       },

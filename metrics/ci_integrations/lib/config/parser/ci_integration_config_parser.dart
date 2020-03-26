@@ -18,21 +18,21 @@ class CiIntegrationConfigParser {
   CiIntegrationConfig parse(String ciConfigYaml) {
     ArgumentError.checkNotNull(ciConfigYaml, 'ciConfigYaml');
 
-    final configJson = _parser.parse(ciConfigYaml);
-    final sourceJson = configJson['source'] as Map<String, dynamic>;
-    final destinationJson = configJson['destination'] as Map<String, dynamic>;
+    final configMap = _parser.parse(ciConfigYaml);
+    final sourceMap = configMap['source'] as Map<String, dynamic>;
+    final destinationMap = configMap['destination'] as Map<String, dynamic>;
 
-    if (sourceJson == null || destinationJson == null) {
+    if (sourceMap == null || destinationMap == null) {
       throw const FormatException(
         "The configuration file must contain 'source' and 'destination' entities.",
       );
     }
 
-    final firestoreConfigJson =
-        destinationJson['firestore'] as Map<String, dynamic>;
-    final firestoreConfig = FirestoreConfig.fromJson(firestoreConfigJson);
-    final jenkinsConfigJson = sourceJson['jenkins'] as Map<String, dynamic>;
-    final jenkinsConfig = JenkinsConfig.fromJson(jenkinsConfigJson);
+    final firestoreConfigMap =
+        destinationMap['firestore'] as Map<String, dynamic>;
+    final firestoreConfig = FirestoreConfig.fromJson(firestoreConfigMap);
+    final jenkinsConfigMap = sourceMap['jenkins'] as Map<String, dynamic>;
+    final jenkinsConfig = JenkinsConfig.fromJson(jenkinsConfigMap);
 
     return CiIntegrationConfig(
       source: jenkinsConfig,

@@ -11,7 +11,10 @@ void main() {
         expect(
           () => CiIntegrationConfig(
             source: null,
-            destination: FirestoreConfigTestbed(),
+            destination: FirestoreConfig(
+              firebaseProjectId: 'firebaseId',
+              metricsProjectId: 'metricsId',
+            ),
           ),
           throwsArgumentError,
         );
@@ -23,7 +26,12 @@ void main() {
       () {
         expect(
           () => CiIntegrationConfig(
-            source: JenkinsConfigTestbed(),
+            source: JenkinsConfig(
+              url: 'url',
+              jobName: 'jobName',
+              username: 'username',
+              password: 'password',
+            ),
             destination: null,
           ),
           throwsArgumentError,
@@ -31,26 +39,4 @@ void main() {
       },
     );
   });
-}
-
-class JenkinsConfigTestbed implements JenkinsConfig {
-  @override
-  String get jobName => null;
-
-  @override
-  String get password => null;
-
-  @override
-  String get url => null;
-
-  @override
-  String get username => null;
-}
-
-class FirestoreConfigTestbed implements FirestoreConfig {
-  @override
-  String get firebaseProjectId => null;
-
-  @override
-  String get metricsProjectId => null;
 }

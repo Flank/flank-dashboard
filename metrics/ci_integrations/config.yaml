@@ -1,9 +1,9 @@
 source:
   jenkins:
     url: sample_url
+    job_name: test_project
     username: username
     password: password
-    job_name: test_project
 destination:
   firestore:
     firebase_project_id: firebaseId
