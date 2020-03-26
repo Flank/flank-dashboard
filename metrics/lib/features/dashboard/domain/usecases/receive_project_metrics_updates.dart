@@ -19,8 +19,8 @@ import 'package:rxdart/rxdart.dart';
 /// Provides an ability to get the [DashboardProjectMetrics] updates.
 class ReceiveProjectMetricsUpdates
     implements UseCase<Stream<DashboardProjectMetrics>, ProjectIdParam> {
-  static const int numberOfLastBuilds = 14;
-  static const Duration buildsLoadingPeriod = Duration(days: 7);
+  static const int lastBuildsForChartsMetrics = 14;
+  static const Duration buildNumberLoadingPeriod = Duration(days: 7);
 
   final MetricsRepository _repository;
 
@@ -33,12 +33,12 @@ class ReceiveProjectMetricsUpdates
 
     final lastBuildsStream = _repository.latestProjectBuildsStream(
       projectId,
-      numberOfLastBuilds,
+      lastBuildsForChartsMetrics,
     );
 
     final projectBuildsInPeriod = _repository.projectBuildsFromDateStream(
       projectId,
-      DateTime.now().subtract(buildsLoadingPeriod).date,
+      DateTime.now().subtract(buildNumberLoadingPeriod).date,
     );
 
     final lastSuccessfulBuildStream = _repository.lastSuccessfulBuildStream(
@@ -91,9 +91,9 @@ class ReceiveProjectMetricsUpdates
 
     List<Build> latestBuilds = builds;
 
-    if (latestBuilds.length > numberOfLastBuilds) {
+    if (latestBuilds.length > lastBuildsForChartsMetrics) {
       latestBuilds = latestBuilds.sublist(
-        latestBuilds.length - numberOfLastBuilds,
+        latestBuilds.length - lastBuildsForChartsMetrics,
       );
     }
 
@@ -162,7 +162,7 @@ class ReceiveProjectMetricsUpdates
 
   /// Calculates the [BuildNumberMetric] from [builds].
   BuildNumberMetric _getBuildNumberMetrics(List<Build> builds) {
-    final buildsPeriodStart = DateTime.now().subtract(buildsLoadingPeriod);
+    final buildsPeriodStart = DateTime.now().subtract(buildNumberLoadingPeriod);
     final thisWeekBuilds = builds
         .where((element) => element.startedAt.isAfter(buildsPeriodStart))
         .toList();

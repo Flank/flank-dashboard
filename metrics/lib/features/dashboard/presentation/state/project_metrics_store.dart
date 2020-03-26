@@ -122,7 +122,7 @@ class ProjectMetricsStore {
     projectsMetrics[projectId] = projectMetrics.copyWith(
       performanceMetrics: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
-      numberOfBuilds: numberOfBuilds,
+      buildNumberMetric: numberOfBuilds,
       averageBuildDurationInMinutes: averageBuildDuration,
       coverage: buildMetrics.coverage,
       stability: buildMetrics.stability,

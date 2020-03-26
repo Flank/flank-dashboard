@@ -2,7 +2,10 @@ import 'package:metrics/features/dashboard/domain/entities/core/build.dart';
 import 'package:metrics/features/dashboard/domain/entities/core/build_status.dart';
 import 'package:metrics/features/dashboard/domain/entities/core/percent.dart';
 import 'package:metrics/features/dashboard/domain/entities/core/project.dart';
+import 'package:metrics/features/dashboard/domain/entities/metrics/build_number_metric.dart';
+import 'package:metrics/features/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
+import 'package:metrics/features/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/features/dashboard/domain/usecases/receive_project_metrics_updates.dart';
@@ -12,7 +15,7 @@ import 'package:test/test.dart';
 void main() {
   group("ReceiveProjectMetricUpdates", () {
     const projectId = 'projectId';
-    const repository = MetricsRepositoryStubImpl();
+    final repository = MetricsRepositoryTestbed();
     final receiveProjectMetricsUpdates =
         ReceiveProjectMetricsUpdates(repository);
 
@@ -21,7 +24,7 @@ void main() {
     DashboardProjectMetrics projectMetrics;
 
     setUpAll(() async {
-      builds = MetricsRepositoryStubImpl.builds;
+      builds = MetricsRepositoryTestbed.testBuilds;
 
       projectMetrics =
           await receiveProjectMetricsUpdates(const ProjectIdParam(projectId))
@@ -52,7 +55,7 @@ void main() {
     test("loads build number metric", () {
       final timestamp = DateTime.now();
       final buildsLoadingStartDate = timestamp
-          .subtract(ReceiveProjectMetricsUpdates.buildsLoadingPeriod)
+          .subtract(ReceiveProjectMetricsUpdates.buildNumberLoadingPeriod)
           .date;
       final thisWeekBuilds = builds
           .where((build) => build.startedAt.isAfter(buildsLoadingStartDate));
@@ -77,7 +80,7 @@ void main() {
     test("loads coverage from last successful build", () {
       final actualCoverage = projectMetrics.coverage;
       final expectedCoverage =
-          MetricsRepositoryStubImpl.lastSuccessfulBuild.coverage;
+          MetricsRepositoryTestbed.lastSuccessfulBuild.coverage;
 
       expect(actualCoverage, expectedCoverage);
     });
@@ -91,10 +94,66 @@ void main() {
 
       expect(actualStability.value, expectedStabilityValue);
     });
+
+    test(
+      "creates empty project metrics if project has no builds",
+      () async {
+        final repository = MetricsRepositoryTestbed(builds: []);
+        final projectMetricsUpdates = ReceiveProjectMetricsUpdates(repository);
+        final projectMetricsStream = projectMetricsUpdates(
+          const ProjectIdParam(projectId),
+        );
+        final projectMetrics = await projectMetricsStream.first;
+
+        const expectedProjectMetrics = DashboardProjectMetrics(
+          projectId: projectId,
+          buildNumberMetrics: BuildNumberMetric(),
+          performanceMetrics: PerformanceMetric(),
+          buildResultMetrics: BuildResultMetric(),
+          coverage: Percent(0.0),
+          stability: Percent(0.0),
+        );
+
+        expect(projectMetrics, equals(expectedProjectMetrics));
+      },
+    );
+
+    test(
+      "creates project metrics with 0 coverage if there are no successful builds",
+      () async {
+        final builds = [
+          Build(
+            id: '1',
+            startedAt: DateTime.now(),
+            buildStatus: BuildStatus.failed,
+            duration: const Duration(minutes: 10),
+            coverage: const Percent(0.4),
+          ),
+          Build(
+            id: '2',
+            startedAt: DateTime.now(),
+            buildStatus: BuildStatus.cancelled,
+            duration: const Duration(minutes: 3),
+            coverage: const Percent(0.2),
+          ),
+        ];
+
+        final repository = MetricsRepositoryTestbed(builds: builds);
+        final projectMetricsUpdates = ReceiveProjectMetricsUpdates(repository);
+        final projectMetricsStream = projectMetricsUpdates(
+          const ProjectIdParam(projectId),
+        );
+        final projectMetrics = await projectMetricsStream.first;
+
+        const expectedCoverage = Percent(0.0);
+
+        expect(projectMetrics.coverage, expectedCoverage);
+      },
+    );
   });
 }
 
-class MetricsRepositoryStubImpl implements MetricsRepository {
+class MetricsRepositoryTestbed implements MetricsRepository {
   static const Project _project = Project(
     name: 'projectName',
     id: 'projectId',
@@ -108,7 +167,7 @@ class MetricsRepositoryStubImpl implements MetricsRepository {
     buildStatus: BuildStatus.cancelled,
   );
 
-  static final List<Build> builds = [
+  static final List<Build> testBuilds = [
     Build(
       id: '1',
       startedAt: DateTime.now(),
@@ -140,11 +199,15 @@ class MetricsRepositoryStubImpl implements MetricsRepository {
     ),
   ];
 
-  const MetricsRepositoryStubImpl();
+  List<Build> _builds;
+
+  MetricsRepositoryTestbed({List<Build> builds}) {
+    _builds = builds ?? testBuilds;
+  }
 
   @override
   Stream<List<Build>> latestProjectBuildsStream(String projectId, int limit) {
-    List<Build> latestBuilds = builds;
+    List<Build> latestBuilds = _builds;
 
     if (latestBuilds.length > limit) {
       latestBuilds = latestBuilds.sublist(0, limit);
@@ -157,7 +220,7 @@ class MetricsRepositoryStubImpl implements MetricsRepository {
   Stream<List<Build>> projectBuildsFromDateStream(
       String projectId, DateTime from) {
     return Stream.value(
-        builds.where((build) => build.startedAt.isAfter(from)).toList());
+        _builds.where((build) => build.startedAt.isAfter(from)).toList());
   }
 
   @override
@@ -167,6 +230,13 @@ class MetricsRepositoryStubImpl implements MetricsRepository {
 
   @override
   Stream<List<Build>> lastSuccessfulBuildStream(String projectId) {
+    final lastSuccessfulBuild = _builds.firstWhere(
+      (build) => build.buildStatus == BuildStatus.successful,
+      orElse: () => null,
+    );
+
+    if (lastSuccessfulBuild == null) return Stream.value([]);
+
     return Stream.value([lastSuccessfulBuild]);
   }
 }

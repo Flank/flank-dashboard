@@ -11,7 +11,7 @@ class ProjectMetricsData {
   final String projectName;
   final Percent coverage;
   final Percent stability;
-  final int numberOfBuilds;
+  final int buildNumberMetric;
   final int averageBuildDurationInMinutes;
   final List<Point<int>> performanceMetrics;
   final List<BuildResultBarData> buildResultMetrics;
@@ -22,7 +22,7 @@ class ProjectMetricsData {
   /// [projectName] is the name of the project these metrics belongs to.
   /// [coverage] is the tests code coverage of the project.
   /// [stability] is the percentage of the successful builds to total builds of the project.
-  /// [numberOfBuilds] is the number of builds the [buildNumberMetrics] are based on.
+  /// [buildNumberMetric] is the metric that represents the number of builds during the last 7 days.
   /// [averageBuildDurationInMinutes] is the average duration in minutes of the single build.
   /// [performanceMetrics] is metric that represents the duration of the builds.
   /// [buildResultMetrics] is the metric that represents the results of the builds.
@@ -31,7 +31,7 @@ class ProjectMetricsData {
     this.projectName,
     this.coverage,
     this.stability,
-    this.numberOfBuilds,
+    this.buildNumberMetric,
     this.averageBuildDurationInMinutes,
     this.performanceMetrics,
     this.buildResultMetrics,
@@ -43,7 +43,7 @@ class ProjectMetricsData {
     String projectName,
     Percent coverage,
     Percent stability,
-    int numberOfBuilds,
+    int buildNumberMetric,
     int averageBuildDurationInMinutes,
     List<Point<int>> performanceMetrics,
     List<BuildResultBarData> buildResultMetrics,
@@ -53,7 +53,7 @@ class ProjectMetricsData {
       projectName: projectName ?? this.projectName,
       coverage: coverage ?? this.coverage,
       stability: stability ?? this.stability,
-      numberOfBuilds: numberOfBuilds ?? this.numberOfBuilds,
+      buildNumberMetric: buildNumberMetric ?? this.buildNumberMetric,
       averageBuildDurationInMinutes:
           averageBuildDurationInMinutes ?? this.averageBuildDurationInMinutes,
       performanceMetrics: performanceMetrics ?? this.performanceMetrics,

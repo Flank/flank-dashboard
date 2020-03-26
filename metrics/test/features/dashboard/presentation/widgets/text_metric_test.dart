@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/titled_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart';
 
 void main() {
-  group("TitledText", () {
+  group("TextMetric", () {
     testWidgets(
       "can't be created with null title",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const TitledTextTestbed(
+        await tester.pumpWidget(const TextMetricTestbed(
           title: null,
+          value: 'value',
         ));
 
         expect(
@@ -22,8 +23,9 @@ void main() {
     testWidgets(
       "can't be created with null value",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const TitledTextTestbed(
+        await tester.pumpWidget(const TextMetricTestbed(
           value: null,
+          title: 'title',
         ));
 
         expect(
@@ -36,10 +38,10 @@ void main() {
     testWidgets(
       'displays the title and value texts',
       (WidgetTester tester) async {
-        await tester.pumpWidget(const TitledTextTestbed());
+        await tester.pumpWidget(const TextMetricTestbed());
 
-        expect(find.text(TitledTextTestbed.defaultTitleText), findsOneWidget);
-        expect(find.text(TitledTextTestbed.defaultValueText), findsOneWidget);
+        expect(find.text(TextMetricTestbed.defaultTitleText), findsOneWidget);
+        expect(find.text(TextMetricTestbed.defaultValueText), findsOneWidget);
       },
     );
 
@@ -49,16 +51,16 @@ void main() {
         const titleStyle = TextStyle(color: Colors.blue);
         const valueStyle = TextStyle(color: Colors.red);
 
-        await tester.pumpWidget(const TitledTextTestbed(
+        await tester.pumpWidget(const TextMetricTestbed(
           titleStyle: titleStyle,
           valueStyle: valueStyle,
         ));
 
         final titleWidget = tester.widget<Text>(
-          find.text(TitledTextTestbed.defaultTitleText),
+          find.text(TextMetricTestbed.defaultTitleText),
         );
         final valueWidget = tester.widget<Text>(
-          find.text(TitledTextTestbed.defaultValueText),
+          find.text(TextMetricTestbed.defaultValueText),
         );
 
         expect(titleWidget.style.color, titleStyle.color);
@@ -71,12 +73,12 @@ void main() {
       (WidgetTester tester) async {
         const valuePadding = EdgeInsets.all(8.0);
 
-        await tester.pumpWidget(const TitledTextTestbed(
+        await tester.pumpWidget(const TextMetricTestbed(
           valuePadding: valuePadding,
         ));
 
         final valuePaddingWidget = tester.widget<Padding>(
-          find.widgetWithText(Padding, TitledTextTestbed.defaultValueText),
+          find.widgetWithText(Padding, TextMetricTestbed.defaultValueText),
         );
 
         expect(valuePaddingWidget.padding, valuePadding);
@@ -85,7 +87,7 @@ void main() {
   });
 }
 
-class TitledTextTestbed extends StatelessWidget {
+class TextMetricTestbed extends StatelessWidget {
   static const defaultTitleText = 'title';
   static const defaultValueText = 'value';
 
@@ -95,7 +97,7 @@ class TitledTextTestbed extends StatelessWidget {
   final TextStyle valueStyle;
   final EdgeInsets valuePadding;
 
-  const TitledTextTestbed({
+  const TextMetricTestbed({
     Key key,
     this.title = defaultTitleText,
     this.value = defaultValueText,
@@ -108,7 +110,7 @@ class TitledTextTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: TitledText(
+        body: TextMetric(
           title: title,
           value: value,
           titleStyle: titleStyle,

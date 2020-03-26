@@ -111,7 +111,7 @@ class ProjectMetricsTileTestbed extends StatelessWidget {
     projectName: 'Test project name',
     coverage: Percent(0.0),
     stability: Percent(0.0),
-    numberOfBuilds: 0,
+    buildNumberMetric: 0,
     averageBuildDurationInMinutes: 0,
     performanceMetrics: [],
     buildResultMetrics: [],

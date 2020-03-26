@@ -1,10 +1,14 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_result.dart';
 
 /// Represents the build results metric entity.
 @immutable
-class BuildResultMetric {
+class BuildResultMetric extends Equatable {
   final List<BuildResult> buildResults;
+
+  @override
+  List<Object> get props => [buildResults];
 
   /// Creates the [BuildResultMetric].
   ///

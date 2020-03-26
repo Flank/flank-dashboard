@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/titled_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart';
 
 /// The widget with sparkline that represents metric.
 ///
@@ -109,7 +109,7 @@ class SparklineGraph extends StatelessWidget {
           ),
           Padding(
             padding: padding,
-            child: TitledText(
+            child: TextMetric(
               valuePadding: valuePadding,
               title: title,
               value: value,

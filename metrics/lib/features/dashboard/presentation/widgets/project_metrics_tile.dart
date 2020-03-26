@@ -8,7 +8,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/coverage_circle_
 import 'package:metrics/features/dashboard/presentation/widgets/loading_builder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/titled_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart';
 
 /// Displays the project name and it's metrics.
 class ProjectMetricsTile extends StatefulWidget {
@@ -65,8 +65,8 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                       builder: (_) => BuildResultBarGraph(
                         data: widget.projectMetrics.buildResultMetrics,
                         title: DashboardStrings.buildTaskName,
-                        numberOfBars:
-                            ReceiveProjectMetricsUpdates.numberOfLastBuilds,
+                        numberOfBars: ReceiveProjectMetricsUpdates
+                            .lastBuildsForChartsMetrics,
                       ),
                     ),
                   ),
@@ -85,14 +85,16 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   ),
                   Flexible(
                     child: LoadingBuilder(
-                      isLoading: widget.projectMetrics.numberOfBuilds == null,
+                      isLoading:
+                          widget.projectMetrics.buildNumberMetric == null,
                       builder: (_) {
                         return Card(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: TitledText(
+                            child: TextMetric(
                               title: DashboardStrings.builds,
-                              value: '${widget.projectMetrics.numberOfBuilds}',
+                              value:
+                                  '${widget.projectMetrics.buildNumberMetric}',
                             ),
                           ),
                         );

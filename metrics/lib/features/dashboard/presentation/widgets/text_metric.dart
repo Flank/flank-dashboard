@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
 
 /// The widget stands for displaying the [value] text with some [title].
-class TitledText extends StatelessWidget {
+class TextMetric extends StatelessWidget {
   final String title;
   final String value;
   final EdgeInsets valuePadding;
   final TextStyle valueStyle;
   final TextStyle titleStyle;
 
-  /// Creates the [TitledText] with given [title] and [value] texts.
+  /// Creates the [TextMetric] with given [title] and [value] texts.
   ///
   /// The [title] and [value] must not be null.
   ///
   /// [valuePadding] is the padding of the value text.
   /// [valueStyle] is the [TextStyle] of the value text.
   /// [titleStyle] is the [TextStyle] of the title text.
-  const TitledText({
+  const TextMetric({
     Key key,
     @required this.title,
     @required this.value,

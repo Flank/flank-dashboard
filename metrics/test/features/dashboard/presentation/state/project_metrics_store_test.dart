@@ -122,7 +122,7 @@ void main() {
     final firstProjectMetrics = actualProjectMetrics.first;
 
     expect(
-      firstProjectMetrics.numberOfBuilds,
+      firstProjectMetrics.buildNumberMetric,
       expectedBuildNumberMetrics.numberOfBuilds,
     );
   });
