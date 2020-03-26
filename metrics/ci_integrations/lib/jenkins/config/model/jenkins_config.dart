@@ -2,11 +2,11 @@ import 'package:meta/meta.dart';
 
 /// Represents the Jenkins CI config.
 class JenkinsConfig {
-  /// Jenkins building job name.
-  final String jobName;
-
   /// The url to the Jenkins instance.
   final String url;
+
+  /// Jenkins building job name.
+  final String jobName;
 
   /// The Jenkins account username.
   final String username;
@@ -16,7 +16,7 @@ class JenkinsConfig {
 
   /// Creates the [JenkinsConfig].
   ///
-  /// Throws an [ArgumentError] is [url] or [jobName] is null.
+  /// Throws an [ArgumentError] if [url] or [jobName] is null.
   JenkinsConfig({
     @required this.url,
     @required this.jobName,

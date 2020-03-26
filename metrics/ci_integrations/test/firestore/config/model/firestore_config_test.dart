@@ -6,7 +6,7 @@ void main() {
     "FirestoreConfig",
     () {
       test(
-        "can't be created when metricsProjectId or firestoreProjectId is null",
+        "can't be created when metricsProjectId or firebaseProjectId is null",
         () {
           expect(
             () => FirestoreConfig(
@@ -28,17 +28,17 @@ void main() {
       test(
         '.fromJson() creates instance of FirestoreModel from json encodable Map',
         () {
-          const firestoreProjectId = 'firestoreId';
+          const firebaseProjectId = 'firebaseId';
           const metricsProjectId = 'projectId';
 
           final firestoreConfigJson = {
-            'firebase_project_id': firestoreProjectId,
+            'firebase_project_id': firebaseProjectId,
             'metrics_project_id': metricsProjectId,
           };
 
           final firestoreConfig = FirestoreConfig.fromJson(firestoreConfigJson);
 
-          expect(firestoreConfig.firebaseProjectId, firestoreProjectId);
+          expect(firestoreConfig.firebaseProjectId, firebaseProjectId);
           expect(firestoreConfig.metricsProjectId, metricsProjectId);
         },
       );

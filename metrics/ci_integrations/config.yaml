@@ -6,5 +6,5 @@ source:
     job_name: test_project
 destination:
   firestore:
-    firebase_project_id: firestoreId
+    firebase_project_id: firebaseId
     metrics_project_id: id

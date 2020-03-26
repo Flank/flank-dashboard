@@ -44,9 +44,9 @@ void main() {
     test(
       ".fromJson() return null if null is passed",
       () {
-        final credentials = JenkinsConfig.fromJson(null);
+        final config = JenkinsConfig.fromJson(null);
 
-        expect(credentials, isNull);
+        expect(config, isNull);
       },
     );
   });

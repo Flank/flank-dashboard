@@ -3,7 +3,7 @@ import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
 import 'package:yaml_map/yaml_map.dart';
 
-/// The class needed to parse the CI configuration YAML.
+/// The class needed to parse the CI integrations configuration YAML.
 class CiIntegrationConfigParser {
   static const YamlMapParser _parser = YamlMapParser();
 
