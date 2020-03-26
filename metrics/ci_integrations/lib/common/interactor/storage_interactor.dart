@@ -1,8 +1,8 @@
 import 'package:metrics_core/metrics_core.dart';
 
 /// An abstract class providing methods for interactions between
-/// [Synchronizer] and Firestore database.
-abstract class FirestoreInteractor {
+/// [Synchronizer] and database.
+abstract class StorageInteractor {
   /// Fetches the last build for a project specified by [projectId].
   Future<BuildData> fetchLastBuild(String projectId);
 

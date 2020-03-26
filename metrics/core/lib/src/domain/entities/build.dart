@@ -5,6 +5,7 @@ import 'package:metrics_core/src/domain/entities/percent.dart';
 /// Represents a single finished build from CI.
 class Build extends Equatable {
   final String id;
+  final int buildNumber;
   final DateTime startedAt;
   final BuildStatus buildStatus;
   final Duration duration;
@@ -15,6 +16,7 @@ class Build extends Equatable {
   /// Creates the [Build].
   ///
   /// [id] is the unique identifier of this build.
+  /// [buildNumber] is the number of this build.
   /// [startedAt] is the date and time this build was started at.
   /// [buildStatus] is the resulting status of this build.
   /// [duration] is the duration of this build.
@@ -23,6 +25,7 @@ class Build extends Equatable {
   /// [coverage] is the project test coverage percent of this build.
   const Build({
     this.id,
+    this.buildNumber,
     this.startedAt,
     this.buildStatus,
     this.duration,
@@ -32,5 +35,6 @@ class Build extends Equatable {
   });
 
   @override
-  List<Object> get props => [startedAt, buildStatus, duration, workflowName];
+  List<Object> get props =>
+      [buildNumber, startedAt, buildStatus, duration, workflowName];
 }

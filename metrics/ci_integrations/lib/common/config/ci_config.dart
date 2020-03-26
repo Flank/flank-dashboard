@@ -4,6 +4,6 @@ abstract class CiConfig {
   /// Used to identify a project in CI it belongs to.
   String get ciProjectId;
 
-  /// Used to identify a project in Firestore database.
-  String get firestoreProjectId;
+  /// Used to identify a project in a database.
+  String get storageProjectId;
 }
