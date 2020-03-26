@@ -1,29 +1,29 @@
 import 'package:ci_integration/common/config/ci_config.dart';
-import 'package:ci_integration/common/interactor/ci_interactor.dart';
-import 'package:ci_integration/common/interactor/storage_interactor.dart';
+import 'package:ci_integration/common/client/ci_client.dart';
+import 'package:ci_integration/common/client/storage_client.dart';
 import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:meta/meta.dart';
 
 /// A class providing a synchronization algorithm for a project's builds
-/// performed on a CI tool and stored on the Firestore database.
-class Synchronizer {
+/// performed on a CI tool and stored in a database.
+class CiIntegration {
   /// Used to interact with a CI tool's API.
-  final CiInteractor ciInteractor;
+  final CiClient ciClient;
 
   /// Used to interact with a database.
-  final StorageInteractor storageInteractor;
+  final StorageClient storageClient;
 
-  /// Creates a [Synchronizer] instance with the given [ciInteractor]
-  /// and [storageInteractor].
+  /// Creates a [CiIntegration] instance with the given [ciClient]
+  /// and [storageClient].
   ///
-  /// Both interactors are required. Throws [ArgumentError] if either
-  /// [ciInteractor] or [storageInteractor] is `null`.
-  Synchronizer({
-    @required this.ciInteractor,
-    @required this.storageInteractor,
+  /// Both client are required. Throws [ArgumentError] if either
+  /// [ciClient] or [storageClient] is `null`.
+  CiIntegration({
+    @required this.ciClient,
+    @required this.storageClient,
   }) {
-    ArgumentError.checkNotNull(ciInteractor, 'ciInteractor');
-    ArgumentError.checkNotNull(storageInteractor, 'storageInteractor');
+    ArgumentError.checkNotNull(ciClient, 'ciClient');
+    ArgumentError.checkNotNull(storageClient, 'storageClient');
   }
 
   /// Synchronizes builds for a project specified in the given [config].
@@ -32,16 +32,16 @@ class Synchronizer {
       final ciProjectId = config.ciProjectId;
       final storageProjectId = config.storageProjectId;
 
-      final lastBuild = await storageInteractor.fetchLastBuild(
+      final lastBuild = await storageClient.fetchLastBuild(
         storageProjectId,
       );
-      final newBuilds = await ciInteractor.fetchBuildsAfter(
+      final newBuilds = await ciClient.fetchBuildsAfter(
         ciProjectId,
         lastBuild,
       );
 
       if (newBuilds != null && newBuilds.isNotEmpty) {
-        await storageInteractor.addBuilds(
+        await storageClient.addBuilds(
           storageProjectId,
           newBuilds,
         );

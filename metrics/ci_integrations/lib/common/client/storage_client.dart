@@ -1,8 +1,9 @@
+import 'package:ci_integration/common/ci_integration/ci_integration.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An abstract class providing methods for interactions between
-/// [Synchronizer] and database.
-abstract class StorageInteractor {
+/// [CiIntegration] and database.
+abstract class StorageClient {
   /// Fetches the last build for a project specified by [projectId].
   Future<BuildData> fetchLastBuild(String projectId);
 
