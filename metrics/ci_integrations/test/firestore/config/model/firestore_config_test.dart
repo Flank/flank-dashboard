@@ -52,9 +52,9 @@ void main() {
       test(
         ".fromJson() return null if null is passed",
         () {
-          final credentials = FirestoreConfig.fromJson(null);
+          final config = FirestoreConfig.fromJson(null);
 
-          expect(credentials, isNull);
+          expect(config, isNull);
         },
       );
     },
