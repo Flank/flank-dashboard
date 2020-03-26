@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:metrics_core/metrics_core.dart';
 
+/// A class providing deserialization methods for a [BuildData] model.
 class BuildDataDeserializer {
   /// Creates the [BuildData] instance from the [json] and it's [id].
   static BuildData fromJson(Map<String, dynamic> json, String id) {

@@ -1,5 +1,5 @@
-import 'package:metrics_core/src/model/data_model.dart';
-import 'package:metrics_core/src/entities/project.dart';
+import 'package:metrics_core/src/data/model/data_model.dart';
+import 'package:metrics_core/src/domain/entities/project.dart';
 
 /// [DataModel] that represents the [Project] entity.
 class ProjectData extends Project implements DataModel {

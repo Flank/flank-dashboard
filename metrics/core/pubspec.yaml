@@ -1,5 +1,5 @@
 name: metrics_core
-description: A package providing a base implementations for Mestrics applications to support code reuse.
+description: A package providing a base implementations for Metrics applications to support code reuse.
 
 environment:
   sdk: '>=2.7.0 <3.0.0'

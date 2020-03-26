@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:metrics_core/src/entities/build_status.dart';
-import 'package:metrics_core/src/entities/percent.dart';
+import 'package:metrics_core/src/domain/entities/build_status.dart';
+import 'package:metrics_core/src/domain/entities/percent.dart';
 
 /// Represents a single finished build from CI.
 class Build extends Equatable {
