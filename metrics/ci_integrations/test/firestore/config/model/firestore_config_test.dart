@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group(
-    "FirestoreModel",
+    "FirestoreConfig",
     () {
       test(
         "can't be created when metricsProjectId or firestoreProjectId is null",
@@ -11,13 +11,13 @@ void main() {
           expect(
             () => FirestoreConfig(
               metricsProjectId: 'id',
-              firestoreProjectId: null,
+              firebaseProjectId: null,
             ),
             throwsArgumentError,
           );
           expect(
             () => FirestoreConfig(
-              firestoreProjectId: 'id',
+              firebaseProjectId: 'id',
               metricsProjectId: null,
             ),
             throwsArgumentError,
@@ -32,13 +32,13 @@ void main() {
           const metricsProjectId = 'projectId';
 
           final firestoreConfigJson = {
-            'firestore_project_id': firestoreProjectId,
+            'firebase_project_id': firestoreProjectId,
             'metrics_project_id': metricsProjectId,
           };
 
           final firestoreConfig = FirestoreConfig.fromJson(firestoreConfigJson);
 
-          expect(firestoreConfig.firestoreProjectId, firestoreProjectId);
+          expect(firestoreConfig.firebaseProjectId, firestoreProjectId);
           expect(firestoreConfig.metricsProjectId, metricsProjectId);
         },
       );

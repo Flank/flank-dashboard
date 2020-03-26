@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group("CiIntegrationConfig", () {
     test(
-      "can't be creates when the source is null",
+      "can't be created when the source is null",
       () {
         expect(
           () => CiIntegrationConfig(
@@ -19,7 +19,7 @@ void main() {
     );
 
     test(
-      "can't be creates when the destination is null",
+      "can't be created when the destination is null",
       () {
         expect(
           () => CiIntegrationConfig(
@@ -49,7 +49,7 @@ class JenkinsConfigTestbed implements JenkinsConfig {
 
 class FirestoreConfigTestbed implements FirestoreConfig {
   @override
-  String get firestoreProjectId => null;
+  String get firebaseProjectId => null;
 
   @override
   String get metricsProjectId => null;

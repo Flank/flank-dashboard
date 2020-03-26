@@ -8,26 +8,29 @@ class FirestoreConfig {
 
   /// The firebase project identifier that defines which instance of
   /// firebase used to store loaded metrics.
-  final String firestoreProjectId;
+  final String firebaseProjectId;
 
   /// Creates the [FirestoreConfig] with the given [metricsProjectId].
   ///
   /// Throws the [ArgumentError] is the [metricsProjectId]
-  /// or [firestoreProjectId] is null.
+  /// or [firebaseProjectId] is null.
   FirestoreConfig({
     @required this.metricsProjectId,
-    @required this.firestoreProjectId,
+    @required this.firebaseProjectId,
   }) {
     ArgumentError.checkNotNull(metricsProjectId, 'metriccs_project_id');
-    ArgumentError.checkNotNull(firestoreProjectId, 'firestore_project_id');
+    ArgumentError.checkNotNull(firebaseProjectId, 'firebase_project_id');
   }
 
+  /// Creates [FirestoreConfig] from the decoded JSON object.
+  ///
+  /// Returns `null` if [json] is `null`.
   factory FirestoreConfig.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
     return FirestoreConfig(
       metricsProjectId: json['metrics_project_id'] as String,
-      firestoreProjectId: json['firestore_project_id'] as String,
+      firebaseProjectId: json['firebase_project_id'] as String,
     );
   }
 }

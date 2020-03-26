@@ -27,7 +27,9 @@ class JenkinsConfig {
     ArgumentError.checkNotNull(url, 'url');
   }
 
-  /// Creates [JenkinsConfig] from JSON encodable [Map].
+  /// Creates [JenkinsConfig] from the decoded JSON object.
+  ///
+  /// Returns `null` if [json] is `null`.
   factory JenkinsConfig.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
