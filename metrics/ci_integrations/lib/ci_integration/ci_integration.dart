@@ -5,12 +5,12 @@ import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:meta/meta.dart';
 
 /// A class providing a synchronization algorithm for a project's builds
-/// performed on a CI tool and stored in a database.
+/// performed on a CI tool and stored in a builds storage.
 class CiIntegration {
   /// Used to interact with a CI tool's API.
   final CiClient ciClient;
 
-  /// Used to interact with a database.
+  /// Used to interact with a builds storage.
   final StorageClient storageClient;
 
   /// Creates a [CiIntegration] instance with the given [ciClient]
@@ -35,6 +35,7 @@ class CiIntegration {
       final lastBuild = await storageClient.fetchLastBuild(
         storageProjectId,
       );
+
       final newBuilds = await ciClient.fetchBuildsAfter(
         ciProjectId,
         lastBuild,
