@@ -1,18 +1,18 @@
-import 'package:ci_integration/jenkins/client/model/jenkins_result.dart';
+import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("JenkinsResult", () {
+  group("InteractionResult", () {
     const errorMessage = 'Error';
     const successMessage = 'Hooray';
     const errorResult = -1;
     const successResult = 1;
 
-    const failed = JenkinsResult.error(
+    const failed = InteractionResult.error(
       message: errorMessage,
       result: errorResult,
     );
-    const success = JenkinsResult.success(
+    const success = InteractionResult.success(
       message: successMessage,
       result: successResult,
     );
