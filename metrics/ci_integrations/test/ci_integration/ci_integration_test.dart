@@ -121,6 +121,8 @@ void main() {
   });
 }
 
+/// A testbed class for a [CiConfig] abstract class providing required
+/// implementations.
 class CiConfigTestbed extends CiConfig {
   @override
   String get ciProjectId => 'ciProjectId';
@@ -129,10 +131,17 @@ class CiConfigTestbed extends CiConfig {
   String get storageProjectId => 'storageProjectId';
 }
 
+/// A testbed class for a [CiClient] abstract class providing test
+/// implementation for methods.
 class CiClientTestbed extends CiClient {
+  /// Callback used to replace the default [fetchBuildsAfter] method
+  /// implementation in testing purposes.
   final Future<List<BuildData>> Function(String, BuildData)
       fetchBuildsAfterCallback;
 
+  /// Creates a testbed instance.
+  ///
+  /// The [fetchBuildsAfterCallback] is optional.
   CiClientTestbed({
     this.fetchBuildsAfterCallback,
   });
@@ -159,10 +168,20 @@ class CiClientTestbed extends CiClient {
   }
 }
 
+/// A testbed class for a [StorageClient] abstract class providing test
+/// implementation for methods.
 class StorageClientTestbed extends StorageClient {
+  /// Callback used to replace the default [fetchLastBuild] method
+  /// implementation in testing purposes.
   final Future<BuildData> Function(String) fetchLastBuildCallback;
+
+  /// Callback used to replace the default [addBuilds] method
+  /// implementation in testing purposes.
   final Future<void> Function(String, List<BuildData>) addBuildsCallback;
 
+  /// Creates a testbed instance.
+  ///
+  /// Both [fetchLastBuildCallback] and [addBuildsCallback] are optional.
   StorageClientTestbed({
     this.fetchLastBuildCallback,
     this.addBuildsCallback,
