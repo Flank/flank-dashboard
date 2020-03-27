@@ -30,7 +30,7 @@ void main() {
               url: 'url',
               jobName: 'jobName',
               username: 'username',
-              password: 'password',
+              apiKey: 'key',
             ),
             destination: null,
           ),

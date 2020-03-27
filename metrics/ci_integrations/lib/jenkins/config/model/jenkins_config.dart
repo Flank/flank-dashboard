@@ -11,8 +11,8 @@ class JenkinsConfig {
   /// The Jenkins account username.
   final String username;
 
-  /// The Jenkins account password.
-  final String password;
+  /// The Jenkins account apiKey.
+  final String apiKey;
 
   /// Creates the [JenkinsConfig].
   ///
@@ -21,7 +21,7 @@ class JenkinsConfig {
     @required this.url,
     @required this.jobName,
     this.username,
-    this.password,
+    this.apiKey,
   }) {
     ArgumentError.checkNotNull(jobName, 'buildJobId');
     ArgumentError.checkNotNull(url, 'url');
@@ -37,7 +37,7 @@ class JenkinsConfig {
       url: json['url'] as String,
       jobName: json['job_name'] as String,
       username: json['username'] as String,
-      password: json['password'] as String,
+      apiKey: json['apiKey'] as String,
     );
   }
 }

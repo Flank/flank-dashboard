@@ -8,7 +8,7 @@ void main() {
         " jenkins:\n"
         "   url: url\n"
         "   username: user\n"
-        "   password: pass\n"
+        "   apiKey: apiKey\n"
         "   job_name: name\n";
 
     const destinationConfig = "destination:\n"
