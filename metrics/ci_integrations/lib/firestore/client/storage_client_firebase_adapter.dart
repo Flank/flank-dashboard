@@ -8,6 +8,10 @@ import 'package:metrics_core/metrics_core.dart';
 class StorageClientFirebaseAdapter extends StorageClient {
   final Firestore _firestore;
 
+  /// Creates a [StorageClientFirebaseAdapter] instance
+  /// with the given [Firestore]
+  ///
+  /// Throws [ArgumentError] if [Firestore] is `null`.
   StorageClientFirebaseAdapter(this._firestore) {
     ArgumentError.checkNotNull(_firestore, '_firestore');
   }
