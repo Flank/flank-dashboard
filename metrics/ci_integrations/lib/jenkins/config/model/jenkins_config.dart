@@ -11,7 +11,7 @@ class JenkinsConfig {
   /// The Jenkins account username.
   final String username;
 
-  /// The Jenkins account apiKey.
+  /// The Jenkins account API key.
   final String apiKey;
 
   /// Creates the [JenkinsConfig].
