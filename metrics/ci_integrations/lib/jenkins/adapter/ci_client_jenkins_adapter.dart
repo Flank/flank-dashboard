@@ -31,7 +31,7 @@ class JenkinsClientAdapter implements CiClient {
       limits: JenkinsQueryLimits.endBefore(0),
     );
 
-    _checkInteractionIsSuccessful(lastBuildFetchResult);
+    _throwIfInteractionUnsuccessful(lastBuildFetchResult);
 
     final lastBuild = lastBuildFetchResult.result.lastBuild;
     final numberOfBuilds = lastBuild.number - build.buildNumber;
@@ -51,7 +51,7 @@ class JenkinsClientAdapter implements CiClient {
   ///
   /// Throws [StateError] with the message of [interactionResult] if this
   /// result is [InteractionResult.isError].
-  void _checkInteractionIsSuccessful(InteractionResult interactionResult) {
+  void _throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
     if (interactionResult.isError) {
       throw StateError(interactionResult.message);
     }
@@ -73,7 +73,7 @@ class JenkinsClientAdapter implements CiClient {
     final newBuildsFetchResult =
         await jenkinsClient.fetchBuilds(projectId, limits: limits);
 
-    _checkInteractionIsSuccessful(newBuildsFetchResult);
+    _throwIfInteractionUnsuccessful(newBuildsFetchResult);
 
     final result = newBuildsFetchResult.result;
 
@@ -107,7 +107,7 @@ class JenkinsClientAdapter implements CiClient {
         coverageArtifact.relativePath,
       );
 
-      _checkInteractionIsSuccessful(artifactContentFetchResult);
+      _throwIfInteractionUnsuccessful(artifactContentFetchResult);
 
       final artifactContent = artifactContentFetchResult.result;
       coverage = CoverageJsonSummary.fromJson(artifactContent);
