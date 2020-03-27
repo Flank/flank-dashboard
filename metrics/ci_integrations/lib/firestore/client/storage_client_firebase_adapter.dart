@@ -8,7 +8,9 @@ import 'package:metrics_core/metrics_core.dart';
 class StorageClientFirebaseAdapter extends StorageClient {
   final Firestore _firestore;
 
-  StorageClientFirebaseAdapter(this._firestore);
+  StorageClientFirebaseAdapter(this._firestore) {
+    ArgumentError.checkNotNull(_firestore, '_firestore');
+  }
 
   @override
   Future<void> addBuilds(String projectId, List<BuildData> builds) async {
