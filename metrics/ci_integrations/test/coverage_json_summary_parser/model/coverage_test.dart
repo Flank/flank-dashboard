@@ -21,10 +21,10 @@ void main() {
       const percent = 30;
       const coverageJson = {'pct': percent};
       final expectedCoverage = Coverage(percent: const Percent(percent / 100));
-      
+
       final coverage = Coverage.fromJson(coverageJson);
 
-      expect(coverage, expectedCoverage);
+      expect(coverage, equals(expectedCoverage));
     });
   });
 }

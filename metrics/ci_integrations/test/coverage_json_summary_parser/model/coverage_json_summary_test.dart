@@ -34,7 +34,7 @@ void main() {
 
         final jsonSummary = CoverageJsonSummary.fromJson(coverageSummaryJson);
 
-        expect(jsonSummary, expectedJsonSummary);
+        expect(jsonSummary, equals(expectedJsonSummary));
       },
     );
 
@@ -43,7 +43,7 @@ void main() {
 
       final jsonSummary = CoverageJsonSummary.fromJson(const {});
 
-      expect(jsonSummary, expectedJsonSummary);
+      expect(jsonSummary, equals(expectedJsonSummary));
     });
   });
 }

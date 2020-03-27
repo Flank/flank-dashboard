@@ -8,7 +8,7 @@ void main() {
     test('.fromJson() returns null if json is null', () {
       final totalSummary = TotalCoverageSummary.fromJson(null);
 
-      expect(totalSummary, null);
+      expect(totalSummary, isNull);
     });
 
     test('.fromJson() creates a new instance from decoded JSON object', () {
@@ -25,14 +25,14 @@ void main() {
 
       final totalSummary = TotalCoverageSummary.fromJson(totalSummaryJson);
 
-      expect(totalSummary, expectedTotalSummary);
+      expect(totalSummary, equals(expectedTotalSummary));
     });
 
     test('.fromJson() creates an empty instance from the empty JSON', () {
       const expectedTotalSummary = TotalCoverageSummary();
       final totalSummary = TotalCoverageSummary.fromJson(const {});
 
-      expect(totalSummary, expectedTotalSummary);
+      expect(totalSummary, equals(expectedTotalSummary));
     });
   });
 }
