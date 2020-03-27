@@ -8,6 +8,10 @@ abstract class CiClient {
   /// which have been performed after the given [build].
   ///
   /// Returns `null` if a project with the given [projectId] is not found.
-  /// Returns all builds if [build] is `null`.
   Future<List<BuildData>> fetchBuildsAfter(String projectId, BuildData build);
+
+  /// Fetches a list with all builds for a project, identified by [projectId].
+  ///
+  /// Returns `null` if a project with the given [projectId] is not found.
+  Future<List<BuildData>> fetchBuilds(String projectId);
 }

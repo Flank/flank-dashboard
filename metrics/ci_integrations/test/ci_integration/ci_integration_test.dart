@@ -40,18 +40,40 @@ void main() {
       },
     );
 
-    test(".sync() should result with error if a ci client throws", () {
-      final ciClient = CiClientTestbed(
-        fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
-      );
-      final ciIntegration = CiIntegration(
-        ciClient: ciClient,
-        storageClient: defaultStorageClientTestbed,
-      );
-      final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
+    test(
+      ".sync() should result with error if a ci client throws fetching all builds",
+      () {
+        final ciClient = CiClientTestbed(
+          fetchBuildsCallback: (_) => throw UnimplementedError(),
+        );
+        final storageClient = StorageClientTestbed(
+          fetchLastBuildCallback: (_) => null,
+        );
+        final ciIntegration = CiIntegration(
+          ciClient: ciClient,
+          storageClient: storageClient,
+        );
+        final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
 
-      expect(result, completion(isTrue));
-    });
+        expect(result, completion(isTrue));
+      },
+    );
+
+    test(
+      ".sync() should result with error if a ci client throws fetching the builds after the given one",
+      () {
+        final ciClient = CiClientTestbed(
+          fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
+        );
+        final ciIntegration = CiIntegration(
+          ciClient: ciClient,
+          storageClient: defaultStorageClientTestbed,
+        );
+        final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
+
+        expect(result, completion(isTrue));
+      },
+    );
 
     test(
       ".sync() should result with error if a storage client throws fetching the last build",
@@ -123,7 +145,7 @@ void main() {
 
 /// A testbed class for a [CiConfig] abstract class providing required
 /// implementations.
-class CiConfigTestbed extends CiConfig {
+class CiConfigTestbed implements CiConfig {
   @override
   String get ciProjectId => 'ciProjectId';
 
@@ -133,17 +155,22 @@ class CiConfigTestbed extends CiConfig {
 
 /// A testbed class for a [CiClient] abstract class providing test
 /// implementation for methods.
-class CiClientTestbed extends CiClient {
+class CiClientTestbed implements CiClient {
   /// Callback used to replace the default [fetchBuildsAfter] method
   /// implementation in testing purposes.
   final Future<List<BuildData>> Function(String, BuildData)
       fetchBuildsAfterCallback;
+
+  /// Callback used to replace the default [fetchBuilds] method
+  /// implementation in testing purposes.
+  final Future<List<BuildData>> Function(String) fetchBuildsCallback;
 
   /// Creates a testbed instance.
   ///
   /// The [fetchBuildsAfterCallback] is optional.
   CiClientTestbed({
     this.fetchBuildsAfterCallback,
+    this.fetchBuildsCallback,
   });
 
   @override
@@ -151,26 +178,31 @@ class CiClientTestbed extends CiClient {
     if (fetchBuildsAfterCallback != null) {
       return fetchBuildsAfterCallback(projectId, build);
     } else {
-      List<BuildData> builds;
+      final builds = BuildsTestData.builds;
 
-      if (build == null) {
-        builds = BuildsTestData.builds;
-      } else {
-        final index = BuildsTestData.builds.indexWhere(
-          (b) => b.buildNumber == build.buildNumber,
-        );
-        builds = BuildsTestData.builds
-            .sublist(index == null || index == -1 ? 0 : index + 1);
-      }
+      final index = BuildsTestData.builds.indexWhere(
+        (b) => b.buildNumber == build.buildNumber,
+      );
+      final result =
+          builds.sublist(index == null || index == -1 ? 0 : index + 1);
 
-      return Future.value(builds);
+      return Future.value(result);
+    }
+  }
+
+  @override
+  Future<List<BuildData>> fetchBuilds(String projectId) {
+    if (fetchBuildsCallback != null) {
+      return fetchBuildsCallback(projectId);
+    } else {
+      return Future.value(BuildsTestData.builds);
     }
   }
 }
 
 /// A testbed class for a [StorageClient] abstract class providing test
 /// implementation for methods.
-class StorageClientTestbed extends StorageClient {
+class StorageClientTestbed implements StorageClient {
   /// Callback used to replace the default [fetchLastBuild] method
   /// implementation in testing purposes.
   final Future<BuildData> Function(String) fetchLastBuildCallback;

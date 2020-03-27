@@ -3,6 +3,7 @@ import 'package:ci_integration/common/client/ci_client.dart';
 import 'package:ci_integration/common/client/storage_client.dart';
 import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:meta/meta.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class providing a synchronization algorithm for a project's builds
 /// performed on a CI tool and stored in a builds storage.
@@ -32,20 +33,17 @@ class CiIntegration {
       final ciProjectId = config.ciProjectId;
       final storageProjectId = config.storageProjectId;
 
-      final lastBuild = await storageClient.fetchLastBuild(
-        storageProjectId,
-      );
+      final lastBuild = await storageClient.fetchLastBuild(storageProjectId);
 
-      final newBuilds = await ciClient.fetchBuildsAfter(
-        ciProjectId,
-        lastBuild,
-      );
+      List<BuildData> newBuilds;
+      if (lastBuild == null) {
+        newBuilds = await ciClient.fetchBuilds(ciProjectId);
+      } else {
+        newBuilds = await ciClient.fetchBuildsAfter(ciProjectId, lastBuild);
+      }
 
       if (newBuilds != null && newBuilds.isNotEmpty) {
-        await storageClient.addBuilds(
-          storageProjectId,
-          newBuilds,
-        );
+        await storageClient.addBuilds(storageProjectId, newBuilds);
         return const InteractionResult.success(
           message: 'The project has been updated successfully!',
         );
