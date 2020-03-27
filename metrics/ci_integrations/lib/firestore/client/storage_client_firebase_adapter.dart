@@ -29,14 +29,16 @@ class StorageClientFirebaseAdapter extends StorageClient {
     }
 
     final collection = _firestore.collection('build');
+    final futures = <Future>[];
     for (final build in builds) {
-      await collection.add(
+      futures.add(collection.add(
         build.toJson()
           ..addAll(
             {'projectId': project.id},
           ),
-      );
+      ));
     }
+    await Future.wait(futures);
   }
 
   @override
