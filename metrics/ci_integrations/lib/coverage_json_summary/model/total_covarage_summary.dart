@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 /// The class that represents the total code coverage summary of the project.
 class TotalCoverageSummary extends Equatable {
-  /// Coverage of the conditional statements.
+  /// Code coverage of all branches of the control flow graph.
   final Coverage branches;
 
   @override

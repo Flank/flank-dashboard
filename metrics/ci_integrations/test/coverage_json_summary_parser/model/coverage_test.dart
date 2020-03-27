@@ -1,4 +1,5 @@
 import 'package:ci_integration/coverage_json_summary/model/coverage.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -19,9 +20,11 @@ void main() {
     test('.fromJson() creates a new instance from decoded JSON object', () {
       const percent = 30;
       const coverageJson = {'pct': percent};
+      final expectedCoverage = Coverage(percent: const Percent(percent / 100));
+      
       final coverage = Coverage.fromJson(coverageJson);
 
-      expect(coverage.percent.value, percent / 100);
+      expect(coverage, expectedCoverage);
     });
   });
 }
