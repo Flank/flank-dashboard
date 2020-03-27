@@ -12,8 +12,8 @@ class UrlUtils {
     if (url == null) throw ArgumentError('URL must not be null');
 
     Uri uri = Uri.parse(url);
-    if (!uri.hasAuthority) {
-      throw const FormatException('URL should have authority component');
+    if (!uri.hasScheme) {
+      throw const FormatException('URL should have scheme component');
     }
 
     final _path = Uri.parse(path);
