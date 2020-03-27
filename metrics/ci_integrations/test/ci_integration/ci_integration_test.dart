@@ -11,16 +11,14 @@ import 'test_data/builds_test_data.dart';
 void main() {
   group("CiIntegration", () {
     final ciConfig = CiConfigTestbed();
-    final defaultCiClientTestbed = CiClientTestbed();
-    final defaultStorageClientTestbed = StorageClientTestbed();
 
     test(
-      "should throw ArgumentError trying to create an instance with null ci client",
+      "should throw ArgumentError trying to create an instance with null CI client",
       () {
         expect(
           () => CiIntegration(
             ciClient: null,
-            storageClient: defaultStorageClientTestbed,
+            storageClient: StorageClientTestbed(),
           ),
           throwsArgumentError,
         );
@@ -32,7 +30,7 @@ void main() {
       () {
         expect(
           () => CiIntegration(
-            ciClient: defaultCiClientTestbed,
+            ciClient: CiClientTestbed(),
             storageClient: null,
           ),
           throwsArgumentError,
@@ -41,7 +39,7 @@ void main() {
     );
 
     test(
-      ".sync() should result with error if a ci client throws fetching all builds",
+      ".sync() should result with error if a CI client throws fetching all builds",
       () {
         final ciClient = CiClientTestbed(
           fetchBuildsCallback: (_) => throw UnimplementedError(),
@@ -60,15 +58,12 @@ void main() {
     );
 
     test(
-      ".sync() should result with error if a ci client throws fetching the builds after the given one",
+      ".sync() should result with error if a CI client throws fetching the builds after the given one",
       () {
         final ciClient = CiClientTestbed(
           fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
         );
-        final ciIntegration = CiIntegration(
-          ciClient: ciClient,
-          storageClient: defaultStorageClientTestbed,
-        );
+        final ciIntegration = CiIntegrationTestbed(ciClient: ciClient);
         final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
@@ -81,8 +76,7 @@ void main() {
         final storageClient = StorageClientTestbed(
           fetchLastBuildCallback: (_) => throw UnimplementedError(),
         );
-        final ciIntegration = CiIntegration(
-          ciClient: defaultCiClientTestbed,
+        final ciIntegration = CiIntegrationTestbed(
           storageClient: storageClient,
         );
         final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
@@ -97,8 +91,7 @@ void main() {
         final storageClient = StorageClientTestbed(
           addBuildsCallback: (_, __) => throw UnimplementedError(),
         );
-        final ciIntegration = CiIntegration(
-          ciClient: defaultCiClientTestbed,
+        final ciIntegration = CiIntegrationTestbed(
           storageClient: storageClient,
         );
         final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
@@ -130,10 +123,7 @@ void main() {
     test(
       ".sync() should synchronize builds",
       () {
-        final ciIntegration = CiIntegration(
-          ciClient: defaultCiClientTestbed,
-          storageClient: defaultStorageClientTestbed,
-        );
+        final ciIntegration = CiIntegrationTestbed();
         final result =
             ciIntegration.sync(ciConfig).then((res) => res.isSuccess);
 
@@ -141,6 +131,25 @@ void main() {
       },
     );
   });
+}
+
+/// A testbed class for a [CiConfig] abstract class providing required
+/// implementations.
+class CiIntegrationTestbed extends CiIntegration {
+  final StorageClientTestbed _storageClientTestbed;
+  final CiClientTestbed _ciClientTestbed;
+
+  @override
+  StorageClient get storageClient => _storageClientTestbed;
+
+  @override
+  CiClient get ciClient => _ciClientTestbed;
+
+  CiIntegrationTestbed({
+    StorageClientTestbed storageClient,
+    CiClientTestbed ciClient,
+  })  : _storageClientTestbed = storageClient ?? StorageClientTestbed(),
+        _ciClientTestbed = ciClient ?? CiClientTestbed();
 }
 
 /// A testbed class for a [CiConfig] abstract class providing required
