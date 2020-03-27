@@ -28,13 +28,13 @@ void main() {
       () {
         const url = 'url';
         const username = 'username';
-        const password = 'password';
+        const apiKey = 'apiKey';
         const buildJobName = 'job_name';
 
         final jenkinsConfigJson = {
           'url': url,
           'username': username,
-          'password': password,
+          'apiKey': apiKey,
           'job_name': buildJobName,
         };
 
@@ -42,7 +42,7 @@ void main() {
 
         expect(jenkinsConfig.url, url);
         expect(jenkinsConfig.username, username);
-        expect(jenkinsConfig.password, password);
+        expect(jenkinsConfig.apiKey, apiKey);
         expect(jenkinsConfig.jobName, buildJobName);
       },
     );

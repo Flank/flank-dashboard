@@ -1,6 +1,6 @@
-import 'package:ci_integration/coverage_json_summary/model/coverage.dart';
-import 'package:ci_integration/coverage_json_summary/model/coverage_json_summary.dart';
-import 'package:ci_integration/coverage_json_summary/model/total_covarage_summary.dart';
+import 'package:ci_integration/coverage/coverage_json_summary/model/coverage.dart';
+import 'package:ci_integration/coverage/coverage_json_summary/model/coverage_json_summary.dart';
+import 'package:ci_integration/coverage/coverage_json_summary/model/total_covarage_summary.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 

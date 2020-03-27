@@ -1,4 +1,4 @@
-import 'package:ci_integration/coverage_json_summary/model/total_covarage_summary.dart';
+import 'package:ci_integration/coverage/coverage_json_summary/model/total_covarage_summary.dart';
 import 'package:equatable/equatable.dart';
 
 /// The class that represents the project coverage JSON-summary.
@@ -10,9 +10,7 @@ class CoverageJsonSummary extends Equatable {
   List<Object> get props => [total];
 
   /// Creates the [CoverageJsonSummary] with the given [total] summary.
-  const CoverageJsonSummary({
-    this.total,
-  });
+  const CoverageJsonSummary({this.total});
 
   /// Creates [CoverageJsonSummary] from the decoded JSON object.
   ///
