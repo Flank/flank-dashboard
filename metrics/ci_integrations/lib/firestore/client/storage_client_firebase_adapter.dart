@@ -9,7 +9,7 @@ class StorageClientFirebaseAdapter extends StorageClient {
   final Firestore _firestore;
 
   /// Creates a [StorageClientFirebaseAdapter] instance
-  /// with the given [Firestore]
+  /// with the given [Firestore].
   ///
   /// Throws [ArgumentError] if [Firestore] is `null`.
   StorageClientFirebaseAdapter(this._firestore) {
