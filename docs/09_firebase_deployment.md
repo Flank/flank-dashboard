@@ -59,7 +59,7 @@ Before you start, you should have the following installed:
 1. Go to [Firebase Console](https://console.firebase.google.com/), login if needed, and tap the `Add project` button.
 2. Enter a project name and tap the `Continue` to proceed.
 3. On the next page, select whether you want to use Firebase Analytics or not and click the `Continue`/`Create project` to proceed.
-4. If you choose to use Firebase Analytics in the previous step select a Firebase Analytics account if you are using one and tap the `Create project`. 
+4. If you choose to use Firebase Analytics in the previous step select a Firebase Analytics account and tap the `Create project`.
 
 After a couple of seconds, your project will be ready, and you'll be redirected to the project console.  
 Your next step will be to create a Firestore database: 
@@ -79,8 +79,8 @@ to be able to connect your web application with the Firestore database:
  left panel and select `Project settings`.
 2. Scroll down and find `There are no apps in your project` text,
  and tap on the `</>` icon to add a new Web application to your Firebase project.
-3. Choose the app nickname and check `Also set up Firebase Hosting for this app`.
-4. Enter the app nickname and make sure that `Also set up Firebase Hosting for this app` is checked.
+3. Enter the app nickname and make sure that `Also set up Firebase Hosting for this app` is checked.
+4. Select from the dropdown menu, or create a new site for your application and tap the `Register app` to proceed.
 5. Skip the `Configure Firebase SDK` step. We will return to Firebase SDK configuration a bit later in [Firebase SDK configuration](#Firebase-SDK-configuration).
 6. Tap on the `Next` button and follow instructions to install the Firebase CLI.
 7. Skip the `Deploy to Firebase Hosting` and tap on the `Continue to console` to finish configuring your Firebase Web application.
