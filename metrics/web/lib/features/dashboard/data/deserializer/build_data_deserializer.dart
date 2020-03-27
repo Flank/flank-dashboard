@@ -14,6 +14,7 @@ class BuildDataDeserializer {
 
     return BuildData(
       id: id,
+      buildNumber: json['buildNumber'] as int,
       startedAt: (json['startedAt'] as Timestamp).toDate(),
       buildStatus: buildStatus,
       duration: Duration(milliseconds: durationMilliseconds),

@@ -1,5 +1,5 @@
-/// A class containing a result for Jenkins API interaction.
-class JenkinsResult<T> {
+/// A class containing a result of an interaction.
+class InteractionResult<T> {
   /// Used to indicate that interaction is failed.
   final bool _isError;
 
@@ -17,19 +17,15 @@ class JenkinsResult<T> {
   /// Indicates if the interaction has finished successfully.
   bool get isSuccess => !_isError;
 
-  const JenkinsResult._(this._isError, this.message, this.result);
+  const InteractionResult._(this._isError, this.message, this.result);
 
-  /// Creates an instance representing a failed interaction with Jenkins API.
-  const JenkinsResult.error({
-    String message,
-    T result,
-  }) : this._(true, message, result);
+  /// Creates an instance representing a failed interaction.
+  const InteractionResult.error({String message, T result})
+      : this._(true, message, result);
 
-  /// Creates an instance representing a successful interaction with Jenkins API.
-  const JenkinsResult.success({
-    String message,
-    T result,
-  }) : this._(false, message, result);
+  /// Creates an instance representing a successful interaction.
+  const InteractionResult.success({String message, T result})
+      : this._(false, message, result);
 
   @override
   String toString() {

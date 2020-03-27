@@ -7,6 +7,7 @@ import 'package:metrics_core/src/domain/entities/percent.dart';
 class BuildData extends Build implements DataModel {
   const BuildData({
     String id,
+    int buildNumber,
     DateTime startedAt,
     BuildStatus buildStatus,
     Duration duration,
@@ -15,6 +16,7 @@ class BuildData extends Build implements DataModel {
     Percent coverage,
   }) : super(
           id: id,
+          buildNumber: buildNumber,
           startedAt: startedAt,
           buildStatus: buildStatus,
           duration: duration,
@@ -26,6 +28,7 @@ class BuildData extends Build implements DataModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      'buildNumber': buildNumber,
       'startedAt': startedAt,
       'buildStatus': buildStatus.index,
       'duration': duration.inMilliseconds,

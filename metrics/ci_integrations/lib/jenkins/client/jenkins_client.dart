@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:ci_integration/common/authorization/authorization.dart';
 import 'package:ci_integration/jenkins/client/constants/tree_query.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
@@ -8,13 +9,12 @@ import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart'
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
-import 'package:ci_integration/jenkins/client/model/jenkins_result.dart';
 import 'package:ci_integration/jenkins/client/util/url_utils.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
 /// A callback for parsing Jenkins API response body.
-typedef BodyParserCallback<T> = JenkinsResult<T> Function(
+typedef BodyParserCallback<T> = InteractionResult<T> Function(
   Map<String, dynamic> body,
 );
 
@@ -94,9 +94,9 @@ class JenkinsClient {
   /// Awaits [responseFuture] and handles the result. If either the provided
   /// future throws or [HttpResponse.statusCode] is not equal to
   /// [successStatusCode] (defaults to [HttpStatus.ok]) this method will
-  /// result with [JenkinsResult.error]. Otherwise, delegates parsing
+  /// result with [InteractionResult.error]. Otherwise, delegates parsing
   /// [Response.body] JSON to the [bodyParser] method.
-  Future<JenkinsResult<T>> _handleResponse<T>(
+  Future<InteractionResult<T>> _handleResponse<T>(
     Future<Response> responseFuture,
     BodyParserCallback<T> bodyParser,
   ) async {
@@ -110,13 +110,13 @@ class JenkinsClient {
         final reason = response.body == null || response.body.isEmpty
             ? response.reasonPhrase
             : response.body;
-        return JenkinsResult.error(
+        return InteractionResult.error(
           message: 'Failed to perform an operation with code '
               '${response.statusCode}. Reason: $reason',
         );
       }
     } catch (error) {
-      return JenkinsResult.error(
+      return InteractionResult.error(
         message: 'Failed to perform an operation. Error details: $error',
       );
     }
@@ -130,7 +130,7 @@ class JenkinsClient {
   ///
   /// If the desired job's full name is known, consider to use
   /// [fetchJobByFullName] method instead.
-  Future<JenkinsResult<JenkinsJob>> fetchJob(
+  Future<InteractionResult<JenkinsJob>> fetchJob(
     String name, {
     List<String> topLevelPipelines = const [],
   }) {
@@ -144,7 +144,7 @@ class JenkinsClient {
   /// following form: `<top-...-top-job>/.../<top-job>/<job>`. Unlike the
   /// [fetchJob] method, this one will parse [fullName] to detect top-level
   /// jobs and build a path to the desired job.
-  Future<JenkinsResult<JenkinsJob>> fetchJobByFullName(String fullName) {
+  Future<InteractionResult<JenkinsJob>> fetchJobByFullName(String fullName) {
     return _fetchJob(_jobFullNameToPath(fullName));
   }
 
@@ -152,7 +152,7 @@ class JenkinsClient {
   ///
   /// Both [fetchJob] and [fetchJobByFullName] delegate fetching job to this
   /// method.
-  Future<JenkinsResult<JenkinsJob>> _fetchJob(String path) {
+  Future<InteractionResult<JenkinsJob>> _fetchJob(String path) {
     final fullUrl = _buildJenkinsApiUrl(
       _jenkinsUrl,
       path: '$path/api/json',
@@ -161,7 +161,7 @@ class JenkinsClient {
 
     return _handleResponse<JenkinsJob>(
       _client.get(fullUrl, headers: headers),
-      (Map<String, dynamic> json) => JenkinsResult.success(
+      (Map<String, dynamic> json) => InteractionResult.success(
         result: JenkinsJob.fromJson(json),
       ),
     );
@@ -172,7 +172,7 @@ class JenkinsClient {
   /// Results with a list of [JenkinsJob]s.
   /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
   /// defaults to [JenkinsQueryLimits.empty].
-  Future<JenkinsResult<List<JenkinsJob>>> fetchJobs(
+  Future<InteractionResult<List<JenkinsJob>>> fetchJobs(
     String multiBranchJobFullName, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
@@ -190,7 +190,7 @@ class JenkinsClient {
   /// Results with a list of [JenkinsJob]s.
   /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
   /// defaults to [JenkinsQueryLimits.empty].
-  Future<JenkinsResult<List<JenkinsJob>>> fetchJobsByUrl(
+  Future<InteractionResult<List<JenkinsJob>>> fetchJobsByUrl(
     String multiBranchJobUrl, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
@@ -206,12 +206,12 @@ class JenkinsClient {
   ///
   /// Both [fetchJobs] and [fetchJobsByUrl] delegate fetching jobs to this
   /// method.
-  Future<JenkinsResult<List<JenkinsJob>>> _fetchJobs(String url) {
+  Future<InteractionResult<List<JenkinsJob>>> _fetchJobs(String url) {
     return _handleResponse<List<JenkinsJob>>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) {
         final list = json == null ? null : json['jobs'] as List<dynamic>;
-        return JenkinsResult.success(
+        return InteractionResult.success(
           result: JenkinsJob.listFromJson(list),
         );
       },
@@ -222,7 +222,7 @@ class JenkinsClient {
   ///
   /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
   /// defaults to [JenkinsQueryLimits.empty].
-  Future<JenkinsResult<JenkinsBuildingJob>> fetchBuilds(
+  Future<InteractionResult<JenkinsBuildingJob>> fetchBuilds(
     String buildingJobFullName, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
@@ -241,7 +241,7 @@ class JenkinsClient {
   ///
   /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
   /// defaults to [JenkinsQueryLimits.empty].
-  Future<JenkinsResult<JenkinsBuildingJob>> fetchBuildsByUrl(
+  Future<InteractionResult<JenkinsBuildingJob>> fetchBuildsByUrl(
     String buildingJobUrl, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
@@ -258,10 +258,10 @@ class JenkinsClient {
   ///
   /// Both [fetchBuilds] and [fetchBuildsByUrl] delegate fetching builds to this
   /// method.
-  Future<JenkinsResult<JenkinsBuildingJob>> _fetchBuilds(String url) {
+  Future<InteractionResult<JenkinsBuildingJob>> _fetchBuilds(String url) {
     return _handleResponse<JenkinsBuildingJob>(
       _client.get(url, headers: headers),
-      (Map<String, dynamic> json) => JenkinsResult.success(
+      (Map<String, dynamic> json) => InteractionResult.success(
         result: JenkinsBuildingJob.fromJson(json),
       ),
     );
@@ -272,7 +272,8 @@ class JenkinsClient {
   ///
   /// [limits] can be used to set the fetch limits (see [JenkinsQueryLimits]) -
   /// defaults to [JenkinsQueryLimits.empty].
-  Future<JenkinsResult<List<JenkinsBuildArtifact>>> fetchArtifactsByBuildUrl(
+  Future<InteractionResult<List<JenkinsBuildArtifact>>>
+      fetchArtifactsByBuildUrl(
     String buildUrl, {
     JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
   }) {
@@ -283,7 +284,7 @@ class JenkinsClient {
 
     return _handleResponse<List<JenkinsBuildArtifact>>(
       _client.get(url, headers: headers),
-      (Map<String, dynamic> json) => JenkinsResult.success(
+      (Map<String, dynamic> json) => InteractionResult.success(
         result: JenkinsBuildArtifact.listFromJson(
             json['artifacts'] as List<dynamic>),
       ),
@@ -292,7 +293,7 @@ class JenkinsClient {
 
   /// Retrieves the content of an artifact specified by the provided
   /// [relativePath] within the build specified by the provided [buildUrl].
-  Future<JenkinsResult<Map<String, dynamic>>> fetchArtifactByRelativePath(
+  Future<InteractionResult<Map<String, dynamic>>> fetchArtifactByRelativePath(
     String buildUrl,
     String relativePath,
   ) {
@@ -302,7 +303,7 @@ class JenkinsClient {
   }
 
   /// Retrieves the [buildArtifact]'s content generated during the [build].
-  Future<JenkinsResult<Map<String, dynamic>>> fetchArtifact(
+  Future<InteractionResult<Map<String, dynamic>>> fetchArtifact(
     JenkinsBuild build,
     JenkinsBuildArtifact buildArtifact,
   ) {
@@ -318,10 +319,10 @@ class JenkinsClient {
   ///
   /// Both [fetchArtifactByRelativePath] and [fetchArtifact] methods delegate
   /// fetching the artifact's content to this method.
-  Future<JenkinsResult<Map<String, dynamic>>> _fetchArtifact(String url) {
+  Future<InteractionResult<Map<String, dynamic>>> _fetchArtifact(String url) {
     return _handleResponse<Map<String, dynamic>>(
       _client.get(url, headers: headers),
-      (Map<String, dynamic> json) => JenkinsResult.success(result: json),
+      (Map<String, dynamic> json) => InteractionResult.success(result: json),
     );
   }
 
