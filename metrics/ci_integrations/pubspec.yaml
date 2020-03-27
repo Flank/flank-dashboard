@@ -11,6 +11,10 @@ dependencies:
   equatable: ^1.1.1
   metrics_core:
     path: ../core
+  yaml_map:
+    git:
+      url: https://github.com/software-platform/monorepo.git
+      path: yaml_map
 
 dev_dependencies:
   lint: ^1.1.1
