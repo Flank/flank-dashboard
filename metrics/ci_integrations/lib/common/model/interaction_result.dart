@@ -19,11 +19,11 @@ class InteractionResult<T> {
 
   const InteractionResult._(this._isError, this.message, this.result);
 
-  /// Creates an instance representing a failed interaction with Jenkins API.
+  /// Creates an instance representing a failed interaction.
   const InteractionResult.error({String message, T result})
       : this._(true, message, result);
 
-  /// Creates an instance representing a successful interaction with Jenkins API.
+  /// Creates an instance representing a successful interaction.
   const InteractionResult.success({String message, T result})
       : this._(false, message, result);
 
