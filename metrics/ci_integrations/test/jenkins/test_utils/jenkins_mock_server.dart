@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:api_mock_server/api_mock_server.dart';
-import 'package:ci_integration/jenkins/client/config/tree_query.dart';
+import 'package:ci_integration/jenkins/client/constants/tree_query.dart';
 import 'package:ci_integration/jenkins/client/jenkins_client.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
