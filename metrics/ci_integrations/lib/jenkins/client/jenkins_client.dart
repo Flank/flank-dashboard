@@ -9,7 +9,7 @@ import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart'
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
-import 'package:ci_integration/jenkins/client/util/url_utils.dart';
+import 'package:ci_integration/jenkins/util/url_utils.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
