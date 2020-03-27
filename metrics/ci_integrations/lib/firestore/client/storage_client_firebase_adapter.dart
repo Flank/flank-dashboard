@@ -2,6 +2,7 @@ import 'package:ci_integration/common/client/storage_client.dart';
 import 'package:ci_integration/common/deserializer/build_data_deserializer.dart';
 import 'package:firedart/firedart.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:grpc/grpc.dart';
 
 /// A class that provides methods for interactions between
 /// [CiIntegration] and Firebase builds storage.
@@ -18,27 +19,25 @@ class StorageClientFirebaseAdapter implements StorageClient {
 
   @override
   Future<void> addBuilds(String projectId, List<BuildData> builds) async {
-    final project = await _firestore
-        .collection('projects')
-        .document(projectId)
-        .get()
-        .catchError(print);
+    try {
+      final project =
+          await _firestore.collection('projects').document(projectId).get();
 
-    if (project == null) {
-      return;
+      final collection = _firestore.collection('build');
+      final futures = <Future>[];
+      for (final build in builds) {
+        futures.add(collection.add(
+          build.toJson()
+            ..addAll(
+              {'projectId': project.id},
+            ),
+        ));
+      }
+      await Future.wait(futures);
+    } on GrpcError catch (e) {
+      if (e.code == 5) return;
+      rethrow;
     }
-
-    final collection = _firestore.collection('build');
-    final futures = <Future>[];
-    for (final build in builds) {
-      futures.add(collection.add(
-        build.toJson()
-          ..addAll(
-            {'projectId': project.id},
-          ),
-      ));
-    }
-    await Future.wait(futures);
   }
 
   @override
@@ -50,9 +49,7 @@ class StorageClientFirebaseAdapter implements StorageClient {
         .limit(1)
         .getDocuments();
 
-    if (documents.isEmpty) {
-      return null;
-    }
+    if (documents.isEmpty) return null;
 
     final document = documents.first;
     return BuildDataDeserializer.fromJson(document.map, document.id);
