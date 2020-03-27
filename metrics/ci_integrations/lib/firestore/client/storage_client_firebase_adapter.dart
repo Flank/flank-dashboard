@@ -1,18 +1,34 @@
 import 'package:ci_integration/common/client/storage_client.dart';
+import 'package:ci_integration/common/deserializer/build_data_deserializer.dart';
 import 'package:firedart/firedart.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-class FirebaseClientAdapter extends StorageClient {
+/// A class that provides methods for interactions between
+/// [CiIntegration] and Firebase builds storage.
+class StorageClientFirebaseAdapter extends StorageClient {
   final Firestore _firestore;
 
-  FirebaseClientAdapter(this._firestore);
+  StorageClientFirebaseAdapter(this._firestore);
 
   @override
   Future<void> addBuilds(String projectId, List<BuildData> builds) async {
+    final project = await _firestore
+        .collection('projects')
+        .document(projectId)
+        .get()
+        .catchError(print);
+
+    if (project == null) {
+      return;
+    }
+
     final collection = _firestore.collection('build');
     for (final build in builds) {
       await collection.add(
-        build.toJson(),
+        build.toJson()
+          ..addAll(
+            {'projectId': project.id},
+          ),
       );
     }
   }
@@ -31,7 +47,7 @@ class FirebaseClientAdapter extends StorageClient {
           return null;
         } else {
           final document = documents.first;
-          return BuildData.fromJson(document.map, document.id);
+          return BuildDataDeserializer.fromJson(document.map, document.id);
         }
       },
     );
