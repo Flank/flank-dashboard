@@ -5,7 +5,7 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class that provides methods for interactions between
 /// [CiIntegration] and Firebase builds storage.
-class StorageClientFirebaseAdapter extends StorageClient {
+class StorageClientFirebaseAdapter implements StorageClient {
   final Firestore _firestore;
 
   /// Creates a [StorageClientFirebaseAdapter] instance
@@ -42,22 +42,19 @@ class StorageClientFirebaseAdapter extends StorageClient {
   }
 
   @override
-  Future<BuildData> fetchLastBuild(String projectId) {
-    return _firestore
+  Future<BuildData> fetchLastBuild(String projectId) async {
+    final documents = await _firestore
         .collection('build')
         .where('projectId', isEqualTo: projectId)
         .orderBy('startedAt', descending: true)
         .limit(1)
-        .getDocuments()
-        .then(
-      (documents) {
-        if (documents.isEmpty) {
-          return null;
-        } else {
-          final document = documents.first;
-          return BuildDataDeserializer.fromJson(document.map, document.id);
-        }
-      },
-    );
+        .getDocuments();
+
+    if (documents.isEmpty) {
+      return null;
+    }
+
+    final document = documents.first;
+    return BuildDataDeserializer.fromJson(document.map, document.id);
   }
 }
