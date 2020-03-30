@@ -3,19 +3,20 @@ import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:ci_integration/coverage_json_summary/model/coverage_json_summary.dart';
 import 'package:ci_integration/jenkins/client/jenkins_client.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
 import 'package:ci_integration/jenkins/util/jenkins_util.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for [JenkinsClient] to fit [CiClient] contract.
-class JenkinsClientAdapter implements CiClient {
+class JenkinsCiClientAdapter implements CiClient {
   /// A Jenkins client instance used to perform API calls.
   final JenkinsClient jenkinsClient;
 
   /// Creates an instance of this adapter with the given [jenkinsClient].
   ///
   /// Throws [ArgumentError] if the given Jenkins client is `null`.
-  JenkinsClientAdapter(this.jenkinsClient) {
+  JenkinsCiClientAdapter(this.jenkinsClient) {
     ArgumentError.checkNotNull(jenkinsClient, 'jenkinsClient');
   }
 
@@ -26,25 +27,58 @@ class JenkinsClientAdapter implements CiClient {
   ) async {
     ArgumentError.checkNotNull(build, 'build');
 
-    final lastBuildFetchResult = await jenkinsClient.fetchBuilds(
+    final buildingJob = await _fetchBuilds(
       projectId,
       limits: JenkinsQueryLimits.endBefore(0),
     );
+    final lastBuild = buildingJob.lastBuild;
+    int numberOfBuilds = lastBuild.number - build.buildNumber;
 
-    _throwIfInteractionUnsuccessful(lastBuildFetchResult);
+    if (numberOfBuilds <= 0) return [];
 
-    final lastBuild = lastBuildFetchResult.result.lastBuild;
-    final numberOfBuilds = lastBuild.number - build.buildNumber;
-    return _fetchBuilds(
-      projectId,
-      limits: JenkinsQueryLimits.endBefore(numberOfBuilds),
+    List<JenkinsBuild> builds;
+    while (builds == null) {
+      final buildingJob = await _fetchBuilds(
+        projectId,
+        limits: JenkinsQueryLimits.endAt(numberOfBuilds),
+      );
+      final _lastOfFetched = buildingJob.builds.last;
+      final difference = _lastOfFetched.number - build.buildNumber;
+
+      if (difference <= 0) {
+        builds = buildingJob.builds;
+      } else {
+        numberOfBuilds += difference;
+      }
+    }
+
+    return _processJenkinsBuilds(
+      builds,
+      buildingJob.name,
       startFromBuildNumber: build.buildNumber,
     );
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String projectId) {
-    return _fetchBuilds(projectId);
+  Future<List<BuildData>> fetchBuilds(String projectId) async {
+    final buildingJob = await _fetchBuilds(projectId);
+    return _processJenkinsBuilds(
+      buildingJob.builds,
+      buildingJob.name,
+    );
+  }
+
+  /// Fetches builds data for the project with given [projectId].
+  ///
+  /// The [limits] can be used to set a range-specifier for the request.
+  Future<JenkinsBuildingJob> _fetchBuilds(
+    String projectId, {
+    JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
+  }) async {
+    final newBuildsFetchResult =
+        await jenkinsClient.fetchBuilds(projectId, limits: limits);
+    _throwIfInteractionUnsuccessful(newBuildsFetchResult);
+    return newBuildsFetchResult.result;
   }
 
   /// Checks the given [interactionResult] to be [InteractionResult.isSuccess].
@@ -57,41 +91,41 @@ class JenkinsClientAdapter implements CiClient {
     }
   }
 
-  /// Fetches builds for the project with given [projectId].
+  /// Processes the given [builds] to the list of [BuildData]s.
   ///
-  /// The [limits] can be used to set a range-specifier for the request.
+  /// The [jobName] is used to identify a building job for the builds.
   /// The [startFromBuildNumber] is used to filter builds which number is less
   /// than or equal to this value. This allows to avoid fetching old builds
   /// since the range specifier in Jenkins API only provides ability to set
-  /// fetch limits but not to filter data to fetch. The [startFromBuildNumber]
-  /// is ignored if `null` or [num.isNegative].
-  Future<List<BuildData>> _fetchBuilds(
-    String projectId, {
-    JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
+  /// fetch limits but not to filter data to fetch.
+  Future<List<BuildData>> _processJenkinsBuilds(
+    List<JenkinsBuild> builds,
+    String jobName, {
     int startFromBuildNumber,
-  }) async {
-    final newBuildsFetchResult =
-        await jenkinsClient.fetchBuilds(projectId, limits: limits);
-
-    _throwIfInteractionUnsuccessful(newBuildsFetchResult);
-
-    final result = newBuildsFetchResult.result;
-
-    final buildDataFutures = result.builds
-        .where((build) =>
-            startFromBuildNumber == null ||
-            startFromBuildNumber.isNegative ||
-            build.number > startFromBuildNumber)
-        .map((build) => _mapJenkinsBuild(result.name, build));
+  }) {
+    final buildDataFutures = builds
+        .where((build) => _checkBuild(build, startFromBuildNumber))
+        .map((build) => _mapJenkinsBuild(build, jobName));
 
     return Future.wait(buildDataFutures);
+  }
+
+  /// Checks a [build] to be not [JenkinsBuild.building] and
+  /// satisfy a [minBuildNumber] parameter.
+  ///
+  /// The [minBuildNumber] is ignored if `null` or [num.isNegative].
+  bool _checkBuild(JenkinsBuild build, int minBuildNumber) {
+    final buildNumberValid = minBuildNumber == null ||
+        minBuildNumber.isNegative ||
+        build.number > minBuildNumber;
+    return !build.building && buildNumberValid;
   }
 
   /// Maps [jenkinsBuild] to the [BuildData] instance with coverage
   /// data fetching.
   Future<BuildData> _mapJenkinsBuild(
-    String jobName,
     JenkinsBuild jenkinsBuild,
+    String jobName,
   ) async {
     final coverageArtifact = jenkinsBuild.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',

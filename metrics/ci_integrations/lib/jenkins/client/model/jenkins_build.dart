@@ -21,6 +21,9 @@ class JenkinsBuild extends Equatable {
   /// A link to access this build in Jenkins.
   final String url;
 
+  /// A flag that indicates whether this build is in progress or not.
+  final bool building;
+
   /// A list of [JenkinsBuildArtifact]s generated during the build.
   final List<JenkinsBuildArtifact> artifacts;
 
@@ -34,6 +37,7 @@ class JenkinsBuild extends Equatable {
     this.timestamp,
     this.result,
     this.url,
+    this.building,
     this.artifacts,
   });
 
@@ -56,6 +60,7 @@ class JenkinsBuild extends Equatable {
       timestamp: timestamp,
       result: json['result'] as String,
       url: json['url'] as String,
+      building: json['building'] as bool,
       artifacts: JenkinsBuildArtifact.listFromJson(
         json['artifacts'] as List<dynamic>,
       ),
