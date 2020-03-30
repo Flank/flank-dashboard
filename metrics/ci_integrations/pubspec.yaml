@@ -9,6 +9,10 @@ dependencies:
   http: ^0.12.0+4
   meta: ^1.1.8
   equatable: ^1.1.1
+  firedart:
+    git:
+      url: https://github.com/software-platform/firedart.git
+      ref: partial-change
   metrics_core:
     path: ../core
   yaml_map:
