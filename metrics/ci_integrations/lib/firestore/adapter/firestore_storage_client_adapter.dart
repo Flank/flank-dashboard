@@ -35,7 +35,7 @@ class FirestoreStorageClientAdapter implements StorageClient {
       }
       await Future.wait(futures);
     } on GrpcError catch (e) {
-      if (e.code == 5) return;
+      if (e.code == StatusCode.notFound) return;
       rethrow;
     }
   }
