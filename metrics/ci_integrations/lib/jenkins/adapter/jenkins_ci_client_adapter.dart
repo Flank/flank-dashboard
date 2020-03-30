@@ -44,8 +44,8 @@ class JenkinsCiClientAdapter implements CiClient {
       );
 
       final _builds = buildingJob.builds;
-      if (_builds.first.number == buildingJob.firstBuild.number ||
-          _builds.isEmpty) {
+      if (_builds.isEmpty ||
+          _builds.first.number == buildingJob.firstBuild.number) {
         builds = _builds;
       } else {
         final _earliestBuild = _builds.first;
