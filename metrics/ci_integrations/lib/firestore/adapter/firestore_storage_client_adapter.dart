@@ -1,5 +1,5 @@
 import 'package:ci_integration/common/client/storage_client.dart';
-import 'package:ci_integration/common/deserializer/build_data_deserializer.dart';
+import 'package:ci_integration/firestore/deserializer/build_data_deserializer.dart';
 import 'package:firedart/firedart.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:grpc/grpc.dart';
