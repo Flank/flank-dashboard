@@ -3,9 +3,9 @@ import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:ci_integration/coverage_json_summary/model/coverage_json_summary.dart';
 import 'package:ci_integration/jenkins/client/jenkins_client.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build_result.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
-import 'package:ci_integration/jenkins/util/jenkins_util.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for [JenkinsClient] to fit [CiClient] contract.
@@ -44,9 +44,8 @@ class JenkinsCiClientAdapter implements CiClient {
       );
 
       final _builds = buildingJob.builds;
-      if (_builds.isEmpty) {
-        builds = [];
-      } else if (_builds.first.number == buildingJob.firstBuild.number) {
+      if (_builds.first.number == buildingJob.firstBuild.number ||
+          _builds.isEmpty) {
         builds = _builds;
       } else {
         final _earliestBuild = _builds.first;
@@ -112,7 +111,8 @@ class JenkinsCiClientAdapter implements CiClient {
     int startFromBuildNumber,
   }) {
     final buildDataFutures = builds
-        .where((build) => _checkBuild(build, startFromBuildNumber))
+        .where((build) =>
+            _checkBuildFinishedAndInRange(build, startFromBuildNumber))
         .map((build) => _mapJenkinsBuild(build, jobName));
 
     return Future.wait(buildDataFutures);
@@ -122,7 +122,7 @@ class JenkinsCiClientAdapter implements CiClient {
   /// satisfy a [minBuildNumber] parameter.
   ///
   /// The [minBuildNumber] is ignored if `null` or [num.isNegative].
-  bool _checkBuild(JenkinsBuild build, int minBuildNumber) {
+  bool _checkBuildFinishedAndInRange(JenkinsBuild build, int minBuildNumber) {
     final buildNumberValid = minBuildNumber == null ||
         minBuildNumber.isNegative ||
         build.number > minBuildNumber;
@@ -158,11 +158,25 @@ class JenkinsCiClientAdapter implements CiClient {
     return BuildData(
       buildNumber: jenkinsBuild.number,
       startedAt: jenkinsBuild.timestamp,
-      buildStatus: JenkinsUtil.mapJenkinsBuildResult(jenkinsBuild.result),
+      buildStatus: _mapJenkinsBuildResult(jenkinsBuild.result),
       duration: jenkinsBuild.duration,
       workflowName: jobName,
       url: jenkinsBuild.url,
       coverage: coverage?.total?.branches?.percent,
     );
+  }
+
+  /// Maps the [result] of [JenkinsBuild] to the [BuildStatus].
+  BuildStatus _mapJenkinsBuildResult(JenkinsBuildResult result) {
+    switch (result) {
+      case JenkinsBuildResult.aborted:
+        return BuildStatus.cancelled;
+      case JenkinsBuildResult.unstable:
+        return BuildStatus.successful;
+      case JenkinsBuildResult.success:
+        return BuildStatus.successful;
+      default:
+        return BuildStatus.failed;
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:ci_integration/jenkins/client/constants/tree_query.dart';
 import 'package:ci_integration/jenkins/client/jenkins_client.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build_result.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_multi_branch_job.dart';
@@ -117,14 +118,14 @@ class JenkinsMockServer extends ApiMockServer {
         number: 1,
         duration: const Duration(),
         timestamp: DateTime(2000),
-        result: 'FAILURE',
+        result: JenkinsBuildResult.failure,
         artifacts: const [],
       );
       final lastBuild = JenkinsBuild(
         number: 2,
         duration: const Duration(),
         timestamp: DateTime(2000),
-        result: 'SUCCESS',
+        result: JenkinsBuildResult.success,
         artifacts: const [
           JenkinsBuildArtifact(
             fileName: 'coverage.json',

@@ -1,5 +1,7 @@
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build_result.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
+import 'package:ci_integration/jenkins/util/jenkins_util.dart';
 import 'package:equatable/equatable.dart';
 
 /// A class representing a single Jenkins build.
@@ -16,7 +18,7 @@ class JenkinsBuild extends Equatable {
   final DateTime timestamp;
 
   /// A result of this build.
-  final String result;
+  final JenkinsBuildResult result;
 
   /// A link to access this build in Jenkins.
   final String url;
@@ -53,12 +55,13 @@ class JenkinsBuild extends Equatable {
     final duration = json['duration'] == null
         ? null
         : Duration(seconds: json['duration'] as int);
+    final result = JenkinsUtil.mapJenkinsBuildResult(json['result'] as String);
 
     return JenkinsBuild(
       number: json['number'] as int,
       duration: duration,
       timestamp: timestamp,
-      result: json['result'] as String,
+      result: result,
       url: json['url'] as String,
       building: json['building'] as bool,
       artifacts: JenkinsBuildArtifact.listFromJson(
@@ -82,7 +85,7 @@ class JenkinsBuild extends Equatable {
       'number': number,
       'duration': duration?.inSeconds,
       'timestamp': timestamp?.millisecondsSinceEpoch,
-      'result': result,
+      'result': JenkinsUtil.unmapJenkinsBuildResult(result),
       'url': url,
       'artifacts': artifacts?.map((a) => a.toJson())?.toList()
     };
