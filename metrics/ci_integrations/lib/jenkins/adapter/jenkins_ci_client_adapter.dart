@@ -42,13 +42,21 @@ class JenkinsCiClientAdapter implements CiClient {
         projectId,
         limits: JenkinsQueryLimits.endAt(numberOfBuilds),
       );
-      final _lastOfFetched = buildingJob.builds.last;
-      final difference = _lastOfFetched.number - build.buildNumber;
 
-      if (difference <= 0) {
-        builds = buildingJob.builds;
+      final _builds = buildingJob.builds;
+      if (_builds.isEmpty) {
+        builds = [];
+      } else if (_builds.first.number == buildingJob.firstBuild.number) {
+        builds = _builds;
       } else {
-        numberOfBuilds += difference;
+        final _earliestBuild = _builds.first;
+        final difference = _earliestBuild.number - build.buildNumber;
+
+        if (difference <= 0) {
+          builds = buildingJob.builds;
+        } else {
+          numberOfBuilds += difference;
+        }
       }
     }
 

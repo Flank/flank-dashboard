@@ -273,7 +273,7 @@ void main() {
         final expected = JenkinsBuildingJob(
           name: 'master',
           fullName: 'test/master',
-          builds: [lastBuild, firstBuild],
+          builds: [firstBuild, lastBuild],
           firstBuild: firstBuild,
           lastBuild: lastBuild,
         );
@@ -322,7 +322,7 @@ void main() {
         final expected = JenkinsBuildingJob(
           name: 'master',
           fullName: 'test/master',
-          builds: [lastBuild, firstBuild],
+          builds: [firstBuild, lastBuild],
           firstBuild: firstBuild,
           lastBuild: lastBuild,
         );

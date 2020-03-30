@@ -261,9 +261,12 @@ class JenkinsClient {
   Future<InteractionResult<JenkinsBuildingJob>> _fetchBuilds(String url) {
     return _handleResponse<JenkinsBuildingJob>(
       _client.get(url, headers: headers),
-      (Map<String, dynamic> json) => InteractionResult.success(
-        result: JenkinsBuildingJob.fromJson(json),
-      ),
+      (Map<String, dynamic> json) {
+        json['builds'] = (json['builds'] as List<dynamic>)?.reversed?.toList();
+        return InteractionResult.success(
+          result: JenkinsBuildingJob.fromJson(json),
+        );
+      },
     );
   }
 
