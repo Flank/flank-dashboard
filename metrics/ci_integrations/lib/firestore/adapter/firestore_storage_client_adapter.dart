@@ -5,15 +5,15 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:grpc/grpc.dart';
 
 /// A class that provides methods for interactions between
-/// [CiIntegration] and Firebase builds storage.
-class StorageClientFirebaseAdapter implements StorageClient {
+/// [CiIntegration] and Firestore builds storage.
+class FirestoreStorageClientAdapter implements StorageClient {
   final Firestore _firestore;
 
-  /// Creates a [StorageClientFirebaseAdapter] instance
+  /// Creates a [FirestoreStorageClientAdapter] instance
   /// with the given [Firestore].
   ///
   /// Throws [ArgumentError] if [Firestore] is `null`.
-  StorageClientFirebaseAdapter(this._firestore) {
+  FirestoreStorageClientAdapter(this._firestore) {
     ArgumentError.checkNotNull(_firestore, '_firestore');
   }
 
@@ -22,9 +22,9 @@ class StorageClientFirebaseAdapter implements StorageClient {
     try {
       final project =
           await _firestore.collection('projects').document(projectId).get();
-
       final collection = _firestore.collection('build');
       final futures = <Future>[];
+
       for (final build in builds) {
         futures.add(collection.add(
           build.toJson()
