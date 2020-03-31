@@ -1,5 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 
 class AuthForm extends StatefulWidget {
   @override
@@ -65,15 +67,22 @@ class _AuthFormState extends State<AuthForm> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                RaisedButton(
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      print('login');
-                      print('email is ${_emailController.text}');
-                      print('password is ${_passwordController.text}');
-                    }
+                StateBuilder(
+                  models: [Injector.getAsReactive<UserMetricsStore>()],
+                  builder: (BuildContext context, userMetricsStore) {
+                    return RaisedButton(
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          userMetricsStore.state
+                              .signInWithEmailAndPassword(_emailController.text,
+                                  _passwordController.text)
+                              .then((value) =>
+                                  Navigator.pushNamed(context, '/dashboard'));
+                        }
+                      },
+                      child: const Text('Sign in'),
+                    );
                   },
-                  child: const Text('Sign in'),
                 ),
               ],
             ),

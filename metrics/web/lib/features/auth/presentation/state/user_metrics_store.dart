@@ -2,21 +2,21 @@ import 'package:metrics/features/auth/data/repositories/user_repository_impl.dar
 import 'package:metrics/features/auth/domain/entities/user.dart';
 
 class UserMetricsStore {
-  final UserRepositoryImpl userRepository;
+  final UserRepositoryImpl userRepositoryImpl;
   User user;
 
-  UserMetricsStore({this.userRepository});
+  UserMetricsStore({this.userRepositoryImpl});
 
   Future<void> currentUser() async {
-    user = await userRepository.currentUser();
+    user = await userRepositoryImpl.currentUser();
   }
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    user = await userRepository.signInWithEmailAndPassword(email, password);
+    user = await userRepositoryImpl.signInWithEmailAndPassword(email, password);
   }
 
   Future<void> signOut() async {
-    await userRepository.signOut();
+    await userRepositoryImpl.signOut();
     user = null;
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/service/user_service.dart';
+import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
 import 'package:metrics/features/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
@@ -24,18 +24,18 @@ class _MyAppState extends State<MyApp> {
         builder: (context, store) {
           final isDark = store?.isDark ?? true;
 
-          return WhenRebuilder<UserService>(
-            models: [Injector.getAsReactive<UserService>()],
+          return WhenRebuilder<UserMetricsStore>(
+            models: [Injector.getAsReactive<UserMetricsStore>()],
             onWaiting: () => const LoadingPlaceholder(),
             onIdle: () => const LoadingPlaceholder(),
             onError: (error) => PagePlaceholder(
                 text: CommonStrings.getLoadingErrorMessage('$error')),
-            onData: (UserService userService) {
+            onData: (UserMetricsStore userMetricsStore) {
               return MaterialApp(
                 title: 'Metrics',
                 initialRoute: '/',
-                onGenerateRoute: (settings) =>
-                    RouteGenerator.generateRoute(settings, userService.user),
+                onGenerateRoute: (settings) => RouteGenerator.generateRoute(
+                    settings, userMetricsStore.user),
                 theme: ThemeData(
                   brightness: isDark ? Brightness.dark : Brightness.light,
                   primarySwatch: Colors.teal,

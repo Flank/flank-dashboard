@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:metrics/features/auth/data/repositories/user_repository_impl.dart';
-import 'package:metrics/features/auth/service/user_service.dart';
+import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
@@ -44,8 +44,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
               _receiveProjectUpdates,
               _receiveProjectMetricsUpdates,
             )),
-        Inject<UserService>(
-            () => UserService(userRepository: _userRepositoryImpl)),
+        Inject<UserMetricsStore>(
+            () => UserMetricsStore(userRepositoryImpl: _userRepositoryImpl)),
         Inject<ThemeStore>(() => ThemeStore()),
       ],
       dispose: _dispose,
@@ -64,7 +64,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       (store) => store.isDark = true,
       catchError: true,
     );
-    Injector.getAsReactive<UserService>()
+    Injector.getAsReactive<UserMetricsStore>()
         .setState((store) => store.currentUser());
   }
 
