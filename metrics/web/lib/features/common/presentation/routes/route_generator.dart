@@ -9,31 +9,22 @@ class RouteGenerator {
     switch (settings.name) {
       case '/dashboard':
         if (user != null) {
-          return navigateTo('/dashboard');
+          return _navigateTo('/dashboard', DashboardPage());
         }
 
-        return navigateTo('/login');
+        return _navigateTo('/login', LoginPage());
       case '/login':
       default:
         if (user != null) {
-          return navigateTo('/dashboard');
+          return _navigateTo('/dashboard', DashboardPage());
         }
 
-        return navigateTo('/login');
+        return _navigateTo('/login', LoginPage());
     }
   }
 
-  static Route navigateTo(String name) {
-    switch (name) {
-      case '/dashboard':
-        return MaterialPageRoute(
-            builder: (context) => DashboardPage(),
-            settings: const RouteSettings(name: '/dashboard'));
-      case '/login':
-      default:
-        return MaterialPageRoute(
-            builder: (context) => LoginPage(),
-            settings: const RouteSettings(name: '/login'));
-    }
+  static MaterialPageRoute _navigateTo(String name, Widget widget) {
+    return MaterialPageRoute(
+        builder: (context) => widget, settings: RouteSettings(name: name));
   }
 }
