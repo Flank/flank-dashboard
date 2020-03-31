@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
+import 'package:metrics/features/common/presentation/widgets/input_field.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class AuthForm extends StatefulWidget {
@@ -25,15 +26,11 @@ class _AuthFormState extends State<AuthForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          TextFormField(
+          InputField(
+            label: 'Email',
             controller: _emailController,
-            autofocus: true,
             keyboardType: TextInputType.emailAddress,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              labelStyle: TextStyle(fontSize: 14.0),
-            ),
+            autofocus: true,
             validator: (value) {
               if (value.isEmpty) {
                 return 'Email address is required';
@@ -46,14 +43,10 @@ class _AuthFormState extends State<AuthForm> {
               return null;
             },
           ),
-          TextFormField(
+          InputField(
+            label: 'Password',
             controller: _passwordController,
             obscureText: true,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              labelText: 'Password',
-              labelStyle: TextStyle(fontSize: 14.0),
-            ),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Password is required';
