@@ -170,7 +170,7 @@ Once you've finished creating test data, you should deactivate the `seedData` cl
 
 > What is the project blocked on?
 
-No blockers
+No blockers.
 
 > What will be impacted by the project?
 
