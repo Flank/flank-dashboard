@@ -1,4 +1,4 @@
-import 'package:ci_integration/jenkins/client/util/url_utils.dart';
+import 'package:ci_integration/jenkins/util/url_utils.dart';
 import 'package:test/test.dart';
 
 void main() {
