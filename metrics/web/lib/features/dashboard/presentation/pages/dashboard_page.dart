@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
+import 'package:metrics/features/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -12,7 +13,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: MetricsAppBar(),
       drawer: const MetricsDrawer(),
       body: SafeArea(
         child: WhenRebuilder<ProjectMetricsStore>(

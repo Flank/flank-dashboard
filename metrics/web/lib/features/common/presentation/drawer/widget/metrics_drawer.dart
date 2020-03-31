@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+import '../../../../auth/service/user_service.dart';
+
 /// The application side menu widget.
 class MetricsDrawer extends StatelessWidget {
   const MetricsDrawer({
@@ -28,6 +30,20 @@ class MetricsDrawer extends StatelessWidget {
               );
             },
           ),
+          StateBuilder<UserService>(
+            models: [Injector.getAsReactive<UserService>()],
+            builder: (context, ReactiveModel<UserService> model) {
+              return FlatButton(
+                onPressed: () {
+                  print(model.state.user);
+                  model
+                      .setState((state) => state.signOut())
+                      .then((value) => Navigator.pushNamed(context, '/login'));
+                },
+                child: const Text('Log out'),
+              );
+            },
+          )
         ],
       ),
     );

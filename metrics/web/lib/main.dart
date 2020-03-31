@@ -1,8 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:metrics/features/auth/service/user_service.dart';
 import 'package:metrics/features/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
-import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:metrics/features/common/presentation/strings/common_strings.dart';
+import 'package:metrics/features/common/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/features/common/presentation/widgets/page_placeholder.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
+
+import './route_generator.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,17 +24,25 @@ class _MyAppState extends State<MyApp> {
         builder: (context, store) {
           final isDark = store?.isDark ?? true;
 
-          return MaterialApp(
-            title: 'Metrics',
-            routes: {
-              '/dashboard': (context) => DashboardPage(),
+          return WhenRebuilder<UserService>(
+            models: [Injector.getAsReactive<UserService>()],
+            onWaiting: () => const LoadingPlaceholder(),
+            onIdle: () => const LoadingPlaceholder(),
+            onError: (error) => PagePlaceholder(
+                text: CommonStrings.getLoadingErrorMessage('$error')),
+            onData: (UserService userService) {
+              return MaterialApp(
+                title: 'Metrics',
+                initialRoute: '/',
+                onGenerateRoute: (settings) =>
+                    RouteGenerator.generateRoute(settings, userService.user),
+                theme: ThemeData(
+                  brightness: isDark ? Brightness.dark : Brightness.light,
+                  primarySwatch: Colors.teal,
+                  fontFamily: 'Bebas Neue',
+                ),
+              );
             },
-            theme: ThemeData(
-              brightness: isDark ? Brightness.dark : Brightness.light,
-              primarySwatch: Colors.teal,
-              fontFamily: 'Bebas Neue',
-            ),
-            home: DashboardPage(),
           );
         },
       ),

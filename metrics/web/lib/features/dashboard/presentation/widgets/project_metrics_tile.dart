@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
@@ -6,7 +7,6 @@ import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_builder.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 
 /// Displays the project name and it's metrics.
