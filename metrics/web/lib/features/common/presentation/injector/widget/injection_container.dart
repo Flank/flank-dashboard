@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:metrics/features/auth/data/repositories/user_repository_impl.dart';
+import 'package:metrics/features/auth/service/user_service.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
@@ -6,9 +8,6 @@ import 'package:metrics/features/dashboard/domain/usecases/receive_project_metri
 import 'package:metrics/features/dashboard/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
-
-import '../../../../auth/data/repositories/user_repository.dart';
-import '../../../../auth/service/user_service.dart';
 
 /// Creates project stores and injects it using the [Injector] widget.
 class InjectionContainer extends StatefulWidget {
@@ -25,7 +24,7 @@ class InjectionContainer extends StatefulWidget {
 
 class _InjectionContainerState extends State<InjectionContainer> {
   final MetricsRepository _metricsRepository = FirestoreMetricsRepository();
-  final UserRepository _userRepository = UserRepository();
+  final UserRepositoryImpl _userRepositoryImpl = UserRepositoryImpl();
   ReceiveProjectUpdates _receiveProjectUpdates;
   ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
 
@@ -45,7 +44,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
               _receiveProjectUpdates,
               _receiveProjectMetricsUpdates,
             )),
-        Inject<UserService>(() => UserService(userRepository: _userRepository)),
+        Inject<UserService>(
+            () => UserService(userRepository: _userRepositoryImpl)),
         Inject<ThemeStore>(() => ThemeStore()),
       ],
       dispose: _dispose,

@@ -1,9 +1,9 @@
 import 'package:metrics/features/auth/domain/entities/user.dart';
-import 'package:metrics/features/auth/service/interfaces/i_user_repository.dart';
+import 'package:metrics/features/auth/domain/repositories/user_repository.dart';
 
 /// Interact
 class UserService {
-  final IUserRepository userRepository;
+  final UserRepository userRepository;
   User user;
 
   UserService({this.userRepository});

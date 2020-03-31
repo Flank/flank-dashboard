@@ -1,8 +1,8 @@
 import 'package:metrics/features/auth/domain/entities/user.dart';
+import 'package:metrics/features/auth/domain/repositories/user_repository.dart';
 import 'package:metrics/features/auth/service/exceptions/sign_in_exception.dart';
-import 'package:metrics/features/auth/service/interfaces/i_user_repository.dart';
 
-class UserRepository implements IUserRepository {
+class UserRepositoryImpl implements UserRepository {
   @override
   Future<User> currentUser() async {
     return null;
@@ -23,7 +23,7 @@ class UserRepository implements IUserRepository {
 
   @override
   Future<void> signOut() async {
-    return Future(() => null);
+    return;
   }
 
   User dummyUser() {
