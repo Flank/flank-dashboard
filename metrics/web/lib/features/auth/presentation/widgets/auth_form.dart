@@ -1,9 +1,5 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/domain/value_objects/email.dart';
-import 'package:metrics/features/auth/domain/value_objects/password.dart';
-import 'package:metrics/features/auth/presentation/exceptions/exception_handler.dart';
-import 'package:metrics/features/auth/service/user_service.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
 
 class AuthForm extends StatefulWidget {
   @override
@@ -11,107 +7,86 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
-  final ReactiveModel<UserService> userServiceRM =
-      Injector.getAsReactive<UserService>().asNew('authForm');
+  /// Global key that uniquely identifies the Form widget and allows validation of the form.
+  final _formKey = GlobalKey<FormState>();
 
-  final _emailRM = ReactiveModel.create('');
-  final _passwordRM = ReactiveModel.create('');
+  /// Controls the email text being edited.
+  final TextEditingController _emailController = TextEditingController();
 
-  bool get _isFormValid => _emailRM.hasData && _passwordRM.hasData;
+  /// Controls the password text being edited.
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        StateBuilder(
-          models: [_emailRM],
-          builder: (context, _) {
-            return TextField(
-              decoration: InputDecoration(
-                labelText: 'Email',
-                labelStyle: const TextStyle(fontSize: 14.0),
-                errorText:
-                    ExceptionHandler.errorMessage(_emailRM.error).message,
-              ),
-              autofocus: true,
-              keyboardType: TextInputType.emailAddress,
-              autocorrect: false,
-              onChanged: (value) {
-                _emailRM.setValue(() => Email(value).value, catchError: true);
-              },
-            );
-          },
-        ),
-        StateBuilder(
-          models: [_passwordRM],
-          builder: (context, _) {
-            return TextField(
-              decoration: InputDecoration(
-                labelText: 'Password',
-                labelStyle: const TextStyle(fontSize: 14.0),
-                errorText:
-                    ExceptionHandler.errorMessage(_passwordRM.error).message,
-              ),
-              autocorrect: false,
-              obscureText: true,
-              onChanged: (value) {
-                _passwordRM.setValue(() => Password(value).value,
-                    catchError: true);
-              },
-            );
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        StateBuilder(
-          models: [userServiceRM],
-          builder: (context, _) {
-            if (userServiceRM.hasError) {
-              return Text(
-                ExceptionHandler.errorMessage(userServiceRM.error).message,
-                style: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 14.0,
-                ),
-              );
-            } else {
-              return const Text('');
-            }
-          },
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            StateBuilder(
-              models: [_emailRM, _passwordRM, userServiceRM],
-              builder: (BuildContext context, _) {
-                return RaisedButton(
-                  onPressed: _isFormValid
-                      ? () {
-                          userServiceRM.setState(
-                            (userService) =>
-                                userService.signInWithEmailAndPassword(
-                                    _emailRM.value, _passwordRM.value),
-                            onData: (BuildContext context, _) =>
-                                Navigator.pushNamed(context, '/dashboard'),
-                            catchError: true,
-                          );
-                        }
-                      : null,
-                  child: userServiceRM.isWaiting
-                      ? const CircularProgressIndicator()
-                      : const Text('Sign in'),
-                );
-              },
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          TextFormField(
+            controller: _emailController,
+            autofocus: true,
+            keyboardType: TextInputType.emailAddress,
+            autocorrect: false,
+            decoration: const InputDecoration(
+              labelText: 'Email',
+              labelStyle: TextStyle(fontSize: 14.0),
             ),
-          ],
-        ),
-      ],
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Email address is required';
+              }
+
+              if (!EmailValidator.validate(value)) {
+                return 'Invalid email address';
+              }
+
+              return null;
+            },
+          ),
+          TextFormField(
+            controller: _passwordController,
+            obscureText: true,
+            autocorrect: false,
+            decoration: const InputDecoration(
+              labelText: 'Password',
+              labelStyle: TextStyle(fontSize: 14.0),
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Password is required';
+              }
+
+              return null;
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      print('login');
+                      print('email is ${_emailController.text}');
+                      print('password is ${_passwordController.text}');
+                    }
+                  },
+                  child: const Text('Sign in'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }
