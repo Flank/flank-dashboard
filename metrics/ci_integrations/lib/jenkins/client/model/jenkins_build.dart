@@ -1,5 +1,7 @@
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build_result.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
+import 'package:ci_integration/jenkins/client/mapper/jenkins_build_result_mapper.dart';
 import 'package:equatable/equatable.dart';
 
 /// A class representing a single Jenkins build.
@@ -16,10 +18,13 @@ class JenkinsBuild extends Equatable {
   final DateTime timestamp;
 
   /// A result of this build.
-  final String result;
+  final JenkinsBuildResult result;
 
   /// A link to access this build in Jenkins.
   final String url;
+
+  /// A flag that indicates whether this build is in progress or not.
+  final bool building;
 
   /// A list of [JenkinsBuildArtifact]s generated during the build.
   final List<JenkinsBuildArtifact> artifacts;
@@ -34,6 +39,7 @@ class JenkinsBuild extends Equatable {
     this.timestamp,
     this.result,
     this.url,
+    this.building,
     this.artifacts,
   });
 
@@ -49,13 +55,16 @@ class JenkinsBuild extends Equatable {
     final duration = json['duration'] == null
         ? null
         : Duration(seconds: json['duration'] as int);
+    const resultMapper = JenkinsBuildResultMapper();
+    final result = resultMapper.map(json['result'] as String);
 
     return JenkinsBuild(
       number: json['number'] as int,
       duration: duration,
       timestamp: timestamp,
-      result: json['result'] as String,
+      result: result,
       url: json['url'] as String,
+      building: json['building'] as bool,
       artifacts: JenkinsBuildArtifact.listFromJson(
         json['artifacts'] as List<dynamic>,
       ),
@@ -73,11 +82,12 @@ class JenkinsBuild extends Equatable {
 
   /// Converts object into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
+    const resultMapper = JenkinsBuildResultMapper();
     return {
       'number': number,
       'duration': duration?.inSeconds,
       'timestamp': timestamp?.millisecondsSinceEpoch,
-      'result': result,
+      'result': resultMapper.unmap(result),
       'url': url,
       'artifacts': artifacts?.map((a) => a.toJson())?.toList()
     };

@@ -4,6 +4,7 @@ import 'package:ci_integration/common/authorization/authorization.dart';
 import 'package:ci_integration/jenkins/client/jenkins_client.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build_result.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_multi_branch_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
@@ -19,7 +20,7 @@ void main() {
       number: 1,
       duration: const Duration(),
       timestamp: DateTime(2000),
-      result: 'FAILURE',
+      result: JenkinsBuildResult.failure,
       artifacts: const [],
     );
 
@@ -27,7 +28,7 @@ void main() {
       number: 2,
       duration: const Duration(),
       timestamp: DateTime(2000),
-      result: 'SUCCESS',
+      result: JenkinsBuildResult.success,
       artifacts: const [
         JenkinsBuildArtifact(
           fileName: 'coverage.json',
@@ -273,7 +274,7 @@ void main() {
         final expected = JenkinsBuildingJob(
           name: 'master',
           fullName: 'test/master',
-          builds: [lastBuild, firstBuild],
+          builds: [firstBuild, lastBuild],
           firstBuild: firstBuild,
           lastBuild: lastBuild,
         );
@@ -322,7 +323,7 @@ void main() {
         final expected = JenkinsBuildingJob(
           name: 'master',
           fullName: 'test/master',
-          builds: [lastBuild, firstBuild],
+          builds: [firstBuild, lastBuild],
           firstBuild: firstBuild,
           lastBuild: lastBuild,
         );
