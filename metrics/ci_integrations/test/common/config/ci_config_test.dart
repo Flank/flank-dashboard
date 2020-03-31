@@ -33,19 +33,6 @@ void main() {
     );
 
     test(
-      "shoud throw ArgumentError trying to create an instance with null storageProjectId",
-      () {
-        expect(
-          () => CiConfig(
-            ciProjectId: ciProjectId,
-            storageProjectId: null,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
       "should create insctance with the given project CI and storage id",
       () {
         final config = CiConfig(

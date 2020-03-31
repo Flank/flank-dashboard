@@ -32,32 +32,15 @@ class JenkinsCiClientAdapter implements CiClient {
       limits: JenkinsQueryLimits.endBefore(0),
     );
     final lastBuild = buildingJob.lastBuild;
-    int numberOfBuilds = lastBuild.number - build.buildNumber;
+    final numberOfBuilds = lastBuild.number - build.buildNumber;
 
     if (numberOfBuilds <= 0) return [];
 
-    List<JenkinsBuild> builds;
-    while (builds == null) {
-      final buildingJob = await _fetchBuilds(
-        projectId,
-        limits: JenkinsQueryLimits.endAt(numberOfBuilds),
-      );
-
-      final _builds = buildingJob.builds;
-      if (_builds.isEmpty ||
-          _builds.first.number == buildingJob.firstBuild.number) {
-        builds = _builds;
-      } else {
-        final _earliestBuild = _builds.first;
-        final difference = _earliestBuild.number - build.buildNumber;
-
-        if (difference <= 0) {
-          builds = buildingJob.builds;
-        } else {
-          numberOfBuilds += difference;
-        }
-      }
-    }
+    final builds = await _fetchLatestBuilds(
+      projectId,
+      numberOfBuilds,
+      build.buildNumber,
+    );
 
     return _processJenkinsBuilds(
       builds,
@@ -88,8 +71,45 @@ class JenkinsCiClientAdapter implements CiClient {
     return newBuildsFetchResult.result;
   }
 
-  /// Checks the given [interactionResult] to be [InteractionResult.isSuccess].
+  /// Fetches latest builds for the project with given [projectId] which
+  /// are not synchronized.
   ///
+  /// The [numberOfBuilds] is used to indicate the number of builds to fetch
+  /// first. The [startFromBuildNumber] is used as the build number indicating
+  /// the last synchronized build.
+  Future<List<JenkinsBuild>> _fetchLatestBuilds(
+    String projectId,
+    int numberOfBuilds,
+    int startFromBuildNumber,
+  ) async {
+    int _numberOfBuilds = numberOfBuilds;
+
+    List<JenkinsBuild> builds;
+    while (builds == null) {
+      final buildingJob = await _fetchBuilds(
+        projectId,
+        limits: JenkinsQueryLimits.endAt(_numberOfBuilds),
+      );
+
+      final _builds = buildingJob.builds;
+      if (_builds.isEmpty ||
+          _builds.first.number == buildingJob.firstBuild.number) {
+        builds = _builds;
+      } else {
+        final _earliestBuild = _builds.first;
+        final difference = _earliestBuild.number - startFromBuildNumber;
+
+        if (difference <= 0) {
+          builds = buildingJob.builds;
+        } else {
+          _numberOfBuilds += difference;
+        }
+      }
+    }
+
+    return builds;
+  }
+
   /// Throws [StateError] with the message of [interactionResult] if this
   /// result is [InteractionResult.isError].
   void _throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
@@ -102,7 +122,7 @@ class JenkinsCiClientAdapter implements CiClient {
   ///
   /// The [jobName] is used to identify a building job for the builds.
   /// The [startFromBuildNumber] is used to filter builds which number is less
-  /// than or equal to this value. This allows to avoid fetching old builds
+  /// than or equal to this value. This allows to avoid processing old builds
   /// since the range specifier in Jenkins API only provides ability to set
   /// fetch limits but not to filter data to fetch.
   Future<List<BuildData>> _processJenkinsBuilds(
@@ -110,10 +130,11 @@ class JenkinsCiClientAdapter implements CiClient {
     String jobName, {
     int startFromBuildNumber,
   }) {
-    final buildDataFutures = builds
-        .where((build) =>
-            _checkBuildFinishedAndInRange(build, startFromBuildNumber))
-        .map((build) => _mapJenkinsBuild(build, jobName));
+    final buildDataFutures = builds.where((build) {
+      return _checkBuildFinishedAndInRange(build, startFromBuildNumber);
+    }).map((build) async {
+      return _mapJenkinsBuild(jobName, build, await _fetchCoverage(build));
+    });
 
     return Future.wait(buildDataFutures);
   }
@@ -129,13 +150,28 @@ class JenkinsCiClientAdapter implements CiClient {
     return !build.building && buildNumberValid;
   }
 
-  /// Maps [jenkinsBuild] to the [BuildData] instance with coverage
-  /// data fetching.
-  Future<BuildData> _mapJenkinsBuild(
-    JenkinsBuild jenkinsBuild,
+  /// Maps [jenkinsBuild] to the [BuildData] instance.
+  BuildData _mapJenkinsBuild(
     String jobName,
-  ) async {
-    final coverageArtifact = jenkinsBuild.artifacts.firstWhere(
+    JenkinsBuild jenkinsBuild,
+    Percent coverage,
+  ) {
+    return BuildData(
+      buildNumber: jenkinsBuild.number,
+      startedAt: jenkinsBuild.timestamp,
+      buildStatus: _mapJenkinsBuildResult(jenkinsBuild.result),
+      duration: jenkinsBuild.duration,
+      workflowName: jobName,
+      url: jenkinsBuild.url,
+      coverage: coverage,
+    );
+  }
+
+  /// Fetches the code coverage for the given [build].
+  ///
+  /// Returns `null` if code coverage artifact for the given build is not found.
+  Future<Percent> _fetchCoverage(JenkinsBuild build) async {
+    final coverageArtifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,
     );
@@ -145,7 +181,7 @@ class JenkinsCiClientAdapter implements CiClient {
     if (coverageArtifact != null) {
       final artifactContentFetchResult =
           await jenkinsClient.fetchArtifactByRelativePath(
-        jenkinsBuild.url,
+        build.url,
         coverageArtifact.relativePath,
       );
 
@@ -155,15 +191,7 @@ class JenkinsCiClientAdapter implements CiClient {
       coverage = CoverageJsonSummary.fromJson(artifactContent);
     }
 
-    return BuildData(
-      buildNumber: jenkinsBuild.number,
-      startedAt: jenkinsBuild.timestamp,
-      buildStatus: _mapJenkinsBuildResult(jenkinsBuild.result),
-      duration: jenkinsBuild.duration,
-      workflowName: jobName,
-      url: jenkinsBuild.url,
-      coverage: coverage?.total?.branches?.percent,
-    );
+    return coverage?.total?.branches?.percent;
   }
 
   /// Maps the [result] of [JenkinsBuild] to the [BuildStatus].
