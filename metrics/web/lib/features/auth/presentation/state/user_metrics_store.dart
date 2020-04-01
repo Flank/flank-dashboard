@@ -1,4 +1,3 @@
-import 'package:metrics/features/auth/presentation/exceptions/auth_exception.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// Metrics store for a user.
@@ -8,8 +7,8 @@ class UserMetricsStore {
   /// Determine if a user is authenticated, based on the [_userUpdates]'s value.
   bool get isLoggedIn => _userUpdates.value;
 
-  /// Contains any authentication exception that may occur.
-  AuthException authException;
+  /// Contains text description of any authentication exception that may occur.
+  String authExceptionDescription;
 
   /// Mock subscribe to a user changes and updates the [_userUpdates]'s value.
   Future<void> subscribeToUserUpdates() async {
