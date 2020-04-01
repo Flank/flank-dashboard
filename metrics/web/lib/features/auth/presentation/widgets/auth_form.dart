@@ -83,7 +83,10 @@ class _AuthFormState extends State<AuthForm> {
       await userMetricsStoreRM.state.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);
 
-      await Navigator.pushReplacementNamed(context, '/dashboard');
+      /// Remove all the routes below the pushed 'dashboard' route to prevent
+      /// accidental navigate back to the login page as an authenticated user
+      await Navigator.pushNamedAndRemoveUntil(
+          context, '/dashboard', (Route<dynamic> route) => false);
     }
   }
 
