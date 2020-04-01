@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
-import 'package:metrics/features/common/presentation/widgets/input_field.dart';
+import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class AuthForm extends StatefulWidget {
@@ -26,11 +26,12 @@ class _AuthFormState extends State<AuthForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          InputField(
+          AuthInputField(
             label: 'Email',
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             autofocus: true,
+            onFieldSubmitted: (String value) async => _submit(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Email address is required';
@@ -43,10 +44,11 @@ class _AuthFormState extends State<AuthForm> {
               return null;
             },
           ),
-          InputField(
+          AuthInputField(
             label: 'Password',
             controller: _passwordController,
             obscureText: true,
+            onFieldSubmitted: (String value) async => _submit(),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Password is required';
@@ -55,34 +57,29 @@ class _AuthFormState extends State<AuthForm> {
               return null;
             },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                StateBuilder(
-                  models: [Injector.getAsReactive<UserMetricsStore>()],
-                  builder: (BuildContext context, userMetricsStore) {
-                    return RaisedButton(
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          userMetricsStore.state
-                              .signInWithEmailAndPassword(_emailController.text,
-                                  _passwordController.text)
-                              .then((value) =>
-                                  Navigator.pushNamed(context, '/dashboard'));
-                        }
-                      },
-                      child: const Text('Sign in'),
-                    );
-                  },
-                ),
-              ],
+          Container(
+            margin: const EdgeInsets.only(top: 20.0),
+            alignment: Alignment.centerRight,
+            child: RaisedButton(
+              onPressed: () async => _submit(),
+              child: const Text('Sign in'),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _submit() async {
+    if (_formKey.currentState.validate()) {
+      final ReactiveModel<UserMetricsStore> userMetricsStoreRM =
+          Injector.getAsReactive<UserMetricsStore>();
+
+      await userMetricsStoreRM.state.signInWithEmailAndPassword(
+          _emailController.text, _passwordController.text);
+
+      await Navigator.pushNamed(context, '/dashboard');
+    }
   }
 
   @override

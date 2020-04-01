@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
 @immutable
-class InputField extends StatelessWidget {
+class AuthInputField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final bool obscureText;
   final bool autocorrect;
   final bool autofocus;
-  final double fontSize;
   final FormFieldValidator<String> validator;
+  final ValueChanged<String> onFieldSubmitted;
   final TextInputType keyboardType;
 
-  const InputField({
+  const AuthInputField({
     this.label,
     this.controller,
     this.obscureText = false,
     this.autocorrect = false,
     this.autofocus = false,
-    this.fontSize = 14.0,
     this.validator,
+    this.onFieldSubmitted,
     this.keyboardType,
   });
 
@@ -32,9 +32,10 @@ class InputField extends StatelessWidget {
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(fontSize: fontSize),
+        labelStyle: const TextStyle(fontSize: 14.0),
       ),
       validator: validator,
+      onFieldSubmitted: onFieldSubmitted,
     );
   }
 }
