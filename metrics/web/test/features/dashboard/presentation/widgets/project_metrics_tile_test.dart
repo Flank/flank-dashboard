@@ -74,18 +74,19 @@ void main() {
   );
 
   testWidgets(
-    'Contains SparklineGraph widgets with build metric',
+    "Contains TextMetric with build number metric",
     (WidgetTester tester) async {
       await tester.pumpWidget(const ProjectMetricsTileTestbed());
 
       expect(
-        find.widgetWithText(SparklineGraph, DashboardStrings.builds),
+        find.widgetWithText(Column, DashboardStrings.builds),
         findsOneWidget,
       );
     },
   );
+
   testWidgets(
-    'Contains SparklineGraph widgets with performance metric',
+    "Contains SparklineGraph widgets with performance metric",
     (WidgetTester tester) async {
       await tester.pumpWidget(const ProjectMetricsTileTestbed());
 
@@ -111,10 +112,9 @@ class ProjectMetricsTileTestbed extends StatelessWidget {
     projectName: 'Test project name',
     coverage: Percent(0.0),
     stability: Percent(0.0),
-    numberOfBuilds: 0,
+    buildNumberMetric: 0,
     averageBuildDurationInMinutes: 0,
     performanceMetrics: [],
-    buildNumberMetrics: [],
     buildResultMetrics: [],
   );
   final ProjectMetricsData projectMetrics;

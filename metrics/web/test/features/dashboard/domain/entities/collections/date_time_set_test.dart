@@ -64,6 +64,19 @@ void main() {
       expect(initialDateTimeSet, equals(dateTimeSet));
     },
   );
+
+  test('The null value could be added to set', () {
+    final dateTimeSet = DateTimeSet.from([
+      DateTimeSetData(
+        date: DateTime.now(),
+        id: '2',
+      ),
+    ]);
+
+    dateTimeSet.add(null);
+
+    expect(dateTimeSet, contains(isNull));
+  });
 }
 
 class DateTimeSetData extends DateTimeSetEntry {

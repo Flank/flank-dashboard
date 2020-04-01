@@ -155,11 +155,10 @@ class MetricsStoreStub implements ProjectMetricsStore {
     projectName: 'project',
     coverage: Percent(0.4),
     stability: Percent(0.7),
-    numberOfBuilds: 1,
+    buildNumberMetric: 1,
     averageBuildDurationInMinutes: 1,
     performanceMetrics: [],
     buildResultMetrics: [],
-    buildNumberMetrics: [],
   );
 
   final List<ProjectMetricsData> projectMetrics;

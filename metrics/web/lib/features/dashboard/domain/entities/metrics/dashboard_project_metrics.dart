@@ -1,4 +1,4 @@
-import 'package:meta/meta.dart';
+import 'package:equatable/equatable.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/performance_metric.dart';
@@ -6,14 +6,23 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// Represent the main project metrics available for users
 /// to have a quick understanding of project status.
-@immutable
-class DashboardProjectMetrics {
+class DashboardProjectMetrics extends Equatable {
   final String projectId;
   final BuildNumberMetric buildNumberMetrics;
   final PerformanceMetric performanceMetrics;
   final BuildResultMetric buildResultMetrics;
   final Percent coverage;
   final Percent stability;
+
+  @override
+  List<Object> get props => [
+        projectId,
+        buildNumberMetrics,
+        performanceMetrics,
+        buildResultMetrics,
+        coverage,
+        stability,
+      ];
 
   /// Creates the [DashboardProjectMetrics].
   ///

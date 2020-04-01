@@ -1,10 +1,11 @@
+import 'dart:collection';
+
 import 'package:metrics/core/usecases/usecase.dart';
 import 'package:metrics/features/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_result_metric.dart';
-import 'package:metrics/features/dashboard/domain/entities/metrics/builds_on_date.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
@@ -16,10 +17,8 @@ import 'package:rxdart/rxdart.dart';
 /// Provides an ability to get the [DashboardProjectMetrics] updates.
 class ReceiveProjectMetricsUpdates
     implements UseCase<Stream<DashboardProjectMetrics>, ProjectIdParam> {
-  static const int numberOfBuildResults = 14;
-  static const Duration buildMetricsLoadingPeriod = Duration(days: 7);
-  static const Duration averageBuildDurationCalculationPeriod =
-      Duration(days: 14);
+  static const int lastBuildsForChartsMetrics = 14;
+  static const Duration buildNumberLoadingPeriod = Duration(days: 7);
 
   final MetricsRepository _repository;
 
@@ -32,17 +31,22 @@ class ReceiveProjectMetricsUpdates
 
     final lastBuildsStream = _repository.latestProjectBuildsStream(
       projectId,
-      numberOfBuildResults,
+      lastBuildsForChartsMetrics,
     );
 
     final projectBuildsInPeriod = _repository.projectBuildsFromDateStream(
       projectId,
-      DateTime.now().subtract(averageBuildDurationCalculationPeriod),
+      DateTime.now().subtract(buildNumberLoadingPeriod).date,
     );
 
-    return CombineLatestStream.combine2(
+    final lastSuccessfulBuildStream = _repository.lastSuccessfulBuildStream(
+      projectId,
+    );
+
+    return CombineLatestStream.combine3(
       lastBuildsStream,
       projectBuildsInPeriod,
+      lastSuccessfulBuildStream,
       _mergeBuilds,
     ).map((builds) => _mapToBuildMetrics(
           builds,
@@ -50,18 +54,22 @@ class ReceiveProjectMetricsUpdates
         ));
   }
 
-  /// Merges 2 [List]s of [Build]s into a single list by id.
+  /// Merges 3 [List]s of [Build]s into a single list by id.
   List<Build> _mergeBuilds(
     List<Build> latestBuilds,
     List<Build> buildsInPeriod,
+    List<Build> lastSuccessfulBuild,
   ) {
-    final builds = buildsInPeriod.toList();
+    final buildsSet = LinkedHashSet<Build>(
+      equals: (build1, build2) => build1?.id == build2?.id,
+      hashCode: (build) => build?.id.hashCode,
+    );
 
-    for (final latestBuild in latestBuilds) {
-      if (buildsInPeriod.any((build) => build.id == latestBuild.id)) continue;
+    buildsSet.addAll(latestBuilds);
+    buildsSet.addAll(buildsInPeriod);
+    buildsSet.addAll(lastSuccessfulBuild);
 
-      builds.add(latestBuild);
-    }
+    final builds = buildsSet.toList();
 
     builds.sort((prev, next) => prev.startedAt.compareTo(next.startedAt));
 
@@ -79,40 +87,56 @@ class ReceiveProjectMetricsUpdates
       );
     }
 
+    List<Build> latestBuilds = builds;
+
+    if (latestBuilds.length > lastBuildsForChartsMetrics) {
+      latestBuilds = latestBuilds.sublist(
+        latestBuilds.length - lastBuildsForChartsMetrics,
+      );
+    }
+
     final buildNumberMetrics = _getBuildNumberMetrics(builds);
-    final buildResultMetrics = _getBuildResultMetrics(builds);
-    final performanceMetrics = _getPerformanceMetrics(builds);
-    final stability = _getStability(builds);
+    final buildResultMetrics = _getBuildResultMetrics(latestBuilds);
+    final performanceMetrics = _getPerformanceMetrics(latestBuilds);
+    final stability = _getStability(latestBuilds);
+    final coverage = _getCoverage(builds);
 
     return DashboardProjectMetrics(
       projectId: projectId,
       buildNumberMetrics: buildNumberMetrics,
       performanceMetrics: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
-      coverage: builds.last.coverage,
+      coverage: coverage,
       stability: stability,
     );
+  }
+
+  /// Gets the coverage of the last successful build in [builds].
+  Percent _getCoverage(List<Build> builds) {
+    final lastSuccessfulBuild = builds.lastWhere(
+      (build) => build.buildStatus == BuildStatus.successful,
+      orElse: () => null,
+    );
+
+    if (lastSuccessfulBuild == null) return const Percent(0.0);
+
+    return lastSuccessfulBuild.coverage;
   }
 
   /// Creates the [PerformanceMetric] from [builds].
   PerformanceMetric _getPerformanceMetrics(
     List<Build> builds,
   ) {
-    final averageBuildTime = _getAverageBuildTime(builds);
-    final buildsInPeriod = _getBuildsInPeriod(
-      builds,
-      buildMetricsLoadingPeriod,
-    );
-
+    final averageBuildDuration = _getAverageBuildDuration(builds);
     final buildPerformanceSet = DateTimeSet<BuildPerformance>();
 
-    if (buildsInPeriod.isEmpty) {
+    if (builds.isEmpty) {
       return PerformanceMetric(
         buildsPerformance: buildPerformanceSet,
       );
     }
 
-    for (final build in buildsInPeriod) {
+    for (final build in builds) {
       buildPerformanceSet.add(BuildPerformance(
         duration: build.duration,
         date: build.startedAt,
@@ -121,61 +145,28 @@ class ReceiveProjectMetricsUpdates
 
     return PerformanceMetric(
       buildsPerformance: buildPerformanceSet,
-      averageBuildDuration: averageBuildTime,
+      averageBuildDuration: averageBuildDuration,
     );
   }
 
   /// Calculates the average build time of [builds].
-  Duration _getAverageBuildTime(List<Build> builds) {
-    final buildsInPeriod = _getBuildsInPeriod(
-      builds,
-      averageBuildDurationCalculationPeriod,
-    );
+  Duration _getAverageBuildDuration(List<Build> builds) {
+    if (builds.isEmpty) return const Duration();
 
-    if (buildsInPeriod.isEmpty) return const Duration();
-
-    return buildsInPeriod.fold<Duration>(
+    return builds.fold<Duration>(
             const Duration(), (value, element) => value + element.duration) ~/
         builds.length;
   }
 
   /// Calculates the [BuildNumberMetric] from [builds].
   BuildNumberMetric _getBuildNumberMetrics(List<Build> builds) {
-    final Map<DateTime, int> buildNumberMap = {};
-
-    final buildsInPeriod = _getBuildsInPeriod(
-      builds,
-      buildMetricsLoadingPeriod,
-    );
-
-    final buildsOnDateSet = DateTimeSet<BuildsOnDate>();
-
-    if (buildsInPeriod.isEmpty) {
-      return BuildNumberMetric(
-        buildsOnDateSet: buildsOnDateSet,
-      );
-    }
-
-    for (final build in buildsInPeriod) {
-      final dayOfBuild = build.startedAt.date;
-
-      if (buildNumberMap.containsKey(dayOfBuild)) {
-        buildNumberMap[dayOfBuild]++;
-      } else {
-        buildNumberMap[dayOfBuild] = 1;
-      }
-    }
-
-    for (final entry in buildNumberMap.entries) {
-      buildsOnDateSet.add(BuildsOnDate(
-        date: entry.key,
-        numberOfBuilds: entry.value,
-      ));
-    }
+    final buildsPeriodStart = DateTime.now().subtract(buildNumberLoadingPeriod);
+    final thisWeekBuilds = builds
+        .where((element) => element.startedAt.isAfter(buildsPeriodStart))
+        .toList();
 
     return BuildNumberMetric(
-      buildsOnDateSet: buildsOnDateSet,
-      totalNumberOfBuilds: buildsInPeriod.length,
+      numberOfBuilds: thisWeekBuilds.length,
     );
   }
 
@@ -183,15 +174,7 @@ class ReceiveProjectMetricsUpdates
   BuildResultMetric _getBuildResultMetrics(List<Build> builds) {
     if (builds.isEmpty) return const BuildResultMetric();
 
-    List<Build> latestBuilds = builds;
-
-    if (latestBuilds.length > numberOfBuildResults) {
-      latestBuilds = latestBuilds.sublist(
-        latestBuilds.length - numberOfBuildResults,
-      );
-    }
-
-    final buildResults = latestBuilds.map((build) {
+    final buildResults = builds.map((build) {
       return BuildResult(
         date: build.startedAt,
         duration: build.duration,
@@ -205,26 +188,12 @@ class ReceiveProjectMetricsUpdates
 
   /// Calculates the stability metric from list of [builds].
   Percent _getStability(List<Build> builds) {
-    final buildsInPeriod = _getBuildsInPeriod(
-      builds,
-      buildMetricsLoadingPeriod,
-    );
+    if (builds.isEmpty) return const Percent(0.0);
 
-    if (buildsInPeriod.isEmpty) return const Percent(0.0);
-
-    final successfulBuilds = buildsInPeriod.where(
+    final successfulBuilds = builds.where(
       (build) => build.buildStatus == BuildStatus.successful,
     );
 
-    return Percent(successfulBuilds.length / buildsInPeriod.length);
-  }
-
-  /// Gets all builds in [period] from given [builds].
-  Iterable<Build> _getBuildsInPeriod(List<Build> builds, Duration period) {
-    final periodStartDate = DateTime.now().subtract(period);
-
-    return builds
-        .where((element) => element.startedAt.isAfter(periodStartDate))
-        .toList();
+    return Percent(successfulBuilds.length / builds.length);
   }
 }
