@@ -7,6 +7,7 @@ import 'package:metrics_core/src/domain/entities/percent.dart';
 class BuildData extends Build implements DataModel {
   const BuildData({
     String id,
+    String projectId,
     int buildNumber,
     DateTime startedAt,
     BuildStatus buildStatus,
@@ -16,6 +17,7 @@ class BuildData extends Build implements DataModel {
     Percent coverage,
   }) : super(
           id: id,
+          projectId: projectId,
           buildNumber: buildNumber,
           startedAt: startedAt,
           buildStatus: buildStatus,
@@ -25,12 +27,16 @@ class BuildData extends Build implements DataModel {
           coverage: coverage,
         );
 
+  /// Unique id for multiple integrations
+  String get documentId => '${projectId}_$id';
+
   @override
   Map<String, dynamic> toJson() {
     return {
+      'projectId': projectId,
       'buildNumber': buildNumber,
       'startedAt': startedAt,
-      'buildStatus': buildStatus?.index,
+      'buildStatus': buildStatus?.toString(),
       'duration': duration?.inMilliseconds,
       'workflowName': workflowName,
       'url': url,

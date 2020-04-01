@@ -1,6 +1,6 @@
 import 'package:ci_integration/common/client/ci_client.dart';
 import 'package:ci_integration/common/model/interaction_result.dart';
-import 'package:ci_integration/coverage_json_summary/model/coverage_json_summary.dart';
+import 'package:ci_integration/coverage/coverage_json_summary/model/coverage_json_summary.dart';
 import 'package:ci_integration/jenkins/client/jenkins_client.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build_result.dart';
