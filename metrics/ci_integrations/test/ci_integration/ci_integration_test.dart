@@ -39,6 +39,18 @@ void main() {
     );
 
     test(
+      ".sync() should throw ArgumentError if the given config is null",
+      () {
+        final ciIntegration = CiIntegration(
+          ciClient: CiClientTestbed(),
+          storageClient: StorageClientTestbed(),
+        );
+
+        expect(() => ciIntegration.sync(null), throwsArgumentError);
+      },
+    );
+
+    test(
       ".sync() should result with error if a CI client throws fetching all builds",
       () {
         final ciClient = CiClientTestbed(

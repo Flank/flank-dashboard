@@ -28,7 +28,11 @@ class CiIntegration {
   }
 
   /// Synchronizes builds for a project specified in the given [config].
+  ///
+  /// If [config] is `null` throws the [ArgumentError].
   Future<InteractionResult> sync(CiConfig config) async {
+    ArgumentError.checkNotNull(config);
+
     try {
       final ciProjectId = config.ciProjectId;
       final storageProjectId = config.storageProjectId;
