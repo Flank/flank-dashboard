@@ -1,22 +1,24 @@
-import 'package:metrics/features/auth/data/repositories/user_repository_impl.dart';
-import 'package:metrics/features/auth/domain/entities/user.dart';
+import 'package:rxdart/rxdart.dart';
 
+/// Metrics store for a user.
 class UserMetricsStore {
-  final UserRepositoryImpl userRepositoryImpl;
-  User user;
+  final BehaviorSubject<bool> _userUpdates = BehaviorSubject();
 
-  UserMetricsStore({this.userRepositoryImpl});
+  /// Determine if a user is authenticated, based on the [_userUpdates]'s value.
+  bool get isLoggedIn => _userUpdates.value;
 
-  Future<void> currentUser() async {
-    user = await userRepositoryImpl.currentUser();
+  /// Mock subscribe to a user changes and updates the [_userUpdates]'s value.
+  Future<void> subscribeToUserUpdates() async {
+    _userUpdates.add(false);
   }
 
+  /// Mock a user sign in to the app using an [email] and a [password].
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    user = await userRepositoryImpl.signInWithEmailAndPassword(email, password);
+    _userUpdates.add(true);
   }
 
+  /// Mock sign out the user from the app.
   Future<void> signOut() async {
-    await userRepositoryImpl.signOut();
-    user = null;
+    _userUpdates.add(false);
   }
 }

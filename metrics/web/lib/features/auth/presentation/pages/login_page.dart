@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
+/// Shows the authentication form to sign in.
+class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:metrics/features/auth/data/repositories/user_repository_impl.dart';
 import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/dashboard/data/repositories/firestore_metrics_repository.dart';
@@ -24,7 +23,6 @@ class InjectionContainer extends StatefulWidget {
 
 class _InjectionContainerState extends State<InjectionContainer> {
   final MetricsRepository _metricsRepository = FirestoreMetricsRepository();
-  final UserRepositoryImpl _userRepositoryImpl = UserRepositoryImpl();
   ReceiveProjectUpdates _receiveProjectUpdates;
   ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
 
@@ -44,8 +42,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
               _receiveProjectUpdates,
               _receiveProjectMetricsUpdates,
             )),
-        Inject<UserMetricsStore>(
-            () => UserMetricsStore(userRepositoryImpl: _userRepositoryImpl)),
+        Inject<UserMetricsStore>(() => UserMetricsStore()),
         Inject<ThemeStore>(() => ThemeStore()),
       ],
       dispose: _dispose,
@@ -65,7 +62,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       catchError: true,
     );
     Injector.getAsReactive<UserMetricsStore>()
-        .setState((store) => store.currentUser());
+        .setState((store) => store.subscribeToUserUpdates());
   }
 
   /// Initiates the [ProjectMetricsStore].

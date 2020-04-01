@@ -31,10 +31,12 @@ class _MyAppState extends State<MyApp> {
                 text: CommonStrings.getLoadingErrorMessage('$error')),
             onData: (UserMetricsStore userMetricsStore) {
               return MaterialApp(
-                title: 'Metrics',
+                title: CommonStrings.projectName,
                 initialRoute: '/',
                 onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-                    settings, userMetricsStore.user),
+                  settings: settings,
+                  isLoggedIn: userMetricsStore.isLoggedIn,
+                ),
                 theme: ThemeData(
                   brightness: isDark ? Brightness.dark : Brightness.light,
                   primarySwatch: Colors.teal,

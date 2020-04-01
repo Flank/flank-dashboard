@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 
-@immutable
+/// The widget that represents a custom [TextFormField] for the [AuthForm].
 class AuthInputField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
@@ -11,6 +12,7 @@ class AuthInputField extends StatelessWidget {
   final ValueChanged<String> onFieldSubmitted;
   final TextInputType keyboardType;
 
+  /// Creates an [AuthInputField].
   const AuthInputField({
     this.label,
     this.controller,
