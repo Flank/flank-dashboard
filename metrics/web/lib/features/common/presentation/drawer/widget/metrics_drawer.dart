@@ -31,12 +31,12 @@ class MetricsDrawer extends StatelessWidget {
           ),
           StateBuilder<UserMetricsStore>(
             models: [Injector.getAsReactive<UserMetricsStore>()],
-            builder: (context, ReactiveModel<UserMetricsStore> model) {
+            builder:
+                (context, ReactiveModel<UserMetricsStore> userMetricsStore) {
               return FlatButton(
-                onPressed: () {
-                  model
-                      .setState((state) => state.signOut())
-                      .then((value) => Navigator.pushNamed(context, '/login'));
+                onPressed: () async {
+                  await userMetricsStore.setState((state) => state.signOut());
+                  await Navigator.pushNamed(context, '/login');
                 },
                 child: const Text('Log out'),
               );
