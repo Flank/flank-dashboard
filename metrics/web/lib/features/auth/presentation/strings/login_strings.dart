@@ -1,4 +1,6 @@
-/// Holds the strings for the login screen.
+import 'package:metrics/features/auth/presentation/pages/login_page.dart';
+
+/// Holds the strings for the [LoginPage].
 ///
 /// Preferably, add the string to this file instead of hardcoding them into UI
 /// to make them available in tests and avoid code duplication.

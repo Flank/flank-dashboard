@@ -6,7 +6,7 @@ import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-/// The widget that shows an authentication form to sign in.
+/// Shows an authentication form to sign in.
 class AuthForm extends StatefulWidget {
   @override
   _AuthFormState createState() => _AuthFormState();
@@ -81,7 +81,9 @@ class _AuthFormState extends State<AuthForm> {
           Injector.getAsReactive<UserMetricsStore>();
 
       await userMetricsStoreRM.state.signInWithEmailAndPassword(
-          _emailController.text, _passwordController.text);
+        _emailController.text,
+        _passwordController.text,
+      );
 
       /// Remove all the routes below the pushed 'dashboard' route to prevent
       /// accidental navigate back to the login page as an authenticated user
