@@ -73,5 +73,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// Disposes the injected models.
   void _dispose() {
     Injector.get<ProjectMetricsStore>().dispose();
+    Injector.get<UserMetricsStore>().dispose();
   }
 }

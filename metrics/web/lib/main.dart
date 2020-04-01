@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
                 text: CommonStrings.getLoadingErrorMessage('$error')),
             onData: (UserMetricsStore userMetricsStore) {
               return MaterialApp(
-                title: CommonStrings.projectName,
+                title: CommonStrings.metrics,
                 initialRoute: '/',
                 onGenerateRoute: (settings) => RouteGenerator.generateRoute(
                   settings: settings,

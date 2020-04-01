@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
+import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -30,31 +31,31 @@ class _AuthFormState extends State<AuthForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           AuthInputField(
-            label: 'Email',
+            label: LoginStrings.email,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             autofocus: true,
             onFieldSubmitted: (String value) async => _submit(),
             validator: (value) {
               if (value.isEmpty) {
-                return 'Email address is required';
+                return LoginStrings.emailIsRequired;
               }
 
               if (!EmailValidator.validate(value)) {
-                return 'Invalid email address';
+                return LoginStrings.emailIsInvalid;
               }
 
               return null;
             },
           ),
           AuthInputField(
-            label: 'Password',
+            label: LoginStrings.password,
             controller: _passwordController,
             obscureText: true,
             onFieldSubmitted: (String value) async => _submit(),
             validator: (value) {
               if (value.isEmpty) {
-                return 'Password is required';
+                return LoginStrings.passwordIsRequired;
               }
 
               return null;
@@ -65,7 +66,7 @@ class _AuthFormState extends State<AuthForm> {
             alignment: Alignment.centerRight,
             child: RaisedButton(
               onPressed: () async => _submit(),
-              child: const Text('Sign in'),
+              child: const Text(LoginStrings.signIn),
             ),
           ),
         ],
@@ -82,7 +83,7 @@ class _AuthFormState extends State<AuthForm> {
       await userMetricsStoreRM.state.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);
 
-      await Navigator.pushNamed(context, '/dashboard');
+      await Navigator.pushReplacementNamed(context, '/dashboard');
     }
   }
 
