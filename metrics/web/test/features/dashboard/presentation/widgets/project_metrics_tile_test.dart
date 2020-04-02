@@ -6,6 +6,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 void main() {
@@ -79,7 +80,7 @@ void main() {
       await tester.pumpWidget(const ProjectMetricsTileTestbed());
 
       expect(
-        find.widgetWithText(Column, DashboardStrings.builds),
+        find.widgetWithText(TextMetric, DashboardStrings.builds),
         findsOneWidget,
       );
     },

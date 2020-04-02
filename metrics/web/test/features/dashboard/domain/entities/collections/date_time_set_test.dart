@@ -41,7 +41,7 @@ void main() {
   );
 
   test(
-    'Not changes the set on adding an element if an entity with the same date exists',
+    "Not changes the set on adding an element if an entity with the same date exists",
     () {
       final currentDate = DateTime.now();
 
@@ -65,7 +65,7 @@ void main() {
     },
   );
 
-  test('The null value could be added to set', () {
+  test("The null value could be added to set", () {
     final dateTimeSet = DateTimeSet.from([
       DateTimeSetData(
         date: DateTime.now(),

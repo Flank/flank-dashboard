@@ -54,25 +54,36 @@ void main() {
     );
 
     testWidgets(
-      "applies value and title text styles",
+      "applies the value text style",
       (WidgetTester tester) async {
-        const titleStyle = TextStyle(color: Colors.blue);
         const valueStyle = TextStyle(color: Colors.red);
 
         await tester.pumpWidget(const TextMetricTestbed(
-          titleStyle: titleStyle,
           valueStyle: valueStyle,
+        ));
+
+        final valueWidget = tester.widget<Text>(
+          find.text(TextMetricTestbed.defaultValueText),
+        );
+
+        expect(valueWidget.style.color, valueStyle.color);
+      },
+    );
+
+    testWidgets(
+      "applies the title text style",
+      (WidgetTester tester) async {
+        const titleStyle = TextStyle(color: Colors.blue);
+
+        await tester.pumpWidget(const TextMetricTestbed(
+          titleStyle: titleStyle,
         ));
 
         final titleWidget = tester.widget<Text>(
           find.text(TextMetricTestbed.defaultTitleText),
         );
-        final valueWidget = tester.widget<Text>(
-          find.text(TextMetricTestbed.defaultValueText),
-        );
 
         expect(titleWidget.style.color, titleStyle.color);
-        expect(valueWidget.style.color, valueStyle.color);
       },
     );
 
