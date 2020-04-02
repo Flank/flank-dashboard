@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:metrics/features/auth/data/adapter/firebase_user_user_adapter.dart';
+import 'package:metrics/features/auth/data/adapter/firebase_user_adapter.dart';
 import 'package:metrics/features/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/features/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/features/auth/domain/entities/user.dart';
@@ -12,7 +12,7 @@ class FirebaseUserRepository implements UserRepository {
   @override
   Stream<User> currentUserStream() {
     return _firebaseAuth.onAuthStateChanged
-        .map((user) => user != null ? FirebaseUserUserAdapter(user) : null);
+        .map((user) => user != null ? FirebaseUserAdapter(user) : null);
   }
 
   @override
@@ -23,7 +23,7 @@ class FirebaseUserRepository implements UserRepository {
         password: password,
       );
     } catch (error) {
-      throw AuthenticationException(code: AuthErrorCode.unknown);
+      throw const AuthenticationException(code: AuthErrorCode.unknown);
     }
   }
 

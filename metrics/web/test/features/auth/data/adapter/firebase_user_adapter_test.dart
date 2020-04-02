@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:metrics/features/auth/data/adapter/firebase_user_user_adapter.dart';
+import 'package:metrics/features/auth/data/adapter/firebase_user_adapter.dart';
 import 'package:metrics/features/auth/domain/entities/user.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("FirebaseUserUserAdapter", () {
+  group("FirebaseUserAdapter", () {
     test("can't be created with null firebaseUser", () {
-      expect(() => FirebaseUserUserAdapter(null), throwsArgumentError);
+      expect(() => FirebaseUserAdapter(null), throwsArgumentError);
     });
 
     test("adapts firebaseUser to a User", () {
@@ -22,7 +22,7 @@ void main() {
         email: email,
       );
 
-      final adaptedUser = FirebaseUserUserAdapter(firebaseUser);
+      final adaptedUser = FirebaseUserAdapter(firebaseUser);
 
       expect(adaptedUser, isA<User>());
       expect(adaptedUser.id, expectedUser.id);

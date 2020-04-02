@@ -13,10 +13,8 @@ class AuthenticationException implements Exception {
   ///
   /// [code] is the code of this error that specifies the concrete reason for the exception occurrence.
   /// [message] is the text description of this exception.
-  AuthenticationException({
-    @required this.code,
+  const AuthenticationException({
+    @required AuthErrorCode code,
     this.message,
-  }) {
-    ArgumentError.checkNotNull(code, 'code');
-  }
+  }) : code = code ?? AuthErrorCode.unknown;
 }
