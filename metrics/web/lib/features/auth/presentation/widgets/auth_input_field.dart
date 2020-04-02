@@ -6,11 +6,11 @@ class AuthInputField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final bool obscureText;
-  final bool autocorrect;
   final bool autofocus;
   final FormFieldValidator<String> validator;
   final ValueChanged<String> onFieldSubmitted;
   final TextInputType keyboardType;
+  final FocusNode focusNode;
 
   /// Creates an [AuthInputField].
   ///
@@ -23,16 +23,17 @@ class AuthInputField extends StatelessWidget {
   /// Returns an error string to display if the input is invalid, or null otherwise.
   /// [onFieldSubmitted] called when a user submits content (e.g., user presses the "enter" button on the keyboard).
   /// [keyboardType] the type of information for which to optimize the text input control.
+  /// [focusNode] defines the keyboard focus for this widget.
   const AuthInputField({
     Key key,
     this.label,
     this.controller,
     this.obscureText = false,
-    this.autocorrect = false,
     this.autofocus = false,
     this.validator,
     this.onFieldSubmitted,
     this.keyboardType,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -41,7 +42,6 @@ class AuthInputField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       autofocus: autofocus,
-      autocorrect: autocorrect,
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
@@ -49,6 +49,7 @@ class AuthInputField extends StatelessWidget {
       ),
       validator: validator,
       onFieldSubmitted: onFieldSubmitted,
+      focusNode: focusNode,
     );
   }
 }
