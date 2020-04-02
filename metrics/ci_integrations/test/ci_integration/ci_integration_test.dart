@@ -2,15 +2,17 @@ import 'package:ci_integration/ci_integration/ci_integration.dart';
 import 'package:ci_integration/common/client/ci_client.dart';
 import 'package:ci_integration/common/client/storage_client.dart';
 import 'package:ci_integration/common/config/ci_config.dart';
-import 'package:metrics_core/metrics_core.dart';
-import 'package:metrics_core/src/data/model/build_data.dart';
 import 'package:test/test.dart';
 
-import 'test_data/builds_test_data.dart';
+import 'test_util/testbed/ci_client_testbed.dart';
+import 'test_util/testbed/storage_client_testbed.dart';
 
 void main() {
   group("CiIntegration", () {
-    final ciConfig = CiConfigTestbed();
+    final ciConfig = CiConfig(
+      ciProjectId: 'ciProjectId',
+      storageProjectId: 'storageProjectId',
+    );
 
     test(
       "should throw ArgumentError trying to create an instance with null CI client",
@@ -162,97 +164,4 @@ class CiIntegrationTestbed extends CiIntegration {
     CiClientTestbed ciClient,
   })  : _storageClientTestbed = storageClient ?? StorageClientTestbed(),
         _ciClientTestbed = ciClient ?? CiClientTestbed();
-}
-
-/// A testbed class for a [CiConfig] abstract class providing required
-/// implementations.
-class CiConfigTestbed implements CiConfig {
-  @override
-  String get ciProjectId => 'ciProjectId';
-
-  @override
-  String get storageProjectId => 'storageProjectId';
-}
-
-/// A testbed class for a [CiClient] abstract class providing test
-/// implementation for methods.
-class CiClientTestbed implements CiClient {
-  /// Callback used to replace the default [fetchBuildsAfter] method
-  /// implementation in testing purposes.
-  final Future<List<BuildData>> Function(String, BuildData)
-      fetchBuildsAfterCallback;
-
-  /// Callback used to replace the default [fetchBuilds] method
-  /// implementation in testing purposes.
-  final Future<List<BuildData>> Function(String) fetchBuildsCallback;
-
-  /// Creates a testbed instance.
-  ///
-  /// The [fetchBuildsAfterCallback] is optional.
-  CiClientTestbed({
-    this.fetchBuildsAfterCallback,
-    this.fetchBuildsCallback,
-  });
-
-  @override
-  Future<List<BuildData>> fetchBuildsAfter(String projectId, BuildData build) {
-    if (fetchBuildsAfterCallback != null) {
-      return fetchBuildsAfterCallback(projectId, build);
-    } else {
-      final builds = BuildsTestData.builds;
-
-      final index = BuildsTestData.builds.indexWhere(
-        (b) => b.buildNumber == build.buildNumber,
-      );
-      final result =
-          builds.sublist(index == null || index == -1 ? 0 : index + 1);
-
-      return Future.value(result);
-    }
-  }
-
-  @override
-  Future<List<BuildData>> fetchBuilds(String projectId) {
-    if (fetchBuildsCallback != null) {
-      return fetchBuildsCallback(projectId);
-    } else {
-      return Future.value(BuildsTestData.builds);
-    }
-  }
-}
-
-/// A testbed class for a [StorageClient] abstract class providing test
-/// implementation for methods.
-class StorageClientTestbed implements StorageClient {
-  /// Callback used to replace the default [fetchLastBuild] method
-  /// implementation in testing purposes.
-  final Future<BuildData> Function(String) fetchLastBuildCallback;
-
-  /// Callback used to replace the default [addBuilds] method
-  /// implementation in testing purposes.
-  final Future<void> Function(String, List<BuildData>) addBuildsCallback;
-
-  /// Creates a testbed instance.
-  ///
-  /// Both [fetchLastBuildCallback] and [addBuildsCallback] are optional.
-  StorageClientTestbed({
-    this.fetchLastBuildCallback,
-    this.addBuildsCallback,
-  });
-
-  @override
-  Future<BuildData> fetchLastBuild(String projectId) {
-    if (fetchLastBuildCallback != null) {
-      return fetchLastBuildCallback(projectId);
-    } else {
-      return Future.value(BuildsTestData.firstBuild);
-    }
-  }
-
-  @override
-  Future<void> addBuilds(String projectId, List<BuildData> builds) async {
-    if (addBuildsCallback != null) {
-      return addBuildsCallback(projectId, builds);
-    }
-  }
 }

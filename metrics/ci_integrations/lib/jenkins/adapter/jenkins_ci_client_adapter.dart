@@ -191,7 +191,7 @@ class JenkinsCiClientAdapter implements CiClient {
       coverage = CoverageJsonSummary.fromJson(artifactContent);
     }
 
-    return coverage?.total?.branches?.percent ?? const Percent(0.0);
+    return coverage?.total?.branches?.percent;
   }
 
   /// Maps the [result] of [JenkinsBuild] to the [BuildStatus].

@@ -4,24 +4,24 @@ import 'package:ci_integration/ci_integration/command/sync_runner/sync_runner.da
 import 'package:ci_integration/common/authorization/authorization.dart';
 import 'package:ci_integration/common/client/ci_client.dart';
 import 'package:ci_integration/common/config/ci_config.dart';
+import 'package:ci_integration/common/logger/logger.dart';
 import 'package:ci_integration/config/model/ci_integration_config.dart';
 import 'package:ci_integration/jenkins/adapter/jenkins_ci_client_adapter.dart';
 import 'package:ci_integration/jenkins/client/jenkins_client.dart';
 
 /// A [SyncRunner] implementation for the Jenkins CI.
 class JenkinsSyncRunner extends SyncRunner {
-  final CiConfig _ciConfig;
+  @override
+  final CiConfig ciConfig;
+
   JenkinsClient _jenkinsClient;
 
-  JenkinsSyncRunner(CiIntegrationConfig config)
-      : _ciConfig = CiConfig(
+  JenkinsSyncRunner(CiIntegrationConfig config, Logger logger)
+      : ciConfig = CiConfig(
           ciProjectId: config.source.jobName,
           storageProjectId: config.destination.metricsProjectId,
         ),
-        super(config);
-
-  @override
-  CiConfig get ciConfig => _ciConfig;
+        super(config, logger);
 
   @override
   FutureOr<CiClient> prepareCiClient() {

@@ -1,0 +1,15 @@
+import 'package:args/command_runner.dart';
+import 'package:ci_integration/common/logger/logger.dart';
+
+/// An abstract class representing a single CLI [Command].
+abstract class CiIntegrationCommand<T> extends Command<T> {
+  /// The [Logger] this command should use for messages and errors.
+  final Logger logger;
+
+  /// Creates an instance for this command.
+  ///
+  /// If [logger] is `null` throws an [ArgumentError].
+  CiIntegrationCommand(this.logger) {
+    ArgumentError.checkNotNull(logger);
+  }
+}

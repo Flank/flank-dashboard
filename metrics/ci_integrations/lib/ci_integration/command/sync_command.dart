@@ -1,22 +1,24 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:ci_integration/ci_integration/command/ci_integration_command.dart';
 import 'package:ci_integration/ci_integration/command/sync_runner/sync_runner.dart';
+import 'package:ci_integration/common/logger/logger.dart';
 import 'package:ci_integration/config/parser/ci_integration_config_parser.dart';
 
 /// A class representing a [Command] for synchronizing builds.
-class SyncCommand extends Command<void> {
+class SyncCommand extends CiIntegrationCommand<void> {
   final _configParser = const CiIntegrationConfigParser();
 
   @override
   String get description =>
-      'Synchronizes builds using the given configurations.';
+      'Synchronizes builds using the given configuration file.';
 
   @override
   String get name => 'sync';
 
   /// Creates an instance of this command.
-  SyncCommand() {
+  SyncCommand(Logger logger) : super(logger) {
     argParser.addOption(
       'config-file',
       help: 'A path to the YAML configuration file.',
@@ -26,18 +28,16 @@ class SyncCommand extends Command<void> {
 
   @override
   Future<void> run() async {
-    final configFilepath = argResults['config-file'] as String;
-    final configFile = File(configFilepath);
+    final configFilePath = argResults['config-file'] as String;
+    final configFile = File(configFilePath);
 
     if (configFile.existsSync()) {
       final content = configFile.readAsStringSync();
       final config = _configParser.parse(content);
-      final syncRunner = SyncRunner.fromConfig(config);
+      final syncRunner = SyncRunner.fromConfig(config, logger);
       await syncRunner.sync();
     } else {
-      stderr.writeln(
-        'Configuration file $configFilepath does not exist.',
-      );
+      logger.printError('Configuration file $configFilePath does not exist.');
     }
   }
 }
