@@ -1,6 +1,7 @@
 import 'package:meta/meta.dart';
 
 /// Represents the logged in user entity.
+@immutable
 class User {
   final String id;
   final String email;
