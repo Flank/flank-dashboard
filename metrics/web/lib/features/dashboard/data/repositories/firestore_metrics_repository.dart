@@ -45,4 +45,19 @@ class FirestoreMetricsRepository implements MetricsRepository {
                 BuildDataDeserializer.fromJson(doc.data, doc.documentID))
             .toList());
   }
+
+  @override
+  Stream<List<Build>> lastSuccessfulBuildStream(String projectId) {
+    return _firestore
+        .collection('build')
+        .orderBy('startedAt', descending: true)
+        .where('projectId', isEqualTo: projectId)
+        .where('buildStatus', isEqualTo: BuildStatus.successful.toString())
+        .limit(1)
+        .snapshots()
+        .map((snapshot) => snapshot.documents
+            .map((doc) =>
+                BuildDataDeserializer.fromJson(doc.data, doc.documentID))
+            .toList());
+  }
 }

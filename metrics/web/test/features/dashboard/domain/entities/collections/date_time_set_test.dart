@@ -41,7 +41,7 @@ void main() {
   );
 
   test(
-    'Not changes the set on adding an element if an entity with the same date exists',
+    "Not changes the set on adding an element if an entity with the same date exists",
     () {
       final currentDate = DateTime.now();
 
@@ -64,6 +64,19 @@ void main() {
       expect(initialDateTimeSet, equals(dateTimeSet));
     },
   );
+
+  test("The null value could be added to set", () {
+    final dateTimeSet = DateTimeSet.from([
+      DateTimeSetData(
+        date: DateTime.now(),
+        id: '2',
+      ),
+    ]);
+
+    dateTimeSet.add(null);
+
+    expect(dateTimeSet, contains(isNull));
+  });
 }
 
 class DateTimeSetData extends DateTimeSetEntry {

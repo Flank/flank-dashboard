@@ -8,6 +8,7 @@ import 'package:metrics/features/common/presentation/metrics_theme/model/metrics
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart';
 
 void main() {
   testWidgets(
@@ -115,7 +116,7 @@ void main() {
 
       final Padding paddingWidget = tester.widget(
         find.byWidgetPredicate(
-          (widget) => widget is Padding && widget.child is Column,
+          (widget) => widget is Padding && widget.child is TextMetric,
         ),
       );
 
