@@ -8,7 +8,7 @@ abstract class UserRepository {
   /// Provides a stream of current [User].
   Stream<User> currentUserStream();
 
-  /// Provides an ability to sign in user using the [email] amd [password].
+  /// Provides an ability to sign in user using the [email] and [password].
   ///
   /// Throws an [AuthenticationException] if sign in is failed.
   Future<void> signInWithEmailAndPassword(String email, String password);

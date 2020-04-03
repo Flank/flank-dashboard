@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:metrics/features/auth/domain/entities/user.dart';
-import 'package:metrics/features/auth/domain/repositories/user_repository.dart';
 
-/// Adapts the [FirebaseUser] to match the [UserRepository] contract.
+/// Adapts the [FirebaseUser] to match the [User] contract.
 class FirebaseUserAdapter implements User {
   final FirebaseUser _firebaseUser;
 

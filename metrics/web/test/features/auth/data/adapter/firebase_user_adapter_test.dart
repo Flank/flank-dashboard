@@ -9,11 +9,11 @@ void main() {
       expect(() => FirebaseUserAdapter(null), throwsArgumentError);
     });
 
-    test("adapts firebaseUser to a User", () {
+    test("adapts FirebaseUser to a User", () {
       const id = 'id';
       const email = 'email';
 
-      final firebaseUser = FirebaseUserTestbed(
+      final firebaseUser = FirebaseUserStub(
         uid: id,
         email: email,
       );
@@ -31,14 +31,14 @@ void main() {
   });
 }
 
-class FirebaseUserTestbed implements FirebaseUser {
+class FirebaseUserStub implements FirebaseUser {
   @override
   final String uid;
 
   @override
   final String email;
 
-  FirebaseUserTestbed({this.uid, this.email});
+  FirebaseUserStub({this.uid, this.email});
 
   @override
   Future<void> delete() async {}

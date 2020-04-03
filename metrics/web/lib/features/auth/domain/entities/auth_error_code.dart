@@ -6,7 +6,7 @@ enum AuthErrorCode {
   /// Indicates that the password is wrong.
   wrongPassword,
 
-  /// Indicates that there is no user with such email.
+  /// Indicates that the user is not found.
   userNotFound,
 
   /// Indicates that the user was disabled in the console.

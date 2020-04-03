@@ -1,11 +1,11 @@
 import 'package:meta/meta.dart';
 
-/// Represents the user credential parameters.
+/// Represents the user credentials parameter.
 class UserCredentialsParam {
   final String email;
   final String password;
 
-  /// Creates [UserCredentialsParam] with the given [email] amd [password].
+  /// Creates [UserCredentialsParam] with the given [email] and [password].
   ///
   /// Throws an [AssertionError] if whether [email] or [password] is null.
   UserCredentialsParam({
