@@ -31,6 +31,7 @@ class _AuthFormState extends State<AuthForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           AuthInputField(
+            key: Key(LoginStrings.email),
             label: LoginStrings.email,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
@@ -49,6 +50,7 @@ class _AuthFormState extends State<AuthForm> {
             },
           ),
           AuthInputField(
+            key: Key(LoginStrings.password),
             label: LoginStrings.password,
             controller: _passwordController,
             obscureText: true,
@@ -65,6 +67,7 @@ class _AuthFormState extends State<AuthForm> {
             margin: const EdgeInsets.only(top: 20.0),
             alignment: Alignment.centerRight,
             child: RaisedButton(
+              key: const Key(LoginStrings.signIn),
               onPressed: () async => _submit(),
               child: const Text(LoginStrings.signIn),
             ),

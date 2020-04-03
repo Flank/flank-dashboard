@@ -34,6 +34,7 @@ class MetricsDrawer extends StatelessWidget {
             builder:
                 (context, ReactiveModel<UserMetricsStore> userMetricsStore) {
               return FlatButton(
+                key: const Key('Logout'),
                 onPressed: () async {
                   await userMetricsStore.setState((state) => state.signOut());
                   await Navigator.pushNamed(context, '/login');
