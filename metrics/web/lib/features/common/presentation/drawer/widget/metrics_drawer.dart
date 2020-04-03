@@ -37,7 +37,10 @@ class MetricsDrawer extends StatelessWidget {
                 key: const Key('Logout'),
                 onPressed: () async {
                   await userMetricsStore.setState((state) => state.signOut());
-                  await Navigator.pushNamed(context, '/login');
+                  /// Remove all the routes below the pushed 'login' route to prevent
+                  /// accidental navigate back to the dashboard page
+                  await Navigator.pushNamedAndRemoveUntil(
+                      context, '/login', (Route<dynamic> route) => false);
                 },
                 child: const Text('Log out'),
               );
