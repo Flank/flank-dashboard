@@ -11,9 +11,10 @@ void main() {
       const themeData = MetricsThemeData();
 
       expect(themeData.buildResultTheme, isNotNull);
-      expect(themeData.sparklineTheme, isNotNull);
-      expect(themeData.circlePercentagePrimaryTheme, isNotNull);
-      expect(themeData.circlePercentageAccentTheme, isNotNull);
+      expect(themeData.metricWidgetTheme, isNotNull);
+      expect(themeData.circlePercentageLowPercentTheme, isNotNull);
+      expect(themeData.circlePercentageMediumPercentTheme, isNotNull);
+      expect(themeData.circlePercentageHighPercentTheme, isNotNull);
     },
   );
 
@@ -21,15 +22,17 @@ void main() {
     'Creates the theme with the default metric widgets theme data if nulls are passed',
     () {
       const themeData = MetricsThemeData(
-        circlePercentagePrimaryTheme: null,
-        circlePercentageAccentTheme: null,
-        sparklineTheme: null,
+        circlePercentageHighPercentTheme: null,
+        circlePercentageLowPercentTheme: null,
+        circlePercentageMediumPercentTheme: null,
+        metricWidgetTheme: null,
         buildResultTheme: null,
       );
 
-      expect(themeData.circlePercentagePrimaryTheme, isNotNull);
-      expect(themeData.circlePercentageAccentTheme, isNotNull);
-      expect(themeData.sparklineTheme, isNotNull);
+      expect(themeData.circlePercentageLowPercentTheme, isNotNull);
+      expect(themeData.circlePercentageMediumPercentTheme, isNotNull);
+      expect(themeData.circlePercentageHighPercentTheme, isNotNull);
+      expect(themeData.metricWidgetTheme, isNotNull);
       expect(themeData.buildResultTheme, isNotNull);
     },
   );
@@ -46,10 +49,20 @@ void main() {
         accentColor: accentColor,
         backgroundColor: backgroundColor,
       );
-      const circlePercentageTheme = MetricWidgetThemeData(
+      const circlePercentageHighTheme = MetricWidgetThemeData(
         primaryColor: primaryColor,
         accentColor: accentColor,
         backgroundColor: backgroundColor,
+      );
+      const circlePercentageMediumTheme = MetricWidgetThemeData(
+        primaryColor: Colors.yellow,
+        accentColor: Colors.yellow,
+        backgroundColor: Colors.yellow,
+      );
+      const circlePercentageLowTheme = MetricWidgetThemeData(
+        primaryColor: Colors.red,
+        accentColor: Colors.red,
+        backgroundColor: Colors.red,
       );
 
       const buildResultsTheme = BuildResultsThemeData(
@@ -61,16 +74,21 @@ void main() {
       const themeData = MetricsThemeData();
 
       final copiedTheme = themeData.copyWith(
-        sparklineTheme: sparklineTheme,
-        circlePercentageAccentTheme: circlePercentageTheme,
-        circlePercentagePrimaryTheme: circlePercentageTheme,
+        metricWidgetTheme: sparklineTheme,
+        circlePercentageHighPercentTheme: circlePercentageHighTheme,
+        circlePercentageMediumPercentTheme: circlePercentageMediumTheme,
+        circlePercentageLowPercentTheme: circlePercentageLowTheme,
         barGraphBackgroundColor: backgroundColor,
         buildResultTheme: buildResultsTheme,
       );
 
-      expect(copiedTheme.circlePercentagePrimaryTheme, circlePercentageTheme);
-      expect(copiedTheme.circlePercentageAccentTheme, circlePercentageTheme);
-      expect(copiedTheme.sparklineTheme, sparklineTheme);
+      expect(copiedTheme.circlePercentageLowPercentTheme,
+          circlePercentageLowTheme);
+      expect(copiedTheme.circlePercentageMediumPercentTheme,
+          circlePercentageMediumTheme);
+      expect(copiedTheme.circlePercentageHighPercentTheme,
+          circlePercentageHighTheme);
+      expect(copiedTheme.metricWidgetTheme, sparklineTheme);
       expect(copiedTheme.buildResultTheme, buildResultsTheme);
       expect(copiedTheme.barGraphBackgroundColor, backgroundColor);
     },
@@ -88,16 +106,20 @@ void main() {
         copiedTheme.barGraphBackgroundColor,
       );
       expect(
-        themeData.sparklineTheme,
-        copiedTheme.sparklineTheme,
+        themeData.metricWidgetTheme,
+        copiedTheme.metricWidgetTheme,
       );
       expect(
-        themeData.circlePercentagePrimaryTheme,
-        copiedTheme.circlePercentagePrimaryTheme,
+        themeData.circlePercentageHighPercentTheme,
+        copiedTheme.circlePercentageHighPercentTheme,
       );
       expect(
-        themeData.circlePercentageAccentTheme,
-        copiedTheme.circlePercentageAccentTheme,
+        themeData.circlePercentageMediumPercentTheme,
+        copiedTheme.circlePercentageMediumPercentTheme,
+      );
+      expect(
+        themeData.circlePercentageLowPercentTheme,
+        copiedTheme.circlePercentageLowPercentTheme,
       );
       expect(
         themeData.buildResultTheme,

@@ -9,7 +9,7 @@ void main() {
     (WidgetTester tester) async {
       const color = Colors.red;
 
-      await tester.pumpWidget(const ColoredBarTestbed(color: color));
+      await tester.pumpWidget(const _ColoredBarTestbed(color: color));
 
       final barContainer = tester.widget<Container>(find.descendant(
         of: find.byType(ColoredBar),
@@ -27,7 +27,7 @@ void main() {
     (WidgetTester tester) async {
       const padding = EdgeInsets.all(32.0);
 
-      await tester.pumpWidget(const ColoredBarTestbed(padding: padding));
+      await tester.pumpWidget(const _ColoredBarTestbed(padding: padding));
 
       final barPadding = tester.widget<Padding>(find.descendant(
         of: find.byType(ColoredBar),
@@ -44,7 +44,7 @@ void main() {
       final border = Border.all(color: Colors.red);
       final borderRadius = BorderRadius.circular(32.0);
 
-      await tester.pumpWidget(ColoredBarTestbed(
+      await tester.pumpWidget(_ColoredBarTestbed(
         borderRadius: borderRadius,
         border: border,
       ));
@@ -66,7 +66,7 @@ void main() {
     (WidgetTester tester) async {
       const width = 4.0;
 
-      await tester.pumpWidget(const ColoredBarTestbed(
+      await tester.pumpWidget(const _ColoredBarTestbed(
         width: width,
       ));
 
@@ -83,14 +83,14 @@ void main() {
   );
 }
 
-class ColoredBarTestbed extends StatelessWidget {
+class _ColoredBarTestbed extends StatelessWidget {
   final Color color;
   final BorderRadiusGeometry borderRadius;
   final Border border;
   final EdgeInsets padding;
   final double width;
 
-  const ColoredBarTestbed({
+  const _ColoredBarTestbed({
     Key key,
     this.color,
     this.borderRadius,

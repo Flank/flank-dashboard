@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/injector/widget/injection_container.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 
@@ -24,10 +25,18 @@ class _MyAppState extends State<MyApp> {
             routes: {
               '/dashboard': (context) => DashboardPage(),
             },
+            themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
             theme: ThemeData(
-              brightness: isDark ? Brightness.dark : Brightness.light,
+              brightness: Brightness.light,
               primarySwatch: Colors.teal,
-              fontFamily: 'Bebas Neue',
+              fontFamily: 'Roboto',
+            ),
+            darkTheme: ThemeData(
+              brightness: Brightness.dark,
+              primarySwatch: Colors.teal,
+              scaffoldBackgroundColor: ColorConfig.darkGrey,
+              cardColor: ColorConfig.darkGrey,
+              fontFamily: 'Roboto',
             ),
             home: DashboardPage(),
           );

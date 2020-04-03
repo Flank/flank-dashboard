@@ -8,7 +8,7 @@ void main() {
   testWidgets(
     "Can't create a LoadingBuilder without a builder",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const LoadingBuilderTestbed(builder: null));
+      await tester.pumpWidget(const _LoadingBuilderTestbed(builder: null));
 
       expect(tester.takeException(), isA<AssertionError>());
     },
@@ -17,7 +17,7 @@ void main() {
   testWidgets(
     "Can't create a LoadingBuilder when the isLoading is null",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const LoadingBuilderTestbed(isLoading: null));
+      await tester.pumpWidget(const _LoadingBuilderTestbed(isLoading: null));
 
       expect(tester.takeException(), isA<AssertionError>());
     },
@@ -26,7 +26,7 @@ void main() {
   testWidgets(
     "When isLoading true - shows the loadingPlaceholder",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const LoadingBuilderTestbed(
+      await tester.pumpWidget(const _LoadingBuilderTestbed(
         isLoading: true,
       ));
 
@@ -39,7 +39,7 @@ void main() {
     (WidgetTester tester) async {
       bool isBuilderFunctionCalled = false;
 
-      await tester.pumpWidget(LoadingBuilderTestbed(
+      await tester.pumpWidget(_LoadingBuilderTestbed(
         isLoading: false,
         builder: (context) {
           isBuilderFunctionCalled = true;
@@ -52,12 +52,12 @@ void main() {
   );
 }
 
-class LoadingBuilderTestbed extends StatelessWidget {
+class _LoadingBuilderTestbed extends StatelessWidget {
   final bool isLoading;
   final WidgetBuilder builder;
   final Widget loadingPlaceholder;
 
-  const LoadingBuilderTestbed({
+  const _LoadingBuilderTestbed({
     Key key,
     this.isLoading = false,
     this.builder = _defaultBuilder,

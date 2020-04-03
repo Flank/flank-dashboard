@@ -9,25 +9,37 @@ class DarkMetricsThemeData extends MetricsThemeData {
   /// Creates the dark theme with the default widget theme configuration.
   const DarkMetricsThemeData()
       : super(
-          circlePercentagePrimaryTheme: const MetricWidgetThemeData(
+          circlePercentageHighPercentTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
             accentColor: Colors.transparent,
             backgroundColor: ColorConfig.primaryTranslucentColor,
           ),
-          circlePercentageAccentTheme: const MetricWidgetThemeData(
+          circlePercentageLowPercentTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.accentColor,
             accentColor: Colors.transparent,
             backgroundColor: ColorConfig.accentTranslucentColor,
           ),
-          sparklineTheme: const MetricWidgetThemeData(
+          circlePercentageMediumPercentTheme: const MetricWidgetThemeData(
+            primaryColor: ColorConfig.yellow,
+            accentColor: Colors.transparent,
+            backgroundColor: ColorConfig.yellowTranslucent,
+          ),
+          metricWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
-            accentColor: ColorConfig.primaryColor,
+            accentColor: ColorConfig.primaryTranslucentColor,
             backgroundColor: ColorConfig.darkGrey,
+            textStyle: TextStyle(color: ColorConfig.primaryColor),
           ),
           buildResultTheme: const BuildResultsThemeData(
             canceledColor: ColorConfig.accentColor,
             successfulColor: ColorConfig.primaryColor,
             failedColor: ColorConfig.accentColor,
+          ),
+          inactiveWidgetTheme: const MetricWidgetThemeData(
+            primaryColor: ColorConfig.darkInactiveColor,
+            accentColor: Colors.transparent,
+            backgroundColor: ColorConfig.darkInactiveBackgroundColor,
+            textStyle: TextStyle(color: ColorConfig.darkInactiveColor),
           ),
         );
 }

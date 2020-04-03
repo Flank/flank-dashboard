@@ -8,7 +8,7 @@ class MetricWidgetThemeData {
   final Color primaryColor;
   final Color accentColor;
   final Color backgroundColor;
-  final TextStyle titleStyle;
+  final TextStyle textStyle;
 
   /// Creates the [MetricWidgetThemeData].
   ///
@@ -23,12 +23,11 @@ class MetricWidgetThemeData {
   /// the [_defaultAccentColor] will be used.
   ///
   /// [backgroundColor] is the color of the background of the metric widget.
-  /// [titleStyle] is the [TextStyle] of metric widget title.
   const MetricWidgetThemeData({
     Color primaryColor,
     Color accentColor,
     this.backgroundColor,
-    this.titleStyle,
+    this.textStyle,
   })  : primaryColor = primaryColor ?? _defaultPrimaryColor,
         accentColor = accentColor ?? _defaultAccentColor;
 }

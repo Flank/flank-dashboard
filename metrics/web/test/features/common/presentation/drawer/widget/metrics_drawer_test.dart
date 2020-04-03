@@ -10,7 +10,7 @@ void main() {
     (WidgetTester tester) async {
       final themeStore = ThemeStore();
 
-      await tester.pumpWidget(MetricsDrawerTestbed(
+      await tester.pumpWidget(_MetricsDrawerTestbed(
         themeStore: themeStore,
       ));
 
@@ -24,10 +24,10 @@ void main() {
   );
 }
 
-class MetricsDrawerTestbed extends StatelessWidget {
+class _MetricsDrawerTestbed extends StatelessWidget {
   final ThemeStore themeStore;
 
-  const MetricsDrawerTestbed({
+  const _MetricsDrawerTestbed({
     Key key,
     this.themeStore,
   }) : super(key: key);

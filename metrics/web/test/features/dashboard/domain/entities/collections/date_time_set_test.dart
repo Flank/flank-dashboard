@@ -8,10 +8,10 @@ void main() {
     () {
       final currentTimestamp = DateTime.now();
       final testData = [
-        DateTimeSetData(
+        _DateTimeSetData(
           date: currentTimestamp,
         ),
-        DateTimeSetData(
+        _DateTimeSetData(
           date: currentTimestamp,
         ),
       ];
@@ -26,10 +26,10 @@ void main() {
     "Creates the set of elements from the list of elements with unique dates",
     () {
       final testData = [
-        DateTimeSetData(
+        _DateTimeSetData(
           date: DateTime(2019),
         ),
-        DateTimeSetData(
+        _DateTimeSetData(
           date: DateTime(2020),
         ),
       ];
@@ -46,7 +46,7 @@ void main() {
       final currentDate = DateTime.now();
 
       final initialDateTimeSet = DateTimeSet.from([
-        DateTimeSetData(
+        _DateTimeSetData(
           date: currentDate,
           id: '1',
         ),
@@ -55,7 +55,7 @@ void main() {
       final dateTimeSet = DateTimeSet.from(initialDateTimeSet);
 
       dateTimeSet.add(
-        DateTimeSetData(
+        _DateTimeSetData(
           date: currentDate,
           id: '2',
         ),
@@ -67,7 +67,7 @@ void main() {
 
   test("The null value could be added to set", () {
     final dateTimeSet = DateTimeSet.from([
-      DateTimeSetData(
+      _DateTimeSetData(
         date: DateTime.now(),
         id: '2',
       ),
@@ -79,12 +79,12 @@ void main() {
   });
 }
 
-class DateTimeSetData extends DateTimeSetEntry {
+class _DateTimeSetData extends DateTimeSetEntry {
   @override
   final DateTime date;
   final String id;
 
-  DateTimeSetData({
+  _DateTimeSetData({
     this.date,
     this.id,
   });

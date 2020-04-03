@@ -4,15 +4,29 @@ import 'package:metrics/features/dashboard/presentation/model/project_metrics_da
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/metrics_title.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// Shows the available projects and metrics for these projects.
 class DashboardPage extends StatelessWidget {
+  static const _contentPadding = EdgeInsets.symmetric(horizontal: 64.0);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        bottom: PreferredSize(
+          preferredSize: Size(
+            MediaQuery.of(context).size.width,
+            60.0,
+          ),
+          child: const Padding(
+            padding: _contentPadding,
+            child: MetricsTitle(),
+          ),
+        ),
+      ),
       drawer: const MetricsDrawer(),
       body: SafeArea(
         child: WhenRebuilder<ProjectMetricsStore>(
@@ -21,8 +35,9 @@ class DashboardPage extends StatelessWidget {
           onWaiting: () => const LoadingPlaceholder(),
           onIdle: () => const LoadingPlaceholder(),
           onData: (store) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
+            return Container(
+              alignment: Alignment.center,
+              padding: _contentPadding,
               child: StreamBuilder<List<ProjectMetricsData>>(
                 stream: store.projectsMetrics,
                 builder: (context, snapshot) {
@@ -53,6 +68,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
+  /// Builds the loading error placeholder.
   Widget _buildLoadingErrorPlaceholder(error) {
     return _DashboardPlaceholder(
       text: DashboardStrings.getLoadingErrorMessage("$error"),
@@ -60,9 +76,11 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
+/// Widget that displays the placeholder [text] in center of the screen.
 class _DashboardPlaceholder extends StatelessWidget {
   final String text;
 
+  /// Creates the dashboard placeholder widget with the given [text].
   const _DashboardPlaceholder({
     Key key,
     this.text,

@@ -8,17 +8,12 @@ import 'package:metrics/features/common/presentation/metrics_theme/model/metrics
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart';
 
 void main() {
   testWidgets(
-    "Can't create widget with null title or value",
+    "Can't create widget with null value",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const SparklineGraphTestbed(title: null));
-
-      expect(tester.takeException(), isA<AssertionError>());
-
-      await tester.pumpWidget(const SparklineGraphTestbed(value: null));
+      await tester.pumpWidget(const _SparklineGraphTestbed(value: null));
 
       expect(tester.takeException(), isA<AssertionError>());
     },
@@ -27,7 +22,7 @@ void main() {
   testWidgets(
     "Can't create widget with null data",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const SparklineGraphTestbed(data: null));
+      await tester.pumpWidget(const _SparklineGraphTestbed(data: null));
 
       expect(tester.takeException(), isA<AssertionError>());
     },
@@ -36,7 +31,7 @@ void main() {
   testWidgets(
     "Can't create widget with negative stroke width",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const SparklineGraphTestbed(
+      await tester.pumpWidget(const _SparklineGraphTestbed(
         strokeWidth: -1.0,
       ));
 
@@ -44,101 +39,63 @@ void main() {
     },
   );
 
-  testWidgets("Displays the title and value", (WidgetTester tester) async {
-    const sparklineTitle = 'Metrics title';
-    const sparklineValue = 'value';
+  testWidgets(
+    "Displays the value text",
+    (WidgetTester tester) async {
+      const sparklineValue = 'value';
 
-    await tester.pumpWidget(const SparklineGraphTestbed(
-      title: sparklineTitle,
-      value: sparklineValue,
-    ));
+      await tester.pumpWidget(const _SparklineGraphTestbed(
+        value: sparklineValue,
+      ));
 
-    expect(find.text(sparklineTitle), findsOneWidget);
-    expect(find.text(sparklineValue), findsOneWidget);
-  });
+      expect(find.text(sparklineValue), findsOneWidget);
+    },
+  );
 
   testWidgets(
     'Creates the chart line from given data',
     (WidgetTester tester) async {
-      await tester.pumpWidget(const SparklineGraphTestbed());
+      await tester.pumpWidget(const _SparklineGraphTestbed());
 
       final lineChart = tester.widget<LineChart>(find.byType(LineChart));
       final chartLine = lineChart.lines.first;
 
       expect(
         chartLine.data,
-        equals(SparklineGraphTestbed.sparklineGraphTestData),
+        equals(_SparklineGraphTestbed.sparklineGraphTestData),
       );
     },
   );
 
   testWidgets(
-    'Creates SparklineGraph with proper line and gradient colors',
+    'Applies the stroke color to the graph',
     (WidgetTester tester) async {
       const strokeColor = Colors.orange;
-      final gradientColor = strokeColor.withOpacity(0.5);
-      await tester.pumpWidget(SparklineGraphTestbed(
+      await tester.pumpWidget(const _SparklineGraphTestbed(
         strokeColor: strokeColor,
-        gradientColor: gradientColor,
       ));
 
       final chartWidget = tester.widget<LineChart>(find.byType(LineChart));
       final chartLine = chartWidget.lines.first;
 
-      expect(chartLine.fill.gradient.colors, contains(gradientColor));
       expect(chartLine.stroke.color, strokeColor);
     },
   );
 
   testWidgets(
-    'Applies correct backdround color',
+    'Applies correct fill color',
     (WidgetTester tester) async {
-      const backgroundColor = Colors.orange;
+      const fillColor = Colors.orange;
 
-      await tester.pumpWidget(const SparklineGraphTestbed(
-        backgroundColor: backgroundColor,
+      await tester.pumpWidget(const _SparklineGraphTestbed(
+        fillColor: fillColor,
       ));
 
-      final chartCard = tester.widget<Card>(find.byType(Card));
+      final chartWidget = tester.widget<LineChart>(find.byType(LineChart));
+      final chartLine = chartWidget.lines.first;
+      final graphFillColor = chartLine.fill.color;
 
-      expect(chartCard.color, backgroundColor);
-    },
-  );
-
-  testWidgets(
-    'Applies padding to title and description',
-    (WidgetTester tester) async {
-      const padding = EdgeInsets.all(16.0);
-
-      await tester.pumpWidget(const SparklineGraphTestbed(
-        padding: padding,
-      ));
-
-      final Padding paddingWidget = tester.widget(
-        find.byWidgetPredicate(
-          (widget) => widget is Padding && widget.child is TextMetric,
-        ),
-      );
-
-      expect(paddingWidget.padding, equals(padding));
-    },
-  );
-
-  testWidgets(
-    'Applies border shape to background card widget',
-    (WidgetTester tester) async {
-      final borderRadius = BorderRadius.circular(14.0);
-
-      await tester.pumpWidget(SparklineGraphTestbed(
-        borderShape: RoundedRectangleBorder(
-          borderRadius: borderRadius,
-        ),
-      ));
-
-      final card = tester.widget<Card>(find.byType(Card));
-      final borderShape = card.shape as RoundedRectangleBorder;
-
-      expect(borderShape.borderRadius, borderRadius);
+      expect(graphFillColor, fillColor);
     },
   );
 
@@ -148,7 +105,7 @@ void main() {
       const value = 'value';
       const valuePadding = EdgeInsets.all(16.0);
 
-      await tester.pumpWidget(const SparklineGraphTestbed(
+      await tester.pumpWidget(const _SparklineGraphTestbed(
         value: value,
         valuePadding: valuePadding,
       ));
@@ -167,7 +124,7 @@ void main() {
     (WidgetTester tester) async {
       const chartPadding = EdgeInsets.all(8.0);
 
-      await tester.pumpWidget(const SparklineGraphTestbed(
+      await tester.pumpWidget(const _SparklineGraphTestbed(
         graphPadding: chartPadding,
       ));
 
@@ -178,24 +135,18 @@ void main() {
   );
 
   testWidgets(
-    "Applies the text styles to texts",
+    "Applies the value text style to value text",
     (WidgetTester tester) async {
-      const title = 'title';
       const value = 'value';
-      const titleStyle = TextStyle(color: Colors.green);
       const valueStyle = TextStyle(color: Colors.red);
 
-      await tester.pumpWidget(const SparklineGraphTestbed(
-        title: title,
+      await tester.pumpWidget(const _SparklineGraphTestbed(
         value: value,
-        titleStyle: titleStyle,
         valueStyle: valueStyle,
       ));
 
-      final titleWidget = tester.widget<Text>(find.text(title));
       final valueWidget = tester.widget<Text>(find.text(value));
 
-      expect(titleWidget.style, titleStyle);
       expect(valueWidget.style, valueStyle);
     },
   );
@@ -205,7 +156,7 @@ void main() {
     (WidgetTester tester) async {
       const curveType = LineCurves.linear;
 
-      await tester.pumpWidget(const SparklineGraphTestbed(
+      await tester.pumpWidget(const _SparklineGraphTestbed(
         curveType: curveType,
       ));
 
@@ -221,7 +172,7 @@ void main() {
     (WidgetTester tester) async {
       const strokeWidth = 1.5;
 
-      await tester.pumpWidget(const SparklineGraphTestbed(
+      await tester.pumpWidget(const _SparklineGraphTestbed(
         strokeWidth: strokeWidth,
       ));
 
@@ -237,24 +188,21 @@ void main() {
     (WidgetTester tester) async {
       const primaryColor = Colors.orange;
       const accentColor = Colors.orangeAccent;
-      const backgroundColor = Colors.grey;
 
       const theme = MetricsThemeData(
-        sparklineTheme: MetricWidgetThemeData(
-            primaryColor: primaryColor,
-            accentColor: accentColor,
-            backgroundColor: backgroundColor),
+        metricWidgetTheme: MetricWidgetThemeData(
+          primaryColor: primaryColor,
+          accentColor: accentColor,
+        ),
       );
 
-      await tester.pumpWidget(const SparklineGraphTestbed(theme: theme));
+      await tester.pumpWidget(const _SparklineGraphTestbed(theme: theme));
 
-      final graphCardWidget = tester.widget<Card>(find.byType(Card));
       final lineChartWidget = tester.widget<LineChart>(find.byType(LineChart));
       final chartLine = lineChartWidget.lines.first;
 
-      expect(graphCardWidget.color, backgroundColor);
       expect(chartLine.stroke.color, primaryColor);
-      expect(chartLine.fill.gradient.colors.first, accentColor);
+      expect(chartLine.fill.color, accentColor);
     },
   );
 
@@ -266,7 +214,7 @@ void main() {
         Point(2, 5),
       ];
 
-      await tester.pumpWidget(const SparklineGraphTestbed(
+      await tester.pumpWidget(const _SparklineGraphTestbed(
         data: graphData,
       ));
 
@@ -281,7 +229,7 @@ void main() {
         Point(1, 5),
       ];
 
-      await tester.pumpWidget(const SparklineGraphTestbed(
+      await tester.pumpWidget(const _SparklineGraphTestbed(
         data: graphData,
       ));
 
@@ -303,7 +251,7 @@ void main() {
         Point(3, 8),
       ];
 
-      await tester.pumpWidget(const SparklineGraphTestbed(
+      await tester.pumpWidget(const _SparklineGraphTestbed(
         data: sparklineData,
       ));
       await tester.pumpAndSettle();
@@ -327,7 +275,7 @@ void main() {
   );
 }
 
-class SparklineGraphTestbed extends StatelessWidget {
+class _SparklineGraphTestbed extends StatelessWidget {
   static const sparklineGraphTestData = [
     Point(1, 5),
     Point(2, 7),
@@ -337,36 +285,26 @@ class SparklineGraphTestbed extends StatelessWidget {
     Point(6, 3),
   ];
 
-  final String title;
   final String value;
   final List<Point> data;
   final Color strokeColor;
-  final Color gradientColor;
-  final Color backgroundColor;
+  final Color fillColor;
   final EdgeInsets graphPadding;
-  final ShapeBorder borderShape;
   final EdgeInsets valuePadding;
-  final EdgeInsets padding;
-  final TextStyle titleStyle;
   final TextStyle valueStyle;
   final LineCurve curveType;
   final double strokeWidth;
   final MetricsThemeData theme;
 
-  const SparklineGraphTestbed({
-    this.title = 'Metrics',
+  const _SparklineGraphTestbed({
     this.value = '10',
     this.data = sparklineGraphTestData,
     this.valuePadding = const EdgeInsets.all(32.0),
-    this.padding = const EdgeInsets.all(8.0),
     this.graphPadding = EdgeInsets.zero,
     this.strokeWidth = 2.0,
     this.theme = const MetricsThemeData(),
     this.strokeColor,
-    this.gradientColor,
-    this.borderShape,
-    this.backgroundColor,
-    this.titleStyle,
+    this.fillColor,
     this.valueStyle,
     this.curveType,
   });
@@ -378,20 +316,15 @@ class SparklineGraphTestbed extends StatelessWidget {
         body: MetricsTheme(
           data: theme,
           child: SparklineGraph(
-            title: title,
             data: data,
             value: value,
             strokeColor: strokeColor,
-            gradientColor: gradientColor,
-            backgroundColor: backgroundColor,
             graphPadding: graphPadding,
-            borderShape: borderShape,
             valuePadding: valuePadding,
-            padding: padding,
-            titleStyle: titleStyle,
             valueStyle: valueStyle,
             curveType: curveType,
             strokeWidth: strokeWidth,
+            fillColor: fillColor,
           ),
         ),
       ),

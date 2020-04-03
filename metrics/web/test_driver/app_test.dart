@@ -55,8 +55,6 @@ void main() {
       test(
         "loads the build result metrics and shows the build results widget",
         () async {
-          await driver.waitFor(find.text(DashboardStrings.buildTaskName));
-
           await driver.waitFor(find.byType('BuildResultBarGraph'));
         },
       );

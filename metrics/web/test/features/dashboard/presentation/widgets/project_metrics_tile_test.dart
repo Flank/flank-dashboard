@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
-import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
@@ -13,7 +12,7 @@ void main() {
   testWidgets(
     "Can't create the ProjectTile with null projectMetrics",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const ProjectMetricsTileTestbed(
+      await tester.pumpWidget(const _ProjectMetricsTileTestbed(
         projectMetrics: null,
       ));
 
@@ -29,7 +28,7 @@ void main() {
             'Some very long name to display that may overflow on some screens but should be displayed properly. Also, this project name has a description that placed to the project name, but we still can display it properly with any overflows.',
       );
 
-      await tester.pumpWidget(const ProjectMetricsTileTestbed(
+      await tester.pumpWidget(const _ProjectMetricsTileTestbed(
         projectMetrics: metrics,
       ));
 
@@ -42,7 +41,7 @@ void main() {
     (WidgetTester tester) async {
       const metrics = ProjectMetricsData();
 
-      await tester.pumpWidget(const ProjectMetricsTileTestbed(
+      await tester.pumpWidget(const _ProjectMetricsTileTestbed(
         projectMetrics: metrics,
       ));
 
@@ -53,10 +52,15 @@ void main() {
   testWidgets(
     "Contains coverage circle percentage",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const ProjectMetricsTileTestbed());
+      final coveragePercent =
+          _ProjectMetricsTileTestbed.testProjectMetrics.coverage;
+      final coverageText = '${(coveragePercent.value * 100).toInt()}%';
+
+      await tester.pumpWidget(const _ProjectMetricsTileTestbed());
+      await tester.pumpAndSettle();
 
       expect(
-        find.widgetWithText(CirclePercentage, DashboardStrings.coverage),
+        find.widgetWithText(CirclePercentage, coverageText),
         findsOneWidget,
       );
     },
@@ -65,10 +69,15 @@ void main() {
   testWidgets(
     "Contains stability circle percentage",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const ProjectMetricsTileTestbed());
+      final stabilityPercent =
+          _ProjectMetricsTileTestbed.testProjectMetrics.coverage;
+      final stabilityText = '${(stabilityPercent.value * 100).toInt()}%';
+
+      await tester.pumpWidget(const _ProjectMetricsTileTestbed());
+      await tester.pumpAndSettle();
 
       expect(
-        find.widgetWithText(CirclePercentage, DashboardStrings.stability),
+        find.widgetWithText(CirclePercentage, stabilityText),
         findsOneWidget,
       );
     },
@@ -77,10 +86,13 @@ void main() {
   testWidgets(
     "Contains TextMetric with build number metric",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const ProjectMetricsTileTestbed());
+      final buildNumber =
+          _ProjectMetricsTileTestbed.testProjectMetrics.buildNumberMetric;
+
+      await tester.pumpWidget(const _ProjectMetricsTileTestbed());
 
       expect(
-        find.widgetWithText(TextMetric, DashboardStrings.builds),
+        find.widgetWithText(TextMetric, '$buildNumber'),
         findsOneWidget,
       );
     },
@@ -89,10 +101,10 @@ void main() {
   testWidgets(
     "Contains SparklineGraph widgets with performance metric",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const ProjectMetricsTileTestbed());
+      await tester.pumpWidget(const _ProjectMetricsTileTestbed());
 
       expect(
-        find.widgetWithText(SparklineGraph, DashboardStrings.performance),
+        find.byType(SparklineGraph),
         findsOneWidget,
       );
     },
@@ -101,18 +113,18 @@ void main() {
   testWidgets(
     "Contains the bar graph with the build results",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const ProjectMetricsTileTestbed());
+      await tester.pumpWidget(const _ProjectMetricsTileTestbed());
 
       expect(find.byType(BuildResultBarGraph), findsOneWidget);
     },
   );
 }
 
-class ProjectMetricsTileTestbed extends StatelessWidget {
+class _ProjectMetricsTileTestbed extends StatelessWidget {
   static const ProjectMetricsData testProjectMetrics = ProjectMetricsData(
     projectName: 'Test project name',
-    coverage: Percent(0.0),
-    stability: Percent(0.0),
+    coverage: Percent(0.3),
+    stability: Percent(0.4),
     buildNumberMetric: 0,
     averageBuildDurationInMinutes: 0,
     performanceMetrics: [],
@@ -120,7 +132,7 @@ class ProjectMetricsTileTestbed extends StatelessWidget {
   );
   final ProjectMetricsData projectMetrics;
 
-  const ProjectMetricsTileTestbed({
+  const _ProjectMetricsTileTestbed({
     Key key,
     this.projectMetrics = testProjectMetrics,
   }) : super(key: key);

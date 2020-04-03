@@ -2,58 +2,54 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
 
-/// The widget stands for displaying the [value] text with some [title].
+/// The widget stands for displaying the [value] text with some [description].
 class TextMetric extends StatelessWidget {
-  final String title;
+  final String description;
   final String value;
   final EdgeInsets valuePadding;
   final TextStyle valueStyle;
-  final TextStyle titleStyle;
+  final TextStyle descriptionStyle;
 
-  /// Creates the [TextMetric] with given [title] and [value] texts.
+  /// Creates the [TextMetric] with given [description] and [value] texts.
   ///
-  /// The [title] and [value] must not be null.
+  /// The [description] and [value] must not be null.
   ///
   /// [valuePadding] is the padding of the value text.
   /// [valueStyle] is the [TextStyle] of the value text.
-  /// [titleStyle] is the [TextStyle] of the title text.
+  /// [descriptionStyle] is the [TextStyle] of the title text.
   const TextMetric({
     Key key,
-    @required this.title,
+    @required this.description,
     @required this.value,
-    this.valuePadding = const EdgeInsets.all(32.0),
+    this.valuePadding = EdgeInsets.zero,
     this.valueStyle,
-    this.titleStyle,
-  })  : assert(title != null),
+    this.descriptionStyle,
+  })  : assert(description != null),
         assert(value != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Expanded(
-          child: ExpandableText(
-            title,
-            style: titleStyle,
+          flex: 3,
+          child: Padding(
+            padding: valuePadding,
+            child: ExpandableText(
+              value,
+              style: valueStyle,
+            ),
           ),
         ),
         Expanded(
-          flex: 5,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: valuePadding,
-                  child: ExpandableText(
-                    value,
-                    style: valueStyle,
-                  ),
-                ),
-              ),
-            ],
+          child: Padding(
+            padding: EdgeInsets.zero,
+            child: ExpandableText(
+              description,
+              style: descriptionStyle,
+            ),
           ),
         )
       ],

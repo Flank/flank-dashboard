@@ -37,7 +37,7 @@ class DashboardProjectMetrics extends Equatable {
     this.buildNumberMetrics = const BuildNumberMetric(),
     this.performanceMetrics = const PerformanceMetric(),
     this.buildResultMetrics = const BuildResultMetric(),
-    this.coverage = const Percent(0.0),
-    this.stability = const Percent(0.0),
+    this.coverage,
+    this.stability,
   });
 }

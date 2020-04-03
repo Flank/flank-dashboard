@@ -10,39 +10,49 @@ class MetricsThemeData {
   static const MetricWidgetThemeData _defaultWidgetThemeData =
       MetricWidgetThemeData();
 
-  final MetricWidgetThemeData circlePercentagePrimaryTheme;
-  final MetricWidgetThemeData circlePercentageAccentTheme;
-  final MetricWidgetThemeData sparklineTheme;
+  final MetricWidgetThemeData circlePercentageHighPercentTheme;
+  final MetricWidgetThemeData circlePercentageMediumPercentTheme;
+  final MetricWidgetThemeData circlePercentageLowPercentTheme;
+  final MetricWidgetThemeData metricWidgetTheme;
+  final MetricWidgetThemeData inactiveWidgetTheme;
   final BuildResultsThemeData buildResultTheme;
   final Color barGraphBackgroundColor;
 
   /// Creates the [MetricsThemeData].
   ///
-  /// [circlePercentagePrimaryTheme] is the theme of
-  /// main [CirclePercentage] widget.
-  /// Used to set the default colors to the [CirclePercentage] widget.
+  /// [circlePercentageHighPercentTheme] is the theme of the [CirclePercentage] widget
+  /// with high percent value.
   ///
-  /// [circlePercentageAccentTheme] is the theme of
-  /// the additional [CirclePercentage] widget.
-  /// Used to create the additional color configuration
-  /// for the [CirclePercentage] widget.
+  /// [circlePercentageMediumPercentTheme] is the theme of the [CirclePercentage] widget
+  /// with medium percent value.
   ///
-  /// [sparklineTheme] is the color theme of the [SparklineGraph].
+  /// [circlePercentageLowPercentTheme] is the theme of the [CirclePercentage] widget
+  /// with low percent value.
+  ///
+  /// [metricWidgetTheme] is the color theme of the [SparklineGraph].
   /// Used to set the default colors to the [SparklineGraph].
+  ///
+  /// [inactiveWidgetTheme] is the color theme of the inactive metric widgets.
+  /// This theme is used when there are no data for metric.
   ///
   /// [buildResultTheme] is the color theme for the [BuildResultBarGraph].
   /// Used to set the colors of the graph bars.
   const MetricsThemeData({
-    MetricWidgetThemeData circlePercentagePrimaryTheme,
-    MetricWidgetThemeData circlePercentageAccentTheme,
-    MetricWidgetThemeData sparklineTheme,
+    MetricWidgetThemeData circlePercentageHighPercentTheme,
+    MetricWidgetThemeData circlePercentageMediumPercentTheme,
+    MetricWidgetThemeData circlePercentageLowPercentTheme,
+    MetricWidgetThemeData metricWidgetTheme,
+    MetricWidgetThemeData inactiveWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     this.barGraphBackgroundColor,
-  })  : circlePercentageAccentTheme =
-            circlePercentageAccentTheme ?? _defaultWidgetThemeData,
-        circlePercentagePrimaryTheme =
-            circlePercentagePrimaryTheme ?? _defaultWidgetThemeData,
-        sparklineTheme = sparklineTheme ?? _defaultWidgetThemeData,
+  })  : circlePercentageHighPercentTheme =
+            circlePercentageHighPercentTheme ?? _defaultWidgetThemeData,
+        circlePercentageMediumPercentTheme =
+            circlePercentageMediumPercentTheme ?? _defaultWidgetThemeData,
+        circlePercentageLowPercentTheme =
+            circlePercentageLowPercentTheme ?? _defaultWidgetThemeData,
+        inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
+        metricWidgetTheme = metricWidgetTheme ?? _defaultWidgetThemeData,
         buildResultTheme = buildResultTheme ??
             const BuildResultsThemeData(
               canceledColor: Colors.grey,
@@ -55,18 +65,21 @@ class MetricsThemeData {
   /// If any of the passed parameters are null, or parameter isn't specified,
   /// the value will be copied from the current instance.
   MetricsThemeData copyWith({
-    MetricWidgetThemeData circlePercentagePrimaryTheme,
-    MetricWidgetThemeData circlePercentageAccentTheme,
-    MetricWidgetThemeData sparklineTheme,
+    MetricWidgetThemeData circlePercentageHighPercentTheme,
+    MetricWidgetThemeData circlePercentageMediumPercentTheme,
+    MetricWidgetThemeData circlePercentageLowPercentTheme,
+    MetricWidgetThemeData metricWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     Color barGraphBackgroundColor,
   }) {
     return MetricsThemeData(
-      circlePercentagePrimaryTheme:
-          circlePercentagePrimaryTheme ?? this.circlePercentagePrimaryTheme,
-      circlePercentageAccentTheme:
-          circlePercentageAccentTheme ?? this.circlePercentageAccentTheme,
-      sparklineTheme: sparklineTheme ?? this.sparklineTheme,
+      circlePercentageHighPercentTheme: circlePercentageHighPercentTheme ??
+          this.circlePercentageHighPercentTheme,
+      circlePercentageMediumPercentTheme: circlePercentageMediumPercentTheme ??
+          this.circlePercentageMediumPercentTheme,
+      circlePercentageLowPercentTheme: circlePercentageLowPercentTheme ??
+          this.circlePercentageLowPercentTheme,
+      metricWidgetTheme: metricWidgetTheme ?? this.metricWidgetTheme,
       buildResultTheme: buildResultTheme ?? this.buildResultTheme,
       barGraphBackgroundColor:
           barGraphBackgroundColor ?? this.barGraphBackgroundColor,

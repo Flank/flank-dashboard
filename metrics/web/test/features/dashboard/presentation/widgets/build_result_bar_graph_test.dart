@@ -12,46 +12,12 @@ import 'package:metrics/features/dashboard/presentation/widgets/placeholder_bar.
 import 'package:metrics_core/metrics_core.dart';
 
 void main() {
-  const buildResults = BuildResultBarGraphTestbed.buildResultBarTestData;
-
-  testWidgets('Displays title text', (WidgetTester tester) async {
-    const title = 'Some title';
-
-    await tester.pumpWidget(const BuildResultBarGraphTestbed(title: title));
-
-    expect(find.text(title), findsOneWidget);
-  });
-
-  testWidgets(
-    'Applies the text style to the title',
-    (WidgetTester tester) async {
-      const title = 'title';
-      const titleStyle = TextStyle(color: Colors.red);
-
-      await tester.pumpWidget(const BuildResultBarGraphTestbed(
-        title: title,
-        titleStyle: titleStyle,
-      ));
-
-      final titleWidget = tester.widget<Text>(find.text(title));
-
-      expect(titleWidget.style, titleStyle);
-    },
-  );
-
-  testWidgets(
-    "Can't create widget without title",
-    (WidgetTester tester) async {
-      await tester.pumpWidget(const BuildResultBarGraphTestbed(title: null));
-
-      expect(tester.takeException(), isA<AssertionError>());
-    },
-  );
+  const buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
 
   testWidgets(
     "Can't create widget without data",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const BuildResultBarGraphTestbed(data: null));
+      await tester.pumpWidget(const _BuildResultBarGraphTestbed(data: null));
 
       expect(tester.takeException(), isA<AssertionError>());
     },
@@ -60,7 +26,7 @@ void main() {
   testWidgets(
     "Creates the number of bars equal to the number of given BuildResultBarData",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const BuildResultBarGraphTestbed());
+      await tester.pumpWidget(const _BuildResultBarGraphTestbed());
 
       final barWidgets = tester.widgetList(find.descendant(
         of: find.byType(LayoutBuilder),
@@ -82,7 +48,7 @@ void main() {
         failedColor: errorColor,
         canceledColor: errorColor,
       );
-      await tester.pumpWidget(const BuildResultBarGraphTestbed(
+      await tester.pumpWidget(const _BuildResultBarGraphTestbed(
         theme: MetricsThemeData(
           buildResultTheme: themeData,
         ),
@@ -123,7 +89,7 @@ void main() {
     (WidgetTester tester) async {
       final numberOfBars = buildResults.length + 1;
 
-      await tester.pumpWidget(BuildResultBarGraphTestbed(
+      await tester.pumpWidget(_BuildResultBarGraphTestbed(
         numberOfBars: numberOfBars,
       ));
 
@@ -142,7 +108,7 @@ void main() {
     (WidgetTester tester) async {
       const numberOfBars = 2;
 
-      await tester.pumpWidget(const BuildResultBarGraphTestbed(
+      await tester.pumpWidget(const _BuildResultBarGraphTestbed(
         numberOfBars: numberOfBars,
       ));
 
@@ -170,7 +136,7 @@ void main() {
         )
       ];
 
-      await tester.pumpWidget(BuildResultBarGraphTestbed(
+      await tester.pumpWidget(_BuildResultBarGraphTestbed(
         data: testData,
         numberOfBars: testData.length,
       ));
@@ -180,7 +146,7 @@ void main() {
   );
 }
 
-class BuildResultBarGraphTestbed extends StatelessWidget {
+class _BuildResultBarGraphTestbed extends StatelessWidget {
   static const buildResultBarTestData = [
     BuildResultBarData(
       buildStatus: BuildStatus.successful,
@@ -196,17 +162,13 @@ class BuildResultBarGraphTestbed extends StatelessWidget {
     ),
   ];
 
-  final String title;
-  final TextStyle titleStyle;
   final List<BuildResultBarData> data;
   final MetricsThemeData theme;
   final int numberOfBars;
 
-  const BuildResultBarGraphTestbed({
+  const _BuildResultBarGraphTestbed({
     Key key,
-    this.title = "Build result graph",
     this.data = buildResultBarTestData,
-    this.titleStyle,
     this.theme = const MetricsThemeData(),
     this.numberOfBars = 3,
   }) : super(key: key);
@@ -220,8 +182,6 @@ class BuildResultBarGraphTestbed extends StatelessWidget {
           body: Center(
             child: BuildResultBarGraph(
               data: data,
-              title: title,
-              titleStyle: titleStyle,
               numberOfBars: numberOfBars,
             ),
           ),

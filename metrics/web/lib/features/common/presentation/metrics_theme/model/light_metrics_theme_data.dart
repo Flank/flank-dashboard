@@ -9,27 +9,37 @@ class LightMetricsThemeData extends MetricsThemeData {
   /// Creates the light theme with the default widget theme configuration.
   const LightMetricsThemeData()
       : super(
-          circlePercentagePrimaryTheme: const MetricWidgetThemeData(
+          circlePercentageHighPercentTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
             accentColor: Colors.transparent,
             backgroundColor: ColorConfig.primaryTranslucentColor,
-            titleStyle: TextStyle(color: ColorConfig.primaryColor),
           ),
-          circlePercentageAccentTheme: const MetricWidgetThemeData(
+          circlePercentageLowPercentTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.accentColor,
             accentColor: Colors.transparent,
             backgroundColor: ColorConfig.accentTranslucentColor,
-            titleStyle: TextStyle(color: ColorConfig.accentColor),
           ),
-          sparklineTheme: const MetricWidgetThemeData(
+          circlePercentageMediumPercentTheme: const MetricWidgetThemeData(
+            primaryColor: ColorConfig.yellow,
+            accentColor: Colors.transparent,
+            backgroundColor: ColorConfig.yellowTranslucent,
+          ),
+          metricWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
-            accentColor: ColorConfig.primaryColor,
+            accentColor: ColorConfig.primaryTranslucentColor,
             backgroundColor: Colors.white,
+            textStyle: TextStyle(color: ColorConfig.primaryColor),
           ),
           buildResultTheme: const BuildResultsThemeData(
             canceledColor: ColorConfig.accentColor,
             successfulColor: ColorConfig.primaryColor,
             failedColor: ColorConfig.accentColor,
+          ),
+          inactiveWidgetTheme: const MetricWidgetThemeData(
+            primaryColor: ColorConfig.lightInactiveColor,
+            accentColor: Colors.transparent,
+            backgroundColor: ColorConfig.lightInactiveBackgroundColor,
+            textStyle: TextStyle(color: Colors.grey),
           ),
         );
 }
