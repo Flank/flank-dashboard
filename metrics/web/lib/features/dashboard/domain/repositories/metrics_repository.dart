@@ -17,4 +17,7 @@ abstract class MetricsRepository {
     String projectId,
     DateTime from,
   );
+
+  /// Provides the stream of the last successful [Build] of the project with [projectId].
+  Stream<List<Build>> lastSuccessfulBuildStream(String projectId);
 }

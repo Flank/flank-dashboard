@@ -1,13 +1,15 @@
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
+import 'package:ci_integration/jenkins/client/mapper/jenkins_build_result_mapper.dart';
 import 'package:test/test.dart';
 
 import '../test_data/jenkins_artifacts_test_data.dart';
 
 void main() {
   group("JenkinsBuild", () {
+    const resultMapper = JenkinsBuildResultMapper();
     const number = 1;
     const duration = 10;
-    const result = 'FAILED';
+    const result = 'FAILURE';
     const url = 'url';
     final timestamp = DateTime(2020);
 
@@ -24,7 +26,7 @@ void main() {
       number: number,
       duration: const Duration(seconds: duration),
       timestamp: timestamp,
-      result: result,
+      result: resultMapper.map(result),
       url: url,
       artifacts: JenkinsArtifactsTestData.artifacts,
     );
@@ -81,7 +83,7 @@ void main() {
           number: _number,
           duration: const Duration(seconds: _duration),
           timestamp: _timestamp,
-          result: _result,
+          result: resultMapper.map(_result),
           url: _url,
         );
 

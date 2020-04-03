@@ -9,7 +9,7 @@ import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart'
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
-import 'package:ci_integration/jenkins/client/util/url_utils.dart';
+import 'package:ci_integration/jenkins/util/url_utils.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
@@ -261,9 +261,12 @@ class JenkinsClient {
   Future<InteractionResult<JenkinsBuildingJob>> _fetchBuilds(String url) {
     return _handleResponse<JenkinsBuildingJob>(
       _client.get(url, headers: headers),
-      (Map<String, dynamic> json) => InteractionResult.success(
-        result: JenkinsBuildingJob.fromJson(json),
-      ),
+      (Map<String, dynamic> json) {
+        json['builds'] = (json['builds'] as List<dynamic>)?.reversed?.toList();
+        return InteractionResult.success(
+          result: JenkinsBuildingJob.fromJson(json),
+        );
+      },
     );
   }
 

@@ -30,11 +30,11 @@ class BuildData extends Build implements DataModel {
     return {
       'buildNumber': buildNumber,
       'startedAt': startedAt,
-      'buildStatus': buildStatus.index,
-      'duration': duration.inMilliseconds,
+      'buildStatus': buildStatus?.index,
+      'duration': duration?.inMilliseconds,
       'workflowName': workflowName,
       'url': url,
-      'coverage': coverage.value,
+      'coverage': coverage?.value,
     };
   }
 }

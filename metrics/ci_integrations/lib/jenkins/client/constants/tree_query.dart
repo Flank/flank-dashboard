@@ -8,7 +8,7 @@ class TreeQuery {
   /// The part of the `tree` query parameter that stands for [JenkinsBuild]'s
   /// properties to fetch.
   static const String build =
-      'number,duration,timestamp,result,url,artifacts[$artifacts]';
+      'number,duration,timestamp,result,url,building,artifacts[$artifacts]';
 
   /// The part of the `tree` query parameter that stands for [JenkinsJob]'s
   /// properties to fetch.

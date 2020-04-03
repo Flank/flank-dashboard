@@ -5,7 +5,6 @@ import 'package:metrics/features/dashboard/domain/entities/metrics/build_number_
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_result_metric.dart';
-import 'package:metrics/features/dashboard/domain/entities/metrics/builds_on_date.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id_param.dart';
@@ -13,7 +12,6 @@ import 'package:metrics/features/dashboard/domain/usecases/receive_project_metri
 import 'package:metrics/features/dashboard/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
-import 'package:metrics/util/date.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
@@ -82,7 +80,6 @@ void main() {
 
       expect(projectMetrics.buildResultMetrics, isEmpty);
       expect(projectMetrics.performanceMetrics, isEmpty);
-      expect(projectMetrics.buildNumberMetrics, isEmpty);
     },
   );
 
@@ -104,7 +101,6 @@ void main() {
 
       expect(projectMetrics.buildResultMetrics, isNull);
       expect(projectMetrics.performanceMetrics, isNull);
-      expect(projectMetrics.buildNumberMetrics, isNull);
     },
   );
 
@@ -120,31 +116,13 @@ void main() {
   test("Loads the build number metrics", () async {
     final expectedBuildNumberMetrics =
         expectedProjectMetrics.buildNumberMetrics;
-    final buildsPerFirstDate = expectedBuildNumberMetrics.buildsOnDateSet.first;
 
     final actualProjectMetrics = await projectMetricsStream.first;
     final firstProjectMetrics = actualProjectMetrics.first;
-    final buildNumberMetrics = firstProjectMetrics.buildNumberMetrics;
 
     expect(
-      firstProjectMetrics.numberOfBuilds,
-      expectedBuildNumberMetrics.totalNumberOfBuilds,
-    );
-
-    expect(
-      firstProjectMetrics.buildNumberMetrics.length,
-      expectedBuildNumberMetrics.buildsOnDateSet.length,
-    );
-
-    final firstBuildNumberMetric = buildNumberMetrics.first;
-
-    expect(
-      firstBuildNumberMetric.x,
-      buildsPerFirstDate.date.millisecondsSinceEpoch,
-    );
-    expect(
-      firstBuildNumberMetric.y,
-      expectedBuildNumberMetrics.totalNumberOfBuilds,
+      firstProjectMetrics.buildNumberMetric,
+      expectedBuildNumberMetrics.numberOfBuilds,
     );
   });
 
@@ -324,14 +302,8 @@ class ReceiveProjectMetricsUpdatesTestbed
       ]),
       averageBuildDuration: const Duration(minutes: 3),
     ),
-    buildNumberMetrics: BuildNumberMetric(
-      buildsOnDateSet: DateTimeSet.from([
-        BuildsOnDate(
-          date: DateTime.now().date,
-          numberOfBuilds: 1,
-        ),
-      ]),
-      totalNumberOfBuilds: 1,
+    buildNumberMetrics: const BuildNumberMetric(
+      numberOfBuilds: 1,
     ),
     buildResultMetrics: BuildResultMetric(
       buildResults: [

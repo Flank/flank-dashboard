@@ -6,6 +6,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 void main() {
@@ -74,18 +75,19 @@ void main() {
   );
 
   testWidgets(
-    'Contains SparklineGraph widgets with build metric',
+    "Contains TextMetric with build number metric",
     (WidgetTester tester) async {
       await tester.pumpWidget(const ProjectMetricsTileTestbed());
 
       expect(
-        find.widgetWithText(SparklineGraph, DashboardStrings.builds),
+        find.widgetWithText(TextMetric, DashboardStrings.builds),
         findsOneWidget,
       );
     },
   );
+
   testWidgets(
-    'Contains SparklineGraph widgets with performance metric',
+    "Contains SparklineGraph widgets with performance metric",
     (WidgetTester tester) async {
       await tester.pumpWidget(const ProjectMetricsTileTestbed());
 
@@ -111,10 +113,9 @@ class ProjectMetricsTileTestbed extends StatelessWidget {
     projectName: 'Test project name',
     coverage: Percent(0.0),
     stability: Percent(0.0),
-    numberOfBuilds: 0,
+    buildNumberMetric: 0,
     averageBuildDurationInMinutes: 0,
     performanceMetrics: [],
-    buildNumberMetrics: [],
     buildResultMetrics: [],
   );
   final ProjectMetricsData projectMetrics;

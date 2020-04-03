@@ -1,4 +1,4 @@
-import 'package:ci_integration/jenkins/client/util/number_validator.dart';
+import 'package:ci_integration/jenkins/util/number_validator.dart';
 
 /// A class representing a range specifier for array-type properties in
 /// Jenkins API requests.
