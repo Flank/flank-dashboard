@@ -3,9 +3,9 @@ import 'package:metrics_core/metrics_core.dart';
 
 import '../../test_data/builds_test_data.dart';
 
-/// A testbed class for a [StorageClient] abstract class providing test
+/// A stub class for a [StorageClient] abstract class providing test
 /// implementation for methods.
-class StorageClientTestbed implements StorageClient {
+class StorageClientStub implements StorageClient {
   /// Callback used to replace the default [fetchLastBuild] method
   /// implementation in testing purposes.
   final Future<BuildData> Function(String) fetchLastBuildCallback;
@@ -14,10 +14,10 @@ class StorageClientTestbed implements StorageClient {
   /// implementation in testing purposes.
   final Future<void> Function(String, List<BuildData>) addBuildsCallback;
 
-  /// Creates a testbed instance.
+  /// Creates this stub class instance.
   ///
   /// Both [fetchLastBuildCallback] and [addBuildsCallback] are optional.
-  StorageClientTestbed({
+  StorageClientStub({
     this.fetchLastBuildCallback,
     this.addBuildsCallback,
   });

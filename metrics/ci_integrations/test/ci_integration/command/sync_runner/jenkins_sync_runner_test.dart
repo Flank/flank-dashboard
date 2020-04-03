@@ -11,7 +11,7 @@ void main() {
     const jobName = 'jobName';
     const metricsProjectId = 'metricsProjectId';
 
-    const logger = Logger();
+    final logger = Logger();
     final CiIntegrationConfig config = CiIntegrationConfig(
       source: JenkinsConfig(
         url: 'url',

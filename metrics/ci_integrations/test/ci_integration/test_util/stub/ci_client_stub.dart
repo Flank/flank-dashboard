@@ -3,9 +3,9 @@ import 'package:metrics_core/metrics_core.dart';
 
 import '../../test_data/builds_test_data.dart';
 
-/// A testbed class for a [CiClient] abstract class providing test
+/// A stub class for a [CiClient] abstract class providing test
 /// implementation for methods.
-class CiClientTestbed implements CiClient {
+class CiClientStub implements CiClient {
   /// Callback used to replace the default [fetchBuildsAfter] method
   /// implementation in testing purposes.
   final Future<List<BuildData>> Function(String, BuildData)
@@ -15,10 +15,10 @@ class CiClientTestbed implements CiClient {
   /// implementation in testing purposes.
   final Future<List<BuildData>> Function(String) fetchBuildsCallback;
 
-  /// Creates a testbed instance.
+  /// Creates this stub class instance.
   ///
-  /// The [fetchBuildsAfterCallback] is optional.
-  CiClientTestbed({
+  /// Both [fetchBuildsAfterCallback] and [fetchBuildsCallback] are optional.
+  CiClientStub({
     this.fetchBuildsAfterCallback,
     this.fetchBuildsCallback,
   });

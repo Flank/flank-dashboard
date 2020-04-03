@@ -7,16 +7,18 @@ import 'package:ci_integration/common/client/storage_client.dart';
 import 'package:ci_integration/common/config/ci_config.dart';
 import 'package:ci_integration/common/logger/logger.dart';
 import 'package:ci_integration/config/model/ci_integration_config.dart';
+import 'package:ci_integration/firestore/adapter/firestore_storage_client_adapter.dart';
 import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
 import 'package:test/test.dart';
 
-import '../../test_util/testbed/ci_client_testbed.dart';
-import '../../test_util/testbed/storage_client_testbed.dart';
+import '../../test_util/stub/ci_client_stub.dart';
+import '../../test_util/stub/logger_stub.dart';
+import '../../test_util/stub/storage_client_stub.dart';
 
 void main() {
   group("SyncRunner", () {
-    final logger = LoggerTestbed();
+    final logger = LoggerStub();
     final CiIntegrationConfig config = CiIntegrationConfig(
       source: JenkinsConfig(
         url: 'url',
@@ -29,7 +31,7 @@ void main() {
         metricsProjectId: 'metricsProjectId',
       ),
     );
-    final syncRunner = SyncRunnerTestbed(config, logger);
+    final syncRunner = SyncRunnerStub(config, logger);
 
     setUp(() {
       logger.clearLogs();
@@ -39,14 +41,14 @@ void main() {
     test(
       "should throw ArgumentError trying to create an instance with null config",
       () {
-        expect(() => SyncRunnerTestbed(null, logger), throwsArgumentError);
+        expect(() => SyncRunnerStub(null, logger), throwsArgumentError);
       },
     );
 
     test(
       "should throw ArgumentError trying to create an instance with null logger",
       () {
-        expect(() => SyncRunnerTestbed(config, null), throwsArgumentError);
+        expect(() => SyncRunnerStub(config, null), throwsArgumentError);
       },
     );
 
@@ -67,6 +69,16 @@ void main() {
     );
 
     test(
+      ".prepareStorageClient() should return the Firestore storage client",
+      () async {
+        final syncRunner = JenkinsSyncRunner(config, logger);
+        final storageClient = await syncRunner.prepareStorageClient();
+
+        expect(storageClient, isA<FirestoreStorageClientAdapter>());
+      },
+    );
+
+    test(
       ".sync() must call .dispose() once",
       () async {
         await syncRunner.sync();
@@ -75,12 +87,23 @@ void main() {
     );
 
     test(".sync() should log error if synchronization is failed", () async {
-      final syncRunner = SyncRunnerTestbed(
+      final syncRunner = SyncRunnerStub(
         config,
         logger,
-        storageClient: StorageClientTestbed(
+        storageClientCallback: () => StorageClientStub(
           addBuildsCallback: (_, __) => throw UnimplementedError(),
         ),
+      );
+
+      await syncRunner.sync();
+      expect(logger.errorLogsNumber, equals(1));
+    });
+
+    test(".sync() should log error if sync throws", () async {
+      final syncRunner = SyncRunnerStub(
+        config,
+        logger,
+        storageClientCallback: () => throw UnimplementedError(),
       );
 
       await syncRunner.sync();
@@ -97,43 +120,11 @@ void main() {
   });
 }
 
-/// A testbed class for a [SyncRunner] abstract class providing a test
+/// A stub class for a [SyncRunner] abstract class providing a test
 /// implementation.
-class LoggerTestbed implements Logger {
-  /// Used to store all error log requests.
-  final List<Object> _errorLogs = [];
-
-  /// Used to store all message log requests.
-  final List<Object> _messageLogs = [];
-
-  /// Clears all log requests.
-  void clearLogs() {
-    _errorLogs.clear();
-    _messageLogs.clear();
-  }
-
-  /// The number of error log requests performed.
-  int get errorLogsNumber => _errorLogs.length;
-
-  /// The number of message log requests performed.
-  int get messageLogsNumber => _messageLogs.length;
-
-  @override
-  void printError(Object error) {
-    _errorLogs.add(error);
-  }
-
-  @override
-  void printMessage(Object message) {
-    _messageLogs.add(message);
-  }
-}
-
-/// A testbed class for a [SyncRunner] abstract class providing a test
-/// implementation.
-class SyncRunnerTestbed extends SyncRunner {
-  final StorageClient _storageClient;
-  final CiClient _ciClient;
+class SyncRunnerStub extends SyncRunner {
+  final StorageClient Function() _storageClientCallback;
+  final CiClient Function() _ciClientCallback;
 
   /// Used to store number of [dispose] calls.
   int _disposeCalls = 0;
@@ -146,20 +137,30 @@ class SyncRunnerTestbed extends SyncRunner {
         storageProjectId: 'storageProjectId',
       );
 
-  SyncRunnerTestbed(
+  SyncRunnerStub(
     CiIntegrationConfig config,
     Logger logger, {
-    StorageClient storageClient,
-    CiClient ciClient,
-  })  : _storageClient = storageClient ?? StorageClientTestbed(),
-        _ciClient = ciClient ?? CiClientTestbed(),
+    StorageClient Function() storageClientCallback,
+    CiClient Function() ciClientCallback,
+  })  : _storageClientCallback = storageClientCallback,
+        _ciClientCallback = ciClientCallback,
         super(config, logger);
 
   @override
-  FutureOr<StorageClient> prepareStorageClient() => _storageClient;
+  FutureOr<StorageClient> prepareStorageClient() {
+    if (_storageClientCallback != null) {
+      return _storageClientCallback();
+    }
+    return StorageClientStub();
+  }
 
   @override
-  FutureOr<CiClient> prepareCiClient() => _ciClient;
+  FutureOr<CiClient> prepareCiClient() {
+    if (_ciClientCallback != null) {
+      return _ciClientCallback();
+    }
+    return CiClientStub();
+  }
 
   @override
   FutureOr<void> dispose() {
