@@ -26,23 +26,23 @@ void main() {
     );
 
     test(
-      "getOptionValue() should return null if option was not parsed",
+      ".getArgumentValue() should return null if option was not parsed",
       () async {
         await runner.run(['test']);
-        final optionValue = command.getOptionValue(optionName);
+        final optionValue = command.getArgumentValue(optionName);
 
         expect(optionValue, isNull);
       },
     );
 
     test(
-      "getOptionValue() should return null if option was not parsed",
+      ".getArgumentValue() should return the argument value",
       () async {
-        const optionValue = 'optionValue';
-        await runner.run(['test', '--$optionName', optionValue]);
-        final parsed = command.getOptionValue(optionName);
+        const argumentValue = 'argumentValue';
+        await runner.run(['test', '--$optionName', argumentValue]);
+        final parsed = command.getArgumentValue(optionName);
 
-        expect(parsed, equals(optionValue));
+        expect(parsed, equals(argumentValue));
       },
     );
   });

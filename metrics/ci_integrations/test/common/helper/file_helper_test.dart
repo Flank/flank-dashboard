@@ -1,16 +1,23 @@
 import 'package:ci_integration/common/helper/file_helper.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+
+import '../../ci_integration/test_util/mock/file_mock.dart';
 
 void main() {
   group("FileHelper", () {
-    const nonExistingFilePath = 'test/common/resources/notafile.txt';
-    const existingFilePath = 'test/common/resources/file.txt';
     final fileHelper = FileHelper();
+    FileMock fileMock;
+
+    setUp(() {
+      fileMock = FileMock();
+    });
 
     test(
       ".exists() should return false if a file by the given path does not exist",
       () {
-        final result = fileHelper.exists(nonExistingFilePath);
+        when(fileMock.existsSync()).thenReturn(false);
+        final result = fileHelper.exists(fileMock);
 
         expect(result, isFalse);
       },
@@ -19,7 +26,8 @@ void main() {
     test(
       ".exists() should return true if a file by the given path exists",
       () {
-        final result = fileHelper.exists(existingFilePath);
+        when(fileMock.existsSync()).thenReturn(true);
+        final result = fileHelper.exists(fileMock);
 
         expect(result, isTrue);
       },
@@ -28,9 +36,11 @@ void main() {
     test(
       ".read() should return a file content",
       () {
-        final result = fileHelper.read(existingFilePath);
+        const fileContent = 'test';
+        when(fileMock.readAsStringSync()).thenReturn(fileContent);
+        final result = fileHelper.read(fileMock);
 
-        expect(result, equals('test'));
+        expect(result, equals(fileContent));
       },
     );
   });

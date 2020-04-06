@@ -13,8 +13,9 @@ abstract class CiIntegrationCommand<T> extends Command<T> {
     ArgumentError.checkNotNull(logger);
   }
 
-  /// Returns a parsed value of an option with the given [name].
-  dynamic getOptionValue(String name) {
-    return argResults[name];
+  /// Returns a parsed value of an argument parameter with the
+  /// given [argumentName].
+  dynamic getArgumentValue(String argumentName) {
+    return argResults[argumentName];
   }
 }

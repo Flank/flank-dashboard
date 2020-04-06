@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:args/command_runner.dart';
 import 'package:ci_integration/ci_integration/command/ci_integration_command.dart';
 import 'package:ci_integration/ci_integration/command/sync_runner/sync_runner.dart';
@@ -38,15 +40,21 @@ class SyncCommand extends CiIntegrationCommand<void> {
 
   @override
   Future<void> run() async {
-    final configFilePath = getOptionValue('config-file') as String;
+    final configFilePath = getArgumentValue('config-file') as String;
+    final file = getConfigFile(configFilePath);
 
-    if (fileHelper.exists(configFilePath)) {
-      final content = fileHelper.read(configFilePath);
+    if (fileHelper.exists(file)) {
+      final content = fileHelper.read(file);
       final config = _configParser.parse(content);
       await runSync(config);
     } else {
       logger.printError('Configuration file $configFilePath does not exist.');
     }
+  }
+
+  /// Returns the configuration file by the given [configFilePath].
+  File getConfigFile(String configFilePath) {
+    return File(configFilePath);
   }
 
   /// Runs [SyncRunner.sync] on the given [config].

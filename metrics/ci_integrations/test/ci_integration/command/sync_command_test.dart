@@ -1,43 +1,61 @@
+import 'dart:io';
+
 import 'package:ci_integration/ci_integration/command/sync_command.dart';
-import 'package:ci_integration/common/helper/file_helper.dart';
 import 'package:ci_integration/common/logger/logger.dart';
 import 'package:ci_integration/config/model/ci_integration_config.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../test_util/mock/file_mock.dart';
 import '../test_util/stub/logger_stub.dart';
 
 void main() {
   group("SyncCommand", () {
+    const configFileContent = '''
+      source:
+        jenkins:
+          url: sample_url
+          job_name: test_project
+          username: username
+          apiKey: key
+      destination:
+        firestore:
+          firebase_project_id: firebaseId
+          metrics_project_id: id
+    ''';
     final logger = LoggerStub();
     SyncCommandStub syncCommand;
+    FileMock fileMock;
 
     setUp(() {
       syncCommand = SyncCommandStub(logger);
+      fileMock = FileMock();
+      syncCommand.fileMock = fileMock;
     });
 
-    test("should has the 'config-file' option", () {
+    test("should have the 'config-file' option", () {
       final argParser = syncCommand.argParser;
       final options = argParser.options;
 
       expect(options, contains('config-file'));
     });
 
-    test("should has the command name equal to 'sync'", () {
+    test("should have the command name equal to 'sync'", () {
       final name = syncCommand.name;
 
       expect(name, equals('sync'));
     });
 
-    test("should has non-empty description", () {
+    test("should have a non-empty description", () {
       final description = syncCommand.description;
 
       expect(description, isNotEmpty);
     });
 
     test(
-      ".run() should log error if the given config file does not exist",
+      ".run() should log an error if the given config file does not exist",
       () async {
-        syncCommand.configFilePath = 'test.yaml';
+        when(fileMock.existsSync()).thenReturn(false);
         await syncCommand.run();
 
         expect(logger.errorLogsNumber, equals(1));
@@ -47,7 +65,7 @@ void main() {
     test(
       ".run() should not run sync if the given config file does not exist",
       () async {
-        syncCommand.configFilePath = 'test.yaml';
+        when(fileMock.existsSync()).thenReturn(false);
         await syncCommand.run();
 
         expect(syncCommand.syncCalled, isFalse);
@@ -57,6 +75,8 @@ void main() {
     test(
       ".run() should run sync on the given config",
       () async {
+        when(fileMock.existsSync()).thenReturn(true);
+        when(fileMock.readAsStringSync()).thenReturn(configFileContent);
         await syncCommand.run();
 
         expect(syncCommand.syncCalled, isTrue);
@@ -73,10 +93,10 @@ class SyncCommandStub extends SyncCommand {
 
   bool get syncCalled => _syncCalled;
 
-  /// A config file path to stub the config file option parsed.
-  String configFilePath = 'config.yaml';
+  /// A config file mock to use for testing purposes.
+  FileMock fileMock;
 
-  SyncCommandStub(Logger logger) : super(logger, fileHelper: FileHelperStub());
+  SyncCommandStub(Logger logger) : super(logger);
 
   @override
   Future<void> runSync(CiIntegrationConfig config) {
@@ -85,36 +105,12 @@ class SyncCommandStub extends SyncCommand {
   }
 
   @override
-  dynamic getOptionValue(String name) {
-    return configFilePath;
-  }
-}
-
-/// A stub class for a [FileHelper] class providing test implementation for
-/// methods.
-class FileHelperStub implements FileHelper {
-  @override
-  bool exists(String filePath) {
-    return filePath == 'config.yaml';
+  File getConfigFile(String configFilePath) {
+    return fileMock;
   }
 
   @override
-  String read(String filePath) {
-    if (exists(filePath)) {
-      return '''
-      source:
-        jenkins:
-          url: sample_url
-          job_name: test_project
-          username: username
-          apiKey: key
-      destination:
-        firestore:
-          firebase_project_id: firebaseId
-          metrics_project_id: id
-      ''';
-    }
-
-    return null;
+  dynamic getArgumentValue(String name) {
+    return 'config.yaml';
   }
 }

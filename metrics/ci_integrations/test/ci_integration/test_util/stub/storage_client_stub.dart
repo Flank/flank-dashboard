@@ -7,11 +7,11 @@ import '../../test_data/builds_test_data.dart';
 /// implementation for methods.
 class StorageClientStub implements StorageClient {
   /// Callback used to replace the default [fetchLastBuild] method
-  /// implementation in testing purposes.
+  /// implementation for testing purposes.
   final Future<BuildData> Function(String) fetchLastBuildCallback;
 
   /// Callback used to replace the default [addBuilds] method
-  /// implementation in testing purposes.
+  /// implementation for testing purposes.
   final Future<void> Function(String, List<BuildData>) addBuildsCallback;
 
   /// Creates this stub class instance.

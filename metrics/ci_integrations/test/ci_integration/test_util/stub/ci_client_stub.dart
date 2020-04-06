@@ -7,12 +7,12 @@ import '../../test_data/builds_test_data.dart';
 /// implementation for methods.
 class CiClientStub implements CiClient {
   /// Callback used to replace the default [fetchBuildsAfter] method
-  /// implementation in testing purposes.
+  /// implementation for testing purposes.
   final Future<List<BuildData>> Function(String, BuildData)
       fetchBuildsAfterCallback;
 
   /// Callback used to replace the default [fetchBuilds] method
-  /// implementation in testing purposes.
+  /// implementation for testing purposes.
   final Future<List<BuildData>> Function(String) fetchBuildsCallback;
 
   /// Creates this stub class instance.

@@ -53,14 +53,14 @@ void main() {
     );
 
     test(
-      ".fromConfig should throw ArgumentError if the given config is null",
+      ".fromConfig() should throw ArgumentError if the given config is null",
       () {
         expect(() => SyncRunner.fromConfig(null, logger), throwsArgumentError);
       },
     );
 
     test(
-      ".fromConfig should create JenkinsSyncRunner for Jenkins config",
+      ".fromConfig() should create JenkinsSyncRunner for Jenkins config",
       () {
         final syncRunner = SyncRunner.fromConfig(config, logger);
 
@@ -86,7 +86,7 @@ void main() {
       },
     );
 
-    test(".sync() should log error if synchronization is failed", () async {
+    test(".sync() should log an error if synchronization is failed", () async {
       final syncRunner = SyncRunnerStub(
         config,
         logger,
@@ -99,7 +99,7 @@ void main() {
       expect(logger.errorLogsNumber, equals(1));
     });
 
-    test(".sync() should log error if sync throws", () async {
+    test(".sync() should log an error if sync throws", () async {
       final syncRunner = SyncRunnerStub(
         config,
         logger,

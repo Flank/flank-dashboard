@@ -44,7 +44,7 @@ void main() {
       },
     );
 
-    test(".prepare() should return the Jenkins CI client", () {
+    test(".prepareCiClient() should return the Jenkins CI client", () {
       final jenkinsCiClient = jenkinsSyncRunner.prepareCiClient();
 
       expect(jenkinsCiClient, isA<JenkinsCiClientAdapter>());
