@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
+import 'package:metrics/features/auth/presentation/state/user_store.dart';
 
 void main() {
-  UserMetricsStore userMetricsStore;
+  UserStore userMetricsStore;
 
   setUpAll(() {
-    userMetricsStore = UserMetricsStore();
+    userMetricsStore = UserStore();
   });
 
   test('User is not authenticated after subscribe to a user updates', () {

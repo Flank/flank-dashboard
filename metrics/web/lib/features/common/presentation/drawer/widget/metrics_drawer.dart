@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
+import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -29,10 +29,10 @@ class MetricsDrawer extends StatelessWidget {
               );
             },
           ),
-          StateBuilder<UserMetricsStore>(
-            models: [Injector.getAsReactive<UserMetricsStore>()],
+          StateBuilder<UserStore>(
+            models: [Injector.getAsReactive<UserStore>()],
             builder:
-                (context, ReactiveModel<UserMetricsStore> userMetricsStore) {
+                (context, ReactiveModel<UserStore> userMetricsStore) {
               return FlatButton(
                 key: const Key('Logout'),
                 onPressed: () async {

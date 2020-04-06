@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
+import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
@@ -23,13 +23,13 @@ class _MyAppState extends State<MyApp> {
         builder: (context, store) {
           final isDark = store?.isDark ?? true;
 
-          return WhenRebuilder<UserMetricsStore>(
-            models: [Injector.getAsReactive<UserMetricsStore>()],
+          return WhenRebuilder<UserStore>(
+            models: [Injector.getAsReactive<UserStore>()],
             onWaiting: () => const LoadingPlaceholder(),
             onIdle: () => const LoadingPlaceholder(),
             onError: (error) => PagePlaceholder(
                 text: CommonStrings.getLoadingErrorMessage('$error')),
-            onData: (UserMetricsStore userMetricsStore) {
+            onData: (UserStore userMetricsStore) {
               return MaterialApp(
                 title: CommonStrings.metrics,
                 initialRoute: '/',

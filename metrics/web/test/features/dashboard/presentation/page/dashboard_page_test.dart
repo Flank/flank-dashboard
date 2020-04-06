@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
+import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
@@ -131,7 +131,7 @@ class DashboardTestbed extends StatelessWidget {
         inject: [
           Inject<ProjectMetricsStore>(() => metricsStore),
           Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
-          Inject<UserMetricsStore>(() => UserMetricsStore()),
+          Inject<UserStore>(() => UserStore()),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>().setState(
@@ -140,7 +140,7 @@ class DashboardTestbed extends StatelessWidget {
           );
           Injector.getAsReactive<ThemeStore>()
               .setState((store) => store.isDark = false);
-          Injector.getAsReactive<UserMetricsStore>().setState((store) => store.subscribeToUserUpdates());
+          Injector.getAsReactive<UserStore>().setState((store) => store.subscribeToUserUpdates());
         },
         builder: (BuildContext context) => MetricsThemeBuilder(
           builder: (_, __) {

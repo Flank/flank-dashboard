@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
+import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
@@ -60,10 +60,10 @@ class AuthFormTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return Injector(
       inject: [
-        Inject<UserMetricsStore>(() => UserMetricsStore()),
+        Inject<UserStore>(() => UserStore()),
       ],
       initState: () {
-        Injector.getAsReactive<UserMetricsStore>().setState(
+        Injector.getAsReactive<UserStore>().setState(
           (store) => store.subscribeToUserUpdates(),
         );
       },

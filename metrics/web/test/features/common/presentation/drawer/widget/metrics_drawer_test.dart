@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
+import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -38,7 +38,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
     return Injector(
       inject: [
         Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
-        Inject<UserMetricsStore>(() => UserMetricsStore()),
+        Inject<UserStore>(() => UserStore()),
       ],
       initState: _initInjectorState,
       builder: (context) {
@@ -54,7 +54,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
   void _initInjectorState() {
     Injector.getAsReactive<ThemeStore>()
         .setState((model) => model.isDark = false);
-    Injector.getAsReactive<UserMetricsStore>()
+    Injector.getAsReactive<UserStore>()
         .setState((model) => model.subscribeToUserUpdates());
   }
 }

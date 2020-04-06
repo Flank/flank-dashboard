@@ -1,27 +1,27 @@
 import 'package:rxdart/rxdart.dart';
 
-/// Metrics store for a user.
-class UserMetricsStore {
+/// Store for a user.
+class UserStore {
   /// Stream that contains a user's authentication status
   final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
 
-  /// Determines if a user is authenticated, based on the [_isLoggedInSubject]'s value.
+  /// Determines if a user is authenticated.
   bool get isLoggedIn => _isLoggedInSubject.value;
 
   /// Contains text description of any authentication exception that may occur.
   String _authExceptionDescription;
 
-  /// Mocks subscribe to a user changes and updates the [_isLoggedInSubject]'s value.
+  /// Subscribes to a current user updates to get notified when the user got signed in.
   void subscribeToUserUpdates() {
     _isLoggedInSubject.add(false);
   }
 
-  /// Mocks a user sign in to the app using an [email] and a [password].
+  /// Signs in user to the app using an [email] and a [password].
   void signInWithEmailAndPassword(String email, String password) {
     _isLoggedInSubject.add(true);
   }
 
-  /// Mocks sign out the user from the app and updates the [_isLoggedInSubject]'s value.
+  /// Signs out the user from the app.
   void signOut() {
     _isLoggedInSubject.add(false);
   }

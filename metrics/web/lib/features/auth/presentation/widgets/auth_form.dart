@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/user_metrics_store.dart';
+import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
@@ -80,8 +80,8 @@ class _AuthFormState extends State<AuthForm> {
   /// Submits the [Form] and navigates to the [DashboardPage].
   void _submit() {
     if (_formKey.currentState.validate()) {
-      final ReactiveModel<UserMetricsStore> userMetricsStoreRM =
-          Injector.getAsReactive<UserMetricsStore>();
+      final ReactiveModel<UserStore> userMetricsStoreRM =
+          Injector.getAsReactive<UserStore>();
 
       userMetricsStoreRM.state.signInWithEmailAndPassword(
         _emailController.text,
