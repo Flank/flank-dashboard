@@ -27,9 +27,13 @@ class BuildData extends Build implements DataModel {
           coverage: coverage,
         );
 
-  /// Unique id for multiple integrations
+  /// The unique identifier of this build.
   String get documentId => '${projectId}_$id';
 
+  /// Creates the new instance of the [BuildData] based on current instance.
+  ///
+  /// If any of the passed parameters are null, or parameter isn't specified,
+  /// the value will be copied from the current instance.
   BuildData copyWith({
     String id,
     String projectId,

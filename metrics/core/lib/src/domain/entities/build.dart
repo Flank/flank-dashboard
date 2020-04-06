@@ -17,7 +17,7 @@ class Build extends Equatable {
   /// Creates the [Build].
   ///
   /// [id] is the unique identifier of this build.
-  /// [projectId] is the unique identifier of the project related with this build.
+  /// [projectId] is the unique identifier of the project this build belongs to.
   /// [buildNumber] is the number of this build.
   /// [startedAt] is the date and time this build was started at.
   /// [buildStatus] is the resulting status of this build.
