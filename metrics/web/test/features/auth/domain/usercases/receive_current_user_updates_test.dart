@@ -14,7 +14,7 @@ void main() {
       );
     });
 
-    test("provides a stream of current user on called", () async {
+    test("delegates call to the UserRepository.currentUserStream", () async {
       final repository = UserRepositoryStub();
       final receiveUserUpdates = ReceiveCurrentUserUpdates(repository);
 
