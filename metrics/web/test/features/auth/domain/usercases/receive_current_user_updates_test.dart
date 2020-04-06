@@ -1,8 +1,8 @@
-import 'package:metrics/features/auth/domain/entities/user.dart';
 import 'package:metrics/features/auth/domain/usecases/receive_current_user_updates.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
+import 'test_utils/error_user_repository_stub.dart';
 import 'test_utils/user_repository_stub.dart';
 
 void main() {
@@ -14,18 +14,28 @@ void main() {
       );
     });
 
-    test("provides a stream that emmits user updates", () async {
-      final seedUser = User(id: 'seed');
-
-      final repository = UserRepositoryStub(seedUser: seedUser);
+    test("provides a stream of current user on called", () async {
+      final repository = UserRepositoryStub();
       final receiveUserUpdates = ReceiveCurrentUserUpdates(repository);
 
-      final userUpdates = receiveUserUpdates();
-      final user = await userUpdates.first;
+      expect(repository.isCurrentUserStreamCalled, isFalse);
 
-      expect(userUpdates, isA<Stream<User>>());
-      expect(user.id, seedUser.id);
-      expect(user.email, seedUser.email);
+      receiveUserUpdates();
+
+      expect(repository.isCurrentUserStreamCalled, isTrue);
     });
+
+    test(
+      "throws an error if repository throws",
+      () {
+        final repository = ErrorUserRepositoryStub();
+        final receiveUserUpdates = ReceiveCurrentUserUpdates(repository);
+
+        expect(
+          () => receiveUserUpdates(),
+          MatcherUtil.throwsAuthenticationException,
+        );
+      },
+    );
   });
 }

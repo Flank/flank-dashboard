@@ -3,10 +3,16 @@ import 'package:metrics/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
+import 'test_utils/error_user_repository_stub.dart';
 import 'test_utils/user_repository_stub.dart';
 
 void main() {
   group("SignInUseCase", () {
+    final userCredentials = UserCredentialsParam(
+      email: 'email',
+      password: 'pass',
+    );
+
     test("can't be created with null repository", () {
       expect(
         () => SignInUseCase(null),
@@ -14,25 +20,31 @@ void main() {
       );
     });
 
-    test("signs in user on call", () async {
-      final repository = UserRepositoryStub();
-      final signInUseCase = SignInUseCase(repository);
+    test(
+      "delegates call to the UserRepository.signInWithEmailAndPassword",
+      () async {
+        final repository = UserRepositoryStub();
+        final signInUseCase = SignInUseCase(repository);
 
-      final currentUser = await repository.currentUserStream().first;
+        expect(repository.isSignInCalled, isFalse);
 
-      expect(currentUser, isNull);
+        await signInUseCase(userCredentials);
 
-      const userEmail = 'email';
-      final userCredentials = UserCredentialsParam(
-        email: userEmail,
-        password: 'pass',
-      );
-      await signInUseCase(userCredentials);
+        expect(repository.isSignInCalled, isTrue);
+      },
+    );
 
-      final newUser = await repository.currentUserStream().first;
+    test(
+      "throws if UserRepository throws during sign in process",
+      () {
+        final repository = ErrorUserRepositoryStub();
+        final signInUseCase = SignInUseCase(repository);
 
-      expect(newUser, isNotNull);
-      expect(newUser.email, userEmail);
-    });
+        expect(
+          () => signInUseCase(userCredentials),
+          MatcherUtil.throwsAuthenticationException,
+        );
+      },
+    );
   });
 }
