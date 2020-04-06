@@ -10,6 +10,9 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for [JenkinsClient] to fit [CiClient] contract.
 class JenkinsCiClientAdapter implements CiClient {
+  /// A fetch limit for builds.
+  static const jenkinsBuildsFetchLimit = 28;
+
   /// A Jenkins client instance used to perform API calls.
   final JenkinsClient jenkinsClient;
 
@@ -63,10 +66,12 @@ class JenkinsCiClientAdapter implements CiClient {
   /// The [limits] can be used to set a range-specifier for the request.
   Future<JenkinsBuildingJob> _fetchBuilds(
     String projectId, {
-    JenkinsQueryLimits limits = const JenkinsQueryLimits.empty(),
+    JenkinsQueryLimits limits,
   }) async {
-    final newBuildsFetchResult =
-        await jenkinsClient.fetchBuilds(projectId, limits: limits);
+    final newBuildsFetchResult = await jenkinsClient.fetchBuilds(
+      projectId,
+      limits: limits ?? JenkinsQueryLimits.endBefore(jenkinsBuildsFetchLimit),
+    );
     _throwIfInteractionUnsuccessful(newBuildsFetchResult);
     return newBuildsFetchResult.result;
   }
