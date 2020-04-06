@@ -9,9 +9,9 @@ class LoginStrings {
   static const String password = 'Password';
   static const String signIn = 'Sign in';
 
-  static const emailIsRequired = 'Email address is required';
-  static const emailIsInvalid = 'Invalid email address';
-  static const passwordIsRequired = 'Password is required';
+  static const String emailIsRequired = 'Email address is required';
+  static const String emailIsInvalid = 'Invalid email address';
+  static const String passwordIsRequired = 'Password is required';
 
   static String getLoadingErrorMessage(String errorMessage) =>
       "An error occured during loading: $errorMessage";
