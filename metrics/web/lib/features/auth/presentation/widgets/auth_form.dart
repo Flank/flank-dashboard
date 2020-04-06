@@ -36,7 +36,7 @@ class _AuthFormState extends State<AuthForm> {
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             autofocus: true,
-            onFieldSubmitted: (String value) async => _submit(),
+            onFieldSubmitted: (_) => _submit(),
             validator: (value) {
               if (value.isEmpty) {
                 return LoginStrings.emailIsRequired;
@@ -54,7 +54,7 @@ class _AuthFormState extends State<AuthForm> {
             label: LoginStrings.password,
             controller: _passwordController,
             obscureText: true,
-            onFieldSubmitted: (String value) async => _submit(),
+            onFieldSubmitted: (_) => _submit(),
             validator: (value) {
               if (value.isEmpty) {
                 return LoginStrings.passwordIsRequired;
@@ -68,7 +68,7 @@ class _AuthFormState extends State<AuthForm> {
             alignment: Alignment.centerRight,
             child: RaisedButton(
               key: const Key(LoginStrings.signIn),
-              onPressed: () async => _submit(),
+              onPressed: () => _submit(),
               child: const Text(LoginStrings.signIn),
             ),
           ),
@@ -78,24 +78,23 @@ class _AuthFormState extends State<AuthForm> {
   }
 
   /// Submits the [Form] and navigates to the [DashboardPage].
-  Future<void> _submit() async {
+  void _submit() {
     if (_formKey.currentState.validate()) {
       final ReactiveModel<UserMetricsStore> userMetricsStoreRM =
           Injector.getAsReactive<UserMetricsStore>();
 
-      await userMetricsStoreRM.state.signInWithEmailAndPassword(
+      userMetricsStoreRM.state.signInWithEmailAndPassword(
         _emailController.text,
         _passwordController.text,
       );
 
       /// Remove all the routes below the pushed 'dashboard' route to prevent
       /// accidental navigate back to the login page as an authenticated user
-      await Navigator.pushNamedAndRemoveUntil(
+      Navigator.pushNamedAndRemoveUntil(
           context, '/dashboard', (Route<dynamic> route) => false);
     }
   }
 
-  /// Discards any resources used by [_emailController] and [_passwordController].
   @override
   void dispose() {
     _emailController.dispose();
