@@ -30,6 +30,30 @@ class BuildData extends Build implements DataModel {
   /// Unique id for multiple integrations
   String get documentId => '${projectId}_$id';
 
+  BuildData copyWith({
+    String id,
+    String projectId,
+    int buildNumber,
+    DateTime startedAt,
+    BuildStatus buildStatus,
+    Duration duration,
+    String workflowName,
+    String url,
+    Percent coverage,
+  }) {
+    return BuildData(
+      id: id ?? this.id,
+      projectId: projectId ?? this.projectId,
+      buildNumber: buildNumber ?? this.buildNumber,
+      startedAt: startedAt ?? this.startedAt,
+      buildStatus: buildStatus ?? this.buildStatus,
+      duration: duration ?? this.duration,
+      workflowName: workflowName ?? this.workflowName,
+      url: url ?? this.url,
+      coverage: coverage ?? this.coverage,
+    );
+  }
+
   @override
   Map<String, dynamic> toJson() {
     return {
