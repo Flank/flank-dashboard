@@ -24,12 +24,12 @@ void main() {
           metrics_project_id: id
     ''';
     final logger = LoggerStub();
+    final FileMock fileMock = FileMock();
     SyncCommandStub syncCommand;
-    FileMock fileMock;
 
     setUp(() {
+      reset(fileMock);
       syncCommand = SyncCommandStub(logger);
-      fileMock = FileMock();
       syncCommand.fileMock = fileMock;
     });
 

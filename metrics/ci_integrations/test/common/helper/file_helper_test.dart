@@ -7,10 +7,10 @@ import '../../ci_integration/test_util/mock/file_mock.dart';
 void main() {
   group("FileHelper", () {
     final fileHelper = FileHelper();
-    FileMock fileMock;
+    final FileMock fileMock = FileMock();
 
     setUp(() {
-      fileMock = FileMock();
+      reset(fileMock);
     });
 
     test(
