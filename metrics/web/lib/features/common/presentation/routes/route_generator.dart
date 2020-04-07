@@ -11,21 +11,12 @@ class RouteGenerator {
   /// status, determined by a [isLoggedIn] value.
   static MaterialPageRoute generateRoute(
       {RouteSettings settings, bool isLoggedIn}) {
-    switch (settings.name) {
-      case dashboard:
-        if (isLoggedIn) {
-          return _createMaterialPageRoute(dashboard, DashboardPage());
-        }
 
-        return _createMaterialPageRoute(login, LoginPage());
-      case login:
-      default:
-        if (isLoggedIn) {
-          return _createMaterialPageRoute(dashboard, DashboardPage());
-        }
-
-        return _createMaterialPageRoute(login, LoginPage());
+    if (!isLoggedIn) {
+      return _createMaterialPageRoute(login, LoginPage());
     }
+
+    return _createMaterialPageRoute(dashboard, DashboardPage());
   }
 
   /// Creates [MaterialPageRoute] with the given [name] and the [widget].

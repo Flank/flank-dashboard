@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
+import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -91,7 +92,7 @@ class _AuthFormState extends State<AuthForm> {
       /// Remove all the routes below the pushed 'dashboard' route to prevent
       /// accidental navigate back to the login page as an authenticated user
       Navigator.pushNamedAndRemoveUntil(
-          context, '/dashboard', (Route<dynamic> route) => false);
+          context, RouteGenerator.dashboard, (Route<dynamic> route) => false);
     }
   }
 

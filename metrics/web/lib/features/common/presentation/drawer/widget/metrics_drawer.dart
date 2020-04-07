@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
+import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// The application side menu widget.
@@ -40,7 +41,7 @@ class MetricsDrawer extends StatelessWidget {
                   /// Remove all the routes below the pushed 'login' route to prevent
                   /// accidental navigate back to the dashboard page
                   await Navigator.pushNamedAndRemoveUntil(
-                      context, '/login', (Route<dynamic> route) => false);
+                      context, RouteGenerator.login, (Route<dynamic> route) => false);
                 },
                 child: const Text('Log out'),
               );
