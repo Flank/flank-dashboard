@@ -13,14 +13,16 @@ class RouteGenerator {
       {RouteSettings settings, bool isLoggedIn}) {
 
     if (!isLoggedIn) {
-      return _createMaterialPageRoute(login, LoginPage());
+      return _createMaterialPageRoute(name: login, widget: LoginPage());
     }
 
-    return _createMaterialPageRoute(dashboard, DashboardPage());
+    return _createMaterialPageRoute(name: dashboard, widget: DashboardPage());
   }
 
   /// Creates [MaterialPageRoute] with the given [name] and the [widget].
-  static MaterialPageRoute _createMaterialPageRoute(String name, Widget widget) {
+  ///
+  /// The [name] and the [widget] should not be null.
+  static MaterialPageRoute _createMaterialPageRoute({@required String name, @required Widget widget}) {
     return MaterialPageRoute(
         builder: (context) => widget, settings: RouteSettings(name: name));
   }
