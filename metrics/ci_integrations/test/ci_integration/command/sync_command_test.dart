@@ -25,12 +25,11 @@ void main() {
     ''';
     final logger = LoggerStub();
     final FileMock fileMock = FileMock();
-    SyncCommandStub syncCommand;
+    final syncCommand = SyncCommandStub(logger, fileMock);
 
     setUp(() {
       reset(fileMock);
-      syncCommand = SyncCommandStub(logger);
-      syncCommand.fileMock = fileMock;
+      syncCommand.reset();
     });
 
     test("should have the 'config-file' option", () {
@@ -94,9 +93,15 @@ class SyncCommandStub extends SyncCommand {
   bool get syncCalled => _syncCalled;
 
   /// A config file mock to use for testing purposes.
-  FileMock fileMock;
+  final FileMock fileMock;
 
-  SyncCommandStub(Logger logger) : super(logger);
+  SyncCommandStub(Logger logger, this.fileMock) : super(logger);
+
+  /// Resets this stub for a new test case to ensure different test cases
+  /// have no hidden dependencies.
+  void reset() {
+    _syncCalled = false;
+  }
 
   @override
   Future<void> runSync(CiIntegrationConfig config) {

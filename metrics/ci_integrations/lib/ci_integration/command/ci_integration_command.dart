@@ -8,7 +8,7 @@ abstract class CiIntegrationCommand<T> extends Command<T> {
 
   /// Creates an instance for this command.
   ///
-  /// If [logger] is `null` throws an [ArgumentError].
+  /// If the [logger] is `null` throws an [ArgumentError].
   CiIntegrationCommand(this.logger) {
     ArgumentError.checkNotNull(logger);
   }
