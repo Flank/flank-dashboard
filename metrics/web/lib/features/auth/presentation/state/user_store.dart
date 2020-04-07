@@ -2,8 +2,11 @@ import 'package:rxdart/rxdart.dart';
 
 /// Store for a user.
 class UserStore {
-  /// Stream that contains a user's authentication status
+  /// Stream that contains a user's authentication status.
   final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
+  
+  /// Returns a stream of a user's authentication status.
+  Stream get loggedInStream => _isLoggedInSubject.stream;
 
   /// Determines if a user is authenticated.
   bool get isLoggedIn => _isLoggedInSubject.value;

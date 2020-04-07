@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
-import 'package:metrics/features/common/presentation/routes/route_generator.dart';
-import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// Shows an authentication form to sign in.
@@ -36,19 +34,8 @@ class _AuthFormState extends State<AuthForm> {
             label: LoginStrings.email,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            autofocus: true,
             onFieldSubmitted: (_) => _submit(),
-            validator: (value) {
-              if (value.isEmpty) {
-                return LoginStrings.emailIsRequired;
-              }
-
-              if (!EmailValidator.validate(value)) {
-                return LoginStrings.emailIsInvalid;
-              }
-
-              return null;
-            },
+            validator: _validateEmail,
           ),
           AuthInputField(
             key: Key(LoginStrings.password),
@@ -56,13 +43,7 @@ class _AuthFormState extends State<AuthForm> {
             controller: _passwordController,
             obscureText: true,
             onFieldSubmitted: (_) => _submit(),
-            validator: (value) {
-              if (value.isEmpty) {
-                return LoginStrings.passwordIsRequired;
-              }
-
-              return null;
-            },
+            validator: _validatePassword,
           ),
           Container(
             margin: const EdgeInsets.only(top: 20.0),
@@ -78,21 +59,33 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-  /// Submits the [Form] and navigates to the [DashboardPage].
+  String _validateEmail(String value) {
+    if (value.isEmpty) {
+      return LoginStrings.emailIsRequired;
+    }
+
+    if (!EmailValidator.validate(value)) {
+      return LoginStrings.emailIsInvalid;
+    }
+
+    return null;
+  }
+
+  String _validatePassword(String value) {
+    if (value.isEmpty) {
+      return LoginStrings.passwordIsRequired;
+    }
+
+    return null;
+  }
+
+  /// Submits the [Form].
   void _submit() {
     if (_formKey.currentState.validate()) {
-      final ReactiveModel<UserStore> userMetricsStoreRM =
-          Injector.getAsReactive<UserStore>();
-
-      userMetricsStoreRM.state.signInWithEmailAndPassword(
+      Injector.getAsReactive<UserStore>().state.signInWithEmailAndPassword(
         _emailController.text,
         _passwordController.text,
       );
-
-      /// Remove all the routes below the pushed 'dashboard' route to prevent
-      /// accidental navigate back to the login page as an authenticated user
-      Navigator.pushNamedAndRemoveUntil(
-          context, RouteGenerator.dashboard, (Route<dynamic> route) => false);
     }
   }
 

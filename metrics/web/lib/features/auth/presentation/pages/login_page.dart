@@ -1,9 +1,39 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
+import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// Shows the authentication form to sign in.
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+/// The logic and internal state for the [LoginPage] widget.
+class _LoginPageState extends State<LoginPage> {
+  final ReactiveModel<UserStore> userStoreRM =
+      Injector.getAsReactive<UserStore>();
+  StreamSubscription loggedInStreamSubscription;
+
+  @override
+  void initState() {
+    /// Subscribes on a user authentication's status updates
+    loggedInStreamSubscription =
+        userStoreRM.state.loggedInStream.listen((isUserLoggedIn) {
+      if (isUserLoggedIn is bool && isUserLoggedIn) {
+        /// Removes all the routes below the pushed 'dashboard' route to prevent
+        /// accidental navigate back to the login page as an authenticated user
+        Navigator.pushNamedAndRemoveUntil(
+            context, RouteGenerator.dashboard, (Route<dynamic> route) => false);
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,5 +59,11 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    loggedInStreamSubscription.cancel();
+    super.dispose();
   }
 }
