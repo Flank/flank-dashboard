@@ -7,7 +7,7 @@ class UserCredentialsParam {
 
   /// Creates [UserCredentialsParam] with the given [email] and [password].
   ///
-  /// Throws an [AssertionError] if whether [email] or [password] is null.
+  /// Throws an [AssertionError] if either [email] or [password] is null.
   UserCredentialsParam({
     @required this.email,
     @required this.password,

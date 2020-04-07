@@ -29,10 +29,10 @@ void main() {
       "throws if UserRepository throws during sign out",
       () {
         final repository = ErrorUserRepositoryStub();
-        final signOutUserCase = SignOutUseCase(repository);
+        final signOutUseCase = SignOutUseCase(repository);
 
         expect(
-          () => signOutUserCase(),
+          () => signOutUseCase(),
           MatcherUtil.throwsAuthenticationException,
         );
       },
