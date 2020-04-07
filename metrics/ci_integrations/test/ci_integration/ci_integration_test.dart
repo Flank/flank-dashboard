@@ -53,7 +53,7 @@ void main() {
     );
 
     test(
-      ".sync() should result with error if a CI client throws fetching all builds",
+      ".sync() should result with an error if a CI client throws fetching all builds",
       () {
         final ciClient = CiClientStub(
           fetchBuildsCallback: (_) => throw UnimplementedError(),
@@ -72,7 +72,7 @@ void main() {
     );
 
     test(
-      ".sync() should result with error if a CI client throws fetching the builds after the given one",
+      ".sync() should result with an error if a CI client throws fetching the builds after the given one",
       () {
         final ciClient = CiClientStub(
           fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
@@ -100,7 +100,7 @@ void main() {
     );
 
     test(
-      ".sync() should result with error if a storage client throws adding new builds",
+      ".sync() should result with an error if a storage client throws adding new builds",
       () {
         final storageClient = StorageClientStub(
           addBuildsCallback: (_, __) => throw UnimplementedError(),

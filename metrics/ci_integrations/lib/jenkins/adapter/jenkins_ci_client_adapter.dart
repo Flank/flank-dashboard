@@ -8,14 +8,17 @@ import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// An adapter for [JenkinsClient] to fit [CiClient] contract.
+/// An adapter for [JenkinsClient] to fit the [CiClient] contract.
 class JenkinsCiClientAdapter implements CiClient {
+  /// A fetch limit for builds when we download all builds from CI (initial fetch).
+  static const initialFetchBuildsLimit = 28;
+
   /// A Jenkins client instance used to perform API calls.
   final JenkinsClient jenkinsClient;
 
   /// Creates an instance of this adapter with the given [jenkinsClient].
   ///
-  /// Throws [ArgumentError] if the given Jenkins client is `null`.
+  /// Throws an [ArgumentError] if the given Jenkins client is `null`.
   JenkinsCiClientAdapter(this.jenkinsClient) {
     ArgumentError.checkNotNull(jenkinsClient, 'jenkinsClient');
   }
@@ -51,7 +54,10 @@ class JenkinsCiClientAdapter implements CiClient {
 
   @override
   Future<List<BuildData>> fetchBuilds(String projectId) async {
-    final buildingJob = await _fetchBuilds(projectId);
+    final buildingJob = await _fetchBuilds(
+      projectId,
+      limits: JenkinsQueryLimits.endBefore(initialFetchBuildsLimit),
+    );
     return _processJenkinsBuilds(
       buildingJob.builds,
       buildingJob.name,
@@ -71,7 +77,7 @@ class JenkinsCiClientAdapter implements CiClient {
     return newBuildsFetchResult.result;
   }
 
-  /// Fetches latest builds for the project with given [projectId] which
+  /// Fetches latest builds for the project with the given [projectId] which
   /// are not synchronized.
   ///
   /// The [numberOfBuilds] is used to indicate the number of builds to fetch
@@ -110,7 +116,7 @@ class JenkinsCiClientAdapter implements CiClient {
     return builds;
   }
 
-  /// Throws [StateError] with the message of [interactionResult] if this
+  /// Throws a [StateError] with the message of [interactionResult] if this
   /// result is [InteractionResult.isError].
   void _throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
     if (interactionResult.isError) {
@@ -123,8 +129,8 @@ class JenkinsCiClientAdapter implements CiClient {
   /// The [jobName] is used to identify a building job for the builds.
   /// The [startFromBuildNumber] is used to filter builds which number is less
   /// than or equal to this value. This allows to avoid processing old builds
-  /// since the range specifier in Jenkins API only provides ability to set
-  /// fetch limits but not to filter data to fetch.
+  /// since the range specifier in Jenkins API only provides an ability to set
+  /// the fetch limits but not to filter data to fetch.
   Future<List<BuildData>> _processJenkinsBuilds(
     List<JenkinsBuild> builds,
     String jobName, {
@@ -150,7 +156,7 @@ class JenkinsCiClientAdapter implements CiClient {
     return !build.building && buildNumberValid;
   }
 
-  /// Maps [jenkinsBuild] to the [BuildData] instance.
+  /// Maps the given [jenkinsBuild] to the [BuildData] instance.
   BuildData _mapJenkinsBuild(
     String jobName,
     JenkinsBuild jenkinsBuild,
@@ -169,7 +175,8 @@ class JenkinsCiClientAdapter implements CiClient {
 
   /// Fetches the code coverage for the given [build].
   ///
-  /// Returns `null` if code coverage artifact for the given build is not found.
+  /// Returns `null` if the code coverage artifact for the given build
+  /// is not found.
   Future<Percent> _fetchCoverage(JenkinsBuild build) async {
     final coverageArtifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
@@ -194,7 +201,7 @@ class JenkinsCiClientAdapter implements CiClient {
     return coverage?.total?.branches?.percent ?? const Percent(0.0);
   }
 
-  /// Maps the [result] of [JenkinsBuild] to the [BuildStatus].
+  /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
   BuildStatus _mapJenkinsBuildResult(JenkinsBuildResult result) {
     switch (result) {
       case JenkinsBuildResult.aborted:
