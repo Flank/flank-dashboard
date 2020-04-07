@@ -29,9 +29,6 @@ class BuildData extends Build implements DataModel {
 
   /// Creates a copy of this [BuildData] but with the given fields
   /// replaced with the new values.
-  ///
-  /// If any of the passed parameters are null, or parameter isn't specified,
-  /// the value will be copied from the current instance.
   BuildData copyWith({
     String id,
     String projectId,
