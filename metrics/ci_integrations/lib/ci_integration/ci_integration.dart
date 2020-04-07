@@ -43,12 +43,9 @@ class CiIntegration {
       }
 
       if (newBuilds != null && newBuilds.isNotEmpty) {
-        final mappedBuilds = newBuilds
-            .map((build) => build.copyWith(projectId: storageProjectId))
-            .toList();
         await storageClient.addBuilds(
           storageProjectId,
-          mappedBuilds,
+          newBuilds,
         );
         return const InteractionResult.success(
           message: 'The project has been updated successfully!',
