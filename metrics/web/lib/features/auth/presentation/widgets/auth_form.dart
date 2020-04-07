@@ -45,8 +45,21 @@ class _AuthFormState extends State<AuthForm> {
             onFieldSubmitted: (_) => _submit(),
             validator: _validatePassword,
           ),
+          StateBuilder(
+            models: [Injector.getAsReactive<UserStore>()],
+            builder: (_, ReactiveModel<UserStore> store) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: store.state.authErrorMessage.isNotEmpty
+                    ? Text(
+                        store.state.authErrorMessage,
+                        style: const TextStyle(color: Colors.red),
+                      )
+                    : null,
+              );
+            },
+          ),
           Container(
-            margin: const EdgeInsets.only(top: 20.0),
             alignment: Alignment.centerRight,
             child: RaisedButton(
               key: const Key(LoginStrings.signIn),
