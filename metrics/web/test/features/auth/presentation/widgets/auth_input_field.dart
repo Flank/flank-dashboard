@@ -5,9 +5,8 @@ import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart
 
 void main() {
   const String testLabel = 'testLabel';
-  const String textForInput = 'abc';
 
-  group('Auth input field', () {
+  group('AuthInputField', () {
     testWidgets('displays the label', (WidgetTester tester) async {
       await tester.pumpWidget(const AuthInputFieldTestbed(
         label: testLabel,
@@ -16,20 +15,29 @@ void main() {
       expect(find.widgetWithText(AuthInputField, testLabel), findsOneWidget);
     });
 
-    testWidgets('obscureText hides provided text for the input',
+    testWidgets('delegates a controller to the text input widget',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(AuthInputFieldTestbed(
+        controller: TextEditingController(),
+      ));
+
+      final TextField textInput =
+          find.byType(TextField).evaluate().single.widget as TextField;
+
+      expect(textInput.controller, isNotNull);
+    });
+
+    testWidgets('delegates an obscureText property to the text input widget',
         (WidgetTester tester) async {
       await tester.pumpWidget(const AuthInputFieldTestbed(
         obscureText: true,
         label: testLabel,
       ));
 
-      final Finder input = find.widgetWithText(AuthInputField, testLabel);
+      final TextField textInput =
+          find.byType(TextField).evaluate().single.widget as TextField;
 
-      await tester.enterText(input, textForInput);
-
-      final String visibleText = findRenderEditable(tester).text.text;
-
-      expect(visibleText, isNot(equals(textForInput)));
+      expect(textInput.obscureText, isTrue);
     });
 
     testWidgets('autofocus sets focus on the input',
@@ -44,7 +52,8 @@ void main() {
       expect(focusNode.hasFocus, isTrue);
     });
 
-    testWidgets('onFieldSubmitted callback is called',
+    testWidgets(
+        'onFieldSubmitted callback is called after submitting the input',
         (WidgetTester tester) async {
       bool callbackIsCalled = false;
 
@@ -59,7 +68,8 @@ void main() {
       expect(callbackIsCalled, isTrue);
     });
 
-    testWidgets('validator callback is called', (WidgetTester tester) async {
+    testWidgets('validator callback is called after a form was validated',
+        (WidgetTester tester) async {
       final GlobalKey<FormState> _formKey = GlobalKey();
       bool callbackIsCalled = false;
 
@@ -80,6 +90,31 @@ void main() {
       _formKey.currentState.validate();
 
       expect(callbackIsCalled, isTrue);
+    });
+
+    testWidgets('delegates keyboardType property to the text field',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const AuthInputFieldTestbed(
+        keyboardType: TextInputType.emailAddress,
+      ));
+
+      final TextField textInput =
+          find.byType(TextField).evaluate().single.widget as TextField;
+
+      expect(textInput.keyboardType, isNotNull);
+      expect(textInput.keyboardType, TextInputType.emailAddress);
+    });
+
+    testWidgets('delegates focusNode property to the text field',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(AuthInputFieldTestbed(
+        focusNode: FocusNode(),
+      ));
+
+      final TextField textInput =
+          find.byType(TextField).evaluate().single.widget as TextField;
+
+      expect(textInput.focusNode, isNotNull);
     });
   });
 }
@@ -111,6 +146,7 @@ class AuthInputFieldTestbed extends StatelessWidget {
   final FocusNode focusNode;
   final ValueChanged<String> onFieldSubmitted;
   final FormFieldValidator<String> validator;
+  final TextInputType keyboardType;
 
   const AuthInputFieldTestbed({
     this.label,
@@ -120,6 +156,7 @@ class AuthInputFieldTestbed extends StatelessWidget {
     this.focusNode,
     this.onFieldSubmitted,
     this.validator,
+    this.keyboardType,
   });
 
   @override
@@ -134,6 +171,7 @@ class AuthInputFieldTestbed extends StatelessWidget {
           focusNode: focusNode,
           onFieldSubmitted: onFieldSubmitted,
           validator: validator,
+          keyboardType: keyboardType,
         ),
       ),
     );

@@ -19,15 +19,15 @@ void main() {
         await driver?.close();
       });
 
-      group('Login page:', () {
+      group('LoginPage:', () {
         test("shows an authentication form", () async  {
-          await authFormExists(driver);
+          await _authFormExists(driver);
         });
 
         test("can authenticate in the app using an email and a password", () async {
-          await authFormExists(driver);
-          await login(driver);
-          await authFormAbsent(driver);
+          await _authFormExists(driver);
+          await _login(driver);
+          await _authFormAbsent(driver);
           await driver.waitFor(find.byType('DashboardPage'));
         });
 
@@ -37,17 +37,17 @@ void main() {
           await driver.waitFor(find.byValueKey('Logout'));
           await driver.tap(find.byValueKey('Logout'));
           await driver.waitUntilNoTransientCallbacks(timeout: const Duration(seconds: 2));
-          await authFormExists(driver);
+          await _authFormExists(driver);
         });
       });
 
-      group('Dashboard page:', () {
+      group('DashboardPage:', () {
         test(
           "loads the projects and shows the project tiles",
               () async {
-            await authFormExists(driver);
-            await login(driver);
-            await authFormAbsent(driver);
+            await _authFormExists(driver);
+            await _login(driver);
+            await _authFormAbsent(driver);
             await driver.waitFor(find.byType('ProjectMetricsTile'));
           },
         );
@@ -93,7 +93,7 @@ void main() {
 }
 
 
-Future<void> login(FlutterDriver driver) async {
+Future<void> _login(FlutterDriver driver) async {
   await driver.tap(find.byValueKey('Email'));
   await driver.enterText('test@email.com');
   await driver.tap(find.byValueKey('Password'));
@@ -101,10 +101,10 @@ Future<void> login(FlutterDriver driver) async {
   await driver.tap(find.byValueKey('Sign in'));
 }
 
-Future<void> authFormExists(FlutterDriver driver) async {
+Future<void> _authFormExists(FlutterDriver driver) async {
   await driver.waitFor(find.byType('AuthForm'));
 }
 
-Future<void> authFormAbsent(FlutterDriver driver) async {
+Future<void> _authFormAbsent(FlutterDriver driver) async {
   await driver.waitForAbsent(find.byType('AuthForm'));
 }

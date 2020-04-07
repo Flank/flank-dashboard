@@ -7,15 +7,10 @@ import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
-  Finder emailInput;
-  Finder submitButton;
+  final Finder emailInput = find.widgetWithText(AuthInputField, LoginStrings.email);
+  final Finder submitButton = find.widgetWithText(RaisedButton, LoginStrings.signIn);
 
-  setUpAll(() async {
-    emailInput = find.widgetWithText(AuthInputField, LoginStrings.email);
-    submitButton = find.widgetWithText(RaisedButton, LoginStrings.signIn);
-  });
-
-  group('Authentication form', () {
+  group('AuthForm', () {
     testWidgets('Email input shows error message if value is empty',
         (WidgetTester tester) async {
       await tester.pumpWidget(AuthFormTestbed());

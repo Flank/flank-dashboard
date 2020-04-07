@@ -8,13 +8,11 @@ import 'package:metrics/features/common/presentation/strings/common_strings.dart
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
-  group('Login page', () {
+  group('LoginPage', () {
     testWidgets('contains project\'s title', (WidgetTester tester) async {
       await tester.pumpWidget(LoginPageTestbed());
 
-      final Finder title = find.text(CommonStrings.metrics);
-
-      expect(title, findsOneWidget);
+      expect(find.text(CommonStrings.metrics), findsOneWidget);
     });
 
     testWidgets('contains authentication form', (WidgetTester tester) async {
