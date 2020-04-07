@@ -45,8 +45,6 @@ void main() {
       () {
         final config = configParser.parse('$sourceConfig$destinationConfig');
 
-        print(config);
-
         expect(config, isNotNull);
         expect(config.source, isNotNull);
         expect(config.destination, isNotNull);
