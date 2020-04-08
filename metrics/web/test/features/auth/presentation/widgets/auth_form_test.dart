@@ -10,66 +10,66 @@ import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
-  final Finder emailInput =
+  final emailInputFinder =
       find.widgetWithText(AuthInputField, LoginStrings.email);
-  final Finder passwordInput =
+  final passwordInputFinder =
       find.widgetWithText(AuthInputField, LoginStrings.password);
-  final Finder submitButton =
+  final submitButtonFinder =
       find.widgetWithText(RaisedButton, LoginStrings.signIn);
 
-  group('AuthForm', () {
-    testWidgets('Email input shows error message if value is empty',
+  group("AuthForm", () {
+    testWidgets("email input shows error message if value is empty",
         (WidgetTester tester) async {
       await tester.pumpWidget(const AuthFormTestbed());
 
-      await tester.tap(submitButton);
+      await tester.tap(submitButtonFinder);
       await tester.pump();
 
       expect(find.text(LoginStrings.emailIsRequired), findsOneWidget);
     });
 
-    testWidgets('Email input shows error message if value is not a valid email',
+    testWidgets("email input shows error message if value is not a valid email",
         (WidgetTester tester) async {
       await tester.pumpWidget(const AuthFormTestbed());
-      await tester.enterText(emailInput, 'notAnEmail');
+      await tester.enterText(emailInputFinder, 'notAnEmail');
 
-      await tester.tap(submitButton);
+      await tester.tap(submitButtonFinder);
       await tester.pump();
 
       expect(find.text(LoginStrings.emailIsInvalid), findsOneWidget);
     });
 
-    testWidgets('Password input shows error message if value is empty',
+    testWidgets("password input shows error message if value is empty",
         (WidgetTester tester) async {
       await tester.pumpWidget(const AuthFormTestbed());
 
-      await tester.tap(submitButton);
+      await tester.tap(submitButtonFinder);
       await tester.pump();
 
       expect(find.text(LoginStrings.passwordIsRequired), findsOneWidget);
     });
 
     testWidgets(
-        'signInWithEmailAndPassword method is called on tap on sign in button',
+        "signInWithEmailAndPassword method is called on tap on sign in button",
         (WidgetTester tester) async {
       await tester.pumpWidget(const AuthFormTestbed(
         userStore: SignInUserStoreStub(),
       ));
-      await tester.enterText(emailInput, 'test@email.com');
-      await tester.enterText(passwordInput, 'testPassword');
-      await tester.tap(submitButton);
+      await tester.enterText(emailInputFinder, 'test@email.com');
+      await tester.enterText(passwordInputFinder, 'testPassword');
+      await tester.tap(submitButtonFinder);
 
       expect(SignInUserStoreStub.called, isTrue);
     });
 
-    testWidgets('Shows an auth error text if the login process went wrong',
+    testWidgets("shows an auth error text if the login process went wrong",
         (WidgetTester tester) async {
       await tester.pumpWidget(AuthFormTestbed(
         userStore: SignInErrorUserStoreStub(),
       ));
-      await tester.enterText(emailInput, 'test@email.com');
-      await tester.enterText(passwordInput, 'testPassword');
-      await tester.tap(submitButton);
+      await tester.enterText(emailInputFinder, 'test@email.com');
+      await tester.enterText(passwordInputFinder, 'testPassword');
+      await tester.tap(submitButtonFinder);
       await tester.pumpAndSettle();
 
       expect(find.text(SignInErrorUserStoreStub.errorMessage), findsOneWidget);
@@ -157,9 +157,8 @@ class SignInErrorUserStoreStub extends UserStoreStub {
   }
 }
 
-class UserIsLoggedInUserStoreStub extends UserStoreStub {
-
-  UserIsLoggedInUserStoreStub();
+class LoggedInUserStoreStub extends UserStoreStub {
+  LoggedInUserStoreStub();
 
   final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
 

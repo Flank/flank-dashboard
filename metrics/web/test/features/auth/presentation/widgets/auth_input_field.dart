@@ -6,45 +6,44 @@ import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart
 void main() {
   const String testLabel = 'testLabel';
 
-  group('AuthInputField', () {
-    testWidgets('displays the label', (WidgetTester tester) async {
-      await tester.pumpWidget(const AuthInputFieldTestbed(
+  group("AuthInputField", () {
+    testWidgets("displays the label", (WidgetTester tester) async {
+      await tester.pumpWidget(const _AuthInputFieldTestbed(
         label: testLabel,
       ));
 
       expect(find.widgetWithText(AuthInputField, testLabel), findsOneWidget);
     });
 
-    testWidgets('delegates a controller to the text input widget',
+    testWidgets("delegates a controller to the text input widget",
         (WidgetTester tester) async {
-      await tester.pumpWidget(AuthInputFieldTestbed(
-        controller: TextEditingController(),
+      final controller = TextEditingController();
+      await tester.pumpWidget(_AuthInputFieldTestbed(
+        controller: controller,
       ));
 
-      final TextField textInput =
-          find.byType(TextField).evaluate().single.widget as TextField;
+      final textInput = tester.widget<TextField>(find.byType(TextField));
 
-      expect(textInput.controller, isNotNull);
+      expect(textInput.controller.hashCode, equals(controller.hashCode));
     });
 
-    testWidgets('delegates an obscureText property to the text input widget',
+    testWidgets("delegates an obscureText property to the text input widget",
         (WidgetTester tester) async {
-      await tester.pumpWidget(const AuthInputFieldTestbed(
+      await tester.pumpWidget(const _AuthInputFieldTestbed(
         obscureText: true,
         label: testLabel,
       ));
 
-      final TextField textInput =
-          find.byType(TextField).evaluate().single.widget as TextField;
+      final textInput = tester.widget<TextField>(find.byType(TextField));
 
       expect(textInput.obscureText, isTrue);
     });
 
-    testWidgets('autofocus sets focus on the input',
+    testWidgets("autofocus sets focus on the input",
         (WidgetTester tester) async {
       final FocusNode focusNode = FocusNode();
 
-      await tester.pumpWidget(AuthInputFieldTestbed(
+      await tester.pumpWidget(_AuthInputFieldTestbed(
         autofocus: true,
         focusNode: focusNode,
       ));
@@ -53,29 +52,29 @@ void main() {
     });
 
     testWidgets(
-        'onFieldSubmitted callback is called after submitting the input',
+        "onFieldSubmitted callback is called after submitting the input",
         (WidgetTester tester) async {
       bool callbackIsCalled = false;
 
-      await tester.pumpWidget(AuthInputFieldTestbed(onFieldSubmitted: (value) {
+      await tester.pumpWidget(_AuthInputFieldTestbed(onFieldSubmitted: (value) {
         callbackIsCalled = true;
       }));
 
-      await tester.showKeyboard(find.byType(AuthInputFieldTestbed));
+      await tester.showKeyboard(find.byType(_AuthInputFieldTestbed));
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pump();
 
       expect(callbackIsCalled, isTrue);
     });
 
-    testWidgets('validator callback is called after a form was validated',
+    testWidgets("validator callback is called after a form was validated",
         (WidgetTester tester) async {
       final GlobalKey<FormState> _formKey = GlobalKey();
       bool callbackIsCalled = false;
 
       await tester.pumpWidget(Form(
         key: _formKey,
-        child: AuthInputFieldTestbed(
+        child: _AuthInputFieldTestbed(
           validator: (String value) {
             callbackIsCalled = true;
             return null;
@@ -83,7 +82,7 @@ void main() {
         ),
       ));
 
-      await tester.showKeyboard(find.byType(AuthInputFieldTestbed));
+      await tester.showKeyboard(find.byType(_AuthInputFieldTestbed));
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pump();
 
@@ -92,9 +91,9 @@ void main() {
       expect(callbackIsCalled, isTrue);
     });
 
-    testWidgets('delegates keyboardType property to the text field',
+    testWidgets("delegates keyboardType property to the text field",
         (WidgetTester tester) async {
-      await tester.pumpWidget(const AuthInputFieldTestbed(
+      await tester.pumpWidget(const _AuthInputFieldTestbed(
         keyboardType: TextInputType.emailAddress,
       ));
 
@@ -102,12 +101,12 @@ void main() {
           find.byType(TextField).evaluate().single.widget as TextField;
 
       expect(textInput.keyboardType, isNotNull);
-      expect(textInput.keyboardType, TextInputType.emailAddress);
+      expect(textInput.keyboardType, equals(TextInputType.emailAddress));
     });
 
-    testWidgets('delegates focusNode property to the text field',
+    testWidgets("delegates focusNode property to the text field",
         (WidgetTester tester) async {
-      await tester.pumpWidget(AuthInputFieldTestbed(
+      await tester.pumpWidget(_AuthInputFieldTestbed(
         focusNode: FocusNode(),
       ));
 
@@ -119,26 +118,7 @@ void main() {
   });
 }
 
-// Returns the first RenderEditable.
-RenderEditable findRenderEditable(WidgetTester tester) {
-  final RenderObject root = tester.renderObject(find.byType(EditableText));
-  expect(root, isNotNull);
-
-  RenderEditable renderEditable;
-  void recursiveFinder(RenderObject child) {
-    if (child is RenderEditable) {
-      renderEditable = child;
-      return;
-    }
-    child.visitChildren(recursiveFinder);
-  }
-
-  root.visitChildren(recursiveFinder);
-  expect(renderEditable, isNotNull);
-  return renderEditable;
-}
-
-class AuthInputFieldTestbed extends StatelessWidget {
+class _AuthInputFieldTestbed extends StatelessWidget {
   final String label;
   final bool obscureText;
   final bool autofocus;
@@ -148,7 +128,7 @@ class AuthInputFieldTestbed extends StatelessWidget {
   final FormFieldValidator<String> validator;
   final TextInputType keyboardType;
 
-  const AuthInputFieldTestbed({
+  const _AuthInputFieldTestbed({
     this.label,
     this.obscureText = false,
     this.autofocus = false,

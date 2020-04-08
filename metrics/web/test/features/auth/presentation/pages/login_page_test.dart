@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
+import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
@@ -13,45 +14,43 @@ import '../../../dashboard/presentation/page/dashboard_page_test.dart';
 import '../widgets/auth_form_test.dart';
 
 void main() {
-  final Finder emailInput =
+  final emailInputFinder =
       find.widgetWithText(AuthInputField, LoginStrings.email);
-  final Finder passwordInput =
+  final passwordInputFinder =
       find.widgetWithText(AuthInputField, LoginStrings.password);
-  final Finder submitButton =
+  final submitButtonFinder =
       find.widgetWithText(RaisedButton, LoginStrings.signIn);
 
-  group('LoginPage', () {
-    testWidgets('contains project\'s title', (WidgetTester tester) async {
-      await tester.pumpWidget(LoginPageTestbed(userStore: UserStore()));
+  group("LoginPage", () {
+    testWidgets("contains project\'s title", (WidgetTester tester) async {
+      await tester.pumpWidget(_LoginPageTestbed(userStore: UserStore()));
 
       expect(find.text(CommonStrings.metrics), findsOneWidget);
     });
 
-    testWidgets('contains authentication form', (WidgetTester tester) async {
-      await tester.pumpWidget(LoginPageTestbed(userStore: UserStore()));
+    testWidgets("contains authentication form", (WidgetTester tester) async {
+      await tester.pumpWidget(_LoginPageTestbed(userStore: UserStore()));
 
-      expect(emailInput, findsOneWidget);
-      expect(passwordInput, findsOneWidget);
-      expect(submitButton, findsOneWidget);
+      expect(find.byType(AuthForm), findsOneWidget);
     });
 
-    testWidgets('navigates to the dashboard page if the login was successful',
+    testWidgets("navigates to the dashboard page if the login was successful",
         (WidgetTester tester) async {
-      await tester.pumpWidget(LoginPageTestbed(userStore: UserStore()));
+      await tester.pumpWidget(_LoginPageTestbed(userStore: UserStore()));
 
-      await tester.enterText(emailInput, 'test@email.com');
-      await tester.enterText(passwordInput, 'testPassword');
-      await tester.tap(submitButton);
+      await tester.enterText(emailInputFinder, 'test@email.com');
+      await tester.enterText(passwordInputFinder, 'testPassword');
+      await tester.tap(submitButtonFinder);
       await tester.pumpAndSettle();
 
       expect(find.byType(DashboardPage), findsOneWidget);
     });
 
     testWidgets(
-        'redirects to the dashboard page if a user is already signed in',
+        "redirects to the dashboard page if a user is already signed in",
         (WidgetTester tester) async {
-      await tester.pumpWidget(LoginPageTestbed(
-        userStore: UserIsLoggedInUserStoreStub(),
+      await tester.pumpWidget(_LoginPageTestbed(
+        userStore: LoggedInUserStoreStub(),
       ));
       await tester.pumpAndSettle();
 
@@ -60,10 +59,10 @@ void main() {
   });
 }
 
-class LoginPageTestbed extends StatelessWidget {
+class _LoginPageTestbed extends StatelessWidget {
   final UserStore userStore;
 
-  const LoginPageTestbed({
+  const _LoginPageTestbed({
     this.userStore = const UserStoreStub(),
   });
 

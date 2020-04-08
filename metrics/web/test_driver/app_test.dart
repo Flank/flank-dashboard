@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 
 void main() {
   group(
-    'Flutter driver test',
+    "Flutter driver test",
     () {
       FlutterDriver driver;
 
@@ -19,12 +19,13 @@ void main() {
         await driver?.close();
       });
 
-      group('LoginPage:', () {
-        test("shows an authentication form", () async  {
+      group("LoginPage", () {
+        test("shows an authentication form", () async {
           await _authFormExists(driver);
         });
 
-        test("can authenticate in the app using an email and a password", () async {
+        test("can authenticate in the app using an email and a password",
+            () async {
           await _authFormExists(driver);
           await _login(driver);
           await _authFormAbsent(driver);
@@ -32,19 +33,21 @@ void main() {
         });
 
         test("can log out from the app", () async {
-          await driver.waitUntilNoTransientCallbacks(timeout: const Duration(seconds: 2));
+          await driver.waitUntilNoTransientCallbacks(
+              timeout: const Duration(seconds: 2));
           await driver.tap(find.byTooltip('Open navigation menu'));
           await driver.waitFor(find.byValueKey('Logout'));
           await driver.tap(find.byValueKey('Logout'));
-          await driver.waitUntilNoTransientCallbacks(timeout: const Duration(seconds: 2));
+          await driver.waitUntilNoTransientCallbacks(
+              timeout: const Duration(seconds: 2));
           await _authFormExists(driver);
         });
       });
 
-      group('DashboardPage:', () {
+      group("DashboardPage", () {
         test(
           "loads the projects and shows the project tiles",
-              () async {
+          () async {
             await _authFormExists(driver);
             await _login(driver);
             await _authFormAbsent(driver);
@@ -54,7 +57,7 @@ void main() {
 
         test(
           "loads the coverage data and shows the circle percentage widget",
-              () async {
+          () async {
             await driver.waitFor(find.text(DashboardStrings.coverage));
             await driver.waitFor(find.byType('CirclePercentage'));
           },
@@ -62,7 +65,7 @@ void main() {
 
         test(
           "loads the build metrics and shows the sparkline graph widgets",
-              () async {
+          () async {
             await driver.waitFor(find.text(DashboardStrings.performance));
             await driver.waitFor(find.text(DashboardStrings.builds));
 
@@ -72,7 +75,7 @@ void main() {
 
         test(
           "loads the build number metric and shows it with the title",
-              () async {
+          () async {
             await driver.waitFor(find.text(DashboardStrings.builds));
 
             await driver.waitFor(find.byType('TextMetric'));
@@ -81,7 +84,7 @@ void main() {
 
         test(
           "loads the build result metrics and shows the build results widget",
-              () async {
+          () async {
             await driver.waitFor(find.text(DashboardStrings.buildTaskName));
 
             await driver.waitFor(find.byType('BuildResultBarGraph'));
@@ -91,7 +94,6 @@ void main() {
     },
   );
 }
-
 
 Future<void> _login(FlutterDriver driver) async {
   await driver.tap(find.byValueKey('Email'));
