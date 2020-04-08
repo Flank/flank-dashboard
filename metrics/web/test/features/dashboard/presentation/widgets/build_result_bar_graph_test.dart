@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/placeholder_bar.dart';
 import 'package:metrics_core/metrics_core.dart';
+
+import 'test_utils/testbed_page.dart';
 
 void main() {
   const buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
@@ -175,17 +176,11 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MetricsTheme(
-        data: theme,
-        child: Scaffold(
-          body: Center(
-            child: BuildResultBarGraph(
-              data: data,
-              numberOfBars: numberOfBars,
-            ),
-          ),
-        ),
+    return TestbedPage(
+      metricsThemeData: theme,
+      body: BuildResultBarGraph(
+        data: data,
+        numberOfBars: numberOfBars,
       ),
     );
   }

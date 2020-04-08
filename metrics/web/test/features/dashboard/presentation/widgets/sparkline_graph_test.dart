@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/placeholder_text.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
+
+import 'test_utils/testbed_page.dart';
 
 void main() {
   testWidgets(
@@ -36,6 +38,22 @@ void main() {
       ));
 
       expect(tester.takeException(), isA<AssertionError>());
+    },
+  );
+
+  testWidgets(
+    "Displays the PlaceholderText widget if there is no data to display",
+    (WidgetTester tester) async {
+      await tester.pumpWidget(const _SparklineGraphTestbed(
+        data: [],
+      ));
+
+      expect(
+        find.descendant(
+            of: find.byType(SparklineGraph),
+            matching: find.byType(PlaceholderText)),
+        findsOneWidget,
+      );
     },
   );
 
@@ -311,22 +329,18 @@ class _SparklineGraphTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: MetricsTheme(
-          data: theme,
-          child: SparklineGraph(
-            data: data,
-            value: value,
-            strokeColor: strokeColor,
-            graphPadding: graphPadding,
-            valuePadding: valuePadding,
-            valueStyle: valueStyle,
-            curveType: curveType,
-            strokeWidth: strokeWidth,
-            fillColor: fillColor,
-          ),
-        ),
+    return TestbedPage(
+      metricsThemeData: theme,
+      body: SparklineGraph(
+        data: data,
+        value: value,
+        strokeColor: strokeColor,
+        graphPadding: graphPadding,
+        valuePadding: valuePadding,
+        valueStyle: valueStyle,
+        curveType: curveType,
+        strokeWidth: strokeWidth,
+        fillColor: fillColor,
       ),
     );
   }

@@ -9,9 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
+
+import 'test_utils/testbed_page.dart';
 
 void main() {
   group("CirlcePercentage", () {
@@ -70,7 +71,7 @@ void main() {
     );
 
     testWidgets(
-      "Takes given square dimensions space",
+      "takes given square dimensions space",
       (WidgetTester tester) async {
         const side = 20.0;
         await tester.pumpWidget(const _CirclePercentageTestbed(
@@ -85,7 +86,7 @@ void main() {
     );
 
     testWidgets(
-      "Applies style to the percent text",
+      "applies style to the percent text",
       (WidgetTester tester) async {
         const valueStyle = TextStyle(color: Colors.red);
 
@@ -110,7 +111,7 @@ void main() {
     );
 
     testWidgets(
-      "Takes square box when parent dimensions when parent height is shorter than width",
+      "takes square box when parent dimensions when parent height is shorter than width",
       (WidgetTester tester) async {
         const height = 100.0;
         const width = 200.0;
@@ -133,7 +134,7 @@ void main() {
     );
 
     testWidgets(
-      "Takes square box when parent dimensions when parent height is shorter than width",
+      "takes square box when parent dimensions when parent height is shorter than width",
       (WidgetTester tester) async {
         const height = 200.0;
         const width = 100.0;
@@ -157,7 +158,7 @@ void main() {
     );
 
     testWidgets(
-      "Widgets with mirrored widgth/heights take same space",
+      "widgets with mirrored widgth/heights take same space",
       (WidgetTester tester) async {
         const height = 200.0;
         const width = 100.0;
@@ -184,7 +185,7 @@ void main() {
     );
 
     testWidgets(
-      "Applies circle percentage low theme if value is in bounds from 0.1 to 0.5",
+      "applies circle percentage low theme if value is in bounds from 0.1 to 0.5",
       (WidgetTester tester) async {
         await tester.pumpWidget(_CirclePercentageTestbed(
           theme: theme,
@@ -205,7 +206,7 @@ void main() {
     );
 
     testWidgets(
-      "Applies circle percentage medium theme if value is in bounds from 0.51 to 0.79",
+      "applies circle percentage medium theme if value is in bounds from 0.51 to 0.79",
       (WidgetTester tester) async {
         await tester.pumpWidget(_CirclePercentageTestbed(
           theme: theme,
@@ -226,7 +227,7 @@ void main() {
     );
 
     testWidgets(
-      "Applies circle percentage high theme if value is grater or equals to 0.8",
+      "applies circle percentage high theme if value is grater or equals to 0.8",
       (WidgetTester tester) async {
         await tester.pumpWidget(_CirclePercentageTestbed(
           theme: theme,
@@ -247,7 +248,7 @@ void main() {
     );
 
     testWidgets(
-      "Applies inactive theme color if value is equals to 0",
+      "applies inactive theme color if value is equals to 0",
       (WidgetTester tester) async {
         await tester.pumpWidget(_CirclePercentageTestbed(
           theme: theme,
@@ -268,7 +269,7 @@ void main() {
     );
 
     testWidgets(
-      "Applies inactive theme color if value is equals to null",
+      "applies inactive theme color if value is equals to null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_CirclePercentageTestbed(
           theme: theme,
@@ -289,19 +290,19 @@ void main() {
     );
 
     testWidgets(
-      "Displays 'N/A' text if the value is null",
+      "displays 'N/A' text if the value is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _CirclePercentageTestbed(
           value: null,
         ));
         await tester.pumpAndSettle();
 
-        expect(find.text(DashboardStrings.na), findsOneWidget);
+        expect(find.text(DashboardStrings.noDataPlaceholder), findsOneWidget);
       },
     );
 
     testWidgets(
-      "Applies stroke, value and background colors",
+      "applies stroke, value and background colors",
       (WidgetTester tester) async {
         const valueColor = Colors.red;
         const strokeColor = Colors.blue;
@@ -371,25 +372,21 @@ class _CirclePercentageTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: MetricsTheme(
-          data: theme,
-          child: Align(
-            alignment: alignment,
-            child: Container(
-              height: height,
-              width: width,
-              child: CirclePercentage(
-                value: value,
-                strokeWidth: strokeWidth,
-                valueColor: valueColor,
-                strokeColor: strokeColor,
-                padding: padding,
-                valueStyle: valueStyle,
-                backgroundColor: backgroundColor,
-              ),
-            ),
+    return TestbedPage(
+      metricsThemeData: theme,
+      body: Align(
+        alignment: alignment,
+        child: Container(
+          height: height,
+          width: width,
+          child: CirclePercentage(
+            value: value,
+            strokeWidth: strokeWidth,
+            valueColor: valueColor,
+            strokeColor: strokeColor,
+            padding: padding,
+            valueStyle: valueStyle,
+            backgroundColor: backgroundColor,
           ),
         ),
       ),

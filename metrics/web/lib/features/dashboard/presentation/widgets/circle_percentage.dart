@@ -32,7 +32,7 @@ class CirclePercentage extends StatefulWidget {
   /// The [value] must must be from 0.0 (inclusive) to 1.0 (inclusive).
   ///
   /// [value] is the percent value of the metric.
-  /// If [value] is null - the [DashboardStrings.na] will be displayed.
+  /// If [value] is null - the [DashboardStrings.noDataPlaceholder] will be displayed.
   /// [padding] the padding of the [value] text inside the circle graph.
   /// [strokeWidth] the wight of the graph's stroke. Defaults to 2.0.
   /// [valueColor] the color of the part of the graph that represents the value.
@@ -71,16 +71,14 @@ class _CirclePercentageState extends State<CirclePercentage>
       duration: const Duration(milliseconds: 2400),
     );
 
-    if (widget.value != null) {
-      _controller.animateTo(widget.value);
-    }
+    _animate();
     super.initState();
   }
 
   @override
   void didUpdateWidget(CirclePercentage oldWidget) {
-    if (widget.value != null && oldWidget.value != widget.value) {
-      _controller.animateTo(widget.value);
+    if (oldWidget.value != widget.value) {
+      _animate();
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -121,7 +119,8 @@ class _CirclePercentageState extends State<CirclePercentage>
                             flex: 2,
                             child: ExpandableText(
                               _getValueText(),
-                              style: widget.valueStyle,
+                              style: widget.valueStyle ??
+                                  widgetThemeData.textStyle,
                             ),
                           ),
                         ),
@@ -137,8 +136,15 @@ class _CirclePercentageState extends State<CirclePercentage>
     );
   }
 
+  /// Animates the [AnimationController] to the [widget.value] if it is not null.
+  void _animate() {
+    if (widget.value != null) {
+      _controller.animateTo(widget.value);
+    }
+  }
+
   String _getValueText() {
-    if (widget.value == null) return DashboardStrings.na;
+    if (widget.value == null) return DashboardStrings.noDataPlaceholder;
 
     return '${(_controller.value * 100).toInt()}%';
   }

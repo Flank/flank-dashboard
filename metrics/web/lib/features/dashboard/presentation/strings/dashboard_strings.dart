@@ -9,7 +9,8 @@ class DashboardStrings {
   static const String coverage = 'Coverage';
   static const String loadMetrics = 'Load metrics';
   static const String noConfiguredProjects = "No configured projects";
-  static const String na = "N/A";
+  static const String noDataPlaceholder = "-";
+  static const String perWeek = '/ week';
 
   static String getLoadingErrorMessage(String errorMessage) =>
       "An error occured during loading: $errorMessage";

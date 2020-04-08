@@ -22,21 +22,30 @@ class _MyAppState extends State<MyApp> {
 
           return MaterialApp(
             title: 'Metrics',
+            debugShowCheckedModeBanner: false,
             routes: {
               '/dashboard': (context) => DashboardPage(),
             },
             themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
             theme: ThemeData(
               brightness: Brightness.light,
+              primaryColor: Colors.white,
               primarySwatch: Colors.teal,
+              cardColor: ColorConfig.lightScaffoldColor,
               fontFamily: 'Roboto',
+              appBarTheme: const AppBarTheme(
+                color: ColorConfig.lightScaffoldColor,
+              ),
             ),
             darkTheme: ThemeData(
               brightness: Brightness.dark,
               primarySwatch: Colors.teal,
-              scaffoldBackgroundColor: ColorConfig.darkGrey,
-              cardColor: ColorConfig.darkGrey,
+              scaffoldBackgroundColor: ColorConfig.darkScaffoldColor,
+              cardColor: ColorConfig.darkScaffoldColor,
               fontFamily: 'Roboto',
+              appBarTheme: const AppBarTheme(
+                color: ColorConfig.darkScaffoldColor,
+              ),
             ),
             home: DashboardPage(),
           );

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/placeholder_text.dart';
 
 /// The widget with sparkline that represents metric.
 ///
@@ -60,12 +61,9 @@ class SparklineGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final metricsTheme = MetricsTheme.of(context);
     final graphData = data.toList();
-    MetricWidgetThemeData widgetThemeData = metricsTheme.metricWidgetTheme;
+    final widgetThemeData = metricsTheme.metricWidgetTheme;
 
-    if (graphData.isEmpty) {
-      graphData.addAll(const <Point<int>>[Point(0, 0), Point(1, 0)]);
-      widgetThemeData = metricsTheme.inactiveWidgetTheme;
-    }
+    if (graphData.isEmpty) return const PlaceholderText();
 
     return Column(
       children: <Widget>[

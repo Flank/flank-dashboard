@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_builder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 
+import 'test_utils/testbed_page.dart';
+
 void main() {
   testWidgets(
     "Can't create a LoadingBuilder without a builder",
@@ -66,12 +68,10 @@ class _LoadingBuilderTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: LoadingBuilder(
-          isLoading: isLoading,
-          builder: builder,
-        ),
+    return TestbedPage(
+      body: LoadingBuilder(
+        isLoading: isLoading,
+        builder: builder,
       ),
     );
   }

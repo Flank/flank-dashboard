@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
 
+import 'test_utils/testbed_page.dart';
+
 void main() {
   testWidgets(
     "Applies the color of the bar",
@@ -101,16 +103,14 @@ class _ColoredBarTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: ColoredBar(
-            color: color,
-            padding: padding,
-            border: border,
-            borderRadius: borderRadius,
-            width: width,
-          ),
+    return TestbedPage(
+      body: Center(
+        child: ColoredBar(
+          color: color,
+          padding: padding,
+          border: border,
+          borderRadius: borderRadius,
+          width: width,
         ),
       ),
     );

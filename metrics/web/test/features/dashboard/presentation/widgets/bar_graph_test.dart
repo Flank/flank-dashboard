@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/model/bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
 
+import 'test_utils/testbed_page.dart';
+
 void main() {
   testWidgets(
     "Can't create widget without data",
@@ -14,7 +16,7 @@ void main() {
   );
 
   testWidgets(
-    'Can create widget from empty data',
+    "Can create widget from empty data",
     (WidgetTester tester) async {
       await tester.pumpWidget(const _BarGraphTestbed(data: []));
 
@@ -24,7 +26,7 @@ void main() {
   );
 
   testWidgets(
-    'Applies graph padding',
+    "Applies graph padding",
     (WidgetTester tester) async {
       const padding = EdgeInsets.all(8.0);
 
@@ -41,7 +43,7 @@ void main() {
   );
 
   testWidgets(
-    'Graph bars are tapable',
+    "Graph bars are tapable",
     (WidgetTester tester) async {
       int tappedBarValue;
 
@@ -61,7 +63,7 @@ void main() {
   );
 
   testWidgets(
-    'Builds all bar data from data list with the given order',
+    "Builds all bar data from data list with the given order",
     (WidgetTester tester) async {
       await tester.pumpWidget(const _BarGraphTestbed());
 
@@ -84,7 +86,7 @@ void main() {
   );
 
   testWidgets(
-    'Builds the graph bars with the height ratio equal to data value ratio',
+    "Builds the graph bars with the height ratio equal to data value ratio",
     (WidgetTester tester) async {
       const barGraphData = [
         _TestBarData(value: 1),
@@ -157,15 +159,13 @@ class _BarGraphTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: BarGraph(
-          data: data,
-          graphPadding: graphPadding,
-          onBarTap: onBarTap,
-          barBuilder: (_TestBarData data) => _GraphTestBar(
-            value: data.value,
-          ),
+    return TestbedPage(
+      body: BarGraph(
+        data: data,
+        graphPadding: graphPadding,
+        onBarTap: onBarTap,
+        barBuilder: (_TestBarData data) => _GraphTestBar(
+          value: data.value,
         ),
       ),
     );

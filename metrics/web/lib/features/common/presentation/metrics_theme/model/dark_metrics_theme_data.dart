@@ -13,22 +13,37 @@ class DarkMetricsThemeData extends MetricsThemeData {
             primaryColor: ColorConfig.primaryColor,
             accentColor: Colors.transparent,
             backgroundColor: ColorConfig.primaryTranslucentColor,
+            textStyle: TextStyle(
+              color: ColorConfig.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           circlePercentageLowPercentTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.accentColor,
             accentColor: Colors.transparent,
             backgroundColor: ColorConfig.accentTranslucentColor,
+            textStyle: TextStyle(
+              color: ColorConfig.accentColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           circlePercentageMediumPercentTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.yellow,
             accentColor: Colors.transparent,
             backgroundColor: ColorConfig.yellowTranslucent,
+            textStyle: TextStyle(
+              color: ColorConfig.yellow,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           metricWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
             accentColor: ColorConfig.primaryTranslucentColor,
-            backgroundColor: ColorConfig.darkGrey,
-            textStyle: TextStyle(color: ColorConfig.primaryColor),
+            backgroundColor: ColorConfig.darkScaffoldColor,
+            textStyle: TextStyle(
+              color: ColorConfig.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           buildResultTheme: const BuildResultsThemeData(
             canceledColor: ColorConfig.accentColor,
@@ -39,7 +54,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
             primaryColor: ColorConfig.darkInactiveColor,
             accentColor: Colors.transparent,
             backgroundColor: ColorConfig.darkInactiveBackgroundColor,
-            textStyle: TextStyle(color: ColorConfig.darkInactiveColor),
+            textStyle: TextStyle(
+                color: ColorConfig.darkInactiveColor,
+                fontSize: 32.0,
+                fontWeight: FontWeight.bold),
           ),
         );
 }

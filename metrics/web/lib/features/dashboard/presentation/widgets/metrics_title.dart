@@ -21,43 +21,38 @@ class MetricsTitle extends StatelessWidget {
           ),
           Flexible(
             flex: DashboardWidgetConfig.trailingFlex,
-            child: DefaultTextStyle(
-              style: TextStyle(color: Colors.white),
-              overflow: TextOverflow.clip,
-              maxLines: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(child: Container()),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        DashboardStrings.performance,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(child: Container()),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
                     child: Text(
-                      DashboardStrings.builds,
+                      DashboardStrings.performance,
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Expanded(
-                    child: Text(
-                      DashboardStrings.stability,
-                      textAlign: TextAlign.center,
-                    ),
+                ),
+                Expanded(
+                  child: Text(
+                    DashboardStrings.builds,
+                    textAlign: TextAlign.center,
                   ),
-                  Expanded(
-                    child: Text(
-                      DashboardStrings.coverage,
-                      textAlign: TextAlign.center,
-                    ),
+                ),
+                Expanded(
+                  child: Text(
+                    DashboardStrings.stability,
+                    textAlign: TextAlign.center,
                   ),
-                ],
-              ),
+                ),
+                Expanded(
+                  child: Text(
+                    DashboardStrings.coverage,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

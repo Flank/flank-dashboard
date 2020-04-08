@@ -39,8 +39,8 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
-        height: 120.0,
-        padding: const EdgeInsets.all(16.0),
+        height: 144.0,
+        padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

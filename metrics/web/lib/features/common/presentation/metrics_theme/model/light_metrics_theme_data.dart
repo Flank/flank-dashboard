@@ -39,7 +39,10 @@ class LightMetricsThemeData extends MetricsThemeData {
             primaryColor: ColorConfig.lightInactiveColor,
             accentColor: Colors.transparent,
             backgroundColor: ColorConfig.lightInactiveBackgroundColor,
-            textStyle: TextStyle(color: Colors.grey),
+            textStyle: TextStyle(
+              color: Colors.grey,
+              fontSize: 32.0,
+            ),
           ),
         );
 }
