@@ -95,9 +95,11 @@ class _AuthFormState extends State<AuthForm> {
   /// Submits the [Form].
   void _submit() {
     if (_formKey.currentState.validate()) {
-      Injector.getAsReactive<UserStore>().state.signInWithEmailAndPassword(
-        _emailController.text,
-        _passwordController.text,
+      Injector.getAsReactive<UserStore>().setState(
+        (store) => store.signInWithEmailAndPassword(
+          _emailController.text,
+          _passwordController.text,
+        ),
       );
     }
   }

@@ -4,6 +4,7 @@
 /// to make them available in tests and avoid code duplication.
 class CommonStrings {
   static const String metrics = 'Metrics';
+  static const String logOut = 'Log out';
 
   static String getLoadingErrorMessage(String errorMessage) =>
       "An error occured during loading: $errorMessage";

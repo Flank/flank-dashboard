@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/auth/presentation/state/user_store.dart';
@@ -7,55 +9,85 @@ import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
-  final Finder emailInput = find.widgetWithText(AuthInputField, LoginStrings.email);
-  final Finder submitButton = find.widgetWithText(RaisedButton, LoginStrings.signIn);
+  final Finder emailInput =
+      find.widgetWithText(AuthInputField, LoginStrings.email);
+  final Finder passwordInput =
+      find.widgetWithText(AuthInputField, LoginStrings.password);
+  final Finder submitButton =
+      find.widgetWithText(RaisedButton, LoginStrings.signIn);
 
   group('AuthForm', () {
     testWidgets('Email input shows error message if value is empty',
         (WidgetTester tester) async {
-      await tester.pumpWidget(AuthFormTestbed());
+      await tester.pumpWidget(const AuthFormTestbed());
 
       await tester.tap(submitButton);
       await tester.pump();
 
-      final Finder errorText = find.text(LoginStrings.emailIsRequired);
-
-      expect(errorText, findsOneWidget);
+      expect(find.text(LoginStrings.emailIsRequired), findsOneWidget);
     });
 
     testWidgets('Email input shows error message if value is not a valid email',
         (WidgetTester tester) async {
-      await tester.pumpWidget(AuthFormTestbed());
+      await tester.pumpWidget(const AuthFormTestbed());
       await tester.enterText(emailInput, 'notAnEmail');
 
       await tester.tap(submitButton);
       await tester.pump();
 
-      final Finder errorText = find.text(LoginStrings.emailIsInvalid);
-
-      expect(errorText, findsOneWidget);
+      expect(find.text(LoginStrings.emailIsInvalid), findsOneWidget);
     });
 
     testWidgets('Password input shows error message if value is empty',
         (WidgetTester tester) async {
-      await tester.pumpWidget(AuthFormTestbed());
+      await tester.pumpWidget(const AuthFormTestbed());
 
       await tester.tap(submitButton);
       await tester.pump();
 
-      final Finder errorText = find.text(LoginStrings.passwordIsRequired);
+      expect(find.text(LoginStrings.passwordIsRequired), findsOneWidget);
+    });
 
-      expect(errorText, findsOneWidget);
+    testWidgets(
+        'signInWithEmailAndPassword method is called on tap on sign in button',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const AuthFormTestbed(
+        userStore: SignInUserStoreStub(),
+      ));
+      await tester.enterText(emailInput, 'test@email.com');
+      await tester.enterText(passwordInput, 'testPassword');
+      await tester.tap(submitButton);
+
+      expect(SignInUserStoreStub.called, isTrue);
+    });
+
+    testWidgets('Shows an auth error text if the login process went wrong',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(AuthFormTestbed(
+        userStore: SignInErrorUserStoreStub(),
+      ));
+      await tester.enterText(emailInput, 'test@email.com');
+      await tester.enterText(passwordInput, 'testPassword');
+      await tester.tap(submitButton);
+      await tester.pumpAndSettle();
+
+      expect(find.text(SignInErrorUserStoreStub.errorMessage), findsOneWidget);
     });
   });
 }
 
 class AuthFormTestbed extends StatelessWidget {
+  final UserStore userStore;
+
+  const AuthFormTestbed({
+    this.userStore = const UserStoreStub(),
+  });
+
   @override
   Widget build(BuildContext context) {
     return Injector(
       inject: [
-        Inject<UserStore>(() => UserStore()),
+        Inject<UserStore>(() => userStore),
       ],
       initState: () {
         Injector.getAsReactive<UserStore>().setState(
@@ -69,5 +101,57 @@ class AuthFormTestbed extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class UserStoreStub implements UserStore {
+  const UserStoreStub();
+
+  @override
+  Stream get loggedInStream => null;
+
+  @override
+  bool get isLoggedIn => false;
+
+  @override
+  String get authErrorMessage => '';
+
+  @override
+  void subscribeToUserUpdates() {}
+
+  @override
+  void signInWithEmailAndPassword(String email, String password) {}
+
+  @override
+  void signOut() {}
+
+  @override
+  void dispose() {}
+}
+
+class SignInUserStoreStub extends UserStoreStub {
+  static bool called = false;
+
+  const SignInUserStoreStub();
+
+  @override
+  void signInWithEmailAndPassword(String email, String password) {
+    called = true;
+  }
+}
+
+class SignInErrorUserStoreStub extends UserStoreStub {
+  static const String errorMessage = "Unknown error";
+
+  SignInErrorUserStoreStub();
+
+  @override
+  String get authErrorMessage => _authExceptionDescription ?? '';
+
+  String _authExceptionDescription;
+
+  @override
+  void signInWithEmailAndPassword(String email, String password) {
+    _authExceptionDescription = errorMessage;
   }
 }

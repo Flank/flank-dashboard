@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
+import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// The application side menu widget.
@@ -43,7 +44,7 @@ class MetricsDrawer extends StatelessWidget {
                   await Navigator.pushNamedAndRemoveUntil(
                       context, RouteGenerator.login, (Route<dynamic> route) => false);
                 },
-                child: const Text('Log out'),
+                child: const Text(CommonStrings.logOut),
               );
             },
           )
