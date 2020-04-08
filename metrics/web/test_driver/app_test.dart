@@ -44,11 +44,11 @@ void main() {
       );
 
       test(
-        "loads the build number metric and shows it with the title",
+        "loads the build number metric and shows it with the BuildNumberTextMetric",
         () async {
           await driver.waitFor(find.text(DashboardStrings.builds));
 
-          await driver.waitFor(find.byType('TextMetric'));
+          await driver.waitFor(find.byType('BuildNumberTextMetric'));
         },
       );
 
