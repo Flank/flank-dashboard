@@ -1,4 +1,4 @@
-import 'package:metrics/features/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:metrics/features/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -7,31 +7,31 @@ import 'test_utils/error_user_repository_mock.dart';
 import 'test_utils/user_repository_mock.dart';
 
 void main() {
-  group("SignOutUseCase", () {
+  group("ReceiveAuthenticationUpdates", () {
     test("can't be created with null repository", () {
       expect(
-        () => SignOutUseCase(null),
+        () => ReceiveAuthenticationUpdates(null),
         MatcherUtil.throwsAssertionError,
       );
     });
 
-    test("delegates call to the UserRepository.signOut", () async {
+    test("delegates call to the UserRepository.authenticationStream", () async {
       final repository = UserRepositoryMock();
-      final signOutUseCase = SignOutUseCase(repository);
+      final receiveUserUpdates = ReceiveAuthenticationUpdates(repository);
 
-      await signOutUseCase();
+      receiveUserUpdates();
 
-      verify(repository.signOut()).called(equals(1));
+      verify(repository.authenticationStream()).called(equals(1));
     });
 
     test(
-      "throws if UserRepository throws during sign out",
+      "throws an error if repository throws",
       () {
         final repository = ErrorUserRepositoryMock();
-        final signOutUseCase = SignOutUseCase(repository);
+        final receiveUserUpdates = ReceiveAuthenticationUpdates(repository);
 
         expect(
-          () => signOutUseCase(),
+          () => receiveUserUpdates(),
           MatcherUtil.throwsAuthenticationException,
         );
       },

@@ -6,8 +6,8 @@ import 'package:metrics/features/auth/domain/entities/user.dart';
 /// Provides methods for authenticating and getting the stream
 /// of the current user.
 abstract class UserRepository {
-  /// Provides a stream of the current [User].
-  Stream<User> currentUserStream();
+  /// Provides a stream of the authenticated [User].
+  Stream<User> authenticationStream();
 
   /// Provides an ability to sign in a user using the [email] and [password].
   ///

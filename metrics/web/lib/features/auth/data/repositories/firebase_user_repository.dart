@@ -10,7 +10,7 @@ class FirebaseUserRepository implements UserRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Stream<User> currentUserStream() {
+  Stream<User> authenticationStream() {
     return _firebaseAuth.onAuthStateChanged
         .map((user) => user != null ? FirebaseUserAdapter(user) : null);
   }
