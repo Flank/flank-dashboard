@@ -34,7 +34,6 @@ class _AuthFormState extends State<AuthForm> {
             label: LoginStrings.email,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            onFieldSubmitted: (_) => _submit(),
             validator: _validateEmail,
           ),
           AuthInputField(
@@ -42,7 +41,6 @@ class _AuthFormState extends State<AuthForm> {
             label: LoginStrings.password,
             controller: _passwordController,
             obscureText: true,
-            onFieldSubmitted: (_) => _submit(),
             validator: _validatePassword,
           ),
           StateBuilder(
