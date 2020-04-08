@@ -84,14 +84,10 @@ class _LoginPageTestbed extends StatelessWidget {
         );
       },
       builder: (BuildContext context) {
-        final ReactiveModel<UserStore> userStoreRM =
-            Injector.getAsReactive<UserStore>();
         return MaterialApp(
           title: 'Login Page',
-          onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-            settings: settings,
-            isLoggedIn: userStoreRM.state.isLoggedIn,
-          ),
+          onGenerateRoute: (settings) =>
+              RouteGenerator.generateRoute(settings: settings),
         );
       },
     );

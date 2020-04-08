@@ -23,27 +23,16 @@ class _MyAppState extends State<MyApp> {
         builder: (context, store) {
           final isDark = store?.isDark ?? true;
 
-          return WhenRebuilder<UserStore>(
-            models: [Injector.getAsReactive<UserStore>()],
-            onWaiting: () => const LoadingPlaceholder(),
-            onIdle: () => const LoadingPlaceholder(),
-            onError: (error) => PagePlaceholder(
-                text: CommonStrings.getLoadingErrorMessage('$error')),
-            onData: (UserStore userMetricsStore) {
-              return MaterialApp(
-                title: CommonStrings.metrics,
-                initialRoute: '/',
-                onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-                  settings: settings,
-                  isLoggedIn: userMetricsStore.isLoggedIn,
-                ),
-                theme: ThemeData(
-                  brightness: isDark ? Brightness.dark : Brightness.light,
-                  primarySwatch: Colors.teal,
-                  fontFamily: 'Bebas Neue',
-                ),
-              );
-            },
+          return MaterialApp(
+            title: CommonStrings.metrics,
+            initialRoute: '/',
+            onGenerateRoute: (settings) =>
+                RouteGenerator.generateRoute(settings: settings),
+            theme: ThemeData(
+              brightness: isDark ? Brightness.dark : Brightness.light,
+              primarySwatch: Colors.teal,
+              fontFamily: 'Bebas Neue',
+            ),
           );
         },
       ),
