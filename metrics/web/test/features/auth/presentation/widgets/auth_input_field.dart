@@ -97,8 +97,7 @@ void main() {
         keyboardType: TextInputType.emailAddress,
       ));
 
-      final TextField textInput =
-          find.byType(TextField).evaluate().single.widget as TextField;
+      final textInput = tester.widget<TextField>(find.byType(TextField));
 
       expect(textInput.keyboardType, isNotNull);
       expect(textInput.keyboardType, equals(TextInputType.emailAddress));
@@ -110,8 +109,7 @@ void main() {
         focusNode: FocusNode(),
       ));
 
-      final TextField textInput =
-          find.byType(TextField).evaluate().single.widget as TextField;
+      final textInput = tester.widget<TextField>(find.byType(TextField));
 
       expect(textInput.focusNode, isNotNull);
     });
