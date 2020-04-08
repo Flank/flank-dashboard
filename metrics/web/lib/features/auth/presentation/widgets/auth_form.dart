@@ -70,6 +70,8 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
+  /// Check if an email field is not empty and has the right format,
+  /// otherwise show an error text.
   String _validateEmail(String value) {
     if (value.isEmpty) {
       return LoginStrings.emailIsRequired;
@@ -82,15 +84,21 @@ class _AuthFormState extends State<AuthForm> {
     return null;
   }
 
+  /// Check if a password field is not empty and match the minimum length,
+  /// otherwise show an error text.
   String _validatePassword(String value) {
     if (value.isEmpty) {
       return LoginStrings.passwordIsRequired;
     }
 
+    if (value.length < 6) {
+      return LoginStrings.passwordMinLength;
+    }
+
     return null;
   }
 
-  /// Submits the [Form].
+  /// Validates the [Form] and signs in user to the app using an email and a password.
   void _submit() {
     if (_formKey.currentState.validate()) {
       Injector.getAsReactive<UserStore>().setState(
