@@ -8,10 +8,12 @@ import 'package:metrics/features/common/presentation/routes/route_generator.dart
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+import '../../../../test_utils/user_store_stub.dart';
 import '../../../dashboard/presentation/page/dashboard_page_test.dart';
-import '../widgets/auth_form_test.dart';
+
 
 void main() {
   final emailInputFinder =
@@ -50,7 +52,7 @@ void main() {
         "redirects to the dashboard page if a user is already signed in",
         (WidgetTester tester) async {
       await tester.pumpWidget(_LoginPageTestbed(
-        userStore: LoggedInUserStoreStub(),
+        userStore: _LoggedInUserStoreStub(),
       ));
       await tester.pumpAndSettle();
 
@@ -94,5 +96,22 @@ class _LoginPageTestbed extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class _LoggedInUserStoreStub extends UserStoreStub {
+  _LoggedInUserStoreStub();
+
+  final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
+
+  @override
+  Stream get loggedInStream => _isLoggedInSubject.stream;
+
+  @override
+  bool get isLoggedIn => _isLoggedInSubject.value;
+
+  @override
+  void subscribeToUserUpdates() {
+    _isLoggedInSubject.add(true);
   }
 }
