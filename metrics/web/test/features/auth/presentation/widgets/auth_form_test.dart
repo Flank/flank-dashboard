@@ -6,6 +6,7 @@ import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
@@ -153,5 +154,23 @@ class SignInErrorUserStoreStub extends UserStoreStub {
   @override
   void signInWithEmailAndPassword(String email, String password) {
     _authExceptionDescription = errorMessage;
+  }
+}
+
+class UserIsLoggedInUserStoreStub extends UserStoreStub {
+
+  UserIsLoggedInUserStoreStub();
+
+  final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
+
+  @override
+  Stream get loggedInStream => _isLoggedInSubject.stream;
+
+  @override
+  bool get isLoggedIn => _isLoggedInSubject.value;
+
+  @override
+  void subscribeToUserUpdates() {
+    _isLoggedInSubject.add(true);
   }
 }
