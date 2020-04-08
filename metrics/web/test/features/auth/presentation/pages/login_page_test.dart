@@ -11,9 +11,8 @@ import 'package:metrics/features/dashboard/presentation/state/project_metrics_st
 import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+import '../../../../test_utils/metrics_store_stub.dart';
 import '../../../../test_utils/user_store_stub.dart';
-import '../../../dashboard/presentation/page/dashboard_page_test.dart';
-
 
 void main() {
   final emailInputFinder =
