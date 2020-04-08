@@ -30,17 +30,9 @@ void main() {
     testWidgets('contains authentication form', (WidgetTester tester) async {
       await tester.pumpWidget(LoginPageTestbed(userStore: UserStore()));
 
-      final Finder emailInput =
-          find.widgetWithText(AuthInputField, LoginStrings.email);
       expect(emailInput, findsOneWidget);
-
-      final Finder passwordInput =
-          find.widgetWithText(AuthInputField, LoginStrings.password);
       expect(passwordInput, findsOneWidget);
-
-      final Finder signInButton =
-          find.widgetWithText(RaisedButton, LoginStrings.signIn);
-      expect(signInButton, findsOneWidget);
+      expect(submitButton, findsOneWidget);
     });
 
     testWidgets('navigates to the dashboard page if the login was successful',
