@@ -45,7 +45,7 @@ class JenkinsCiClientAdapter implements CiClient {
       build.buildNumber,
     );
 
-    return _processJenkinsBuilds(
+    return processJenkinsBuilds(
       builds,
       buildingJob.name,
       startFromBuildNumber: build.buildNumber,
@@ -58,7 +58,7 @@ class JenkinsCiClientAdapter implements CiClient {
       projectId,
       limits: JenkinsQueryLimits.endBefore(initialFetchBuildsLimit),
     );
-    return _processJenkinsBuilds(
+    return processJenkinsBuilds(
       buildingJob.builds,
       buildingJob.name,
     );
@@ -131,7 +131,7 @@ class JenkinsCiClientAdapter implements CiClient {
   /// than or equal to this value. This allows to avoid processing old builds
   /// since the range specifier in Jenkins API only provides an ability to set
   /// the fetch limits but not to filter data to fetch.
-  Future<List<BuildData>> _processJenkinsBuilds(
+  Future<List<BuildData>> processJenkinsBuilds(
     List<JenkinsBuild> builds,
     String jobName, {
     int startFromBuildNumber,
@@ -139,7 +139,7 @@ class JenkinsCiClientAdapter implements CiClient {
     final buildDataFutures = builds.where((build) {
       return checkBuildFinishedAndInRange(build, startFromBuildNumber);
     }).map((build) async {
-      return _mapJenkinsBuild(jobName, build, await _fetchCoverage(build));
+      return _mapJenkinsBuild(jobName, build, await fetchCoverage(build));
     });
 
     return Future.wait(buildDataFutures);
@@ -165,7 +165,7 @@ class JenkinsCiClientAdapter implements CiClient {
     return BuildData(
       buildNumber: jenkinsBuild.number,
       startedAt: jenkinsBuild.timestamp,
-      buildStatus: _mapJenkinsBuildResult(jenkinsBuild.result),
+      buildStatus: mapJenkinsBuildResult(jenkinsBuild.result),
       duration: jenkinsBuild.duration,
       workflowName: jobName,
       url: jenkinsBuild.url,
@@ -177,7 +177,7 @@ class JenkinsCiClientAdapter implements CiClient {
   ///
   /// Returns `null` if the code coverage artifact for the given build
   /// is not found.
-  Future<Percent> _fetchCoverage(JenkinsBuild build) async {
+  Future<Percent> fetchCoverage(JenkinsBuild build) async {
     final coverageArtifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,
@@ -202,7 +202,7 @@ class JenkinsCiClientAdapter implements CiClient {
   }
 
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
-  BuildStatus _mapJenkinsBuildResult(JenkinsBuildResult result) {
+  BuildStatus mapJenkinsBuildResult(JenkinsBuildResult result) {
     switch (result) {
       case JenkinsBuildResult.aborted:
         return BuildStatus.cancelled;
