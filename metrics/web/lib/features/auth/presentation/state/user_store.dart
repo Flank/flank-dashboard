@@ -1,6 +1,10 @@
 import 'package:rxdart/rxdart.dart';
 
-/// Store for a user.
+/// The store for a user.
+///
+/// Stores [_isLoggedInSubject] stream to determine user's authentication status.
+/// Provides the ability to sign in and sign out user from the app,
+/// track the [isLoggedIn] status and authentication error message if any
 class UserStore {
   /// Stream that contains a user's authentication status.
   final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
