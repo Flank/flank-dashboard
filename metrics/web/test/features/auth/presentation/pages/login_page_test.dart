@@ -25,20 +25,20 @@ void main() {
 
   group("LoginPage", () {
     testWidgets("contains project\'s title", (WidgetTester tester) async {
-      await tester.pumpWidget(_LoginPageTestbed(userStore: UserStore()));
+      await tester.pumpWidget(_LoginPageTestbed());
 
       expect(find.text(CommonStrings.metrics), findsOneWidget);
     });
 
     testWidgets("contains authentication form", (WidgetTester tester) async {
-      await tester.pumpWidget(_LoginPageTestbed(userStore: UserStore()));
+      await tester.pumpWidget(_LoginPageTestbed());
 
       expect(find.byType(AuthForm), findsOneWidget);
     });
 
     testWidgets("navigates to the dashboard page if the login was successful",
         (WidgetTester tester) async {
-      await tester.pumpWidget(_LoginPageTestbed(userStore: UserStore()));
+      await tester.pumpWidget(_LoginPageTestbed());
 
       await tester.enterText(emailInputFinder, 'test@email.com');
       await tester.enterText(passwordInputFinder, 'testPassword');
@@ -65,14 +65,14 @@ class _LoginPageTestbed extends StatelessWidget {
   final UserStore userStore;
 
   const _LoginPageTestbed({
-    this.userStore = const UserStoreStub(),
+    this.userStore,
   });
 
   @override
   Widget build(BuildContext context) {
     return Injector(
       inject: [
-        Inject<UserStore>(() => userStore),
+        Inject<UserStore>(() => userStore ?? UserStore()),
         Inject<ProjectMetricsStore>(() => const MetricsStoreStub()),
       ],
       initState: () {
