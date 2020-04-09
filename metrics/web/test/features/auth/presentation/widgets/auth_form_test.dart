@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
@@ -48,6 +49,29 @@ void main() {
       await tester.pump();
 
       expect(find.text(LoginStrings.passwordIsRequired), findsOneWidget);
+    });
+
+    testWidgets("password input shows error message if value is less then 6",
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const _AuthFormTestbed());
+
+      await tester.enterText(passwordInputFinder, '12345');
+      await tester.tap(submitButtonFinder);
+      await tester.pump();
+
+      expect(find.text(LoginStrings.passwordMinLength), findsOneWidget);
+    });
+
+    testWidgets("password input shows a value replaced by bullets",
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const _AuthFormTestbed());
+      await tester.enterText(passwordInputFinder, 'x');
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      final String editText =
+          _findRenderEditable(tester, passwordInputFinder).text.text;
+
+      expect(editText, '\u2022');
     });
 
     testWidgets(
@@ -118,3 +142,20 @@ class SignInErrorAuthStoreMock extends Mock implements AuthStore {
 
 /// Mock implementation of the [AuthStore].
 class AuthStoreMock extends Mock implements AuthStore {}
+
+/// Returns the first [RenderEditable].
+RenderEditable _findRenderEditable(WidgetTester tester, Finder finder) {
+  final RenderObject root = tester.renderObject(finder);
+
+  RenderEditable renderEditable;
+  void recursiveFinder(RenderObject child) {
+    if (child is RenderEditable) {
+      renderEditable = child;
+      return;
+    }
+    child.visitChildren(recursiveFinder);
+  }
+
+  root.visitChildren(recursiveFinder);
+  return renderEditable;
+}
