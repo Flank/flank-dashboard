@@ -9,6 +9,12 @@ import 'test_utils/user_repository_mock.dart';
 
 void main() {
   group("SignInUseCase", () {
+    final repository = UserRepositoryMock();
+
+    tearDown((){
+      reset(repository);
+    });
+
     final userCredentials = UserCredentialsParam(
       email: 'email',
       password: 'pass',
@@ -24,11 +30,7 @@ void main() {
     test(
       "delegates call to the UserRepository.signInWithEmailAndPassword",
       () async {
-        final repository = UserRepositoryMock();
         final signInUseCase = SignInUseCase(repository);
-
-        when(repository.signInWithEmailAndPassword(any, any))
-            .thenAnswer((_) async {});
 
         await signInUseCase(userCredentials);
 

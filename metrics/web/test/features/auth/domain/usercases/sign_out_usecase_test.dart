@@ -8,6 +8,12 @@ import 'test_utils/user_repository_mock.dart';
 
 void main() {
   group("SignOutUseCase", () {
+    final repository = UserRepositoryMock();
+
+    tearDown(() {
+      reset(repository);
+    });
+
     test("can't be created with null repository", () {
       expect(
         () => SignOutUseCase(null),
@@ -16,10 +22,7 @@ void main() {
     });
 
     test("delegates call to the UserRepository.signOut", () async {
-      final repository = UserRepositoryMock();
       final signOutUseCase = SignOutUseCase(repository);
-
-      when(repository.signOut()).thenAnswer((_) async {});
 
       await signOutUseCase();
 
@@ -29,7 +32,6 @@ void main() {
     test(
       "throws if UserRepository throws during sign out",
       () {
-        final repository = UserRepositoryMock();
         final signOutUseCase = SignOutUseCase(repository);
 
         when(repository.signOut()).thenThrow(const AuthenticationException());

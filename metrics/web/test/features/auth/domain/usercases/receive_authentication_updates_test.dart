@@ -8,6 +8,12 @@ import 'test_utils/user_repository_mock.dart';
 
 void main() {
   group("ReceiveAuthenticationUpdates", () {
+    final repository = UserRepositoryMock();
+
+    tearDown(() {
+      reset(repository);
+    });
+
     test("can't be created with null repository", () {
       expect(
         () => ReceiveAuthenticationUpdates(null),
@@ -16,12 +22,7 @@ void main() {
     });
 
     test("delegates call to the UserRepository.authenticationStream", () async {
-      final repository = UserRepositoryMock();
       final receiveUserUpdates = ReceiveAuthenticationUpdates(repository);
-
-      when(repository.authenticationStream()).thenAnswer(
-        (_) => const Stream.empty(),
-      );
 
       receiveUserUpdates();
 
@@ -31,7 +32,6 @@ void main() {
     test(
       "throws an error if repository throws",
       () {
-        final repository = UserRepositoryMock();
         final receiveUserUpdates = ReceiveAuthenticationUpdates(repository);
 
         when(repository.authenticationStream())
