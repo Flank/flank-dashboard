@@ -54,7 +54,7 @@ class JenkinsBuild extends Equatable {
         : DateTime.fromMillisecondsSinceEpoch(json['timestamp'] as int);
     final duration = json['duration'] == null
         ? null
-        : Duration(seconds: json['duration'] as int);
+        : Duration(milliseconds: json['duration'] as int);
     const resultMapper = JenkinsBuildResultMapper();
     final result = resultMapper.map(json['result'] as String);
 
@@ -85,7 +85,7 @@ class JenkinsBuild extends Equatable {
     const resultMapper = JenkinsBuildResultMapper();
     return {
       'number': number,
-      'duration': duration?.inSeconds,
+      'duration': duration?.inMilliseconds,
       'timestamp': timestamp?.millisecondsSinceEpoch,
       'result': resultMapper.unmap(result),
       'url': url,

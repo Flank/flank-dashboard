@@ -2,15 +2,17 @@ import 'package:ci_integration/ci_integration/ci_integration.dart';
 import 'package:ci_integration/common/client/ci_client.dart';
 import 'package:ci_integration/common/client/storage_client.dart';
 import 'package:ci_integration/common/config/ci_config.dart';
-import 'package:metrics_core/metrics_core.dart';
-import 'package:metrics_core/src/data/model/build_data.dart';
 import 'package:test/test.dart';
 
-import 'test_data/builds_test_data.dart';
+import 'test_util/stub/ci_client_stub.dart';
+import 'test_util/stub/storage_client_stub.dart';
 
 void main() {
   group("CiIntegration", () {
-    final ciConfig = CiConfigTestbed();
+    final ciConfig = CiConfig(
+      ciProjectId: 'ciProjectId',
+      storageProjectId: 'storageProjectId',
+    );
 
     test(
       "should throw ArgumentError trying to create an instance with null CI client",
@@ -18,7 +20,7 @@ void main() {
         expect(
           () => CiIntegration(
             ciClient: null,
-            storageClient: StorageClientTestbed(),
+            storageClient: StorageClientStub(),
           ),
           throwsArgumentError,
         );
@@ -30,7 +32,7 @@ void main() {
       () {
         expect(
           () => CiIntegration(
-            ciClient: CiClientTestbed(),
+            ciClient: CiClientStub(),
             storageClient: null,
           ),
           throwsArgumentError,
@@ -39,12 +41,24 @@ void main() {
     );
 
     test(
-      ".sync() should result with error if a CI client throws fetching all builds",
+      ".sync() should throw ArgumentError if the given config is null",
       () {
-        final ciClient = CiClientTestbed(
+        final ciIntegration = CiIntegration(
+          ciClient: CiClientStub(),
+          storageClient: StorageClientStub(),
+        );
+
+        expect(() => ciIntegration.sync(null), throwsArgumentError);
+      },
+    );
+
+    test(
+      ".sync() should result with an error if a CI client throws fetching all builds",
+      () {
+        final ciClient = CiClientStub(
           fetchBuildsCallback: (_) => throw UnimplementedError(),
         );
-        final storageClient = StorageClientTestbed(
+        final storageClient = StorageClientStub(
           fetchLastBuildCallback: (_) => null,
         );
         final ciIntegration = CiIntegration(
@@ -58,12 +72,12 @@ void main() {
     );
 
     test(
-      ".sync() should result with error if a CI client throws fetching the builds after the given one",
+      ".sync() should result with an error if a CI client throws fetching the builds after the given one",
       () {
-        final ciClient = CiClientTestbed(
+        final ciClient = CiClientStub(
           fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
         );
-        final ciIntegration = CiIntegrationTestbed(ciClient: ciClient);
+        final ciIntegration = CiIntegrationStub(ciClient: ciClient);
         final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
@@ -73,10 +87,10 @@ void main() {
     test(
       ".sync() should result with error if a storage client throws fetching the last build",
       () {
-        final storageClient = StorageClientTestbed(
+        final storageClient = StorageClientStub(
           fetchLastBuildCallback: (_) => throw UnimplementedError(),
         );
-        final ciIntegration = CiIntegrationTestbed(
+        final ciIntegration = CiIntegrationStub(
           storageClient: storageClient,
         );
         final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
@@ -86,12 +100,12 @@ void main() {
     );
 
     test(
-      ".sync() should result with error if a storage client throws adding new builds",
+      ".sync() should result with an error if a storage client throws adding new builds",
       () {
-        final storageClient = StorageClientTestbed(
+        final storageClient = StorageClientStub(
           addBuildsCallback: (_, __) => throw UnimplementedError(),
         );
-        final ciIntegration = CiIntegrationTestbed(
+        final ciIntegration = CiIntegrationStub(
           storageClient: storageClient,
         );
         final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
@@ -103,10 +117,10 @@ void main() {
     test(
       ".sync() should ignore empty list of new builds and not call adding builds",
       () {
-        final ciClient = CiClientTestbed(
+        final ciClient = CiClientStub(
           fetchBuildsAfterCallback: (_, __) => Future.value([]),
         );
-        final storageClient = StorageClientTestbed(
+        final storageClient = StorageClientStub(
           addBuildsCallback: (_, __) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegration(
@@ -123,7 +137,7 @@ void main() {
     test(
       ".sync() should synchronize builds",
       () {
-        final ciIntegration = CiIntegrationTestbed();
+        final ciIntegration = CiIntegrationStub();
         final result =
             ciIntegration.sync(ciConfig).then((res) => res.isSuccess);
 
@@ -133,11 +147,11 @@ void main() {
   });
 }
 
-/// A testbed class for a [CiConfig] abstract class providing required
+/// A stub class for a [CiConfig] abstract class providing required
 /// implementations.
-class CiIntegrationTestbed extends CiIntegration {
-  final StorageClientTestbed _storageClientTestbed;
-  final CiClientTestbed _ciClientTestbed;
+class CiIntegrationStub extends CiIntegration {
+  final StorageClientStub _storageClientTestbed;
+  final CiClientStub _ciClientTestbed;
 
   @override
   StorageClient get storageClient => _storageClientTestbed;
@@ -145,102 +159,13 @@ class CiIntegrationTestbed extends CiIntegration {
   @override
   CiClient get ciClient => _ciClientTestbed;
 
-  CiIntegrationTestbed({
-    StorageClientTestbed storageClient,
-    CiClientTestbed ciClient,
-  })  : _storageClientTestbed = storageClient ?? StorageClientTestbed(),
-        _ciClientTestbed = ciClient ?? CiClientTestbed();
-}
-
-/// A testbed class for a [CiConfig] abstract class providing required
-/// implementations.
-class CiConfigTestbed implements CiConfig {
-  @override
-  String get ciProjectId => 'ciProjectId';
-
-  @override
-  String get storageProjectId => 'storageProjectId';
-}
-
-/// A testbed class for a [CiClient] abstract class providing test
-/// implementation for methods.
-class CiClientTestbed implements CiClient {
-  /// Callback used to replace the default [fetchBuildsAfter] method
-  /// implementation in testing purposes.
-  final Future<List<BuildData>> Function(String, BuildData)
-      fetchBuildsAfterCallback;
-
-  /// Callback used to replace the default [fetchBuilds] method
-  /// implementation in testing purposes.
-  final Future<List<BuildData>> Function(String) fetchBuildsCallback;
-
-  /// Creates a testbed instance.
+  /// Creates this stub class instance.
   ///
-  /// The [fetchBuildsAfterCallback] is optional.
-  CiClientTestbed({
-    this.fetchBuildsAfterCallback,
-    this.fetchBuildsCallback,
-  });
-
-  @override
-  Future<List<BuildData>> fetchBuildsAfter(String projectId, BuildData build) {
-    if (fetchBuildsAfterCallback != null) {
-      return fetchBuildsAfterCallback(projectId, build);
-    } else {
-      final builds = BuildsTestData.builds;
-
-      final index = BuildsTestData.builds.indexWhere(
-        (b) => b.buildNumber == build.buildNumber,
-      );
-      final result =
-          builds.sublist(index == null || index == -1 ? 0 : index + 1);
-
-      return Future.value(result);
-    }
-  }
-
-  @override
-  Future<List<BuildData>> fetchBuilds(String projectId) {
-    if (fetchBuildsCallback != null) {
-      return fetchBuildsCallback(projectId);
-    } else {
-      return Future.value(BuildsTestData.builds);
-    }
-  }
-}
-
-/// A testbed class for a [StorageClient] abstract class providing test
-/// implementation for methods.
-class StorageClientTestbed implements StorageClient {
-  /// Callback used to replace the default [fetchLastBuild] method
-  /// implementation in testing purposes.
-  final Future<BuildData> Function(String) fetchLastBuildCallback;
-
-  /// Callback used to replace the default [addBuilds] method
-  /// implementation in testing purposes.
-  final Future<void> Function(String, List<BuildData>) addBuildsCallback;
-
-  /// Creates a testbed instance.
-  ///
-  /// Both [fetchLastBuildCallback] and [addBuildsCallback] are optional.
-  StorageClientTestbed({
-    this.fetchLastBuildCallback,
-    this.addBuildsCallback,
-  });
-
-  @override
-  Future<BuildData> fetchLastBuild(String projectId) {
-    if (fetchLastBuildCallback != null) {
-      return fetchLastBuildCallback(projectId);
-    } else {
-      return Future.value(BuildsTestData.firstBuild);
-    }
-  }
-
-  @override
-  Future<void> addBuilds(String projectId, List<BuildData> builds) async {
-    if (addBuildsCallback != null) {
-      return addBuildsCallback(projectId, builds);
-    }
-  }
+  /// If [storageClient] is not given, the [StorageClientStub] is created.
+  /// If [ciClient] is not given, the [CiClientStub] is created.
+  CiIntegrationStub({
+    StorageClientStub storageClient,
+    CiClientStub ciClient,
+  })  : _storageClientTestbed = storageClient ?? StorageClientStub(),
+        _ciClientTestbed = ciClient ?? CiClientStub();
 }
