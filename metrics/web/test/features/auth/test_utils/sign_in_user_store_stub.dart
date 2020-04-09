@@ -28,10 +28,6 @@ class SignInUserStoreStub implements UserStore {
     _isLoggedInSubject.add(false);
   }
 
-
-
-
-
   @override
   void dispose() {}
 }
