@@ -11,7 +11,7 @@ void main() {
   group("SignInUseCase", () {
     final repository = UserRepositoryMock();
 
-    tearDown((){
+    tearDown(() {
       reset(repository);
     });
 
@@ -44,7 +44,6 @@ void main() {
     test(
       "throws if UserRepository throws during sign in process",
       () {
-        final repository = UserRepositoryMock();
         final signInUseCase = SignInUseCase(repository);
 
         when(repository.signInWithEmailAndPassword(any, any))
