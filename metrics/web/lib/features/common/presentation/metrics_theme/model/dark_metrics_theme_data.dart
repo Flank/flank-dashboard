@@ -55,9 +55,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
             accentColor: Colors.transparent,
             backgroundColor: ColorConfig.darkInactiveBackgroundColor,
             textStyle: TextStyle(
-                color: ColorConfig.darkInactiveColor,
-                fontSize: 32.0,
-                fontWeight: FontWeight.bold),
+              color: ColorConfig.darkInactiveColor,
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         );
 }

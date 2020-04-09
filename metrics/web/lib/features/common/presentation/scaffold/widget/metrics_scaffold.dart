@@ -11,7 +11,7 @@ class MetricsScaffold extends StatelessWidget {
   ///
   /// Throws an [AssertionError] is the [body] is null.
   ///
-  /// [body] is the primary content of the scaffold.
+  /// [body] is the primary content of this scaffold.
   /// [drawer] is the panel, displayed on the right side of the [body].
   /// If nothing is passed the [MetricsDrawer] will be used.
   const MetricsScaffold({

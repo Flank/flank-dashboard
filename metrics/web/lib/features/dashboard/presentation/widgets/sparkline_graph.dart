@@ -38,7 +38,7 @@ class SparklineGraph extends StatelessWidget {
   /// If [fillColor] is null - the [MetricWidgetThemeData.accentColor] will be used.
   /// [graphPadding] is the graph padding.
   /// [strokeWidth] is the width of the graph's stroke.
-  /// [valuePadding] padding of the [value] text.
+  /// [valuePadding] is a padding of the [value] text.
   /// [valueStyle] is the [TextStyle] of the [value] text.
   /// If [valueStyle] is null - the [MetricWidgetThemeData.textStyle] will be used.
   const SparklineGraph({

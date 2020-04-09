@@ -100,7 +100,7 @@ class ProjectMetricsStore {
     });
   }
 
-  /// Create project metrics form [DashboardProjectMetrics].
+  /// Creates project metrics from [DashboardProjectMetrics].
   void _createProjectMetrics(
       DashboardProjectMetrics dashboardMetrics, String projectId) {
     final projectsMetrics = _projectsMetricsSubject.value;

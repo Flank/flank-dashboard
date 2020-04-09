@@ -9,14 +9,14 @@ import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.
 
 /// The widget that represents the metric percent in a circular graph.
 ///
-/// This widget will be as big as possible if no constraints are given by its parent.
-/// Otherwise it will match its parent's size.
+/// If no constraints are given by the parent widget, it will be as big as possible.
+/// Otherwise, it will match its parent's size.
 ///
-/// Applies the color theme from the [MetricsThemeData] following next rules, if no colors is passed:
-/// * if [value] is 0 - applies the [MetricsThemeData.inactiveWidgetTheme]
-/// * if [value] is from 0.1 (inclusive) to 0.5 (inclusive) - applies [MetricsThemeData.circlePercentageLowPercentTheme]
-/// * if [value] is from 0.51 (inclusive) to 0.79 (inclusive) -- applies [MetricsThemeData.circlePercentageMediumPercentTheme]
-/// * if [value] is grater or equals to 0.8 -- applies [MetricsThemeData.circlePercentageHighPercentTheme]
+/// Applies the color theme from the [MetricsThemeData] following the next rules, if no colors are passed:
+/// * if the [value] is 0, applies the [MetricsThemeData.inactiveWidgetTheme]
+/// * if the [value] is from 0.1 (inclusive) to 0.51 (exclusive), applies the [MetricsThemeData.circlePercentageLowPercentTheme]
+/// * if the [value] is from 0.51 (inclusive) to 0.8 (exclusive), applies the [MetricsThemeData.circlePercentageMediumPercentTheme]
+/// * if the [value] is greater or equal to 0.8 - applies the [MetricsThemeData.circlePercentageHighPercentTheme]
 class CirclePercentage extends StatefulWidget {
   final double value;
   final EdgeInsets padding;
@@ -29,19 +29,19 @@ class CirclePercentage extends StatefulWidget {
 
   /// Creates the circle graph.
   ///
-  /// The [value] must must be from 0.0 (inclusive) to 1.0 (inclusive).
+  /// The [value] must be `null` or from 0.0 (inclusive) to 1.0 (inclusive).
   ///
   /// [value] is the percent value of the metric.
-  /// If [value] is null - the [DashboardStrings.noDataPlaceholder] will be displayed.
-  /// [padding] the padding of the [value] text inside the circle graph.
-  /// [strokeWidth] the wight of the graph's stroke. Defaults to 2.0.
-  /// [valueColor] the color of the part of the graph that represents the value.
+  /// If the [value] is null - the [DashboardStrings.noDataPlaceholder] will be displayed.
+  /// [padding] is the padding of the [value] text inside the circle graph.
+  /// [strokeWidth] is the wight of the graph's stroke. Defaults to 2.0.
+  /// [valueColor] is the color of the part of the graph that represents the value.
   /// If nothing is passed - the [MetricWidgetThemeData.primaryColor] will be used.
-  /// [strokeColor] the color of the graph's circle itself.
+  /// [strokeColor] is the color of the graph's circle itself.
   /// If nothing is passed - the [MetricWidgetThemeData.accentColor] will be used.
   /// [backgroundColor] is the color to fill the graph.
   /// If nothing is passed - the [MetricWidgetThemeData.backgroundColor] will be used.
-  /// [valueStyle] the [TextStyle] of the percent text.
+  /// [valueStyle] is the [TextStyle] of the percent text.
   /// [valueStrokeWidth] is the width of the value (filled) stroke. Defaults to 5.0.
   const CirclePercentage({
     Key key,
@@ -143,13 +143,15 @@ class _CirclePercentageState extends State<CirclePercentage>
     }
   }
 
+  /// Gets the value text to display.
   String _getValueText() {
     if (widget.value == null) return DashboardStrings.noDataPlaceholder;
 
-    return '${(_controller.value * 100).toInt()}%';
+    final value = _controller.value * 100;
+    return '${value.toInt()}%';
   }
 
-  /// Gets the [MetricWidgetThemeData] according to [widget.value].
+  /// Gets the [MetricWidgetThemeData] according to the [widget.value].
   MetricWidgetThemeData _getWidgetTheme() {
     final metricsTheme = MetricsTheme.of(context);
     final inactiveTheme = metricsTheme.inactiveWidgetTheme;

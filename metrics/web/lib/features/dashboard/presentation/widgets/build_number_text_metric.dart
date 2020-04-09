@@ -8,7 +8,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart
 /// Widget that displays the [TextMetric] with the build number metric.
 ///
 /// Applies the text styles from the [MetricsThemeData.metricWidgetTheme].
-/// If the [buildNumberMetric] is equals to 0 or is `null` - displays the [PlaceholderText]
+/// If the [buildNumberMetric] is either `null` or equal to 0, displays the [PlaceholderText]
 /// and applies the text styles from [MetricsThemeData.inactiveWidgetTheme] to it.
 class BuildNumberTextMetric extends StatelessWidget {
   final int buildNumberMetric;

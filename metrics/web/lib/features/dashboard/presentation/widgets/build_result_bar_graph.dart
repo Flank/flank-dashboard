@@ -17,17 +17,16 @@ class BuildResultBarGraph extends StatefulWidget {
   final List<BuildResultBarData> data;
   final int numberOfBars;
 
-  /// Creates the [BuildResultBarGraph] based [data] with the [description].
+  /// Creates the [BuildResultBarGraph] based on the given [data].
   ///
-  /// The [description] and [data] should not be null.
-  /// [descriptionStyle] the [TextStyle] of the [description] text.
+  /// The [data] must not be null.
   /// [numberOfBars] is the number if the bars on graph.
   /// If the [data] length will be greater than [numberOfBars],
   /// the last [numberOfBars] of the [data] will be shown.
   /// If there will be not enough [data] to display [numberOfBars] bars,
   /// the [PlaceholderBar]s will be added to match the requested [numberOfBars].
-  /// If the [numberOfBars] won't be specified,
-  /// all bars from [data] will be displayed.
+  /// If the [data] length is greater than [numberOfBars],
+  /// the last [numberOfBars] of the [data] is displayed.
   const BuildResultBarGraph({
     Key key,
     @required this.data,

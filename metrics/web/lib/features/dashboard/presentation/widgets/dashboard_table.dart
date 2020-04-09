@@ -30,7 +30,7 @@ class DashboardTable extends StatelessWidget {
                   final projects = snapshot.data;
 
                   if (projects.isEmpty) {
-                    return const _MetricsTablePlaceholder(
+                    return const _DashboardTablePlaceholder(
                       text: DashboardStrings.noConfiguredProjects,
                     );
                   }
@@ -54,18 +54,18 @@ class DashboardTable extends StatelessWidget {
 
   /// Builds the loading error placeholder.
   Widget _buildLoadingErrorPlaceholder(error) {
-    return _MetricsTablePlaceholder(
+    return _DashboardTablePlaceholder(
       text: DashboardStrings.getLoadingErrorMessage("$error"),
     );
   }
 }
 
-/// Widget that displays the placeholder [text] in center of the screen.
-class _MetricsTablePlaceholder extends StatelessWidget {
+/// Widget that displays the placeholder [text] in the center of the screen.
+class _DashboardTablePlaceholder extends StatelessWidget {
   final String text;
 
   /// Creates the dashboard placeholder widget with the given [text].
-  const _MetricsTablePlaceholder({
+  const _DashboardTablePlaceholder({
     Key key,
     this.text,
   }) : super(key: key);

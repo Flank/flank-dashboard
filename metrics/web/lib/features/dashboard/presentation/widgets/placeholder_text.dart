@@ -3,7 +3,7 @@ import 'package:metrics/features/common/presentation/metrics_theme/model/metrics
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 
-/// A widget that displays centered text.
+/// A widget that displays a centered text.
 class PlaceholderText extends StatelessWidget {
   final String text;
   final TextStyle style;
@@ -11,9 +11,9 @@ class PlaceholderText extends StatelessWidget {
   /// Creates the [PlaceholderText] with the given [text].
   ///
   /// [text] is the text to be displayed.
-  /// If null - the [DashboardStrings.noDataPlaceholder] will be displayed.
+  /// If null, the [DashboardStrings.noDataPlaceholder] will be displayed.
   /// [style] is the [TextStyle] of the [text].
-  /// If null - the text style from the [MetricsThemeData.inactiveWidgetTheme] will be used.
+  /// If null, the text style from the [MetricsThemeData.inactiveWidgetTheme] is used.
   const PlaceholderText({
     Key key,
     this.text,

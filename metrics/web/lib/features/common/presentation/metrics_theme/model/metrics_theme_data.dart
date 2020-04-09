@@ -29,13 +29,13 @@ class MetricsThemeData {
   /// [circlePercentageLowPercentTheme] is the theme of the [CirclePercentage] widget
   /// with low percent value.
   ///
-  /// [metricWidgetTheme] is the color theme of the [SparklineGraph].
+  /// [metricWidgetTheme] is the theme of the [SparklineGraph].
   /// Used to set the default colors to the [SparklineGraph].
   ///
-  /// [inactiveWidgetTheme] is the color theme of the inactive metric widgets.
+  /// [inactiveWidgetTheme] is the theme of the inactive metric widgets.
   /// This theme is used when there are no data for metric.
   ///
-  /// [buildResultTheme] is the color theme for the [BuildResultBarGraph].
+  /// [buildResultTheme] is the theme for the [BuildResultBarGraph].
   /// Used to set the colors of the graph bars.
   const MetricsThemeData({
     MetricWidgetThemeData circlePercentageHighPercentTheme,
