@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/user_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
@@ -33,13 +33,13 @@ class MetricsDrawer extends StatelessWidget {
               );
             },
           ),
-          StateBuilder<UserStore>(
-            models: [Injector.getAsReactive<UserStore>()],
-            builder: (context, ReactiveModel<UserStore> userStoreRM) {
+          StateBuilder<AuthStore>(
+            models: [Injector.getAsReactive<AuthStore>()],
+            builder: (context, ReactiveModel<AuthStore> authStoreRM) {
               return ListTile(
                 key: const Key('Logout'),
                 title: const Text(CommonStrings.logOut),
-                onTap: () => signOut(context, userStoreRM),
+                onTap: () => signOut(context, authStoreRM),
               );
             },
           )
@@ -49,10 +49,10 @@ class MetricsDrawer extends StatelessWidget {
   }
 
   /// Signs out a user from the app
-  Future<void> signOut(BuildContext context, ReactiveModel<UserStore> storeRM) async {
+  Future<void> signOut(BuildContext context, ReactiveModel<AuthStore> storeRM) async {
     StreamSubscription _loggedInStreamSubscription;
 
-    _loggedInStreamSubscription = Injector.get<UserStore>()
+    _loggedInStreamSubscription = Injector.get<AuthStore>()
         .loggedInStream
         .listen((isUserLoggedIn) {
       if (isUserLoggedIn != null && !isUserLoggedIn) {
@@ -67,7 +67,7 @@ class MetricsDrawer extends StatelessWidget {
       }
     });
 
-    await storeRM.setState((userStore) => userStore.signOut());
+    await storeRM.setState((store) => store.signOut());
   }
 
   void _changeTheme(ReactiveModel<ThemeStore> model, ThemeStore snapshot) {

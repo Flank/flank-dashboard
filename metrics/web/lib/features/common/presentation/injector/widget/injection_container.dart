@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:metrics/features/auth/presentation/state/user_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
@@ -42,7 +42,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
               _receiveProjectUpdates,
               _receiveProjectMetricsUpdates,
             )),
-        Inject<UserStore>(() => UserStore()),
+        Inject<AuthStore>(() => AuthStore()),
         Inject<ThemeStore>(() => ThemeStore()),
       ],
       dispose: _dispose,
@@ -61,7 +61,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       (store) => store.isDark = true,
       catchError: true,
     );
-    Injector.getAsReactive<UserStore>()
+    Injector.getAsReactive<AuthStore>()
         .setState((store) => store.subscribeToAuthenticationUpdates());
   }
 
@@ -73,6 +73,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// Disposes the injected models.
   void _dispose() {
     Injector.get<ProjectMetricsStore>().dispose();
-    Injector.get<UserStore>().dispose();
+    Injector.get<AuthStore>().dispose();
   }
 }

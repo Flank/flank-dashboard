@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/auth/presentation/state/user_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
@@ -11,7 +11,7 @@ import 'package:metrics/features/dashboard/presentation/state/project_metrics_st
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import '../../../../test_utils/metrics_store_stub.dart';
-import '../../test_utils/sign_in_user_store_stub.dart';
+import '../../test_utils/sign_in_auth_store_stub.dart';
 
 void main() {
   final emailInputFinder =
@@ -50,7 +50,7 @@ void main() {
         "redirects to the dashboard page if a user is already signed in",
         (WidgetTester tester) async {
       await tester.pumpWidget(_LoginPageTestbed(
-        userStore: SignInUserStoreStub(),
+        authStore: SignInAuthStoreStub(),
       ));
       await tester.pumpAndSettle();
 
@@ -60,21 +60,21 @@ void main() {
 }
 
 class _LoginPageTestbed extends StatelessWidget {
-  final UserStore userStore;
+  final AuthStore authStore;
 
   const _LoginPageTestbed({
-    this.userStore,
+    this.authStore,
   });
 
   @override
   Widget build(BuildContext context) {
     return Injector(
       inject: [
-        Inject<UserStore>(() => userStore ?? UserStore()),
+        Inject<AuthStore>(() => authStore ?? AuthStore()),
         Inject<ProjectMetricsStore>(() => const MetricsStoreStub()),
       ],
       initState: () {
-        Injector.getAsReactive<UserStore>().setState(
+        Injector.getAsReactive<AuthStore>().setState(
           (store) => store.subscribeToAuthenticationUpdates(),
         );
         Injector.getAsReactive<ProjectMetricsStore>().setState(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/auth/presentation/state/user_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
@@ -54,47 +54,47 @@ void main() {
     testWidgets(
         "signInWithEmailAndPassword method is called on tap on sign in button",
         (WidgetTester tester) async {
-      final userStore = UserStoreMock();
+      final authStore = AuthStoreMock();
 
-      await tester.pumpWidget(_AuthFormTestbed(userStore: userStore));
+      await tester.pumpWidget(_AuthFormTestbed(authStore: authStore));
       await tester.enterText(emailInputFinder, testEmail);
       await tester.enterText(passwordInputFinder, testPassword);
       await tester.tap(submitButtonFinder);
 
-      verify(userStore.signInWithEmailAndPassword(testEmail, testPassword))
+      verify(authStore.signInWithEmailAndPassword(testEmail, testPassword))
           .called(equals(1));
     });
 
     testWidgets("shows an auth error text if the login process went wrong",
         (WidgetTester tester) async {
       await tester.pumpWidget(_AuthFormTestbed(
-        userStore: SignInErrorUserStoreStub(),
+        authStore: SignInErrorAuthStoreStub(),
       ));
       await tester.enterText(emailInputFinder, 'test@email.com');
       await tester.enterText(passwordInputFinder, 'testPassword');
       await tester.tap(submitButtonFinder);
       await tester.pumpAndSettle();
 
-      expect(find.text(SignInErrorUserStoreStub.errorMessage), findsOneWidget);
+      expect(find.text(SignInErrorAuthStoreStub.errorMessage), findsOneWidget);
     });
   });
 }
 
 class _AuthFormTestbed extends StatelessWidget {
-  final UserStore userStore;
+  final AuthStore authStore;
 
   const _AuthFormTestbed({
-    this.userStore,
+    this.authStore,
   });
 
   @override
   Widget build(BuildContext context) {
     return Injector(
       inject: [
-        Inject<UserStore>(() => userStore ?? UserStoreMock()),
+        Inject<AuthStore>(() => authStore ?? AuthStoreMock()),
       ],
       initState: () {
-        Injector.getAsReactive<UserStore>().setState(
+        Injector.getAsReactive<AuthStore>().setState(
           (store) => store.subscribeToAuthenticationUpdates(),
         );
       },
@@ -108,8 +108,8 @@ class _AuthFormTestbed extends StatelessWidget {
   }
 }
 
-/// Stub of [UserStore] that emulates presence of auth message error.
-class SignInErrorUserStoreStub implements UserStore {
+/// Stub of [AuthStore] that emulates presence of auth message error.
+class SignInErrorAuthStoreStub implements AuthStore {
   static const String errorMessage = "Unknown error";
 
   final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
@@ -140,5 +140,5 @@ class SignInErrorUserStoreStub implements UserStore {
   void dispose() {}
 }
 
-/// Mock implementation of the [UserStore].
-class UserStoreMock extends Mock implements UserStore {}
+/// Mock implementation of the [AuthStore].
+class AuthStoreMock extends Mock implements AuthStore {}

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/auth/presentation/state/user_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
@@ -13,7 +13,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/circle_percentag
 import 'package:metrics_core/metrics_core.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-import '../../../auth/test_utils/sign_in_user_store_stub.dart';
+import '../../../auth/test_utils/sign_in_auth_store_stub.dart';
 import '../../../../test_utils/metrics_store_stub.dart';
 
 void main() {
@@ -134,7 +134,7 @@ class DashboardTestbed extends StatelessWidget {
         inject: [
           Inject<ProjectMetricsStore>(() => metricsStore),
           Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
-          Inject<UserStore>(() => SignInUserStoreStub()),
+          Inject<AuthStore>(() => SignInAuthStoreStub()),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>().setState(
@@ -143,7 +143,7 @@ class DashboardTestbed extends StatelessWidget {
           );
           Injector.getAsReactive<ThemeStore>()
               .setState((store) => store.isDark = false);
-          Injector.getAsReactive<UserStore>().setState((store) => store.subscribeToAuthenticationUpdates());
+          Injector.getAsReactive<AuthStore>().setState((store) => store.subscribeToAuthenticationUpdates());
         },
         builder: (BuildContext context) => MetricsThemeBuilder(
           builder: (_, __) {

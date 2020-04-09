@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/user_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
@@ -19,11 +19,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    final userStore = Injector.get<UserStore>();
+    final authStore = Injector.get<AuthStore>();
 
     /// Subscribes on a user authentication's status updates
     _loggedInStreamSubscription =
-        userStore.loggedInStream.listen((isUserLoggedIn) {
+        authStore.loggedInStream.listen((isUserLoggedIn) {
       if (isUserLoggedIn != null && isUserLoggedIn) {
         /// Removes all the routes below the pushed 'dashboard' route to prevent
         /// accidental navigate back to the login page as an authenticated user

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/user_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';

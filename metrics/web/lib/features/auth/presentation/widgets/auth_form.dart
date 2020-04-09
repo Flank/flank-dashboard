@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/user_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -44,8 +44,8 @@ class _AuthFormState extends State<AuthForm> {
             validator: _validatePassword,
           ),
           StateBuilder(
-            models: [Injector.getAsReactive<UserStore>()],
-            builder: (_, ReactiveModel<UserStore> store) {
+            models: [Injector.getAsReactive<AuthStore>()],
+            builder: (_, ReactiveModel<AuthStore> store) {
               if (store.state.authErrorMessage == null) return Container();
 
               return Padding(
@@ -102,7 +102,7 @@ class _AuthFormState extends State<AuthForm> {
   /// Validates the [Form] and signs in user to the app using an email and a password.
   void _submit() {
     if (_formKey.currentState.validate()) {
-      Injector.getAsReactive<UserStore>().setState(
+      Injector.getAsReactive<AuthStore>().setState(
         (store) => store.signInWithEmailAndPassword(
           _emailController.text,
           _passwordController.text,

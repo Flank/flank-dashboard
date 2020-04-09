@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/pages/login_page.dart';
-import 'package:metrics/features/auth/presentation/state/user_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -11,7 +11,9 @@ class RouteGenerator {
 
   /// Generates a route for the given route [settings].
   static MaterialPageRoute generateRoute({RouteSettings settings}) {
-    if (!Injector.get<UserStore>().isLoggedIn) {
+    final store = Injector.get<AuthStore>();
+
+    if (store.isLoggedIn == null || !store.isLoggedIn) {
       return _createMaterialPageRoute(name: login, widget: LoginPage());
     }
 
