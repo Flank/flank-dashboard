@@ -11,7 +11,7 @@ import 'package:metrics/features/dashboard/presentation/state/project_metrics_st
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import '../../../../test_utils/metrics_store_stub.dart';
-import '../../test_utils/sign_in_auth_store_stub.dart';
+import '../../test_utils/signed_in_auth_store_mock.dart';
 
 void main() {
   final emailInputFinder =
@@ -50,7 +50,7 @@ void main() {
         "redirects to the dashboard page if a user is already signed in",
         (WidgetTester tester) async {
       await tester.pumpWidget(_LoginPageTestbed(
-        authStore: SignInAuthStoreStub(),
+        authStore: SignedInAuthStoreMock(),
       ));
       await tester.pumpAndSettle();
 
