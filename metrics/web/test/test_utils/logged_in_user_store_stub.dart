@@ -17,4 +17,9 @@ class LoggedInUserStoreStub extends UserStoreStub {
   void subscribeToAuthenticationUpdates() {
     _isLoggedInSubject.add(true);
   }
+
+  @override
+  void signOut() {
+    _isLoggedInSubject.add(false);
+  }
 }
