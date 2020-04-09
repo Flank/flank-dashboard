@@ -46,18 +46,19 @@ class _AuthFormState extends State<AuthForm> {
           StateBuilder(
             models: [Injector.getAsReactive<UserStore>()],
             builder: (_, ReactiveModel<UserStore> store) {
+              if (store.state.authErrorMessage == null) return Container();
+
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: store.state.authErrorMessage.isNotEmpty
-                    ? Text(
-                        store.state.authErrorMessage,
-                        style: const TextStyle(color: Colors.red),
-                      )
-                    : null,
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(
+                  store.state.authErrorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
               );
             },
           ),
           Container(
+            margin: const EdgeInsets.only(top: 10.0),
             alignment: Alignment.centerRight,
             child: RaisedButton(
               key: const Key(LoginStrings.signIn),

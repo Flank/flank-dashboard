@@ -16,7 +16,7 @@ class UserStore {
   bool get isLoggedIn => _isLoggedInSubject.value;
 
   /// Returns a string, containing an auth error message.
-  String get authErrorMessage => _authExceptionDescription ?? '';
+  String get authErrorMessage => _authExceptionDescription;
 
   /// Contains text description of any authentication exception that may occur.
   String _authExceptionDescription;
