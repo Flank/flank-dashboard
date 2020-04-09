@@ -30,7 +30,7 @@ void main() {
     });
 
     test(
-      "throws an error if repository throws",
+      "throws an exception if repository throws",
       () {
         final receiveUserUpdates = ReceiveAuthenticationUpdates(repository);
 
