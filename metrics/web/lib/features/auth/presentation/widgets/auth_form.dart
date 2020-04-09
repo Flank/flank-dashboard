@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/state/auth_store.dart';
-import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
+import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -32,15 +32,15 @@ class _AuthFormState extends State<AuthForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           AuthInputField(
-            key: Key(LoginStrings.email),
-            label: LoginStrings.email,
+            key: Key(AuthStrings.email),
+            label: AuthStrings.email,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             validator: _validateEmail,
           ),
           AuthInputField(
-            key: Key(LoginStrings.password),
-            label: LoginStrings.password,
+            key: Key(AuthStrings.password),
+            label: AuthStrings.password,
             controller: _passwordController,
             obscureText: true,
             validator: _validatePassword,
@@ -63,9 +63,9 @@ class _AuthFormState extends State<AuthForm> {
             margin: const EdgeInsets.only(top: 10.0),
             alignment: Alignment.centerRight,
             child: RaisedButton(
-              key: const Key(LoginStrings.signIn),
+              key: const Key(AuthStrings.signIn),
               onPressed: () => _submit(),
-              child: const Text(LoginStrings.signIn),
+              child: const Text(AuthStrings.signIn),
             ),
           ),
         ],
@@ -77,11 +77,11 @@ class _AuthFormState extends State<AuthForm> {
   /// otherwise show an error text.
   String _validateEmail(String value) {
     if (value.isEmpty) {
-      return LoginStrings.emailIsRequired;
+      return AuthStrings.emailIsRequired;
     }
 
     if (!EmailValidator.validate(value)) {
-      return LoginStrings.emailIsInvalid;
+      return AuthStrings.emailIsInvalid;
     }
 
     return null;
@@ -91,11 +91,11 @@ class _AuthFormState extends State<AuthForm> {
   /// otherwise show an error text.
   String _validatePassword(String value) {
     if (value.isEmpty) {
-      return LoginStrings.passwordIsRequired;
+      return AuthStrings.passwordIsRequired;
     }
 
     if (value.length < _minPasswordLength) {
-      return LoginStrings.passwordMinLength;
+      return AuthStrings.passwordMinLength;
     }
 
     return null;

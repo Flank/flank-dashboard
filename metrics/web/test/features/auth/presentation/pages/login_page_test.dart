@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/auth/presentation/state/auth_store.dart';
-import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
+import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
@@ -15,11 +15,11 @@ import '../../test_utils/signed_in_auth_store_mock.dart';
 
 void main() {
   final emailInputFinder =
-      find.widgetWithText(AuthInputField, LoginStrings.email);
+      find.widgetWithText(AuthInputField, AuthStrings.email);
   final passwordInputFinder =
-      find.widgetWithText(AuthInputField, LoginStrings.password);
+      find.widgetWithText(AuthInputField, AuthStrings.password);
   final submitButtonFinder =
-      find.widgetWithText(RaisedButton, LoginStrings.signIn);
+      find.widgetWithText(RaisedButton, AuthStrings.signIn);
 
   group("LoginPage", () {
     testWidgets("contains project's title", (WidgetTester tester) async {

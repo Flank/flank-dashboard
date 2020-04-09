@@ -1,10 +1,6 @@
-import 'package:metrics/features/auth/presentation/pages/login_page.dart';
-
-/// Holds the strings for the [LoginPage].
-///
 /// Preferably, add the string to this file instead of hardcoding them into UI
 /// to make them available in tests and avoid code duplication.
-class LoginStrings {
+class AuthStrings {
   static const String email = 'Email';
   static const String password = 'Password';
   static const String signIn = 'Sign in';

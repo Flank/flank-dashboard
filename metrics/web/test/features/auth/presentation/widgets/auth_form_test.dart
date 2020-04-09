@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/auth/presentation/state/auth_store.dart';
-import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
+import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:mockito/mockito.dart';
@@ -10,11 +10,11 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
   final emailInputFinder =
-      find.widgetWithText(AuthInputField, LoginStrings.email);
+      find.widgetWithText(AuthInputField, AuthStrings.email);
   final passwordInputFinder =
-      find.widgetWithText(AuthInputField, LoginStrings.password);
+      find.widgetWithText(AuthInputField, AuthStrings.password);
   final submitButtonFinder =
-      find.widgetWithText(RaisedButton, LoginStrings.signIn);
+      find.widgetWithText(RaisedButton, AuthStrings.signIn);
 
   const testEmail = 'test@email.com';
   const testPassword = 'testPassword';
@@ -27,7 +27,7 @@ void main() {
       await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(LoginStrings.emailIsRequired), findsOneWidget);
+      expect(find.text(AuthStrings.emailIsRequired), findsOneWidget);
     });
 
     testWidgets("email input shows error message if value is not a valid email",
@@ -38,7 +38,7 @@ void main() {
       await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(LoginStrings.emailIsInvalid), findsOneWidget);
+      expect(find.text(AuthStrings.emailIsInvalid), findsOneWidget);
     });
 
     testWidgets("password input shows error message if value is empty",
@@ -48,7 +48,7 @@ void main() {
       await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(LoginStrings.passwordIsRequired), findsOneWidget);
+      expect(find.text(AuthStrings.passwordIsRequired), findsOneWidget);
     });
 
     testWidgets("password input shows error message if value is less then 6",
@@ -59,7 +59,7 @@ void main() {
       await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(LoginStrings.passwordMinLength), findsOneWidget);
+      expect(find.text(AuthStrings.passwordMinLength), findsOneWidget);
     });
 
     testWidgets("password input shows a value replaced by bullets",
