@@ -12,8 +12,6 @@ class LoginStrings {
   static const String emailIsRequired = 'Email address is required';
   static const String emailIsInvalid = 'Invalid email address';
   static const String passwordIsRequired = 'Password is required';
-  static const String passwordMinLength = 'Password should be at least 6 characters long';
-
-  static String getLoadingErrorMessage(String errorMessage) =>
-      "An error occured during loading: $errorMessage";
+  static const String passwordMinLength =
+      'Password should be at least 6 characters long';
 }
