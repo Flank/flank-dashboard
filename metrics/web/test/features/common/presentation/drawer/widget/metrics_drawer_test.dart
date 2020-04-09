@@ -53,7 +53,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
     return Injector(
       inject: [
         Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
-        Inject<UserStore>(() => LoggedInUserStoreStub()),
+        Inject<UserStore>(() => SignInUserStoreStub()),
       ],
       initState: _initInjectorState,
       builder: (context) {

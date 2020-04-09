@@ -50,7 +50,7 @@ void main() {
         "redirects to the dashboard page if a user is already signed in",
         (WidgetTester tester) async {
       await tester.pumpWidget(_LoginPageTestbed(
-        userStore: LoggedInUserStoreStub(),
+        userStore: SignInUserStoreStub(),
       ));
       await tester.pumpAndSettle();
 

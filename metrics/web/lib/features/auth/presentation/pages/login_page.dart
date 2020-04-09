@@ -20,10 +20,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     final userStore = Injector.get<UserStore>();
+
     /// Subscribes on a user authentication's status updates
     _loggedInStreamSubscription =
         userStore.loggedInStream.listen((isUserLoggedIn) {
-      if (isUserLoggedIn is bool && isUserLoggedIn) {
+      if (isUserLoggedIn != null && isUserLoggedIn) {
         /// Removes all the routes below the pushed 'dashboard' route to prevent
         /// accidental navigate back to the login page as an authenticated user
         Navigator.pushNamedAndRemoveUntil(

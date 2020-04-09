@@ -4,11 +4,9 @@ import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:mockito/mockito.dart';
-
-import '../../test_utils/sign_in_error_user_store_stub.dart';
-import '../../test_utils/user_store_mock.dart';
 
 void main() {
   final emailInputFinder =
@@ -109,3 +107,38 @@ class _AuthFormTestbed extends StatelessWidget {
     );
   }
 }
+
+/// Stub of [UserStore] that emulates presence of auth message error.
+class SignInErrorUserStoreStub implements UserStore {
+  static const String errorMessage = "Unknown error";
+
+  final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
+
+  @override
+  Stream<bool> get loggedInStream => _isLoggedInSubject.stream;
+
+  @override
+  bool get isLoggedIn => false;
+
+  @override
+  String get authErrorMessage => _authExceptionDescription;
+
+  String _authExceptionDescription;
+
+  @override
+  void signInWithEmailAndPassword(String email, String password) {
+    _authExceptionDescription = errorMessage;
+  }
+
+  @override
+  void subscribeToAuthenticationUpdates() {}
+
+  @override
+  void signOut() {}
+
+  @override
+  void dispose() {}
+}
+
+/// Mock implementation of the [UserStore].
+class UserStoreMock extends Mock implements UserStore {}

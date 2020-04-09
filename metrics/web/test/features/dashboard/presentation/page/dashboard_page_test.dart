@@ -134,7 +134,7 @@ class DashboardTestbed extends StatelessWidget {
         inject: [
           Inject<ProjectMetricsStore>(() => metricsStore),
           Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
-          Inject<UserStore>(() => LoggedInUserStoreStub()),
+          Inject<UserStore>(() => SignInUserStoreStub()),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>().setState(

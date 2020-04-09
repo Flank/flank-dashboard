@@ -8,32 +8,10 @@ import 'package:metrics/features/common/presentation/strings/common_strings.dart
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// The application side menu widget.
-class MetricsDrawer extends StatefulWidget {
+class MetricsDrawer extends StatelessWidget {
   const MetricsDrawer({
     Key key,
   }) : super(key: key);
-
-  @override
-  _MetricsDrawerState createState() => _MetricsDrawerState();
-}
-
-class _MetricsDrawerState extends State<MetricsDrawer> {
-  StreamSubscription _loggedInStreamSubscription;
-
-  @override
-  void initState() {
-    final userStore = Injector.get<UserStore>();
-    /// Subscribes on a user authentication's status updates
-    _loggedInStreamSubscription = userStore.loggedInStream.listen((isUserLoggedIn) {
-      if (isUserLoggedIn is bool && !isUserLoggedIn) {
-        /// Remove all the routes below the pushed 'login' route to prevent
-        /// accidental navigate back to the dashboard page
-        Navigator.pushNamedAndRemoveUntil(
-            context, RouteGenerator.login, (Route<dynamic> route) => false);
-      }
-    });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +39,25 @@ class _MetricsDrawerState extends State<MetricsDrawer> {
               return ListTile(
                 key: const Key('Logout'),
                 title: const Text(CommonStrings.logOut),
-                onTap: () => signOut(userStoreRM),
+                onTap: () {
+                  StreamSubscription _loggedInStreamSubscription;
+
+                  _loggedInStreamSubscription = Injector.get<UserStore>()
+                      .loggedInStream
+                      .listen((isUserLoggedIn) {
+                    if (isUserLoggedIn != null && !isUserLoggedIn) {
+                      /// Remove all the routes below the pushed 'login' route to prevent
+                      /// accidental navigate back to the dashboard page
+                      Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          RouteGenerator.login,
+                          (Route<dynamic> route) => false);
+                      /// Cancels logged in stream subscription
+                      _loggedInStreamSubscription.cancel();
+                    }
+                  });
+                  signOut(userStoreRM);
+                },
               );
             },
           )
@@ -71,7 +67,7 @@ class _MetricsDrawerState extends State<MetricsDrawer> {
   }
 
   /// Signs out a user from the app
-  Future<void> signOut (ReactiveModel<UserStore> storeRM) async {
+  Future<void> signOut(ReactiveModel<UserStore> storeRM) async {
     await storeRM.setState((userStore) => userStore.signOut());
   }
 
@@ -79,11 +75,5 @@ class _MetricsDrawerState extends State<MetricsDrawer> {
     model.setState(
       (model) => snapshot.isDark = !snapshot.isDark,
     );
-  }
-
-  @override
-  void dispose() {
-    _loggedInStreamSubscription.cancel();
-    super.dispose();
   }
 }

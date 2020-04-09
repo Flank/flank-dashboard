@@ -2,16 +2,21 @@ import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// Stub of [UserStore] ensures that a user is already logged in into the app.
-class LoggedInUserStoreStub extends UserStore {
-  LoggedInUserStoreStub();
-
+class SignInUserStoreStub implements UserStore {
   final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
+  String _authExceptionDescription;
 
   @override
-  Stream get loggedInStream => _isLoggedInSubject.stream;
+  Stream<bool> get loggedInStream => _isLoggedInSubject.stream;
 
   @override
   bool get isLoggedIn => _isLoggedInSubject.value;
+
+  @override
+  String get authErrorMessage => _authExceptionDescription;
+
+  @override
+  void signInWithEmailAndPassword(String email, String password) {}
 
   @override
   void subscribeToAuthenticationUpdates() {
@@ -22,4 +27,11 @@ class LoggedInUserStoreStub extends UserStore {
   void signOut() {
     _isLoggedInSubject.add(false);
   }
+
+
+
+
+
+  @override
+  void dispose() {}
 }

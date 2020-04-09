@@ -10,7 +10,7 @@ class UserStore {
   final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
   
   /// Returns a stream of a user's authentication status.
-  Stream get loggedInStream => _isLoggedInSubject.stream;
+  Stream<bool> get loggedInStream => _isLoggedInSubject.stream;
 
   /// Determines if a user is authenticated.
   bool get isLoggedIn => _isLoggedInSubject.value;
