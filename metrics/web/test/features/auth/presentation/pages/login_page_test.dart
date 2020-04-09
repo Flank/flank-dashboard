@@ -11,6 +11,7 @@ import 'package:metrics/features/dashboard/presentation/state/project_metrics_st
 import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+import '../../../../test_utils/logged_in_user_store_stub.dart';
 import '../../../../test_utils/metrics_store_stub.dart';
 import '../../../../test_utils/user_store_stub.dart';
 
@@ -51,7 +52,7 @@ void main() {
         "redirects to the dashboard page if a user is already signed in",
         (WidgetTester tester) async {
       await tester.pumpWidget(_LoginPageTestbed(
-        userStore: _LoggedInUserStoreStub(),
+        userStore: LoggedInUserStoreStub(),
       ));
       await tester.pumpAndSettle();
 
@@ -91,22 +92,5 @@ class _LoginPageTestbed extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-class _LoggedInUserStoreStub extends UserStoreStub {
-  _LoggedInUserStoreStub();
-
-  final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
-
-  @override
-  Stream get loggedInStream => _isLoggedInSubject.stream;
-
-  @override
-  bool get isLoggedIn => _isLoggedInSubject.value;
-
-  @override
-  void subscribeToAuthenticationUpdates() {
-    _isLoggedInSubject.add(true);
   }
 }

@@ -5,6 +5,8 @@ import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawe
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+import '../../../../../test_utils/logged_in_user_store_stub.dart';
+
 void main() {
   testWidgets(
     "Changes theme store state on tap on checkbox",
@@ -38,7 +40,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
     return Injector(
       inject: [
         Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
-        Inject<UserStore>(() => UserStore()),
+        Inject<UserStore>(() => LoggedInUserStoreStub()),
       ],
       initState: _initInjectorState,
       builder: (context) {

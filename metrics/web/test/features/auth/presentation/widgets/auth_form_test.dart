@@ -6,7 +6,6 @@ import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import '../../../../test_utils/user_store_stub.dart';
