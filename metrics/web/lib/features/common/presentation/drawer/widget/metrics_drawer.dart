@@ -39,25 +39,7 @@ class MetricsDrawer extends StatelessWidget {
               return ListTile(
                 key: const Key('Logout'),
                 title: const Text(CommonStrings.logOut),
-                onTap: () {
-                  StreamSubscription _loggedInStreamSubscription;
-
-                  _loggedInStreamSubscription = Injector.get<UserStore>()
-                      .loggedInStream
-                      .listen((isUserLoggedIn) {
-                    if (isUserLoggedIn != null && !isUserLoggedIn) {
-                      /// Remove all the routes below the pushed 'login' route to prevent
-                      /// accidental navigate back to the dashboard page
-                      Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          RouteGenerator.login,
-                          (Route<dynamic> route) => false);
-                      /// Cancels logged in stream subscription
-                      _loggedInStreamSubscription.cancel();
-                    }
-                  });
-                  signOut(userStoreRM);
-                },
+                onTap: () => signOut(context, userStoreRM),
               );
             },
           )
@@ -67,7 +49,24 @@ class MetricsDrawer extends StatelessWidget {
   }
 
   /// Signs out a user from the app
-  Future<void> signOut(ReactiveModel<UserStore> storeRM) async {
+  Future<void> signOut(BuildContext context, ReactiveModel<UserStore> storeRM) async {
+    StreamSubscription _loggedInStreamSubscription;
+
+    _loggedInStreamSubscription = Injector.get<UserStore>()
+        .loggedInStream
+        .listen((isUserLoggedIn) {
+      if (isUserLoggedIn != null && !isUserLoggedIn) {
+        /// Remove all the routes below the pushed 'login' route to prevent
+        /// accidental navigate back to the dashboard page
+        Navigator.pushNamedAndRemoveUntil(
+            context,
+            RouteGenerator.login,
+                (Route<dynamic> route) => false);
+        /// Cancels logged in stream subscription
+        _loggedInStreamSubscription.cancel();
+      }
+    });
+
     await storeRM.setState((userStore) => userStore.signOut());
   }
 
