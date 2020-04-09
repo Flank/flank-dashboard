@@ -1,10 +1,10 @@
+import 'package:metrics/features/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/features/auth/domain/usecases/parameters/user_credentials_param.dart';
 import 'package:metrics/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
-import 'test_utils/error_user_repository_mock.dart';
 import 'test_utils/user_repository_mock.dart';
 
 void main() {
@@ -27,6 +27,9 @@ void main() {
         final repository = UserRepositoryMock();
         final signInUseCase = SignInUseCase(repository);
 
+        when(repository.signInWithEmailAndPassword(any, any))
+            .thenAnswer((_) async {});
+
         await signInUseCase(userCredentials);
 
         verify(repository.signInWithEmailAndPassword(
@@ -39,8 +42,11 @@ void main() {
     test(
       "throws if UserRepository throws during sign in process",
       () {
-        final repository = ErrorUserRepositoryMock();
+        final repository = UserRepositoryMock();
         final signInUseCase = SignInUseCase(repository);
+
+        when(repository.signInWithEmailAndPassword(any, any))
+            .thenThrow(const AuthenticationException());
 
         expect(
           () => signInUseCase(userCredentials),

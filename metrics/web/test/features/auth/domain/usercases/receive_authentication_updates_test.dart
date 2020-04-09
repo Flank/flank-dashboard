@@ -1,9 +1,9 @@
+import 'package:metrics/features/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/features/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
-import 'test_utils/error_user_repository_mock.dart';
 import 'test_utils/user_repository_mock.dart';
 
 void main() {
@@ -19,6 +19,10 @@ void main() {
       final repository = UserRepositoryMock();
       final receiveUserUpdates = ReceiveAuthenticationUpdates(repository);
 
+      when(repository.authenticationStream()).thenAnswer(
+        (_) => const Stream.empty(),
+      );
+
       receiveUserUpdates();
 
       verify(repository.authenticationStream()).called(equals(1));
@@ -27,8 +31,11 @@ void main() {
     test(
       "throws an error if repository throws",
       () {
-        final repository = ErrorUserRepositoryMock();
+        final repository = UserRepositoryMock();
         final receiveUserUpdates = ReceiveAuthenticationUpdates(repository);
+
+        when(repository.authenticationStream())
+            .thenThrow(const AuthenticationException());
 
         expect(
           () => receiveUserUpdates(),
