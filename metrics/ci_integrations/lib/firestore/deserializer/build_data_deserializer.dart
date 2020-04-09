@@ -4,6 +4,8 @@ import 'package:metrics_core/metrics_core.dart';
 class BuildDataDeserializer {
   /// Creates the [BuildData] using the [json] and it's [id].
   static BuildData fromJson(Map<String, dynamic> json, String id) {
+    if(json == null) return null;
+    
     final buildResultValue = json['buildStatus'] as String;
     final durationMilliseconds = json['duration'] as int;
     final buildStatus = BuildStatus.values.firstWhere(

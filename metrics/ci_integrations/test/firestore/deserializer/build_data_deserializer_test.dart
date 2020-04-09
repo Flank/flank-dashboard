@@ -3,21 +3,38 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('BuildDataDeserializer', () {
+  group("BuildDataDeserializer", () {
     const id = 'id';
+    const duration = Duration(milliseconds: 100000);
+    const url = 'testUrl';
+    const buildNumber = 1;
+    const buildStatus = BuildStatus.failed;
+    const workflowName = 'testWorkflowName';
+    const coverage = Percent(1.0);
+    final startedAt = DateTime.now();
+    final buildDataJson = {
+      'id': id,
+      'duration':  duration.inMilliseconds,
+      'startedAt': startedAt,
+      'url': url,
+      'buildNumber': buildNumber,
+      'buildStatus': buildStatus.toString(),
+      'workflowName': workflowName,
+      'coverage': coverage.value,
+    };
     final buildData = BuildData(
       id: id,
-      duration: const Duration(milliseconds: 100000),
-      startedAt: DateTime.now(),
-      url: 'testUrl',
-      buildNumber: 1,
-      buildStatus: BuildStatus.failed,
-      workflowName: 'testWorkflowName',
-      coverage: const Percent(1.0),
+      duration: duration,
+      startedAt: startedAt,
+      url: url,
+      buildNumber: buildNumber,
+      buildStatus: buildStatus,
+      workflowName: workflowName,
+      coverage: coverage,
     );
 
     test(
-      '.fromJson() should throw NoSuchMethodError if a given json is null',
+      ".fromJson() should return null if a given json is null",
       () {
         expect(
           () => BuildDataDeserializer.fromJson(null, id),
@@ -26,9 +43,9 @@ void main() {
       },
     );
 
-    test('.fromJson() should return BuildData from a json map', () {
+    test(".fromJson() should return BuildData from a json map", () {
       expect(
-        BuildDataDeserializer.fromJson(buildData.toJson(), id),
+        BuildDataDeserializer.fromJson(buildDataJson, id),
         equals(buildData),
       );
     });

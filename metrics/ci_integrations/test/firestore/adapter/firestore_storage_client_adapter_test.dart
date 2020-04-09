@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 import 'package:grpc/grpc.dart';
 
 void main() {
-  group('FirestoreStorageClientAdapter', () {
+  group("FirestoreStorageClientAdapter", () {
     const projectId = 'projectId';
     const testDocumentId = 'documentId';
     final buildDataTestJson = {
@@ -19,29 +19,48 @@ void main() {
       'url': 'testUrl',
       'coverage': 0.1,
     };
+    final collectionReferenceMock = _CollectionReferenceMock();
     final documentReferenceMock = _DocumentReferenceMock();
-    final collectionAddBuildsMock = _CollectionReferenceMockAddBuilds(
-      projectId: projectId,
-      documentReferenceMock: documentReferenceMock,
-    );
-    final collectionFetchBuildsMock = _CollectionReferenceMockFetchBuild(
-      projectId: projectId,
-    );
-    final firestoreMock =
-        _FirestoreMock(collectionAddBuildsMock, collectionFetchBuildsMock);
+    final firestoreMock = _FirestoreMock();
     final mockAdapter = FirestoreStorageClientAdapter(firestoreMock);
 
+    reset(collectionReferenceMock);
+    reset(documentReferenceMock);
+    reset(firestoreMock);
+    reset(mockAdapter);
+
+    setUp(() {
+      when(firestoreMock.collection('projects')).thenReturn(
+        collectionReferenceMock,
+      );
+      when(firestoreMock.collection('build')).thenReturn(
+        collectionReferenceMock,
+      );
+      when(collectionReferenceMock.document(projectId)).thenReturn(
+        documentReferenceMock,
+      );
+      when(collectionReferenceMock.where('projectId', isEqualTo: projectId))
+          .thenReturn(
+        collectionReferenceMock,
+      );
+      when(collectionReferenceMock.orderBy('startedAt', descending: true))
+          .thenReturn(
+        collectionReferenceMock,
+      );
+      when(collectionReferenceMock.limit(1)).thenReturn(
+        collectionReferenceMock,
+      );
+    });
+
     test(
-      'should throw ArgumentError trying to create an instance '
-      'with null Firestore',
+      "should throw ArgumentError trying to create an instance with null Firestore",
       () {
         expect(() => FirestoreStorageClientAdapter(null), throwsArgumentError);
       },
     );
 
     test(
-      '.addBuilds() should return normally if it throws GrpcError '
-      'with status code "not found"',
+      ".addBuilds() should return normally if firestore throws GrpcError.notFound",
       () {
         when(documentReferenceMock.get()).thenThrow(GrpcError.notFound());
         expect(() => mockAdapter.addBuilds(projectId, []), returnsNormally);
@@ -49,8 +68,7 @@ void main() {
     );
 
     test(
-      '.addBuilds() should throw Exception if the exception '
-      'is different from GrpcError with status code "not found"',
+      ".addBuilds() should throw Exception if the firestore throws exception different from GrpcError.notFound",
       () {
         when(documentReferenceMock.get()).thenThrow(Exception());
         expect(() => mockAdapter.addBuilds(projectId, []), throwsException);
@@ -58,8 +76,15 @@ void main() {
     );
 
     test(
-      '.addBuilds() ensure that methods isnot called after throws GrpcError '
-      'with status code "not fount" ',
+      ".addBuilds() should rethrow GrpcError with status different from 'notFound'",
+      () {
+        when(documentReferenceMock.get()).thenThrow(GrpcError.cancelled());
+        expect(() => mockAdapter.addBuilds(projectId, []), throwsException);
+      },
+    );
+
+    test(
+      ".addBuilds() ensure that methods isnot called after throws GrpcError.notFound",
       () async {
         when(documentReferenceMock.get()).thenThrow(GrpcError.notFound());
         await mockAdapter.addBuilds(projectId, []);
@@ -67,19 +92,24 @@ void main() {
       },
     );
 
-    test('.fetchLastBuild should return null, if documents is empty', () {
-      when(collectionFetchBuildsMock.getDocuments()).thenAnswer(
+    test(
+        ".fetchLastBuild() should return null, if there are no builds for a project with the given id",
+        () {
+      when(collectionReferenceMock.getDocuments()).thenAnswer(
         (_) => Future.value([]),
       );
-      expect(mockAdapter.fetchLastBuild(projectId), completion(equals(null)));
+      final result = mockAdapter.fetchLastBuild(projectId);
+      expect(result, completion(isNull));
     });
 
     test(
-      '.fetchLastBuild should return BuildData, if documents is not empty',
+      ".fetchLastBuild() should return the last build for a project with the given id",
       () {
-        final documentMock = _DocumentMock(testDocumentId, buildDataTestJson);
+        final documentMock = _DocumentMock();
 
-        when(collectionFetchBuildsMock.getDocuments()).thenAnswer(
+        when(documentMock.id).thenReturn(testDocumentId);
+        when(documentMock.map).thenReturn(buildDataTestJson);
+        when(collectionReferenceMock.getDocuments()).thenAnswer(
           (_) => Future.value([documentMock]),
         );
         expect(
@@ -98,40 +128,10 @@ void main() {
   });
 }
 
-class _FirestoreMock extends Mock implements Firestore {
-  _FirestoreMock(_CollectionReferenceMockAddBuilds collectionAddBuilds,
-      _CollectionReferenceMockFetchBuild collectionFetchBuild) {
-    when(collection('projects')).thenReturn(collectionAddBuilds);
-    when(collection('build')).thenReturn(collectionFetchBuild);
-  }
-}
+class _FirestoreMock extends Mock implements Firestore {}
 
-class _CollectionReferenceMockAddBuilds extends Mock
-    implements CollectionReference {
-  _CollectionReferenceMockAddBuilds({
-    String projectId,
-    _DocumentReferenceMock documentReferenceMock,
-  }) {
-    when(document(projectId)).thenReturn(documentReferenceMock);
-  }
-}
-
-class _CollectionReferenceMockFetchBuild extends Mock
-    implements CollectionReference {
-  _CollectionReferenceMockFetchBuild({
-    String projectId,
-  }) {
-    when(where('projectId', isEqualTo: projectId)).thenReturn(this);
-    when(orderBy('startedAt', descending: true)).thenReturn(this);
-    when(limit(1)).thenReturn(this);
-  }
-}
+class _CollectionReferenceMock extends Mock implements CollectionReference {}
 
 class _DocumentReferenceMock extends Mock implements DocumentReference {}
 
-class _DocumentMock extends Mock implements Document {
-  _DocumentMock(String testDocumentId, Map<String, dynamic> buildDataJson) {
-    when(id).thenReturn(testDocumentId);
-    when(map).thenReturn(buildDataJson);
-  }
-}
+class _DocumentMock extends Mock implements Document {}
