@@ -17,9 +17,8 @@ class AuthInputField extends StatelessWidget {
   /// [label] is the text title of the input.
   /// [controller] controls the text being edited.
   /// [obscureText] whether to hide the text being edited (e.g., for passwords).
-  /// [autofocus] whether this text field should focus itself if nothing else is already focused.
+  /// [autofocus] whether this text field should be focused initially.
   /// [validator] an optional method that validates an input.
-  /// Returns an error string to display if the input is invalid, or null otherwise.
   /// [onFieldSubmitted] called when a user submits content (e.g., user presses the "enter" button on the keyboard).
   /// [keyboardType] the type of information for which to optimize the text input control.
   /// [focusNode] defines the keyboard focus for this widget.

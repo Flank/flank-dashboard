@@ -35,11 +35,12 @@ class MetricsDrawer extends StatelessWidget {
           ),
           StateBuilder<AuthStore>(
             models: [Injector.getAsReactive<AuthStore>()],
-            builder: (context, ReactiveModel<AuthStore> authStoreRM) {
+            builder:
+                (context, ReactiveModel<AuthStore> authStoreReactiveModel) {
               return ListTile(
                 key: const Key('Logout'),
                 title: const Text(CommonStrings.logOut),
-                onTap: () => signOut(context, authStoreRM),
+                onTap: () => signOut(context, authStoreReactiveModel),
               );
             },
           )
@@ -49,8 +50,8 @@ class MetricsDrawer extends StatelessWidget {
   }
 
   /// Signs out a user from the app
-  Future<void> signOut(
-      BuildContext context, ReactiveModel<AuthStore> storeRM) async {
+  Future<void> signOut(BuildContext context,
+      ReactiveModel<AuthStore> authStoreReactiveModel) async {
     StreamSubscription _loggedInStreamSubscription;
 
     _loggedInStreamSubscription =
@@ -64,7 +65,7 @@ class MetricsDrawer extends StatelessWidget {
       }
     });
 
-    await storeRM.setState((store) => store.signOut());
+    await authStoreReactiveModel.setState((store) => store.signOut());
   }
 
   void _changeTheme(ReactiveModel<ThemeStore> model, ThemeStore snapshot) {

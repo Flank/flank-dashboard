@@ -99,7 +99,7 @@ class _AuthFormState extends State<AuthForm> {
     return null;
   }
 
-  /// Validates the [Form] and signs in user to the app using an email and a password.
+  /// Starts sign in process
   void _submit() {
     if (_formKey.currentState.validate()) {
       Injector.getAsReactive<AuthStore>().setState(
