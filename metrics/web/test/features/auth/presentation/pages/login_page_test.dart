@@ -22,7 +22,7 @@ void main() {
       find.widgetWithText(RaisedButton, LoginStrings.signIn);
 
   group("LoginPage", () {
-    testWidgets("contains project\'s title", (WidgetTester tester) async {
+    testWidgets("contains project's title", (WidgetTester tester) async {
       await tester.pumpWidget(_LoginPageTestbed());
 
       expect(find.text(CommonStrings.metrics), findsOneWidget);

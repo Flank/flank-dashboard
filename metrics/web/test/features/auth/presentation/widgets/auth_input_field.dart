@@ -29,26 +29,37 @@ void main() {
 
     testWidgets("delegates an obscureText property to the text input widget",
         (WidgetTester tester) async {
-      await tester.pumpWidget(const _AuthInputFieldTestbed(
-        obscureText: true,
-        label: testLabel,
-      ));
+      await tester.pumpWidget(const _AuthInputFieldTestbed(obscureText: true));
 
-      final textInput = tester.widget<TextField>(find.byType(TextField));
+      final firstInputText = tester.widget<TextField>(find.byType(TextField));
 
-      expect(textInput.obscureText, isTrue);
+      expect(firstInputText.obscureText, isTrue);
+
+      await tester.pumpWidget(const _AuthInputFieldTestbed());
+
+      final secondInputText = tester.widget<TextField>(find.byType(TextField));
+
+      expect(secondInputText.obscureText, isFalse);
     });
 
-    testWidgets("autofocus sets focus on the input",
+    testWidgets("delegates an autofocus property to the text input widget",
         (WidgetTester tester) async {
-      final FocusNode focusNode = FocusNode();
+      final FocusNode firstFocusNode = FocusNode();
 
       await tester.pumpWidget(_AuthInputFieldTestbed(
         autofocus: true,
-        focusNode: focusNode,
+        focusNode: firstFocusNode,
       ));
 
-      expect(focusNode.hasFocus, isTrue);
+      expect(firstFocusNode.hasFocus, isTrue);
+
+      final FocusNode secondFocusNode = FocusNode();
+
+      await tester.pumpWidget(_AuthInputFieldTestbed(
+        focusNode: secondFocusNode,
+      ));
+
+      expect(secondFocusNode.hasFocus, isFalse);
     });
 
     testWidgets(
@@ -97,10 +108,18 @@ void main() {
         keyboardType: TextInputType.emailAddress,
       ));
 
-      final textInput = tester.widget<TextField>(find.byType(TextField));
+      final emailTextInput = tester.widget<TextField>(find.byType(TextField));
 
-      expect(textInput.keyboardType, isNotNull);
-      expect(textInput.keyboardType, equals(TextInputType.emailAddress));
+      expect(emailTextInput.keyboardType, isNotNull);
+      expect(emailTextInput.keyboardType, equals(TextInputType.emailAddress));
+
+      await tester.pumpWidget(const _AuthInputFieldTestbed(
+        keyboardType: TextInputType.phone,
+      ));
+
+      final phoneTextInput = tester.widget<TextField>(find.byType(TextField));
+
+      expect(phoneTextInput.keyboardType, equals(TextInputType.phone));
     });
 
     testWidgets("delegates focusNode property to the text field",
