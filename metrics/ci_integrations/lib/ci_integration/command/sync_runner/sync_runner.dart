@@ -56,10 +56,19 @@ abstract class SyncRunner {
   ///
   /// Default implementation prepares [Firestore] and returns
   /// the [FirestoreStorageClientAdapter] instance as a storage client.
-  FutureOr<StorageClient> prepareStorageClient() {
+  FutureOr<StorageClient> prepareStorageClient() async {
     final firestoreConfig = config.destination;
-    final firestore = Firestore(firestoreConfig.firebaseProjectId);
+    final auth = FirebaseAuth.initialize(
+      firestoreConfig.firebaseAuthApiKey,
+      VolatileStore(),
+    );
 
+    await auth.signIn(
+      firestoreConfig.firebaseUserEmail,
+      firestoreConfig.firebaseUserPassword,
+    );
+
+    final firestore = Firestore(firestoreConfig.firebaseProjectId);
     return FirestoreStorageClientAdapter(firestore);
   }
 

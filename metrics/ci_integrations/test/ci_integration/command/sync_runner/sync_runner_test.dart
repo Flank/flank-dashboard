@@ -7,7 +7,6 @@ import 'package:ci_integration/common/client/storage_client.dart';
 import 'package:ci_integration/common/config/ci_config.dart';
 import 'package:ci_integration/common/logger/logger.dart';
 import 'package:ci_integration/config/model/ci_integration_config.dart';
-import 'package:ci_integration/firestore/adapter/firestore_storage_client_adapter.dart';
 import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
 import 'package:test/test.dart';
@@ -29,6 +28,9 @@ void main() {
       destination: FirestoreConfig(
         firebaseProjectId: 'firebaseProjectId',
         metricsProjectId: 'metricsProjectId',
+        firebaseUserPassword: 'firebaseUserPassword',
+        firebaseUserEmail: 'firebaseUserEmail',
+        firebaseAuthApiKey: 'firebaseAuthApiKey',
       ),
     );
     final syncRunner = SyncRunnerStub(config, logger);
@@ -69,12 +71,18 @@ void main() {
     );
 
     test(
-      ".prepareStorageClient() should return the Firestore storage client",
+      ".prepareStorageClient() should return the class that implements storage client",
       () async {
-        final syncRunner = JenkinsSyncRunner(config, logger);
+        final syncRunner = SyncRunnerStub(
+          config,
+          logger,
+          storageClientCallback: () => StorageClientStub(
+            addBuildsCallback: (_, __) => throw UnimplementedError(),
+          ),
+        );
         final storageClient = await syncRunner.prepareStorageClient();
 
-        expect(storageClient, isA<FirestoreStorageClientAdapter>());
+        expect(storageClient, isA<StorageClient>());
       },
     );
 

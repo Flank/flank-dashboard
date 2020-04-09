@@ -10,8 +10,11 @@ void main() {
         () {
           expect(
             () => FirestoreConfig(
-              metricsProjectId: 'id',
               firebaseProjectId: null,
+              metricsProjectId: 'id',
+              firebaseAuthApiKey: 'apiKey',
+              firebaseUserEmail: 'userEmail',
+              firebaseUserPassword: 'userPass',
             ),
             throwsArgumentError,
           );
@@ -25,6 +28,57 @@ void main() {
             () => FirestoreConfig(
               firebaseProjectId: 'id',
               metricsProjectId: null,
+              firebaseAuthApiKey: 'apiKey',
+              firebaseUserEmail: 'userEmail',
+              firebaseUserPassword: 'userPass',
+            ),
+            throwsArgumentError,
+          );
+        },
+      );
+
+      test(
+        "can't be created when the firebaseAuthApiKey is null",
+        () {
+          expect(
+            () => FirestoreConfig(
+              firebaseProjectId: 'id',
+              metricsProjectId: 'id',
+              firebaseAuthApiKey: null,
+              firebaseUserEmail: 'userEmail',
+              firebaseUserPassword: 'userPass',
+            ),
+            throwsArgumentError,
+          );
+        },
+      );
+
+      test(
+        "can't be created when the firebaseUserEmail is null",
+        () {
+          expect(
+            () => FirestoreConfig(
+              firebaseProjectId: 'id',
+              metricsProjectId: 'id',
+              firebaseAuthApiKey: 'apiKey',
+              firebaseUserEmail: null,
+              firebaseUserPassword: 'userPass',
+            ),
+            throwsArgumentError,
+          );
+        },
+      );
+
+      test(
+        "can't be created when the firebaseUserPassword is null",
+        () {
+          expect(
+            () => FirestoreConfig(
+              firebaseProjectId: 'id',
+              metricsProjectId: 'id',
+              firebaseAuthApiKey: 'apiKey',
+              firebaseUserEmail: 'userEmail',
+              firebaseUserPassword: null,
             ),
             throwsArgumentError,
           );
@@ -36,16 +90,25 @@ void main() {
         () {
           const firebaseProjectId = 'firebaseId';
           const metricsProjectId = 'projectId';
+          const firebaseAuthApiKey = 'apiKey';
+          const firebaseUserEmail = 'userEmail';
+          const firebaseUserPassword = 'userPassword';
 
           final firestoreConfigJson = {
             'firebase_project_id': firebaseProjectId,
             'metrics_project_id': metricsProjectId,
+            'firebase_api_key': firebaseAuthApiKey,
+            'firebase_user_email': firebaseUserEmail,
+            'firebase_user_pass': firebaseUserPassword,
           };
 
           final firestoreConfig = FirestoreConfig.fromJson(firestoreConfigJson);
 
           expect(firestoreConfig.firebaseProjectId, firebaseProjectId);
           expect(firestoreConfig.metricsProjectId, metricsProjectId);
+          expect(firestoreConfig.firebaseAuthApiKey, firebaseAuthApiKey);
+          expect(firestoreConfig.firebaseUserEmail, firebaseUserEmail);
+          expect(firestoreConfig.firebaseUserPassword, firebaseUserPassword);
         },
       );
 
