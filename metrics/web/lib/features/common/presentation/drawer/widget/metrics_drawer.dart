@@ -49,19 +49,16 @@ class MetricsDrawer extends StatelessWidget {
   }
 
   /// Signs out a user from the app
-  Future<void> signOut(BuildContext context, ReactiveModel<AuthStore> storeRM) async {
+  Future<void> signOut(
+      BuildContext context, ReactiveModel<AuthStore> storeRM) async {
     StreamSubscription _loggedInStreamSubscription;
 
-    _loggedInStreamSubscription = Injector.get<AuthStore>()
-        .loggedInStream
-        .listen((isUserLoggedIn) {
+    _loggedInStreamSubscription =
+        Injector.get<AuthStore>().loggedInStream.listen((isUserLoggedIn) {
       if (isUserLoggedIn != null && !isUserLoggedIn) {
-        /// Remove all the routes below the pushed 'login' route to prevent
-        /// accidental navigate back to the dashboard page
         Navigator.pushNamedAndRemoveUntil(
-            context,
-            RouteGenerator.login,
-                (Route<dynamic> route) => false);
+            context, RouteGenerator.login, (Route<dynamic> route) => false);
+
         /// Cancels logged in stream subscription
         _loggedInStreamSubscription.cancel();
       }

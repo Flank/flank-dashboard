@@ -21,12 +21,9 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     final authStore = Injector.get<AuthStore>();
 
-    /// Subscribes on a user authentication's status updates
     _loggedInStreamSubscription =
         authStore.loggedInStream.listen((isUserLoggedIn) {
       if (isUserLoggedIn != null && isUserLoggedIn) {
-        /// Removes all the routes below the pushed 'dashboard' route to prevent
-        /// accidental navigate back to the login page as an authenticated user
         Navigator.pushNamedAndRemoveUntil(
             context, RouteGenerator.dashboard, (Route<dynamic> route) => false);
       }
