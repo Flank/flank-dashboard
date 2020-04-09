@@ -60,7 +60,6 @@ class MetricsDrawer extends StatelessWidget {
         Navigator.pushNamedAndRemoveUntil(
             context, RouteGenerator.login, (Route<dynamic> route) => false);
 
-        /// Cancels logged in stream subscription
         _loggedInStreamSubscription.cancel();
       }
     });

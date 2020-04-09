@@ -16,6 +16,8 @@ class _AuthFormState extends State<AuthForm> {
   /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
+  final _minPasswordLength = 6;
+
   /// Controls the email text being edited.
   final TextEditingController _emailController = TextEditingController();
 
@@ -92,7 +94,7 @@ class _AuthFormState extends State<AuthForm> {
       return LoginStrings.passwordIsRequired;
     }
 
-    if (value.length < 6) {
+    if (value.length < _minPasswordLength) {
       return LoginStrings.passwordMinLength;
     }
 

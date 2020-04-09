@@ -7,5 +7,5 @@ class CommonStrings {
   static const String logOut = 'Log out';
 
   static String getLoadingErrorMessage(String errorMessage) =>
-      "An error occured during loading: $errorMessage";
+      "An error occurred during loading: $errorMessage";
 }
