@@ -8,12 +8,10 @@ import 'package:metrics/features/common/presentation/routes/route_generator.dart
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-import '../../../../test_utils/logged_in_user_store_stub.dart';
 import '../../../../test_utils/metrics_store_stub.dart';
-import '../../../../test_utils/user_store_stub.dart';
+import '../../test_utils/sign_in_user_store_stub.dart';
 
 void main() {
   final emailInputFinder =

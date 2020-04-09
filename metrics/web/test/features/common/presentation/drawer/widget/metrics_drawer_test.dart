@@ -8,7 +8,7 @@ import 'package:metrics/features/common/presentation/metrics_theme/store/theme_s
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-import '../../../../../test_utils/logged_in_user_store_stub.dart';
+import '../../../../auth/test_utils/sign_in_user_store_stub.dart';
 
 void main() {
   testWidgets(

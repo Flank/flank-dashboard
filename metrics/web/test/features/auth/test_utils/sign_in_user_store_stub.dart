@@ -1,8 +1,8 @@
+import 'package:metrics/features/auth/presentation/state/user_store.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'user_store_stub.dart';
-
-class LoggedInUserStoreStub extends UserStoreStub {
+/// Stub of [UserStore] ensures that a user is already logged in into the app.
+class LoggedInUserStoreStub extends UserStore {
   LoggedInUserStoreStub();
 
   final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
