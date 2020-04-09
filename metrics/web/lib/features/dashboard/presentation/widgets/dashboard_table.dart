@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/dashboard_table_header.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/metrics_title.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/placeholder_text.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-/// A widget that displays the [MetricsTitle] with the list of [ProjectMetricsTile].
-class MetricsTable extends StatelessWidget {
+/// A widget that displays the [DashboardTableHeader] with the list of [ProjectMetricsTile].
+class DashboardTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        const MetricsTitle(),
+        const DashboardTableHeader(),
         Expanded(
           child: WhenRebuilder<ProjectMetricsStore>(
             models: [Injector.getAsReactive<ProjectMetricsStore>()],

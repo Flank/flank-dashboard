@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_builder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 
-import 'test_utils/testbed_page.dart';
+import '../../../../test_utils/testbed_page.dart';
 
 void main() {
   testWidgets(

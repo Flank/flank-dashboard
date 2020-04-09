@@ -4,7 +4,7 @@ import 'package:metrics/features/common/presentation/metrics_theme/model/metric_
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_number_text_metric.dart';
 
-import 'test_utils/testbed_page.dart';
+import '../../../../test_utils/testbed_page.dart';
 
 void main() {
   group("BuildNumberTextMetric", () {

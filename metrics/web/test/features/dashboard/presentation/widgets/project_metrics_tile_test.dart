@@ -8,7 +8,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.
 import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-import 'test_utils/testbed_page.dart';
+import '../../../../test_utils/testbed_page.dart';
 
 void main() {
   testWidgets(

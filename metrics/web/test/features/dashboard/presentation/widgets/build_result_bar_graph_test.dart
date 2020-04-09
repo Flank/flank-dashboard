@@ -10,7 +10,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart
 import 'package:metrics/features/dashboard/presentation/widgets/placeholder_bar.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-import 'test_utils/testbed_page.dart';
+import '../../../../test_utils/testbed_page.dart';
 
 void main() {
   const buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;

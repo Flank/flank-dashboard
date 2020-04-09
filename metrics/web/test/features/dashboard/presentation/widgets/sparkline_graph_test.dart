@@ -9,7 +9,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.
 import 'package:metrics/features/dashboard/presentation/widgets/placeholder_text.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 
-import 'test_utils/testbed_page.dart';
+import '../../../../test_utils/testbed_page.dart';
 
 void main() {
   testWidgets(
@@ -86,7 +86,7 @@ void main() {
   );
 
   testWidgets(
-    'Applies the stroke color to the graph',
+    "Applies the stroke color to the graph",
     (WidgetTester tester) async {
       const strokeColor = Colors.orange;
       await tester.pumpWidget(const _SparklineGraphTestbed(
@@ -101,7 +101,7 @@ void main() {
   );
 
   testWidgets(
-    'Applies correct fill color',
+    "Applies correct fill color",
     (WidgetTester tester) async {
       const fillColor = Colors.orange;
 
@@ -118,7 +118,7 @@ void main() {
   );
 
   testWidgets(
-    'Applies value padding',
+    "Applies value padding",
     (WidgetTester tester) async {
       const value = 'value';
       const valuePadding = EdgeInsets.all(16.0);
@@ -138,7 +138,7 @@ void main() {
   );
 
   testWidgets(
-    'Applies graph padding',
+    "Applies graph padding",
     (WidgetTester tester) async {
       const chartPadding = EdgeInsets.all(8.0);
 
@@ -186,7 +186,7 @@ void main() {
   );
 
   testWidgets(
-    'Applies the stroke width to chart line',
+    "Applies the stroke width to chart line",
     (WidgetTester tester) async {
       const strokeWidth = 1.5;
 
