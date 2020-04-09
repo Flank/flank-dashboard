@@ -62,7 +62,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       catchError: true,
     );
     Injector.getAsReactive<UserStore>()
-        .setState((store) => store.subscribeToUserUpdates());
+        .setState((store) => store.subscribeToAuthenticationUpdates());
   }
 
   /// Initiates the [ProjectMetricsStore].

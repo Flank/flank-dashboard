@@ -17,8 +17,9 @@ class UserStore {
   /// Contains text description of any authentication exception that may occur.
   String _authExceptionDescription;
 
-  /// Subscribes to a current user updates to get notified when the user got signed in.
-  void subscribeToUserUpdates() {
+  /// Subscribes to a user authentication updates
+  /// to get notified when the user got signed in or signed out.
+  void subscribeToAuthenticationUpdates() {
     _isLoggedInSubject.add(false);
   }
 

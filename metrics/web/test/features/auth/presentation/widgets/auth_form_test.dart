@@ -94,7 +94,7 @@ class _AuthFormTestbed extends StatelessWidget {
       ],
       initState: () {
         Injector.getAsReactive<UserStore>().setState(
-          (store) => store.subscribeToUserUpdates(),
+          (store) => store.subscribeToAuthenticationUpdates(),
         );
       },
       builder: (BuildContext context) => MaterialApp(

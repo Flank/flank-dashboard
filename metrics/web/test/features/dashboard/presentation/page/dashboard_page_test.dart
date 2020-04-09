@@ -142,7 +142,7 @@ class DashboardTestbed extends StatelessWidget {
           );
           Injector.getAsReactive<ThemeStore>()
               .setState((store) => store.isDark = false);
-          Injector.getAsReactive<UserStore>().setState((store) => store.subscribeToUserUpdates());
+          Injector.getAsReactive<UserStore>().setState((store) => store.subscribeToAuthenticationUpdates());
         },
         builder: (BuildContext context) => MetricsThemeBuilder(
           builder: (_, __) {

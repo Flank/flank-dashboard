@@ -15,15 +15,14 @@ class LoginPage extends StatefulWidget {
 
 /// The logic and internal state for the [LoginPage] widget.
 class _LoginPageState extends State<LoginPage> {
-  final ReactiveModel<UserStore> _userStoreRM =
-      Injector.getAsReactive<UserStore>();
   StreamSubscription _loggedInStreamSubscription;
 
   @override
   void initState() {
+    final userStore = Injector.get<UserStore>();
     /// Subscribes on a user authentication's status updates
     _loggedInStreamSubscription =
-        _userStoreRM.state.loggedInStream.listen((isUserLoggedIn) {
+        userStore.loggedInStream.listen((isUserLoggedIn) {
       if (isUserLoggedIn is bool && isUserLoggedIn) {
         /// Removes all the routes below the pushed 'dashboard' route to prevent
         /// accidental navigate back to the login page as an authenticated user

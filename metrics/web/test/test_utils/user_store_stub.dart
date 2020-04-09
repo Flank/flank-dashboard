@@ -13,7 +13,7 @@ class UserStoreStub implements UserStore {
   String get authErrorMessage => '';
 
   @override
-  void subscribeToUserUpdates() {}
+  void subscribeToAuthenticationUpdates() {}
 
   @override
   void signInWithEmailAndPassword(String email, String password) {}

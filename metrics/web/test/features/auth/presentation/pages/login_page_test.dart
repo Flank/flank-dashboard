@@ -76,7 +76,7 @@ class _LoginPageTestbed extends StatelessWidget {
       ],
       initState: () {
         Injector.getAsReactive<UserStore>().setState(
-          (store) => store.subscribeToUserUpdates(),
+          (store) => store.subscribeToAuthenticationUpdates(),
         );
         Injector.getAsReactive<ProjectMetricsStore>().setState(
           (store) => store.subscribeToProjects(),
@@ -106,7 +106,7 @@ class _LoggedInUserStoreStub extends UserStoreStub {
   bool get isLoggedIn => _isLoggedInSubject.value;
 
   @override
-  void subscribeToUserUpdates() {
+  void subscribeToAuthenticationUpdates() {
     _isLoggedInSubject.add(true);
   }
 }

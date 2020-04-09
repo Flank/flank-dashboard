@@ -5,7 +5,7 @@ void main() {
   final UserStore userStore = UserStore();
 
   test("User is not authenticated after subscribe to a user updates", () {
-    userStore.subscribeToUserUpdates();
+    userStore.subscribeToAuthenticationUpdates();
 
     expect(userStore.isLoggedIn, isFalse);
   });

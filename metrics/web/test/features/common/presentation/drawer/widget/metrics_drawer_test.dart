@@ -55,6 +55,6 @@ class MetricsDrawerTestbed extends StatelessWidget {
     Injector.getAsReactive<ThemeStore>()
         .setState((model) => model.isDark = false);
     Injector.getAsReactive<UserStore>()
-        .setState((model) => model.subscribeToUserUpdates());
+        .setState((model) => model.subscribeToAuthenticationUpdates());
   }
 }
