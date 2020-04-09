@@ -71,7 +71,7 @@ void main() {
     );
 
     test(
-      ".prepareStorageClient() should return the class that implements storage client",
+      ".prepareStorageClient() should return the instance that implements StorageClient",
       () async {
         final syncRunner = SyncRunnerStub(
           config,
