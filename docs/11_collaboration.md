@@ -60,7 +60,13 @@ Tasks are not assigned before being started. Any task can be worked on by anyone
 
 After a task is finished, ask if there's anything you can do to help an in progress task. For example coding, reviewing, or testing. 
 
+
 The goal is to maximize completed tasks. Code reviews have priority over writing code.
+
+> Speed of Code Reviews
+>
+> At Google, we optimize for the speed at which a team of developers can produce a product together, as opposed to optimizing for the speed at which an individual developer can write code. The speed of individual development is important, it’s just not as important as the velocity of the entire team.
+> https://google.github.io/eng-practices/review/reviewer/speed.html
 
 ## Retrospective
 
