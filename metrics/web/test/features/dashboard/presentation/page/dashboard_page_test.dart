@@ -13,7 +13,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/circle_percentag
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import '../../../../test_utils/metrics_store_stub.dart';
-import '../../../auth/test_utils/signed_in_auth_store_mock.dart';
+import '../../../../test_utils/signed_in_auth_store_fake.dart';
 
 void main() {
   group("DashboardPage", () {
@@ -133,7 +133,7 @@ class DashboardTestbed extends StatelessWidget {
         inject: [
           Inject<ProjectMetricsStore>(() => metricsStore),
           Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
-          Inject<AuthStore>(() => SignedInAuthStoreMock()),
+          Inject<AuthStore>(() => SignedInAuthStoreFake()),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>().setState(

@@ -24,7 +24,7 @@ class RouteGenerator {
   ///
   /// The [name] and the [widget] should not be null.
   static MaterialPageRoute _createMaterialPageRoute(
-      {@required String name, @required Widget widget}) {
+      {String name, @required Widget widget}) {
     assert(widget != null);
     return MaterialPageRoute(
         builder: (context) => widget, settings: RouteSettings(name: name));

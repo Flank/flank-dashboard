@@ -7,7 +7,7 @@ import 'package:metrics/features/common/presentation/metrics_theme/store/theme_s
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-import '../../../../auth/test_utils/signed_in_auth_store_mock.dart';
+import '../../../../../test_utils/signed_in_auth_store_fake.dart';
 
 void main() {
   testWidgets(
@@ -52,7 +52,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
     return Injector(
       inject: [
         Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
-        Inject<AuthStore>(() => SignedInAuthStoreMock()),
+        Inject<AuthStore>(() => SignedInAuthStoreFake()),
       ],
       initState: _initInjectorState,
       builder: (context) {

@@ -13,7 +13,7 @@ void main() {
       find.widgetWithText(AuthInputField, AuthStrings.email);
   final passwordInputFinder =
       find.widgetWithText(AuthInputField, AuthStrings.password);
-  final submitButtonFinder =
+  final signInButtonFinder =
       find.widgetWithText(RaisedButton, AuthStrings.signIn);
 
   const testEmail = 'test@email.com';
@@ -24,7 +24,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
 
-      await tester.tap(submitButtonFinder);
+      await tester.tap(signInButtonFinder);
       await tester.pump();
 
       expect(find.text(AuthStrings.emailIsRequired), findsOneWidget);
@@ -35,7 +35,7 @@ void main() {
       await tester.pumpWidget(const _AuthFormTestbed());
       await tester.enterText(emailInputFinder, 'notAnEmail');
 
-      await tester.tap(submitButtonFinder);
+      await tester.tap(signInButtonFinder);
       await tester.pump();
 
       expect(find.text(AuthStrings.emailIsInvalid), findsOneWidget);
@@ -45,7 +45,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
 
-      await tester.tap(submitButtonFinder);
+      await tester.tap(signInButtonFinder);
       await tester.pump();
 
       expect(find.text(AuthStrings.passwordIsRequired), findsOneWidget);
@@ -56,7 +56,7 @@ void main() {
       await tester.pumpWidget(const _AuthFormTestbed());
 
       await tester.enterText(passwordInputFinder, '12345');
-      await tester.tap(submitButtonFinder);
+      await tester.tap(signInButtonFinder);
       await tester.pump();
 
       expect(find.text(AuthStrings.passwordMinLength), findsOneWidget);
@@ -82,7 +82,7 @@ void main() {
       await tester.pumpWidget(_AuthFormTestbed(authStore: authStore));
       await tester.enterText(emailInputFinder, testEmail);
       await tester.enterText(passwordInputFinder, testPassword);
-      await tester.tap(submitButtonFinder);
+      await tester.tap(signInButtonFinder);
 
       verify(authStore.signInWithEmailAndPassword(testEmail, testPassword))
           .called(equals(1));
@@ -95,7 +95,7 @@ void main() {
       ));
       await tester.enterText(emailInputFinder, 'test@email.com');
       await tester.enterText(passwordInputFinder, 'testPassword');
-      await tester.tap(submitButtonFinder);
+      await tester.tap(signInButtonFinder);
       await tester.pumpAndSettle();
 
       expect(find.text(SignInErrorAuthStoreMock.errorMessage), findsOneWidget);

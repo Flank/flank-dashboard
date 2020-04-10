@@ -11,16 +11,9 @@ import 'package:metrics/features/dashboard/presentation/state/project_metrics_st
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import '../../../../test_utils/metrics_store_stub.dart';
-import '../../test_utils/signed_in_auth_store_mock.dart';
+import '../../../../test_utils/signed_in_auth_store_fake.dart';
 
 void main() {
-  final emailInputFinder =
-      find.widgetWithText(AuthInputField, AuthStrings.email);
-  final passwordInputFinder =
-      find.widgetWithText(AuthInputField, AuthStrings.password);
-  final submitButtonFinder =
-      find.widgetWithText(RaisedButton, AuthStrings.signIn);
-
   group("LoginPage", () {
     testWidgets("contains project's title", (WidgetTester tester) async {
       await tester.pumpWidget(_LoginPageTestbed());
@@ -38,9 +31,15 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(_LoginPageTestbed());
 
-      await tester.enterText(emailInputFinder, 'test@email.com');
-      await tester.enterText(passwordInputFinder, 'testPassword');
-      await tester.tap(submitButtonFinder);
+      await tester.enterText(
+        find.widgetWithText(AuthInputField, AuthStrings.email),
+        'test@email.com',
+      );
+      await tester.enterText(
+        find.widgetWithText(AuthInputField, AuthStrings.password),
+        'testPassword',
+      );
+      await tester.tap(find.widgetWithText(RaisedButton, AuthStrings.signIn));
       await tester.pumpAndSettle();
 
       expect(find.byType(DashboardPage), findsOneWidget);
@@ -50,7 +49,7 @@ void main() {
         "redirects to the dashboard page if a user is already signed in",
         (WidgetTester tester) async {
       await tester.pumpWidget(_LoginPageTestbed(
-        authStore: SignedInAuthStoreMock(),
+        authStore: SignedInAuthStoreFake(),
       ));
       await tester.pumpAndSettle();
 

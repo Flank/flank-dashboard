@@ -73,8 +73,8 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-  /// Check if an email field is not empty and has the right format,
-  /// otherwise show an error text.
+  /// Checks if an email field is not empty and has the right format,
+  /// otherwise returns an error message.
   String _validateEmail(String value) {
     if (value.isEmpty) {
       return AuthStrings.emailIsRequired;
@@ -87,8 +87,8 @@ class _AuthFormState extends State<AuthForm> {
     return null;
   }
 
-  /// Check if a password field is not empty and match the minimum length,
-  /// otherwise show an error text.
+  /// Checks if a password field is not empty and match the minimum length,
+  /// otherwise returns an error message.
   String _validatePassword(String value) {
     if (value.isEmpty) {
       return AuthStrings.passwordIsRequired;
