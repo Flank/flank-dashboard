@@ -36,13 +36,13 @@ Minimize interruptions and context switching.
 
 One prioritized backlog per team.
 
-Work on one project at a time to enable focus.
+A team works on one project at a time to enable focus.
 
 ## Buddy System
 
 Each sprint, select a buddy.
 
-Every task should have at least two people.
+Every task should have at least two people. Work on one task at a time.
 
 > We believe that people thrive on being trusted, on freedom, and on being able to make a difference. So we foster freedom and empowerment wherever we can.
 > https://jobs.netflix.com/culture
