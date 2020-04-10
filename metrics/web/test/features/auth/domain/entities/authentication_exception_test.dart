@@ -1,3 +1,5 @@
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
 import 'package:metrics/features/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/features/auth/domain/entities/authentication_exception.dart';
 import 'package:test/test.dart';

@@ -1,3 +1,5 @@
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:test/test.dart';
 
