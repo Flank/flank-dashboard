@@ -13,14 +13,17 @@
 Value is software customers are using.
 
 Software is available to the customer. Owned by Engineering.
+
 Software is valuable to the customer. Owned by Product.
 
 ## Principles
 
 Maximize value. Value is software available to customers.
+
 Minimize not value. Everything else is wasteful.
 
 Things that are Done are Value
+
 Things that are In Progress are cost
 
 ## Flow
@@ -32,11 +35,13 @@ Minimize interruptions and context switching.
 ## Backlog
 
 One prioritized backlog per team.
+
 Work on one project at a time to enable focus.
 
 ## Buddy System
 
 Each sprint, select a buddy.
+
 Every task should have at least two people.
 
 > We believe that people thrive on being trusted, on freedom, and on being able to make a difference. So we foster freedom and empowerment wherever we can.
@@ -50,7 +55,9 @@ Buddies are empowered to select how to best collaborate. Ideas:
 ## Priorities
 
 Tasks are pulled from the prioritized backlog.
+
 Tasks are not assigned before being started. Any task can be worked on by anyone.
+
 After a task is finished, ask if there's anything you can do to help an in progress task. For example coding, reviewing, or testing. 
 
 The goal is to maximize completed tasks. Code reviews have priority over writing code.
