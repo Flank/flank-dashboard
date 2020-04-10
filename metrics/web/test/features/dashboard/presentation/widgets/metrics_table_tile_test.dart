@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/dashboard_table_tile.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_tile.dart';
 
 import '../../../../test_utils/testbed_page.dart';
 
 void main() {
-  group("DashboardTableTile", () {
+  group("MetricsTableTile", () {
     testWidgets(
       "can't be created with null leading",
       (tester) async {
@@ -85,7 +85,7 @@ class _DashboardTableTileTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TestbedPage(
-      body: DashboardTableTile(
+      body: MetricsTableTile(
         leading: leading,
         trailing: trailing,
       ),

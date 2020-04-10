@@ -39,7 +39,7 @@ class BuildResultBarGraph extends StatefulWidget {
 }
 
 class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
-  static const _barWidth = 6.0;
+  static const _barWidth = 4.0;
   static const _listEquality = ListEquality();
   List<BuildResultBarData> _barsData;
   int _missingBarsCount = 0;
@@ -103,7 +103,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
                       data.buildStatus,
                       widgetThemeData,
                     ),
-                    borderRadius: BorderRadius.circular(5.0),
+                    borderRadius: BorderRadius.circular(1.0),
                   ),
                 );
               },

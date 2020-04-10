@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 
-/// A specific for the metrics application [AppBar] widget.
+/// A common for the metrics application [AppBar] widget.
 class MetricsAppBar extends AppBar {
   MetricsAppBar({
     Key key,

@@ -29,8 +29,8 @@ class _MyAppState extends State<MyApp> {
             themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
             theme: ThemeData(
               brightness: Brightness.light,
-              primaryColor: Colors.white,
               primarySwatch: Colors.teal,
+              primaryColorBrightness: Brightness.light,
               cardColor: ColorConfig.lightScaffoldColor,
               fontFamily: 'Roboto',
               appBarTheme: const AppBarTheme(
@@ -40,6 +40,7 @@ class _MyAppState extends State<MyApp> {
             darkTheme: ThemeData(
               brightness: Brightness.dark,
               primarySwatch: Colors.teal,
+              primaryColorBrightness: Brightness.dark,
               scaffoldBackgroundColor: ColorConfig.darkScaffoldColor,
               cardColor: ColorConfig.darkScaffoldColor,
               fontFamily: 'Roboto',

@@ -1,7 +1,4 @@
 /// Holds the strings for the dashboard screen.
-///
-/// Preferably, add the string to this file instead of hardcoding them into UI
-/// to make them available in tests and avoid code duplication.
 class DashboardStrings {
   static const String performance = 'Performance';
   static const String builds = 'Builds';
@@ -14,4 +11,6 @@ class DashboardStrings {
 
   static String getLoadingErrorMessage(String errorMessage) =>
       "An error occured during loading: $errorMessage";
+
+  static String minutes(int minutes) => "${minutes}M";
 }

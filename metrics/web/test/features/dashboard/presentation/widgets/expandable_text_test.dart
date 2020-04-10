@@ -32,36 +32,6 @@ void main() {
         expect(textWidget.style, textStyle);
       },
     );
-
-    testWidgets(
-      "applies the BoxFit.contain if textSize is not given",
-      (tester) async {
-        const text = 'test_text';
-        await tester.pumpWidget(const _ExpandableTextTestbed(
-          text: text,
-        ));
-
-        final fittedBoxWidget =
-            tester.widget<FittedBox>(find.byType(FittedBox));
-
-        expect(fittedBoxWidget.fit, equals(BoxFit.contain));
-      },
-    );
-
-    testWidgets(
-      "applies the BoxFit.none if textSize is given",
-      (tester) async {
-        const textStyle = TextStyle(fontSize: 20.0);
-        await tester.pumpWidget(const _ExpandableTextTestbed(
-          style: textStyle,
-        ));
-
-        final fittedBoxWidget =
-            tester.widget<FittedBox>(find.byType(FittedBox));
-
-        expect(fittedBoxWidget.fit, equals(BoxFit.none));
-      },
-    );
   });
 }
 

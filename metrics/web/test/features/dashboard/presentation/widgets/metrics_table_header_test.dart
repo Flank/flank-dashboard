@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/dashboard_table_header.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/dashboard_table_tile.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_header.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_tile.dart';
 
 import '../../../../test_utils/testbed_page.dart';
 
 void main() {
-  group("DashboardTableHeader", () {
+  group("MetricsTableHeader", () {
     testWidgets(
       "contains DashboardTableTile",
       (tester) async {
         await tester.pumpWidget(_DashboardTableHeaderTestbed());
 
-        expect(find.byType(DashboardTableTile), findsOneWidget);
+        expect(find.byType(MetricsTableTile), findsOneWidget);
       },
     );
 
@@ -59,7 +59,7 @@ class _DashboardTableHeaderTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const TestbedPage(
-      body: DashboardTableHeader(),
+      body: MetricsTableHeader(),
     );
   }
 }

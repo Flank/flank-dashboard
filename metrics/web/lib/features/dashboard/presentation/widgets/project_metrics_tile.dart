@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/features/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar_graph.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/dashboard_table_tile.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_builder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_tile.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/project_metric_circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 
 /// Displays the project name and it's metrics.
@@ -37,80 +38,88 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
   Widget build(BuildContext context) {
     super.build(context);
     final projectMetrics = widget.projectMetrics;
+    final brightness = Theme.of(context).brightness;
 
-    return Card(
+    return Container(
+      height: _tileHeight,
       margin: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Container(
-        height: _tileHeight,
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: DashboardTableTile(
-          leading: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              projectMetrics.projectName ?? '',
-              style: const TextStyle(fontSize: 22.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(2.0),
+        border: Border.all(
+          color:
+              brightness == Brightness.dark ? Colors.black54 : Colors.grey[300],
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: MetricsTableTile(
+        leading: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            projectMetrics.projectName ?? '',
+            style: const TextStyle(fontSize: 22.0),
+          ),
+        ),
+        trailing: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: LoadingBuilder(
+                  isLoading: projectMetrics.buildResultMetrics == null,
+                  loadingPlaceholder: const LoadingPlaceholder(),
+                  builder: (_) => BuildResultBarGraph(
+                    data: widget.projectMetrics.buildResultMetrics,
+                    numberOfBars:
+                        ReceiveProjectMetricsUpdates.lastBuildsForChartsMetrics,
+                  ),
+                ),
+              ),
             ),
-          ),
-          trailing: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: LoadingBuilder(
-                    isLoading: projectMetrics.buildResultMetrics == null,
-                    loadingPlaceholder: const LoadingPlaceholder(),
-                    builder: (_) => BuildResultBarGraph(
-                      data: widget.projectMetrics.buildResultMetrics,
-                      numberOfBars: ReceiveProjectMetricsUpdates
-                          .lastBuildsForChartsMetrics,
+            Expanded(
+              child: LoadingBuilder(
+                isLoading: projectMetrics.performanceMetrics == null,
+                loadingPlaceholder: const LoadingPlaceholder(),
+                builder: (_) => SparklineGraph(
+                  data: projectMetrics.performanceMetrics,
+                  value: DashboardStrings.minutes(
+                    projectMetrics.averageBuildDurationInMinutes,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: LoadingBuilder(
+                isLoading: projectMetrics.buildNumberMetric == null,
+                builder: (_) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: BuildNumberTextMetric(
+                      buildNumberMetric: projectMetrics.buildNumberMetric,
                     ),
-                  ),
+                  );
+                },
+              ),
+            ),
+            Expanded(
+              child: LoadingBuilder(
+                isLoading: projectMetrics == null,
+                loadingPlaceholder: const LoadingPlaceholder(),
+                builder: (_) => ProjectMetricCirclePercentage(
+                  value: projectMetrics.stability?.value,
                 ),
               ),
-              Expanded(
-                child: LoadingBuilder(
-                  isLoading: projectMetrics.performanceMetrics == null,
-                  loadingPlaceholder: const LoadingPlaceholder(),
-                  builder: (_) => SparklineGraph(
-                    data: projectMetrics.performanceMetrics,
-                    value: '${projectMetrics.averageBuildDurationInMinutes}M',
-                  ),
+            ),
+            Expanded(
+              child: LoadingBuilder(
+                isLoading: projectMetrics == null,
+                loadingPlaceholder: const LoadingPlaceholder(),
+                builder: (_) => ProjectMetricCirclePercentage(
+                  value: projectMetrics.coverage?.value,
                 ),
               ),
-              Expanded(
-                child: LoadingBuilder(
-                  isLoading: projectMetrics.buildNumberMetric == null,
-                  builder: (_) {
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: BuildNumberTextMetric(
-                        buildNumberMetric: projectMetrics.buildNumberMetric,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Expanded(
-                child: LoadingBuilder(
-                  isLoading: projectMetrics == null,
-                  loadingPlaceholder: const LoadingPlaceholder(),
-                  builder: (_) => CirclePercentage(
-                    value: projectMetrics.stability?.value,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: LoadingBuilder(
-                  isLoading: projectMetrics == null,
-                  loadingPlaceholder: const LoadingPlaceholder(),
-                  builder: (_) => CirclePercentage(
-                    value: projectMetrics.coverage?.value,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

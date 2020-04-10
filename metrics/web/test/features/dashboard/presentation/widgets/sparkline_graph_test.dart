@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/placeholder_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/no_data_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 
 import '../../../../test_utils/testbed_page.dart';
@@ -51,7 +51,7 @@ void main() {
       expect(
         find.descendant(
             of: find.byType(SparklineGraph),
-            matching: find.byType(PlaceholderText)),
+            matching: find.byType(NoDataPlaceholder)),
         findsOneWidget,
       );
     },

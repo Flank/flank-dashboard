@@ -7,8 +7,8 @@ import 'package:metrics/features/dashboard/presentation/state/project_metrics_st
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/dashboard_table.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/dashboard_table_header.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/metrics_table.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -16,13 +16,13 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 import '../test_utils/project_metrics_store_stub.dart';
 
 void main() {
-  group("DashboardTable", () {
+  group("MetricsTable", () {
     testWidgets(
       "contains MetricsTitle widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(_MetricsTableTestbed());
 
-        expect(find.byType(DashboardTableHeader), findsOneWidget);
+        expect(find.byType(MetricsTableHeader), findsOneWidget);
       },
     );
 
@@ -206,7 +206,7 @@ class _MetricsTableTestbed extends StatelessWidget {
         },
         builder: (BuildContext context) => MetricsThemeBuilder(
           builder: (_, __) {
-            return DashboardTable();
+            return MetricsTable();
           },
         ),
       ),

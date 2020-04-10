@@ -2,21 +2,15 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/no_data_placeholder.dart';
 
 /// The widget that represents the metric percent in a circular graph.
 ///
 /// If no constraints are given by the parent widget, it will be as big as possible.
 /// Otherwise, it will match its parent's size.
-///
-/// Applies the color theme from the [MetricsThemeData] following the next rules, if no colors are passed:
-/// * if the [value] is 0, applies the [MetricsThemeData.inactiveWidgetTheme]
-/// * if the [value] is from 0.1 (inclusive) to 0.51 (exclusive), applies the [MetricsThemeData.circlePercentageLowPercentTheme]
-/// * if the [value] is from 0.51 (inclusive) to 0.8 (exclusive), applies the [MetricsThemeData.circlePercentageMediumPercentTheme]
-/// * if the [value] is greater or equal to 0.8 - applies the [MetricsThemeData.circlePercentageHighPercentTheme]
 class CirclePercentage extends StatefulWidget {
   final double value;
   final EdgeInsets padding;
@@ -85,7 +79,7 @@ class _CirclePercentageState extends State<CirclePercentage>
 
   @override
   Widget build(BuildContext context) {
-    final widgetThemeData = _getWidgetTheme();
+    final widgetThemeData = MetricsTheme.of(context).metricWidgetTheme;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -116,12 +110,13 @@ class _CirclePercentageState extends State<CirclePercentage>
                         DefaultTextStyle(
                           style: TextStyle(color: valueColor),
                           child: Expanded(
-                            flex: 2,
-                            child: ExpandableText(
-                              _getValueText(),
-                              style: widget.valueStyle ??
-                                  widgetThemeData.textStyle,
-                            ),
+                            child: widget.value == null
+                                ? const NoDataPlaceholder()
+                                : ExpandableText(
+                                    _getValueText(),
+                                    style: widget.valueStyle ??
+                                        widgetThemeData.textStyle,
+                                  ),
                           ),
                         ),
                       ],
@@ -145,29 +140,8 @@ class _CirclePercentageState extends State<CirclePercentage>
 
   /// Gets the value text to display.
   String _getValueText() {
-    if (widget.value == null) return DashboardStrings.noDataPlaceholder;
-
     final value = _controller.value * 100;
     return '${value.toInt()}%';
-  }
-
-  /// Gets the [MetricWidgetThemeData] according to the [widget.value].
-  MetricWidgetThemeData _getWidgetTheme() {
-    final metricsTheme = MetricsTheme.of(context);
-    final inactiveTheme = metricsTheme.inactiveWidgetTheme;
-    final percent = widget.value;
-
-    if (percent == null) return inactiveTheme;
-
-    if (percent >= 0.8) {
-      return metricsTheme.circlePercentageHighPercentTheme;
-    } else if (percent >= 0.51) {
-      return metricsTheme.circlePercentageMediumPercentTheme;
-    } else if (percent > 0.0) {
-      return metricsTheme.circlePercentageLowPercentTheme;
-    } else {
-      return inactiveTheme;
-    }
   }
 
   Color _getBackgroundColor(MetricWidgetThemeData themeData) {

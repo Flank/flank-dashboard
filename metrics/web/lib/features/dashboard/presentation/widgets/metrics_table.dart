@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/dashboard_table_header.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/placeholder_text.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-/// A widget that displays the [DashboardTableHeader] with the list of [ProjectMetricsTile].
-class DashboardTable extends StatelessWidget {
+/// A widget that displays the [MetricsTableHeader] with the list of [ProjectMetricsTile].
+class MetricsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        const DashboardTableHeader(),
+        const MetricsTableHeader(),
         Expanded(
           child: WhenRebuilder<ProjectMetricsStore>(
             models: [Injector.getAsReactive<ProjectMetricsStore>()],
@@ -72,11 +71,13 @@ class _DashboardTablePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlaceholderText(
-      text: text,
-      style: const TextStyle(
-        fontSize: 20.0,
-        color: Colors.grey,
+    return Center(
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 20.0,
+          color: Colors.grey,
+        ),
       ),
     );
   }
