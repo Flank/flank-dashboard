@@ -89,15 +89,17 @@ void main() {
 
     testWidgets("shows an auth error text if the login process went wrong",
         (WidgetTester tester) async {
-      await tester.pumpWidget(_AuthFormTestbed(
-        authStore: SignInErrorAuthStoreMock(),
-      ));
+      final authStore = AuthStoreMock();
+      const errorMessage = 'Unknown Error';
+      when(authStore.authErrorMessage).thenReturn(errorMessage);
+
+      await tester.pumpWidget(_AuthFormTestbed(authStore: authStore));
       await tester.enterText(emailInputFinder, 'test@email.com');
       await tester.enterText(passwordInputFinder, 'testPassword');
       await tester.tap(signInButtonFinder);
       await tester.pumpAndSettle();
 
-      expect(find.text(SignInErrorAuthStoreMock.errorMessage), findsOneWidget);
+      expect(find.text(errorMessage), findsOneWidget);
     });
   });
 }
@@ -127,15 +129,6 @@ class _AuthFormTestbed extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-/// Mock implementation of the [AuthStore] that emulates presence of auth message error.
-class SignInErrorAuthStoreMock extends Mock implements AuthStore {
-  static const String errorMessage = "Unknown error";
-
-  SignInErrorAuthStoreMock() {
-    when(authErrorMessage).thenReturn(errorMessage);
   }
 }
 
