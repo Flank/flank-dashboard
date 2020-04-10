@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
@@ -142,20 +141,3 @@ class SignInErrorAuthStoreMock extends Mock implements AuthStore {
 
 /// Mock implementation of the [AuthStore].
 class AuthStoreMock extends Mock implements AuthStore {}
-
-/// Returns the first [RenderEditable].
-RenderEditable _findRenderEditable(WidgetTester tester, Finder finder) {
-  final RenderObject root = tester.renderObject(finder);
-
-  RenderEditable renderEditable;
-  void recursiveFinder(RenderObject child) {
-    if (child is RenderEditable) {
-      renderEditable = child;
-      return;
-    }
-    child.visitChildren(recursiveFinder);
-  }
-
-  root.visitChildren(recursiveFinder);
-  return renderEditable;
-}
