@@ -22,31 +22,35 @@ void main() {
       'workflowName': workflowName,
       'coverage': coverage.value,
     };
-    final buildData = BuildData(
-      id: id,
-      duration: duration,
-      startedAt: startedAt,
-      url: url,
-      buildNumber: buildNumber,
-      buildStatus: buildStatus,
-      workflowName: workflowName,
-      coverage: coverage,
-    );
 
     test(
       ".fromJson() should return null if a given json is null",
       () {
+        final buildData = BuildDataDeserializer.fromJson(null, id);
+
         expect(
-          () => BuildDataDeserializer.fromJson(null, id),
-          throwsNoSuchMethodError,
+          buildData,
+          isNull,
         );
       },
     );
 
     test(".fromJson() should return BuildData from a json map", () {
+      final buildData = BuildDataDeserializer.fromJson(buildDataJson, id);
+      final expectedBuildData = BuildData(
+        id: id,
+        duration: duration,
+        startedAt: startedAt,
+        url: url,
+        buildNumber: buildNumber,
+        buildStatus: buildStatus,
+        workflowName: workflowName,
+        coverage: coverage,
+      );
+
       expect(
-        BuildDataDeserializer.fromJson(buildDataJson, id),
-        equals(buildData),
+        buildData,
+        equals(expectedBuildData),
       );
     });
   });

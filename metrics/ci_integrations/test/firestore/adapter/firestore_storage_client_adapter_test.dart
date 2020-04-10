@@ -1,5 +1,7 @@
-import 'package:ci_integration/firestore/deserializer/build_data_deserializer.dart';
+// ignore_for_file: avoid_implementing_value_types
+
 import 'package:ci_integration/firestore/adapter/firestore_storage_client_adapter.dart';
+import 'package:ci_integration/firestore/deserializer/build_data_deserializer.dart';
 import 'package:firedart/firedart.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
@@ -8,7 +10,7 @@ import 'package:grpc/grpc.dart';
 
 void main() {
   group("FirestoreStorageClientAdapter", () {
-    const projectId = 'projectId';
+    const testProjectId = 'projectId';
     const testDocumentId = 'documentId';
     final buildDataTestJson = {
       'buildNumber': 1,
@@ -19,14 +21,46 @@ void main() {
       'url': 'testUrl',
       'coverage': 0.1,
     };
+    final _firestoreMock = _FirestoreMock();
+    final _collectionReferenceMock = _CollectionReferenceMock();
+    final _documentReferenceMock = _DocumentReferenceMock();
+    final _documentMock = _DocumentMock();
+    final mockAdapter = FirestoreStorageClientAdapter(_firestoreMock);
 
-    final firestoreStorageAdapterMockManager =
-        _FirestoreStorageAdapterMockManager();
+    PostExpectation<Future<Document>> whenFetchProject({
+      String collectionId = 'projects',
+      String projectId = testProjectId,
+    }) {
+      when(_firestoreMock.collection(collectionId))
+          .thenReturn(_collectionReferenceMock);
+      when(_collectionReferenceMock.document(projectId))
+          .thenReturn(_documentReferenceMock);
+      return when(_documentReferenceMock.get());
+    }
 
-    final mockAdapter = firestoreStorageAdapterMockManager.initMockAdapter();
+    PostExpectation<Future<List<Document>>> whenFetchLastBuild({
+      String collectionId = 'build',
+      String whereFieldPath = 'projectId',
+      dynamic isEqualTo = testProjectId,
+      String orderByFieldPath = 'startedAt',
+      int limit = 1,
+    }) {
+      when(_firestoreMock.collection(collectionId))
+          .thenReturn(_collectionReferenceMock);
+      when(_collectionReferenceMock.where(whereFieldPath, isEqualTo: isEqualTo))
+          .thenReturn(_collectionReferenceMock);
+      when(_collectionReferenceMock.orderBy(orderByFieldPath, descending: true))
+          .thenReturn(_collectionReferenceMock);
+      when(_collectionReferenceMock.limit(limit))
+          .thenReturn(_collectionReferenceMock);
+      return when(_collectionReferenceMock.getDocuments());
+    }
 
     setUp(() {
-      firestoreStorageAdapterMockManager.resetMocks();
+      reset(_firestoreMock);
+      reset(_collectionReferenceMock);
+      reset(_documentReferenceMock);
+      reset(_documentMock);
     });
 
     test(
@@ -39,72 +73,70 @@ void main() {
     test(
       ".addBuilds() should return normally if firestore throws GrpcError.notFound",
       () {
-        firestoreStorageAdapterMockManager.mockAddBuildsBasic(
-          collectionId: 'projects',
-          projectId: projectId,
-        );
-        firestoreStorageAdapterMockManager.mockThrowDocumentGet(
-          exception: GrpcError.notFound(),
-        );
-        expect(() => mockAdapter.addBuilds(projectId, []), returnsNormally);
+        whenFetchProject().thenThrow(GrpcError.notFound());
+        expect(() => mockAdapter.addBuilds(testProjectId, []), returnsNormally);
       },
     );
-
     test(
       ".addBuilds() should throw Exception if the firestore throws exception different from GrpcError.notFound",
       () {
-        firestoreStorageAdapterMockManager.mockAddBuildsBasic(
-          collectionId: 'projects',
-          projectId: projectId,
-        );
-        firestoreStorageAdapterMockManager.mockThrowDocumentGet(
-          exception: Exception(),
-        );
-        expect(() => mockAdapter.addBuilds(projectId, []), throwsException);
+        whenFetchProject().thenThrow(Exception());
+        expect(() => mockAdapter.addBuilds(testProjectId, []), throwsException);
       },
     );
 
     test(
       ".addBuilds() should rethrow GrpcError with status different from 'notFound'",
       () {
-        firestoreStorageAdapterMockManager.mockAddBuildsBasic(
-          collectionId: 'projects',
-          projectId: projectId,
+        final error = GrpcError.cancelled();
+
+        whenFetchProject().thenThrow(error);
+        expect(
+          () => mockAdapter.addBuilds(testProjectId, []),
+          throwsA(
+            equals(error),
+          ),
         );
-        firestoreStorageAdapterMockManager.mockThrowDocumentGet(
-          exception: GrpcError.cancelled(),
-        );
-        expect(() => mockAdapter.addBuilds(projectId, []), throwsException);
       },
     );
 
     test(
       ".addBuilds() ensure that methods is not called after throws GrpcError.notFound",
       () async {
-        firestoreStorageAdapterMockManager.mockAddBuildsBasic(
-          collectionId: 'projects',
-          projectId: projectId,
-        );
-        firestoreStorageAdapterMockManager.mockThrowDocumentGet(
-          exception: GrpcError.notFound(),
-        );
-        await mockAdapter.addBuilds(projectId, []);
-        verifyNever(firestoreStorageAdapterMockManager._firestoreMock
-            .collection('build'));
+        whenFetchProject().thenThrow(GrpcError.notFound());
+        expect(() => mockAdapter.addBuilds(testProjectId, []), returnsNormally);
+        verifyNever(_firestoreMock.collection('build'));
       },
     );
 
     test(
+        ".addBuilds() ensure that method document.create() is not called after throws Exception",
+        () async {
+      final buildData = BuildDataDeserializer.fromJson(
+        buildDataTestJson,
+        testDocumentId,
+      );
+
+      whenFetchProject().thenThrow(Exception());
+      when(_firestoreMock.collection('build'))
+          .thenReturn(_collectionReferenceMock);
+      when(_collectionReferenceMock.document(argThat(anything)))
+          .thenReturn(_documentReferenceMock);
+      when(_documentReferenceMock.create(argThat(anything)))
+          .thenAnswer((_) => Future.value(_documentMock));
+      expect(
+        () => mockAdapter.addBuilds(testProjectId, [buildData]),
+        throwsException,
+      );
+      verifyNever(_documentReferenceMock.create(argThat(anything)));
+    });
+
+    test(
         ".fetchLastBuild() should return null, if there are no builds for a project with the given id",
         () {
-      firestoreStorageAdapterMockManager.mockFetchBuildBasic(
-        collectionId: 'build',
-        projectId: projectId,
-      );
-      firestoreStorageAdapterMockManager
-          .mockCollectionGetDocuments(Future.value([]));
+      whenFetchLastBuild().thenAnswer((_) => Future.value([]));
 
-      final result = mockAdapter.fetchLastBuild(projectId);
+      final result = mockAdapter.fetchLastBuild(testProjectId);
 
       expect(result, completion(isNull));
     });
@@ -112,136 +144,27 @@ void main() {
     test(
       ".fetchLastBuild() should return the last build for a project with the given id",
       () async {
-        firestoreStorageAdapterMockManager.mockFetchBuildBasic(
-          collectionId: 'build',
-          projectId: projectId,
+        whenFetchLastBuild().thenAnswer((_) => Future.value([_documentMock]));
+        when(_documentMock.id).thenReturn(testDocumentId);
+        when(_documentMock.map).thenReturn(buildDataTestJson);
+
+        final buildData = mockAdapter.fetchLastBuild(testProjectId);
+        final expectedBuildData = BuildDataDeserializer.fromJson(
+          buildDataTestJson,
+          testDocumentId,
         );
 
-        firestoreStorageAdapterMockManager.mockDocumentId(id: testDocumentId);
-        firestoreStorageAdapterMockManager.mockDocumentMap(
-            buildDataJson: buildDataTestJson);
-        firestoreStorageAdapterMockManager.mockCollectionGetDocuments(
-          Future.value([firestoreStorageAdapterMockManager._documentMock]),
-        );
-
-        final buildData = mockAdapter.fetchLastBuild(projectId);
         expect(
           buildData,
           completion(
             equals(
-              BuildDataDeserializer.fromJson(
-                buildDataTestJson,
-                testDocumentId,
-              ),
+              expectedBuildData,
             ),
           ),
         );
       },
     );
   });
-}
-
-class _FirestoreStorageAdapterMockManager {
-  final _FirestoreMock _firestoreMock = _FirestoreMock();
-  final _CollectionReferenceMock _collectionReferenceMock =
-      _CollectionReferenceMock();
-  final _DocumentReferenceMock _documentReferenceMock =
-      _DocumentReferenceMock();
-  final _DocumentMock _documentMock = _DocumentMock();
-
-  FirestoreStorageClientAdapter initMockAdapter() {
-    return FirestoreStorageClientAdapter(_firestoreMock);
-  }
-
-  void resetMocks() {
-    reset(_firestoreMock);
-    reset(_collectionReferenceMock);
-    reset(_documentReferenceMock);
-    reset(_documentMock);
-  }
-
-  void mockCollectionId({
-    String collectionId,
-  }) {
-    when(_firestoreMock.collection(collectionId))
-        .thenReturn(_collectionReferenceMock);
-  }
-
-  void mockCollectionWhere({
-    String fieldPath,
-    String isEqualTo,
-  }) {
-    when(
-      _collectionReferenceMock.where(fieldPath, isEqualTo: isEqualTo),
-    ).thenReturn(
-      _collectionReferenceMock,
-    );
-  }
-
-  void mockCollectionOrderBy({
-    String fieldPath,
-  }) {
-    when(
-      _collectionReferenceMock.orderBy(fieldPath, descending: true),
-    ).thenReturn(
-      _collectionReferenceMock,
-    );
-  }
-
-  void mockCollectionLimit({
-    int limit,
-  }) {
-    when(
-      _collectionReferenceMock.limit(limit),
-    ).thenReturn(
-      _collectionReferenceMock,
-    );
-  }
-
-  void mockCollectionGetDocuments(Future<List<Document>> futureDocuments) {
-    when(_collectionReferenceMock.getDocuments())
-        .thenAnswer((realInvocation) => futureDocuments);
-  }
-
-  void mockDocumentReferenceId({
-    String documentId,
-  }) {
-    when(_collectionReferenceMock.document(documentId)).thenReturn(
-      _documentReferenceMock,
-    );
-  }
-
-  void mockThrowDocumentGet({
-    Exception exception,
-  }) {
-    when(_documentReferenceMock.get()).thenThrow(exception);
-  }
-
-  void mockDocumentId({String id}) {
-    when(_documentMock.id).thenReturn(id);
-  }
-
-  void mockDocumentMap({Map<String, dynamic> buildDataJson}) {
-    when(_documentMock.map).thenReturn(buildDataJson);
-  }
-
-  void mockFetchBuildBasic({
-    String collectionId,
-    String projectId,
-  }) {
-    mockCollectionId(collectionId: collectionId);
-    mockCollectionWhere(fieldPath: 'projectId', isEqualTo: projectId);
-    mockCollectionOrderBy(fieldPath: 'startedAt');
-    mockCollectionLimit(limit: 1);
-  }
-
-  void mockAddBuildsBasic({
-    String collectionId,
-    String projectId,
-  }) {
-    mockCollectionId(collectionId: collectionId);
-    mockDocumentReferenceId(documentId: projectId);
-  }
 }
 
 class _FirestoreMock extends Mock implements Firestore {}
