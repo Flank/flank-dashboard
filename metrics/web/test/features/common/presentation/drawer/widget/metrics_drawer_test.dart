@@ -38,7 +38,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
       inject: [Inject<ThemeStore>(() => themeStore ?? ThemeStore())],
       initState: _initInjectorState,
       builder: (context) {
-        return const MaterialApp(
+        return MaterialApp(
           home: Scaffold(
             body: MetricsDrawer(),
           ),

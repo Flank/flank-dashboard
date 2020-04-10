@@ -5,7 +5,7 @@ void main() {
   test(
     "Creates MetricWidgetThemeData with default primary and accent colors if nothing was passed to constructor",
     () {
-      const widgetThemeData = MetricWidgetThemeData();
+      final widgetThemeData = MetricWidgetThemeData();
 
       expect(widgetThemeData.primaryColor, isNotNull);
       expect(widgetThemeData.accentColor, isNotNull);
@@ -15,7 +15,7 @@ void main() {
   test(
     "Creates an instance with the default primary and accent colors if nulls were passed into constuctor",
     () {
-      const widgetThemeData = MetricWidgetThemeData(
+      final widgetThemeData = MetricWidgetThemeData(
         primaryColor: null,
         accentColor: null,
       );

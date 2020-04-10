@@ -7,7 +7,7 @@ void main() {
     test(
       "constructor creates the instance with unknown error code when the null is passed",
       () {
-        const authException = AuthenticationException(code: null);
+        final authException = AuthenticationException(code: null);
 
         expect(authException.code, AuthErrorCode.unknown);
       },
