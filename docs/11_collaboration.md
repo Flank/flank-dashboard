@@ -42,15 +42,22 @@ A team works on one project at a time to enable focus.
 
 Each sprint, select a buddy.
 
-Every task should have at least two people. Work on one task at a time.
+Every task should have at least two people.
 
-> We believe that people thrive on being trusted, on freedom, and on being able to make a difference. So we foster freedom and empowerment wherever we can.
-> https://jobs.netflix.com/culture
+Work on one task at a time.
+
+> Stop starting, start finishing. WIP limits encourage us to finish work that’s already in process before introducing more work into the system. The more work teams try to juggle at once, the harder it is for them to take work to the finish line.
+>
+> https://www.planview.com/resources/articles/wip-limits/
 
 Buddies are empowered to select how to best collaborate. Ideas:
 - One writes code, the other reviews.
 - One writes the business logic, the other writes tests
 - [Pair programming.](https://stackify.com/pair-programming-advantages/) One writes code, the other observes and guides. Roles can be switched anytime.
+
+> We believe that people thrive on being trusted, on freedom, and on being able to make a difference. So we foster freedom and empowerment wherever we can.
+>
+> https://jobs.netflix.com/culture
 
 ## Priorities
 
@@ -58,14 +65,14 @@ Tasks are pulled from the prioritized backlog.
 
 Tasks are not assigned before being started. Any task can be worked on by anyone.
 
-After a task is finished, ask if there's anything you can do to help an in progress task. For example coding, reviewing, or testing. 
-
+After a task is finished, ask if there's anything you can do to help an in progress task. For example coding, reviewing, or testing.
 
 The goal is to maximize completed tasks. Code reviews have priority over writing code.
 
 > Speed of Code Reviews
 >
 > At Google, we optimize for the speed at which a team of developers can produce a product together, as opposed to optimizing for the speed at which an individual developer can write code. The speed of individual development is important, it’s just not as important as the velocity of the entire team.
+>
 > https://google.github.io/eng-practices/review/reviewer/speed.html
 
 ## Retrospective
@@ -76,7 +83,7 @@ Optimize the sprint process methodically using retrospectives.
 - What could have gone better? (Learn / Stop)
 - What are we going to improve for next time? (Try)
 
-##  Daily standups
+## Daily standups
   
 - What did you do today?
 - What do you plan on doing tomorrow?
