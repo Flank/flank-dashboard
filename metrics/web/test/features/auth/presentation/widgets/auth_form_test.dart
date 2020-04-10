@@ -53,30 +53,30 @@ void main() {
 
     testWidgets("password input shows error message if value is less then 6",
         (WidgetTester tester) async {
+      const _minPasswordLength = 6;
       await tester.pumpWidget(const _AuthFormTestbed());
 
       await tester.enterText(passwordInputFinder, '12345');
       await tester.tap(signInButtonFinder);
       await tester.pump();
 
-      expect(find.text(AuthStrings.passwordMinLength), findsOneWidget);
+      expect(
+        find.text(
+            AuthStrings.getPasswordMinLengthErrorMessage(_minPasswordLength)),
+        findsOneWidget,
+      );
     });
 
-    testWidgets("password input shows a value replaced by bullets",
-        (WidgetTester tester) async {
+    testWidgets("password input text is obscure", (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
-      await tester.enterText(passwordInputFinder, 'x');
-      await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      final String editText =
-          _findRenderEditable(tester, passwordInputFinder).text.text;
+      final passwordField =
+          tester.widget(passwordInputFinder) as AuthInputField;
 
-      expect(editText, '\u2022');
+      expect(passwordField.obscureText, isTrue);
     });
 
-    testWidgets(
-        "signInWithEmailAndPassword method is called on tap on sign in button",
-        (WidgetTester tester) async {
+    testWidgets("integrated with AuthStore", (WidgetTester tester) async {
       final authStore = AuthStoreMock();
 
       await tester.pumpWidget(_AuthFormTestbed(authStore: authStore));

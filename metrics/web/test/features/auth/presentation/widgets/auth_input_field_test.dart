@@ -15,7 +15,7 @@ void main() {
       expect(find.widgetWithText(AuthInputField, testLabel), findsOneWidget);
     });
 
-    testWidgets("delegates a controller to the text input widget",
+    testWidgets("delegates a controller to the TextField widget",
         (WidgetTester tester) async {
       final controller = TextEditingController();
       await tester.pumpWidget(_AuthInputFieldTestbed(
@@ -24,7 +24,7 @@ void main() {
 
       final textInput = tester.widget<TextField>(find.byType(TextField));
 
-      expect(textInput.controller.hashCode, equals(controller.hashCode));
+      expect(textInput.controller, equals(controller));
     });
 
     testWidgets("delegates an obscureText property to the text input widget",

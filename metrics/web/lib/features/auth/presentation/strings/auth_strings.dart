@@ -8,6 +8,6 @@ class AuthStrings {
   static const String emailIsRequired = 'Email address is required';
   static const String emailIsInvalid = 'Invalid email address';
   static const String passwordIsRequired = 'Password is required';
-  static const String passwordMinLength =
-      'Password should be at least 6 characters long';
+  static String getPasswordMinLengthErrorMessage(int minLength) =>
+      "Password should be at least $minLength characters long";
 }

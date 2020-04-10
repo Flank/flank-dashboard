@@ -16,20 +16,20 @@ import '../../../../test_utils/signed_in_auth_store_fake.dart';
 void main() {
   group("LoginPage", () {
     testWidgets("contains project's title", (WidgetTester tester) async {
-      await tester.pumpWidget(_LoginPageTestbed());
+      await tester.pumpWidget(const _LoginPageTestbed());
 
       expect(find.text(CommonStrings.metrics), findsOneWidget);
     });
 
     testWidgets("contains authentication form", (WidgetTester tester) async {
-      await tester.pumpWidget(_LoginPageTestbed());
+      await tester.pumpWidget(const _LoginPageTestbed());
 
       expect(find.byType(AuthForm), findsOneWidget);
     });
 
     testWidgets("navigates to the dashboard page if the login was successful",
         (WidgetTester tester) async {
-      await tester.pumpWidget(_LoginPageTestbed());
+      await tester.pumpWidget(const _LoginPageTestbed());
 
       await tester.enterText(
         find.widgetWithText(AuthInputField, AuthStrings.email),

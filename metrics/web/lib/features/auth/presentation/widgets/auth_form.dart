@@ -95,7 +95,7 @@ class _AuthFormState extends State<AuthForm> {
     }
 
     if (value.length < _minPasswordLength) {
-      return AuthStrings.passwordMinLength;
+      return AuthStrings.getPasswordMinLengthErrorMessage(_minPasswordLength);
     }
 
     return null;

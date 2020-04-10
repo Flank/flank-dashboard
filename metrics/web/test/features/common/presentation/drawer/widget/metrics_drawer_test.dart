@@ -30,7 +30,7 @@ void main() {
 
   testWidgets("User is logged out on tap on logout list tile",
       (WidgetTester tester) async {
-    await tester.pumpWidget(MetricsDrawerTestbed());
+    await tester.pumpWidget(const MetricsDrawerTestbed());
 
     await tester.tap(find.byKey(const Key('Logout')));
     await tester.pumpAndSettle();
