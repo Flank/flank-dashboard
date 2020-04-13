@@ -38,7 +38,6 @@ class MetricsDrawer extends StatelessWidget {
             builder:
                 (context, ReactiveModel<AuthStore> authStoreReactiveModel) {
               return ListTile(
-                key: const Key('Logout'),
                 title: const Text(CommonStrings.logOut),
                 onTap: () => signOut(context, authStoreReactiveModel),
               );
