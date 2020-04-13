@@ -7,6 +7,10 @@ void main() {
   group('SlackSectionBlock', () {
     const sectionBlock = SlackSectionBlock(
       text: SlackPlainTextObject(text: 'test'),
+      fields: [
+        SlackMarkdownTextObject(text: 'test'),
+        SlackMarkdownTextObject(text: 'test'),
+      ]
     );
     const sectionBlockMap = {
       'type': 'section',
@@ -14,6 +18,16 @@ void main() {
         'type': 'plain_text',
         'text': 'test',
       },
+      'fields': [
+        {
+          'type': 'mrkdwn',
+          'text': 'test',
+        },
+        {
+          'type': 'mrkdwn',
+          'text': 'test',
+        }
+      ],
     };
 
     test(

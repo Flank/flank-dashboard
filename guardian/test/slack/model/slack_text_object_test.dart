@@ -73,6 +73,16 @@ void main() {
     });
 
     test(
+      'validate() should result with true on valid text, but with maxLength is null',
+          () {
+        const textObject = SlackTextObjectTestbed('test');
+        final result = textObject.validate();
+
+        expect(result.isValid, isTrue);
+      },
+    );
+
+    test(
       'validate() should result with false if text length is out of limits',
       () {
         const textObject = SlackTextObjectTestbed('test message');
@@ -91,6 +101,14 @@ void main() {
         expect(result.isValid, isTrue);
       },
     );
+
+    test("Two identical instances of SlackTextObject are equals", () {
+      const map = {'type': 'mrkdwn'};
+      final firstTextObject = SlackTextObject.fromJson(map);
+      final secondTextObject = SlackTextObject.fromJson(map);
+
+      expect(firstTextObject, equals(secondTextObject));
+    });
   });
 }
 

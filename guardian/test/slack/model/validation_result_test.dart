@@ -23,7 +23,7 @@ void main() {
         final invalidSecond = ValidationResult.invalid();
         final result = invalidFirst.combine(invalidSecond);
 
-        expect(result.isValid, isFalse);
+        expect(result.isInvalid, isTrue);
       },
     );
 
