@@ -1,5 +1,4 @@
-/// Preferably, add the string to this file instead of hardcoding them into UI
-/// to make them available in tests and avoid code duplication.
+/// Holds the strings for the auth module.
 class AuthStrings {
   static const String email = 'Email';
   static const String password = 'Password';

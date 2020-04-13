@@ -29,7 +29,7 @@ void main() {
     },
   );
 
-  testWidgets("User is logged out on tap on logout list tile",
+  testWidgets("After a user taps on 'Log out' - application navigates back to the login screen",
       (WidgetTester tester) async {
     await tester.pumpWidget(const MetricsDrawerTestbed());
 

@@ -27,7 +27,7 @@ void main() {
       expect(textInput.controller, equals(controller));
     });
 
-    testWidgets("delegates an obscureText property to the text input widget",
+    testWidgets("delegates an obscureText property to the text TextField widget",
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthInputFieldTestbed(obscureText: true));
 
@@ -42,7 +42,7 @@ void main() {
       expect(secondInputText.obscureText, isFalse);
     });
 
-    testWidgets("delegates an autofocus property to the text input widget",
+    testWidgets("when autofocus is true, then field is active",
         (WidgetTester tester) async {
       final FocusNode firstFocusNode = FocusNode();
 
@@ -102,7 +102,7 @@ void main() {
       expect(callbackIsCalled, isTrue);
     });
 
-    testWidgets("delegates keyboardType property to the text field",
+    testWidgets("delegates keyboardType property to the TextField widget",
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthInputFieldTestbed(
         keyboardType: TextInputType.emailAddress,
@@ -122,7 +122,7 @@ void main() {
       expect(phoneTextInput.keyboardType, equals(TextInputType.phone));
     });
 
-    testWidgets("delegates focusNode property to the text field",
+    testWidgets("delegates focusNode property to the TextField widget",
         (WidgetTester tester) async {
       await tester.pumpWidget(_AuthInputFieldTestbed(
         focusNode: FocusNode(),

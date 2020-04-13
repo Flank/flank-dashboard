@@ -2,6 +2,7 @@
 // https://github.com/flutter/flutter/pull/45951
 
 import 'package:flutter_driver/flutter_driver.dart';
+import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:test/test.dart';
 
@@ -36,8 +37,8 @@ void main() {
           await driver.waitUntilNoTransientCallbacks(
               timeout: const Duration(seconds: 2));
           await driver.tap(find.byTooltip('Open navigation menu'));
-          await driver.waitFor(find.byValueKey('Logout'));
-          await driver.tap(find.byValueKey('Logout'));
+          await driver.waitFor(find.text(CommonStrings.logOut));
+          await driver.tap(find.text(CommonStrings.logOut));
           await driver.waitUntilNoTransientCallbacks(
               timeout: const Duration(seconds: 2));
           await _authFormExists(driver);
