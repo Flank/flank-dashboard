@@ -74,9 +74,13 @@ void main() {
       ".addBuilds() should return normally if firestore throws GrpcError.notFound",
       () {
         whenFetchProject().thenThrow(GrpcError.notFound());
-        expect(() => mockAdapter.addBuilds(testProjectId, []), returnsNormally);
+
+        final result = mockAdapter.addBuilds(testProjectId, []);
+
+        expect(result, completes);
       },
     );
+
     test(
       ".addBuilds() should throw Exception if the firestore throws exception different from GrpcError.notFound",
       () {
@@ -93,43 +97,21 @@ void main() {
         whenFetchProject().thenThrow(error);
         expect(
           () => mockAdapter.addBuilds(testProjectId, []),
-          throwsA(
-            equals(error),
-          ),
+          throwsA(equals(error)),
         );
       },
     );
 
     test(
-      ".addBuilds() ensure that methods is not called after throws GrpcError.notFound",
+      ".addBuilds() should not add builds if fetching the project throws",
       () async {
         whenFetchProject().thenThrow(GrpcError.notFound());
-        expect(() => mockAdapter.addBuilds(testProjectId, []), returnsNormally);
+
+        await mockAdapter.addBuilds(testProjectId, []);
+
         verifyNever(_firestoreMock.collection('build'));
       },
     );
-
-    test(
-        ".addBuilds() ensure that method document.create() is not called after throws Exception",
-        () async {
-      final buildData = BuildDataDeserializer.fromJson(
-        buildDataTestJson,
-        testDocumentId,
-      );
-
-      whenFetchProject().thenThrow(Exception());
-      when(_firestoreMock.collection('build'))
-          .thenReturn(_collectionReferenceMock);
-      when(_collectionReferenceMock.document(argThat(anything)))
-          .thenReturn(_documentReferenceMock);
-      when(_documentReferenceMock.create(argThat(anything)))
-          .thenAnswer((_) => Future.value(_documentMock));
-      expect(
-        () => mockAdapter.addBuilds(testProjectId, [buildData]),
-        throwsException,
-      );
-      verifyNever(_documentReferenceMock.create(argThat(anything)));
-    });
 
     test(
         ".fetchLastBuild() should return null, if there are no builds for a project with the given id",
@@ -143,7 +125,7 @@ void main() {
 
     test(
       ".fetchLastBuild() should return the last build for a project with the given id",
-      () async {
+      () {
         whenFetchLastBuild().thenAnswer((_) => Future.value([_documentMock]));
         when(_documentMock.id).thenReturn(testDocumentId);
         when(_documentMock.map).thenReturn(buildDataTestJson);

@@ -28,10 +28,7 @@ void main() {
       () {
         final buildData = BuildDataDeserializer.fromJson(null, id);
 
-        expect(
-          buildData,
-          isNull,
-        );
+        expect(buildData, isNull);
       },
     );
 
@@ -48,10 +45,7 @@ void main() {
         coverage: coverage,
       );
 
-      expect(
-        buildData,
-        equals(expectedBuildData),
-      );
+      expect(buildData, equals(expectedBuildData));
     });
   });
 }
