@@ -73,7 +73,7 @@ class JenkinsCiClientAdapter implements CiClient {
   }) async {
     final newBuildsFetchResult =
         await jenkinsClient.fetchBuilds(projectId, limits: limits);
-    throwIfInteractionUnsuccessful(newBuildsFetchResult);
+    _throwIfInteractionUnsuccessful(newBuildsFetchResult);
     return newBuildsFetchResult.result;
   }
 
@@ -118,7 +118,7 @@ class JenkinsCiClientAdapter implements CiClient {
 
   /// Throws a [StateError] with the message of [interactionResult] if this
   /// result is [InteractionResult.isError].
-  void throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
+  void _throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
     if (interactionResult.isError) {
       throw StateError(interactionResult.message);
     }
@@ -137,7 +137,7 @@ class JenkinsCiClientAdapter implements CiClient {
     int startFromBuildNumber,
   }) {
     final buildDataFutures = builds.where((build) {
-      return checkBuildFinishedAndInRange(build, startFromBuildNumber);
+      return _checkBuildFinishedAndInRange(build, startFromBuildNumber);
     }).map((build) async {
       return _mapJenkinsBuild(jobName, build, await fetchCoverage(build));
     });
@@ -149,7 +149,7 @@ class JenkinsCiClientAdapter implements CiClient {
   /// satisfy a [minBuildNumber] parameter.
   ///
   /// The [minBuildNumber] is ignored if `null` or [num.isNegative].
-  bool checkBuildFinishedAndInRange(JenkinsBuild build, int minBuildNumber) {
+  bool _checkBuildFinishedAndInRange(JenkinsBuild build, int minBuildNumber) {
     final buildNumberValid = minBuildNumber == null ||
         minBuildNumber.isNegative ||
         build.number > minBuildNumber;
@@ -192,7 +192,7 @@ class JenkinsCiClientAdapter implements CiClient {
         coverageArtifact.relativePath,
       );
 
-      throwIfInteractionUnsuccessful(artifactContentFetchResult);
+      _throwIfInteractionUnsuccessful(artifactContentFetchResult);
 
       final artifactContent = artifactContentFetchResult.result;
       coverage = CoverageJsonSummary.fromJson(artifactContent);
