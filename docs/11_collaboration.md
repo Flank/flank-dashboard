@@ -95,6 +95,7 @@ Optimize the sprint process methodically using retrospectives.
 
 > Link to supporting documentation, GitHub tickets, etc.
 
+- [The Tyranny of Metrics](https://www.amazon.com/Tyranny-Metrics-Jerry-Z-Muller/dp/0691174954)
 - [Netflix culture](https://jobs.netflix.com/culture)
 - [The Machine That Changed the World: The Story of Lean Production-- Toyota's Secret Weapon in the Global Car Wars That Is Now Revolutionizing World Industry](https://www.amazon.com/Machine-That-Changed-World-Revolutionizing/dp/0743299795)
 - [The Goal: A Process of Ongoing Improvement](https://www.amazon.com/Goal-Process-Ongoing-Improvement/dp/0884270610)
