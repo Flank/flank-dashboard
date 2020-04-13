@@ -22,7 +22,7 @@ class RouteGenerator {
 
   /// Creates [MaterialPageRoute] with the given [name] and the [widget].
   ///
-  /// The [name] and the [widget] should not be null.
+  /// The [widget] should not be null.
   static MaterialPageRoute _createMaterialPageRoute(
       {String name, @required Widget widget}) {
     assert(widget != null);
