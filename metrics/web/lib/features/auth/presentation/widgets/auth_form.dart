@@ -11,12 +11,12 @@ class AuthForm extends StatefulWidget {
   _AuthFormState createState() => _AuthFormState();
 }
 
-/// The logic and internal state for the [AuthForm] widget.
 class _AuthFormState extends State<AuthForm> {
+  /// Minimum length of the password.
+  static const _minPasswordLength = 6;
+
   /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
-
-  final _minPasswordLength = 6;
 
   /// Controls the email text being edited.
   final TextEditingController _emailController = TextEditingController();
@@ -32,14 +32,14 @@ class _AuthFormState extends State<AuthForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           AuthInputField(
-            key: Key(AuthStrings.email),
+            key: const Key(AuthStrings.email),
             label: AuthStrings.email,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             validator: _validateEmail,
           ),
           AuthInputField(
-            key: Key(AuthStrings.password),
+            key: const Key(AuthStrings.password),
             label: AuthStrings.password,
             controller: _passwordController,
             obscureText: true,

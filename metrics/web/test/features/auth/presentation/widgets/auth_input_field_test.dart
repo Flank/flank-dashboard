@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 
 void main() {
-  const String testLabel = 'testLabel';
-
   group("AuthInputField", () {
     testWidgets("displays the label", (WidgetTester tester) async {
+      const String testLabel = 'testLabel';
+
       await tester.pumpWidget(const _AuthInputFieldTestbed(
         label: testLabel,
       ));
@@ -15,123 +15,136 @@ void main() {
       expect(find.widgetWithText(AuthInputField, testLabel), findsOneWidget);
     });
 
-    testWidgets("delegates a controller to the TextField widget",
-        (WidgetTester tester) async {
-      final controller = TextEditingController();
-      await tester.pumpWidget(_AuthInputFieldTestbed(
-        controller: controller,
-      ));
+    testWidgets(
+      "delegates a controller to the TextField widget",
+      (WidgetTester tester) async {
+        final controller = TextEditingController();
+        await tester.pumpWidget(_AuthInputFieldTestbed(
+          controller: controller,
+        ));
 
-      final textInput = tester.widget<TextField>(find.byType(TextField));
+        final textInput = tester.widget<TextField>(find.byType(TextField));
 
-      expect(textInput.controller, equals(controller));
-    });
-
-    testWidgets("delegates an obscureText property to the text TextField widget",
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const _AuthInputFieldTestbed(obscureText: true));
-
-      final firstInputText = tester.widget<TextField>(find.byType(TextField));
-
-      expect(firstInputText.obscureText, isTrue);
-
-      await tester.pumpWidget(const _AuthInputFieldTestbed());
-
-      final secondInputText = tester.widget<TextField>(find.byType(TextField));
-
-      expect(secondInputText.obscureText, isFalse);
-    });
-
-    testWidgets("when autofocus is true, then field is active",
-        (WidgetTester tester) async {
-      final FocusNode firstFocusNode = FocusNode();
-
-      await tester.pumpWidget(_AuthInputFieldTestbed(
-        autofocus: true,
-        focusNode: firstFocusNode,
-      ));
-
-      expect(firstFocusNode.hasFocus, isTrue);
-
-      final FocusNode secondFocusNode = FocusNode();
-
-      await tester.pumpWidget(_AuthInputFieldTestbed(
-        focusNode: secondFocusNode,
-      ));
-
-      expect(secondFocusNode.hasFocus, isFalse);
-    });
+        expect(textInput.controller, equals(controller));
+      },
+    );
 
     testWidgets(
-        "onFieldSubmitted callback is called after submitting the input",
-        (WidgetTester tester) async {
-      bool callbackIsCalled = false;
+      "delegates an obscureText property to the text TextField widget",
+      (WidgetTester tester) async {
+        await tester
+            .pumpWidget(const _AuthInputFieldTestbed(obscureText: true));
 
-      await tester.pumpWidget(_AuthInputFieldTestbed(onFieldSubmitted: (value) {
-        callbackIsCalled = true;
-      }));
+        final firstInputText = tester.widget<TextField>(find.byType(TextField));
 
-      await tester.showKeyboard(find.byType(_AuthInputFieldTestbed));
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pump();
+        expect(firstInputText.obscureText, isTrue);
 
-      expect(callbackIsCalled, isTrue);
-    });
+        await tester.pumpWidget(const _AuthInputFieldTestbed());
 
-    testWidgets("validator callback is called after a form was validated",
-        (WidgetTester tester) async {
-      final GlobalKey<FormState> _formKey = GlobalKey();
-      bool callbackIsCalled = false;
+        final secondInputText =
+            tester.widget<TextField>(find.byType(TextField));
 
-      await tester.pumpWidget(Form(
-        key: _formKey,
-        child: _AuthInputFieldTestbed(
-          validator: (String value) {
-            callbackIsCalled = true;
-            return null;
-          },
-        ),
-      ));
+        expect(secondInputText.obscureText, isFalse);
+      },
+    );
 
-      await tester.showKeyboard(find.byType(_AuthInputFieldTestbed));
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pump();
+    testWidgets(
+      "when autofocus is true, then field is active",
+      (WidgetTester tester) async {
+        final FocusNode firstFocusNode = FocusNode();
 
-      _formKey.currentState.validate();
+        await tester.pumpWidget(_AuthInputFieldTestbed(
+          autofocus: true,
+          focusNode: firstFocusNode,
+        ));
 
-      expect(callbackIsCalled, isTrue);
-    });
+        expect(firstFocusNode.hasFocus, isTrue);
 
-    testWidgets("delegates keyboardType property to the TextField widget",
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const _AuthInputFieldTestbed(
-        keyboardType: TextInputType.emailAddress,
-      ));
+        final FocusNode secondFocusNode = FocusNode();
 
-      final emailTextInput = tester.widget<TextField>(find.byType(TextField));
+        await tester.pumpWidget(_AuthInputFieldTestbed(
+          focusNode: secondFocusNode,
+        ));
 
-      expect(emailTextInput.keyboardType, isNotNull);
-      expect(emailTextInput.keyboardType, equals(TextInputType.emailAddress));
+        expect(secondFocusNode.hasFocus, isFalse);
+      },
+    );
 
-      await tester.pumpWidget(const _AuthInputFieldTestbed(
-        keyboardType: TextInputType.phone,
-      ));
+    testWidgets(
+      "onFieldSubmitted callback is called after submitting the input",
+      (WidgetTester tester) async {
+        bool callbackIsCalled = false;
 
-      final phoneTextInput = tester.widget<TextField>(find.byType(TextField));
+        await tester
+            .pumpWidget(_AuthInputFieldTestbed(onFieldSubmitted: (value) {
+          callbackIsCalled = true;
+        }));
 
-      expect(phoneTextInput.keyboardType, equals(TextInputType.phone));
-    });
+        await tester.showKeyboard(find.byType(_AuthInputFieldTestbed));
+        await tester.testTextInput.receiveAction(TextInputAction.done);
+        await tester.pump();
 
-    testWidgets("delegates focusNode property to the TextField widget",
-        (WidgetTester tester) async {
-      await tester.pumpWidget(_AuthInputFieldTestbed(
-        focusNode: FocusNode(),
-      ));
+        expect(callbackIsCalled, isTrue);
+      },
+    );
 
-      final textInput = tester.widget<TextField>(find.byType(TextField));
+    testWidgets(
+      "validator callback is called on the form validation",
+      (WidgetTester tester) async {
+        final GlobalKey<FormState> _formKey = GlobalKey();
+        bool callbackIsCalled = false;
 
-      expect(textInput.focusNode, isNotNull);
-    });
+        await tester.pumpWidget(Form(
+          key: _formKey,
+          child: _AuthInputFieldTestbed(
+            validator: (String value) {
+              callbackIsCalled = true;
+              return null;
+            },
+          ),
+        ));
+
+        _formKey.currentState.validate();
+
+        expect(callbackIsCalled, isTrue);
+      },
+    );
+
+    testWidgets(
+      "delegates keyboardType property to the TextField widget",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _AuthInputFieldTestbed(
+          keyboardType: TextInputType.emailAddress,
+        ));
+
+        final emailTextInput = tester.widget<TextField>(find.byType(TextField));
+
+        expect(emailTextInput.keyboardType, equals(TextInputType.emailAddress));
+
+        await tester.pumpWidget(const _AuthInputFieldTestbed(
+          keyboardType: TextInputType.phone,
+        ));
+
+        final phoneTextInput = tester.widget<TextField>(find.byType(TextField));
+
+        expect(phoneTextInput.keyboardType, equals(TextInputType.phone));
+      },
+    );
+
+    testWidgets(
+      "delegates focusNode property to the TextField widget",
+      (WidgetTester tester) async {
+        final focusNode = FocusNode();
+
+        await tester.pumpWidget(_AuthInputFieldTestbed(
+          focusNode: focusNode,
+        ));
+
+        final textInput = tester.widget<TextField>(find.byType(TextField));
+
+        expect(textInput.focusNode, equals(focusNode));
+      },
+    );
   });
 }
 

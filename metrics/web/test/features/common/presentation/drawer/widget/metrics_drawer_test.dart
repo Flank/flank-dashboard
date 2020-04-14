@@ -29,15 +29,17 @@ void main() {
     },
   );
 
-  testWidgets("After a user taps on 'Log out' - application navigates back to the login screen",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(const MetricsDrawerTestbed());
+  testWidgets(
+    "After a user taps on 'Log out' - application navigates back to the login screen",
+    (WidgetTester tester) async {
+      await tester.pumpWidget(const MetricsDrawerTestbed());
 
-    await tester.tap(find.text(CommonStrings.logOut));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text(CommonStrings.logOut));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(LoginPage), findsOneWidget);
-  });
+      expect(find.byType(LoginPage), findsOneWidget);
+    },
+  );
 }
 
 class MetricsDrawerTestbed extends StatelessWidget {

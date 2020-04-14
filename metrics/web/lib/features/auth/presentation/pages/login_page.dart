@@ -22,13 +22,16 @@ class _LoginPageState extends State<LoginPage> {
     final authStore = Injector.get<AuthStore>();
 
     _loggedInStreamSubscription =
-        authStore.loggedInStream.listen((isUserLoggedIn) {
-      if (isUserLoggedIn != null && isUserLoggedIn) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, RouteGenerator.dashboard, (Route<dynamic> route) => false);
-      }
-    });
+        authStore.loggedInStream.listen(_loggedInListener);
     super.initState();
+  }
+
+  /// Navigates to the dashboard page if logged in.
+  void _loggedInListener(bool isLoggedIn) {
+    if (isLoggedIn != null && isLoggedIn) {
+      Navigator.pushNamedAndRemoveUntil(
+          context, RouteGenerator.dashboard, (Route<dynamic> route) => false);
+    }
   }
 
   @override

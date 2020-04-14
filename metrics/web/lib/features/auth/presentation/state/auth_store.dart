@@ -1,11 +1,11 @@
 import 'package:rxdart/rxdart.dart';
 
-/// The auth store for a user.
+/// The authentication store for a user.
 ///
-/// Provides the ability to sign in and sign out user from the app,
-/// track the [isLoggedIn] status and authentication error message if any.
+/// Provides an ability to sign in and sign out the user from the app,
+/// track the [isLoggedIn] status and the authentication error message if any.
 class AuthStore {
-  /// Stream that contains a user's authentication status.
+  /// The [BehaviorSubject] that contains a user's authentication status.
   final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
 
   /// Returns a stream of a user's authentication status.
@@ -14,11 +14,11 @@ class AuthStore {
   /// Determines if a user is authenticated.
   bool get isLoggedIn => _isLoggedInSubject.value;
 
-  /// Returns a string, containing an auth error message.
-  String get authErrorMessage => _authExceptionDescription;
+  /// Returns a string, containing an authentication error message.
+  String get authErrorMessage => _authErrorMessage;
 
-  /// Contains text description of any authentication exception that may occur.
-  String _authExceptionDescription;
+  /// Contains the text description of any authentication exception that may occur.
+  String _authErrorMessage;
 
   /// Subscribes to a user authentication updates
   /// to get notified when the user got signed in or signed out.
@@ -26,7 +26,7 @@ class AuthStore {
     _isLoggedInSubject.add(false);
   }
 
-  /// Signs in user to the app using an [email] and a [password].
+  /// Signs in the user to the app using an [email] and a [password].
   void signInWithEmailAndPassword(String email, String password) {
     _isLoggedInSubject.add(true);
   }

@@ -8,6 +8,9 @@ import 'package:mockito/mockito.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
+  const testEmail = 'test@email.com';
+  const testPassword = 'testPassword';
+
   final emailInputFinder =
       find.widgetWithText(AuthInputField, AuthStrings.email);
   final passwordInputFinder =
@@ -15,11 +18,44 @@ void main() {
   final signInButtonFinder =
       find.widgetWithText(RaisedButton, AuthStrings.signIn);
 
-  const testEmail = 'test@email.com';
-  const testPassword = 'testPassword';
-
   group("AuthForm", () {
-    testWidgets("email input shows error message if value is empty",
+    testWidgets(
+      "contains the email input field",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _AuthFormTestbed());
+
+        expect(
+          find.widgetWithText(AuthInputField, AuthStrings.email),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      "contains the password input field",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _AuthFormTestbed());
+
+        expect(
+          find.widgetWithText(AuthInputField, AuthStrings.password),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      "contains the sign in button",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _AuthFormTestbed());
+
+        expect(
+          find.widgetWithText(RaisedButton, AuthStrings.signIn),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets("email input shows an error message if a value is empty",
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
 
@@ -29,7 +65,8 @@ void main() {
       expect(find.text(AuthStrings.emailIsRequired), findsOneWidget);
     });
 
-    testWidgets("email input shows error message if value is not a valid email",
+    testWidgets(
+        "email input shows an error message if a value is not a valid email",
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
       await tester.enterText(emailInputFinder, 'notAnEmail');
@@ -40,7 +77,7 @@ void main() {
       expect(find.text(AuthStrings.emailIsInvalid), findsOneWidget);
     });
 
-    testWidgets("password input shows error message if value is empty",
+    testWidgets("password input shows an error message if a value is empty",
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
 
@@ -50,21 +87,23 @@ void main() {
       expect(find.text(AuthStrings.passwordIsRequired), findsOneWidget);
     });
 
-    testWidgets("password input shows error message if value is less then 6",
-        (WidgetTester tester) async {
-      const _minPasswordLength = 6;
-      await tester.pumpWidget(const _AuthFormTestbed());
+    testWidgets(
+      "password input shows an error message if a value is less then 6",
+      (WidgetTester tester) async {
+        const _minPasswordLength = 6;
+        await tester.pumpWidget(const _AuthFormTestbed());
 
-      await tester.enterText(passwordInputFinder, '12345');
-      await tester.tap(signInButtonFinder);
-      await tester.pump();
+        await tester.enterText(passwordInputFinder, '12345');
+        await tester.tap(signInButtonFinder);
+        await tester.pump();
 
-      expect(
-        find.text(
-            AuthStrings.getPasswordMinLengthErrorMessage(_minPasswordLength)),
-        findsOneWidget,
-      );
-    });
+        expect(
+          find.text(
+              AuthStrings.getPasswordMinLengthErrorMessage(_minPasswordLength)),
+          findsOneWidget,
+        );
+      },
+    );
 
     testWidgets("password input text is obscure", (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
