@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_implementing_value_types
-
 import 'package:ci_integration/firestore/adapter/firestore_storage_client_adapter.dart';
 import 'package:ci_integration/firestore/deserializer/build_data_deserializer.dart';
 import 'package:firedart/firedart.dart';
@@ -7,6 +5,8 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:grpc/grpc.dart';
+
+// ignore_for_file: avoid_implementing_value_types
 
 void main() {
   group("FirestoreStorageClientAdapter", () {
@@ -21,11 +21,12 @@ void main() {
       'url': 'testUrl',
       'coverage': 0.1,
     };
+
     final _firestoreMock = _FirestoreMock();
     final _collectionReferenceMock = _CollectionReferenceMock();
     final _documentReferenceMock = _DocumentReferenceMock();
     final _documentMock = _DocumentMock();
-    final mockAdapter = FirestoreStorageClientAdapter(_firestoreMock);
+    final adapter = FirestoreStorageClientAdapter(_firestoreMock);
 
     PostExpectation<Future<Document>> whenFetchProject({
       String collectionId = 'projects',
@@ -75,17 +76,20 @@ void main() {
       () {
         whenFetchProject().thenThrow(GrpcError.notFound());
 
-        final result = mockAdapter.addBuilds(testProjectId, []);
+        final result = adapter.addBuilds(testProjectId, []);
 
         expect(result, completes);
       },
     );
 
     test(
-      ".addBuilds() should throw Exception if the firestore throws exception different from GrpcError.notFound",
+      ".addBuilds() should throw an exception if the firestore throws exception different from GrpcError.notFound",
       () {
         whenFetchProject().thenThrow(Exception());
-        expect(() => mockAdapter.addBuilds(testProjectId, []), throwsException);
+
+        final result = adapter.addBuilds(testProjectId, []);
+
+        expect(result, throwsException);
       },
     );
 
@@ -93,12 +97,11 @@ void main() {
       ".addBuilds() should rethrow GrpcError with status different from 'notFound'",
       () {
         final error = GrpcError.cancelled();
-
         whenFetchProject().thenThrow(error);
-        expect(
-          () => mockAdapter.addBuilds(testProjectId, []),
-          throwsA(equals(error)),
-        );
+
+        final result = adapter.addBuilds(testProjectId, []);
+
+        expect(result, throwsA(equals(error)));
       },
     );
 
@@ -107,21 +110,49 @@ void main() {
       () async {
         whenFetchProject().thenThrow(GrpcError.notFound());
 
-        await mockAdapter.addBuilds(testProjectId, []);
+        await adapter.addBuilds(testProjectId, []);
 
         verifyNever(_firestoreMock.collection('build'));
       },
     );
 
     test(
-        ".fetchLastBuild() should return null, if there are no builds for a project with the given id",
-        () {
-      whenFetchLastBuild().thenAnswer((_) => Future.value([]));
+      ".addBuilds() should add given builds for the given project",
+      () async {
+        const builds = [
+          BuildData(buildNumber: 1),
+          BuildData(buildNumber: 2),
+        ];
+        whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.id).thenReturn(testProjectId);
+        when(_firestoreMock.collection('build'))
+            .thenReturn(_collectionReferenceMock);
+        when(_collectionReferenceMock.document(
+          argThat(anyOf([
+            '${testProjectId}_1',
+            '${testProjectId}_2',
+          ])),
+        )).thenReturn(_documentReferenceMock);
+        when(_documentReferenceMock.create(argThat(anything)))
+            .thenAnswer((_) => Future.value(_documentMock));
 
-      final result = mockAdapter.fetchLastBuild(testProjectId);
+        await adapter.addBuilds(testProjectId, builds);
 
-      expect(result, completion(isNull));
-    });
+        verify(_documentReferenceMock.create(argThat(anything)))
+            .called(builds.length);
+      },
+    );
+
+    test(
+      ".fetchLastBuild() should return null, if there are no builds for a project with the given id",
+      () {
+        whenFetchLastBuild().thenAnswer((_) => Future.value([]));
+
+        final result = adapter.fetchLastBuild(testProjectId);
+
+        expect(result, completion(isNull));
+      },
+    );
 
     test(
       ".fetchLastBuild() should return the last build for a project with the given id",
@@ -130,20 +161,13 @@ void main() {
         when(_documentMock.id).thenReturn(testDocumentId);
         when(_documentMock.map).thenReturn(buildDataTestJson);
 
-        final buildData = mockAdapter.fetchLastBuild(testProjectId);
+        final buildData = adapter.fetchLastBuild(testProjectId);
         final expectedBuildData = BuildDataDeserializer.fromJson(
           buildDataTestJson,
           testDocumentId,
         );
 
-        expect(
-          buildData,
-          completion(
-            equals(
-              expectedBuildData,
-            ),
-          ),
-        );
+        expect(buildData, completion(equals(expectedBuildData)));
       },
     );
   });

@@ -33,7 +33,6 @@ void main() {
     );
 
     test(".fromJson() should return BuildData from a json map", () {
-      final buildData = BuildDataDeserializer.fromJson(buildDataJson, id);
       final expectedBuildData = BuildData(
         id: id,
         duration: duration,
@@ -44,6 +43,8 @@ void main() {
         workflowName: workflowName,
         coverage: coverage,
       );
+
+      final buildData = BuildDataDeserializer.fromJson(buildDataJson, id);
 
       expect(buildData, equals(expectedBuildData));
     });
