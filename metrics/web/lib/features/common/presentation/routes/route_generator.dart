@@ -4,7 +4,10 @@ import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dar
 
 /// Responsible for generating routes.
 class RouteGenerator {
+  /// The Route name of the dashboard page.
   static const String dashboard = '/dashboard';
+
+  /// The route name of the login page.
   static const String login = '/login';
 
   /// Generates a route for the given route [settings]
@@ -26,7 +29,7 @@ class RouteGenerator {
 
   /// Creates [MaterialPageRoute] with the given [name] and the [widget].
   ///
-  /// The [widget] should not be null.
+  /// Throws an [AssertionError] if the [widget] is null.
   static MaterialPageRoute _createMaterialPageRoute(
       {String name, @required Widget widget}) {
     assert(widget != null);
