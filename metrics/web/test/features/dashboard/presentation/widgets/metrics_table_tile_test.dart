@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_tile.dart';
 
-import '../../../../test_utils/testbed_page.dart';
+import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("MetricsTableTile", () {
@@ -84,7 +84,7 @@ class _DashboardTableTileTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TestbedPage(
+    return MetricsThemedTestbed(
       body: MetricsTableTile(
         leading: leading,
         trailing: trailing,

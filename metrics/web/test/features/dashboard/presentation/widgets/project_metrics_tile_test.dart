@@ -8,7 +8,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.
 import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-import '../../../../test_utils/testbed_page.dart';
+import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   testWidgets(
@@ -141,7 +141,7 @@ class _ProjectMetricsTileTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TestbedPage(
+    return MetricsThemedTestbed(
       body: ProjectMetricsTile(
         projectMetrics: projectMetrics,
       ),

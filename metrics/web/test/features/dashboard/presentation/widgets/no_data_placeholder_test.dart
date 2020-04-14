@@ -5,7 +5,7 @@ import 'package:metrics/features/common/presentation/metrics_theme/model/metrics
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/no_data_placeholder.dart';
 
-import '../../../../test_utils/testbed_page.dart';
+import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("NoDataPlaceholder", () {
@@ -52,7 +52,7 @@ class _PlaceholderTextTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TestbedPage(
+    return MetricsThemedTestbed(
       metricsThemeData: theme,
       body: const NoDataPlaceholder(),
     );

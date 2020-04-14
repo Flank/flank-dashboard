@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/text_metric.dart';
 
-import '../../../../test_utils/testbed_page.dart';
+import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("TextMetric", () {
@@ -130,7 +130,7 @@ class _TextMetricTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TestbedPage(
+    return MetricsThemedTestbed(
       body: TextMetric(
         description: description,
         value: value,

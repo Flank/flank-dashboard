@@ -4,7 +4,7 @@ import 'package:metrics/features/dashboard/presentation/strings/dashboard_string
 import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_tile.dart';
 
-import '../../../../test_utils/testbed_page.dart';
+import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("MetricsTableHeader", () {
@@ -58,7 +58,7 @@ void main() {
 class _DashboardTableHeaderTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const TestbedPage(
+    return const MetricsThemedTestbed(
       body: MetricsTableHeader(),
     );
   }

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/model/bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
 
-import '../../../../test_utils/testbed_page.dart';
+import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   testWidgets(
@@ -159,7 +159,7 @@ class _BarGraphTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TestbedPage(
+    return MetricsThemedTestbed(
       body: BarGraph(
         data: data,
         graphPadding: graphPadding,

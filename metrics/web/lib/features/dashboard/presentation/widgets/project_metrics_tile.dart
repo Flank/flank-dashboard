@@ -7,8 +7,8 @@ import 'package:metrics/features/dashboard/presentation/widgets/build_result_bar
 import 'package:metrics/features/dashboard/presentation/widgets/loading_builder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_tile.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/project_metric_circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/themed_circle_percentage.dart';
 
 /// Displays the project name and it's metrics.
 class ProjectMetricsTile extends StatefulWidget {
@@ -108,7 +108,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   child: LoadingBuilder(
                     isLoading: projectMetrics == null,
                     loadingPlaceholder: const LoadingPlaceholder(),
-                    builder: (_) => ProjectMetricCirclePercentage(
+                    builder: (_) => ThemedCirclePercentage(
                       value: projectMetrics.stability?.value,
                     ),
                   ),
@@ -117,7 +117,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   child: LoadingBuilder(
                     isLoading: projectMetrics == null,
                     loadingPlaceholder: const LoadingPlaceholder(),
-                    builder: (_) => ProjectMetricCirclePercentage(
+                    builder: (_) => ThemedCirclePercentage(
                       value: projectMetrics.coverage?.value,
                     ),
                   ),

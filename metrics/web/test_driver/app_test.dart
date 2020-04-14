@@ -20,14 +20,14 @@ void main() {
       });
 
       test(
-        "loads the projects and shows the project tiles",
+        "loads and shows the projects",
         () async {
           await driver.waitFor(find.byType('ProjectMetricsTile'));
         },
       );
 
       test(
-        "loads the coverage data and shows the circle percentage widget",
+        "loads and displays coverage metric",
         () async {
           await driver.waitFor(find.text(DashboardStrings.coverage));
           await driver.waitFor(find.byType('CirclePercentage'));
@@ -35,7 +35,7 @@ void main() {
       );
 
       test(
-        "loads the performance metric and shows it on sparkline graph",
+        "loads and displays the performance metric ",
         () async {
           await driver.waitFor(find.text(DashboardStrings.performance));
 
@@ -44,7 +44,7 @@ void main() {
       );
 
       test(
-        "loads the build number metric and shows it with the BuildNumberTextMetric",
+        "loads and shows the build number metric",
         () async {
           await driver.waitFor(find.text(DashboardStrings.builds));
 
@@ -53,7 +53,7 @@ void main() {
       );
 
       test(
-        "loads the build result metrics and shows the build results widget",
+        "loads and shows the build result metrics",
         () async {
           await driver.waitFor(find.byType('BuildResultBarGraph'));
         },

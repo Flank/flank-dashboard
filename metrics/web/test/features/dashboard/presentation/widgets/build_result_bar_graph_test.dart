@@ -10,7 +10,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart
 import 'package:metrics/features/dashboard/presentation/widgets/placeholder_bar.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-import '../../../../test_utils/testbed_page.dart';
+import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   const buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
@@ -176,7 +176,7 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TestbedPage(
+    return MetricsThemedTestbed(
       metricsThemeData: theme,
       body: BuildResultBarGraph(
         data: data,
