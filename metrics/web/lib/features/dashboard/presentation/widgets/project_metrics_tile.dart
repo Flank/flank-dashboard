@@ -47,8 +47,9 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2.0),
           border: Border.all(
-            color:
-            brightness == Brightness.dark ? Colors.black54 : Colors.grey[300],
+            color: brightness == Brightness.dark
+                ? Colors.black54
+                : Colors.grey[300],
           ),
         ),
         child: Padding(
@@ -72,8 +73,8 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                       loadingPlaceholder: const LoadingPlaceholder(),
                       builder: (_) => BuildResultBarGraph(
                         data: widget.projectMetrics.buildResultMetrics,
-                        numberOfBars:
-                            ReceiveProjectMetricsUpdates.lastBuildsForChartsMetrics,
+                        numberOfBars: ReceiveProjectMetricsUpdates
+                            .lastBuildsForChartsMetrics,
                       ),
                     ),
                   ),

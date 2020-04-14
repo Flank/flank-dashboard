@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
-import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_number_text_metric.dart';
@@ -11,6 +10,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/metrics_table.da
 import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.dart';
+import 'package:mockito/mockito.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import '../test_utils/project_metrics_store_stub.dart';
@@ -18,7 +18,7 @@ import '../test_utils/project_metrics_store_stub.dart';
 void main() {
   group("MetricsTable", () {
     testWidgets(
-      "contains MetricsTitle widget",
+      "contains MetricsTableHeader widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(_MetricsTableTestbed());
 
@@ -46,7 +46,10 @@ void main() {
     testWidgets(
       "displays an error, occured during loading the metrics data",
       (WidgetTester tester) async {
-        const metricsStore = _MetricsStoreErrorStub();
+        const errorMessage = 'Unknown error';
+        final metricsStore = _ProjectMetricsStoreMock();
+
+        when(metricsStore.subscribeToProjects()).thenThrow(errorMessage);
 
         await tester.pumpWidget(_MetricsTableTestbed(
           metricsStore: metricsStore,
@@ -54,16 +57,18 @@ void main() {
 
         await tester.pumpAndSettle();
 
+        final loadingErrorMessage =
+            DashboardStrings.getLoadingErrorMessage('$errorMessage');
+
         expect(
-          find.text(DashboardStrings.getLoadingErrorMessage(
-              '${_MetricsStoreErrorStub.errorMessage}')),
+          find.text(loadingErrorMessage),
           findsOneWidget,
         );
       },
     );
 
     testWidgets(
-      'displays the placeholder when there are no available projects',
+      "displays the placeholder when there are no available projects",
       (WidgetTester tester) async {
         const metricsStore = ProjectMetricsStoreStub(projectMetrics: []);
         await tester.pumpWidget(_MetricsTableTestbed(
@@ -152,7 +157,7 @@ void main() {
     );
 
     testWidgets(
-      "displays stability title above the stability circle percentage widget",
+      "displays coverage title above the coverage circle percentage widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(_MetricsTableTestbed());
         await tester.pumpAndSettle();
@@ -214,19 +219,4 @@ class _MetricsTableTestbed extends StatelessWidget {
   }
 }
 
-class _MetricsStoreErrorStub extends ProjectMetricsStoreStub {
-  static const String errorMessage = "Unknown error";
-
-  const _MetricsStoreErrorStub();
-
-  @override
-  Stream<List<ProjectMetricsData>> get projectsMetrics => throw errorMessage;
-
-  @override
-  Future<void> subscribeToProjects() {
-    throw errorMessage;
-  }
-
-  @override
-  void dispose() {}
-}
+class _ProjectMetricsStoreMock extends Mock implements ProjectMetricsStore {}

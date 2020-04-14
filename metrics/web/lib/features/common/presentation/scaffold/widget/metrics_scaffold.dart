@@ -14,7 +14,7 @@ class MetricsScaffold extends StatelessWidget {
   /// [body] is the primary content of this scaffold.
   /// [drawer] is the panel that slides in horizontally from the edge of
   /// a Scaffold to show navigation links in an application.
-  /// If nothing is passed the [MetricsDrawer] will be used.
+  /// If nothing is passed the [MetricsDrawer] is used.
   const MetricsScaffold({
     Key key,
     @required this.body,

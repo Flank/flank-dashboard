@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/model/circle_percentage_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/project_metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 
-/// A [CirclePercentage] widget that display the project metric.
+/// A [CirclePercentage] widget that displays the project metric.
 ///
 /// Applies the color theme from the [MetricsThemeData] following the next rules:
 /// * if the [value] is 0, applies the [MetricsThemeData.inactiveWidgetTheme]
-/// * if the [value] is from 0.1 (inclusive) to 0.51 (exclusive), applies the [CirclePercentageThemeData.lowPercentTheme]
-/// * if the [value] is from 0.51 (inclusive) to 0.8 (exclusive), applies the [CirclePercentageThemeData.mediumPercentTheme]
-/// * if the [value] is greater or equal to 0.8 - applies the [CirclePercentageThemeData.highPercentTheme].
+/// * if the [value] is greater than [lowPercentBound] and less than [mediumPercentBound], applies the [ProjectMetricsCirclePercentageThemeData.lowPercentTheme]
+/// * if the [value] is greater than or equal to [mediumPercentBound] and less than [highPercentBound], applies the [ProjectMetricsCirclePercentageThemeData.mediumPercentTheme]
+/// * if the [value] is greater or equal to [highPercentBound], applies the [ProjectMetricsCirclePercentageThemeData.highPercentTheme].
 class ProjectMetricCirclePercentage extends StatelessWidget {
-  static const double mediumPercentBound = 0.51;
+  /// Is the lower bound of the [value]
+  /// to apply the [ProjectMetricsCirclePercentageThemeData.highPercentTheme].
   static const double highPercentBound = 0.8;
+
+  /// Is the lower bound of the [value]
+  /// to apply the [ProjectMetricsCirclePercentageThemeData.mediumPercentTheme].
+  static const double mediumPercentBound = 0.51;
+
+  /// Is the lower bound of the [value]
+  /// to apply the [ProjectMetricsCirclePercentageThemeData.lowPercentTheme].
   static const double lowPercentBound = 0.0;
 
   final double value;
@@ -41,7 +49,8 @@ class ProjectMetricCirclePercentage extends StatelessWidget {
   /// Gets the [MetricWidgetThemeData] according to the [widget.value].
   MetricWidgetThemeData _getWidgetTheme(BuildContext context) {
     final metricsTheme = MetricsTheme.of(context);
-    final circlePercentageTheme = metricsTheme.circlePercentageTheme;
+    final circlePercentageTheme =
+        metricsTheme.projectMetricsCirclePercentageTheme;
     final inactiveTheme = metricsTheme.inactiveWidgetTheme;
     final percent = value;
 

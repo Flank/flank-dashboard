@@ -34,7 +34,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the drawer on tap on menu button",
+      "displays the MetricsDrawer on tap on the menu button",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _DashboardTestbed());
         await tester.pumpAndSettle();

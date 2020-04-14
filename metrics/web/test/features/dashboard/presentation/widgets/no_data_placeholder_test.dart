@@ -10,7 +10,7 @@ import '../../../../test_utils/testbed_page.dart';
 void main() {
   group("NoDataPlaceholder", () {
     testWidgets(
-      "shows the DashboardString.noDataPlaceholder",
+      "shows the DashboardStrings.noDataPlaceholder",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _PlaceholderTextTestbed());
 

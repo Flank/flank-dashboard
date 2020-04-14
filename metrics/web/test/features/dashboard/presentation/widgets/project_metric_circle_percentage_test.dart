@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/model/circle_percentage_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/project_metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metric_circle_percentage.dart';
 
@@ -15,7 +15,7 @@ void main() {
     const highPercentMaterialColor = Colors.green;
     const inactiveMaterialColor = Colors.grey;
 
-    final circlePercentageTheme = CirclePercentageThemeData(
+    final circlePercentageTheme = ProjectMetricsCirclePercentageThemeData(
       lowPercentTheme: MetricWidgetThemeData(
         primaryColor: lowPercentMaterialColor[100],
         accentColor: lowPercentMaterialColor[200],
@@ -33,7 +33,7 @@ void main() {
       ),
     );
     final MetricsThemeData theme = MetricsThemeData(
-      circlePercentageTheme: circlePercentageTheme,
+      projectMetricsCirclePercentageTheme: circlePercentageTheme,
       inactiveWidgetTheme: MetricWidgetThemeData(
         primaryColor: inactiveMaterialColor[100],
         accentColor: inactiveMaterialColor[200],
@@ -42,7 +42,7 @@ void main() {
     );
 
     testWidgets(
-      "applies circle percentage low percent theme if value is in bounds from 0.1 to 0.5",
+      "applies circle percentage low percent theme",
       (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricCirclePercentageTestbed(
           theme: theme,
@@ -64,7 +64,7 @@ void main() {
     );
 
     testWidgets(
-      "applies circle percentage medium percent theme if value is in bounds from 0.51 to 0.79",
+      "applies circle percentage medium percent theme",
       (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricCirclePercentageTestbed(
           theme: theme,
@@ -87,7 +87,7 @@ void main() {
     );
 
     testWidgets(
-      "applies circle percentage high percent theme if value is grater or equals to 0.8",
+      "applies circle percentage high percent theme",
       (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricCirclePercentageTestbed(
           theme: theme,
@@ -109,7 +109,7 @@ void main() {
     );
 
     testWidgets(
-      "applies inactive theme color to CirclePercentage widget if value is equals to 0",
+      "applies inactive theme color to CirclePercentage widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricCirclePercentageTestbed(
           theme: theme,
@@ -132,7 +132,7 @@ void main() {
     );
 
     testWidgets(
-      "applies inactive theme colors to CirclePercentage if value is equals to null",
+      "applies inactive theme colors to CirclePercentage",
       (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricCirclePercentageTestbed(
           theme: theme,

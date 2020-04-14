@@ -24,7 +24,7 @@ class MetricWidgetThemeData {
   ///
   /// [backgroundColor] is the color of the background of the metric widget.
   ///
-  /// [textStyle] is the [TextStyle] applies to all text in metrics widget.
+  /// [textStyle] is the [TextStyle] applied to all text in metrics widget.
   const MetricWidgetThemeData({
     Color primaryColor,
     Color accentColor,

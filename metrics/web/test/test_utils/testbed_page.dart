@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
-/// A widget that contains default page configuration used in tests.
+/// A widget that contains the default page configuration used in tests.
 class TestbedPage extends StatelessWidget {
   final MetricsThemeData metricsThemeData;
   final Widget body;

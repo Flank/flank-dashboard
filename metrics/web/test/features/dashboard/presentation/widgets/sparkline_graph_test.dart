@@ -71,7 +71,7 @@ void main() {
   );
 
   testWidgets(
-    'Creates the chart line from given data',
+    "Creates the chart line from the given data",
     (WidgetTester tester) async {
       await tester.pumpWidget(const _SparklineGraphTestbed());
 

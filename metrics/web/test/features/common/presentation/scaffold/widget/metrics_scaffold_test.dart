@@ -8,7 +8,7 @@ void main() {
     const drawer = Drawer();
 
     testWidgets(
-      "thows an AssertionError if trying to create without body",
+      "throws an AssertionError if trying to create without a body",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsScaffoldTestbed(body: null));
 
@@ -17,7 +17,7 @@ void main() {
     );
 
     testWidgets(
-      'displays the given body',
+      "displays the given body",
       (WidgetTester tester) async {
         const body = Text('body text');
         await tester.pumpWidget(const _MetricsScaffoldTestbed(body: body));
@@ -45,7 +45,7 @@ void main() {
     );
 
     testWidgets(
-      'applies the drawer as the Scaffold.endDrawer',
+      "places the drawer on the right side of the Scaffold",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsScaffoldTestbed(drawer: drawer));
 
@@ -56,7 +56,7 @@ void main() {
     );
 
     testWidgets(
-      'opens the given drawer on tap on the menu icon button',
+      "opens the given drawer on tap on the menu icon button",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsScaffoldTestbed(drawer: drawer));
 

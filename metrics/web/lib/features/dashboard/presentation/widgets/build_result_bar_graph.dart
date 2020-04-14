@@ -22,11 +22,9 @@ class BuildResultBarGraph extends StatefulWidget {
   /// The [data] must not be null.
   /// [numberOfBars] is the number if the bars on graph.
   /// If the [data] length will be greater than [numberOfBars],
-  /// the last [numberOfBars] of the [data] will be shown.
-  /// If there will be not enough [data] to display [numberOfBars] bars,
-  /// the [PlaceholderBar]s will be added to match the requested [numberOfBars].
-  /// If the [data] length is greater than [numberOfBars],
   /// the last [numberOfBars] of the [data] is displayed.
+  /// If there are not enough [data] to display [numberOfBars] bars,
+  /// the [PlaceholderBar]s are added to match the requested [numberOfBars].
   const BuildResultBarGraph({
     Key key,
     @required this.data,

@@ -9,8 +9,8 @@ import 'package:metrics/features/dashboard/presentation/widgets/no_data_placehol
 
 /// The widget with sparkline that represents metric.
 ///
-/// This widget will fill all available space if no constraints given
-/// by it's parent.
+/// If no constraints are given by the parent of this widget,
+/// it fills all the available space.
 class SparklineGraph extends StatelessWidget {
   static const _minChartAxisLength = 1;
 
@@ -32,15 +32,15 @@ class SparklineGraph extends StatelessWidget {
   /// [value] is the value string of this graph.
   /// [data] is the class to present the line of this graph.
   /// [curveType] defines the drawing type for the curve.
-  /// [strokeColor] is the color of the graph's line.
-  /// If [strokeColor] is null - the [MetricWidgetThemeData.primaryColor] will be used.
-  /// [fillColor] is the color with which the graph filled.
-  /// If [fillColor] is null - the [MetricWidgetThemeData.accentColor] will be used.
-  /// [graphPadding] is the graph padding.
-  /// [strokeWidth] is the width of the graph's stroke.
+  /// [strokeColor] is the color of this graph's line.
+  /// If [strokeColor] is null, the [MetricWidgetThemeData.primaryColor] is used.
+  /// [fillColor] is the color this graph is filled with.
+  /// If [fillColor] is null, the [MetricWidgetThemeData.accentColor] is used.
+  /// [graphPadding] is a padding of this graph.
+  /// [strokeWidth] is the width of this graph's stroke.
   /// [valuePadding] is a padding of the [value] text.
   /// [valueStyle] is the [TextStyle] of the [value] text.
-  /// If [valueStyle] is null - the [MetricWidgetThemeData.textStyle] will be used.
+  /// If [valueStyle] is null, the [MetricWidgetThemeData.textStyle] is used.
   const SparklineGraph({
     Key key,
     @required this.value,

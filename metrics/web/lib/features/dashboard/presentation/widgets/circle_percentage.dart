@@ -26,15 +26,15 @@ class CirclePercentage extends StatefulWidget {
   /// The [value] must be `null` or from 0.0 (inclusive) to 1.0 (inclusive).
   ///
   /// [value] is the percent value of the metric.
-  /// If the [value] is null - the [DashboardStrings.noDataPlaceholder] will be displayed.
+  /// If the [value] is null, the [DashboardStrings.noDataPlaceholder] is displayed.
   /// [padding] is the padding of the [value] text inside the circle graph.
   /// [strokeWidth] is the wight of the graph's stroke. Defaults to 2.0.
   /// [valueColor] is the color of the part of the graph that represents the value.
-  /// If nothing is passed - the [MetricWidgetThemeData.primaryColor] will be used.
+  /// If nothing is passed, the [MetricWidgetThemeData.primaryColor] is used.
   /// [strokeColor] is the color of the graph's circle itself.
-  /// If nothing is passed - the [MetricWidgetThemeData.accentColor] will be used.
+  /// If nothing is passed, the [MetricWidgetThemeData.accentColor] is used.
   /// [backgroundColor] is the color to fill the graph.
-  /// If nothing is passed - the [MetricWidgetThemeData.backgroundColor] will be used.
+  /// If nothing is passed, the [MetricWidgetThemeData.backgroundColor] is used.
   /// [valueStyle] is the [TextStyle] of the percent text.
   /// [valueStrokeWidth] is the width of the value (filled) stroke. Defaults to 5.0.
   const CirclePercentage({

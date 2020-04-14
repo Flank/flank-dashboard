@@ -15,7 +15,7 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(const _MetricsThemeBuilderTestbed(builder: null));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 

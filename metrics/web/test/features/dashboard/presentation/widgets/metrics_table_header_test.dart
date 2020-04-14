@@ -9,7 +9,7 @@ import '../../../../test_utils/testbed_page.dart';
 void main() {
   group("MetricsTableHeader", () {
     testWidgets(
-      "contains DashboardTableTile",
+      "contains MetricsTableTile",
       (tester) async {
         await tester.pumpWidget(_DashboardTableHeaderTestbed());
 
