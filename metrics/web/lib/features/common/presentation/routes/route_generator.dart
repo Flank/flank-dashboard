@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/features/auth/presentation/pages/login_page.dart';
-import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// Responsible for generating routes.
 class RouteGenerator {
   static const String dashboard = '/dashboard';
   static const String login = '/login';
 
-  /// Generates a route for the given route [settings].
-  static MaterialPageRoute generateRoute({RouteSettings settings}) {
-    final store = Injector.get<AuthStore>();
+  /// Generates a route for the given route [settings]
+  /// based on the [isLoggedIn] authentication status.
+  ///
+  /// Throws an [AssertionError] if [settings] is null.
+  static MaterialPageRoute generateRoute({
+    @required RouteSettings settings,
+    bool isLoggedIn,
+  }) {
+    assert(settings != null);
 
-    if (store.isLoggedIn == null || !store.isLoggedIn) {
+    if (isLoggedIn == null || !isLoggedIn) {
       return _createMaterialPageRoute(name: login, widget: LoginPage());
     }
 

@@ -63,8 +63,10 @@ class MetricsDrawerTestbed extends StatelessWidget {
           home: const Scaffold(
             body: MetricsDrawer(),
           ),
-          onGenerateRoute: (settings) =>
-              RouteGenerator.generateRoute(settings: settings),
+          onGenerateRoute: (settings) => RouteGenerator.generateRoute(
+            settings: settings,
+            isLoggedIn: Injector.get<AuthStore>().isLoggedIn,
+          ),
         );
       },
     );
