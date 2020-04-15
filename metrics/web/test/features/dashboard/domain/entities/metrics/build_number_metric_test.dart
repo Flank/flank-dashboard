@@ -4,20 +4,40 @@ import 'package:metrics/features/dashboard/domain/entities/metrics/build_number_
 import 'package:test/test.dart';
 
 void main() {
-  const buildNumber = 1;
+  group("BuildNumberMetric", () {
+    const buildNumber = 1;
 
-  test('Creates BuildNumberMetric instance with the given build number', () {
-    final buildNumberMetric = BuildNumberMetric(numberOfBuilds: buildNumber);
+    test(
+      "can be created with the given build number",
+      () {
+        final buildNumberMetric =
+            BuildNumberMetric(numberOfBuilds: buildNumber);
 
-    expect(buildNumberMetric.numberOfBuilds, buildNumber);
-  });
+        expect(buildNumberMetric.numberOfBuilds, equals(buildNumber));
+      },
+    );
 
-  test('Two identical instances of BuildNumberMetric are equals', () {
-    final firstBuildNumberMetric =
-        BuildNumberMetric(numberOfBuilds: buildNumber);
-    final secondBuildNumberMetric =
-        BuildNumberMetric(numberOfBuilds: buildNumber);
+    test(
+      "two instances with the equal number of builds are equal",
+      () {
+        final firstBuildNumberMetric = BuildNumberMetric(
+          numberOfBuilds: buildNumber,
+        );
+        final secondBuildNumberMetric = BuildNumberMetric(
+          numberOfBuilds: buildNumber,
+        );
 
-    expect(firstBuildNumberMetric, equals(secondBuildNumberMetric));
+        expect(firstBuildNumberMetric, equals(secondBuildNumberMetric));
+      },
+    );
+
+    test(
+      "creates a new instance with 0 number of builds if nothing is passed",
+      () {
+        final buildNumberMetric = BuildNumberMetric();
+
+        expect(buildNumberMetric.numberOfBuilds, equals(0));
+      },
+    );
   });
 }

@@ -11,7 +11,7 @@ void main() {
         final invalid = ValidationResult.invalid();
         final result = invalid.combine(valid);
 
-        expect(result.isValid, isFalse);
+        expect(result.isInvalid, isTrue);
       },
     );
 

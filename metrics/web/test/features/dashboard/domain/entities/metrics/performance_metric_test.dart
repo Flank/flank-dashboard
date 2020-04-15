@@ -6,36 +6,47 @@ import 'package:metrics/features/dashboard/domain/entities/metrics/performance_m
 import 'package:test/test.dart';
 
 void main() {
-  const averageBuildDuration = Duration(seconds: 2);
-  final buildsPerformance = DateTimeSet.from(
-    [
-      BuildPerformance(
-        date: DateTime.utc(2020, 4, 10),
-        duration: const Duration(seconds: 2),
-      )
-    ],
-  );
-
-  test('Creates PerformanceMetric instance with the given options', () {
-    final performanceMetric = PerformanceMetric(
-      averageBuildDuration: averageBuildDuration,
-      buildsPerformance: buildsPerformance,
+  group("PerformanceMetric", () {
+    const averageBuildDuration = Duration(seconds: 2);
+    final buildsPerformance = DateTimeSet.from(
+      [
+        BuildPerformance(
+          date: DateTime.utc(2020, 4, 10),
+          duration: const Duration(seconds: 2),
+        )
+      ],
     );
 
-    expect(performanceMetric.averageBuildDuration, averageBuildDuration);
-    expect(performanceMetric.buildsPerformance, buildsPerformance);
-  });
+    test(
+      "creates an instance with the given data",
+      () {
+        final performanceMetric = PerformanceMetric(
+          averageBuildDuration: averageBuildDuration,
+          buildsPerformance: buildsPerformance,
+        );
 
-  test('Two identical instances of PerformanceMetric are equals', () {
-    final firstPerformanceMetric = PerformanceMetric(
-      averageBuildDuration: averageBuildDuration,
-      buildsPerformance: buildsPerformance,
-    );
-    final secondPerformanceMetric = PerformanceMetric(
-      averageBuildDuration: averageBuildDuration,
-      buildsPerformance: buildsPerformance,
+        expect(
+          performanceMetric.averageBuildDuration,
+          equals(averageBuildDuration),
+        );
+        expect(performanceMetric.buildsPerformance, equals(buildsPerformance));
+      },
     );
 
-    expect(firstPerformanceMetric, equals(secondPerformanceMetric));
+    test(
+      "two instances with equal fields are identical",
+      () {
+        final firstPerformanceMetric = PerformanceMetric(
+          averageBuildDuration: averageBuildDuration,
+          buildsPerformance: buildsPerformance,
+        );
+        final secondPerformanceMetric = PerformanceMetric(
+          averageBuildDuration: averageBuildDuration,
+          buildsPerformance: buildsPerformance,
+        );
+
+        expect(firstPerformanceMetric, equals(secondPerformanceMetric));
+      },
+    );
   });
 }

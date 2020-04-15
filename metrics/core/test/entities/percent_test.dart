@@ -6,33 +6,34 @@ import 'package:test/test.dart';
 import '../test_utils/matcher_util.dart';
 
 void main() {
-  test("Can't create Percent with null value", () {
+  group("Percent", () {
+    test("can't be created with the null value", () {
+      expect(
+        () => Percent(null),
+        MatcherUtil.throwsAssertionError,
+      );
+    });
 
-    expect(
-          () => Percent(null),
-      MatcherUtil.throwsAssertionError,
-    );
-  });
+    test("can't be created with the value, less then 0.0", () {
+      expect(
+        () => Percent(-1.0),
+        MatcherUtil.throwsAssertionError,
+      );
+    });
 
-  test("Can't create Percent with value, less then 0.0", () {
-    expect(
-          () => Percent(-1.0),
-      MatcherUtil.throwsAssertionError,
-    );
-  });
+    test("can't be created with the value, more then 1.0", () {
+      expect(
+        () => Percent(1.1),
+        MatcherUtil.throwsAssertionError,
+      );
+    });
 
-  test("Can't create Percent with value, more then 1.0", () {
-    expect(
-          () => Percent(1.1),
-      MatcherUtil.throwsAssertionError,
-    );
-  });
+    test("two intances with the equal value are equal", () {
+      const percentValue = 0.1;
+      final firstPercent = Percent(percentValue);
+      final secondPercent = Percent(percentValue);
 
-  test("Two identical Percent instances are equal", () {
-    const percentValue = 0.1;
-    final firstPercent = Percent(percentValue);
-    final secondPercent = Percent(percentValue);
-
-    expect(firstPercent, equals(secondPercent));
+      expect(firstPercent, equals(secondPercent));
+    });
   });
 }

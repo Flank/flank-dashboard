@@ -10,7 +10,7 @@ void main() {
       fields: [
         SlackMarkdownTextObject(text: 'test'),
         SlackMarkdownTextObject(text: 'test'),
-      ]
+      ],
     );
     const sectionBlockMap = {
       'type': 'section',
