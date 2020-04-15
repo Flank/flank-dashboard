@@ -12,7 +12,7 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(const _LoadingBuilderTestbed(builder: null));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 
@@ -21,7 +21,7 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(const _LoadingBuilderTestbed(isLoading: null));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 

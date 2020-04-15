@@ -29,22 +29,22 @@ class MetricsTableHeader extends StatelessWidget {
                 Expanded(
                   child: Container(
                     alignment: Alignment.center,
-                    child: Text(
+                    child: const Text(
                       DashboardStrings.performance,
                     ),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   child: Text(
                     DashboardStrings.builds,
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   child: Text(
                     DashboardStrings.stability,
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   child: Text(
                     DashboardStrings.coverage,
                   ),

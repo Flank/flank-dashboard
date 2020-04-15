@@ -17,7 +17,7 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(const _SparklineGraphTestbed(value: null));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 
@@ -26,7 +26,7 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(const _SparklineGraphTestbed(data: null));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 
@@ -37,7 +37,7 @@ void main() {
         strokeWidth: -1.0,
       ));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 

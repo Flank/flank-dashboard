@@ -20,7 +20,7 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(const _BuildResultBarGraphTestbed(data: null));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 

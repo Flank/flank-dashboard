@@ -30,7 +30,7 @@ void main() {
           ),
         );
 
-        expect(tester.takeException(), isA<AssertionError>());
+        expect(tester.takeException(), isAssertionError);
       },
     );
 
@@ -43,7 +43,7 @@ void main() {
           ),
         );
 
-        expect(tester.takeException(), isA<AssertionError>());
+        expect(tester.takeException(), isAssertionError);
       },
     );
 
