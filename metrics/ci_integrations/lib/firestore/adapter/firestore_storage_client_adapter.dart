@@ -14,7 +14,7 @@ class FirestoreStorageClientAdapter implements StorageClient {
   ///
   /// Throws [ArgumentError] if [Firestore] is `null`.
   FirestoreStorageClientAdapter(this._firestore) {
-    ArgumentError.checkNotNull(_firestore, '_firestore');
+    ArgumentError.checkNotNull(_firestore, 'firestore');
   }
 
   @override
