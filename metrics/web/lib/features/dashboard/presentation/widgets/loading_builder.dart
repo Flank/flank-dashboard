@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 
 /// Displays the [loadingPlaceholder] widget if the data [isLoading].
