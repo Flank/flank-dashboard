@@ -3,7 +3,7 @@
 Overall Flutter/Dart has a great ecosystem, support from Google and most importantly great community. Working with Flutter/Dart is fun due to ‘Hot-reload’, 1 language for all & great cross-compatibility that is growing (mobile, web, cli, server, dart->js). Recent improvements with SKIA based rendered for Flutter for Web are truly awesome.
 
 
-| Area for improvements | Description |
+| Growth Area | Description |
 | --- | --- |
 Code coverage collection reliability | For us it’s important that we can track code coverage to get a sense of what parts of the our code base is not covered with tests: [flutter/flutter#46868](https://github.com/flutter/flutter/issues/46868) [dart-lang/sdk#38934](https://github.com/dart-lang/sdk/issues/38934)
 Support Flutter Driver on Firebase Test Lab | Making reliable software and having the ability to have all the tools to support it
