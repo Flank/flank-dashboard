@@ -1,4 +1,6 @@
-import 'package:ci_integration/common/client/ci_client.dart';
+import 'dart:async';
+
+import 'package:ci_integration/common/client/source_client.dart';
 import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:ci_integration/coverage/coverage_json_summary/model/coverage_json_summary.dart';
 import 'package:ci_integration/jenkins/client/jenkins_client.dart';
@@ -8,8 +10,8 @@ import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// An adapter for [JenkinsClient] to fit the [CiClient] contract.
-class JenkinsCiClientAdapter implements CiClient {
+/// An adapter for [JenkinsClient] to fit the [SourceClient] contract.
+class JenkinsSourceClientAdapter implements SourceClient {
   /// A fetch limit for builds when we download all builds from CI (initial fetch).
   static const initialFetchBuildsLimit = 28;
 
@@ -19,7 +21,7 @@ class JenkinsCiClientAdapter implements CiClient {
   /// Creates an instance of this adapter with the given [jenkinsClient].
   ///
   /// Throws an [ArgumentError] if the given Jenkins client is `null`.
-  JenkinsCiClientAdapter(this.jenkinsClient) {
+  JenkinsSourceClientAdapter(this.jenkinsClient) {
     ArgumentError.checkNotNull(jenkinsClient, 'jenkinsClient');
   }
 
@@ -213,5 +215,10 @@ class JenkinsCiClientAdapter implements CiClient {
       default:
         return BuildStatus.failed;
     }
+  }
+
+  @override
+  void dispose() {
+    jenkinsClient.close();
   }
 }

@@ -1,7 +1,7 @@
 import 'package:ci_integration/ci_integration/ci_integration.dart';
-import 'package:ci_integration/common/client/ci_client.dart';
-import 'package:ci_integration/common/client/storage_client.dart';
-import 'package:ci_integration/common/config/ci_config.dart';
+import 'package:ci_integration/common/client/source_client.dart';
+import 'package:ci_integration/common/client/destination_client.dart';
+import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
 import 'package:test/test.dart';
 
 import 'test_util/stub/ci_client_stub.dart';
@@ -9,9 +9,9 @@ import 'test_util/stub/storage_client_stub.dart';
 
 void main() {
   group("CiIntegration", () {
-    final ciConfig = CiConfig(
-      ciProjectId: 'ciProjectId',
-      storageProjectId: 'storageProjectId',
+    final syncConfig = SyncConfig(
+      sourceProjectId: 'sourceProjectId',
+      destinationProjectId: 'destinationProjectId',
     );
 
     test(
@@ -19,8 +19,8 @@ void main() {
       () {
         expect(
           () => CiIntegration(
-            ciClient: null,
-            storageClient: StorageClientStub(),
+            sourceClient: null,
+            destinationClient: StorageClientStub(),
           ),
           throwsArgumentError,
         );
@@ -32,8 +32,8 @@ void main() {
       () {
         expect(
           () => CiIntegration(
-            ciClient: CiClientStub(),
-            storageClient: null,
+            sourceClient: CiClientStub(),
+            destinationClient: null,
           ),
           throwsArgumentError,
         );
@@ -44,8 +44,8 @@ void main() {
       ".sync() should throw ArgumentError if the given config is null",
       () {
         final ciIntegration = CiIntegration(
-          ciClient: CiClientStub(),
-          storageClient: StorageClientStub(),
+          sourceClient: CiClientStub(),
+          destinationClient: StorageClientStub(),
         );
 
         expect(() => ciIntegration.sync(null), throwsArgumentError);
@@ -62,10 +62,10 @@ void main() {
           fetchLastBuildCallback: (_) => null,
         );
         final ciIntegration = CiIntegration(
-          ciClient: ciClient,
-          storageClient: storageClient,
+          sourceClient: ciClient,
+          destinationClient: storageClient,
         );
-        final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
+        final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
       },
@@ -78,7 +78,7 @@ void main() {
           fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegrationStub(ciClient: ciClient);
-        final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
+        final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
       },
@@ -93,7 +93,7 @@ void main() {
         final ciIntegration = CiIntegrationStub(
           storageClient: storageClient,
         );
-        final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
+        final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
       },
@@ -108,7 +108,7 @@ void main() {
         final ciIntegration = CiIntegrationStub(
           storageClient: storageClient,
         );
-        final result = ciIntegration.sync(ciConfig).then((res) => res.isError);
+        final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
       },
@@ -124,11 +124,11 @@ void main() {
           addBuildsCallback: (_, __) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegration(
-          ciClient: ciClient,
-          storageClient: storageClient,
+          sourceClient: ciClient,
+          destinationClient: storageClient,
         );
         final result =
-            ciIntegration.sync(ciConfig).then((res) => res.isSuccess);
+            ciIntegration.sync(syncConfig).then((res) => res.isSuccess);
 
         expect(result, completion(isTrue));
       },
@@ -139,7 +139,7 @@ void main() {
       () {
         final ciIntegration = CiIntegrationStub();
         final result =
-            ciIntegration.sync(ciConfig).then((res) => res.isSuccess);
+            ciIntegration.sync(syncConfig).then((res) => res.isSuccess);
 
         expect(result, completion(isTrue));
       },
@@ -154,10 +154,10 @@ class CiIntegrationStub extends CiIntegration {
   final CiClientStub _ciClientTestbed;
 
   @override
-  StorageClient get storageClient => _storageClientTestbed;
+  DestinationClient get destinationClient => _storageClientTestbed;
 
   @override
-  CiClient get ciClient => _ciClientTestbed;
+  SourceClient get sourceClient => _ciClientTestbed;
 
   /// Creates this stub class instance.
   ///

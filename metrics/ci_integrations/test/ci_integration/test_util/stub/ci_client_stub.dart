@@ -1,11 +1,13 @@
-import 'package:ci_integration/common/client/ci_client.dart';
+import 'dart:async';
+
+import 'package:ci_integration/common/client/source_client.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 import '../../test_data/builds_test_data.dart';
 
-/// A stub class for a [CiClient] abstract class providing test
+/// A stub class for a [SourceClient] abstract class providing test
 /// implementation for methods.
-class CiClientStub implements CiClient {
+class CiClientStub implements SourceClient {
   /// Callback used to replace the default [fetchBuildsAfter] method
   /// implementation for testing purposes.
   final Future<List<BuildData>> Function(String, BuildData)
@@ -47,5 +49,11 @@ class CiClientStub implements CiClient {
     } else {
       return Future.value(BuildsTestData.builds);
     }
+  }
+
+  @override
+  FutureOr<void> dispose() {
+    // TODO: implement dispose
+    throw UnimplementedError();
   }
 }

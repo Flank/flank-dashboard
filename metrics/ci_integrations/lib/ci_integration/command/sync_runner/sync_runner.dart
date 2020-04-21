@@ -3,12 +3,12 @@ import 'dart:io';
 
 import 'package:ci_integration/ci_integration/ci_integration.dart';
 import 'package:ci_integration/ci_integration/command/sync_runner/jenkins_sync_runner.dart';
-import 'package:ci_integration/common/client/ci_client.dart';
-import 'package:ci_integration/common/client/storage_client.dart';
-import 'package:ci_integration/common/config/ci_config.dart';
+import 'package:ci_integration/common/client/destination_client.dart';
+import 'package:ci_integration/common/client/source_client.dart';
+import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
 import 'package:ci_integration/common/logger/logger.dart';
-import 'package:ci_integration/config/model/ci_integration_config.dart';
-import 'package:ci_integration/firestore/adapter/firestore_storage_client_adapter.dart';
+import 'package:ci_integration/ci_integration/config/model/raw_integration_config.dart';
+import 'package:ci_integration/firestore/adapter/firestore_destination_client_adapter.dart';
 import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
 import 'package:firedart/firedart.dart';
 
@@ -19,11 +19,11 @@ abstract class SyncRunner {
 
   /// The configuration for CI integrations used to define all the parts
   /// required by [CiIntegration].
-  final CiIntegrationConfig config;
+  final RawIntegrationConfig config;
 
   /// A configuration for CI integrations used to identify project
   /// to synchronize.
-  CiConfig get ciConfig;
+  SyncConfig get syncConfig;
 
   /// Creates an instance of [SyncRunner] with the given [config] and [logger].
   ///
@@ -34,43 +34,43 @@ abstract class SyncRunner {
   }
 
   /// Creates a specific [SyncRunner] from the given [config] declared by
-  /// the [CiIntegrationConfig.source] type.
+  /// the [RawIntegrationConfig.sourceConfigMap] type.
   ///
   /// If the [config] is `null` throws an [ArgumentError].
   /// If the `source` represents [JenkinsConfig] returns [JenkinsSyncRunner].
   /// If the `source` represents unknown configurations returns `null`.
-  factory SyncRunner.fromConfig(CiIntegrationConfig config, Logger logger) {
+  factory SyncRunner.fromConfig(RawIntegrationConfig config, Logger logger) {
     ArgumentError.checkNotNull(config);
 
-    if (config.source is JenkinsConfig) {
+    if (config.sourceConfigMap is JenkinsConfig) {
       return JenkinsSyncRunner(config, logger);
     }
 
     return null;
   }
 
-  /// Prepares the [CiClient] instance for synchronization.
-  FutureOr<CiClient> prepareCiClient();
+  /// Prepares the [SourceClient] instance for synchronization.
+  FutureOr<SourceClient> prepareCiClient();
 
-  /// Prepares the [StorageClient] instance for synchronization.
+  /// Prepares the [DestinationClient] instance for synchronization.
   ///
   /// Default implementation prepares [Firestore] and returns
-  /// the [FirestoreStorageClientAdapter] instance as a storage client.
-  FutureOr<StorageClient> prepareStorageClient() {
-    final firestoreConfig = config.destination;
-    final firestore = Firestore(firestoreConfig.firebaseProjectId);
+  /// the [FirestoreDestinationClientAdapter] instance as a storage client.
+  FutureOr<DestinationClient> prepareStorageClient() {
+    final firestoreConfig = config.destinationConfigMap;
+    final firestore = Firestore(firestoreConfig);
 
-    return FirestoreStorageClientAdapter(firestore);
+    return FirestoreDestinationClientAdapter(firestore);
   }
 
   /// Runs the [CiIntegration.sync] method after all preparations required.
   Future<void> sync() async {
     try {
       final CiIntegration ciIntegration = CiIntegration(
-        ciClient: await prepareCiClient(),
-        storageClient: await prepareStorageClient(),
+        sourceClient: await prepareCiClient(),
+        destinationClient: await prepareStorageClient(),
       );
-      final result = await ciIntegration.sync(ciConfig);
+      final result = await ciIntegration.sync(syncConfig);
 
       if (result.isSuccess) {
         logger.printMessage(result.message);

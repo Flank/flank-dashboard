@@ -1,4 +1,4 @@
-import 'package:ci_integration/firestore/adapter/firestore_storage_client_adapter.dart';
+import 'package:ci_integration/firestore/adapter/firestore_destination_client_adapter.dart';
 import 'package:ci_integration/firestore/deserializer/build_data_deserializer.dart';
 import 'package:firedart/firedart.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -26,7 +26,7 @@ void main() {
     final _collectionReferenceMock = _CollectionReferenceMock();
     final _documentReferenceMock = _DocumentReferenceMock();
     final _documentMock = _DocumentMock();
-    final adapter = FirestoreStorageClientAdapter(_firestoreMock);
+    final adapter = FirestoreDestinationClientAdapter(_firestoreMock);
 
     PostExpectation<Future<Document>> whenFetchProject({
       String collectionId = 'projects',
@@ -67,7 +67,7 @@ void main() {
     test(
       "should throw ArgumentError trying to create an instance with null Firestore",
       () {
-        expect(() => FirestoreStorageClientAdapter(null), throwsArgumentError);
+        expect(() => FirestoreDestinationClientAdapter(null), throwsArgumentError);
       },
     );
 

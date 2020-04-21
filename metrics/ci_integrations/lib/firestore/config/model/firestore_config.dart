@@ -1,12 +1,16 @@
+import 'package:ci_integration/common/config/model/destination_config.dart';
 import 'package:meta/meta.dart';
 
 /// Represents the firestore configuration.
-class FirestoreConfig {
+class FirestoreConfig implements DestinationConfig {
   /// The firebase project identifier.
   final String firebaseProjectId;
 
   /// The firestore metrics project identifier.
   final String metricsProjectId;
+
+  @override
+  String get destinationProjectId => metricsProjectId;
 
   /// Creates the [FirestoreConfig] with the given [metricsProjectId].
   ///

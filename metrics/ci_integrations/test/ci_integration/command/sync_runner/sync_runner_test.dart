@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:ci_integration/ci_integration/command/sync_runner/jenkins_sync_runner.dart';
 import 'package:ci_integration/ci_integration/command/sync_runner/sync_runner.dart';
-import 'package:ci_integration/common/client/ci_client.dart';
-import 'package:ci_integration/common/client/storage_client.dart';
-import 'package:ci_integration/common/config/ci_config.dart';
+import 'package:ci_integration/ci_integration/config/model/raw_integration_config.dart';
+import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
+import 'package:ci_integration/common/client/destination_client.dart';
+import 'package:ci_integration/common/client/source_client.dart';
 import 'package:ci_integration/common/logger/logger.dart';
-import 'package:ci_integration/config/model/ci_integration_config.dart';
-import 'package:ci_integration/firestore/adapter/firestore_storage_client_adapter.dart';
-import 'package:ci_integration/firestore/config/model/firestore_config.dart';
-import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
+import 'package:ci_integration/firestore/adapter/firestore_destination_client_adapter.dart';
 import 'package:test/test.dart';
 
 import '../../test_util/stub/ci_client_stub.dart';
@@ -19,17 +17,17 @@ import '../../test_util/stub/storage_client_stub.dart';
 void main() {
   group("SyncRunner", () {
     final logger = LoggerStub();
-    final CiIntegrationConfig config = CiIntegrationConfig(
-      source: JenkinsConfig(
-        url: 'url',
-        jobName: 'jobName',
-        username: 'username',
-        apiKey: 'apiKey',
-      ),
-      destination: FirestoreConfig(
-        firebaseProjectId: 'firebaseProjectId',
-        metricsProjectId: 'metricsProjectId',
-      ),
+    final RawIntegrationConfig config = RawIntegrationConfig(
+      sourceConfigMap: {
+        'url': 'url',
+        'jobName': 'jobName',
+        'username': 'username',
+        'apiKey': 'apiKey',
+      },
+      destinationConfigMap: {
+        'firebaseProjectId': 'firebaseProjectId',
+        'metricsProjectId': 'metricsProjectId',
+      },
     );
     final syncRunner = SyncRunnerStub(config, logger);
 
@@ -74,7 +72,7 @@ void main() {
         final syncRunner = JenkinsSyncRunner(config, logger);
         final storageClient = await syncRunner.prepareStorageClient();
 
-        expect(storageClient, isA<FirestoreStorageClientAdapter>());
+        expect(storageClient, isA<FirestoreDestinationClientAdapter>());
       },
     );
 
@@ -123,8 +121,8 @@ void main() {
 /// A stub class for a [SyncRunner] abstract class providing a test
 /// implementation.
 class SyncRunnerStub extends SyncRunner {
-  final StorageClient Function() _storageClientCallback;
-  final CiClient Function() _ciClientCallback;
+  final DestinationClient Function() _storageClientCallback;
+  final SourceClient Function() _ciClientCallback;
 
   /// Used to store number of [dispose] calls.
   int _disposeCalls = 0;
@@ -132,22 +130,22 @@ class SyncRunnerStub extends SyncRunner {
   int get disposeCalls => _disposeCalls;
 
   @override
-  CiConfig get ciConfig => CiConfig(
-        ciProjectId: 'ciProjectId',
-        storageProjectId: 'storageProjectId',
+  SyncConfig get syncConfig => SyncConfig(
+        sourceProjectId: 'ciProjectId',
+        destinationProjectId: 'storageProjectId',
       );
 
   SyncRunnerStub(
-    CiIntegrationConfig config,
+    RawIntegrationConfig config,
     Logger logger, {
-    StorageClient Function() storageClientCallback,
-    CiClient Function() ciClientCallback,
+    DestinationClient Function() storageClientCallback,
+    SourceClient Function() ciClientCallback,
   })  : _storageClientCallback = storageClientCallback,
         _ciClientCallback = ciClientCallback,
         super(config, logger);
 
   @override
-  FutureOr<StorageClient> prepareStorageClient() {
+  FutureOr<DestinationClient> prepareStorageClient() {
     if (_storageClientCallback != null) {
       return _storageClientCallback();
     }
@@ -155,7 +153,7 @@ class SyncRunnerStub extends SyncRunner {
   }
 
   @override
-  FutureOr<CiClient> prepareCiClient() {
+  FutureOr<SourceClient> prepareCiClient() {
     if (_ciClientCallback != null) {
       return _ciClientCallback();
     }

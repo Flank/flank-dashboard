@@ -1,8 +1,8 @@
-import 'package:ci_integration/common/config/ci_config.dart';
+import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('CiConfig', () {
+  group('SyncConfig', () {
     const ciProjectId = 'ciProjectId';
     const storageProjectId = 'storageProjectId';
 
@@ -10,9 +10,9 @@ void main() {
       "shoud throw ArgumentError trying to create an instance with null ciProjectId",
       () {
         expect(
-          () => CiConfig(
-            ciProjectId: null,
-            storageProjectId: storageProjectId,
+          () => SyncConfig(
+            sourceProjectId: null,
+            destinationProjectId: storageProjectId,
           ),
           throwsArgumentError,
         );
@@ -23,9 +23,9 @@ void main() {
       "shoud throw Argument error trying to create an instance with null storageProjectId",
       () {
         expect(
-          () => CiConfig(
-            ciProjectId: ciProjectId,
-            storageProjectId: null,
+          () => SyncConfig(
+            sourceProjectId: ciProjectId,
+            destinationProjectId: null,
           ),
           throwsArgumentError,
         );
@@ -35,13 +35,13 @@ void main() {
     test(
       "should create insctance with the given project CI and storage id",
       () {
-        final config = CiConfig(
-          ciProjectId: ciProjectId,
-          storageProjectId: storageProjectId,
+        final config = SyncConfig(
+          sourceProjectId: ciProjectId,
+          destinationProjectId: storageProjectId,
         );
 
-        expect(config.ciProjectId, equals(ciProjectId));
-        expect(config.storageProjectId, equals(storageProjectId));
+        expect(config.sourceProjectId, equals(ciProjectId));
+        expect(config.destinationProjectId, equals(storageProjectId));
       },
     );
   });

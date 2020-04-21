@@ -1,7 +1,8 @@
+import 'package:ci_integration/common/config/model/source_config.dart';
 import 'package:meta/meta.dart';
 
 /// Represents the Jenkins CI config.
-class JenkinsConfig {
+class JenkinsConfig implements SourceConfig {
   /// The url to the Jenkins instance.
   final String url;
 
@@ -13,6 +14,9 @@ class JenkinsConfig {
 
   /// The Jenkins account API key.
   final String apiKey;
+
+  @override
+  String get sourceProjectId => jobName;
 
   /// Creates the [JenkinsConfig].
   ///

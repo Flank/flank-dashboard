@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:ci_integration/ci_integration/command/sync_command.dart';
 import 'package:ci_integration/common/logger/logger.dart';
-import 'package:ci_integration/config/model/ci_integration_config.dart';
+import 'package:ci_integration/ci_integration/config/model/raw_integration_config.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -104,7 +104,7 @@ class SyncCommandStub extends SyncCommand {
   }
 
   @override
-  Future<void> runSync(CiIntegrationConfig config) {
+  Future<void> runSync(RawIntegrationConfig config) {
     _syncCalled = true;
     return Future.value();
   }

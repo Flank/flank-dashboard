@@ -1,9 +1,10 @@
 import 'package:ci_integration/ci_integration/ci_integration.dart';
+import 'package:ci_integration/common/client/integration_client.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An abstract class providing a contract of interactions between
 /// [CiIntegration] and CI tool's API.
-abstract class CiClient {
+abstract class SourceClient extends IntegrationClient {
   /// Fetches a list of builds for a project, identified by [projectId],
   /// which have been performed after the given [build].
   ///
