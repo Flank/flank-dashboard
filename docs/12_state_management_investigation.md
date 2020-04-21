@@ -38,7 +38,7 @@ The BLoC is an architectural pattern that functions as a state management soluti
 
 ### Code sample
 
-Assume we have an `AuthBloc` that provides an ability to signIn a user and holds current authentication state.
+Assume we have an `AuthBloc` that provides an ability to sign in a user and holds the current authentication state.
 
 ```dart
 class AuthBloc {
@@ -62,7 +62,9 @@ class AuthBloc {
 }
 ```
 
-So, to subscribe to the auth updates we should subscribe to `isLoggedInStream` whether using the regular listener function `isLoggedInStream.listen(...)` or using the `StreamBuilder` to update the UI based on the current stream value. If we want to sign in a user we have a `Sink`, so we should call `signInSink.add(credentials)` to trigger the sign in process.
+So, to subscribe to the auth updates, we should subscribe to `isLoggedInStream`, whether using the regular listener function `isLoggedInStream.listen(...)` or using the `StreamBuilder` to update the UI based on the current stream value. If we want to sign in a user, we have a `Sink`, so we should call `signInSink.add(credentials)` to trigger the sign in process.
+
+Because we have only streams as the output of the BLoC, we can easily build the reactive granular UI, using the `StreamBuilder` widget and dividing the UI to the logical parts that will be controlled by a separate stream in BLoC.
 
 ### Pros
 
@@ -99,9 +101,9 @@ class AuthStore {
 }
 ```
 
-In this case to subscribe to the authentication updates in the UI we should:
+In this case, to subscribe to the authentication updates in the UI we should:
 
-1.  We should inject this stream.
+1. Inject the `loggedInStream` stream.
 
 ```dart
 Injector(
@@ -124,7 +126,7 @@ StateBuilder(
 );
 ```
 
-If we want to subscribe to the authentication updates outside of the UI we can call `loggedInStream.listen()`.
+If we want to subscribe to the authentication updates outside of the UI, we can call `loggedInStream.listen()`.
 
 In case we want to subscribe to the application state updates we should:
 
@@ -150,16 +152,16 @@ class _LoginPageState extends State<LoginPage> implements ObserverOfStatesRebuil
 
 ### Pros
 
-1. Provides a useful methods `onError`, `onWaiting`, etc. to build the UI.
+1. It provides useful callbacks `onError`, `onWaiting`, etc. to build the UI.
 2. Has embedded dependency injection.
 3. Relatively simple for beginners.
-4. Suitable for applications that have a lot of asynchronies.
+4. Great support of asynchronous programming.
 
 ### Cons
 
 1. Not so great support of reactive features (streams, etc).
-2. Has complex mechanism of subscription to the application state updates.
-3. Has complex mechanism of subscription to any streams inside of the state from the UI.
+2. Has a complex mechanism of subscription to the application state updates.
+3. Has a complex mechanism of subscription to any streams inside of the state from the UI.
 4. Has bad support of reactivity.
 
 ## [BLoC library](https://pub.dev/packages/bloc)
@@ -202,17 +204,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 }
 ```
 
-Extending the `Bloc` class we should implement two methods:
+Extending the `Bloc` class, we should implement two methods:
 
 - the `initialState` getter that should return the initial state of our `AuthStore`
 - the `mapEventToState` method that will receive the dispatched `AuthEvent`s and should yield a new `AuthState` on each event.
 
-To add the functionality to our bloc we should:
+To add the functionality to our `AuthBloc`, we should:
 
 1. Add a new event called `SignInAuthEvent`
 
    ```dart
    abstract class AuthEvent {}
+  
+   class SignInAuthEvent implements AuthEvent {
+     final String email;
+     final String password;
+   
+     ...
+   }
    ```
 
 2. Add implementation of the sign in to the `mapEventToState` method:
@@ -253,23 +262,49 @@ BlocBuilder<AuthBloc, AuthState>(
 
 To start the sign in process it is needed to call the `BlocProvider.of<AuthBloc>(context).add(SignInAuthEvent(...))` method.
 
+Then assume we have some `repository` that provides the `authUpdatesStream`. To subscribe to these updates and update the UI in response to data from this stream: 
+
+1. We should add `AuthStateUpdateEvent` and `SubscribeToAuthUpdatesEvent` events, as described above. 
+2. Then we should subscribe to `authUpdatesStream` in `AuthBloc` on `SubscribeToAuthUpdatesEvent` event and emit a new event each time the `authUpdatesStream` emits a new item: 
+
+```dart
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final AuthRepository _repository;
+  StreamSubscription _authUpdatesSubscription;
+
+  AuthBloc(this._repository);
+
+  @override
+  Stream<AuthState> mapEventToState(AuthEvent event) {
+    if (event is SubscribeToAuthUpdatesEvent) {
+      _authUpdatesSubscription?.cancel();
+      _authUpdatesSubscription = _repository
+          .authUpdatesStream()
+          .listen((authState) => add(AuthStateUpdateEvent()));
+    }else if (event is AuthStateUpdateEvent){
+      /// update the state to change the UI.
+    }
+  }
+  ...
+}
+```
+
 ### Pros
 
 1. Nicely-divided business logic from the application state.
 2. Understandable data flow: `UI` -> `Action` -> `Bloc` -> `New State` -> `UI`
 3. Embedded dependency injection mechanism.
-4. Nice support of asynchrony.
+4. Nice support of asynchronous programming.
 
-### Const
+### Cons
 
-1. Overhead in creation of the event classes for each action.
-2. Not the best choice for reactive application.
-3. Has large entry threshold.
-4. Bad support of reactivity.
+1. Overhead in the creation of the event classes for each action.
+2. Not the best choice for the reactive application.
+3. Has a large entry threshold.
 
 ## [Redux](https://pub.dev/packages/redux)
 
-Redux is a predictable state container for Dart and Flutter apps
+Redux is a predictable state container for Dart and Flutter apps.
 
 **_Core concepts_**
 
@@ -280,9 +315,12 @@ Redux is a predictable state container for Dart and Flutter apps
 5. Stores
 
 **_Actions_** are payloads of information that send data from your application to your store. They are the only source of information for the store. You send them to the store using the `store.dispatch()` method.
+
 **_Middlewares_** allows you to do something before your action access to the reducer.
+
 **_Reducers_** specify how the application's state changes in response to actions.
-**_Store_** holds the application state.
+
+**_The Store_** holds the application state.
 
 **_Core concepts in action_**:
 
@@ -301,7 +339,7 @@ First of all, need to create our central source of truth - the Store.
       Store<AppState>(...our reducer, initialState: ...);
 ```
 
-To inject store into UI we need to use `StoreProvider`
+To inject the store into UI, we need to use `StoreProvider`.
 
 ```dart
 @override
@@ -322,9 +360,9 @@ RaisedButton(
   },
 ```
 
-The reducer will handle incoming old store and action, `signInReducer(Store store, SignInAction action)` and returns a new store with new values.
+The reducer will handle incoming old store and action, `signInReducer(Store store, SignInAction action)`, and returns a new store with new values.
 
-UI rebuilds every time Store changes with `StoreConnector` widget. It has `converter` function, that can filter all data to get only specific list of them and `builder` that is getting viewModel with filtered data and return UI:
+UI rebuilds every time Store changes with `StoreConnector` widget. It has `converter` function, that can filter all data to get an only specific list of them and `builder` that is getting viewModel with filtered data and return UI:
 
 ```dart
 child: StoreConnector<AppState, AppState>(
@@ -337,33 +375,32 @@ child: StoreConnector<AppState, AppState>(
 
 ### Pros
 
-1. A lot of useful tools, that helps in development, testing and debugging:
-   redux_dev_tools - A Time-Traveling Redux Debugger for Flutter
-   redux_logging - A Middleware that prints the latest action & state
-   redux_epics - A Middleware that helps you perform side effects using Streams
-   flutter_redux_navigation - A simple reactive navigation middleware for Flutter's redux library.
-   ...
+1. A lot of useful tools that help in development, testing, and debugging:
+   - redux_dev_tools - A Time-Traveling Redux Debugger for Flutter.
+   - redux_logging - A Middleware that prints the latest action & state.
+   - redux_epics - A Middleware that helps you perform side effects using Streams.
+   - flutter_redux_navigation - A simple reactive navigation middleware for Flutter's redux library.
 2. It helps you write applications that behave consistently and are easy to test.
-3. Unidirectional data flow
+3. Unidirectional data flow.
 4. Single Source of Truth - the state of the whole application is stored in an object tree within a single store.
 5. Store changes are perfectly predictable.
 6. Middlewares - allows for side effects to be run without blocking state updates (like API calls or logging).
 
 ### Cons
 
-1. High learning curve
-2. The store will get very large with large applications
-3. Every widget can access to the global store
+1. High learning curve.
+2. The store will get very large with large applications.
+3. Every widget can access to the global store.
 
 ## [Provider](https://pub.dev/packages/provider)
 
-It is a wrapper around InheritedWidget, that can expose any kind of state object, including BLoC, streams, futures, and others. Because of its simplicity and flexibility, Google announced at Google I/O ’19 that Provider is now its preferred package for state management.
+The provider is the state management mechanism based on the flutter `InheeritedWidget`, that can expose any kind of state object, including BLoC, streams, futures, and others. Because of its simplicity and flexibility, Google announced at Google I/O ’19 that Provider is now its preferred package for state management.
 
 **_Core concepts:_**
 
 1. ChangeNotifier - a simple class that provides change notification to its listeners.
 2. ChangeNotifierProvider - a widget that provides an instance of a ChangeNotifier to its descendants.
-3. Consumer - a widget, that rebuilds specific parts of the UI whenever the obtained value changes and helps to access the instance of ChangeNotify.
+3. Consumer - a widget, that rebuilds specific parts of the UI, whenever the obtained value changes and helps to access the instance of ChangeNotify.
 
 ### Code sample
 
@@ -386,7 +423,7 @@ class AuthStore extends ChangeNotifier {
 }
 ```
 
-In the UI we need to use `ChangeNotifierProvider` widget to inject our class. It listens to a `ChangeNotifier`, exposes it to its descendants and rebuilds dependents whenever `notifyListeners()` is called.
+In the UI, we need to use the `ChangeNotifierProvider` widget to inject our class. It listens to a `ChangeNotifier`, exposes it to its descendants, and rebuilds dependents whenever `notifyListeners()` is called.
 
 ```dart
 ...
@@ -399,9 +436,9 @@ In the UI we need to use `ChangeNotifierProvider` widget to inject our class. It
 ```
 
 The easiest way to read value is by using the static method `Provider.of<T>(BuildContext context)`.
-This method will look up in the widget tree starting from the widget associated with the BuildContext passed and it will return the nearest variable of type T found (or throw if nothing is found).
+This method will look up in the widget tree for `Provider<T>` class, starting from the widget associated with the BuildContext passed, and return the value of the nearest one (or throw if nothing is found).
 
-Alternatively instead of using `Provider.of`, we can use the `Consumer` widget:
+Alternatively, instead of using the `Provider.of`, we can use the `Consumer` widget:
 
 ```dart
 ...
@@ -420,17 +457,18 @@ Also, there is the `Selector` widget - equivalent to the Consumer that can filte
 
 The package works well with Future and Streams via:
 
-1.  `FutureProvider` widget, that is used to provide data into the widget tree that is asynchronous.
-2.  `StreamProvider` widget, that is designed to allow widgets to access state which occurs as part of a stream.
+1. `FutureProvider` widget used to provide data into the asynchronous widget tree.
+2. `StreamProvider` widget, designed to allow widgets access to the state, which occurs as part of a stream.
 
 ### Pros
 
 1. Easy to learn.
 2. UI logic and business logic are separated.
-3. testability/composability: `ChangeNotifier` is part of `flutter:foundation` and doesn’t depend on any higher-level classes in Flutter.
-4. there are useful widgets, for different purposes, such as:
-   `ChangeNotifierProvider` - Listens to a `ChangeNotifier`, expose it to its descendants and rebuilds dependents whenever the `notifyListeners()` is called.
-   `MultiProvider` - It's a list of all the different Providers being used within its scope.
+3. Testability/composability: `ChangeNotifier` is part of `flutter:foundation` and doesn’t depend on any higher-level classes in Flutter.
+4. There are useful widgets, for different purposes, such as:
+   - `ChangeNotifierProvider` - Listens to a `ChangeNotifier`, expose it to its descendants and rebuilds dependents whenever the `notifyListeners()` is called.
+   - `MultiProvider` - It's a list of all the different Providers being used within its scope.
+   
    There are more: `StreamProvider`, `FutureProvider`, `ListenableProvider`, `ValueListenableProvider` etc.
 
 ### Cons
@@ -442,13 +480,13 @@ The package works well with Future and Streams via:
 
 This package reimplements the `ValueNotifier` outside of Flutter.
 
-A value notifier is a ChangeNotifier that holds a single value. When the value is replaced with something that is not equal to the old value as evaluated by the equality operator ==, this class notifies its listeners.
+A value notifier is a ChangeNotifier that holds a single value. When the value replaced with something that is not equal to the old value as evaluated by the equality operator ==, this class notifies its listeners.
 
 The motivation of the package is to extracting ValueNotifier outside of Flutter in a separate package to allowed Dart packages with no dependency on Flutter to use these classes.
 
 ### Code sample
 
-To create our notifier we need to extend `StateNotifier` class. It is an observable class that stores a single immutable state.
+To create our notifier, we need to extend the `StateNotifier` class. It is an observable class that stores a single immutable state.
 
 ```dart
 class AuthStateNotifier extends StateNotifier<AuthState> {
@@ -456,26 +494,22 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
 }
 ```
 
-For a reading, StateNotifier gives us a **_state_** protected property, that is used only by subclasses of StateNotifier. To get the state from outside of the class, **\*addListener** method.
+For a reading, StateNotifier gives us a `state` - the protected property, that is used only by subclasses of StateNotifier.
 
-To update the state you can override **_state_** setter. Updating the value will synchronously call all the listeners.
+To update the state, just set the new state to the `state` variable. Updating the value will synchronously call all the listeners.
 
 ```dart
-@override
-@protected
-set state(AuthState newValue) {
-    super.state = newValue;
-}
+super.state = newState;
 ```
 
-To subscribe on the AuthState updates we can use **_addListener_** method.
+To subscribe to the `AuthState` updates, use the `addListener` method.
 
 ```dart
 final authNotifier = AuthStateNotifier();
 authNotifier.addListener((value) => ...);
 ```
 
-To remove listener from the object, **_addListener_** method returns a **_removeListener_** function, that we can save to the variable and call later.
+To remove the listener from the object, the `addListener` method returns a `removeListener` function, that we can save to the variable and call later.
 
 ```dart
 final authNotifier = AuthStateNotifier();
@@ -484,7 +518,7 @@ final removeAuthListener = authNotifier.addListener((value) => ...);
 removeAuthListener();
 ```
 
-To work with things, like Provider.of (from the provider flutter's package) or GetIt (get_it package) `LocatorMixin` exists. It provides the interface for the 3rd party libraries.
+To work with things, like `Provider.of` (from the provider flutter's package) or GetIt (get_it package) `LocatorMixin` exists. It provides the interface for the 3rd party libraries.
 
 ```dart
 class AuthStateNotifier extends StateNotifier<AuthState> with LocatorMixin {
@@ -492,7 +526,7 @@ class AuthStateNotifier extends StateNotifier<AuthState> with LocatorMixin {
 }
 ```
 
-With this, we can use **_flutter_notifier_** package - a binding between state*notifier and Flutter. It adds things like \*\*\_ChangeNotifierProvider*\*\* from the provider package, but compatible with the state_notifier.
+With this, we can use [flutter_state_notifier](https://pub.dev/packages/flutter_state_notifier#-readme-tab-) package - a binding between state notifier and Flutter. It adds things like `ChangeNotifierProvider` from the provider package, but compatible with the state_notifier.
 
 ```dart
 ...
@@ -506,16 +540,15 @@ With this, we can use **_flutter_notifier_** package - a binding between state*n
 
 ### Pros
 
-1. Based on the pure dart, so the business logic could be reused in non-flutter application.
-2. Great support for reactivity and asynchronies.
+1. Based on the pure dart, so the business logic could be reused in a non-flutter application.
+2. Great support for reactivity and asynchronous programming.
 3. Simple embedded mechanism of state listeners' notification. You should just set a new state, and the `StateNotifier` will notify all the listeners.
-4. The application state and the business logic are separated.
+4. The application state and business logic are separated.
 
 ### Cons
 
-1. Unable to update the application state without rebuilding the UI. ??
-2. No ability to rebuild the widget tree granular. If the state changes - all listeners are notified.
-3. A pretty young plugin.
+1. No ability to rebuild the widget tree granular. If the state changes - all listeners are notified.
+2. A pretty young plugin.
 
 # Results
 
