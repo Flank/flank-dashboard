@@ -1,12 +1,12 @@
 import 'package:ci_integration/common/config/model/source_config.dart';
 import 'package:meta/meta.dart';
 
-/// Represents the Jenkins CI config.
+/// Represents the Jenkins source config.
 class JenkinsConfig implements SourceConfig {
-  /// The url to the Jenkins instance.
+  /// The URL to the Jenkins instance.
   final String url;
 
-  /// Jenkins building job name.
+  /// The Jenkins building job name.
   final String jobName;
 
   /// The Jenkins account username.
@@ -20,14 +20,14 @@ class JenkinsConfig implements SourceConfig {
 
   /// Creates the [JenkinsConfig].
   ///
-  /// Throws an [ArgumentError] if [url] or [jobName] is null.
+  /// Throws an [ArgumentError] if either [url] or [jobName] is null.
   JenkinsConfig({
     @required this.url,
     @required this.jobName,
     this.username,
     this.apiKey,
   }) {
-    ArgumentError.checkNotNull(jobName, 'buildJobId');
+    ArgumentError.checkNotNull(jobName, 'jobName');
     ArgumentError.checkNotNull(url, 'url');
   }
 

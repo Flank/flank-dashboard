@@ -5,6 +5,10 @@ import 'package:ci_integration/firestore/adapter/firestore_destination_client_ad
 import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 import 'package:firedart/firedart.dart';
 
+/// A client factory for the Firestore destination integration.
+/// 
+/// Used to create instances of the [FirestoreDestinationClientAdapter] 
+/// using [FirestoreConfig].
 class FirestoreDestinationClientFactory
     implements
         DestinationClientFactory<FirestoreConfig,
@@ -13,6 +17,8 @@ class FirestoreDestinationClientFactory
 
   @override
   FutureOr<FirestoreDestinationClientAdapter> create(FirestoreConfig config) {
+    ArgumentError.checkNotNull(config, 'config');
+
     final firestore = Firestore(config.firebaseProjectId);
     return FirestoreDestinationClientAdapter(firestore);
   }

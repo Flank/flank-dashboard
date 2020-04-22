@@ -3,7 +3,7 @@ import 'package:ci_integration/common/client/integration_client.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An abstract class providing methods for interactions between
-/// [CiIntegration] and builds storage.
+/// [CiIntegration] and destination storage.
 abstract class DestinationClient extends IntegrationClient {
   /// Fetches the last build for a project specified by [projectId].
   ///

@@ -4,6 +4,7 @@ import 'package:ci_integration/firestore/client_factory/firestore_destination_cl
 import 'package:ci_integration/firestore/adapter/firestore_destination_client_adapter.dart';
 import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 
+/// An integration party for the Firestore destination integration.
 class FirestoreDestinationParty
     implements
         DestinationParty<FirestoreConfig, FirestoreDestinationClientAdapter> {

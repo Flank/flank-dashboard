@@ -1,16 +1,19 @@
 import 'package:meta/meta.dart';
 
-/// Represents the integration configuration.
+/// A class that represents the raw integration configuration.
+///
+/// Used to define both source and destination configuration maps.
 class RawIntegrationConfig {
-  /// Configuration of source CI from which metrics will be loaded.
+  /// The configuration of a source the metrics will be loaded from.
   final Map<String, dynamic> sourceConfigMap;
 
-  /// The configuration that defines where to store loaded metrics.
+  /// The configuration of a destination storage the loaded metrics 
+  /// will be saved to.
   final Map<String, dynamic> destinationConfigMap;
 
-  /// Creates the [RawIntegrationConfig].
+  /// Creates a new instance of this config.
   ///
-  /// If the [sourceConfigMap] or [destinationConfigMap] is null -
+  /// If either [sourceConfigMap] or [destinationConfigMap] is null,
   /// throws an [ArgumentError].
   RawIntegrationConfig({
     @required this.sourceConfigMap,

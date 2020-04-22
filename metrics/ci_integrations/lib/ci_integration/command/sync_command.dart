@@ -4,22 +4,24 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:ci_integration/ci_integration/ci_integration.dart';
 import 'package:ci_integration/ci_integration/command/ci_integration_command.dart';
-import 'package:ci_integration/ci_integration/command/sync_runner/sync_runner.dart';
 import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
 import 'package:ci_integration/ci_integration/config/parser/raw_integration_config_parser.dart';
 import 'package:ci_integration/ci_integration/parties/suppoested_integration_parties.dart';
 import 'package:ci_integration/common/client/destination_client.dart';
+import 'package:ci_integration/common/client/integration_client.dart';
 import 'package:ci_integration/common/client/source_client.dart';
+import 'package:ci_integration/common/config/model/config.dart';
 import 'package:ci_integration/common/logger/logger.dart';
 import 'package:ci_integration/ci_integration/config/model/raw_integration_config.dart';
-import 'package:ci_integration/common/party/destination_party.dart';
-import 'package:ci_integration/common/party/source_party.dart';
+import 'package:ci_integration/common/party/integration_party.dart';
+import 'package:ci_integration/ci_integration/parties/parties.dart';
 
 /// A class representing a [Command] for synchronizing builds.
 class SyncCommand extends CiIntegrationCommand<void> {
   /// Used to parse configuration file content.
   final _configParser = const RawIntegrationConfigParser();
 
+  /// An instance containing all the supported [IntegrationParty]s.
   final SupportedIntegrationParties supportedParties;
 
   @override
@@ -30,6 +32,9 @@ class SyncCommand extends CiIntegrationCommand<void> {
   String get name => 'sync';
 
   /// Creates an instance of this command with the given [logger].
+  ///
+  /// If the [supportedParties] is `null` the
+  /// default [SupportedIntegrationParties] instance is created.
   SyncCommand(
     Logger logger, {
     SupportedIntegrationParties supportedParties,
@@ -52,16 +57,34 @@ class SyncCommand extends CiIntegrationCommand<void> {
       DestinationClient destinationClient;
       try {
         final rawConfig = parseConfigFileContent(file);
-        final sourceParty = getSourceParty(rawConfig.sourceConfigMap);
-        final destinationParty =
-            getDestinationParty(rawConfig.destinationConfigMap);
-        final sourceConfig =
-            sourceParty.configParser.parse(rawConfig.sourceConfigMap);
-        final destinationConfig =
-            destinationParty.configParser.parse(rawConfig.destinationConfigMap);
-        sourceClient = await sourceParty.clientFactory.create(sourceConfig);
-        destinationClient =
-            await destinationParty.clientFactory.create(destinationConfig);
+
+        final sourceParty = getParty(
+          rawConfig.sourceConfigMap,
+          supportedParties.sourceParties,
+        );
+        final destinationParty = getParty(
+          rawConfig.destinationConfigMap,
+          supportedParties.destinationParties,
+        );
+
+        final sourceConfig = parseConfig(
+          rawConfig.sourceConfigMap,
+          sourceParty,
+        );
+        final destinationConfig = parseConfig(
+          rawConfig.destinationConfigMap,
+          destinationParty,
+        );
+
+        sourceClient = await createClient(
+          sourceConfig,
+          sourceParty,
+        );
+        destinationClient = await createClient(
+          destinationConfig,
+          destinationParty,
+        );
+
         final syncConfig = SyncConfig(
           sourceProjectId: sourceConfig.sourceProjectId,
           destinationProjectId: destinationConfig.destinationProjectId,
@@ -69,12 +92,14 @@ class SyncCommand extends CiIntegrationCommand<void> {
 
         await sync(syncConfig, sourceClient, destinationClient);
       } catch (e) {
-        logger.printError(e);
+        logger.printError(
+          'Failed to perform a sync due to the following error: $e',
+        );
       } finally {
         await dispose(sourceClient, destinationClient);
       }
     } else {
-      logger.printError('Configuration file $configFilePath does not exist.');
+      logger.printError('The configuration file $configFilePath does not exist.');
     }
   }
 
@@ -83,44 +108,53 @@ class SyncCommand extends CiIntegrationCommand<void> {
     return File(configFilePath);
   }
 
+  /// Parses the content of the given [file] into 
+  /// the [RawIntegrationConfig] instance.
   RawIntegrationConfig parseConfigFileContent(File file) {
     final content = file.readAsStringSync();
     return _configParser.parse(content);
   }
 
-  SourceParty getSourceParty(
-    Map<String, dynamic> sourceConfigMap,
+  /// Returns an [IntegrationParty] element from the given
+  /// [parties] that matches the given [configMap].
+  ///
+  /// If there is no party matching the given [configMap],
+  /// throws an [UnimplementedError].
+  T getParty<T extends IntegrationParty>(
+    Map<String, dynamic> configMap,
+    Parties<T> parties,
   ) {
-    final parties = supportedParties.supportedSourceParties.parties;
-    final sourceParty = parties.firstWhere(
-      (party) => party.configParser.canParse(sourceConfigMap),
+    final party = parties.parties.firstWhere(
+      (party) => party.configParser.canParse(configMap),
       orElse: () => null,
     );
 
-    if (sourceParty == null) {
+    if (party == null) {
       throw UnimplementedError('The given source config is unknown');
     }
 
-    return sourceParty;
+    return party;
   }
 
-  DestinationParty getDestinationParty(
-    Map<String, dynamic> destinationConfigMap,
+  /// Parses the given [configMap] into the [Config] instance
+  /// using an [IntegrationParty.configParser] of the given [party].
+  T parseConfig<T extends Config>(
+    Map<String, dynamic> configMap,
+    IntegrationParty<T, IntegrationClient> party,
   ) {
-    final parties = supportedParties.supportedDestinationParties.parties;
-    final destinationParty = parties.firstWhere(
-      (party) => party.configParser.canParse(destinationConfigMap),
-      orElse: () => null,
-    );
-
-    if (destinationParty == null) {
-      throw UnimplementedError('The given destination config is unknown');
-    }
-
-    return destinationParty;
+    return party.configParser.parse(configMap);
   }
 
-  /// Runs [SyncRunner.sync] on the given [config].
+  /// Creates an [IntegrationClient] instance with the given [config]
+  /// using an [IntegrationParty.clientFactory] of the given [party].
+  FutureOr<T> createClient<T extends IntegrationClient>(
+    Config config,
+    IntegrationParty<Config, T> party,
+  ) {
+    return party.clientFactory.create(config);
+  }
+
+  /// Runs the [CiIntegration.sync] method on the given [config].
   Future<void> sync(
     SyncConfig syncConfig,
     SourceClient sourceClient,
@@ -140,6 +174,8 @@ class SyncCommand extends CiIntegrationCommand<void> {
     }
   }
 
+  /// Closes both [sourceClient] and [destinationClient] and cleans up any 
+  /// resources associated with them.
   Future<void> dispose(
     SourceClient sourceClient,
     DestinationClient destinationClient,

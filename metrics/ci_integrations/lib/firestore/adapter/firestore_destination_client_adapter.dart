@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:ci_integration/common/client/destination_client.dart';
 import 'package:ci_integration/firestore/deserializer/build_data_deserializer.dart';
 import 'package:firedart/firedart.dart';
@@ -7,14 +5,14 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:grpc/grpc.dart';
 
 /// A class that provides methods for interactions between
-/// [CiIntegration] and Firestore builds storage.
+/// [CiIntegration] and Firestore destination storage.
 class FirestoreDestinationClientAdapter implements DestinationClient {
   final Firestore _firestore;
 
   /// Creates a [FirestoreDestinationClientAdapter] instance
-  /// with the given [Firestore].
+  /// with the given [Firestore] instance.
   ///
-  /// Throws [ArgumentError] if [Firestore] is `null`.
+  /// Throws an [ArgumentError], if the given [Firestore] instance is `null`.
   FirestoreDestinationClientAdapter(this._firestore) {
     ArgumentError.checkNotNull(_firestore, 'firestore');
   }
@@ -53,8 +51,5 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
   }
 
   @override
-  FutureOr<void> dispose() {
-    // TODO: implement dispose
-    throw UnimplementedError();
-  }
+  void dispose() {}
 }

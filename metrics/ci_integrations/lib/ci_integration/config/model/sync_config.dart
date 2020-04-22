@@ -1,19 +1,20 @@
 import 'package:meta/meta.dart';
 
-/// A class representing configurations for a project within CI
-/// and builds storage context.
+/// A class representing configurations for a project within a source
+/// and destination context.
 @immutable
 class SyncConfig {
-  /// Used to identify a project in a source this config belongs to.
+  /// Used to identify a project in a source the metrics will be loaded from.
   final String sourceProjectId;
 
-  /// Used to identify a project in a builds storage.
+  /// Used to identify a project in a destination storage
+  /// the loaded metrics will be saved to.
   final String destinationProjectId;
 
-  /// Creates an instance of the CI configuration.
+  /// Creates an instance of this configuration.
   ///
-  /// Both [sourceProjectId] and [destinationProjectId] is required. If one of these
-  /// values is `null`, throws an [ArgumentError].
+  /// Both [sourceProjectId] and [destinationProjectId] are required.
+  /// If one of these values is `null`, throws an [ArgumentError].
   SyncConfig({
     @required this.sourceProjectId,
     @required this.destinationProjectId,

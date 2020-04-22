@@ -6,7 +6,7 @@ abstract class CiIntegrationCommand<T> extends Command<T> {
   /// The [Logger] this command should use for messages and errors.
   final Logger logger;
 
-  /// Creates an instance for this command.
+  /// Creates an instance of this command.
   ///
   /// If the [logger] is `null` throws an [ArgumentError].
   CiIntegrationCommand(this.logger) {

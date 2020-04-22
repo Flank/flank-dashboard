@@ -1,20 +1,20 @@
 /// A class containing a result of an interaction.
 class InteractionResult<T> {
-  /// Used to indicate that interaction is failed.
+  /// Used to indicate that this interaction is failed.
   final bool _isError;
 
-  /// Contains message with a result of interaction.
+  /// Contains a message with a result of this interaction.
   final String message;
 
-  /// Contains a result of interaction.
+  /// Contains a result of this interaction.
   ///
-  /// Generally, the parsed body from response.
+  /// Generally, the parsed body from the response.
   final T result;
 
-  /// Indicates if the interaction has finished with an error.
+  /// Indicates if this interaction has finished with an error.
   bool get isError => _isError;
 
-  /// Indicates if the interaction has finished successfully.
+  /// Indicates if this interaction has finished successfully.
   bool get isSuccess => !_isError;
 
   const InteractionResult._(this._isError, this.message, this.result);

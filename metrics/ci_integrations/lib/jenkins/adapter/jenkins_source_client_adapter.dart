@@ -10,7 +10,7 @@ import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// An adapter for [JenkinsClient] to fit the [SourceClient] contract.
+/// An adapter for the [JenkinsClient] to fit the [SourceClient] contract.
 class JenkinsSourceClientAdapter implements SourceClient {
   /// A fetch limit for builds when we download all builds from CI (initial fetch).
   static const initialFetchBuildsLimit = 28;
@@ -20,7 +20,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
 
   /// Creates an instance of this adapter with the given [jenkinsClient].
   ///
-  /// Throws an [ArgumentError] if the given Jenkins client is `null`.
+  /// Throws an [ArgumentError], if the given [jenkinsClient] is `null`.
   JenkinsSourceClientAdapter(this.jenkinsClient) {
     ArgumentError.checkNotNull(jenkinsClient, 'jenkinsClient');
   }

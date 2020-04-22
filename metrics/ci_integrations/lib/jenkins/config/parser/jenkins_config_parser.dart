@@ -1,6 +1,7 @@
 import 'package:ci_integration/common/config/parser/source_config_parser.dart';
 import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
 
+/// A configuration parser for the Jenkins source integration.
 class JenkinsConfigParser implements SourceConfigParser<JenkinsConfig> {
   const JenkinsConfigParser();
 

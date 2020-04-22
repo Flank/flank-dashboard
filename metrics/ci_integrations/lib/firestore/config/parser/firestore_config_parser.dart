@@ -1,6 +1,7 @@
 import 'package:ci_integration/common/config/parser/destination_config_parser.dart';
 import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 
+/// A configuration parser for the Firestore destination integration.
 class FirestoreConfigParser
     implements DestinationConfigParser<FirestoreConfig> {
   const FirestoreConfigParser();

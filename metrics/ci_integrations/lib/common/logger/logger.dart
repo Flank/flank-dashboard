@@ -1,6 +1,6 @@
 import 'dart:io';
 
-/// A class providing methods for logging messages and errors for CLI tool.
+/// A class providing methods for logging messages and errors for the CLI tool.
 class Logger {
   /// The [IOSink] used to log errors.
   final IOSink errorSink;
@@ -8,11 +8,11 @@ class Logger {
   /// The [IOSink] used to log messages.
   final IOSink messageSink;
 
-  /// Creates the logger instance.
+  /// Creates this logger instance.
   ///
   /// Both [errorSink] and [messageSink] are optional.
-  /// If [errorSink] is not given, the default [stderr] is used.
-  /// If [messageSink] is not given, the default [stdout] is used.
+  /// If the [errorSink] is not given, the default [stderr] is used.
+  /// If the [messageSink] is not given, the default [stdout] is used.
   Logger({
     IOSink errorSink,
     IOSink messageSink,
