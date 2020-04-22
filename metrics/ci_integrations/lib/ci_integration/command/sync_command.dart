@@ -6,7 +6,7 @@ import 'package:ci_integration/ci_integration/ci_integration.dart';
 import 'package:ci_integration/ci_integration/command/ci_integration_command.dart';
 import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
 import 'package:ci_integration/ci_integration/config/parser/raw_integration_config_parser.dart';
-import 'package:ci_integration/ci_integration/parties/suppoested_integration_parties.dart';
+import 'package:ci_integration/ci_integration/parties/supported_integration_parties.dart';
 import 'package:ci_integration/common/client/destination_client.dart';
 import 'package:ci_integration/common/client/integration_client.dart';
 import 'package:ci_integration/common/client/source_client.dart';

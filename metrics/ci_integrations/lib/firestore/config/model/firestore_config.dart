@@ -1,8 +1,9 @@
 import 'package:ci_integration/common/config/model/destination_config.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// Represents the Firestore configuration.
-class FirestoreConfig implements DestinationConfig {
+class FirestoreConfig extends Equatable implements DestinationConfig {
   /// The Firebase project identifier.
   final String firebaseProjectId;
 
@@ -10,9 +11,12 @@ class FirestoreConfig implements DestinationConfig {
   final String metricsProjectId;
 
   @override
+  List<Object> get props => [firebaseProjectId, metricsProjectId];
+
+  @override
   String get destinationProjectId => metricsProjectId;
 
-  /// Creates the [FirestoreConfig] with the given 
+  /// Creates the [FirestoreConfig] with the given
   /// [metricsProjectId] and [firebaseProjectId].
   ///
   /// Throws an [ArgumentError] if either the [metricsProjectId]

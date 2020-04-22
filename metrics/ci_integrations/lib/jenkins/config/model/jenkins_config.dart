@@ -1,8 +1,9 @@
 import 'package:ci_integration/common/config/model/source_config.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// Represents the Jenkins source config.
-class JenkinsConfig implements SourceConfig {
+class JenkinsConfig extends Equatable implements SourceConfig {
   /// The URL to the Jenkins instance.
   final String url;
 
@@ -17,6 +18,9 @@ class JenkinsConfig implements SourceConfig {
 
   @override
   String get sourceProjectId => jobName;
+
+  @override
+  List<Object> get props => [url, jobName, username, apiKey];
 
   /// Creates the [JenkinsConfig].
   ///
@@ -41,7 +45,7 @@ class JenkinsConfig implements SourceConfig {
       url: json['url'] as String,
       jobName: json['job_name'] as String,
       username: json['username'] as String,
-      apiKey: json['apiKey'] as String,
+      apiKey: json['api_key'] as String,
     );
   }
 }

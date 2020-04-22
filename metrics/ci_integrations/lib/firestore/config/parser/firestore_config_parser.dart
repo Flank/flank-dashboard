@@ -8,11 +8,13 @@ class FirestoreConfigParser
 
   @override
   bool canParse(Map<String, dynamic> map) {
-    return map['firestore'] != null;
+    return map!=null && map['firestore'] != null;
   }
 
   @override
   FirestoreConfig parse(Map<String, dynamic> map) {
+    if (map == null) return null;
+
     final firestoreConfigMap = map['firestore'] as Map<String, dynamic>;
     return FirestoreConfig.fromJson(firestoreConfigMap);
   }

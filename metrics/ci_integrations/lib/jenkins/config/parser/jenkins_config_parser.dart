@@ -7,11 +7,13 @@ class JenkinsConfigParser implements SourceConfigParser<JenkinsConfig> {
 
   @override
   bool canParse(Map<String, dynamic> map) {
-    return map['jenkins'] != null;
+    return map != null && map['jenkins'] != null;
   }
 
   @override
   JenkinsConfig parse(Map<String, dynamic> map) {
+    if (map == null) return null;
+
     final jenkinsConfigMap = map['jenkins'] as Map<String, dynamic>;
     return JenkinsConfig.fromJson(jenkinsConfigMap);
   }

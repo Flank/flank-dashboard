@@ -3,6 +3,25 @@ import 'package:test/test.dart';
 
 void main() {
   group("JenkinsConfig", () {
+    const url = 'url';
+    const username = 'username';
+    const apiKey = 'apiKey';
+    const jobName = 'jobName';
+
+    final jenkinsConfigJson = {
+      'url': url,
+      'username': username,
+      'api_key': apiKey,
+      'job_name': jobName,
+    };
+
+    final jenkinsConfig = JenkinsConfig(
+      url: url,
+      jobName: jobName,
+      username: username,
+      apiKey: apiKey,
+    );
+
     test(
       "can't be created with null url",
       () {
@@ -24,36 +43,29 @@ void main() {
     );
 
     test(
-      ".fromJson() creates new instance of JenkinsConfig from json encodable Map",
+      ".fromJson() should create a new instance of the JenkinsConfig from json encodable Map",
       () {
-        const url = 'url';
-        const username = 'username';
-        const apiKey = 'apiKey';
-        const buildJobName = 'job_name';
-
-        final jenkinsConfigJson = {
-          'url': url,
-          'username': username,
-          'apiKey': apiKey,
-          'job_name': buildJobName,
-        };
-
         final jenkinsConfig = JenkinsConfig.fromJson(jenkinsConfigJson);
 
-        expect(jenkinsConfig.url, url);
-        expect(jenkinsConfig.username, username);
-        expect(jenkinsConfig.apiKey, apiKey);
-        expect(jenkinsConfig.jobName, buildJobName);
+        expect(jenkinsConfig, equals(jenkinsConfig));
       },
     );
 
     test(
-      ".fromJson() return null if null is passed",
+      ".fromJson() should return null if null is passed",
       () {
         final config = JenkinsConfig.fromJson(null);
 
         expect(config, isNull);
       },
     );
+
+    test(".sourceProjectId should return the jobName property value", () {
+      const expected = jobName;
+
+      final sourceProjectId = jenkinsConfig.sourceProjectId;
+
+      expect(sourceProjectId, equals(expected));
+    });
   });
 }
