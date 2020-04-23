@@ -2,26 +2,54 @@
 // https://github.com/flutter/flutter/pull/45951
 
 import 'package:flutter_driver/flutter_driver.dart';
+import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:test/test.dart';
 
 void main() {
+  FlutterDriver driver;
+
+  setUpAll(() async {
+    driver = await WebFlutterDriver.connectWeb();
+  });
+
+  tearDownAll(() async {
+    await driver?.close();
+  });
+
+  group("LoginPage", () {
+    test("shows an authentication form", () async {
+      await _authFormExists(driver);
+    });
+
+    test("can authenticate in the app using an email and a password", () async {
+      await _authFormExists(driver);
+      await _login(driver);
+      await _authFormAbsent(driver);
+      await driver.waitFor(find.byType('DashboardPage'));
+    });
+
+    test("can log out from the app", () async {
+      await driver.waitUntilNoTransientCallbacks(
+          timeout: const Duration(seconds: 2));
+      await driver.tap(find.byTooltip('Open navigation menu'));
+      await driver.waitFor(find.text(CommonStrings.logOut));
+      await driver.tap(find.text(CommonStrings.logOut));
+      await driver.waitUntilNoTransientCallbacks(
+          timeout: const Duration(seconds: 2));
+      await _authFormExists(driver);
+    });
+  });
+
   group(
     "DashboardPage",
     () {
-      FlutterDriver driver;
-
-      setUpAll(() async {
-        driver = await WebFlutterDriver.connectWeb();
-      });
-
-      tearDownAll(() async {
-        await driver?.close();
-      });
-
       test(
         "loads and shows the projects",
         () async {
+          await _authFormExists(driver);
+          await _login(driver);
+          await _authFormAbsent(driver);
           await driver.waitFor(find.byType('ProjectMetricsTile'));
         },
       );
@@ -60,4 +88,20 @@ void main() {
       );
     },
   );
+}
+
+Future<void> _login(FlutterDriver driver) async {
+  await driver.tap(find.byValueKey('Email'));
+  await driver.enterText('test@email.com');
+  await driver.tap(find.byValueKey('Password'));
+  await driver.enterText('testPassword');
+  await driver.tap(find.byValueKey('Sign in'));
+}
+
+Future<void> _authFormExists(FlutterDriver driver) async {
+  await driver.waitFor(find.byType('AuthForm'));
+}
+
+Future<void> _authFormAbsent(FlutterDriver driver) async {
+  await driver.waitForAbsent(find.byType('AuthForm'));
 }

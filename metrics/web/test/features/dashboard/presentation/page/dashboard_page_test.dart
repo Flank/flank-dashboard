@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
@@ -11,6 +12,7 @@ import 'package:metrics/features/dashboard/presentation/strings/dashboard_string
 import 'package:metrics/features/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+import '../../../../test_utils/signed_in_auth_store_fake.dart';
 import '../test_utils/project_metrics_store_stub.dart';
 
 void main() {
@@ -108,6 +110,7 @@ class _DashboardTestbed extends StatelessWidget {
         inject: [
           Inject<ProjectMetricsStore>(() => metricsStore),
           Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
+          Inject<AuthStore>(() => SignedInAuthStoreFake()),
         ],
         initState: () {
           Injector.getAsReactive<ProjectMetricsStore>().setState(
@@ -116,6 +119,8 @@ class _DashboardTestbed extends StatelessWidget {
           );
           Injector.getAsReactive<ThemeStore>()
               .setState((store) => store.isDark = false);
+          Injector.getAsReactive<AuthStore>()
+              .setState((store) => store.subscribeToAuthenticationUpdates());
         },
         builder: (BuildContext context) => MetricsThemeBuilder(
           builder: (_, __) {

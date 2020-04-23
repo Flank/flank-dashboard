@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';

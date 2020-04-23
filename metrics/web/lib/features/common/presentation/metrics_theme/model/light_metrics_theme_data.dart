@@ -44,7 +44,10 @@ class LightMetricsThemeData extends MetricsThemeData {
             primaryColor: ColorConfig.primaryColor,
             accentColor: ColorConfig.primaryTranslucentColor,
             backgroundColor: Colors.white,
-            textStyle: TextStyle(color: ColorConfig.primaryColor),
+            textStyle: TextStyle(
+              color: ColorConfig.primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           buildResultTheme: const BuildResultsThemeData(
             canceledColor: ColorConfig.accentColor,
@@ -58,6 +61,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             textStyle: TextStyle(
               color: Colors.grey,
               fontSize: 32.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
         );
