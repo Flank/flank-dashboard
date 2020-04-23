@@ -7,6 +7,7 @@ import 'package:metrics_core/src/domain/entities/percent.dart';
 class BuildData extends Build implements DataModel {
   const BuildData({
     String id,
+    String projectId,
     int buildNumber,
     DateTime startedAt,
     BuildStatus buildStatus,
@@ -16,6 +17,7 @@ class BuildData extends Build implements DataModel {
     Percent coverage,
   }) : super(
           id: id,
+          projectId: projectId,
           buildNumber: buildNumber,
           startedAt: startedAt,
           buildStatus: buildStatus,
@@ -25,12 +27,39 @@ class BuildData extends Build implements DataModel {
           coverage: coverage,
         );
 
+  /// Creates a copy of this [BuildData] but with the given fields
+  /// replaced with the new values.
+  BuildData copyWith({
+    String id,
+    String projectId,
+    int buildNumber,
+    DateTime startedAt,
+    BuildStatus buildStatus,
+    Duration duration,
+    String workflowName,
+    String url,
+    Percent coverage,
+  }) {
+    return BuildData(
+      id: id ?? this.id,
+      projectId: projectId ?? this.projectId,
+      buildNumber: buildNumber ?? this.buildNumber,
+      startedAt: startedAt ?? this.startedAt,
+      buildStatus: buildStatus ?? this.buildStatus,
+      duration: duration ?? this.duration,
+      workflowName: workflowName ?? this.workflowName,
+      url: url ?? this.url,
+      coverage: coverage ?? this.coverage,
+    );
+  }
+
   @override
   Map<String, dynamic> toJson() {
     return {
+      'projectId': projectId,
       'buildNumber': buildNumber,
       'startedAt': startedAt,
-      'buildStatus': buildStatus?.index,
+      'buildStatus': buildStatus?.toString(),
       'duration': duration?.inMilliseconds,
       'workflowName': workflowName,
       'url': url,

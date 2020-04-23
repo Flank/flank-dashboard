@@ -4,7 +4,6 @@ import 'package:metrics/features/common/presentation/injector/widget/injection_c
 import 'package:metrics/features/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
-import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() => runApp(MyApp());
@@ -23,9 +22,8 @@ class _MyAppState extends State<MyApp> {
           final isDark = store?.isDark ?? true;
 
           return MaterialApp(
-            title: CommonStrings.metrics,
+            title: 'Metrics',
             debugShowCheckedModeBanner: false,
-            initialRoute: '/',
             onGenerateRoute: (settings) => RouteGenerator.generateRoute(
               settings: settings,
               isLoggedIn: Injector.get<AuthStore>().isLoggedIn,

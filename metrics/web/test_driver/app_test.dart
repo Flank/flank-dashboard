@@ -7,87 +7,90 @@ import 'package:metrics/features/dashboard/presentation/strings/dashboard_string
 import 'package:test/test.dart';
 
 void main() {
-  FlutterDriver driver;
+  group("Flutter driver test", () {
+    FlutterDriver driver;
 
-  setUpAll(() async {
-    driver = await WebFlutterDriver.connectWeb();
-  });
-
-  tearDownAll(() async {
-    await driver?.close();
-  });
-
-  group("LoginPage", () {
-    test("shows an authentication form", () async {
-      await _authFormExists(driver);
+    setUpAll(() async {
+      driver = await WebFlutterDriver.connectWeb();
     });
 
-    test("can authenticate in the app using an email and a password", () async {
-      await _authFormExists(driver);
-      await _login(driver);
-      await _authFormAbsent(driver);
-      await driver.waitFor(find.byType('DashboardPage'));
+    tearDownAll(() async {
+      await driver?.close();
     });
 
-    test("can log out from the app", () async {
-      await driver.waitUntilNoTransientCallbacks(
-          timeout: const Duration(seconds: 2));
-      await driver.tap(find.byTooltip('Open navigation menu'));
-      await driver.waitFor(find.text(CommonStrings.logOut));
-      await driver.tap(find.text(CommonStrings.logOut));
-      await driver.waitUntilNoTransientCallbacks(
-          timeout: const Duration(seconds: 2));
-      await _authFormExists(driver);
+    group("LoginPage", () {
+      test("shows an authentication form", () async {
+        await _authFormExists(driver);
+      });
+
+      test("can authenticate in the app using an email and a password",
+          () async {
+        await _authFormExists(driver);
+        await _login(driver);
+        await _authFormAbsent(driver);
+        await driver.waitFor(find.byType('DashboardPage'));
+      });
+
+      test("can log out from the app", () async {
+        await driver.waitUntilNoTransientCallbacks(
+            timeout: const Duration(seconds: 2));
+        await driver.tap(find.byTooltip('Open navigation menu'));
+        await driver.waitFor(find.text(CommonStrings.logOut));
+        await driver.tap(find.text(CommonStrings.logOut));
+        await driver.waitUntilNoTransientCallbacks(
+            timeout: const Duration(seconds: 2));
+        await _authFormExists(driver);
+      });
     });
+
+    group(
+      "DashboardPage",
+      () {
+        test(
+          "loads and shows the projects",
+          () async {
+            await _authFormExists(driver);
+            await _login(driver);
+            await _authFormAbsent(driver);
+            await driver.waitFor(find.byType('ProjectMetricsTile'));
+          },
+        );
+
+        test(
+          "loads and displays coverage metric",
+          () async {
+            await driver.waitFor(find.text(DashboardStrings.coverage));
+            await driver.waitFor(find.byType('CirclePercentage'));
+          },
+        );
+
+        test(
+          "loads and displays the performance metric ",
+          () async {
+            await driver.waitFor(find.text(DashboardStrings.performance));
+
+            await driver.waitFor(find.byType('SparklineGraph'));
+          },
+        );
+
+        test(
+          "loads and shows the build number metric",
+          () async {
+            await driver.waitFor(find.text(DashboardStrings.builds));
+
+            await driver.waitFor(find.byType('BuildNumberTextMetric'));
+          },
+        );
+
+        test(
+          "loads and shows the build result metrics",
+          () async {
+            await driver.waitFor(find.byType('BuildResultBarGraph'));
+          },
+        );
+      },
+    );
   });
-
-  group(
-    "DashboardPage",
-    () {
-      test(
-        "loads and shows the projects",
-        () async {
-          await _authFormExists(driver);
-          await _login(driver);
-          await _authFormAbsent(driver);
-          await driver.waitFor(find.byType('ProjectMetricsTile'));
-        },
-      );
-
-      test(
-        "loads and displays coverage metric",
-        () async {
-          await driver.waitFor(find.text(DashboardStrings.coverage));
-          await driver.waitFor(find.byType('CirclePercentage'));
-        },
-      );
-
-      test(
-        "loads and displays the performance metric ",
-        () async {
-          await driver.waitFor(find.text(DashboardStrings.performance));
-
-          await driver.waitFor(find.byType('SparklineGraph'));
-        },
-      );
-
-      test(
-        "loads and shows the build number metric",
-        () async {
-          await driver.waitFor(find.text(DashboardStrings.builds));
-
-          await driver.waitFor(find.byType('BuildNumberTextMetric'));
-        },
-      );
-
-      test(
-        "loads and shows the build result metrics",
-        () async {
-          await driver.waitFor(find.byType('BuildResultBarGraph'));
-        },
-      );
-    },
-  );
 }
 
 Future<void> _login(FlutterDriver driver) async {

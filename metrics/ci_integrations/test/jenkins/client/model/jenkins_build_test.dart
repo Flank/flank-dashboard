@@ -8,7 +8,7 @@ void main() {
   group("JenkinsBuild", () {
     const resultMapper = JenkinsBuildResultMapper();
     const number = 1;
-    const duration = 10;
+    const duration = 10000;
     const result = 'FAILURE';
     const url = 'url';
     final timestamp = DateTime(2020);
@@ -24,7 +24,7 @@ void main() {
 
     final jenkinsBuild = JenkinsBuild(
       number: number,
-      duration: const Duration(seconds: duration),
+      duration: const Duration(milliseconds: duration),
       timestamp: timestamp,
       result: resultMapper.map(result),
       url: url,
@@ -65,7 +65,7 @@ void main() {
       ".listFromJson() should map a list of jobs json maps",
       () {
         const _number = number + 1;
-        const _duration = duration + 10;
+        const _duration = duration + 10000;
         final _timestamp = timestamp.add(const Duration(days: 1));
         const _result = 'SUCCESS';
         const _url = 'anotherUrl';
@@ -81,7 +81,7 @@ void main() {
 
         final anotherBuild = JenkinsBuild(
           number: _number,
-          duration: const Duration(seconds: _duration),
+          duration: const Duration(milliseconds: _duration),
           timestamp: _timestamp,
           result: resultMapper.map(_result),
           url: _url,

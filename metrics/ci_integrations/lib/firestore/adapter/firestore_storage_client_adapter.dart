@@ -14,7 +14,7 @@ class FirestoreStorageClientAdapter implements StorageClient {
   ///
   /// Throws [ArgumentError] if [Firestore] is `null`.
   FirestoreStorageClientAdapter(this._firestore) {
-    ArgumentError.checkNotNull(_firestore, '_firestore');
+    ArgumentError.checkNotNull(_firestore, 'firestore');
   }
 
   @override
@@ -26,12 +26,9 @@ class FirestoreStorageClientAdapter implements StorageClient {
       final futures = <Future>[];
 
       for (final build in builds) {
-        futures.add(collection.add(
-          build.toJson()
-            ..addAll(
-              {'projectId': project.id},
-            ),
-        ));
+        final documentId = '${project.id}_${build.buildNumber}';
+        final map = build.copyWith(projectId: project.id).toJson();
+        futures.add(collection.document(documentId).create(map));
       }
       await Future.wait(futures);
     } on GrpcError catch (e) {
