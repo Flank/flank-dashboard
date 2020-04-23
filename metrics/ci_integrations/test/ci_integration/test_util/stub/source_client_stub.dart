@@ -7,7 +7,7 @@ import '../../test_data/builds_test_data.dart';
 
 /// A stub class for a [SourceClient] abstract class providing test
 /// implementation for methods.
-class CiClientStub implements SourceClient {
+class SourceClientStub implements SourceClient {
   /// Callback used to replace the default [fetchBuildsAfter] method
   /// implementation for testing purposes.
   final Future<List<BuildData>> Function(String, BuildData)
@@ -20,7 +20,7 @@ class CiClientStub implements SourceClient {
   /// Creates this stub class instance.
   ///
   /// Both [fetchBuildsAfterCallback] and [fetchBuildsCallback] are optional.
-  CiClientStub({
+  SourceClientStub({
     this.fetchBuildsAfterCallback,
     this.fetchBuildsCallback,
   });
@@ -52,8 +52,5 @@ class CiClientStub implements SourceClient {
   }
 
   @override
-  FutureOr<void> dispose() {
-    // TODO: implement dispose
-    throw UnimplementedError();
-  }
+  void dispose() {}
 }

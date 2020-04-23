@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:ci_integration/common/client/destination_client.dart';
+import 'package:ci_integration/firestore/client/firestore.dart';
 import 'package:ci_integration/firestore/deserializer/build_data_deserializer.dart';
-import 'package:firedart/firedart.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:grpc/grpc.dart';
 
@@ -16,7 +18,7 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
   FirestoreDestinationClientAdapter(this._firestore) {
     ArgumentError.checkNotNull(_firestore, 'firestore');
   }
-
+  
   @override
   Future<void> addBuilds(String projectId, List<BuildData> builds) async {
     try {

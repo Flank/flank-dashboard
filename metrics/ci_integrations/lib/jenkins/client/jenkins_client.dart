@@ -27,24 +27,23 @@ class JenkinsClient {
   final Client _client = Client();
 
   /// The authorization method used within HTTP requests.
-  final AuthorizationBase _authorization;
+  final AuthorizationBase authorization;
 
   /// The base URL of the Jenkins instance.
-  final String _jenkinsUrl;
+  final String jenkinsUrl;
 
-  /// Creates an instance of [JenkinsClient] using [url] and
+  /// Creates an instance of [JenkinsClient] using [jekninsUrl] and
   /// [authorization] method (see [AuthorizationBase] and implementers)
   /// provided.
   ///
-  /// [url] is required. Throws [ArgumentError] if it is `null` or empty.
+  /// [jenkinsUrl] is required. Throws [ArgumentError] if it is `null` or empty.
   JenkinsClient({
-    @required String url,
-    AuthorizationBase authorization,
-  })  : _authorization = authorization,
-        _jenkinsUrl = url {
-    if (_jenkinsUrl == null || _jenkinsUrl.isEmpty) {
+    @required this.jenkinsUrl,
+    this.authorization,
+  }) {
+    if (jenkinsUrl == null || jenkinsUrl.isEmpty) {
       throw ArgumentError.value(
-        _jenkinsUrl,
+        jenkinsUrl,
         'jenkinsUrl',
         'must not be null or empty',
       );
@@ -59,7 +58,7 @@ class JenkinsClient {
     return <String, String>{
       HttpHeaders.contentTypeHeader: ContentType.json.value,
       HttpHeaders.acceptHeader: ContentType.json.value,
-      if (_authorization != null) ..._authorization.toMap(),
+      if (authorization != null) ...authorization.toMap(),
     };
   }
 
@@ -154,7 +153,7 @@ class JenkinsClient {
   /// method.
   Future<InteractionResult<JenkinsJob>> _fetchJob(String path) {
     final fullUrl = _buildJenkinsApiUrl(
-      _jenkinsUrl,
+      jenkinsUrl,
       path: '$path/api/json',
       treeQuery: TreeQuery.job,
     );
@@ -178,7 +177,7 @@ class JenkinsClient {
   }) {
     final path = _jobFullNameToPath(multiBranchJobFullName);
     final url = _buildJenkinsApiUrl(
-      _jenkinsUrl,
+      jenkinsUrl,
       path: '$path$jsonApiPath',
       treeQuery: 'jobs[${TreeQuery.job}]${limits.toQuery()}',
     );
@@ -228,7 +227,7 @@ class JenkinsClient {
   }) {
     final path = _jobFullNameToPath(buildingJobFullName);
     final url = _buildJenkinsApiUrl(
-      _jenkinsUrl,
+      jenkinsUrl,
       path: '$path$jsonApiPath',
       treeQuery: '${TreeQuery.jobBase},'
           'builds[${TreeQuery.build}]${limits.toQuery()},'

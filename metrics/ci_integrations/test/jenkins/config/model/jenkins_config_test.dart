@@ -1,32 +1,21 @@
 import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/jenkins_config_test_data.dart';
+
 void main() {
   group("JenkinsConfig", () {
-    const url = 'url';
-    const username = 'username';
-    const apiKey = 'apiKey';
-    const jobName = 'jobName';
-
-    final jenkinsConfigJson = {
-      'url': url,
-      'username': username,
-      'api_key': apiKey,
-      'job_name': jobName,
-    };
-
-    final jenkinsConfig = JenkinsConfig(
-      url: url,
-      jobName: jobName,
-      username: username,
-      apiKey: apiKey,
-    );
+    const jenkinsConfigJson = JenkinsConfigTestData.jenkinsConfigMap;
+    final jenkinsConfig = JenkinsConfigTestData.jenkinsConfig;
 
     test(
       "can't be created with null url",
       () {
         expect(
-          () => JenkinsConfig(jobName: 'jobId', url: null),
+          () => JenkinsConfig(
+            jobName: JenkinsConfigTestData.jobName,
+            url: null,
+          ),
           throwsArgumentError,
         );
       },
@@ -36,7 +25,10 @@ void main() {
       "can't be created with null jobName",
       () {
         expect(
-          () => JenkinsConfig(url: 'url', jobName: null),
+          () => JenkinsConfig(
+            url: JenkinsConfigTestData.url,
+            jobName: null,
+          ),
           throwsArgumentError,
         );
       },
@@ -61,7 +53,7 @@ void main() {
     );
 
     test(".sourceProjectId should return the jobName property value", () {
-      const expected = jobName;
+      const expected = JenkinsConfigTestData.jobName;
 
       final sourceProjectId = jenkinsConfig.sourceProjectId;
 

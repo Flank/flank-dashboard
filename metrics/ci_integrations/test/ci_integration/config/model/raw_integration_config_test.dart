@@ -2,7 +2,7 @@ import 'package:ci_integration/ci_integration/config/model/raw_integration_confi
 import 'package:test/test.dart';
 
 void main() {
-  group("CiIntegrationConfig", () {
+  group("RawIntegrationConfig", () {
     test(
       "can't be created when the source is null",
       () {

@@ -1,4 +1,5 @@
 import 'package:ci_integration/firestore/adapter/firestore_destination_client_adapter.dart';
+import 'package:ci_integration/firestore/client/firestore.dart' as client;
 import 'package:ci_integration/firestore/deserializer/build_data_deserializer.dart';
 import 'package:firedart/firedart.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -234,7 +235,7 @@ void main() {
   });
 }
 
-class _FirestoreMock extends Mock implements Firestore {}
+class _FirestoreMock extends Mock implements client.Firestore {}
 
 class _CollectionReferenceMock extends Mock implements CollectionReference {}
 

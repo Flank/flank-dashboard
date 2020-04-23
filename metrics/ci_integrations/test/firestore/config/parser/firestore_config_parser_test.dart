@@ -1,58 +1,63 @@
-import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 import 'package:ci_integration/firestore/config/parser/firestore_config_parser.dart';
 import 'package:test/test.dart';
+
+import '../../test_utils/firestore_config_test_data.dart';
 
 void main() {
   group("FirestoreConfigParser", () {
     const firestoreConfigParser = FirestoreConfigParser();
-    const destinationMap = {
-      'firestore': {
-        'firebase_project_id': 'firestore_project_id',
-        'metrics_project_id': 'metrics_project_id',
-      },
+    final firestoreConfig = FirestoreConfigTestData.firestoreConfig;
+    final firestoreConfigMap = {
+      'firestore': FirestoreConfigTestData.firestoreConfigJson,
     };
-    test(".canParse() should returns false if the given map is null", () {
+
+    test(".canParse() should return false if the given map is null", () {
       final result = firestoreConfigParser.canParse(null);
 
       expect(false, equals(result));
     });
 
     test(
-        ".canParse() should returns false if the given map does not contain a firestore  key",
-        () {
-      final result = firestoreConfigParser.canParse({});
+      ".canParse() should return false if the given map does not contain a firestore  key",
+      () {
+        final map = {'test': {}};
 
-      expect(false, equals(result));
-    });
+        final result = firestoreConfigParser.canParse(map);
 
-    test(".canParse() should returns true if parser can parse the given map", () {
-      final result = firestoreConfigParser.canParse(destinationMap);
+        expect(false, equals(result));
+      },
+    );
 
-      expect(true, equals(result));
-    });
+    test(
+      ".canParse() should return true if parser can parse the given map",
+      () {
+        final result = firestoreConfigParser.canParse(firestoreConfigMap);
 
-    test(".parse() should returns null if the given map is null", () {
+        expect(true, equals(result));
+      },
+    );
+
+    test(".parse() should return null if the given map is null", () {
       final result = firestoreConfigParser.parse(null);
 
       expect(result, isNull);
     });
 
     test(
-        ".parse() should returns null if the given map does not contain a firestore key",
-        () {
-      final result = firestoreConfigParser.parse({});
+      ".parse() should return null if the given map does not contain a firestore key",
+      () {
+        final map = {'test': {}};
 
-      expect(result, isNull);
-    });
+        final result = firestoreConfigParser.parse(map);
+
+        expect(result, isNull);
+      },
+    );
 
     test(".parse() should parses valid map and returns FirestoreConfig", () {
-      final expected = FirestoreConfig(
-        firebaseProjectId: 'firestore_project_id',
-        metricsProjectId: 'metrics_project_id',
-      );
-      final result = firestoreConfigParser.parse(destinationMap);
+      final result = firestoreConfigParser.parse(firestoreConfigMap);
 
-      expect(result, equals(expected));
+      expect(result, equals(firestoreConfig));
     });
   });
 }

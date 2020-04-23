@@ -5,13 +5,13 @@ import 'package:test/test.dart';
 
 void main() {
   group("TotalCoverageSummary", () {
-    test('.fromJson() returns null if json is null', () {
+    test('.fromJson() should return null if the given JSON is null', () {
       final totalSummary = TotalCoverageSummary.fromJson(null);
 
       expect(totalSummary, isNull);
     });
 
-    test('.fromJson() creates a new instance from decoded JSON object', () {
+    test('.fromJson() should create a new instance from the decoded JSON object', () {
       const percent = 40;
       const totalSummaryJson = {
         'branches': {
@@ -28,7 +28,7 @@ void main() {
       expect(totalSummary, equals(expectedTotalSummary));
     });
 
-    test('.fromJson() creates an empty instance from the empty JSON', () {
+    test('.fromJson() should create an empty instance from the empty JSON', () {
       const expectedTotalSummary = TotalCoverageSummary();
       final totalSummary = TotalCoverageSummary.fromJson(const {});
 

@@ -5,8 +5,8 @@ import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
 import 'package:ci_integration/jenkins/client/jenkins_client.dart';
 
 /// A client factory for the Jenkins source integration.
-/// 
-/// Used to create instances of the [JenkinsSourceClientAdapter] 
+///
+/// Used to create instances of the [JenkinsSourceClientAdapter]
 /// using [JenkinsConfig].
 class JenkinsSourceClientFactory
     implements SourceClientFactory<JenkinsConfig, JenkinsSourceClientAdapter> {
@@ -16,12 +16,14 @@ class JenkinsSourceClientFactory
   JenkinsSourceClientAdapter create(JenkinsConfig config) {
     ArgumentError.checkNotNull(config, 'config');
 
+    BasicAuthorization authorization;
+    if (config.username != null && config.apiKey != null) {
+      authorization = BasicAuthorization(config.username, config.apiKey);
+    }
+
     final jenkinsClient = JenkinsClient(
-      url: config.url,
-      authorization: BasicAuthorization(
-        config.username,
-        config.apiKey,
-      ),
+      jenkinsUrl: config.url,
+      authorization: authorization,
     );
 
     return JenkinsSourceClientAdapter(jenkinsClient);

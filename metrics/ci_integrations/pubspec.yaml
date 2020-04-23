@@ -12,7 +12,6 @@ dependencies:
   firedart:
     git:
       url: https://github.com/software-platform/firedart.git
-      ref: partial-change
   metrics_core:
     path: ../core
   yaml_map:

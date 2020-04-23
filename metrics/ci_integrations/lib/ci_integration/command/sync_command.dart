@@ -99,7 +99,9 @@ class SyncCommand extends CiIntegrationCommand<void> {
         await dispose(sourceClient, destinationClient);
       }
     } else {
-      logger.printError('The configuration file $configFilePath does not exist.');
+      logger.printError(
+        'The configuration file $configFilePath does not exist.',
+      );
     }
   }
 
@@ -108,7 +110,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     return File(configFilePath);
   }
 
-  /// Parses the content of the given [file] into 
+  /// Parses the content of the given [file] into
   /// the [RawIntegrationConfig] instance.
   RawIntegrationConfig parseConfigFileContent(File file) {
     final content = file.readAsStringSync();
@@ -154,17 +156,25 @@ class SyncCommand extends CiIntegrationCommand<void> {
     return party.clientFactory.create(config);
   }
 
+  /// Creates a [CiIntegration] instance with the given
+  /// [sourceConfig] and [destinationConfig].
+  CiIntegration createCiIntegration(
+    SourceClient sourceClient,
+    DestinationClient destinationClient,
+  ) {
+    return CiIntegration(
+      sourceClient: sourceClient,
+      destinationClient: destinationClient,
+    );
+  }
+
   /// Runs the [CiIntegration.sync] method on the given [config].
   Future<void> sync(
     SyncConfig syncConfig,
     SourceClient sourceClient,
     DestinationClient destinationClient,
   ) async {
-    final ciIntegration = CiIntegration(
-      sourceClient: sourceClient,
-      destinationClient: destinationClient,
-    );
-
+    final ciIntegration = createCiIntegration(sourceClient, destinationClient);
     final result = await ciIntegration.sync(syncConfig);
 
     if (result.isSuccess) {
@@ -174,7 +184,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     }
   }
 
-  /// Closes both [sourceClient] and [destinationClient] and cleans up any 
+  /// Closes both [sourceClient] and [destinationClient] and cleans up any
   /// resources associated with them.
   Future<void> dispose(
     SourceClient sourceClient,

@@ -4,8 +4,8 @@ import 'package:ci_integration/common/client/destination_client.dart';
 import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
 import 'package:test/test.dart';
 
-import 'test_util/stub/ci_client_stub.dart';
-import 'test_util/stub/storage_client_stub.dart';
+import 'test_util/stub/destination_client_stub.dart';
+import 'test_util/stub/source_client_stub.dart';
 
 void main() {
   group("CiIntegration", () {
@@ -15,12 +15,12 @@ void main() {
     );
 
     test(
-      "should throw ArgumentError trying to create an instance with null CI client",
+      "should throw ArgumentError trying to create an instance with null source client",
       () {
         expect(
           () => CiIntegration(
             sourceClient: null,
-            destinationClient: StorageClientStub(),
+            destinationClient: DestinationClientStub(),
           ),
           throwsArgumentError,
         );
@@ -28,11 +28,11 @@ void main() {
     );
 
     test(
-      "should throw ArgumentError trying to create an instance with null storage client",
+      "should throw ArgumentError trying to create an instance with null destination client",
       () {
         expect(
           () => CiIntegration(
-            sourceClient: CiClientStub(),
+            sourceClient: SourceClientStub(),
             destinationClient: null,
           ),
           throwsArgumentError,
@@ -44,8 +44,8 @@ void main() {
       ".sync() should throw ArgumentError if the given config is null",
       () {
         final ciIntegration = CiIntegration(
-          sourceClient: CiClientStub(),
-          destinationClient: StorageClientStub(),
+          sourceClient: SourceClientStub(),
+          destinationClient: DestinationClientStub(),
         );
 
         expect(() => ciIntegration.sync(null), throwsArgumentError);
@@ -53,17 +53,17 @@ void main() {
     );
 
     test(
-      ".sync() should result with an error if a CI client throws fetching all builds",
+      ".sync() should result with an error if a source client throws fetching all builds",
       () {
-        final ciClient = CiClientStub(
+        final sourceClient = SourceClientStub(
           fetchBuildsCallback: (_) => throw UnimplementedError(),
         );
-        final storageClient = StorageClientStub(
+        final destinationClient = DestinationClientStub(
           fetchLastBuildCallback: (_) => null,
         );
         final ciIntegration = CiIntegration(
-          sourceClient: ciClient,
-          destinationClient: storageClient,
+          sourceClient: sourceClient,
+          destinationClient: destinationClient,
         );
         final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
 
@@ -72,12 +72,12 @@ void main() {
     );
 
     test(
-      ".sync() should result with an error if a CI client throws fetching the builds after the given one",
+      ".sync() should result with an error if a source client throws fetching the builds after the given one",
       () {
-        final ciClient = CiClientStub(
+        final sourceClient = SourceClientStub(
           fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
         );
-        final ciIntegration = CiIntegrationStub(ciClient: ciClient);
+        final ciIntegration = CiIntegrationStub(sourceClient: sourceClient);
         final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
@@ -85,13 +85,13 @@ void main() {
     );
 
     test(
-      ".sync() should result with error if a storage client throws fetching the last build",
+      ".sync() should result with error if a destination client throws fetching the last build",
       () {
-        final storageClient = StorageClientStub(
+        final destinationClient = DestinationClientStub(
           fetchLastBuildCallback: (_) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegrationStub(
-          storageClient: storageClient,
+          destinationClient: destinationClient,
         );
         final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
 
@@ -100,13 +100,13 @@ void main() {
     );
 
     test(
-      ".sync() should result with an error if a storage client throws adding new builds",
+      ".sync() should result with an error if a destination client throws adding new builds",
       () {
-        final storageClient = StorageClientStub(
+        final destinationClient = DestinationClientStub(
           addBuildsCallback: (_, __) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegrationStub(
-          storageClient: storageClient,
+          destinationClient: destinationClient,
         );
         final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
 
@@ -117,15 +117,15 @@ void main() {
     test(
       ".sync() should ignore empty list of new builds and not call adding builds",
       () {
-        final ciClient = CiClientStub(
+        final sourceClient = SourceClientStub(
           fetchBuildsAfterCallback: (_, __) => Future.value([]),
         );
-        final storageClient = StorageClientStub(
+        final destinationClient = DestinationClientStub(
           addBuildsCallback: (_, __) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegration(
-          sourceClient: ciClient,
-          destinationClient: storageClient,
+          sourceClient: sourceClient,
+          destinationClient: destinationClient,
         );
         final result =
             ciIntegration.sync(syncConfig).then((res) => res.isSuccess);
@@ -150,22 +150,22 @@ void main() {
 /// A stub class for a [CiConfig] abstract class providing required
 /// implementations.
 class CiIntegrationStub extends CiIntegration {
-  final StorageClientStub _storageClientTestbed;
-  final CiClientStub _ciClientTestbed;
+  final DestinationClientStub _destinationClientTestbed;
+  final SourceClientStub _sourceClientTestbed;
 
   @override
-  DestinationClient get destinationClient => _storageClientTestbed;
+  DestinationClient get destinationClient => _destinationClientTestbed;
 
   @override
-  SourceClient get sourceClient => _ciClientTestbed;
+  SourceClient get sourceClient => _sourceClientTestbed;
 
   /// Creates this stub class instance.
   ///
-  /// If [storageClient] is not given, the [StorageClientStub] is created.
-  /// If [ciClient] is not given, the [CiClientStub] is created.
+  /// If [destinationClient] is not given, the [DestinationClientStub] is created.
+  /// If [sourceClient] is not given, the [SourceClientStub] is created.
   CiIntegrationStub({
-    StorageClientStub storageClient,
-    CiClientStub ciClient,
-  })  : _storageClientTestbed = storageClient ?? StorageClientStub(),
-        _ciClientTestbed = ciClient ?? CiClientStub();
+    DestinationClientStub destinationClient,
+    SourceClientStub sourceClient,
+  })  : _destinationClientTestbed = destinationClient ?? DestinationClientStub(),
+        _sourceClientTestbed = sourceClient ?? SourceClientStub();
 }

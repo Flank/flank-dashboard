@@ -7,7 +7,7 @@ import '../../test_data/builds_test_data.dart';
 
 /// A stub class for a [DestinationClient] abstract class providing test
 /// implementation for methods.
-class StorageClientStub implements DestinationClient {
+class DestinationClientStub implements DestinationClient {
   /// Callback used to replace the default [fetchLastBuild] method
   /// implementation for testing purposes.
   final Future<BuildData> Function(String) fetchLastBuildCallback;
@@ -19,7 +19,7 @@ class StorageClientStub implements DestinationClient {
   /// Creates this stub class instance.
   ///
   /// Both [fetchLastBuildCallback] and [addBuildsCallback] are optional.
-  StorageClientStub({
+  DestinationClientStub({
     this.fetchLastBuildCallback,
     this.addBuildsCallback,
   });
@@ -41,8 +41,5 @@ class StorageClientStub implements DestinationClient {
   }
 
   @override
-  FutureOr<void> dispose() {
-    // TODO: implement dispose
-    throw UnimplementedError();
-  }
+  void dispose() {}
 }

@@ -1,62 +1,55 @@
 import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/firestore_config_test_data.dart';
+
 void main() {
-  group(
-    "FirestoreConfig",
-    () {
-      test(
-        "can't be created when the firebaseProjectId is null",
-        () {
-          expect(
-            () => FirestoreConfig(
-              metricsProjectId: 'id',
-              firebaseProjectId: null,
-            ),
-            throwsArgumentError,
-          );
-        },
-      );
+  group("FirestoreConfig", () {
+    final firestoreConfigJson = FirestoreConfigTestData.firestoreConfigJson;
+    final firestoreConfig = FirestoreConfigTestData.firestoreConfig;
 
-      test(
-        "can't be created when the metricsProjectId is null",
-        () {
-          expect(
-            () => FirestoreConfig(
-              firebaseProjectId: 'id',
-              metricsProjectId: null,
-            ),
-            throwsArgumentError,
-          );
-        },
-      );
+    test(
+      "can't be created when the firebaseProjectId is null",
+      () {
+        expect(
+          () => FirestoreConfig(
+            metricsProjectId: FirestoreConfigTestData.metricsProjectId,
+            firebaseProjectId: null,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
 
-      test(
-        '.fromJson() creates instance of FirestoreConfig from json encodable Map',
-        () {
-          const firebaseProjectId = 'firebaseId';
-          const metricsProjectId = 'projectId';
+    test(
+      "can't be created when the metricsProjectId is null",
+      () {
+        expect(
+          () => FirestoreConfig(
+            firebaseProjectId: FirestoreConfigTestData.firebaseProjectId,
+            metricsProjectId: null,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
 
-          final firestoreConfigJson = {
-            'firebase_project_id': firebaseProjectId,
-            'metrics_project_id': metricsProjectId,
-          };
+    test(
+      ".fromJson() should return null if the given JSON map is null",
+      () {
+        final config = FirestoreConfig.fromJson(null);
 
-          final firestoreConfig = FirestoreConfig.fromJson(firestoreConfigJson);
+        expect(config, isNull);
+      },
+    );
 
-          expect(firestoreConfig.firebaseProjectId, firebaseProjectId);
-          expect(firestoreConfig.metricsProjectId, metricsProjectId);
-        },
-      );
+    test(
+      '.fromJson() should create an instance of FirestoreConfig from JSON encodable Map',
+      () {
+        final parsed = FirestoreConfig.fromJson(firestoreConfigJson);
 
-      test(
-        ".fromJson() return null if null is passed",
-        () {
-          final config = FirestoreConfig.fromJson(null);
-
-          expect(config, isNull);
-        },
-      );
-    },
-  );
+        expect(parsed, equals(firestoreConfig));
+      },
+    );
+  });
 }
