@@ -34,32 +34,32 @@ that code style is consistent.
 # Documentation
 
 ## Unit tests
-1. Test Group description starts with Capital letter:
+1. Test Group descriptions start with Capital letter:
     ```dart
     group("DashboardPage", () {
     ```
-2. Test description inside a group starts with a small letter:
+2. Test descriptions inside Test Groups start with a small letter:
     ```dart
     test("should throw ArgumentError trying to create an instance with null CI client", 
     ```
-3. Test description not inside Test Group starts with Capital letter:
+3. Test descriptions not inside Test Groups start with a Capital letter:
     ```dart
     testWidgets("Can't create widget without data",
    ```
 4. Group and test descriptions should not end with a dot (.).
-5. If method name (or named constructor) is used in test description it should start with dot (.)
-and should have parenthesis:
+5. If a test is specific for a method (or named constructor) - test description should start with 
+a dot (.) followed by a method name with an empty parenthesis (without parameters even if there are any):
 
     ```dart
     test(".fromJson() should create an instance from the json map", () {
     ```
-6. Use group with class under test name:
+6. Use Test Group descriptions with class under test name:
     ```dart
     group("ReceiveProjectMetricUpdates", () {
        .....
        test("loads all fields in the performance metrics", () {
     ```
-7. Multiline test description shouldn't be used as single test can't 
+7. Multiline test descriptions shouldn't be used as such tests can't 
 be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842).
 8. Prefer using double quotes. 
 
