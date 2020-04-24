@@ -9,62 +9,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
 
+import '../../../../test_utils/metrics_themed_testbed.dart';
+
 void main() {
-  group("Widget configuration", () {
+  group("CirlcePercentage", () {
+    final circlePercentageTypeFinder = find.byType(CirclePercentage);
+    const strokeColor = Colors.blue;
+    const valueColor = Colors.red;
+    const backgroundColor = Colors.grey;
+
     testWidgets(
-      "Can't create widget with value more than 1.0",
+      "can't be created with value more than 1.0",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const CirclePercentageTestbed(
-            title: "Coverage",
+          const _CirclePercentageTestbed(
             value: 30.0,
           ),
         );
 
-        expect(tester.takeException(), isA<AssertionError>());
+        expect(tester.takeException(), isAssertionError);
       },
     );
 
     testWidgets(
-      "Can't create widget with value less than 0",
+      "can't be created with value less than 0",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const CirclePercentageTestbed(
-            title: "Coverage",
+          const _CirclePercentageTestbed(
             value: -1,
           ),
         );
 
-        expect(tester.takeException(), isA<AssertionError>());
+        expect(tester.takeException(), isAssertionError);
       },
     );
-  });
 
-  group("Data loading", () {
     testWidgets(
-      "Shows the coverage label",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const CirclePercentageTestbed());
-        await tester.pumpAndSettle();
-
-        expect(
-          find.widgetWithText(CirclePercentage, 'Coverage'),
-          findsOneWidget,
-        );
-      },
-    );
-  });
-
-  group("Data display", () {
-    final circlePercentageTypeFinder = find.byType(CirclePercentage);
-    testWidgets(
-      "Takes given square dimensions space",
+      "takes given square dimensions space",
       (WidgetTester tester) async {
         const side = 20.0;
-        await tester.pumpWidget(const CirclePercentageTestbed(
+        await tester.pumpWidget(const _CirclePercentageTestbed(
           height: side,
           width: side,
         ));
@@ -76,28 +63,18 @@ void main() {
     );
 
     testWidgets(
-      "Applies styles to the title and percent texts",
+      "applies style to the percent text",
       (WidgetTester tester) async {
-        const titleStyle = TextStyle(fontWeight: FontWeight.bold);
         const valueStyle = TextStyle(color: Colors.red);
 
         await tester.pumpWidget(
-          const CirclePercentageTestbed(
-            title: 'Coverage',
-            titleStyle: titleStyle,
+          const _CirclePercentageTestbed(
             valueStyle: valueStyle,
             value: 0.3,
           ),
         );
 
         await tester.pumpAndSettle();
-
-        final titleWidget = tester.firstWidget<Text>(
-          find.descendant(
-            of: circlePercentageTypeFinder,
-            matching: find.text('Coverage'),
-          ),
-        );
 
         final valueWidget = tester.firstWidget<Text>(
           find.descendant(
@@ -106,22 +83,20 @@ void main() {
           ),
         );
 
-        expect(titleStyle, titleWidget.style);
         expect(valueStyle, valueWidget.style);
       },
     );
 
     testWidgets(
-      "Takes square box when parent dimensions when parent height is shorter than width",
+      "takes square box when parent dimensions when parent height is shorter than width",
       (WidgetTester tester) async {
         const height = 100.0;
         const width = 200.0;
 
-        await tester.pumpWidget(const CirclePercentageTestbed(
+        await tester.pumpWidget(const _CirclePercentageTestbed(
           height: height,
           width: width,
         ));
-
         await tester.pumpAndSettle();
 
         final widgetSize = tester.getSize(
@@ -136,12 +111,12 @@ void main() {
     );
 
     testWidgets(
-      "Takes square box when parent dimensions when parent height is shorter than width",
+      "takes square box when parent dimensions when parent height is shorter than width",
       (WidgetTester tester) async {
         const height = 200.0;
         const width = 100.0;
 
-        await tester.pumpWidget(const CirclePercentageTestbed(
+        await tester.pumpWidget(const _CirclePercentageTestbed(
           height: height,
           width: width,
         ));
@@ -160,7 +135,7 @@ void main() {
     );
 
     testWidgets(
-      "Widgets with mirrored widgth/heights take same space",
+      "widgets with mirrored widgth/heights take same space",
       (WidgetTester tester) async {
         const height = 200.0;
         const width = 100.0;
@@ -168,14 +143,14 @@ void main() {
           of: circlePercentageTypeFinder,
           matching: find.byType(CustomPaint),
         );
-        await tester.pumpWidget(const CirclePercentageTestbed(
+        await tester.pumpWidget(const _CirclePercentageTestbed(
           height: height,
           width: width,
         ));
         await tester.pumpAndSettle();
         final firstWidgetSize = tester.getSize(percentagePaintFinder);
 
-        await tester.pumpWidget(const CirclePercentageTestbed(
+        await tester.pumpWidget(const _CirclePercentageTestbed(
           height: width,
           width: height,
         ));
@@ -187,69 +162,135 @@ void main() {
     );
 
     testWidgets(
-      "Applies colors from the theme",
+      "displays 'N/A' text if the value is null",
       (WidgetTester tester) async {
-        const primaryColor = Colors.green;
-        const accentColor = Colors.red;
-        const backgroundColor = Colors.orange;
-
-        const theme = MetricsThemeData(
-          circlePercentagePrimaryTheme: MetricWidgetThemeData(
-            primaryColor: primaryColor,
-            accentColor: accentColor,
-            backgroundColor: backgroundColor,
-          ),
-        );
-
-        await tester.pumpWidget(const CirclePercentageTestbed(theme: theme));
+        await tester.pumpWidget(const _CirclePercentageTestbed(
+          value: null,
+        ));
         await tester.pumpAndSettle();
 
-        final customPaintWidget = tester.widget<CustomPaint>(find.descendant(
-          of: find.byType(CirclePercentage),
-          matching: find.byType(CustomPaint),
-        ));
-
-        final percentagePainter =
-            customPaintWidget.painter as CirclePercentageChartPainter;
-
-        expect(percentagePainter.valueColor, primaryColor);
-        expect(percentagePainter.backgroundColor, backgroundColor);
-        expect(percentagePainter.strokeColor, accentColor);
+        expect(find.text(DashboardStrings.noDataPlaceholder), findsOneWidget);
       },
     );
 
     testWidgets(
-      "Applies stroke, value and background colors",
+      "applies background color",
       (WidgetTester tester) async {
-        const valueColor = Colors.red;
-        const strokeColor = Colors.blue;
         const backgroundColor = Colors.grey;
 
-        await tester.pumpWidget(const CirclePercentageTestbed(
-          valueColor: valueColor,
-          strokeColor: strokeColor,
+        await tester.pumpWidget(const _CirclePercentageTestbed(
           backgroundColor: backgroundColor,
         ));
         await tester.pumpAndSettle();
 
-        final circlePercentagePaintWidget = tester.widget<CustomPaint>(
-          find.descendant(
-              of: find.byType(CirclePercentage),
-              matching: find.byType(CustomPaint)),
-        );
-        final circlePercentagePainter =
-            circlePercentagePaintWidget.painter as CirclePercentageChartPainter;
+        final circlePercentagePainter = _getCirclePercentagePainter(tester);
+
+        expect(circlePercentagePainter.backgroundColor, backgroundColor);
+      },
+    );
+
+    testWidgets(
+      "applies value color",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _CirclePercentageTestbed(
+          valueColor: valueColor,
+        ));
+        await tester.pumpAndSettle();
+
+        final circlePercentagePainter = _getCirclePercentagePainter(tester);
+
+        expect(circlePercentagePainter.valueColor, valueColor);
+      },
+    );
+
+    testWidgets(
+      "applies stroke color",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _CirclePercentageTestbed(
+          strokeColor: strokeColor,
+        ));
+        await tester.pumpAndSettle();
+
+        final circlePercentagePainter = _getCirclePercentagePainter(tester);
 
         expect(circlePercentagePainter.strokeColor, strokeColor);
+      },
+    );
+
+    testWidgets(
+      "applies the stroke color from the MetricWidgetTheme.accentColor",
+      (tester) async {
+        const metricsTheme = MetricsThemeData(
+          metricWidgetTheme: MetricWidgetThemeData(
+            accentColor: strokeColor,
+          ),
+        );
+
+        await tester.pumpWidget(const _CirclePercentageTestbed(
+          theme: metricsTheme,
+        ));
+        await tester.pumpAndSettle();
+
+        final circlePercentagePainter = _getCirclePercentagePainter(tester);
+
+        expect(circlePercentagePainter.strokeColor, strokeColor);
+      },
+    );
+
+    testWidgets(
+      "applies the value color from the MetricWidgetTheme.primaryColor",
+      (tester) async {
+        const metricsTheme = MetricsThemeData(
+          metricWidgetTheme: MetricWidgetThemeData(
+            primaryColor: valueColor,
+          ),
+        );
+
+        await tester.pumpWidget(const _CirclePercentageTestbed(
+          theme: metricsTheme,
+        ));
+        await tester.pumpAndSettle();
+
+        final circlePercentagePainter = _getCirclePercentagePainter(tester);
+
         expect(circlePercentagePainter.valueColor, valueColor);
+      },
+    );
+
+    testWidgets(
+      "applies the backgroundColor color from the MetricWidgetTheme.backgroundColor",
+      (tester) async {
+        const metricsTheme = MetricsThemeData(
+          metricWidgetTheme: MetricWidgetThemeData(
+            backgroundColor: backgroundColor,
+          ),
+        );
+
+        await tester.pumpWidget(const _CirclePercentageTestbed(
+          theme: metricsTheme,
+        ));
+        await tester.pumpAndSettle();
+
+        final circlePercentagePainter = _getCirclePercentagePainter(tester);
+
         expect(circlePercentagePainter.backgroundColor, backgroundColor);
       },
     );
   });
 }
 
-class CirclePercentageTestbed extends StatelessWidget {
-  final String title;
+CirclePercentageChartPainter _getCirclePercentagePainter(WidgetTester tester) {
+  final circlePercentagePaintWidget = tester.widget<CustomPaint>(
+    find.descendant(
+      of: find.byType(CirclePercentage),
+      matching: find.byType(CustomPaint),
+    ),
+  );
+
+  return circlePercentagePaintWidget.painter as CirclePercentageChartPainter;
+}
+
+class _CirclePercentageTestbed extends StatelessWidget {
   final double value;
   final EdgeInsets padding;
   final double strokeWidth;
@@ -259,14 +300,12 @@ class CirclePercentageTestbed extends StatelessWidget {
   final AlignmentGeometry alignment;
   final double height;
   final double width;
-  final TextStyle titleStyle;
   final TextStyle valueStyle;
   final MetricsThemeData theme;
 
-  const CirclePercentageTestbed({
+  const _CirclePercentageTestbed({
     Key key,
     this.value = 0.3,
-    this.title = 'Coverage',
     this.height,
     this.strokeWidth = 5.0,
     this.padding = EdgeInsets.zero,
@@ -275,34 +314,27 @@ class CirclePercentageTestbed extends StatelessWidget {
     this.backgroundColor,
     this.alignment = Alignment.center,
     this.theme = const MetricsThemeData(),
-    this.titleStyle,
     this.valueStyle,
     this.width,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: MetricsTheme(
-          data: theme,
-          child: Align(
-            alignment: alignment,
-            child: Container(
-              height: height,
-              width: width,
-              child: CirclePercentage(
-                title: title,
-                value: value,
-                strokeWidth: strokeWidth,
-                valueColor: valueColor,
-                strokeColor: strokeColor,
-                padding: padding,
-                titleStyle: titleStyle,
-                valueStyle: valueStyle,
-                backgroundColor: backgroundColor,
-              ),
-            ),
+    return MetricsThemedTestbed(
+      metricsThemeData: theme,
+      body: Align(
+        alignment: alignment,
+        child: Container(
+          height: height,
+          width: width,
+          child: CirclePercentage(
+            value: value,
+            strokeWidth: strokeWidth,
+            valueColor: valueColor,
+            strokeColor: strokeColor,
+            padding: padding,
+            valueStyle: valueStyle,
+            backgroundColor: backgroundColor,
           ),
         ),
       ),

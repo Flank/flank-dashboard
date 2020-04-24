@@ -7,6 +7,7 @@ class BuildDataDeserializer {
   static BuildData fromJson(Map<String, dynamic> json, String id) {
     final buildResultValue = json['buildStatus'] as String;
     final durationMilliseconds = json['duration'] as int;
+    final coverage = json['coverage'] as double;
     final buildStatus = BuildStatus.values.firstWhere(
       (element) => '$element' == buildResultValue,
       orElse: () => null,
@@ -20,7 +21,7 @@ class BuildDataDeserializer {
       duration: Duration(milliseconds: durationMilliseconds),
       workflowName: json['workflow'] as String,
       url: json['url'] as String,
-      coverage: Percent(json['coverage'] as double),
+      coverage: coverage != null ? Percent(coverage) : null,
     );
   }
 }

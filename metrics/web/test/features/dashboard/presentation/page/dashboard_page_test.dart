@@ -2,48 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/auth/presentation/state/auth_store.dart';
+import 'package:metrics/features/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
-import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-import '../../../../test_utils/metrics_store_stub.dart';
 import '../../../../test_utils/signed_in_auth_store_fake.dart';
+import '../test_utils/project_metrics_store_stub.dart';
 
 void main() {
   group("DashboardPage", () {
     testWidgets(
-      "displays an error, occured during loading the metrics data",
+      "contains the MetricsAppBar widget",
       (WidgetTester tester) async {
-        const metricsStore = MetricsStoreErrorStub();
+        await tester.pumpWidget(const _DashboardTestbed());
 
-        await tester.pumpWidget(const DashboardTestbed(
-          metricsStore: metricsStore,
-        ));
-
-        await tester.pumpAndSettle();
-
-        expect(
-          find.text(DashboardStrings.getLoadingErrorMessage(
-              '${MetricsStoreErrorStub.errorMessage}')),
-          findsOneWidget,
-        );
+        expect(find.byType(MetricsAppBar), findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the drawer on tap on menu button",
+      "contains the MetricsTable widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const DashboardTestbed());
+        await tester.pumpWidget(const _DashboardTestbed());
+
+        expect(find.byType(MetricsAppBar), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the MetricsDrawer on tap on the menu button",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _DashboardTestbed());
         await tester.pumpAndSettle();
 
         await tester.tap(find.descendant(
-          of: find.byType(AppBar),
+          of: find.byType(MetricsAppBar),
           matching: find.byType(IconButton),
         ));
         await tester.pumpAndSettle();
@@ -57,16 +56,15 @@ void main() {
       (WidgetTester tester) async {
         final themeStore = ThemeStore();
 
-        await tester.pumpWidget(DashboardTestbed(
+        await tester.pumpWidget(_DashboardTestbed(
           themeStore: themeStore,
         ));
         await tester.pumpAndSettle();
 
-        final circlePercentageTitleColor =
-            _getCirclePercentageTitleColor(tester);
+        final darkBuildNumberMetricColor = _getBuildNumberMetricColor(tester);
 
         await tester.tap(find.descendant(
-          of: find.byType(AppBar),
+          of: find.byType(MetricsAppBar),
           matching: find.byType(IconButton),
         ));
         await tester.pumpAndSettle();
@@ -74,55 +72,34 @@ void main() {
         await tester.tap(find.byType(CheckboxListTile));
         await tester.pump();
 
-        final newCirclePercentageTitleColor =
-            _getCirclePercentageTitleColor(tester);
+        final lightBuildNumberMetricColor = _getBuildNumberMetricColor(tester);
 
         expect(
-          newCirclePercentageTitleColor,
-          isNot(circlePercentageTitleColor),
-        );
-      },
-    );
-
-    testWidgets(
-      'displays the placeholder when there are no available projects',
-      (WidgetTester tester) async {
-        const metricsStore = MetricsStoreStub(projectMetrics: []);
-        await tester.pumpWidget(const DashboardTestbed(
-          metricsStore: metricsStore,
-        ));
-
-        await tester.pumpAndSettle();
-
-        expect(
-          find.text(DashboardStrings.noConfiguredProjects),
-          findsOneWidget,
+          darkBuildNumberMetricColor,
+          isNot(lightBuildNumberMetricColor),
         );
       },
     );
   });
 }
 
-Color _getCirclePercentageTitleColor(WidgetTester tester) {
-  final circlePercentageFinder = find.descendant(
-    of: find.widgetWithText(CirclePercentage, DashboardStrings.coverage),
-    matching: find.text(DashboardStrings.coverage),
+Color _getBuildNumberMetricColor(WidgetTester tester) {
+  final buildNumberTextWidget = tester.widget<Text>(
+    find.descendant(
+      of: find.byType(BuildNumberTextMetric),
+      matching: find.text(DashboardStrings.noDataPlaceholder),
+    ),
   );
 
-  final titleWidget = tester.widget<Text>(
-    circlePercentageFinder,
-  );
-
-  return titleWidget.style?.color;
+  return buildNumberTextWidget.style.color;
 }
 
-class DashboardTestbed extends StatelessWidget {
-  final ProjectMetricsStore metricsStore;
+class _DashboardTestbed extends StatelessWidget {
+  static const ProjectMetricsStore metricsStore = ProjectMetricsStoreStub();
   final ThemeStore themeStore;
 
-  const DashboardTestbed({
+  const _DashboardTestbed({
     Key key,
-    this.metricsStore = const MetricsStoreStub(),
     this.themeStore,
   }) : super(key: key);
 
@@ -153,21 +130,4 @@ class DashboardTestbed extends StatelessWidget {
       ),
     );
   }
-}
-
-class MetricsStoreErrorStub extends MetricsStoreStub {
-  static const String errorMessage = "Unknown error";
-
-  const MetricsStoreErrorStub();
-
-  @override
-  Stream<List<ProjectMetricsData>> get projectsMetrics => throw errorMessage;
-
-  @override
-  Future<void> subscribeToProjects() {
-    throw errorMessage;
-  }
-
-  @override
-  void dispose() {}
 }

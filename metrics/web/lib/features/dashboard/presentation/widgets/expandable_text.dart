@@ -6,6 +6,7 @@ class ExpandableText extends StatelessWidget {
   final String text;
   final TextStyle style;
 
+  /// Creates the [ExpandableText] with the given [text] and [style].
   const ExpandableText(
     this.text, {
     Key key,

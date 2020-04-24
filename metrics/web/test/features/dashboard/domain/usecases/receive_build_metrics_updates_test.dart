@@ -1,7 +1,4 @@
-import 'package:metrics/features/dashboard/domain/entities/metrics/build_number_metric.dart';
-import 'package:metrics/features/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
-import 'package:metrics/features/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/features/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/features/dashboard/domain/usecases/receive_project_metrics_updates.dart';
@@ -12,7 +9,7 @@ import 'package:test/test.dart';
 void main() {
   group("ReceiveProjectMetricUpdates", () {
     const projectId = 'projectId';
-    final repository = MetricsRepositoryTestbed();
+    final repository = _MetricsRepositoryStub();
     final receiveProjectMetricsUpdates =
         ReceiveProjectMetricsUpdates(repository);
 
@@ -21,7 +18,7 @@ void main() {
     DashboardProjectMetrics projectMetrics;
 
     setUpAll(() async {
-      builds = MetricsRepositoryTestbed.testBuilds;
+      builds = _MetricsRepositoryStub.testBuilds;
 
       projectMetrics =
           await receiveProjectMetricsUpdates(const ProjectIdParam(projectId))
@@ -77,7 +74,7 @@ void main() {
     test("loads coverage from last successful build", () {
       final actualCoverage = projectMetrics.coverage;
       final expectedCoverage =
-          MetricsRepositoryTestbed.lastSuccessfulBuild.coverage;
+          _MetricsRepositoryStub.lastSuccessfulBuild.coverage;
 
       expect(actualCoverage, expectedCoverage);
     });
@@ -95,7 +92,7 @@ void main() {
     test(
       "creates empty project metrics if project has no builds",
       () async {
-        final repository = MetricsRepositoryTestbed(builds: []);
+        final repository = _MetricsRepositoryStub(builds: []);
         final projectMetricsUpdates = ReceiveProjectMetricsUpdates(repository);
         final projectMetricsStream = projectMetricsUpdates(
           const ProjectIdParam(projectId),
@@ -104,11 +101,6 @@ void main() {
 
         const expectedProjectMetrics = DashboardProjectMetrics(
           projectId: projectId,
-          buildNumberMetrics: BuildNumberMetric(),
-          performanceMetrics: PerformanceMetric(),
-          buildResultMetrics: BuildResultMetric(),
-          coverage: Percent(0.0),
-          stability: Percent(0.0),
         );
 
         expect(projectMetrics, equals(expectedProjectMetrics));
@@ -116,7 +108,7 @@ void main() {
     );
 
     test(
-      "creates project metrics with 0 coverage if there are no successful builds",
+      "creates project metrics with null coverage if there are no successful builds",
       () async {
         final builds = [
           Build(
@@ -135,22 +127,20 @@ void main() {
           ),
         ];
 
-        final repository = MetricsRepositoryTestbed(builds: builds);
+        final repository = _MetricsRepositoryStub(builds: builds);
         final projectMetricsUpdates = ReceiveProjectMetricsUpdates(repository);
         final projectMetricsStream = projectMetricsUpdates(
           const ProjectIdParam(projectId),
         );
         final projectMetrics = await projectMetricsStream.first;
 
-        const expectedCoverage = Percent(0.0);
-
-        expect(projectMetrics.coverage, expectedCoverage);
+        expect(projectMetrics.coverage, isNull);
       },
     );
   });
 }
 
-class MetricsRepositoryTestbed implements MetricsRepository {
+class _MetricsRepositoryStub implements MetricsRepository {
   static const Project _project = Project(
     name: 'projectName',
     id: 'projectId',
@@ -198,7 +188,7 @@ class MetricsRepositoryTestbed implements MetricsRepository {
 
   List<Build> _builds;
 
-  MetricsRepositoryTestbed({List<Build> builds}) {
+  _MetricsRepositoryStub({List<Build> builds}) {
     _builds = builds ?? testBuilds;
   }
 

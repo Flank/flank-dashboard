@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:metrics/features/common/presentation/widgets/loading_placeholder.dart';
+import 'package:flutter/material.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 
 /// Displays the [loadingPlaceholder] widget if the data [isLoading].
 class LoadingBuilder extends StatelessWidget {

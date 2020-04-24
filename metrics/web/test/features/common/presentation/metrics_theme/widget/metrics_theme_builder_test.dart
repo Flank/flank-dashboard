@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
@@ -13,9 +12,9 @@ void main() {
   testWidgets(
     "Can't build the widget without builder",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const MetricsThemeBuilderTestbed(builder: null));
+      await tester.pumpWidget(const _MetricsThemeBuilderTestbed(builder: null));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 
@@ -24,7 +23,7 @@ void main() {
     (WidgetTester tester) async {
       final store = ThemeStore();
 
-      await tester.pumpWidget(MetricsThemeBuilderTestbed(
+      await tester.pumpWidget(_MetricsThemeBuilderTestbed(
         themeStore: store,
       ));
 
@@ -58,7 +57,7 @@ void main() {
   testWidgets(
     "Creates default theme data if nothing was specified",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const MetricsThemeBuilderTestbed());
+      await tester.pumpWidget(const _MetricsThemeBuilderTestbed());
 
       final themeWidget =
           tester.widget<MetricsThemeBuilder>(find.byType(MetricsThemeBuilder));
@@ -69,13 +68,13 @@ void main() {
   );
 }
 
-class MetricsThemeBuilderTestbed extends StatelessWidget {
+class _MetricsThemeBuilderTestbed extends StatelessWidget {
   final MetricsThemeData lightTheme;
   final MetricsThemeData darkTheme;
   final ThemeStore themeStore;
   final ThemeBuilder builder;
 
-  const MetricsThemeBuilderTestbed({
+  const _MetricsThemeBuilderTestbed({
     Key key,
     this.lightTheme,
     this.darkTheme,

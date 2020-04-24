@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
 
 /// Represents the placeholder bar of the [BarGraph].
@@ -9,6 +11,8 @@ class PlaceholderBar extends StatelessWidget {
   ///
   /// This bar displays the missing/empty build in [BarGraph].
   /// [width] is the width of this bar.
+  ///
+  /// Applies the colors from the [MetricsThemeData.inactiveWidgetTheme].
   const PlaceholderBar({
     Key key,
     @required this.width,
@@ -16,15 +20,16 @@ class PlaceholderBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final widgetTheme = MetricsTheme.of(context).inactiveWidgetTheme;
+
     return Container(
       alignment: Alignment.bottomCenter,
       height: 6.0,
       child: ColoredBar(
-        color: Colors.transparent,
+        color: widgetTheme.primaryColor,
         width: width,
-        borderRadius: BorderRadius.circular(4.0),
         border: Border.all(
-          color: Colors.grey,
+          color: widgetTheme.primaryColor,
           width: 2.0,
         ),
       ),

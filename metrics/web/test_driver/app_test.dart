@@ -46,18 +46,21 @@ void main() {
       });
 
       group("DashboardPage", () {
+        setUpAll(() async {
+          await _authFormExists(driver);
+          await _login(driver);
+          await _authFormAbsent(driver);
+        });
+
         test(
-          "loads the projects and shows the project tiles",
+          "loads and shows the projects",
           () async {
-            await _authFormExists(driver);
-            await _login(driver);
-            await _authFormAbsent(driver);
             await driver.waitFor(find.byType('ProjectMetricsTile'));
           },
         );
 
         test(
-          "loads the coverage data and shows the circle percentage widget",
+          "loads and displays coverage metric",
           () async {
             await driver.waitFor(find.text(DashboardStrings.coverage));
             await driver.waitFor(find.byType('CirclePercentage'));
@@ -65,29 +68,26 @@ void main() {
         );
 
         test(
-          "loads the build metrics and shows the sparkline graph widgets",
+          "loads and displays the performance metric ",
           () async {
             await driver.waitFor(find.text(DashboardStrings.performance));
-            await driver.waitFor(find.text(DashboardStrings.builds));
 
             await driver.waitFor(find.byType('SparklineGraph'));
           },
         );
 
         test(
-          "loads the build number metric and shows it with the title",
+          "loads and shows the build number metric",
           () async {
             await driver.waitFor(find.text(DashboardStrings.builds));
 
-            await driver.waitFor(find.byType('TextMetric'));
+            await driver.waitFor(find.byType('BuildNumberTextMetric'));
           },
         );
 
         test(
-          "loads the build result metrics and shows the build results widget",
+          "loads and shows the build result metrics",
           () async {
-            await driver.waitFor(find.text(DashboardStrings.buildTaskName));
-
             await driver.waitFor(find.byType('BuildResultBarGraph'));
           },
         );

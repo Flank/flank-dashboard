@@ -1,32 +1,33 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_builder.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
+
+import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   testWidgets(
     "Can't create a LoadingBuilder without a builder",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const LoadingBuilderTestbed(builder: null));
+      await tester.pumpWidget(const _LoadingBuilderTestbed(builder: null));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 
   testWidgets(
     "Can't create a LoadingBuilder when the isLoading is null",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const LoadingBuilderTestbed(isLoading: null));
+      await tester.pumpWidget(const _LoadingBuilderTestbed(isLoading: null));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 
   testWidgets(
     "When isLoading true - shows the loadingPlaceholder",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const LoadingBuilderTestbed(
+      await tester.pumpWidget(const _LoadingBuilderTestbed(
         isLoading: true,
       ));
 
@@ -39,7 +40,7 @@ void main() {
     (WidgetTester tester) async {
       bool isBuilderFunctionCalled = false;
 
-      await tester.pumpWidget(LoadingBuilderTestbed(
+      await tester.pumpWidget(_LoadingBuilderTestbed(
         isLoading: false,
         builder: (context) {
           isBuilderFunctionCalled = true;
@@ -52,12 +53,12 @@ void main() {
   );
 }
 
-class LoadingBuilderTestbed extends StatelessWidget {
+class _LoadingBuilderTestbed extends StatelessWidget {
   final bool isLoading;
   final WidgetBuilder builder;
   final Widget loadingPlaceholder;
 
-  const LoadingBuilderTestbed({
+  const _LoadingBuilderTestbed({
     Key key,
     this.isLoading = false,
     this.builder = _defaultBuilder,
@@ -66,12 +67,10 @@ class LoadingBuilderTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: LoadingBuilder(
-          isLoading: isLoading,
-          builder: builder,
-        ),
+    return MetricsThemedTestbed(
+      body: LoadingBuilder(
+        isLoading: isLoading,
+        builder: builder,
       ),
     );
   }

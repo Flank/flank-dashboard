@@ -118,7 +118,7 @@ class ReceiveProjectMetricsUpdates
       orElse: () => null,
     );
 
-    if (lastSuccessfulBuild == null) return const Percent(0.0);
+    if (lastSuccessfulBuild == null) return null;
 
     return lastSuccessfulBuild.coverage;
   }
@@ -188,7 +188,7 @@ class ReceiveProjectMetricsUpdates
 
   /// Calculates the stability metric from list of [builds].
   Percent _getStability(List<Build> builds) {
-    if (builds.isEmpty) return const Percent(0.0);
+    if (builds.isEmpty) return null;
 
     final successfulBuilds = builds.where(
       (build) => build.buildStatus == BuildStatus.successful,

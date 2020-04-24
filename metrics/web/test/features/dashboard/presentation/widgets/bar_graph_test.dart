@@ -3,33 +3,35 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/model/bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/bar_graph.dart';
 
+import '../../../../test_utils/metrics_themed_testbed.dart';
+
 void main() {
   testWidgets(
     "Can't create widget without data",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const BarGraphTestbed(data: null));
+      await tester.pumpWidget(const _BarGraphTestbed(data: null));
 
-      expect(tester.takeException(), isA<AssertionError>());
+      expect(tester.takeException(), isAssertionError);
     },
   );
 
   testWidgets(
-    'Can create widget from empty data',
+    "Can create widget from empty data",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const BarGraphTestbed(data: []));
+      await tester.pumpWidget(const _BarGraphTestbed(data: []));
 
       expect(tester.takeException(), isNull);
-      expect(find.byType(BarGraphTestbed), findsOneWidget);
+      expect(find.byType(_BarGraphTestbed), findsOneWidget);
     },
   );
 
   testWidgets(
-    'Applies graph padding',
+    "Applies graph padding",
     (WidgetTester tester) async {
       const padding = EdgeInsets.all(8.0);
 
       await tester.pumpWidget(
-        const BarGraphTestbed(graphPadding: padding),
+        const _BarGraphTestbed(graphPadding: padding),
       );
 
       final paddingWidget = tester.widget<Padding>(find.byWidgetPredicate(
@@ -41,16 +43,16 @@ void main() {
   );
 
   testWidgets(
-    'Graph bars are tapable',
+    "Graph bars are tapable",
     (WidgetTester tester) async {
       int tappedBarValue;
 
-      await tester.pumpWidget(BarGraphTestbed(
+      await tester.pumpWidget(_BarGraphTestbed(
         onBarTap: (data) => tappedBarValue = data.value,
       ));
 
       final barWidgets =
-          tester.widgetList<GraphTestBar>(find.byType(GraphTestBar));
+          tester.widgetList<_GraphTestBar>(find.byType(_GraphTestBar));
 
       for (final barWidget in barWidgets) {
         await tester.tap(find.byWidget(barWidget));
@@ -61,41 +63,41 @@ void main() {
   );
 
   testWidgets(
-    'Builds all bar data from data list with the given order',
+    "Builds all bar data from data list with the given order",
     (WidgetTester tester) async {
-      await tester.pumpWidget(const BarGraphTestbed());
+      await tester.pumpWidget(const _BarGraphTestbed());
 
       final barsRow = tester.widget<Row>(find.byType(Row));
 
       final rowWidgets = barsRow.children;
 
-      expect(rowWidgets.length, BarGraphTestbed.graphBarTestData.length);
+      expect(rowWidgets.length, _BarGraphTestbed.graphBarTestData.length);
 
       for (int i = 0; i < rowWidgets.length; i++) {
         final rowWidget = rowWidgets[i];
-        final bar = tester.widget<GraphTestBar>(find.descendant(
+        final bar = tester.widget<_GraphTestBar>(find.descendant(
           of: find.byWidget(rowWidget),
-          matching: find.byType(GraphTestBar),
+          matching: find.byType(_GraphTestBar),
         ));
 
-        expect(bar.value, BarGraphTestbed.graphBarTestData[i].value);
+        expect(bar.value, _BarGraphTestbed.graphBarTestData[i].value);
       }
     },
   );
 
   testWidgets(
-    'Builds the graph bars with the height ratio equal to data value ratio',
+    "Builds the graph bars with the height ratio equal to data value ratio",
     (WidgetTester tester) async {
       const barGraphData = [
-        TestBarData(value: 1),
-        TestBarData(value: 3),
-        TestBarData(value: 7),
+        _TestBarData(value: 1),
+        _TestBarData(value: 3),
+        _TestBarData(value: 7),
       ];
 
       final barGraphDataValues =
           barGraphData.map((data) => data.value).toList();
 
-      await tester.pumpWidget(const BarGraphTestbed(
+      await tester.pumpWidget(const _BarGraphTestbed(
         data: barGraphData,
       ));
 
@@ -130,23 +132,23 @@ void main() {
   );
 }
 
-class BarGraphTestbed extends StatelessWidget {
+class _BarGraphTestbed extends StatelessWidget {
   static const graphBarTestData = [
-    TestBarData(value: 1),
-    TestBarData(value: 6),
-    TestBarData(value: 18),
-    TestBarData(value: 13),
-    TestBarData(value: 6),
-    TestBarData(value: 19),
+    _TestBarData(value: 1),
+    _TestBarData(value: 6),
+    _TestBarData(value: 18),
+    _TestBarData(value: 13),
+    _TestBarData(value: 6),
+    _TestBarData(value: 19),
   ];
 
   final String title;
   final TextStyle titleStyle;
   final EdgeInsets graphPadding;
-  final List<TestBarData> data;
-  final ValueChanged<TestBarData> onBarTap;
+  final List<_TestBarData> data;
+  final ValueChanged<_TestBarData> onBarTap;
 
-  const BarGraphTestbed({
+  const _BarGraphTestbed({
     Key key,
     this.title = 'title',
     this.data = graphBarTestData,
@@ -157,32 +159,30 @@ class BarGraphTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: BarGraph(
-          data: data,
-          graphPadding: graphPadding,
-          onBarTap: onBarTap,
-          barBuilder: (TestBarData data) => GraphTestBar(
-            value: data.value,
-          ),
+    return MetricsThemedTestbed(
+      body: BarGraph(
+        data: data,
+        graphPadding: graphPadding,
+        onBarTap: onBarTap,
+        barBuilder: (_TestBarData data) => _GraphTestBar(
+          value: data.value,
         ),
       ),
     );
   }
 }
 
-class TestBarData implements BarData {
+class _TestBarData implements BarData {
   @override
   final int value;
 
-  const TestBarData({this.value});
+  const _TestBarData({this.value});
 }
 
-class GraphTestBar extends StatelessWidget {
+class _GraphTestBar extends StatelessWidget {
   final int value;
 
-  const GraphTestBar({Key key, this.value}) : super(key: key);
+  const _GraphTestBar({Key key, this.value}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
