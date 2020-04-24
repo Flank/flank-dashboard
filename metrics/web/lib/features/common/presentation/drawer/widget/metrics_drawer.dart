@@ -1,5 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
+import 'package:metrics/features/common/presentation/routes/route_generator.dart';
+import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 /// The application side menu widget.
@@ -28,9 +33,39 @@ class MetricsDrawer extends StatelessWidget {
               );
             },
           ),
+          StateBuilder<AuthStore>(
+            models: [Injector.getAsReactive<AuthStore>()],
+            builder:
+                (context, ReactiveModel<AuthStore> authStoreReactiveModel) {
+              return ListTile(
+                title: const Text(CommonStrings.logOut),
+                onTap: () => _signOut(context, authStoreReactiveModel),
+              );
+            },
+          )
         ],
       ),
     );
+  }
+
+  /// Signs out a user from the app.
+  Future<void> _signOut(
+    BuildContext context,
+    ReactiveModel<AuthStore> authStoreReactiveModel,
+  ) async {
+    StreamSubscription _loggedInStreamSubscription;
+
+    _loggedInStreamSubscription =
+        authStoreReactiveModel.state.loggedInStream.listen((isUserLoggedIn) {
+      if (isUserLoggedIn != null && !isUserLoggedIn) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, RouteGenerator.login, (Route<dynamic> route) => false);
+
+        _loggedInStreamSubscription.cancel();
+      }
+    });
+
+    await authStoreReactiveModel.setState((store) => store.signOut());
   }
 
   void _changeTheme(ReactiveModel<ThemeStore> model, ThemeStore snapshot) {
