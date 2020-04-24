@@ -28,7 +28,7 @@ void main() {
     );
 
     testWidgets(
-      "contains ListView with ProjectMetricTile widgets",
+      "contains a list of projects with their metrics",
       (WidgetTester tester) async {
         await tester.pumpWidget(_MetricsTableTestbed());
         await tester.pumpAndSettle();
@@ -97,8 +97,9 @@ void main() {
 
         final performanceTitleCenter = tester.getCenter(
           find.descendant(
-              of: find.byType(Expanded),
-              matching: find.text(DashboardStrings.performance)),
+            of: find.byType(Expanded),
+            matching: find.text(DashboardStrings.performance),
+          ),
         );
 
         expect(
@@ -114,19 +115,20 @@ void main() {
         await tester.pumpWidget(_MetricsTableTestbed());
         await tester.pumpAndSettle();
 
-        final performanceMetricWidgetCenter = tester.getCenter(
+        final buildNumberMetricWidgetCenter = tester.getCenter(
           find.byType(BuildNumberTextMetric),
         );
 
-        final performanceTitleCenter = tester.getCenter(
+        final buildNumberTitleCenter = tester.getCenter(
           find.descendant(
-              of: find.byType(Expanded),
-              matching: find.text(DashboardStrings.builds)),
+            of: find.byType(Expanded),
+            matching: find.text(DashboardStrings.builds),
+          ),
         );
 
         expect(
-          performanceMetricWidgetCenter.dx,
-          equals(performanceTitleCenter.dx),
+          buildNumberMetricWidgetCenter.dx,
+          equals(buildNumberTitleCenter.dx),
         );
       },
     );
@@ -140,19 +142,19 @@ void main() {
             ProjectMetricsStoreStub.testProjectMetrics.stability;
         final stabilityText = '${(stabilityPercent.value * 100).toInt()}%';
 
-        final performanceMetricWidgetCenter = tester.getCenter(
+        final stabilityMetricWidgetCenter = tester.getCenter(
           find.widgetWithText(CirclePercentage, stabilityText),
         );
 
-        final performanceTitleCenter = tester.getCenter(
+        final stabilityTitleCenter = tester.getCenter(
           find.descendant(
               of: find.byType(Expanded),
               matching: find.text(DashboardStrings.stability)),
         );
 
         expect(
-          performanceMetricWidgetCenter.dx,
-          equals(performanceTitleCenter.dx),
+          stabilityMetricWidgetCenter.dx,
+          equals(stabilityTitleCenter.dx),
         );
       },
     );
@@ -166,19 +168,20 @@ void main() {
             ProjectMetricsStoreStub.testProjectMetrics.coverage;
         final coverageText = '${(coveragePercent.value * 100).toInt()}%';
 
-        final performanceMetricWidgetCenter = tester.getCenter(
+        final coverageMetricWidgetCenter = tester.getCenter(
           find.widgetWithText(CirclePercentage, coverageText),
         );
 
-        final performanceTitleCenter = tester.getCenter(
+        final coverageTitleCenter = tester.getCenter(
           find.descendant(
-              of: find.byType(Expanded),
-              matching: find.text(DashboardStrings.coverage)),
+            of: find.byType(Expanded),
+            matching: find.text(DashboardStrings.coverage),
+          ),
         );
 
         expect(
-          performanceMetricWidgetCenter.dx,
-          equals(performanceTitleCenter.dx),
+          coverageMetricWidgetCenter.dx,
+          equals(coverageTitleCenter.dx),
         );
       },
     );

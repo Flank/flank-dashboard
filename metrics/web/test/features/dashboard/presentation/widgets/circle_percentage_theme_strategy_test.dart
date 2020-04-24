@@ -48,10 +48,8 @@ void main() {
           0.5,
         );
 
-        final expectedTheme = circlePercentageTheme.lowPercentTheme;
-
-        expect(lowerBoundTheme, equals(expectedTheme));
-        expect(upperBoundTheme, equals(expectedTheme));
+        expect(lowerBoundTheme, equals(circlePercentageTheme.lowPercentTheme));
+        expect(upperBoundTheme, equals(circlePercentageTheme.lowPercentTheme));
       },
     );
 
@@ -68,10 +66,14 @@ void main() {
           0.79,
         );
 
-        final expectedTheme = circlePercentageTheme.mediumPercentTheme;
-
-        expect(lowerBoundTheme, equals(expectedTheme));
-        expect(upperBoundTheme, equals(expectedTheme));
+        expect(
+          lowerBoundTheme,
+          equals(circlePercentageTheme.mediumPercentTheme),
+        );
+        expect(
+          upperBoundTheme,
+          equals(circlePercentageTheme.mediumPercentTheme),
+        );
       },
     );
 
@@ -88,10 +90,8 @@ void main() {
           1.0,
         );
 
-        final expectedTheme = circlePercentageTheme.highPercentTheme;
-
-        expect(lowerBoundTheme, equals(expectedTheme));
-        expect(upperBoundTheme, equals(expectedTheme));
+        expect(lowerBoundTheme, equals(circlePercentageTheme.highPercentTheme));
+        expect(upperBoundTheme, equals(circlePercentageTheme.highPercentTheme));
       },
     );
 
@@ -103,9 +103,7 @@ void main() {
           0.0,
         );
 
-        final expectedTheme = theme.inactiveWidgetTheme;
-
-        expect(widgetTheme, equals(expectedTheme));
+        expect(widgetTheme, equals(theme.inactiveWidgetTheme));
       },
     );
   });

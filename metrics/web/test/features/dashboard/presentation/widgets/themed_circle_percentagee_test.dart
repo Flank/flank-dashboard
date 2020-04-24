@@ -8,11 +8,15 @@ import 'package:mockito/mockito.dart';
 import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
-  group("ProjectMetricCirclePercentage", () {
+  group("ThemedCirclePercentage", () {
     testWidgets(
       "applies the colors from the MetricWidgetThemeData given by theme strategy",
       (tester) async {
-        const metricWidgetTheme = MetricWidgetThemeData();
+        const metricWidgetTheme = MetricWidgetThemeData(
+          primaryColor: Colors.red,
+          accentColor: Colors.blue,
+          backgroundColor: Colors.white,
+        );
         final themeStrategy = CirclePercentageThemeStrategyMock();
 
         when(themeStrategy.getWidgetTheme(any, any))
@@ -41,7 +45,7 @@ void main() {
     );
 
     testWidgets(
-      "can be created with null themeStrategy",
+      "can be created with not provided (default) themeStrategy",
       (tester) async {
         await tester.pumpWidget(const _ThemedCirclePercentageTestbed());
 
@@ -66,6 +70,7 @@ class _ThemedCirclePercentageTestbed extends StatelessWidget {
     return MetricsThemedTestbed(
       body: ThemedCirclePercentage(
         value: value,
+        themeStrategy: strategy,
       ),
     );
   }

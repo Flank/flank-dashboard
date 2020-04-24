@@ -88,7 +88,7 @@ void main() {
     );
 
     testWidgets(
-      "takes square box when parent dimensions when parent height is shorter than width",
+      "takes square box dimensions when parent height is shorter than the width",
       (WidgetTester tester) async {
         const height = 100.0;
         const width = 200.0;
@@ -162,7 +162,7 @@ void main() {
     );
 
     testWidgets(
-      "displays 'N/A' text if the value is null",
+      "displays 'no data placeholder' text if the value is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _CirclePercentageTestbed(
           value: null,

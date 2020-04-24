@@ -6,7 +6,7 @@ import 'package:metrics/features/dashboard/presentation/widgets/expandable_text.
 import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
-  group("ExapndableText", () {
+  group("ExpandableText", () {
     testWidgets(
       "displays the given text",
       (tester) async {
