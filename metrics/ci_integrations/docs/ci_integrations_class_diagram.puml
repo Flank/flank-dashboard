@@ -1,6 +1,8 @@
     @startuml
 
     top to bottom direction
+    
+    scale 0.5
 
     interface Config{}
     interface SourceConfig{
