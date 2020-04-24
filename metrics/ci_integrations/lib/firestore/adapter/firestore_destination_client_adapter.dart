@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:ci_integration/common/client/destination_client.dart';
 import 'package:ci_integration/firestore/client/firestore.dart';
 import 'package:ci_integration/firestore/deserializer/build_data_deserializer.dart';
-import 'package:metrics_core/metrics_core.dart';
 import 'package:grpc/grpc.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class that provides methods for interactions between
 /// [CiIntegration] and Firestore destination storage.

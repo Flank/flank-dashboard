@@ -2,10 +2,10 @@ import 'package:ci_integration/firestore/adapter/firestore_destination_client_ad
 import 'package:ci_integration/firestore/client/firestore.dart' as client;
 import 'package:ci_integration/firestore/deserializer/build_data_deserializer.dart';
 import 'package:firedart/firedart.dart';
+import 'package:grpc/grpc.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
-import 'package:grpc/grpc.dart';
 
 // ignore_for_file: avoid_implementing_value_types
 

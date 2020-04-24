@@ -1,7 +1,7 @@
 import 'package:ci_integration/ci_integration/ci_integration.dart';
-import 'package:ci_integration/common/client/source_client.dart';
-import 'package:ci_integration/common/client/destination_client.dart';
 import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
+import 'package:ci_integration/common/client/destination_client.dart';
+import 'package:ci_integration/common/client/source_client.dart';
 import 'package:test/test.dart';
 
 import 'test_util/stub/destination_client_stub.dart';

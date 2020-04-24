@@ -1,7 +1,7 @@
 import 'package:ci_integration/common/client_factory/destination_client_factory.dart';
 import 'package:ci_integration/firestore/adapter/firestore_destination_client_adapter.dart';
-import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 import 'package:ci_integration/firestore/client/firestore.dart';
+import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 
 /// A client factory for the Firestore destination integration.
 ///

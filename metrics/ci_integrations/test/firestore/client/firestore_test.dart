@@ -8,16 +8,9 @@ void main() {
     const apiKey = 'apiKey';
 
     test(
-      "should throw an ArgumentError trying to create an instance with null project id",
+      "should throw an AssertionError trying to create an instance with empty project id",
       () {
-        expect(() => Firestore(null), throwsArgumentError);
-      },
-    );
-
-    test(
-      "should throw an ArgumentError trying to create an instance with empty project id",
-      () {
-        expect(() => Firestore(''), throwsArgumentError);
+        expect(() => Firestore(''), throwsA(isA<AssertionError>()));
       },
     );
 

@@ -1,5 +1,9 @@
-import 'package:ci_integration/common/config/model/config.dart';
-import 'package:ci_integration/common/config/parser/config_parser.dart';
+import 'package:ci_integration/common/config/model/destination_config.dart';
+import 'package:ci_integration/common/config/model/source_config.dart';
+import 'package:ci_integration/common/config/parser/destination_config_parser.dart';
+import 'package:ci_integration/common/config/parser/source_config_parser.dart';
 import 'package:mockito/mockito.dart';
 
-class ConfigParserMock<T extends Config> extends Mock implements ConfigParser<T> {}
+class SourceConfigParserMock<T extends SourceConfig> extends Mock implements SourceConfigParser<T>{}
+
+class DestinationConfigParserMock<T extends DestinationConfig> extends Mock implements DestinationConfigParser<T>{}

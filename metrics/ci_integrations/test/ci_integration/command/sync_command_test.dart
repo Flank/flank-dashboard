@@ -40,7 +40,7 @@ void main() {
           metrics_project_id: id
     ''';
       final RawIntegrationConfig integrationConfig = RawIntegrationConfig(
-        sourceConfigMap: {
+        sourceConfigMap: const {
           'jenkins': {
             'url': 'sample_url',
             'job_name': jobName,
@@ -48,7 +48,7 @@ void main() {
             'api_key': 'key',
           },
         },
-        destinationConfigMap: {
+        destinationConfigMap: const {
           'firestore': {
             'firebase_project_id': firebaseProjectId,
             'metrics_project_id': 'id',
@@ -66,21 +66,21 @@ void main() {
       final sourceConfigMock = SourceConfigMock();
       final destinationConfigMock = DestinationConfigMock();
 
-      final sourceClientFactoryStub = ClientFactoryStub(sourceClientMock);
+      final sourceClientFactoryStub = SourceClientFactoryStub(sourceClientMock);
       final destinationClientFactoryStub =
-          ClientFactoryStub(destinationClientMock);
+          DestinationClientFactoryStub(destinationClientMock);
 
-      final sourceConfigParserMock = ConfigParserMock<SourceConfig>();
-      final destinationConfigParserMock = ConfigParserMock<DestinationConfig>();
+      final sourceConfigParserMock = SourceConfigParserMock();
+      final destinationConfigParserMock = DestinationConfigParserMock();
 
-      final sourcePartyStub = IntegrationPartyStub(
+      final sourcePartyStub = SourcePartyStub(
         sourceClientFactoryStub,
         sourceConfigParserMock,
-      ) as SourceParty;
-      final destinationPartyStub = IntegrationPartyStub(
+      );
+      final destinationPartyStub = DestinationPartyStub(
         destinationClientFactoryStub,
         destinationConfigParserMock,
-      ) as DestinationParty;
+      );
 
       final sourcePartiesMock = PartiesMock<SourceParty>();
       final destinationPartiesMock = PartiesMock<DestinationParty>();
@@ -113,26 +113,26 @@ void main() {
         reset(destinationConfigMock);
       });
 
-      PostExpectation<SourceClient> whenCreateSourceClient(
+      PostExpectation<SourceConfig> whenCreateSourceConfig(
         Map<String, dynamic> configMap,
       ) {
         when(sourcePartiesMock.parties).thenReturn([sourcePartyStub]);
         when(sourceConfigParserMock.canParse(configMap)).thenReturn(true);
-        when(sourceConfigParserMock.parse(
+        return when(sourceConfigParserMock.parse(
           configMap,
-        )).thenReturn(sourceConfigMock);
-        return when(sourceClientFactoryStub.create(sourceConfigMock));
+        ));
       }
 
-      PostExpectation<DestinationClient> whenCreateDestinationClient(
+      PostExpectation<DestinationConfig> whenCreateDestinationConfig(
         Map<String, dynamic> configMap,
       ) {
         when(destinationPartiesMock.parties).thenReturn([destinationPartyStub]);
         when(destinationConfigParserMock.canParse(configMap)).thenReturn(true);
-        when(destinationConfigParserMock.parse(
-          configMap,
-        )).thenReturn(destinationConfigMock);
-        return when(destinationClientFactoryStub.create(destinationConfigMock));
+        return when(
+          destinationConfigParserMock.parse(
+            configMap,
+          ),
+        );
       }
 
       PostExpectation<Future<InteractionResult>> whenRunSync(
@@ -140,12 +140,10 @@ void main() {
       ) {
         when(fileMock.existsSync()).thenReturn(true);
         when(fileMock.readAsStringSync()).thenReturn(configFileContent);
-        whenCreateSourceClient(
-          integrationConfig.sourceConfigMap,
-        ).thenReturn(sourceClientMock);
-        whenCreateDestinationClient(
-          integrationConfig.destinationConfigMap,
-        ).thenReturn(destinationClientMock);
+        whenCreateSourceConfig(integrationConfig.sourceConfigMap)
+            .thenReturn(sourceConfigMock);
+        whenCreateDestinationConfig(integrationConfig.destinationConfigMap)
+            .thenReturn(destinationConfigMock);
         when(
           sourceConfigMock.sourceProjectId,
         ).thenReturn(syncConfig.sourceProjectId);
@@ -190,7 +188,7 @@ void main() {
           when(sourcePartiesMock.parties).thenReturn([]);
 
           expect(
-            syncCommand.getParty(
+            () => syncCommand.getParty(
               integrationConfig.sourceConfigMap,
               sourcePartiesMock,
             ),
@@ -208,7 +206,7 @@ void main() {
           )).thenReturn(false);
 
           expect(
-            syncCommand.getParty(
+            () => syncCommand.getParty(
               integrationConfig.sourceConfigMap,
               sourcePartiesMock,
             ),
@@ -317,7 +315,7 @@ void main() {
       );
 
       test(".run() should call dispose once", () async {
-        whenRunSync(syncConfig).thenAnswer(any);
+        whenRunSync(syncConfig).thenAnswer((_) => Future.value(any));
 
         await syncCommand.run();
 
@@ -347,10 +345,10 @@ void main() {
         () async {
           when(fileMock.existsSync()).thenReturn(true);
           when(fileMock.readAsStringSync()).thenReturn(configFileContent);
-          whenCreateDestinationClient(
+          whenCreateDestinationConfig(
             integrationConfig.destinationConfigMap,
-          ).thenReturn(destinationClientMock);
-          whenCreateSourceClient(
+          ).thenReturn(destinationConfigMock);
+          whenCreateSourceConfig(
             integrationConfig.sourceConfigMap,
           ).thenThrow(Exception());
 
@@ -365,10 +363,10 @@ void main() {
         () async {
           when(fileMock.existsSync()).thenReturn(true);
           when(fileMock.readAsStringSync()).thenReturn(configFileContent);
-          whenCreateSourceClient(
+          whenCreateSourceConfig(
             integrationConfig.sourceConfigMap,
-          ).thenReturn(sourceClientMock);
-          whenCreateDestinationClient(
+          ).thenReturn(sourceConfigMock);
+          whenCreateDestinationConfig(
             integrationConfig.destinationConfigMap,
           ).thenThrow(Exception());
 
@@ -381,7 +379,7 @@ void main() {
       test(
         ".run() should run sync on the given config",
         () async {
-          whenRunSync(syncConfig).thenAnswer(any);
+          whenRunSync(syncConfig).thenAnswer((_) => Future.value(any));
 
           await syncCommand.run();
 
@@ -444,7 +442,7 @@ void main() {
             sourceClientMock,
             destinationClientMock,
           );
-          
+
           verify(destinationClientMock.dispose()).called(1);
         },
       );

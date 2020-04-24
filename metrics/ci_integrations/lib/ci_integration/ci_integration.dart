@@ -1,6 +1,6 @@
+import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
 import 'package:ci_integration/common/client/destination_client.dart';
 import 'package:ci_integration/common/client/source_client.dart';
-import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
 import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';

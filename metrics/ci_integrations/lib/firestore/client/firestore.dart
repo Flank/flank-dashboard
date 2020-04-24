@@ -13,7 +13,7 @@ class Firestore extends fd.Firestore {
   ///
   /// The [firebaseAuth] is optional. If it is not provided then no
   /// authorization for Firestore related requests is applied.
-  /// 
+  ///
   /// Throws an [ArgumentError] if the given [projectId] is `null` or empty.
   Firestore(
     this.projectId, {
@@ -21,13 +21,5 @@ class Firestore extends fd.Firestore {
   }) : super(
           projectId,
           auth: firebaseAuth,
-        ) {
-    if (projectId == null || projectId.isEmpty) {
-      throw ArgumentError.value(
-        projectId,
-        'projectId',
-        'must not be null or empty',
-      );
-    }
-  }
+        );
 }

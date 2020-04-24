@@ -1,5 +1,5 @@
-import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/mapper/jenkins_build_result_mapper.dart';
+import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:test/test.dart';
 
 import '../test_data/jenkins_artifacts_test_data.dart';

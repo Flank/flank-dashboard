@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:ci_integration/common/authorization/authorization.dart';
+import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:ci_integration/jenkins/client/constants/tree_query.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart';
