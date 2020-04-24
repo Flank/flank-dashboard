@@ -1,0 +1,237 @@
+    @startuml
+
+    top to bottom direction
+
+    interface Config{}
+    interface SourceConfig{
+     + getSourceProjectId()
+    }
+    interface DestinationConfig {
+     + getDestinationProjectId()
+    }
+    class BitriseConfig {
+     + getSourceProjectId()
+    }
+    class JenkinsConfig {
+     + getSourceProjectId()
+    }
+    class FirestoreConfig {
+     + getDestinationProjectId()
+    }
+
+    interface ConfigParser<T extends Config>{
+      + parse(Map<String, dynamic>):T
+      + canParse(Map<String, dynamic>): bool
+    }
+    interface SourceConfigParser<T extends SourceConfig>{
+      + parse(Map<String, dynamic>):T
+      + canParse(Map<String, dynamic>): bool
+    }
+    interface DestinationConfigParser<T extends DestinationConfig>{
+      + parse(Map<String, dynamic>):T
+      + canParse(Map<String, dynamic>): bool
+    }
+    class BitriseConfigParser{
+      + parse(Map<String, dynamic>):BitriseConfig
+      + canParse(Map<String, dynamic>): bool
+    }
+    class JenkinsConfigParser{
+      + parse(Map<String, dynamic>):JenkinsConfig
+      + canParse(Map<String, dynamic>): bool
+    }
+    class FirestoreConfigParser{
+      + parse(Map<String, dynamic>):FirestoreConfig
+      + canParse(Map<String, dynamic>): bool
+    }
+
+    interface IntegrationClient{
+      + dispose(): void
+    }
+    interface SourceClient{
+      + fetchBuilds(String): List<BuildData>
+      + fetchBuildsAfter(String, BuildData): List<BuildData>
+      + dispose(): void
+    }
+    interface DestinationClient{
+      + fetchLastBuild(String): BuildData
+      + addBuilds(String, List<BuildData>): void
+      + dispose(): void
+    }
+    class JenkinsSourceClientAdapter {
+      + jenkinsClient: JenkinsClient
+      + fetchBuilds(String): List<BuildData>
+      + fetchBuildsAfter(String, BuildData): List<BuildData>
+      + dispose(): void
+    }
+    class BitriseSourceClientAdapter {
+      + bitriseClient: BitriseClient
+      + fetchBuilds(String): List<BuildData>
+      + fetchBuildsAfter(String, BuildData): List<BuildData>
+      + dispose(): void
+    }
+    class FirestoreDestinationClientAdapter{
+      + firestore : Firestore
+      + fetchLastBuild(String): BuildData
+      + addBuilds(String, List<BuildData>): void
+      + dispose(): void
+    }
+
+    interface IntegrationClientFactory<T extends Config, K extends IntegrationClient>{
+      + create(T): K
+    }
+    interface SourceClientFactory<T extends SourceConfig, K extends SourceClient>{
+      + create(T): K
+    }
+    interface DestinationClientFactory<T extends DestinationConfig, K extends DestinationClient>{
+      + create(T): K
+    }
+    class JenkinsSourceClientFactory{
+      + create(JenkinsConfig): JenkinsSourceClientAdapter
+    }
+    class BitriseSourceClientFactory{
+      + create(BitriseConfig): BitriseSourceClientAdapter
+    }
+    class FirestoreDestinationClientFactory{
+      + create(FirestoreConfig): FirestoreStorageClientAdapter
+    }
+
+    interface IntegrationParty<T extends Config, K extends IntegrationClient> {
+      + clientFactory: IntegrationClientAbstractFactory<T, K>
+      + configParser: ConfigParser<T>
+    }
+    interface SourceParty<T extends SourceConfig, K extends SourceClient> {
+      + clientFactory: SourceClientAbstractFactory<T, K>
+      + configParser: SourceConfigParser<T>
+    }
+    interface DestinationParty<T extends DestinationConfig, K extends DestinationClient> {
+      + clientFactory: DestinationClientAbstractFactory<T, K>
+      + configParser: DestinationConfigParser<T>
+    }
+    class JenkinsSourceParty{
+      + clientFactory: JenkinsSourceClientFactory
+      + configParser: JenkinsConfigParser
+    }
+    class BitriseSourceParty{
+      + clientFactory: BitriseSourceClientFactory
+      + configParser: BitriseConfigParser
+    }
+    class FirestoreDestinationParty{
+      + clientFactory: FirestoreDestinationClientFactory
+      + configParser: FirestoreConfigParser
+    }
+
+    abstract class Parties<T extends IntegrationParty>{
+      + parties: ImmutableList<T>
+    }
+    class SupportedSourceParties {
+      + parties: List<SourceParty>
+    }
+    class SupportedDestinationParties {
+      + parties: List<DestinationParty>
+    }
+    class SupportedIntegrationParties{
+      + sourceParties: SupportedSourceParties
+      + destinationParties: SupportedDestinationParties
+    }
+
+    class CiIntegration{
+      - sourceClient: SourceClient
+      - destinationClient: DestinationClient
+      + sync(SyncConfig): InteractionResult
+    }
+    class SyncConfig{
+      + sourceProjectId: String
+      + destinationProjectId: String
+    }
+    class RawIntegrationConfig{
+      + sourceConfigMap: Map<String, dynamic>
+      + destinationConfigMap: Map<String, dynamic>
+    }
+    class SyncCommand{
+      + supportedIntegrations: SupportedIntegrations
+      + run(): void
+      - getConfigFilePath(): String
+      - getConfigFile(String): File
+      - parseConfigFileContent(File): RawIntegrationConfig
+      - getSourceClient(Map<String, dynamic>) : SourceClient
+      - getDestinationClient(Map<String, dynamic>) : DestinationClient
+      - sync(SyncConfig, SourceClient, DestinationClient) : InteractionResult
+      - dispose(SourceClient, DestinationClient)
+    }
+
+    Config <|-- SourceConfig
+    Config <|-- DestinationConfig
+    SourceConfig <|.. BitriseConfig
+    SourceConfig <|.. JenkinsConfig
+    DestinationConfig <|.. FirestoreConfig
+
+    ConfigParser <|-- SourceConfigParser
+    ConfigParser <|-- DestinationConfigParser
+    SourceConfigParser <|.. BitriseConfigParser
+    SourceConfigParser <|.. JenkinsConfigParser
+    DestinationConfigParser <|.. FirestoreConfigParser
+
+    FirestoreConfigParser ..> FirestoreConfig : creates
+    BitriseConfigParser ..> BitriseConfig : creates
+    JenkinsConfigParser ..> JenkinsConfig : creates
+
+    IntegrationClient <|-- SourceClient
+    IntegrationClient <|-- DestinationClient
+    SourceClient <|.. JenkinsSourceClientAdapter
+    SourceClient <|.. BitriseSourceClientAdapter
+    DestinationClient <|.. FirestoreDestinationClientAdapter
+
+    JenkinsSourceClientAdapter ..> JenkinsClient : uses
+    BitriseSourceClientAdapter ..> BitriseClient : uses
+    FirestoreDestinationClientAdapter ..> Firestore : uses
+
+    IntegrationClientFactory <|-- SourceClientFactory
+    IntegrationClientFactory <|-- DestinationClientFactory
+    SourceClientFactory <|.. JenkinsSourceClientFactory
+    SourceClientFactory <|.. BitriseSourceClientFactory
+    DestinationClientFactory <|.. FirestoreDestinationClientFactory
+    
+    IntegrationClientFactory ..> IntegrationClient : creates
+    SourceClientFactory ..> SourceClient : creates
+    DestinationClientFactory ..> DestinationClient : creates
+    JenkinsSourceClientFactory ..> JenkinsSourceClientAdapter : creates
+    BitriseSourceClientFactory ..> BitriseSourceClientAdapter : creates
+    FirestoreDestinationClientFactory ..> FirestoreDestinationClientAdapter : creates
+
+    IntegrationParty <|-- SourceParty
+    IntegrationParty <|-- DestinationParty
+    SourceParty <|.. JenkinsSourceParty
+    SourceParty <|.. BitriseSourceParty
+    DestinationParty <|.. FirestoreDestinationParty
+
+    IntegrationParty ..> ConfigParser : uses
+    IntegrationParty ..> IntegrationClientFactory : uses
+    SourceParty ..> SourceConfigParser : uses
+    SourceParty ..> SourceClientFactory : uses
+    DestinationParty ..> DestinationConfigParser : uses
+    DestinationParty ..> DestinationClientFactory : uses
+    JenkinsSourceParty ..> JenkinsConfigParser : uses
+    JenkinsSourceParty ..> JenkinsSourceClientFactory : uses
+    BitriseSourceParty ..> BitriseConfigParser : uses
+    BitriseSourceParty ..> BitriseSourceClientFactory : uses
+    FirestoreDestinationParty ..> FirestoreConfigParser : uses
+    FirestoreDestinationParty ..> FirestoreDestinationClientFactory : uses
+
+    Parties <|.. SupportedSourceParties
+    Parties <|.. SupportedDestinationParties
+    SupportedSourceParties o.. SourceParty
+    SupportedSourceParties <.. SupportedIntegrationParties : uses
+    SupportedDestinationParties o.. DestinationParty
+    SupportedDestinationParties <.. SupportedIntegrationParties : uses
+
+
+    SyncCommand ..> RawIntegrationConfig : uses
+    SyncCommand ..> SyncConfig : uses
+    SyncCommand ..> SupportedIntegrationParties : depends
+    SyncCommand ..> CiIntegration : uses
+
+    CiIntegration ..> SourceClient : uses
+    CiIntegration ..> DestinationClient : uses
+    CiIntegration ..> SyncConfig : uses
+
+    @enduml
