@@ -18,7 +18,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the performance title",
+      "displays the performance header",
       (tester) async {
         await tester.pumpWidget(_DashboardTableHeaderTestbed());
 
@@ -27,7 +27,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the builds title",
+      "displays the builds header",
       (tester) async {
         await tester.pumpWidget(_DashboardTableHeaderTestbed());
 
@@ -36,7 +36,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the stability title",
+      "displays the stability header",
       (tester) async {
         await tester.pumpWidget(_DashboardTableHeaderTestbed());
 
@@ -45,7 +45,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the coverage title",
+      "displays the coverage header",
       (tester) async {
         await tester.pumpWidget(_DashboardTableHeaderTestbed());
 

@@ -32,8 +32,8 @@ class MetricsTheme extends InheritedWidget {
   bool updateShouldNotify(MetricsTheme oldWidget) {
     final oldData = oldWidget.data;
 
-    return oldData.projectMetricsCirclePercentageTheme !=
-            data.projectMetricsCirclePercentageTheme ||
+    return oldData.metricCirclePercentageThemeData !=
+            data.metricCirclePercentageThemeData ||
         oldData.buildResultTheme != data.buildResultTheme ||
         oldData.metricWidgetTheme != data.metricWidgetTheme;
   }

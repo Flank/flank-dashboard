@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/model/project_metrics_circle_percentage_theme_data.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -13,8 +13,8 @@ void main() {
 
       expect(themeData.buildResultTheme, isNotNull);
       expect(themeData.metricWidgetTheme, isNotNull);
-      expect(themeData.projectMetricsCirclePercentageTheme, isNotNull);
-      expect(themeData.projectMetricsCirclePercentageTheme, isNotNull);
+      expect(themeData.metricCirclePercentageThemeData, isNotNull);
+      expect(themeData.metricCirclePercentageThemeData, isNotNull);
     },
   );
 
@@ -22,13 +22,13 @@ void main() {
     'Creates the theme with the default metric widgets theme data if nulls are passed',
     () {
       const themeData = MetricsThemeData(
-        projectMetricsCirclePercentageTheme: null,
+        metricCirclePercentageThemeData: null,
         metricWidgetTheme: null,
         buildResultTheme: null,
       );
 
-      expect(themeData.projectMetricsCirclePercentageTheme, isNotNull);
-      expect(themeData.projectMetricsCirclePercentageTheme, isNotNull);
+      expect(themeData.metricCirclePercentageThemeData, isNotNull);
+      expect(themeData.metricCirclePercentageThemeData, isNotNull);
       expect(themeData.metricWidgetTheme, isNotNull);
       expect(themeData.buildResultTheme, isNotNull);
     },
@@ -47,7 +47,7 @@ void main() {
         backgroundColor: backgroundColor,
       );
 
-      const circlePercentageTheme = ProjectMetricsCirclePercentageThemeData(
+      const circlePercentageTheme = MetricCirclePercentageThemeData(
         lowPercentTheme: MetricWidgetThemeData(
           primaryColor: primaryColor,
           accentColor: accentColor,
@@ -65,16 +65,15 @@ void main() {
 
       final copiedTheme = themeData.copyWith(
         metricWidgetTheme: sparklineTheme,
-        projectMetricsCirclePercentageTheme: circlePercentageTheme,
+        metricCirclePercentageThemeData: circlePercentageTheme,
         barGraphBackgroundColor: backgroundColor,
         buildResultTheme: buildResultsTheme,
       );
 
-      expect(copiedTheme.projectMetricsCirclePercentageTheme,
-          circlePercentageTheme);
+      expect(
+          copiedTheme.metricCirclePercentageThemeData, circlePercentageTheme);
       expect(copiedTheme.metricWidgetTheme, sparklineTheme);
       expect(copiedTheme.buildResultTheme, buildResultsTheme);
-      expect(copiedTheme.barGraphBackgroundColor, backgroundColor);
     },
   );
 
@@ -86,16 +85,12 @@ void main() {
 
       expect(themeData, isNot(copiedTheme));
       expect(
-        themeData.barGraphBackgroundColor,
-        copiedTheme.barGraphBackgroundColor,
-      );
-      expect(
         themeData.metricWidgetTheme,
         copiedTheme.metricWidgetTheme,
       );
       expect(
-        themeData.projectMetricsCirclePercentageTheme,
-        copiedTheme.projectMetricsCirclePercentageTheme,
+        themeData.metricCirclePercentageThemeData,
+        copiedTheme.metricCirclePercentageThemeData,
       );
       expect(
         themeData.buildResultTheme,

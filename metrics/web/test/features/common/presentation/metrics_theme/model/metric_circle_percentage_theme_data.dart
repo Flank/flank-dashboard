@@ -1,12 +1,12 @@
-import 'package:metrics/features/common/presentation/metrics_theme/model/project_metrics_circle_percentage_theme_data.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("ProjectMetricsCirclePercentageThemeData", () {
+  group("MetricCirclePercentageThemeData", () {
     test(
       "provides a default MetricWidgetThemeData if nothing is passed",
       () {
-        const themeData = ProjectMetricsCirclePercentageThemeData();
+        const themeData = MetricCirclePercentageThemeData();
 
         expect(themeData.highPercentTheme, isNotNull);
         expect(themeData.mediumPercentTheme, isNotNull);
@@ -17,7 +17,7 @@ void main() {
     test(
       "provides a default MetricWidgetThemeData if nulls are passed",
       () {
-        const themeData = ProjectMetricsCirclePercentageThemeData(
+        const themeData = MetricCirclePercentageThemeData(
           lowPercentTheme: null,
           mediumPercentTheme: null,
           highPercentTheme: null,

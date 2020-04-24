@@ -7,12 +7,12 @@ import 'package:metrics/features/dashboard/presentation/widgets/circle_percentag
 /// Provides the theme data for [CirclePercentage] widget
 /// with low, medium, and high percent.
 @immutable
-class ProjectMetricsCirclePercentageThemeData {
+class MetricCirclePercentageThemeData {
   final MetricWidgetThemeData lowPercentTheme;
   final MetricWidgetThemeData mediumPercentTheme;
   final MetricWidgetThemeData highPercentTheme;
 
-  /// Creates the [ProjectMetricsCirclePercentageThemeData].
+  /// Creates the [MetricCirclePercentageThemeData].
   ///
   /// [highPercentTheme] is the theme of the [CirclePercentage] widget
   /// with high percent value.
@@ -22,7 +22,7 @@ class ProjectMetricsCirclePercentageThemeData {
   ///
   /// [lowPercentTheme] is the theme of the [CirclePercentage] widget
   /// with low percent value.
-  const ProjectMetricsCirclePercentageThemeData({
+  const MetricCirclePercentageThemeData({
     MetricWidgetThemeData lowPercentTheme,
     MetricWidgetThemeData mediumPercentTheme,
     MetricWidgetThemeData highPercentTheme,

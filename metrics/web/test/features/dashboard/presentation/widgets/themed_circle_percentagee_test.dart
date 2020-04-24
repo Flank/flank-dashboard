@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/circle_percentage.dart';
+import 'package:metrics/features/dashboard/presentation/widgets/strategy/metric_value_theme_strategy.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/themed_circle_percentage.dart';
 import 'package:mockito/mockito.dart';
 
@@ -45,24 +46,26 @@ void main() {
     );
 
     testWidgets(
-      "can be created with not provided (default) themeStrategy",
+      "can't be created with null themeStrategy",
       (tester) async {
-        await tester.pumpWidget(const _ThemedCirclePercentageTestbed());
+        await tester.pumpWidget(const _ThemedCirclePercentageTestbed(
+          strategy: null,
+        ));
 
-        expect(find.byType(CirclePercentage), findsOneWidget);
+        expect(tester.takeException(), isAssertionError);
       },
     );
   });
 }
 
 class _ThemedCirclePercentageTestbed extends StatelessWidget {
-  final CirclePercentageThemeStrategy strategy;
+  final MetricValueThemeStrategy strategy;
   final double value;
 
   const _ThemedCirclePercentageTestbed({
     Key key,
     this.value = 1.0,
-    this.strategy,
+    this.strategy = const MetricValueThemeStrategy(),
   }) : super(key: key);
 
   @override
@@ -77,4 +80,4 @@ class _ThemedCirclePercentageTestbed extends StatelessWidget {
 }
 
 class CirclePercentageThemeStrategyMock extends Mock
-    implements CirclePercentageThemeStrategy {}
+    implements MetricValueThemeStrategy {}
