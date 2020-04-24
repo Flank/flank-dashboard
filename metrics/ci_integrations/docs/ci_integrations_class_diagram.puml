@@ -190,7 +190,7 @@
     SourceClientFactory <|.. JenkinsSourceClientFactory
     SourceClientFactory <|.. BitriseSourceClientFactory
     DestinationClientFactory <|.. FirestoreDestinationClientFactory
-    
+
     IntegrationClientFactory ..> IntegrationClient : creates
     SourceClientFactory ..> SourceClient : creates
     DestinationClientFactory ..> DestinationClient : creates
