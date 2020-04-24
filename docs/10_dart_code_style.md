@@ -33,35 +33,81 @@ that code style is consistent.
 
 # Documentation
 
-## Unit tests
-1. Test Group descriptions start with Capital letter:
+## Test descriptions
+1. DO NOT end descriptions with a dot (.)
+    
+    `Good:`
+              
+    ```dart
+    test('.fromJson() should create an instance from the json map', () {
+    ```
+   
+   `Bad:`
+               
+   ```dart
+   test('.fromJson() should create an instance from the json map.', () {
+   ```
+2. DO start Test Group descriptions with a Capital letter
+    
+    `Good:`
+    
     ```dart
     group("DashboardPage", () {
     ```
-2. Test descriptions inside Test Groups start with a small letter:
+3. DO start with a small letter test descriptions inside Test Groups
+
+    `Good:`
+    
     ```dart
-    test("should throw ArgumentError trying to create an instance with null CI client", 
+    group("DashboardPage", () {
+      test("should throw ArgumentError trying to create an instance with null CI client", 
     ```
-3. Test descriptions not inside Test Groups start with a Capital letter:
+4. DO start with a Capital letter test descriptions not inside Test Groups
+    
+    `Good:`
+    
     ```dart
     testWidgets("Can't create widget without data",
    ```
-4. Group and test descriptions should not end with a dot (.).
-5. If a test is specific for a method (or named constructor) - test description should start with 
-a dot (.) followed by a method name with an empty parenthesis (without parameters even if there are any):
+5. DO start test descriptions with a dot (.) followed by a method name with an empty parenthesis 
+(without parameters even if there are any) when a test is specific for a method (or named constructor)
 
+    `Good:`
+    
     ```dart
     test(".fromJson() should create an instance from the json map", () {
     ```
-6. Use Test Group descriptions with class under test name:
+6. DO use Test Group descriptions with class under test name
+    
+    `Good:`
+    
     ```dart
     group("ReceiveProjectMetricUpdates", () {
        .....
        test("loads all fields in the performance metrics", () {
     ```
-7. Multiline test descriptions shouldn't be used as such tests can't 
-be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842).
-8. Prefer using double quotes. 
+7. DO NOT use multiline test descriptions as such tests can't 
+be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842)
+    
+    `Good:`
+            
+    ```dart
+    test(".fromJson() should create an instance from the json map", () {
+    ```
+   
+   `Bad:`
+               
+   ```dart
+   test('.fromJson() should create an instance'
+        'from the json map', () {
+   ```
+8. PREFER using double quotes in test descriptions
+    
+    `Good:`
+    
+    ```dart
+    test(".fromJson() should create an instance from the json map", () {
+    ```
 
 # Testing
 
