@@ -1120,6 +1120,8 @@ It is good for small and medium apps, because requires a minimum code to impleme
 
 We cannot make a state snapshot, because of separated models with their own states (no global single state), but we can track each of the model's state on a different stage of the app.
 
+Score:
+
 #### Debugging
 
 With `Provider` package we have a simple concept of `changes/rebuilds`, based on pure functions, so we can use debugger to fix issues in the application code.
@@ -1188,9 +1190,9 @@ Score:
 
 This package reimplements the `ValueNotifier` outside of Flutter.
 
-A value notifier is a ChangeNotifier that holds a single value. When the value replaced with something that is not equal to the old value as evaluated by the equality operator ==, this class notifies its listeners.
+A value notifier is a `ChangeNotifier` that holds a single value. When the value replaced with something that is not equal to the old value as evaluated by the equality operator ==, this class notifies its listeners.
 
-The motivation of the package is to extracting ValueNotifier outside of Flutter in a separate package to allowed Dart packages with no dependency on Flutter to use these classes.
+The motivation of the package is to extracting `ValueNotifier` outside of Flutter in a separate package to allowed Dart packages with no dependency on Flutter to use these classes.
 
 ### Code sample
 
@@ -1256,14 +1258,14 @@ The same as in Provider package, read [here](#Asynchronous-4).
 
 The same as in Provider package, read [here](#Reactivity-4).
 
-#### Initial boilerplate absence
+#### Boilerplate
 
 All we need to make our class that represents state `extends ValueNotifier` and place `notifyListener` to our method to call all the registered listeners.
 With that we can use widgets, provided by the [State notifier flutter](https://pub.dev/packages/flutter_state_notifier) package to rebuild the UI.
 
-#### New feature boilerplate absence
-
 To add a new feature we either add `notifyListener` to a new method or add a separate class with extending the `ValueNotifier` class.
+
+Score: 5
 
 #### Maintainability
 
@@ -1275,9 +1277,7 @@ The same as in Provider package, read [here](#State-snapshot-4).
 
 #### Debugging
 
-As the package is good for small and medium apps, it is easy to debug because of simple concept of changes/rebuilds.
-Also, because the `notifyListeners` affects only subscribed listeners, so we can find possible errors in predictable places.
-Debug level is decreasing while going to the large app.
+The same as in Provider package, read [here](#Debugging-4).
 
 #### Undo/Redo
 
@@ -1285,12 +1285,34 @@ The same as Provider package, read [here](#Undo/Redo-4)
 
 #### Testability
 
-Easy to mock methods of the class makes high level of testability.
-One of the useful method is `debugMockDependency`, that overrides `read` method of `LocatorMixin` to mock its behavior in development.
+The same as Provider package, read [here](#Testability)
 
-#### Easy to learn
+#### Easy to learn/Namings
 
 The same as Provider package, read [here](#Easy-to-learn-4)
+
+#### Analytics\Centralized
+
+The same as Provider package, read [here](#Analytics\Centralized-4)
+
+#### State Mutability/Immutability
+
+The same as Provider package, read [here](#State-Mutability/Immutability-4)
+
+#### Flutter integration/Reusability
+
+This repository is a set of packages that reimplements ValueNotifier outside of Flutter.
+
+It is spread across two packages:
+
+- `state_notifier`, a pure `Dart` package containing the reimplementation of `ValueNotifier`.
+  It comes with extra utilities for combining our `ValueNotifier` with provider and to test it.
+- `flutter_notifier`, a binding between `state_notifier` and `Flutter`.
+  It adds things like `ChangeNotifierProvider` from provider, but compatible with `state_notifier`.
+
+So we can use this package in the application, that not based on `flutter` framework.
+
+Score:
 
 ### Pros
 
@@ -1314,9 +1336,9 @@ The same as Provider package, read [here](#Easy-to-learn-4)
 
 # Glossary
 
-- Asynchronous -
+- Asynchronous - means a unit of work runs separately from the main application thread and notifies the calling thread of its completion, failure, or progress.
 - Reactivity
-- Boilerplate -
+- Boilerplate - in this case, means how many a programmer must write code to do minimal jobs.
 - Maintainability -
 - State snapshot -
 - Debugging -
