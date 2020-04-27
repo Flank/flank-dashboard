@@ -1,3 +1,5 @@
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/auth/presentation/pages/login_page.dart';
@@ -60,7 +62,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
       initState: _initInjectorState,
       builder: (context) {
         return MaterialApp(
-          home: const Scaffold(
+          home: Scaffold(
             body: MetricsDrawer(),
           ),
           onGenerateRoute: (settings) => RouteGenerator.generateRoute(

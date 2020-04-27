@@ -83,6 +83,16 @@ void main() {
     );
 
     test(
+      'validate() should result with true on non-null text when maxLength is null',
+      () {
+        const textObject = SlackTextObjectTestbed('test');
+        final result = textObject.validate();
+
+        expect(result.isValid, isTrue);
+      },
+    );
+
+    test(
       'validate() should result with true on valid text',
       () {
         const textObject = SlackTextObjectTestbed('test');
@@ -91,6 +101,14 @@ void main() {
         expect(result.isValid, isTrue);
       },
     );
+
+    test("two instances with equal fields are identical", () {
+      const map = {'type': 'mrkdwn'};
+      final firstTextObject = SlackTextObject.fromJson(map);
+      final secondTextObject = SlackTextObject.fromJson(map);
+
+      expect(firstTextObject, equals(secondTextObject));
+    });
   });
 }
 
