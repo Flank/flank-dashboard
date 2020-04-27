@@ -13,8 +13,6 @@ class Firestore extends fd.Firestore {
   ///
   /// The [firebaseAuth] is optional. If it is not provided then no
   /// authorization for Firestore related requests is applied.
-  ///
-  /// Throws an [ArgumentError] if the given [projectId] is `null` or empty.
   Firestore(
     this.projectId, {
     this.firebaseAuth,

@@ -1,6 +1,6 @@
 import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
 
-/// A class containig a test data for the [JenkinsConfig].
+/// A class containing a test data for the [JenkinsConfig].
 class JenkinsConfigTestData {
   static const String url = 'url';
   static const String username = 'username';

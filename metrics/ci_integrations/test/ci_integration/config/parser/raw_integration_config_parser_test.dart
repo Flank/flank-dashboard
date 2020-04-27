@@ -1,9 +1,11 @@
 import 'package:ci_integration/ci_integration/config/parser/raw_integration_config_parser.dart';
 import 'package:test/test.dart';
 
+// ignore_for_file: prefer_const_constructors
+
 void main() {
   group("RawIntegrationConfigParser", () {
-    const configParser = RawIntegrationConfigParser();
+    final configParser = RawIntegrationConfigParser();
 
     const sourceProjectId = 'sourceProjectId';
     const sourceConfig = "source:\n"
@@ -14,7 +16,6 @@ void main() {
         'source_project_id': sourceProjectId,
       },
     };
-
     const destinationProjectId = 'destinationProjectId';
     const destinationConfig = "destination:\n"
         " test_destination:\n"

@@ -7,7 +7,7 @@ void main() {
     const storageProjectId = 'storageProjectId';
 
     test(
-      "shoud throw ArgumentError trying to create an instance with null ciProjectId",
+      "should throw ArgumentError trying to create an instance with null ciProjectId",
       () {
         expect(
           () => SyncConfig(
@@ -20,7 +20,7 @@ void main() {
     );
 
     test(
-      "shoud throw Argument error trying to create an instance with null storageProjectId",
+      "should throw ArgumentError trying to create an instance with null storageProjectId",
       () {
         expect(
           () => SyncConfig(
@@ -33,7 +33,7 @@ void main() {
     );
 
     test(
-      "should create insctance with the given project CI and storage id",
+      "should create instance with the given project CI and storage id",
       () {
         final config = SyncConfig(
           sourceProjectId: ciProjectId,

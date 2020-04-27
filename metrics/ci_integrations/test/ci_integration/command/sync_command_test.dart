@@ -2,13 +2,12 @@ import 'dart:io';
 
 import 'package:ci_integration/ci_integration/ci_integration.dart';
 import 'package:ci_integration/ci_integration/command/sync_command.dart';
-import 'package:ci_integration/ci_integration/config/model/raw_integration_config.dart';
-import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
+import 'package:ci_integration/ci_integration/parties/parties.dart';
+import 'package:ci_integration/ci_integration/parties/supported_destination_parties.dart';
 import 'package:ci_integration/ci_integration/parties/supported_integration_parties.dart';
+import 'package:ci_integration/ci_integration/parties/supported_source_parties.dart';
 import 'package:ci_integration/common/client/destination_client.dart';
 import 'package:ci_integration/common/client/source_client.dart';
-import 'package:ci_integration/common/config/model/destination_config.dart';
-import 'package:ci_integration/common/config/model/source_config.dart';
 import 'package:ci_integration/common/logger/logger.dart';
 import 'package:ci_integration/common/model/interaction_result.dart';
 import 'package:ci_integration/common/party/destination_party.dart';
@@ -20,71 +19,27 @@ import 'package:test/test.dart';
 
 import '../test_util/mock/mocks.dart';
 import '../test_util/stub/stubs.dart';
+import '../test_util/test_data/config_test_data.dart';
 
 void main() {
   group(
     "SyncCommand",
     () {
-      const jobName = 'test_project';
-      const firebaseProjectId = 'firebaseId';
-      const configFileContent = '''
-      source:
-        jenkins:
-          url: sample_url
-          job_name: $jobName
-          username: username
-          api_key: key
-      destination:
-        firestore:
-          firebase_project_id: $firebaseProjectId
-          metrics_project_id: id
-    ''';
-      final RawIntegrationConfig integrationConfig = RawIntegrationConfig(
-        sourceConfigMap: const {
-          'jenkins': {
-            'url': 'sample_url',
-            'job_name': jobName,
-            'username': 'username',
-            'api_key': 'key',
-          },
-        },
-        destinationConfigMap: const {
-          'firestore': {
-            'firebase_project_id': firebaseProjectId,
-            'metrics_project_id': 'id',
-          },
-        },
-      );
-      final loggerStub = LoggerStub();
+      const configFileContent = ConfigTestData.configFileContent;
+      final syncConfig = ConfigTestData.syncConfig;
+      final integrationConfig = ConfigTestData.integrationConfig;
+
+      final supportedSourceParties = SupportedSourceParties();
+      final supportedDestinationParties = SupportedDestinationParties();
+
       final fileMock = FileMock();
-
       final ciIntegrationMock = _CiIntegrationMock();
-
       final sourceClientMock = SourceClientMock();
       final destinationClientMock = DestinationClientMock();
-
-      final sourceConfigMock = SourceConfigMock();
-      final destinationConfigMock = DestinationConfigMock();
-
-      final sourceClientFactoryStub = SourceClientFactoryStub(sourceClientMock);
-      final destinationClientFactoryStub =
-          DestinationClientFactoryStub(destinationClientMock);
-
-      final sourceConfigParserMock = SourceConfigParserMock();
-      final destinationConfigParserMock = DestinationConfigParserMock();
-
-      final sourcePartyStub = SourcePartyStub(
-        sourceClientFactoryStub,
-        sourceConfigParserMock,
-      );
-      final destinationPartyStub = DestinationPartyStub(
-        destinationClientFactoryStub,
-        destinationConfigParserMock,
-      );
-
       final sourcePartiesMock = PartiesMock<SourceParty>();
       final destinationPartiesMock = PartiesMock<DestinationParty>();
 
+      final loggerStub = LoggerStub();
       final syncCommand = SyncCommandStub(
         loggerStub,
         SupportedIntegrationParties(
@@ -94,62 +49,27 @@ void main() {
         fileMock,
         ciIntegrationMock,
       );
-      final syncConfig = SyncConfig(
-        destinationProjectId: firebaseProjectId,
-        sourceProjectId: jobName,
-      );
 
       setUp(() {
         loggerStub.clearLogs();
+        syncCommand.reset();
         reset(fileMock);
         reset(ciIntegrationMock);
         reset(sourceClientMock);
         reset(destinationClientMock);
-        reset(sourceConfigParserMock);
-        reset(destinationConfigParserMock);
         reset(sourcePartiesMock);
         reset(destinationPartiesMock);
-        reset(sourceConfigMock);
-        reset(destinationConfigMock);
       });
 
-      PostExpectation<SourceConfig> whenCreateSourceConfig(
-        Map<String, dynamic> configMap,
+      PostExpectation<Future<InteractionResult>> whenRunSyncWithParties(
+        Parties<SourceParty> sourceParties,
+        Parties<DestinationParty> destinationParties,
       ) {
-        when(sourcePartiesMock.parties).thenReturn([sourcePartyStub]);
-        when(sourceConfigParserMock.canParse(configMap)).thenReturn(true);
-        return when(sourceConfigParserMock.parse(
-          configMap,
-        ));
-      }
-
-      PostExpectation<DestinationConfig> whenCreateDestinationConfig(
-        Map<String, dynamic> configMap,
-      ) {
-        when(destinationPartiesMock.parties).thenReturn([destinationPartyStub]);
-        when(destinationConfigParserMock.canParse(configMap)).thenReturn(true);
-        return when(
-          destinationConfigParserMock.parse(
-            configMap,
-          ),
-        );
-      }
-
-      PostExpectation<Future<InteractionResult>> whenRunSync(
-        SyncConfig syncConfig,
-      ) {
+        when(sourcePartiesMock.parties).thenReturn(sourceParties.parties);
+        when(destinationPartiesMock.parties)
+            .thenReturn(destinationParties.parties);
         when(fileMock.existsSync()).thenReturn(true);
         when(fileMock.readAsStringSync()).thenReturn(configFileContent);
-        whenCreateSourceConfig(integrationConfig.sourceConfigMap)
-            .thenReturn(sourceConfigMock);
-        whenCreateDestinationConfig(integrationConfig.destinationConfigMap)
-            .thenReturn(destinationConfigMock);
-        when(
-          sourceConfigMock.sourceProjectId,
-        ).thenReturn(syncConfig.sourceProjectId);
-        when(
-          destinationConfigMock.destinationProjectId,
-        ).thenReturn(syncConfig.destinationProjectId);
         return when(ciIntegrationMock.sync(syncConfig));
       }
 
@@ -172,15 +92,17 @@ void main() {
         expect(description, isNotEmpty);
       });
 
-      test(".parseConfigFileContent() should parse the config file content",
-          () {
-        final expected = integrationConfig;
-        when(fileMock.readAsStringSync()).thenReturn(configFileContent);
+      test(
+        ".parseConfigFileContent() should parse the config file content",
+        () {
+          final expected = integrationConfig;
+          when(fileMock.readAsStringSync()).thenReturn(configFileContent);
 
-        final result = syncCommand.parseConfigFileContent(fileMock);
+          final result = syncCommand.parseConfigFileContent(fileMock);
 
-        expect(result, equals(expected));
-      });
+          expect(result, equals(expected));
+        },
+      );
 
       test(
         ".getParty() should throw an UnimplementedError if the given parties is empty",
@@ -200,15 +122,12 @@ void main() {
       test(
         ".getParty() should throw an UnimplementedError if the given parties does not contain appropriate party",
         () {
-          when(sourcePartiesMock.parties).thenReturn([sourcePartyStub]);
-          when(sourceConfigParserMock.canParse(
-            integrationConfig.sourceConfigMap,
-          )).thenReturn(false);
+          final parties = supportedDestinationParties;
 
           expect(
             () => syncCommand.getParty(
               integrationConfig.sourceConfigMap,
-              sourcePartiesMock,
+              parties,
             ),
             throwsUnimplementedError,
           );
@@ -216,37 +135,16 @@ void main() {
       );
 
       test(
-        ".getParty() should return the SourceParty instance for the source config map",
+        ".getParty() should return the appropriate party instance for the given config map",
         () {
-          when(sourcePartiesMock.parties).thenReturn([sourcePartyStub]);
-          when(sourceConfigParserMock.canParse(
-            integrationConfig.sourceConfigMap,
-          )).thenReturn(true);
+          final parties = supportedSourceParties;
 
           final result = syncCommand.getParty(
             integrationConfig.sourceConfigMap,
-            sourcePartiesMock,
+            parties,
           );
 
-          expect(result, isA<SourceParty>());
-        },
-      );
-
-      test(
-        ".getParty() should return the DestinationParty instance for the destination config map",
-        () {
-          when(destinationPartiesMock.parties)
-              .thenReturn([destinationPartyStub]);
-          when(destinationConfigParserMock.canParse(
-            integrationConfig.destinationConfigMap,
-          )).thenReturn(true);
-
-          final result = syncCommand.getParty(
-            integrationConfig.destinationConfigMap,
-            destinationPartiesMock,
-          );
-
-          expect(result, isA<DestinationParty>());
+          expect(result, isA<JenkinsSourceParty>());
         },
       );
 
@@ -265,30 +163,32 @@ void main() {
       );
 
       test(
-        ".parseConfig() should return the SourceConfig instance for the source config map",
+        ".parseConfig() should return the SourceConfig instance matching the given source config map",
         () {
           final party = JenkinsSourceParty();
+          final jenkinsConfig = ConfigTestData.jenkinsConfig;
 
           final result = syncCommand.parseConfig(
-            integrationConfig.sourceConfigMap,
+            ConfigTestData.integrationConfig.sourceConfigMap,
             party,
           );
 
-          expect(result, isA<SourceConfig>());
+          expect(result, equals(jenkinsConfig));
         },
       );
 
       test(
-        ".parseConfig() should return the DestinationConfig instance for the destination config map",
+        ".parseConfig() should return the DestinationConfig instance matching the given destination config map",
         () {
           final party = FirestoreDestinationParty();
+          final firestoreConfig = ConfigTestData.firestoreConfig;
 
           final result = syncCommand.parseConfig(
-            integrationConfig.destinationConfigMap,
+            ConfigTestData.integrationConfig.destinationConfigMap,
             party,
           );
 
-          expect(result, isA<DestinationConfig>());
+          expect(result, equals(firestoreConfig));
         },
       );
 
@@ -315,25 +215,32 @@ void main() {
       );
 
       test(".run() should call dispose once", () async {
-        whenRunSync(syncConfig).thenAnswer((_) => Future.value(any));
+        whenRunSyncWithParties(
+          supportedSourceParties,
+          supportedDestinationParties,
+        ).thenAnswer((_) => Future.value(any));
 
         await syncCommand.run();
 
-        verify(sourceClientMock.dispose()).called(1);
-        verify(destinationClientMock.dispose()).called(1);
+        expect(syncCommand.disposeCallCount, equals(1));
       });
 
       test(".run() should call dispose once if sync throws", () async {
-        whenRunSync(syncConfig).thenThrow(Exception());
+        whenRunSyncWithParties(
+          supportedSourceParties,
+          supportedDestinationParties,
+        ).thenThrow(Exception());
 
         await syncCommand.run();
 
-        verify(sourceClientMock.dispose()).called(1);
-        verify(destinationClientMock.dispose()).called(1);
+        expect(syncCommand.disposeCallCount, equals(1));
       });
 
-      test(".run() should log error if sync throws", () async {
-        whenRunSync(syncConfig).thenThrow(Exception());
+      test(".run() should log an error if sync throws", () async {
+        whenRunSyncWithParties(
+          supportedSourceParties,
+          supportedDestinationParties,
+        ).thenThrow(Exception());
 
         await syncCommand.run();
 
@@ -341,45 +248,12 @@ void main() {
       });
 
       test(
-        ".run() should log an error if creating the source client throws",
-        () async {
-          when(fileMock.existsSync()).thenReturn(true);
-          when(fileMock.readAsStringSync()).thenReturn(configFileContent);
-          whenCreateDestinationConfig(
-            integrationConfig.destinationConfigMap,
-          ).thenReturn(destinationConfigMock);
-          whenCreateSourceConfig(
-            integrationConfig.sourceConfigMap,
-          ).thenThrow(Exception());
-
-          await syncCommand.run();
-
-          expect(loggerStub.errorLogsNumber, equals(1));
-        },
-      );
-
-      test(
-        ".run() should log an error if creating the destination client throws",
-        () async {
-          when(fileMock.existsSync()).thenReturn(true);
-          when(fileMock.readAsStringSync()).thenReturn(configFileContent);
-          whenCreateSourceConfig(
-            integrationConfig.sourceConfigMap,
-          ).thenReturn(sourceConfigMock);
-          whenCreateDestinationConfig(
-            integrationConfig.destinationConfigMap,
-          ).thenThrow(Exception());
-
-          await syncCommand.run();
-
-          expect(loggerStub.errorLogsNumber, equals(1));
-        },
-      );
-
-      test(
         ".run() should run sync on the given config",
         () async {
-          whenRunSync(syncConfig).thenAnswer((_) => Future.value(any));
+          whenRunSyncWithParties(
+            supportedSourceParties,
+            supportedDestinationParties,
+          ).thenAnswer((_) => Future.value(any));
 
           await syncCommand.run();
 
@@ -388,7 +262,7 @@ void main() {
       );
 
       test(
-        ".sync() should print a message if an interaction result is success",
+        ".sync() should print a message if a sync result is success",
         () async {
           const interactionResult = InteractionResult.success();
 
@@ -406,7 +280,7 @@ void main() {
       );
 
       test(
-        ".sync() should print an error message if an interaction result is error",
+        ".sync() should print an error message if a sync result is error",
         () async {
           const interactionResult = InteractionResult.error();
 
@@ -424,8 +298,10 @@ void main() {
       );
 
       test(
-        ".dispose() should dispose source client",
+        ".dispose() should dispose the given source client",
         () async {
+          final syncCommand = SyncCommand(loggerStub);
+
           await syncCommand.dispose(
             sourceClientMock,
             destinationClientMock,
@@ -436,8 +312,10 @@ void main() {
       );
 
       test(
-        ".dispose() should dispose destination client",
+        ".dispose() should dispose the given destination client",
         () async {
+          final syncCommand = SyncCommand(loggerStub);
+
           await syncCommand.dispose(
             sourceClientMock,
             destinationClientMock,
@@ -461,12 +339,22 @@ class SyncCommandStub extends SyncCommand {
   /// A CI integration mock to use for testing purposes.
   final _CiIntegrationMock ciIntegrationMock;
 
+  /// A counter used to save the number of times the [dispose] method called.
+  int _disposeCallCount = 0;
+
+  int get disposeCallCount => _disposeCallCount;
+
   SyncCommandStub(
     Logger logger,
     SupportedIntegrationParties supportedParties,
     this.fileMock,
     this.ciIntegrationMock,
   ) : super(logger, supportedParties: supportedParties);
+
+  /// Resets this stub to ensure tests run independently.
+  void reset() {
+    _disposeCallCount = 0;
+  }
 
   @override
   File getConfigFile(String configFilePath) {
@@ -476,7 +364,7 @@ class SyncCommandStub extends SyncCommand {
   @override
   CiIntegration createCiIntegration(
     SourceClient sourceClient,
-    DestinationClient destinationaClient,
+    DestinationClient destinationClient,
   ) {
     return ciIntegrationMock;
   }
@@ -484,5 +372,13 @@ class SyncCommandStub extends SyncCommand {
   @override
   dynamic getArgumentValue(String name) {
     return 'config.yaml';
+  }
+
+  @override
+  Future<void> dispose(
+    SourceClient sourceClient,
+    DestinationClient destinationClient,
+  ) async {
+    _disposeCallCount += 1;
   }
 }

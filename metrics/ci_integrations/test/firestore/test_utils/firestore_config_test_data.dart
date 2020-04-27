@@ -1,6 +1,6 @@
 import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 
-/// A class containig a test data for the [FirestoreConfig].
+/// A class containing a test data for the [FirestoreConfig].
 class FirestoreConfigTestData {
   static const String firebaseProjectId = 'firebaseProjectId';
   static const String metricsProjectId = 'metricsProjectId';

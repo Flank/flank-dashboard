@@ -3,9 +3,11 @@ import 'package:test/test.dart';
 
 import '../../test_utils/firestore_config_test_data.dart';
 
+// ignore_for_file: prefer_const_constructors
+
 void main() {
   group("FirestoreConfigParser", () {
-    const firestoreConfigParser = FirestoreConfigParser();
+    final firestoreConfigParser = FirestoreConfigParser();
     final firestoreConfig = FirestoreConfigTestData.firestoreConfig;
     final firestoreConfigMap = {
       'firestore': FirestoreConfigTestData.firestoreConfigJson,

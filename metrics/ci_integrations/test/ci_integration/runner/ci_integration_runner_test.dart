@@ -9,7 +9,7 @@ void main() {
     final CiIntegrationsRunner runner = CiIntegrationsRunner(logger);
 
     test(
-      "should throw an AgrumentError trying to create an instance with null logger",
+      "should throw an ArgumentError trying to create an instance with null logger",
       () {
         expect(() => CiIntegrationsRunner(null), throwsArgumentError);
       },

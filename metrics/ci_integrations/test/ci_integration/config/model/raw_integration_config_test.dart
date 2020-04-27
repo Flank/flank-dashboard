@@ -9,7 +9,7 @@ void main() {
         expect(
           () => RawIntegrationConfig(
             sourceConfigMap: null,
-            destinationConfigMap: {},
+            destinationConfigMap: const {},
           ),
           throwsArgumentError,
         );
@@ -21,7 +21,7 @@ void main() {
       () {
         expect(
           () => RawIntegrationConfig(
-            sourceConfigMap: {},
+            sourceConfigMap: const {},
             destinationConfigMap: null,
           ),
           throwsArgumentError,

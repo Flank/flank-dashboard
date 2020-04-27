@@ -3,10 +3,12 @@ import 'package:ci_integration/firestore/client_factory/firestore_destination_cl
 import 'package:ci_integration/firestore/config/model/firestore_config.dart';
 import 'package:test/test.dart';
 
+// ignore_for_file: prefer_const_constructors
+
 void main() {
   group("FirestoreDestinationClientFactory", () {
     const firestoreProjectId = 'firestoreProjectId';
-    const firestoreClientFactory = FirestoreDestinationClientFactory();
+    final firestoreClientFactory = FirestoreDestinationClientFactory();
 
     test(
       ".create() should throws ArgumentError if the given FirestoreConfig is null",

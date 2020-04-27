@@ -1,4 +1,4 @@
-import 'package:ci_integration/coverage/coverage_json_summary/model/total_covarage_summary.dart';
+import 'package:ci_integration/coverage/coverage_json_summary/model/total_coverage_summary.dart';
 import 'package:equatable/equatable.dart';
 
 /// The class that represents the project coverage JSON-summary.
