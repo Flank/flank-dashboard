@@ -410,7 +410,47 @@ StateBuilder(
 );
 ```
 
+
+The main problem in this approach is that if we have 2 streams with the same generic type and they should be injected, you should add names while injecting them to be able to get the correct stream using the `Injector.get()` method.
+
+For example, we have the same `AuthStore`, but with an additional hasAuthErrorStream and it looks like this:
+
+```dart
+class AuthStore {
+  ...
+
+  Stream<bool> get loggedInStream => _isLoggedInSubject.stream;
+
+  Stream<bool> get hasAuthErrorStream => _hasAuthErrorSubject.stream;
+
+  ...
+}
+```
+
+The injection of these streams, we should add, for example, 2 constants with the names of the stream and give a name for each stream. The injection will look like this: 
+
+```dart
+...
+
+Injector(
+    inject: [
+        Inject<AuthStore>(() => AuthStore()),
+        Inject.stream(() => Injector.get<AuthStore>().loggedInStream, name: loggedInStreamName),
+        Inject.stream(() => Injector.get<AuthStore>().hasAuthErrorStream, name: authErrorStream),
+    ],
+    builder: (BuildContext context) => widget.child,
+);
+
+...
+```
+
+After injection of these streams, we will be able to get one of these streams using the `Injector.get<bool>(name: ...)`, or the `Injector.getAsReactive<bool>(name: ...)` methods. In case we won't give the names for there streams, the injector returns the first sound stream with the given type (first found `Stream<bool>` in our case).
+
+
 In case we want to subscribe to the authentication state stream updates outside of the UI, we should implement the `ObserverOfStatesRebuilder` interface, as shown in the [Code sample](#Code_sample-1) section.
+
+<a id="s-react-states-r"></a>
+Score: 2
 
 #### Initial boilerplate absence
 
