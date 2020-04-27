@@ -22,8 +22,8 @@ void main() {
   const projectId = 'projectId';
   const projectIdParam = ProjectIdParam(projectId);
 
-  final receiveProjectMetricsUpdates = ReceiveProjectMetricsUpdatesTestbed();
-  final receiveProjectUpdates = ReceiveProjectUpdatesTestbed();
+  final receiveProjectMetricsUpdates = _ReceiveProjectMetricsUpdatesStub();
+  final receiveProjectUpdates = _ReceiveProjectUpdatesStub();
 
   DashboardProjectMetrics expectedProjectMetrics;
   ProjectMetricsStore projectMetricsStore;
@@ -64,7 +64,7 @@ void main() {
   test(
     "Creates ProjectMetrics with empty points from empty BuildMetrics",
     () async {
-      final receiveEmptyMetrics = ReceiveProjectMetricsUpdatesTestbed(
+      final receiveEmptyMetrics = _ReceiveProjectMetricsUpdatesStub(
         metrics: const DashboardProjectMetrics(),
       );
 
@@ -87,7 +87,7 @@ void main() {
     "Creates ProjectMetrics with null metrics if the BuildMetrics is null",
     () async {
       final receiveProjectMetricsUpdates =
-          ReceiveProjectMetricsUpdatesTestbed.withNullMetrics();
+          _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
 
       final projectMetricsStore = ProjectMetricsStore(
         receiveProjectUpdates,
@@ -191,9 +191,9 @@ void main() {
   test(
     'Deletes the ProjectMetrics if the project was deleted on server',
     () async {
-      final projects = ReceiveProjectUpdatesTestbed.testProjects.toList();
+      final projects = _ReceiveProjectUpdatesStub.testProjects.toList();
 
-      final receiveProjectUpdates = ReceiveProjectUpdatesTestbed(
+      final receiveProjectUpdates = _ReceiveProjectUpdatesStub(
         projects: projects,
       );
 
@@ -222,7 +222,7 @@ void main() {
   test(
     'Creates empty ProjectMetrics list when the projects are null',
     () async {
-      final receiveProjects = ReceiveProjectUpdatesTestbed(projects: null);
+      final receiveProjects = _ReceiveProjectUpdatesStub(projects: null);
 
       final metricsStore = ProjectMetricsStore(
         receiveProjects,
@@ -239,8 +239,8 @@ void main() {
   test(
     "Unsubscribes from all streams when dispose called",
     () async {
-      final projectUpdates = ReceiveProjectUpdatesTestbed();
-      final metricsUpdates = ReceiveProjectMetricsUpdatesTestbed();
+      final projectUpdates = _ReceiveProjectUpdatesStub();
+      final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
 
       final metricsStore = ProjectMetricsStore(
         projectUpdates,
@@ -262,7 +262,7 @@ void main() {
   );
 }
 
-class ReceiveProjectUpdatesTestbed implements ReceiveProjectUpdates {
+class _ReceiveProjectUpdatesStub implements ReceiveProjectUpdates {
   static const testProjects = [
     Project(
       id: 'id',
@@ -277,7 +277,7 @@ class ReceiveProjectUpdatesTestbed implements ReceiveProjectUpdates {
   final List<Project> _projects;
   final BehaviorSubject<List<Project>> _projectsSubject = BehaviorSubject();
 
-  ReceiveProjectUpdatesTestbed({List<Project> projects = testProjects})
+  _ReceiveProjectUpdatesStub({List<Project> projects = testProjects})
       : _projects = projects;
 
   @override
@@ -289,7 +289,7 @@ class ReceiveProjectUpdatesTestbed implements ReceiveProjectUpdates {
   bool get hasListener => _projectsSubject.hasListener;
 }
 
-class ReceiveProjectMetricsUpdatesTestbed
+class _ReceiveProjectMetricsUpdatesStub
     implements ReceiveProjectMetricsUpdates {
   static final _projectMetrics = DashboardProjectMetrics(
     projectId: 'id',
@@ -321,11 +321,11 @@ class ReceiveProjectMetricsUpdatesTestbed
   final BehaviorSubject<DashboardProjectMetrics> _metricsUpdatesSubject =
       BehaviorSubject();
 
-  ReceiveProjectMetricsUpdatesTestbed({DashboardProjectMetrics metrics}) {
+  _ReceiveProjectMetricsUpdatesStub({DashboardProjectMetrics metrics}) {
     _metricsUpdatesSubject.add(metrics ?? _projectMetrics);
   }
 
-  ReceiveProjectMetricsUpdatesTestbed.withNullMetrics() {
+  _ReceiveProjectMetricsUpdatesStub.withNullMetrics() {
     _metricsUpdatesSubject.add(null);
   }
 

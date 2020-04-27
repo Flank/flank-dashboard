@@ -90,42 +90,42 @@ class ProjectMetricsStore {
 
   /// Subscribes to project metrics.
   void _subscribeToBuildMetrics(String projectId) {
-    final buildMetricsStream = _receiveProjectMetricsUpdates(
+    final dashboardMetricsStream = _receiveProjectMetricsUpdates(
       ProjectIdParam(projectId),
     );
 
     _buildMetricsSubscriptions[projectId] =
-        buildMetricsStream.listen((metrics) {
-      _createBuildMetrics(metrics, projectId);
+        dashboardMetricsStream.listen((metrics) {
+      _createProjectMetrics(metrics, projectId);
     });
   }
 
-  /// Create project metrics form [DashboardProjectMetrics].
-  void _createBuildMetrics(
-      DashboardProjectMetrics buildMetrics, String projectId) {
+  /// Creates project metrics from [DashboardProjectMetrics].
+  void _createProjectMetrics(
+      DashboardProjectMetrics dashboardMetrics, String projectId) {
     final projectsMetrics = _projectsMetricsSubject.value;
 
     final projectMetrics = projectsMetrics[projectId];
 
-    if (projectMetrics == null || buildMetrics == null) return;
+    if (projectMetrics == null || dashboardMetrics == null) return;
 
     final performanceMetrics = _getPerformanceMetrics(
-      buildMetrics.performanceMetrics,
+      dashboardMetrics.performanceMetrics,
     );
     final buildResultMetrics = _getBuildResultMetrics(
-      buildMetrics.buildResultMetrics,
+      dashboardMetrics.buildResultMetrics,
     );
     final averageBuildDuration =
-        buildMetrics.performanceMetrics.averageBuildDuration.inMinutes;
-    final numberOfBuilds = buildMetrics.buildNumberMetrics.numberOfBuilds;
+        dashboardMetrics.performanceMetrics.averageBuildDuration.inMinutes;
+    final numberOfBuilds = dashboardMetrics.buildNumberMetrics.numberOfBuilds;
 
     projectsMetrics[projectId] = projectMetrics.copyWith(
       performanceMetrics: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
       buildNumberMetric: numberOfBuilds,
       averageBuildDurationInMinutes: averageBuildDuration,
-      coverage: buildMetrics.coverage,
-      stability: buildMetrics.stability,
+      coverage: dashboardMetrics.coverage,
+      stability: dashboardMetrics.stability,
     );
 
     _projectsMetricsSubject.add(projectsMetrics);
