@@ -29,7 +29,7 @@ Simplify the development process of the metrics web app.
 
 `UI` -> `State management` -> `Application State` -> `UI`
 
-# Alternatives Considered
+# Overview
 
 > Summarize alternative designs (pros & cons)
 
@@ -64,7 +64,7 @@ Simplify the development process of the metrics web app.
 1. [BLoC pattern](#BLoC-pattern)
    - [Asynchronous](#Asynchronous)
    - [Reactivity](#Reactivity)
-   - [Boilerplate](#Boilerplate)
+   - [Boilerplate absence](#Boilerplate-absence)
    - [Maintainability](#Maintainability)
    - [State snapshot](#State-snapshot)
    - [Debugging](#Debugging)
@@ -77,7 +77,7 @@ Simplify the development process of the metrics web app.
 2. [States Rebuilder](#States-Rebuilder)
    - [Asynchronous](#Asynchronous-1)
    - [Reactivity](#Reactivity-1)
-   - [Boilerplate](#Boilerplate-1)
+   - [Boilerplate absence](#Boilerplate-absence-1)
    - [Maintainability](#Maintainability-1)
    - [State snapshot](#State-snapshot-1)
    - [Debugging](#Debugging-1)
@@ -90,7 +90,7 @@ Simplify the development process of the metrics web app.
 3. [BLoC library](#BLoC-library)
    - [Asynchronous](#Asynchronous-2)
    - [Reactivity](#Reactivity-2)
-   - [Boilerplate](#Boilerplate-2)
+   - [Boilerplate absence](#Boilerplate-absence-2)
    - [Maintainability](#Maintainability-2)
    - [State snapshot](#State-snapshot-2)
    - [Debugging](#Debugging-2)
@@ -103,7 +103,7 @@ Simplify the development process of the metrics web app.
 4. [Redux](#Redux)
    - [Asynchronous](#Asynchronous-3)
    - [Reactivity](#Reactivity-3)
-   - [Boilerplate](#Boilerplate-3)
+   - [Boilerplate absence](#Boilerplate-absence-3)
    - [Maintainability](#Maintainability-3)
    - [State snapshot](#State-snapshot-3)
    - [Debugging](#Debugging-3)
@@ -116,7 +116,7 @@ Simplify the development process of the metrics web app.
 5. [Provider](#Provider)
    - [Asynchronous](#Asynchronous-4)
    - [Reactivity](#Reactivity-4)
-   - [Boilerplate](#Boilerplate-4)
+   - [Boilerplate absence](#Boilerplate-absence-4)
    - [Maintainability](#Maintainability-4)
    - [State snapshot](#State-snapshot-4)
    - [Debugging](#Debugging-4)
@@ -129,7 +129,7 @@ Simplify the development process of the metrics web app.
 6. [State notifier](#State-notifier)
    - [Asynchronous](#Asynchronous-5)
    - [Reactivity](#Reactivity-5)
-   - [Boilerplate](#Boilerplate-5)
+   - [Boilerplate absence](#Boilerplate-absence-5)
    - [Maintainability](#Maintainability-5)
    - [State snapshot](#State-snapshot-5)
    - [Debugging](#Debugging-5)
@@ -144,7 +144,7 @@ Simplify the development process of the metrics web app.
 
 The BLoC is an architectural pattern that functions as a state management solution. All business logic is extracted from the UI into BLoC (Business Logic Components). The UI should only publish events to the BLoCs and display the UI based on the state of the BLoCs.
 
-//todo: main idea: Bloc contains only streams, data pushed to bloc only using Sinks, Output data as streams, Works tightly with RxDArt
+The BLoC pattern's main idea is using only streams and syncs for input/output. That means that the only input to the BLoC is the `Sink`, and the only output from the BLoC is the `Stream`.
 
 ### Code sample
 
@@ -176,7 +176,7 @@ So, to subscribe to the auth updates, we should subscribe to `isLoggedInStream`,
 
 Because we have only streams as the output of the BLoC, we can easily build the reactive granular UI, using the `StreamBuilder` widget and dividing the UI to the logical parts that will be controlled by a separate stream in BLoC.
 
-### Conclusion
+### Scores
 
 #### Asynchronous
 
@@ -213,7 +213,17 @@ class ProjectsBloc {
 So, to load the projects using some API, for example, we should call the `projectsBloc.loadProjectsSink.add(true)` method. After loading finished or an error occurred, we will receive our projects to the `projectsBloc.projectsStream` stream:
 
 ```dart
+void loadProjects(ProjectsBloc projectsBloc){
+  StreamSubscription _projectsSubscription;
 
+  _projectsSubscription = projectsBloc.projectsStream.listen((projects){
+    /// do something with loaded projects
+    ...
+    _projectsSubscription?.cancel();
+  });
+
+
+}
 ```
 
 <a id="s-a-bloc"></a>
@@ -280,6 +290,7 @@ Score:
 #### Undo/Redo actions
 
 The BLoC pattern has no embedded support of the undo/redo feature.
+
 <a id="s-u-bloc"></a>
 Score:
 
@@ -291,6 +302,7 @@ The BLoC pattern is pretty good testable because it is based on the streams, and
 
 The BLoC pattern could be pretty hard to understand if you are not familiar with the [rxdart](https://pub.dev/packages/rxdart) or at least dart streams.
 
+<a id="s-l-bloc"></a>
 Score: \* + description why?
 
 #### Pros
@@ -354,7 +366,7 @@ class _LoginPageState extends State<LoginPage> implements ObserverOfStatesRebuil
   }
 ```
 
-### Conclusion
+### Scores
 
 #### Asynchronous
 
@@ -574,7 +586,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 }
 ```
 
-### Conclusion
+### Scores
 
 #### Asynchronous
 
@@ -714,7 +726,7 @@ child: StoreConnector<AppState, AppState>(
 )
 ```
 
-### Conclusion
+### Scores
 
 #### Asynchronous
 
@@ -764,6 +776,7 @@ And now we can import our middlewares to the `main.dart` file and inject it to t
 Redux works well with asynchronous actions, as we can see in the code example above. Any our async functions or API calls can be placed inside middlewares.
 
 The complicated part of this, that we need to create middleware for each asynchronous action we want to implement.
+
 <a id="s-a-redux"></a>
 Score: 3.
 
@@ -810,10 +823,11 @@ var store = new Store<State>(..., middleware: [epicMiddleware]);
 ```
 
 So, Redux works pretty good with `streams`, but requires an additional `epic_redux` package, which adds specific to the package way to interact with them. This imposes some complexity working with `streams`.
+
 <a id="s-r-redux"></a>
 Score: 3.
 
-#### Boilerplate
+#### Boilerplate absence
 
 To add Redux to the project, we need to create `Store` object, which will hold our application state. Each action of the app requires corresponding `Action` and `Reducer`, which mutates the state. If we need to do asynchronous work - `Middleware` comes into play.
 
@@ -822,6 +836,7 @@ To inject our store into UI, we use `StoreProvider` and access the store, using 
 So it is a lot of classes, functions and widgets to the initial boilerplate, that provides a lot of files to initialize the Redux.
 
 To add a new feature to the app, we need to create `Action` and either `Middleware` if we plan to make API calls or `Reducer` if we plan to mutate the state.
+
 <a id="s-b-redux"></a>
 Score: 1
 
@@ -833,13 +848,15 @@ The only way to trigger mutation of the application `state` is an `action`, so e
 
 All this stuff to implement features, but makes the `state` highly maintainable and scalable.
 
-On the other hand, this overhead makes adding or editing a feature as a complex task.
+On the other hand, this overhead makes adding or editing a feature as a complex task. Also, the learning curve of the package is high, so it is negative effects the maintainability property of the package.
+
 <a id="s-m-redux"></a>
 Score: 4
 
 #### State snapshot
 
 As we have a single application `Store` we can make a snapshot of the state in any time we want.
+
 <a id="s-s-redux"></a>
 Score: 5
 
@@ -848,12 +865,14 @@ Score: 5
 The business logic, that is separated into `actions`, `middlewares` and `reducers` makes it easy to debug the application. Also, unidirectional data flow makes our changes predictable and the central `Store` allows us to print the application `state` in any time.
 
 There are useful tools to debug, such us [redux_dev_tools](https://pub.dev/packages/redux_dev_tools). It allows you to travel back and forth throughout the `State` of your application. There is a wrapper of the package, made to work with flutter - [flutter_redux_dev_tools](https://pub.dev/packages/flutter_redux_dev_tools).
+
 <a id="s-d-redux"></a>
 Score: 5
 
 #### Undo/Redo actions
 
 There is a [redux_undo](https://github.com/fluttercommunity/redux_undo) package, that adds undo/redo functionality, jump to the past or to the future through some steps, clear all history.
+
 <a id="s-u-redux"></a>
 Score: 5
 
@@ -862,6 +881,7 @@ Score: 5
 We have separate pieces of the business logic - `actions`, `middlewares`, and `reducers` so we can isolate each part for testing purposes.
 
 Also, the Redux concept is one input - action, and one output - reducer, a middleware, that lies between these two. Each of them responsible for doing a little part of the logic and is separated, so we can easily test it.
+
 <a id="s-t-redux"></a>
 Score: 5
 
@@ -872,10 +892,11 @@ Redux is hard to learn, because of its key concept, which is not clear to newcom
 The package has the same concept as `redux.js`, so if you have experience working with it, `flutter_redux` will be understandable for you.
 
 Namings in Redux is not intuitive, and at first it is hard to understand what middleware or reducers are used for.
+
 <a id="s-l-redux"></a>
 Score: 1
 
-#### Analytics\Centralized
+#### Analytics/Centralized
 
 With Redux we can use a middleware, that can store information about our state and actions, that dispatched across whole app. As this is a common task, there is a [redux_logging](https://pub.dev/packages/redux_logging) package that prints the latest action & state. So, with that we can easily provide centralized analytics.
 
@@ -884,7 +905,8 @@ Score: 5
 
 #### State Mutability/Immutability
 
-The application `state` in Redux is immutable and it is a core concept. The only way to mutate the `state` is to `dispatch` an `action`.
+The application `state` in Redux is immutable and it is a core concept. The only way to mutate the `state` is to `dispatch` an `action`, that has a new `state` as a result.
+
 <a id="s-m-redux"></a>
 Score: 5
 
@@ -895,6 +917,7 @@ The [redux](https://pub.dev/packages/redux) package developed to work with `Dart
 To work with `flutter` there is a [flutter_redux](https://pub.dev/packages/flutter_redux) package, so we have a good flutter integration.
 
 Also, business logic is separated from the UI and split into `actions`, `middlewares`, `reducers`, so we can easily reuse the code.
+
 <a id="s-r-redux"></a>
 Score: 5
 
@@ -984,7 +1007,7 @@ The package works well with Future and Streams via:
 1. `FutureProvider` widget used to provide data into the asynchronous widget tree.
 2. `StreamProvider` widget, designed to allow widgets access to the state, which occurs as part of a stream.
 
-### Conclusion
+### Scores
 
 #### Asynchronous
 
@@ -1051,6 +1074,7 @@ With that we can use `Consumer` widget to get the projects, after our Future res
 ```
 
 The Provider is good with asynchronous. We have different ways to handle async work and it is not a complex task.
+
 <a id="s-a-provider"></a>
 Score: 5
 
@@ -1133,29 +1157,32 @@ And read `stream's` value in `Consumer` widget:
 ```
 
 So, the support of reactivity is pretty good too. We have different ways to work with streams, as well as async.
+
 <a id="s-r-provider"></a>
 Score: 5
 
-#### Boilerplate
+#### Boilerplate absence
 
 To initialize the Provider as a state management of the application, all we need to make our class `extends ChangeNotifier` and place `notifyListener` to our method to call all the registered listeners. With that we can use widgets, provided by the package, to rebuild the UI.
 
 To add a new feature we either add `notifyListener` to a new method or add a separate class with extending the `ChangeNotifier` class. In most cases, we don't need to create new files, and just create methods in the existing ones. If the feature requires their own state with the logic, we just need to create a separate class.
 
 So, the boilerplate level of the Provider package is very low. Usually, all we have to do is to extend the class and add method, that triggers the rebuild out UI.
+
 <a id="s-b-provider"></a>
 Score: 5
 
 #### Maintainability
 
-A simple concept of the UI rebuild, by invoking the `notifyListeners` method. Use of pure dart classes and functions, that gives us the ability to easily test and debug the app.
-These makes high level of maintainability.
+A simple concept of the UI rebuild, by invoking the `notifyListeners` method. Use of pure dart classes and functions, that gives us the ability to easily test, debug the app and add new features. Also, the concept of the package is simple to understand. These makes high level of maintainability.
+
 <a id="s-m-provider"></a>
 Score: 5
 
 #### State snapshot
 
 We cannot make a state snapshot, because of separated models with their own states(no centralized state, like [Redux](#State-snapshot-3)), but we can track each of the model's state on a different stage of the app.
+
 <a id="s-s-provider"></a>
 Score: 2
 
@@ -1163,28 +1190,32 @@ Score: 2
 
 With `Provider` package we have a simple concept of `changes/rebuilds`, based on pure functions, so we can use debugger to fix issues in the application code.
 Also, because the `notifyListeners` affects only subscribed listeners, we can find possible errors in predictable places.
+
 <a id="s-d-provider"></a>
 Score: 5
 
 #### Undo/Redo
 
 The Provider package has no support of a feature, like undo/redo.
+
 <a id="s-u-provider"></a>
 Score: 0
 
 #### Testability
 
 With the Provider we can use pure Dart classes and functions, a major part of the logic is focused on using public methods to interact with the logic components so we can easily test it.
+
 <a id="s-t-provider"></a>
 Score: 5
 
 #### Easy to learn/Namings
 
 It has an easy basic concept, consist of `ChangeNotifier`, `ChangeNotifierProvider`, and `Consumer` that easy to learn. Also, these concept and namings are intuitive to understand.
+
 <a id="s-l-provider"></a>
 Score: 5
 
-#### Analytics\Centralized
+#### Analytics/Centralized
 
 With `Provider` we have separate models with their own states and methods. That's why we can't easily provide central analytics for application actions. We can create some wrapper functions, and use them to do all actions but it is a lot of manual work and is not convenient, because we will have to provide too many parameters to that wrappers, to make them work well.
 
@@ -1194,6 +1225,7 @@ Score: 1
 #### State Mutability/Immutability
 
 There is no concept of immutability in the Provider package. We can just use private values and provide getters to add an encapsulation to the model.
+
 <a id="s-m-provider"></a>
 Score: 2
 
@@ -1203,6 +1235,7 @@ The Provider is based on the flutter's [foundation library](https://api.flutter.
 So we can't use this package outside of `flutter`.
 
 On the other hand, we can reuse our business logic, because there are pure classes and functions. The complicated part is to choose the right place to use our `Provider` widget to inject the model and `Consumer` widget to rebuild the piece of the UI.
+
 <a id="s-r-provider"></a>
 Score: 4
 
@@ -1292,7 +1325,7 @@ With this, we can use [flutter_state_notifier](https://pub.dev/packages/flutter_
         child: ...
 ```
 
-### Conclusion
+### Scores
 
 #### Asynchronous
 
@@ -1302,12 +1335,13 @@ The same as in Provider package, read [here](#Asynchronous-4).
 
 The same as in Provider package, read [here](#Reactivity-4).
 
-#### Boilerplate
+#### Boilerplate absence
 
 All we need to make our class that represents state `extends ValueNotifier` and place `notifyListener` to our method to call all the registered listeners.
 With that we can use widgets, provided by the [State notifier flutter](https://pub.dev/packages/flutter_state_notifier) package to rebuild the UI.
 
 To add a new feature we either add `notifyListener` to a new method or add a separate class with extending the `ValueNotifier` class.
+
 <a id="s-b-notifier"></a>
 Score: 5
 
@@ -1335,7 +1369,7 @@ The same as Provider package, read [here](#Testability)
 
 The same as Provider package, read [here](#Easy-to-learn-4)
 
-#### Analytics\Centralized
+#### Analytics/Centralized
 
 The same as Provider package, read [here](#Analytics\Centralized-4)
 
@@ -1355,6 +1389,7 @@ It is spread across two packages:
   It adds things like `ChangeNotifierProvider` from provider, but compatible with `state_notifier`.
 
 So we can use this package in the application, that not based on `flutter` framework.
+
 <a id="s-r-notifier"></a>
 Score:
 
@@ -1380,19 +1415,17 @@ Score:
 
 # Criteria glossary
 
-- Asynchronous - means a unit of work runs separately from the main application thread and notifies the calling thread of its completion, failure, or progress.
-- Reactivity - how good is support of `streams`.
-- Boilerplate - in this case, means how many a programmer must write code(create files) to do minimal jobs.
-- Maintainability -
-- State snapshot -
-- Debugging - how easy to find issues in the application code.
-- Undo/Redo actions - support of jumps to the past or to the future of the application state.
-- Testability - each part of the state management's code easy to test.
-- Easy to learn / Namings - how hard or easy to learn the state management's concept and how intuitive building blocks(classes, functions or widgets) of the state management are?
-- State Mutability / Immutability -
-- Flutter integration / Reusability - do we have an opportunity to use the package outside of flutter? How easy the package logic can be reused?
-- Analytics/Centralized -
-
-# Results
+**_Asynchronous_** - means a unit of work runs separately from the main application thread and notifies the calling thread of its completion, failure, or progress.
+**_Reactivity_** - how good is support of `streams`.
+**_Boilerplate absence_** - in this case, means how many a programmer must write code(create files) to do minimal jobs.
+**_Maintainability_** -
+**_State snapshot_** - is the state of an application at a particular point in time.
+**_Debugging_** - how easy to find issues in the application code.
+**_Undo/Redo actions_** - support of jumps to the past or to the future of the application state.
+**_Testability_** - each part of the state management's code easy to test.
+**_Easy to learn / Namings_** - how hard or easy to learn the state management's concept and how intuitive building blocks(classes, functions or widgets) of the state management are?
+**_State Mutability / Immutability_** -
+**_Flutter integration / Reusability_** - do we have an opportunity to use the package outside of flutter? How easy the package logic can be reused?
+**_Analytics/Centralized_** - how easy to make centralized analytics.
 
 > What was the outcome of the project?
