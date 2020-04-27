@@ -20,6 +20,40 @@ void main() {
     );
 
     testWidgets(
+      "displays the ColoredBar with a transparent color",
+          (WidgetTester tester) async {
+        await tester.pumpWidget(_PlaceholderBarTestbed());
+
+        final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
+
+        expect(coloredBar.color, equals(Colors.transparent));
+
+      },
+    );
+
+    testWidgets(
+      "displays the ColoredBar with a grey color borders of a 2.0 width",
+          (WidgetTester tester) async {
+        await tester.pumpWidget(_PlaceholderBarTestbed());
+
+        final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
+
+        expect(coloredBar.border, equals(Border.all(color: Colors.grey, width: 2.0)));
+      },
+    );
+
+    testWidgets(
+      "displays the ColoredBar with a circular border of a 4.0 radius",
+          (WidgetTester tester) async {
+        await tester.pumpWidget(_PlaceholderBarTestbed());
+
+        final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
+
+        expect(coloredBar.borderRadius, equals(BorderRadius.circular(4.0)));
+      },
+    );
+    
+    testWidgets(
       "delegates width to the ColoredBar widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed(width: _width));

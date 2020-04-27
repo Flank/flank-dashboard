@@ -33,6 +33,10 @@ void main() {
       },
     );
 
+    test("has an averageBuildDuration of 0 if no duration is provided", () {
+      expect(PerformanceMetric().averageBuildDuration, equals(Duration.zero));
+    });
+
     test(
       "two instances with equal fields are identical",
       () {

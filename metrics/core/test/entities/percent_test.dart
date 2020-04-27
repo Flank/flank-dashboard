@@ -14,14 +14,14 @@ void main() {
       );
     });
 
-    test("can't be created with the value, less then 0.0", () {
+    test("can't be created with the value, less than 0.0", () {
       expect(
         () => Percent(-1.0),
         MatcherUtil.throwsAssertionError,
       );
     });
 
-    test("can't be created with the value, more then 1.0", () {
+    test("can't be created with the value, more than 1.0", () {
       expect(
         () => Percent(1.1),
         MatcherUtil.throwsAssertionError,
