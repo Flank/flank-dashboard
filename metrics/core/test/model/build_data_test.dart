@@ -38,7 +38,27 @@ void main() {
     test(
       ".copyWith() creates a new instance from the existing one",
       () {
-        final copiedBuildData = buildData.copyWith();
+        const id = 'newId';
+        const projectId = 'newProjectId';
+        const buildNumber = 10;
+        final startedAt = DateTime(2020, 12, 31);
+        const buildStatus = BuildStatus.cancelled;
+        const duration = Duration();
+        const workflowName = 'newWorkflowName';
+        const url = 'newUrl';
+        const coverage = Percent(0.0);
+
+        final copiedBuildData = buildData.copyWith(
+          id: id,
+          projectId: projectId,
+          buildNumber: buildNumber,
+          startedAt: startedAt,
+          buildStatus: buildStatus,
+          duration: duration,
+          workflowName: workflowName,
+          url: url,
+          coverage: coverage,
+        );
 
         expect(copiedBuildData.id, equals(id));
         expect(copiedBuildData.projectId, equals(projectId));
