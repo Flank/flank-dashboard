@@ -46,9 +46,9 @@ Simplify the development process of the metrics web app.
 | Undo/Redo actions              | [0](#s-u-bloc)     | [0](#s-u-states-r)     | [1](#s-u-bloc-l)     | [5](#s-u-redux)     | [0](#s-u-provider)     | [0](#s-u-provider)     |
 | Testability                    | [4](#s-t-bloc)     | [5](#s-t-states-r)     | [4](#s-t-bloc-l)     | [4](#s-t-redux)     | [5](#s-t-provider)     | [5](#s-t-provider)     |
 | Easy to learn                  | [1](#s-l-bloc)     | [3](#s-l-states-r)     | [1](#s-l-bloc-l)     | [1](#s-l-redux)     | [5](#s-l-provider)     | [5](#s-l-provider)     |
-| State immutability             | [-](#s-si-bloc)    | [1](#s-si-states-r)    | [-](#s-si-bloc-l)    | [5](#s-si-redux)    | [2](#s-si-provider)    | [2](#s-si-provider)    |
-| Ability to use outside Flutter | [-](#s-r-bloc)     | [-](#s-r-states-r)     | [-](#s-r-bloc-l)     | [5](#s-r-redux)     | [2](#s-r-provider)     | [5](#s-r-provider)     |
-| Centralized analytics          | [-](#s-c-bloc)     | [0](#s-c-states-r)     | [-](#s-c-bloc-l)     | [5](#s-c-redux)     | [1](#s-c-provider)     | [1](#s-c-provider)     |
+| State immutability             | [0](#s-si-bloc)    | [1](#s-si-states-r)    | [-](#s-si-bloc-l)    | [5](#s-si-redux)    | [2](#s-si-provider)    | [2](#s-si-provider)    |
+| Ability to use outside Flutter | [5](#s-r-bloc)     | [-](#s-r-states-r)     | [-](#s-r-bloc-l)     | [5](#s-r-redux)     | [2](#s-r-provider)     | [5](#s-r-provider)     |
+| Centralized analytics          | [1](#s-c-bloc)     | [0](#s-c-states-r)     | [-](#s-c-bloc-l)     | [5](#s-c-redux)     | [1](#s-c-provider)     | [1](#s-c-provider)     |
 
 ### Descriptions of scores:
 
@@ -58,6 +58,21 @@ Simplify the development process of the metrics web app.
 - 3 - Normal
 - 4 - Good
 - 5 - Very good
+
+## Criteria glossary
+
+- **_Asynchronous_** - means a unit of work runs separately from the main application thread and notifies the calling thread of its completion, failure, or progress.
+- **_Reactivity_** - how well app can react to the changes (basic component for reacting is streams so how well it supports data updates from streams).
+- **_Boilerplate absence_** - in this case, means how many a programmer must write code(create files) to do minimal jobs.
+- **_Maintainability_** - how an application is understood, repaired, or enhanced.
+- **_State snapshot_** - is the state of an application at a particular point in time.
+- **_Debugging_** - how easy to find issues in the application code.
+- **_Undo/Redo actions_** - support of jumps to the past or to the future of the application state.
+- **_Testability_** - each part of the state management's code easy to test.
+- **_Easy to learn / Namings_** - how hard or easy to learn the state management's concept and how intuitive building blocks(classes, functions or widgets) of the state management are?
+- **_State Mutability / Immutability_** - A mutable state is a state that can be changed after we create it. The immutable state is a state that cannot be changed.
+- **_Flutter integration / Reusability_** - do we have an opportunity to use the package outside of flutter? How easy the package logic can be reused?
+- **_Analytics/Centralized_** - how easy to make centralized analytics.
 
 ## Navigation
 
@@ -172,9 +187,27 @@ class AuthBloc {
 }
 ```
 
-So, to subscribe to the auth updates, we should subscribe to `isLoggedInStream`, whether using the regular listener function `isLoggedInStream.listen(...)` or using the `StreamBuilder` to update the UI based on the current stream value. If we want to sign in a user, we have a `Sink`, so we should call `signInSink.add(credentials)` to trigger the sign in process.
+So, to subscribe to the auth updates, we should subscribe to `isLoggedInStream`, whether using the regular listener function `isLoggedInStream.listen(...)` or using the `StreamBuilder` to update the UI based on the current stream value. If we want to sign in a user, we have a `Sink`, so we should call `signInSink.add(credentials)` to trigger the sign in process. Let's consider the example of the `signInWithEmailAndPassword` method. Let's assume this method is called after a tap on the `Login` button: 
 
-Because we have only streams as the output of the BLoC, we can easily build the reactive granular UI, using the `StreamBuilder` widget and dividing the UI to the logical parts that will be controlled by a separate stream in BLoC.
+```dart 
+...
+
+void signInWithEmailAndPassword(AuthBloc authBloc) async {
+  final email = _emailController.text;
+  final password = _passwordController.text;
+
+  authBloc.signInSink.add(UserCredentials(email, password));
+
+  final authResult = await authBloc.isLoggedInStream.firstWhere((projects) => projects != null);
+
+  /// handle auth result
+  ...
+}
+
+...
+```
+
+Since we have only streams as the output of the BLoC, we can easily build the reactive granular UI, using the `StreamBuilder` widget and dividing the UI to the logical parts that will be controlled by a separate stream in BLoC.
 
 ### Scores
 
@@ -197,37 +230,39 @@ class ProjectsBloc {
   }
 
   void _loadProjects(bool event) async {
+    _projectsSubject.add(null);
+
+    List<Project> loadedProjects = [];
     try {
       /// loading projects asynchronously.
-      ....
-      final loadedProject = await repository.getProjects();
-      ///
-      _projectsSubject.add(loadedProjects);
+      ...
+      loadedProject = await repository.getProjects();
+    
     } catch (exception){
       _projectsSubject.addError(LoadingError(message: 'error message'));
     }
+
+    _projectsSubject.add(loadedProjects);
   }
 }
 ```
 
-So, to load the projects using some API, for example, we should call the `projectsBloc.loadProjectsSink.add(true)` method. After loading finished or an error occurred, we will receive our projects to the `projectsBloc.projectsStream` stream:
+So, to load the projects using some API, for example, we should call the `projectsBloc.loadProjectsSink.add(true)` method. After loading finished or an error occurred, we will receive our projects to the `projectsBloc.projectsStream` stream: 
 
 ```dart
-void loadProjects(ProjectsBloc projectsBloc){
-  StreamSubscription _projectsSubscription;
+void loadProjects(ProjectsBloc projectsBloc) async {
+  projectsBloc.loadProjectsSink.add(true);
 
-  _projectsSubscription = projectsBloc.projectsStream.listen((projects){
-    /// do something with loaded projects
-    ...
-    _projectsSubscription?.cancel();
-  });
+  final loadedProjects = await projectsBloc.projectsStream.firstWhere((projects) => projects != null);
 
-
+  ...
 }
 ```
 
+The asynchronous programming support is not bad overall, but required a bit of overhead in the creation of the separate `Sink` for triggering each async operation and complexity of handling the result.
+
 <a id="s-a-bloc"></a>
-Score:
+Score: 3
 
 #### Reactivity
 
@@ -251,59 +286,77 @@ return Scaffold(
 ```
 
 <a id="s-r-bloc"></a>
-Score:
+Score: 5
 
-#### Boilerplate
+#### Boilerplate absence
 
 To create a new BLoC, you just should create the class that will contain business logic. The only place of the boilerplate code is the creation of the Streams and Sinks. The example of the simple BLoC is presented above in [Reactivity](#Reactivity) or [Code sample](#Code_sample) sections.
 
 <a id="s-b-bloc"></a>
-Score:
-
-#### New feature boilerplate absence
-
-To add the new feature to the existing BLoC, it is needed to create a separate `Stream`, that will contain the new value to display, and the `Sink` that will be used to trigger related business logic from UI or another BLoC if needed.
+Score: 5
 
 #### Maintainability
 
-The applications that use the BLoC pattern as the state management are highly maintainable because all of the business logic is separated from the UI. Moreover, the business processes could be triggered only from one place - the sink, and it helps to find errors, bugs, etc. in the code. Also, because of the low level of the boilerplate code and good separation of the features, it is easy to add a new feature by adding a new BLoC or change the behavior of the existing feature by modifying the logic in the existing BLoC.
+The applications that use the BLoC pattern as the state management are highly maintainable because all of the business logic is separated from the UI. Moreover, the business processes could be triggered only from one place - the sink, and it helps to find errors, bugs, etc. in the code. Also, because of the low level of the boilerplate code and good separation of the features, it is easy to add a new feature by adding a new BLoC or change the behavior of the existing feature by modifying the logic in the existing BLoC. The only problem in maintainability is the BLoC pattern's async support.
 
 <a id="s-m-bloc"></a>
-Score:
+Score: 4
 
 #### State snapshot
 
-There is no ability to make the application state snapshot because the application state is divided into separate BLoCs, but we can make a snapshot of the current BLoC, by subscribing to the streams.
+There is no ability to make the application state snapshot because the application state is divided into separate BLoCs, but we can make a snapshot of the current BLoC, by subscribing to the streams. So, we can implement the state snapshot mechanism, but it will require a lot of work.
 
-//todo no easy way
 <a id="s-s-bloc"></a>
-Score:
+Score: 1
 
 #### Debugging
 
-The BLoC pattern is well-debuggable because the only way to trigger an event is to add something to the stream. But the debug process is not perfect, because you can't, for example, print the whole application state, you can only print the events, coming to some stream.
+The BLoC pattern is well-debuggable because the only way to trigger an event is to add something to the stream. But the debug process is not perfect, because you can't, for example, print the whole application state, you can only print the events, coming to some stream. Also, it could be a bit hard to find the place from which the new value was added to the `Sink` because you cannot step back using the debug mode.
 
-//todo: hard to find place where it's called
 <a id="s-d-bloc"></a>
-Score:
+Score: 4
 
 #### Undo/Redo actions
 
 The BLoC pattern has no embedded support of the undo/redo feature.
 
 <a id="s-u-bloc"></a>
-Score:
+Score: 0
 
 #### Testability
 
-The BLoC pattern is pretty good testable because it is based on the streams, and the dart [testing framework](https://pub.dev/packages/test) has a [StreamMatcher](https://pub.dev/documentation/test_api/latest/test_api/StreamMatcher-class.html) class that helps to write the tests for stream-based functionality.
+The BLoC pattern is pretty good testable because it is based on the streams, and the dart [testing framework](https://pub.dev/packages/test) has a [StreamMatcher](https://pub.dev/documentation/test_api/latest/test_api/StreamMatcher-class.html) class that helps to write the tests for stream-based functionality. But it is still more complex to write tests for streams than writing tests that will test methods directly.
+
+<a id="s-t-bloc"></a>
+Score: 4
 
 #### Easy to learn
 
 The BLoC pattern could be pretty hard to understand if you are not familiar with the [rxdart](https://pub.dev/packages/rxdart) or at least dart streams.
 
 <a id="s-l-bloc"></a>
-Score: \* + description why?
+Score: 1
+
+#### State immutability
+
+Since we have no separate application state class, and this state is the current value of each stream, we cannot make it immutable.
+
+<a id="s-si-bloc"></a>
+Score: 0
+
+#### Ability to use outside Flutter
+
+Since the BLoC pattern based on the streams, each BLoC can be freely used outside of flutter.
+
+<a id="s-si-bloc"></a>
+Score: 5
+
+#### Centralized analytics
+
+The centralized analytics could be not easy to implement because there is no centralized place to handle all events. It means we cannot listen to one stream, for example, that contains all user events (or events from the remote) to collect analytical data and store it somehow. But we can implement something like `AnalyticsBloc` that will report the analytical data to some service, and collect it from streams, that should be injected to this BLoC.
+
+<a id="s-c-bloc"></a>
+Score: 1
 
 #### Pros
 
@@ -1492,19 +1545,5 @@ Score:
 4. Doesn't have a possibility to [Undo/Redo](#Undo/Redo-5) actions.
 5. Preferable in small and middle-sized projects.
 
-# Criteria glossary
-
-**_Asynchronous_** - means a unit of work runs separately from the main application thread and notifies the calling thread of its completion, failure, or progress.
-**_Reactivity_** - how well app can react to the changes (basic component for reacting is streams so how well it supports data updates from streams).
-**_Boilerplate absence_** - in this case, means how many a programmer must write code(create files) to do minimal jobs.
-**_Maintainability_** - how an application is understood, repaired, or enhanced.
-**_State snapshot_** - is the state of an application at a particular point in time.
-**_Debugging_** - how easy to find issues in the application code.
-**_Undo/Redo actions_** - support of jumps to the past or to the future of the application state.
-**_Testability_** - each part of the state management's code easy to test.
-**_Easy to learn / Namings_** - how hard or easy to learn the state management's concept and how intuitive building blocks(classes, functions or widgets) of the state management are?
-**_State Mutability / Immutability_** - A mutable state is a state that can be changed after we create it. The immutable state is a state that cannot be changed.
-**_Flutter integration / Reusability_** - do we have an opportunity to use the package outside of flutter? How easy the package logic can be reused?
-**_Analytics/Centralized_** - how easy to make centralized analytics.
 
 > What was the outcome of the project?
