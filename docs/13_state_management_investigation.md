@@ -39,16 +39,16 @@ Simplify the development process of the metrics web app.
 | ------------------------------ | :----------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: |
 | Asynchronous                   |          [3](#Asynchronous)          |          [5](#Asynchronous-1)          |          [5](#Asynchronous-2)          |          [3](#Asynchronous-3)          |          [5](#Asynchronous-4)          |          [5](#Asynchronous-5)          |
 | Reactivity                     |           [5](#Reactivity)           |           [2](#Reactivity-1)           |           [2](#Reactivity-2)           |           [2](#Reactivity-3)           |           [4](#Reactivity-4)           |           [4](#Reactivity-5)           |
-| Boilerplate absence            |      [5](#Boilerplate_absence)       |      [5](#Boilerplate_absence-1)       |      [1](#Boilerplate_absence-2)       |      [1](#Boilerplate_absence-3)       |      [5](#Boilerplate_absence-4)       |      [5](#Boilerplate_absence-5)       |
+| Boilerplate absence            |      [5](#Boilerplate-absence)       |      [5](#Boilerplate-absence-1)       |      [1](#Boilerplate-absence-2)       |      [1](#Boilerplate-absence-3)       |      [5](#Boilerplate-absence-4)       |      [5](#Boilerplate-absence-5)       |
 | Maintainability                |        [4](#Maintainability)         |        [4](#Maintainability-1)         |        [3](#Maintainability-2)         |        [3](#Maintainability-3)         |        [4](#Maintainability-4)         |        [4](#Maintainability-5)         |
-| State snapshot                 |         [1](#State_snapshot)         |         [2](#State_snapshot-1)         |         [5](#State_snapshot-2)         |         [5](#State_snapshot-3)         |         [2](#State_snapshot-4)         |         [2](#State_snapshot-5)         |
+| State snapshot                 |         [1](#State-snapshot)         |         [2](#State-snapshot-1)         |         [5](#State-snapshot-2)         |         [5](#State-snapshot-3)         |         [2](#State-snapshot-4)         |         [2](#State-snapshot-5)         |
 | Debugging                      |           [3](#Debugging)            |           [4](#Debugging-1)            |           [3](#Debugging-2)            |           [3](#Debugging-3)            |           [4](#Debugging-4)            |           [4](#Debugging-5)            |
-| Undo and redo actions          |     [0](#Undo_and_redo_actions)      |     [0](#Undo_and_redo_actions-1)      |     [1](#Undo_and_redo_actions-2)      |     [5](#Undo_and_redo_actions-3)      |     [0](#Undo_and_redo_actions-4)      |     [0](#Undo_and_redo_actions-5)      |
+| Undo and redo actions          |     [0](#Undo-and-redo-actions)      |     [0](#Undo-and-redo-actions-1)      |     [1](#Undo-and-redo-actions-2)      |     [5](#Undo-and-redo-actions-3)      |     [0](#Undo-and-redo-actions-4)      |     [0](#Undo-and-redo-actions-5)      |
 | Testability                    |          [4](#Testability)           |          [5](#Testability-1)           |          [4](#Testability-2)           |          [3](#Testability-3)           |          [5](#Testability-4)           |          [5](#Testability-5)           |
-| Easy to learn                  |         [1](#Easy_to_learn)          |         [3](#Easy_to_learn-1)          |         [2](#Easy_to_learn-2)          |         [1](#Easy_to_learn-3)          |         [5](#Easy_to_learn-4)          |         [5](#Easy_to_learn-5)          |
-| State immutability             |       [0](#State_immutability)       |       [1](#State_immutability-1)       |       [5](#State_immutability-2)       |       [5](#State_immutability-3)       |       [1](#State_immutability-4)       |       [1](#State_immutability-5)       |
-| Ability to use outside Flutter | [5](#Ability_to_use_outside_flutter) | [0](#Ability_to_use_outside_flutter-1) | [5](#Ability_to_use_outside_flutter-2) | [5](#Ability_to_use_outside_flutter-3) | [0](#Ability_to_use_outside_flutter-4) | [5](#Ability_to_use_outside_flutter-5) |
-| Centralized analytics          |     [1](#Centralized_analytics)      |     [1](#Centralized_analytics-1)      |     [5](#Centralized_analytics-2)      |     [5](#Centralized_analytics-3)      |     [1](#Centralized_analytics-4)      |     [1](#Centralized_analytics-5)      |
+| Easy to learn                  |         [1](#Easy-to-learn)          |         [3](#Easy-to-learn-1)          |         [2](#Easy-to-learn-2)          |         [1](#Easy-to-learn-3)          |         [5](#Easy-to-learn-4)          |         [5](#Easy-to-learn-5)          |
+| State immutability             |       [0](#State-immutability)       |       [1](#State-immutability-1)       |       [5](#State-immutability-2)       |       [5](#State-immutability-3)       |       [1](#State-immutability-4)       |       [1](#State-immutability-5)       |
+| Ability to use outside Flutter | [5](#Ability-to-use-outside-flutter) | [0](#Ability-to-use-outside-flutter-1) | [5](#Ability-to-use-outside-flutter-2) | [5](#Ability-to-use-outside-flutter-3) | [0](#Ability-to-use-outside-flutter-4) | [5](#Ability-to-use-outside-flutter-5) |
+| Centralized analytics          |     [1](#Centralized-analytics)      |     [1](#Centralized-analytics-1)      |     [5](#Centralized-analytics-2)      |     [5](#Centralized-analytics-3)      |     [1](#Centralized-analytics-4)      |     [1](#Centralized-analytics-5)      |
 
 ### Descriptions of scores:
 
@@ -290,7 +290,7 @@ return Scaffold(
 
 Score: 5
 
-To create a new BLoC, you just should create the class that will contain business logic. The only place of the boilerplate code is the creation of the Streams and Sinks. The example of the simple BLoC is presented above in [Reactivity](#Reactivity) or [Code sample](#Code_sample) sections.
+To create a new BLoC, you just should create the class that will contain business logic. The only place of the boilerplate code is the creation of the Streams and Sinks. The example of the simple BLoC is presented above in [Reactivity](#Reactivity) or [Code sample](#Code-sample) sections.
 
 #### Maintainability
 
@@ -353,7 +353,7 @@ The centralized analytics could be not easy to implement because there is no cen
 3. The widget tree could be rebuilt granular only when the data for the exact subtree is changed.
 4. Easy to subscribe to the application state updates outside of the UI.
 5. Has the great support of [reactivity](#Reactivity).
-6. Has low level of the [boilerplate code](#Initial_boilerplate_absence).
+6. Has low level of the [boilerplate code](#Initial-boilerplate-absence).
 7. Has high level of [maintainability](#Maintainability).
 8. Pretty good [testability](#Testability).
 
@@ -362,9 +362,9 @@ The centralized analytics could be not easy to implement because there is no cen
 1. Relatively large entry [threshold](#Easy-to-learn).
 2. Has an overhead because you should create a separate stream for API response results, etc.
 3. Has not the best support of the [asynchronous programming](#Asynchronous).
-4. No ability to make a [state snapshot](#State_snapshot).
+4. No ability to make a [state snapshot](#State-snapshot).
 
-## [States Rebuilder](https://github.com/GIfatahTH/states_rebuilder)
+## [States Rebuilder](https://github.com/GIfatahTH/states-rebuilder)
 
 States Rebuilder if the package for flutter built on the observer pattern for state management and the service locator pattern for dependency injection. It is very similar to the Provider package but has a couple of additional features that make building the UI a bit easier.
 
@@ -490,7 +490,7 @@ Injector(
 
 After injection of these streams, we will be able to get one of these streams using the `Injector.get<bool>(name: ...)`, or the `Injector.getAsReactive<bool>(name: ...)` methods. In case we won't give the names for there streams, the injector returns the first sound stream with the given type (first found `Stream<bool>` in our case).
 
-In case we want to subscribe to the authentication state stream updates outside of the UI, we should implement the `ObserverOfStatesRebuilder` interface, as shown in the [Code sample](#Code_sample-1) section.
+In case we want to subscribe to the authentication state stream updates outside of the UI, we should implement the `ObserverOfStatesRebuilder` interface, as shown in the [Code sample](#Code-sample-1) section.
 
 Also, there is a problem with mixing the reactive with the non-reactive state. I mean, there is no ability to transform the `Stream` into the state without losing the main features of this package - the `onError`, `onWaiting`, etc. callbacks for this stream.
 
@@ -722,7 +722,7 @@ The BLoC library has not so good support of the reactivity because to update the
 
 Score: 1
 
-There are a lot of initial boilerplate to create your first BLoC. As you can see in the [code sample](#Code_sample-2) section, you should create a state, actions, and the BLoC itself to start working on a project with this package.
+There are a lot of initial boilerplate to create your first BLoC. As you can see in the [code sample](#Code-sample-2) section, you should create a state, actions, and the BLoC itself to start working on a project with this package.
 
 There is pretty much boilerplate code even to add a new feature or change the existing one. If you are trying to add a new feature to the existing BLoC, you should add an event, modify the state if needed, and implement the logic in the BLoC.
 
@@ -1554,7 +1554,7 @@ So we can use this package in the application, that not based on `flutter` frame
 
 1. Based on the pure dart, so the business logic could be reused in a non-flutter application.
 2. Great support for [reactivity](#Reactivity-5) and [asynchronous](#Asynchronous-5) programming.
-3. Requires a low level of the [boilerplate-absence](#boilerplate-absence-5).
+3. Requires a low level of the [boilerplate-absence](#Boilerplate-absence-5).
 4. It has a good level of [maintainability](#Maintainability-5) in small and medium apps.
 5. Easy to [debug](#Debugging-4).
 6. Has a good [testability](#Testability-4).
