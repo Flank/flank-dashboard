@@ -59,6 +59,30 @@ Simplify the development process of the metrics web app.
 - 4 - Good
 - 5 - Very good
 
+|                                |                 Bloc                 |            States rebuilder            |              Bloc library              |                 Redux                  |                Provider                |             State notifier             |
+| ------------------------------ | :----------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: |
+| Asynchronous                   |          [🙂](#Asynchronous)          |          [🎉](#Asynchronous-1)          |          [🎉](#Asynchronous-2)          |          [🙂](#Asynchronous-3)          |          [🎉](#Asynchronous-4)          |          [🎉](#Asynchronous-5)          |
+| Reactivity                     |           [🎉](#Reactivity)           |           [😭](#Reactivity-1)           |           [😭](#Reactivity-2)           |           [😭](#Reactivity-3)           |           [🤩](#Reactivity-4)           |           [🤩](#Reactivity-5)           |
+| Boilerplate absence            |      [🎉](#Boilerplate-absence)       |      [🎉](#Boilerplate-absence-1)       |      [😭](#Boilerplate-absence-2)       |      [😭](#Boilerplate-absence-3)       |      [🎉](#Boilerplate-absence-4)       |      [🎉](#Boilerplate-absence-5)       |
+| Maintainability                |        [🤩](#Maintainability)         |        [🤩](#Maintainability-1)         |        [🙂](#Maintainability-2)         |        [🙂](#Maintainability-3)         |        [🤩](#Maintainability-4)         |        [🤩](#Maintainability-5)         |
+| State snapshot                 |         [😭](#State-snapshot)         |         [😭](#State-snapshot-1)         |         [🎉](#State-snapshot-2)         |         [🎉](#State-snapshot-3)         |         [😭](#State-snapshot-4)         |         [😭](#State-snapshot-5)         |
+| Debugging                      |           [🙂](#Debugging)            |           [🤩](#Debugging-1)            |           [🙂](#Debugging-2)            |           [🙂](#Debugging-3)            |           [🤩](#Debugging-4)            |           [🤩](#Debugging-5)            |
+| Undo and redo actions          |     [💀](#Undo-and-redo-actions)      |     [💀](#Undo-and-redo-actions-1)      |     [😭](#Undo-and-redo-actions-2)      |     [🎉](#Undo-and-redo-actions-3)      |     [💀](#Undo-and-redo-actions-4)      |     [💀](#Undo-and-redo-actions-5)      |
+| Testability                    |          [🤩](#Testability)           |          [🎉](#Testability-1)           |          [🤩](#Testability-2)           |          [🙂](#Testability-3)           |          [🎉](#Testability-4)           |          [🎉](#Testability-5)           |
+| Easy to learn                  |         [😭](#Easy-to-learn)          |         [🙂](#Easy-to-learn-1)          |         [😭](#Easy-to-learn-2)          |         [😭](#Easy-to-learn-3)          |         [🎉](#Easy-to-learn-4)          |         [🎉](#Easy-to-learn-5)          |
+| State immutability             |       [💀](#State-immutability)       |       [😭](#State-immutability-1)       |       [🎉](#State-immutability-2)       |       [🎉](#State-immutability-3)       |       [😭](#State-immutability-4)       |       [😭](#State-immutability-5)       |
+| Ability to use outside Flutter | [🎉](#Ability-to-use-outside-flutter) | [💀](#Ability-to-use-outside-flutter-1) | [🎉](#Ability-to-use-outside-flutter-2) | [🎉](#Ability-to-use-outside-flutter-3) | [💀](#Ability-to-use-outside-flutter-4) | [🎉](#Ability-to-use-outside-flutter-5) |
+| Centralized analytics          |     [😭](#Centralized-analytics)      |     [😭](#Centralized-analytics-1)      |     [🎉](#Centralized-analytics-2)      |     [🎉](#Centralized-analytics-3)      |     [😭](#Centralized-analytics-4)      |     [😭](#Centralized-analytics-5)      |
+
+### Descriptions of scores:
+
+- 💀 - Not implemented
+- 😭 - Very bad
+- 🤔 - Bad
+- 🙂 - Normal
+- 🤩 - Good
+- 🎉 - Very good
+
 ## Criteria glossary
 
 - **_Asynchronous_** - means a unit of work runs separately from the main application thread and notifies the calling thread of its completion, failure, or progress.
