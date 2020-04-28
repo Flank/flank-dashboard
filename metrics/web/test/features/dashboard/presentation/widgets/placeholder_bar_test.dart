@@ -3,13 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/colored_bar.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/placeholder_bar.dart';
 
 void main() {
-  const _width = 2.0;
-
   group("PlaceholderBar", () {
+    const _width = 2.0;
+    final _inactiveColor = MetricsThemeData().inactiveWidgetTheme.primaryColor;
+
     testWidgets(
       "displays the ColoredBar",
       (WidgetTester tester) async {
@@ -20,39 +22,30 @@ void main() {
     );
 
     testWidgets(
-      "displays the ColoredBar with a transparent color",
-          (WidgetTester tester) async {
+      "displays the ColoredBar with an inactive color",
+      (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed());
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 
-        expect(coloredBar.color, equals(Colors.transparent));
-
+        expect(coloredBar.color, equals(_inactiveColor));
       },
     );
 
     testWidgets(
-      "displays the ColoredBar with a grey color borders of a 2.0 width",
-          (WidgetTester tester) async {
+      "displays the ColoredBar with an inactive color borders of a 2.0 width",
+      (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed());
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 
-        expect(coloredBar.border, equals(Border.all(color: Colors.grey, width: 2.0)));
+        expect(
+          coloredBar.border,
+          equals(Border.all(color: _inactiveColor, width: 2.0)),
+        );
       },
     );
 
-    testWidgets(
-      "displays the ColoredBar with a circular border of a 4.0 radius",
-          (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed());
-
-        final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
-
-        expect(coloredBar.borderRadius, equals(BorderRadius.circular(4.0)));
-      },
-    );
-    
     testWidgets(
       "delegates width to the ColoredBar widget",
       (WidgetTester tester) async {
