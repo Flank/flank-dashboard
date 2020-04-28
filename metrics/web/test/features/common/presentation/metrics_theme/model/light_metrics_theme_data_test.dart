@@ -10,10 +10,10 @@ void main() {
       () {
         final lightMetricsThemeData = LightMetricsThemeData();
 
-        expect(lightMetricsThemeData.circlePercentagePrimaryTheme, isNotNull);
-        expect(lightMetricsThemeData.circlePercentageAccentTheme, isNotNull);
-        expect(lightMetricsThemeData.sparklineTheme, isNotNull);
+        expect(lightMetricsThemeData.metricCirclePercentageThemeData, isNotNull);
+        expect(lightMetricsThemeData.metricWidgetTheme, isNotNull);
         expect(lightMetricsThemeData.buildResultTheme, isNotNull);
+        expect(lightMetricsThemeData.inactiveWidgetTheme, isNotNull);
       },
     );
   });

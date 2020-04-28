@@ -8,12 +8,12 @@ void main() {
     test(
       'creates a variation theme',
       () {
-        final lightMetricsThemeData = DarkMetricsThemeData();
+        final darkMetricsThemeData = DarkMetricsThemeData();
 
-        expect(lightMetricsThemeData.circlePercentagePrimaryTheme, isNotNull);
-        expect(lightMetricsThemeData.circlePercentageAccentTheme, isNotNull);
-        expect(lightMetricsThemeData.sparklineTheme, isNotNull);
-        expect(lightMetricsThemeData.buildResultTheme, isNotNull);
+        expect(darkMetricsThemeData.metricCirclePercentageThemeData, isNotNull);
+        expect(darkMetricsThemeData.metricWidgetTheme, isNotNull);
+        expect(darkMetricsThemeData.buildResultTheme, isNotNull);
+        expect(darkMetricsThemeData.inactiveWidgetTheme, isNotNull);
       },
     );
   });
