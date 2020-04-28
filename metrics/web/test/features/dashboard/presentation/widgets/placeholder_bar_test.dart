@@ -9,13 +9,13 @@ import 'package:metrics/features/dashboard/presentation/widgets/placeholder_bar.
 
 void main() {
   group("PlaceholderBar", () {
-    const width = 2.0;
-    final inactiveColor = MetricsThemeData().inactiveWidgetTheme.primaryColor;
+    const _width = 2.0;
+    final _inactiveColor = MetricsThemeData().inactiveWidgetTheme.primaryColor;
 
     testWidgets(
       "displays the ColoredBar",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(width: width));
+        await tester.pumpWidget(_PlaceholderBarTestbed(width: _width));
 
         expect(find.byType(ColoredBar), findsOneWidget);
       },
@@ -28,7 +28,7 @@ void main() {
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 
-        expect(coloredBar.color, equals(inactiveColor));
+        expect(coloredBar.color, equals(_inactiveColor));
       },
     );
 
@@ -41,7 +41,7 @@ void main() {
 
         expect(
           coloredBar.border,
-          equals(Border.all(color: inactiveColor, width: 2.0)),
+          equals(Border.all(color: _inactiveColor, width: 2.0)),
         );
       },
     );
@@ -49,11 +49,11 @@ void main() {
     testWidgets(
       "delegates width to the ColoredBar widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(width: width));
+        await tester.pumpWidget(_PlaceholderBarTestbed(width: _width));
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 
-        expect(coloredBar.width, equals(width));
+        expect(coloredBar.width, equals(_width));
       },
     );
   });
