@@ -1,3 +1,4 @@
+import 'package:metrics/features/auth/presentation/model/auth_error_message.dart';
 import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
@@ -13,9 +14,9 @@ class SignedInAuthStoreFake extends Fake implements AuthStore {
   Stream<bool> get loggedInStream => _isLoggedInSubject.stream;
 
   @override
-  String get authErrorMessage => _authExceptionDescription;
+  AuthErrorMessage get authErrorMessage => _authExceptionDescription;
 
-  String _authExceptionDescription;
+  AuthErrorMessage _authExceptionDescription;
 
   @override
   void subscribeToAuthenticationUpdates() {
@@ -23,7 +24,7 @@ class SignedInAuthStoreFake extends Fake implements AuthStore {
   }
 
   @override
-  void signOut() {
+  Future<void> signOut() async {
     _isLoggedInSubject.add(false);
   }
 }

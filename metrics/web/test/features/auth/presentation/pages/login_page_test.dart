@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/auth/presentation/model/auth_error_message.dart';
 import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
@@ -8,6 +11,7 @@ import 'package:metrics/features/common/presentation/routes/route_generator.dart
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import '../../../../test_utils/metrics_store_stub.dart';
@@ -78,7 +82,7 @@ class _LoginPageTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return Injector(
       inject: [
-        Inject<AuthStore>(() => authStore ?? AuthStore()),
+        Inject<AuthStore>(() => authStore ?? AuthStoreStub()),
         Inject<ProjectMetricsStore>(() => const MetricsStoreStub()),
       ],
       initState: () {
@@ -101,4 +105,35 @@ class _LoginPageTestbed extends StatelessWidget {
       },
     );
   }
+}
+
+class AuthStoreStub implements AuthStore {
+  final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
+
+  @override
+  bool get isLoggedIn => _isLoggedInSubject.value;
+
+  @override
+  Stream<bool> get loggedInStream => _isLoggedInSubject.stream;
+
+  @override
+  AuthErrorMessage get authErrorMessage => null;
+
+  @override
+  void subscribeToAuthenticationUpdates() {
+    _isLoggedInSubject.add(false);
+  }
+
+  @override
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    _isLoggedInSubject.add(true);
+  }
+
+  @override
+  Future<void> signOut() async {
+    _isLoggedInSubject.add(false);
+  }
+
+  @override
+  void dispose() {}
 }

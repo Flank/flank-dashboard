@@ -53,7 +53,7 @@ class _AuthFormState extends State<AuthForm> {
               return Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Text(
-                  store.state.authErrorMessage,
+                  store.state.authErrorMessage.message,
                   style: const TextStyle(color: Colors.red),
                 ),
               );

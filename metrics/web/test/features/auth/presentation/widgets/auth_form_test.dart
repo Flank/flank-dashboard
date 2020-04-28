@@ -1,126 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/features/auth/domain/entities/auth_error_code.dart';
+import 'package:metrics/features/auth/presentation/model/auth_error_message.dart';
 import 'package:metrics/features/auth/presentation/state/auth_store.dart';
-import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
+import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {
+  final emailInputFinder =
+      find.widgetWithText(AuthInputField, LoginStrings.email);
+  final passwordInputFinder =
+      find.widgetWithText(AuthInputField, LoginStrings.password);
+  final submitButtonFinder =
+      find.widgetWithText(RaisedButton, LoginStrings.signIn);
+
   const testEmail = 'test@email.com';
   const testPassword = 'testPassword';
 
-  final emailInputFinder =
-      find.widgetWithText(AuthInputField, AuthStrings.email);
-  final passwordInputFinder =
-      find.widgetWithText(AuthInputField, AuthStrings.password);
-  final signInButtonFinder =
-      find.widgetWithText(RaisedButton, AuthStrings.signIn);
-
   group("AuthForm", () {
-    testWidgets(
-      "contains the email input field",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _AuthFormTestbed());
-
-        expect(
-          find.widgetWithText(AuthInputField, AuthStrings.email),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets(
-      "contains the password input field",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _AuthFormTestbed());
-
-        expect(
-          find.widgetWithText(AuthInputField, AuthStrings.password),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets(
-      "contains the sign in button",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _AuthFormTestbed());
-
-        expect(
-          find.widgetWithText(RaisedButton, AuthStrings.signIn),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets("email input shows an error message if a value is empty",
+    testWidgets("email input shows error message if value is empty",
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
 
-      await tester.tap(signInButtonFinder);
+      await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(AuthStrings.emailIsRequired), findsOneWidget);
+      expect(find.text(LoginStrings.emailIsRequired), findsOneWidget);
     });
 
-    testWidgets(
-        "email input shows an error message if a value is not a valid email",
+    testWidgets("email input shows error message if value is not a valid email",
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
       await tester.enterText(emailInputFinder, 'notAnEmail');
 
-      await tester.tap(signInButtonFinder);
+      await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(AuthStrings.emailIsInvalid), findsOneWidget);
+      expect(find.text(LoginStrings.emailIsInvalid), findsOneWidget);
     });
 
-    testWidgets("password input shows an error message if a value is empty",
+    testWidgets("password input shows error message if value is empty",
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
 
-      await tester.tap(signInButtonFinder);
+      await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(AuthStrings.passwordIsRequired), findsOneWidget);
+      expect(find.text(LoginStrings.passwordIsRequired), findsOneWidget);
     });
 
     testWidgets(
-      "password input shows an error message if a value is less then 6",
-      (WidgetTester tester) async {
-        const _minPasswordLength = 6;
-        await tester.pumpWidget(const _AuthFormTestbed());
-
-        await tester.enterText(passwordInputFinder, '12345');
-        await tester.tap(signInButtonFinder);
-        await tester.pump();
-
-        expect(
-          find.text(
-              AuthStrings.getPasswordMinLengthErrorMessage(_minPasswordLength)),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets("password input text is obscure", (WidgetTester tester) async {
-      await tester.pumpWidget(const _AuthFormTestbed());
-
-      final passwordField =
-          tester.widget(passwordInputFinder) as AuthInputField;
-
-      expect(passwordField.obscureText, isTrue);
-    });
-
-    testWidgets("integrated with AuthStore", (WidgetTester tester) async {
+        "signInWithEmailAndPassword method is called on tap on sign in button",
+        (WidgetTester tester) async {
       final authStore = AuthStoreMock();
 
       await tester.pumpWidget(_AuthFormTestbed(authStore: authStore));
       await tester.enterText(emailInputFinder, testEmail);
       await tester.enterText(passwordInputFinder, testPassword);
-      await tester.tap(signInButtonFinder);
+      await tester.tap(submitButtonFinder);
 
       verify(authStore.signInWithEmailAndPassword(testEmail, testPassword))
           .called(equals(1));
@@ -128,17 +69,18 @@ void main() {
 
     testWidgets("shows an auth error text if the login process went wrong",
         (WidgetTester tester) async {
-      final authStore = AuthStoreMock();
-      const errorMessage = 'Unknown Error';
-      when(authStore.authErrorMessage).thenReturn(errorMessage);
-
-      await tester.pumpWidget(_AuthFormTestbed(authStore: authStore));
+      await tester.pumpWidget(_AuthFormTestbed(
+        authStore: SignInErrorAuthStoreStub(),
+      ));
       await tester.enterText(emailInputFinder, 'test@email.com');
       await tester.enterText(passwordInputFinder, 'testPassword');
-      await tester.tap(signInButtonFinder);
+      await tester.tap(submitButtonFinder);
       await tester.pumpAndSettle();
 
-      expect(find.text(errorMessage), findsOneWidget);
+      expect(
+        find.text(SignInErrorAuthStoreStub.errorMessage.message),
+        findsOneWidget,
+      );
     });
   });
 }
@@ -169,6 +111,38 @@ class _AuthFormTestbed extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Stub of [AuthStore] that emulates presence of auth message error.
+class SignInErrorAuthStoreStub implements AuthStore {
+  static const errorMessage = AuthErrorMessage(AuthErrorCode.unknown);
+
+  final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
+
+  @override
+  Stream<bool> get loggedInStream => _isLoggedInSubject.stream;
+
+  @override
+  bool get isLoggedIn => false;
+
+  @override
+  AuthErrorMessage get authErrorMessage => _authExceptionDescription;
+
+  AuthErrorMessage _authExceptionDescription;
+
+  @override
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    _authExceptionDescription = errorMessage;
+  }
+
+  @override
+  void subscribeToAuthenticationUpdates() {}
+
+  @override
+  Future<void> signOut() async {}
+
+  @override
+  void dispose() {}
 }
 
 /// Mock implementation of the [AuthStore].

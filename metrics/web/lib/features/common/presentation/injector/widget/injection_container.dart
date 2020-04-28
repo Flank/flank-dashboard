@@ -1,8 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:metrics/features/auth/data/repositories/firebase_user_repository.dart';
+import 'package:metrics/features/auth/domain/usecases/receive_authentication_updates.dart';
+import 'package:metrics/features/auth/domain/usecases/sign_in_usecase.dart';
+import 'package:metrics/features/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/dashboard/data/repositories/firestore_metrics_repository.dart';
-import 'package:metrics/features/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/features/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/features/dashboard/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
@@ -22,15 +25,24 @@ class InjectionContainer extends StatefulWidget {
 }
 
 class _InjectionContainerState extends State<InjectionContainer> {
-  final MetricsRepository _metricsRepository = FirestoreMetricsRepository();
   ReceiveProjectUpdates _receiveProjectUpdates;
   ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
+  ReceiveAuthenticationUpdates _receiveAuthUpdates;
+  SignInUseCase _signInUseCase;
+  SignOutUseCase _signOutUseCase;
 
   @override
   void initState() {
+    final _metricsRepository = FirestoreMetricsRepository();
+    final _userRepository = FirebaseUserRepository();
+
     _receiveProjectUpdates = ReceiveProjectUpdates(_metricsRepository);
     _receiveProjectMetricsUpdates =
         ReceiveProjectMetricsUpdates(_metricsRepository);
+    _receiveAuthUpdates = ReceiveAuthenticationUpdates(_userRepository);
+    _signInUseCase = SignInUseCase(_userRepository);
+    _signOutUseCase = SignOutUseCase(_userRepository);
+
     super.initState();
   }
 
@@ -42,7 +54,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
               _receiveProjectUpdates,
               _receiveProjectMetricsUpdates,
             )),
-        Inject<AuthStore>(() => AuthStore()),
+        Inject<AuthStore>(() => AuthStore(
+              _receiveAuthUpdates,
+              _signInUseCase,
+              _signOutUseCase,
+            )),
         Inject<ThemeStore>(() => ThemeStore()),
       ],
       dispose: _dispose,
@@ -53,21 +69,12 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
   /// Initiates the injector state.
   void _initInjectorState() {
-    Injector.getAsReactive<ProjectMetricsStore>().setState(
-      _initMetricsStore,
-      catchError: true,
-    );
     Injector.getAsReactive<ThemeStore>().setState(
       (store) => store.isDark = true,
       catchError: true,
     );
     Injector.getAsReactive<AuthStore>()
         .setState((store) => store.subscribeToAuthenticationUpdates());
-  }
-
-  /// Initiates the [ProjectMetricsStore].
-  Future _initMetricsStore(ProjectMetricsStore store) async {
-    await store.subscribeToProjects();
   }
 
   /// Disposes the injected models.
