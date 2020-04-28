@@ -33,7 +33,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the ColoredBar with an inactive color color borders of a 2.0 width",
+      "displays the ColoredBar with an inactive color borders of a 2.0 width",
       (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed());
 
