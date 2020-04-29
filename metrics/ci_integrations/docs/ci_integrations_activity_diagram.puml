@@ -1,0 +1,22 @@
+@startuml ci_integration_activity_diagram
+
+(*) --> CoolClient
+if Is this a source integration? then
+--> [Yes] CoolConfig implements SourceConfig
+--> CoolConfigParser implements SourceConfigParser
+--> CoolClientAdapter implements SourceClient
+--> CoolClientFactory implements SourceClientFactory
+--> CoolParty implements SourceParty
+--> add CoolParty to SupportedSourceParties.parties
+--> (*)
+else
+--> [No] CoolConfig implements DestinationConfig
+--> CoolConfigParser implements DestinationConfigParser
+--> CoolClientAdapter implements  DestinationClient
+--> CoolClientFactory implements DestinationClientFactory
+--> CoolParty implements DestinationParty
+--> add CoolParty to SupportedDestinationParties.parties
+--> (*)
+endif
+
+@enduml
