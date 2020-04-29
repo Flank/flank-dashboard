@@ -11,11 +11,16 @@ import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../../test_utils/matcher_util.dart';
+
 void main() {
   group("AuthStore", () {
     final signInUseCase = SignInUseCaseMock();
     final signOutUseCase = SignOutUseCaseMock();
     final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
+
+    const email = 'test@email.com';
+    const password = 'password';
 
     final authStore = AuthStore(
       receiveAuthUpdates,
@@ -31,6 +36,23 @@ void main() {
 
     tearDownAll(() {
       authStore.dispose();
+    });
+
+    test("throws AsserionError if one of AuthStore parameters is null", () {
+      expect(
+        () => AuthStore(null, signInUseCase, signOutUseCase),
+        MatcherUtil.throwsAssertionError,
+      );
+
+      expect(
+        () => AuthStore(receiveAuthUpdates, null, signOutUseCase),
+        MatcherUtil.throwsAssertionError,
+      );
+
+      expect(
+        () => AuthStore(receiveAuthUpdates, signInUseCase, null),
+        MatcherUtil.throwsAssertionError,
+      );
     });
 
     test(
@@ -58,6 +80,28 @@ void main() {
         expect(userController.hasListener, isTrue);
       },
     );
+
+    test("isLoggedIn status is true after a user signs in", () async {
+      final user = User(id: 'id', email: email);
+
+      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(user));
+
+      authStore.subscribeToAuthenticationUpdates();
+
+      await authStore.signInWithEmailAndPassword(email, password);
+
+      expect(authStore.isLoggedIn, isTrue);
+    });
+
+    test("isLoggedIn status is false after a user signs out", () async {
+      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(null));
+
+      authStore.subscribeToAuthenticationUpdates();
+
+      await authStore.signOut();
+
+      expect(authStore.isLoggedIn, isFalse);
+    });
 
     test(".signInWithEmailAndPassword() delegates to signInUseCase", () {
       const email = 'test@test.com';
