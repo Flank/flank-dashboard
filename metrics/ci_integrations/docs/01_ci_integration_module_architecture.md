@@ -36,7 +36,7 @@ Both types are presented as a set of interfaces in `integration.interface.source
 
 The `SupportedSourceParties` is an integration point for all source integrations. And the `SupportedDestinationParties` is the same point for the destination integrations. Both of them intersect in the `SupportedIntegrationParties` used by the `SyncCommand` - the brain of the module.
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/plant_uml_diagram/metrics/ci_integrations/docs/ci_integrations_class_diagram.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/plant_uml_diagram/metrics/ci_integrations/docs/diagrams/ci_integrations_class_diagram.puml)
 
 # Adding new integration
 
@@ -51,7 +51,7 @@ Adding a new source integration and destination one is very similar. Let's look 
 
 The process for adding new destination integration differs from the above only in interfaces' names. Thus, consider the following mapping:
 
-<center>source</center> | <center>destination</center>
+source | destination
 --- | ---
 `SourceConfig` | `DestinationConfig`
 `SourceConfigParser` | `DestinationConfigParser`
@@ -62,7 +62,7 @@ The process for adding new destination integration differs from the above only i
 
 Suppose you are going to add a new `Cool` integration. Here is a diagram displaying the process: 
 
-![Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/plant_uml_diagram/metrics/ci_integrations/docs/ci_integrations_activity_diagram.puml)
+![Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/plant_uml_diagram/metrics/ci_integrations/docs/diagrams/ci_integrations_activity_diagram.puml)
 
 # API
 > What will the proposed API look like?
