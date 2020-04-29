@@ -14,7 +14,7 @@ import 'package:metrics/features/dashboard/presentation/state/project_metrics_st
 import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-import '../../../../test_utils/metrics_store_stub.dart';
+import '../../../../test_utils/project_metrics_store_stub.dart';
 import '../../../../test_utils/signed_in_auth_store_fake.dart';
 
 void main() {
@@ -83,7 +83,7 @@ class _LoginPageTestbed extends StatelessWidget {
     return Injector(
       inject: [
         Inject<AuthStore>(() => authStore ?? AuthStoreStub()),
-        Inject<ProjectMetricsStore>(() => const MetricsStoreStub()),
+        Inject<ProjectMetricsStore>(() => const ProjectMetricsStoreStub()),
       ],
       initState: () {
         Injector.getAsReactive<AuthStore>().setState(

@@ -14,7 +14,8 @@ import 'package:metrics/features/dashboard/presentation/widgets/sparkline_graph.
 import 'package:mockito/mockito.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-import '../test_utils/project_metrics_store_stub.dart';
+import '../../../../test_utils/project_metrics_store_mock.dart';
+import '../../../../test_utils/project_metrics_store_stub.dart';
 
 void main() {
   group("MetricsTable", () {
@@ -48,7 +49,7 @@ void main() {
       "displays an error, occured during loading the metrics data",
       (WidgetTester tester) async {
         const errorMessage = 'Unknown error';
-        final metricsStore = _ProjectMetricsStoreMock();
+        final metricsStore = ProjectMetricsStoreMock();
 
         when(metricsStore.subscribeToProjects()).thenThrow(errorMessage);
 
@@ -223,4 +224,3 @@ class _MetricsTableTestbed extends StatelessWidget {
   }
 }
 
-class _ProjectMetricsStoreMock extends Mock implements ProjectMetricsStore {}

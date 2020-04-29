@@ -68,6 +68,32 @@ void main() {
     );
 
     test(
+      ".loggedInStream emits false if null is emited by ReceiveAuthUpdates",
+      () async {
+        final usersController = StreamController<User>();
+        when(receiveAuthUpdates()).thenAnswer((_) => usersController.stream);
+
+        authStore.subscribeToAuthenticationUpdates();
+        usersController.add(null);
+
+        expect(authStore.loggedInStream, emitsThrough(false));
+      },
+    );
+
+    test(
+      ".loggedInStream emits true if new user is emited by ReceiveAuthUpdates",
+      () async {
+        final usersController = StreamController<User>();
+        when(receiveAuthUpdates()).thenAnswer((_) => usersController.stream);
+
+        authStore.subscribeToAuthenticationUpdates();
+        usersController.add(User(id: 'id'));
+
+        expect(authStore.loggedInStream, emitsThrough(true));
+      },
+    );
+
+    test(
       ".subscribeToAuthenticationUpdates() subscribes to user updates",
       () {
         final userController = StreamController<User>();
