@@ -21,7 +21,7 @@ Document the criteria for selecting the best state management approach for the m
 
 > What problem is this project solving?
 
-Simplify the development process of the metrics web app.
+Given our current understanding of project major characteristics, analyze main state management approaches to be able to choose the best tool for the job.
 
 # Design
 
@@ -38,15 +38,15 @@ Simplify the development process of the metrics web app.
 |                                |                 Bloc                 |            States rebuilder            |              Bloc library              |                 Redux                  |                Provider                |             State notifier             |
 | ------------------------------ | :----------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: |
 | Asynchronous                   |          [3](#Asynchronous)          |          [5](#Asynchronous-1)          |          [5](#Asynchronous-2)          |          [3](#Asynchronous-3)          |          [5](#Asynchronous-4)          |          [5](#Asynchronous-5)          |
-| Reactivity                     |           [5](#Reactivity)           |           [2](#Reactivity-1)           |           [2](#Reactivity-2)           |           [2](#Reactivity-3)           |           [4](#Reactivity-4)           |           [4](#Reactivity-5)           |
-| Boilerplate absence            |      [5](#Boilerplate-absence)       |      [5](#Boilerplate-absence-1)       |      [1](#Boilerplate-absence-2)       |      [1](#Boilerplate-absence-3)       |      [5](#Boilerplate-absence-4)       |      [5](#Boilerplate-absence-5)       |
+| Reactivity                     |           [5](#Reactivity)           |           [2](#Reactivity-1)           |           [3](#Reactivity-2)           |           [2](#Reactivity-3)           |           [4](#Reactivity-4)           |           [4](#Reactivity-5)           |
+| Boilerplate absence            |      [4](#Boilerplate-absence)       |      [5](#Boilerplate-absence-1)       |      [1](#Boilerplate-absence-2)       |      [1](#Boilerplate-absence-3)       |      [5](#Boilerplate-absence-4)       |      [5](#Boilerplate-absence-5)       |
 | Maintainability                |        [4](#Maintainability)         |        [4](#Maintainability-1)         |        [3](#Maintainability-2)         |        [3](#Maintainability-3)         |        [4](#Maintainability-4)         |        [4](#Maintainability-5)         |
 | State snapshot                 |         [1](#State-snapshot)         |         [2](#State-snapshot-1)         |         [5](#State-snapshot-2)         |         [5](#State-snapshot-3)         |         [2](#State-snapshot-4)         |         [2](#State-snapshot-5)         |
 | Debugging                      |           [3](#Debugging)            |           [4](#Debugging-1)            |           [3](#Debugging-2)            |           [3](#Debugging-3)            |           [4](#Debugging-4)            |           [4](#Debugging-5)            |
 | Undo and redo actions          |     [0](#Undo-and-redo-actions)      |     [0](#Undo-and-redo-actions-1)      |     [1](#Undo-and-redo-actions-2)      |     [5](#Undo-and-redo-actions-3)      |     [0](#Undo-and-redo-actions-4)      |     [0](#Undo-and-redo-actions-5)      |
 | Testability                    |          [4](#Testability)           |          [5](#Testability-1)           |          [4](#Testability-2)           |          [3](#Testability-3)           |          [5](#Testability-4)           |          [5](#Testability-5)           |
-| Easy to learn                  |         [1](#Easy-to-learn)          |         [3](#Easy-to-learn-1)          |         [2](#Easy-to-learn-2)          |         [1](#Easy-to-learn-3)          |         [5](#Easy-to-learn-4)          |         [5](#Easy-to-learn-5)          |
-| State immutability             |       [0](#State-immutability)       |       [1](#State-immutability-1)       |       [5](#State-immutability-2)       |       [5](#State-immutability-3)       |       [1](#State-immutability-4)       |       [1](#State-immutability-5)       |
+| Easy to learn                  |         [1](#Easy-to-learn)          |         [3](#Easy-to-learn-1)          |         [3](#Easy-to-learn-2)          |         [1](#Easy-to-learn-3)          |         [5](#Easy-to-learn-4)          |         [5](#Easy-to-learn-5)          |
+| State immutability             |       [1](#State-immutability)       |       [1](#State-immutability-1)       |       [5](#State-immutability-2)       |       [5](#State-immutability-3)       |       [0](#State-immutability-4)       |       [0](#State-immutability-5)       |
 | Ability to use outside Flutter | [5](#Ability-to-use-outside-flutter) | [0](#Ability-to-use-outside-flutter-1) | [5](#Ability-to-use-outside-flutter-2) | [5](#Ability-to-use-outside-flutter-3) | [0](#Ability-to-use-outside-flutter-4) | [5](#Ability-to-use-outside-flutter-5) |
 | Centralized analytics          |     [1](#Centralized-analytics)      |     [1](#Centralized-analytics-1)      |     [5](#Centralized-analytics-2)      |     [5](#Centralized-analytics-3)      |     [1](#Centralized-analytics-4)      |     [1](#Centralized-analytics-5)      |
 
@@ -62,15 +62,15 @@ Simplify the development process of the metrics web app.
 |                                |                 Bloc                 |            States rebuilder            |              Bloc library              |                 Redux                  |                Provider                |             State notifier             |
 | ------------------------------ | :----------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: | :------------------------------------: |
 | Asynchronous                   |          [🙂](#Asynchronous)          |          [🎉](#Asynchronous-1)          |          [🎉](#Asynchronous-2)          |          [🙂](#Asynchronous-3)          |          [🎉](#Asynchronous-4)          |          [🎉](#Asynchronous-5)          |
-| Reactivity                     |           [🎉](#Reactivity)           |           [😭](#Reactivity-1)           |           [😭](#Reactivity-2)           |           [😭](#Reactivity-3)           |           [🤩](#Reactivity-4)           |           [🤩](#Reactivity-5)           |
-| Boilerplate absence            |      [🎉](#Boilerplate-absence)       |      [🎉](#Boilerplate-absence-1)       |      [😭](#Boilerplate-absence-2)       |      [😭](#Boilerplate-absence-3)       |      [🎉](#Boilerplate-absence-4)       |      [🎉](#Boilerplate-absence-5)       |
-| Maintainability                |        [🤩](#Maintainability)         |        [🤩](#Maintainability-1)         |        [🙂](#Maintainability-2)         |        [🙂](#Maintainability-3)         |        [🤩](#Maintainability-4)         |        [🤩](#Maintainability-5)         |
+| Reactivity                     |           [🎉](#Reactivity)           |           [😭](#Reactivity-1)           |           [🙂](#Reactivity-2)           |           [😭](#Reactivity-3)           |           [🤩](#Reactivity-4)           |           [🤩](#Reactivity-5)           |
+| Boilerplate absence            |      [🤩](#Boilerplate-absence)       |      [🎉](#Boilerplate-absence-1)       |      [😭](#Boilerplate-absence-2)       |      [😭](#Boilerplate-absence-3)       |      [🎉](#Boilerplate-absence-4)       |      [🎉](#Boilerplate-absence-5)       |
+| Maintainability                |        [🙂](#Maintainability)         |        [🤩](#Maintainability-1)         |        [🙂](#Maintainability-2)         |        [🙂](#Maintainability-3)         |        [🤩](#Maintainability-4)         |        [🤩](#Maintainability-5)         |
 | State snapshot                 |         [😭](#State-snapshot)         |         [😭](#State-snapshot-1)         |         [🎉](#State-snapshot-2)         |         [🎉](#State-snapshot-3)         |         [😭](#State-snapshot-4)         |         [😭](#State-snapshot-5)         |
 | Debugging                      |           [🙂](#Debugging)            |           [🤩](#Debugging-1)            |           [🙂](#Debugging-2)            |           [🙂](#Debugging-3)            |           [🤩](#Debugging-4)            |           [🤩](#Debugging-5)            |
 | Undo and redo actions          |     [💀](#Undo-and-redo-actions)      |     [💀](#Undo-and-redo-actions-1)      |     [😭](#Undo-and-redo-actions-2)      |     [🎉](#Undo-and-redo-actions-3)      |     [💀](#Undo-and-redo-actions-4)      |     [💀](#Undo-and-redo-actions-5)      |
 | Testability                    |          [🤩](#Testability)           |          [🎉](#Testability-1)           |          [🤩](#Testability-2)           |          [🙂](#Testability-3)           |          [🎉](#Testability-4)           |          [🎉](#Testability-5)           |
-| Easy to learn                  |         [😭](#Easy-to-learn)          |         [🙂](#Easy-to-learn-1)          |         [😭](#Easy-to-learn-2)          |         [😭](#Easy-to-learn-3)          |         [🎉](#Easy-to-learn-4)          |         [🎉](#Easy-to-learn-5)          |
-| State immutability             |       [💀](#State-immutability)       |       [😭](#State-immutability-1)       |       [🎉](#State-immutability-2)       |       [🎉](#State-immutability-3)       |       [😭](#State-immutability-4)       |       [😭](#State-immutability-5)       |
+| Easy to learn                  |         [😭](#Easy-to-learn)          |         [🙂](#Easy-to-learn-1)          |         [🙂](#Easy-to-learn-2)          |         [😭](#Easy-to-learn-3)          |         [🎉](#Easy-to-learn-4)          |         [🎉](#Easy-to-learn-5)          |
+| State immutability             |       [😭](#State-immutability)       |       [😭](#State-immutability-1)       |       [🎉](#State-immutability-2)       |       [🎉](#State-immutability-3)       |       [💀](#State-immutability-4)       |       [💀](#State-immutability-5)       |
 | Ability to use outside Flutter | [🎉](#Ability-to-use-outside-flutter) | [💀](#Ability-to-use-outside-flutter-1) | [🎉](#Ability-to-use-outside-flutter-2) | [🎉](#Ability-to-use-outside-flutter-3) | [💀](#Ability-to-use-outside-flutter-4) | [🎉](#Ability-to-use-outside-flutter-5) |
 | Centralized analytics          |     [😭](#Centralized-analytics)      |     [😭](#Centralized-analytics-1)      |     [🎉](#Centralized-analytics-2)      |     [🎉](#Centralized-analytics-3)      |     [😭](#Centralized-analytics-4)      |     [😭](#Centralized-analytics-5)      |
 
@@ -312,15 +312,15 @@ return Scaffold(
 
 #### Boilerplate absence
 
-Score: 5
+Score: 4
 
-To create a new BLoC, you just should create the class that will contain business logic. The only place of the boilerplate code is the creation of the Streams and Sinks. The example of the simple BLoC is presented above in [Reactivity](#Reactivity) or [Code sample](#Code-sample) sections.
+To create a new BLoC, you just should create the class that will contain business logic. The only place of the boilerplate code is the creation of the Streams and Sinks, if data passed isn't simple you'll need to create DTO. The example of the simple BLoC is presented above in [Reactivity](#Reactivity) or [Code sample](#Code-sample) sections.
 
 #### Maintainability
 
-Score: 4
+Score: 3
 
-The applications that use the BLoC pattern as the state management are highly maintainable because all of the business logic is separated from the UI. Moreover, the business processes could be triggered only from one place - the sink, and it helps to find errors, bugs, etc. in the code. Also, because of the low level of the boilerplate code and good separation of the features, it is easy to add a new feature by adding a new BLoC or change the behavior of the existing feature by modifying the logic in the existing BLoC. The only problem in maintainability is the BLoC pattern's async support.
+The applications that use the BLoC pattern as the state management are highly maintainable because all of the business logic is separated from the UI. Moreover, the business processes could be triggered only from one place - the sink, and it helps to find errors, bugs, etc. in the code. Also, because of the low level of the boilerplate code and good separation of the features, it is easy to add a new feature by adding a new BLoC or change the behavior of the existing feature by modifying the logic in the existing BLoC. It might be challenging to get the whole app state or find callers of BLoCs due to Stream/Sink async nature.
 
 #### State snapshot
 
@@ -354,9 +354,9 @@ The BLoC pattern could be pretty hard to understand if you are not familiar with
 
 #### State immutability
 
-Score: 0
+Score: 1
 
-Since we have no separate application state class, and this state is the current value of each stream, we cannot make it immutable.
+While we can separate application state class it doesn't seem reasonable as we'll lose granularity this state management offers. 
 
 #### Ability to use outside Flutter
 
@@ -390,7 +390,7 @@ The centralized analytics could be not easy to implement because there is no cen
 
 ## [States Rebuilder](https://github.com/GIfatahTH/states-rebuilder)
 
-States Rebuilder if the package for flutter built on the observer pattern for state management and the service locator pattern for dependency injection. It is very similar to the Provider package but has a couple of additional features that make building the UI a bit easier.
+States Rebuilder is the package for flutter built on the observer pattern for state management and the service locator pattern for dependency injection. It is very similar to the Provider package but has a couple of additional features that make building the UI a bit easier.
 
 ### Code sample
 
@@ -522,7 +522,7 @@ Also, there is a problem with mixing the reactive with the non-reactive state. I
 
 Score: 5
 
-To create a new Store(the class that will contain the application business logic), we should create a class for this store, and inject it, using the `Injector` widget. Also, we should inject the streams which you want to use to build your UI if there is any. So, there is almost no boilerplate code except of injection mechanism.
+To create a new Store(the class that will contain the application business logic), we should create a class for this store, and inject it, using the `Injector` widget. Also, we should inject the streams which you want to use to build your UI if there is any. So, there is almost no boilerplate code except of streams injection mechanism.
 
 #### Maintainability
 
@@ -558,7 +558,7 @@ The states of the States Rebuilder are nicely-testable because we can just separ
 
 Score: 3
 
-Since the States Rebuilder is very similar to the Provider and has a pretty simple mechanism of interaction between UI and business logic - method calls, it is pretty easy to learn. The main problem in learning this state management is a lack of documentation and pretty hard-understandable namings like `whenConnectionState` or `WhenRebuilder`.
+Since the States Rebuilder is very similar to the Provider and has a pretty simple mechanism of interaction between UI and business logic - method calls, it is pretty easy to learn. The main problem in learning this state management is a lack of documentation and in our view namings like `whenConnectionState` or `WhenRebuilder` could be improved.
 
 #### State immutability
 
@@ -589,7 +589,7 @@ The States Rebuilder is based on the simple classes with the methods that should
 
 ### Cons
 
-1. Not bad support of [reactivity](#Reactivity-1).
+1. Not very suitable for complex reactive apps [reactivity](#Reactivity-1).
 2. Has a complex mechanism of subscription to the application state updates outside of .
 3. The [debugging](#Debugging-1) of the UI changes could be pretty difficult.
 4. Has a big [overhead](#New-feature-boilerplate-absence-1) in injecting each stream for UI.
@@ -681,7 +681,7 @@ BlocProvider(
 );
 ```
 
-Now the `AuthBloc` is available for all down-laying widgets, so we can use the `BlocBuilder` or the `BlocConsumer` widgets to build your UI in respect of the current application state.
+Now the `AuthBloc` is available for all of the widgets below in the widget tree, so we can use the `BlocBuilder` or the `BlocConsumer` widgets to build your UI in respect of the current application state.
 
 ```dart
 BlocBuilder<AuthBloc, AuthState>(
@@ -730,7 +730,7 @@ The BLoC library has great support of asynchronous programming because you can j
 
 #### Reactivity
 
-Score: 2
+Score: 3
 
 The BLoC library has not so good support of the reactivity because to update the UI corresponding to stream events you should add a lot of boilerplate code:
 
@@ -782,7 +782,7 @@ There is a [bloc test](https://pub.dev/packages/bloc_test) package, created for 
 
 #### Easy to learn
 
-Score: 2
+Score: 3
 
 It could be not so easy to learn the BLoC library, especially if you are not familiar with redux and its approach to state management. But it has pretty understandable namings and good documentation.
 
@@ -825,10 +825,10 @@ It is pretty easy to implement centralized analytics if we override these method
 #### Cons
 
 1. Overhead in the creation of the event classes for each action.
-2. Has a large entry threshold.
+2. Has a medium entry threshold.
 3. Not the best choice for [reactive](#Reactivity-2) application.
 4. Has a lot of [boilerplate](#boilerplate-absence-2) code.
-5. Has a low level of [maintainability](#Maintainability-2).
+5. Has a medium level of [maintainability](#Maintainability-2).
 6. It could be [hard to learn](#Easy-to-learn-2).
 
 ## [Redux](https://pub.dev/packages/redux)
@@ -1108,7 +1108,7 @@ Also, business logic is separated from the UI and split into `actions`, `middlew
 
 ## [Provider](https://pub.dev/packages/provider)
 
-The provider is the state management mechanism based on the flutter `InheritedWidget`, that can expose any kind of state object, including BLoC, streams, futures, and others. Because of its simplicity and flexibility, Google announced at Google I/O ’19 that Provider is now its preferred package for state management.
+The provider is the state management mechanism based on the flutter `InheritedWidget`, that can expose any kind of state object, including BLoC, streams, futures, and others. Because of its simplicity and flexibility, Google announced at Google I/O ’19 that Provider is now a preferred package for state management.
 
 **_Core concepts:_**
 
@@ -1410,7 +1410,7 @@ With `Provider` we have separate models with their own states and methods. That'
 
 #### State immutability
 
-Score: 1
+Score: 0
 
 There is no concept of immutability in the Provider package.
 
