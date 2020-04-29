@@ -81,7 +81,7 @@ The CI integrations module implementation is impacted.
 # Testing
 > How will the project be tested?
 
-Different parts of each CI source integration should be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](../blob/master/docs/03_third_party_api_testing.md) and [here](../blob/master/docs/04_mock_server.md) should be used testing an integration client that performs direct HTTP calls. 
+Different parts of each CI source integration should be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/software-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/software-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing an integration client that performs direct HTTP calls. 
 
 # Alternatives Considered
 > Summarize alternative designs (pros & cons)
