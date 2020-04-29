@@ -1,9 +1,8 @@
-import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
 import 'package:ci_integration/client/jenkins/mapper/jenkins_build_result_mapper.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
+import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:equatable/equatable.dart';
-
 
 /// A class representing a single Jenkins build.
 class JenkinsBuild extends Equatable {

@@ -1,5 +1,4 @@
 import 'package:ci_integration/command/config/parser/raw_integration_config_parser.dart';
-
 import 'package:test/test.dart';
 
 // ignore_for_file: prefer_const_constructors

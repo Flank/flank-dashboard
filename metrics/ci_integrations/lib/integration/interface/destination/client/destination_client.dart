@@ -1,5 +1,5 @@
-import 'package:ci_integration/integration/interface/base/client/integration_client.dart';
 import 'package:ci_integration/integration/ci_integration/ci_integration.dart';
+import 'package:ci_integration/integration/interface/base/client/integration_client.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An abstract class providing methods for interactions between

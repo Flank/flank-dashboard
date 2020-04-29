@@ -1,4 +1,5 @@
 import 'package:ci_integration/command/logger/logger.dart';
+
 /// A stub class for a [Logger] class providing a test implementation.
 class LoggerStub extends Logger {
   /// Used to store all error log requests.

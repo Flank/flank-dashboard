@@ -3,7 +3,6 @@ import 'package:test/test.dart';
 
 import '../test_utils/test_data/jenkins_artifacts_test_data.dart';
 
-
 void main() {
   group("JenkinsBuildArtifact", () {
     const artifactJson = JenkinsArtifactsTestData.coverageArtifactJson;

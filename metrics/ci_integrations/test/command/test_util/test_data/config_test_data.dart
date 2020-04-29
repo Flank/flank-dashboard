@@ -1,6 +1,6 @@
 import 'package:ci_integration/command/config/model/raw_integration_config.dart';
-import 'package:ci_integration/integration/ci_integration/config/model/sync_config.dart';
 import 'package:ci_integration/destination/firestore/config/model/firestore_destination_config.dart';
+import 'package:ci_integration/integration/ci_integration/config/model/sync_config.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_config.dart';
 
 /// A class containing a test data for the different sync configurations

@@ -2,19 +2,19 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:ci_integration/integration/ci_integration/ci_integration.dart';
 import 'package:ci_integration/command/command/ci_integration_command.dart';
 import 'package:ci_integration/command/config/model/raw_integration_config.dart';
-import 'package:ci_integration/integration/ci_integration/config/model/sync_config.dart';
 import 'package:ci_integration/command/config/parser/raw_integration_config_parser.dart';
+import 'package:ci_integration/command/logger/logger.dart';
 import 'package:ci_integration/command/parties/parties.dart';
 import 'package:ci_integration/command/parties/supported_integration_parties.dart';
-import 'package:ci_integration/integration/interface/base/config/model/config.dart';
-import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
+import 'package:ci_integration/integration/ci_integration/ci_integration.dart';
+import 'package:ci_integration/integration/ci_integration/config/model/sync_config.dart';
 import 'package:ci_integration/integration/interface/base/client/integration_client.dart';
-import 'package:ci_integration/integration/interface/source/client/source_client.dart';
-import 'package:ci_integration/command/logger/logger.dart';
+import 'package:ci_integration/integration/interface/base/config/model/config.dart';
 import 'package:ci_integration/integration/interface/base/party/integration_party.dart';
+import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
+import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 
 /// A class representing a [Command] for synchronizing builds.
 class SyncCommand extends CiIntegrationCommand<void> {

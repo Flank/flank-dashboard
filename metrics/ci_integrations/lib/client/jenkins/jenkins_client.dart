@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ci_integration/util/authorization/authorization.dart';
-import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:ci_integration/client/jenkins/constants/tree_query.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
+import 'package:ci_integration/util/authorization/authorization.dart';
+import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:ci_integration/util/url/url_utils.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';

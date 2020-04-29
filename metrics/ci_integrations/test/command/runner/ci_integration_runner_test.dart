@@ -1,4 +1,3 @@
-
 import 'package:ci_integration/command/command/sync_command.dart';
 import 'package:ci_integration/command/logger/logger.dart';
 import 'package:ci_integration/command/runner/ci_integration_runner.dart';

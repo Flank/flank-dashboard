@@ -1,7 +1,7 @@
-import 'package:ci_integration/source/jenkins/client_factory/jenkins_source_client_factory.dart';
-import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
+import 'package:ci_integration/source/jenkins/client_factory/jenkins_source_client_factory.dart';
 import 'package:ci_integration/source/jenkins/config/model/jenkins_source_config.dart';
+import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/test_data/jenkins_config_test_data.dart';

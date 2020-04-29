@@ -1,6 +1,7 @@
 import 'package:args/command_runner.dart';
 import 'package:ci_integration/command/command/sync_command.dart';
 import 'package:ci_integration/command/logger/logger.dart';
+
 /// A [CommandRunner] for the CI integrations CLI.
 class CiIntegrationsRunner extends CommandRunner<void> {
   /// The [Logger] this runner and its commands should use for messages

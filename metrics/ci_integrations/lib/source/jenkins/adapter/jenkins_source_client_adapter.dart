@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:ci_integration/integration/interface/source/client/source_client.dart';
-import 'package:ci_integration/util/model/interaction_result.dart';
-import 'package:ci_integration/coverage/coverage_json_summary/model/coverage_json_summary.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
+import 'package:ci_integration/coverage/coverage_json_summary/model/coverage_json_summary.dart';
+import 'package:ci_integration/integration/interface/source/client/source_client.dart';
+import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for the [JenkinsClient] to implement the [SourceClient] interface.
