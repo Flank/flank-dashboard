@@ -1,7 +1,7 @@
 # CI integrations module architecture.
 > Summary of the proposed change
 
-The top-level description of CI integration architecture and package structure. Tips in adding new integration.
+The top-level description of CI integration architecture and package structure.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -11,7 +11,7 @@ The top-level description of CI integration architecture and package structure. 
 # Motivation
 > What problem is this project solving?
 
-As the CI integration module is required to be extendable in order to support new integrations, it should be provided with an appropriate artifact explaining its structure and how to add new integrations.
+As the CI integration module is required to be extendable in order to support new integrations, it should be provided with an appropriate documentation explaining its structure and how to add new integrations.
 
 # Goals
 > Identify success metrics and measurable goals.
@@ -29,12 +29,12 @@ As the CI integration module is required to be extendable in order to support ne
 > Explain and diagram the technical design
 
 All the integrations used by the CI integration module can be one of two types: 
-- source (stands for the source of builds - where they are loaded from);
-- destination (stands for the builds storage - where they are stored).
+- source (stands for the source of builds data - where they are loaded from);
+- destination (stands for the builds data storage - where they are stored).
 
 Both types are presented as a set of interfaces in `integration.interface.source` and `integration.interface.destination` respectively. Also, both of them are presented by their implementations in the `source` (for example, with `source.jenkins`, `source.bitrise`) and `destination` (for example, with `destination.firestore`) respectively.
 
-The `SupportedSourceParties` is an integration point for all source integrations. And the `SupportedDestinationParties` is the same point for the destination integrations. Both of them intersect in the `SupportedIntegrationParties` used by the `SyncCommand` - the brain of the module.
+The `SupportedSourceParties` is an integration point for all source integrations. And the `SupportedDestinationParties` is the same point for the destination integrations. Both of them intersect in the `SupportedIntegrationParties` used by the `SyncCommand` that parses the given configurations, creates clients and then performs `CiIntegration.sync` on them.
 
 ![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/plant_uml_diagram/metrics/ci_integrations/docs/diagrams/ci_integrations_class_diagram.puml)
 
@@ -64,6 +64,56 @@ Suppose you are going to add a new `Cool` integration. Here is a diagram display
 
 ![Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/plant_uml_diagram/metrics/ci_integrations/docs/diagrams/ci_integrations_activity_diagram.puml)
 
+# Package structure
+
+The package structure is also an important part of the CI integrations module. Every integration has a package structure that matches one of the interface integration it implements. Here is an example (let's call it `interface_unit_structure`):
+> * client/
+> * client_factory/
+> * config/
+>    * model/
+>    * parser/
+> * party/
+
+_Note_: Usually an integration client does not provide a direct implementation of functionality the `CiIntegration` requires. In such cases, the adapter is a solution and package structure changes to the following (let's call it `unit_structure`): 
+> * adapter/
+> * client_factory/
+> * config/
+>     * model/
+>     * parser/
+> * party/
+
+So considering the above, the package structure for the CI integration module is following:
+> * integration/
+>     * interface/
+>         * base/
+>           * `interface_unit_structure`
+>         * source/
+>           * `interface_unit_structure`
+>         * destination/
+>           * `interface_unit_structure`
+>     * ci_integration/
+>         * config/
+>             * model/
+> * command/
+>     * config/
+>         * model/
+>         * parser/
+>     * command/
+>     * parties/
+> * source/
+>     * jenkins/
+>         * `unit_structure`
+>     * bitrise/
+>         * `unit_structure`
+> * destination/
+>     * firestore/
+>         * `unit_structure`
+> * client/
+>     * jenkins/
+>     * bitrise/
+>     * firestore/
+
+
 # API
 > What will the proposed API look like?
 
@@ -81,7 +131,7 @@ The CI integrations module implementation is impacted.
 # Testing
 > How will the project be tested?
 
-Different parts of each CI source integration should be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/software-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/software-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing an integration client that performs direct HTTP calls. 
+Different parts of each integration should be unit-tested using the Dart's core [test](https://pub.dev/packages/test) and [mockito](https://pub.dev/packages/mockito) packages. Also, the approaches discussed in [3rd-party API testing](https://github.com/software-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/software-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing an integration client that performs direct HTTP calls. 
 
 # Alternatives Considered
 > Summarize alternative designs (pros & cons)
