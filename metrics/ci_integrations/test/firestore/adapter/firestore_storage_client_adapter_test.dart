@@ -138,10 +138,74 @@ void main() {
 
         await adapter.addBuilds(testProjectId, builds);
 
-        verify(_documentReferenceMock.create(argThat(anything)))
-            .called(builds.length);
+        verify(_documentReferenceMock.create(any)).called(builds.length);
       },
     );
+
+    test(
+      ".addBuilds() should stop adding builds if adding one of them is failed",
+      () async {
+        const builds = [
+          BuildData(buildNumber: 1),
+          BuildData(buildNumber: 2),
+          BuildData(buildNumber: 3),
+        ];
+        final buildsData = builds
+            .map((build) => build.copyWith(projectId: testProjectId).toJson())
+            .toList();
+
+        whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+        when(_documentMock.id).thenReturn(testProjectId);
+        when(_firestoreMock.collection('build'))
+            .thenReturn(_collectionReferenceMock);
+
+        when(_collectionReferenceMock.document(any))
+            .thenReturn(_documentReferenceMock);
+
+        when(_documentReferenceMock.create(argThat(anyOf(
+          buildsData[0],
+          buildsData[2],
+        )))).thenAnswer((_) => Future.value(_documentMock));
+        when(_documentReferenceMock.create(buildsData[1]))
+            .thenAnswer((_) => Future.error(Exception()));
+
+        dynamic exception;
+        await adapter
+            .addBuilds(testProjectId, builds)
+            .catchError((error) => exception = error);
+
+        expect(exception, isNotNull);
+        verify(_documentReferenceMock.create(any)).called(2);
+        verifyNever(_documentReferenceMock.create(buildsData[2]));
+      },
+    );
+
+    test(".addBuilds() should add builds in the given order", () async {
+      const builds = [
+        BuildData(buildNumber: 1),
+        BuildData(buildNumber: 2),
+      ];
+      final buildsData = builds
+          .map((build) => build.copyWith(projectId: testProjectId).toJson())
+          .toList();
+
+      whenFetchProject().thenAnswer((_) => Future.value(_documentMock));
+      when(_documentMock.id).thenReturn(testProjectId);
+      when(_firestoreMock.collection('build'))
+          .thenReturn(_collectionReferenceMock);
+
+      when(_collectionReferenceMock.document(any))
+          .thenReturn(_documentReferenceMock);
+      when(_documentReferenceMock.create(any))
+          .thenAnswer((_) => Future.value(_documentMock));
+
+      await adapter.addBuilds(testProjectId, builds);
+
+      verifyInOrder([
+        _documentReferenceMock.create(buildsData[0]),
+        _documentReferenceMock.create(buildsData[1]),
+      ]);
+    });
 
     test(
       ".fetchLastBuild() should return null, if there are no builds for a project with the given id",
