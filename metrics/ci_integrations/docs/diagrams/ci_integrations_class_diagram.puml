@@ -74,15 +74,15 @@ together {
   package source.jenkins {
     class JenkinsSourceParty {
       + clientFactory : JenkinsSourceClientFactory
-      + configParser : JenkinsConfigParser
+      + configParser : JenkinsSourceConfigParser
     }
 
-    class JenkinsConfig {
+    class JenkinsSourceConfig {
       + getSourceProjectId() : String
     }
 
-    class JenkinsConfigParser {
-      + parse(Map<String, dynamic>) : JenkinsConfig
+    class JenkinsSourceConfigParser {
+      + parse(Map<String, dynamic>) : JenkinsSourceConfig
       + canParse(Map<String, dynamic>) : bool
     }
 
@@ -94,23 +94,23 @@ together {
     }
 
     class JenkinsSourceClientFactory {
-      + create(JenkinsConfig) : JenkinsSourceClientAdapter
+      + create(JenkinsSourceConfig) : JenkinsSourceClientAdapter
     }
 
-    JenkinsConfigParser ..> JenkinsConfig : creates
+    JenkinsSourceConfigParser ..> JenkinsSourceConfig : creates
     JenkinsSourceClientAdapter ..> JenkinsClient : uses
     JenkinsSourceClientFactory ..> JenkinsSourceClientAdapter : creates
-    JenkinsSourceParty ..> JenkinsConfigParser : uses
+    JenkinsSourceParty ..> JenkinsSourceConfigParser : uses
     JenkinsSourceParty ..> JenkinsSourceClientFactory : uses
   }
 
   package source.bitrise {
-    class BitriseConfig {
+    class BitriseSourceConfig {
       + getSourceProjectId() : String
     }
 
-    class BitriseConfigParser {
-      + parse(Map<String, dynamic>) : BitriseConfig
+    class BitriseSourceConfigParser {
+      + parse(Map<String, dynamic>) : BitriseSourceConfig
       + canParse(Map<String, dynamic>) : bool
     }
 
@@ -122,32 +122,33 @@ together {
     }
 
     class BitriseSourceClientFactory {
-      + create(BitriseConfig) : BitriseSourceClientAdapter
+      + create(BitriseSourceConfig) : BitriseSourceClientAdapter
     }
 
     class BitriseSourceParty {
       + clientFactory : BitriseSourceClientFactory
-      + configParser : BitriseConfigParser
+      + configParser : BitriseSourceConfigParser
     }
 
-    BitriseConfigParser ..> BitriseConfig : creates
+    BitriseSourceConfigParser ..> BitriseSourceConfig : creates
     BitriseSourceClientAdapter ..> BitriseClient : uses
     BitriseSourceClientFactory ..> BitriseSourceClientAdapter : creates
-    BitriseSourceParty ..> BitriseConfigParser : uses
+    BitriseSourceParty ..> BitriseSourceConfigParser : uses
     BitriseSourceParty ..> BitriseSourceClientFactory : uses
   }
   package destination.firestore {
     class FirestoreDestinationParty {
       + clientFactory : FirestoreDestinationClientFactory
-      + configParser : FirestoreConfigParser
+      + configParser : FirestoreDestinationConfigParser
     }
 
-    class FirestoreConfig {
+    class FirestoreDestinationConfig {
       + getDestinationProjectId() : String
     }
 
-    class FirestoreConfigParser {
-      + parse(Map<String, dynamic>) : FirestoreConfig
+    class FirestoreDestinationConfigParser {
+      + parse(Map<String, dynamic>) : FirestoreDestinationConfig
+
       + canParse(Map<String, dynamic>) : bool
     }
 
@@ -159,14 +160,15 @@ together {
     }
 
     class FirestoreDestinationClientFactory {
-      + create(FirestoreConfig) : FirestoreStorageClientAdapter
+      + create(FirestoreDestinationConfig
+      ) : FirestoreStorageClientAdapter
     }
 
-    FirestoreConfigParser ..> FirestoreConfig : creates
+    FirestoreDestinationConfigParser ..> FirestoreDestinationConfig : creates
     FirestoreDestinationClientAdapter ..> Firestore : uses
     FirestoreDestinationParty ..> FirestoreDestinationClientFactory : uses
     FirestoreDestinationClientFactory ..> FirestoreDestinationClientAdapter : creates
-    FirestoreDestinationParty ..> FirestoreConfigParser : uses
+    FirestoreDestinationParty ..> FirestoreDestinationConfigParser : uses
   }
 }
 
