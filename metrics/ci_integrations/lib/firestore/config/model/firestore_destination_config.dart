@@ -2,8 +2,8 @@ import 'package:ci_integration/common/config/model/destination_config.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// Represents the Firestore configuration.
-class FirestoreConfig extends Equatable implements DestinationConfig {
+/// Represents the Firestore destination configuration.
+class FirestoreDestinationConfig extends Equatable implements DestinationConfig {
   /// The Firebase project identifier.
   final String firebaseProjectId;
 
@@ -16,12 +16,12 @@ class FirestoreConfig extends Equatable implements DestinationConfig {
   @override
   String get destinationProjectId => metricsProjectId;
 
-  /// Creates the [FirestoreConfig] with the given
+  /// Creates the [FirestoreDestinationConfig] with the given
   /// [metricsProjectId] and [firebaseProjectId].
   ///
   /// Throws an [ArgumentError] if either the [metricsProjectId]
   /// or [firebaseProjectId] is null.
-  FirestoreConfig({
+  FirestoreDestinationConfig({
     @required this.firebaseProjectId,
     @required this.metricsProjectId,
   }) {
@@ -29,13 +29,13 @@ class FirestoreConfig extends Equatable implements DestinationConfig {
     ArgumentError.checkNotNull(metricsProjectId, 'metricsProjectId');
   }
 
-  /// Creates [FirestoreConfig] from the decoded JSON object.
+  /// Creates [FirestoreDestinationConfig] from the decoded JSON object.
   ///
   /// Returns `null` if [json] is `null`.
-  factory FirestoreConfig.fromJson(Map<String, dynamic> json) {
+  factory FirestoreDestinationConfig.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
-    return FirestoreConfig(
+    return FirestoreDestinationConfig(
       firebaseProjectId: json['firebase_project_id'] as String,
       metricsProjectId: json['metrics_project_id'] as String,
     );

@@ -1,9 +1,9 @@
 import 'package:ci_integration/common/config/parser/source_config_parser.dart';
-import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
+import 'package:ci_integration/jenkins/config/model/jenkins_source_config.dart';
 
 /// A configuration parser for the Jenkins source integration.
-class JenkinsConfigParser implements SourceConfigParser<JenkinsConfig> {
-  const JenkinsConfigParser();
+class JenkinsSourceConfigParser implements SourceConfigParser<JenkinsSourceConfig> {
+  const JenkinsSourceConfigParser();
 
   @override
   bool canParse(Map<String, dynamic> map) {
@@ -11,10 +11,10 @@ class JenkinsConfigParser implements SourceConfigParser<JenkinsConfig> {
   }
 
   @override
-  JenkinsConfig parse(Map<String, dynamic> map) {
+  JenkinsSourceConfig parse(Map<String, dynamic> map) {
     if (map == null) return null;
 
     final jenkinsConfigMap = map['jenkins'] as Map<String, dynamic>;
-    return JenkinsConfig.fromJson(jenkinsConfigMap);
+    return JenkinsSourceConfig.fromJson(jenkinsConfigMap);
   }
 }

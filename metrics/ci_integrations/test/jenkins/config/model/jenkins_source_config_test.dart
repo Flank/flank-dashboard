@@ -1,10 +1,10 @@
-import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
+import 'package:ci_integration/jenkins/config/model/jenkins_source_config.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/jenkins_config_test_data.dart';
 
 void main() {
-  group("JenkinsConfig", () {
+  group("JenkinsSourceConfig", () {
     const jenkinsConfigJson = JenkinsConfigTestData.jenkinsConfigMap;
     final jenkinsConfig = JenkinsConfigTestData.jenkinsConfig;
 
@@ -12,7 +12,7 @@ void main() {
       "can't be created with null url",
       () {
         expect(
-          () => JenkinsConfig(
+          () => JenkinsSourceConfig(
             jobName: JenkinsConfigTestData.jobName,
             url: null,
           ),
@@ -25,7 +25,7 @@ void main() {
       "can't be created with null jobName",
       () {
         expect(
-          () => JenkinsConfig(
+          () => JenkinsSourceConfig(
             url: JenkinsConfigTestData.url,
             jobName: null,
           ),
@@ -37,7 +37,7 @@ void main() {
     test(
       ".fromJson() should create a new instance of the JenkinsConfig from json encodable Map",
       () {
-        final jenkinsConfig = JenkinsConfig.fromJson(jenkinsConfigJson);
+        final jenkinsConfig = JenkinsSourceConfig.fromJson(jenkinsConfigJson);
 
         expect(jenkinsConfig, equals(jenkinsConfig));
       },
@@ -46,7 +46,7 @@ void main() {
     test(
       ".fromJson() should return null if null is passed",
       () {
-        final config = JenkinsConfig.fromJson(null);
+        final config = JenkinsSourceConfig.fromJson(null);
 
         expect(config, isNull);
       },

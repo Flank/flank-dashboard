@@ -18,8 +18,8 @@ import 'package:ci_integration/common/party/integration_party.dart';
 
 /// A class representing a [Command] for synchronizing builds.
 class SyncCommand extends CiIntegrationCommand<void> {
-  /// Used to parse configuration file content.
-  final _configParser = const RawIntegrationConfigParser();
+  /// Used to parse configuration file main components.
+  final _rawConfigParser = const RawIntegrationConfigParser();
 
   /// An instance containing all the supported [IntegrationParty]s.
   final SupportedIntegrationParties supportedParties;
@@ -114,7 +114,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
   /// the [RawIntegrationConfig] instance.
   RawIntegrationConfig parseConfigFileContent(File file) {
     final content = file.readAsStringSync();
-    return _configParser.parse(content);
+    return _rawConfigParser.parse(content);
   }
 
   /// Returns an [IntegrationParty] element from the given

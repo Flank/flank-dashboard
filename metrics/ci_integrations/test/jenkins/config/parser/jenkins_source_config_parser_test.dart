@@ -1,4 +1,4 @@
-import 'package:ci_integration/jenkins/config/parser/jenkins_config_parser.dart';
+import 'package:ci_integration/jenkins/config/parser/jenkins_source_config_parser.dart';
 import 'package:test/test.dart';
 
 import '../../test_utils/jenkins_config_test_data.dart';
@@ -6,13 +6,13 @@ import '../../test_utils/jenkins_config_test_data.dart';
 // ignore_for_file: prefer_const_constructors
 
 void main() {
-  group("JenkinsConfigParser", () {
+  group("JenkinsSourceConfigParser", () {
     const jenkinsConfigMap = {
       'jenkins': JenkinsConfigTestData.jenkinsConfigMap,
     };
     final jenkinsConfig = JenkinsConfigTestData.jenkinsConfig;
 
-    final jenkinsConfigParser = JenkinsConfigParser();
+    final jenkinsConfigParser = JenkinsSourceConfigParser();
 
     test(".canParse() should return false if the given map is null", () {
       final canParse = jenkinsConfigParser.canParse(null);

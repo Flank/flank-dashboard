@@ -1,7 +1,7 @@
 import 'package:ci_integration/ci_integration/config/model/raw_integration_config.dart';
 import 'package:ci_integration/ci_integration/config/model/sync_config.dart';
-import 'package:ci_integration/firestore/config/model/firestore_config.dart';
-import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
+import 'package:ci_integration/firestore/config/model/firestore_destination_config.dart';
+import 'package:ci_integration/jenkins/config/model/jenkins_source_config.dart';
 
 /// A class containing a test data for the different sync configurations
 /// as [RawIntegrationConfig], [SyncConfig] and others.
@@ -29,14 +29,14 @@ class ConfigTestData {
           metrics_project_id: $metricsProjectId
       ''';
 
-  static final JenkinsConfig jenkinsConfig = JenkinsConfig(
+  static final JenkinsSourceConfig jenkinsConfig = JenkinsSourceConfig(
     url: jenkinsUrl,
     jobName: jenkinsJobName,
     username: jenkinsUsername,
     apiKey: jenkinsApiKey,
   );
 
-  static final FirestoreConfig firestoreConfig = FirestoreConfig(
+  static final FirestoreDestinationConfig firestoreConfig = FirestoreDestinationConfig(
     firebaseProjectId: firebaseProjectId,
     metricsProjectId: metricsProjectId,
   );

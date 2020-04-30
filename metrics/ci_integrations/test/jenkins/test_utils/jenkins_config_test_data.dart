@@ -1,6 +1,6 @@
-import 'package:ci_integration/jenkins/config/model/jenkins_config.dart';
+import 'package:ci_integration/jenkins/config/model/jenkins_source_config.dart';
 
-/// A class containing a test data for the [JenkinsConfig].
+/// A class containing a test data for the [JenkinsSourceConfig].
 class JenkinsConfigTestData {
   static const String url = 'url';
   static const String username = 'username';
@@ -14,7 +14,7 @@ class JenkinsConfigTestData {
     'job_name': jobName,
   };
 
-  static final JenkinsConfig jenkinsConfig = JenkinsConfig(
+  static final JenkinsSourceConfig jenkinsConfig = JenkinsSourceConfig(
     url: url,
     jobName: jobName,
     username: username,

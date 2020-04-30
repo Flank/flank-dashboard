@@ -9,7 +9,7 @@ class RawIntegrationConfigParser {
 
   const RawIntegrationConfigParser();
 
-  /// Parser the given [configYaml] into the [RawIntegrationConfig] instance.
+  /// Parses the given [configYaml] into the [RawIntegrationConfig] instance.
   ///
   /// The [configYaml] is required.
   /// Throws an [ArgumentError] if [configYaml] is `null`.

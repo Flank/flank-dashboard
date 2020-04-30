@@ -1,6 +1,6 @@
-import 'package:ci_integration/firestore/config/model/firestore_config.dart';
+import 'package:ci_integration/firestore/config/model/firestore_destination_config.dart';
 
-/// A class containing a test data for the [FirestoreConfig].
+/// A class containing a test data for the [FirestoreDestinationConfig].
 class FirestoreConfigTestData {
   static const String firebaseProjectId = 'firebaseProjectId';
   static const String metricsProjectId = 'metricsProjectId';
@@ -10,7 +10,7 @@ class FirestoreConfigTestData {
     'metrics_project_id': metricsProjectId,
   };
 
-  static final FirestoreConfig firestoreConfig = FirestoreConfig(
+  static final FirestoreDestinationConfig firestoreConfig = FirestoreDestinationConfig(
     metricsProjectId: metricsProjectId,
     firebaseProjectId: firebaseProjectId,
   );

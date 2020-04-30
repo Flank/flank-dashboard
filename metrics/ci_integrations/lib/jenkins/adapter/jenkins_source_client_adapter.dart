@@ -10,7 +10,7 @@ import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// An adapter for the [JenkinsClient] to fit the [SourceClient] contract.
+/// An adapter for the [JenkinsClient] to implement the [SourceClient] interface.
 class JenkinsSourceClientAdapter implements SourceClient {
   /// A fetch limit for builds when we download all builds from CI (initial fetch).
   static const initialFetchBuildsLimit = 28;

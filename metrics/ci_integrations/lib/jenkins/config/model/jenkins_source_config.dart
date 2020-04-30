@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// Represents the Jenkins source config.
-class JenkinsConfig extends Equatable implements SourceConfig {
+class JenkinsSourceConfig extends Equatable implements SourceConfig {
   /// The URL to the Jenkins instance.
   final String url;
 
@@ -22,10 +22,10 @@ class JenkinsConfig extends Equatable implements SourceConfig {
   @override
   List<Object> get props => [url, jobName, username, apiKey];
 
-  /// Creates the [JenkinsConfig].
+  /// Creates the [JenkinsSourceConfig].
   ///
   /// Throws an [ArgumentError] if either [url] or [jobName] is null.
-  JenkinsConfig({
+  JenkinsSourceConfig({
     @required this.url,
     @required this.jobName,
     this.username,
@@ -35,13 +35,13 @@ class JenkinsConfig extends Equatable implements SourceConfig {
     ArgumentError.checkNotNull(url, 'url');
   }
 
-  /// Creates [JenkinsConfig] from the decoded JSON object.
+  /// Creates [JenkinsSourceConfig] from the decoded JSON object.
   ///
   /// Returns `null` if [json] is `null`.
-  factory JenkinsConfig.fromJson(Map<String, dynamic> json) {
+  factory JenkinsSourceConfig.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
-    return JenkinsConfig(
+    return JenkinsSourceConfig(
       url: json['url'] as String,
       jobName: json['job_name'] as String,
       username: json['username'] as String,

@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 // ignore_for_file: avoid_implementing_value_types
 
 void main() {
-  group("FirestoreStorageClientAdapter", () {
+  group("FirestoreDestinationClientAdapter", () {
     const testProjectId = 'projectId';
     const testDocumentId = 'documentId';
     final buildDataTestJson = {
