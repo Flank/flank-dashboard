@@ -1,6 +1,6 @@
 import 'package:metrics/features/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/features/auth/presentation/model/auth_error_message.dart';
-import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
+import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -10,7 +10,7 @@ void main() {
       () {
         const errorMessage = AuthErrorMessage(AuthErrorCode.unknown);
 
-        expect(errorMessage.message, LoginStrings.unknownErrorMessage);
+        expect(errorMessage.message, AuthStrings.unknownErrorMessage);
       },
     );
 
@@ -19,7 +19,7 @@ void main() {
       () {
         const errorMessage = AuthErrorMessage(AuthErrorCode.wrongPassword);
 
-        expect(errorMessage.message, LoginStrings.wrongPasswordErrorMessage);
+        expect(errorMessage.message, AuthStrings.wrongPasswordErrorMessage);
       },
     );
 
@@ -28,7 +28,7 @@ void main() {
       () {
         const errorMessage = AuthErrorMessage(AuthErrorCode.invalidEmail);
 
-        expect(errorMessage.message, LoginStrings.emailIsInvalid);
+        expect(errorMessage.message, AuthStrings.emailIsInvalid);
       },
     );
 
@@ -37,7 +37,7 @@ void main() {
       () {
         const errorMessage = AuthErrorMessage(AuthErrorCode.tooManyRequests);
 
-        expect(errorMessage.message, LoginStrings.tooManyRequestsErrorMessage);
+        expect(errorMessage.message, AuthStrings.tooManyRequestsErrorMessage);
       },
     );
 
@@ -46,7 +46,7 @@ void main() {
       () {
         const errorMessage = AuthErrorMessage(AuthErrorCode.userDisabled);
 
-        expect(errorMessage.message, LoginStrings.userDisabledErrorMessage);
+        expect(errorMessage.message, AuthStrings.userDisabledErrorMessage);
       },
     );
 
@@ -55,7 +55,7 @@ void main() {
       () {
         const errorMessage = AuthErrorMessage(AuthErrorCode.userNotFound);
 
-        expect(errorMessage.message, LoginStrings.userNotFoundErrorMessage);
+        expect(errorMessage.message, AuthStrings.userNotFoundErrorMessage);
       },
     );
   });

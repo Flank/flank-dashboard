@@ -1,5 +1,5 @@
 import 'package:metrics/features/auth/domain/entities/auth_error_code.dart';
-import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
+import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
 
 /// A class that provides the authentication error description based on [AuthErrorCode].
 class AuthErrorMessage {
@@ -12,17 +12,17 @@ class AuthErrorMessage {
   String get message {
     switch (_code) {
       case AuthErrorCode.invalidEmail:
-        return LoginStrings.emailIsInvalid;
+        return AuthStrings.emailIsInvalid;
       case AuthErrorCode.wrongPassword:
-        return LoginStrings.wrongPasswordErrorMessage;
+        return AuthStrings.wrongPasswordErrorMessage;
       case AuthErrorCode.userNotFound:
-        return LoginStrings.userNotFoundErrorMessage;
+        return AuthStrings.userNotFoundErrorMessage;
       case AuthErrorCode.userDisabled:
-        return LoginStrings.userDisabledErrorMessage;
+        return AuthStrings.userDisabledErrorMessage;
       case AuthErrorCode.tooManyRequests:
-        return LoginStrings.tooManyRequestsErrorMessage;
+        return AuthStrings.tooManyRequestsErrorMessage;
       case AuthErrorCode.unknown:
-        return LoginStrings.unknownErrorMessage;
+        return AuthStrings.unknownErrorMessage;
       default:
         return null;
     }

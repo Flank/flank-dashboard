@@ -1,4 +1,4 @@
-import 'package:metrics/features/auth/presentation/strings/login_strings.dart';
+import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -7,7 +7,7 @@ void main() {
       const error = 'error';
       const message = 'An error occured during loading: $error';
 
-      expect(LoginStrings.getLoadingErrorMessage(error), equals(message));
+      expect(AuthStrings.getLoadingErrorMessage(error), equals(message));
     });
   });
 }
