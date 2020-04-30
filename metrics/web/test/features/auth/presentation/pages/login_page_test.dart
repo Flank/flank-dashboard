@@ -11,9 +11,11 @@ import 'package:metrics/features/common/presentation/routes/route_generator.dart
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
+import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+import '../../../../test_utils/project_metrics_store_mock.dart';
 import '../../../../test_utils/project_metrics_store_stub.dart';
 import '../../../../test_utils/signed_in_auth_store_fake.dart';
 
@@ -42,18 +44,27 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(const _LoginPageTestbed());
 
-        await tester.enterText(
-          find.widgetWithText(AuthInputField, AuthStrings.email),
-          'test@email.com',
-        );
-        await tester.enterText(
-          find.widgetWithText(AuthInputField, AuthStrings.password),
-          'testPassword',
-        );
-        await tester.tap(find.widgetWithText(RaisedButton, AuthStrings.signIn));
+        await _signIn(tester);
         await tester.pumpAndSettle();
 
         expect(find.byType(DashboardPage), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "subscribes to projects if login was successful",
+      (tester) async {
+        final authStore = AuthStoreStub();
+        final metricsStore = ProjectMetricsStoreMock();
+
+        await tester.pumpWidget(_LoginPageTestbed(
+          metricsStore: metricsStore,
+          authStore: authStore,
+        ));
+
+        await _signIn(tester);
+
+        verify(metricsStore.subscribeToProjects()).called(equals(1));
       },
     );
 
@@ -63,7 +74,7 @@ void main() {
         await tester.pumpWidget(_LoginPageTestbed(
           authStore: SignedInAuthStoreFake(),
         ));
-        await tester.pumpAndSettle();
+        await tester.pump();
 
         expect(find.byType(DashboardPage), findsOneWidget);
       },
@@ -71,11 +82,25 @@ void main() {
   });
 }
 
+Future<void> _signIn(WidgetTester tester) async {
+  await tester.enterText(
+    find.widgetWithText(AuthInputField, AuthStrings.email),
+    'test@email.com',
+  );
+  await tester.enterText(
+    find.widgetWithText(AuthInputField, AuthStrings.password),
+    'testPassword',
+  );
+  await tester.tap(find.widgetWithText(RaisedButton, AuthStrings.signIn));
+}
+
 class _LoginPageTestbed extends StatelessWidget {
   final AuthStore authStore;
+  final ProjectMetricsStore metricsStore;
 
   const _LoginPageTestbed({
     this.authStore,
+    this.metricsStore = const ProjectMetricsStoreStub(),
   });
 
   @override
@@ -83,15 +108,11 @@ class _LoginPageTestbed extends StatelessWidget {
     return Injector(
       inject: [
         Inject<AuthStore>(() => authStore ?? AuthStoreStub()),
-        Inject<ProjectMetricsStore>(() => const ProjectMetricsStoreStub()),
+        Inject<ProjectMetricsStore>(() => metricsStore),
       ],
       initState: () {
         Injector.getAsReactive<AuthStore>().setState(
           (store) => store.subscribeToAuthenticationUpdates(),
-        );
-        Injector.getAsReactive<ProjectMetricsStore>().setState(
-          (store) => store.subscribeToProjects(),
-          catchError: true,
         );
       },
       builder: (BuildContext context) {

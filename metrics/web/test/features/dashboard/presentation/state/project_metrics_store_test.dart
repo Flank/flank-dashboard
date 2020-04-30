@@ -237,6 +237,19 @@ void main() {
   );
 
   test(
+    ".subscribeToProjects() subscribes to projects updates",
+    () async {
+      final projectUpdates = _ReceiveProjectUpdatesStub();
+      final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
+
+      final metricsStore = ProjectMetricsStore(projectUpdates, metricsUpdates);
+      await metricsStore.subscribeToProjects();
+
+      expect(projectUpdates.hasListener, isTrue);
+    },
+  );
+
+  test(
     "Unsubscribes from all streams when dispose called",
     () async {
       final projectUpdates = _ReceiveProjectUpdatesStub();
