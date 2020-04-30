@@ -37,18 +37,18 @@ Given our current understanding of project major characteristics, analyze main s
 
 |                                     | <div style="width:120px">Bloc</div>         | <div style="width:120px">States rebuilder</div> | <div style="width:120px">Bloc library</div>   | <div style="width:120px">Redux</div>          | <div style="width:120px">Provider</div> | <div style="width:120px">State notifier</div> |
 | ----------------------------------- | ------------------------------------------- | ----------------------------------------------- | --------------------------------------------- | --------------------------------------------- | --------------------------------------- | --------------------------------------------- |
-| Asynchronous                        | [⭐⭐](#Asynchronous)                       | [⭐⭐⭐⭐](#Asynchronous-1)                     | [⭐⭐⭐⭐](#Asynchronous-2)                   | [⭐⭐](#Asynchronous-3)                       | [⭐⭐⭐⭐](#Asynchronous-4)             | [⭐⭐⭐⭐](#Asynchronous-5)                   |
-| Reactivity                          | [⭐⭐⭐⭐](#Reactivity)                     | [⭐⭐](#Reactivity-1)                           | [⭐⭐](#Reactivity-2)                         | [⭐⭐](#Reactivity-3)                         | [⭐⭐⭐](#Reactivity-4)                 | [⭐⭐⭐](#Reactivity-5)                       |
-| Boilerplate<br/> absence            | [⭐⭐⭐⭐](#Boilerplate-absence)            | [⭐⭐⭐⭐](#Boilerplate-absence-1)              | [⭐](#Boilerplate-absence-2)                  | [⭐](#Boilerplate-absence-3)                  | [⭐⭐⭐⭐](#Boilerplate-absence-4)      | [⭐⭐⭐⭐](#Boilerplate-absence-5)            |
+| Asynchronous                        | [⭐⭐](#Asynchronous)                       | [⭐⭐⭐🌟](#Asynchronous-1)                     | [⭐⭐⭐🌟](#Asynchronous-2)                   | [⭐⭐](#Asynchronous-3)                       | [⭐⭐⭐🌟](#Asynchronous-4)             | [⭐⭐⭐🌟](#Asynchronous-5)                   |
+| Reactivity                          | [⭐⭐⭐🌟](#Reactivity)                     | [⭐⭐](#Reactivity-1)                           | [⭐⭐](#Reactivity-2)                         | [⭐⭐](#Reactivity-3)                         | [⭐⭐⭐](#Reactivity-4)                 | [⭐⭐⭐](#Reactivity-5)                       |
+| Boilerplate<br/> absence            | [⭐⭐⭐🌟](#Boilerplate-absence)            | [⭐⭐⭐🌟](#Boilerplate-absence-1)              | [⭐](#Boilerplate-absence-2)                  | [⭐](#Boilerplate-absence-3)                  | [⭐⭐⭐🌟](#Boilerplate-absence-4)      | [⭐⭐⭐🌟](#Boilerplate-absence-5)            |
 | Maintainability                     | [⭐⭐⭐](#Maintainability)                  | [⭐⭐⭐](#Maintainability-1)                    | [⭐⭐](#Maintainability-2)                    | [⭐⭐](#Maintainability-3)                    | [⭐⭐⭐](#Maintainability-4)            | [⭐⭐⭐](#Maintainability-5)                  |
-| State<br/> snapshot                 | [⭐](#State-snapshot)                       | [⭐⭐](#State-snapshot-1)                       | [⭐⭐⭐⭐](#State-snapshot-2)                 | [⭐⭐⭐⭐](#State-snapshot-3)                 | [⭐⭐](#State-snapshot-4)               | [⭐⭐](#State-snapshot-5)                     |
+| State<br/> snapshot                 | [⭐](#State-snapshot)                       | [⭐⭐](#State-snapshot-1)                       | [⭐⭐⭐🌟](#State-snapshot-2)                 | [⭐⭐⭐🌟](#State-snapshot-3)                 | [⭐⭐](#State-snapshot-4)               | [⭐⭐](#State-snapshot-5)                     |
 | Debugging                           | [⭐⭐](#Debugging)                          | [⭐⭐⭐](#Debugging-1)                          | [⭐⭐](#Debugging-2)                          | [⭐⭐](#Debugging-3)                          | [⭐⭐⭐](#Debugging-4)                  | [⭐⭐⭐](#Debugging-5)                        |
-| Undo and redo<br/> actions          | [🌑](#Undo-and-redo-actions)                | [🌑](#Undo-and-redo-actions-1)                  | [⭐⭐](#Undo-and-redo-actions-2)              | [⭐⭐⭐⭐](#Undo-and-redo-actions-3)          | [🌑](#Undo-and-redo-actions-4)          | [🌑](#Undo-and-redo-actions-5)                |
-| Testability                         | [⭐⭐⭐](#Testability)                      | [⭐⭐⭐⭐](#Testability-1)                      | [⭐⭐⭐](#Testability-2)                      | [⭐⭐](#Testability-3)                        | [⭐⭐⭐⭐](#Testability-4)              | [⭐⭐⭐⭐](#Testability-5)                    |
-| Easy to learn                       | [⭐](#Easy-to-learn)                        | [⭐⭐](#Easy-to-learn-1)                        | [⭐⭐](#Easy-to-learn-2)                      | [⭐](#Easy-to-learn-3)                        | [⭐⭐⭐⭐](#Easy-to-learn-4)            | [⭐⭐⭐⭐](#Easy-to-learn-5)                  |
-| State<br/> immutability             | [🌑](#State-immutability)                   | [⭐](#State-immutability-1)                     | [⭐⭐⭐⭐](#State-immutability-2)             | [⭐⭐⭐⭐](#State-immutability-3)             | [⭐](#State-immutability-4)             | [⭐](#State-immutability-5)                   |
-| Ability to use <br/>outside Flutter | [⭐⭐⭐⭐](#Ability-to-use-outside-flutter) | [🌑](#Ability-to-use-outside-flutter-1)         | [⭐⭐⭐⭐](#Ability-to-use-outside-flutter-2) | [⭐⭐⭐⭐](#Ability-to-use-outside-flutter-3) | [🌑](#Ability-to-use-outside-flutter-4) | [⭐⭐⭐⭐](#Ability-to-use-outside-flutter-5) |
-| Centralized<br/> analytics          | [⭐](#Centralized-analytics)                | [⭐](#Centralized-analytics-1)                  | [⭐⭐⭐⭐](#Centralized-analytics-2)          | [⭐⭐⭐⭐](#Centralized-analytics-3)          | [⭐](#Centralized-analytics-4)          | [⭐](#Centralized-analytics-5)                |
+| Undo and redo<br/> actions          | [🌑](#Undo-and-redo-actions)                | [🌑](#Undo-and-redo-actions-1)                  | [⭐⭐](#Undo-and-redo-actions-2)              | [⭐⭐⭐🌟](#Undo-and-redo-actions-3)          | [🌑](#Undo-and-redo-actions-4)          | [🌑](#Undo-and-redo-actions-5)                |
+| Testability                         | [⭐⭐⭐](#Testability)                      | [⭐⭐⭐🌟](#Testability-1)                      | [⭐⭐⭐](#Testability-2)                      | [⭐⭐](#Testability-3)                        | [⭐⭐⭐🌟](#Testability-4)              | [⭐⭐⭐🌟](#Testability-5)                    |
+| Easy to learn                       | [⭐](#Easy-to-learn)                        | [⭐⭐](#Easy-to-learn-1)                        | [⭐⭐](#Easy-to-learn-2)                      | [⭐](#Easy-to-learn-3)                        | [⭐⭐⭐🌟](#Easy-to-learn-4)            | [⭐⭐⭐🌟](#Easy-to-learn-5)                  |
+| State<br/> immutability             | [🌑](#State-immutability)                   | [⭐](#State-immutability-1)                     | [⭐⭐⭐🌟](#State-immutability-2)             | [⭐⭐⭐🌟](#State-immutability-3)             | [⭐](#State-immutability-4)             | [⭐](#State-immutability-5)                   |
+| Ability to use <br/>outside Flutter | [⭐⭐⭐🌟](#Ability-to-use-outside-flutter) | [🌑](#Ability-to-use-outside-flutter-1)         | [⭐⭐⭐🌟](#Ability-to-use-outside-flutter-2) | [⭐⭐⭐🌟](#Ability-to-use-outside-flutter-3) | [🌑](#Ability-to-use-outside-flutter-4) | [⭐⭐⭐🌟](#Ability-to-use-outside-flutter-5) |
+| Centralized<br/> analytics          | [⭐](#Centralized-analytics)                | [⭐](#Centralized-analytics-1)                  | [⭐⭐⭐🌟](#Centralized-analytics-2)          | [⭐⭐⭐🌟](#Centralized-analytics-3)          | [⭐](#Centralized-analytics-4)          | [⭐](#Centralized-analytics-5)                |
 
 ### Descriptions of scores:
 
@@ -56,7 +56,7 @@ Given our current understanding of project major characteristics, analyze main s
 - ⭐ - Very bad
 - ⭐⭐ - Bad
 - ⭐⭐⭐ - Good
-- ⭐⭐⭐⭐ - Very good
+- ⭐⭐⭐🌟 - Very good
 
 ## Criteria glossary
 
@@ -264,7 +264,7 @@ The asynchronous programming support is not bad overall, but required a bit of o
 
 #### Reactivity
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 To update the UI corresponding to stream value, we just should create the stream in BLoC and use the `StreamBuilder` widget that will listen to stream updates and provide it's snapshots to the `builder` function. Let's consider the concrete example with the `projectsStream`:
 
@@ -287,7 +287,7 @@ return Scaffold(
 
 #### Boilerplate absence
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 To create a new BLoC, you just should create the class that will contain business logic. The only place of the boilerplate code is the creation of the Streams and Sinks, if data passed isn't simple you'll need to create DTO. The example of the simple BLoC is presented above in [Reactivity](#Reactivity) or [Code sample](#Code-sample) sections.
 
@@ -335,7 +335,7 @@ While we can separate application state class it doesn't seem reasonable as we'l
 
 #### Ability to use outside Flutter
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 Since the BLoC pattern based on the streams, each BLoC can be freely used outside of flutter.
 
@@ -443,7 +443,7 @@ Now we can build our UI based on list of projects using `StateBuilder` widget:
 
 #### Asynchronous
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 The States Rebuilder provides great support for asynchronous programming. To perform an async operation we need:
 
@@ -528,7 +528,7 @@ Also, there is a problem with mixing the reactive with the non-reactive state. I
 
 #### Boilerplate absence
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 To create a new Store(the class that will contain the application business logic), we should create a class for this store, and inject it, using the `Injector` widget. Also, we should inject the streams which you want to use to build your UI if there is any. So, there is almost no boilerplate code except of streams injection mechanism.
 
@@ -558,7 +558,7 @@ There is no embedded support of undo/redo.
 
 #### Testability
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 The states of the States Rebuilder are nicely-testable because we can just separately test the methods of the state using the available public API.
 
@@ -732,7 +732,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
 #### Asynchronous
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 The BLoC library has great support of asynchronous programming because you can just use the standard dart approach to wait for something asynchronous - the `await` keyword right inside of the `mapEventToState` method.
 
@@ -766,7 +766,7 @@ On the one hand, the BLoC library has a high level of maintainability because th
 
 #### State snapshot
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 Using the BLoC library, it is easy to get the state snapshot because the state of the application is separated from UI and business logic.
 
@@ -796,13 +796,13 @@ It could be not so easy to learn the BLoC library, especially if you are not fam
 
 #### State immutability
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 Since we have a separate class for the state, we can easily make the state immutable.
 
 #### Ability to use outside Flutter
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 The BLoC library consists of several pub packages: a [bloc](https://pub.dev/packages/bloc), which contains all core functionality of this state management, and a [flutter_bloc](https://pub.dev/packages/flutter_bloc) that adds widgets to work with `flutter`.
 To work outside of `flutter`, there is an [angular_bloc](https://pub.dev/packages/angular_bloc).
@@ -810,7 +810,7 @@ So the package works well outside because it consists of a core package, that ha
 
 #### Centralized analytics
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 The `Bloc` has the `onEvent`, `onTransition`, and `onError` methods that are useful to implement analytics:
 
@@ -1034,7 +1034,7 @@ On the other hand, this overhead makes adding or editing a feature as a complex 
 
 #### State snapshot
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 As we have a single application `Store` we can make a snapshot of the state in any time we want.
 
@@ -1048,7 +1048,7 @@ There are useful tools to debug, such us [redux_dev_tools](https://pub.dev/packa
 
 #### Undo and redo actions
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 There is a [redux_undo](https://github.com/fluttercommunity/redux_undo) package, that adds undo/redo functionality, jump to the past or to the future through some steps, clear all history.
 
@@ -1072,13 +1072,13 @@ Namings in Redux is not intuitive, and at first it is hard to understand what mi
 
 #### State immutability
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 The application `state` in Redux is immutable and it is a core concept. The only way to mutate the `state` is to `dispatch` an `action`, that has a new `state` as a result.
 
 #### Ability to use outside Flutter
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 The [redux](https://pub.dev/packages/redux) package developed to work with `Dart`. So we can use Redux outside of `flutter`.
 
@@ -1088,7 +1088,7 @@ Also, business logic is separated from the UI and split into `actions`, `middlew
 
 #### Centralized analytics
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 With Redux we can use a middleware, that can store information about our state and actions, that dispatched across whole app. As this is a common task, there is a [redux_logging](https://pub.dev/packages/redux_logging) package that prints the latest action & state. So, with that we can easily provide centralized analytics.
 
@@ -1182,7 +1182,7 @@ The package works well with Future and Streams via:
 
 #### Asynchronous
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 To asynchronously update the UI, based on `projects`, we can invoke `notifyListeners` method after we update `projects` value.
 
@@ -1365,7 +1365,7 @@ So, the support of reactivity is pretty good too. We have different ways to work
 
 #### Boilerplate absence
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 To initialize the Provider as a state management of the application, all we need to make our class `extends ChangeNotifier` and place `notifyListener` to our method to call all the registered listeners. With that we can use widgets, provided by the package, to rebuild the UI.
 
@@ -1400,13 +1400,13 @@ The Provider package has no support of a feature, like undo/redo.
 
 #### Testability
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 With the Provider we can use pure Dart classes and functions, a major part of the logic is focused on using public methods to interact with the logic components so we can easily test it.
 
 #### Easy to learn
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 It has an easy basic concept, consist of `ChangeNotifier`, `ChangeNotifierProvider`, and `Consumer` that easy to learn. Also, these concept and namings are intuitive to understand.
 
@@ -1528,7 +1528,7 @@ The same as in Provider package, read [here](#Reactivity-4).
 
 #### Boilerplate absence
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 All we need to make our class that represents state `extends ValueNotifier` and place `notifyListener` to our method to call all the registered listeners.
 With that we can use widgets, provided by the [State notifier flutter](https://pub.dev/packages/flutter_state_notifier) package to rebuild the UI.
@@ -1569,7 +1569,7 @@ The same as Provider package, read [here](#State-immutability-4)
 
 #### Ability to use outside Flutter
 
-Score: ⭐⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 This repository is a set of packages that reimplements ValueNotifier outside of Flutter.
 
