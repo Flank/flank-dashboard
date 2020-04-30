@@ -48,6 +48,12 @@ class ProjectMetricsStore {
     _projectsSubscription = projectsStream.listen(_projectsListener);
   }
 
+  /// Unsubscribes from projects and it's metrics.
+  Future<void> unsubscribeFromProjects() async {
+    await _cancelSubscriptions();
+    _projectsMetricsSubject.add({});
+  }
+
   /// Listens to project updates.
   void _projectsListener(List<Project> newProjects) {
     if (newProjects == null || newProjects.isEmpty) {
@@ -165,11 +171,17 @@ class ProjectMetricsStore {
   }
 
   /// Cancels all created subscriptions.
-  void dispose() {
-    _projectsSubscription?.cancel();
+  Future<void> _cancelSubscriptions() async {
+    await _projectsSubscription?.cancel();
     for (final subscription in _buildMetricsSubscriptions.values) {
-      subscription?.cancel();
+      await subscription?.cancel();
     }
     _buildMetricsSubscriptions.clear();
+  }
+
+  /// Cancels all subscriptions and closes all created streams.
+  Future<void> dispose() async {
+    await _cancelSubscriptions();
+    await _projectsMetricsSubject.close();
   }
 }

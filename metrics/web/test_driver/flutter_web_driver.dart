@@ -123,6 +123,7 @@ class FlutterWebDriver {
       port: port,
       browserName: _args.browserName,
       verbose: verbose,
+      environment: _args.credentials.toEnvironment(),
     );
 
     final driverProcess = await _processManager.run(

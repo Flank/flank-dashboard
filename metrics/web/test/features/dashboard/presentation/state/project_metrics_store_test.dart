@@ -250,7 +250,7 @@ void main() {
   );
 
   test(
-    "Unsubscribes from all streams when dispose called",
+    "Unsubscribes from all streams when dispose called and closes projects stream",
     () async {
       final projectUpdates = _ReceiveProjectUpdatesStub();
       final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
@@ -267,10 +267,37 @@ void main() {
       expect(projectUpdates.hasListener, isTrue);
       expect(metricsUpdates.hasListener, isTrue);
 
-      metricsStore.dispose();
+      await metricsStore.dispose();
 
       expect(projectUpdates.hasListener, isFalse);
       expect(metricsUpdates.hasListener, isFalse);
+      expect(metricsStore.projectsMetrics, emitsThrough(emitsDone));
+    },
+  );
+
+  test(
+    ".unsubscribeFromProjects() cancels all createed subscriptions and clears loaded projects",
+    () async {
+      final projectUpdates = _ReceiveProjectUpdatesStub();
+      final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
+
+      final metricsStore = ProjectMetricsStore(
+        projectUpdates,
+        metricsUpdates,
+      );
+
+      await metricsStore.subscribeToProjects();
+      await metricsStore.projectsMetrics
+          .firstWhere((element) => element != null);
+
+      expect(projectUpdates.hasListener, isTrue);
+      expect(metricsUpdates.hasListener, isTrue);
+
+      await metricsStore.unsubscribeFromProjects();
+
+      expect(projectUpdates.hasListener, isFalse);
+      expect(metricsUpdates.hasListener, isFalse);
+      expect(metricsStore.projectsMetrics, emits(isEmpty));
     },
   );
 }

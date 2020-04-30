@@ -31,5 +31,8 @@ class ProjectMetricsStoreStub implements ProjectMetricsStore {
   Future<void> subscribeToProjects() async {}
 
   @override
-  void dispose() {}
+  Future<void> dispose() async {}
+
+  @override
+  Future<void> unsubscribeFromProjects() async {}
 }

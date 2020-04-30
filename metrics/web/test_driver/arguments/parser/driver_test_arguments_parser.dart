@@ -3,6 +3,7 @@ import 'package:args/args.dart';
 import '../../common/config/browser_name.dart';
 import '../../common/config/driver_tests_config.dart';
 import '../model/driver_test_arguments.dart';
+import '../model/user_credentials.dart';
 
 /// Parses the arguments for the driver tests.
 class DriverTestArgumentsParser {
@@ -10,6 +11,8 @@ class DriverTestArgumentsParser {
   static const String _portOptionName = 'port';
   static const String _storeLogsToOptionName = 'store-logs-to';
   static const String _browserNameOptionName = 'browser-name';
+  static const String _emailOptionName = 'email';
+  static const String _passwordOptionName = 'password';
   static const String _verboseFlagName = 'verbose';
   static const String _quietFlagName = 'quiet';
   static const String _helpFlagName = 'help';
@@ -36,6 +39,8 @@ class DriverTestArgumentsParser {
     final logsDir = result[_storeLogsToOptionName] as String;
     final workingDir = result[_workingDirOptionName] as String;
     final showHelp = result[_helpFlagName] as bool;
+    final email = result[_emailOptionName] as String;
+    final password = result[_passwordOptionName] as String;
 
     return DriverTestArguments(
       port: port,
@@ -45,6 +50,10 @@ class DriverTestArgumentsParser {
       verbose: verbose,
       quiet: quiet,
       showHelp: showHelp,
+      credentials: UserCredentials(
+        email: email,
+        password: password,
+      ),
     );
   }
 
@@ -95,7 +104,18 @@ class DriverTestArgumentsParser {
     _parser.addOption(
       _browserNameOptionName,
       help: 'Name of browser where tests will be executed.',
+      allowed: BrowserName.values.map((name) => name.toString()),
       defaultsTo: '${BrowserName.chrome}',
+    );
+
+    _parser.addOption(
+      _emailOptionName,
+      help: 'An email the tests will use to log in to the application',
+    );
+
+    _parser.addOption(
+      _passwordOptionName,
+      help: 'A password the tests will use to log in to the application',
     );
   }
 

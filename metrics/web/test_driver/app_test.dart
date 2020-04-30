@@ -1,10 +1,14 @@
 // This is a Flutter Web Driver test
 // https://github.com/flutter/flutter/pull/45951
 
+import 'dart:io';
+
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:test/test.dart';
+
+import 'arguments/model/user_credentials.dart';
 
 void main() {
   group(
@@ -97,10 +101,14 @@ void main() {
 }
 
 Future<void> _login(FlutterDriver driver) async {
+  final environment = Platform.environment;
+  final email = environment[UserCredentials.emailEnvVariableName];
+  final password = environment[UserCredentials.passwordEvnVariableName];
+
   await driver.tap(find.byValueKey('Email'));
-  await driver.enterText('test@email.com');
+  await driver.enterText(email);
   await driver.tap(find.byValueKey('Password'));
-  await driver.enterText('testPassword');
+  await driver.enterText(password);
   await driver.tap(find.byValueKey('Sign in'));
 }
 
