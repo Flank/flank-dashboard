@@ -1,0 +1,278 @@
+@startuml ci_integration_class_diagram
+left to right direction
+
+package client {
+  class JenkinsClient
+  class BitriseClient
+  class Firestore
+}
+
+package integration.interface.source {
+  interface SourceConfig {
+    + {abstract} getSourceProjectId() : String
+  }
+
+  interface SourceClientFactory<T extends SourceConfig, K extends SourceClient> {
+    + {abstract} create(T) : K
+  }
+
+  interface SourceParty<T extends SourceConfig, K extends SourceClient> {
+    + {abstract} clientFactory : SourceClientAbstractFactory<T, K>
+    + {abstract} configParser : SourceConfigParser<T>
+  }
+
+  interface SourceConfigParser<T extends SourceConfig> {
+    + {abstract} parse(Map<String, dynamic>) : T
+    + {abstract} canParse(Map<String, dynamic>) : bool
+  }
+
+  interface SourceClient {
+    + {abstract} fetchBuilds(String) : List<BuildData>
+    + {abstract} fetchBuildsAfter(String, BuildData) : List<BuildData>
+    + {abstract} dispose() : void
+  }
+
+  SourceClientFactory ..> SourceClient : creates
+  SourceConfigParser ..> SourceConfig : creates
+  SourceParty ..> SourceConfigParser : uses
+  SourceParty ..> SourceClientFactory : uses
+}
+
+package integration.interface.destination {
+  interface DestinationConfig {
+    + {abstract} getDestinationProjectId() : String
+  }
+
+  interface DestinationClientFactory<T extends DestinationConfig, K extends DestinationClient> {
+    + {abstract} create(T) : K
+  }
+
+  interface DestinationParty<T extends DestinationConfig, K extends DestinationClient> {
+    + {abstract} clientFactory : DestinationClientAbstractFactory<T, K>
+    + {abstract} configParser : DestinationConfigParser<T>
+  }
+
+  interface DestinationConfigParser<T extends DestinationConfig> {
+    + {abstract} parse(Map<String, dynamic>) : T
+    + {abstract} canParse(Map<String, dynamic>) : bool
+  }
+
+  interface DestinationClient {
+    + {abstract} fetchLastBuild(String) : BuildData
+    + {abstract} addBuilds(String, List<BuildData>) : void
+    + {abstract} dispose() : void
+  }
+
+  DestinationClientFactory ..> DestinationClient : creates
+  DestinationConfigParser ..> DestinationConfig : creates
+  DestinationParty ..> DestinationConfigParser : uses
+  DestinationParty ..> DestinationClientFactory : uses
+}
+
+
+together {
+  package source.jenkins {
+    class JenkinsSourceParty {
+      + clientFactory : JenkinsSourceClientFactory
+      + configParser : JenkinsSourceConfigParser
+    }
+
+    class JenkinsSourceConfig {
+      + getSourceProjectId() : String
+    }
+
+    class JenkinsSourceConfigParser {
+      + parse(Map<String, dynamic>) : JenkinsSourceConfig
+      + canParse(Map<String, dynamic>) : bool
+    }
+
+    class JenkinsSourceClientAdapter {
+      + jenkinsClient: JenkinsClient
+      + fetchBuilds(String) : List<BuildData>
+      + fetchBuildsAfter(String, BuildData) : List<BuildData>
+      + dispose() : void
+    }
+
+    class JenkinsSourceClientFactory {
+      + create(JenkinsSourceConfig) : JenkinsSourceClientAdapter
+    }
+
+    JenkinsSourceConfigParser ..> JenkinsSourceConfig : creates
+    JenkinsSourceClientAdapter ..> JenkinsClient : uses
+    JenkinsSourceClientFactory ..> JenkinsSourceClientAdapter : creates
+    JenkinsSourceParty ..> JenkinsSourceConfigParser : uses
+    JenkinsSourceParty ..> JenkinsSourceClientFactory : uses
+  }
+
+  package source.bitrise {
+    class BitriseSourceConfig {
+      + getSourceProjectId() : String
+    }
+
+    class BitriseSourceConfigParser {
+      + parse(Map<String, dynamic>) : BitriseSourceConfig
+      + canParse(Map<String, dynamic>) : bool
+    }
+
+    class BitriseSourceClientAdapter {
+      + bitriseClient : BitriseClient
+      + fetchBuilds(String) : List<BuildData>
+      + fetchBuildsAfter(String, BuildData) : List<BuildData>
+      + dispose() : void
+    }
+
+    class BitriseSourceClientFactory {
+      + create(BitriseSourceConfig) : BitriseSourceClientAdapter
+    }
+
+    class BitriseSourceParty {
+      + clientFactory : BitriseSourceClientFactory
+      + configParser : BitriseSourceConfigParser
+    }
+
+    BitriseSourceConfigParser ..> BitriseSourceConfig : creates
+    BitriseSourceClientAdapter ..> BitriseClient : uses
+    BitriseSourceClientFactory ..> BitriseSourceClientAdapter : creates
+    BitriseSourceParty ..> BitriseSourceConfigParser : uses
+    BitriseSourceParty ..> BitriseSourceClientFactory : uses
+  }
+  package destination.firestore {
+    class FirestoreDestinationParty {
+      + clientFactory : FirestoreDestinationClientFactory
+      + configParser : FirestoreDestinationConfigParser
+    }
+
+    class FirestoreDestinationConfig {
+      + getDestinationProjectId() : String
+    }
+
+    class FirestoreDestinationConfigParser {
+      + parse(Map<String, dynamic>) : FirestoreDestinationConfig
+
+      + canParse(Map<String, dynamic>) : bool
+    }
+
+    class FirestoreDestinationClientAdapter {
+      + firestore: Firestore
+      + fetchLastBuild(String) : BuildData
+      + addBuilds(String, List<BuildData>) : void
+      + dispose() : void
+    }
+
+    class FirestoreDestinationClientFactory {
+      + create(FirestoreDestinationConfig
+      ) : FirestoreStorageClientAdapter
+    }
+
+    FirestoreDestinationConfigParser ..> FirestoreDestinationConfig : creates
+    FirestoreDestinationClientAdapter ..> Firestore : uses
+    FirestoreDestinationParty ..> FirestoreDestinationClientFactory : uses
+    FirestoreDestinationClientFactory ..> FirestoreDestinationClientAdapter : creates
+    FirestoreDestinationParty ..> FirestoreDestinationConfigParser : uses
+  }
+}
+
+package integration.interface.base {
+  interface Config
+
+  interface IntegrationClientFactory<T extends Config, K extends IntegrationClient> {
+    + {abstract} create(T) : K
+  }
+
+  interface IntegrationParty<T extends Config, K extends IntegrationClient> {
+    + {abstract} clientFactory : IntegrationClientAbstractFactory<T, K>
+    + {abstract} configParser : ConfigParser<T>
+  }
+
+  interface IntegrationClient {
+    + {abstract} dispose() : void
+  }
+
+  interface ConfigParser<T extends Config> {
+    + {abstract} parse(Map<String, dynamic>) : T
+    + {abstract} canParse(Map<String, dynamic>) : bool
+  }
+
+  IntegrationClientFactory ..> IntegrationClient : creates
+  ConfigParser ..> Config : creates
+  IntegrationParty ..> ConfigParser : uses
+  IntegrationParty ..> IntegrationClientFactory : uses
+}
+
+package command {
+  interface Parties<T extends IntegrationParty> {
+    + {abstract} parties : ImmutableList<T>
+  }
+
+  class SupportedSourceParties {
+    + parties : ImmutableList<SourceParty>
+  }
+
+  class SupportedDestinationParties {
+    + parties : ImmutableList<DestinationParty>
+  }
+
+  class SupportedIntegrationParties {
+    + sourceParties : SupportedSourceParties
+    + destinationParties : SupportedDestinationParties
+  }
+
+  class SyncCommand {
+    + supportedIntegrations : SupportedIntegrations
+    - integrationConfigParser : RawIntegrationConfigParser
+    + run() : void
+    - getConfigFilePath() : String
+    - getConfigFile(String) : File
+    - parseConfigFileContent(File) : RawIntegrationConfig
+    - getParty<T extends IntegrationParty>(Map<String, dynamic>, Parties<T>) : T
+    - parseConfig<T extends Config>(Map<String, dynamic>, IntegrationParty<T, IntegrationClient>) : T
+    - createClient<T extends IntegrationClient>(Config, IntegrationParty<Config, T>) : T
+    - createCiIntegration(SourceClient, DestinationClient) : CiIntegration
+    - sync(SyncConfig, SourceClient, DestinationClient) : InteractionResult
+    - dispose(SourceClient, DestinationClient) : void
+  }
+
+  class RawIntegrationConfig {
+    + sourceConfigMap : Map<String, dynamic>
+    + destinationConfigMap: Map<String, dynamic>
+  }
+
+  class RawIntegrationConfigParser {
+    + parse(String) : Map<String, dynamic>
+  }
+
+  Parties <|. SupportedSourceParties
+  Parties <|.. SupportedDestinationParties
+  SupportedSourceParties <.. SupportedIntegrationParties : uses
+  SupportedDestinationParties <.. SupportedIntegrationParties : uses
+
+  SyncCommand ..> SupportedIntegrationParties : uses
+  SyncCommand ..> RawIntegrationConfigParser : uses
+  RawIntegrationConfigParser ..> RawIntegrationConfig : creates
+}
+
+package integration.ci_integration {
+  class CiIntegration {
+    + sourceClient : SourceClient
+    + destinationClient : DestinationClient
+    + sync(SyncConfig) : InteractionResult
+  }
+
+  class SyncConfig {
+    + sourceProjectId : String
+    + destinationProjectId : String
+  }
+
+  CiIntegration ..> SyncConfig : uses
+}
+
+integration.interface.base <|---- integration.interface.source
+integration.interface.base <|---- integration.interface.destination
+integration.interface.source <|.. source.jenkins
+integration.interface.source <|.. source.bitrise
+integration.interface.destination <|.. destination.firestore
+integration.ci_integration ..> integration.interface.source : uses
+integration.ci_integration ..> integration.interface.destination : uses
+SyncCommand .up.> integration.ci_integration : uses
+
+@enduml
