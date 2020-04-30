@@ -77,11 +77,11 @@ class _AuthFormState extends State<AuthForm> {
   /// otherwise returns an error message.
   String _validateEmail(String value) {
     if (value.isEmpty) {
-      return AuthStrings.emailIsRequired;
+      return AuthStrings.requiredEmailErrorMessage;
     }
 
     if (!EmailValidator.validate(value)) {
-      return AuthStrings.emailIsInvalid;
+      return AuthStrings.invalidEmailErrorMessage;
     }
 
     return null;
@@ -91,7 +91,7 @@ class _AuthFormState extends State<AuthForm> {
   /// otherwise returns an error message.
   String _validatePassword(String value) {
     if (value.isEmpty) {
-      return AuthStrings.passwordIsRequired;
+      return AuthStrings.requiredPasswordErrorMessage;
     }
 
     if (value.length < _minPasswordLength) {

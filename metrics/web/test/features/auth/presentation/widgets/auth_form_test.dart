@@ -29,7 +29,7 @@ void main() {
       await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(AuthStrings.emailIsRequired), findsOneWidget);
+      expect(find.text(AuthStrings.requiredEmailErrorMessage), findsOneWidget);
     });
 
     testWidgets("email input shows error message if value is not a valid email",
@@ -40,7 +40,7 @@ void main() {
       await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(AuthStrings.emailIsInvalid), findsOneWidget);
+      expect(find.text(AuthStrings.invalidEmailErrorMessage), findsOneWidget);
     });
 
     testWidgets("password input shows error message if value is empty",
@@ -50,7 +50,7 @@ void main() {
       await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(AuthStrings.passwordIsRequired), findsOneWidget);
+      expect(find.text(AuthStrings.requiredPasswordErrorMessage), findsOneWidget);
     });
 
     testWidgets(

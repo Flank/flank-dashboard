@@ -12,7 +12,7 @@ class AuthErrorMessage {
   String get message {
     switch (_code) {
       case AuthErrorCode.invalidEmail:
-        return AuthStrings.emailIsInvalid;
+        return AuthStrings.invalidEmailErrorMessage;
       case AuthErrorCode.wrongPassword:
         return AuthStrings.wrongPasswordErrorMessage;
       case AuthErrorCode.userNotFound:

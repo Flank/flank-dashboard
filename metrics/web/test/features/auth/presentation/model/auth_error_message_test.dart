@@ -28,7 +28,7 @@ void main() {
       () {
         const errorMessage = AuthErrorMessage(AuthErrorCode.invalidEmail);
 
-        expect(errorMessage.message, AuthStrings.emailIsInvalid);
+        expect(errorMessage.message, AuthStrings.invalidEmailErrorMessage);
       },
     );
 
