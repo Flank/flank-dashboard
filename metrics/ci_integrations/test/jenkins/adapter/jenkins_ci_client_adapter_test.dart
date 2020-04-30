@@ -10,25 +10,46 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../test_utils/jenkins_builder.dart';
+import '../test_utils/test_data_builder.dart';
 
 void main() {
   group("JenkinsCiClientAdapter", () {
     const jobName = 'test-job';
     final jenkinsClientMock = JenkinsClientMock();
     final adapter = JenkinsCiClientAdapter(jenkinsClientMock);
-    final jenkinsBuilder = JenkinsBuilder();
-    final responses = JenkinsClientResponseBuilder(jobName, jenkinsBuilder);
+    final testDataBuilder = TestDataBuilder();
+    final responses = JenkinsClientResponseBuilder(jobName, testDataBuilder);
 
     setUp(() {
       reset(jenkinsClientMock);
       responses.reset();
     });
 
+    PostExpectation<Future<InteractionResult>> whenFetchArtifact({
+      Matcher buildUrlThat,
+      Matcher relativePathThat,
+    }) {
+      return when(jenkinsClientMock.fetchArtifactByRelativePath(
+        argThat(buildUrlThat ?? anything),
+        argThat(relativePathThat ?? anything),
+      ));
+    }
+
+    PostExpectation<Future<InteractionResult>> whenFetchBuilds({
+      String jobName = jobName,
+      JenkinsQueryLimits limits,
+    }) {
+      whenFetchArtifact().thenAnswer(responses.artifactResponse);
+      return when(jenkinsClientMock.fetchBuilds(
+        jobName,
+        limits: limits ?? anyNamed('limits'),
+      ));
+    }
+
     test(
-      ".fetchCoverage() should return coverage equal to 0.0 if the given build has no coverage artifact",
+      ".fetchCoverage() should return coverage equals to 0.0 if the given build has no coverage artifact",
       () {
-        final jenkinsBuild = jenkinsBuilder.getBuild(artifacts: []);
+        final jenkinsBuild = testDataBuilder.getJenkinsBuild(artifacts: []);
         final result = adapter.fetchCoverage(jenkinsBuild);
         const expected = Percent(0.0);
 
@@ -41,13 +62,15 @@ void main() {
       () {
         const fileName = 'coverage-summary.json';
         const relativePath = 'test/$fileName';
-        final jenkinsBuild = jenkinsBuilder.getBuild(artifacts: const [
+        final jenkinsBuild = testDataBuilder.getJenkinsBuild(artifacts: const [
           JenkinsBuildArtifact(fileName: fileName, relativePath: relativePath),
         ]);
-        when(jenkinsClientMock.fetchArtifactByRelativePath(
-          jenkinsBuild.url,
-          relativePath,
-        )).thenAnswer(responses.errorResponse);
+
+        whenFetchArtifact(
+          buildUrlThat: equals(jenkinsBuild.url),
+          relativePathThat: equals(relativePath),
+        ).thenAnswer((_) => responses.errorResponse<Map<String, dynamic>>());
+
         final result = adapter.fetchCoverage(jenkinsBuild);
 
         expect(result, throwsStateError);
@@ -55,16 +78,18 @@ void main() {
     );
 
     test(
-      ".fetchCoverage() should fetch coverage of the given build",
+      ".fetchCoverage() should fetch code coverage of the given build",
       () {
-        final jenkinsBuild = jenkinsBuilder.getBuild();
-        final artifact = jenkinsBuild.artifacts.first;
-        when(jenkinsClientMock.fetchArtifactByRelativePath(
-          jenkinsBuild.url,
-          artifact.relativePath,
-        )).thenAnswer(responses.artifactResponse);
-        final result = adapter.fetchCoverage(jenkinsBuild);
         const expected = Percent(0.6);
+        final jenkinsBuild = testDataBuilder.getJenkinsBuild();
+        final artifact = jenkinsBuild.artifacts.first;
+
+        whenFetchArtifact(
+          buildUrlThat: equals(jenkinsBuild.url),
+          relativePathThat: equals(artifact.relativePath),
+        ).thenAnswer(responses.artifactResponse);
+
+        final result = adapter.fetchCoverage(jenkinsBuild);
 
         expect(result, completion(equals(expected)));
       },
@@ -74,25 +99,16 @@ void main() {
       ".processJenkinsBuilds() should map builds which are not building",
       () {
         final jenkinsBuilds = [
-          jenkinsBuilder.getBuild(),
-          jenkinsBuilder.getBuild(number: 2, building: true),
+          testDataBuilder.getJenkinsBuild(),
+          testDataBuilder.getJenkinsBuild(number: 2, building: true),
         ];
-        when(jenkinsClientMock.fetchArtifactByRelativePath(
-          argThat(anything),
-          argThat(anything),
-        )).thenAnswer(responses.artifactResponse);
-        final result = adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
         final expected = [
-          BuildData(
-            buildNumber: 1,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.successful,
-            duration: const Duration(seconds: 10),
-            workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
-          ),
+          testDataBuilder.getBuildData(workflowName: jobName),
         ];
+
+        whenFetchArtifact().thenAnswer(responses.artifactResponse);
+
+        final result = adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
 
         expect(result, completion(equals(expected)));
       },
@@ -102,29 +118,23 @@ void main() {
       ".processJenkinsBuilds() should map builds satisfying the given startFromBuildNumber",
       () {
         final jenkinsBuilds = [
-          jenkinsBuilder.getBuild(),
-          jenkinsBuilder.getBuild(number: 2),
+          testDataBuilder.getJenkinsBuild(),
+          testDataBuilder.getJenkinsBuild(number: 2),
         ];
-        when(jenkinsClientMock.fetchArtifactByRelativePath(
-          argThat(anything),
-          argThat(anything),
-        )).thenAnswer(responses.artifactResponse);
+        final expected = [
+          testDataBuilder.getBuildData(
+            buildNumber: 2,
+            workflowName: jobName,
+          ),
+        ];
+
+        whenFetchArtifact().thenAnswer(responses.artifactResponse);
+
         final result = adapter.processJenkinsBuilds(
           jenkinsBuilds,
           jobName,
           startFromBuildNumber: 1,
         );
-        final expected = [
-          BuildData(
-            buildNumber: 2,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.successful,
-            duration: const Duration(seconds: 10),
-            workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
-          ),
-        ];
 
         expect(result, completion(equals(expected)));
       },
@@ -134,19 +144,16 @@ void main() {
       ".processJenkinsBuilds() should fetch coverage for each build",
       () async {
         final jenkinsBuilds = [
-          jenkinsBuilder.getBuild(),
-          jenkinsBuilder.getBuild(number: 2),
+          testDataBuilder.getJenkinsBuild(),
+          testDataBuilder.getJenkinsBuild(number: 2),
         ];
-        when(jenkinsClientMock.fetchArtifactByRelativePath(
-          argThat(anything),
-          argThat(anything),
-        )).thenAnswer(responses.artifactResponse);
+
+        whenFetchArtifact().thenAnswer(responses.artifactResponse);
+
         await adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
 
-        verify(jenkinsClientMock.fetchArtifactByRelativePath(
-          argThat(anything),
-          argThat(anything),
-        )).called(equals(jenkinsBuilds.length));
+        verify(jenkinsClientMock.fetchArtifactByRelativePath(any, any))
+            .called(equals(jenkinsBuilds.length));
       },
     );
 
@@ -154,78 +161,52 @@ void main() {
       ".processJenkinsBuilds() should map a list of Jenkins builds into the list of BuildData",
       () async {
         final jenkinsBuilds = [
-          jenkinsBuilder.getBuild(result: JenkinsBuildResult.failure),
-          jenkinsBuilder.getBuild(
+          testDataBuilder.getJenkinsBuild(result: JenkinsBuildResult.failure),
+          testDataBuilder.getJenkinsBuild(
               number: 2, result: JenkinsBuildResult.notBuild),
-          jenkinsBuilder.getBuild(
+          testDataBuilder.getJenkinsBuild(
               number: 3, result: JenkinsBuildResult.aborted),
-          jenkinsBuilder.getBuild(
+          testDataBuilder.getJenkinsBuild(
               number: 4, result: JenkinsBuildResult.unstable),
-          jenkinsBuilder.getBuild(
+          testDataBuilder.getJenkinsBuild(
               number: 5, result: JenkinsBuildResult.success),
-          jenkinsBuilder.getBuild(number: 6, result: null),
+          testDataBuilder.getJenkinsBuild(number: 6, result: null),
         ];
-        when(jenkinsClientMock.fetchArtifactByRelativePath(
-          argThat(anything),
-          argThat(anything),
-        )).thenAnswer(responses.artifactResponse);
-        final result = adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
         final expected = [
-          BuildData(
-            buildNumber: 1,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.failed,
-            duration: const Duration(seconds: 10),
+          testDataBuilder.getBuildData(
             workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
+            buildStatus: BuildStatus.failed,
           ),
-          BuildData(
+          testDataBuilder.getBuildData(
             buildNumber: 2,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.failed,
-            duration: const Duration(seconds: 10),
             workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
+            buildStatus: BuildStatus.failed,
           ),
-          BuildData(
+          testDataBuilder.getBuildData(
             buildNumber: 3,
-            startedAt: DateTime(2020),
+            workflowName: jobName,
             buildStatus: BuildStatus.cancelled,
-            duration: const Duration(seconds: 10),
-            workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
           ),
-          BuildData(
+          testDataBuilder.getBuildData(
             buildNumber: 4,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.successful,
-            duration: const Duration(seconds: 10),
             workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
+            buildStatus: BuildStatus.successful,
           ),
-          BuildData(
+          testDataBuilder.getBuildData(
             buildNumber: 5,
-            startedAt: DateTime(2020),
+            workflowName: jobName,
             buildStatus: BuildStatus.successful,
-            duration: const Duration(seconds: 10),
-            workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
           ),
-          BuildData(
+          testDataBuilder.getBuildData(
             buildNumber: 6,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.failed,
-            duration: const Duration(seconds: 10),
             workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
+            buildStatus: BuildStatus.failed,
           ),
         ];
+
+        whenFetchArtifact().thenAnswer(responses.artifactResponse);
+
+        final result = adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
 
         expect(result, completion(equals(expected)));
       },
@@ -234,37 +215,29 @@ void main() {
     test(
       ".fetchBuilds() should throw StateError if a project with the given id is not found",
       () {
-        when(
-          jenkinsClientMock.fetchBuilds(
-            'test-non-job',
-            limits: anyNamed('limits'),
-          ),
-        ).thenAnswer(responses.errorResponse);
-        final future = adapter.fetchBuilds('test-non-job');
+        whenFetchBuilds(jobName: 'test-non-job').thenAnswer(
+          (_) => responses.errorResponse<JenkinsBuildingJob>(),
+        );
 
-        expect(future, throwsStateError);
+        final result = adapter.fetchBuilds('test-non-job');
+
+        expect(result, throwsStateError);
       },
     );
 
     test(
       ".fetchBuilds() should fetch no more than last 28 builds of a project",
       () {
-        responses.prepareBuilds();
-        when(
-          jenkinsClientMock.fetchBuilds(jobName, limits: anyNamed('limits')),
-        ).thenAnswer(responses.fetchBuildsResponse);
-        when(
-          jenkinsClientMock.fetchArtifactByRelativePath(
-            argThat(anything),
-            argThat(anything),
-          ),
-        ).thenAnswer(responses.artifactResponse);
-        final future = adapter.fetchBuilds(jobName);
         const expectedBuildsLength =
             JenkinsCiClientAdapter.initialFetchBuildsLimit;
+        responses.prepareBuilds(number: 30);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuildsResponse);
+
+        final result = adapter.fetchBuilds(jobName);
 
         expect(
-          future,
+          result,
           completion(hasLength(lessThanOrEqualTo(expectedBuildsLength))),
         );
       },
@@ -273,58 +246,27 @@ void main() {
     test(
       ".fetchBuilds() should fetch all builds",
       () {
-        responses.prepareBuilds(number: 3);
-        when(jenkinsClientMock.fetchBuilds(
-          jobName,
-          limits: anyNamed('limits'),
-        )).thenAnswer(responses.fetchBuildsResponse);
-        when(
-          jenkinsClientMock.fetchArtifactByRelativePath(
-            argThat(anything),
-            argThat(anything),
-          ),
-        ).thenAnswer(responses.artifactResponse);
-        final future = adapter.fetchBuilds(jobName);
         final expected = [
-          BuildData(
-            buildNumber: 1,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.successful,
-            duration: const Duration(seconds: 10),
-            workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
-          ),
-          BuildData(
-            buildNumber: 2,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.successful,
-            duration: const Duration(seconds: 10),
-            workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
-          ),
-          BuildData(
-            buildNumber: 3,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.successful,
-            duration: const Duration(seconds: 10),
-            workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
-          ),
+          testDataBuilder.getBuildData(workflowName: jobName),
+          testDataBuilder.getBuildData(buildNumber: 2, workflowName: jobName),
+          testDataBuilder.getBuildData(buildNumber: 3, workflowName: jobName),
         ];
+        responses.prepareBuilds(number: 3);
 
-        expect(future, completion(equals(expected)));
+        whenFetchBuilds().thenAnswer(responses.fetchBuildsResponse);
+
+        final result = adapter.fetchBuilds(jobName);
+
+        expect(result, completion(equals(expected)));
       },
     );
 
     test(
       ".fetchBuildsAfter() should throw an ArgumentError if the given build is null",
       () {
-        final future = adapter.fetchBuildsAfter(jobName, null);
+        final result = adapter.fetchBuildsAfter(jobName, null);
 
-        expect(future, throwsArgumentError);
+        expect(result, throwsArgumentError);
       },
     );
 
@@ -332,15 +274,14 @@ void main() {
       ".fetchBuildsAfter() should throw a StateError if a project with the given id is not found",
       () {
         const build = BuildData(buildNumber: 1);
-        when(
-          jenkinsClientMock.fetchBuilds(
-            'test-non-job',
-            limits: anyNamed('limits'),
-          ),
-        ).thenAnswer(responses.errorResponse);
-        final future = adapter.fetchBuildsAfter('test-non-job', build);
 
-        expect(future, throwsStateError);
+        whenFetchBuilds(jobName: 'test-non-job').thenAnswer(
+          (_) => responses.errorResponse<JenkinsBuildingJob>(),
+        );
+
+        final result = adapter.fetchBuildsAfter('test-non-job', build);
+
+        expect(result, throwsStateError);
       },
     );
 
@@ -349,13 +290,12 @@ void main() {
       () {
         const build = BuildData(buildNumber: 1);
         responses.prepareBuilds(number: 1);
-        when(jenkinsClientMock.fetchBuilds(
-          jobName,
-          limits: anyNamed('limits'),
-        )).thenAnswer(responses.fetchBuildsResponse);
-        final future = adapter.fetchBuildsAfter(jobName, build);
 
-        expect(future, completion(isEmpty));
+        whenFetchBuilds().thenAnswer(responses.fetchBuildsResponse);
+
+        final result = adapter.fetchBuildsAfter(jobName, build);
+
+        expect(result, completion(isEmpty));
       },
     );
 
@@ -365,10 +305,8 @@ void main() {
         const build = BuildData(buildNumber: 1);
         responses.prepareBuilds(number: 3);
         bool additionalBuildsAdded = false;
-        when(jenkinsClientMock.fetchBuilds(
-          jobName,
-          limits: anyNamed('limits'),
-        )).thenAnswer(
+
+        whenFetchBuilds().thenAnswer(
           (invocation) => responses.fetchBuildsResponse(
             invocation,
             afterFetchCallback: additionalBuildsAdded
@@ -379,15 +317,10 @@ void main() {
                   },
           ),
         );
-        when(
-          jenkinsClientMock.fetchArtifactByRelativePath(
-            argThat(anything),
-            argThat(anything),
-          ),
-        ).thenAnswer(responses.artifactResponse);
-        final future = adapter.fetchBuildsAfter(jobName, build);
 
-        expect(future, completion(hasLength(4)));
+        final result = adapter.fetchBuildsAfter(jobName, build);
+
+        expect(result, completion(hasLength(4)));
       },
     );
 
@@ -396,19 +329,12 @@ void main() {
       () {
         const build = BuildData(buildNumber: 4);
         responses.prepareBuilds(number: 10, buildNumberStep: 2);
-        when(jenkinsClientMock.fetchBuilds(
-          jobName,
-          limits: anyNamed('limits'),
-        )).thenAnswer(responses.fetchBuildsResponse);
-        when(
-          jenkinsClientMock.fetchArtifactByRelativePath(
-            argThat(anything),
-            argThat(anything),
-          ),
-        ).thenAnswer(responses.artifactResponse);
-        final future = adapter.fetchBuildsAfter(jobName, build);
 
-        expect(future, completion(hasLength(8)));
+        whenFetchBuilds().thenAnswer(responses.fetchBuildsResponse);
+
+        final result = adapter.fetchBuildsAfter(jobName, build);
+
+        expect(result, completion(hasLength(8)));
       },
     );
 
@@ -418,10 +344,8 @@ void main() {
         const build = BuildData(buildNumber: 2);
         responses.prepareBuilds(number: 3, buildNumberStep: 2);
         bool additionalBuildsAdded = false;
-        when(jenkinsClientMock.fetchBuilds(
-          jobName,
-          limits: anyNamed('limits'),
-        )).thenAnswer(
+
+        whenFetchBuilds().thenAnswer(
           (invocation) => responses.fetchBuildsResponse(
             invocation,
             afterFetchCallback: additionalBuildsAdded
@@ -432,15 +356,10 @@ void main() {
                   },
           ),
         );
-        when(
-          jenkinsClientMock.fetchArtifactByRelativePath(
-            argThat(anything),
-            argThat(anything),
-          ),
-        ).thenAnswer(responses.artifactResponse);
-        final future = adapter.fetchBuildsAfter(jobName, build);
 
-        expect(future, completion(hasLength(4)));
+        final result = adapter.fetchBuildsAfter(jobName, build);
+
+        expect(result, completion(hasLength(4)));
       },
     );
 
@@ -449,62 +368,45 @@ void main() {
       () {
         const build = BuildData(buildNumber: 1);
         responses.prepareBuilds(number: 3);
-        when(jenkinsClientMock.fetchBuilds(
-          jobName,
-          limits: anyNamed('limits'),
-        )).thenAnswer(responses.fetchBuildsResponse);
-        when(
-          jenkinsClientMock.fetchArtifactByRelativePath(
-            argThat(anything),
-            argThat(anything),
-          ),
-        ).thenAnswer(responses.artifactResponse);
-        final future = adapter.fetchBuildsAfter(jobName, build);
         final expected = [
-          BuildData(
-            buildNumber: 2,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.successful,
-            duration: const Duration(seconds: 10),
-            workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
-          ),
-          BuildData(
-            buildNumber: 3,
-            startedAt: DateTime(2020),
-            buildStatus: BuildStatus.successful,
-            duration: const Duration(seconds: 10),
-            workflowName: jobName,
-            url: 'url',
-            coverage: const Percent(0.6),
-          ),
+          testDataBuilder.getBuildData(buildNumber: 2, workflowName: jobName),
+          testDataBuilder.getBuildData(buildNumber: 3, workflowName: jobName),
         ];
 
-        expect(future, completion(equals(expected)));
+        whenFetchBuilds().thenAnswer(responses.fetchBuildsResponse);
+
+        final result = adapter.fetchBuildsAfter(jobName, build);
+
+        expect(result, completion(equals(expected)));
       },
     );
+
+    test(".dispose() should close jenkins client", () {
+      adapter.dispose();
+
+      verify(jenkinsClientMock.close()).called(1);
+    });
   });
 }
 
 class JenkinsClientMock extends Mock implements JenkinsClient {}
 
 class JenkinsClientResponseBuilder {
-  final JenkinsBuilder _jenkinsBuilder;
+  final TestDataBuilder _testDataBuilder;
   final String jobName;
   final List<JenkinsBuild> _builds = [];
 
-  JenkinsClientResponseBuilder(this.jobName, this._jenkinsBuilder);
+  JenkinsClientResponseBuilder(this.jobName, this._testDataBuilder);
 
   void prepareBuilds({
     int number = 30,
     int buildNumberStep = 1,
   }) {
     final startingBuildNumber = _builds.isEmpty ? 1 : _builds.last.number + 1;
-    _builds.addAll(_jenkinsBuilder.getBuilds(
+    _builds.addAll(_testDataBuilder.getJenkinsBuilds(
       number: number,
       buildNumberStep: buildNumberStep,
-      startingBuildNumber: startingBuildNumber,
+      startingFromBuildNumber: startingBuildNumber,
     ));
   }
 
@@ -528,7 +430,7 @@ class JenkinsClientResponseBuilder {
       afterFetchCallback();
     }
 
-    return wrapFuture(InteractionResult.success(result: _result));
+    return _wrapFuture(InteractionResult.success(result: _result));
   }
 
   List<JenkinsBuild> _applyLimits(JenkinsQueryLimits limits) {
@@ -555,15 +457,15 @@ class JenkinsClientResponseBuilder {
   }
 
   Future<InteractionResult<Map<String, dynamic>>> artifactResponse([_]) {
-    final result = _jenkinsBuilder.getCoverage();
-    return wrapFuture(InteractionResult.success(result: result));
+    final result = _testDataBuilder.getBuildCoverageArtifact();
+    return _wrapFuture(InteractionResult.success(result: result));
   }
 
-  Future<InteractionResult<T>> errorResponse<T>([_]) {
-    return wrapFuture(const InteractionResult.error());
+  Future<InteractionResult<T>> errorResponse<T>() {
+    return _wrapFuture(InteractionResult<T>.error());
   }
 
-  Future<T> wrapFuture<T>(T value) {
+  Future<T> _wrapFuture<T>(T value) {
     return Future.value(value);
   }
 

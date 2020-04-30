@@ -165,7 +165,7 @@ class JenkinsCiClientAdapter implements CiClient {
     return BuildData(
       buildNumber: jenkinsBuild.number,
       startedAt: jenkinsBuild.timestamp,
-      buildStatus: mapJenkinsBuildResult(jenkinsBuild.result),
+      buildStatus: _mapJenkinsBuildResult(jenkinsBuild.result),
       duration: jenkinsBuild.duration,
       workflowName: jobName,
       url: jenkinsBuild.url,
@@ -202,7 +202,7 @@ class JenkinsCiClientAdapter implements CiClient {
   }
 
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
-  BuildStatus mapJenkinsBuildResult(JenkinsBuildResult result) {
+  BuildStatus _mapJenkinsBuildResult(JenkinsBuildResult result) {
     switch (result) {
       case JenkinsBuildResult.aborted:
         return BuildStatus.cancelled;
@@ -213,5 +213,9 @@ class JenkinsCiClientAdapter implements CiClient {
       default:
         return BuildStatus.failed;
     }
+  }
+
+  void dispose() {
+    jenkinsClient.close();
   }
 }
