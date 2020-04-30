@@ -15,7 +15,6 @@ class LoginStrings {
   static const String unknownErrorMessage =
       'An unknown error occured, please try again';
 
-  static const String invalidEmailErrorMessage = 'The email is invalid.';
   static const String wrongPasswordErrorMessage = 'The password is wrong';
   static const String userNotFoundErrorMessage =
       'User with such email not found';
