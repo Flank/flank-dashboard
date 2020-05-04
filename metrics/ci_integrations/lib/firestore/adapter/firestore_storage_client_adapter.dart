@@ -23,14 +23,12 @@ class FirestoreStorageClientAdapter implements StorageClient {
       final project =
           await _firestore.collection('projects').document(projectId).get();
       final collection = _firestore.collection('build');
-      final futures = <Future>[];
 
       for (final build in builds) {
         final documentId = '${project.id}_${build.buildNumber}';
         final map = build.copyWith(projectId: project.id).toJson();
-        futures.add(collection.document(documentId).create(map));
+        await collection.document(documentId).create(map);
       }
-      await Future.wait(futures);
     } on GrpcError catch (e) {
       if (e.code == StatusCode.notFound) return;
       rethrow;
