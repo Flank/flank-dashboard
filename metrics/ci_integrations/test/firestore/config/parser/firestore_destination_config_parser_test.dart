@@ -20,7 +20,7 @@ void main() {
     });
 
     test(
-      ".canParse() should return false if the given map does not contain a Firestore  key",
+      ".canParse() should return false if the given map does not contain a Firestore key",
       () {
         final map = {'test': {}};
 
