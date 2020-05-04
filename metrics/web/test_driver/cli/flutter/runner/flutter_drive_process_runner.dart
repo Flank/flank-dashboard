@@ -3,11 +3,12 @@ import '../../../common/config/device.dart';
 import '../../common/runner/process_runner.dart';
 import '../command/drive_command.dart';
 import '../command/flutter_command.dart';
+import '../model/flutter_drive_environment.dart';
 import '../process/flutter_process.dart';
 
 /// Runs the flutter driver tests.
 class FlutterDriveProcessRunner implements ProcessRunner {
-  final Map<String, String> environment;
+  final FlutterDriveEnvironment environment;
 
   final _driveCommand = DriveCommand()
     ..target('lib/app.dart')
@@ -21,7 +22,7 @@ class FlutterDriveProcessRunner implements ProcessRunner {
   /// [browserName] is the name of the browser which will be used to test the app.
   /// [verbose] specifies whether print the detailed logs from
   /// the 'flutter drive' command or not.
-  /// [environment] is the [Map] of the environment variable that will be available in driver tests.
+  /// [environment] is the environment variables that will be available in driver tests.
   FlutterDriveProcessRunner({
     this.environment,
     int port,
@@ -44,7 +45,7 @@ class FlutterDriveProcessRunner implements ProcessRunner {
     return FlutterProcess.start(
       _driveCommand,
       workingDir: workingDir,
-      environment: environment,
+      environment: environment.toMap(),
     );
   }
 

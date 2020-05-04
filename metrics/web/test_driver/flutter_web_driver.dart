@@ -4,6 +4,7 @@ import 'dart:io';
 import 'arguments/model/driver_test_arguments.dart';
 import 'arguments/parser/driver_test_arguments_parser.dart';
 import 'cli/common/process/process_wrapper.dart';
+import 'cli/flutter/model/flutter_drive_environment.dart';
 import 'cli/flutter/runner/flutter_drive_process_runner.dart';
 import 'cli/flutter/runner/flutter_run_process_runner.dart';
 import 'cli/selenium/runner/selenium_process_runner.dart';
@@ -123,7 +124,7 @@ class FlutterWebDriver {
       port: port,
       browserName: _args.browserName,
       verbose: verbose,
-      environment: _args.credentials.toEnvironment(),
+      environment: FlutterDriveEnvironment(credentials: _args.credentials),
     );
 
     final driverProcess = await _processManager.run(
