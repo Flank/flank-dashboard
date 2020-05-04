@@ -11,7 +11,7 @@ class Firestore extends fd.Firestore {
 
   /// Creates an instance of this Firestore wrapper with the given [projectId].
   ///
-  /// Can be created with an optional [firebaseAuth] to allow 
+  /// Can be created with an optional [firebaseAuth] to allow
   /// user identity verification.
   Firestore(
     this.projectId, {

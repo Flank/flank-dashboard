@@ -9,7 +9,8 @@ import 'package:ci_integration/jenkins/config/model/jenkins_source_config.dart';
 /// Used to create instances of the [JenkinsSourceClientAdapter]
 /// using [JenkinsSourceConfig].
 class JenkinsSourceClientFactory
-    implements SourceClientFactory<JenkinsSourceConfig, JenkinsSourceClientAdapter> {
+    implements
+        SourceClientFactory<JenkinsSourceConfig, JenkinsSourceClientAdapter> {
   const JenkinsSourceClientFactory();
 
   @override

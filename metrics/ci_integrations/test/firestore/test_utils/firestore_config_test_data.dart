@@ -10,7 +10,8 @@ class FirestoreConfigTestData {
     'metrics_project_id': metricsProjectId,
   };
 
-  static final FirestoreDestinationConfig firestoreConfig = FirestoreDestinationConfig(
+  static final FirestoreDestinationConfig firestoreConfig =
+      FirestoreDestinationConfig(
     metricsProjectId: metricsProjectId,
     firebaseProjectId: firebaseProjectId,
   );

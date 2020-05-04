@@ -7,11 +7,14 @@ void main() {
   group("FirestoreDestinationParty", () {
     final firestoreDestinationParty = FirestoreDestinationParty();
 
-    test("should use FirestoreDestinationClientFactory as a client factory", () {
-      final clientFactory = firestoreDestinationParty.clientFactory;
+    test(
+      "should use FirestoreDestinationClientFactory as a client factory",
+      () {
+        final clientFactory = firestoreDestinationParty.clientFactory;
 
-      expect(clientFactory, isA<FirestoreDestinationClientFactory>());
-    });
+        expect(clientFactory, isA<FirestoreDestinationClientFactory>());
+      },
+    );
 
     test("should use FirestoreConfigParser as a config parser", () {
       final configParser = firestoreDestinationParty.configParser;

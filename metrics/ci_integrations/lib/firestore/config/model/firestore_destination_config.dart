@@ -3,7 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// Represents the Firestore destination configuration.
-class FirestoreDestinationConfig extends Equatable implements DestinationConfig {
+class FirestoreDestinationConfig extends Equatable
+    implements DestinationConfig {
   /// The Firebase project identifier.
   final String firebaseProjectId;
 

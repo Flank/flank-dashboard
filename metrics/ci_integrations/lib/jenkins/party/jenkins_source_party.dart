@@ -12,5 +12,6 @@ class JenkinsSourceParty
       const JenkinsSourceClientFactory();
 
   @override
-  final JenkinsSourceConfigParser configParser = const JenkinsSourceConfigParser();
+  final JenkinsSourceConfigParser configParser =
+      const JenkinsSourceConfigParser();
 }

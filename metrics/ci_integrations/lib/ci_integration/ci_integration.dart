@@ -37,13 +37,18 @@ class CiIntegration {
       final sourceProjectId = config.sourceProjectId;
       final destinationProjectId = config.destinationProjectId;
 
-      final lastBuild = await destinationClient.fetchLastBuild(destinationProjectId);
+      final lastBuild = await destinationClient.fetchLastBuild(
+        destinationProjectId,
+      );
 
       List<BuildData> newBuilds;
       if (lastBuild == null) {
         newBuilds = await sourceClient.fetchBuilds(sourceProjectId);
       } else {
-        newBuilds = await sourceClient.fetchBuildsAfter(sourceProjectId, lastBuild);
+        newBuilds = await sourceClient.fetchBuildsAfter(
+          sourceProjectId,
+          lastBuild,
+        );
       }
 
       if (newBuilds != null && newBuilds.isNotEmpty) {

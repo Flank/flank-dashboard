@@ -14,7 +14,7 @@ void main() {
     final startedAt = DateTime.now();
     final buildDataJson = {
       'id': id,
-      'duration':  duration.inMilliseconds,
+      'duration': duration.inMilliseconds,
       'startedAt': startedAt,
       'url': url,
       'buildNumber': buildNumber,

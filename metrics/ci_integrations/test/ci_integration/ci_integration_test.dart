@@ -65,7 +65,8 @@ void main() {
           sourceClient: sourceClient,
           destinationClient: destinationClient,
         );
-        final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
+        final result =
+            ciIntegration.sync(syncConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
       },
@@ -78,7 +79,8 @@ void main() {
           fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
         );
         final ciIntegration = CiIntegrationStub(sourceClient: sourceClient);
-        final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
+        final result =
+            ciIntegration.sync(syncConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
       },
@@ -93,7 +95,8 @@ void main() {
         final ciIntegration = CiIntegrationStub(
           destinationClient: destinationClient,
         );
-        final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
+        final result =
+            ciIntegration.sync(syncConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
       },
@@ -108,7 +111,8 @@ void main() {
         final ciIntegration = CiIntegrationStub(
           destinationClient: destinationClient,
         );
-        final result = ciIntegration.sync(syncConfig).then((res) => res.isError);
+        final result =
+            ciIntegration.sync(syncConfig).then((res) => res.isError);
 
         expect(result, completion(isTrue));
       },
@@ -166,6 +170,7 @@ class CiIntegrationStub extends CiIntegration {
   CiIntegrationStub({
     DestinationClientStub destinationClient,
     SourceClientStub sourceClient,
-  })  : _destinationClientTestbed = destinationClient ?? DestinationClientStub(),
+  })  : _destinationClientTestbed =
+            destinationClient ?? DestinationClientStub(),
         _sourceClientTestbed = sourceClient ?? SourceClientStub();
 }

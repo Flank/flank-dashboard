@@ -68,7 +68,10 @@ void main() {
     test(
       "should throw ArgumentError trying to create an instance with null Firestore",
       () {
-        expect(() => FirestoreDestinationClientAdapter(null), throwsArgumentError);
+        expect(
+          () => FirestoreDestinationClientAdapter(null),
+          throwsArgumentError,
+        );
       },
     );
 

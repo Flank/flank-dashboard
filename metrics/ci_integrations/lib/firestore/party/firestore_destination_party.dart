@@ -7,11 +7,13 @@ import 'package:ci_integration/firestore/config/parser/firestore_destination_con
 /// An integration party for the Firestore destination integration.
 class FirestoreDestinationParty
     implements
-        DestinationParty<FirestoreDestinationConfig, FirestoreDestinationClientAdapter> {
+        DestinationParty<FirestoreDestinationConfig,
+            FirestoreDestinationClientAdapter> {
   @override
   final FirestoreDestinationClientFactory clientFactory =
       const FirestoreDestinationClientFactory();
 
   @override
-  final FirestoreDestinationConfigParser configParser = const FirestoreDestinationConfigParser();
+  final FirestoreDestinationConfigParser configParser =
+      const FirestoreDestinationConfigParser();
 }

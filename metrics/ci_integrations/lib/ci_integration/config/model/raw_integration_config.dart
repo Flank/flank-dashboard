@@ -8,7 +8,7 @@ class RawIntegrationConfig extends Equatable {
   /// The configuration of a source the metrics will be loaded from.
   final Map<String, dynamic> sourceConfigMap;
 
-  /// The configuration of a destination storage the loaded metrics 
+  /// The configuration of a destination storage the loaded metrics
   /// will be saved to.
   final Map<String, dynamic> destinationConfigMap;
 

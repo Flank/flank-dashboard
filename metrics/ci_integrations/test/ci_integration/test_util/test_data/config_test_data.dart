@@ -16,7 +16,7 @@ class ConfigTestData {
   static const String firebaseProjectId = 'firebaseId';
   static const String metricsProjectId = 'metricsProjectId';
 
-  static const configFileContent = '''
+  static const String configFileContent = '''
       source:
         jenkins:
           url: $jenkinsUrl
@@ -36,7 +36,8 @@ class ConfigTestData {
     apiKey: jenkinsApiKey,
   );
 
-  static final FirestoreDestinationConfig firestoreConfig = FirestoreDestinationConfig(
+  static final FirestoreDestinationConfig firestoreConfig =
+      FirestoreDestinationConfig(
     firebaseProjectId: firebaseProjectId,
     metricsProjectId: metricsProjectId,
   );

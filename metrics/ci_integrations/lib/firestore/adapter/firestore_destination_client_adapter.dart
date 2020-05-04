@@ -18,7 +18,7 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
   FirestoreDestinationClientAdapter(this._firestore) {
     ArgumentError.checkNotNull(_firestore, 'firestore');
   }
-  
+
   @override
   Future<void> addBuilds(String projectId, List<BuildData> builds) async {
     try {

@@ -1,6 +1,6 @@
 import 'package:ci_integration/common/config/model/config.dart';
 
-/// An abstract class providing methods for parsing a 
+/// An abstract class providing methods for parsing a
 /// configuration [Map] into the [Config] instance.
 abstract class ConfigParser<T extends Config> {
   /// Parses the given [map] into the [Config] instance.
