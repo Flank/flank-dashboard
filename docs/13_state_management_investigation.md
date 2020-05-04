@@ -60,18 +60,18 @@ Given our current understanding of project major characteristics, analyze main s
 
 ## Criteria glossary
 
-- **_Asynchronous_** - means a unit of work runs separately from the main application thread and notifies the calling thread of its completion, failure, or progress.
+- **_Asynchronous_** - ease of performing asynchronous operations (fetch data, load file, ...).
 - **_Reactivity_** - how well app can react to the changes (basic component for reacting is streams so how well it supports data updates from streams).
-- **_Boilerplate absence_** - in this case, means how many a programmer must write code(create files) to do minimal jobs.
-- **_Maintainability_** - how an application is understood, repaired, or enhanced.
-- **_State snapshot_** - is the state of an application at a particular point in time.
-- **_Debugging_** - how easy to find issues in the application code.
+- **_Boilerplate absence_** - lines of code needed to perform typical tasks (login, fetch data, ...).
+- **_Maintainability_** - how easy it is to find bugs, add new features, etc...
+- **_State snapshot_** - ease of obtaining a state of an application at any point in time.
+- **_Debugging_** - how easy it is to pinpoint issues in the application code.
 - **_Undo and redo actions_** - support of jumps to the past or to the future of the application state.
-- **_Testability_** - each part of the state management's code easy to test.
-- **_Easy to learn_** - how hard or easy to learn the state management's concept and how intuitive building blocks(classes, functions or widgets) of the state management are?
-- **_State immutability_** - A mutable state is a state that can be changed after we create it. The immutable state is a state that cannot be changed.
-- **_Ability to use outside Flutter_** - do we have an opportunity to use the package outside of flutter? How easy the package logic can be reused?
-- **_Centralized analytics_** - how easy to make centralized analytics.
+- **_Testability_** - ease of testing application state management components.
+- **_Easy to learn_** - how easy it is to learn the state management's concepts, namings and building blocks.
+- **_State immutability_** - how good support of immutable application state.
+- **_Ability to use outside Flutter_** - do we have an ability to use the package outside of the Flutter?
+- **_Centralized analytics_** - how easy it is to implement single-point interceptor of all app events/state mutations.
 
 ## Navigation
 
@@ -605,7 +605,7 @@ The States Rebuilder is based on the simple classes with the methods that should
 
 ## [BLoC library](https://pub.dev/packages/bloc)
 
-The Bloc library is the package, used for managing the application state, which is based on the Redux concept.
+The Bloc library is the package, used for managing the application state, which is based on the BLoC concept.
 
 ### Code sample
 
