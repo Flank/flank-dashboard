@@ -21,7 +21,7 @@ void main() {
     });
 
     test(
-      "should create an instance with the given firebase authentication",
+      "should create an instance with the given Firebase authentication",
       () {
         final firebaseAuth = fd.FirebaseAuth(apiKey, fd.VolatileStore());
 

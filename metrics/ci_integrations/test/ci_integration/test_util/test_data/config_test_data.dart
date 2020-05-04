@@ -29,7 +29,7 @@ class ConfigTestData {
           metrics_project_id: $metricsProjectId
       ''';
 
-  static final JenkinsSourceConfig jenkinsConfig = JenkinsSourceConfig(
+  static final JenkinsSourceConfig jenkinsSourceConfig = JenkinsSourceConfig(
     url: jenkinsUrl,
     jobName: jenkinsJobName,
     username: jenkinsUsername,

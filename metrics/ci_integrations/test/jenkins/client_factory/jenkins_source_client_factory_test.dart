@@ -11,7 +11,7 @@ import '../test_utils/jenkins_config_test_data.dart';
 void main() {
   group("JenkinsSourceClientFactory", () {
     final jenkinsSourceParty = JenkinsSourceClientFactory();
-    final jenkinsConfig = JenkinsConfigTestData.jenkinsConfig;
+    final jenkinsConfig = JenkinsConfigTestData.jenkinsSourceConfig;
 
     JenkinsClient createClient(JenkinsSourceConfig jenkinsConfig) {
       final jenkinsClientAdapter = jenkinsSourceParty.create(jenkinsConfig);

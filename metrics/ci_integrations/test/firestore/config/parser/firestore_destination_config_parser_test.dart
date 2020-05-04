@@ -20,7 +20,7 @@ void main() {
     });
 
     test(
-      ".canParse() should return false if the given map does not contain a firestore  key",
+      ".canParse() should return false if the given map does not contain a Firestore  key",
       () {
         final map = {'test': {}};
 
@@ -31,7 +31,7 @@ void main() {
     );
 
     test(
-      ".canParse() should return true if parser can parse the given map",
+      ".canParse() should return true if the parser can parse the given map",
       () {
         final result =
             firestoreDestinationConfigParser.canParse(firestoreConfigMap);
@@ -47,7 +47,7 @@ void main() {
     });
 
     test(
-      ".parse() should return null if the given map does not contain a firestore key",
+      ".parse() should return null if the given map does not contain a Firestore key",
       () {
         final map = {'test': {}};
 

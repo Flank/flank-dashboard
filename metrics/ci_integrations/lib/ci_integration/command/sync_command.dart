@@ -118,15 +118,15 @@ class SyncCommand extends CiIntegrationCommand<void> {
   }
 
   /// Returns an [IntegrationParty] element from the given
-  /// [parties] that matches the given [configMap].
+  /// [supportedParties] that matches the given [configMap].
   ///
   /// If there is no party matching the given [configMap],
   /// throws an [UnimplementedError].
   T getParty<T extends IntegrationParty>(
     Map<String, dynamic> configMap,
-    Parties<T> parties,
+    Parties<T> supportedParties,
   ) {
-    final party = parties.parties.firstWhere(
+    final party = supportedParties.parties.firstWhere(
       (party) => party.configParser.canParse(configMap),
       orElse: () => null,
     );

@@ -5,8 +5,8 @@ import '../../test_utils/jenkins_config_test_data.dart';
 
 void main() {
   group("JenkinsSourceConfig", () {
-    const jenkinsConfigJson = JenkinsConfigTestData.jenkinsConfigMap;
-    final jenkinsConfig = JenkinsConfigTestData.jenkinsConfig;
+    const jenkinsConfigJson = JenkinsConfigTestData.jenkinsSourceConfigMap;
+    final jenkinsConfig = JenkinsConfigTestData.jenkinsSourceConfig;
 
     test(
       "can't be created with null url",
@@ -35,7 +35,7 @@ void main() {
     );
 
     test(
-      ".fromJson() should create a new instance of the JenkinsConfig from json encodable Map",
+      ".fromJson() should create a new instance of the JenkinsConfig from JSON encodable Map",
       () {
         final jenkinsConfig = JenkinsSourceConfig.fromJson(jenkinsConfigJson);
 

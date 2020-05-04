@@ -105,7 +105,7 @@ void main() {
       );
 
       test(
-        ".getParty() should throw an UnimplementedError if the given parties is empty",
+        ".getParty() should throw an UnimplementedError if the given parties are empty",
         () {
           when(sourcePartiesMock.parties).thenReturn([]);
 
@@ -120,7 +120,7 @@ void main() {
       );
 
       test(
-        ".getParty() should throw an UnimplementedError if the given parties does not contain appropriate party",
+        ".getParty() should throw an UnimplementedError if the given parties do not contain an appropriate party",
         () {
           final parties = supportedDestinationParties;
 
@@ -166,7 +166,7 @@ void main() {
         ".parseConfig() should return the SourceConfig instance matching the given source config map",
         () {
           final party = JenkinsSourceParty();
-          final jenkinsConfig = ConfigTestData.jenkinsConfig;
+          final jenkinsConfig = ConfigTestData.jenkinsSourceConfig;
 
           final result = syncCommand.parseConfig(
             ConfigTestData.integrationConfig.sourceConfigMap,
@@ -262,7 +262,7 @@ void main() {
       );
 
       test(
-        ".sync() should print a message if a sync result is success",
+        ".sync() should print a message if a sync result is a success",
         () async {
           const interactionResult = InteractionResult.success();
 
@@ -280,7 +280,7 @@ void main() {
       );
 
       test(
-        ".sync() should print an error message if a sync result is error",
+        ".sync() should print an error message if a sync result is an error",
         () async {
           const interactionResult = InteractionResult.error();
 

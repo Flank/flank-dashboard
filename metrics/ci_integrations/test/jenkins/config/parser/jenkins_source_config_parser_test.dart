@@ -8,9 +8,9 @@ import '../../test_utils/jenkins_config_test_data.dart';
 void main() {
   group("JenkinsSourceConfigParser", () {
     const jenkinsConfigMap = {
-      'jenkins': JenkinsConfigTestData.jenkinsConfigMap,
+      'jenkins': JenkinsConfigTestData.jenkinsSourceConfigMap,
     };
-    final jenkinsConfig = JenkinsConfigTestData.jenkinsConfig;
+    final jenkinsConfig = JenkinsConfigTestData.jenkinsSourceConfig;
 
     final jenkinsConfigParser = JenkinsSourceConfigParser();
 
@@ -21,7 +21,7 @@ void main() {
     });
 
     test(
-      ".canParse() should return false if the given map does not contain a jenkins key",
+      ".canParse() should return false if the given map does not contain a Jenkins key",
       () {
         final map = {'test': {}};
 
@@ -32,7 +32,7 @@ void main() {
     );
 
     test(
-      ".canParse() should return true if parser can parse the given map",
+      ".canParse() should return true if the parser can parse the given map",
       () {
         final canParse = jenkinsConfigParser.canParse(jenkinsConfigMap);
 
@@ -50,7 +50,7 @@ void main() {
     );
 
     test(
-      ".parse() should return null if the given map does not contain a jenkins key",
+      ".parse() should return null if the given map does not contain a Jenkins key",
       () {
         final map = {'test': {}};
 

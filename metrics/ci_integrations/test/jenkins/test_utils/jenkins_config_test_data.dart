@@ -7,14 +7,14 @@ class JenkinsConfigTestData {
   static const String apiKey = 'apiKey';
   static const String jobName = 'jobName';
 
-  static const Map<String, dynamic> jenkinsConfigMap = {
+  static const Map<String, dynamic> jenkinsSourceConfigMap = {
     'url': url,
     'username': username,
     'api_key': apiKey,
     'job_name': jobName,
   };
 
-  static final JenkinsSourceConfig jenkinsConfig = JenkinsSourceConfig(
+  static final JenkinsSourceConfig jenkinsSourceConfig = JenkinsSourceConfig(
     url: url,
     jobName: jobName,
     username: username,

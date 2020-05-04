@@ -17,7 +17,7 @@ void main() {
     });
 
     test(
-      ".create() should throws ArgumentError if the given FirestoreConfig is null",
+      ".create() should throw an ArgumentError if the given FirestoreConfig is null",
       () {
         expect(
           () => firestoreClientFactory.create(null),
@@ -27,7 +27,7 @@ void main() {
     );
 
     test(
-      ".create() should create FirestoreDestinationClientAdapter instance from the given FirestoreConfig",
+      ".create() should create a FirestoreDestinationClientAdapter instance from the given FirestoreConfig",
       () {
         final firestoreConfig = FirestoreDestinationConfig(
           metricsProjectId: 'metricsProjectId',

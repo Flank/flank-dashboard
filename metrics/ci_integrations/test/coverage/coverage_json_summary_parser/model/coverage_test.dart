@@ -17,7 +17,7 @@ void main() {
       expect(coverage, isNull);
     });
 
-    test('.fromJson() should create a new instance from decoded JSON object', () {
+    test('.fromJson() should create a new instance from the decoded JSON object', () {
       const percent = 30;
       const coverageJson = {'pct': percent};
       final expectedCoverage = Coverage(percent: const Percent(percent / 100));
