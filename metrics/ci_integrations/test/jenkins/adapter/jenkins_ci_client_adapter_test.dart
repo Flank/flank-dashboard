@@ -15,6 +15,7 @@ import '../test_utils/test_data_builder.dart';
 void main() {
   group("JenkinsCiClientAdapter", () {
     const jobName = 'test-job';
+
     final jenkinsClientMock = JenkinsClientMock();
     final adapter = JenkinsCiClientAdapter(jenkinsClientMock);
     final testDataBuilder = TestDataBuilder();
@@ -45,55 +46,6 @@ void main() {
         limits: limits ?? anyNamed('limits'),
       ));
     }
-
-    test(
-      ".fetchCoverage() should return coverage equals to 0.0 if the given build has no coverage artifact",
-      () {
-        final jenkinsBuild = testDataBuilder.getJenkinsBuild(artifacts: []);
-        final result = adapter.fetchCoverage(jenkinsBuild);
-        const expected = Percent(0.0);
-
-        expect(result, completion(equals(expected)));
-      },
-    );
-
-    test(
-      ".fetchCoverage() should throw StateError if fetching an artifact content fails",
-      () {
-        const fileName = 'coverage-summary.json';
-        const relativePath = 'test/$fileName';
-        final jenkinsBuild = testDataBuilder.getJenkinsBuild(artifacts: const [
-          JenkinsBuildArtifact(fileName: fileName, relativePath: relativePath),
-        ]);
-
-        whenFetchArtifact(
-          buildUrlThat: equals(jenkinsBuild.url),
-          relativePathThat: equals(relativePath),
-        ).thenAnswer((_) => responses.errorResponse<Map<String, dynamic>>());
-
-        final result = adapter.fetchCoverage(jenkinsBuild);
-
-        expect(result, throwsStateError);
-      },
-    );
-
-    test(
-      ".fetchCoverage() should fetch code coverage of the given build",
-      () {
-        const expected = Percent(0.6);
-        final jenkinsBuild = testDataBuilder.getJenkinsBuild();
-        final artifact = jenkinsBuild.artifacts.first;
-
-        whenFetchArtifact(
-          buildUrlThat: equals(jenkinsBuild.url),
-          relativePathThat: equals(artifact.relativePath),
-        ).thenAnswer(responses.artifactResponse);
-
-        final result = adapter.fetchCoverage(jenkinsBuild);
-
-        expect(result, completion(equals(expected)));
-      },
-    );
 
     test(
       ".processJenkinsBuilds() should map builds which are not building",
@@ -141,19 +93,54 @@ void main() {
     );
 
     test(
+      ".processJenkinsBuilds() should throw StateError if fetching an artifact content fails for any of the given builds",
+      () {
+        const fileName = 'coverage-summary.json';
+        const relativePath = 'test/$fileName';
+        final jenkinsBuild = testDataBuilder.getJenkinsBuild();
+        final nonExistingCoverageJenkinsBuild = testDataBuilder.getJenkinsBuild(
+          number: 2,
+          artifacts: const [
+            JenkinsBuildArtifact(
+              fileName: fileName,
+              relativePath: relativePath,
+            ),
+          ],
+        );
+        final jenkinsBuilds = [jenkinsBuild, nonExistingCoverageJenkinsBuild];
+
+        whenFetchArtifact(
+          buildUrlThat: equals(jenkinsBuild.url),
+          relativePathThat: anything,
+        ).thenAnswer(responses.artifactResponse);
+
+        whenFetchArtifact(
+          buildUrlThat: equals(nonExistingCoverageJenkinsBuild.url),
+          relativePathThat: equals(relativePath),
+        ).thenAnswer((_) => responses.errorResponse<Map<String, dynamic>>());
+
+        final result = adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
       ".processJenkinsBuilds() should fetch coverage for each build",
       () async {
         final jenkinsBuilds = [
           testDataBuilder.getJenkinsBuild(),
           testDataBuilder.getJenkinsBuild(number: 2),
+          testDataBuilder.getJenkinsBuild(number: 3, artifacts: []),
         ];
+        const expected = [Percent(0.6), Percent(0.6), null];
 
         whenFetchArtifact().thenAnswer(responses.artifactResponse);
 
-        await adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
+        final list = await adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
+        final coverages = list.map((buildData) => buildData.coverage).toList();
 
-        verify(jenkinsClientMock.fetchArtifactByRelativePath(any, any))
-            .called(equals(jenkinsBuilds.length));
+        expect(coverages, equals(expected));
       },
     );
 
@@ -327,14 +314,16 @@ void main() {
     test(
       ".fetchBuildsAfter() should act normal if the given build has been deleted",
       () {
-        const build = BuildData(buildNumber: 4);
-        responses.prepareBuilds(number: 10, buildNumberStep: 2);
+        const build = BuildData(buildNumber: 8);
+        responses.prepareBuilds(number: 6, buildNumberStep: 2);
 
-        whenFetchBuilds().thenAnswer(responses.fetchBuildsResponse);
+        whenFetchBuilds().thenAnswer(
+          (invocation) => responses.fetchBuildsResponse(invocation),
+        );
 
         final result = adapter.fetchBuildsAfter(jobName, build);
 
-        expect(result, completion(hasLength(8)));
+        expect(result, completion(hasLength(2)));
       },
     );
 

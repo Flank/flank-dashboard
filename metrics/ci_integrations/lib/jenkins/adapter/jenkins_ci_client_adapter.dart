@@ -6,6 +6,7 @@ import 'package:ci_integration/jenkins/client/model/jenkins_build.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_build_result.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
+import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for [JenkinsClient] to fit the [CiClient] contract.
@@ -34,6 +35,7 @@ class JenkinsCiClientAdapter implements CiClient {
       projectId,
       limits: JenkinsQueryLimits.endBefore(0),
     );
+
     final lastBuild = buildingJob.lastBuild;
     final numberOfBuilds = lastBuild.number - build.buildNumber;
 
@@ -131,6 +133,7 @@ class JenkinsCiClientAdapter implements CiClient {
   /// than or equal to this value. This allows to avoid processing old builds
   /// since the range specifier in Jenkins API only provides an ability to set
   /// the fetch limits but not to filter data to fetch.
+  @visibleForTesting
   Future<List<BuildData>> processJenkinsBuilds(
     List<JenkinsBuild> builds,
     String jobName, {
@@ -139,7 +142,7 @@ class JenkinsCiClientAdapter implements CiClient {
     final buildDataFutures = builds.where((build) {
       return _checkBuildFinishedAndInRange(build, startFromBuildNumber);
     }).map((build) async {
-      return _mapJenkinsBuild(jobName, build, await fetchCoverage(build));
+      return _mapJenkinsBuild(jobName, build, await _fetchCoverage(build));
     });
 
     return Future.wait(buildDataFutures);
@@ -177,7 +180,7 @@ class JenkinsCiClientAdapter implements CiClient {
   ///
   /// Returns `null` if the code coverage artifact for the given build
   /// is not found.
-  Future<Percent> fetchCoverage(JenkinsBuild build) async {
+  Future<Percent> _fetchCoverage(JenkinsBuild build) async {
     final coverageArtifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,
@@ -198,7 +201,7 @@ class JenkinsCiClientAdapter implements CiClient {
       coverage = CoverageJsonSummary.fromJson(artifactContent);
     }
 
-    return coverage?.total?.branches?.percent ?? const Percent(0.0);
+    return coverage?.total?.branches?.percent;
   }
 
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
