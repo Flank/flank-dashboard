@@ -36,7 +36,7 @@ Both types are presented as a set of interfaces in `integration.interface.source
 
 The `SupportedSourceParties` is an integration point for all source integrations. And the `SupportedDestinationParties` is the same point for the destination integrations. Both of them intersect in the `SupportedIntegrationParties` used by the `SyncCommand` that parses the given configurations, creates clients and then performs `CiIntegration.sync` on them.
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/plant_uml_diagram/metrics/ci_integrations/docs/diagrams/ci_integrations_class_diagram.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/ci_integrations_class_diagram.puml)
 
 # Adding new integration
 
@@ -62,7 +62,7 @@ source | destination
 
 Suppose you are going to add a new `Cool` integration. Here is a diagram displaying the process: 
 
-![Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/plant_uml_diagram/metrics/ci_integrations/docs/diagrams/ci_integrations_activity_diagram.puml)
+![Activity Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/ci_integrations_activity_diagram.puml)
 
 # Package structure
 
