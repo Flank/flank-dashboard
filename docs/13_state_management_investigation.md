@@ -39,13 +39,13 @@ Given our current understanding of project major characteristics, analyze main s
 | ----------------------------------- | ------------------------------------------- | ----------------------------------------------- | --------------------------------------------- | --------------------------------------------- | --------------------------------------- | --------------------------------------------- |
 | Asynchronous                        | [⭐⭐](#Asynchronous)                       | [⭐⭐⭐🌟](#Asynchronous-1)                     | [⭐⭐⭐🌟](#Asynchronous-2)                   | [⭐⭐](#Asynchronous-3)                       | [⭐⭐⭐🌟](#Asynchronous-4)             | [⭐⭐⭐🌟](#Asynchronous-5)                   |
 | Reactivity                          | [⭐⭐⭐🌟](#Reactivity)                     | [⭐⭐](#Reactivity-1)                           | [⭐⭐](#Reactivity-2)                         | [⭐⭐](#Reactivity-3)                         | [⭐⭐⭐](#Reactivity-4)                 | [⭐⭐⭐](#Reactivity-5)                       |
-| Boilerplate<br/> absence            | [⭐⭐⭐🌟](#Boilerplate-absence)            | [⭐⭐⭐🌟](#Boilerplate-absence-1)              | [⭐](#Boilerplate-absence-2)                  | [⭐](#Boilerplate-absence-3)                  | [⭐⭐⭐🌟](#Boilerplate-absence-4)      | [⭐⭐⭐🌟](#Boilerplate-absence-5)            |
-| Maintainability                     | [⭐⭐⭐](#Maintainability)                  | [⭐⭐⭐](#Maintainability-1)                    | [⭐⭐](#Maintainability-2)                    | [⭐⭐](#Maintainability-3)                    | [⭐⭐⭐](#Maintainability-4)            | [⭐⭐⭐](#Maintainability-5)                  |
+| Boilerplate<br/> absence            | [⭐⭐⭐](#Boilerplate-absence)              | [⭐⭐⭐🌟](#Boilerplate-absence-1)              | [⭐](#Boilerplate-absence-2)                  | [⭐](#Boilerplate-absence-3)                  | [⭐⭐⭐🌟](#Boilerplate-absence-4)      | [⭐⭐⭐🌟](#Boilerplate-absence-5)            |
+| Maintainability                     | [⭐⭐⭐](#Maintainability)                  | [⭐⭐⭐](#Maintainability-1)                    | [⭐⭐](#Maintainability-2)                    | [⭐⭐](#Maintainability-3)                    | [⭐⭐⭐🌟](#Maintainability-4)          | [⭐⭐⭐🌟](#Maintainability-5)                |
 | State<br/> snapshot                 | [⭐](#State-snapshot)                       | [⭐⭐](#State-snapshot-1)                       | [⭐⭐⭐🌟](#State-snapshot-2)                 | [⭐⭐⭐🌟](#State-snapshot-3)                 | [⭐⭐](#State-snapshot-4)               | [⭐⭐](#State-snapshot-5)                     |
-| Debugging                           | [⭐⭐](#Debugging)                          | [⭐⭐⭐](#Debugging-1)                          | [⭐⭐](#Debugging-2)                          | [⭐⭐](#Debugging-3)                          | [⭐⭐⭐](#Debugging-4)                  | [⭐⭐⭐](#Debugging-5)                        |
+| Debugging                           | [⭐⭐](#Debugging)                          | [⭐⭐⭐](#Debugging-1)                          | [⭐⭐](#Debugging-2)                          | [⭐⭐](#Debugging-3)                          | [⭐⭐⭐🌟](#Debugging-4)                | [⭐⭐⭐🌟](#Debugging-5)                      |
 | Undo and redo<br/> actions          | [🌑](#Undo-and-redo-actions)                | [🌑](#Undo-and-redo-actions-1)                  | [⭐⭐](#Undo-and-redo-actions-2)              | [⭐⭐⭐🌟](#Undo-and-redo-actions-3)          | [🌑](#Undo-and-redo-actions-4)          | [🌑](#Undo-and-redo-actions-5)                |
 | Testability                         | [⭐⭐⭐](#Testability)                      | [⭐⭐⭐🌟](#Testability-1)                      | [⭐⭐⭐](#Testability-2)                      | [⭐⭐](#Testability-3)                        | [⭐⭐⭐🌟](#Testability-4)              | [⭐⭐⭐🌟](#Testability-5)                    |
-| Easy to learn                       | [⭐](#Easy-to-learn)                        | [⭐⭐](#Easy-to-learn-1)                        | [⭐⭐](#Easy-to-learn-2)                      | [⭐](#Easy-to-learn-3)                        | [⭐⭐⭐🌟](#Easy-to-learn-4)            | [⭐⭐⭐🌟](#Easy-to-learn-5)                  |
+| Easy to learn                       | [⭐](#Easy-to-learn)                        | [⭐⭐](#Easy-to-learn-1)                        | [⭐⭐⭐](#Easy-to-learn-2)                    | [⭐](#Easy-to-learn-3)                        | [⭐⭐⭐🌟](#Easy-to-learn-4)            | [⭐⭐⭐🌟](#Easy-to-learn-5)                  |
 | State<br/> immutability             | [🌑](#State-immutability)                   | [⭐](#State-immutability-1)                     | [⭐⭐⭐🌟](#State-immutability-2)             | [⭐⭐⭐🌟](#State-immutability-3)             | [⭐](#State-immutability-4)             | [⭐](#State-immutability-5)                   |
 | Ability to use <br/>outside Flutter | [⭐⭐⭐🌟](#Ability-to-use-outside-flutter) | [🌑](#Ability-to-use-outside-flutter-1)         | [⭐⭐⭐🌟](#Ability-to-use-outside-flutter-2) | [⭐⭐⭐🌟](#Ability-to-use-outside-flutter-3) | [🌑](#Ability-to-use-outside-flutter-4) | [⭐⭐⭐🌟](#Ability-to-use-outside-flutter-5) |
 | Centralized<br/> analytics          | [⭐](#Centralized-analytics)                | [⭐](#Centralized-analytics-1)                  | [⭐⭐⭐🌟](#Centralized-analytics-2)          | [⭐⭐⭐🌟](#Centralized-analytics-3)          | [⭐](#Centralized-analytics-4)          | [⭐](#Centralized-analytics-5)                |
@@ -287,7 +287,7 @@ return Scaffold(
 
 #### Boilerplate absence
 
-Score: ⭐⭐⭐🌟
+Score: ⭐⭐⭐
 
 To create a new BLoC, you just should create the class that will contain business logic. The only place of the boilerplate code is the creation of the Streams and Sinks, if data passed isn't simple you'll need to create DTO. The example of the simple BLoC is presented above in [Reactivity](#Reactivity) or [Code sample](#Code-sample) sections.
 
@@ -605,7 +605,7 @@ The States Rebuilder is based on the simple classes with the methods that should
 
 ## [BLoC library](https://pub.dev/packages/bloc)
 
-The Bloc library is the package, used for managing the application state, which is based on the BLoC concept.
+The Bloc library is the package, used for managing the application state. A BLoC takes an event as an input and transforms them into a modified state as an output.
 
 ### Code sample
 
@@ -790,9 +790,9 @@ There is a [bloc test](https://pub.dev/packages/bloc_test) package, created for 
 
 #### Easy to learn
 
-Score: ⭐⭐
+Score: ⭐⭐⭐
 
-It could be not so easy to learn the BLoC library, especially if you are not familiar with redux and its approach to state management. But it has pretty understandable namings and good documentation.
+It's pretty intuitive and easy to understand with clear naming.
 
 #### State immutability
 
@@ -1375,7 +1375,7 @@ So, the boilerplate level of the Provider package is very low. Usually, all we h
 
 #### Maintainability
 
-Score: ⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 A simple concept of the UI rebuild, by invoking the `notifyListeners` method. Use of pure dart classes and functions, that gives us the ability to easily test, debug the app and add new features. Also, the concept of the package is simple to understand. These makes high level of maintainability.
 
@@ -1387,7 +1387,7 @@ We cannot make a state snapshot, because of separated models with their own stat
 
 #### Debugging
 
-Score: ⭐⭐⭐
+Score: ⭐⭐⭐🌟
 
 With `Provider` package we have a simple concept of `changes/rebuilds`, based on pure functions, so we can use debugger to fix issues in the application code.
 Also, because the `notifyListeners` affects only subscribed listeners, we can find possible errors in predictable places.
