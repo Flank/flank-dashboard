@@ -21,7 +21,7 @@ class FlutterProcess extends ProcessWrapper {
       FlutterCommand.executableName,
       args.buildArgs(),
       workingDirectory: workingDir,
-      environment: environment.toMap(),
+      environment: environment?.toMap(),
     );
 
     return FlutterProcess._(process);

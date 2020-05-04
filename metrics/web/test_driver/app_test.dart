@@ -8,7 +8,7 @@ import 'package:metrics/features/common/presentation/strings/common_strings.dart
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:test/test.dart';
 
-import 'cli/flutter/model/flutter_drive_environment.dart';
+import 'arguments/model/user_credentials.dart';
 
 void main() {
   group(
@@ -102,13 +102,12 @@ void main() {
 
 Future<void> _login(FlutterDriver driver) async {
   final environment = Platform.environment;
-  final email = environment[FlutterDriveEnvironment.emailEnvVariableName];
-  final password = environment[FlutterDriveEnvironment.passwordEvnVariableName];
+  final credentials = UserCredentials.fromMap(environment);
 
   await driver.tap(find.byValueKey('Email'));
-  await driver.enterText(email);
+  await driver.enterText(credentials.email);
   await driver.tap(find.byValueKey('Password'));
-  await driver.enterText(password);
+  await driver.enterText(credentials.password);
   await driver.tap(find.byValueKey('Sign in'));
 }
 
