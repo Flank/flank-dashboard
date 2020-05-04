@@ -169,12 +169,9 @@ void main() {
         when(_documentReferenceMock.create(buildsData[1]))
             .thenAnswer((_) => Future.error(Exception()));
 
-        dynamic exception;
-        await adapter
-            .addBuilds(testProjectId, builds)
-            .catchError((error) => exception = error);
+        final result = adapter.addBuilds(testProjectId, builds);
+        await expectLater(result, throwsException);
 
-        expect(exception, isNotNull);
         verify(_documentReferenceMock.create(any)).called(2);
         verifyNever(_documentReferenceMock.create(buildsData[2]));
       },
