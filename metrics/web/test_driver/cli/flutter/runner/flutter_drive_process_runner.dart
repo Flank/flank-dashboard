@@ -22,7 +22,7 @@ class FlutterDriveProcessRunner implements ProcessRunner {
   /// [browserName] is the name of the browser which will be used to test the app.
   /// [verbose] specifies whether print the detailed logs from
   /// the 'flutter drive' command or not.
-  /// [environment] is the environment variables that will be available in driver tests.
+  /// [environment] is the [FlutterDriveEnvironment] that will be available in driver tests.
   FlutterDriveProcessRunner({
     this.environment,
     int port,
@@ -45,7 +45,7 @@ class FlutterDriveProcessRunner implements ProcessRunner {
     return FlutterProcess.start(
       _driveCommand,
       workingDir: workingDir,
-      environment: environment.toMap(),
+      environment: environment,
     );
   }
 
