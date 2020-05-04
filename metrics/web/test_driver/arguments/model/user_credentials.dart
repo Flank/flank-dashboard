@@ -1,7 +1,7 @@
 /// Represents the user credentials for the Metrics application.
 class UserCredentials {
   static const String emailEnvVariableName = 'USER_EMAIL';
-  static const String passwordEvnVariableName = 'USER_PASSWORD';
+  static const String passwordEnvVariableName = 'USER_PASSWORD';
 
   final String email;
   final String password;
@@ -20,7 +20,7 @@ class UserCredentials {
   Map<String, String> toEnvironment() {
     return {
       emailEnvVariableName: email,
-      passwordEvnVariableName: password,
+      passwordEnvVariableName: password,
     };
   }
 }

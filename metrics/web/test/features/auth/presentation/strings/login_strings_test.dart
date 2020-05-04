@@ -4,10 +4,9 @@ import 'package:test/test.dart';
 void main() {
   group('LoginStrings', () {
     test(".getLoadingErrorMessage() returns an error message with the given description", () {
-      const error = 'error';
-      const message = 'An error occured during loading: $error';
+      const error = 'testErrorMessage';
 
-      expect(AuthStrings.getLoadingErrorMessage(error), equals(message));
+      expect(AuthStrings.getLoadingErrorMessage(error), contains(error));
     });
   });
 }

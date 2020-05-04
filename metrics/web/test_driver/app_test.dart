@@ -103,7 +103,7 @@ void main() {
 Future<void> _login(FlutterDriver driver) async {
   final environment = Platform.environment;
   final email = environment[UserCredentials.emailEnvVariableName];
-  final password = environment[UserCredentials.passwordEvnVariableName];
+  final password = environment[UserCredentials.passwordEnvVariableName];
 
   await driver.tap(find.byValueKey('Email'));
   await driver.enterText(email);

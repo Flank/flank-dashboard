@@ -38,19 +38,23 @@ void main() {
       authStore.dispose();
     });
 
-    test("throws AsserionError if one of AuthStore parameters is null", () {
+    test("throws AssertionError if a receiveAuthUpdates parameter is null", () {
       expect(
-        () => AuthStore(null, signInUseCase, signOutUseCase),
+            () => AuthStore(null, signInUseCase, signOutUseCase),
         MatcherUtil.throwsAssertionError,
       );
+    });
 
+    test("throws AssertionError if a signInUseCase parameter is null", () {
       expect(
-        () => AuthStore(receiveAuthUpdates, null, signOutUseCase),
+            () => AuthStore(receiveAuthUpdates, null, signOutUseCase),
         MatcherUtil.throwsAssertionError,
       );
+    });
 
+    test("throws AssertionError if a signOutUseCase parameter is null", () {
       expect(
-        () => AuthStore(receiveAuthUpdates, signInUseCase, null),
+            () => AuthStore(receiveAuthUpdates, signInUseCase, null),
         MatcherUtil.throwsAssertionError,
       );
     });
@@ -68,7 +72,7 @@ void main() {
     );
 
     test(
-      ".loggedInStream emits false if null is emited by ReceiveAuthUpdates",
+      ".loggedInStream emits false if null is emitted by ReceiveAuthUpdates",
       () async {
         final usersController = StreamController<User>();
         when(receiveAuthUpdates()).thenAnswer((_) => usersController.stream);
@@ -81,7 +85,7 @@ void main() {
     );
 
     test(
-      ".loggedInStream emits true if new user is emited by ReceiveAuthUpdates",
+      ".loggedInStream emits true if a new user is emitted by ReceiveAuthUpdates",
       () async {
         final usersController = StreamController<User>();
         when(receiveAuthUpdates()).thenAnswer((_) => usersController.stream);
@@ -107,7 +111,7 @@ void main() {
       },
     );
 
-    test("isLoggedIn status is true after a user signs in", () async {
+    test(".isLoggedIn status is true after a user signs in", () async {
       final user = User(id: 'id', email: email);
 
       when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(user));
@@ -119,7 +123,7 @@ void main() {
       expect(authStore.isLoggedIn, isTrue);
     });
 
-    test("isLoggedIn status is false after a user signs out", () async {
+    test(".isLoggedIn status is false after a user signs out", () async {
       when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(null));
 
       authStore.subscribeToAuthenticationUpdates();
@@ -143,7 +147,7 @@ void main() {
       verify(signInUseCase(userCredentials)).called(equals(1));
     });
 
-    test("saves the error message when SignInUseCase throws", () {
+    test(".authErrorMessage populated when SignInUseCase throws", () {
       const authException = AuthenticationException(
         code: AuthErrorCode.unknown,
       );
@@ -156,7 +160,7 @@ void main() {
     });
 
     test(
-      ".signInWithEmailAndPassword() clears the authentication error message on successful sign in",
+      ".signInWithEmailAndPassword() clears the authentication error message on a successful sign in",
       () {
         const invalidEmail = 'email';
         const invalidPassword = 'password';

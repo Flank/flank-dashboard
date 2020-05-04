@@ -250,7 +250,7 @@ void main() {
   );
 
   test(
-    "Unsubscribes from all streams when dispose called and closes projects stream",
+    ".dispose() unsubscribes from all streams when dispose called and closes projects stream",
     () async {
       final projectUpdates = _ReceiveProjectUpdatesStub();
       final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
@@ -276,7 +276,7 @@ void main() {
   );
 
   test(
-    ".unsubscribeFromProjects() cancels all createed subscriptions and clears loaded projects",
+    ".unsubscribeFromProjects() cancels all created subscriptions and clears loaded projects",
     () async {
       final projectUpdates = _ReceiveProjectUpdatesStub();
       final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();

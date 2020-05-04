@@ -54,13 +54,9 @@ void main() {
     testWidgets(
       "subscribes to projects if login was successful",
       (tester) async {
-        final authStore = AuthStoreStub();
         final metricsStore = ProjectMetricsStoreMock();
 
-        await tester.pumpWidget(_LoginPageTestbed(
-          metricsStore: metricsStore,
-          authStore: authStore,
-        ));
+        await tester.pumpWidget(_LoginPageTestbed(metricsStore: metricsStore));
 
         await _signIn(tester);
 

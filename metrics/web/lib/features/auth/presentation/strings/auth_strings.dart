@@ -7,8 +7,6 @@ class AuthStrings {
   static const String requiredEmailErrorMessage = 'Email address is required';
   static const String invalidEmailErrorMessage = 'Invalid email address';
   static const String requiredPasswordErrorMessage = 'Password is required';
-  static const String minLengthPasswordErrorMessage =
-      'Password should be at least 6 characters long';
   static const String unknownErrorMessage =
       'An unknown error occured, please try again';
 
@@ -18,7 +16,7 @@ class AuthStrings {
   static const String userDisabledErrorMessage =
       'The user was disabled, please contact support';
   static const String tooManyRequestsErrorMessage =
-      'Too many requests. Wait a while and try again';
+      'Too many requests. Please wait and try your request again later';
 
   static String getPasswordMinLengthErrorMessage(int minLength) =>
       "Password should be at least $minLength characters long";
