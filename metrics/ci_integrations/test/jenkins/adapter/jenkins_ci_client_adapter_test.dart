@@ -6,25 +6,26 @@ import 'package:ci_integration/jenkins/client/model/jenkins_build_artifact.dart'
 import 'package:ci_integration/jenkins/client/model/jenkins_build_result.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_building_job.dart';
 import 'package:ci_integration/jenkins/client/model/jenkins_query_limits.dart';
+import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../test_utils/test_data_builder.dart';
-
 void main() {
   group("JenkinsCiClientAdapter", () {
     const jobName = 'test-job';
+    const defaultCoverage = Percent(0.6);
+    const defaultDuration = Duration(seconds: 10);
+    const defaultBuildUrl = 'buildUrl';
+    const defaultArtifact = JenkinsBuildArtifact(
+      fileName: 'coverage-summary.json',
+      relativePath: 'coverage/coverage-summary.json',
+    );
+    final defaultDateTime = DateTime(2020);
 
-    final jenkinsClientMock = JenkinsClientMock();
+    final jenkinsClientMock = _JenkinsClientMock();
     final adapter = JenkinsCiClientAdapter(jenkinsClientMock);
-    final testDataBuilder = TestDataBuilder();
-    final responses = JenkinsClientResponseBuilder(jobName, testDataBuilder);
-
-    setUp(() {
-      reset(jenkinsClientMock);
-      responses.reset();
-    });
+    final responses = _JenkinsClientResponse(jobName);
 
     PostExpectation<Future<InteractionResult>> whenFetchArtifact({
       Matcher buildUrlThat,
@@ -40,25 +41,73 @@ void main() {
       String jobName = jobName,
       JenkinsQueryLimits limits,
     }) {
-      whenFetchArtifact().thenAnswer(responses.artifactResponse);
+      whenFetchArtifact().thenAnswer(responses.artifact);
       return when(jenkinsClientMock.fetchBuilds(
         jobName,
         limits: limits ?? anyNamed('limits'),
       ));
     }
 
+    /// Creates a [JenkinsBuild] instance with the given [buildNumber]
+    /// and default build arguments.
+    JenkinsBuild createJenkinsBuild({
+      @required int buildNumber,
+      JenkinsBuildResult result = JenkinsBuildResult.success,
+      bool building = false,
+      List<JenkinsBuildArtifact> artifacts = const [defaultArtifact],
+    }) {
+      return JenkinsBuild(
+        number: buildNumber,
+        duration: defaultDuration,
+        timestamp: defaultDateTime,
+        result: result,
+        url: defaultBuildUrl,
+        building: building,
+        artifacts: artifacts,
+      );
+    }
+
+    /// Creates a list of [JenkinsBuild] using the given [buildNumbers].
+    List<JenkinsBuild> createJenkinsBuilds({
+      @required List<int> buildNumbers,
+    }) {
+      return buildNumbers.map((buildNumber) {
+        return createJenkinsBuild(buildNumber: buildNumber);
+      }).toList();
+    }
+
+    /// Creates a [BuildData] instance with the given [buildNumber]
+    /// and default build arguments.
+    BuildData createBuildData({
+      @required int buildNumber,
+      BuildStatus buildStatus = BuildStatus.successful,
+    }) {
+      return BuildData(
+        buildNumber: buildNumber,
+        startedAt: defaultDateTime,
+        buildStatus: buildStatus,
+        duration: defaultDuration,
+        workflowName: jobName,
+        url: defaultBuildUrl,
+        coverage: defaultCoverage,
+      );
+    }
+
+    setUp(() {
+      reset(jenkinsClientMock);
+      responses.reset();
+    });
+
     test(
-      ".processJenkinsBuilds() should map builds which are not building",
+      ".processJenkinsBuilds() maps builds which are not building",
       () {
         final jenkinsBuilds = [
-          testDataBuilder.getJenkinsBuild(),
-          testDataBuilder.getJenkinsBuild(number: 2, building: true),
+          createJenkinsBuild(buildNumber: 1),
+          createJenkinsBuild(buildNumber: 2, building: true),
         ];
-        final expected = [
-          testDataBuilder.getBuildData(workflowName: jobName),
-        ];
+        final expected = [createBuildData(buildNumber: 1)];
 
-        whenFetchArtifact().thenAnswer(responses.artifactResponse);
+        whenFetchArtifact().thenAnswer(responses.artifact);
 
         final result = adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
 
@@ -67,20 +116,12 @@ void main() {
     );
 
     test(
-      ".processJenkinsBuilds() should map builds satisfying the given startFromBuildNumber",
+      ".processJenkinsBuilds() maps builds satisfying the given startFromBuildNumber",
       () {
-        final jenkinsBuilds = [
-          testDataBuilder.getJenkinsBuild(),
-          testDataBuilder.getJenkinsBuild(number: 2),
-        ];
-        final expected = [
-          testDataBuilder.getBuildData(
-            buildNumber: 2,
-            workflowName: jobName,
-          ),
-        ];
+        final jenkinsBuilds = createJenkinsBuilds(buildNumbers: [1, 2]);
+        final expected = [createBuildData(buildNumber: 2)];
 
-        whenFetchArtifact().thenAnswer(responses.artifactResponse);
+        whenFetchArtifact().thenAnswer(responses.artifact);
 
         final result = adapter.processJenkinsBuilds(
           jenkinsBuilds,
@@ -93,13 +134,13 @@ void main() {
     );
 
     test(
-      ".processJenkinsBuilds() should throw StateError if fetching an artifact content fails for any of the given builds",
+      ".processJenkinsBuilds() throws a StateError if fetching an artifact content fails for any of the given builds",
       () {
         const fileName = 'coverage-summary.json';
         const relativePath = 'test/$fileName';
-        final jenkinsBuild = testDataBuilder.getJenkinsBuild();
-        final nonExistingCoverageJenkinsBuild = testDataBuilder.getJenkinsBuild(
-          number: 2,
+        final jenkinsBuild = createJenkinsBuild(buildNumber: 1);
+        final nonExistingCoverageJenkinsBuild = createJenkinsBuild(
+          buildNumber: 2,
           artifacts: const [
             JenkinsBuildArtifact(
               fileName: fileName,
@@ -112,12 +153,12 @@ void main() {
         whenFetchArtifact(
           buildUrlThat: equals(jenkinsBuild.url),
           relativePathThat: anything,
-        ).thenAnswer(responses.artifactResponse);
+        ).thenAnswer(responses.artifact);
 
         whenFetchArtifact(
           buildUrlThat: equals(nonExistingCoverageJenkinsBuild.url),
           relativePathThat: equals(relativePath),
-        ).thenAnswer((_) => responses.errorResponse<Map<String, dynamic>>());
+        ).thenAnswer((_) => responses.error<Map<String, dynamic>>());
 
         final result = adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
 
@@ -126,16 +167,15 @@ void main() {
     );
 
     test(
-      ".processJenkinsBuilds() should fetch coverage for each build",
+      ".processJenkinsBuilds() fetches a coverage for each build",
       () async {
         final jenkinsBuilds = [
-          testDataBuilder.getJenkinsBuild(),
-          testDataBuilder.getJenkinsBuild(number: 2),
-          testDataBuilder.getJenkinsBuild(number: 3, artifacts: []),
+          createJenkinsBuild(buildNumber: 1),
+          createJenkinsBuild(buildNumber: 2, artifacts: [])
         ];
-        const expected = [Percent(0.6), Percent(0.6), null];
+        const expected = [defaultCoverage, null];
 
-        whenFetchArtifact().thenAnswer(responses.artifactResponse);
+        whenFetchArtifact().thenAnswer(responses.artifact);
 
         final list = await adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
         final coverages = list.map((buildData) => buildData.coverage).toList();
@@ -145,53 +185,39 @@ void main() {
     );
 
     test(
-      ".processJenkinsBuilds() should map a list of Jenkins builds into the list of BuildData",
+      ".processJenkinsBuilds() maps a list of Jenkins builds into the list of BuildData",
       () async {
-        final jenkinsBuilds = [
-          testDataBuilder.getJenkinsBuild(result: JenkinsBuildResult.failure),
-          testDataBuilder.getJenkinsBuild(
-              number: 2, result: JenkinsBuildResult.notBuild),
-          testDataBuilder.getJenkinsBuild(
-              number: 3, result: JenkinsBuildResult.aborted),
-          testDataBuilder.getJenkinsBuild(
-              number: 4, result: JenkinsBuildResult.unstable),
-          testDataBuilder.getJenkinsBuild(
-              number: 5, result: JenkinsBuildResult.success),
-          testDataBuilder.getJenkinsBuild(number: 6, result: null),
+        const jenkinsResults = [
+          JenkinsBuildResult.failure,
+          JenkinsBuildResult.notBuild,
+          JenkinsBuildResult.aborted,
+          JenkinsBuildResult.unstable,
+          JenkinsBuildResult.success,
+          null,
         ];
-        final expected = [
-          testDataBuilder.getBuildData(
-            workflowName: jobName,
-            buildStatus: BuildStatus.failed,
-          ),
-          testDataBuilder.getBuildData(
-            buildNumber: 2,
-            workflowName: jobName,
-            buildStatus: BuildStatus.failed,
-          ),
-          testDataBuilder.getBuildData(
-            buildNumber: 3,
-            workflowName: jobName,
-            buildStatus: BuildStatus.cancelled,
-          ),
-          testDataBuilder.getBuildData(
-            buildNumber: 4,
-            workflowName: jobName,
-            buildStatus: BuildStatus.successful,
-          ),
-          testDataBuilder.getBuildData(
-            buildNumber: 5,
-            workflowName: jobName,
-            buildStatus: BuildStatus.successful,
-          ),
-          testDataBuilder.getBuildData(
-            buildNumber: 6,
-            workflowName: jobName,
-            buildStatus: BuildStatus.failed,
-          ),
+        const expectedStatuses = [
+          BuildStatus.failed,
+          BuildStatus.failed,
+          BuildStatus.cancelled,
+          BuildStatus.successful,
+          BuildStatus.successful,
+          BuildStatus.failed,
         ];
+        final jenkinsBuilds = <JenkinsBuild>[];
+        final expected = <BuildData>[];
 
-        whenFetchArtifact().thenAnswer(responses.artifactResponse);
+        for (int i = 0; i < 6; i++) {
+          jenkinsBuilds.add(createJenkinsBuild(
+            buildNumber: i + 1,
+            result: jenkinsResults[i],
+          ));
+          expected.add(createBuildData(
+            buildNumber: i + 1,
+            buildStatus: expectedStatuses[i],
+          ));
+        }
+
+        whenFetchArtifact().thenAnswer(responses.artifact);
 
         final result = adapter.processJenkinsBuilds(jenkinsBuilds, jobName);
 
@@ -200,10 +226,10 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() should throw StateError if a project with the given id is not found",
+      ".fetchBuilds() throws a StateError if a project with the given id is not found",
       () {
         whenFetchBuilds(jobName: 'test-non-job').thenAnswer(
-          (_) => responses.errorResponse<JenkinsBuildingJob>(),
+          (_) => responses.error<JenkinsBuildingJob>(),
         );
 
         final result = adapter.fetchBuilds('test-non-job');
@@ -213,13 +239,15 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() should fetch no more than last 28 builds of a project",
+      ".fetchBuilds() fetches no more than last 28 builds of a project",
       () {
         const expectedBuildsLength =
             JenkinsCiClientAdapter.initialFetchBuildsLimit;
-        responses.prepareBuilds(number: 30);
+        final builds = createJenkinsBuilds(
+            buildNumbers: List.generate(30, (index) => index));
+        responses.addBuilds(builds);
 
-        whenFetchBuilds().thenAnswer(responses.fetchBuildsResponse);
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
         final result = adapter.fetchBuilds(jobName);
 
@@ -231,16 +259,15 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() should fetch all builds",
+      ".fetchBuilds() fetches all builds",
       () {
         final expected = [
-          testDataBuilder.getBuildData(workflowName: jobName),
-          testDataBuilder.getBuildData(buildNumber: 2, workflowName: jobName),
-          testDataBuilder.getBuildData(buildNumber: 3, workflowName: jobName),
+          createBuildData(buildNumber: 1),
+          createBuildData(buildNumber: 2),
         ];
-        responses.prepareBuilds(number: 3);
+        responses.addBuilds(createJenkinsBuilds(buildNumbers: [1, 2]));
 
-        whenFetchBuilds().thenAnswer(responses.fetchBuildsResponse);
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
         final result = adapter.fetchBuilds(jobName);
 
@@ -249,7 +276,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() should throw an ArgumentError if the given build is null",
+      ".fetchBuildsAfter() throws an ArgumentError if the given build is null",
       () {
         final result = adapter.fetchBuildsAfter(jobName, null);
 
@@ -258,12 +285,12 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() should throw a StateError if a project with the given id is not found",
+      ".fetchBuildsAfter() throws a StateError if a project with the given id is not found",
       () {
         const build = BuildData(buildNumber: 1);
 
         whenFetchBuilds(jobName: 'test-non-job').thenAnswer(
-          (_) => responses.errorResponse<JenkinsBuildingJob>(),
+          (_) => responses.error<JenkinsBuildingJob>(),
         );
 
         final result = adapter.fetchBuildsAfter('test-non-job', build);
@@ -273,12 +300,12 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() should return empty list if there are no new builds",
+      ".fetchBuildsAfter() returns an empty list if there are no new builds",
       () {
         const build = BuildData(buildNumber: 1);
-        responses.prepareBuilds(number: 1);
+        responses.addBuilds(createJenkinsBuilds(buildNumbers: [1]));
 
-        whenFetchBuilds().thenAnswer(responses.fetchBuildsResponse);
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
         final result = adapter.fetchBuildsAfter(jobName, build);
 
@@ -287,19 +314,20 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() should fetch new builds added during synchronization",
+      ".fetchBuildsAfter() fetches new builds added during synchronization",
       () {
         const build = BuildData(buildNumber: 1);
-        responses.prepareBuilds(number: 3);
+        responses.addBuilds(createJenkinsBuilds(buildNumbers: [1, 2, 3]));
         bool additionalBuildsAdded = false;
 
         whenFetchBuilds().thenAnswer(
-          (invocation) => responses.fetchBuildsResponse(
+          (invocation) => responses.fetchBuilds(
             invocation,
             afterFetchCallback: additionalBuildsAdded
                 ? null
                 : () {
-                    responses.prepareBuilds(number: 2);
+                    responses
+                        .addBuilds(createJenkinsBuilds(buildNumbers: [4, 5]));
                     additionalBuildsAdded = true;
                   },
           ),
@@ -312,14 +340,14 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() should act normal if the given build has been deleted",
+      ".fetchBuildsAfter() acts normal if the given build has been deleted",
       () {
         const build = BuildData(buildNumber: 8);
-        responses.prepareBuilds(number: 6, buildNumberStep: 2);
+        responses.addBuilds(createJenkinsBuilds(
+          buildNumbers: [1, 3, 5, 7, 9, 11],
+        ));
 
-        whenFetchBuilds().thenAnswer(
-          (invocation) => responses.fetchBuildsResponse(invocation),
-        );
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
         final result = adapter.fetchBuildsAfter(jobName, build);
 
@@ -328,19 +356,21 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() should act normal on new builds added during synchronization if the given build has been deleted",
+      ".fetchBuildsAfter() acts normal on new builds added during synchronization if the given build has been deleted",
       () {
         const build = BuildData(buildNumber: 2);
-        responses.prepareBuilds(number: 3, buildNumberStep: 2);
+        responses.addBuilds(createJenkinsBuilds(buildNumbers: [1, 3, 5]));
         bool additionalBuildsAdded = false;
 
         whenFetchBuilds().thenAnswer(
-          (invocation) => responses.fetchBuildsResponse(
+          (invocation) => responses.fetchBuilds(
             invocation,
             afterFetchCallback: additionalBuildsAdded
                 ? null
                 : () {
-                    responses.prepareBuilds(number: 2);
+                    responses.addBuilds(createJenkinsBuilds(
+                      buildNumbers: [6, 7],
+                    ));
                     additionalBuildsAdded = true;
                   },
           ),
@@ -353,16 +383,16 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() should fetch new builds",
+      ".fetchBuildsAfter() fetches new builds performed after the given build",
       () {
         const build = BuildData(buildNumber: 1);
-        responses.prepareBuilds(number: 3);
+        responses.addBuilds(createJenkinsBuilds(buildNumbers: [1, 2, 3]));
         final expected = [
-          testDataBuilder.getBuildData(buildNumber: 2, workflowName: jobName),
-          testDataBuilder.getBuildData(buildNumber: 3, workflowName: jobName),
+          createBuildData(buildNumber: 2),
+          createBuildData(buildNumber: 3),
         ];
 
-        whenFetchBuilds().thenAnswer(responses.fetchBuildsResponse);
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
 
         final result = adapter.fetchBuildsAfter(jobName, build);
 
@@ -370,7 +400,7 @@ void main() {
       },
     );
 
-    test(".dispose() should close jenkins client", () {
+    test(".dispose() closes the Jenkins client", () {
       adapter.dispose();
 
       verify(jenkinsClientMock.close()).called(1);
@@ -378,28 +408,26 @@ void main() {
   });
 }
 
-class JenkinsClientMock extends Mock implements JenkinsClient {}
+class _JenkinsClientMock extends Mock implements JenkinsClient {}
 
-class JenkinsClientResponseBuilder {
-  final TestDataBuilder _testDataBuilder;
+/// A class that provides methods for building [_JenkinsClientMock] responses.
+class _JenkinsClientResponse {
   final String jobName;
   final List<JenkinsBuild> _builds = [];
 
-  JenkinsClientResponseBuilder(this.jobName, this._testDataBuilder);
+  _JenkinsClientResponse(this.jobName);
 
-  void prepareBuilds({
-    int number = 30,
-    int buildNumberStep = 1,
-  }) {
-    final startingBuildNumber = _builds.isEmpty ? 1 : _builds.last.number + 1;
-    _builds.addAll(_testDataBuilder.getJenkinsBuilds(
-      number: number,
-      buildNumberStep: buildNumberStep,
-      startingFromBuildNumber: startingBuildNumber,
-    ));
+  /// Adds the given [builds] list to the [_builds].
+  void addBuilds(Iterable<JenkinsBuild> builds) {
+    _builds.addAll(builds);
   }
 
-  Future<InteractionResult<JenkinsBuildingJob>> fetchBuildsResponse(
+  /// Builds the response for the [JenkinsClient.fetchBuilds] method.
+  ///
+  /// Uses [_builds] to create a response for the given [invocation].
+  /// If [afterFetchCallback] is not null this method invokes it after a 
+  /// response building is finished.
+  Future<InteractionResult<JenkinsBuildingJob>> fetchBuilds(
     Invocation invocation, {
     void Function() afterFetchCallback,
   }) {
@@ -422,6 +450,7 @@ class JenkinsClientResponseBuilder {
     return _wrapFuture(InteractionResult.success(result: _result));
   }
 
+  /// Applies the given [limits] to the [_builds] list.
   List<JenkinsBuild> _applyLimits(JenkinsQueryLimits limits) {
     final _buildsToProcess = _builds.reversed.toList();
 
@@ -445,19 +474,31 @@ class JenkinsClientResponseBuilder {
         : _buildsToProcess.sublist(limits.lower ?? 0, limits.upper);
   }
 
-  Future<InteractionResult<Map<String, dynamic>>> artifactResponse([_]) {
-    final result = _testDataBuilder.getBuildCoverageArtifact();
+  /// Builds the response for the [JenkinsClient.fetchArtifactByRelativePath] 
+  /// method.
+  Future<InteractionResult<Map<String, dynamic>>> artifact([_]) {
+    final result = <String, dynamic>{
+      'total': {
+        'branches': {
+          'pct': 60,
+        },
+      },
+    };
     return _wrapFuture(InteractionResult.success(result: result));
   }
 
-  Future<InteractionResult<T>> errorResponse<T>() {
+  /// Builds the error response creating an [InteractionResult.error] instance.
+  Future<InteractionResult<T>> error<T>() {
     return _wrapFuture(InteractionResult<T>.error());
   }
 
+  /// Wraps the given [value] into the [Future.value].
   Future<T> _wrapFuture<T>(T value) {
     return Future.value(value);
   }
 
+  /// Resets this [_JenkinsClientResponse] for a new test case to ensure 
+  /// different test cases have no hidden dependencies.
   void reset() {
     _builds.clear();
   }
