@@ -11,7 +11,7 @@ class FlutterProcess extends ProcessWrapper {
   /// Starts the flutter executable with the given [args] in separate process.
   ///
   /// [workingDir] specifies the directory in which the command will be running.
-  /// [environment] is the [Environment] that will be available for the process.
+  /// The [environment] contains relevant to process information.
   static Future<FlutterProcess> start(
     FlutterCommand args, {
     String workingDir,
