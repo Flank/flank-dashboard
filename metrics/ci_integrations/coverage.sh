@@ -17,3 +17,7 @@ if test -f "coverage_badge.svg"; then
 fi
 
 genhtml -o build/coverage/html build/coverage/lcov/lcov.info
+
+if [[ "$1" == "-open" ]]; then
+    open build/coverage/html/index.html
+fi
