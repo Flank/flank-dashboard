@@ -1,4 +1,4 @@
-import 'package:ci_integration/integration/ci_integration/config/model/sync_config.dart';
+import 'package:ci_integration/integration/ci/config/model/sync_config.dart';
 import 'package:test/test.dart';
 
 void main() {

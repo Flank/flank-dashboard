@@ -1,23 +1,32 @@
 import 'package:ci_integration/destination/firestore/adapter/firestore_destination_client_adapter.dart';
 import 'package:ci_integration/destination/firestore/client_factory/firestore_destination_client_factory.dart';
-import 'package:ci_integration/destination/firestore/config/model/firestore_destination_config.dart';
+import 'package:firedart/firedart.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+
+import '../test_utils/test_data/firestore_config_test_data.dart';
 
 // ignore_for_file: prefer_const_constructors
 
 void main() {
   group("FirestoreDestinationClientFactory", () {
-    const firestoreProjectId = 'firestoreProjectId';
-    final firestoreClientFactory = FirestoreDestinationClientFactory();
+    final firestoreConfig = FirestoreConfigTestData.firestoreDestiantionConfig;
+    final email = firestoreConfig.firebaseUserEmail;
+    final password = firestoreConfig.firebaseUserPassword;
+
+    final _firebaseAuthMock = _FirebaseAuthMock();
+    final firestoreClientFactory =
+        FirestoreDestinationClientFactory(_firebaseAuthMock);
 
     FirestoreDestinationClientAdapter adapter;
 
     tearDown(() {
       adapter?.dispose();
+      reset(_firebaseAuthMock);
     });
 
     test(
-      ".create() should throw an ArgumentError if the given FirestoreConfig is null",
+      ".create() throws an ArgumentError if the given FirestoreConfig is null",
       () {
         expect(
           () => firestoreClientFactory.create(null),
@@ -26,18 +35,39 @@ void main() {
       },
     );
 
+    test(".create() throws if authentication is failed", () {
+      when(_firebaseAuthMock.signIn(email, password)).thenThrow(Exception());
+
+      final result = firestoreClientFactory.create(firestoreConfig);
+
+      expect(result, throwsA(anything));
+    });
+
+    test(".create() authenticates Firestore with the given config", () async {
+      final user = User.fromMap({});
+      when(_firebaseAuthMock.signIn(email, password)).thenAnswer(
+        (_) => Future.value(user),
+      );
+
+      adapter = await firestoreClientFactory.create(firestoreConfig);
+
+      verify(_firebaseAuthMock.signIn(email, password)).called(1);
+    });
+
     test(
-      ".create() should create a FirestoreDestinationClientAdapter instance from the given FirestoreConfig",
-      () {
-        final firestoreConfig = FirestoreDestinationConfig(
-          metricsProjectId: 'metricsProjectId',
-          firebaseProjectId: firestoreProjectId,
+      ".create() creates a FirestoreDestinationClientAdapter instance from the given FirestoreConfig",
+      () async {
+        final user = User.fromMap({});
+        when(_firebaseAuthMock.signIn(any, any)).thenAnswer(
+          (_) => Future.value(user),
         );
 
-        adapter = firestoreClientFactory.create(firestoreConfig);
+        adapter = await firestoreClientFactory.create(firestoreConfig);
 
         expect(adapter, isA<FirestoreDestinationClientAdapter>());
       },
     );
   });
 }
+
+class _FirebaseAuthMock extends Mock implements FirebaseAuth {}

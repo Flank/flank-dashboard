@@ -8,19 +8,19 @@ import '../../test_utils/test_data/firestore_config_test_data.dart';
 void main() {
   group("FirestoreDestinationConfigParser", () {
     final firestoreDestinationConfigParser = FirestoreDestinationConfigParser();
-    final firestoreConfig = FirestoreConfigTestData.firestoreConfig;
+    final firestoreConfig = FirestoreConfigTestData.firestoreDestiantionConfig;
     final firestoreConfigMap = {
-      'firestore': FirestoreConfigTestData.firestoreConfigJson,
+      'firestore': FirestoreConfigTestData.firestoreDestinationConfigMap,
     };
 
-    test(".canParse() should return false if the given map is null", () {
+    test(".canParse() returns false if the given map is null", () {
       final result = firestoreDestinationConfigParser.canParse(null);
 
       expect(false, equals(result));
     });
 
     test(
-      ".canParse() should return false if the given map does not contain a Firestore key",
+      ".canParse() returns false if the given map does not contain a Firestore key",
       () {
         final map = {'test': {}};
 
@@ -31,7 +31,7 @@ void main() {
     );
 
     test(
-      ".canParse() should return true if the parser can parse the given map",
+      ".canParse() returns true if the parser can parse the given map",
       () {
         final result =
             firestoreDestinationConfigParser.canParse(firestoreConfigMap);
@@ -40,14 +40,14 @@ void main() {
       },
     );
 
-    test(".parse() should return null if the given map is null", () {
+    test(".parse() returns null if the given map is null", () {
       final result = firestoreDestinationConfigParser.parse(null);
 
       expect(result, isNull);
     });
 
     test(
-      ".parse() should return null if the given map does not contain a Firestore key",
+      ".parse() returns null if the given map does not contain a Firestore key",
       () {
         final map = {'test': {}};
 
@@ -57,7 +57,7 @@ void main() {
       },
     );
 
-    test(".parse() should parses valid map and returns FirestoreConfig", () {
+    test(".parse() parses a valid map and returns FirestoreConfig", () {
       final result = firestoreDestinationConfigParser.parse(firestoreConfigMap);
 
       expect(result, equals(firestoreConfig));
