@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:ci_integration/ci_integration/runner/ci_integration_runner.dart';
-import 'package:ci_integration/common/logger/logger.dart';
+import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:ci_integration/cli/runner/ci_integration_runner.dart';
 
 Future<void> main(List<String> arguments) async {
   final Logger logger = Logger();

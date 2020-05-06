@@ -3,7 +3,7 @@ source:
     url: sample_url
     job_name: test_project
     username: username
-    apiKey: key
+    api_key: key
 destination:
   firestore:
     firebase_project_id: firebaseId
