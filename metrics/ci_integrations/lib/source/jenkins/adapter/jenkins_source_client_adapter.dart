@@ -8,6 +8,7 @@ import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
 import 'package:ci_integration/coverage/coverage_json_summary/model/coverage_json_summary.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
+import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for the [JenkinsClient] to implement the [SourceClient] interface.
@@ -20,7 +21,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
 
   /// Creates an instance of this adapter with the given [jenkinsClient].
   ///
-  /// Throws an [ArgumentError], if the given [jenkinsClient] is `null`.
+  /// Throws an [ArgumentError] if the given [JenkinsClient] is `null`.
   JenkinsSourceClientAdapter(this.jenkinsClient) {
     ArgumentError.checkNotNull(jenkinsClient, 'jenkinsClient');
   }
@@ -36,6 +37,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       projectId,
       limits: JenkinsQueryLimits.endBefore(0),
     );
+
     final lastBuild = buildingJob.lastBuild;
     final numberOfBuilds = lastBuild.number - build.buildNumber;
 
@@ -47,7 +49,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       build.buildNumber,
     );
 
-    return _processJenkinsBuilds(
+    return processJenkinsBuilds(
       builds,
       buildingJob.name,
       startFromBuildNumber: build.buildNumber,
@@ -60,7 +62,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       projectId,
       limits: JenkinsQueryLimits.endBefore(initialFetchBuildsLimit),
     );
-    return _processJenkinsBuilds(
+    return processJenkinsBuilds(
       buildingJob.builds,
       buildingJob.name,
     );
@@ -133,7 +135,8 @@ class JenkinsSourceClientAdapter implements SourceClient {
   /// than or equal to this value. This allows to avoid processing old builds
   /// since the range specifier in Jenkins API only provides an ability to set
   /// the fetch limits but not to filter data to fetch.
-  Future<List<BuildData>> _processJenkinsBuilds(
+  @visibleForTesting
+  Future<List<BuildData>> processJenkinsBuilds(
     List<JenkinsBuild> builds,
     String jobName, {
     int startFromBuildNumber,
@@ -200,7 +203,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       coverage = CoverageJsonSummary.fromJson(artifactContent);
     }
 
-    return coverage?.total?.branches?.percent ?? const Percent(0.0);
+    return coverage?.total?.branches?.percent;
   }
 
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
