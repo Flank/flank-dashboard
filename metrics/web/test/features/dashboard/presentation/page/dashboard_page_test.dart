@@ -12,8 +12,8 @@ import 'package:metrics/features/dashboard/presentation/strings/dashboard_string
 import 'package:metrics/features/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+import '../../../../test_utils/project_metrics_store_stub.dart';
 import '../../../../test_utils/signed_in_auth_store_fake.dart';
-import '../test_utils/project_metrics_store_stub.dart';
 
 void main() {
   group("DashboardPage", () {

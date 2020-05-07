@@ -15,7 +15,7 @@ void main() {
       reset(repository);
     });
 
-    final userCredentials = UserCredentialsParam(
+    const userCredentials = UserCredentialsParam(
       email: 'email',
       password: 'pass',
     );

@@ -8,8 +8,12 @@ import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawe
 import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
+import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
+import 'package:mockito/mockito.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+import '../../../../../test_utils/project_metrics_store_mock.dart';
+import '../../../../../test_utils/project_metrics_store_stub.dart';
 import '../../../../../test_utils/signed_in_auth_store_fake.dart';
 
 void main() {
@@ -42,14 +46,32 @@ void main() {
       expect(find.byType(LoginPage), findsOneWidget);
     },
   );
+
+  testWidgets(
+    "Unsubscribes from projects after logout",
+    (tester) async {
+      final metricsStore = ProjectMetricsStoreMock();
+
+      await tester.pumpWidget(MetricsDrawerTestbed(
+        metricsStore: metricsStore,
+      ));
+
+      await tester.tap(find.text(CommonStrings.logOut));
+      await tester.pumpAndSettle();
+
+      verify(metricsStore.unsubscribeFromProjects()).called(equals(1));
+    },
+  );
 }
 
 class MetricsDrawerTestbed extends StatelessWidget {
   final ThemeStore themeStore;
+  final ProjectMetricsStore metricsStore;
 
   const MetricsDrawerTestbed({
     Key key,
     this.themeStore,
+    this.metricsStore = const ProjectMetricsStoreStub(),
   }) : super(key: key);
 
   @override
@@ -58,6 +80,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
       inject: [
         Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
         Inject<AuthStore>(() => SignedInAuthStoreFake()),
+        Inject<ProjectMetricsStore>(() => metricsStore),
       ],
       initState: _initInjectorState,
       builder: (context) {

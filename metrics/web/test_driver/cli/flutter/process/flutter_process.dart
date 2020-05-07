@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import '../../common/model/environment.dart';
 import '../../common/process/process_wrapper.dart';
 import '../command/flutter_command.dart';
 
@@ -10,14 +11,17 @@ class FlutterProcess extends ProcessWrapper {
   /// Starts the flutter executable with the given [args] in separate process.
   ///
   /// [workingDir] specifies the directory in which the command will be running.
+  /// The [environment] contains relevant to process information.
   static Future<FlutterProcess> start(
     FlutterCommand args, {
     String workingDir,
+    Environment environment,
   }) async {
     final process = await Process.start(
       FlutterCommand.executableName,
       args.buildArgs(),
       workingDirectory: workingDir,
+      environment: environment?.toMap(),
     );
 
     return FlutterProcess._(process);

@@ -1,4 +1,5 @@
 import '../../common/config/browser_name.dart';
+import 'user_credentials.dart';
 
 /// Represents the arguments for the test driver application.
 class DriverTestArguments {
@@ -9,6 +10,7 @@ class DriverTestArguments {
   final bool verbose;
   final bool quiet;
   final bool showHelp;
+  final UserCredentials credentials;
 
   /// Creates the [DriverTestArguments].
   ///
@@ -27,5 +29,6 @@ class DriverTestArguments {
     this.verbose,
     this.quiet,
     this.showHelp,
+    this.credentials,
   });
 }
