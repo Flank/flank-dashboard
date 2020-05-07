@@ -345,6 +345,31 @@ void main() {
     );
 
     test(
+      ".projectMetrics are an empty list when the projects are the empty list",
+          () async {
+        final receiveProjects = _ReceiveProjectUpdatesStub(projects: []);
+
+        final metricsNotifier = ProjectMetricsNotifier(
+          receiveProjects,
+          receiveProjectMetricsUpdates,
+        );
+
+        await metricsNotifier.subscribeToProjects();
+
+        bool hasEmptyProjectMetrics;
+        final metricsListener = expectAsyncUntil0(() async {
+          final projectMetrics = metricsNotifier.projectsMetrics;
+          hasEmptyProjectMetrics =
+              projectMetrics != null && projectMetrics.isEmpty;
+
+          if (hasEmptyProjectMetrics) metricsNotifier.dispose();
+        }, () => hasEmptyProjectMetrics);
+
+        metricsNotifier.addListener(metricsListener);
+      },
+    );
+
+    test(
       ".subscribeToProjects() subscribes to projects updates",
       () async {
         final projectUpdates = _ReceiveProjectUpdatesStub();

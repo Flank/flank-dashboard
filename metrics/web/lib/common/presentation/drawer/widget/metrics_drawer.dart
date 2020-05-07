@@ -8,8 +8,6 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../auth/presentation/state/auth_notifier.dart';
-
 /// The application side menu widget.
 class MetricsDrawer extends StatelessWidget {
   const MetricsDrawer({
