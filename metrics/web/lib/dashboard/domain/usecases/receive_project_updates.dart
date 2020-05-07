@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:metrics/core/usecases/usecase.dart';
+import 'package:metrics/common/domain/usecases/usecase.dart';
 import 'package:metrics/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics_core/metrics_core.dart';
 

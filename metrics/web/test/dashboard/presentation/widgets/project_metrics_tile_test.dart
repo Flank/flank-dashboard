@@ -39,7 +39,7 @@ void main() {
   );
 
   testWidgets(
-    "Displays the ProjectMetrics even when the project name is null",
+    "Displays the ProjectMetricsData even when the project name is null",
     (WidgetTester tester) async {
       const metrics = ProjectMetricsData();
 

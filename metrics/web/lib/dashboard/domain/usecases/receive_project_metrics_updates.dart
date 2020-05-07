@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:metrics/core/usecases/usecase.dart';
+import 'package:metrics/common/domain/usecases/usecase.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';

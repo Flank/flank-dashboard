@@ -72,7 +72,7 @@ void main() {
     );
 
     test(
-      "creates ProjectMetrics with empty points from empty BuildMetrics",
+      "creates ProjectMetricsData with empty points from empty DashboardProjectMetrics",
       () async {
         final receiveEmptyMetrics = _ReceiveProjectMetricsUpdatesStub(
           metrics: const DashboardProjectMetrics(),
@@ -110,7 +110,7 @@ void main() {
     );
 
     test(
-      "creates ProjectMetrics with null metrics if the BuildMetrics is null",
+      "creates ProjectMetricsData with null metrics if the DashboardProjectMetrics is null",
       () async {
         final receiveProjectMetricsUpdates =
             _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
@@ -133,6 +133,8 @@ void main() {
 
           if (hasNullMetrics) projectMetricsNotifier.dispose();
         }, () => hasNullMetrics);
+
+        await projectMetricsNotifier.subscribeToProjects();
 
         projectMetricsNotifier.addListener(metricsListener);
       },
@@ -290,7 +292,7 @@ void main() {
     );
 
     test(
-      "deletes the ProjectMetrics if the project was deleted on server",
+      "deletes the ProjectMetricsData if the project was deleted on server",
       () async {
         final projects = _ReceiveProjectUpdatesStub.testProjects.toList();
 

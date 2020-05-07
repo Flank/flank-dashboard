@@ -1,6 +1,6 @@
-import 'package:metrics/core/usecases/usecase.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
 import 'package:metrics/auth/domain/repositories/user_repository.dart';
+import 'package:metrics/common/domain/usecases/usecase.dart';
 
 /// The use case that provides an ability to receive authentication updates.
 class ReceiveAuthenticationUpdates implements UseCase<Stream<User>, void> {

@@ -1,5 +1,5 @@
-import 'package:metrics/core/usecases/usecase.dart';
 import 'package:metrics/auth/domain/repositories/user_repository.dart';
+import 'package:metrics/common/domain/usecases/usecase.dart';
 
 /// The use case that provides an ability to sign out user.
 class SignOutUseCase implements UseCase<Future<void>, void> {
