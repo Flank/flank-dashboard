@@ -2,22 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/auth/presentation/model/auth_error_message.dart';
-import 'package:metrics/features/auth/presentation/state/auth_store.dart';
+import 'package:metrics/features/auth/presentation/pages/login_page.dart';
+import 'package:metrics/features/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
-import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:metrics/features/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../test_utils/project_metrics_store_mock.dart';
-import '../../../../test_utils/project_metrics_store_stub.dart';
-import '../../../../test_utils/signed_in_auth_store_fake.dart';
+import '../../../../test_utils/auth_notifier_stub.dart';
+import '../../../../test_utils/injection_container_testbed.dart';
+import '../../../../test_utils/signed_in_auth_notifier_stub.dart';
 
 void main() {
   group("LoginPage", () {
@@ -42,7 +40,9 @@ void main() {
     testWidgets(
       "navigates to the dashboard page if the login was successful",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _LoginPageTestbed());
+        await tester.pumpWidget(_LoginPageTestbed(
+          authNotifier: AuthNotifierStub(),
+        ));
 
         await _signIn(tester);
         await tester.pumpAndSettle();
@@ -52,25 +52,12 @@ void main() {
     );
 
     testWidgets(
-      "subscribes to projects if login was successful",
-      (tester) async {
-        final metricsStore = ProjectMetricsStoreMock();
-
-        await tester.pumpWidget(_LoginPageTestbed(metricsStore: metricsStore));
-
-        await _signIn(tester);
-
-        verify(metricsStore.subscribeToProjects()).called(equals(1));
-      },
-    );
-
-    testWidgets(
       "redirects to the dashboard page if a user is already signed in",
       (WidgetTester tester) async {
         await tester.pumpWidget(_LoginPageTestbed(
-          authStore: SignedInAuthStoreFake(),
+          authNotifier: SignedInAuthNotifierStub(),
         ));
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         expect(find.byType(DashboardPage), findsOneWidget);
       },
@@ -91,66 +78,32 @@ Future<void> _signIn(WidgetTester tester) async {
 }
 
 class _LoginPageTestbed extends StatelessWidget {
-  final AuthStore authStore;
-  final ProjectMetricsStore metricsStore;
+  final AuthNotifier authNotifier;
+  final ProjectMetricsNotifier metricsNotifier;
 
   const _LoginPageTestbed({
-    this.authStore,
-    this.metricsStore = const ProjectMetricsStoreStub(),
+    this.authNotifier,
+    this.metricsNotifier,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Injector(
-      inject: [
-        Inject<AuthStore>(() => authStore ?? AuthStoreStub()),
-        Inject<ProjectMetricsStore>(() => metricsStore),
-      ],
-      initState: () {
-        Injector.getAsReactive<AuthStore>().setState(
-          (store) => store.subscribeToAuthenticationUpdates(),
-        );
-      },
-      builder: (BuildContext context) {
-        return MaterialApp(
-          title: 'Login Page',
-          onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-            settings: settings,
-            isLoggedIn: Injector.get<AuthStore>().isLoggedIn,
-          ),
-        );
-      },
+    return InjectionContainerTestbed(
+      authNotifier: authNotifier,
+      metricsNotifier: metricsNotifier,
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            title: CommonStrings.metrics,
+            home: LoginPage(),
+            onGenerateRoute: (settings) => RouteGenerator.generateRoute(
+              settings: settings,
+              isLoggedIn:
+                  Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
+            ),
+          );
+        },
+      ),
     );
   }
-}
-
-class AuthStoreStub implements AuthStore {
-  final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
-
-  @override
-  bool get isLoggedIn => _isLoggedInSubject.value;
-
-  @override
-  Stream<bool> get loggedInStream => _isLoggedInSubject.stream;
-
-  @override
-  AuthErrorMessage get authErrorMessage => null;
-
-  @override
-  void subscribeToAuthenticationUpdates() {
-    _isLoggedInSubject.add(false);
-  }
-
-  @override
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
-    _isLoggedInSubject.add(true);
-  }
-
-  @override
-  Future<void> signOut() async {
-    _isLoggedInSubject.add(false);
-  }
-
-  @override
-  void dispose() {}
 }

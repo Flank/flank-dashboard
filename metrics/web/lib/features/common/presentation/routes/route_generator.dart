@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/features/auth/presentation/pages/loading_page.dart';
 import 'package:metrics/features/auth/presentation/pages/login_page.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
 
@@ -20,7 +21,11 @@ class RouteGenerator {
   }) {
     assert(settings != null);
 
-    if (isLoggedIn == null || !isLoggedIn) {
+    if (isLoggedIn == null) {
+      return _createMaterialPageRoute(widget: LoadingPage());
+    }
+
+    if (!isLoggedIn) {
       return _createMaterialPageRoute(name: login, widget: LoginPage());
     }
 

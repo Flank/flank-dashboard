@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:provider/provider.dart';
 
-typedef ThemeBuilder = Widget Function(BuildContext context, ThemeStore store);
+typedef ThemeBuilder = Widget Function(
+    BuildContext context, ThemeNotifier themeNotifier);
 
-/// Widget to rebuild the [MetricsApp] when the [ThemeStore] is changed.
+/// Widget to rebuild the [MetricsApp] when the [ThemeNotifier] is changed.
 class MetricsThemeBuilder extends StatelessWidget {
   final MetricsThemeData lightTheme;
   final MetricsThemeData darkTheme;
@@ -18,9 +19,9 @@ class MetricsThemeBuilder extends StatelessWidget {
   ///
   /// The [builder] should not be null.
   ///
-  /// Rebuilds the [MetricsApp] when the [ThemeStore] changes.
+  /// Rebuilds the [MetricsApp] when the [ThemeNotifier] changes.
   /// [builder] is the function used to build the child depending
-  /// on current theme store state.
+  /// on current theme state.
   const MetricsThemeBuilder({
     Key key,
     @required this.builder,
@@ -33,22 +34,19 @@ class MetricsThemeBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StateBuilder(
-      models: [Injector.getAsReactive<ThemeStore>()],
-      builder: (_, themeStore) {
-        final themeSnapshot = themeStore.snapshot.data as ThemeStore;
-
+    return Consumer<ThemeNotifier>(
+      builder: (_, themeNotifier, __) {
         return MetricsTheme(
-          data: _getThemeData(themeSnapshot),
-          child: builder(context, themeSnapshot),
+          data: _getThemeData(themeNotifier),
+          child: builder(context, themeNotifier),
         );
       },
     );
   }
 
-  /// Gets the [MetricsThemeType] from the [ThemeStore].
-  MetricsThemeData _getThemeData(ThemeStore themeSnapshot) {
-    if (themeSnapshot == null || !themeSnapshot.isDark) return lightTheme;
+  /// Gets the [MetricsThemeType] from the [ThemeNotifier].
+  MetricsThemeData _getThemeData(ThemeNotifier themeNotifier) {
+    if (themeNotifier == null || !themeNotifier.isDark) return lightTheme;
 
     return darkTheme;
   }

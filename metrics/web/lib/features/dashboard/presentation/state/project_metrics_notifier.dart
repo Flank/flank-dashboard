@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:metrics/features/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/features/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
@@ -11,24 +13,34 @@ import 'package:metrics/features/dashboard/domain/usecases/receive_project_updat
 import 'package:metrics/features/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics_core/metrics_core.dart';
-import 'package:rxdart/rxdart.dart';
 
 /// The store for the project metrics.
 ///
 /// Stores the [Project]s and their [DashboardProjectMetrics].
-class ProjectMetricsStore {
+class ProjectMetricsNotifier extends ChangeNotifier {
+  /// Provides an ability to receive project updates.
   final ReceiveProjectUpdates _receiveProjectsUpdates;
-  final ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
-  final Map<String, StreamSubscription> _buildMetricsSubscriptions = {};
-  final BehaviorSubject<Map<String, ProjectMetricsData>>
-      _projectsMetricsSubject = BehaviorSubject();
 
+  /// Provides an ability to receive project metrics updates.
+  final ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
+
+  /// A [Map] that holds all created [StreamSubscription].
+  final Map<String, StreamSubscription> _buildMetricsSubscriptions = {};
+
+  /// A [Map] that holds all loaded [ProjectMetricsData].
+  Map<String, ProjectMetricsData> _projectMetrics;
+
+  /// The projects subscription.
+  /// Needed to be able to stop listening the project updates.
   StreamSubscription _projectsSubscription;
+
+  /// Holds the error message that occurred during loading data.
+  String _errorMessage;
 
   /// Creates the project metrics store.
   ///
   /// The provided use cases should not be null.
-  ProjectMetricsStore(
+  ProjectMetricsNotifier(
     this._receiveProjectsUpdates,
     this._receiveProjectMetricsUpdates,
   ) : assert(
@@ -37,31 +49,42 @@ class ProjectMetricsStore {
           'The use cases should not be null',
         );
 
-  Stream<List<ProjectMetricsData>> get projectsMetrics =>
-      _projectsMetricsSubject.map((metricsMap) => metricsMap.values.toList());
+  /// Provides a list of project metrics.
+  List<ProjectMetricsData> get projectsMetrics =>
+      _projectMetrics?.values?.toList();
+
+  /// Provides an error description that occurred during loading metrics data.
+  String get errorMessage => _errorMessage;
 
   /// Subscribes to projects and its metrics.
   Future<void> subscribeToProjects() async {
     final projectsStream = _receiveProjectsUpdates();
+    _errorMessage = null;
     await _projectsSubscription?.cancel();
 
-    _projectsSubscription = projectsStream.listen(_projectsListener);
+    _projectsSubscription = projectsStream.listen(
+      _projectsListener,
+      onError: _errorHandler,
+    );
   }
 
   /// Unsubscribes from projects and it's metrics.
   Future<void> unsubscribeFromProjects() async {
     await _cancelSubscriptions();
-    _projectsMetricsSubject.add({});
+    notifyListeners();
   }
 
   /// Listens to project updates.
   void _projectsListener(List<Project> newProjects) {
-    if (newProjects == null || newProjects.isEmpty) {
-      _projectsMetricsSubject.add({});
+    if (newProjects == null) return;
+
+    if (newProjects.isEmpty) {
+      _projectMetrics = {};
+      notifyListeners();
       return;
     }
 
-    final projectsMetrics = _projectsMetricsSubject.value ?? {};
+    final projectsMetrics = _projectMetrics ?? {};
 
     final projectIds = newProjects.map((project) => project.id);
     projectsMetrics.removeWhere((projectId, value) {
@@ -91,7 +114,8 @@ class ProjectMetricsStore {
       projectsMetrics[projectId] = projectMetrics;
     }
 
-    _projectsMetricsSubject.add(projectsMetrics);
+    _projectMetrics = projectsMetrics;
+    notifyListeners();
   }
 
   /// Subscribes to project metrics.
@@ -103,13 +127,13 @@ class ProjectMetricsStore {
     _buildMetricsSubscriptions[projectId] =
         dashboardMetricsStream.listen((metrics) {
       _createProjectMetrics(metrics, projectId);
-    });
+    }, onError: _errorHandler);
   }
 
   /// Creates project metrics from [DashboardProjectMetrics].
   void _createProjectMetrics(
       DashboardProjectMetrics dashboardMetrics, String projectId) {
-    final projectsMetrics = _projectsMetricsSubject.value;
+    final projectsMetrics = _projectMetrics ?? {};
 
     final projectMetrics = projectsMetrics[projectId];
 
@@ -134,7 +158,8 @@ class ProjectMetricsStore {
       stability: dashboardMetrics.stability,
     );
 
-    _projectsMetricsSubject.add(projectsMetrics);
+    _projectMetrics = projectsMetrics;
+    notifyListeners();
   }
 
   /// Creates the project performance metrics from [PerformanceMetric].
@@ -176,12 +201,21 @@ class ProjectMetricsStore {
     for (final subscription in _buildMetricsSubscriptions.values) {
       await subscription?.cancel();
     }
+    _projectMetrics = null;
     _buildMetricsSubscriptions.clear();
   }
 
-  /// Cancels all subscriptions and closes all created streams.
-  Future<void> dispose() async {
-    await _cancelSubscriptions();
-    await _projectsMetricsSubject.close();
+  /// Saves the error [String] representation to [_errorMessage].
+  void _errorHandler(error) {
+    if (error is PlatformException) {
+      _errorMessage = error.message;
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _cancelSubscriptions();
+    super.dispose();
   }
 }

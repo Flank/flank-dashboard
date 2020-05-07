@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/auth_store.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
-import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:metrics/features/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../auth/presentation/state/auth_notifier.dart';
 
 /// The application side menu widget.
 class MetricsDrawer extends StatelessWidget {
@@ -22,58 +24,32 @@ class MetricsDrawer extends StatelessWidget {
           DrawerHeader(
             child: Container(),
           ),
-          StateBuilder<ThemeStore>(
-            models: [Injector.getAsReactive<ThemeStore>()],
-            builder: (context, model) {
-              final snapshot = model.snapshot.data;
-
+          Consumer<ThemeNotifier>(
+            builder: (context, model, _) {
               return CheckboxListTile(
-                value: snapshot.isDark,
+                value: model.isDark,
                 title: const Text('Dark theme'),
-                onChanged: (_) => _changeTheme(model, snapshot),
+                onChanged: (_) => model.changeTheme(),
               );
             },
           ),
-          StateBuilder<AuthStore>(
-            models: [Injector.getAsReactive<AuthStore>()],
-            builder:
-                (context, ReactiveModel<AuthStore> authStoreReactiveModel) {
-              return ListTile(
-                title: const Text(CommonStrings.logOut),
-                onTap: () => _signOut(context, authStoreReactiveModel),
-              );
-            },
-          )
+          ListTile(
+            title: const Text(CommonStrings.logOut),
+            onTap: () => _signOut(context),
+          ),
         ],
       ),
     );
   }
 
   /// Signs out a user from the app.
-  Future<void> _signOut(
-    BuildContext context,
-    ReactiveModel<AuthStore> authStoreReactiveModel,
-  ) async {
-    StreamSubscription _loggedInStreamSubscription;
+  Future<void> _signOut(BuildContext context) async {
+    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
-    _loggedInStreamSubscription = authStoreReactiveModel.state.loggedInStream
-        .listen((isUserLoggedIn) async {
-      if (isUserLoggedIn != null && !isUserLoggedIn) {
-        await Injector.get<ProjectMetricsStore>().unsubscribeFromProjects();
-
-        await Navigator.pushNamedAndRemoveUntil(
-            context, RouteGenerator.login, (Route<dynamic> route) => false);
-
-        await _loggedInStreamSubscription.cancel();
-      }
-    });
-
-    await authStoreReactiveModel.setState((store) => store.signOut());
-  }
-
-  void _changeTheme(ReactiveModel<ThemeStore> model, ThemeStore snapshot) {
-    model.setState(
-      (model) => snapshot.isDark = !snapshot.isDark,
-    );
+    await authNotifier.signOut();
+    await Provider.of<ProjectMetricsNotifier>(context, listen: false)
+        .unsubscribeFromProjects();
+    await Navigator.pushNamedAndRemoveUntil(
+        context, RouteGenerator.login, (Route<dynamic> route) => false);
   }
 }

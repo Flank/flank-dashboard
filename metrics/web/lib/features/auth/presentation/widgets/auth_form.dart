@@ -1,9 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/auth_store.dart';
+import 'package:metrics/features/auth/presentation/model/auth_error_message.dart';
+import 'package:metrics/features/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:provider/provider.dart';
 
 /// Shows an authentication form to sign in.
 class AuthForm extends StatefulWidget {
@@ -45,15 +46,15 @@ class _AuthFormState extends State<AuthForm> {
             obscureText: true,
             validator: _validatePassword,
           ),
-          StateBuilder(
-            models: [Injector.getAsReactive<AuthStore>()],
-            builder: (_, ReactiveModel<AuthStore> store) {
-              if (store.state.authErrorMessage == null) return Container();
+          Selector<AuthNotifier, AuthErrorMessage>(
+            selector: (_, state) => state.authErrorMessage,
+            builder: (_, authErrorMessage, __) {
+              if (authErrorMessage == null) return Container();
 
               return Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Text(
-                  store.state.authErrorMessage.message,
+                  authErrorMessage.message,
                   style: const TextStyle(color: Colors.red),
                 ),
               );
@@ -104,11 +105,10 @@ class _AuthFormState extends State<AuthForm> {
   /// Starts sign in process
   void _submit() {
     if (_formKey.currentState.validate()) {
-      Injector.getAsReactive<AuthStore>().setState(
-        (store) => store.signInWithEmailAndPassword(
-          _emailController.text,
-          _passwordController.text,
-        ),
+      Provider.of<AuthNotifier>(context, listen: false)
+          .signInWithEmailAndPassword(
+        _emailController.text,
+        _passwordController.text,
       );
     }
   }

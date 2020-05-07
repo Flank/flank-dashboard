@@ -7,14 +7,14 @@ import 'package:metrics/features/auth/domain/usecases/parameters/user_credential
 import 'package:metrics/features/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/features/auth/domain/usecases/sign_out_usecase.dart';
-import 'package:metrics/features/auth/presentation/state/auth_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
 
 void main() {
-  group("AuthStore", () {
+  group("AuthNotifier", () {
     final signInUseCase = SignInUseCaseMock();
     final signOutUseCase = SignOutUseCaseMock();
     final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
@@ -22,7 +22,7 @@ void main() {
     const email = 'test@email.com';
     const password = 'password';
 
-    final authStore = AuthStore(
+    final authNotifier = AuthNotifier(
       receiveAuthUpdates,
       signInUseCase,
       signOutUseCase,
@@ -34,27 +34,23 @@ void main() {
       reset(receiveAuthUpdates);
     });
 
-    tearDownAll(() {
-      authStore.dispose();
-    });
-
     test("throws AssertionError if a receiveAuthUpdates parameter is null", () {
       expect(
-            () => AuthStore(null, signInUseCase, signOutUseCase),
+        () => AuthNotifier(null, signInUseCase, signOutUseCase),
         MatcherUtil.throwsAssertionError,
       );
     });
 
     test("throws AssertionError if a signInUseCase parameter is null", () {
       expect(
-            () => AuthStore(receiveAuthUpdates, null, signOutUseCase),
+        () => AuthNotifier(receiveAuthUpdates, null, signOutUseCase),
         MatcherUtil.throwsAssertionError,
       );
     });
 
     test("throws AssertionError if a signOutUseCase parameter is null", () {
       expect(
-            () => AuthStore(receiveAuthUpdates, signInUseCase, null),
+        () => AuthNotifier(receiveAuthUpdates, signInUseCase, null),
         MatcherUtil.throwsAssertionError,
       );
     });
@@ -65,35 +61,9 @@ void main() {
         when(receiveAuthUpdates.call())
             .thenAnswer((realInvocation) => const Stream.empty());
 
-        authStore.subscribeToAuthenticationUpdates();
+        authNotifier.subscribeToAuthenticationUpdates();
 
         verify(receiveAuthUpdates.call()).called(equals(1));
-      },
-    );
-
-    test(
-      ".loggedInStream emits false if null is emitted by ReceiveAuthUpdates",
-      () async {
-        final usersController = StreamController<User>();
-        when(receiveAuthUpdates()).thenAnswer((_) => usersController.stream);
-
-        authStore.subscribeToAuthenticationUpdates();
-        usersController.add(null);
-
-        expect(authStore.loggedInStream, emitsThrough(false));
-      },
-    );
-
-    test(
-      ".loggedInStream emits true if a new user is emitted by ReceiveAuthUpdates",
-      () async {
-        final usersController = StreamController<User>();
-        when(receiveAuthUpdates()).thenAnswer((_) => usersController.stream);
-
-        authStore.subscribeToAuthenticationUpdates();
-        usersController.add(User(id: 'id'));
-
-        expect(authStore.loggedInStream, emitsThrough(true));
       },
     );
 
@@ -105,7 +75,7 @@ void main() {
         when(receiveAuthUpdates.call())
             .thenAnswer((realInvocation) => userController.stream);
 
-        authStore.subscribeToAuthenticationUpdates();
+        authNotifier.subscribeToAuthenticationUpdates();
 
         expect(userController.hasListener, isTrue);
       },
@@ -116,28 +86,28 @@ void main() {
 
       when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(user));
 
-      authStore.subscribeToAuthenticationUpdates();
+      authNotifier.subscribeToAuthenticationUpdates();
 
-      await authStore.signInWithEmailAndPassword(email, password);
+      await authNotifier.signInWithEmailAndPassword(email, password);
 
-      expect(authStore.isLoggedIn, isTrue);
+      expect(authNotifier.isLoggedIn, isTrue);
     });
 
     test(".isLoggedIn status is false after a user signs out", () async {
       when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(null));
 
-      authStore.subscribeToAuthenticationUpdates();
+      authNotifier.subscribeToAuthenticationUpdates();
 
-      await authStore.signOut();
+      await authNotifier.signOut();
 
-      expect(authStore.isLoggedIn, isFalse);
+      expect(authNotifier.isLoggedIn, isFalse);
     });
 
     test(".signInWithEmailAndPassword() delegates to signInUseCase", () {
       const email = 'test@test.com';
       const password = 'someTestPassword';
 
-      authStore.signInWithEmailAndPassword(email, password);
+      authNotifier.signInWithEmailAndPassword(email, password);
 
       const userCredentials = UserCredentialsParam(
         email: email,
@@ -154,9 +124,9 @@ void main() {
 
       when(signInUseCase.call(any)).thenThrow(authException);
 
-      authStore.signInWithEmailAndPassword('email', 'password');
+      authNotifier.signInWithEmailAndPassword('email', 'password');
 
-      expect(authStore.authErrorMessage, isNotNull);
+      expect(authNotifier.authErrorMessage, isNotNull);
     });
 
     test(
@@ -174,18 +144,19 @@ void main() {
 
         when(signInUseCase.call(invalidCredentials)).thenThrow(authException);
 
-        authStore.signInWithEmailAndPassword('email', 'password');
+        authNotifier.signInWithEmailAndPassword('email', 'password');
 
-        expect(authStore.authErrorMessage, isNotNull);
+        expect(authNotifier.authErrorMessage, isNotNull);
 
-        authStore.signInWithEmailAndPassword('valid_email', 'valid_password');
+        authNotifier.signInWithEmailAndPassword(
+            'valid_email', 'valid_password');
 
-        expect(authStore.authErrorMessage, isNull);
+        expect(authNotifier.authErrorMessage, isNull);
       },
     );
 
     test(".signOut() delegates to the SignOutUseCase", () {
-      authStore.signOut();
+      authNotifier.signOut();
 
       verify(signOutUseCase()).called(equals(1));
     });
@@ -197,11 +168,11 @@ void main() {
 
         when(receiveAuthUpdates()).thenAnswer((_) => userController.stream);
 
-        authStore.subscribeToAuthenticationUpdates();
+        authNotifier.subscribeToAuthenticationUpdates();
 
         expect(userController.hasListener, isTrue);
 
-        authStore.dispose();
+        authNotifier.dispose();
 
         expect(userController.hasListener, isFalse);
       },

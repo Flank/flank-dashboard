@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
-import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
-import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
+import 'package:metrics/features/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/project_metrics_tile.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:provider/provider.dart';
 
 /// A widget that displays the [MetricsTableHeader] with the list of [ProjectMetricsTile].
 class MetricsTable extends StatelessWidget {
@@ -16,33 +15,30 @@ class MetricsTable extends StatelessWidget {
       children: <Widget>[
         const MetricsTableHeader(),
         Expanded(
-          child: WhenRebuilder<ProjectMetricsStore>(
-            models: [Injector.getAsReactive<ProjectMetricsStore>()],
-            onError: _buildLoadingErrorPlaceholder,
-            onWaiting: () => const LoadingPlaceholder(),
-            onIdle: () => const LoadingPlaceholder(),
-            onData: (store) {
-              return StreamBuilder<List<ProjectMetricsData>>(
-                stream: store.projectsMetrics,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return const LoadingPlaceholder();
+          child: Consumer<ProjectMetricsNotifier>(
+            builder: (_, projectsMetricsNotifier, __) {
+              if (projectsMetricsNotifier.errorMessage != null) {
+                return _buildLoadingErrorPlaceholder(
+                  projectsMetricsNotifier.errorMessage,
+                );
+              }
 
-                  final projects = snapshot.data;
+              final projects = projectsMetricsNotifier.projectsMetrics;
 
-                  if (projects.isEmpty) {
-                    return const _DashboardTablePlaceholder(
-                      text: DashboardStrings.noConfiguredProjects,
-                    );
-                  }
+              if (projects == null) return const LoadingPlaceholder();
 
-                  return ListView.builder(
-                    itemCount: projects.length,
-                    itemBuilder: (context, index) {
-                      final project = projects[index];
+              if (projects.isEmpty) {
+                return const _DashboardTablePlaceholder(
+                  text: DashboardStrings.noConfiguredProjects,
+                );
+              }
 
-                      return ProjectMetricsTile(projectMetrics: project);
-                    },
-                  );
+              return ListView.builder(
+                itemCount: projects.length,
+                itemBuilder: (context, index) {
+                  final project = projects[index];
+
+                  return ProjectMetricsTile(projectMetrics: project);
                 },
               );
             },
@@ -53,9 +49,9 @@ class MetricsTable extends StatelessWidget {
   }
 
   /// Builds the loading error placeholder.
-  Widget _buildLoadingErrorPlaceholder(error) {
+  Widget _buildLoadingErrorPlaceholder(String errorMessage) {
     return _DashboardTablePlaceholder(
-      text: CommonStrings.getLoadingErrorMessage("$error"),
+      text: CommonStrings.getLoadingErrorMessage(errorMessage),
     );
   }
 }

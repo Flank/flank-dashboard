@@ -1,3 +1,5 @@
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
@@ -54,7 +56,7 @@ class _PlaceholderTextTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       metricsThemeData: theme,
-      body: const NoDataPlaceholder(),
+      body: NoDataPlaceholder(),
     );
   }
 }

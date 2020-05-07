@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/features/auth/presentation/state/auth_store.dart';
 import 'package:metrics/features/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/features/common/presentation/drawer/widget/metrics_drawer.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/store/theme_store.dart';
+import 'package:metrics/features/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
+import 'package:metrics/features/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/build_number_text_metric.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:mockito/mockito.dart';
 
-import '../../../../test_utils/project_metrics_store_stub.dart';
-import '../../../../test_utils/signed_in_auth_store_fake.dart';
+import '../../../../test_utils/injection_container_testbed.dart';
+import '../../../../test_utils/project_metrics_notifier_mock.dart';
 
 void main() {
   group("DashboardPage", () {
@@ -54,10 +53,10 @@ void main() {
     testWidgets(
       "changes the widget theme on switching theme in the drawer",
       (WidgetTester tester) async {
-        final themeStore = ThemeStore();
+        final themeStore = ThemeNotifier();
 
         await tester.pumpWidget(_DashboardTestbed(
-          themeStore: themeStore,
+          themeNotifier: themeStore,
         ));
         await tester.pumpAndSettle();
 
@@ -80,6 +79,19 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      "subscribes to project updates in intiState",
+      (tester) async {
+        final metricsNotifier = ProjectMetricsNotifierMock();
+
+        await tester.pumpWidget(_DashboardTestbed(
+          metricsNotifier: metricsNotifier,
+        ));
+
+        verify(metricsNotifier.subscribeToProjects()).called(equals(1));
+      },
+    );
   });
 }
 
@@ -94,35 +106,26 @@ Color _getBuildNumberMetricColor(WidgetTester tester) {
   return buildNumberTextWidget.style.color;
 }
 
+/// A testbed widget, used to test the [DashboardPage] widget.
 class _DashboardTestbed extends StatelessWidget {
-  static const ProjectMetricsStore metricsStore = ProjectMetricsStoreStub();
-  final ThemeStore themeStore;
+  /// The [ThemeNotifier] that will be injected and used to test the [DashboardPage].
+  final ThemeNotifier themeNotifier;
+  final ProjectMetricsNotifier metricsNotifier;
 
+  /// Creates the [_DashboardTestbed] with the given [themeNotifier].
   const _DashboardTestbed({
     Key key,
-    this.themeStore,
+    this.themeNotifier,
+    this.metricsNotifier,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Injector(
-        inject: [
-          Inject<ProjectMetricsStore>(() => metricsStore),
-          Inject<ThemeStore>(() => themeStore ?? ThemeStore()),
-          Inject<AuthStore>(() => SignedInAuthStoreFake()),
-        ],
-        initState: () {
-          Injector.getAsReactive<ProjectMetricsStore>().setState(
-            (store) => store.subscribeToProjects(),
-            catchError: true,
-          );
-          Injector.getAsReactive<ThemeStore>()
-              .setState((store) => store.isDark = false);
-          Injector.getAsReactive<AuthStore>()
-              .setState((store) => store.subscribeToAuthenticationUpdates());
-        },
-        builder: (BuildContext context) => MetricsThemeBuilder(
+    return InjectionContainerTestbed(
+      themeNotifier: themeNotifier,
+      metricsNotifier: metricsNotifier,
+      child: MaterialApp(
+        home: MetricsThemeBuilder(
           builder: (_, __) {
             return DashboardPage();
           },

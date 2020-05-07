@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/auth_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/common/presentation/routes/route_generator.dart';
 import 'package:metrics/features/common/presentation/strings/common_strings.dart';
-import 'package:metrics/features/dashboard/presentation/state/project_metrics_store.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:metrics/features/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:provider/provider.dart';
 
 /// Shows the authentication form to sign in.
 class LoginPage extends StatefulWidget {
@@ -16,27 +16,27 @@ class LoginPage extends StatefulWidget {
 
 /// The logic and internal state for the [LoginPage] widget.
 class _LoginPageState extends State<LoginPage> {
-  StreamSubscription _loggedInStreamSubscription;
-
   @override
   void initState() {
-    final authStore = Injector.get<AuthStore>();
+    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    authNotifier.addListener(_loggedInListener);
 
-    _loggedInStreamSubscription =
-        authStore.loggedInStream.listen(_loggedInListener);
     super.initState();
   }
 
-  /// Navigates to the dashboard page if logged in.
-  void _loggedInListener(bool isLoggedIn) {
-    if (isLoggedIn != null && isLoggedIn) {
-      Injector.getAsReactive<ProjectMetricsStore>().setState(
-        (store) => store.subscribeToProjects(),
-        catchError: true,
-      );
+  Future<void> _loggedInListener() async {
+    final isLoggedIn =
+        Provider.of<AuthNotifier>(context, listen: false).isLoggedIn;
 
-      Navigator.pushNamedAndRemoveUntil(
-          context, RouteGenerator.dashboard, (Route<dynamic> route) => false);
+    if (isLoggedIn != null && isLoggedIn) {
+      await Provider.of<ProjectMetricsNotifier>(context, listen: false)
+          .subscribeToProjects();
+
+      await Navigator.pushNamedAndRemoveUntil(
+        context,
+        RouteGenerator.dashboard,
+        (Route<dynamic> route) => false,
+      );
     }
   }
 
@@ -65,11 +65,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _loggedInStreamSubscription.cancel();
-    super.dispose();
   }
 }

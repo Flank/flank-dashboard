@@ -1,19 +1,18 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:metrics/features/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/features/auth/domain/usecases/parameters/user_credentials_param.dart';
 import 'package:metrics/features/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/features/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/features/auth/presentation/model/auth_error_message.dart';
-import 'package:rxdart/rxdart.dart';
 
-/// The auth store for a user.
+/// The auth state for a user.
 ///
-/// Stores [_isLoggedInSubject] stream to determine user's authentication status.
 /// Provides the ability to sign in and sign out user from the app,
 /// track the [isLoggedIn] status and authentication error message if any
-class AuthStore {
+class AuthNotifier extends ChangeNotifier {
   /// Used to receive authentication updates.
   final ReceiveAuthenticationUpdates _receiveAuthUpdates;
 
@@ -23,15 +22,15 @@ class AuthStore {
   /// Used to sign out a user.
   final SignOutUseCase _signOutUseCase;
 
-  /// Stream that contains a user's authentication status.
-  final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
+  /// Contains a user's authentication status.
+  bool _isLoggedIn;
 
   StreamSubscription _authUpdatesSubscription;
 
   /// Contains text description of any authentication exception that may occur.
   AuthErrorMessage _authExceptionDescription;
 
-  AuthStore(
+  AuthNotifier(
     this._receiveAuthUpdates,
     this._signInUseCase,
     this._signOutUseCase,
@@ -39,27 +38,26 @@ class AuthStore {
         assert(_signInUseCase != null),
         assert(_signOutUseCase != null);
 
-  /// Returns a stream of a user's authentication status.
-  Stream<bool> get loggedInStream => _isLoggedInSubject.stream;
-
   /// Determines if a user is authenticated.
-  bool get isLoggedIn => _isLoggedInSubject.value;
+  bool get isLoggedIn => _isLoggedIn;
 
-  /// Returns a string, containing an auth error message.
+  /// Returns an AuthErrorMessage, containing an auth error message.
   AuthErrorMessage get authErrorMessage => _authExceptionDescription;
 
   /// Subscribes to a user authentication updates
   /// to get notified when the user got signed in or signed out.
   void subscribeToAuthenticationUpdates() {
     _authUpdatesSubscription?.cancel();
-    _authUpdatesSubscription = _receiveAuthUpdates().listen(
-      (user) => _isLoggedInSubject.add(user != null),
-    );
+    _authUpdatesSubscription = _receiveAuthUpdates().listen((user) {
+      _isLoggedIn = user != null;
+      notifyListeners();
+    });
   }
 
   /// Signs in user to the app using an [email] and a [password].
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     _authExceptionDescription = null;
+    notifyListeners();
 
     try {
       await _signInUseCase(UserCredentialsParam(
@@ -68,6 +66,7 @@ class AuthStore {
       ));
     } on AuthenticationException catch (exception) {
       _authExceptionDescription = AuthErrorMessage(exception.code);
+      notifyListeners();
     }
   }
 
@@ -77,8 +76,9 @@ class AuthStore {
   }
 
   /// Cancels all created subscriptions.
+  @override
   void dispose() {
     _authUpdatesSubscription?.cancel();
-    _isLoggedInSubject.close();
+    super.dispose();
   }
 }

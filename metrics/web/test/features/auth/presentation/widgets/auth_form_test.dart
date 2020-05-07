@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/features/auth/presentation/model/auth_error_message.dart';
-import 'package:metrics/features/auth/presentation/state/auth_store.dart';
+import 'package:metrics/features/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/features/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
+
+import '../../../../test_utils/injection_container_testbed.dart';
 
 void main() {
   final emailInputFinder =
@@ -22,17 +22,21 @@ void main() {
   const testPassword = 'testPassword';
 
   group("AuthForm", () {
-    testWidgets("email input shows error message if value is empty",
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const _AuthFormTestbed());
+    testWidgets(
+      "email input shows an error message if a value is empty",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _AuthFormTestbed());
 
-      await tester.tap(submitButtonFinder);
-      await tester.pump();
+        await tester.tap(submitButtonFinder);
+        await tester.pumpAndSettle();
 
-      expect(find.text(AuthStrings.requiredEmailErrorMessage), findsOneWidget);
-    });
+        expect(
+            find.text(AuthStrings.requiredEmailErrorMessage), findsOneWidget);
+      },
+    );
 
-    testWidgets("email input shows error message if value is not a valid email",
+    testWidgets(
+        "email input shows an error message if a value is not a valid email",
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
       await tester.enterText(emailInputFinder, 'notAnEmail');
@@ -43,34 +47,35 @@ void main() {
       expect(find.text(AuthStrings.invalidEmailErrorMessage), findsOneWidget);
     });
 
-    testWidgets("password input shows error message if value is empty",
+    testWidgets("password input shows an error message if a value is empty",
         (WidgetTester tester) async {
       await tester.pumpWidget(const _AuthFormTestbed());
 
       await tester.tap(submitButtonFinder);
       await tester.pump();
 
-      expect(find.text(AuthStrings.requiredPasswordErrorMessage), findsOneWidget);
+      expect(
+          find.text(AuthStrings.requiredPasswordErrorMessage), findsOneWidget);
     });
 
     testWidgets(
         "signInWithEmailAndPassword method is called on tap on sign in button",
         (WidgetTester tester) async {
-      final authStore = AuthStoreMock();
+      final authNotifier = AuthNotifierMock();
 
-      await tester.pumpWidget(_AuthFormTestbed(authStore: authStore));
+      await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
       await tester.enterText(emailInputFinder, testEmail);
       await tester.enterText(passwordInputFinder, testPassword);
       await tester.tap(submitButtonFinder);
 
-      verify(authStore.signInWithEmailAndPassword(testEmail, testPassword))
+      verify(authNotifier.signInWithEmailAndPassword(testEmail, testPassword))
           .called(equals(1));
     });
 
     testWidgets("shows an auth error text if the login process went wrong",
         (WidgetTester tester) async {
       await tester.pumpWidget(_AuthFormTestbed(
-        authStore: SignInErrorAuthStoreStub(),
+        authNotifier: SignInErrorAuthNotifierStub(),
       ));
       await tester.enterText(emailInputFinder, 'test@email.com');
       await tester.enterText(passwordInputFinder, 'testPassword');
@@ -78,7 +83,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.text(SignInErrorAuthStoreStub.errorMessage.message),
+        find.text(SignInErrorAuthNotifierStub.errorMessage.message),
         findsOneWidget,
       );
     });
@@ -86,41 +91,33 @@ void main() {
 }
 
 class _AuthFormTestbed extends StatelessWidget {
-  final AuthStore authStore;
+  final AuthNotifier authNotifier;
 
   const _AuthFormTestbed({
-    this.authStore,
+    this.authNotifier,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Injector(
-      inject: [
-        Inject<AuthStore>(() => authStore ?? AuthStoreMock()),
-      ],
-      initState: () {
-        Injector.getAsReactive<AuthStore>().setState(
-          (store) => store.subscribeToAuthenticationUpdates(),
-        );
-      },
-      builder: (BuildContext context) => MaterialApp(
-        title: 'Auth form',
-        home: Scaffold(
-          body: AuthForm(),
-        ),
+    return InjectionContainerTestbed(
+      authNotifier: authNotifier,
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            home: Scaffold(
+              body: AuthForm(),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
-/// Stub of [AuthStore] that emulates presence of auth message error.
-class SignInErrorAuthStoreStub implements AuthStore {
+/// Stub of the [AuthNotifier] that emulates presence of auth message error.
+class SignInErrorAuthNotifierStub extends ChangeNotifier
+    implements AuthNotifier {
   static const errorMessage = AuthErrorMessage(AuthErrorCode.unknown);
-
-  final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
-
-  @override
-  Stream<bool> get loggedInStream => _isLoggedInSubject.stream;
 
   @override
   bool get isLoggedIn => false;
@@ -133,6 +130,7 @@ class SignInErrorAuthStoreStub implements AuthStore {
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     _authExceptionDescription = errorMessage;
+    notifyListeners();
   }
 
   @override
@@ -140,10 +138,9 @@ class SignInErrorAuthStoreStub implements AuthStore {
 
   @override
   Future<void> signOut() async {}
-
-  @override
-  void dispose() {}
 }
 
-/// Mock implementation of the [AuthStore].
-class AuthStoreMock extends Mock implements AuthStore {}
+/// Mock implementation of the [AuthNotifier].
+class AuthNotifierMock extends Mock
+    with ChangeNotifier
+    implements AuthNotifier {}

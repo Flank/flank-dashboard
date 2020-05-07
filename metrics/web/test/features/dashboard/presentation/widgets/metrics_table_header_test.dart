@@ -1,3 +1,5 @@
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
@@ -58,7 +60,7 @@ void main() {
 class _DashboardTableHeaderTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MetricsThemedTestbed(
+    return MetricsThemedTestbed(
       body: MetricsTableHeader(),
     );
   }
