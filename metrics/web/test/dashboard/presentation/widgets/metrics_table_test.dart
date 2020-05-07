@@ -11,9 +11,9 @@ import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart
 import 'package:metrics/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../test_utils/injection_container_testbed.dart';
 import '../../../test_utils/project_metrics_notifier_mock.dart';
 import '../../../test_utils/project_metrics_notifier_stub.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("MetricsTable", () {
@@ -201,7 +201,7 @@ class _MetricsTableTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: InjectionContainerTestbed(
+      home: TestInjectionContainer(
         metricsNotifier: metricsNotifier,
         child: MetricsTable(),
       ),

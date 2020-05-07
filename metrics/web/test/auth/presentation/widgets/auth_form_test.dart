@@ -9,7 +9,7 @@ import 'package:metrics/auth/presentation/widgets/auth_input_field.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
-import '../../../test_utils/injection_container_testbed.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   final emailInputFinder =
@@ -100,7 +100,7 @@ class _AuthFormTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InjectionContainerTestbed(
+    return TestInjectionContainer(
       authNotifier: authNotifier,
       child: Builder(
         builder: (context) {

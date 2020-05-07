@@ -11,8 +11,8 @@ import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
-import '../../../test_utils/injection_container_testbed.dart';
 import '../../../test_utils/signed_in_auth_notifier_stub.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("LoadingPage", () {
@@ -61,7 +61,7 @@ class _LoadingPageTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InjectionContainerTestbed(
+    return TestInjectionContainer(
       authNotifier: authNotifier,
       metricsNotifier: metricsNotifier,
       child: Builder(

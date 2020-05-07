@@ -11,8 +11,8 @@ import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../test_utils/injection_container_testbed.dart';
 import '../../../test_utils/project_metrics_notifier_mock.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("DashboardPage", () {
@@ -121,7 +121,7 @@ class _DashboardTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InjectionContainerTestbed(
+    return TestInjectionContainer(
       themeNotifier: themeNotifier,
       metricsNotifier: metricsNotifier,
       child: MaterialApp(

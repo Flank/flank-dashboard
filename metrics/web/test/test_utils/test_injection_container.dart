@@ -8,26 +8,26 @@ import 'auth_notifier_stub.dart';
 import 'project_metrics_notifier_stub.dart';
 import 'signed_in_auth_notifier_stub.dart';
 
-/// A testbed class that injects the stub [ChangeNotifier]s needed in tests.
-class InjectionContainerTestbed extends StatelessWidget {
+/// A widget that injects the [ChangeNotifier]s needed in tests.
+class TestInjectionContainer extends StatelessWidget {
   /// A child widget to display.
   final Widget child;
 
-  /// A [ProjectMetricsNotifier] that will be injected.
+  /// A [ProjectMetricsNotifier] to inject.
   final ProjectMetricsNotifier metricsNotifier;
 
-  /// An [AuthNotifier] that will be injected.
+  /// An [AuthNotifier] to inject.
   final AuthNotifier authNotifier;
 
-  /// A [ThemeNotifier] that will be injected.
+  /// A [ThemeNotifier] to inject.
   final ThemeNotifier themeNotifier;
 
-  /// Creates the [InjectionContainerTestbed] with the given notifiers.
+  /// Creates the [TestInjectionContainer] with the given notifiers.
   ///
   /// If [metricsNotifier] not passed, the [ProjectMetricsNotifierStub] used.
   /// If [authNotifier] not passed, the [SignedInAuthNotifierStub] used.
   /// If [themeNotifier] not passed, the [ThemeNotifier] used.
-  const InjectionContainerTestbed({
+  const TestInjectionContainer({
     Key key,
     this.child,
     this.metricsNotifier,

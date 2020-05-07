@@ -7,7 +7,7 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 
-import '../../../../test_utils/injection_container_testbed.dart';
+import '../../../../test_utils/test_injection_container.dart';
 
 void main() {
   testWidgets(
@@ -78,7 +78,7 @@ class _MetricsThemeBuilderTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: InjectionContainerTestbed(
+      home: TestInjectionContainer(
         themeNotifier: themeNotifier,
         child: MetricsThemeBuilder(
           lightTheme: lightTheme,

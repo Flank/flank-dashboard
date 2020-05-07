@@ -8,7 +8,7 @@ void main() {
   group("LoadingPlaceholder", () {
     testWidgets(
       "displays the centered CircularProgressIndicator",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await tester.pumpWidget(_LoadingPlaceholderTestbed());
 
         final finder = find.descendant(
