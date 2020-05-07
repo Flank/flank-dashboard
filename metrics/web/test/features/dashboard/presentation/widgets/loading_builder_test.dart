@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/features/dashboard/presentation/widgets/loading_builder.dart';
-import 'package:metrics/features/dashboard/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/features/common/presentation/widgets/loading_placeholder.dart';
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
 

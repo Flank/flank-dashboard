@@ -20,7 +20,4 @@ class AuthStrings {
 
   static String getPasswordMinLengthErrorMessage(int minLength) =>
       "Password should be at least $minLength characters long";
-
-  static String getLoadingErrorMessage(String errorMessage) =>
-      "An error occured during loading: $errorMessage";
 }

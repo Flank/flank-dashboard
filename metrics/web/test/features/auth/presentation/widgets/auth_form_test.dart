@@ -8,6 +8,7 @@ import 'package:metrics/features/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:mockito/mockito.dart';
 
+import '../../../../test_utils/auth_notifier_mock.dart';
 import '../../../../test_utils/injection_container_testbed.dart';
 
 void main() {
@@ -139,8 +140,3 @@ class SignInErrorAuthNotifierStub extends ChangeNotifier
   @override
   Future<void> signOut() async {}
 }
-
-/// Mock implementation of the [AuthNotifier].
-class AuthNotifierMock extends Mock
-    with ChangeNotifier
-    implements AuthNotifier {}

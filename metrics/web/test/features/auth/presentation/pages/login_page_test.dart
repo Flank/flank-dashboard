@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../test_utils/auth_notifier_stub.dart';
 import '../../../../test_utils/injection_container_testbed.dart';
-import '../../../../test_utils/signed_in_auth_notifier_stub.dart';
 
 void main() {
   group("LoginPage", () {
@@ -45,18 +44,6 @@ void main() {
         ));
 
         await _signIn(tester);
-        await tester.pumpAndSettle();
-
-        expect(find.byType(DashboardPage), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "redirects to the dashboard page if a user is already signed in",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(_LoginPageTestbed(
-          authNotifier: SignedInAuthNotifierStub(),
-        ));
         await tester.pumpAndSettle();
 
         expect(find.byType(DashboardPage), findsOneWidget);
