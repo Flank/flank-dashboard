@@ -4,8 +4,8 @@
 import 'dart:io';
 
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:metrics/features/common/presentation/strings/common_strings.dart';
-import 'package:metrics/features/dashboard/presentation/strings/dashboard_strings.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:test/test.dart';
 
 import 'arguments/model/user_credentials.dart';

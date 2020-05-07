@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/features/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
+import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_notifier_stub.dart';

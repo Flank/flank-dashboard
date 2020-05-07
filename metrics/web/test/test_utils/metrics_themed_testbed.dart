@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
 /// Metrics themed page used in tests.
 class MetricsThemedTestbed extends StatelessWidget {

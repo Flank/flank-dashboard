@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:metrics/features/dashboard/presentation/model/project_metrics_data.dart';
-import 'package:metrics/features/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// Stub implementation of the [ProjectMetricsNotifier].

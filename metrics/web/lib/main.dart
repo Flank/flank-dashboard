@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/features/common/presentation/injector/widget/injection_container.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
-import 'package:metrics/features/common/presentation/routes/route_generator.dart';
-import 'package:metrics/features/common/presentation/strings/common_strings.dart';
+import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
+import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
 
-import 'features/common/presentation/metrics_theme/config/color_config.dart';
+import 'common/presentation/metrics_theme/config/color_config.dart';
 
 void main() => runApp(MyApp());
 
