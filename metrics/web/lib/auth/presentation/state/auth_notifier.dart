@@ -8,7 +8,7 @@ import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
 
-/// The auth state for a user.
+/// The [ChangeNotifier] that holds the authentication state.
 ///
 /// Provides the ability to sign in and sign out user from the app,
 /// track the [isLoggedIn] status and authentication error message if any
@@ -25,6 +25,8 @@ class AuthNotifier extends ChangeNotifier {
   /// Contains a user's authentication status.
   bool _isLoggedIn;
 
+  /// The stream subscription needed to be able to unsubscribe
+  /// from authentication state updates.
   StreamSubscription _authUpdatesSubscription;
 
   /// Contains text description of any authentication exception that may occur.
@@ -75,7 +77,6 @@ class AuthNotifier extends ChangeNotifier {
     await _signOutUseCase();
   }
 
-  /// Cancels all created subscriptions.
   @override
   void dispose() {
     _authUpdatesSubscription?.cancel();

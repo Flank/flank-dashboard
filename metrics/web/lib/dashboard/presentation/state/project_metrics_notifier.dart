@@ -14,7 +14,7 @@ import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart'
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// The store for the project metrics.
+/// The [ChangeNotifier] that holds the projects metrics state.
 ///
 /// Stores the [Project]s and their [DashboardProjectMetrics].
 class ProjectMetricsNotifier extends ChangeNotifier {
@@ -30,8 +30,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// A [Map] that holds all loaded [ProjectMetricsData].
   Map<String, ProjectMetricsData> _projectMetrics;
 
-  /// The projects subscription.
-  /// Needed to be able to stop listening the project updates.
+  /// The stream subscription needed to be able to stop listening
+  /// to the project updates.
   StreamSubscription _projectsSubscription;
 
   /// Holds the error message that occurred during loading data.
