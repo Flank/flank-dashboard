@@ -41,17 +41,23 @@ Overall status
 
 ## Architecture
 
-- CLEAN architecture (from resocoder) with States Rebuilder
+- CLEAN architecture (from resocoder) with Provider
   - [Flutter TDD Clean Architecture](https://resocoder.com/2019/08/27/flutter-tdd-clean-architecture-course-1-explanation-project-structure/)
 
 ![image](https://user-images.githubusercontent.com/1173057/72225104-593e9080-3536-11ea-89a4-9650cac25340.png)
 
-- States Rebuilder for state management
-  - [States Rebuilder - Zero Boilerplate (Resocoder)](https://resocoder.com/2019/12/30/states-rebuilder-zero-boilerplate-flutter-state-management/)
-  - [GIfatahTH/states_rebuilder example](https://github.com/GIfatahTH/states_rebuilder/tree/master/example)
-  - [State Management with states rebuilder part 1](https://medium.com/flutter-community/state-management-gymnastics-using-states-rebuilder-part-1-3ba3a6abf9c7)
-  - [State Management with states rebuilder part 2](https://medium.com/flutter-community/state-management-gymnastics-using-states-rebuilder-part-2-a7fa0dd7dc51)
-  - [States Rebuilder Clean Architecture Example](https://github.com/GIfatahTH/states-rebuilder-examples/tree/master/007-clean_architecture_dane_mackier_app)
+- Provider for state management
+  - [State management investigation document](https://github.com/software-platform/monorepo/blob/master/docs/13_state_management_investigation.md)
+  - [Provider - Simple app state management](https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple)
+
+[Provider](https://pub.dev/documentation/provider/latest/) is the simple state management for Flutter recommended by Google.
+
+The main reasons for choosing the Provider as state management: 
+1. Has good support of reactivity (see code samples and more wide explanation [here](https://github.com/software-platform/monorepo/blob/master/docs/13_state_management_investigation.md#Reactivity-4)).
+2. Has perfect support of asynchronous programming style (mere [here](https://github.com/software-platform/monorepo/blob/master/docs/13_state_management_investigation.md#Reactivity-4)).
+3. Simple for beginners because has a simple concept, understandable namings, and great documentation.
+4. Well testable because the concept is based on simple method calls.  
+
 
 ## Principles: Simplify. Standardize. Automate.
 
