@@ -120,8 +120,6 @@ void main() {
           receiveProjectMetricsUpdates,
         );
 
-        await projectMetricsNotifier.subscribeToProjects();
-
         bool hasNullMetrics;
         final metricsListener = expectAsyncUntil0(() async {
           final projectMetrics = projectMetricsNotifier.projectsMetrics;
@@ -325,7 +323,7 @@ void main() {
     );
 
     test(
-      ".projectMetrics are null when the projects are null",
+      "handles the null projects",
       () async {
         final receiveProjects = _ReceiveProjectUpdatesStub(projects: null);
 
@@ -334,7 +332,7 @@ void main() {
           receiveProjectMetricsUpdates,
         );
 
-        await metricsNotifier.subscribeToProjects();
+        await expectLater(metricsNotifier.subscribeToProjects(), completes);
 
         final projectMetrics = metricsNotifier.projectsMetrics;
 
@@ -346,7 +344,7 @@ void main() {
 
     test(
       ".projectMetrics are an empty list when the projects are the empty list",
-          () async {
+      () async {
         final receiveProjects = _ReceiveProjectUpdatesStub(projects: []);
 
         final metricsNotifier = ProjectMetricsNotifier(
