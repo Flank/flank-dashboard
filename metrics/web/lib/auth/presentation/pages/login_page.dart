@@ -16,17 +16,18 @@ class LoginPage extends StatefulWidget {
 
 /// The logic and internal state for the [LoginPage] widget.
 class _LoginPageState extends State<LoginPage> {
+  AuthNotifier _authNotifier;
+
   @override
   void initState() {
-    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-    authNotifier.addListener(_loggedInListener);
+    _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    _authNotifier.addListener(_loggedInListener);
 
     super.initState();
   }
 
   Future<void> _loggedInListener() async {
-    final isLoggedIn =
-        Provider.of<AuthNotifier>(context, listen: false).isLoggedIn;
+    final isLoggedIn = _authNotifier.isLoggedIn;
 
     if (isLoggedIn != null && isLoggedIn) {
       await Provider.of<ProjectMetricsNotifier>(context, listen: false)
@@ -65,5 +66,11 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _authNotifier.removeListener(_loggedInListener);
+    super.dispose();
   }
 }

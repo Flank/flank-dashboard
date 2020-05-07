@@ -12,23 +12,19 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage>
     with TickerProviderStateMixin {
+  /// Duration of the `metrics` text animation.
   static const _animationDuration = Duration(seconds: 1);
+
+  /// Animation controller of the `metrics` text.
   AnimationController _animationController;
+
+  /// An [AuthNotifier] needed to remove added listeners in the [dispose] method.
   AuthNotifier _authNotifier;
 
   @override
   void initState() {
-    _animationController = AnimationController(
-      vsync: this,
-      duration: _animationDuration,
-    );
-    _animationController.repeat(reverse: true);
-
-    _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-    _authNotifier.addListener(_authNotifierListener);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _authNotifier.subscribeToAuthenticationUpdates();
-    });
+    _initAnimation();
+    _subscribeToAuthUpdates();
 
     super.initState();
   }
@@ -56,6 +52,24 @@ class _LoadingPageState extends State<LoadingPage>
     );
   }
 
+  /// Starts the repeated 'metrics' text animation.
+  void _initAnimation() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: _animationDuration,
+    );
+    _animationController.repeat(reverse: true);
+  }
+
+  /// Subscribes to authentication updates.
+  void _subscribeToAuthUpdates() {
+    _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    _authNotifier.addListener(_authNotifierListener);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _authNotifier.subscribeToAuthenticationUpdates();
+    });
+  }
+
   /// Navigates from loading page corresponding to authentication status.
   void _authNotifierListener() {
     final isLoggedIn = _authNotifier.isLoggedIn;
@@ -63,10 +77,19 @@ class _LoadingPageState extends State<LoadingPage>
     if (isLoggedIn == null) return;
 
     if (isLoggedIn) {
-      Navigator.pushReplacementNamed(context, RouteGenerator.dashboard);
+      _navigateTo(RouteGenerator.dashboard);
     } else {
-      Navigator.pushReplacementNamed(context, RouteGenerator.login);
+      _navigateTo(RouteGenerator.login);
     }
+  }
+
+  /// Navigates to [routeName] and removes all underlying routes.
+  void _navigateTo(String routeName) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      routeName,
+      (_) => false,
+    );
   }
 
   @override
