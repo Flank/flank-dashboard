@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/auth/domain/entities/user.dart';
 import 'package:metrics/auth/presentation/pages/loading_page.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
-import '../../../test_utils/auth_notifier_mock.dart';
-import '../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../test_utils/test_injection_container.dart';
+import '../../test_utils/receive_authentication_updates_mock.dart';
+import '../../test_utils/sign_in_usecase_mock.dart';
+import '../../test_utils/sign_out_usecase_mock.dart';
 
 void main() {
+  final signInUseCase = SignInUseCaseMock();
+  final signOutUseCase = SignOutUseCaseMock();
+  final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
+
   group("LoadingPage", () {
     testWidgets("displays on the application initial loading",
         (WidgetTester tester) async {
@@ -25,14 +30,15 @@ void main() {
 
     testWidgets("redirects to the LoginPage if a user is not signed in",
         (WidgetTester tester) async {
-      final AuthNotifierMock authNotifier = AuthNotifierMock();
+      final authNotifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        signOutUseCase,
+      );
 
-      when(authNotifier.isLoggedIn).thenReturn(false);
+      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(null));
 
-      await tester.pumpWidget(_LoadingPageTestbed(
-        authNotifier: authNotifier,
-      ));
-
+      await tester.pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginPage), findsOneWidget);
@@ -40,9 +46,17 @@ void main() {
 
     testWidgets("redirects to the DashboardPage if a user is signed in",
         (WidgetTester tester) async {
-      await tester.pumpWidget(_LoadingPageTestbed(
-        authNotifier: SignedInAuthNotifierStub(),
-      ));
+      final authNotifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        signOutUseCase,
+      );
+
+      final user = User(id: 'id', email: 'test@email.com');
+
+      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(user));
+
+      await tester.pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
       await tester.pumpAndSettle();
 
       expect(find.byType(DashboardPage), findsOneWidget);
@@ -53,19 +67,16 @@ void main() {
 /// A testbed widget, used to test the [LoadingPage] widget.
 class _LoadingPageTestbed extends StatelessWidget {
   final AuthNotifier authNotifier;
-  final ProjectMetricsNotifier metricsNotifier;
 
-  /// Creates the [_LoadingPageTestbed] with the given [authNotifier] and [metricsNotifier].
+  /// Creates the [_LoadingPageTestbed] with the given [authNotifier].
   const _LoadingPageTestbed({
     this.authNotifier,
-    this.metricsNotifier,
   });
 
   @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
       authNotifier: authNotifier,
-      metricsNotifier: metricsNotifier,
       child: Builder(
         builder: (context) {
           return MaterialApp(
