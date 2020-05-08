@@ -108,8 +108,10 @@ Color _getBuildNumberMetricColor(WidgetTester tester) {
 
 /// A testbed widget, used to test the [DashboardPage] widget.
 class _DashboardTestbed extends StatelessWidget {
-  /// The [ThemeNotifier] that will be injected and used to test the [DashboardPage].
+  /// The [ThemeNotifier] to inject and use to test the [DashboardPage].
   final ThemeNotifier themeNotifier;
+
+  /// The [ProjectMetricsNotifier] to inject and use to test the [DashboardPage].
   final ProjectMetricsNotifier metricsNotifier;
 
   /// Creates the [_DashboardTestbed] with the given [themeNotifier].

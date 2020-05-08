@@ -44,7 +44,7 @@ void main() {
     );
 
     testWidgets(
-      "displays an error description, occured during loading the metrics data",
+      "displays an error description, occurred during loading the metrics data",
       (WidgetTester tester) async {
         const errorMessage = 'Unknown error';
         final metricsNotifier = ProjectMetricsNotifierMock();

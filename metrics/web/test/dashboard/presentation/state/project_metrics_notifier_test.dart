@@ -54,10 +54,6 @@ void main() {
           () => ProjectMetricsNotifier(null, receiveProjectMetricsUpdates),
           MatcherUtil.throwsAssertionError,
         );
-        expect(
-          () => ProjectMetricsNotifier(receiveProjectUpdates, null),
-          MatcherUtil.throwsAssertionError,
-        );
       },
     );
 
@@ -222,7 +218,7 @@ void main() {
     });
 
     test(
-      ".errorMessage provides an error description if projects stream emits a PlatfromException",
+      ".errorMessage provides an error description if projects stream emits a PlatformException",
       () async {
         final receiveProjectUpdates = _ReceiveProjectUpdatesMock();
         final projectsController = BehaviorSubject<List<Project>>();
@@ -255,7 +251,7 @@ void main() {
     );
 
     test(
-      ".errorMessage provides an error description if the project metrics stream emits a PlatfromException",
+      ".errorMessage provides an error description if the project metrics stream emits a PlatformException",
       () async {
         final receiveProjectUpdates = _ReceiveProjectUpdatesMock();
         final receiveProjectMetricsUpdates =
@@ -325,7 +321,7 @@ void main() {
     );
 
     test(
-      "handles the null projects",
+      ".subscribeToProjects() completes normally if received projects are null",
       () async {
         final receiveProjects = _ReceiveProjectUpdatesStub(projects: null);
 
