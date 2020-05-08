@@ -42,11 +42,11 @@ that code style is consistent.
     test(".fromJson() creates an instance from the json map", () {
     ```
    
-   `Bad:`
+    `Bad:`
                
-   ```dart
-   test('.fromJson() creates an instance from the json map.', () {
-   ```
+    ```dart
+    test('.fromJson() creates an instance from the json map.', () {
+    ```
 2. DO start Test Group descriptions with a Capital letter
     
     `Good:`
@@ -68,7 +68,7 @@ that code style is consistent.
     
     ```dart
     testWidgets("Can't create widget without data",
-   ```
+    ```
 5. DO start test descriptions with a dot (.) followed by a method name with an empty parenthesis 
 (without parameters even if there are any) when a test is specific for a method (or named constructor)
 
@@ -95,12 +95,12 @@ be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842)
     test(".fromJson() creates an instance from the json map", () {
     ```
    
-   `Bad:`
+    `Bad:`
                
-   ```dart
-   test('.fromJson() creates an instance'
+    ```dart
+    test('.fromJson() creates an instance'
         'from the json map', () {
-   ```
+    ```
 8. PREFER using double quotes in test descriptions
     
     `Good:`
@@ -108,12 +108,92 @@ be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842)
     ```dart
     test(".fromJson() creates an instance from the json map", () {
     ```
+9. DO NOT use "should" in test descriptions
+    
+    `Good:`
+         
+    ```dart
+    test(".fromJson() creates an instance from the json map", () {
+    ```
+    
+    `Bad:`
+              
+    ```dart
+    test(".fromJson() should create an instance from the json map.", () {
+    ```
+    Additional information: 
+    - https://enterprisecraftsmanship.com/posts/you-naming-tests-wrong/
+    - https://medium.com/frontmen/remove-the-verb-should-from-your-unit-test-descriptions-please-ee3a58f3dda0
+    
+10. DO NOT document Mock classes
+    
+    `Good:`
+    
+    ```dart
+    class SourceClientMock extends Mock implements SourceClient {}
+    ```
+    
+    `Bad:`
+              
+    ```dart
+    /// This class mocks [SourceClient] to help with testing.
+    class SourceClientMock extends Mock implements SourceClient {}
+    ```
+    
+11. DO document Mock static fields
+12. DO NOT document Fake classes
+
+    `Good:`
+    
+    ```dart
+    class SignedInAuthStoreFake extends Fake implements AuthStore {
+    ```
+    
+    `Bad:`
+              
+    ```dart
+    /// Fake implementation of the [AuthStore] ensures that a user is already logged in into the app.
+    class SignedInAuthStoreFake extends Fake implements AuthStore {
+    ```
+13. DO document Fake custom properties
+
+    `Good:`
+    
+    ```dart
+    class SignedInAuthStoreFake extends Fake implements AuthStore {
+      /// Internal stream used to support [AuthStore] functionality.
+      final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
+    ```
+    
+    `Bad:`
+              
+    ```dart
+    class SignedInAuthStoreFake extends Fake implements AuthStore {
+      final BehaviorSubject<bool> _isLoggedInSubject = BehaviorSubject();
+    ```
+
+14. DO document Testbeds, Stubs, etc. used in testing
+    
+    `Good:`
+        
+    ```dart
+    /// A stub class for a [CiConfig] abstract class providing required
+    /// implementations.
+    class CiIntegrationStub extends CiIntegration {
+    ```
+    
+    `Bad:`
+          
+    ```dart
+    class CiIntegrationStub extends CiIntegration {
+    ```
+15. AVOID document fields of test data classes
 
 # Testing
 
 > How will the project be tested?
 
-The document will be reviewed by the team.
+The team will review the document and provide feedback.
 
 # Alternatives Considered
 
