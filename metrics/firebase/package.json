@@ -1,0 +1,23 @@
+{
+  "name": "firebase_project",
+  "version": "1.0.0",
+  "engines": {
+    "node": "8"
+  },
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^7.14.3"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.2",
+    "@firebase/testing": "^0.19.3",
+    "@firebase/firestore-types": "^1.10.1"
+  }
+}

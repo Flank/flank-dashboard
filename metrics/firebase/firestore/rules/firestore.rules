@@ -2,8 +2,67 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    match /{document=**} {
-      allow read, write: if request.auth.uid != null;
+    match /projects/{projectId} {
+      allow read, delete: if isLoggedIn();
+      allow create, update: if isLoggedIn() && hasName();
+    }
+
+
+    match /build/{buildId} {
+      allow read, delete: if isLoggedIn();
+      allow create, update: if isLoggedIn() && buildIsValid(database);
     }
   }
+
+
+  /// Checks if request is autorised.
+  function isLoggedIn() {
+    return request.auth.uid != null
+  }
+
+  /// Checks whether data from request contains name string.
+  function hasName(){
+    let requestData = request.resource.data;
+
+    return "name" in requestData && requestData.name is string;
+  }
+
+  /// Checks whether build data from request is valid.
+  function buildIsValid(database){
+    let requestData = request.resource.data;
+
+    return projectExists(database) 
+          && hasValidStartedAtTimestamp(requestData) 
+          && hasDuration(requestData) 
+          && hasUrl(requestData);
+  }
+
+  /// Chacks whether projectId in requested data points to existing project.
+  function projectExists(database){
+    let projectId = request.resource.data.projectId;
+    return exists(/databases/$(database)/documents/projects/$(projectId));
+  }
+
+  /// Checks whether data from request contains a startedAt timestamp.
+  function hasValidStartedAtTimestamp(requestData){
+    return "startedAt" in requestData 
+          && requestData.startedAt is timestamp
+          && dateNotAfterNow(requestData.startedAt);
+  }
+
+  /// Checks whether timestamp is not after the request time.
+  function dateNotAfterNow(date){
+    return date <= request.time;
+  }
+
+  /// Checks whether data from request contains a duration integer.
+  function hasDuration(requestData){
+    return "duration" in requestData && requestData.duration is int;
+  }
+
+  /// Checks whether data from request contains a url string.
+  function hasUrl(requestData){
+    return "url" in requestData && requestData.url is string;
+  }
+
 }
