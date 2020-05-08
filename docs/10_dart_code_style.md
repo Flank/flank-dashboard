@@ -187,7 +187,7 @@ be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842)
     ```dart
     class CiIntegrationStub extends CiIntegration {
     ```
-15. AVOID document fields of classes providing a test data
+15. AVOID document fields of classes providing test data
 
     `Good:`
         
