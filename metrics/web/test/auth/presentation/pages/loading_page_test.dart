@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/auth/domain/entities/user.dart';
 import 'package:metrics/auth/presentation/pages/loading_page.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
@@ -10,16 +9,10 @@ import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
-import '../../test_utils/receive_authentication_updates_mock.dart';
-import '../../test_utils/sign_in_usecase_mock.dart';
-import '../../test_utils/sign_out_usecase_mock.dart';
 
 void main() {
-  final signInUseCase = SignInUseCaseMock();
-  final signOutUseCase = SignOutUseCaseMock();
-  final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
-
   group("LoadingPage", () {
     testWidgets("displays on the application initial loading",
         (WidgetTester tester) async {
@@ -30,15 +23,12 @@ void main() {
 
     testWidgets("redirects to the LoginPage if a user is not signed in",
         (WidgetTester tester) async {
-      final authNotifier = AuthNotifier(
-        receiveAuthUpdates,
-        signInUseCase,
-        signOutUseCase,
-      );
-
-      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(null));
+      final authNotifier = AuthNotifierMock();
 
       await tester.pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
+
+      when(authNotifier.isLoggedIn).thenReturn(false);
+      authNotifier.notifyListeners();
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginPage), findsOneWidget);
@@ -46,17 +36,13 @@ void main() {
 
     testWidgets("redirects to the DashboardPage if a user is signed in",
         (WidgetTester tester) async {
-      final authNotifier = AuthNotifier(
-        receiveAuthUpdates,
-        signInUseCase,
-        signOutUseCase,
-      );
-
-      final user = User(id: 'id', email: 'test@email.com');
-
-      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(user));
+      final authNotifier = AuthNotifierMock();
 
       await tester.pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
+
+      when(authNotifier.isLoggedIn).thenReturn(true);
+      authNotifier.notifyListeners();
+
       await tester.pumpAndSettle();
 
       expect(find.byType(DashboardPage), findsOneWidget);

@@ -91,9 +91,11 @@ void main() {
   });
 }
 
+/// A testbed widget, used to test the [AuthForm] widget.
 class _AuthFormTestbed extends StatelessWidget {
   final AuthNotifier authNotifier;
 
+  /// Creates the [_AuthFormTestbed] with the given [authNotifier].
   const _AuthFormTestbed({
     this.authNotifier,
   });

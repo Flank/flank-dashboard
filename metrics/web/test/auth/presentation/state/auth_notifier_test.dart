@@ -4,14 +4,14 @@ import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
+import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
+import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
+import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
-import '../../test_utils/receive_authentication_updates_mock.dart';
-import '../../test_utils/sign_in_usecase_mock.dart';
-import '../../test_utils/sign_out_usecase_mock.dart';
 
 void main() {
   group("AuthNotifier", () {
@@ -180,3 +180,9 @@ void main() {
   });
 }
 
+class SignInUseCaseMock extends Mock implements SignInUseCase {}
+
+class SignOutUseCaseMock extends Mock implements SignOutUseCase {}
+
+class ReceiveAuthenticationUpdatesMock extends Mock
+    implements ReceiveAuthenticationUpdates {}

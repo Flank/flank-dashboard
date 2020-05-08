@@ -148,6 +148,7 @@ void main() {
   });
 }
 
+/// A testbed widget, used to test the [AuthInputField] widget.
 class _AuthInputFieldTestbed extends StatelessWidget {
   final String label;
   final bool obscureText;
