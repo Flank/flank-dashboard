@@ -14,39 +14,62 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("LoadingPage", () {
-    testWidgets("displays on the application initial loading",
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const _LoadingPageTestbed());
+    testWidgets(
+      "displayed until AuthNotifier.isLoggedIn is null",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _LoadingPageTestbed());
 
-      expect(find.byType(LoadingPage), findsOneWidget);
-    });
+        expect(find.byType(LoadingPage), findsOneWidget);
+      },
+    );
 
-    testWidgets("redirects to the LoginPage if a user is not signed in",
-        (WidgetTester tester) async {
-      final authNotifier = AuthNotifierMock();
+    testWidgets(
+      "subscribes to authentication updates on initState",
+      (tester) async {
+        final authNotifier = AuthNotifierMock();
 
-      await tester.pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
+        await tester.pumpWidget(_LoadingPageTestbed(
+          authNotifier: authNotifier,
+        ));
 
-      when(authNotifier.isLoggedIn).thenReturn(false);
-      authNotifier.notifyListeners();
-      await tester.pumpAndSettle();
+        verify(authNotifier.subscribeToAuthenticationUpdates())
+            .called(equals(1));
+      },
+    );
 
-      expect(find.byType(LoginPage), findsOneWidget);
-    });
+    testWidgets(
+      "redirects to the LoginPage if a user is not signed in",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
 
-    testWidgets("redirects to the DashboardPage if a user is signed in",
-        (WidgetTester tester) async {
-      final authNotifier = AuthNotifierMock();
+        await tester
+            .pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
 
-      await tester.pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
+        when(authNotifier.isLoggedIn).thenReturn(false);
+        authNotifier.notifyListeners();
 
-      when(authNotifier.isLoggedIn).thenReturn(true);
-      authNotifier.notifyListeners();
+        await tester.pumpAndSettle();
 
-      await tester.pumpAndSettle();
+        expect(find.byType(LoginPage), findsOneWidget);
+      },
+    );
 
-      expect(find.byType(DashboardPage), findsOneWidget);
-    });
+    testWidgets(
+      "redirects to the DashboardPage if a user is signed in",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+
+        await tester
+            .pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
+
+        when(authNotifier.isLoggedIn).thenReturn(true);
+        authNotifier.notifyListeners();
+
+        await tester.pumpAndSettle();
+
+        expect(find.byType(DashboardPage), findsOneWidget);
+      },
+    );
   });
 }
 

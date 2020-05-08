@@ -104,14 +104,10 @@ class _AuthFormTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return TestInjectionContainer(
       authNotifier: authNotifier,
-      child: Builder(
-        builder: (context) {
-          return MaterialApp(
-            home: Scaffold(
-              body: AuthForm(),
-            ),
-          );
-        },
+      child: MaterialApp(
+        home: Scaffold(
+          body: AuthForm(),
+        ),
       ),
     );
   }
