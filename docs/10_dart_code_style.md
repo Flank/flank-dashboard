@@ -39,13 +39,13 @@ that code style is consistent.
     `Good:`
               
     ```dart
-    test('.fromJson() should create an instance from the json map', () {
+    test(".fromJson() creates an instance from the json map", () {
     ```
    
    `Bad:`
                
    ```dart
-   test('.fromJson() should create an instance from the json map.', () {
+   test('.fromJson() creates an instance from the json map.', () {
    ```
 2. DO start Test Group descriptions with a Capital letter
     
@@ -60,7 +60,7 @@ that code style is consistent.
     
     ```dart
     group("DashboardPage", () {
-      test("should throw ArgumentError trying to create an instance with null CI client", 
+      test("throws ArgumentError trying to create an instance with null CI client", 
     ```
 4. DO start with a Capital letter test descriptions not inside Test Groups
     
@@ -75,7 +75,7 @@ that code style is consistent.
     `Good:`
     
     ```dart
-    test(".fromJson() should create an instance from the json map", () {
+    test(".fromJson() creates an instance from the json map", () {
     ```
 6. DO use Test Group descriptions with class under test name
     
@@ -92,13 +92,13 @@ be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842)
     `Good:`
             
     ```dart
-    test(".fromJson() should create an instance from the json map", () {
+    test(".fromJson() creates an instance from the json map", () {
     ```
    
    `Bad:`
                
    ```dart
-   test('.fromJson() should create an instance'
+   test('.fromJson() creates an instance'
         'from the json map', () {
    ```
 8. PREFER using double quotes in test descriptions
@@ -106,7 +106,7 @@ be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842)
     `Good:`
     
     ```dart
-    test(".fromJson() should create an instance from the json map", () {
+    test(".fromJson() creates an instance from the json map", () {
     ```
 
 # Testing
