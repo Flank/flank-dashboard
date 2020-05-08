@@ -187,8 +187,25 @@ be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842)
     ```dart
     class CiIntegrationStub extends CiIntegration {
     ```
-15. AVOID document fields of test data classes
+15. AVOID document fields of classes providing a test data
 
+    `Good:`
+        
+    ```dart
+    /// A class containing a test data for the [JenkinsSourceConfig].
+    class JenkinsConfigTestData {
+      static const String url = 'url';
+    ```
+    
+    `Bad:`
+          
+    ```dart
+    /// A class containing a test data for the [JenkinsSourceConfig].
+    class JenkinsConfigTestData {
+      /// Test URL used for Jenkins configuration.
+      static const String url = 'url';
+    ```
+  
 # Testing
 
 > How will the project be tested?
