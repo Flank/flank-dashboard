@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
 
-/// A page that shows until the authentication status unknown.
+/// A page that shows until the authentication status is unknown.
 class LoadingPage extends StatefulWidget {
   @override
   _LoadingPageState createState() => _LoadingPageState();

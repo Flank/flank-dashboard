@@ -66,6 +66,7 @@ void main() {
   );
 }
 
+/// A testbed widget, used to test the [MetricsDrawer] widget.
 class MetricsDrawerTestbed extends StatelessWidget {
   final ThemeNotifier themeNotifier;
   final ProjectMetricsNotifier metricsNotifier;

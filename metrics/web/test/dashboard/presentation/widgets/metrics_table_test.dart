@@ -70,9 +70,9 @@ void main() {
     testWidgets(
       "displays the placeholder when there are no available projects",
       (WidgetTester tester) async {
-        final metricsStore = ProjectMetricsNotifierStub(projectsMetrics: []);
+        final metricsNotifier = ProjectMetricsNotifierStub(projectsMetrics: []);
         await tester.pumpWidget(_MetricsTableTestbed(
-          metricsNotifier: metricsStore,
+          metricsNotifier: metricsNotifier,
         ));
 
         await tester.pumpAndSettle();

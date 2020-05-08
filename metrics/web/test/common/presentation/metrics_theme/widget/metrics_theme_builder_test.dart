@@ -61,6 +61,7 @@ void main() {
   );
 }
 
+/// A testbed widget, used to test the [MetricsThemeBuilder] widget.
 class _MetricsThemeBuilderTestbed extends StatelessWidget {
   final MetricsThemeData lightTheme;
   final MetricsThemeData darkTheme;

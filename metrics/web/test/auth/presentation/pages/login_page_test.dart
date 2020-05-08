@@ -64,10 +64,12 @@ Future<void> _signIn(WidgetTester tester) async {
   await tester.tap(find.widgetWithText(RaisedButton, AuthStrings.signIn));
 }
 
+/// A testbed widget, used to test the [LoginPage] widget.
 class _LoginPageTestbed extends StatelessWidget {
   final AuthNotifier authNotifier;
   final ProjectMetricsNotifier metricsNotifier;
 
+  /// Creates the [_LoginPageTestbed] with the given [authNotifier] and [metricsNotifier].
   const _LoginPageTestbed({
     this.authNotifier,
     this.metricsNotifier,

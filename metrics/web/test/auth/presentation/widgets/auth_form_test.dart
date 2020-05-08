@@ -126,6 +126,7 @@ class SignInErrorAuthNotifierStub extends ChangeNotifier
   @override
   AuthErrorMessage get authErrorMessage => _authExceptionDescription;
 
+  /// Contains text description of any authentication exception that may occur.
   AuthErrorMessage _authExceptionDescription;
 
   @override

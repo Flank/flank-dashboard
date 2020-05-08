@@ -50,10 +50,12 @@ void main() {
   });
 }
 
+/// A testbed widget, used to test the [LoadingPage] widget.
 class _LoadingPageTestbed extends StatelessWidget {
   final AuthNotifier authNotifier;
   final ProjectMetricsNotifier metricsNotifier;
 
+  /// Creates the [_LoadingPageTestbed] with the given [authNotifier] and [metricsNotifier].
   const _LoadingPageTestbed({
     this.authNotifier,
     this.metricsNotifier,

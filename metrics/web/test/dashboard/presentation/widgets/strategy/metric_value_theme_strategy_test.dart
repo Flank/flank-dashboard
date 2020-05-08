@@ -35,11 +35,7 @@ void main() {
       ),
     );
 
-    const themeStrategy = MetricValueThemeStrategy();
-
-    test("allows to create an instance", () {
-      expect(MetricValueThemeStrategy(), isA<MetricValueThemeStrategy>());
-    });
+    final themeStrategy = MetricValueThemeStrategy();
 
     test(
       "returns low percent theme if the given value is in bounds from 0.01 to 0.5",

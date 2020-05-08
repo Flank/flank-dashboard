@@ -22,6 +22,7 @@ void main() {
   });
 }
 
+/// A testbed widget, used to test the [LoadingPlaceholder] widget.
 class _LoadingPlaceholderTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -20,8 +20,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return InjectionContainer(
       child: MetricsThemeBuilder(
-        builder: (context, state) {
-          final isDark = state?.isDark ?? true;
+        builder: (context, themeNotifier) {
+          final isDark = themeNotifier?.isDark ?? true;
 
           return MaterialApp(
             title: CommonStrings.metrics,
