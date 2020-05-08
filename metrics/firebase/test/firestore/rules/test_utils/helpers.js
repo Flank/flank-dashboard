@@ -1,32 +1,44 @@
-import { initializeTestApp, loadFirestoreRules } from '@firebase/testing';
-import { readFileSync } from 'fs';
+const {
+  initializeTestApp,
+  initializeAdminApp,
+  loadFirestoreRules,
+  apps,
+} = require("@firebase/testing");
 
-export async function setup(auth, data) {
-    const projectId = `rules-spec-${Date.now()}`;
-    const app = await initializeTestApp({
-        projectId,
-        auth
-    });
+const { readFileSync } = require("fs");
+const projectId = `rules-spec-${Date.now()}`;
 
-    const db = app.firestore();
+// Construct an application with the given auth options
+exports.getApplication = async function (auth) {
+  const app = await initializeTestApp({
+    projectId,
+    auth,
+  });
 
-    // Write mock documents before rules
-    if (data) {
-        for (const key in data) {
-            const ref = db.doc(key);
-            await ref.set(data[key]);
-        }
+  return app.firestore();
+};
+
+exports.setupTestDatabase = async function (initialData) {
+  const adminApp = await initializeAdminApp({ projectId });
+
+  if (initialData) {
+    for (const key in initialData) {
+      const ref = adminApp.firestore().doc(key);
+      await ref.set(initialData[key]);
     }
+  }
 
-    // Apply rules
-    await loadFirestoreRules({
-        projectId,
-        rules: readFileSync('firestore.rules', 'utf8')
-    });
+  // Apply rules
+  await loadFirestoreRules({
+    projectId,
+    rules: readFileSync(
+      __dirname + "/../../../../firestore/rules/firestore.rules",
+      "utf8"
+    ),
+  });
+};
 
-    return db;
-}
-
-module.exports.teardown = async () => {
-    Promise.all(firebase.apps().map(app => app.delete()));
+// Deletes the app and frees the resources of all associated services.
+exports.tearDown = async () => {
+  Promise.all(apps().map((app) => app.delete()));
 };
