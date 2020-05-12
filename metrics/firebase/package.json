@@ -17,7 +17,6 @@
   },
   "devDependencies": {
     "mocha": "^7.1.2",
-    "@firebase/testing": "^0.19.3",
-    "@firebase/firestore-types": "^1.10.1"
+    "@firebase/testing": "^0.19.3"
   }
 }

@@ -8,7 +8,7 @@ const {
 const { readFileSync } = require("fs");
 const projectId = `rules-spec-${Date.now()}`;
 
-// Construct an application with the given auth options
+/** Constructs an application with the given auth options. */
 exports.getApplication = async function (auth) {
   const app = await initializeTestApp({
     projectId,
@@ -18,7 +18,8 @@ exports.getApplication = async function (auth) {
   return app.firestore();
 };
 
-exports.setupTestDatabase = async function (initialData) {
+/** Creates an admin app with security rules using initial data. */
+exports.setupTestDatabaseWith = async function (initialData) {
   const adminApp = await initializeAdminApp({ projectId });
 
   if (initialData) {
@@ -28,7 +29,6 @@ exports.setupTestDatabase = async function (initialData) {
     }
   }
 
-  // Apply rules
   await loadFirestoreRules({
     projectId,
     rules: readFileSync(
@@ -38,7 +38,7 @@ exports.setupTestDatabase = async function (initialData) {
   });
 };
 
-// Deletes the app and frees the resources of all associated services.
+/** Deletes the application and frees the resources of all associated services. */
 exports.tearDown = async () => {
-  Promise.all(apps().map((app) => app.delete()));
+  return Promise.all(apps().map((app) => app.delete()));
 };
