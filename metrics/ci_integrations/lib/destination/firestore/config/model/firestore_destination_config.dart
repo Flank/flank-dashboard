@@ -35,7 +35,7 @@ class FirestoreDestinationConfig extends Equatable
   /// Creates the [FirestoreConfig] with the given [metricsProjectId].
   ///
   /// All the arguments are required. Throws an [ArgumentError]
-  /// if one of them is `null`.
+  /// if any of them is `null`.
   FirestoreDestinationConfig({
     @required this.firebaseProjectId,
     @required this.firebaseUserEmail,
