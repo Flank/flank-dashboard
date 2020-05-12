@@ -1,5 +1,9 @@
 const firestore = require("firebase").firestore;
 
+exports.project = {
+  name: "test_project",
+};
+
 /** A list of test projects */
 exports.projects = {
   "projects/1": {
