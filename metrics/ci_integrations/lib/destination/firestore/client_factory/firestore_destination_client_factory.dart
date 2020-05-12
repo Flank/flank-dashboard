@@ -12,13 +12,13 @@ class FirestoreDestinationClientFactory
     implements
         DestinationClientFactory<FirestoreDestinationConfig,
             FirestoreDestinationClientAdapter> {
-  /// The [FirebaseAuth] instance used to authenticate the Firestore client. 
+  /// The [FirebaseAuth] instance used to authenticate the Firestore client.
   final FirebaseAuth _firebaseAuth;
 
   /// Creates an instance of this client factory.
   ///
-  /// If the given optional parameter [_firebaseAuth] is `null` 
-  /// then the [FirebaseAuth.initialize] is used.
+  /// If the [_firebaseAuth] is `null`, then the [FirebaseAuth.initialize]
+  /// is used to create authentication.
   const FirestoreDestinationClientFactory([this._firebaseAuth]);
 
   @override
@@ -37,7 +37,7 @@ class FirestoreDestinationClientFactory
       config.firebaseUserEmail,
       config.firebaseUserPassword,
     );
-    
+
     final firestore = fs.Firestore(
       config.firebaseProjectId,
       firebaseAuth: auth,
