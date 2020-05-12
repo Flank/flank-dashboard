@@ -33,18 +33,22 @@ const builds = {
 
 const user = { uid: "uid" };
 
+/** Get a user with a test uid */
 exports.getUser = function () {
   return user;
 };
 
+/** Get a list of test projects */
 exports.getProjects = function () {
   return projects;
 };
 
+/** Get a list of test builds */
 exports.getBuilds = function () {
   return builds;
 };
 
+/** Get a test build */
 exports.getBuild = function () {
   return Object.assign({}, build);
 };
