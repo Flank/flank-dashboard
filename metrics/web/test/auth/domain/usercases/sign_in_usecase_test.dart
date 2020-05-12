@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
-import 'test_utils/user_repository_mock.dart';
+import '../../../test_utils/user_repository_mock.dart';
 
 void main() {
   group("SignInUseCase", () {

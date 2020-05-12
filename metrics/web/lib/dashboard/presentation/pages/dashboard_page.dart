@@ -11,10 +11,13 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  /// A [ProjectMetricsNotifier] needed to unsubscribe from project updates in [dispose].
+  ProjectMetricsNotifier _projectMetricsNotifier;
+
   @override
   void initState() {
-    Provider.of<ProjectMetricsNotifier>(context, listen: false)
-        .subscribeToProjects();
+    _projectMetricsNotifier =
+        Provider.of<ProjectMetricsNotifier>(context, listen: false);
     super.initState();
   }
 
@@ -26,5 +29,11 @@ class _DashboardPageState extends State<DashboardPage> {
         child: MetricsTable(),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _projectMetricsNotifier.unsubscribeFromProjects();
+    super.dispose();
   }
 }

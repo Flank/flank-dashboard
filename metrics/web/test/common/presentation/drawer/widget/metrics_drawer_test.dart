@@ -9,10 +9,8 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
-import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../test_utils/project_metrics_notifier_mock.dart';
 import '../../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../../test_utils/test_injection_container.dart';
 
@@ -46,22 +44,6 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(LoginPage), findsOneWidget);
-    },
-  );
-
-  testWidgets(
-    "Unsubscribes from projects after logout",
-    (tester) async {
-      final metricsNotifier = ProjectMetricsNotifierMock();
-
-      await tester.pumpWidget(MetricsDrawerTestbed(
-        metricsNotifier: metricsNotifier,
-      ));
-
-      await tester.tap(find.text(CommonStrings.logOut));
-      await tester.pump();
-
-      verify(metricsNotifier.unsubscribeFromProjects()).called(equals(1));
     },
   );
 }

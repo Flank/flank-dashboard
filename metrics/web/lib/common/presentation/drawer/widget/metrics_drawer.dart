@@ -5,7 +5,6 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:provider/provider.dart';
 
 /// The application side menu widget.
@@ -45,8 +44,6 @@ class MetricsDrawer extends StatelessWidget {
     final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
     await authNotifier.signOut();
-    await Provider.of<ProjectMetricsNotifier>(context, listen: false)
-        .unsubscribeFromProjects();
     await Navigator.pushNamedAndRemoveUntil(
         context, RouteGenerator.login, (Route<dynamic> route) => false);
   }

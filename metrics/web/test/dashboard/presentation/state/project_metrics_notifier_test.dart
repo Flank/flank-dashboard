@@ -251,43 +251,6 @@ void main() {
     );
 
     test(
-      ".errorMessage provides an error description if the project metrics stream emits a PlatformException",
-      () async {
-        final receiveProjectUpdates = _ReceiveProjectUpdatesMock();
-        final receiveProjectMetricsUpdates =
-            _ReceiveProjectMetricsUpdatesMock();
-        final metricsController = BehaviorSubject<DashboardProjectMetrics>();
-        const errorMessage = 'errorMessage';
-
-        when(receiveProjectMetricsUpdates(any))
-            .thenAnswer((_) => metricsController.stream);
-        when(receiveProjectUpdates()).thenAnswer((realInvocation) =>
-            Stream.value([const Project(id: 'id', name: 'name')]));
-
-        final metricsNotifier = ProjectMetricsNotifier(
-          receiveProjectUpdates,
-          receiveProjectMetricsUpdates,
-        );
-
-        await metricsNotifier.subscribeToProjects();
-
-        metricsController.addError(PlatformException(
-          message: errorMessage,
-          code: 'test_code',
-        ));
-
-        bool hasErrorDescription = false;
-        final metricsListener = expectAsyncUntil0(() async {
-          hasErrorDescription = metricsNotifier.errorMessage == errorMessage;
-
-          if (hasErrorDescription) metricsNotifier.dispose();
-        }, () => hasErrorDescription);
-
-        metricsNotifier.addListener(metricsListener);
-      },
-    );
-
-    test(
       "deletes the ProjectMetricsData if the project was deleted on server",
       () async {
         final projects = _ReceiveProjectUpdatesStub.testProjects.toList();
@@ -529,6 +492,3 @@ class _ReceiveProjectMetricsUpdatesStub
 
 class _ReceiveProjectUpdatesMock extends Mock implements ReceiveProjectUpdates {
 }
-
-class _ReceiveProjectMetricsUpdatesMock extends Mock
-    implements ReceiveProjectMetricsUpdates {}

@@ -1,11 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:provider/provider.dart';
 
 /// Shows the authentication form to sign in.
@@ -26,14 +23,11 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
-  Future<void> _loggedInListener() async {
+  void _loggedInListener() {
     final isLoggedIn = _authNotifier.isLoggedIn;
 
     if (isLoggedIn != null && isLoggedIn) {
-      await Provider.of<ProjectMetricsNotifier>(context, listen: false)
-          .subscribeToProjects();
-
-      await Navigator.pushNamedAndRemoveUntil(
+      Navigator.pushNamedAndRemoveUntil(
         context,
         RouteGenerator.dashboard,
         (Route<dynamic> route) => false,
