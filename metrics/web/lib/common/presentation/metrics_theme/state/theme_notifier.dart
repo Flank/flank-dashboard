@@ -6,10 +6,10 @@ import 'package:flutter/foundation.dart';
 class ThemeNotifier extends ChangeNotifier {
   bool _isDark = true;
 
-  /// Determines if a dark theme currently is active
+  /// Determines if a dark theme is currently active.
   bool get isDark => _isDark;
 
-  /// Enable and disable a dark theme of the application
+  /// Enable and disable a dark theme of the application.
   void changeTheme() {
     _isDark = !_isDark;
     notifyListeners();

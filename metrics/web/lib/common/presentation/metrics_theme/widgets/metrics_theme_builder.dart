@@ -19,7 +19,7 @@ class MetricsThemeBuilder extends StatelessWidget {
   ///
   /// The [builder] should not be null.
   ///
-  /// Rebuilds the [MetricsApp] when the [ThemeNotifier] changes.
+  /// Rebuilds a [MetricsApp] when a [ThemeNotifier] changes.
   /// [builder] is the function used to build the child depending
   /// on current theme state.
   const MetricsThemeBuilder({
@@ -44,7 +44,7 @@ class MetricsThemeBuilder extends StatelessWidget {
     );
   }
 
-  /// Gets the [MetricsThemeType] from the [ThemeNotifier].
+  /// Gets a [MetricsThemeData] from a [ThemeNotifier].
   MetricsThemeData _getThemeData(ThemeNotifier themeNotifier) {
     if (themeNotifier == null || !themeNotifier.isDark) return lightTheme;
 

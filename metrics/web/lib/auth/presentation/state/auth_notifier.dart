@@ -11,7 +11,7 @@ import 'package:metrics/auth/presentation/model/auth_error_message.dart';
 /// The [ChangeNotifier] that holds the authentication state.
 ///
 /// Provides the ability to sign in and sign out user from the app,
-/// track the [isLoggedIn] status and authentication error message if any
+/// track the [isLoggedIn] status and authentication error message if any.
 class AuthNotifier extends ChangeNotifier {
   /// Used to receive authentication updates.
   final ReceiveAuthenticationUpdates _receiveAuthUpdates;

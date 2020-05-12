@@ -81,7 +81,7 @@ void main() {
     );
 
     testWidgets(
-      "subscribes to project updates in intiState",
+      "subscribes to project updates in initState",
       (tester) async {
         final metricsNotifier = ProjectMetricsNotifierMock();
 

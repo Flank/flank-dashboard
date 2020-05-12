@@ -136,7 +136,7 @@ void main() {
       },
     );
 
-    test("properly loads the coverage data", () async {
+    test("loads the coverage data", () async {
       final expectedProjectCoverage = expectedProjectMetrics.coverage;
 
       final projectMetrics = projectMetricsNotifier.projectsMetrics.first;
@@ -341,7 +341,7 @@ void main() {
     );
 
     test(
-      ".projectMetrics are an empty list when the projects are the empty list",
+      ".projectMetrics is an empty list when the projects parameter is an empty list",
       () async {
         final receiveProjects = _ReceiveProjectUpdatesStub(projects: []);
 

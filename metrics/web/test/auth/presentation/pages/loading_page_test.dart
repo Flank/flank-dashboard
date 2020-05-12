@@ -15,7 +15,7 @@ import '../../../test_utils/test_injection_container.dart';
 void main() {
   group("LoadingPage", () {
     testWidgets(
-      "displayed until AuthNotifier.isLoggedIn is null",
+      "displayed while the authentication status is unknown",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _LoadingPageTestbed());
 
@@ -38,7 +38,7 @@ void main() {
     );
 
     testWidgets(
-      "redirects to the LoginPage if a user is not signed in",
+      "redirects to the LoginPage if a user is not logged in",
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
@@ -55,7 +55,7 @@ void main() {
     );
 
     testWidgets(
-      "redirects to the DashboardPage if a user is signed in",
+      "redirects to the DashboardPage if a user is logged in",
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
