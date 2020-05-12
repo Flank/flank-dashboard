@@ -1,88 +1,86 @@
 const {
   setupTestDatabaseWith,
-  getApplication,
+  getApplicationWith,
   tearDown,
 } = require("./test_utils/helpers");
 const { assertFails, assertSucceeds } = require("@firebase/testing");
-const { getUser, getBuilds, getBuild } = require("./test_utils/mock-data");
+const { user, builds, getBuild } = require("./test_utils/test-data");
 const firestore = require("firebase").firestore;
 
-describe("Database rules", async () => {
-  const app = await getApplication(getUser());
+describe("Build collection rules", async () => {
+  const app = await getApplicationWith(user);
 
   before(async () => {
-    await setupTestDatabaseWith(getBuilds());
+    await setupTestDatabaseWith(builds);
   });
 
-  describe("Build rules", async () => {
-    it("allows adding build by an authenticated user", async () => {
-      await assertSucceeds(app.collection("build").add(getBuild()));
-    });
+  it("allows adding build by an authenticated user", async () => {
+    await assertSucceeds(app.collection("build").add(getBuild()));
+  });
 
-    it("does not allow to read a build by an unauthenticated user", async () => {
-      const app = await getApplication(null);
+  it("does not allow to read a build by an unauthenticated user", async () => {
+    const app = await getApplicationWith(null);
 
-      await assertFails(app.collection("build").get());
-    });
+    await assertFails(app.collection("build").get());
+  });
 
-    it("does not allow to add a build with not existing project id", async () => {
-      const build = Object.assign(getBuild(), {
-        projectId: "non-existing-id",
-      });
+  it("does not allow to add a build with not existing project id", async () => {
+    let build = getBuild();
+    build.projectId = "non-existing-id";
 
-      await assertFails(app.collection("build").add(build));
-    });
+    await assertFails(app.collection("build").add(build));
+  });
 
-    it("does not allow to add a build if the startedAt is null", async () => {
-      const build = Object.assign(getBuild(), {
-        startedAt: null,
-      });
+  it("does not allow to add a build if the startedAt is null", async () => {
+    let build = getBuild();
+    build.startedAt = null;
 
-      await assertFails(app.collection("build").add(build));
-    });
+    await assertFails(app.collection("build").add(build));
+  });
 
-    it("does not allow to add a build if the startedAt is not a timestamp", async () => {
-      const build = Object.assign(getBuild(), {
-        startedAt: Date(),
-      });
+  it("does not allow to add a build if the startedAt is not a timestamp", async () => {
+    const build = getBuild();
+    build.startedAt = Date();
 
-      await assertFails(app.collection("build").add(build));
-    });
+    await assertFails(app.collection("build").add(build));
+  });
 
-    it("does not allow to add builds if the startedAt value is after the current timestamp", async () => {
-      let date = new Date();
-      date.setDate(date.getDate() + 1);
+  it("does not allow to add builds if the startedAt value is after the current timestamp", async () => {
+    let date = new Date();
+    date.setDate(date.getDate() + 1);
 
-      const build = Object.assign(getBuild(), {
-        startedAt: firestore.Timestamp.fromDate(date),
-      });
+    let build = getBuild();
+    build.startedAt = firestore.Timestamp.fromDate(date);
 
-      await assertFails(app.collection("build").add(build));
-    });
+    await assertFails(app.collection("build").add(build));
+  });
 
-    it("does not allow to add builds if the duration is null", async () => {
-      const build = Object.assign(getBuild(), {
-        duration: null,
-      });
+  it("does not allow to add builds if the duration is null", async () => {
+    let build = getBuild();
+    build.duration = null;
 
-      await assertFails(app.collection("build").add(build));
-    });
+    await assertFails(app.collection("build").add(build));
+  });
 
-    it("does not allow to add builds if the duration is not an integer", async () => {
-      const build = Object.assign(getBuild(), {
-        duration: "123",
-      });
+  it("does not allow to add builds if the duration is not an integer", async () => {
+    let build = getBuild();
+    build.duration = "123";
 
-      await assertFails(app.collection("build").add(build));
-    });
+    await assertFails(app.collection("build").add(build));
+  });
 
-    it("does not allow to add builds if the url is null", async () => {
-      const build = Object.assign(getBuild(), {
-        url: null,
-      });
+  it("does not allow to add builds if the url is null", async () => {
+    let build = getBuild();
+    build.url = null;
 
-      await assertFails(app.collection("build").add(build));
-    });
+    await assertFails(app.collection("build").add(build));
+  });
+
+  it("does not allow to add builds if the url is not a string", async () => {
+    let build = getBuild();
+    build.url = 2;
+
+    await assertFails(app.collection("build").add(build));
   });
 
   after(async () => {

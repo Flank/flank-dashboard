@@ -8,11 +8,11 @@ const {
 const { readFileSync } = require("fs");
 const projectId = `rules-spec-${Date.now()}`;
 
-/** Constructs an application with the given auth options. */
-exports.getApplication = async function (auth) {
+/** Constructs an application with the given user. */
+exports.getApplicationWith = async function (user) {
   const app = await initializeTestApp({
     projectId,
-    auth,
+    auth: user,
   });
 
   return app.firestore();
