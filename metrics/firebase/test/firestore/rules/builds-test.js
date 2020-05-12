@@ -16,6 +16,15 @@ describe("Build collection rules", async () => {
     await setupTestDatabaseWith(builds);
   });
 
+  it("does not allows to create a build with not allowed fields", async () => {
+    let build = getBuild();
+    build.test = "test";
+
+    await assertFails(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+
   it("allows reading builds by an authenticated user", async () => {
     await assertSucceeds(
       authenticatedApp.collection(buildsCollectionName).get()

@@ -26,14 +26,17 @@ service cloud.firestore {
   function isProjectValid(){
     let requestData = request.resource.data;
 
-    return "name" in requestData && isString(requestData.name);
+    return isValidProjectData(requestData)
+          && "name" in requestData 
+          && isString(requestData.name);
   }
 
   /// Checks whether build data from the request is valid.
   function isBuildValid(database){
     let requestData = request.resource.data;
 
-    return projectExists(database) 
+    return isValidBuildData(requestData)
+          && projectExists(database) 
           && hasValidStartedAtTimestamp(requestData) 
           && hasDuration(requestData) 
           && hasUrl(requestData);
@@ -67,7 +70,27 @@ service cloud.firestore {
     return "url" in requestData && isString(requestData.url);
   }
 
+  /// Checks whether the data is the string.
   function isString(data){
     return data is string;
+  }
+
+  /// Check whether the data contains only allowed for build document fields.
+  function isValidBuildData(data){
+    return data.keys().hasOnly([
+      "projectId",
+      "buildNumber",
+      "startedAt",
+      "buildStatus",
+      "duration",
+      "workflowName",
+      "url",
+      "coverage",
+    ]);
+  }
+  
+  /// Check whether the data contains only allowed for project document fields.
+  function isValidProjectData(data){
+    return data.keys().hasOnly(["name"]);
   }
 }
