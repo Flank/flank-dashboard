@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/features/auth/presentation/state/auth_store.dart';
-import 'package:metrics/features/common/presentation/injector/widget/injection_container.dart';
-import 'package:metrics/features/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
-import 'package:metrics/features/common/presentation/routes/route_generator.dart';
-import 'package:metrics/features/common/presentation/strings/common_strings.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
+import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:provider/provider.dart';
 
-import 'features/common/presentation/metrics_theme/config/color_config.dart';
+import 'common/presentation/metrics_theme/config/color_config.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,8 +20,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return InjectionContainer(
       child: MetricsThemeBuilder(
-        builder: (context, store) {
-          final isDark = store?.isDark ?? true;
+        builder: (context, themeNotifier) {
+          final isDark = themeNotifier?.isDark ?? true;
 
           return MaterialApp(
             title: CommonStrings.metrics,
@@ -29,7 +29,8 @@ class _MyAppState extends State<MyApp> {
             initialRoute: '/',
             onGenerateRoute: (settings) => RouteGenerator.generateRoute(
               settings: settings,
-              isLoggedIn: Injector.get<AuthStore>().isLoggedIn,
+              isLoggedIn:
+                  Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
             themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
             theme: ThemeData(

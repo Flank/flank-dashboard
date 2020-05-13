@@ -1,4 +1,4 @@
-import 'package:metrics/features/auth/domain/entities/authentication_exception.dart';
+import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:test/test.dart';
 
 /// A utility class providing base matchers for tests.
