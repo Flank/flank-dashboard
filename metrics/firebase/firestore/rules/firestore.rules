@@ -45,10 +45,14 @@ service cloud.firestore {
     let requestData = request.resource.data;
 
     return isValidBuildData(requestData)
-          && projectExists(database) 
+          && projectExists(database)
+          && isIntegerOrNull("buildNumber")
           && hasValidStartedAtTimestamp(requestData) 
+          && isBuildStatusValid()
           && isInteger("duration") 
-          && isString("url");
+          && isStringOrNull("workflowName")
+          && isString("url")
+          && isCoverageValid();
   }
 
   /// Check whether the data contains only allowed for build document fields.
@@ -65,10 +69,51 @@ service cloud.firestore {
     ]);
   }
 
-  /// Chacks whether projectId in requested data points to existing project.
+
+  /// Checks if build status has a valid value or null.
+  function isBuildStatusValid(){
+    let requestData = request.resource.data;
+    let validStatuses = [
+      "BuildStatus.successful",
+      "BuildStatus.cancelled",
+      "BuildStatus.failed"
+    ];
+
+    return isNotInRequestOrNull("buildStatus") || requestData["buildStatus"] in validStatuses;
+  }
+
+  /// Checks if fields is string or null.
+  function isStringOrNull(field){
+    let requestData = request.resource.data;
+
+    return isNotInRequestOrNull(field) || requestData[field] is string;
+  }
+
+  /// Checks if fields is integer or null.
+  function isIntegerOrNull(field){
+    let requestData = request.resource.data;
+
+    return isNotInRequestOrNull(field) || requestData[field] is int;
+  }
+
+  /// Checks if field is float or null
+  function isCoverageValid(){
+    let requestData = request.resource.data;
+
+    return isNotInRequestOrNull("coverage") || (requestData["coverage"] >= 0.0 && requestData["coverage"] <= 1.0);
+  }
+
+  /// Checks whether the field is not in reequest data or it is null.
+  function isNotInRequestOrNull(field){
+    let requestData = request.resource.data;
+
+    return !(field in requestData) || requestData[field] == null;
+  }
+
+  /// Checks whether projectId in requested data points to existing project.
   function projectExists(database){
-    let projectId = request.resource.data.projectId;
-    return exists(/databases/$(database)/documents/projects/$(projectId));
+    return "projectId" in request.resource.data 
+        && exists(/databases/$(database)/documents/projects/$(request.resource.data.projectId));
   }
 
   /// Checks whether data from request contains a startedAt timestamp.

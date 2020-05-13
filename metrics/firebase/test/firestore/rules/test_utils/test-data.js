@@ -18,15 +18,23 @@ exports.projects = {
 const builds = {
   "build/1": {
     projectId: "1",
+    buildNumber: 1,
     startedAt: new firestore.Timestamp.now(),
+    buildStatus: "BuildStatus.failed",
+    workflowName: "workflow",
     duration: 234,
     url: "url1",
+    coverage: 0.0
   },
   "build/2": {
     projectId: "2",
+    buildNumber: 1,
     startedAt: new firestore.Timestamp.now(),
+    buildStatus: "BuildStatus.cancelled",
+    workflowName: "workflow",
     duration: 345,
     url: "url2",
+    coverage: 1.0
   },
 };
 
