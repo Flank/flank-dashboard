@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:ci_integration/cli/command/sync_command.dart';
 import 'package:ci_integration/cli/logger/logger.dart';
-import 'package:ci_integration/cli/parties/parties.dart';
 import 'package:ci_integration/cli/parties/supported_destination_parties.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
 import 'package:ci_integration/cli/parties/supported_source_parties.dart';
+import 'package:ci_integration/destination/firestore/client_factory/firestore_destination_client_factory.dart';
+import 'package:ci_integration/destination/firestore/config/parser/firestore_destination_config_parser.dart';
 import 'package:ci_integration/destination/firestore/party/firestore_destination_party.dart';
 import 'package:ci_integration/integration/ci/ci_integration.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
@@ -14,6 +15,7 @@ import 'package:ci_integration/integration/interface/source/client/source_client
 import 'package:ci_integration/integration/interface/source/party/source_party.dart';
 import 'package:ci_integration/source/jenkins/party/jenkins_source_party.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
+import 'package:firedart/firedart.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -33,6 +35,7 @@ void main() {
       final supportedDestinationParties = SupportedDestinationParties();
 
       final fileMock = FileMock();
+      final _firebaseAuthMock = _FirebaseAuthMock();
       final ciIntegrationMock = _CiIntegrationMock();
       final sourceClientMock = SourceClientMock();
       final destinationClientMock = DestinationClientMock();
@@ -59,15 +62,16 @@ void main() {
         reset(destinationClientMock);
         reset(sourcePartiesMock);
         reset(destinationPartiesMock);
+        reset(_firebaseAuthMock);
       });
 
-      PostExpectation<Future<InteractionResult>> whenRunSyncWithParties(
-        Parties<SourceParty> sourceParties,
-        Parties<DestinationParty> destinationParties,
-      ) {
-        when(sourcePartiesMock.parties).thenReturn(sourceParties.parties);
+      PostExpectation<Future<InteractionResult>> whenRunSync() {
+        when(sourcePartiesMock.parties)
+            .thenReturn(supportedSourceParties.parties);
         when(destinationPartiesMock.parties)
-            .thenReturn(destinationParties.parties);
+            .thenReturn([_FirestoreDestinationPartyStub(_firebaseAuthMock)]);
+        when(_firebaseAuthMock.signIn(any, any))
+            .thenAnswer((_) => Future.value(User.fromMap({})));
         when(fileMock.existsSync()).thenReturn(true);
         when(fileMock.readAsStringSync()).thenReturn(configFileContent);
         return when(ciIntegrationMock.sync(syncConfig));
@@ -80,20 +84,20 @@ void main() {
         expect(options, contains('config-file'));
       });
 
-      test("should have the command name equal to 'sync'", () {
+      test("has the command name equal to 'sync'", () {
         final name = syncCommand.name;
 
         expect(name, equals('sync'));
       });
 
-      test("should have a non-empty description", () {
+      test("has a non-empty description", () {
         final description = syncCommand.description;
 
         expect(description, isNotEmpty);
       });
 
       test(
-        ".parseConfigFileContent() should parse the config file content",
+        ".parseConfigFileContent() parses the config file content",
         () {
           final expected = integrationConfig;
           when(fileMock.readAsStringSync()).thenReturn(configFileContent);
@@ -105,7 +109,7 @@ void main() {
       );
 
       test(
-        ".getParty() should throw an UnimplementedError if the given parties are empty",
+        ".getParty() throws an UnimplementedError if the given parties are empty",
         () {
           when(sourcePartiesMock.parties).thenReturn([]);
 
@@ -120,7 +124,7 @@ void main() {
       );
 
       test(
-        ".getParty() should throw an UnimplementedError if the given parties do not contain an appropriate party",
+        ".getParty() throws an UnimplementedError if the given parties do not contain an appropriate party",
         () {
           final parties = supportedDestinationParties;
 
@@ -135,7 +139,7 @@ void main() {
       );
 
       test(
-        ".getParty() should return the appropriate party instance for the given config map",
+        ".getParty() returns the appropriate party instance for the given config map",
         () {
           final parties = supportedSourceParties;
 
@@ -149,7 +153,7 @@ void main() {
       );
 
       test(
-        ".parseConfig() should return null if the given party cannot parse the given config",
+        ".parseConfig() returns null if the given party cannot parse the given config",
         () {
           final party = JenkinsSourceParty();
 
@@ -163,7 +167,7 @@ void main() {
       );
 
       test(
-        ".parseConfig() should return the SourceConfig instance matching the given source config map",
+        ".parseConfig() returns the SourceConfig instance matching the given source config map",
         () {
           final party = JenkinsSourceParty();
           final jenkinsConfig = ConfigTestData.jenkinsSourceConfig;
@@ -178,7 +182,7 @@ void main() {
       );
 
       test(
-        ".parseConfig() should return the DestinationConfig instance matching the given destination config map",
+        ".parseConfig() returns the DestinationConfig instance matching the given destination config map",
         () {
           final party = FirestoreDestinationParty();
           final firestoreConfig = ConfigTestData.firestoreConfig;
@@ -193,7 +197,7 @@ void main() {
       );
 
       test(
-        ".run() should log an error if the given config file does not exist",
+        ".run() logs an error if the given config file does not exist",
         () async {
           when(fileMock.existsSync()).thenReturn(false);
 
@@ -204,7 +208,7 @@ void main() {
       );
 
       test(
-        ".run() should not run sync if the given config file does not exist",
+        ".run() does not run sync if the given config file does not exist",
         () async {
           when(fileMock.existsSync()).thenReturn(false);
 
@@ -214,33 +218,25 @@ void main() {
         },
       );
 
-      test(".run() should call dispose once", () async {
-        whenRunSyncWithParties(
-          supportedSourceParties,
-          supportedDestinationParties,
-        ).thenAnswer((_) => Future.value(any));
+      test(".run() calls dispose once", () async {
+        whenRunSync().thenAnswer((_) => Future.value(any));
 
         await syncCommand.run();
 
         expect(syncCommand.disposeCallCount, equals(1));
       });
 
-      test(".run() should call dispose once if sync throws", () async {
-        whenRunSyncWithParties(
-          supportedSourceParties,
-          supportedDestinationParties,
-        ).thenThrow(Exception());
+      test(".run() calls dispose once if sync throws", () async {
+        whenRunSync().thenThrow(Exception());
 
         await syncCommand.run();
 
         expect(syncCommand.disposeCallCount, equals(1));
       });
 
-      test(".run() should log an error if sync throws", () async {
-        whenRunSyncWithParties(
-          supportedSourceParties,
-          supportedDestinationParties,
-        ).thenThrow(Exception());
+      test(".run() logs an error if sync throws", () async {
+        when(destinationPartiesMock.parties).thenReturn([]);
+        whenRunSync().thenThrow(Exception());
 
         await syncCommand.run();
 
@@ -248,12 +244,9 @@ void main() {
       });
 
       test(
-        ".run() should run sync on the given config",
+        ".run() runs sync on the given config",
         () async {
-          whenRunSyncWithParties(
-            supportedSourceParties,
-            supportedDestinationParties,
-          ).thenAnswer((_) => Future.value(any));
+          whenRunSync().thenAnswer((_) => Future.value(any));
 
           await syncCommand.run();
 
@@ -262,7 +255,7 @@ void main() {
       );
 
       test(
-        ".sync() should print a message if a sync result is a success",
+        ".sync() prints a message if a sync result is a success",
         () async {
           const interactionResult = InteractionResult.success();
 
@@ -280,7 +273,7 @@ void main() {
       );
 
       test(
-        ".sync() should print an error message if a sync result is an error",
+        ".sync() prints an error message if a sync result is an error",
         () async {
           const interactionResult = InteractionResult.error();
 
@@ -298,7 +291,7 @@ void main() {
       );
 
       test(
-        ".dispose() should dispose the given source client",
+        ".dispose() disposes the given source client",
         () async {
           final syncCommand = SyncCommand(loggerStub);
 
@@ -312,7 +305,7 @@ void main() {
       );
 
       test(
-        ".dispose() should dispose the given destination client",
+        ".dispose() disposes the given destination client",
         () async {
           final syncCommand = SyncCommand(loggerStub);
 
@@ -329,6 +322,27 @@ void main() {
 }
 
 class _CiIntegrationMock extends Mock implements CiIntegration {}
+
+class _FirebaseAuthMock extends Mock implements FirebaseAuth {}
+
+/// A stub class for a [FirestoreDestinationParty] class providing test
+/// implementation for fields.
+class _FirestoreDestinationPartyStub implements FirestoreDestinationParty {
+  final FirebaseAuth firebaseAuth;
+
+  @override
+  final FirestoreDestinationClientFactory clientFactory;
+
+  @override
+  final FirestoreDestinationConfigParser configParser =
+      const FirestoreDestinationConfigParser();
+
+  /// Creates this stub class with the given [firebaseAuth] that is used to create
+  /// [FirestoreDestinationClientFactory] allowing to mock authentication related
+  /// functionality.
+  _FirestoreDestinationPartyStub(this.firebaseAuth)
+      : clientFactory = FirestoreDestinationClientFactory(firebaseAuth);
+}
 
 /// A stub class for a [SyncCommand] class providing test implementation for
 /// methods.

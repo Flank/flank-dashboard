@@ -11,22 +11,42 @@ class FirestoreDestinationConfig extends Equatable
   /// The Firestore metrics project identifier.
   final String metricsProjectId;
 
+  /// The Firebase user email.
+  final String firebaseUserEmail;
+
+  /// The Firebase user password.
+  final String firebaseUserPassword;
+
+  /// The Firebase Web API key.
+  final String firebaseWebApiKey;
+
   @override
-  List<Object> get props => [firebaseProjectId, metricsProjectId];
+  List<Object> get props => [
+        firebaseProjectId,
+        metricsProjectId,
+        firebaseUserEmail,
+        firebaseUserPassword,
+        firebaseWebApiKey,
+      ];
 
   @override
   String get destinationProjectId => metricsProjectId;
 
-  /// Creates the [FirestoreDestinationConfig] with the given
-  /// [metricsProjectId] and [firebaseProjectId].
+  /// Creates the [FirestoreConfig] with the given [metricsProjectId].
   ///
-  /// Throws an [ArgumentError] if either the [metricsProjectId]
-  /// or [firebaseProjectId] is null.
+  /// All the arguments are required. Throws an [ArgumentError]
+  /// if any of them is `null`.
   FirestoreDestinationConfig({
     @required this.firebaseProjectId,
+    @required this.firebaseUserEmail,
+    @required this.firebaseUserPassword,
+    @required this.firebaseWebApiKey,
     @required this.metricsProjectId,
   }) {
     ArgumentError.checkNotNull(firebaseProjectId, 'firebaseProjectId');
+    ArgumentError.checkNotNull(firebaseUserEmail, 'firebaseUserEmail');
+    ArgumentError.checkNotNull(firebaseUserPassword, 'firebaseUserPassword');
+    ArgumentError.checkNotNull(firebaseWebApiKey, 'firebaseWebApiKey');
     ArgumentError.checkNotNull(metricsProjectId, 'metricsProjectId');
   }
 
@@ -38,6 +58,9 @@ class FirestoreDestinationConfig extends Equatable
 
     return FirestoreDestinationConfig(
       firebaseProjectId: json['firebase_project_id'] as String,
+      firebaseUserPassword: json['firebase_user_pass'] as String,
+      firebaseUserEmail: json['firebase_user_email'] as String,
+      firebaseWebApiKey: json['firebase_web_api_key'] as String,
       metricsProjectId: json['metrics_project_id'] as String,
     );
   }

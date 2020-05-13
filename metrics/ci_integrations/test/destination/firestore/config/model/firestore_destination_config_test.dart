@@ -5,8 +5,25 @@ import '../../test_utils/test_data/firestore_config_test_data.dart';
 
 void main() {
   group("FirestoreDestinationConfig", () {
-    final firestoreConfigJson = FirestoreConfigTestData.firestoreConfigJson;
-    final firestoreConfig = FirestoreConfigTestData.firestoreConfig;
+    const firestoreConfigJson =
+        FirestoreConfigTestData.firestoreDestinationConfigMap;
+    final firestoreConfig = FirestoreConfigTestData.firestoreDestiantionConfig;
+
+    test(
+      "can't be created when the metricsProjectId is null",
+      () {
+        expect(
+          () => FirestoreDestinationConfig(
+            metricsProjectId: null,
+            firebaseProjectId: FirestoreConfigTestData.firebaseProjectId,
+            firebaseUserEmail: FirestoreConfigTestData.firebaseUserEmail,
+            firebaseUserPassword: FirestoreConfigTestData.firebaseUserPassword,
+            firebaseWebApiKey: FirestoreConfigTestData.firebaseWebApiKey,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
 
     test(
       "can't be created when the firebaseProjectId is null",
@@ -15,6 +32,9 @@ void main() {
           () => FirestoreDestinationConfig(
             metricsProjectId: FirestoreConfigTestData.metricsProjectId,
             firebaseProjectId: null,
+            firebaseUserEmail: FirestoreConfigTestData.firebaseUserEmail,
+            firebaseUserPassword: FirestoreConfigTestData.firebaseUserPassword,
+            firebaseWebApiKey: FirestoreConfigTestData.firebaseWebApiKey,
           ),
           throwsArgumentError,
         );
@@ -22,12 +42,15 @@ void main() {
     );
 
     test(
-      "can't be created when the metricsProjectId is null",
+      "can't be created when the firebaseUserEmail is null",
       () {
         expect(
           () => FirestoreDestinationConfig(
+            metricsProjectId: FirestoreConfigTestData.metricsProjectId,
             firebaseProjectId: FirestoreConfigTestData.firebaseProjectId,
-            metricsProjectId: null,
+            firebaseUserEmail: null,
+            firebaseUserPassword: FirestoreConfigTestData.firebaseUserPassword,
+            firebaseWebApiKey: FirestoreConfigTestData.firebaseWebApiKey,
           ),
           throwsArgumentError,
         );
@@ -35,7 +58,39 @@ void main() {
     );
 
     test(
-      ".fromJson() should return null if the given JSON map is null",
+      "can't be created when the firebaseUserPassword is null",
+      () {
+        expect(
+          () => FirestoreDestinationConfig(
+            metricsProjectId: FirestoreConfigTestData.metricsProjectId,
+            firebaseProjectId: FirestoreConfigTestData.firebaseProjectId,
+            firebaseUserEmail: FirestoreConfigTestData.firebaseUserEmail,
+            firebaseUserPassword: null,
+            firebaseWebApiKey: FirestoreConfigTestData.firebaseWebApiKey,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "can't be created when the firebaseWebApiKey is null",
+      () {
+        expect(
+          () => FirestoreDestinationConfig(
+            metricsProjectId: FirestoreConfigTestData.metricsProjectId,
+            firebaseProjectId: FirestoreConfigTestData.firebaseProjectId,
+            firebaseUserEmail: FirestoreConfigTestData.firebaseUserEmail,
+            firebaseUserPassword: FirestoreConfigTestData.firebaseUserPassword,
+            firebaseWebApiKey: null,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".fromJson() returns null if the given JSON map is null",
       () {
         final config = FirestoreDestinationConfig.fromJson(null);
 
@@ -44,7 +99,7 @@ void main() {
     );
 
     test(
-      '.fromJson() should create an instance of FirestoreConfig from JSON encodable Map',
+      '.fromJson() creates an instance of FirestoreConfig from JSON encodable Map',
       () {
         final parsed = FirestoreDestinationConfig.fromJson(firestoreConfigJson);
 
