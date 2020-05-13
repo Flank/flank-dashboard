@@ -16,7 +16,7 @@ describe("Build collection rules", async () => {
     await setupTestDatabaseWith(builds);
   });
 
-  it("does not allows to create a build with not allowed fields", async () => {
+  it("does not allow to create a build with not allowed fields", async () => {
     let build = getBuild();
     build.test = "test";
 

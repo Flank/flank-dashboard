@@ -36,11 +36,11 @@ describe("Project collection rules", async function () {
     );
   });
 
-  if ("does not allows to create a project with not allowed fields", async () => {
+  it("does not allow to create a project with not allowed fields", async () => {
     await assertFails(
       unauthenticatedApp.collection(projectsCollectionName).add({
         name: "name",
-        test: "test"
+        test: "test",
       })
     );
   });
