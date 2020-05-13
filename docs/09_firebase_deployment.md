@@ -40,6 +40,10 @@ Deployment to other platforms is out of scope.
 
 `Metrics Web Cloud Functions` -> `Deploy` -> `Firebase Cloud Functions`
 
+`Metrics Web Security Rules` -> `Deploy` -> `Firestore Security Rules`
+
+`Metrics Web Indexes` -> `Deploy` -> `Firestore Indexes`
+
 > Identify risks and edge cases
 
 # API
@@ -165,6 +169,19 @@ Once you've finished creating test data, you should deactivate the `seedData` cl
 1. Go to the `metrics/firebase/functions/index.js` file and change the `inactive` constant back to `true`.
 2. Redeploy this function, using the `firebase deploy --only functions` command.
 
+## Creating a new Firebase User
+
+Once you've finished deploying the Metrics application and created the test data, you probably want to open the application and ensure it works well, so you need to create a Firebase User to log in to the application:
+
+1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in the previous steps.
+2. Go to the `Authentication` section on the left panel and tap on the `Add user` button.
+3. Provide an email and a password to create a new user and type on the `Add user` button again.
+4. You should see your email with additional data appear in the list of the users' table.
+
+With that in place, you can use your credentials, that you've used to create the user, to fill an authentication form of the web application. 
+
+After logged-in you should see a page with a list of projects and their metrics, that you've created in the previous steps.
+
 # Dependencies
 
 > What is the project blocked on?
@@ -195,6 +212,7 @@ DONE:
 
 - Deploy Metrics application to Firebase Hosting.
 - Deploy the Cloud Function for creating test data.
+- Deploy Firestore Security Rules.
 
 # Results
 
