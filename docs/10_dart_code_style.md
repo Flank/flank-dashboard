@@ -141,22 +141,23 @@ be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842)
     ```
     
 11. DO document Mock static fields
-     Though it is assumed that Mock classes do not have any fields, sometimes it appears to be very pragmatic to add some _static_ fields to them in order to simplify code and tests structure, follow DRY or KISS, etc. (see Dart Mockito [best practices](https://pub.dev/packages/mockito#best-practices))
+    
+    Though it is assumed that Mock classes do not have any fields, sometimes it appears to be very pragmatic to add some _static_ fields to them in order to simplify code and tests structure, follow DRY or KISS, etc. (see Dart Mockito [best practices](https://pub.dev/packages/mockito#best-practices))
      
     `Good:`
 
     ```dart
     class CoolClassMock extends Mock implements CoolClass {
-    /// The really useful field that allows doing something extra-cool 
-    /// in order to prevent something very bad.
-    static const String reallyUsefulField = 'Really Useful Value';
+      /// The really useful field that allows doing something extra-cool 
+      /// in order to prevent something very bad.
+      static const String reallyUsefulField = 'Really Useful Value';
     ```
 
     `Bad:`
 
     ```dart
     class CoolClassMock extends Mock implements CoolClass {
-    static const String reallyUsefulField = 'Really Useful Value';
+      static const String reallyUsefulField = 'Really Useful Value';
     ```
 12. DO NOT document Fake classes
 
