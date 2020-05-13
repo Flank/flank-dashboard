@@ -8,7 +8,6 @@ import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
 import 'package:ci_integration/coverage/coverage_json_summary/model/coverage_json_summary.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
-import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for the [JenkinsClient] to implement the [SourceClient] interface.
@@ -49,10 +48,10 @@ class JenkinsSourceClientAdapter implements SourceClient {
       build.buildNumber,
     );
 
-    return processJenkinsBuilds(
+    return _processJenkinsBuilds(
       builds,
       buildingJob.name,
-      startFromBuildNumber: build.buildNumber,
+      startAfterBuildNumber: build.buildNumber,
     );
   }
 
@@ -62,7 +61,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       projectId,
       limits: JenkinsQueryLimits.endBefore(initialFetchBuildsLimit),
     );
-    return processJenkinsBuilds(
+    return _processJenkinsBuilds(
       buildingJob.builds,
       buildingJob.name,
     );
@@ -131,18 +130,17 @@ class JenkinsSourceClientAdapter implements SourceClient {
   /// Processes the given [builds] to the list of [BuildData]s.
   ///
   /// The [jobName] is used to identify a building job for the builds.
-  /// The [startFromBuildNumber] is used to filter builds which number is less
+  /// The [startAfterBuildNumber] is used to filter builds which number is less
   /// than or equal to this value. This allows to avoid processing old builds
   /// since the range specifier in Jenkins API only provides an ability to set
   /// the fetch limits but not to filter data to fetch.
-  @visibleForTesting
-  Future<List<BuildData>> processJenkinsBuilds(
+  Future<List<BuildData>> _processJenkinsBuilds(
     List<JenkinsBuild> builds,
     String jobName, {
-    int startFromBuildNumber,
+    int startAfterBuildNumber,
   }) {
     final buildDataFutures = builds.where((build) {
-      return _checkBuildFinishedAndInRange(build, startFromBuildNumber);
+      return _checkBuildFinishedAndInRange(build, startAfterBuildNumber);
     }).map((build) async {
       return _mapJenkinsBuild(jobName, build, await _fetchCoverage(build));
     });
