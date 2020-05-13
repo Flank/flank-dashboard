@@ -31,6 +31,16 @@ service cloud.firestore {
           && isString(requestData.name);
   }
 
+  /// Check whether the data contains only allowed for project document fields.
+  function isValidProjectData(data){
+    return data.keys().hasOnly(["name"]);
+  }
+
+  /// Checks whether the data is the string.
+  function isString(data){
+    return data is string;
+  }
+
   /// Checks whether build data from the request is valid.
   function isBuildValid(database){
     let requestData = request.resource.data;
@@ -40,6 +50,20 @@ service cloud.firestore {
           && hasValidStartedAtTimestamp(requestData) 
           && hasDuration(requestData) 
           && hasUrl(requestData);
+  }
+
+  /// Check whether the data contains only allowed for build document fields.
+  function isValidBuildData(data){
+    return data.keys().hasOnly([
+      "projectId",
+      "buildNumber",
+      "startedAt",
+      "buildStatus",
+      "duration",
+      "workflowName",
+      "url",
+      "coverage",
+    ]);
   }
 
   /// Chacks whether projectId in requested data points to existing project.
@@ -68,29 +92,5 @@ service cloud.firestore {
   /// Checks whether data from request contains a url string.
   function hasUrl(requestData){
     return "url" in requestData && isString(requestData.url);
-  }
-
-  /// Checks whether the data is the string.
-  function isString(data){
-    return data is string;
-  }
-
-  /// Check whether the data contains only allowed for build document fields.
-  function isValidBuildData(data){
-    return data.keys().hasOnly([
-      "projectId",
-      "buildNumber",
-      "startedAt",
-      "buildStatus",
-      "duration",
-      "workflowName",
-      "url",
-      "coverage",
-    ]);
-  }
-  
-  /// Check whether the data contains only allowed for project document fields.
-  function isValidProjectData(data){
-    return data.keys().hasOnly(["name"]);
   }
 }
