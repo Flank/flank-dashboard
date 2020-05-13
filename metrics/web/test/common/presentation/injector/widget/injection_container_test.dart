@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 void main() {
   group("InjectionContainer", () {
     testWidgets(
-      "injects the ProjectMetricsNotifier",
+      "injects a ProjectMetricsNotifier",
       (tester) async {
         await tester.pumpWidget(InjectionContainerTestbed());
 
@@ -23,7 +23,7 @@ void main() {
     );
 
     testWidgets(
-      "injects the AuthNotifier",
+      "injects a AuthNotifier",
       (tester) async {
         await tester.pumpWidget(InjectionContainerTestbed());
 
@@ -37,7 +37,7 @@ void main() {
     );
 
     testWidgets(
-      "injects the ThemeNotifier",
+      "injects a ThemeNotifier",
       (tester) async {
         await tester.pumpWidget(InjectionContainerTestbed());
 
