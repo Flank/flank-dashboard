@@ -111,6 +111,19 @@ void main() {
         verify(metricsNotifier.unsubscribeFromProjects()).called(equals(1));
       },
     );
+
+    testWidgets(
+      "subscribes to project updates in initState",
+      (tester) async {
+        final metricsNotifier = ProjectMetricsNotifierMock();
+
+        await tester.pumpWidget(_DashboardTestbed(
+          metricsNotifier: metricsNotifier,
+        ));
+
+        verify(metricsNotifier.subscribeToProjects()).called(equals(1));
+      },
+    );
   });
 }
 

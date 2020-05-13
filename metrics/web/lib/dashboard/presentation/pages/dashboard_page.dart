@@ -18,6 +18,8 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     _projectMetricsNotifier =
         Provider.of<ProjectMetricsNotifier>(context, listen: false);
+
+    _projectMetricsNotifier.subscribeToProjects();
     super.initState();
   }
 
