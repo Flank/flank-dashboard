@@ -15,6 +15,26 @@ describe("Project collection rules", async function () {
     await setupTestDatabaseWith(projects);
   });
 
+  /**
+   * Common tests
+   */
+  it("does not allow to create a project with not allowed fields", async () => {
+    await assertFails(
+      unauthenticatedApp.collection(projectsCollectionName).add({
+        name: "name",
+        test: "test",
+      })
+    );
+  });
+
+  it("does not allow to create a project without a name", async () => {
+    await assertFails(authenticatedApp.collection("projects").add({}));
+  });
+
+  /**
+   * Tests, specific for the authenticated user
+   */
+
   it("allows reading projects by an authenticated user", async () => {
     await assertSucceeds(
       authenticatedApp.collection(projectsCollectionName).get()
@@ -36,14 +56,15 @@ describe("Project collection rules", async function () {
     );
   });
 
-  it("does not allow to create a project with not allowed fields", async () => {
+  it("does not allow to delete a project by authenticated user", async () => {
     await assertFails(
-      unauthenticatedApp.collection(projectsCollectionName).add({
-        name: "name",
-        test: "test",
-      })
+      authenticatedApp.collection(projectsCollectionName).doc("1").delete()
     );
   });
+
+  /**
+   * Tests, specific for the unauthenticated user
+   */
 
   it("does not allow to read projects by an unauthenticated user", async () => {
     await assertFails(
@@ -70,16 +91,6 @@ describe("Project collection rules", async function () {
     await assertFails(
       unauthenticatedApp.collection(projectsCollectionName).doc("1").delete()
     );
-  });
-
-  it("does not allow to delete a project by authenticated user", async () => {
-    await assertFails(
-      authenticatedApp.collection(projectsCollectionName).doc("1").delete()
-    );
-  });
-
-  it("does not allow to create a project without a name", async () => {
-    await assertFails(authenticatedApp.collection("projects").add({}));
   });
 
   after(async () => {

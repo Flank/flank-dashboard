@@ -16,66 +16,16 @@ describe("Build collection rules", async () => {
     await setupTestDatabaseWith(builds);
   });
 
+  /**
+   * Common tests
+   */
+
   it("does not allow to create a build with not allowed fields", async () => {
     let build = getBuild();
     build.test = "test";
 
     await assertFails(
       authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
-
-  it("allows reading builds by an authenticated user", async () => {
-    await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).get()
-    );
-  });
-
-  it("does not allow to read builds by an unauthenticated user", async () => {
-    await assertFails(
-      unauthenticatedApp.collection(buildsCollectionName).get()
-    );
-  });
-
-  it("allows creating a build by an authenticated user", async () => {
-    await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).add(getBuild())
-    );
-  });
-
-  it("does not allow to create a build by an unauthenticated user", async () => {
-    await assertFails(
-      unauthenticatedApp.collection(buildsCollectionName).add(getBuild())
-    );
-  });
-
-  it("allows updating a build by an authenticated user", async () => {
-    await assertSucceeds(
-      authenticatedApp
-        .collection(buildsCollectionName)
-        .doc("1")
-        .update({ url: "updated" })
-    );
-  });
-
-  it("does not allow to update a build by an unauthenticated user", async () => {
-    await assertFails(
-      unauthenticatedApp
-        .collection(buildsCollectionName)
-        .doc("1")
-        .update({ url: "updated" })
-    );
-  });
-
-  it("does not allow to delete a build by an authenticated user", async () => {
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).doc("1").delete()
-    );
-  });
-
-  it("does not allow to delete a build by an unauthenticated user", async () => {
-    await assertFails(
-      unauthenticatedApp.collection(buildsCollectionName).doc("1").delete()
     );
   });
 
@@ -151,6 +101,68 @@ describe("Build collection rules", async () => {
 
     await assertFails(
       authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+
+  /**
+   * Tests, specific for the authenticated user
+   */
+
+  it("allows reading builds by an authenticated user", async () => {
+    await assertSucceeds(
+      authenticatedApp.collection(buildsCollectionName).get()
+    );
+  });
+
+  it("allows creating a build by an authenticated user", async () => {
+    await assertSucceeds(
+      authenticatedApp.collection(buildsCollectionName).add(getBuild())
+    );
+  });
+
+  it("allows updating a build by an authenticated user", async () => {
+    await assertSucceeds(
+      authenticatedApp
+        .collection(buildsCollectionName)
+        .doc("1")
+        .update({ url: "updated" })
+    );
+  });
+
+  it("does not allow to delete a build by an authenticated user", async () => {
+    await assertFails(
+      authenticatedApp.collection(buildsCollectionName).doc("1").delete()
+    );
+  });
+
+  /**
+   * Tests, specific for the unauthenticated user
+   */
+
+  it("does not allow to read builds by an unauthenticated user", async () => {
+    await assertFails(
+      unauthenticatedApp.collection(buildsCollectionName).get()
+    );
+  });
+
+  it("does not allow to create a build by an unauthenticated user", async () => {
+    await assertFails(
+      unauthenticatedApp.collection(buildsCollectionName).add(getBuild())
+    );
+  });
+
+  it("does not allow to update a build by an unauthenticated user", async () => {
+    await assertFails(
+      unauthenticatedApp
+        .collection(buildsCollectionName)
+        .doc("1")
+        .update({ url: "updated" })
+    );
+  });
+
+  it("does not allow to delete a build by an unauthenticated user", async () => {
+    await assertFails(
+      unauthenticatedApp.collection(buildsCollectionName).doc("1").delete()
     );
   });
 
