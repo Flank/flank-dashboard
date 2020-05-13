@@ -16,7 +16,6 @@ service cloud.firestore {
     }
   }
 
-
   /// Checks if a request is from a logged-in user.
   function isLoggedIn() {
     return request.auth.uid != null
@@ -26,7 +25,7 @@ service cloud.firestore {
   function isProjectValid(){
     let requestData = request.resource.data;
 
-    return isValidProjectData(requestData) && hasString(requestData, "name");
+    return isValidProjectData(requestData) && isString("name");
   }
 
   /// Check whether the data contains only allowed for project document fields.
@@ -34,8 +33,10 @@ service cloud.firestore {
     return data.keys().hasOnly(["name"]);
   }
 
-  /// Checks whether the field in the requestData and it is the string.
-  function hasString(requestData, field){
+  /// Checks whether the field is the string.
+  function isString(field){
+    let requestData = request.resource.data;
+
     return field in requestData && requestData[field] is string;
   }
 
@@ -47,7 +48,7 @@ service cloud.firestore {
           && projectExists(database) 
           && hasValidStartedAtTimestamp(requestData) 
           && hasDuration(requestData) 
-          && hasString(requestData, "url");
+          && isString("url");
   }
 
   /// Check whether the data contains only allowed for build document fields.

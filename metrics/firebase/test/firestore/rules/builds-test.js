@@ -105,7 +105,7 @@ describe("Build collection rules", async () => {
   });
 
   /**
-   * Tests, specific for the authenticated user
+   * The authenticated user specific tests
    */
 
   it("allows reading builds by an authenticated user", async () => {
@@ -136,7 +136,7 @@ describe("Build collection rules", async () => {
   });
 
   /**
-   * Tests, specific for the unauthenticated user
+   * The unauthenticated user specific tests
    */
 
   it("does not allow to read builds by an unauthenticated user", async () => {

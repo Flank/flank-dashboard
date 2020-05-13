@@ -18,6 +18,7 @@ describe("Project collection rules", async function () {
   /**
    * Common tests
    */
+
   it("does not allow to create a project with not allowed fields", async () => {
     await assertFails(
       unauthenticatedApp.collection(projectsCollectionName).add({
@@ -32,7 +33,7 @@ describe("Project collection rules", async function () {
   });
 
   /**
-   * Tests, specific for the authenticated user
+   * The authenticated user specific tests
    */
 
   it("allows reading projects by an authenticated user", async () => {
@@ -63,7 +64,7 @@ describe("Project collection rules", async function () {
   });
 
   /**
-   * Tests, specific for the unauthenticated user
+   * The unauthenticated user specific tests
    */
 
   it("does not allow to read projects by an unauthenticated user", async () => {
