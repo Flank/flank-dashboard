@@ -104,10 +104,91 @@ describe("Build collection rules", async () => {
     );
   });
 
+  it("does not allow to create a build if the build number is not an int", async () => {
+    let build = getBuild();
+    build.buildNumber = "2";
+
+    await assertFails(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+
+  it("allows to create a build if the build number is null", async () => {
+    let build = getBuild();
+    build.buildNumber = null;
+
+    await assertSucceeds(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+
+  it("does not allow to create a build with not valid build status value", async () => {
+    let build = getBuild();
+    build.buildStatus = "test";
+
+    await assertFails(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+
+  it("allows to create a build with null build status", async () => {
+    let build = getBuild();
+    build.buildStatus = null;
+
+    await assertSucceeds(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+  
+  it("does not allow to create a build when workflow name is not a string", async () => {
+    let build = getBuild();
+    build.workflowName = 2;
+
+    await assertFails(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+  
+  it("allows to create a build when workflow name is null", async () => {
+    let build = getBuild();
+    build.workflowName = null;
+
+    await assertSucceeds(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+  
+  it("does not allow to create a build when the coverage is grater then 1.0", async () => {
+    let build = getBuild();
+    build.coverage = 1.1;
+
+    await assertFails(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+  
+  it("does not allow to create a build when the coverage is less then 0.0", async () => {
+    let build = getBuild();
+    build.coverage = -1.0;
+
+    await assertFails(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+  
+  it("allows to create a build when the coverage is null", async () => {
+    let build = getBuild();
+    build.coverage = null;
+
+    await assertSucceeds(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+
   /**
    * The authenticated user specific tests
    */
-  
+
   it("allows creating a build by an authenticated user", async () => {
     await assertSucceeds(
       authenticatedApp.collection(buildsCollectionName).add(getBuild())
