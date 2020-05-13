@@ -6,7 +6,7 @@ const {
 const { assertFails, assertSucceeds } = require("@firebase/testing");
 const { project, projects, user } = require("./test_utils/test-data");
 
-describe("Project collection rules", async function () {
+describe("Projects collection rules", async function () {
   const authenticatedApp = await getApplicationWith(user);
   const unauthenticatedApp = await getApplicationWith(null);
   const projectsCollectionName = "projects";
@@ -36,15 +36,15 @@ describe("Project collection rules", async function () {
    * The authenticated user specific tests
    */
 
-  it("allows reading projects by an authenticated user", async () => {
+  it("allows creating a project by an authenticated user", async () => {
     await assertSucceeds(
-      authenticatedApp.collection(projectsCollectionName).get()
+      authenticatedApp.collection(projectsCollectionName).add(project)
     );
   });
 
-  it("allows adding a project by an authenticated user", async () => {
+  it("allows reading projects by an authenticated user", async () => {
     await assertSucceeds(
-      authenticatedApp.collection(projectsCollectionName).add(project)
+      authenticatedApp.collection(projectsCollectionName).get()
     );
   });
 
@@ -67,15 +67,15 @@ describe("Project collection rules", async function () {
    * The unauthenticated user specific tests
    */
 
-  it("does not allow to read projects by an unauthenticated user", async () => {
-    await assertFails(
-      unauthenticatedApp.collection(projectsCollectionName).get()
-    );
-  });
-
   it("does not allow to create a project by an unauthenticated user", async () => {
     await assertFails(
       unauthenticatedApp.collection(projectsCollectionName).add(project)
+    );
+  });
+
+  it("does not allow to read projects by an unauthenticated user", async () => {
+    await assertFails(
+      unauthenticatedApp.collection(projectsCollectionName).get()
     );
   });
 

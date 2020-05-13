@@ -107,16 +107,16 @@ describe("Build collection rules", async () => {
   /**
    * The authenticated user specific tests
    */
+  
+  it("allows creating a build by an authenticated user", async () => {
+    await assertSucceeds(
+      authenticatedApp.collection(buildsCollectionName).add(getBuild())
+    );
+  });
 
   it("allows reading builds by an authenticated user", async () => {
     await assertSucceeds(
       authenticatedApp.collection(buildsCollectionName).get()
-    );
-  });
-
-  it("allows creating a build by an authenticated user", async () => {
-    await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).add(getBuild())
     );
   });
 
@@ -139,15 +139,15 @@ describe("Build collection rules", async () => {
    * The unauthenticated user specific tests
    */
 
-  it("does not allow to read builds by an unauthenticated user", async () => {
-    await assertFails(
-      unauthenticatedApp.collection(buildsCollectionName).get()
-    );
-  });
-
   it("does not allow to create a build by an unauthenticated user", async () => {
     await assertFails(
       unauthenticatedApp.collection(buildsCollectionName).add(getBuild())
+    );
+  });
+
+  it("does not allow to read builds by an unauthenticated user", async () => {
+    await assertFails(
+      unauthenticatedApp.collection(buildsCollectionName).get()
     );
   });
 

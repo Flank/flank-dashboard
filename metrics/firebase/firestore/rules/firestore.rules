@@ -47,7 +47,7 @@ service cloud.firestore {
     return isValidBuildData(requestData)
           && projectExists(database) 
           && hasValidStartedAtTimestamp(requestData) 
-          && hasDuration(requestData) 
+          && isInteger("duration") 
           && isString("url");
   }
 
@@ -73,9 +73,14 @@ service cloud.firestore {
 
   /// Checks whether data from request contains a startedAt timestamp.
   function hasValidStartedAtTimestamp(requestData){
-    return "startedAt" in requestData 
-          && requestData.startedAt is timestamp
-          && isDateInPast(requestData.startedAt);
+    return isTimestamp("startedAt") && isDateInPast(requestData.startedAt);
+  }
+
+  /// Checks whether the field is the timestamp.
+  function isTimestamp(field) {
+    let requestData = request.resource.data;
+
+    return field in requestData && requestData[field] is timestamp;
   }
 
   /// Checks whether timestamp is not after the request time.
@@ -83,8 +88,10 @@ service cloud.firestore {
     return date <= request.time;
   }
 
-  /// Checks whether data from request contains a duration integer.
-  function hasDuration(requestData){
-    return "duration" in requestData && requestData.duration is int;
+  /// Checks whether the field is the integer.
+  function isInteger(field){
+    let requestData = request.resource.data;
+
+    return field in requestData && requestData[field] is int;
   }
 }
