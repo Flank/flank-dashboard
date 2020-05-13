@@ -25,11 +25,11 @@ service cloud.firestore {
   function isProjectValid(){
     let requestData = request.resource.data;
 
-    return isValidProjectData(requestData) && isString("name");
+    return isProjectDataValid(requestData) && isString("name");
   }
 
   /// Check whether the data contains only allowed for project document fields.
-  function isValidProjectData(data){
+  function isProjectDataValid(data){
     return data.keys().hasOnly(["name"]);
   }
 
@@ -43,20 +43,25 @@ service cloud.firestore {
   /// Checks whether build data from the request is valid.
   function isBuildValid(database){
     let requestData = request.resource.data;
+    let validBuildStatuses = [
+      "BuildStatus.successful",
+      "BuildStatus.cancelled",
+      "BuildStatus.failed"
+    ];
 
-    return isValidBuildData(requestData)
+    return isBuildDataValid(requestData)
           && projectExists(database)
           && isIntegerOrNull("buildNumber")
-          && hasValidStartedAtTimestamp(requestData) 
-          && isBuildStatusValid()
+          && isTimestampValid(requestData, false)
+          && isEmumValid("buildStatus", validBuildStatuses)
           && isInteger("duration") 
           && isStringOrNull("workflowName")
           && isString("url")
-          && isCoverageValid();
+          && isFloatValid("coverage", 0.0, 1.0);
   }
 
   /// Check whether the data contains only allowed for build document fields.
-  function isValidBuildData(data){
+  function isBuildDataValid(data){
     return data.keys().hasOnly([
       "projectId",
       "buildNumber",
@@ -71,15 +76,10 @@ service cloud.firestore {
 
 
   /// Checks if build status has a valid value or null.
-  function isBuildStatusValid(){
+  function isEmumValid(field, validEnumValues){
     let requestData = request.resource.data;
-    let validStatuses = [
-      "BuildStatus.successful",
-      "BuildStatus.cancelled",
-      "BuildStatus.failed"
-    ];
 
-    return isNotInRequestOrNull("buildStatus") || requestData["buildStatus"] in validStatuses;
+    return isNotInRequestOrNull(field) || requestData[field] in validEnumValues;
   }
 
   /// Checks if fields is string or null.
@@ -96,11 +96,11 @@ service cloud.firestore {
     return isNotInRequestOrNull(field) || requestData[field] is int;
   }
 
-  /// Checks if field is float or null
-  function isCoverageValid(){
+  /// Checks if field is float and in bounds from min to max or null
+  function isFloatValid(field, min, max){
     let requestData = request.resource.data;
 
-    return isNotInRequestOrNull("coverage") || (requestData["coverage"] >= 0.0 && requestData["coverage"] <= 1.0);
+    return isNotInRequestOrNull(field) || (requestData[field] >= min && requestData[field] <= max);
   }
 
   /// Checks whether the field is not in reequest data or it is null.
@@ -112,13 +112,14 @@ service cloud.firestore {
 
   /// Checks whether projectId in requested data points to existing project.
   function projectExists(database){
-    return "projectId" in request.resource.data 
+    return "projectId" in request.resource.data
         && exists(/databases/$(database)/documents/projects/$(request.resource.data.projectId));
   }
 
   /// Checks whether data from request contains a startedAt timestamp.
-  function hasValidStartedAtTimestamp(requestData){
-    return isTimestamp("startedAt") && isDateInPast(requestData.startedAt);
+  function isTimestampValid(requestData, canBeInFuture){
+    return isTimestamp("startedAt")
+          &&  (canBeInFuture || isDateInPast(requestData.startedAt));
   }
 
   /// Checks whether the field is the timestamp.
