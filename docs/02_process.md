@@ -103,6 +103,12 @@ A daily asynchronous check in. Answer [the following questions](https://support.
 * What do you plan on doing today?
 * Okay, any obstacles? 
 
+For teams with large time zone differences, it may make sense to have standups at the end of the day. The questions are slightly different.
+
+* What did you do today?
+* What do you plan on doing tomorrow?
+* Okay, any obstacles? 
+
 An example standup report:
 
 * John
