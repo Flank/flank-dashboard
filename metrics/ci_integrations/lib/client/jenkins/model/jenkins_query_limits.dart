@@ -1,13 +1,17 @@
 import 'package:ci_integration/util/validator/number_validator.dart';
+import 'package:equatable/equatable.dart';
 
 /// A class representing a range specifier for array-type properties in
 /// Jenkins API requests.
-class JenkinsQueryLimits {
+class JenkinsQueryLimits extends Equatable {
   /// The lower bound of a range specified.
   final int lower;
 
   /// The upper bound of a range specified.
   final int upper;
+
+  @override
+  List<Object> get props => [lower, upper];
 
   /// Creates a range specifier with given [lower] and [upper] bounds.
   const JenkinsQueryLimits._({this.lower, this.upper});

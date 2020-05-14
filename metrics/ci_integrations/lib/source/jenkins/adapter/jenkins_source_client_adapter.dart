@@ -20,7 +20,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
 
   /// Creates an instance of this adapter with the given [jenkinsClient].
   ///
-  /// Throws an [ArgumentError], if the given [jenkinsClient] is `null`.
+  /// Throws an [ArgumentError] if the given [JenkinsClient] is `null`.
   JenkinsSourceClientAdapter(this.jenkinsClient) {
     ArgumentError.checkNotNull(jenkinsClient, 'jenkinsClient');
   }
@@ -36,6 +36,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       projectId,
       limits: JenkinsQueryLimits.endBefore(0),
     );
+
     final lastBuild = buildingJob.lastBuild;
     final numberOfBuilds = lastBuild.number - build.buildNumber;
 
@@ -50,7 +51,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
     return _processJenkinsBuilds(
       builds,
       buildingJob.name,
-      startFromBuildNumber: build.buildNumber,
+      startAfterBuildNumber: build.buildNumber,
     );
   }
 
@@ -129,17 +130,17 @@ class JenkinsSourceClientAdapter implements SourceClient {
   /// Processes the given [builds] to the list of [BuildData]s.
   ///
   /// The [jobName] is used to identify a building job for the builds.
-  /// The [startFromBuildNumber] is used to filter builds which number is less
+  /// The [startAfterBuildNumber] is used to filter builds which number is less
   /// than or equal to this value. This allows to avoid processing old builds
   /// since the range specifier in Jenkins API only provides an ability to set
   /// the fetch limits but not to filter data to fetch.
   Future<List<BuildData>> _processJenkinsBuilds(
     List<JenkinsBuild> builds,
     String jobName, {
-    int startFromBuildNumber,
+    int startAfterBuildNumber,
   }) {
     final buildDataFutures = builds.where((build) {
-      return _checkBuildFinishedAndInRange(build, startFromBuildNumber);
+      return _checkBuildFinishedAndInRange(build, startAfterBuildNumber);
     }).map((build) async {
       return _mapJenkinsBuild(jobName, build, await _fetchCoverage(build));
     });
@@ -200,7 +201,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       coverage = CoverageJsonSummary.fromJson(artifactContent);
     }
 
-    return coverage?.total?.branches?.percent ?? const Percent(0.0);
+    return coverage?.total?.branches?.percent;
   }
 
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].

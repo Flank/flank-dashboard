@@ -13,3 +13,4 @@ doc/api/
 test/.test_coverage.dart
 
 *.iml
+.vscode/
