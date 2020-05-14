@@ -147,7 +147,7 @@ The `metrics/firebase` folder contains Firestore security rules, Firestore index
 1. Activate the `seedData` function: go to the `metrics/firebase/functions/index.js` file and change the `const inactive = true;` to `const inactive = false;`.
 2. 0pen the terminal and navigate to `metrics/firebase` folder.
 3. Run the `firebase deploy` command to deploy all components.
-4. Once command execution finished, you'll find the `seedData` function URL, used to trigger it, in the console. Save this URL somewhere - you will need it a bit later.
+4. Once command execution finished, you'll find the `seedData` function URL, that can be used to trigger function execution in the console. Save this URL somewhere - you will need it a bit later.
 
 Now you can create test projects in your Firestore database: 
 
@@ -180,7 +180,7 @@ Once you've finished deploying the Metrics application and created the test data
 
 With that in place, you can use your credentials, that you've used to create the user, to fill an authentication form of the web application. 
 
-After logged-in you should see a dashboard page with a list of test projects and their metrics, that you've created in the previous steps.
+After logging in, you should see a dashboard page with a list of test projects and their metrics if you've created them in the previous steps or no data. The app should provide an ability to switch between light/dark themes.
 
 # Dependencies
 
@@ -212,7 +212,7 @@ DONE:
 
 - Deploy Metrics application to Firebase Hosting.
 - Deploy the Cloud Function for creating test data.
-- Deploy Firestore Security Rules.
+- Deploy Firestore Security Rules & Indexes.
 
 # Results
 
