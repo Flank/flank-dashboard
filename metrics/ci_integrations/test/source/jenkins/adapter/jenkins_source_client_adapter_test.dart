@@ -102,7 +102,7 @@ void main() {
       ".fetchBuilds() fetches builds which are not building",
       () {
         final jenkinsBuilds = [
-          createJenkinsBuild(buildNumber: 1),
+          createJenkinsBuild(buildNumber: 1, building: false),
           createJenkinsBuild(buildNumber: 2, building: true),
         ];
         final expected = [createBuildData(buildNumber: 1)];
@@ -211,7 +211,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() results with correct list of fetched builds",
+      ".fetchBuilds() maps fetched builds statuses according to specification",
       () async {
         const jenkinsResults = [
           JenkinsBuildResult.failure,
@@ -260,8 +260,8 @@ void main() {
       () {
         const build = BuildData(buildNumber: 1);
         final jenkinsBuilds = [
-          createJenkinsBuild(buildNumber: 1),
-          createJenkinsBuild(buildNumber: 2),
+          createJenkinsBuild(buildNumber: 1, building: false),
+          createJenkinsBuild(buildNumber: 2, building: false),
           createJenkinsBuild(buildNumber: 3, building: true),
         ];
         final expected = [createBuildData(buildNumber: 2)];
@@ -339,7 +339,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() fetches new builds performed after the given build",
+      ".fetchBuildsAfter() maps fetched builds statuses according to specification",
       () async {
         const startingBuildNumber = 1;
         const build = BuildData(buildNumber: startingBuildNumber);
@@ -374,6 +374,29 @@ void main() {
             buildStatus: expectedStatuses[i],
           ));
         }
+
+        responses.addBuilds(jenkinsBuilds);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = adapter.fetchBuildsAfter(jobName, build);
+
+        expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() fetches new builds performed after the given build",
+      () async {
+        const build = BuildData(buildNumber: 2);
+        final jenkinsBuilds = [
+          createJenkinsBuild(buildNumber: 1),
+          createJenkinsBuild(buildNumber: 2),
+          createJenkinsBuild(buildNumber: 3),
+        ];
+        final expected = <BuildData>[
+          createBuildData(buildNumber: 3),
+        ];
 
         responses.addBuilds(jenkinsBuilds);
 
