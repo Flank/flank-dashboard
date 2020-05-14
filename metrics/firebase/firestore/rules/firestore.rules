@@ -28,41 +28,44 @@ service cloud.firestore {
     return isProjectDataValid(requestData) && isString("name");
   }
 
-  /// Check whether the data contains only allowed for project document fields.
+  /// Check whether the request data contains only allowed for project document fields.
   function isProjectDataValid(data){
     return data.keys().hasOnly(["name"]);
   }
 
-  /// Checks whether the field is the string.
+  /// Checks whether a field of request is the string.
   function isString(field){
     let requestData = request.resource.data;
 
     return field in requestData && requestData[field] is string;
   }
 
-  /// Checks whether build data from the request is valid.
+  /// Checks whether the request contains the valid build data.
   function isBuildValid(database){
-    let requestData = request.resource.data;
+    
     let validBuildStatuses = [
       "BuildStatus.successful",
       "BuildStatus.cancelled",
       "BuildStatus.failed"
     ];
 
-    return isBuildDataValid(requestData)
+    return isBuildDataValid()
+          && isString("projectId")
           && projectExists(database)
-          && isIntegerOrNull("buildNumber")
-          && isTimestampValid(requestData, false)
-          && isEmumValid("buildStatus", validBuildStatuses)
+          && isInteger("buildNumber")
+          && isTimestampValid("startedAt", false)
+          && isEnumValid("buildStatus", validBuildStatuses)
           && isInteger("duration") 
           && isStringOrNull("workflowName")
           && isString("url")
-          && isFloatValid("coverage", 0.0, 1.0);
+          && isFloatValidOrNull("coverage", 0.0, 1.0);
   }
 
-  /// Check whether the data contains only allowed for build document fields.
-  function isBuildDataValid(data){
-    return data.keys().hasOnly([
+  /// Check whether the request data contains only allowed for build document fields.
+  function isBuildDataValid(){
+    let requestData = request.resource.data;
+
+    return requestData.keys().hasOnly([
       "projectId",
       "buildNumber",
       "startedAt",
@@ -75,66 +78,68 @@ service cloud.firestore {
   }
 
 
-  /// Checks if build status has a valid value or null.
-  function isEmumValid(field, validEnumValues){
+  /// Checks if a field of the request is a valid enum value or null.
+  function isEnumValid(field, validEnumValues){
     let requestData = request.resource.data;
 
     return isNotInRequestOrNull(field) || requestData[field] in validEnumValues;
   }
 
-  /// Checks if fields is string or null.
+  /// Checks if a field of the request is a string or null.
   function isStringOrNull(field){
     let requestData = request.resource.data;
 
     return isNotInRequestOrNull(field) || requestData[field] is string;
   }
 
-  /// Checks if fields is integer or null.
+  /// Checks if a field of the request is an integer or null.
   function isIntegerOrNull(field){
     let requestData = request.resource.data;
 
     return isNotInRequestOrNull(field) || requestData[field] is int;
   }
 
-  /// Checks if field is float and in bounds from min to max or null
-  function isFloatValid(field, min, max){
+  /// Checks if a field is a float and in bounds from min to max or null.
+  function isFloatValidOrNull(field, min, max){
     let requestData = request.resource.data;
 
     return isNotInRequestOrNull(field) || (requestData[field] >= min && requestData[field] <= max);
   }
 
-  /// Checks whether the field is not in reequest data or it is null.
+  /// Checks whether a field is not in request data or it is null.
   function isNotInRequestOrNull(field){
     let requestData = request.resource.data;
 
     return !(field in requestData) || requestData[field] == null;
   }
 
-  /// Checks whether projectId in requested data points to existing project.
+  /// Checks whether projectId in requested data points to the existing project.
   function projectExists(database){
     return "projectId" in request.resource.data
         && exists(/databases/$(database)/documents/projects/$(request.resource.data.projectId));
   }
 
-  /// Checks whether data from request contains a startedAt timestamp.
-  function isTimestampValid(requestData, canBeInFuture){
-    return isTimestamp("startedAt")
+  /// Checks whether a field of the request is a timestamp, and it is in the past if canBeInFuture is false.
+  function isTimestampValid(field, canBeInFuture){
+    let requestData = request.resource.data;
+
+    return isTimestamp(field)
           &&  (canBeInFuture || isDateInPast(requestData.startedAt));
   }
 
-  /// Checks whether the field is the timestamp.
+  /// Checks whether a field of requested data is a timestamp.
   function isTimestamp(field) {
     let requestData = request.resource.data;
 
     return field in requestData && requestData[field] is timestamp;
   }
 
-  /// Checks whether timestamp is not after the request time.
+  /// Checks whether a timestamp of requested data is not after the request time.
   function isDateInPast(date){
     return date <= request.time;
   }
 
-  /// Checks whether the field is the integer.
+  /// Checks whether a field of requested data is an integer.
   function isInteger(field){
     let requestData = request.resource.data;
 

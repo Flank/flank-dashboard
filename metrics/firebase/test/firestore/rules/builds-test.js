@@ -37,6 +37,24 @@ describe("Build collection rules", async () => {
       authenticatedApp.collection(buildsCollectionName).add(build)
     );
   });
+  
+  it("does not allow to add a build with null projectId", async () => {
+    let build = getBuild();
+    build.projectId = null;
+
+    await assertFails(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
+  
+  it("does not allow to add a build when projectId is not a string", async () => {
+    let build = getBuild();
+    build.projectId = 2;
+
+    await assertFails(
+      authenticatedApp.collection(buildsCollectionName).add(build)
+    );
+  });
 
   it("does not allow to create a build if the startedAt is null", async () => {
     let build = getBuild();
@@ -113,11 +131,11 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("allows to create a build if the build number is null", async () => {
+  it("does not allow to create a build if the build number is null", async () => {
     let build = getBuild();
     build.buildNumber = null;
 
-    await assertSucceeds(
+    await assertFails(
       authenticatedApp.collection(buildsCollectionName).add(build)
     );
   });
