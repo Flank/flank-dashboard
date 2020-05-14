@@ -97,13 +97,13 @@ If a task is larger than 13, then create multiple smaller tickets. If a task is 
 
 ## Daily standup
 
-A daily asynchronous check in. Answer [the following questions](https://support.standuply.com/article/97-how-to-customize-the-questions), with reference to the GitHub tickets.
+A daily asynchronous check in. Answer [the following questions](https://support.standuply.com/article/97-how-to-customize-the-questions), with reference to the GitHub tickets. The goal is to reflect on yesterday and create a plan for today.
 
 * What did you do yesterday?
 * What do you plan on doing today?
 * Okay, any obstacles? 
 
-For teams with large time zone differences, it may make sense to have standups at the end of the day. The questions are slightly different.
+For teams with large time zone differences, it may make sense to have standups at the end of the day. The questions are slightly different. The goal is to sum up the day and then think about tomorrow.
 
 * What did you do today?
 * What do you plan on doing tomorrow?
