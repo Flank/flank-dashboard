@@ -97,11 +97,11 @@ If a task is larger than 13, then create multiple smaller tickets. If a task is 
 
 ## Daily standup
 
-A daily asynchronous check in. Answer the following questions, with reference to the GitHub tickets.
+A daily asynchronous check in. Answer [the following questions](https://support.standuply.com/article/97-how-to-customize-the-questions), with reference to the GitHub tickets.
 
-* What did you work on yesterday?
-* What will you work on today?
-* What is getting in your way?
+* What did you do yesterday?
+* What do you plan on doing today?
+* Okay, any obstacles? 
 
 An example standup report:
 
