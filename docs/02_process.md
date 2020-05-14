@@ -99,8 +99,8 @@ If a task is larger than 13, then create multiple smaller tickets. If a task is 
 
 A daily asynchronous check in. Answer the following questions, with reference to the GitHub tickets.
 
-* What did you do yesterday?
-* What will you do today?
+* What did you work on yesterday?
+* What will you work on today?
 * What is getting in your way?
 
 An example standup report:
