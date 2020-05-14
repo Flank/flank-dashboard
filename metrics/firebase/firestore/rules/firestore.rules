@@ -33,7 +33,7 @@ service cloud.firestore {
     return data.keys().hasOnly(["name"]);
   }
 
-  /// Checks whether a field of request is the string.
+  /// Checks whether a field of request data is the string.
   function isString(field){
     let requestData = request.resource.data;
 
@@ -78,21 +78,21 @@ service cloud.firestore {
   }
 
 
-  /// Checks if a field of the request is a valid enum value or null.
+  /// Checks if a field of the request data is a valid enum value or null.
   function isEnumValid(field, validEnumValues){
     let requestData = request.resource.data;
 
     return isNotInRequestOrNull(field) || requestData[field] in validEnumValues;
   }
 
-  /// Checks if a field of the request is a string or null.
+  /// Checks if a field of the request data is a string or null.
   function isStringOrNull(field){
     let requestData = request.resource.data;
 
     return isNotInRequestOrNull(field) || requestData[field] is string;
   }
 
-  /// Checks if a field of the request is an integer or null.
+  /// Checks if a field of the request data is an integer or null.
   function isIntegerOrNull(field){
     let requestData = request.resource.data;
 
@@ -119,7 +119,7 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/projects/$(request.resource.data.projectId));
   }
 
-  /// Checks whether a field of the request is a timestamp, and it is in the past if canBeInFuture is false.
+  /// Checks whether a field of the request data is a timestamp, and it is in the past if canBeInFuture is false.
   function isTimestampValid(field, canBeInFuture){
     let requestData = request.resource.data;
 

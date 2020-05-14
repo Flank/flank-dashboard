@@ -29,7 +29,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to add a build with not existing project id", async () => {
+  it("does not allow to create a build with not existing project id", async () => {
     let build = getBuild();
     build.projectId = "non-existing-id";
 
@@ -38,7 +38,7 @@ describe("Build collection rules", async () => {
     );
   });
   
-  it("does not allow to add a build with null projectId", async () => {
+  it("does not allow to create a build with null projectId", async () => {
     let build = getBuild();
     build.projectId = null;
 
@@ -47,7 +47,7 @@ describe("Build collection rules", async () => {
     );
   });
   
-  it("does not allow to add a build when projectId is not a string", async () => {
+  it("does not allow to create a build when projectId is not a string", async () => {
     let build = getBuild();
     build.projectId = 2;
 
