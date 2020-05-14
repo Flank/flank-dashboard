@@ -63,10 +63,9 @@ exports.seedData = functions.https.onRequest(async (req, resp) => {
             projectId: projectId,
             buildStatus: buildStatuses[randomInt(0, buildStatuses.length)],
             startedAt: buildDate,
-            triggeredAt: buildDate,
             coverage: Math.round(Math.random() * 100) / 100,
             url: 'https://github.com/software-platform/monorepo/commits/master',
-            workflow: 'run_tests',
+            workflowName: 'run_tests',
         });
     }
     return resp.status(200).send('done');
