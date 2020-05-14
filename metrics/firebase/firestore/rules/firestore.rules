@@ -123,7 +123,8 @@ service cloud.firestore {
   function isTimestamp(field, canBeInFuture){
     let requestData = request.resource.data;
 
-    return (field in requestData && requestData[field] is timestamp)
+    return field in requestData 
+          && requestData[field] is timestamp
           &&  (canBeInFuture || isDateInPast(requestData.startedAt));
   }
 
