@@ -9,14 +9,16 @@ class BuildDataDeserializer {
     final buildResultValue = json['buildStatus'] as String;
     final durationMilliseconds = json['duration'] as int;
     final buildStatus = BuildStatus.values.firstWhere(
-      (element) => '$element' == buildResultValue,
+          (element) => '$element' == buildResultValue,
       orElse: () => null,
     );
 
     return BuildData(
       id: id,
       duration: Duration(milliseconds: durationMilliseconds),
-      coverage: Percent(json['coverage'] as double),
+      coverage: json['coverage'] == null
+          ? null
+          : PercentValueObject(json['coverage'] as double),
       startedAt: json['startedAt'] as DateTime,
       url: json['url'] as String,
       buildNumber: json['buildNumber'] as int,

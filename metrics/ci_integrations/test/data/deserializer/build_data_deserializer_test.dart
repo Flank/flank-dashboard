@@ -10,7 +10,7 @@ void main() {
     const buildNumber = 1;
     const buildStatus = BuildStatus.failed;
     const workflowName = 'testWorkflowName';
-    const coverage = Percent(1.0);
+    final coverage = PercentValueObject(1.0);
     final startedAt = DateTime.now();
     final buildDataJson = {
       'id': id,
@@ -25,7 +25,7 @@ void main() {
 
     test(
       ".fromJson() should return null if the given JSON is null",
-      () {
+          () {
         final buildData = BuildDataDeserializer.fromJson(null, id);
 
         expect(buildData, isNull);

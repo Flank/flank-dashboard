@@ -116,14 +116,14 @@ void main() {
             startedAt: DateTime.now(),
             buildStatus: BuildStatus.failed,
             duration: const Duration(minutes: 10),
-            coverage: const Percent(0.4),
+            coverage: PercentValueObject(0.4),
           ),
           Build(
             id: '2',
             startedAt: DateTime.now(),
             buildStatus: BuildStatus.cancelled,
             duration: const Duration(minutes: 3),
-            coverage: const Percent(0.2),
+            coverage: PercentValueObject(0.2),
           ),
         ];
 
@@ -150,7 +150,7 @@ class _MetricsRepositoryStub implements MetricsRepository {
     id: '2',
     startedAt: DateTime.now().subtract(const Duration(days: 1)),
     duration: const Duration(minutes: 6),
-    coverage: const Percent(0.1),
+    coverage: PercentValueObject(0.1),
     buildStatus: BuildStatus.cancelled,
   );
 
@@ -159,7 +159,7 @@ class _MetricsRepositoryStub implements MetricsRepository {
       id: '1',
       startedAt: DateTime.now(),
       duration: const Duration(minutes: 10),
-      coverage: const Percent(0.1),
+      coverage: PercentValueObject(0.1),
       buildStatus: BuildStatus.failed,
     ),
     lastSuccessfulBuild,
@@ -167,21 +167,21 @@ class _MetricsRepositoryStub implements MetricsRepository {
       id: '3',
       startedAt: DateTime.now().subtract(const Duration(days: 2)),
       duration: const Duration(minutes: 3),
-      coverage: const Percent(0.1),
+      coverage: PercentValueObject(0.1),
       buildStatus: BuildStatus.successful,
     ),
     Build(
       id: '4',
       startedAt: DateTime.now().subtract(const Duration(days: 3)),
       duration: const Duration(minutes: 8),
-      coverage: const Percent(0.1),
+      coverage: PercentValueObject(0.1),
       buildStatus: BuildStatus.failed,
     ),
     Build(
       id: '5',
       startedAt: DateTime.now().subtract(const Duration(days: 4)),
       duration: const Duration(minutes: 12),
-      coverage: const Percent(0.1),
+      coverage: PercentValueObject(0.1),
       buildStatus: BuildStatus.failed,
     ),
   ];

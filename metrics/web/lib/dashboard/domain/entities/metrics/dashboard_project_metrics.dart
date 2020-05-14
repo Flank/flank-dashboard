@@ -11,8 +11,8 @@ class DashboardProjectMetrics extends Equatable {
   final BuildNumberMetric buildNumberMetrics;
   final PerformanceMetric performanceMetrics;
   final BuildResultMetric buildResultMetrics;
-  final Percent coverage;
-  final Percent stability;
+  final PercentValueObject coverage;
+  final PercentValueObject stability;
 
   @override
   List<Object> get props => [

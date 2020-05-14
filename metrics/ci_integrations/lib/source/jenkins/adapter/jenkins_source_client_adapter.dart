@@ -163,7 +163,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
   BuildData _mapJenkinsBuild(
     String jobName,
     JenkinsBuild jenkinsBuild,
-    Percent coverage,
+    PercentValueObject coverage,
   ) {
     return BuildData(
       buildNumber: jenkinsBuild.number,
@@ -180,7 +180,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
   ///
   /// Returns `null` if the code coverage artifact for the given build
   /// is not found.
-  Future<Percent> _fetchCoverage(JenkinsBuild build) async {
+  Future<PercentValueObject> _fetchCoverage(JenkinsBuild build) async {
     final coverageArtifact = build.artifacts.firstWhere(
       (artifact) => artifact.fileName == 'coverage-summary.json',
       orElse: () => null,
@@ -201,7 +201,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       coverage = CoverageJsonSummary.fromJson(artifactContent);
     }
 
-    return coverage?.total?.branches?.percent;
+    return coverage?.total?.branches?.percent ??  PercentValueObject(0.0);
   }
 
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].

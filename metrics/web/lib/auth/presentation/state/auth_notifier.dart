@@ -2,11 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
+import 'package:metrics/auth/domain/entities/email_validation_exception.dart';
+import 'package:metrics/auth/domain/entities/password_validation_exception.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:metrics/auth/domain/value_objects/email_value_object.dart';
+import 'package:metrics/auth/domain/value_objects/password_value_object.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
+import 'package:metrics/auth/presentation/model/email_validation_error_message.dart';
+import 'package:metrics/auth/presentation/model/password_validation_error_message.dart';
 
 /// The [ChangeNotifier] that holds the authentication state.
 ///
@@ -32,6 +38,12 @@ class AuthNotifier extends ChangeNotifier {
   /// Contains text description of any authentication exception that may occur.
   AuthErrorMessage _authExceptionDescription;
 
+  /// Contains text description of any email validation error that may occur.
+  EmailValidationErrorMessage _emailValidationErrorMessage;
+
+  /// Contains text description of any password validation error that may occur.
+  PasswordValidationErrorMessage _passwordValidationErrorMessage;
+
   AuthNotifier(
     this._receiveAuthUpdates,
     this._signInUseCase,
@@ -43,8 +55,16 @@ class AuthNotifier extends ChangeNotifier {
   /// Determines if a user is authenticated.
   bool get isLoggedIn => _isLoggedIn;
 
-  /// Returns an AuthErrorMessage, containing an auth error message.
+  /// Returns an [AuthErrorMessage], containing an auth error message.
   AuthErrorMessage get authErrorMessage => _authExceptionDescription;
+
+  /// Returns an [EmailValidationErrorMessage], containing an email validation error message.
+  EmailValidationErrorMessage get emailValidationErrorMessage =>
+      _emailValidationErrorMessage;
+
+  /// Returns an [PasswordValidationErrorMessage], containing a password validation error message.
+  PasswordValidationErrorMessage get passwordValidationErrorMessage =>
+      _passwordValidationErrorMessage;
 
   /// Subscribes to a user authentication updates
   /// to get notified when the user got signed in or signed out.
@@ -59,16 +79,40 @@ class AuthNotifier extends ChangeNotifier {
   /// Signs in user to the app using an [email] and a [password].
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     _authExceptionDescription = null;
-    notifyListeners();
 
     try {
       await _signInUseCase(UserCredentialsParam(
-        email: email,
-        password: password,
+        email: EmailValueObject(email),
+        password: PasswordValueObject(password),
       ));
     } on AuthenticationException catch (exception) {
       _authExceptionDescription = AuthErrorMessage(exception.code);
-      notifyListeners();
+    }
+  }
+
+  /// Validates the given [value] as an email.
+  void validateEmail(String value) {
+    _emailValidationErrorMessage = null;
+
+    try {
+      EmailValueObject(value);
+    } on EmailValidationException catch (exception) {
+      _emailValidationErrorMessage = EmailValidationErrorMessage(
+        exception.code,
+      );
+    }
+  }
+
+  /// Validates the given [value] as a password.
+  void validatePassword(String value) {
+    _passwordValidationErrorMessage = null;
+
+    try {
+      PasswordValueObject(value);
+    } on PasswordValidationException catch (exception) {
+      _passwordValidationErrorMessage = PasswordValidationErrorMessage(
+        exception.code,
+      );
     }
   }
 

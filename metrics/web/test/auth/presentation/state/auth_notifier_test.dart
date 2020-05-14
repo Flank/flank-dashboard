@@ -7,6 +7,8 @@ import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.d
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:metrics/auth/domain/value_objects/email_value_object.dart';
+import 'package:metrics/auth/domain/value_objects/password_value_object.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -109,9 +111,9 @@ void main() {
 
       authNotifier.signInWithEmailAndPassword(email, password);
 
-      const userCredentials = UserCredentialsParam(
-        email: email,
-        password: password,
+      final userCredentials = UserCredentialsParam(
+        email: EmailValueObject(email),
+        password: PasswordValueObject(password),
       );
 
       verify(signInUseCase(userCredentials)).called(equals(1));
@@ -132,11 +134,11 @@ void main() {
     test(
       ".signInWithEmailAndPassword() clears the authentication error message on a successful sign in",
       () {
-        const invalidEmail = 'email';
+        const invalidEmail = 'email@mail.mail';
         const invalidPassword = 'password';
-        const invalidCredentials = UserCredentialsParam(
-          email: invalidEmail,
-          password: invalidPassword,
+        final invalidCredentials = UserCredentialsParam(
+          email: EmailValueObject(invalidEmail),
+          password: PasswordValueObject(invalidPassword),
         );
         const authException = AuthenticationException(
           code: AuthErrorCode.unknown,
@@ -144,14 +146,36 @@ void main() {
 
         when(signInUseCase.call(invalidCredentials)).thenThrow(authException);
 
-        authNotifier.signInWithEmailAndPassword('email', 'password');
+        authNotifier.signInWithEmailAndPassword(invalidEmail, invalidPassword);
 
         expect(authNotifier.authErrorMessage, isNotNull);
 
         authNotifier.signInWithEmailAndPassword(
-            'valid_email', 'valid_password');
+            'valid_email@mail.mail', 'valid_password');
 
         expect(authNotifier.authErrorMessage, isNull);
+      },
+    );
+
+    test(
+      ".validateEmail() saves the validation error message to .emailValidationErrorMessage if the given email is not valid",
+      () {
+        const invalidEmail = "invalid@@email.com";
+
+        authNotifier.validateEmail(invalidEmail);
+
+        expect(authNotifier.emailValidationErrorMessage, isNotNull);
+      },
+    );
+
+    test(
+      ".validatePassword() saves the validation error message to .passwordValidationErrorMessage if the given password is not valid",
+      () {
+        const invalidPassword = "pass";
+
+        authNotifier.validatePassword(invalidPassword);
+
+        expect(authNotifier.passwordValidationErrorMessage, isNotNull);
       },
     );
 

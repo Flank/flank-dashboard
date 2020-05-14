@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:metrics_core/src/domain/entities/build_status.dart';
-import 'package:metrics_core/src/domain/entities/percent.dart';
+import 'package:metrics_core/src/domain/value_objects/percent_value_object.dart';
 
 /// Represents a single finished build from CI.
 class Build extends Equatable {
@@ -12,7 +12,7 @@ class Build extends Equatable {
   final Duration duration;
   final String workflowName;
   final String url;
-  final Percent coverage;
+  final PercentValueObject coverage;
 
   /// Creates the [Build].
   ///

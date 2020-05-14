@@ -458,8 +458,8 @@ class _ReceiveProjectMetricsUpdatesStub
         ),
       ],
     ),
-    coverage: const Percent(0.2),
-    stability: const Percent(0.5),
+    coverage: PercentValueObject(0.2),
+    stability: PercentValueObject(0.5),
   );
 
   /// A [BehaviorSubject] that holds the [DashboardProjectMetrics] and provides a stream of them.

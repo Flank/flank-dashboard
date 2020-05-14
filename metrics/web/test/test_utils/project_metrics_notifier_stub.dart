@@ -8,15 +8,15 @@ import 'package:metrics_core/metrics_core.dart';
 /// Provides test implementation of the [ProjectMetricsNotifier] methods.
 class ProjectMetricsNotifierStub extends ChangeNotifier
     implements ProjectMetricsNotifier {
-  static const testProjectMetrics = ProjectMetricsData(
+  static final ProjectMetricsData testProjectMetrics = ProjectMetricsData(
     projectId: '1',
     projectName: 'project',
-    coverage: Percent(0.1),
-    stability: Percent(0.2),
+    coverage: PercentValueObject(0.1),
+    stability: PercentValueObject(0.2),
     buildNumberMetric: 0,
     averageBuildDurationInMinutes: 1,
-    performanceMetrics: [],
-    buildResultMetrics: [],
+    performanceMetrics: const [],
+    buildResultMetrics: const [],
   );
 
   /// The list of [ProjectMetricsData].
@@ -28,10 +28,11 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   /// is passed the list containing [testProjectMetrics] used.
   ProjectMetricsNotifierStub({
     List<ProjectMetricsData> projectsMetrics,
-  }) : _projectMetrics = projectsMetrics ?? const [testProjectMetrics];
+  }) : _projectMetrics = projectsMetrics;
 
   @override
-  List<ProjectMetricsData> get projectsMetrics => _projectMetrics;
+  List<ProjectMetricsData> get projectsMetrics =>
+      _projectMetrics ?? [testProjectMetrics];
 
   @override
   Future<void> subscribeToProjects() async {}

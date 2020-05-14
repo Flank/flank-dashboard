@@ -13,7 +13,7 @@ void main() {
 
     test(
       '.fromJson() should create a new instance from the decoded JSON object',
-      () {
+          () {
         const percent = 40;
         const totalSummaryJson = {
           'branches': {
@@ -22,7 +22,7 @@ void main() {
         };
 
         final expectedTotalSummary = TotalCoverageSummary(
-          branches: Coverage(percent: const Percent(percent / 100)),
+          branches: Coverage(percent: PercentValueObject(percent / 100)),
         );
 
         final totalSummary = TotalCoverageSummary.fromJson(totalSummaryJson);

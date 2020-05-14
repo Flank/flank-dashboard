@@ -112,7 +112,7 @@ class ReceiveProjectMetricsUpdates
   }
 
   /// Gets the coverage of the last successful build in [builds].
-  Percent _getCoverage(List<Build> builds) {
+  PercentValueObject _getCoverage(List<Build> builds) {
     final lastSuccessfulBuild = builds.lastWhere(
       (build) => build.buildStatus == BuildStatus.successful,
       orElse: () => null,
@@ -187,13 +187,13 @@ class ReceiveProjectMetricsUpdates
   }
 
   /// Calculates the stability metric from list of [builds].
-  Percent _getStability(List<Build> builds) {
+  PercentValueObject _getStability(List<Build> builds) {
     if (builds.isEmpty) return null;
 
     final successfulBuilds = builds.where(
       (build) => build.buildStatus == BuildStatus.successful,
     );
 
-    return Percent(successfulBuilds.length / builds.length);
+    return PercentValueObject(successfulBuilds.length / builds.length);
   }
 }

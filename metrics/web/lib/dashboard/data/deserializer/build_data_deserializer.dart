@@ -21,7 +21,7 @@ class BuildDataDeserializer {
       duration: Duration(milliseconds: durationMilliseconds),
       workflowName: json['workflow'] as String,
       url: json['url'] as String,
-      coverage: coverage != null ? Percent(coverage) : null,
+      coverage: coverage != null ? PercentValueObject(coverage) : null,
     );
   }
 }

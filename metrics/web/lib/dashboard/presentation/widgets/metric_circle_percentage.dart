@@ -7,7 +7,7 @@ import 'package:metrics_core/metrics_core.dart';
 /// A [CirclePercentage] widget that displays the project metric
 /// and applies the [MetricValueThemeStrategy].
 class MetricCirclePercentage extends StatelessWidget {
-  final Percent percent;
+  final PercentValueObject percent;
 
   const MetricCirclePercentage({
     Key key,

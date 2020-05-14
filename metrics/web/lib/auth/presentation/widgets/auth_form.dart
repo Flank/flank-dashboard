@@ -1,4 +1,3 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
@@ -13,9 +12,6 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
-  /// Minimum length of the password.
-  static const _minPasswordLength = 6;
-
   /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
@@ -74,32 +70,24 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-  /// Checks if an email field is not empty and has the right format,
-  /// otherwise returns an error message.
+  /// Validates the email input field.
   String _validateEmail(String value) {
-    if (value.isEmpty) {
-      return AuthStrings.requiredEmailErrorMessage;
-    }
+    final AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
 
-    if (!EmailValidator.validate(value)) {
-      return AuthStrings.invalidEmailErrorMessage;
-    }
+    authNotifier.validateEmail(value);
 
-    return null;
+    return authNotifier.emailValidationErrorMessage?.message;
   }
 
-  /// Checks if a password field is not empty and match the minimum length,
-  /// otherwise returns an error message.
+  /// Validates the password input field.
   String _validatePassword(String value) {
-    if (value.isEmpty) {
-      return AuthStrings.requiredPasswordErrorMessage;
-    }
+    final AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
 
-    if (value.length < _minPasswordLength) {
-      return AuthStrings.getPasswordMinLengthErrorMessage(_minPasswordLength);
-    }
+    authNotifier.validatePassword(value);
 
-    return null;
+    return authNotifier.passwordValidationErrorMessage?.message;
   }
 
   /// Starts sign in process

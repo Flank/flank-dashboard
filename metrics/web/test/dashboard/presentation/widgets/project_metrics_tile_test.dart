@@ -123,27 +123,27 @@ void main() {
 }
 
 class _ProjectMetricsTileTestbed extends StatelessWidget {
-  static const ProjectMetricsData testProjectMetrics = ProjectMetricsData(
+  static final ProjectMetricsData testProjectMetrics = ProjectMetricsData(
     projectName: 'Test project name',
-    coverage: Percent(0.3),
-    stability: Percent(0.4),
+    coverage: PercentValueObject(0.3),
+    stability: PercentValueObject(0.4),
     buildNumberMetric: 1,
     averageBuildDurationInMinutes: 0,
-    performanceMetrics: [],
-    buildResultMetrics: [],
+    performanceMetrics: const [],
+    buildResultMetrics: const [],
   );
   final ProjectMetricsData projectMetrics;
 
   const _ProjectMetricsTileTestbed({
     Key key,
-    this.projectMetrics = testProjectMetrics,
+    this.projectMetrics,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       body: ProjectMetricsTile(
-        projectMetrics: projectMetrics,
+        projectMetrics: projectMetrics ?? testProjectMetrics,
       ),
     );
   }

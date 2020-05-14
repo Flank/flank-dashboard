@@ -5,7 +5,7 @@ import 'package:metrics_core/metrics_core.dart';
 /// The class that represents the code coverage entity.
 class Coverage extends Equatable {
   /// The code coverage percent.
-  final Percent percent;
+  final PercentValueObject percent;
 
   @override
   List<Object> get props => [percent];
@@ -28,7 +28,7 @@ class Coverage extends Equatable {
     final coveragePercent = json['pct'] as int;
 
     return Coverage(
-      percent: Percent(coveragePercent / 100),
+      percent: PercentValueObject(coveragePercent / 100),
     );
   }
 }

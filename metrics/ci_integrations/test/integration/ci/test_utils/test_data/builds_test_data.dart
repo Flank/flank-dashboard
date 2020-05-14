@@ -8,7 +8,7 @@ class BuildsTestData {
     buildStatus: BuildStatus.successful,
     duration: const Duration(minutes: 10),
     workflowName: 'build',
-    coverage: const Percent(0.7),
+    coverage: PercentValueObject(0.7),
   );
 
   static final BuildData secondBuild = BuildData(
@@ -18,7 +18,7 @@ class BuildsTestData {
     buildStatus: BuildStatus.successful,
     duration: const Duration(minutes: 9),
     workflowName: 'build',
-    coverage: const Percent(0.75),
+    coverage: PercentValueObject(0.75),
   );
 
   static final List<BuildData> builds = [firstBuild, secondBuild];
