@@ -53,12 +53,12 @@ service cloud.firestore {
           && isString("projectId")
           && projectExists(database)
           && isInteger("buildNumber")
-          && isTimestampValid("startedAt", false)
-          && isEnumValid("buildStatus", validBuildStatuses)
+          && isTimestamp("startedAt", false)
+          && isEnum("buildStatus", validBuildStatuses)
           && isInteger("duration") 
           && isStringOrNull("workflowName")
           && isString("url")
-          && isFloatValidOrNull("coverage", 0.0, 1.0);
+          && isFloatOrNull("coverage", 0.0, 1.0);
   }
 
   /// Check whether the request data contains only allowed for build document fields.
@@ -79,7 +79,7 @@ service cloud.firestore {
 
 
   /// Checks if a field of the request data is a valid enum value or null.
-  function isEnumValid(field, validEnumValues){
+  function isEnum(field, validEnumValues){
     let requestData = request.resource.data;
 
     return isNotInRequestOrNull(field) || requestData[field] in validEnumValues;
@@ -100,7 +100,7 @@ service cloud.firestore {
   }
 
   /// Checks if a field is a float and in bounds from min to max or null.
-  function isFloatValidOrNull(field, min, max){
+  function isFloatOrNull(field, min, max){
     let requestData = request.resource.data;
 
     return isNotInRequestOrNull(field) || (requestData[field] >= min && requestData[field] <= max);
@@ -119,19 +119,12 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/projects/$(request.resource.data.projectId));
   }
 
-  /// Checks whether a field of the request data is a timestamp, and it is in the past if canBeInFuture is false.
-  function isTimestampValid(field, canBeInFuture){
+  /// Checks whether a field of the request data is a timestamp.
+  function isTimestamp(field, canBeInFuture){
     let requestData = request.resource.data;
 
-    return isTimestamp(field)
+    return (field in requestData && requestData[field] is timestamp)
           &&  (canBeInFuture || isDateInPast(requestData.startedAt));
-  }
-
-  /// Checks whether a field of requested data is a timestamp.
-  function isTimestamp(field) {
-    let requestData = request.resource.data;
-
-    return field in requestData && requestData[field] is timestamp;
   }
 
   /// Checks whether a timestamp of requested data is not after the request time.
