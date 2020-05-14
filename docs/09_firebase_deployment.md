@@ -142,14 +142,14 @@ After the deployment process finished, your application will be accessible using
 ## Configuring Firestore database
 
 Once you've deployed the metrics application to Firebase Hosting, you should finish configuring your Firestore database. 
-The `metrics/firebase` folder contains Firestore security rules, Firestore indexes, and a `seedData` Cloud function needed to create a test data for our application. To deploy all of this components, follow the next steps: 
+The `metrics/firebase` folder contains Firestore security rules, Firestore indexes, and a `seedData` Cloud function needed to create a test data for our application. To deploy all of these components, follow the next steps: 
 
 1. Activate the `seedData` function: go to the `metrics/firebase/functions/index.js` file and change the `const inactive = true;` to `const inactive = false;`.
 2. 0pen the terminal and navigate to `metrics/firebase` folder.
 3. Run the `firebase deploy` command to deploy all components.
 4. Once command execution finished, you'll find the `seedData` function URL, used to trigger it, in the console. Save this URL somewhere - you will need it a bit later.
 
-Now you should create test projects in your Firestore database: 
+Now you can create test projects in your Firestore database: 
 
 1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
 2. Go to the database section on the left panel and tap on the `Start collection` button.
@@ -171,7 +171,7 @@ Once you've finished creating test data, you should deactivate the `seedData` cl
 
 ## Creating a new Firebase User
 
-Once you've finished deploying the Metrics application and created the test data, you probably want to open the application and ensure it works well, so you need to create a Firebase User to log in to the application:
+Once you've finished deploying the Metrics application and created the test data, you probably want to open the application and ensure it works well, so you need to create a Firebase User to log-in to the application:
 
 1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in the previous steps.
 2. Go to the `Authentication` section on the left panel and tap on the `Add user` button.
@@ -180,7 +180,7 @@ Once you've finished deploying the Metrics application and created the test data
 
 With that in place, you can use your credentials, that you've used to create the user, to fill an authentication form of the web application. 
 
-After logged-in you should see a page with a list of projects and their metrics, that you've created in the previous steps.
+After logged-in you should see a dashboard page with a list of test projects and their metrics, that you've created in the previous steps.
 
 # Dependencies
 
