@@ -84,6 +84,7 @@ class AuthNotifier extends ChangeNotifier {
         password: PasswordValueObject(password),
       ));
     } on AuthenticationException catch (exception) {
+      notifyListeners();
       _authErrorMessage = AuthErrorMessage(exception.code);
     }
   }
