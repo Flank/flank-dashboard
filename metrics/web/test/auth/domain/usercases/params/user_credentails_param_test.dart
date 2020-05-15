@@ -9,7 +9,9 @@ void main() {
     test("can't be created with null email", () {
       expect(
         () => UserCredentialsParam(
-            email: null, password: PasswordValueObject("password")),
+          email: null,
+          password: PasswordValueObject("password"),
+        ),
         MatcherUtil.throwsAssertionError,
       );
     });
@@ -17,7 +19,9 @@ void main() {
     test("can't be created with null password", () {
       expect(
         () => UserCredentialsParam(
-            email: EmailValueObject('email@mail.mail'), password: null),
+          email: EmailValueObject('email@mail.mail'),
+          password: null,
+        ),
         MatcherUtil.throwsAssertionError,
       );
     });

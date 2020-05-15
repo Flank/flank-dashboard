@@ -20,7 +20,7 @@ void main() {
     );
 
     test(
-      ".message maps tooShortPassword error code to password must be at least 6 characters long error message",
+      ".message maps tooShortPassword error code to password must be at least minPasswordLength characters long error message",
       () {
         const errorMessage = PasswordValidationErrorMessage(
           PasswordValidationErrorCode.tooShortPassword,
@@ -30,7 +30,8 @@ void main() {
           errorMessage.message,
           equals(
             AuthStrings.getPasswordMinLengthErrorMessage(
-                PasswordValueObject.minPasswordLength),
+              PasswordValueObject.minPasswordLength,
+            ),
           ),
         );
       },

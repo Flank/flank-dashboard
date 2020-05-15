@@ -33,7 +33,7 @@ class AuthNotifier extends ChangeNotifier {
   StreamSubscription _authUpdatesSubscription;
 
   /// Contains a text description of any authentication exception that may occur.
-  AuthErrorMessage _authExceptionDescription;
+  AuthErrorMessage _authErrorMessage;
 
   /// Contains a text description of any email validation error that may occur.
   EmailValidationErrorMessage _emailValidationErrorMessage;
@@ -53,7 +53,7 @@ class AuthNotifier extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
 
   /// Returns an [AuthErrorMessage], containing an authentication error message.
-  AuthErrorMessage get authErrorMessage => _authExceptionDescription;
+  AuthErrorMessage get authErrorMessage => _authErrorMessage;
 
   /// Returns an [EmailValidationErrorMessage], containing an email validation error message.
   EmailValidationErrorMessage get emailValidationErrorMessage =>
@@ -75,7 +75,7 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Signs in user to the app using an [email] and a [password].
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    _authExceptionDescription = null;
+    _authErrorMessage = null;
     notifyListeners();
 
     try {
@@ -84,7 +84,7 @@ class AuthNotifier extends ChangeNotifier {
         password: PasswordValueObject(password),
       ));
     } on AuthenticationException catch (exception) {
-      _authExceptionDescription = AuthErrorMessage(exception.code);
+      _authErrorMessage = AuthErrorMessage(exception.code);
     }
   }
 
