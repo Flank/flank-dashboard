@@ -7,6 +7,7 @@ Adopt an agile process on GitHub using ZenHub that matches established engineeri
 # References
 
 - [ZenHub](https://www.zenhub.com/) is the project management software (install the [free extension](https://www.zenhub.com/extension))
+- Review and follow [Google's eng practices](https://google.github.io/eng-practices/)
 
 # Motivation
 
