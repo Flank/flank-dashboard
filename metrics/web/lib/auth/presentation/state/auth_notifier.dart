@@ -41,10 +41,11 @@ class AuthNotifier extends ChangeNotifier {
   /// Contains a text description of any password validation error that may occur.
   PasswordValidationErrorMessage _passwordValidationErrorMessage;
 
-  AuthNotifier(this._receiveAuthUpdates,
-      this._signInUseCase,
-      this._signOutUseCase,)
-      : assert(_receiveAuthUpdates != null),
+  AuthNotifier(
+    this._receiveAuthUpdates,
+    this._signInUseCase,
+    this._signOutUseCase,
+  )   : assert(_receiveAuthUpdates != null),
         assert(_signInUseCase != null),
         assert(_signOutUseCase != null);
 
@@ -75,6 +76,7 @@ class AuthNotifier extends ChangeNotifier {
   /// Signs in user to the app using an [email] and a [password].
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     _authExceptionDescription = null;
+    notifyListeners();
 
     try {
       await _signInUseCase(UserCredentialsParam(
