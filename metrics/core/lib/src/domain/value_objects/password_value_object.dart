@@ -4,6 +4,7 @@ import 'package:metrics_core/src/domain/entities/password_validation_exception.d
 
 /// A [ValueObject] represents a password.
 class PasswordValueObject extends ValueObject<String> {
+  /// Minimum length of the password.
   static const int minPasswordLength = 6;
 
   @override

@@ -29,19 +29,21 @@ void main() {
   final signOutUseCase = SignOutUseCaseMock();
   final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
 
+  AuthNotifier authNotifier;
+
+  setUp(() {
+    authNotifier = AuthNotifier(
+      receiveAuthUpdates,
+      signInUseCase,
+      signOutUseCase,
+    );
+  });
+
   group("AuthForm", () {
     testWidgets(
       "email input shows an error message if a value is empty",
       (WidgetTester tester) async {
-        await tester.pumpWidget(
-          _AuthFormTestbed(
-            authNotifier: AuthNotifier(
-              receiveAuthUpdates,
-              signInUseCase,
-              signOutUseCase,
-            ),
-          ),
-        );
+        await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
 
         await tester.tap(submitButtonFinder);
         await tester.pumpAndSettle();
@@ -56,15 +58,7 @@ void main() {
     testWidgets(
         "email input shows an error message if a value is not a valid email",
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        _AuthFormTestbed(
-          authNotifier: AuthNotifier(
-            receiveAuthUpdates,
-            signInUseCase,
-            signOutUseCase,
-          ),
-        ),
-      );
+      await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
       await tester.enterText(emailInputFinder, 'notAnEmail');
 
       await tester.tap(submitButtonFinder);
@@ -75,21 +69,15 @@ void main() {
 
     testWidgets("password input shows an error message if a value is empty",
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        _AuthFormTestbed(
-          authNotifier: AuthNotifier(
-            receiveAuthUpdates,
-            signInUseCase,
-            signOutUseCase,
-          ),
-        ),
-      );
+      await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
 
       await tester.tap(submitButtonFinder);
       await tester.pump();
 
       expect(
-          find.text(AuthStrings.requiredPasswordErrorMessage), findsOneWidget);
+        find.text(AuthStrings.requiredPasswordErrorMessage),
+        findsOneWidget,
+      );
     });
 
     testWidgets(
