@@ -2,17 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
-import 'package:metrics/auth/domain/entities/email_validation_exception.dart';
-import 'package:metrics/auth/domain/entities/password_validation_exception.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
-import 'package:metrics/auth/domain/value_objects/email_value_object.dart';
-import 'package:metrics/auth/domain/value_objects/password_value_object.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
 import 'package:metrics/auth/presentation/model/email_validation_error_message.dart';
 import 'package:metrics/auth/presentation/model/password_validation_error_message.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the authentication state.
 ///
@@ -44,11 +41,10 @@ class AuthNotifier extends ChangeNotifier {
   /// Contains a text description of any password validation error that may occur.
   PasswordValidationErrorMessage _passwordValidationErrorMessage;
 
-  AuthNotifier(
-    this._receiveAuthUpdates,
-    this._signInUseCase,
-    this._signOutUseCase,
-  )   : assert(_receiveAuthUpdates != null),
+  AuthNotifier(this._receiveAuthUpdates,
+      this._signInUseCase,
+      this._signOutUseCase,)
+      : assert(_receiveAuthUpdates != null),
         assert(_signInUseCase != null),
         assert(_signOutUseCase != null);
 

@@ -1,5 +1,5 @@
-import 'package:metrics/auth/domain/entities/password_validation_error_code.dart';
-import 'package:metrics/common/domain/entities/validation_exception.dart';
+import 'package:metrics_core/src/domain/entities/password_validation_error_code.dart';
+import 'package:metrics_core/src/domain/entities/validation_exception.dart';
 
 /// Represents the password validation exception.
 /// A [ValidationException] thrown when the password validation is failed.

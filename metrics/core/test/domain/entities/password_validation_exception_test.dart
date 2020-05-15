@@ -1,4 +1,4 @@
-import 'package:metrics/auth/domain/entities/password_validation_exception.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {

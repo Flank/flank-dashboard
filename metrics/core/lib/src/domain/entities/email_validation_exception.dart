@@ -1,5 +1,5 @@
-import 'package:metrics/auth/domain/entities/email_validation_error_code.dart';
-import 'package:metrics/common/domain/entities/validation_exception.dart';
+import 'package:metrics_core/src/domain/entities/email_validation_error_code.dart';
+import 'package:metrics_core/src/domain/entities/validation_exception.dart';
 
 /// A [ValidationException] thrown once the email validation failed.
 ///

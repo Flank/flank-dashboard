@@ -1,6 +1,4 @@
-import 'package:metrics/auth/domain/entities/password_validation_error_code.dart';
-import 'package:metrics/auth/domain/entities/password_validation_exception.dart';
-import 'package:metrics/auth/domain/value_objects/password_value_object.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -40,6 +38,17 @@ void main() {
         final passwordValueObject = PasswordValueObject(password);
 
         expect(passwordValueObject.value, equals(password));
+      },
+    );
+
+    test(
+      "equals to another PasswordValueObject if their values are equal",
+      () {
+        const password = 'password';
+        final firstPassword = PasswordValueObject(password);
+        final secondPassword = PasswordValueObject(password);
+
+        expect(firstPassword, equals(secondPassword));
       },
     );
   });

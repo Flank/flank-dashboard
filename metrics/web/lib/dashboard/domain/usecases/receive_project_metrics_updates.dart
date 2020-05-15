@@ -23,7 +23,9 @@ class ReceiveProjectMetricsUpdates
   final MetricsRepository _repository;
 
   /// Creates the [ReceiveProjectMetricsUpdates] use case with given [MetricsRepository].
-  ReceiveProjectMetricsUpdates(this._repository);
+  ///
+  /// [MetricsRepository] must not be null.
+  ReceiveProjectMetricsUpdates(this._repository) : assert(_repository != null);
 
   @override
   Stream<DashboardProjectMetrics> call(ProjectIdParam params) {
@@ -36,7 +38,10 @@ class ReceiveProjectMetricsUpdates
 
     final projectBuildsInPeriod = _repository.projectBuildsFromDateStream(
       projectId,
-      DateTime.now().subtract(buildNumberLoadingPeriod).date,
+      DateTime
+          .now()
+          .subtract(buildNumberLoadingPeriod)
+          .date,
     );
 
     final lastSuccessfulBuildStream = _repository.lastSuccessfulBuildStream(
@@ -48,18 +53,17 @@ class ReceiveProjectMetricsUpdates
       projectBuildsInPeriod,
       lastSuccessfulBuildStream,
       _mergeBuilds,
-    ).map((builds) => _mapToBuildMetrics(
+    ).map((builds) =>
+        _mapToBuildMetrics(
           builds,
           projectId,
         ));
   }
 
   /// Merges 3 [List]s of [Build]s into a single list by id.
-  List<Build> _mergeBuilds(
-    List<Build> latestBuilds,
-    List<Build> buildsInPeriod,
-    List<Build> lastSuccessfulBuild,
-  ) {
+  List<Build> _mergeBuilds(List<Build> latestBuilds,
+      List<Build> buildsInPeriod,
+      List<Build> lastSuccessfulBuild,) {
     final buildsSet = LinkedHashSet<Build>(
       equals: (build1, build2) => build1?.id == build2?.id,
       hashCode: (build) => build?.id.hashCode,
@@ -77,10 +81,8 @@ class ReceiveProjectMetricsUpdates
   }
 
   /// Creates the [DashboardProjectMetrics] from the list of [Build]s.
-  DashboardProjectMetrics _mapToBuildMetrics(
-    List<Build> builds,
-    String projectId,
-  ) {
+  DashboardProjectMetrics _mapToBuildMetrics(List<Build> builds,
+      String projectId,) {
     if (builds == null || builds.isEmpty) {
       return DashboardProjectMetrics(
         projectId: projectId,
@@ -114,7 +116,7 @@ class ReceiveProjectMetricsUpdates
   /// Gets the coverage of the last successful build in [builds].
   PercentValueObject _getCoverage(List<Build> builds) {
     final lastSuccessfulBuild = builds.lastWhere(
-      (build) => build.buildStatus == BuildStatus.successful,
+          (build) => build.buildStatus == BuildStatus.successful,
       orElse: () => null,
     );
 
@@ -124,9 +126,7 @@ class ReceiveProjectMetricsUpdates
   }
 
   /// Creates the [PerformanceMetric] from [builds].
-  PerformanceMetric _getPerformanceMetrics(
-    List<Build> builds,
-  ) {
+  PerformanceMetric _getPerformanceMetrics(List<Build> builds,) {
     final averageBuildDuration = _getAverageBuildDuration(builds);
     final buildPerformanceSet = DateTimeSet<BuildPerformance>();
 
@@ -154,7 +154,7 @@ class ReceiveProjectMetricsUpdates
     if (builds.isEmpty) return const Duration();
 
     return builds.fold<Duration>(
-            const Duration(), (value, element) => value + element.duration) ~/
+        const Duration(), (value, element) => value + element.duration) ~/
         builds.length;
   }
 
@@ -191,7 +191,7 @@ class ReceiveProjectMetricsUpdates
     if (builds.isEmpty) return null;
 
     final successfulBuilds = builds.where(
-      (build) => build.buildStatus == BuildStatus.successful,
+          (build) => build.buildStatus == BuildStatus.successful,
     );
 
     return PercentValueObject(successfulBuilds.length / builds.length);

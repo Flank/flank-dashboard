@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 /// A base class for all validation exceptions.
 abstract class ValidationException<T> extends Equatable implements Exception {

@@ -9,7 +9,9 @@ class ReceiveProjectUpdates implements UseCase<Stream<List<Project>>, void> {
   final MetricsRepository _repository;
 
   /// Creates the [ReceiveProjectUpdates] use case with the given [MetricsRepository].
-  const ReceiveProjectUpdates(this._repository);
+  ///
+  /// [MetricsRepository] must not be null.
+  const ReceiveProjectUpdates(this._repository) : assert(_repository != null);
 
   @override
   Stream<List<Project>> call([_]) {

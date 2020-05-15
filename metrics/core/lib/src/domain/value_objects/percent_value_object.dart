@@ -1,9 +1,7 @@
-import 'package:equatable/equatable.dart';
-
 import '../../../metrics_core.dart';
 
-/// Represents the percent.
-class PercentValueObject extends Equatable implements ValueObject<double> {
+/// A [ValueObject] represents a percent.
+class PercentValueObject extends ValueObject<double> {
   @override
   final double value;
 
@@ -18,7 +16,4 @@ class PercentValueObject extends Equatable implements ValueObject<double> {
           "The percent value should be in bounds from 0.0 inclusive to 1.0 inclusive");
     }
   }
-
-  @override
-  List<Object> get props => [value];
 }

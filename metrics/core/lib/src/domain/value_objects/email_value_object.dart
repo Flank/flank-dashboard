@@ -1,10 +1,10 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:metrics/auth/domain/entities/email_validation_error_code.dart';
-import 'package:metrics/auth/domain/entities/email_validation_exception.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:metrics_core/src/domain/entities/email_validation_error_code.dart';
+import 'package:metrics_core/src/domain/entities/email_validation_exception.dart';
 
 /// A [ValueObject] represents an email.
-class EmailValueObject implements ValueObject<String> {
+class EmailValueObject extends ValueObject<String> {
   @override
   final String value;
 

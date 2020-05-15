@@ -1,6 +1,5 @@
-import 'package:metrics/auth/domain/entities/password_validation_error_code.dart';
-import 'package:metrics/auth/domain/value_objects/password_value_object.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A class that provides the password validation error description based on [PasswordValidationErrorMessage].
 class PasswordValidationErrorMessage {

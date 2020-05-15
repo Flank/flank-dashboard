@@ -1,6 +1,4 @@
-import 'package:metrics/auth/domain/entities/email_validation_error_code.dart';
-import 'package:metrics/auth/domain/entities/email_validation_exception.dart';
-import 'package:metrics/auth/domain/value_objects/email_value_object.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -40,6 +38,17 @@ void main() {
         final email = EmailValueObject(validEmail);
 
         expect(email.value, equals(validEmail));
+      },
+    );
+
+    test(
+      "equals to another EmailValueObject if their values are equal",
+      () {
+        const email = 'email@mail.mail';
+        final firstEmail = EmailValueObject(email);
+        final secondEmail = EmailValueObject(email);
+
+        expect(firstEmail, equals(secondEmail));
       },
     );
   });

@@ -7,9 +7,8 @@ import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.d
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
-import 'package:metrics/auth/domain/value_objects/email_value_object.dart';
-import 'package:metrics/auth/domain/value_objects/password_value_object.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -154,11 +153,14 @@ void main() {
       },
     );
 
-    test(".validateEmail() leaves .emailValidationErrorMessage value as null if the given email is valid", () {
-      authNotifier.validateEmail(email);
+    test(
+      ".validateEmail() leaves .emailValidationErrorMessage value as null if the given email is valid",
+      () {
+        authNotifier.validateEmail(email);
 
-      expect(authNotifier.emailValidationErrorMessage, isNull);
-    });
+        expect(authNotifier.emailValidationErrorMessage, isNull);
+      },
+    );
 
     test(
       ".validateEmail() saves the validation error message to .emailValidationErrorMessage if the given email is not valid",
@@ -171,11 +173,14 @@ void main() {
       },
     );
 
-    test(".validateEmail() leaves .emailValidationErrorMessage value as null if the given email is valid", () {
-      authNotifier.validatePassword(password);
+    test(
+      ".validatePassword() leaves .passwordValidationErrorMessage value as null if the given password is valid",
+      () {
+        authNotifier.validatePassword(password);
 
-      expect(authNotifier.passwordValidationErrorMessage, isNull);
-    });
+        expect(authNotifier.passwordValidationErrorMessage, isNull);
+      },
+    );
 
     test(
       ".validatePassword() saves the validation error message to .passwordValidationErrorMessage if the given password is not valid",

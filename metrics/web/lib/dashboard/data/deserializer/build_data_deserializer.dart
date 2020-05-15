@@ -9,7 +9,7 @@ class BuildDataDeserializer {
     final durationMilliseconds = json['duration'] as int;
     final coverage = json['coverage'] as double;
     final buildStatus = BuildStatus.values.firstWhere(
-      (element) => '$element' == buildResultValue,
+          (element) => '$element' == buildResultValue,
       orElse: () => null,
     );
 
@@ -19,7 +19,7 @@ class BuildDataDeserializer {
       startedAt: (json['startedAt'] as Timestamp).toDate(),
       buildStatus: buildStatus,
       duration: Duration(milliseconds: durationMilliseconds),
-      workflowName: json['workflow'] as String,
+      workflowName: json['workflowName'] as String,
       url: json['url'] as String,
       coverage: coverage != null ? PercentValueObject(coverage) : null,
     );

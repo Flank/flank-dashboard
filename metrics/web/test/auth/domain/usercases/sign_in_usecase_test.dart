@@ -1,8 +1,7 @@
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
-import 'package:metrics/auth/domain/value_objects/email_value_object.dart';
-import 'package:metrics/auth/domain/value_objects/password_value_object.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -24,14 +23,14 @@ void main() {
 
     test("can't be created with null repository", () {
       expect(
-        () => SignInUseCase(null),
+            () => SignInUseCase(null),
         MatcherUtil.throwsAssertionError,
       );
     });
 
     test(
       "delegates call to the UserRepository.signInWithEmailAndPassword",
-      () async {
+          () async {
         final signInUseCase = SignInUseCase(repository);
 
         await signInUseCase(userCredentials);
@@ -45,14 +44,14 @@ void main() {
 
     test(
       "throws if UserRepository throws during sign in process",
-      () {
+          () {
         final signInUseCase = SignInUseCase(repository);
 
         when(repository.signInWithEmailAndPassword(any, any))
             .thenThrow(const AuthenticationException());
 
         expect(
-          () => signInUseCase(userCredentials),
+              () => signInUseCase(userCredentials),
           MatcherUtil.throwsAuthenticationException,
         );
       },

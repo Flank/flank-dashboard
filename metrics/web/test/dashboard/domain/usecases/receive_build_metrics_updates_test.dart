@@ -6,6 +6,8 @@ import 'package:metrics/util/date.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
+import '../../../test_utils/matcher_util.dart';
+
 void main() {
   group("ReceiveProjectMetricUpdates", () {
     const projectId = 'projectId';
@@ -25,6 +27,13 @@ void main() {
               .first;
 
       lastBuild = builds.first;
+    });
+
+    test("throws an AssertionError when the given repository is null", () {
+      expect(
+        () => ReceiveProjectMetricsUpdates(null),
+        MatcherUtil.throwsAssertionError,
+      );
     });
 
     test("loads all fields in the performance metrics", () {
