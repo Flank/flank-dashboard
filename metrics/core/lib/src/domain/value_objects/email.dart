@@ -4,14 +4,14 @@ import 'package:metrics_core/src/domain/entities/email_validation_error_code.dar
 import 'package:metrics_core/src/domain/entities/email_validation_exception.dart';
 
 /// A [ValueObject] represents an email.
-class EmailValueObject extends ValueObject<String> {
+class Email extends ValueObject<String> {
   @override
   final String value;
 
-  /// Creates the [EmailValueObject] with the given [value].
+  /// Creates the [Email] with the given [value].
   ///
   /// If the [value] is null or is not a valid email throws an [EmailValidationException].
-  EmailValueObject(this.value) {
+  Email(this.value) {
     if (value == null || value.isEmpty) {
       throw EmailValidationException(EmailValidationErrorCode.isNull);
     }

@@ -3,18 +3,18 @@ import 'package:metrics_core/src/domain/entities/password_validation_error_code.
 import 'package:metrics_core/src/domain/entities/password_validation_exception.dart';
 
 /// A [ValueObject] represents a password.
-class PasswordValueObject extends ValueObject<String> {
+class Password extends ValueObject<String> {
   /// Minimum length of the password.
   static const int minPasswordLength = 6;
 
   @override
   final String value;
 
-  /// Creates the [PasswordValueObject].
+  /// Creates the [Password] with the given [value].
   ///
   /// If [value] is null or value length is less than [minPasswordLength] characters
   /// long throws a [PasswordValidationException].
-  PasswordValueObject(this.value) {
+  Password(this.value) {
     if (value == null || value.isEmpty) {
       throw PasswordValidationException(PasswordValidationErrorCode.isNull);
     }

@@ -108,8 +108,8 @@ void main() {
       authNotifier.signInWithEmailAndPassword(email, password);
 
       final userCredentials = UserCredentialsParam(
-        email: EmailValueObject(email),
-        password: PasswordValueObject(password),
+        email: Email(email),
+        password: Password(password),
       );
 
       verify(signInUseCase(userCredentials)).called(equals(1));
@@ -133,8 +133,8 @@ void main() {
         const invalidEmail = 'email@mail.mail';
         const invalidPassword = 'password';
         final invalidCredentials = UserCredentialsParam(
-          email: EmailValueObject(invalidEmail),
-          password: PasswordValueObject(invalidPassword),
+          email: Email(invalidEmail),
+          password: Password(invalidPassword),
         );
         const authException = AuthenticationException(
           code: AuthErrorCode.unknown,

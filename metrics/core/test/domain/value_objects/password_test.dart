@@ -2,7 +2,7 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("PasswordValueObject", () {
+  group("Password", () {
     test(
       "throws a PasswordValidationException with isNull error code when the value is null",
       () {
@@ -11,7 +11,7 @@ void main() {
         );
 
         expect(
-          () => PasswordValueObject(null),
+          () => Password(null),
           throwsA(equals(isNullValidationException)),
         );
       },
@@ -25,28 +25,28 @@ void main() {
         );
 
         expect(
-          () => PasswordValueObject('pass'),
+          () => Password('pass'),
           throwsA(equals(isNullValidationException)),
         );
       },
     );
 
     test(
-      "creates a PasswordValueObject with the given password as a value is it is valid",
+      "creates an instance with the given value",
       () {
         const password = 'password';
-        final passwordValueObject = PasswordValueObject(password);
+        final passwordValueObject = Password(password);
 
         expect(passwordValueObject.value, equals(password));
       },
     );
 
     test(
-      "equals to another PasswordValueObject if their values are equal",
+      "equals to another Password if their values are equal",
       () {
         const password = 'password';
-        final firstPassword = PasswordValueObject(password);
-        final secondPassword = PasswordValueObject(password);
+        final firstPassword = Password(password);
+        final secondPassword = Password(password);
 
         expect(firstPassword, equals(secondPassword));
       },

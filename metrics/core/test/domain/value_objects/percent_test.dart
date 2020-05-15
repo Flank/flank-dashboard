@@ -4,32 +4,32 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("PercentValueObject", () {
+  group("Percent", () {
     test("can't be created with the null value", () {
       expect(
-        () => PercentValueObject(null),
+        () => Percent(null),
         throwsArgumentError,
       );
     });
 
     test("can't be created with the value, less than 0.0", () {
       expect(
-        () => PercentValueObject(-1.0),
+        () => Percent(-1.0),
         throwsArgumentError,
       );
     });
 
     test("can't be created with the value, more than 1.0", () {
       expect(
-        () => PercentValueObject(1.1),
+        () => Percent(1.1),
         throwsArgumentError,
       );
     });
 
     test("two instances with the equal value are equal", () {
       const percentValue = 0.1;
-      final firstPercent = PercentValueObject(percentValue);
-      final secondPercent = PercentValueObject(percentValue);
+      final firstPercent = Percent(percentValue);
+      final secondPercent = Percent(percentValue);
 
       expect(firstPercent, equals(secondPercent));
     });

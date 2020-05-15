@@ -22,8 +22,7 @@ void main() {
       () {
         const percent = 30;
         const coverageJson = {'pct': percent};
-        final expectedCoverage =
-            Coverage(percent: PercentValueObject(percent / 100));
+        final expectedCoverage = Coverage(percent: Percent(percent / 100));
 
         final coverage = Coverage.fromJson(coverageJson);
 

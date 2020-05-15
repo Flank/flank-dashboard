@@ -17,8 +17,8 @@ void main() {
     });
 
     final userCredentials = UserCredentialsParam(
-      email: EmailValueObject('email@mail.mail'),
-      password: PasswordValueObject('password'),
+      email: Email('email@mail.mail'),
+      password: Password('password'),
     );
 
     test("can't be created with null repository", () {

@@ -10,7 +10,7 @@ void main() {
     const buildNumber = 1;
     const buildStatus = BuildStatus.failed;
     const workflowName = 'testWorkflowName';
-    final coverage = PercentValueObject(1.0);
+    final coverage = Percent(1.0);
     final startedAt = DateTime.now();
     final buildDataJson = {
       'id': id,

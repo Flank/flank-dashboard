@@ -15,7 +15,7 @@ class PasswordValidationErrorMessage {
         return AuthStrings.requiredPasswordErrorMessage;
       case PasswordValidationErrorCode.tooShortPassword:
         return AuthStrings.getPasswordMinLengthErrorMessage(
-          PasswordValueObject.minPasswordLength,
+          Password.minPasswordLength,
         );
       default:
         return null;

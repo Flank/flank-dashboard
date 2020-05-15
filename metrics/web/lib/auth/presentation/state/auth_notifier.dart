@@ -80,8 +80,8 @@ class AuthNotifier extends ChangeNotifier {
 
     try {
       await _signInUseCase(UserCredentialsParam(
-        email: EmailValueObject(email),
-        password: PasswordValueObject(password),
+        email: Email(email),
+        password: Password(password),
       ));
     } on AuthenticationException catch (exception) {
       _authErrorMessage = AuthErrorMessage(exception.code);
@@ -94,7 +94,7 @@ class AuthNotifier extends ChangeNotifier {
     _emailValidationErrorMessage = null;
 
     try {
-      EmailValueObject(value);
+      Email(value);
     } on EmailValidationException catch (exception) {
       _emailValidationErrorMessage = EmailValidationErrorMessage(
         exception.code,
@@ -107,7 +107,7 @@ class AuthNotifier extends ChangeNotifier {
     _passwordValidationErrorMessage = null;
 
     try {
-      PasswordValueObject(value);
+      Password(value);
     } on PasswordValidationException catch (exception) {
       _passwordValidationErrorMessage = PasswordValidationErrorMessage(
         exception.code,

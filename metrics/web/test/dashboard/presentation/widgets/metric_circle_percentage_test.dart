@@ -35,7 +35,7 @@ void main() {
     testWidgets(
       "delegates the percent value to the ThemedCirclePercentage widget",
       (tester) async {
-        final percent = PercentValueObject(0.2);
+        final percent = Percent(0.2);
 
         await tester.pumpWidget(_MetricCirclePercentageTestbed(
           percent: percent,
@@ -53,7 +53,7 @@ void main() {
 }
 
 class _MetricCirclePercentageTestbed extends StatelessWidget {
-  final PercentValueObject percent;
+  final Percent percent;
 
   const _MetricCirclePercentageTestbed({
     Key key,

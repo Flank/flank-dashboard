@@ -13,7 +13,7 @@ void main() {
       const duration = Duration(minutes: 10);
       const workflowName = 'workflow';
       const url = 'url';
-      final coverage = PercentValueObject(1.0);
+      final coverage = Percent(1.0);
 
       final buildDataJson = {
         'buildNumber': buildNumber,

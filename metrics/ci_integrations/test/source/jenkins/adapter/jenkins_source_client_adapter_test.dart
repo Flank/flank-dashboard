@@ -14,7 +14,7 @@ import 'package:test/test.dart';
 void main() {
   group("JenkinsSourceClientAdapter", () {
     const jobName = 'test-job';
-    final defaultCoverage = PercentValueObject(0.6);
+    final defaultCoverage = Percent(0.6);
     const defaultDuration = Duration(seconds: 10);
     const defaultBuildUrl = 'buildUrl';
     const defaultArtifact = JenkinsBuildArtifact(

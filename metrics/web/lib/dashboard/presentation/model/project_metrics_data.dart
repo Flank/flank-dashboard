@@ -9,8 +9,8 @@ import 'package:metrics_core/metrics_core.dart';
 class ProjectMetricsData {
   final String projectId;
   final String projectName;
-  final PercentValueObject coverage;
-  final PercentValueObject stability;
+  final Percent coverage;
+  final Percent stability;
   final int buildNumberMetric;
   final int averageBuildDurationInMinutes;
   final List<Point<int>> performanceMetrics;
@@ -41,8 +41,8 @@ class ProjectMetricsData {
   ProjectMetricsData copyWith({
     String projectId,
     String projectName,
-    PercentValueObject coverage,
-    PercentValueObject stability,
+    Percent coverage,
+    Percent stability,
     int buildNumberMetric,
     int averageBuildDurationInMinutes,
     List<Point<int>> performanceMetrics,

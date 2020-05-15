@@ -14,8 +14,8 @@ void main() {
   group("ProjectMetricsTile", () {
     final ProjectMetricsData testProjectMetrics = ProjectMetricsData(
       projectName: 'Test project name',
-      coverage: PercentValueObject(0.3),
-      stability: PercentValueObject(0.4),
+      coverage: Percent(0.3),
+      stability: Percent(0.4),
       buildNumberMetric: 1,
       averageBuildDurationInMinutes: 0,
       performanceMetrics: const [],

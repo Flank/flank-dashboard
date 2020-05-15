@@ -30,7 +30,7 @@ void main() {
           errorMessage.message,
           equals(
             AuthStrings.getPasswordMinLengthErrorMessage(
-              PasswordValueObject.minPasswordLength,
+              Password.minPasswordLength,
             ),
           ),
         );

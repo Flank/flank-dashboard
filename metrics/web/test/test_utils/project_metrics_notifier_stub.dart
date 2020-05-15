@@ -11,8 +11,8 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   static final ProjectMetricsData testProjectMetrics = ProjectMetricsData(
     projectId: '1',
     projectName: 'project',
-    coverage: PercentValueObject(0.1),
-    stability: PercentValueObject(0.2),
+    coverage: Percent(0.1),
+    stability: Percent(0.2),
     buildNumberMetric: 0,
     averageBuildDurationInMinutes: 1,
     performanceMetrics: const [],
