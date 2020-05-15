@@ -5,7 +5,7 @@ import 'package:metrics_core/metrics_core.dart';
 class PasswordValidationErrorMessage {
   final PasswordValidationErrorCode _code;
 
-  /// Creates the [PasswordValidationErrorMessage] from the given [PasswordValidationErrorCode].
+  /// Creates the [PasswordValidationErrorMessage] with the given [PasswordValidationErrorCode].
   const PasswordValidationErrorMessage(this._code);
 
   /// Provides the password validation error message based on the [PasswordValidationErrorCode].

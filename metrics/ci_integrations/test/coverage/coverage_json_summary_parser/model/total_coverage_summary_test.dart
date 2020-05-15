@@ -13,7 +13,7 @@ void main() {
 
     test(
       '.fromJson() should create a new instance from the decoded JSON object',
-          () {
+      () {
         const percent = 40;
         const totalSummaryJson = {
           'branches': {

@@ -5,7 +5,7 @@ import 'package:metrics_core/metrics_core.dart';
 class EmailValidationErrorMessage {
   final EmailValidationErrorCode _code;
 
-  /// Creates the [EmailValidationErrorMessage] from the given [EmailValidationErrorCode].
+  /// Creates the [EmailValidationErrorMessage] with the given [EmailValidationErrorCode].
   const EmailValidationErrorMessage(this._code);
 
   /// Provides the email validation error message based on the [EmailValidationErrorCode].

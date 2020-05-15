@@ -23,14 +23,14 @@ void main() {
 
     test("can't be created with null repository", () {
       expect(
-            () => SignInUseCase(null),
+        () => SignInUseCase(null),
         MatcherUtil.throwsAssertionError,
       );
     });
 
     test(
       "delegates call to the UserRepository.signInWithEmailAndPassword",
-          () async {
+      () async {
         final signInUseCase = SignInUseCase(repository);
 
         await signInUseCase(userCredentials);
@@ -44,14 +44,14 @@ void main() {
 
     test(
       "throws if UserRepository throws during sign in process",
-          () {
+      () {
         final signInUseCase = SignInUseCase(repository);
 
         when(repository.signInWithEmailAndPassword(any, any))
             .thenThrow(const AuthenticationException());
 
         expect(
-              () => signInUseCase(userCredentials),
+          () => signInUseCase(userCredentials),
           MatcherUtil.throwsAuthenticationException,
         );
       },

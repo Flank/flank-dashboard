@@ -6,7 +6,7 @@ void main() {
   group("Coverage", () {
     test(
       "can't be created with the null percent",
-          () {
+      () {
         expect(() => Coverage(percent: null), throwsArgumentError);
       },
     );
@@ -18,16 +18,17 @@ void main() {
     });
 
     test(
-        '.fromJson() should create a new instance from the decoded JSON object',
-            () {
-          const percent = 30;
-          const coverageJson = {'pct': percent};
-          final expectedCoverage =
-          Coverage(percent: PercentValueObject(percent / 100));
+      '.fromJson() should create a new instance from the decoded JSON object',
+      () {
+        const percent = 30;
+        const coverageJson = {'pct': percent};
+        final expectedCoverage =
+            Coverage(percent: PercentValueObject(percent / 100));
 
-          final coverage = Coverage.fromJson(coverageJson);
+        final coverage = Coverage.fromJson(coverageJson);
 
-          expect(coverage, equals(expectedCoverage));
-        });
+        expect(coverage, equals(expectedCoverage));
+      },
+    );
   });
 }

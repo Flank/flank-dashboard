@@ -25,7 +25,7 @@ void main() {
 
     test(
       ".fromJson() should return null if the given JSON is null",
-          () {
+      () {
         final buildData = BuildDataDeserializer.fromJson(null, id);
 
         expect(buildData, isNull);

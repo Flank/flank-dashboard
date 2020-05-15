@@ -24,7 +24,7 @@ void main() {
 
     testWidgets(
       "throws an AssertionError if a projectMetrics parameter is null",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await tester.pumpWidget(const _ProjectMetricsTileTestbed(
           projectMetrics: null,
         ));
@@ -35,10 +35,10 @@ void main() {
 
     testWidgets(
       "displays the project name even if it is very long",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         const ProjectMetricsData metrics = ProjectMetricsData(
           projectName:
-          'Some very long name to display that may overflow on some screens but should be displayed properly. Also, this project name has a description that placed to the project name, but we still can display it properly with any overflows.',
+              'Some very long name to display that may overflow on some screens but should be displayed properly. Also, this project name has a description that placed to the project name, but we still can display it properly with any overflows.',
         );
 
         await tester.pumpWidget(const _ProjectMetricsTileTestbed(
@@ -51,7 +51,7 @@ void main() {
 
     testWidgets(
       "displays the ProjectMetricsData even when the project name is null",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         const metrics = ProjectMetricsData();
 
         await tester.pumpWidget(const _ProjectMetricsTileTestbed(
@@ -64,7 +64,7 @@ void main() {
 
     testWidgets(
       "contains coverage circle percentage",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         final coveragePercent = testProjectMetrics.coverage;
         final coverageText = '${(coveragePercent.value * 100).toInt()}%';
 
@@ -82,7 +82,7 @@ void main() {
 
     testWidgets(
       "contains stability circle percentage",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         final stabilityPercent = testProjectMetrics.coverage;
         final stabilityText = '${(stabilityPercent.value * 100).toInt()}%';
 
@@ -100,7 +100,7 @@ void main() {
 
     testWidgets(
       "contains TextMetric with build number metric",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         final buildNumber = testProjectMetrics.buildNumberMetric;
 
         await tester.pumpWidget(_ProjectMetricsTileTestbed(
@@ -116,7 +116,7 @@ void main() {
 
     testWidgets(
       "contains SparklineGraph widgets with performance metric",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricsTileTestbed(
           projectMetrics: testProjectMetrics,
         ));
@@ -130,7 +130,7 @@ void main() {
 
     testWidgets(
       "contains the bar graph with the build results",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricsTileTestbed(
           projectMetrics: testProjectMetrics,
         ));

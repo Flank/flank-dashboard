@@ -51,7 +51,7 @@ class AuthNotifier extends ChangeNotifier {
   /// Determines if a user is authenticated.
   bool get isLoggedIn => _isLoggedIn;
 
-  /// Returns an [AuthErrorMessage], containing an auth error message.
+  /// Returns an [AuthErrorMessage], containing an authentication error message.
   AuthErrorMessage get authErrorMessage => _authExceptionDescription;
 
   /// Returns an [EmailValidationErrorMessage], containing an email validation error message.

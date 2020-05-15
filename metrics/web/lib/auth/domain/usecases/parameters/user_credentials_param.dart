@@ -16,7 +16,6 @@ class UserCredentialsParam extends Equatable {
   const UserCredentialsParam({
     @required this.email,
     @required this.password,
-  })
-      : assert(email != null),
+  })  : assert(email != null),
         assert(password != null);
 }
