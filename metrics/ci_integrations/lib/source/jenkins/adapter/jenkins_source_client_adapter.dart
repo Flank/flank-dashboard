@@ -201,7 +201,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       coverage = CoverageJsonSummary.fromJson(artifactContent);
     }
 
-    return coverage?.total?.branches?.percent ??  PercentValueObject(0.0);
+    return coverage?.total?.branches?.percent;
   }
 
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
