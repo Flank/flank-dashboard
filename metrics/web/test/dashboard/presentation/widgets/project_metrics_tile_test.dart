@@ -11,127 +11,137 @@ import 'package:metrics_core/metrics_core.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
-  testWidgets(
-    "Can't create the ProjectTile with null projectMetrics",
-    (WidgetTester tester) async {
-      await tester.pumpWidget(const _ProjectMetricsTileTestbed(
-        projectMetrics: null,
-      ));
+  group("ProjectMetricsTile", () {
+    final ProjectMetricsData testProjectMetrics = ProjectMetricsData(
+      projectName: 'Test project name',
+      coverage: PercentValueObject(0.3),
+      stability: PercentValueObject(0.4),
+      buildNumberMetric: 1,
+      averageBuildDurationInMinutes: 0,
+      performanceMetrics: const [],
+      buildResultMetrics: const [],
+    );
 
-      expect(tester.takeException(), isAssertionError);
-    },
-  );
+    testWidgets(
+      "throws an AssertionError if a projectMetrics parameter is null",
+          (WidgetTester tester) async {
+        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
+          projectMetrics: null,
+        ));
 
-  testWidgets(
-    "Displays the project name even if it is very long",
-    (WidgetTester tester) async {
-      const ProjectMetricsData metrics = ProjectMetricsData(
-        projectName:
-            'Some very long name to display that may overflow on some screens but should be displayed properly. Also, this project name has a description that placed to the project name, but we still can display it properly with any overflows.',
-      );
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
 
-      await tester.pumpWidget(const _ProjectMetricsTileTestbed(
-        projectMetrics: metrics,
-      ));
+    testWidgets(
+      "displays the project name even if it is very long",
+          (WidgetTester tester) async {
+        const ProjectMetricsData metrics = ProjectMetricsData(
+          projectName:
+          'Some very long name to display that may overflow on some screens but should be displayed properly. Also, this project name has a description that placed to the project name, but we still can display it properly with any overflows.',
+        );
 
-      expect(tester.takeException(), isNull);
-    },
-  );
+        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
+          projectMetrics: metrics,
+        ));
 
-  testWidgets(
-    "Displays the ProjectMetricsData even when the project name is null",
-    (WidgetTester tester) async {
-      const metrics = ProjectMetricsData();
+        expect(tester.takeException(), isNull);
+      },
+    );
 
-      await tester.pumpWidget(const _ProjectMetricsTileTestbed(
-        projectMetrics: metrics,
-      ));
+    testWidgets(
+      "displays the ProjectMetricsData even when the project name is null",
+          (WidgetTester tester) async {
+        const metrics = ProjectMetricsData();
 
-      expect(tester.takeException(), isNull);
-    },
-  );
+        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
+          projectMetrics: metrics,
+        ));
 
-  testWidgets(
-    "Contains coverage circle percentage",
-    (WidgetTester tester) async {
-      final coveragePercent =
-          _ProjectMetricsTileTestbed.testProjectMetrics.coverage;
-      final coverageText = '${(coveragePercent.value * 100).toInt()}%';
+        expect(tester.takeException(), isNull);
+      },
+    );
 
-      await tester.pumpWidget(const _ProjectMetricsTileTestbed());
-      await tester.pumpAndSettle();
+    testWidgets(
+      "contains coverage circle percentage",
+          (WidgetTester tester) async {
+        final coveragePercent = testProjectMetrics.coverage;
+        final coverageText = '${(coveragePercent.value * 100).toInt()}%';
 
-      expect(
-        find.widgetWithText(CirclePercentage, coverageText),
-        findsOneWidget,
-      );
-    },
-  );
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
+          projectMetrics: testProjectMetrics,
+        ));
+        await tester.pumpAndSettle();
 
-  testWidgets(
-    "Contains stability circle percentage",
-    (WidgetTester tester) async {
-      final stabilityPercent =
-          _ProjectMetricsTileTestbed.testProjectMetrics.coverage;
-      final stabilityText = '${(stabilityPercent.value * 100).toInt()}%';
+        expect(
+          find.widgetWithText(CirclePercentage, coverageText),
+          findsOneWidget,
+        );
+      },
+    );
 
-      await tester.pumpWidget(const _ProjectMetricsTileTestbed());
-      await tester.pumpAndSettle();
+    testWidgets(
+      "contains stability circle percentage",
+          (WidgetTester tester) async {
+        final stabilityPercent = testProjectMetrics.coverage;
+        final stabilityText = '${(stabilityPercent.value * 100).toInt()}%';
 
-      expect(
-        find.widgetWithText(CirclePercentage, stabilityText),
-        findsOneWidget,
-      );
-    },
-  );
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
+          projectMetrics: testProjectMetrics,
+        ));
+        await tester.pumpAndSettle();
 
-  testWidgets(
-    "Contains TextMetric with build number metric",
-    (WidgetTester tester) async {
-      final buildNumber =
-          _ProjectMetricsTileTestbed.testProjectMetrics.buildNumberMetric;
+        expect(
+          find.widgetWithText(CirclePercentage, stabilityText),
+          findsOneWidget,
+        );
+      },
+    );
 
-      await tester.pumpWidget(const _ProjectMetricsTileTestbed());
+    testWidgets(
+      "contains TextMetric with build number metric",
+          (WidgetTester tester) async {
+        final buildNumber = testProjectMetrics.buildNumberMetric;
 
-      expect(
-        find.widgetWithText(TextMetric, '$buildNumber'),
-        findsOneWidget,
-      );
-    },
-  );
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
+          projectMetrics: testProjectMetrics,
+        ));
 
-  testWidgets(
-    "Contains SparklineGraph widgets with performance metric",
-    (WidgetTester tester) async {
-      await tester.pumpWidget(const _ProjectMetricsTileTestbed());
+        expect(
+          find.widgetWithText(TextMetric, '$buildNumber'),
+          findsOneWidget,
+        );
+      },
+    );
 
-      expect(
-        find.byType(SparklineGraph),
-        findsOneWidget,
-      );
-    },
-  );
+    testWidgets(
+      "contains SparklineGraph widgets with performance metric",
+          (WidgetTester tester) async {
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
+          projectMetrics: testProjectMetrics,
+        ));
 
-  testWidgets(
-    "Contains the bar graph with the build results",
-    (WidgetTester tester) async {
-      await tester.pumpWidget(const _ProjectMetricsTileTestbed());
+        expect(
+          find.byType(SparklineGraph),
+          findsOneWidget,
+        );
+      },
+    );
 
-      expect(find.byType(BuildResultBarGraph), findsOneWidget);
-    },
-  );
+    testWidgets(
+      "contains the bar graph with the build results",
+          (WidgetTester tester) async {
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
+          projectMetrics: testProjectMetrics,
+        ));
+
+        expect(find.byType(BuildResultBarGraph), findsOneWidget);
+      },
+    );
+  });
 }
 
 class _ProjectMetricsTileTestbed extends StatelessWidget {
-  static final ProjectMetricsData testProjectMetrics = ProjectMetricsData(
-    projectName: 'Test project name',
-    coverage: PercentValueObject(0.3),
-    stability: PercentValueObject(0.4),
-    buildNumberMetric: 1,
-    averageBuildDurationInMinutes: 0,
-    performanceMetrics: const [],
-    buildResultMetrics: const [],
-  );
   final ProjectMetricsData projectMetrics;
 
   const _ProjectMetricsTileTestbed({
@@ -143,7 +153,7 @@ class _ProjectMetricsTileTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       body: ProjectMetricsTile(
-        projectMetrics: projectMetrics ?? testProjectMetrics,
+        projectMetrics: projectMetrics,
       ),
     );
   }

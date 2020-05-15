@@ -35,13 +35,13 @@ class AuthNotifier extends ChangeNotifier {
   /// from authentication state updates.
   StreamSubscription _authUpdatesSubscription;
 
-  /// Contains text description of any authentication exception that may occur.
+  /// Contains a text description of any authentication exception that may occur.
   AuthErrorMessage _authExceptionDescription;
 
-  /// Contains text description of any email validation error that may occur.
+  /// Contains a text description of any email validation error that may occur.
   EmailValidationErrorMessage _emailValidationErrorMessage;
 
-  /// Contains text description of any password validation error that may occur.
+  /// Contains a text description of any password validation error that may occur.
   PasswordValidationErrorMessage _passwordValidationErrorMessage;
 
   AuthNotifier(

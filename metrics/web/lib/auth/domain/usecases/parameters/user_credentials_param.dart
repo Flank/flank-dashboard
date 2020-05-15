@@ -9,7 +9,7 @@ class UserCredentialsParam extends Equatable {
   final PasswordValueObject password;
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [email.value, password.value];
 
   /// Creates [UserCredentialsParam] with the given [email] and [password].
   ///

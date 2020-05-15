@@ -90,7 +90,7 @@ class _AuthFormState extends State<AuthForm> {
     return authNotifier.passwordValidationErrorMessage?.message;
   }
 
-  /// Starts sign in process
+  /// Starts sign in process.
   void _submit() {
     if (_formKey.currentState.validate()) {
       Provider.of<AuthNotifier>(context, listen: false)

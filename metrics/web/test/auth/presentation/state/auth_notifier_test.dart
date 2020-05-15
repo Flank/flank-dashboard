@@ -106,9 +106,6 @@ void main() {
     });
 
     test(".signInWithEmailAndPassword() delegates to signInUseCase", () {
-      const email = 'test@test.com';
-      const password = 'someTestPassword';
-
       authNotifier.signInWithEmailAndPassword(email, password);
 
       final userCredentials = UserCredentialsParam(
@@ -126,7 +123,7 @@ void main() {
 
       when(signInUseCase.call(any)).thenThrow(authException);
 
-      authNotifier.signInWithEmailAndPassword('email', 'password');
+      authNotifier.signInWithEmailAndPassword(email, password);
 
       expect(authNotifier.authErrorMessage, isNotNull);
     });
@@ -157,6 +154,12 @@ void main() {
       },
     );
 
+    test(".validateEmail() leaves .emailValidationErrorMessage value as null if the given email is valid", () {
+      authNotifier.validateEmail(email);
+
+      expect(authNotifier.emailValidationErrorMessage, isNull);
+    });
+
     test(
       ".validateEmail() saves the validation error message to .emailValidationErrorMessage if the given email is not valid",
       () {
@@ -167,6 +170,12 @@ void main() {
         expect(authNotifier.emailValidationErrorMessage, isNotNull);
       },
     );
+
+    test(".validateEmail() leaves .emailValidationErrorMessage value as null if the given email is valid", () {
+      authNotifier.validatePassword(password);
+
+      expect(authNotifier.passwordValidationErrorMessage, isNull);
+    });
 
     test(
       ".validatePassword() saves the validation error message to .passwordValidationErrorMessage if the given password is not valid",

@@ -12,6 +12,7 @@ import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
+import '../state/auth_notifier_test.dart';
 
 void main() {
   final emailInputFinder =
@@ -24,24 +25,38 @@ void main() {
   const testEmail = 'test@email.com';
   const testPassword = 'testPassword';
 
+  final signInUseCase = SignInUseCaseMock();
+  final signOutUseCase = SignOutUseCaseMock();
+  final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
+
   group("AuthForm", () {
     testWidgets(
       "email input shows an error message if a value is empty",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _AuthFormTestbed());
+        await tester.pumpWidget(_AuthFormTestbed(authNotifier: AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          signOutUseCase,
+        )));
 
         await tester.tap(submitButtonFinder);
         await tester.pumpAndSettle();
 
         expect(
-            find.text(AuthStrings.requiredEmailErrorMessage), findsOneWidget);
+          find.text(AuthStrings.requiredEmailErrorMessage),
+          findsOneWidget,
+        );
       },
     );
 
     testWidgets(
         "email input shows an error message if a value is not a valid email",
         (WidgetTester tester) async {
-      await tester.pumpWidget(const _AuthFormTestbed());
+      await tester.pumpWidget(_AuthFormTestbed(authNotifier: AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        signOutUseCase,
+      )));
       await tester.enterText(emailInputFinder, 'notAnEmail');
 
       await tester.tap(submitButtonFinder);
@@ -52,7 +67,11 @@ void main() {
 
     testWidgets("password input shows an error message if a value is empty",
         (WidgetTester tester) async {
-      await tester.pumpWidget(const _AuthFormTestbed());
+      await tester.pumpWidget(_AuthFormTestbed(authNotifier: AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        signOutUseCase,
+      )));
 
       await tester.tap(submitButtonFinder);
       await tester.pump();
