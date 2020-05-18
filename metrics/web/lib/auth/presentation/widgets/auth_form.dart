@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
+import 'package:metrics/auth/presentation/util/validation_util.dart';
 import 'package:metrics/auth/presentation/widgets/auth_input_field.dart';
 import 'package:provider/provider.dart';
 
@@ -33,14 +34,14 @@ class _AuthFormState extends State<AuthForm> {
             label: AuthStrings.email,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            validator: _validateEmail,
+            validator: ValidationUtil.validateEmail,
           ),
           AuthInputField(
             key: const Key(AuthStrings.password),
             label: AuthStrings.password,
             controller: _passwordController,
             obscureText: true,
-            validator: _validatePassword,
+            validator: ValidationUtil.validatePassword,
           ),
           Selector<AuthNotifier, AuthErrorMessage>(
             selector: (_, state) => state.authErrorMessage,
@@ -68,26 +69,6 @@ class _AuthFormState extends State<AuthForm> {
         ],
       ),
     );
-  }
-
-  /// Validates the email input field.
-  String _validateEmail(String value) {
-    final AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: false);
-
-    authNotifier.validateEmail(value);
-
-    return authNotifier.emailValidationErrorMessage?.message;
-  }
-
-  /// Validates the password input field.
-  String _validatePassword(String value) {
-    final AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: false);
-
-    authNotifier.validatePassword(value);
-
-    return authNotifier.passwordValidationErrorMessage?.message;
   }
 
   /// Starts sign in process.

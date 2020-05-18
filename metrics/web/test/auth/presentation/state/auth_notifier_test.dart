@@ -153,46 +153,6 @@ void main() {
       },
     );
 
-    test(
-      ".validateEmail() leaves .emailValidationErrorMessage value as null if the given email is valid",
-      () {
-        authNotifier.validateEmail(email);
-
-        expect(authNotifier.emailValidationErrorMessage, isNull);
-      },
-    );
-
-    test(
-      ".validateEmail() saves the validation error message to .emailValidationErrorMessage if the given email is not valid",
-      () {
-        const invalidEmail = "invalid@@email.com";
-
-        authNotifier.validateEmail(invalidEmail);
-
-        expect(authNotifier.emailValidationErrorMessage, isNotNull);
-      },
-    );
-
-    test(
-      ".validatePassword() leaves .passwordValidationErrorMessage value as null if the given password is valid",
-      () {
-        authNotifier.validatePassword(password);
-
-        expect(authNotifier.passwordValidationErrorMessage, isNull);
-      },
-    );
-
-    test(
-      ".validatePassword() saves the validation error message to .passwordValidationErrorMessage if the given password is not valid",
-      () {
-        const invalidPassword = "pass";
-
-        authNotifier.validatePassword(invalidPassword);
-
-        expect(authNotifier.passwordValidationErrorMessage, isNotNull);
-      },
-    );
-
     test(".signOut() delegates to the SignOutUseCase", () {
       authNotifier.signOut();
 

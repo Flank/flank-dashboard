@@ -12,7 +12,7 @@ void main() {
           EmailValidationErrorCode.isNull,
         );
 
-        expect(errorMessage.message, AuthStrings.requiredEmailErrorMessage);
+        expect(errorMessage.message, AuthStrings.emailRequiredErrorMessage);
       },
     );
 

@@ -49,7 +49,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          find.text(AuthStrings.requiredEmailErrorMessage),
+          find.text(AuthStrings.emailRequiredErrorMessage),
           findsOneWidget,
         );
       },
@@ -75,7 +75,7 @@ void main() {
       await tester.pump();
 
       expect(
-        find.text(AuthStrings.requiredPasswordErrorMessage),
+        find.text(AuthStrings.passwordRequiredErrorMessage),
         findsOneWidget,
       );
     });

@@ -4,9 +4,9 @@ class AuthStrings {
   static const String password = 'Password';
   static const String signIn = 'Sign in';
 
-  static const String requiredEmailErrorMessage = 'Email address is required';
+  static const String emailRequiredErrorMessage = 'Email address is required';
   static const String invalidEmailErrorMessage = 'Invalid email address';
-  static const String requiredPasswordErrorMessage = 'Password is required';
+  static const String passwordRequiredErrorMessage = 'Password is required';
   static const String unknownErrorMessage =
       'An unknown error occurred, please try again';
 

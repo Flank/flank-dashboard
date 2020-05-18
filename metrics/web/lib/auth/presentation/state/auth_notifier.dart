@@ -7,8 +7,6 @@ import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
-import 'package:metrics/auth/presentation/model/email_validation_error_message.dart';
-import 'package:metrics/auth/presentation/model/password_validation_error_message.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the authentication state.
@@ -35,12 +33,6 @@ class AuthNotifier extends ChangeNotifier {
   /// Contains a text description of any authentication exception that may occur.
   AuthErrorMessage _authErrorMessage;
 
-  /// Contains a text description of any email validation error that may occur.
-  EmailValidationErrorMessage _emailValidationErrorMessage;
-
-  /// Contains a text description of any password validation error that may occur.
-  PasswordValidationErrorMessage _passwordValidationErrorMessage;
-
   AuthNotifier(
     this._receiveAuthUpdates,
     this._signInUseCase,
@@ -54,14 +46,6 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Returns an [AuthErrorMessage], containing an authentication error message.
   AuthErrorMessage get authErrorMessage => _authErrorMessage;
-
-  /// Returns an [EmailValidationErrorMessage], containing an email validation error message.
-  EmailValidationErrorMessage get emailValidationErrorMessage =>
-      _emailValidationErrorMessage;
-
-  /// Returns an [PasswordValidationErrorMessage], containing a password validation error message.
-  PasswordValidationErrorMessage get passwordValidationErrorMessage =>
-      _passwordValidationErrorMessage;
 
   /// Subscribes to a user authentication updates
   /// to get notified when the user got signed in or signed out.
@@ -86,32 +70,6 @@ class AuthNotifier extends ChangeNotifier {
     } on AuthenticationException catch (exception) {
       _authErrorMessage = AuthErrorMessage(exception.code);
       notifyListeners();
-    }
-  }
-
-  /// Validates the given [value] as an email.
-  void validateEmail(String value) {
-    _emailValidationErrorMessage = null;
-
-    try {
-      Email(value);
-    } on EmailValidationException catch (exception) {
-      _emailValidationErrorMessage = EmailValidationErrorMessage(
-        exception.code,
-      );
-    }
-  }
-
-  /// Validates the given [value] as a password.
-  void validatePassword(String value) {
-    _passwordValidationErrorMessage = null;
-
-    try {
-      Password(value);
-    } on PasswordValidationException catch (exception) {
-      _passwordValidationErrorMessage = PasswordValidationErrorMessage(
-        exception.code,
-      );
     }
   }
 

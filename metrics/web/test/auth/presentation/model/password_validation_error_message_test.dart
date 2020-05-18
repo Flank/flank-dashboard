@@ -14,7 +14,7 @@ void main() {
 
         expect(
           errorMessage.message,
-          equals(AuthStrings.requiredPasswordErrorMessage),
+          equals(AuthStrings.passwordRequiredErrorMessage),
         );
       },
     );

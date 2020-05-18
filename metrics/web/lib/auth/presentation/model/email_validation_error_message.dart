@@ -12,7 +12,7 @@ class EmailValidationErrorMessage {
   String get message {
     switch (_code) {
       case EmailValidationErrorCode.isNull:
-        return AuthStrings.requiredEmailErrorMessage;
+        return AuthStrings.emailRequiredErrorMessage;
       case EmailValidationErrorCode.invalidEmailFormat:
         return AuthStrings.invalidEmailErrorMessage;
       default:

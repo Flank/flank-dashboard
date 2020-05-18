@@ -12,7 +12,7 @@ class PasswordValidationErrorMessage {
   String get message {
     switch (_code) {
       case PasswordValidationErrorCode.isNull:
-        return AuthStrings.requiredPasswordErrorMessage;
+        return AuthStrings.passwordRequiredErrorMessage;
       case PasswordValidationErrorCode.tooShortPassword:
         return AuthStrings.getPasswordMinLengthErrorMessage(
           Password.minPasswordLength,

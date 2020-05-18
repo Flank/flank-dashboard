@@ -1,7 +1,5 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:metrics_core/metrics_core.dart';
-import 'package:metrics_core/src/domain/entities/email_validation_error_code.dart';
-import 'package:metrics_core/src/domain/entities/email_validation_exception.dart';
 
 /// A [ValueObject] represents an email.
 class Email extends ValueObject<String> {

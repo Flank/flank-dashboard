@@ -1,6 +1,4 @@
 import 'package:metrics_core/metrics_core.dart';
-import 'package:metrics_core/src/domain/entities/password_validation_error_code.dart';
-import 'package:metrics_core/src/domain/entities/password_validation_exception.dart';
 
 /// A [ValueObject] represents a password.
 class Password extends ValueObject<String> {
