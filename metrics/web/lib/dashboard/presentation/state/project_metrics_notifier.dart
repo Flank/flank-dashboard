@@ -11,6 +11,8 @@ import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.da
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
+import 'package:metrics/dashboard/presentation/model/filter.dart';
+import 'package:metrics/dashboard/presentation/model/filters.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -41,17 +43,24 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   ///
   /// The provided use cases should not be null.
   ProjectMetricsNotifier(
-    this._receiveProjectsUpdates,
-    this._receiveProjectMetricsUpdates,
-  ) : assert(
-          _receiveProjectsUpdates != null &&
-              _receiveProjectMetricsUpdates != null,
-          'The use cases should not be null',
-        );
+      this._receiveProjectsUpdates,
+      this._receiveProjectMetricsUpdates,
+      ) : assert(
+  _receiveProjectsUpdates != null &&
+      _receiveProjectMetricsUpdates != null,
+  'The use cases should not be null',
+  );
 
   /// Provides a list of project metrics.
   List<ProjectMetricsData> get projectsMetrics =>
-      _projectMetrics?.values?.toList();
+      _projectsMetricsFilters.applyAll(_projectMetrics?.values?.toList());
+
+  final _projectsMetricsFilters = Filters<ProjectMetricsData>();
+
+  void addFilter(Filter<ProjectMetricsData> filter) {
+    _projectsMetricsFilters.addFilter(filter);
+    notifyListeners();
+  }
 
   /// Provides an error description that occurred during loading metrics data.
   String get errorMessage => _errorMessage;
@@ -126,8 +135,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
     _buildMetricsSubscriptions[projectId] =
         dashboardMetricsStream.listen((metrics) {
-      _createProjectMetrics(metrics, projectId);
-    }, onError: _errorHandler);
+          _createProjectMetrics(metrics, projectId);
+        }, onError: _errorHandler);
   }
 
   /// Creates project metrics from [DashboardProjectMetrics].

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
+import 'package:metrics/dashboard/presentation/widgets/search_input.dart';
 import 'package:provider/provider.dart';
 
 /// Allows to quickly get primary metrics of all available projects.
@@ -16,11 +17,11 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void initState() {
+    super.initState();
     _projectMetricsNotifier =
         Provider.of<ProjectMetricsNotifier>(context, listen: false);
 
     _projectMetricsNotifier.subscribeToProjects();
-    super.initState();
   }
 
   @override
@@ -28,14 +29,22 @@ class _DashboardPageState extends State<DashboardPage> {
     return MetricsScaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 124.0),
-        child: MetricsTable(),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 24.0),
+              child: SearchInput(),
+            ),
+            Expanded(child: MetricsTable()),
+          ],
+        ),
       ),
     );
   }
 
   @override
   void dispose() {
-    _projectMetricsNotifier.unsubscribeFromProjects();
     super.dispose();
+    _projectMetricsNotifier.unsubscribeFromProjects();
   }
 }
