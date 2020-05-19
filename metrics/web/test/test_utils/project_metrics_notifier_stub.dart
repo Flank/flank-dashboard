@@ -44,5 +44,5 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   Future<void> unsubscribeFromProjects() async {}
 
   @override
-  void filterByProjectName(String searchQuery) {}
+  void filterByProjectName(String value) {}
 }

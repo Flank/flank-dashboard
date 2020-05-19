@@ -351,8 +351,6 @@ void main() {
     test(
         ".filterByProjectName() returns filtered list of the project metrics according to the given value",
         () async {
-      _resetProjectsFilters();
-
       final expectedProjectMetrics = [
         projectMetricsNotifier.projectsMetrics.last
       ];
@@ -367,13 +365,13 @@ void main() {
         filteredProjectMetrics,
         equals(expectedProjectMetrics),
       );
+
+      _resetProjectsFilters();
     });
 
     test(
         ".filterByProjectName() returns a list of the project metrics without changes if the given value is null",
         () {
-      _resetProjectsFilters();
-
       final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
       projectMetricsNotifier.filterByProjectName(null);
@@ -384,6 +382,8 @@ void main() {
         filteredProjectMetrics,
         equals(expectedProjectMetrics),
       );
+
+      _resetProjectsFilters();
     });
 
     test(
