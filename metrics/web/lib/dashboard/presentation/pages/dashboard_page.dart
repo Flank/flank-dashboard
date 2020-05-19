@@ -46,7 +46,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void dispose() {
-    super.dispose();
     _projectMetricsNotifier.unsubscribeFromProjects();
+    super.dispose();
   }
 }

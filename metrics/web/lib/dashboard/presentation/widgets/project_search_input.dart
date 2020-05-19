@@ -48,7 +48,7 @@ class _ProjectSearchInputState extends State<ProjectSearchInput> {
 
   @override
   void dispose() {
-    super.dispose();
     _searchSubscription?.cancel();
+    super.dispose();
   }
 }
