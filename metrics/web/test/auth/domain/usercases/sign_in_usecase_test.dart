@@ -1,6 +1,7 @@
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -15,9 +16,9 @@ void main() {
       reset(repository);
     });
 
-    const userCredentials = UserCredentialsParam(
-      email: 'email',
-      password: 'pass',
+    final userCredentials = UserCredentialsParam(
+      email: Email('email@mail.mail'),
+      password: Password('password'),
     );
 
     test("can't be created with null repository", () {
@@ -35,8 +36,8 @@ void main() {
         await signInUseCase(userCredentials);
 
         verify(repository.signInWithEmailAndPassword(
-          userCredentials.email,
-          userCredentials.password,
+          userCredentials.email.value,
+          userCredentials.password.value,
         )).called(equals(1));
       },
     );

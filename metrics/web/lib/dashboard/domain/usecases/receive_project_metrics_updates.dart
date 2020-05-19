@@ -23,7 +23,9 @@ class ReceiveProjectMetricsUpdates
   final MetricsRepository _repository;
 
   /// Creates the [ReceiveProjectMetricsUpdates] use case with given [MetricsRepository].
-  ReceiveProjectMetricsUpdates(this._repository);
+  ///
+  /// [MetricsRepository] must not be null.
+  ReceiveProjectMetricsUpdates(this._repository) : assert(_repository != null);
 
   @override
   Stream<DashboardProjectMetrics> call(ProjectIdParam params) {

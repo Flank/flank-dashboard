@@ -3,32 +3,30 @@
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
-import '../test_utils/matcher_util.dart';
-
 void main() {
   group("Percent", () {
     test("can't be created with the null value", () {
       expect(
         () => Percent(null),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
 
     test("can't be created with the value, less than 0.0", () {
       expect(
         () => Percent(-1.0),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
 
     test("can't be created with the value, more than 1.0", () {
       expect(
         () => Percent(1.1),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
 
-    test("two intances with the equal value are equal", () {
+    test("two instances with the equal value are equal", () {
       const percentValue = 0.1;
       final firstPercent = Percent(percentValue);
       final secondPercent = Percent(percentValue);

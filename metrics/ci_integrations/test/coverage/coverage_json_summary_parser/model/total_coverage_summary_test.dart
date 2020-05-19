@@ -22,7 +22,7 @@ void main() {
         };
 
         final expectedTotalSummary = TotalCoverageSummary(
-          branches: Coverage(percent: const Percent(percent / 100)),
+          branches: Coverage(percent: Percent(percent / 100)),
         );
 
         final totalSummary = TotalCoverageSummary.fromJson(totalSummaryJson);

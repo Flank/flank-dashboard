@@ -7,6 +7,7 @@ import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the authentication state.
 ///
@@ -29,8 +30,8 @@ class AuthNotifier extends ChangeNotifier {
   /// from authentication state updates.
   StreamSubscription _authUpdatesSubscription;
 
-  /// Contains text description of any authentication exception that may occur.
-  AuthErrorMessage _authExceptionDescription;
+  /// Contains a text description of any authentication exception that may occur.
+  AuthErrorMessage _authErrorMessage;
 
   AuthNotifier(
     this._receiveAuthUpdates,
@@ -43,8 +44,8 @@ class AuthNotifier extends ChangeNotifier {
   /// Determines if a user is authenticated.
   bool get isLoggedIn => _isLoggedIn;
 
-  /// Returns an AuthErrorMessage, containing an auth error message.
-  AuthErrorMessage get authErrorMessage => _authExceptionDescription;
+  /// Returns an [AuthErrorMessage], containing an authentication error message.
+  AuthErrorMessage get authErrorMessage => _authErrorMessage;
 
   /// Subscribes to a user authentication updates
   /// to get notified when the user got signed in or signed out.
@@ -58,16 +59,16 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Signs in user to the app using an [email] and a [password].
   Future<void> signInWithEmailAndPassword(String email, String password) async {
-    _authExceptionDescription = null;
+    _authErrorMessage = null;
     notifyListeners();
 
     try {
       await _signInUseCase(UserCredentialsParam(
-        email: email,
-        password: password,
+        email: Email(email),
+        password: Password(password),
       ));
     } on AuthenticationException catch (exception) {
-      _authExceptionDescription = AuthErrorMessage(exception.code);
+      _authErrorMessage = AuthErrorMessage(exception.code);
       notifyListeners();
     }
   }

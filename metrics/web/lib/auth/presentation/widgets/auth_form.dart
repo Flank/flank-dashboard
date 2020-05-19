@@ -1,8 +1,8 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
+import 'package:metrics/auth/presentation/util/validation_util.dart';
 import 'package:metrics/auth/presentation/widgets/auth_input_field.dart';
 import 'package:provider/provider.dart';
 
@@ -13,9 +13,6 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
-  /// Minimum length of the password.
-  static const _minPasswordLength = 6;
-
   /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
@@ -37,14 +34,14 @@ class _AuthFormState extends State<AuthForm> {
             label: AuthStrings.email,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            validator: _validateEmail,
+            validator: ValidationUtil.validateEmail,
           ),
           AuthInputField(
             key: const Key(AuthStrings.password),
             label: AuthStrings.password,
             controller: _passwordController,
             obscureText: true,
-            validator: _validatePassword,
+            validator: ValidationUtil.validatePassword,
           ),
           Selector<AuthNotifier, AuthErrorMessage>(
             selector: (_, state) => state.authErrorMessage,
@@ -74,35 +71,7 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-  /// Checks if an email field is not empty and has the right format,
-  /// otherwise returns an error message.
-  String _validateEmail(String value) {
-    if (value.isEmpty) {
-      return AuthStrings.requiredEmailErrorMessage;
-    }
-
-    if (!EmailValidator.validate(value)) {
-      return AuthStrings.invalidEmailErrorMessage;
-    }
-
-    return null;
-  }
-
-  /// Checks if a password field is not empty and match the minimum length,
-  /// otherwise returns an error message.
-  String _validatePassword(String value) {
-    if (value.isEmpty) {
-      return AuthStrings.requiredPasswordErrorMessage;
-    }
-
-    if (value.length < _minPasswordLength) {
-      return AuthStrings.getPasswordMinLengthErrorMessage(_minPasswordLength);
-    }
-
-    return null;
-  }
-
-  /// Starts sign in process
+  /// Starts sign in process.
   void _submit() {
     if (_formKey.currentState.validate()) {
       Provider.of<AuthNotifier>(context, listen: false)

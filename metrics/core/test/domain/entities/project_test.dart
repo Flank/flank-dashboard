@@ -1,7 +1,7 @@
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
-import '../test_utils/matcher_util.dart';
+import '../../test_utils/matcher_util.dart';
 
 void main() {
   test("Can't create project with null id", () {

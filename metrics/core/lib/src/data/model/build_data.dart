@@ -1,7 +1,7 @@
 import 'package:metrics_core/src/data/model/data_model.dart';
 import 'package:metrics_core/src/domain/entities/build.dart';
 import 'package:metrics_core/src/domain/entities/build_status.dart';
-import 'package:metrics_core/src/domain/entities/percent.dart';
+import 'package:metrics_core/src/domain/value_objects/percent.dart';
 
 /// [DataModel] that represents the [Build] entity.
 class BuildData extends Build implements DataModel {

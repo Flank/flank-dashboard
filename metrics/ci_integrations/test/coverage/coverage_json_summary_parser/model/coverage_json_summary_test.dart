@@ -27,7 +27,7 @@ void main() {
         final expectedJsonSummary = CoverageJsonSummary(
           total: TotalCoverageSummary(
             branches: Coverage(
-              percent: const Percent(percent / 100),
+              percent: Percent(percent / 100),
             ),
           ),
         );

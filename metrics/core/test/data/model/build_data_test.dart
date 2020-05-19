@@ -11,7 +11,7 @@ void main() {
     const duration = Duration(seconds: 1);
     const workflowName = 'workflowName';
     const url = 'url';
-    const coverage = Percent(1.0);
+    final coverage = Percent(1.0);
 
     final buildDataJson = {
       'projectId': projectId,
@@ -46,7 +46,7 @@ void main() {
         const duration = Duration();
         const workflowName = 'newWorkflowName';
         const url = 'newUrl';
-        const coverage = Percent(0.0);
+        final coverage = Percent(0.0);
 
         final copiedBuildData = buildData.copyWith(
           id: id,

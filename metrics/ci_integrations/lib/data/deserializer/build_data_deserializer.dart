@@ -16,7 +16,8 @@ class BuildDataDeserializer {
     return BuildData(
       id: id,
       duration: Duration(milliseconds: durationMilliseconds),
-      coverage: Percent(json['coverage'] as double),
+      coverage:
+          json['coverage'] == null ? null : Percent(json['coverage'] as double),
       startedAt: json['startedAt'] as DateTime,
       url: json['url'] as String,
       buildNumber: json['buildNumber'] as int,

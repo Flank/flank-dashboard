@@ -14,7 +14,7 @@ import 'package:test/test.dart';
 void main() {
   group("JenkinsSourceClientAdapter", () {
     const jobName = 'test-job';
-    const defaultCoverage = Percent(0.6);
+    final defaultCoverage = Percent(0.6);
     const defaultDuration = Duration(seconds: 10);
     const defaultBuildUrl = 'buildUrl';
     const defaultArtifact = JenkinsBuildArtifact(
@@ -124,7 +124,7 @@ void main() {
           createJenkinsBuild(buildNumber: 1),
           createJenkinsBuild(buildNumber: 2, artifacts: [])
         ];
-        const expected = [defaultCoverage, null];
+        final expected = [defaultCoverage, null];
 
         responses.addBuilds(jenkinsBuilds);
 
@@ -284,7 +284,7 @@ void main() {
           createJenkinsBuild(buildNumber: 2),
           createJenkinsBuild(buildNumber: 3, artifacts: [])
         ];
-        const expected = [defaultCoverage, null];
+        final expected = [defaultCoverage, null];
 
         responses.addBuilds(jenkinsBuilds);
 

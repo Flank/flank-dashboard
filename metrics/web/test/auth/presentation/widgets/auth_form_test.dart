@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
+import 'package:metrics/auth/presentation/model/email_validation_error_message.dart';
+import 'package:metrics/auth/presentation/model/password_validation_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
@@ -10,6 +12,7 @@ import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
+import '../state/auth_notifier_test.dart';
 
 void main() {
   final emailInputFinder =
@@ -22,24 +25,40 @@ void main() {
   const testEmail = 'test@email.com';
   const testPassword = 'testPassword';
 
+  final signInUseCase = SignInUseCaseMock();
+  final signOutUseCase = SignOutUseCaseMock();
+  final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
+
+  AuthNotifier authNotifier;
+
+  setUp(() {
+    authNotifier = AuthNotifier(
+      receiveAuthUpdates,
+      signInUseCase,
+      signOutUseCase,
+    );
+  });
+
   group("AuthForm", () {
     testWidgets(
       "email input shows an error message if a value is empty",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _AuthFormTestbed());
+        await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
 
         await tester.tap(submitButtonFinder);
         await tester.pumpAndSettle();
 
         expect(
-            find.text(AuthStrings.requiredEmailErrorMessage), findsOneWidget);
+          find.text(AuthStrings.emailRequiredErrorMessage),
+          findsOneWidget,
+        );
       },
     );
 
     testWidgets(
         "email input shows an error message if a value is not a valid email",
         (WidgetTester tester) async {
-      await tester.pumpWidget(const _AuthFormTestbed());
+      await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
       await tester.enterText(emailInputFinder, 'notAnEmail');
 
       await tester.tap(submitButtonFinder);
@@ -50,13 +69,15 @@ void main() {
 
     testWidgets("password input shows an error message if a value is empty",
         (WidgetTester tester) async {
-      await tester.pumpWidget(const _AuthFormTestbed());
+      await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
 
       await tester.tap(submitButtonFinder);
       await tester.pump();
 
       expect(
-          find.text(AuthStrings.requiredPasswordErrorMessage), findsOneWidget);
+        find.text(AuthStrings.passwordRequiredErrorMessage),
+        findsOneWidget,
+      );
     });
 
     testWidgets(
@@ -138,4 +159,16 @@ class SignInErrorAuthNotifierStub extends ChangeNotifier
 
   @override
   Future<void> signOut() async {}
+
+  @override
+  void validateEmail(String value) {}
+
+  @override
+  void validatePassword(String value) {}
+
+  @override
+  EmailValidationErrorMessage get emailValidationErrorMessage => null;
+
+  @override
+  PasswordValidationErrorMessage get passwordValidationErrorMessage => null;
 }

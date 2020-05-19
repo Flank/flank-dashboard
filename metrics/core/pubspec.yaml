@@ -7,6 +7,7 @@ environment:
 dependencies:
   meta: ^1.1.8
   equatable: ^1.1.1
+  email_validator: ^1.0.4
 
 dev_dependencies:
   lint: ^1.1.1
