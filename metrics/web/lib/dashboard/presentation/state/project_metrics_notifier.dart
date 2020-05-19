@@ -11,8 +11,8 @@ import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.da
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
-import 'package:metrics/dashboard/presentation/model/filter.dart';
-import 'package:metrics/dashboard/presentation/model/filters.dart';
+import 'package:metrics/common/presentation/model/filter.dart';
+import 'package:metrics/common/presentation/model/filters.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -28,6 +28,10 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
   /// A [Map] that holds all created [StreamSubscription].
   final Map<String, StreamSubscription> _buildMetricsSubscriptions = {};
+
+  /// Creates a [Filters] instance, that collects a list of possible filters,
+  /// related to the [ProjectMetricsData].
+  final _projectMetricsFilters = Filters<ProjectMetricsData>();
 
   /// A [Map] that holds all loaded [ProjectMetricsData].
   Map<String, ProjectMetricsData> _projectMetrics;
@@ -55,17 +59,6 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   List<ProjectMetricsData> get projectsMetrics =>
       _projectMetricsFilters.applyAll(_projectMetrics?.values?.toList());
 
-  /// Creates a [Filters] instance, that collects a list of possible filters,
-  /// related to the [ProjectMetricsData].
-  final _projectMetricsFilters = Filters<ProjectMetricsData>();
-
-  /// Add a specific [Filter] and filter a list of the [ProjectMetricsData]
-  /// according to the filter.
-  void addFilter(Filter<ProjectMetricsData> filter) {
-    _projectMetricsFilters.addFilter(filter);
-    notifyListeners();
-  }
-
   /// Provides an error description that occurred during loading metrics data.
   String get errorMessage => _errorMessage;
 
@@ -84,6 +77,13 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Unsubscribes from projects and it's metrics.
   Future<void> unsubscribeFromProjects() async {
     await _cancelSubscriptions();
+    notifyListeners();
+  }
+
+  /// Add a specific [Filter] and filter a list of the [ProjectMetricsData]
+  /// according to the filter.
+  void addFilter(Filter<ProjectMetricsData> filter) {
+    _projectMetricsFilters.addFilter(filter);
     notifyListeners();
   }
 

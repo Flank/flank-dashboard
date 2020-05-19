@@ -1,4 +1,4 @@
-import 'package:metrics/dashboard/presentation/model/filter.dart';
+import 'package:metrics/common/presentation/model/filter.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 
 /// A class that is a specific version of the [Filter],
@@ -8,7 +8,7 @@ class ProjectsSearchMetricsFilter implements Filter<ProjectMetricsData> {
 
   /// Creates the [ProjectsSearchMetricsFilter].
   ///
-  /// [search] is the search string, that used to find a project.
+  /// The [search] is the search string, that used to find a project.
   const ProjectsSearchMetricsFilter({
     this.search,
   });

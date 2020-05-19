@@ -1,19 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/widgets/search_input_field.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_search_filter.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
 
-/// The specific [SearchInputField] widget that searches across projects.
+/// Display a custom [TextField] with ability to search across projects.
 class ProjectSearchInput extends StatefulWidget {
   @override
   _ProjectSearchInputState createState() => _ProjectSearchInputState();
 }
 
 class _ProjectSearchInputState extends State<ProjectSearchInput> {
+  final TextEditingController _searchController = TextEditingController();
   final BehaviorSubject<String> _searchBehaviourSubject =
       BehaviorSubject<String>();
   StreamSubscription _searchSubscription;
@@ -27,10 +28,12 @@ class _ProjectSearchInputState extends State<ProjectSearchInput> {
     _searchSubscription = _searchBehaviourSubject.timeout(
       const Duration(milliseconds: 300),
       onTimeout: (_) {
-        if (_searchBehaviourSubject.value == null) return;
+        if (_searchController.text == null) return;
 
         _projectMetricsNotifier.addFilter(
-          ProjectsSearchMetricsFilter(search: _searchBehaviourSubject.value),
+          ProjectsSearchMetricsFilter(
+            search: _searchController.text,
+          ),
         );
       },
     ).listen((_) {});
@@ -38,8 +41,13 @@ class _ProjectSearchInputState extends State<ProjectSearchInput> {
 
   @override
   Widget build(BuildContext context) {
-    return SearchInputField(
-      onChanged: (value) => _searchBehaviourSubject.add(value),
+    return TextField(
+      controller: _searchController,
+      onChanged: (value) => _searchBehaviourSubject.add(_searchController.text),
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.search),
+        hintText: CommonStrings.searchForProject,
+      ),
     );
   }
 
