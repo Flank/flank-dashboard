@@ -43,22 +43,26 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   ///
   /// The provided use cases should not be null.
   ProjectMetricsNotifier(
-      this._receiveProjectsUpdates,
-      this._receiveProjectMetricsUpdates,
-      ) : assert(
-  _receiveProjectsUpdates != null &&
-      _receiveProjectMetricsUpdates != null,
-  'The use cases should not be null',
-  );
+    this._receiveProjectsUpdates,
+    this._receiveProjectMetricsUpdates,
+  ) : assert(
+          _receiveProjectsUpdates != null &&
+              _receiveProjectMetricsUpdates != null,
+          'The use cases should not be null',
+        );
 
-  /// Provides a list of project metrics.
+  /// Provides a list of project metrics, filtered by a list of added [Filter]s.
   List<ProjectMetricsData> get projectsMetrics =>
-      _projectsMetricsFilters.applyAll(_projectMetrics?.values?.toList());
+      _projectMetricsFilters.applyAll(_projectMetrics?.values?.toList());
 
-  final _projectsMetricsFilters = Filters<ProjectMetricsData>();
+  /// Creates a [Filters] instance, that collects a list of possible filters,
+  /// related to the [ProjectMetricsData].
+  final _projectMetricsFilters = Filters<ProjectMetricsData>();
 
+  /// Add a specific [Filter] and filter a list of the [ProjectMetricsData]
+  /// according to the filter.
   void addFilter(Filter<ProjectMetricsData> filter) {
-    _projectsMetricsFilters.addFilter(filter);
+    _projectMetricsFilters.addFilter(filter);
     notifyListeners();
   }
 
@@ -135,8 +139,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
     _buildMetricsSubscriptions[projectId] =
         dashboardMetricsStream.listen((metrics) {
-          _createProjectMetrics(metrics, projectId);
-        }, onError: _errorHandler);
+      _createProjectMetrics(metrics, projectId);
+    }, onError: _errorHandler);
   }
 
   /// Creates project metrics from [DashboardProjectMetrics].

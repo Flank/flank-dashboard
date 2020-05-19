@@ -1,20 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/search_input_field.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_search_filter.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
 
-class SearchInput extends StatefulWidget {
+/// The specific [SearchInputField] widget that searches across projects.
+class ProjectSearchInput extends StatefulWidget {
   @override
-  _SearchInputState createState() => _SearchInputState();
+  _ProjectSearchInputState createState() => _ProjectSearchInputState();
 }
 
-class _SearchInputState extends State<SearchInput> {
-  final TextEditingController _searchController = TextEditingController();
+class _ProjectSearchInputState extends State<ProjectSearchInput> {
   final BehaviorSubject<String> _searchBehaviourSubject =
       BehaviorSubject<String>();
   StreamSubscription _searchSubscription;
@@ -28,12 +27,10 @@ class _SearchInputState extends State<SearchInput> {
     _searchSubscription = _searchBehaviourSubject.timeout(
       const Duration(milliseconds: 300),
       onTimeout: (_) {
-        if (_searchController.text == null) return;
+        if (_searchBehaviourSubject.value == null) return;
 
         _projectMetricsNotifier.addFilter(
-          ProjectsSearchMetricsFilter(
-            search: _searchController.text,
-          ),
+          ProjectsSearchMetricsFilter(search: _searchBehaviourSubject.value),
         );
       },
     ).listen((_) {});
@@ -41,19 +38,8 @@ class _SearchInputState extends State<SearchInput> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context);
-
-    return TextField(
-      controller: _searchController,
-      onChanged: (value) {
-        _searchBehaviourSubject.add(_searchController.text);
-      },
-      decoration: InputDecoration(
-        fillColor: themeNotifier.isDark ? Colors.black : Colors.grey[200],
-        filled: true,
-        prefixIcon: const Icon(Icons.search),
-        hintText: CommonStrings.searchForProject,
-      ),
+    return SearchInputField(
+      onChanged: (value) => _searchBehaviourSubject.add(value),
     );
   }
 
