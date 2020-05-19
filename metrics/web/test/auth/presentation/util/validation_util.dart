@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group("ValidationUtil", () {
     test(
-      ".validateEmail() returns an email required error message id the given email is null",
+      ".validateEmail() returns the email required error message if the given email is null",
       () {
         final validationResult = ValidationUtil.validateEmail(null);
 
@@ -15,7 +15,7 @@ void main() {
     );
 
     test(
-      ".validateEmail() returns an invalid email error message id the given email is malformed",
+      ".validateEmail() returns the invalid email error message if the given email is malformed",
       () {
         final validationResult = ValidationUtil.validateEmail('not valid');
 
@@ -34,7 +34,7 @@ void main() {
     );
 
     test(
-      ".validatePassword() returns password required error message is the password is null",
+      ".validatePassword() returns the password required error message if the password is null",
       () {
         final validationResult = ValidationUtil.validatePassword(null);
 
@@ -44,7 +44,7 @@ void main() {
     );
 
     test(
-      ".validatePassword() returns password too short error message is the password is less that 6 characters long",
+      ".validatePassword() returns the password too short error message if the password is less than 6 characters long",
       () {
         final validationResult = ValidationUtil.validatePassword('pass');
 

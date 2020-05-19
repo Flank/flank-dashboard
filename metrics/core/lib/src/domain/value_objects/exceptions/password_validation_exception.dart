@@ -1,4 +1,4 @@
-import 'package:metrics_core/src/domain/entities/validation_exception.dart';
+import 'package:metrics_core/src/domain/value_objects/exceptions/validation_exception.dart';
 import 'package:metrics_core/src/domain/value_objects/exceptions/password_validation_error_code.dart';
 
 /// Represents the password validation exception.
