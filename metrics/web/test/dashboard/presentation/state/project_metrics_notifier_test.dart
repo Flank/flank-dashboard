@@ -47,6 +47,10 @@ void main() {
       projectMetricsNotifier.dispose();
     });
 
+    void _resetProjectsFilters() {
+      projectMetricsNotifier.filterByProjectName(null);
+    }
+
     test(
       "throws an AssertionError if receive project updates use case is null",
       () {
@@ -343,6 +347,44 @@ void main() {
         metricsNotifier.dispose();
       },
     );
+
+    test(
+        ".filterByProjectName() returns filtered list of the project metrics according to the given value",
+        () async {
+      _resetProjectsFilters();
+
+      final expectedProjectMetrics = [
+        projectMetricsNotifier.projectsMetrics.last
+      ];
+
+      final projectNameFilter = expectedProjectMetrics.first.projectName;
+
+      projectMetricsNotifier.filterByProjectName(projectNameFilter);
+
+      final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
+
+      expect(
+        filteredProjectMetrics,
+        equals(expectedProjectMetrics),
+      );
+    });
+
+    test(
+        ".filterByProjectName() returns a list of the project metrics without changes if the given value is null",
+        () {
+      _resetProjectsFilters();
+
+      final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
+
+      projectMetricsNotifier.filterByProjectName(null);
+
+      final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
+
+      expect(
+        filteredProjectMetrics,
+        equals(expectedProjectMetrics),
+      );
+    });
 
     test(
       ".dispose() unsubscribes from all streams and removes project metrics",

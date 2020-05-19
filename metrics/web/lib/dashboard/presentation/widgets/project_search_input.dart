@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/dashboard/presentation/model/project_metrics_search_filter.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
@@ -30,11 +29,7 @@ class _ProjectSearchInputState extends State<ProjectSearchInput> {
       onTimeout: (_) {
         if (_searchController.text == null) return;
 
-        _projectMetricsNotifier.addFilter(
-          ProjectsSearchMetricsFilter(
-            search: _searchController.text,
-          ),
-        );
+        _projectMetricsNotifier.filterByProjectName(_searchController.text);
       },
     ).listen((_) {});
   }

@@ -95,6 +95,10 @@ void main() {
             await driver.waitFor(find.byType('BuildResultBarGraph'));
           },
         );
+
+        test("shows a search project input", () async {
+          await driver.waitFor(find.text(CommonStrings.searchForProject));
+        });
       });
     },
   );

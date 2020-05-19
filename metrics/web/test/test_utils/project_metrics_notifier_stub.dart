@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:metrics/common/presentation/model/filter.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -45,5 +44,5 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   Future<void> unsubscribeFromProjects() async {}
 
   @override
-  void addFilter(Filter<ProjectMetricsData> filter) {}
+  void filterByProjectName(String searchQuery) {}
 }

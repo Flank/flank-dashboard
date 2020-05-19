@@ -11,8 +11,6 @@ import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.da
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
-import 'package:metrics/common/presentation/model/filter.dart';
-import 'package:metrics/common/presentation/model/filters.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -29,10 +27,6 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// A [Map] that holds all created [StreamSubscription].
   final Map<String, StreamSubscription> _buildMetricsSubscriptions = {};
 
-  /// Creates a [Filters] instance, that collects a list of possible filters,
-  /// related to the [ProjectMetricsData].
-  final _projectMetricsFilters = Filters<ProjectMetricsData>();
-
   /// A [Map] that holds all loaded [ProjectMetricsData].
   Map<String, ProjectMetricsData> _projectMetrics;
 
@@ -42,6 +36,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
   /// Holds the error message that occurred during loading data.
   String _errorMessage;
+
+  /// A string that represents a value, used to filter the projects.
+  String _projectNameFilter;
 
   /// Creates the project metrics store.
   ///
@@ -55,9 +52,21 @@ class ProjectMetricsNotifier extends ChangeNotifier {
           'The use cases should not be null',
         );
 
-  /// Provides a list of project metrics, filtered by a list of added [Filter]s.
-  List<ProjectMetricsData> get projectsMetrics =>
-      _projectMetricsFilters.applyAll(_projectMetrics?.values?.toList());
+  /// Provides a list of project metrics, filtered by the project name filter.
+  List<ProjectMetricsData> get projectsMetrics {
+    final List<ProjectMetricsData> projectMetricsData =
+        _projectMetrics?.values?.toList();
+
+    if (_projectNameFilter == null || projectMetricsData == null) {
+      return projectMetricsData;
+    }
+
+    return projectMetricsData
+        .where((project) => project.projectName
+            .toLowerCase()
+            .contains(_projectNameFilter.toLowerCase()))
+        .toList();
+  }
 
   /// Provides an error description that occurred during loading metrics data.
   String get errorMessage => _errorMessage;
@@ -80,10 +89,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Add a specific [Filter] and filter a list of the [ProjectMetricsData]
-  /// according to the filter.
-  void addFilter(Filter<ProjectMetricsData> filter) {
-    _projectMetricsFilters.addFilter(filter);
+  /// Filters a list of projects, according to the [value] string.
+  void filterByProjectName(String value) {
+    _projectNameFilter = value;
     notifyListeners();
   }
 
