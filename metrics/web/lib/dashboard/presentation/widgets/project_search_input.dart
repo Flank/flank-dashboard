@@ -6,7 +6,7 @@ import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.da
 import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
 
-/// Display a custom [TextField] with ability to search across projects.
+/// [TextField] with the ability to search across projects.
 class ProjectSearchInput extends StatefulWidget {
   @override
   _ProjectSearchInputState createState() => _ProjectSearchInputState();

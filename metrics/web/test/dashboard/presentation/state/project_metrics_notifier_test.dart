@@ -349,7 +349,7 @@ void main() {
     );
 
     test(
-        ".filterByProjectName() returns filtered list of the project metrics according to the given value",
+        ".filterByProjectName() filters list of the project metrics according to the given value",
         () async {
       final expectedProjectMetrics = [
         projectMetricsNotifier.projectsMetrics.last
@@ -370,7 +370,7 @@ void main() {
     });
 
     test(
-        ".filterByProjectName() returns a list of the project metrics without changes if the given value is null",
+        ".filterByProjectName() doesnt't apply filters to the list of the project metrics if the given value is null",
         () {
       final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
 

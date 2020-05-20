@@ -97,7 +97,7 @@ void main() {
         );
 
         test("shows a search project input", () async {
-          await driver.waitFor(find.text(CommonStrings.searchForProject));
+          await driver.waitFor(find.byType('ProjectSearchInput'));
         });
       });
     },

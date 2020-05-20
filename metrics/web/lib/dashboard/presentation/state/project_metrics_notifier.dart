@@ -37,7 +37,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Holds the error message that occurred during loading data.
   String _errorMessage;
 
-  /// A string that represents a value, used to filter the projects.
+  /// Optional filter value that represents a part (or full) project name used to limit the displayed data.
   String _projectNameFilter;
 
   /// Creates the project metrics store.
@@ -89,7 +89,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Filters a list of projects, according to the [value] string.
+  /// Adds project metrics filter using [value] provided.
   void filterByProjectName(String value) {
     _projectNameFilter = value;
     notifyListeners();
