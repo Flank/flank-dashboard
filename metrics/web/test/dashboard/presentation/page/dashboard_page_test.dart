@@ -12,6 +12,8 @@ import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +37,16 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(const _DashboardTestbed());
 
-        expect(find.byType(MetricsAppBar), findsOneWidget);
+        expect(find.byType(MetricsTable), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "contains a project search input",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _DashboardTestbed());
+
+        expect(find.byType(ProjectSearchInput), findsOneWidget);
       },
     );
 

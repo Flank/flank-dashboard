@@ -95,6 +95,23 @@ void main() {
             await driver.waitFor(find.byType('BuildResultBarGraph'));
           },
         );
+
+        test("shows a search project input", () async {
+          await driver.waitFor(find.byType('ProjectSearchInput'));
+        });
+
+        test("project search input filters list of projects", () async {
+          await driver.waitForAbsent(
+            find.text(DashboardStrings.noConfiguredProjects),
+          );
+
+          await driver.tap(find.byType('ProjectSearchInput'));
+          await driver.enterText('_test_filters_project_name_');
+
+          await driver.waitFor(
+            find.text(DashboardStrings.noConfiguredProjects),
+          );
+        });
       });
     },
   );

@@ -37,6 +37,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Holds the error message that occurred during loading data.
   String _errorMessage;
 
+  /// Optional filter value that represents a part (or full) project name used to limit the displayed data.
+  String _projectNameFilter;
+
   /// Creates the project metrics store.
   ///
   /// The provided use cases should not be null.
@@ -49,9 +52,21 @@ class ProjectMetricsNotifier extends ChangeNotifier {
           'The use cases should not be null',
         );
 
-  /// Provides a list of project metrics.
-  List<ProjectMetricsData> get projectsMetrics =>
-      _projectMetrics?.values?.toList();
+  /// Provides a list of project metrics, filtered by the project name filter.
+  List<ProjectMetricsData> get projectsMetrics {
+    final List<ProjectMetricsData> projectMetricsData =
+        _projectMetrics?.values?.toList();
+
+    if (_projectNameFilter == null || projectMetricsData == null) {
+      return projectMetricsData;
+    }
+
+    return projectMetricsData
+        .where((project) => project.projectName
+            .toLowerCase()
+            .contains(_projectNameFilter.toLowerCase()))
+        .toList();
+  }
 
   /// Provides an error description that occurred during loading metrics data.
   String get errorMessage => _errorMessage;
@@ -71,6 +86,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Unsubscribes from projects and it's metrics.
   Future<void> unsubscribeFromProjects() async {
     await _cancelSubscriptions();
+    notifyListeners();
+  }
+
+  /// Adds project metrics filter using [value] provided.
+  void filterByProjectName(String value) {
+    _projectNameFilter = value;
     notifyListeners();
   }
 
