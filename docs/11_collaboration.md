@@ -42,7 +42,7 @@ A team works on one project at a time to enable focus.
 
 Each sprint, select a buddy.
 
-Every task should have at least two people. Two people working on the task ensures the task gets to Done quickly. There's no single point of failure. Cross training is another valuable aspect of the buddy system. Code reviews will be faster as the buddy doesn't have to context switch to review the code.
+Every task should have at least two people. Two people working on the task ensures the task gets to Done quickly. There's no single point of failure. Cross training is another valuable aspect of the buddy system. Code reviews will be faster as the buddy doesn't have to context switch to review the code. Having a buddy working on a task provides emotional support and  psychological safety as there's two people responsible for completing the work.
 
 Work on one task at a time.
 
