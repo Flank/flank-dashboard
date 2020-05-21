@@ -1,5 +1,5 @@
 # Metrics Web module architecture
-> Summary of the proposed change
+> Summary of the proposed change.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -17,57 +17,57 @@
 > Explain and diagram the technical design.
 
 ## Clean architecture fundamentals
-> Explain the basic principles of the [Screaming architecture](https://blog.cleancoder.com/uncle-bob/2011/09/30/Screaming-Architecture.html)
+> Explain the basic principles of the [Screaming architecture](https://blog.cleancoder.com/uncle-bob/2011/09/30/Screaming-Architecture.html).
 
-> Explain what is the application layers and why do we need it
+> Explain what are the application layers and why do we need them.
 
-> Explain the clean architecture dependency rule
+> Explain the clean architecture dependency rule.
 
 ## Metrics Web Application modules
-> Explain the components of the application module
+> Explain the components of the application module.
 
-> List all current modules
+> List all current modules.
 
 ## Clean architecture in the Metrics Web Application
-> Explain the way we implementing the clean architecture in the Metrics Web Application
+> Explain the way we are implementing the clean architecture in the Metrics Web Application.
 
-> Add the abstract class diagram with packages that will explain the main class and layers relationships
+> Add the abstract class diagram with packages that will explain the main class and layers relationships.
 
 ## Metrics Web Application data layer
-> Explain what a `data` layer is and what it consists of in terms of the Metrics Web Application
+> Explain what a `data` layer is and what it consists of in terms of the Metrics Web Application.
 
-> Explain what is a `model`
+> Explain what a `model` is.
 
-> Explain what is a `repository`
+> Explain what a `repository` is.
 
 ## Metrics Web Application domain layer
-> Explain what a `domain` layer is and what it consists of in terms of the Metrics Web Application
+> Explain what a `domain` layer is and what it consists of in terms of the Metrics Web Application.
 
-> Explain what is an `entity`
+> Explain what an `entity` is.
 
-> Explain what is a `Use Case`
+> Explain what a `Use Case` is.
 
-> Explain why does a `domain` contain a `repository` as well
+> Explain why a `domain` contains a `repository` as well.
 
 ## Metrics Web Application presentation layer
 > Explain what a `presentation` layer is and what it consists of in terms of the Metrics Web Application
 
-> Explain what is a `model (view model)`
+> Explain what a `model (view model)` is.
 
-> Explain what is a `page/widget`
+> Explain what a `page/widget` is.
 
-> Explain what is a `state`
+> Explain what a `state` is.
 
 ## Communication between layers
-> Explain and diagram how does these three layers work together more detailed
+> Explain and diagram how do these three layers work together more detailed.
 
-> Explain how does the `presentation` layer work with `domain` layer and how the `domain` layer works with `data` layer
+> Explain how the `presentation` layer works with the `domain` layer and how the `domain` layer works with the `data` layer.
 
-1. Add data flow diagram explaining data migrations and transformations in a context of layers. 
+1. Add a data flow diagram explaining data migrations and transformations in the context of layers.
     `data layer(repo)` -> `domain(use case)` -> `presentation(store)` -> `view(UI)` and vice-versa
 
 # Package structure
-> Explain and diagram the Metrics Web Application package structure
+> Explain and diagram the Metrics Web Application package structure.
 
 # Dependencies
 > What is the project blocked on?
@@ -77,7 +77,7 @@ No blockers.
 > What will be impacted by the project?
 
 # Alternatives Considered
-> Summarize alternative designs (pros & cons)
+> Summarize alternative designs (pros & cons).
 
 # Results
 > What was the outcome of the project?

@@ -1,5 +1,5 @@
-# Metrics Web presentation layer architecture architecture.
-> Summary of the proposed change
+# Metrics Web presentation layer architecture.
+> Summary of the proposed change.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -14,34 +14,34 @@
 > Identify what's not in scope.
 
 # Design
-> Explain and diagram the technical design
+> Explain and diagram the technical design.
 
-## The main components of presentation layer
+## The main components of the presentation layer
 
 ### The main principles of the view model
-> Explain what is the `view model`.
+> Explain what the `view model` is.
 
-> Explain difference between a `view model` and an `entity`
+> Explain a difference between a `view model` and an `entity`.
 
-> Explain the main parts of the `view model`
+> Explain the main parts of the `view model`.
 
-> Explain the main responsibilities of the `view model` and where to use it
+> Explain the main responsibilities of the `view model` and where to use it.
 
 ### What is the state and why do we need it
-> Explain what is the `state` of the module
+> Explain what the `state` of the module is.
 
-> Explain main responsibilities of the `state`
+> Explain the main responsibilities of the `state`.
 
-### Widget creation (?)
-> Explain difference between `low level` and `high level` widgets
+### Widget creation
+> Explain the difference between `low level` and `high level` widgets.
 
-> Explain the way of using the `strings` in the widgets and where to place them
+> Explain the way of using the `strings` in the widgets and where to place them.
 
-> Explain main principles of creating/editing widgets 
+> Explain the main principles of creating/editing widgets.
 
 [link to widget structure doc.]()
 
-## Widget structure (?)
+## Widget structure
 > Create the class diagram explaining the structure of widgets.
 
 > Explain the package structure of the presentation layer
