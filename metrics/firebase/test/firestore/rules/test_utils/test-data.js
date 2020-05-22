@@ -14,6 +14,17 @@ exports.projects = {
   },
 };
 
+const projectGroups = {
+  "project_groups/1": {
+    name: "project_group_1",
+    projectIds: ["1", "2"],
+  },
+  "project_groups/2": {
+    name: "project_group_2",
+    projectIds: ["1"],
+  },
+};
+
 /** A list of test builds */
 const builds = {
   "build/1": {
@@ -24,7 +35,7 @@ const builds = {
     workflowName: "workflow",
     duration: 234,
     url: "url1",
-    coverage: 0.0
+    coverage: 0.0,
   },
   "build/2": {
     projectId: "2",
@@ -34,14 +45,20 @@ const builds = {
     workflowName: "workflow",
     duration: 345,
     url: "url2",
-    coverage: 1.0
+    coverage: 1.0,
   },
 };
 
+exports.projectGroups = projectGroups;
 exports.builds = builds;
 
 /** A firebase user needed for tests */
 exports.user = { uid: "uid" };
+
+/** Get a test project group */
+exports.getProjectGroup = function () {
+  return JSON.parse(JSON.stringify(projectGroups["project_groups/1"]));
+};
 
 /** Get a test build */
 exports.getBuild = function () {
