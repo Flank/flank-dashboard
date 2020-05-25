@@ -11,7 +11,9 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
   @override
   Widget build(BuildContext context) {
     return MetricsScaffold(
-      body: ProjectGroupCardList(),
+      body: Center(
+        child: ProjectGroupCardList(),
+      ),
     );
   }
 }
