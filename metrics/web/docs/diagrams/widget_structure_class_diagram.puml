@@ -1,0 +1,70 @@
+@startuml widget_structure_class_diagram
+top to bottom direction
+
+package common.presentation.widgets {
+    class CoolGraph {
+        coolPoints : List<Point>
+        backgroundColor : Color
+        accentColor : Color
+        primaryColor : Color
+        coolGraphPadding : EdgeInsets
+    }
+}
+
+package cool_module.presentation {
+    package state {
+        class CoolNotifier {
+            awesomeModel : AwesomeViewModel
+            coolModel : CoolViewModel
+
+            loadAwesomeData() : void
+            loadCoolData() : void
+            notifyListeners() : void
+        }
+    }
+
+    package model {
+        class CoolViewModel {
+            coolPoints : List<Point>
+        }
+
+        class AwesomeViewModel {
+            awesomePoints : List<Point>
+            averageValue : double
+        }
+    }
+
+    package widgets {
+        class CoolWidget {
+            coolModel : CoolViewModel
+        }
+
+        class AwesomeWidget {
+            awesomeModel : AwesomeViewModel
+        }
+    }
+
+    package strings {
+        class CoolStrings {
+            {static} coolTitle : String
+            {static} awesomeTitle : String
+            {static} coolDescription : String
+            {static} awesomeDescription : String
+            {static} terrifyingErrorMessage : String
+        }
+    }
+}
+
+widgets ...> common.presentation.widgets : uses
+widgets .up.> state : uses
+
+CoolNotifier o.down. AwesomeViewModel : provides
+CoolNotifier o.down. CoolViewModel : provides
+
+CoolWidget ..> CoolStrings : uses
+CoolWidget *.up. CoolViewModel
+
+AwesomeWidget *.up. AwesomeViewModel
+AwesomeWidget ..> CoolStrings : uses
+
+@enduml
