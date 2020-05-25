@@ -128,6 +128,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       if (projectMetrics.projectName != project.name) {
         projectMetrics = projectMetrics.copyWith(
           projectName: project.name,
+         //todo projectId: projectId,
         );
       }
 

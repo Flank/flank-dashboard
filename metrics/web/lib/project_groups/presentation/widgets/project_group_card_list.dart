@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
 
 class ProjectGroupCardList extends StatefulWidget {
@@ -11,18 +10,17 @@ class _ProjectGroupCardListState extends State<ProjectGroupCardList> {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 10.0,
-      runSpacing: 20.0,
-      children: <Widget>[
-        const ProjectGroupCard(
-          projectGroupName: 'Android',
+      spacing: 16.0, // gap between adjacent chips
+      runSpacing: 16.0, // gap between lines
+      children: const <Widget>[
+        ProjectGroupCard(
+          projectGroupName: 'AndroidAndroidAndroidAndroidAndroidAndroidAndroidAndroid',
           projectsCount: 0,
         ),
-        const ProjectGroupCard(
+        ProjectGroupCard(
           projectGroupName: 'IOS',
           projectsCount: 3,
         ),
-        AddProjectGroupCard(),
       ],
     );
   }

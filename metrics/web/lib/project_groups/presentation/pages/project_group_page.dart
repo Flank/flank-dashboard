@@ -11,8 +11,28 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
   @override
   Widget build(BuildContext context) {
     return MetricsScaffold(
-      body: Center(
-        child: ProjectGroupCardList(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 124.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.only(bottom: 32.0),
+              child: Text(
+                'Project Groups',
+                style: TextStyle(fontSize: 32.0),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ProjectGroupCardList(),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
