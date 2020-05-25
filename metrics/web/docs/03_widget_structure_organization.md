@@ -99,7 +99,7 @@ class ProjectTileViewModel {
   final PercentMetricViewModel coverage;
   final PercentMetricViewModel stability;
 
-  ProjectTileViewModel1({
+  ProjectTileViewModel({
     this.projectName,
     this.lastBuildStatus,
     this.performanceMetric,
@@ -176,7 +176,7 @@ Pros:
 - Reduces the number of changes to make one widget looks different.
 
 Cons: 
-- Increases code duplication in realization and tests.
+- Increases code duplication in implementation and tests.
 - Increases the amount of code.
 
 Another way is to create a single configurable high-level widget for displaying these metrics. Let's consider the pros & cons of this approach:
