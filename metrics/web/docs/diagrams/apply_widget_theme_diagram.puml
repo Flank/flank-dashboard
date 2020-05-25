@@ -1,0 +1,21 @@
+@startuml apply_widget_theme_diagram
+(*) -> Apply theme to the CoolWidget
+if Is a low-level widget? then
+--> [Yes] ===STEP1===
+else
+---> [No] if Needs custom theme data? then
+--> [Yes] Add a CoolWidgetThemeData
+--> Apply a CoolWidgetThemeData
+--> ===STEP2===
+else
+--> [No] ===STEP1===
+endif
+--> Apply default widget theme
+--> ===STEP2===
+if Can be inactive? then
+--> [Yes] Apply inactive theme to inactive state
+--> (*)
+else
+--> [No] (*)
+endif
+@enduml

@@ -1,0 +1,26 @@
+@startuml create_widget_activity_diagram
+(*) -> CoolWidget
+if Any child widgets? then
+--> [Yes] Create Composite view model
+--> ===STEP1===
+else
+--> [No] Create Plain view model
+--> ===STEP1===
+endif
+--> if Any common widgets to use? then
+--> [Yes] Use the existing common widget
+--> ===STEP2===
+else
+--> [No] Try to create a new common widget to use
+--> ===STEP2===
+endif
+--> Add the theme data for a new widget
+if Any new common widgets? then
+--> [Yes] Apply default theme to them
+--> ===STEP3===
+else
+--> [No] ===STEP3===
+--> Extract strigs if any
+--> (*)
+endif
+@enduml

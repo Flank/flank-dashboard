@@ -1,0 +1,37 @@
+@startuml metrics_theme_structure_diagram
+    class MetricsThemeBuilder {
+        lightTheme : MetricsThemeData
+        darkTheme : MetricsThemeData
+    }
+
+    class MetricsTheme {
+        themeData : MetricsThemeData
+        {static} of(BuildContext) : MetricsThemeData
+    }
+
+    class MetricsThemeData {
+        metricWidgetTheme : MetricWidgetTheme
+        inactiveWidgetTheme : MetricWidgetTheme
+        concreteMetricsTheme : ConcreteMetricsTheme
+    }
+
+    class MetricWidgetTheme {
+        primaryColor : Color
+        accentColor : Color
+        backgroundColor : Color
+        textStyle : TextStyle
+    }
+
+    class ConcreteMetricsTheme {
+        successfulColor : Color
+        failedColor : Color
+        textStyle : TextStyle
+    }
+
+    MetricsThemeBuilder ..> MetricsThemeData : uses
+    MetricsTheme ..> MetricsThemeData : provides
+    MetricsThemeData ..> MetricWidgetTheme : uses
+    MetricsThemeData ..> ConcreteMetricsTheme : uses
+    ConcreteWidget ..> MetricsTheme : uses
+    ConcreteWidget ..> ConcreteMetricsTheme : applies
+@enduml
