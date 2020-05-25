@@ -163,7 +163,7 @@ There are a few main steps of adding a new widget to the Metrics Web Application
 
 The following diagram describes the above process:
 
-![Create Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_design_articafts_planning/metrics/web/docs/diagrams/create_widget_activity_diagram.puml)
+![Create Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/create_widget_activity_diagram.puml)
 
 The next question we should answer is: "Should we create a separate widget for each UI component?".
 For example, we have one low-level widget that displays the circular percentage chart, and we have two metrics that should be displayed with this chart. The question is - should we create a separate widget for each of these metrics.
@@ -203,7 +203,7 @@ The main idea of the Metrics Theme is inspired by Flutter default MaterialTheme 
 
 See the diagram below for a more detailed description of metrics theme structure: 
 
-![Metrics Theme Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_design_articafts_planning/metrics/web/docs/diagrams/metrics_theme_structure_diagram.puml)
+![Metrics Theme Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/metrics_theme_structure_diagram.puml)
 
 ### Applying a Theme to a widget appearance
 > Explain the algorithm of applying the metrics theme to the widgets.
@@ -214,7 +214,7 @@ If a high-level widget requires the configurations of its appearance depends on 
 
 As we've noticed above, the low-level widgets should apply the `MetricsThemeData.defaultWidgetTheme` by default. This means that the low-level widget should have the color params in the constructor, but if no colors passed, it should use the default metric theme (`defaultWidgetTheme`). Also, the low-level widgets, commonly, should not have any logic of applying the themes, for example, it should not decide if it is in an `active` or `inactive` state or something like this.
 
-![Apply Widget Theme Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_design_articafts_planning/metrics/web/docs/diagrams/apply_widget_theme_diagram.puml)
+![Apply Widget Theme Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/apply_widget_theme_diagram.puml)
 
 ### Adding a new Theme
 > Explain the algorithm of adding new theme components for new widgets.
@@ -227,7 +227,7 @@ To add a new theme to the `MetricsThemeData` you should follow the next steps:
 
 That's all! Now you can use your new theme data in widgets, calling the `MetricsTheme.of(context).newThemeData` method.
 
-![Add Theme Data Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_design_articafts_planning/metrics/web/docs/diagrams/add_theme_data_diagram.puml)
+![Add Theme Data Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/add_theme_data_diagram.puml)
 
 # Dependencies
 > What is the project blocked on?
