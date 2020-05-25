@@ -34,7 +34,7 @@ To make the Metrics Web Application clear, we have to create a document that wil
 ### The main principles of the view model
 > Explain what the `view model` is.
 
-A `view model` is the class that implements the humble object pattern and used for data transfer from the presenter to the view.
+A `view model` is a class that implements the humble object pattern and used for data transfer from the presenter to the view.
 
 > Explain a difference between a `view model` and an `entity`.
 
@@ -42,13 +42,13 @@ Unlike an `entity`, which can contain the critical business rules and business d
 
 > Explain the main parts of the `view model`.
 
-A `view model` can consist from the Dart's native objects like `int`, `String`, `Point`, etc and from other `view model` classes. Only fields that used for storing some data are allowed - that means that `view model` classes cannot have any methods neither static nor public. Generally, the static fields are also should be avoided, but if they helps to simplify code structure and reduce the boilerplate code then the static fields are allowed. 
+A `view model` can consist of Dart's native objects like `int`, `String`, `Point`, etc, and other `view model` classes. Only fields that used for storing some data are allowed - that means that `view model` classes cannot have any methods neither static nor public. Generally, the static fields are also should be avoided, but if they help to simplify code structure and reduce the boilerplate code - then the static fields are allowed. 
 
 > Explain the main responsibilities of the `view model` and where to use it.
 
 A `view model`'s main responsibility is to provide data to the view. It should be as simple as possible and contain only data that will be displayed. The `view model` should be constructed in the presenter of the presentation layer (`ChangeNotifier` in our case) and should not depend on any `entities`. 
 
-For the more detailed overview in a `view-model` take a look at the [Widget structure organization](03_widget_structure_organization.md) document. 
+For the more detailed overview in a `view-model`, take a look at the [Widget structure organization](03_widget_structure_organization.md) document. 
 
 ### What is the state and why do we need it
 > Explain what the `state` of the module is.
@@ -68,7 +68,7 @@ There are three main types of the UI components in the Metrics Web Application:
 
 > Explain the difference between `page` and `widget`.
 
-A `page` is a very high-level widget that stands for the web-page (or screen) and combines all the UI units together. Neither the `high-level widgets` nor `low-level widgets` know where they are used and placed - this is what the `page` purpose in. Each `feature` should consist at least of one page meaning that the feature is presented by the several pages in the UI. 
+A `page` is a very high-level widget that stands for the web-page (or screen) and combines all the UI units together. Neither the `high-level widgets` nor `low-level widgets` know where they are used and placed - this is what the `page` purpose in. Each `feature` should consist at least of one page, meaning that the feature is presented by several pages in the UI. 
 
 > Explain the difference between `low level` and `high level` widgets.
 
@@ -79,6 +79,13 @@ A `page` is a very high-level widget that stands for the web-page (or screen) an
 2. High-level widgets
 
 `High-level widgets` are used to actually display the data for a user. Commonly, these widgets use `low-level widgets` as a building component to create the required view. These widgets should accept the `view model` from which the widget will display the information. Also, it can accept the `theme strategy` or any other params that could improve the testability of this widget and reduce the business logic in it.
+
+So, to sum up: 
+
+3. Page - the widget that properly combines the high-level widgets. Represents the web page or screen of the application.
+2. High-level widgets - the widgets that consist of low-level widgets and properly configures them. Should accept the `view model` on input. Can obtain any other params like `ThemeStrategy` to make it more testable.
+1. Low-level widgets - the configurable widgets that simply displays the data. Should accept the Dart's basic types (sometimes can accept types from any UI packages). Should be highly reusable. Should be placed to `common/presentation` package.
+
 
 > Explain the way of using the `strings` in the widgets and where to place them.
 
@@ -117,7 +124,7 @@ The package structure is also an important part of the Metrics Web Application p
 >       * widgets/
 >           * strategy/
 
-So, each module's presentation layer consists of `model`, `state`, `pages`, `strings`, and `widgets` packages. The `widgets` package can be divided into several packages that will simplify the navigation. 
+So, each module's presentation layer consists of the `model`, `state`, `pages`, `strings`, and `widgets` packages. The `widgets` package can be divided into several packages that will simplify the navigation. 
 
 # Dependencies
 > What is the project blocked on?
@@ -127,7 +134,7 @@ No blockers.
 > What will be impacted by the project?
 
 - The implementation of presentation layer components of the Metrics Web Application is impacted.
-- Since a developer should consider creating low level widgets and then use it for creating the desired module-specific one, hence the process of delivering a presentation layer component is impacted. 
+- Since a developer should consider creating low-level widgets and then use it for creating the desired module-specific one, hence the process of delivering a presentation layer component is impacted. 
 
 # Testing
 > How will the project be tested?
@@ -140,7 +147,7 @@ The presentation layer will be unit-tested and integration-tested using the core
 - Not document the presentation layer of the Metrics Web Application:
     - Cons: 
         - As the application grows, the future development of new modules and maintaining the old ones may be tricky without any document describing the presentation layer.
-        - As there is no explanation in differences between top-level and low-level widgets in a context of the Metrics Web Application, newcomers will be required to investigate this by themselves. This point makes the Metrics Web Application entry threshold quite hight.
+        - As there is no explanation in differences between top-level and low-level widgets in the context of the Metrics Web Application, newcomers will be required to investigate this by themselves. This point makes the Metrics Web Application entry threshold quite hight.
 
 # Results
 > What was the outcome of the project?
