@@ -190,7 +190,7 @@ Cons:
 - Makes your code less maintainable.
 - Increases amount of changes to make one widget looks different.
 
-Conclusion
+So, it seems to be better to create a separate widget for each view even if these widgets look identical currently. It will allow us to simply change one of them later and increase maintainability.
 
 ## Metrics Theme guidelines
 
@@ -210,7 +210,7 @@ See the diagram below for a more detailed description of metrics theme structure
 
 Them main concept of applying the theme to the widgets is to apply the `defaultWidgetTheme` theme in the low-level widgets by default and give an ability to pass the colors to widget's constructor to change the colors of this widget. So, if we have some low-level widget that applies the `defaultWidgetTheme` and we have some high-level widget that uses the low-level widget and should apply another theme we are getting this theme in the high-level widget, using the `MetricsTheme.of(context)` method, and apply it to the low-level widget, using the constructor params. 
 
-If a high-level widget requires the configurations of its appearance depends on the application theme (light or dark) then you should consider creating a theme for this widget. This means that if the widget has specific colors, text styles, or other theme-related components than these specific components should be moved to the theme data for this widget (see [Adding a new Theme](#Adding-a-new-Theme)). Otherwise, this widget should use the default metrics widgets theme. Moreover, if this widget supports `active` \ `inactive` states then it should use the default inactive metrics widgets theme for its `inactive` state. Hence, if the widget uses low-level widgets that support `active` \ `inactive` states then it should apply the default inactive metrics widgets theme to them as well.
+If a high-level widget requires the configurations of its appearance depends on the application theme (light or dark) then you should consider creating a theme for this widget. This means that if the widget has specific colors, text styles, or other theme-related components than these specific components should be moved to the theme data for this widget (see [Adding a new Theme](#Adding-a-new-Theme). Otherwise, this widget should use the default metrics widgets theme. Moreover, if this widget supports `active` \ `inactive` states then it should use the default inactive metrics widgets theme for its `inactive` state. Hence, if the widget uses low-level widgets that support `active` \ `inactive` states then it should apply the default inactive metrics widgets theme to them as well.
 
 As we've noticed above, the low-level widgets should apply the `MetricsThemeData.defaultWidgetTheme` by default. This means that the low-level widget should have the color params in the constructor, but if no colors passed, it should use the default metric theme (`defaultWidgetTheme`). Also, the low-level widgets, commonly, should not have any logic of applying the themes, for example, it should not decide if it is in an `active` or `inactive` state or something like this.
 
