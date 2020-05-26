@@ -23,7 +23,7 @@ describe("Project groups collection rules", async function () {
    * Common tests
    */
 
-  it("does not allow to create a project with not allowed fields", async () => {
+  it("does not allow to create a project group with not allowed fields", async () => {
     await assertFails(
       authenticatedApp.collection(collectionName).add({
         name: "name",
@@ -34,27 +34,33 @@ describe("Project groups collection rules", async function () {
   });
 
   it("does not allow to create a project group without a name", async () => {
-    await assertFails(authenticatedApp.collection(collectionName).add({}));
+    await assertFails(
+      authenticatedApp.collection(collectionName).add({
+        projectIds: [],
+      })
+    );
   });
 
   it("does not allow to create a project group with a name having other than a string value", async () => {
     let names = [false, 123, []];
-    let projectIds = [];
 
     names.forEach(async (name) => {
       await assertFails(
-        authenticatedApp.collection(collectionName).add({ name, projectIds })
+        authenticatedApp
+          .collection(collectionName)
+          .add({ name, projectIds: [] })
       );
     });
   });
 
   it("does not allow to create a project group with a projectIds having other than a list value", () => {
-    let name = "test";
     let projectIdsValues = [123, false, "test"];
 
     projectIdsValues.forEach(async (projectIds) => {
       await assertFails(
-        authenticatedApp.collection(collectionName).add({ name, projectIds })
+        authenticatedApp
+          .collection(collectionName)
+          .add({ name: "test", projectIds })
       );
     });
   });
