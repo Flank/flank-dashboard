@@ -34,8 +34,10 @@ class MetricsDrawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Project groups'),
-            onTap: () =>
-                Navigator.pushNamed(context, RouteGenerator.projectGroupPage),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, RouteGenerator.projectGroupPage);
+            },
           ),
           ListTile(
             title: const Text(CommonStrings.logOut),

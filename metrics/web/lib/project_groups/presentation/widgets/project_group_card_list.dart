@@ -4,6 +4,8 @@ import 'package:metrics/project_groups/presentation/state/project_groups_notifie
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
 import 'package:provider/provider.dart';
 
+import 'add_project_group_card.dart';
+
 class ProjectGroupCardList extends StatefulWidget {
   @override
   _ProjectGroupCardListState createState() => _ProjectGroupCardListState();
@@ -39,8 +41,12 @@ class _ProjectGroupCardListState extends State<ProjectGroupCardList> {
             mainAxisSpacing: 20,
             childAspectRatio: 2.0,
           ),
-          itemCount: projectGroupViewModels.length,
+          itemCount: projectGroupViewModels.length + 1,
           itemBuilder: (context, index) {
+            if (index == projectGroupViewModels.length) {
+              return AddProjectGroupCard();
+            }
+
             final projectGroupViewModel = projectGroupViewModels[index];
 
             return ProjectGroupCard(

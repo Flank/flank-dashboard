@@ -7,6 +7,8 @@ import 'package:metrics/project_groups/data/model/project_group_data.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:provider/provider.dart';
 
+import '../state/project_groups_notifier.dart';
+
 class ProjectGroupDialog extends StatefulWidget {
   final ProjectGroupData projectGroupData;
 
@@ -140,8 +142,15 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5.0),
             ),
-            onPressed: () {
-              print('save');
+            onPressed: () async {
+              final projectGroupNotifier =
+                  Provider.of<ProjectGroupsNotifier>(context, listen: false);
+              await projectGroupNotifier.saveProjectGroups(
+                widget.projectGroupData?.id,
+                groupNameController.text,
+                projectIds,
+              );
+              Navigator.pop(context);
             },
             child: Text(
               widget.projectGroupData == null
