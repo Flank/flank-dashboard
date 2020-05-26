@@ -122,13 +122,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     for (final project in newProjects) {
       final projectId = project.id;
 
-      ProjectMetricsData projectMetrics =
-          projectsMetrics[projectId] ?? const ProjectMetricsData();
+      ProjectMetricsData projectMetrics = projectsMetrics[projectId] ??
+          ProjectMetricsData(projectId: projectId);
 
       if (projectMetrics.projectName != project.name) {
         projectMetrics = projectMetrics.copyWith(
           projectName: project.name,
-         //todo projectId: projectId,
         );
       }
 

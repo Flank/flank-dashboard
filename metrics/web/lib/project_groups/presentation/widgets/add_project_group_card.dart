@@ -11,9 +11,7 @@ class AddProjectGroupCard extends StatelessWidget {
       onTap: () async {
         await showDialog(
           context: context,
-          child: ProjectGroupDialog(
-            title: ProjectGroupsStrings.addProjectGroup,
-          ),
+          child: const ProjectGroupDialog(),
         );
       },
       child: Column(

@@ -10,7 +10,6 @@ class _ProjectGroupCardListState extends State<ProjectGroupCardList> {
   @override
   Widget build(BuildContext context) {
     return GridView(
-      padding: const EdgeInsets.all(5.0),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: 20,
