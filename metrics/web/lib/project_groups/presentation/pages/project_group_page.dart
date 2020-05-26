@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
+import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card_list.dart';
+import 'package:provider/provider.dart';
 
 class ProjectGroupPage extends StatefulWidget {
   @override
@@ -9,6 +11,18 @@ class ProjectGroupPage extends StatefulWidget {
 }
 
 class _ProjectGroupPageState extends State<ProjectGroupPage> {
+  ProjectGroupsNotifier _projectGroupsNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _projectGroupsNotifier =
+        Provider.of<ProjectGroupsNotifier>(context, listen: false);
+
+    _projectGroupsNotifier.subscribeToProjectGroups();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MetricsScaffold(
@@ -31,5 +45,12 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _projectGroupsNotifier.unsubscribeFromProjectGroups();
+
+    super.dispose();
   }
 }

@@ -5,7 +5,9 @@ import 'package:metrics/project_groups/domain/usecases/parameters/project_group_
 /// The use case that provides the ability to add a project group.
 class AddProjectGroupUseCase
     implements UseCase<Future<void>, ProjectGroupAddParam> {
-  ProjectGroupRepository _repository;
+  final ProjectGroupRepository _repository;
+
+  const AddProjectGroupUseCase(this._repository) : assert(_repository != null);
 
   @override
   Future<void> call(ProjectGroupAddParam params) {

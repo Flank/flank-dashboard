@@ -11,8 +11,9 @@ import 'package:metrics/project_groups/domain/usecases/parameters/project_group_
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 
-class ProjectGroupNotifier extends ChangeNotifier {
+class ProjectGroupsNotifier extends ChangeNotifier {
   final ReceiveProjectGroupUpdates _receiveProjectGroupUpdates;
   final UpdateProjectGroupUseCase _updateProjectGroupUseCase;
   final DeleteProjectGroupUseCase _deleteProjectGroupUseCase;
@@ -24,16 +25,16 @@ class ProjectGroupNotifier extends ChangeNotifier {
 
   String _errorMessage;
 
-  ProjectGroupNotifier(
+  ProjectGroupsNotifier(
     this._receiveProjectGroupUpdates,
+    this._addProjectGroupUseCase,
     this._updateProjectGroupUseCase,
     this._deleteProjectGroupUseCase,
-    this._addProjectGroupUseCase,
   ) : assert(
           _receiveProjectGroupUpdates != null &&
+              _addProjectGroupUseCase != null &&
               _updateProjectGroupUseCase != null &&
-              _deleteProjectGroupUseCase != null &&
-              _addProjectGroupUseCase != null,
+              _deleteProjectGroupUseCase != null,
           'The use cases should not be null',
         );
 
@@ -113,8 +114,11 @@ class ProjectGroupNotifier extends ChangeNotifier {
   void _errorHandler(error) {
     if (error is PlatformException) {
       _errorMessage = error.message;
-      notifyListeners();
+      return notifyListeners();
     }
+
+    _errorMessage = ProjectGroupsStrings.unknownErrorMessage;
+    return notifyListeners();
   }
 
   @override

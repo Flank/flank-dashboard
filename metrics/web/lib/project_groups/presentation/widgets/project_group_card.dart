@@ -3,18 +3,17 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_card.dart';
 import 'package:metrics/project_groups/data/model/project_group_data.dart';
+import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
 class ProjectGroupCard extends StatelessWidget {
-  final String projectGroupName;
-  final int projectsCount;
+  final ProjectGroupViewModel projectGroupViewModel;
 
   const ProjectGroupCard({
     Key key,
-    this.projectGroupName,
-    this.projectsCount,
+    @required this.projectGroupViewModel,
   }) : super(key: key);
 
   @override
@@ -27,16 +26,14 @@ class ProjectGroupCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       elevation: 0.0,
       title: Text(
-        projectGroupName,
+        projectGroupViewModel.name,
         overflow: TextOverflow.ellipsis,
         softWrap: false,
         maxLines: 1,
         style: const TextStyle(fontSize: 24.0),
       ),
       titlePadding: const EdgeInsets.all(8.0),
-      subtitle: Text(projectsCount > 0
-          ? ProjectGroupsStrings.getProjectsCount(projectsCount)
-          : ProjectGroupsStrings.noProjects),
+      subtitle: Text(_projectGroupsCount),
       subtitlePadding: const EdgeInsets.all(8.0),
       actionsPadding: const EdgeInsets.only(top: 24.0),
       actions: <Widget>[
@@ -61,5 +58,12 @@ class ProjectGroupCard extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String get _projectGroupsCount {
+    final projectsCount = projectGroupViewModel.projectIds?.length ?? 0;
+    return projectsCount == 0
+        ? ProjectGroupsStrings.noProjects
+        : ProjectGroupsStrings.getProjectsCount(projectsCount);
   }
 }

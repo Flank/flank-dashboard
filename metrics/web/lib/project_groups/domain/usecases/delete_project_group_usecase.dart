@@ -5,7 +5,10 @@ import 'package:metrics/project_groups/domain/usecases/parameters/project_group_
 /// The use case that provides the ability to delete a project group.
 class DeleteProjectGroupUseCase
     implements UseCase<Future<void>, ProjectGroupDeleteParam> {
-  ProjectGroupRepository _repository;
+  final ProjectGroupRepository _repository;
+
+  const DeleteProjectGroupUseCase(this._repository)
+      : assert(_repository != null);
 
   @override
   Future<void> call(ProjectGroupDeleteParam params) {

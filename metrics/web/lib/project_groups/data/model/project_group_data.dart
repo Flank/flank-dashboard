@@ -14,7 +14,8 @@ class ProjectGroupData extends ProjectGroup implements DataModel {
         );
 
   /// Creates the [ProjectGroupData] using the [json] and [documentId].
-  factory ProjectGroupData.fromJson(Map<String, dynamic> json, String documentId){
+  factory ProjectGroupData.fromJson(
+      Map<String, dynamic> json, String documentId) {
     return ProjectGroupData(
       id: documentId,
       name: json['name'] as String,

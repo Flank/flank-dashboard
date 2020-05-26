@@ -5,7 +5,10 @@ import 'package:metrics/project_groups/domain/usecases/parameters/project_group_
 /// The use case that provides the ability to update a project group.
 class UpdateProjectGroupUseCase
     implements UseCase<Future<void>, ProjectGroupUpdateParam> {
-  ProjectGroupRepository _repository;
+  final ProjectGroupRepository _repository;
+
+  const UpdateProjectGroupUseCase(this._repository)
+      : assert(_repository != null);
 
   @override
   Future<void> call(ProjectGroupUpdateParam params) {
