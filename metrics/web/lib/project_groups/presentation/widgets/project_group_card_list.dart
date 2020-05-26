@@ -9,12 +9,18 @@ class ProjectGroupCardList extends StatefulWidget {
 class _ProjectGroupCardListState extends State<ProjectGroupCardList> {
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 16.0, // gap between adjacent chips
-      runSpacing: 16.0, // gap between lines
+    return GridView(
+      padding: const EdgeInsets.all(5.0),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 20,
+        childAspectRatio: 2.0,
+      ),
       children: const <Widget>[
         ProjectGroupCard(
-          projectGroupName: 'AndroidAndroidAndroidAndroidAndroidAndroidAndroidAndroid',
+          projectGroupName:
+              'AndroidAndroidAndroidAndroidAndroidAndroidAndroidAndroid',
           projectsCount: 0,
         ),
         ProjectGroupCard(

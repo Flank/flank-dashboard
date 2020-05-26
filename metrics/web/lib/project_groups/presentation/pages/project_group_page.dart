@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card_list.dart';
 
 class ProjectGroupPage extends StatefulWidget {
@@ -19,17 +20,12 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
             const Padding(
               padding: EdgeInsets.only(bottom: 32.0),
               child: Text(
-                'Project Groups',
+                ProjectGroupsStrings.projectGroups,
                 style: TextStyle(fontSize: 32.0),
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ProjectGroupCardList(),
-                ),
-              ),
+              child: ProjectGroupCardList(),
             ),
           ],
         ),

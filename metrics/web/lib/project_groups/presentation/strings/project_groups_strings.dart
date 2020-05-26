@@ -1,5 +1,6 @@
 /// Holds the strings for the project groups screen.
 class ProjectGroupsStrings {
+  static const String projectGroups = 'Project Groups';
   static const String addProjectGroup = 'Add new group';
   static const String editProjectGroup = 'Edit group';
   static const String noProjects = 'No projects';

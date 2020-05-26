@@ -16,67 +16,63 @@ class ProjectGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(
-        maxWidth: 224.0,
-      ),
-      child: Card(
-        margin: EdgeInsets.zero,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  projectGroupName,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  maxLines: 1,
-                  style: const TextStyle(fontSize: 24.0),
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                projectGroupName,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+                maxLines: 1,
+                style: const TextStyle(fontSize: 24.0),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                projectsCount > 0
+                    ? ProjectGroupsStrings.getProjectsCount(projectsCount)
+                    : ProjectGroupsStrings.noProjects,
+                style: const TextStyle(
+                  fontSize: 16.0,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  projectsCount > 0
-                      ? ProjectGroupsStrings.getProjectsCount(projectsCount)
-                      : ProjectGroupsStrings.noProjects,
-                  style: const TextStyle(
-                    fontSize: 16.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  FlatButton.icon(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ProjectGroupDialog(
+                              title: ProjectGroupsStrings.editProjectGroup,
+                              projectGroupData:
+                                  const ProjectGroupData(name: 'Android'),
+                            );
+                          });
+                    },
+                    icon: Icon(Icons.edit),
+                    label: const Text(CommonStrings.edit),
                   ),
-                ),
+                  FlatButton.icon(
+                    onPressed: () {},
+                    icon: Icon(Icons.delete_outline),
+                    label: const Text(CommonStrings.delete),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 24.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    FlatButton.icon(
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return ProjectGroupDialog(
-                                title: ProjectGroupsStrings.editProjectGroup,
-                                projectGroupData: const ProjectGroupData(name: 'Android'),
-                              );
-                            });
-                      },
-                      icon: Icon(Icons.edit),
-                      label: const Text(CommonStrings.edit),
-                    ),
-                    FlatButton.icon(
-                      onPressed: () {},
-                      icon: Icon(Icons.delete_outline),
-                      label: const Text(CommonStrings.delete),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
