@@ -3,6 +3,7 @@ class ProjectGroupsStrings {
   static const String projectGroups = 'Project Groups';
   static const String addProjectGroup = 'Add new group';
   static const String editProjectGroup = 'Edit group';
+  static const String deleteProjectGroup = 'Delete group';
   static const String noProjects = 'No projects';
   static const String nameYourStrings = 'Name your group';
   static const String saveChanges = 'Save changes';

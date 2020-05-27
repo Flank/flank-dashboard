@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_card.dart';
-import 'package:metrics/project_groups/data/model/project_group_data.dart';
 import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
+import 'package:metrics/project_groups/presentation/widgets/project_group_delete_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -42,8 +42,8 @@ class ProjectGroupCard extends StatelessWidget {
             showDialog(
               context: context,
               builder: (context) {
-                return const ProjectGroupDialog(
-                  projectGroupData: ProjectGroupData(name: 'Android'),
+                return ProjectGroupDialog(
+                  projectGroupViewModel: projectGroupViewModel,
                 );
               },
             );
@@ -52,8 +52,17 @@ class ProjectGroupCard extends StatelessWidget {
           label: const Text(CommonStrings.edit),
         ),
         FlatButton.icon(
-          onPressed: () {},
-          icon: Icon(Icons.delete_outline),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return ProjectGroupDeleteDialog(
+                  projectGroupViewModel: projectGroupViewModel,
+                );
+              },
+            );
+          },
+          icon: const Icon(Icons.delete_outline),
           label: const Text(CommonStrings.delete),
         ),
       ],

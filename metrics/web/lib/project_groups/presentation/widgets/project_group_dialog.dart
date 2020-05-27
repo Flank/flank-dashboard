@@ -3,17 +3,16 @@ import 'package:metrics/common/presentation/widgets/clearable_text_field.dart';
 import 'package:metrics/common/presentation/widgets/metrics_dialog.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
-import 'package:metrics/project_groups/data/model/project_group_data.dart';
+import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
+import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:provider/provider.dart';
 
-import '../state/project_groups_notifier.dart';
-
 class ProjectGroupDialog extends StatefulWidget {
-  final ProjectGroupData projectGroupData;
+  final ProjectGroupViewModel projectGroupViewModel;
 
   const ProjectGroupDialog({
-    this.projectGroupData,
+    this.projectGroupViewModel,
   });
 
   @override
@@ -23,13 +22,16 @@ class ProjectGroupDialog extends StatefulWidget {
 class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   final TextEditingController groupNameController = TextEditingController();
   ProjectMetricsNotifier _projectMetricsNotifier;
-  final List<String> projectIds = [];
+  List<String> projectIds = [];
 
   @override
   void initState() {
     super.initState();
 
-    groupNameController.text = widget.projectGroupData?.name;
+    if (widget.projectGroupViewModel != null) {
+      groupNameController.text = widget.projectGroupViewModel?.name;
+      projectIds = [...widget.projectGroupViewModel?.projectIds];
+    }
 
     groupNameController.addListener(() {
       setState(() {});
@@ -47,7 +49,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
       padding: const EdgeInsets.all(32.0),
       maxWidth: 500.0,
       title: Text(
-        widget.projectGroupData == null
+        widget.projectGroupViewModel == null
             ? ProjectGroupsStrings.addProjectGroup
             : ProjectGroupsStrings.editProjectGroup,
         style: TextStyle(
@@ -146,14 +148,14 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
               final projectGroupNotifier =
                   Provider.of<ProjectGroupsNotifier>(context, listen: false);
               await projectGroupNotifier.saveProjectGroups(
-                widget.projectGroupData?.id,
+                widget.projectGroupViewModel?.id,
                 groupNameController.text,
                 projectIds,
               );
               Navigator.pop(context);
             },
             child: Text(
-              widget.projectGroupData == null
+              widget.projectGroupViewModel == null
                   ? ProjectGroupsStrings.createGroup
                   : ProjectGroupsStrings.saveChanges,
             ),

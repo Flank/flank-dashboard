@@ -9,7 +9,6 @@ class MetricsDialog extends StatelessWidget {
 
   final Widget title;
   final EdgeInsetsGeometry titlePadding;
-  final TextStyle titleTextStyle;
 
   final Widget content;
   final EdgeInsetsGeometry contentPadding;
@@ -26,7 +25,6 @@ class MetricsDialog extends StatelessWidget {
     this.maxWidth,
     this.title,
     this.titlePadding = EdgeInsets.zero,
-    this.titleTextStyle,
     this.content,
     this.contentPadding = EdgeInsets.zero,
     this.actions,

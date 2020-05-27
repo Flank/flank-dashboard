@@ -5,6 +5,7 @@ class CommonStrings {
   static const String searchForProject = 'Search for project...';
   static const String edit = 'Edit';
   static const String delete = 'Delete';
+  static const String cancel = 'Cancel';
 
   static String getLoadingErrorMessage(String errorMessage) =>
       "An error occurred during loading: $errorMessage";

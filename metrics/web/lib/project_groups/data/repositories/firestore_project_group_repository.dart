@@ -31,11 +31,6 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
   }
 
   @override
-  Future<void> deleteProjectGroup(String projectGroupId) {
-    return _firestore.document(projectGroupId).delete();
-  }
-
-  @override
   Future<void> updateProjectGroup(
       String projectGroupId, String projectGroupName, List<String> projectIds) {
     final projectGroupData = ProjectGroupData(
@@ -48,5 +43,13 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
         .updateData(
           projectGroupData.toJson(),
         );
+  }
+
+  @override
+  Future<void> deleteProjectGroup(String projectGroupId) {
+    return _firestore
+        .collection('project_groups')
+        .document(projectGroupId)
+        .delete();
   }
 }

@@ -71,11 +71,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   }
 
   Future<void> deleteProjectGroup(String projectGroupId) async {
-    await _deleteProjectGroupUseCase(
-      ProjectGroupDeleteParam(
-        projectGroupId,
-      ),
-    );
+    await _deleteProjectGroupUseCase(ProjectGroupDeleteParam(projectGroupId));
   }
 
   Future<void> saveProjectGroups(
