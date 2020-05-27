@@ -13,6 +13,9 @@ class AddProjectGroupCard extends StatelessWidget {
     return MetricsButtonCard(
       backgroundColor:
           themeNotifier.isDark ? Colors.grey[900] : Colors.grey[200],
+      iconData: Icons.add,
+      iconSize: 72.0,
+      iconPadding: const EdgeInsets.symmetric(vertical: 4.0),
       titlePadding: const EdgeInsets.symmetric(vertical: 4.0),
       title: Text(
         ProjectGroupsStrings.addProjectGroup,
@@ -21,9 +24,6 @@ class AddProjectGroupCard extends StatelessWidget {
         maxLines: 1,
         style: const TextStyle(fontSize: 24.0),
       ),
-      iconData: Icons.add,
-      iconSize: 72.0,
-      iconPadding: const EdgeInsets.symmetric(vertical: 4.0),
       onTap: () async {
         await showDialog(
           context: context,

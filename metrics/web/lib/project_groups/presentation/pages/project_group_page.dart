@@ -32,7 +32,7 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const Padding(
-              padding: EdgeInsets.only(bottom: 32.0),
+              padding: EdgeInsets.symmetric(vertical: 32.0),
               child: Text(
                 ProjectGroupsStrings.projectGroups,
                 style: TextStyle(fontSize: 32.0),

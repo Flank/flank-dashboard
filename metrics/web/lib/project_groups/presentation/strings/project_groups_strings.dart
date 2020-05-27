@@ -9,8 +9,6 @@ class ProjectGroupsStrings {
   static const String saveChanges = 'Save changes';
   static const String createGroup = 'Create group';
   static const String chooseProjectToAdd = 'Choose project to add';
-  static const String unknownErrorMessage =
-      'An unknown error occurred, please try again';
 
   static String getProjectsCount(int count) => '$count projects';
   static String getSelectedCount(int count) => '$count selected';

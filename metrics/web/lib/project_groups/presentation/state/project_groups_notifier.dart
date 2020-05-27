@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
 import 'package:metrics/project_groups/domain/usecases/delete_project_group_usecase.dart';
@@ -11,7 +12,6 @@ import 'package:metrics/project_groups/domain/usecases/parameters/project_group_
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
-import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 
 class ProjectGroupsNotifier extends ChangeNotifier {
   final ReceiveProjectGroupUpdates _receiveProjectGroupUpdates;
@@ -113,7 +113,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       return notifyListeners();
     }
 
-    _errorMessage = ProjectGroupsStrings.unknownErrorMessage;
+    _errorMessage = CommonStrings.unknownErrorMessage;
     return notifyListeners();
   }
 

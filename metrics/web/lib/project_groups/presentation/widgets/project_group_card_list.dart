@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
+import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
 import 'package:provider/provider.dart';
-
-import 'add_project_group_card.dart';
 
 class ProjectGroupCardList extends StatefulWidget {
   @override
@@ -17,8 +19,8 @@ class _ProjectGroupCardListState extends State<ProjectGroupCardList> {
     return Consumer<ProjectGroupsNotifier>(
       builder: (_, projectsGroupsNotifier, __) {
         if (projectsGroupsNotifier.errorMessage != null) {
-          return const Center(
-            child: Text('ERROR MESSAGE'),
+          return MetricsTextPlaceholder(
+            text: CommonStrings.unknownErrorMessage,
           );
         }
 
@@ -28,10 +30,7 @@ class _ProjectGroupCardListState extends State<ProjectGroupCardList> {
         if (projectGroupViewModels == null) return const LoadingPlaceholder();
 
         if (projectGroupViewModels.isEmpty) {
-          // return const _DashboardTablePlaceholder(
-          //   text: ProjectGroupsStrings.noConfiguredProjectGroups,
-          // );
-          return const Center(child: Text('PROJECT GROUPS EMPTY'));
+          return MetricsTextPlaceholder(text: ProjectGroupsStrings.noProjects);
         }
 
         return GridView.builder(
