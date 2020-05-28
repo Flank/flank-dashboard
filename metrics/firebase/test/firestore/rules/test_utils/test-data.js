@@ -67,5 +67,8 @@ exports.getProjectGroup = function () {
 
 /** Get a test build */
 exports.getBuild = function () {
-  return Object.assign({}, builds["build/1"]);
+  let clonedBuild = clone(builds["build/1"]);
+  clonedBuild.startedAt = new firestore.Timestamp.now();
+
+  return clonedBuild;
 };
