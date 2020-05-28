@@ -4,7 +4,7 @@ if Is a low-level widget? then
 --> [Yes] ===STEP1===
 else
 ---> [No] if Needs custom theme data? then
---> [Yes] Add a CoolWidgetThemeData
+--> [Yes] Add a CoolWidgetThemeData \n into **common/presentation/metrics_theme/model**
 --> Apply a CoolWidgetThemeData
 --> ===STEP2===
 else

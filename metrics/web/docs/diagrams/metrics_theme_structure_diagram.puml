@@ -10,28 +10,14 @@
     }
 
     class MetricsThemeData {
-        metricWidgetTheme : MetricWidgetTheme
-        inactiveWidgetTheme : MetricWidgetTheme
-        concreteMetricsTheme : ConcreteMetricsTheme
+        concreteMetricsTheme : ConcreteMetricsThemeData
     }
 
-    class MetricWidgetTheme {
-        primaryColor : Color
-        accentColor : Color
-        backgroundColor : Color
-        textStyle : TextStyle
-    }
-
-    class ConcreteMetricsTheme {
-        successfulColor : Color
-        failedColor : Color
-        textStyle : TextStyle
-    }
+    class ConcreteMetricsThemeData {}
 
     MetricsThemeBuilder ..> MetricsThemeData : uses
     MetricsTheme ..> MetricsThemeData : provides
-    MetricsThemeData ..> MetricWidgetTheme : uses
-    MetricsThemeData ..> ConcreteMetricsTheme : uses
+    MetricsThemeData ..> ConcreteMetricsThemeData : uses
     ConcreteWidget ..> MetricsTheme : uses
-    ConcreteWidget ..> ConcreteMetricsTheme : applies
+    ConcreteWidget ..> ConcreteMetricsThemeData : applies
 @enduml

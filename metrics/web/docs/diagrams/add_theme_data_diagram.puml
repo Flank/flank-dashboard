@@ -1,6 +1,6 @@
 @startuml add_theme_data_diagram
 (*) --> "Add **CoolWidgetThemeData**"
---> "Create a **CoolWidgetThemeData** class"
+--> "Create a **CoolWidgetThemeData** class \n in the **common/metrics_theme/model**"
 --> "Add the **coolThemeData** field to the **MetricThemeData**"
 --> "Add the **coolThemeData** to **copyWith** method in **MetricThemeData**"
 --> "Configure the //light// and **dark** variants for **CoolWidgetThemeData**"
