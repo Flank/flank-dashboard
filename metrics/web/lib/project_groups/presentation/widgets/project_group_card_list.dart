@@ -3,17 +3,17 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
-import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
 import 'package:provider/provider.dart';
 
-class ProjectGroupCardList extends StatefulWidget {
+/// A widget that displays the grid view with the list of [ProjectGroupCard].
+class ProjectGroupCardGridView extends StatefulWidget {
   @override
-  _ProjectGroupCardListState createState() => _ProjectGroupCardListState();
+  _ProjectGroupCardGridViewState createState() => _ProjectGroupCardGridViewState();
 }
 
-class _ProjectGroupCardListState extends State<ProjectGroupCardList> {
+class _ProjectGroupCardGridViewState extends State<ProjectGroupCardGridView> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ProjectGroupsNotifier>(

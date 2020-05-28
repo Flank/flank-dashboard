@@ -2,10 +2,10 @@ import 'package:metrics/project_groups/domain/value_objects/exceptions/project_g
 import 'package:metrics/project_groups/domain/value_objects/project_group_name.dart';
 import 'package:metrics/project_groups/presentation/model/project_group_validation_error_message.dart';
 
-class ValidationUtil {
-  /// Validates the given [value] as a password.
+class ProjectGroupValidationUtil {
+  /// Validates the given [value] as a project group name.
   ///
-  /// Returns an error message if the [value] is not a valid password,
+  /// Returns an error message if the [value] is not a valid project group name,
   /// otherwise returns null.
   static String validateProjectGroupName(String value) {
     ProjectGroupNameValidationErrorMessage errorMessage;

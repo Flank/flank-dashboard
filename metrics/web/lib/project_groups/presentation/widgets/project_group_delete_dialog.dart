@@ -6,9 +6,13 @@ import 'package:metrics/project_groups/presentation/state/project_groups_notifie
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:provider/provider.dart';
 
+/// A dialog that using for deleting project group data.
 class ProjectGroupDeleteDialog extends StatefulWidget {
   final ProjectGroupViewModel projectGroupViewModel;
 
+  /// Creates the [ProjectGroupDeleteDialog].
+  ///
+  /// [projectGroupViewModel] represents project group data for UI.
   const ProjectGroupDeleteDialog({
     this.projectGroupViewModel,
   });
@@ -19,6 +23,7 @@ class ProjectGroupDeleteDialog extends StatefulWidget {
 }
 
 class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
+  /// Controls loading state.
   bool _isLoading = false;
 
   @override
@@ -49,25 +54,28 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5.0),
             ),
-            onPressed: _isLoading ? null : () async {
-              final projectGroupNotifier =
-                  Provider.of<ProjectGroupsNotifier>(context, listen: false);
-
-              setState(() => _isLoading = true);
-
-              final isSuccess = await projectGroupNotifier
-                  .deleteProjectGroup(widget.projectGroupViewModel?.id);
-
-              setState(() => _isLoading = false);
-
-              if (isSuccess) {
-                Navigator.pop(context);
-              }
-            },
+            onPressed: _isLoading ? null : () => _deleteProjectGroup(),
             child: Text(ProjectGroupsStrings.deleteProjectGroup),
           ),
         ),
       ],
     );
+  }
+  
+  /// Starts delete project group process.
+  Future<void> _deleteProjectGroup() async {
+    final projectGroupNotifier =
+    Provider.of<ProjectGroupsNotifier>(context, listen: false);
+
+    setState(() => _isLoading = true);
+
+    final isSuccess = await projectGroupNotifier
+        .deleteProjectGroup(widget.projectGroupViewModel?.id);
+
+    setState(() => _isLoading = false);
+
+    if (isSuccess) {
+      Navigator.pop(context);
+    }
   }
 }

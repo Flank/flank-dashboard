@@ -11,6 +11,8 @@ class ProjectGroupPage extends StatefulWidget {
 }
 
 class _ProjectGroupPageState extends State<ProjectGroupPage> {
+  /// A [ProjectGroupsNotifier] needed to unsubscribe from project groups
+  /// updates in [dispose].
   ProjectGroupsNotifier _projectGroupsNotifier;
 
   @override
@@ -39,7 +41,7 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
               ),
             ),
             Expanded(
-              child: ProjectGroupCardList(),
+              child: ProjectGroupCardGridView(),
             ),
           ],
         ),

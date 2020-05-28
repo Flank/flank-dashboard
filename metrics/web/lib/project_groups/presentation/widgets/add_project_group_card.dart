@@ -5,6 +5,7 @@ import 'package:metrics/project_groups/presentation/strings/project_groups_strin
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
+/// An [AddProjectGroupCard] widget that represent button card.
 class AddProjectGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

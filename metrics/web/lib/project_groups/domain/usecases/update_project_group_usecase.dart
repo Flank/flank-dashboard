@@ -7,6 +7,9 @@ class UpdateProjectGroupUseCase
     implements UseCase<Future<void>, ProjectGroupUpdateParam> {
   final ProjectGroupRepository _repository;
 
+  /// Creates the [UpdateProjectGroupUseCase] use case with the given [ProjectGroupRepository].
+  ///
+  /// [ProjectGroupRepository] must not be null.
   const UpdateProjectGroupUseCase(this._repository)
       : assert(_repository != null);
 

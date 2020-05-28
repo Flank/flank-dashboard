@@ -6,14 +6,16 @@ import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart
 import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
-import 'package:metrics/project_groups/presentation/util/validation_util.dart';
+import 'package:metrics/project_groups/presentation/util/project_group_validation_util.dart';
 import 'package:provider/provider.dart';
-import '../state/project_groups_notifier.dart';
-import '../strings/project_groups_strings.dart';
 
+/// A dialog that using for updating or creating project group data.
 class ProjectGroupDialog extends StatefulWidget {
   final ProjectGroupViewModel projectGroupViewModel;
 
+  /// Creates the [ProjectGroupDialog].
+  ///
+  /// [projectGroupViewModel] represents project group data for UI.
   const ProjectGroupDialog({
     this.projectGroupViewModel,
   });
@@ -23,9 +25,16 @@ class ProjectGroupDialog extends StatefulWidget {
 }
 
 class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
-  final TextEditingController groupNameController = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  /// Controls the group name text being edited.
+  final TextEditingController _groupNameController = TextEditingController();
+
+  /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  /// Contains a list of project ids related with the given [projectGroupViewModel].
   List<String> _projectIds = [];
+
+  /// Controls loading state.
   bool _isLoading = false;
 
   @override
@@ -33,11 +42,11 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     super.initState();
 
     if (widget.projectGroupViewModel != null) {
-      groupNameController.text = widget.projectGroupViewModel?.name;
+      _groupNameController.text = widget.projectGroupViewModel?.name;
       _projectIds = [...widget.projectGroupViewModel?.projectIds];
     }
 
-    groupNameController.addListener(() {
+    _groupNameController.addListener(() {
       setState(() {});
     });
 
@@ -48,7 +57,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: formKey,
+      key: _formKey,
       child: MetricsDialog(
         padding: const EdgeInsets.all(32.0),
         maxWidth: 500.0,
@@ -66,9 +75,9 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ClearableTextFormField(
-              validator: ValidationUtil.validateProjectGroupName,
+              validator: ProjectGroupValidationUtil.validateProjectGroupName,
               label: ProjectGroupsStrings.nameYourStrings,
-              controller: groupNameController,
+              controller: _groupNameController,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
@@ -185,8 +194,9 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     );
   }
 
+  /// Starts save project group process.
   Future<void> _saveProjectGroups() async {
-    if (!formKey.currentState.validate()) {
+    if (!_formKey.currentState.validate()) {
       return;
     }
 
@@ -197,7 +207,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     });
     final isSuccess = await projectGroupNotifier.saveProjectGroups(
       widget.projectGroupViewModel?.id,
-      groupNameController.text,
+      _groupNameController.text,
       _projectIds,
     );
     setState(() {
@@ -211,7 +221,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
   @override
   void dispose() {
-    groupNameController.dispose();
+    _groupNameController.dispose();
     super.dispose();
   }
 }

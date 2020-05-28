@@ -2,7 +2,7 @@ import 'package:metrics/auth/presentation/model/email_validation_error_message.d
 import 'package:metrics/auth/presentation/model/password_validation_error_message.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-class ValidationUtil {
+class AuthValidationUtil {
   /// Validates the given [value] as an email.
   ///
   /// Returns an error message if the [value] is not a valid email,

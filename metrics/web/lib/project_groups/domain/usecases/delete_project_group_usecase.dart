@@ -7,6 +7,9 @@ class DeleteProjectGroupUseCase
     implements UseCase<Future<void>, ProjectGroupDeleteParam> {
   final ProjectGroupRepository _repository;
 
+  /// Creates the [DeleteProjectGroupUseCase] use case with the given [ProjectGroupRepository].
+  ///
+  /// [ProjectGroupRepository] must not be null.
   const DeleteProjectGroupUseCase(this._repository)
       : assert(_repository != null);
 

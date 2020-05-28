@@ -7,6 +7,9 @@ class AddProjectGroupUseCase
     implements UseCase<Future<void>, ProjectGroupAddParam> {
   final ProjectGroupRepository _repository;
 
+  /// Creates the [AddProjectGroupUseCase] use case with the given [ProjectGroupRepository].
+  ///
+  /// [ProjectGroupRepository] must not be null.
   const AddProjectGroupUseCase(this._repository) : assert(_repository != null);
 
   @override

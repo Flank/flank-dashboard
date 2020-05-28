@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// The widget that represents metrics card.
 class MetricsCard extends StatelessWidget {
   final Widget title;
   final EdgeInsetsGeometry titlePadding;
@@ -12,6 +13,18 @@ class MetricsCard extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final double elevation;
 
+  /// Creates an [MetricsCard].
+  ///
+  /// [title] is a title of this [MetricsCard].
+  /// [titlePadding] is a padding around the title.
+  /// [subtitle]  is a subtitle of this [MetricsCard].
+  /// [subtitlePadding] is a padding around the subtitle.
+  /// [actions] is a set of actions that are displayed at the bottom of this [MetricsCard].
+  /// [actionsPadding] is a padding around the actions.
+  /// [backgroundColor] is background color of this [MetricsCard].
+  /// [margin] is an empty space that surrounds the [MetricsCard].
+  /// [padding] is a padding around the [MetricsCard]'s content.
+  /// [elevation] is a elevation of this [MetricsCard].
   const MetricsCard({
     this.title,
     this.titlePadding = EdgeInsets.zero,

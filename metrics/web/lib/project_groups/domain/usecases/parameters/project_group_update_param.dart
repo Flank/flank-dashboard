@@ -7,7 +7,8 @@ class ProjectGroupUpdateParam {
   final String projectGroupName;
   final List<String> projectIds;
 
-  /// Creates the [ProjectGroupUpdateParam] with the given [projectGroupId], [projectGroupName] and [projectIds].
+  /// Creates the [ProjectGroupUpdateParam] with the given [projectGroupId],
+  /// [projectGroupName] and [projectIds].
   const ProjectGroupUpdateParam(
     this.projectGroupId,
     this.projectGroupName,

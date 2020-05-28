@@ -8,13 +8,20 @@ import 'package:metrics/project_groups/presentation/widgets/project_group_delete
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
+/// A widget that represent [projectGroupViewModel].
 class ProjectGroupCard extends StatelessWidget {
   final ProjectGroupViewModel projectGroupViewModel;
 
+  /// Creates the [ProjectGroupCard].
+  ///
+  /// [projectGroupViewModel] should not be null.
+  ///
+  /// [projectGroupViewModel] represents project group data for UI.
   const ProjectGroupCard({
     Key key,
     @required this.projectGroupViewModel,
-  }) : super(key: key);
+  })  : assert(projectGroupViewModel != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +76,7 @@ class ProjectGroupCard extends StatelessWidget {
     );
   }
 
+  /// Provides a project groups count for the given [projectGroupViewModel].
   String get _projectGroupsCount {
     final projectsCount = projectGroupViewModel.projectIds?.length ?? 0;
     return projectsCount == 0

@@ -1,5 +1,5 @@
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
-import 'package:metrics/auth/presentation/util/validation_util.dart';
+import 'package:metrics/auth/presentation/util/auth_validation_util.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
@@ -8,7 +8,7 @@ void main() {
     test(
       ".validateEmail() returns the email required error message if the given email is null",
       () {
-        final validationResult = ValidationUtil.validateEmail(null);
+        final validationResult = AuthValidationUtil.validateEmail(null);
 
         expect(validationResult, equals(AuthStrings.emailRequiredErrorMessage));
       },
@@ -17,7 +17,7 @@ void main() {
     test(
       ".validateEmail() returns the invalid email error message if the given email is malformed",
       () {
-        final validationResult = ValidationUtil.validateEmail('not valid');
+        final validationResult = AuthValidationUtil.validateEmail('not valid');
 
         expect(validationResult, equals(AuthStrings.invalidEmailErrorMessage));
       },
@@ -27,7 +27,7 @@ void main() {
       ".validateEmail() returns null if the given email is valid",
       () {
         final validationResult =
-            ValidationUtil.validateEmail('email@mail.mail');
+            AuthValidationUtil.validateEmail('email@mail.mail');
 
         expect(validationResult, isNull);
       },
@@ -36,7 +36,7 @@ void main() {
     test(
       ".validatePassword() returns the password required error message if the password is null",
       () {
-        final validationResult = ValidationUtil.validatePassword(null);
+        final validationResult = AuthValidationUtil.validatePassword(null);
 
         expect(
             validationResult, equals(AuthStrings.passwordRequiredErrorMessage));
@@ -46,7 +46,7 @@ void main() {
     test(
       ".validatePassword() returns the password too short error message if the password is less than 6 characters long",
       () {
-        final validationResult = ValidationUtil.validatePassword('pass');
+        final validationResult = AuthValidationUtil.validatePassword('pass');
 
         expect(
           validationResult,
@@ -62,7 +62,7 @@ void main() {
     test(
       ".validatePassword() returns null if the given password is valid",
       () {
-        final validationResult = ValidationUtil.validatePassword('password');
+        final validationResult = AuthValidationUtil.validatePassword('password');
 
         expect(validationResult, isNull);
       },

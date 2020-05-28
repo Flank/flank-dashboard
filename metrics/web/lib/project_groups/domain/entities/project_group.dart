@@ -7,7 +7,11 @@ class ProjectGroup {
   final String name;
   final List<String> projectIds;
 
-  /// Creates the [ProjectGroup] with [id] and [name] and a list of [projectIds].
+  /// Creates the [ProjectGroup]
+  ///
+  /// [id] is the unique identifier of this project group.
+  /// [name] is the name of this project group.
+  /// [projectIds] is the list of project ids related with this project group.
   const ProjectGroup({
     this.id,
     this.name,

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
+/// The widget that represents metrics text placeholder.
 class MetricsTextPlaceholder extends StatelessWidget {
   final String text;
   final double size;
   final Color color;
 
-  /// Creates the a placeholder widget with the given [text].
+  /// Creates a placeholder widget with the given [text].
   const MetricsTextPlaceholder({
     Key key,
     this.text,
