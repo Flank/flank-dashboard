@@ -1,8 +1,18 @@
 const firestore = require("firebase").firestore;
 
-/** Returns a deep copy of the given value  */
+/** 
+ * Returns a deep copy of the given value. 
+ */
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+/** 
+ * Returns a copy of the given object. 
+ * Working fine with objects, like firestore.Timestamp. 
+ */
+function cloneObject(obj) {
+  return Object.assign({}, obj);
 }
 
 exports.project = {
@@ -67,8 +77,5 @@ exports.getProjectGroup = function () {
 
 /** Get a test build */
 exports.getBuild = function () {
-  let clonedBuild = clone(builds["build/1"]);
-  clonedBuild.startedAt = new firestore.Timestamp.now();
-
-  return clonedBuild;
+  return cloneObject(builds["build/1"]);
 };
