@@ -74,11 +74,11 @@ A `page` is a very high-level widget that stands for the web-page (or screen) an
 
 1. Low-level widgets.
 
-`Low-level widgets` are highly-reusable widgets that should only present the given data. The most common approach is using the `low-level widgets` to create `high-level widgets` that will properly configure them for different needs. See more details about high-level widgets in the [Widget Structure Organization](03_widget_structure_organization.md) document.
+`Low-level widgets` are highly-reusable widgets that should only present the given data. The most common approach is using the `low-level widgets` to create `high-level widgets` that will properly configure them for different needs. See more details about high-level widgets in the [Widget structure organization](03_widget_structure_organization.md) document.
 
 2. High-level widgets
 
-`High-level widgets` are used to actually display the data for a user. Commonly, these widgets use `low-level widgets` as a building component to create the required view. Also, these widgets should accept the `view model`. See [Widget Structure Organization](03_widget_structure_organization.md) document to get more information about `high-level` widgets.
+`High-level widgets` are used to actually display the data for a user. Commonly, these widgets use `low-level widgets` as a building component to create the required view. Also, these widgets should accept the `view model`. See [Widget structure organization](03_widget_structure_organization.md) document to get more information about `high-level` widgets.
 
 So, to sum up: 
 
