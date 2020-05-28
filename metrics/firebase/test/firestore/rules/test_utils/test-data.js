@@ -57,10 +57,15 @@ exports.user = { uid: "uid" };
 
 /** Get a test project group */
 exports.getProjectGroup = function () {
-  return JSON.parse(JSON.stringify(projectGroups["project_groups/1"]));
+  return clone(projectGroups["project_groups/1"]);
 };
 
 /** Get a test build */
 exports.getBuild = function () {
   return Object.assign({}, builds["build/1"]);
 };
+
+/** Returns a deep copy of the given value  */
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
