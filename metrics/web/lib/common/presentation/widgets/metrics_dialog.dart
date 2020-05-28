@@ -38,38 +38,40 @@ class MetricsDialog extends StatelessWidget {
       backgroundColor: backgroundColor,
       elevation: elevation,
       shape: shape,
-      child: Container(
-        padding: padding,
-        constraints: BoxConstraints(
-          maxWidth: maxWidth,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Icon(Icons.close),
+      child: SingleChildScrollView(
+        child: Container(
+          padding: padding,
+          constraints: BoxConstraints(
+            maxWidth: maxWidth,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Icon(Icons.close),
+                ),
               ),
-            ),
-            Padding(
-              padding: titlePadding,
-              child: title,
-            ),
-            Padding(
-              padding: contentPadding,
-              child: content,
-            ),
-            Padding(
-              padding: actionsPadding,
-              child: Row(
-                mainAxisAlignment: actionsAlignment,
-                children: actions,
+              Padding(
+                padding: titlePadding,
+                child: title,
               ),
-            ),
-          ],
+              Padding(
+                padding: contentPadding,
+                child: content,
+              ),
+              Padding(
+                padding: actionsPadding,
+                child: Row(
+                  mainAxisAlignment: actionsAlignment,
+                  children: actions,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

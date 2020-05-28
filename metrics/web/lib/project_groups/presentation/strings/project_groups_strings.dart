@@ -9,6 +9,7 @@ class ProjectGroupsStrings {
   static const String saveChanges = 'Save changes';
   static const String createGroup = 'Create group';
   static const String chooseProjectToAdd = 'Choose project to add';
+  static const String projectGroupNameRequired = 'Project group name is required';
 
   static String getProjectsCount(int count) => '$count projects';
   static String getSelectedCount(int count) => '$count selected';

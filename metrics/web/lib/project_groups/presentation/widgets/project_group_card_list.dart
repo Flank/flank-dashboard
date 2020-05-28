@@ -29,10 +29,6 @@ class _ProjectGroupCardListState extends State<ProjectGroupCardList> {
 
         if (projectGroupViewModels == null) return const LoadingPlaceholder();
 
-        if (projectGroupViewModels.isEmpty) {
-          return MetricsTextPlaceholder(text: ProjectGroupsStrings.noProjects);
-        }
-
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,

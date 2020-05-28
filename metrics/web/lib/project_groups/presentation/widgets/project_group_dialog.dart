@@ -6,7 +6,10 @@ import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart
 import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
+import 'package:metrics/project_groups/presentation/util/validation_util.dart';
 import 'package:provider/provider.dart';
+import '../state/project_groups_notifier.dart';
+import '../strings/project_groups_strings.dart';
 
 class ProjectGroupDialog extends StatefulWidget {
   final ProjectGroupViewModel projectGroupViewModel;
@@ -21,8 +24,9 @@ class ProjectGroupDialog extends StatefulWidget {
 
 class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   final TextEditingController groupNameController = TextEditingController();
-  ProjectMetricsNotifier _projectMetricsNotifier;
-  List<String> projectIds = [];
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  List<String> _projectIds = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -30,140 +34,179 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
     if (widget.projectGroupViewModel != null) {
       groupNameController.text = widget.projectGroupViewModel?.name;
-      projectIds = [...widget.projectGroupViewModel?.projectIds];
+      _projectIds = [...widget.projectGroupViewModel?.projectIds];
     }
 
     groupNameController.addListener(() {
       setState(() {});
     });
 
-    _projectMetricsNotifier =
-        Provider.of<ProjectMetricsNotifier>(context, listen: false);
-
-    _projectMetricsNotifier.subscribeToProjects();
+    Provider.of<ProjectMetricsNotifier>(context, listen: false)
+        .subscribeToProjects();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MetricsDialog(
-      padding: const EdgeInsets.all(32.0),
-      maxWidth: 500.0,
-      title: Text(
-        widget.projectGroupViewModel == null
-            ? ProjectGroupsStrings.addProjectGroup
-            : ProjectGroupsStrings.editProjectGroup,
-        style: TextStyle(
-          fontSize: 32.0,
-          fontWeight: FontWeight.bold,
+    return Form(
+      key: formKey,
+      child: MetricsDialog(
+        padding: const EdgeInsets.all(32.0),
+        maxWidth: 500.0,
+        title: Text(
+          widget.projectGroupViewModel == null
+              ? ProjectGroupsStrings.addProjectGroup
+              : ProjectGroupsStrings.editProjectGroup,
+          style: TextStyle(
+            fontSize: 32.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      ),
-      titlePadding: const EdgeInsets.symmetric(vertical: 12.0),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          ClearableTextField(
-            label: ProjectGroupsStrings.nameYourStrings,
-            controller: groupNameController,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Text(ProjectGroupsStrings.chooseProjectToAdd),
-          ),
-          Container(
-            height: 250.0,
-            padding: const EdgeInsets.all(16.0),
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(3.0),
+        titlePadding: const EdgeInsets.symmetric(vertical: 12.0),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            ClearableTextFormField(
+              validator: ValidationUtil.validateProjectGroupName,
+              label: ProjectGroupsStrings.nameYourStrings,
+              controller: groupNameController,
             ),
-            child: Column(
-              children: <Widget>[
-                ProjectSearchInput(),
-                Flexible(
-                  child: Consumer<ProjectMetricsNotifier>(
-                    builder: (_, projectsMetricsNotifier, __) {
-                      if (projectsMetricsNotifier.errorMessage != null) {
-                        return Container(); //error loading
-                      }
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Text(ProjectGroupsStrings.chooseProjectToAdd),
+            ),
+            Container(
+              height: 250.0,
+              padding: const EdgeInsets.all(16.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(3.0),
+              ),
+              child: Column(
+                children: <Widget>[
+                  ProjectSearchInput(),
+                  Flexible(
+                    child: Consumer<ProjectMetricsNotifier>(
+                      builder: (_, projectsMetricsNotifier, __) {
+                        if (projectsMetricsNotifier.errorMessage != null) {
+                          return Container(); //error loading
+                        }
 
-                      final projects = projectsMetricsNotifier.projectsMetrics;
+                        final projects =
+                            projectsMetricsNotifier.projectsMetrics;
 
-                      if (projects == null) return Container(); // no projects
+                        if (projects == null) return Container(); // no projects
 
-                      if (projects.isEmpty) {
-                        return Container(); // empty projects
-                        // return const _DashboardTablePlaceholder(
-                        //   text: DashboardStrings.noConfiguredProjects,
-                        // );
-                      }
+                        if (projects.isEmpty) {
+                          return Container(); // empty projects
+                          // return const _DashboardTablePlaceholder(
+                          //   text: DashboardStrings.noConfiguredProjects,
+                          // );
+                        }
 
-                      return ListView.builder(
-                        itemCount: projects.length,
-                        itemBuilder: (context, index) {
-                          final project = projects[index];
-                          return CheckboxListTile(
-                            title: Text(
-                              project.projectName,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                        return ListView.builder(
+                          itemCount: projects.length,
+                          itemBuilder: (context, index) {
+                            final project = projects[index];
+                            return CheckboxListTile(
+                              title: Text(
+                                project.projectName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            controlAffinity: ListTileControlAffinity.leading,
-                            value: projectIds.contains(project.projectId),
-                            onChanged: (value) {
-                              setState(() {
-                                if (value) {
-                                  projectIds.add(project.projectId);
-                                } else {
-                                  projectIds.remove(project.projectId);
-                                }
-                              });
-                            },
-                          );
-                        },
-                      );
-                    },
+                              controlAffinity: ListTileControlAffinity.leading,
+                              value: _projectIds.contains(project.projectId),
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value) {
+                                    _projectIds.add(project.projectId);
+                                  } else {
+                                    _projectIds.remove(project.projectId);
+                                  }
+                                });
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              _projectIds.isNotEmpty
+                  ? ProjectGroupsStrings.getSelectedCount(_projectIds.length)
+                  : '',
+            ),
+          ],
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+        actions: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                height: 50.0,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  onPressed: _isLoading ? null : () => _saveProjectGroups(),
+                  child: Text(
+                    widget.projectGroupViewModel == null
+                        ? ProjectGroupsStrings.createGroup
+                        : ProjectGroupsStrings.saveChanges,
                   ),
                 ),
-              ],
-            ),
-          ),
-          Text(
-            projectIds.isNotEmpty
-                ? ProjectGroupsStrings.getSelectedCount(projectIds.length)
-                : '',
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Selector<ProjectGroupsNotifier, String>(
+                  selector: (_, state) => state.firestoreWriteErrorMessage,
+                  builder: (_, firestoreWriteErrorMessage, __) {
+                    if (firestoreWriteErrorMessage == null) {
+                      return const Text('');
+                    }
+
+                    return Text(
+                      firestoreWriteErrorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
+        actionsPadding: const EdgeInsets.symmetric(vertical: 12.0),
       ),
-      contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
-      actions: <Widget>[
-        Container(
-          height: 50.0,
-          child: RaisedButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            onPressed: () async {
-              final projectGroupNotifier =
-                  Provider.of<ProjectGroupsNotifier>(context, listen: false);
-              await projectGroupNotifier.saveProjectGroups(
-                widget.projectGroupViewModel?.id,
-                groupNameController.text,
-                projectIds,
-              );
-              Navigator.pop(context);
-            },
-            child: Text(
-              widget.projectGroupViewModel == null
-                  ? ProjectGroupsStrings.createGroup
-                  : ProjectGroupsStrings.saveChanges,
-            ),
-          ),
-        ),
-      ],
-      actionsPadding: const EdgeInsets.symmetric(vertical: 12.0),
     );
+  }
+
+  Future<void> _saveProjectGroups() async {
+    if (!formKey.currentState.validate()) {
+      return;
+    }
+
+    final projectGroupNotifier =
+        Provider.of<ProjectGroupsNotifier>(context, listen: false);
+    setState(() {
+      _isLoading = true;
+    });
+    final isSuccess = await projectGroupNotifier.saveProjectGroups(
+      widget.projectGroupViewModel?.id,
+      groupNameController.text,
+      _projectIds,
+    );
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (isSuccess) {
+      Navigator.pop(context);
+    }
   }
 
   @override

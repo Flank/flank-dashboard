@@ -13,9 +13,16 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
         .collection('project_groups')
         .orderBy('name')
         .snapshots()
-        .map((snapshot) => snapshot.documents
-            .map((doc) => ProjectGroupData.fromJson(doc.data, doc.documentID))
-            .toList());
+        .map(
+          (snapshot) => snapshot.documents
+              .map(
+                (doc) => ProjectGroupData.fromJson(
+                  doc.data,
+                  doc.documentID,
+                ),
+              )
+              .toList(),
+        );
   }
 
   @override

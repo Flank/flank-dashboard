@@ -13,6 +13,9 @@ import 'package:metrics/project_groups/domain/usecases/receive_project_group_upd
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
 
+import '../../../common/presentation/strings/common_strings.dart';
+import '../../../common/presentation/strings/common_strings.dart';
+
 class ProjectGroupsNotifier extends ChangeNotifier {
   final ReceiveProjectGroupUpdates _receiveProjectGroupUpdates;
   final UpdateProjectGroupUseCase _updateProjectGroupUseCase;
@@ -24,6 +27,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   StreamSubscription _projectGroupsSubscription;
 
   String _errorMessage;
+
+  String _firestoreWriteErrorMessage;
 
   ProjectGroupsNotifier(
     this._receiveProjectGroupUpdates,
@@ -42,6 +47,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       _projectGroupViewModels;
 
   String get errorMessage => _errorMessage;
+
+  String get firestoreWriteErrorMessage => _firestoreWriteErrorMessage;
 
   Future<void> subscribeToProjectGroups() async {
     final projectGroupsStream = _receiveProjectGroupUpdates();
@@ -70,31 +77,52 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteProjectGroup(String projectGroupId) async {
-    await _deleteProjectGroupUseCase(ProjectGroupDeleteParam(projectGroupId));
+  Future<bool> deleteProjectGroup(String projectGroupId) async {
+    resetFirestoreWriteErrorMessage();
+
+    try {
+      await _deleteProjectGroupUseCase(ProjectGroupDeleteParam(projectGroupId));
+    } catch (e) {
+      _firestoreWriteErrorHandler(e);
+    }
+
+    return _firestoreWriteErrorMessage == null;
   }
 
-  Future<void> saveProjectGroups(
+  void resetFirestoreWriteErrorMessage() {
+    _firestoreWriteErrorMessage = null;
+    notifyListeners();
+  }
+
+  Future<bool> saveProjectGroups(
     String projectGroupId,
     String projectGroupName,
     List<String> projectIds,
   ) async {
-    if (projectGroupId == null) {
-      await _addProjectGroupUseCase(
-        ProjectGroupAddParam(
-          projectGroupName,
-          projectIds,
-        ),
-      );
-    } else {
-      await _updateProjectGroupUseCase(
-        ProjectGroupUpdateParam(
-          projectGroupId,
-          projectGroupName,
-          projectIds,
-        ),
-      );
+    resetFirestoreWriteErrorMessage();
+
+    try {
+      if (projectGroupId == null) {
+        await _addProjectGroupUseCase(
+          ProjectGroupAddParam(
+            projectGroupName,
+            projectIds,
+          ),
+        );
+      } else {
+        await _updateProjectGroupUseCase(
+          ProjectGroupUpdateParam(
+            projectGroupId,
+            projectGroupName,
+            projectIds,
+          ),
+        );
+      }
+    } catch (e) {
+      _firestoreWriteErrorHandler(e);
     }
+
+    return _firestoreWriteErrorMessage == null;
   }
 
   Future<void> unsubscribeFromProjectGroups() async {
@@ -114,7 +142,12 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     }
 
     _errorMessage = CommonStrings.unknownErrorMessage;
-    return notifyListeners();
+    notifyListeners();
+  }
+
+  void _firestoreWriteErrorHandler(error) {
+    _firestoreWriteErrorMessage = CommonStrings.unknownErrorMessage;
+    notifyListeners();
   }
 
   @override

@@ -6,7 +6,7 @@ import 'package:metrics/project_groups/presentation/state/project_groups_notifie
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:provider/provider.dart';
 
-class ProjectGroupDeleteDialog extends StatelessWidget {
+class ProjectGroupDeleteDialog extends StatefulWidget {
   final ProjectGroupViewModel projectGroupViewModel;
 
   const ProjectGroupDeleteDialog({
@@ -14,12 +14,20 @@ class ProjectGroupDeleteDialog extends StatelessWidget {
   });
 
   @override
+  _ProjectGroupDeleteDialogState createState() =>
+      _ProjectGroupDeleteDialogState();
+}
+
+class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
+  bool _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
     return MetricsDialog(
       maxWidth: 500.0,
       padding: const EdgeInsets.all(32.0),
       title: Text(
-        'Delete ${projectGroupViewModel.name} project group?',
+        'Delete ${widget.projectGroupViewModel.name} project group?',
         style: const TextStyle(fontSize: 16.0),
       ),
       titlePadding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -41,12 +49,20 @@ class ProjectGroupDeleteDialog extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5.0),
             ),
-            onPressed: () async {
+            onPressed: _isLoading ? null : () async {
               final projectGroupNotifier =
                   Provider.of<ProjectGroupsNotifier>(context, listen: false);
-              await projectGroupNotifier
-                  .deleteProjectGroup(projectGroupViewModel?.id);
-              Navigator.pop(context);
+
+              setState(() => _isLoading = true);
+
+              final isSuccess = await projectGroupNotifier
+                  .deleteProjectGroup(widget.projectGroupViewModel?.id);
+
+              setState(() => _isLoading = false);
+
+              if (isSuccess) {
+                Navigator.pop(context);
+              }
             },
             child: Text(ProjectGroupsStrings.deleteProjectGroup),
           ),

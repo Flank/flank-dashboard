@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 
-class ClearableTextField extends StatelessWidget {
+class ClearableTextFormField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
+  final String Function(String) validator;
 
-  const ClearableTextField({
+  const ClearableTextFormField({
     @required this.label,
     @required this.controller,
+    this.validator,
   });
 
   @override
@@ -19,8 +21,9 @@ class ClearableTextField extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(ProjectGroupsStrings.nameYourStrings),
         ),
-        TextField(
+        TextFormField(
           controller: controller,
+          validator: validator,
           decoration: InputDecoration(
             suffixIcon: controller.text.isEmpty
                 ? null
@@ -34,14 +37,8 @@ class ClearableTextField extends StatelessWidget {
                       });
                     },
                   ),
-            enabledBorder: OutlineInputBorder(
+            border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Theme.of(context).accentColor,
-                width: 2.0,
-              ),
             ),
           ),
         )
