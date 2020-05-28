@@ -17,8 +17,8 @@ To make the Metrics Web Application clear, we have to create a document that wil
 # Goals
 > Identify success metrics and measurable goals.
 
-- Well-explained architecture of the Metrics Web Application's presentation layer and it's components.
-- Created the component diagram that explains the relationships between UI components of the Metrics Web Application.
+- Explain the architecture of the Metrics Web Application's presentation layer and it's components.
+- Create the component diagram that explains the relationships between UI components of the Metrics Web Application.
 
 # Non-Goals
 > Identify what's not in scope.
@@ -34,11 +34,11 @@ To make the Metrics Web Application clear, we have to create a document that wil
 ### The main principles of the view model
 > Explain what the `view model` is.
 
-A `view model` is a class that implements the humble object pattern and used for data transfer from the presenter to the view.
+A `view model` is a class that implements the humble object pattern and used for data transfer from the presenter to the view. The view model should lay under the `module_name/presentation/view_model` package.
 
 > Explain a difference between a `view model` and an `entity`.
 
-Unlike an `entity`, which can contain the critical business rules and business data, a `view model` should store only the view-ready data that will be displayed on the view.
+Unlike an `entity`, which can contain the critical business rules and business data, a `view model` should store only the view-ready data displayed on the UI.
 
 > Explain the main parts of the `view model`.
 
@@ -53,7 +53,7 @@ For the more detailed overview in a `view-model`, take a look at the [Widget str
 ### What is the state and why do we need it
 > Explain what the `state` of the module is.
 
-A `state`, or a `presenter`, is the part of the presentation layer that is the intermediary between the `domain` and the `presentation` layer.
+A `state`, or a `presenter`, is the part of the presentation layer that is the intermediary between the `domain` and the `presentation` layer. The `state` classes lay under the `module_name/presentation/view_model` folder.
 
 > Explain the main responsibilities of the `state`.
 
@@ -68,39 +68,35 @@ There are three main types of the UI components in the Metrics Web Application:
 
 > Explain the difference between `page` and `widget`.
 
-A `page` is a very high-level widget that stands for the web-page (or screen) and combines all the UI units together. Neither the `high-level widgets` nor `low-level widgets` know where they are used and placed - this is what the `page` purpose in. Each `feature` should consist at least of one page, meaning that the feature is presented by several pages in the UI. 
+A `page` is a very high-level widget that stands for the web-page (or screen) and combines all the UI units. Neither the `high-level widgets` nor `low-level widgets` know where they are used and placed - this is what the `page` purpose in. Each `feature` should consist at least of one page, meaning that the feature is presented by several pages in the UI. 
 
-> Explain the difference between `low level` and `high level` widgets.
+> Explain the difference between `low-level` and `high-level` widgets.
 
 1. Low-level widgets.
 
-`Low-level widgets` are highly-reusable widgets that should only present the given data. These widgets, commonly, lays in the `common/presentation` folder and rarely used to display the data directly. The most common approach is using the `low-level widgets` to create `high-level widgets` that will properly configure them for different needs. `Low-level widgets` should be highly-configurable. This means that the `low-level widget` should obtain most of the appearance configurations like colors, paddings, alignments, etc. from outside and should be more like a component for construction `high-level widget` than a complete widget for the concrete UI.
+`Low-level widgets` are highly-reusable widgets that should only present the given data. The most common approach is using the `low-level widgets` to create `high-level widgets` that will properly configure them for different needs. See more details about high-level widgets in the [Widget Structure Organization](03_widget_structure_organization.md) document.
 
 2. High-level widgets
 
-`High-level widgets` are used to actually display the data for a user. Commonly, these widgets use `low-level widgets` as a building component to create the required view. These widgets should accept the `view model` from which the widget will display the information. Also, it can accept the `theme strategy` or any other params that could improve the testability of this widget and reduce the business logic in it.
+`High-level widgets` are used to actually display the data for a user. Commonly, these widgets use `low-level widgets` as a building component to create the required view. Also, these widgets should accept the `view model`. See [Widget Structure Organization](03_widget_structure_organization.md) document to get more information about `high-level` widgets.
 
 So, to sum up: 
 
-3. Page - the widget that properly combines the high-level widgets. Represents the web page or screen of the application.
-2. High-level widgets - the widgets that consist of low-level widgets and properly configures them. Should accept the `view model` on input. Can obtain any other params like `ThemeStrategy` to make it more testable.
-1. Low-level widgets - the configurable widgets that simply displays the data. Should accept the Dart's basic types (sometimes can accept types from any UI packages). Should be highly reusable. Should be placed to `common/presentation` package.
-
+1. Page - the widget that properly combines the high-level widgets. Represents the web page or screen of the application. These widgets lay under the `module_name/presentation/pages` folder.
+2. High-level widgets - the widgets that may, or may not, consist of low-level widgets and properly configures them. It should accept the `view model` on input. Can obtain any other params like `ThemeStrategy` to make it more testable.
+3. Low-level widgets - the configurable widgets that simply displays the data. They should accept the Dart's native types, like `int`, `String`, `Point`, `bool` (can accept types from any UI packages if necessary). They should be highly reusable. Low-level widgets should be placed under the `common/presentation` package.
 
 > Explain the way of using the `strings` in the widgets and where to place them.
 
-Once we have widgets, we probably have some constant texts in it like titles, descriptions, error messages, etc. To make these strings reusable in different parts of our application like tests or even `ci integrations module`, we should extract them to the separate classes. Commonly, we have a single class with strings for a module, and it is placed to `module_name/presentation/strings` folder. Another reason to extract the strings into the separate class is translations. To add translations to our application, we have to wrap each string into `Intl.message` method from the [intl](https://pub.dev/packages/intl) package. So, if strings from our application will be placed into one file per module, it will be easy to integrate the translations, by changing the static fields to static getters. 
+Once we have widgets, we probably have some constant texts in them like titles, descriptions, error messages, etc. To make these strings reusable in different parts of our application like tests or even `ci integrations module`, we should extract strings to the separate classes. Commonly, we have a single class with strings for a module, and it is placed under the `module_name/presentation/strings` folder. Another reason to extract the strings into the separate class is translations. To add translations to our application, we have to wrap each string into `Intl.message` method from the [intl](https://pub.dev/packages/intl) package. So, if strings from our application will be placed into one file per module, it will be easy to integrate the translations, by changing the static fields to static getters. 
 
 > Explain the main principles of creating/editing widgets.
 
-So, to create a new widget, we should: 
+As all widgets we create are divided into `low-level` and `high-level`, then we should examine the process of creating these types separately. The below statements are the short description of the widgets creating process. See the [Widget structure organization document](03_widget_structure_organization.md) for more details about creating a new widget.
 
-1. Create a low-level widget or find the appropriate existing one.
-2. Create a view model for a new widget.
-3. Create a high-level widget that will accept created earlier `view model`.
-4. Extract strings if there are any.
+To create a `high-level` widget, we commonly should use the `low-level` widgets in the implementation and create a `view model` for this widget.
 
-See the [Widget structure organization document](03_widget_structure_organization.md) for more details about creating a new widget.
+To create a `low-level` widget, we should implement the widget that will be highly-configurable and reusable in different parts of the application.
 
 ## Widget structure
 > Create the class diagram explaining the structure of widgets.
@@ -117,14 +113,14 @@ The package structure is also an important part of the Metrics Web Application p
 >    * data/...
 >    * domain/...
 >    * presentation/
->       * model/
+>       * view_model/
 >       * state/
 >       * pages/
 >       * strings/
 >       * widgets/
 >           * strategy/
 
-So, each module's presentation layer consists of the `model`, `state`, `pages`, `strings`, and `widgets` packages. The `widgets` package can be divided into several packages that will simplify the navigation. 
+So, each module's presentation layer consists of the `view_model`, `state`, `pages`, `strings`, and `widgets` packages. The `widgets` package can be divided into several packages that will simplify the navigation if necessary. 
 
 # Dependencies
 > What is the project blocked on?
