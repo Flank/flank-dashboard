@@ -1,5 +1,10 @@
 const firestore = require("firebase").firestore;
 
+/** Returns a deep copy of the given value  */
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
 exports.project = {
   name: "test_project",
 };
@@ -64,8 +69,3 @@ exports.getProjectGroup = function () {
 exports.getBuild = function () {
   return Object.assign({}, builds["build/1"]);
 };
-
-/** Returns a deep copy of the given value  */
-function clone(value) {
-  return JSON.parse(JSON.stringify(value));
-}
