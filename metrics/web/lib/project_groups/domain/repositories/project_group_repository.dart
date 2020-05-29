@@ -11,7 +11,7 @@ abstract class ProjectGroupRepository {
   Future<void> addProjectGroup(
       String projectGroupName, List<String> projectIds);
 
-  /// Provides the ability to update a project group 
+  /// Provides the ability to update a project group
   /// using a [projectGroupId], a [projectGroupName] and [projectIds].
   Future<void> updateProjectGroup(
     String projectGroupId,

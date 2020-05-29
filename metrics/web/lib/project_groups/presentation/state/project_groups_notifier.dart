@@ -6,9 +6,9 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
 import 'package:metrics/project_groups/domain/usecases/delete_project_group_usecase.dart';
-import 'package:metrics/project_groups/domain/usecases/parameters/project_group_add_param.dart';
-import 'package:metrics/project_groups/domain/usecases/parameters/project_group_delete_param.dart';
-import 'package:metrics/project_groups/domain/usecases/parameters/project_group_update_param.dart';
+import 'package:metrics/project_groups/domain/usecases/parameters/add_project_group_param.dart';
+import 'package:metrics/project_groups/domain/usecases/parameters/delete_project_group_param.dart';
+import 'package:metrics/project_groups/domain/usecases/parameters/update_project_group_param.dart';
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
@@ -92,23 +92,23 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// If [projectIds] is null, a new project group is added,
   /// otherwise existing ones are updated.
   Future<bool> saveProjectGroups(
-      String projectGroupId,
-      String projectGroupName,
-      List<String> projectIds,
-      ) async {
+    String projectGroupId,
+    String projectGroupName,
+    List<String> projectIds,
+  ) async {
     resetFirestoreWriteErrorMessage();
 
     try {
       if (projectGroupId == null) {
         await _addProjectGroupUseCase(
-          ProjectGroupAddParam(
+          AddProjectGroupParam(
             projectGroupName,
             projectIds,
           ),
         );
       } else {
         await _updateProjectGroupUseCase(
-          ProjectGroupUpdateParam(
+          UpdateProjectGroupParam(
             projectGroupId,
             projectGroupName,
             projectIds,
@@ -127,7 +127,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     resetFirestoreWriteErrorMessage();
 
     try {
-      await _deleteProjectGroupUseCase(ProjectGroupDeleteParam(projectGroupId));
+      await _deleteProjectGroupUseCase(DeleteProjectGroupParam(projectGroupId));
     } catch (e) {
       _firestoreWriteErrorHandler(e);
     }
@@ -148,11 +148,11 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectGroupViewModels = newProjectGroups
         .map(
           (projectGroup) => ProjectGroupViewModel(
-        id: projectGroup.id,
-        name: projectGroup.name,
-        projectIds: projectGroup.projectIds,
-      ),
-    )
+            id: projectGroup.id,
+            name: projectGroup.name,
+            projectIds: projectGroup.projectIds,
+          ),
+        )
         .toList();
 
     notifyListeners();
