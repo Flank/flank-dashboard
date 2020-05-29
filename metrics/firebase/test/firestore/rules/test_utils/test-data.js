@@ -1,19 +1,5 @@
 const firestore = require("firebase").firestore;
-
-/** 
- * Returns a deep copy of the given value. 
- */
-function clone(value) {
-  return JSON.parse(JSON.stringify(value));
-}
-
-/** 
- * Returns a copy of the given object. 
- * Working fine with objects, like firestore.Timestamp. 
- */
-function cloneObject(obj) {
-  return Object.assign({}, obj);
-}
+const cloneDeep = require('clone-deep');
 
 exports.project = {
   name: "test_project",
@@ -72,10 +58,10 @@ exports.user = { uid: "uid" };
 
 /** Get a test project group */
 exports.getProjectGroup = function () {
-  return clone(projectGroups["project_groups/1"]);
+  return cloneDeep(projectGroups["project_groups/1"]);
 };
 
 /** Get a test build */
 exports.getBuild = function () {
-  return cloneObject(builds["build/1"]);
+  return cloneDeep(builds["build/1"]);
 };
