@@ -13,6 +13,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "clone-deep": "^4.0.1",
     "firebase": "^7.14.3"
   },
   "devDependencies": {

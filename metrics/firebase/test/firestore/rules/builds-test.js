@@ -37,7 +37,7 @@ describe("Build collection rules", async () => {
       authenticatedApp.collection(buildsCollectionName).add(build)
     );
   });
-  
+
   it("does not allow to create a build with null projectId", async () => {
     let build = getBuild();
     build.projectId = null;
@@ -46,7 +46,7 @@ describe("Build collection rules", async () => {
       authenticatedApp.collection(buildsCollectionName).add(build)
     );
   });
-  
+
   it("does not allow to create a build when projectId is not a string", async () => {
     let build = getBuild();
     build.projectId = 2;
@@ -157,7 +157,7 @@ describe("Build collection rules", async () => {
       authenticatedApp.collection(buildsCollectionName).add(build)
     );
   });
-  
+
   it("does not allow to create a build when workflow name is not a string", async () => {
     let build = getBuild();
     build.workflowName = 2;
@@ -166,7 +166,7 @@ describe("Build collection rules", async () => {
       authenticatedApp.collection(buildsCollectionName).add(build)
     );
   });
-  
+
   it("allows to create a build when workflow name is null", async () => {
     let build = getBuild();
     build.workflowName = null;
@@ -175,7 +175,7 @@ describe("Build collection rules", async () => {
       authenticatedApp.collection(buildsCollectionName).add(build)
     );
   });
-  
+
   it("does not allow to create a build when the coverage is grater then 1.0", async () => {
     let build = getBuild();
     build.coverage = 1.1;
@@ -184,7 +184,7 @@ describe("Build collection rules", async () => {
       authenticatedApp.collection(buildsCollectionName).add(build)
     );
   });
-  
+
   it("does not allow to create a build when the coverage is less then 0.0", async () => {
     let build = getBuild();
     build.coverage = -1.0;
@@ -193,7 +193,7 @@ describe("Build collection rules", async () => {
       authenticatedApp.collection(buildsCollectionName).add(build)
     );
   });
-  
+
   it("allows to create a build when the coverage is null", async () => {
     let build = getBuild();
     build.coverage = null;
