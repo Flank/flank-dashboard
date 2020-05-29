@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
@@ -11,6 +12,7 @@ import 'package:metrics/project_groups/domain/usecases/receive_project_group_upd
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
@@ -149,6 +151,73 @@ void main() {
       },
     );
 
+    test(
+      ".errorMessage provides an error description if project groups stream emits a PlatformException",
+      () async {
+        final projectGroupsController = BehaviorSubject<List<ProjectGroup>>();
+        const errorMessage = 'errorMessage';
+
+        when(receiveProjectGroupUpdates())
+            .thenAnswer((_) => projectGroupsController.stream);
+
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
+        await projectGroupsNotifier.subscribeToProjectGroups();
+
+        projectGroupsController.addError(PlatformException(
+          message: errorMessage,
+          code: 'test_code',
+        ));
+
+        bool hasErrorDescription;
+        final metricsListener = expectAsyncUntil0(() async {
+          hasErrorDescription =
+              projectGroupsNotifier.errorMessage == errorMessage;
+
+          if (hasErrorDescription) projectGroupsNotifier.dispose();
+        }, () => hasErrorDescription);
+
+        projectGroupsNotifier.addListener(metricsListener);
+      },
+    );
+
+    test(
+      ".errorMessage provides an error description if project groups stream emits an unknown Exception",
+      () async {
+        final projectGroupsController = BehaviorSubject<List<ProjectGroup>>();
+        const errorMessage = CommonStrings.unknownErrorMessage;
+
+        when(receiveProjectGroupUpdates())
+            .thenAnswer((_) => projectGroupsController.stream);
+
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
+        await projectGroupsNotifier.subscribeToProjectGroups();
+
+        projectGroupsController.addError(Exception());
+
+        bool hasErrorDescription;
+        final metricsListener = expectAsyncUntil0(() async {
+          hasErrorDescription =
+              projectGroupsNotifier.errorMessage == errorMessage;
+
+          if (hasErrorDescription) projectGroupsNotifier.dispose();
+        }, () => hasErrorDescription);
+
+        projectGroupsNotifier.addListener(metricsListener);
+      },
+    );
+
     test(".deleteProjectGroup() delegates to the DeleteProjectGroupUseCase",
         () {
       projectGroupsNotifier.deleteProjectGroup(projectGroupId);
@@ -273,6 +342,36 @@ void main() {
     );
 
     test(
+      ".unsubscribeFromProjectGroups() cancels all created subscriptions and clear view models",
+      () async {
+        when(receiveProjectGroupUpdates()).thenAnswer(
+          (_) => Stream.value([
+            const ProjectGroup(id: 'id', name: 'name', projectIds: []),
+            const ProjectGroup(id: 'id', name: 'name', projectIds: []),
+          ]),
+        );
+
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
+        await expectLater(
+          projectGroupsNotifier.subscribeToProjectGroups(),
+          completes,
+        );
+
+        expect(projectGroupsNotifier.projectGroupViewModels, isNotNull);
+
+        await projectGroupsNotifier.unsubscribeFromProjectGroups();
+
+        expect(projectGroupsNotifier.projectGroupViewModels, isNull);
+      },
+    );
+
+    test(
       ".dispose() cancels all created subscriptions",
       () async {
         final projectGroupsNotifier = ProjectGroupsNotifier(
@@ -311,43 +410,3 @@ class DeleteProjectGroupUseCaseMock extends Mock
 
 class ReceiveProjectGroupUpdatesMock extends Mock
     implements ReceiveProjectGroupUpdates {}
-
-// class ProjectGroupNtifierStub extends ChangeNotifier
-//     implements ProjectGroupsNotifier {
-//   String _errorMessage;
-//   String _firestoreWriteErrorMessage;
-//   List<ProjectGroupViewModel> _projectGroupViewModels;
-
-//   @override
-//   String get errorMessage => _errorMessage;
-
-//   @override
-//   String get firestoreWriteErrorMessage => _firestoreWriteErrorMessage;
-
-//   @override
-//   List<ProjectGroupViewModel> get projectGroupViewModels =>
-//       _projectGroupViewModels;
-
-//   @override
-//   void resetFirestoreWriteErrorMessage() {
-//     _firestoreWriteErrorMessage = null;
-//     notifyListeners();
-//   }
-
-//   @override
-//   Future<bool> saveProjectGroups(
-//     String projectGroupId,
-//     String projectGroupName,
-//     List<String> projectIds,
-//   ) =>
-//       Future.value(true);
-
-//   @override
-//   Future<bool> deleteProjectGroup(String projectGroupId) => Future.value(true);
-
-//   @override
-//   Future<void> subscribeToProjectGroups() async {}
-
-//   @override
-//   Future<void> unsubscribeFromProjectGroups() async {}
-// }
