@@ -11,7 +11,7 @@ import 'package:metrics/project_groups/domain/usecases/parameters/delete_project
 import 'package:metrics/project_groups/domain/usecases/parameters/update_project_group_param.dart';
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
-import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_model/project_group_view_model.dart';
 
 /// The [ChangeNotifier] that holds the project groups state.
 ///
@@ -102,8 +102,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       if (projectGroupId == null) {
         await _addProjectGroupUseCase(
           AddProjectGroupParam(
-            projectGroupName,
-            projectIds,
+            projectGroupName: projectGroupName,
+            projectIds: projectIds,
           ),
         );
       } else {
@@ -127,7 +127,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     resetFirestoreWriteErrorMessage();
 
     try {
-      await _deleteProjectGroupUseCase(DeleteProjectGroupParam(projectGroupId));
+      await _deleteProjectGroupUseCase(
+        DeleteProjectGroupParam(projectGroupId: projectGroupId),
+      );
     } catch (e) {
       _firestoreWriteErrorHandler(e);
     }

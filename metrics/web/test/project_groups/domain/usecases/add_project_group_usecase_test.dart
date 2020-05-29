@@ -20,7 +20,10 @@ void main() {
       () async {
         final repository = ProjectGroupRepositoryMock();
         final addProjectGroupUseCase = AddProjectGroupUseCase(repository);
-        const projectGroupParam = AddProjectGroupParam('name', []);
+        const projectGroupParam = AddProjectGroupParam(
+          projectGroupName: 'name',
+          projectIds: [],
+        );
 
         await addProjectGroupUseCase(projectGroupParam);
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_card.dart';
-import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_model/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_delete_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';

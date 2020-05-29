@@ -7,14 +7,17 @@ void main() {
   group("ProjectGroupAddParam", () {
     test("throws an AssertionError when created with null name", () {
       expect(
-        () => AddProjectGroupParam(null, []),
+        () => AddProjectGroupParam(
+          projectGroupName: null,
+          projectIds: [],
+        ),
         MatcherUtil.throwsAssertionError,
       );
     });
 
     test("throws an AssertionError when created with null project ids", () {
       expect(
-        () => AddProjectGroupParam('name', null),
+        () => AddProjectGroupParam(projectGroupName: 'name', projectIds: null),
         MatcherUtil.throwsAssertionError,
       );
     });

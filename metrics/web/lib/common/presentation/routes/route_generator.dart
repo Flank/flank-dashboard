@@ -13,7 +13,7 @@ class RouteGenerator {
   static const String login = '/login';
 
   /// The route name of the project groups page.
-  static const String projectGroupPage ='/projectGroups';
+  static const String projectGroupPage = '/projectGroups';
 
   /// Generates a route for the given route [settings]
   /// based on the [isLoggedIn] authentication status.
@@ -32,13 +32,17 @@ class RouteGenerator {
     if (!isLoggedIn) {
       return _createMaterialPageRoute(name: login, widget: LoginPage());
     }
-    if(settings.name == dashboard) {
+
+    if (settings.name == dashboard) {
       return _createMaterialPageRoute(name: dashboard, widget: DashboardPage());
     }
 
-    if(settings.name == projectGroupPage) {
-      return _createMaterialPageRoute(name: projectGroupPage, widget: ProjectGroupPage());
+    if (settings.name == projectGroupPage) {
+      return _createMaterialPageRoute(
+          name: projectGroupPage, widget: ProjectGroupPage());
     }
+
+    return _createMaterialPageRoute(name: dashboard, widget: DashboardPage());
   }
 
   /// Creates [MaterialPageRoute] with the given [name] and the [widget].

@@ -9,10 +9,11 @@ class AddProjectGroupParam extends Equatable {
 
   /// Creates the [AddProjectGroupParam] with the given [projectGroupName]
   /// and [projectIds].
-  const AddProjectGroupParam(
-    this.projectGroupName,
-    this.projectIds,
-  );
+  const AddProjectGroupParam({
+    @required this.projectGroupName,
+    @required this.projectIds,
+  })  : assert(projectGroupName != null),
+        assert(projectIds != null);
 
   @override
   List<Object> get props => [projectGroupName, projectIds];

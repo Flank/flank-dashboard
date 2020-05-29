@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_dialog.dart';
-import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_model/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:provider/provider.dart';

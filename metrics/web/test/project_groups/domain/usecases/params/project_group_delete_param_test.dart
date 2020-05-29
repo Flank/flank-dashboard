@@ -7,7 +7,7 @@ void main() {
   group("ProjectGroupDeleteParam", () {
     test("throws an AssertionError when created with null id", () {
       expect(
-        () => DeleteProjectGroupParam(null),
+        () => DeleteProjectGroupParam(projectGroupId: null),
         MatcherUtil.throwsAssertionError,
       );
     });

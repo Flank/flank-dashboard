@@ -3,7 +3,7 @@ import 'package:metrics/common/presentation/widgets/clearable_text_field.dart';
 import 'package:metrics/common/presentation/widgets/metrics_dialog.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
-import 'package:metrics/project_groups/presentation/model/project_group_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_model/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/util/project_group_validation_util.dart';

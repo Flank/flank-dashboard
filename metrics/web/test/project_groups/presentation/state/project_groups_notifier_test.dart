@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
 import 'package:metrics/project_groups/domain/usecases/delete_project_group_usecase.dart';
@@ -39,7 +40,7 @@ void main() {
       reset(receiveProjectGroupUpdates);
     });
 
-    tearDownAll((){
+    tearDownAll(() {
       projectGroupsNotifier.dispose();
     });
 
@@ -154,7 +155,8 @@ void main() {
 
       verify(
         deleteProjectGroupUseCase(
-            const DeleteProjectGroupParam(projectGroupId)),
+          const DeleteProjectGroupParam(projectGroupId: projectGroupId),
+        ),
       ).called(1);
     });
 
@@ -190,11 +192,109 @@ void main() {
         verify(
           addProjectGroupUseCase(
             const AddProjectGroupParam(
-              projectGroupName,
-              projectIds,
+              projectGroupName: projectGroupName,
+              projectIds: projectIds,
             ),
           ),
         ).called(1);
+      },
+    );
+
+    test(
+      ".saveProjectGroups() sets the firestore error message if the AddProjectGroupUseCase throws",
+      () async {
+        when(addProjectGroupUseCase(any)).thenThrow(Exception());
+
+        await projectGroupsNotifier.saveProjectGroups(
+          null,
+          projectGroupName,
+          projectIds,
+        );
+
+        expect(
+          projectGroupsNotifier.firestoreWriteErrorMessage,
+          equals(CommonStrings.unknownErrorMessage),
+        );
+      },
+    );
+
+    test(
+      ".saveProjectGroups() sets the firestore error message if the UpdateProjectGroupUseCase throws",
+      () async {
+        when(updateProjectGroupUseCase(any)).thenThrow(Exception());
+
+        await projectGroupsNotifier.saveProjectGroups(
+          projectGroupId,
+          projectGroupName,
+          projectIds,
+        );
+
+        expect(
+          projectGroupsNotifier.firestoreWriteErrorMessage,
+          equals(CommonStrings.unknownErrorMessage),
+        );
+      },
+    );
+
+    test(
+      ".deleteProjectGroup() sets the firestore error message if the DeleteProjectGroupUseCase throws",
+      () async {
+        when(deleteProjectGroupUseCase(any)).thenThrow(Exception());
+
+        await projectGroupsNotifier.deleteProjectGroup(projectGroupId);
+
+        expect(
+          projectGroupsNotifier.firestoreWriteErrorMessage,
+          equals(CommonStrings.unknownErrorMessage),
+        );
+      },
+    );
+
+    test(
+      ".resetFirestoreWriteErrorMessage() sets an error message to null",
+      () async {
+        when(addProjectGroupUseCase(any)).thenThrow(Exception());
+
+        await projectGroupsNotifier.saveProjectGroups(
+          null,
+          projectGroupName,
+          projectIds,
+        );
+
+        expect(
+          projectGroupsNotifier.firestoreWriteErrorMessage,
+          equals(CommonStrings.unknownErrorMessage),
+        );
+
+        projectGroupsNotifier.resetFirestoreWriteErrorMessage();
+
+        expect(projectGroupsNotifier.firestoreWriteErrorMessage, isNull);
+      },
+    );
+
+    test(
+      ".dispose() cancels all created subscriptions",
+      () async {
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
+        final projectGroupsController = StreamController<List<ProjectGroup>>();
+
+        when(receiveProjectGroupUpdates()).thenAnswer(
+          (_) => projectGroupsController.stream,
+        );
+
+        await projectGroupsNotifier.subscribeToProjectGroups();
+
+        expect(projectGroupsController.hasListener, isTrue);
+
+        projectGroupsNotifier.dispose();
+
+        expect(projectGroupsController.hasListener, isFalse);
       },
     );
   });
@@ -211,3 +311,43 @@ class DeleteProjectGroupUseCaseMock extends Mock
 
 class ReceiveProjectGroupUpdatesMock extends Mock
     implements ReceiveProjectGroupUpdates {}
+
+// class ProjectGroupNtifierStub extends ChangeNotifier
+//     implements ProjectGroupsNotifier {
+//   String _errorMessage;
+//   String _firestoreWriteErrorMessage;
+//   List<ProjectGroupViewModel> _projectGroupViewModels;
+
+//   @override
+//   String get errorMessage => _errorMessage;
+
+//   @override
+//   String get firestoreWriteErrorMessage => _firestoreWriteErrorMessage;
+
+//   @override
+//   List<ProjectGroupViewModel> get projectGroupViewModels =>
+//       _projectGroupViewModels;
+
+//   @override
+//   void resetFirestoreWriteErrorMessage() {
+//     _firestoreWriteErrorMessage = null;
+//     notifyListeners();
+//   }
+
+//   @override
+//   Future<bool> saveProjectGroups(
+//     String projectGroupId,
+//     String projectGroupName,
+//     List<String> projectIds,
+//   ) =>
+//       Future.value(true);
+
+//   @override
+//   Future<bool> deleteProjectGroup(String projectGroupId) => Future.value(true);
+
+//   @override
+//   Future<void> subscribeToProjectGroups() async {}
+
+//   @override
+//   Future<void> unsubscribeFromProjectGroups() async {}
+// }

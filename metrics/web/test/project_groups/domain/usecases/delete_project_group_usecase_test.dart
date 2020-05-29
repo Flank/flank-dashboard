@@ -20,7 +20,7 @@ void main() {
       () async {
         final repository = ProjectGroupRepositoryMock();
         final deleteProjectGroupUseCase = DeleteProjectGroupUseCase(repository);
-        const projectGroupParam = DeleteProjectGroupParam('id');
+        const projectGroupParam = DeleteProjectGroupParam(projectGroupId: 'id');
 
         await deleteProjectGroupUseCase(projectGroupParam);
 
