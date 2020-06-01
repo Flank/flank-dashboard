@@ -20,8 +20,6 @@ class _DashboardPageState extends State<DashboardPage> {
     super.initState();
     _projectMetricsNotifier =
         Provider.of<ProjectMetricsNotifier>(context, listen: false);
-
-    _projectMetricsNotifier.subscribeToProjects();
   }
 
   @override
@@ -46,7 +44,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void dispose() {
-    _projectMetricsNotifier.unsubscribeFromProjects();
+    _projectMetricsNotifier.unsubscribeFromBuildMetrics();
     super.dispose();
   }
 }

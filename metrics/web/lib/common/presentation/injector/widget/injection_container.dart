@@ -5,6 +5,7 @@ import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
+import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
@@ -83,22 +84,42 @@ class _InjectionContainerState extends State<InjectionContainer> {
             _signOutUseCase,
           ),
         ),
-        ChangeNotifierProvider<ProjectMetricsNotifier>(
-          create: (_) => ProjectMetricsNotifier(
-            _receiveProjectUpdates,
-            _receiveProjectMetricsUpdates,
-          ),
-        ),
         ChangeNotifierProvider<ThemeNotifier>(
           create: (_) => ThemeNotifier(),
         ),
-        ChangeNotifierProvider<ProjectGroupsNotifier>(
+        ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
+          create: (_) => ProjectsNotifier(_receiveProjectUpdates),
+          update: (_, authNotifier, projectsNotifier) {
+            return projectsNotifier
+              ..updateProjectsSubscription(
+                isLoggedIn: authNotifier.isLoggedIn,
+              );
+          },
+        ),
+        ChangeNotifierProxyProvider<ProjectsNotifier, ProjectMetricsNotifier>(
+          create: (_) => ProjectMetricsNotifier(_receiveProjectMetricsUpdates),
+          update: (_, projectsNotifier, projectMetricsNotifier) {
+            return projectMetricsNotifier
+              ..updateProjects(
+                projectsNotifier.projects,
+                projectsNotifier.errorMessage,
+              );
+          },
+        ),
+        ChangeNotifierProxyProvider<ProjectsNotifier, ProjectGroupsNotifier>(
           create: (_) => ProjectGroupsNotifier(
             _receiveProjectGroupUpdates,
             _addProjectGroupUseCase,
             _updateProjectGroupUseCase,
             _deleteProjectGroupUseCase,
           ),
+          update: (_, projectsNotifier, projectGroupsNotifier) {
+            return projectGroupsNotifier
+              ..updateProjects(
+                projectsNotifier.projects,
+                projectsNotifier.errorMessage,
+              );
+          },
         ),
       ],
       child: widget.child,

@@ -12,6 +12,7 @@ import 'package:metrics/project_groups/domain/usecases/parameters/update_project
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/view_model/project_group_view_model.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the project groups state.
 ///
@@ -42,6 +43,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Holds the error message that occurred during the firestore writing operation.
   String _firestoreWriteErrorMessage;
 
+  /// Holds a list of projects.
+  List<Project> _projects;
+
   /// Creates the project groups store.
   ///
   /// The provided use cases should not be null.
@@ -67,6 +71,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Provides an error description that occurred during the firestore writing operation.
   String get firestoreWriteErrorMessage => _firestoreWriteErrorMessage;
+
+  /// A list of projects.
+  List<Project> get projects => _projects;
 
   /// Subscribes to project groups.
   Future<void> subscribeToProjectGroups() async {
@@ -140,6 +147,13 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Set [_firestoreWriteErrorMessage] to null.
   void resetFirestoreWriteErrorMessage() {
     _firestoreWriteErrorMessage = null;
+    notifyListeners();
+  }
+
+  /// Update list of projects.
+  void updateProjects(List<Project> projects, String errorMessage) {
+    _projects = projects;
+    _errorMessage = errorMessage;
     notifyListeners();
   }
 

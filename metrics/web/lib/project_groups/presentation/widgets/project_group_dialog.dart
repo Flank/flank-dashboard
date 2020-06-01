@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/widgets/clearable_text_field.dart';
 import 'package:metrics/common/presentation/widgets/metrics_dialog.dart';
-import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
 import 'package:metrics/project_groups/presentation/view_model/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -49,9 +48,6 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     _groupNameController.addListener(() {
       setState(() {});
     });
-
-    Provider.of<ProjectMetricsNotifier>(context, listen: false)
-        .subscribeToProjects();
   }
 
   @override
@@ -95,14 +91,14 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                 children: <Widget>[
                   ProjectSearchInput(),
                   Flexible(
-                    child: Consumer<ProjectMetricsNotifier>(
-                      builder: (_, projectsMetricsNotifier, __) {
-                        if (projectsMetricsNotifier.errorMessage != null) {
+                    child: Consumer<ProjectGroupsNotifier>(
+                      builder: (_, projectGroupsNotifier, __) {
+                        if (projectGroupsNotifier.errorMessage != null) {
                           return Container(); //error loading
                         }
 
                         final projects =
-                            projectsMetricsNotifier.projectsMetrics;
+                            projectGroupsNotifier.projects;
 
                         if (projects == null) return Container(); // no projects
 
@@ -119,19 +115,19 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                             final project = projects[index];
                             return CheckboxListTile(
                               title: Text(
-                                project.projectName,
+                                project.name,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               controlAffinity: ListTileControlAffinity.leading,
-                              value: _projectIds.contains(project.projectId),
+                              value: _projectIds.contains(project.id),
                               onChanged: (value) {
                                 setState(() {
                                   if (value) {
-                                    _projectIds.add(project.projectId);
+                                    _projectIds.add(project.id);
                                   } else {
-                                    _projectIds.remove(project.projectId);
+                                    _projectIds.remove(project.id);
                                   }
                                 });
                               },

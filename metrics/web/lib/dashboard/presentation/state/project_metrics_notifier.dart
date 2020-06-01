@@ -9,7 +9,6 @@ import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metr
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
-import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
@@ -20,9 +19,6 @@ import 'package:metrics_core/metrics_core.dart';
 ///
 /// Stores the [Project]s and their [DashboardProjectMetrics].
 class ProjectMetricsNotifier extends ChangeNotifier {
-  /// Provides an ability to receive project updates.
-  final ReceiveProjectUpdates _receiveProjectsUpdates;
-
   /// Provides an ability to receive project metrics updates.
   final ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
 
@@ -31,10 +27,6 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
   /// A [Map] that holds all loaded [ProjectMetricsData].
   Map<String, ProjectMetricsData> _projectMetrics;
-
-  /// The stream subscription needed to be able to stop listening
-  /// to the project updates.
-  StreamSubscription _projectsSubscription;
 
   /// Holds the error message that occurred during loading data.
   String _errorMessage;
@@ -46,12 +38,10 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   ///
   /// The provided use cases should not be null.
   ProjectMetricsNotifier(
-    this._receiveProjectsUpdates,
     this._receiveProjectMetricsUpdates,
   ) : assert(
-          _receiveProjectsUpdates != null &&
               _receiveProjectMetricsUpdates != null,
-          'The use cases should not be null',
+          'The use case should not be null',
         );
 
   /// Provides a list of project metrics, filtered by the project name filter.
@@ -73,24 +63,6 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Provides an error description that occurred during loading metrics data.
   String get errorMessage => _errorMessage;
 
-  /// Subscribes to projects and its metrics.
-  Future<void> subscribeToProjects() async {
-    final projectsStream = _receiveProjectsUpdates();
-    _errorMessage = null;
-    await _projectsSubscription?.cancel();
-
-    _projectsSubscription = projectsStream.listen(
-      _projectsListener,
-      onError: _errorHandler,
-    );
-  }
-
-  /// Unsubscribes from projects and it's metrics.
-  Future<void> unsubscribeFromProjects() async {
-    await _cancelSubscriptions();
-    notifyListeners();
-  }
-
   /// Adds project metrics filter using [value] provided.
   void filterByProjectName(String value) {
     _projectNameFilter = value;
@@ -98,7 +70,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Listens to project updates.
-  void _projectsListener(List<Project> newProjects) {
+  void updateProjects(List<Project> newProjects, String errorMessage) {
+    _errorMessage = errorMessage;
+    
     if (newProjects == null) return;
 
     if (newProjects.isEmpty) {
@@ -138,6 +112,11 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     }
 
     _projectMetrics = projectsMetrics;
+    notifyListeners();
+  }
+
+  Future<void> unsubscribeFromBuildMetrics() async {
+    await _cancelSubscriptions();
     notifyListeners();
   }
 
@@ -220,7 +199,6 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
   /// Cancels all created subscriptions.
   Future<void> _cancelSubscriptions() async {
-    await _projectsSubscription?.cancel();
     for (final subscription in _buildMetricsSubscriptions.values) {
       await subscription?.cancel();
     }
