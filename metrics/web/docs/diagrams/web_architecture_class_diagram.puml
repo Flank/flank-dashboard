@@ -1,0 +1,115 @@
+@startuml theme_data_class_diagram
+
+package data {
+    package model.deserializer {
+        class CoolEntityDeseerializer <<Serializable>> {
+            fromJson(Map<String, dynamic>) : CoolEntityDeseerializer
+            toJson() : Map<String, dynamic>
+        }
+    }
+
+    package data.repositories {
+        class ConcreteCoolReepository {
+            loadCoolEntities() : List<CoolEntity>
+            updateCoolEntitiy(String coolId, String coolName) : void
+        }
+    }
+}
+
+package domain {
+
+    package entities {
+        class CoolEntity {
+            coolId : String
+            coolName : String
+        }
+    }
+
+    package usecases {
+        package parameters {
+            class CoolParameters {
+                coolId : String
+                coolName : String
+            }
+        }
+
+        class LoadCoolEntitiesUseCase {
+            call() : List<CoolEntity>
+        }
+
+        class UpdateCoolEntityUseCase {
+            call(CoolParameters params) : void
+        }
+    }
+
+    package domain.repositories {
+        interface CoolRepository {
+            loadCoolEntities() : List<CoolEntity>
+            updateCoolEntitiy(String coolId, String coolName) : void
+        }
+    }
+}
+
+package presentation {
+    package view_model {
+        class CoolViewModel {
+            coolName : String
+        }
+    }
+
+    package pages {
+        class CoolPage {
+            build(BUildContext) : Widget
+        }
+    }
+
+    package state {
+        class CoolNotifier {
+            coolModels : List<CoolViewModel>
+
+            loadCoolModels() : void
+            updateCoolModel(CoolViewModel) : void
+        }
+    }
+
+    package strings {
+        class CoolStrings {}
+    }
+
+    package widgets {
+        class CoolTile {
+            build(BUildContext) : Widget
+        }
+
+        class CoolTable {
+            build(BUildContext) : Widget
+        }
+    }
+
+}
+
+ConcreteCoolReepository ..|> CoolRepository
+ConcreteCoolReepository ..> CoolEntityDeseerializer : uses
+
+CoolRepository ..> CoolEntity : provides
+
+CoolEntityDeseerializer --|> CoolEntity
+
+LoadCoolEntitiesUseCase *.. CoolRepository
+UpdateCoolEntityUseCase *.. CoolRepository
+LoadCoolEntitiesUseCase .up.> CoolEntity : provides
+UpdateCoolEntityUseCase ..> CoolParameters : uses
+
+CoolNotifier *.. UpdateCoolEntityUseCase
+CoolNotifier *.. LoadCoolEntitiesUseCase
+CoolNotifier ..> CoolViewModel : provides
+
+CoolPage ..> CoolNotifier : uses
+CoolPage ..> CoolTile : uses
+CoolPage ..> CoolTable : uses
+CoolTile ..> CoolViewModel : uses
+
+pages .right.> strings : uses
+widgets .up.> strings : uses
+
+@enduml
