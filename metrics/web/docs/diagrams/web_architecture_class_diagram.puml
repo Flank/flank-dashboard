@@ -2,14 +2,14 @@
 
 package data {
     package model.deserializer {
-        class CoolEntityDeseerializer <<Serializable>> {
-            fromJson(Map<String, dynamic>) : CoolEntityDeseerializer
+        class CoolEntityDeserializer <<Serializable>> {
+            fromJson(Map<String, dynamic>) : CoolEntityDeserializer
             toJson() : Map<String, dynamic>
         }
     }
 
     package data.repositories {
-        class ConcreteCoolReepository {
+        class ConcreteCoolRepository {
             loadCoolEntities() : List<CoolEntity>
             updateCoolEntitiy(String coolId, String coolName) : void
         }
@@ -59,7 +59,7 @@ package presentation {
 
     package pages {
         class CoolPage {
-            build(BUildContext) : Widget
+            build(BuildContext) : Widget
         }
     }
 
@@ -78,22 +78,22 @@ package presentation {
 
     package widgets {
         class CoolTile {
-            build(BUildContext) : Widget
+            build(BuildContext) : Widget
         }
 
         class CoolTable {
-            build(BUildContext) : Widget
+            build(BuildContext) : Widget
         }
     }
 
 }
 
-ConcreteCoolReepository ..|> CoolRepository
-ConcreteCoolReepository ..> CoolEntityDeseerializer : uses
+ConcreteCoolRepository ..|> CoolRepository
+ConcreteCoolRepository ..> CoolEntityDeserializer : uses
 
 CoolRepository ..> CoolEntity : provides
 
-CoolEntityDeseerializer --|> CoolEntity
+CoolEntityDeserializer --|> CoolEntity
 
 LoadCoolEntitiesUseCase *.. CoolRepository
 UpdateCoolEntityUseCase *.. CoolRepository

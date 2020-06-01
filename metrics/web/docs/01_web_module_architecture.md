@@ -16,14 +16,14 @@ To make the Metrics Web Application architecture clean and understandable we hav
 # Goals
 > Identify success metrics and measurable goals.
 
-- Explained common principles of the Clean Architecture.
-- Well explained components and modules of the Metrics Web Application.
+- Explain common principles of the Clean Architecture.
+- Explain components and modules of the Metrics Web Application.
 
 # Non-Goals
 > Identify what's not in scope.
 
-- The document does not explains the Clean Architecture in details.
-- The document does not describes the details of presentation layer and it's components. 
+- The document does not explain the Clean Architecture in details.
+- The document does not describe the details of presentation layer and it's components. 
 
 # Design
 > Explain and diagram the technical design.
@@ -89,7 +89,7 @@ The `repository`, in it's turn, is the class that provides an ability to interac
 ## Metrics Web Application domain layer
 > Explain what a `domain` layer is and what it consists of in terms of the Metrics Web Application.
 
-The domain layer is a part of the Metrics Application responsible for data processing and interaction with the `data` layer. The `domain` layer consists of `entities`, `use cases`, and `repository`. The domain layer contains the major part of the application functionality and business logic. 
+The `domain` layer is a part of the Metrics Web Application responsible for data processing and interaction with the `data` layer. This layer consists of `entities`, `use cases`, and `repository`. The domain layer contains the major part of the application functionality and business logic. 
 
 > Explain what an `entity` is.
 
@@ -106,14 +106,26 @@ Once the `domain` layer cannot depend on the `data` layer we should create an in
 ## Metrics Web Application presentation layer
 > Explain what a `presentation` layer is and what it consists of in terms of the Metrics Web Application
 
-> Explain what a `model (view model)` is.
+The `presentation` layer is responsible for displaying the data for the users and provides an ability to interact with the data for the user. The presentation layer consists of the `view model`, `page`, `widgets` and `state`.
+
+> Explain what a `view model` is.
+
+A `view model` is a class that implements the humble object pattern and used for data transfer from the presenter to the view. The `view model` should not depend on any entities or anything from the domain level. The `view model` is needed to make the UI (pages and widgets) independent from the domain layer.
 
 > Explain what a `page/widget` is.
 
+A `widget` is the part of the Metrics Web Application UI that stands for displaying the piece of some data. A `page` is the widget that properly combines `widgets`. Represents the web page or screen of the application.
+
 > Explain what a `state` is.
+
+A `state`, or a presenter, is the part of the presentation layer that is the intermediary between the domain and the presentation layer. A state is responsible for holding the logic of the presentation layer - loading data, creating `view model`s from `entities`, saving data to the persistent store. The presenter is needed to separate the logic from UI to make it more testable and structured.
+
+To discover more details about presentation layer and widgets for the Metrics Web Application, see the [Presentation Layer](02_presentation_layer_architecture) and [Widget structure](03_widget_structure_organization) organization documents.
 
 ## Communication between layers
 > Explain and diagram how do these three layers work together more detailed.
+
+
 
 > Explain how the `presentation` layer works with the `domain` layer and how the `domain` layer works with the `data` layer.
 
@@ -123,6 +135,38 @@ Once the `domain` layer cannot depend on the `data` layer we should create an in
 # Package structure
 > Explain and diagram the Metrics Web Application package structure.
 
+`data_unit`
+> * data/
+>   * deserializer/
+>   * repositories/
+
+`domain_unit`
+> * domain/
+>   * entities/
+>   * usecases/
+>   * repositories/
+
+`presentation_unit`
+> * presentation/
+>   * view_model/
+>   * state/
+>   * pages/
+>   * strings/
+>   * widgets/
+>       * strategy/
+
+`module_unit`
+> * module/
+>    * `data_unit`
+>    * `domain_unit`
+>    * `presentation_unit`
+
+`common`
+> * common/
+>    * `data_unit`
+>    * `domain_unit`
+>    * `presentation_unit`
+
 # Dependencies
 > What is the project blocked on?
 
@@ -130,8 +174,17 @@ No blockers.
 
 > What will be impacted by the project?
 
+- The document decreases the entry threshold for newcomers of the Metrics Web Application.
+- The document simplifies the implementation process of the Metrics Web Application by explaining the common principles and concepts of the application architecture.
+
 # Alternatives Considered
 > Summarize alternative designs (pros & cons).
 
+- Not document the Metrics Web Application widget structure organization:
+    - Cons:
+        - The module appears to be tricky for newcomers without any document describing it on a top-level.
+
 # Results
 > What was the outcome of the project?
+
+The document that explains the Metrics Web Application architecture and its design on a top level. 
