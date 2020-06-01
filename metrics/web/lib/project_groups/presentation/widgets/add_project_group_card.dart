@@ -12,7 +12,6 @@ class AddProjectGroupCard extends StatelessWidget {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     return MetricsButtonCard(
-      elevation: 0.0,
       backgroundColor:
           themeNotifier.isDark ? Colors.grey[900] : Colors.grey[200],
       iconData: Icons.add,

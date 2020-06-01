@@ -46,4 +46,14 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
 
   @override
   void filterByProjectName(String value) {}
+
+  @override
+  Future<void> unsubscribeFromBuildMetrics() async {
+    return;
+  }
+
+  @override
+  void updateProjects(List<Project> newProjects, String errorMessage) {
+    return;
+  }
 }

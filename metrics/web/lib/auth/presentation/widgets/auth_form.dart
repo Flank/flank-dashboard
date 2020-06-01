@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
-import 'package:metrics/auth/presentation/util/auth_validation_util.dart';
+import 'package:metrics/auth/presentation/util/email_validation_util.dart';
+import 'package:metrics/auth/presentation/util/password_validation_util.dart';
 import 'package:metrics/auth/presentation/widgets/auth_input_field.dart';
 import 'package:provider/provider.dart';
 
@@ -34,14 +35,14 @@ class _AuthFormState extends State<AuthForm> {
             label: AuthStrings.email,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            validator: AuthValidationUtil.validateEmail,
+            validator: EmailValidationUtil.validateEmail,
           ),
           AuthInputField(
             key: const Key(AuthStrings.password),
             label: AuthStrings.password,
             controller: _passwordController,
             obscureText: true,
-            validator: AuthValidationUtil.validatePassword,
+            validator: PasswordValidationUtil.validatePassword,
           ),
           Selector<AuthNotifier, AuthErrorMessage>(
             selector: (_, state) => state.authErrorMessage,

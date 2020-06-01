@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/widgets/metrics_card.dart';
+import 'package:metrics/common/presentation/widgets/metrics_tile_card.dart';
 import 'package:metrics/project_groups/presentation/view_model/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_delete_dialog.dart';
@@ -27,11 +27,10 @@ class ProjectGroupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
-    return MetricsCard(
+    return MetricsTileCard(
       backgroundColor:
           themeNotifier.isDark ? Colors.grey[900] : Colors.grey[200],
       padding: const EdgeInsets.all(16.0),
-      elevation: 0.0,
       title: Text(
         projectGroupViewModel.name,
         overflow: TextOverflow.ellipsis,

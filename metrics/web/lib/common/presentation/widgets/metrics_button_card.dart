@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/widgets/metrics_card.dart';
 
 /// The widget that represents metrics button card.
 class MetricsButtonCard extends StatelessWidget {
@@ -35,7 +36,7 @@ class MetricsButtonCard extends StatelessWidget {
     this.iconPadding,
     this.titlePadding,
     this.backgroundColor,
-    this.margin = EdgeInsets.zero,
+    this.margin,
     this.elevation,
   }) : super(key: key);
 
@@ -43,10 +44,10 @@ class MetricsButtonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Card(
-        margin: margin,
+      child: MetricsCard(
         elevation: elevation,
-        color: backgroundColor,
+        margin: margin,
+        backgroundColor: backgroundColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

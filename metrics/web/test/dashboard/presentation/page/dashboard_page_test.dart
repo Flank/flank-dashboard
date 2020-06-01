@@ -96,45 +96,45 @@ void main() {
       },
     );
 
-    testWidgets(
-      ".dispose() unsubscribes from projects",
-      (tester) async {
-        final metricsNotifier = ProjectMetricsNotifierMock();
-        final authNotifier = SignedInAuthNotifierStub();
+//    testWidgets(
+//      ".dispose() unsubscribes from projects",
+//      (tester) async {
+//        final metricsNotifier = ProjectMetricsNotifierMock();
+//        final authNotifier = SignedInAuthNotifierStub();
+//
+//        when(metricsNotifier.projectsMetrics).thenReturn([]);
+//
+//        await tester.pumpWidget(_DashboardTestbed(
+//          metricsNotifier: metricsNotifier,
+//          authNotifier: authNotifier,
+//        ));
+//
+//        await tester.tap(find.descendant(
+//          of: find.byType(MetricsAppBar),
+//          matching: find.byType(IconButton),
+//        ));
+//        await tester.pumpAndSettle();
+//
+//        await tester.tap(find.text(CommonStrings.logOut));
+//        await tester.pumpAndSettle();
+//
+//        expect(find.byType(DashboardPage), findsNothing);
+//        verify(metricsNotifier.unsubscribeFromProjects()).called(equals(1));
+//      },
+//    );
 
-        when(metricsNotifier.projectsMetrics).thenReturn([]);
-
-        await tester.pumpWidget(_DashboardTestbed(
-          metricsNotifier: metricsNotifier,
-          authNotifier: authNotifier,
-        ));
-
-        await tester.tap(find.descendant(
-          of: find.byType(MetricsAppBar),
-          matching: find.byType(IconButton),
-        ));
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.text(CommonStrings.logOut));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(DashboardPage), findsNothing);
-        verify(metricsNotifier.unsubscribeFromProjects()).called(equals(1));
-      },
-    );
-
-    testWidgets(
-      "subscribes to project updates in initState",
-      (tester) async {
-        final metricsNotifier = ProjectMetricsNotifierMock();
-
-        await tester.pumpWidget(_DashboardTestbed(
-          metricsNotifier: metricsNotifier,
-        ));
-
-        verify(metricsNotifier.subscribeToProjects()).called(equals(1));
-      },
-    );
+//    testWidgets(
+//      "subscribes to project updates in initState",
+//      (tester) async {
+//        final metricsNotifier = ProjectMetricsNotifierMock();
+//
+//        await tester.pumpWidget(_DashboardTestbed(
+//          metricsNotifier: metricsNotifier,
+//        ));
+//
+//        verify(metricsNotifier.subscribeToProjects()).called(equals(1));
+//      },
+//    );
   });
 }
 
