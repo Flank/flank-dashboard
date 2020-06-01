@@ -5,6 +5,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:provider/provider.dart';
 
 import '../../routes/route_generator.dart';
@@ -33,7 +34,7 @@ class MetricsDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Project groups'),
+            title: const Text(ProjectGroupsStrings.projectGroups),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, RouteGenerator.projectGroupPage);

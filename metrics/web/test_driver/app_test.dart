@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:test/test.dart';
 
 import 'arguments/model/user_credentials.dart';
@@ -113,6 +114,29 @@ void main() {
           );
         });
       });
+
+      // group("ProjectGroup page", () {
+      //   const String projectGroupName = 'testProjectGroupName';
+
+      //   setUpAll(() async {
+      //     await _openProjectGroupPage(driver);
+      //   });
+
+      //   test("loads and shows the project groups", () async {
+      //     await driver.waitFor(find.byType('ProjectGroupCard'));
+      //   });
+
+      //   test("can create a project group", () async {
+      //     await driver.waitFor(find.byType('AddProjectGroupCard'));
+      //     await driver.tap(find.byType('AddProjectGroupCard'));
+      //     await driver.waitUntilNoTransientCallbacks(
+      //       timeout: const Duration(seconds: 2),
+      //     );
+      //     await driver.tap(find.byType('ClearableTextFormField'));
+      //     await driver.enterText(projectGroupName);
+      //     await driver.tap(find.text(ProjectGroupsStrings.createGroup));
+      //   });
+      // });
     },
   );
 }
@@ -134,4 +158,22 @@ Future<void> _authFormExists(FlutterDriver driver) async {
 
 Future<void> _authFormAbsent(FlutterDriver driver) async {
   await driver.waitForAbsent(find.byType('AuthForm'));
+}
+
+Future<void> _openProjectGroupPage(FlutterDriver driver) async {
+  await _authFormExists(driver);
+  await _login(driver);
+  await _authFormAbsent(driver);
+
+  await driver.waitUntilNoTransientCallbacks(
+    timeout: const Duration(seconds: 2),
+  );
+  await driver.tap(find.byTooltip('Open navigation menu'));
+
+  await driver.waitFor(find.text(ProjectGroupsStrings.projectGroups));
+  await driver.tap(find.text(ProjectGroupsStrings.projectGroups));
+
+  await driver.waitUntilNoTransientCallbacks(
+    timeout: const Duration(seconds: 2),
+  );
 }

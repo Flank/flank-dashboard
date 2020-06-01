@@ -7,15 +7,13 @@ class ProjectGroupData extends ProjectGroup implements DataModel {
     String id,
     String name,
     List<String> projectIds,
-  }) : super(
-          id: id,
-          name: name,
-          projectIds: projectIds,
-        );
+  }) : super(id: id, name: name, projectIds: projectIds);
 
   /// Creates the [ProjectGroupData] using the [json] and [documentId].
   factory ProjectGroupData.fromJson(
-      Map<String, dynamic> json, String documentId) {
+    Map<String, dynamic> json,
+    String documentId,
+  ) {
     return ProjectGroupData(
       id: documentId,
       name: json['name'] as String,

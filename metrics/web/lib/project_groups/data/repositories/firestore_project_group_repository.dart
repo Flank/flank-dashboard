@@ -27,19 +27,25 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
 
   @override
   Future<void> addProjectGroup(
-      String projectGroupName, List<String> projectIds) {
+    String projectGroupName,
+    List<String> projectIds,
+  ) {
     final projectGroupData = ProjectGroupData(
       name: projectGroupName,
       projectIds: projectIds,
     );
-    return _firestore.collection('project_groups').add(
-          projectGroupData.toJson(),
-        );
+
+    return _firestore
+        .collection('project_groups')
+        .add(projectGroupData.toJson());
   }
 
   @override
   Future<void> updateProjectGroup(
-      String projectGroupId, String projectGroupName, List<String> projectIds) {
+    String projectGroupId,
+    String projectGroupName,
+    List<String> projectIds,
+  ) {
     final projectGroupData = ProjectGroupData(
       name: projectGroupName,
       projectIds: projectIds,

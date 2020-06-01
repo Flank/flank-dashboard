@@ -13,10 +13,9 @@ class ProjectGroup {
   /// [name] is the name of this project group.
   /// [projectIds] is the list of project ids related with this project group.
   const ProjectGroup({
-    @required this.id,
+    this.id,
     @required this.name,
     @required this.projectIds,
-  })  : assert(id != null),
-        assert(name != null),
+  })  : assert(name != null),
         assert(projectIds != null);
 }
