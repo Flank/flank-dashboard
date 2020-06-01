@@ -29,20 +29,25 @@ To make the Metrics Web Application clear, understandable, and to lower the entr
 # Design
 > Explain and diagram the technical design.
 
-## View models for UI components: pros & cons.
+## View models for UI components
 > Give the main pros & cons of using the `view model`.
 
-The `view model` is the simple object implementing the humble object pattern and used to provide data from the presenter (ChangeNotifier) to the view (Widgets).
+The `view model` is the simple object implementing the humble object pattern and used to provide data from the presenter (ChangeNotifier) to the view (Widgets). The view model should consists of simple Dart types (`string`s, `integer`s, `enum`s, etc.) or other `view model`s.
 
 All the `view model` classes should be placed under the `module_name/presentation/view_model` folder. There should not be any common `view model`s since they should be module-specific.
 
-Pros: 
-- It helps to divide the UI from the business logic.
-- Improves testability and reduces the number of complex widget tests.
-- Reduces entities using in the presentation layer and thus reduces the connectedness between presentation and domain layers.
+<details>
+  <summary>Pros & cons using the view model</summary>
 
-Cons: 
-- Increases the amount of boilerplate code and code duplication in some cases.
+    Pros: 
+    - It helps to divide the UI from the business logic.
+    - Improves testability and reduces the number of complex widget tests.
+    - Reduces entities using in the presentation layer and thus reduces the connectedness between presentation and domain layers.
+
+    Cons: 
+    - Increases the amount of boilerplate code and code duplication in some cases.
+
+</details>
 
 > Explain and compare two main approaches in using the `view model`.
 
@@ -215,16 +220,16 @@ Let us consider the class diagram that will explain relationships between `widge
 
 ![View model usage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/view_model_usage_class_diagram.puml)
 
-On this diagram we can see that all widgets that uses the other `high-level` widgets (widgets from `dashboard/presentation/widgets` package) uses the composite view model. Other widgets uses the plain view model.
+On this diagram, we can see that all widgets that use the other `high-level` widgets (widgets from `dashboard/presentation/widgets` package) use a composite view model. The rest of the `high-level` widgets use a plain view model.
 
 ## Widget creation guidelines
 > Explain and diagram an algorithm for creating a new `widget`.
 
-As mentioned in the [Presentation Layer Architecture document](02_presentation_layer_architecture), all widgets can be one of two following types:
+As mentioned in the [Presentation Layer Architecture document](02_presentation_layer_architecture), all widgets can be one of the two following types:
 
-1. `Low-level widget` is the widgets that is responsible for only displaying the given data. This widgets should be highly-configurable and out of the Metrics Web Application context. It means that the `low-level` widgets should not apply any themes or use any `view model`s. The low-level widgets should be placed under the `common/presentation` folder. If there are more than one similar widgets then it is better to create a separate folder for them (like already existing `metrics_theme` folder), otherwise we can place a new low-level widget to the `widgets` folder. 
+1. `Low-level widget` is the widget that is responsible for only displaying the given data. These widgets should be highly-configurable and usable out of the Metrics Web Application context. 
  
-2. `High-level widget` is the widget that actually used in the Metrics Web Application context. It accepts the `view model` instance with data to display and displays the given data using `low-level widgets` and other `high-level widgets`. Also, the high-level widgets should apply the themes to used low-level widgets.
+2. `High-level widget` is the widget that is actually used in the Metrics Web Application context. It accepts the `view model` instance with data to display and displays the given data using `low-level widgets` and other `high-level widgets`.
 
 To make widget creation process clear we should describe it in details for all the widget types.
 
@@ -236,7 +241,7 @@ To create a new low-level widget we should follow the next steps:
     - It should be highly configurable meaning that all the colors and styles can be configured from outside of this widget regardless of the default parameters used.
     - It should accept only Dart native data types like `string`s, `int`s, `bool`s, `Point`s, etc.
     - It should not apply any theme provided with the Metrics Web Application context.
-2. Place the new widget in the `common/presentation/widgets/` folder, so it can be used by any module of the Metrics Web Application.
+2. Place the new widget in the `common/presentation/` folder, so it can be used by any module of the Metrics Web Application. If there are a couple of similar common widgets, we can place them into a separate folder. For example, a `common/presentation/dialog` folder will contain all the common dialogs. If the `low-level` widget has no similar widgets and cannot be united with any other widgets into some group, we are placing these widgets into `common/presentation/widgets` folder.
 
 Generally speaking, the low-level widget should be implemented in the way it can be used outside of the Metrics Web Application. This allows creating high-reusable widgets not only within the Metrics Web Application scope but anywhere.
 
@@ -250,31 +255,39 @@ To create a new high-level widget, we should follow the next steps:
 
 2. If we have to use any low-level widgets, we should check if there any already existing low-level widgets that could be used, otherwise we need to try to separate the common (low-level) part of this widget and create it, using the instructions in [Low-level widget creation](#Low-level-widget-creation) section.
 
-3. Implement your widget using the view model from the previous step and low-level widgets from the first step, if any.
+3. Implement your widget using the view model from the first step and low-level widgets from the previous step, if any.
 
-4. Once you've created a widget itself, its time to add some paints. To be able to change the application colors from one place, we've created the metrics theme - the single place you can configure the colors and appearance of the application. So, you should decide if there any need to create a new theme data or the `MetricWidgetThemeData` could be used. Then you should add a theme data to the `MetricsThemeData` to be able to access this theme in your widgets later, using the `MetricsTheme.of(context)` method.
+4. Once you've created a widget itself, its time to add some paints. To be able to change the application colors from one place, we've created the metrics theme - the single place you can configure the colors and appearance of the application. About theme approach and related guidelines see the [Metrics Theme guidelines](#Metrics-Theme-guidelines) section.
 
-5. If widget contains any constant strings like titles, descriptions, error messages, and so on, consider extracting them to a separate class in the `strings` folder.
+5. If the widget contains any constant strings like titles, descriptions, error messages, and so on, consider extracting them to a specialized class in the `module_name/presentation/strings` folder.
 
 The following diagram describes the process of creation of the high-level widget:
 
 ![Create High-Level Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/create_high_level_widget_activity_diagram.puml)
 
-The next question we should answer is: "Should we create a separate widget for each UI component?".
-For example, we have one low-level widget that displays the circular percentage chart, and we have two metrics that should be displayed with this chart. The question is - should we create a separate widget for each of these metrics.
+### A note in widget creation
 
-Let's consider the pros & cons of creating a separate widget for each metric: 
+The next question we should answer is: _"Should we create a separate widget for each UI component?"_.
+
+For example, we have one `low-level` widget that displays the circular percentage chart, and we have two metrics that should be displayed with this chart. The question is - should we create a separate widget for each of these metrics or we can create a common widget for them. 
+
+So, it seems to be better to create a separate widget for each view even if these widgets look identical currently. It will allow us to simply change one of them later and increase maintainability.
+
+
+<details>
+  <summary>Pros & cons of described approaches</summary>
+
+## Pros & cons of creating a separate widget for each metric
 
 Pros: 
 - SRP: one widget for one view.
 - It makes the namings a bit more intuitive.
-- Reduces the number of changes to make one widget looks different.
+- Reduces the number of changes to make one widget look different.
 
 Cons: 
 - Increases code duplication in implementation and tests.
-- Increases the amount of code.
 
-Another way is to create a single configurable high-level widget for displaying these metrics. Let's consider the pros & cons of this approach:
+## Pros & cons of creating a common widget
 
 Pros: 
 - Keeps your code DRY.
@@ -283,33 +296,37 @@ Pros:
 
 Cons: 
 - Makes your code less maintainable.
-- Increases amount of changes to make one widget looks different.
+- Increases the number of changes to make one widget look different.
 
-So, it seems to be better to create a separate widget for each view even if these widgets look identical currently. It will allow us to simply change one of them later and increase maintainability.
+</details>
 
 ## Metrics Theme guidelines
 
 ### Metrics Theme structure [Pending Approval]
 > Explain and diagram the metrics theme structure.
 
-In order to support the application's appearance in a clear and maintainable way, the Metrics Web Application uses themes. The theme is a configuration for the appearance (colors, text style, etc.) of a part of UI. Themes allow configuring how the UI or its part looks like and introduces the great support to change this appearance reactively (e.g. dark and light themes).
+The Metrics Web Application uses themes to make visual elements style reusable and consistent. A theme is a set of colors, fonts logically structured to allow configuring how the UI in general or its parts look like. It provides an ability to swap themes (e.g. dark and light themes).
 
-Our main concept of the theme is that we have a `MetricsThemeData` class that contains all the theme data for widgets. We can obtain the `MetricsThemeData` using the `MetricsTheme.of(context)` method. The `MetricsThemeData` consists of classes that implement the  `AttentionLevelThemeData` interface. This interface provides an `attentionLevel` field that provides the different variations of styles, applicable for separate group of widgets. Let's consider the class diagram that represents structure of `MetricsThemeData` and the relationships between classes in the theme data and widgets: 
+The main idea of the Metrics Theme inspired by Flutter default MaterialTheme that provides the `InheritedWidget` with the theme data to widgets. So, we have a `MetricsThemeData` class that contains the theme data for all the Metric widgets. Also, we have a `MetricsTheme` widget - the `InheritedWidget` that provides the `MetricsThemeData` to descendant widgets. To simplify the mechanism of changing the theme, there is the `MetricsThemeBuilder` widget that holds the light and dark themes and builds the MetricsTheme widget depending on the current theme state.
+
+See the diagram below for a more detailed description of metrics theme organization: 
+
+![Metrics Theme Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/metrics_theme_structure_diagram.puml)
+
+Let's consider the class diagram that represents structure of `MetricsThemeData` and the relationships between classes in the theme data and widgets: 
 
 ![Metrics Theme Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/theme_data_class_diagram.puml)
 
-The main idea of the Metrics Theme inspired by Flutter default MaterialTheme that provides the `InheritedWidget` with the theme data to widgets. So, we have a `MetricsThemeData` class that contains the theme data for all the Metric widgets. Also, we have a `MetricsTheme` widget - the `InheritedWidget` that provides the `MetricsThemeData` to descendant widgets. To simplify the mechanism of changing the theme (from light to dart), there is the `MetricsThemeBuilder` widget that holds the light and dark themes and builds the MetricsTheme widget depending on the current theme state.
+#### How to get the Metrics Theme
 
-See the diagram below for a more detailed description of metrics theme structure: 
-
-![Metrics Theme Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/metrics_theme_structure_diagram.puml)
+Our main concept of the theme is that we have a `MetricsThemeData` class that contains all the theme data for widgets. We can obtain the `MetricsThemeData` using the `MetricsTheme.of(context)` method. The `MetricsThemeData` consists of classes that implement the  `AttentionLevelThemeData` interface. This interface provides an `attentionLevel` field that provides the different variations of styles, applicable for separate group of widgets.
 
 ### Applying a Theme to a widget appearance [Pending]
 > Explain the algorithm of applying the metrics theme to the widgets.
 
-The main concept of applying the themes in the Metrics Web Application is to create a separate theme data or a separate field in `MetricsThemeData` class with `MetricWidgetThemeData` type for each high-level widget. The low-level widgets should not apply any theme. If the low-level widget requires any default colors, we should set them in the constructor default params or create some constants, but not use the metrics theme to make the low-level widgets independent of the Metrics Web Application context.
+The main concept of applying the themes in the Metrics Web Application is to create a separate theme data or a separate field in `MetricsThemeData` class with `MetricWidgetThemeData` type for each high-level widget. The low-level widgets should not apply any theme as they shouldn't be dependent of Metrics Web Application context. If the low-level widget requires any default colors, we should set them in the constructor default params or create some constants.
 
-So, the low-level widget should have the color params in the constructor, and the high-level widget that uses this low-level widget should apply the appropriate theme for it. This means that the appearance of the low-level widget is always controlled outside of it.
+So, the low-level widget should have the color params in the constructor, and the high-level widget that uses this low-level widget should apply the appropriate theme for it.
 
 If widgets require the custom theme (different from `MetricWidgetThemeData`, or any existing ones), we should create a new theme data (see [Adding a new Theme](#Adding_a_new_Theme)), specific for this widget. All the theme data classes should be stored in a `common/presentation/metrics_theme/model` folder. Let's consider the activity diagram that will explain the process of applying a theme data to a widget: 
 
@@ -318,9 +335,11 @@ If widgets require the custom theme (different from `MetricWidgetThemeData`, or 
 ### Adding a new Theme [Pending]
 > Explain the algorithm of adding new theme components for new widgets.
 
+Before adding a new theme, you should keep in mind that there are several themes providing a common configuration of the application appearance. The `textTheme` and `metricsWidgetTheme` fields of the `MetricThemeData` provide all the common text styles and colors respectively. So if the widget you've created requires only the common styles - use the themes given and **do not** create a new theme. Consider creating a new theme data only if your widget appearance differs from the common for the application.
+
 To add a new theme to the `MetricsThemeData` you should follow the next steps: 
 1. Create a new class in `common/presentation/metrics_theme/model` folder that will represent a new theme data.
-2. Add the `newThemeData` field to the `MetricThemeData` class to be able to obtain it. 
+2. Add the `newTheme` field to the `MetricThemeData` class to be able to obtain it. 
 3. Modify the `copyWith` method of the `MetricsThemeData` class and make it accept the created theme data. 
 4. Configure the light and dark variants theme data for a new theme in corresponding classes.
 

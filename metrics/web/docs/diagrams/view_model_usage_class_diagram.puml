@@ -1,6 +1,6 @@
 @startuml view_model_usage_diagram
 
-package dashboard.preseentation {
+package dashboard.presentation {
     package widgets {
         class ProjectTile {
             projectTileViewModel : ProjectTileViewModel
