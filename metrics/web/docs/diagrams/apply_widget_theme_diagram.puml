@@ -1,0 +1,13 @@
+@startuml apply_widget_theme_diagram
+(*) -> Apply theme to the CoolWidget
+if Is a low-level widget? then
+--> [Yes] (*)
+else
+---> [No] if Needs custom theme data? then
+--> [Yes] Add a CoolWidgetThemeData \n into **common/presentation/metrics_theme/model**
+--> Apply a CoolWidgetThemeData
+--> (*)
+else
+--> [No] (*)
+endif
+@enduml

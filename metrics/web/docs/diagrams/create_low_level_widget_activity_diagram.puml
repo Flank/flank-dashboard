@@ -1,0 +1,9 @@
+@startuml create_high-level_widget_activity_diagram
+
+(*) --> CoolWidget
+--> "Create a new dart file in **common/presentation/widgets/**"
+--> "Implement a new widget"
+--> "Add an ability to configure the appearence"
+--> (*)
+
+@enduml

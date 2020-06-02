@@ -1,0 +1,29 @@
+@startuml create_high-level_widget_activity_diagram
+(*) -> CoolWidget
+--> if Any child high-level widgets? then
+--> [Yes] Create Composite view model 
+--> ===STEP1===
+else
+--> [No] Create Plain view model 
+--> ===STEP1===
+endif
+--> Place the created view model under **module_name/presentation/view_model**
+--> if Need to use low-level widgets? then
+--> [Yes] if Do they exist? then
+--> [Yes] Use the existing low-level widget
+--> ===STEP2===
+else
+--> [No] Try to create a new low-level widget to use
+--> ===STEP2===
+endif
+else 
+--> [No] ===STEP2===
+endif
+--> Apply a theme data
+--> if Any constant strings? then
+--> [Yes] Extract strings to the `ModuleNameStrings` class
+--> (*)
+else
+--> [No] (*)
+endif
+@enduml
