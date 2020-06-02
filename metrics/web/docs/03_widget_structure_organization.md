@@ -265,7 +265,7 @@ The following diagram describes the process of creation of the high-level widget
 
 ![Create High-Level Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/create_high_level_widget_activity_diagram.puml)
 
-### A note in widget creation
+### Implementation guidelines
 
 The next question we should answer is: _"Should we create a separate widget for each UI component?"_.
 
@@ -302,7 +302,7 @@ Cons:
 
 ## Metrics Theme guidelines
 
-### Metrics Theme structure [Pending Approval]
+### Metrics Theme structure
 > Explain and diagram the metrics theme structure.
 
 The Metrics Web Application uses themes to make visual elements style reusable and consistent. A theme is a set of colors, fonts logically structured to allow configuring how the UI in general or its parts look like. It provides an ability to swap themes (e.g. dark and light themes).
@@ -319,23 +319,23 @@ Let's consider the class diagram that represents structure of `MetricsThemeData`
 
 #### How to get the Metrics Theme
 
-Our main concept of the theme is that we have a `MetricsThemeData` class that contains all the theme data for widgets. We can obtain the `MetricsThemeData` using the `MetricsTheme.of(context)` method. The `MetricsThemeData` consists of classes that implement the  `AttentionLevelThemeData` interface. This interface provides an `attentionLevel` field that provides the different variations of styles, applicable for separate group of widgets.
+Approach to applying the themes in the Metrics Web Application is to create separate theme data or a separate field in `MetricsThemeData` class with `MetricWidgetThemeData` type for each high-level widget. The low-level widgets should not apply any theme as they shouldn't be dependent on the Metrics Web Application context. If the low-level widget requires any default colors, we should set them in the constructor default params or create constants.
 
-### Applying a Theme to a widget appearance [Pending]
+### Applying a Theme to a widget appearance
 > Explain the algorithm of applying the metrics theme to the widgets.
 
 The main concept of applying the themes in the Metrics Web Application is to create a separate theme data or a separate field in `MetricsThemeData` class with `MetricWidgetThemeData` type for each high-level widget. The low-level widgets should not apply any theme as they shouldn't be dependent of Metrics Web Application context. If the low-level widget requires any default colors, we should set them in the constructor default params or create some constants.
 
-So, the low-level widget should have the color params in the constructor, and the high-level widget that uses this low-level widget should apply the appropriate theme for it.
+So, the low-level widget should have the color params in the constructor, and the high-level widget that uses this low-level widget should apply the appropriate theme to it.
 
 If widgets require the custom theme (different from `MetricWidgetThemeData`, or any existing ones), we should create a new theme data (see [Adding a new Theme](#Adding_a_new_Theme)), specific for this widget. All the theme data classes should be stored in a `common/presentation/metrics_theme/model` folder. Let's consider the activity diagram that will explain the process of applying a theme data to a widget: 
 
 ![Apply Widget Theme Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/apply_widget_theme_diagram.puml)
 
-### Adding a new Theme [Pending]
+### Adding a new Theme 
 > Explain the algorithm of adding new theme components for new widgets.
 
-Before adding a new theme, you should keep in mind that there are several themes providing a common configuration of the application appearance. The `textTheme` and `metricsWidgetTheme` fields of the `MetricThemeData` provide all the common text styles and colors respectively. So if the widget you've created requires only the common styles - use the themes given and **do not** create a new theme. Consider creating a new theme data only if your widget appearance differs from the common for the application.
+Before adding a new theme, you should keep in mind that there are several themes providing a common configuration of the application appearance. The `textTheme` and `metricsWidgetTheme` fields of the `MetricThemeData` provide all the common text styles and colors, respectively. So if the widget you've created can be styled using those common styles **do not** create a new theme. Consider creating a new theme data only if your widget appearance can't be styled with just common styles, but even in this case, try to use common styles to initialize parts of your custom theme data.
 
 To add a new theme to the `MetricsThemeData` you should follow the next steps: 
 1. Create a new class in `common/presentation/metrics_theme/model` folder that will represent a new theme data.
