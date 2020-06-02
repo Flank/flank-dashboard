@@ -343,7 +343,7 @@ To add a new theme to the `MetricsThemeData` you should follow the next steps:
 3. Modify the `copyWith` method of the `MetricsThemeData` class and make it accept the created theme data. 
 4. Configure the light and dark variants theme data for a new theme in corresponding classes.
 
-That's all! Now you can use your new theme data in widgets, calling the `MetricsTheme.of(context).newThemeData` method.
+That's all! Now you can use your new theme data in widgets, calling the `MetricsTheme.of(context).newTheme` method.
 
 ![Add Theme Data Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/add_theme_data_diagram.puml)
 
