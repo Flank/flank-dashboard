@@ -206,7 +206,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     setState(() {
       _isLoading = true;
     });
-    final isSuccess = await projectGroupNotifier.saveProjectGroups(
+    final isSuccess = await projectGroupNotifier.saveProjectGroup(
       widget.projectGroupViewModel?.id,
       _groupNameController.text,
       _projectIds,

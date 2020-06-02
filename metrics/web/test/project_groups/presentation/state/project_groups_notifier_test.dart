@@ -230,9 +230,9 @@ void main() {
     });
 
     test(
-        ".saveProjectGroups() delegates to the UpdateProjectGroupUseCase if the projectGroupId is not null",
+        ".saveProjectGroup() delegates to the UpdateProjectGroupUseCase if the projectGroupId is not null",
         () {
-      projectGroupsNotifier.saveProjectGroups(
+      projectGroupsNotifier.saveProjectGroup(
         projectGroupId,
         projectGroupName,
         projectIds,
@@ -250,9 +250,9 @@ void main() {
     });
 
     test(
-      ".saveProjectGroups() delegates to the AddProjectGroupUseCase if the projectGroupId is null",
+      ".saveProjectGroup() delegates to the AddProjectGroupUseCase if the projectGroupId is null",
       () {
-        projectGroupsNotifier.saveProjectGroups(
+        projectGroupsNotifier.saveProjectGroup(
           null,
           projectGroupName,
           projectIds,
@@ -268,13 +268,54 @@ void main() {
         ).called(1);
       },
     );
+    test(".saveProjectGroup() returns true if completes successfully",
+        () async {
+      final result = await projectGroupsNotifier.saveProjectGroup(
+        null,
+        projectGroupName,
+        projectIds,
+      );
+
+      expect(result, isTrue);
+    });
+
+    test(".saveProjectGroup() returns false if throws an Exception", () async {
+      when(addProjectGroupUseCase(any)).thenThrow(Exception());
+
+      final result = await projectGroupsNotifier.saveProjectGroup(
+        null,
+        projectGroupName,
+        projectIds,
+      );
+
+      expect(result, isFalse);
+    });
+
+    test(".deleteProjectGroup() returns true if completes successfully",
+        () async {
+      final result = await projectGroupsNotifier.deleteProjectGroup(
+        projectGroupId,
+      );
+
+      expect(result, isTrue);
+    });
+
+    test(".deleteProjectGroup() returns false if throws an Exception",
+        () async {
+      when(deleteProjectGroupUseCase(any)).thenThrow(Exception());
+
+      final result =
+          await projectGroupsNotifier.deleteProjectGroup(projectGroupId);
+
+      expect(result, isFalse);
+    });
 
     test(
-      ".saveProjectGroups() sets the firestore error message if the AddProjectGroupUseCase throws",
+      ".saveProjectGroup() sets the firestore error message if the AddProjectGroupUseCase throws",
       () async {
         when(addProjectGroupUseCase(any)).thenThrow(Exception());
 
-        await projectGroupsNotifier.saveProjectGroups(
+        await projectGroupsNotifier.saveProjectGroup(
           null,
           projectGroupName,
           projectIds,
@@ -288,11 +329,11 @@ void main() {
     );
 
     test(
-      ".saveProjectGroups() sets the firestore error message if the UpdateProjectGroupUseCase throws",
+      ".saveProjectGroup() sets the firestore error message if the UpdateProjectGroupUseCase throws",
       () async {
         when(updateProjectGroupUseCase(any)).thenThrow(Exception());
 
-        await projectGroupsNotifier.saveProjectGroups(
+        await projectGroupsNotifier.saveProjectGroup(
           projectGroupId,
           projectGroupName,
           projectIds,
@@ -324,7 +365,7 @@ void main() {
       () async {
         when(addProjectGroupUseCase(any)).thenThrow(Exception());
 
-        await projectGroupsNotifier.saveProjectGroups(
+        await projectGroupsNotifier.saveProjectGroup(
           null,
           projectGroupName,
           projectIds,

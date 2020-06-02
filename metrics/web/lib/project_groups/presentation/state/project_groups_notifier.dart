@@ -98,7 +98,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   ///
   /// If [projectIds] is null, a new project group is added,
   /// otherwise existing ones are updated.
-  Future<bool> saveProjectGroups(
+  Future<bool> saveProjectGroup(
     String projectGroupId,
     String projectGroupName,
     List<String> projectIds,

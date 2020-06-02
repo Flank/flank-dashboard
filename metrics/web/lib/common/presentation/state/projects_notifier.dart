@@ -86,7 +86,7 @@ class ProjectsNotifier extends ChangeNotifier {
 
   @override
   void dispose() {
-    _cancelSubscription();
+    _cancelSubscription(); 
     super.dispose();
   }
 }
