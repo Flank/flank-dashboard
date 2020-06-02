@@ -218,7 +218,7 @@ The `Coverage` is a `high-level` widget, as a `ProjectTile`, but it consists of 
 
 Let us consider the class diagram that will explain relationships between `widget`s and `view model`s on `ProjectTile` widget example:
 
-![View model usage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/view_model_usage_class_diagram.puml)
+![View model usage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/view_model_usage_class_diagram.puml)
 
 On this diagram, we can see that all widgets that use the other `high-level` widgets (widgets from `dashboard/presentation/widgets` package) use a composite view model. The rest of the `high-level` widgets use a plain view model.
 
@@ -245,7 +245,7 @@ To create a new low-level widget we should follow the next steps:
 
 Generally speaking, the low-level widget should be implemented in the way it can be used outside of the Metrics Web Application. This allows creating high-reusable widgets not only within the Metrics Web Application scope but anywhere.
 
-![Create Low-Level Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/create_low_level_widget_activity_diagram.puml)
+![Create Low-Level Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/create_low_level_widget_activity_diagram.puml)
 
 ### High-level widget creation
 
@@ -263,7 +263,7 @@ To create a new high-level widget, we should follow the next steps:
 
 The following diagram describes the process of creation of the high-level widget:
 
-![Create High-Level Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/create_high_level_widget_activity_diagram.puml)
+![Create High-Level Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/create_high_level_widget_activity_diagram.puml)
 
 ### Implementation guidelines
 
@@ -311,11 +311,11 @@ The main idea of the Metrics Theme inspired by Flutter default MaterialTheme tha
 
 See the diagram below for a more detailed description of metrics theme organization: 
 
-![Metrics Theme Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/metrics_theme_structure_diagram.puml)
+![Metrics Theme Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/metrics_theme_structure_diagram.puml)
 
 Let's consider the class diagram that represents structure of `MetricsThemeData` and the relationships between classes in the theme data and widgets: 
 
-![Metrics Theme Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/theme_data_class_diagram.puml)
+![Metrics Theme Structure Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/theme_data_class_diagram.puml)
 
 #### How to get the Metrics Theme
 
@@ -330,7 +330,7 @@ So, the low-level widget should have the color params in the constructor, and th
 
 If widgets require the custom theme (different from `MetricWidgetThemeData`, or any existing ones), we should create a new theme data (see [Adding a new Theme](#Adding_a_new_Theme)), specific for this widget. All the theme data classes should be stored in a `common/presentation/metrics_theme/model` folder. Let's consider the activity diagram that will explain the process of applying a theme data to a widget: 
 
-![Apply Widget Theme Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/apply_widget_theme_diagram.puml)
+![Apply Widget Theme Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/apply_widget_theme_diagram.puml)
 
 ### Adding a new Theme 
 > Explain the algorithm of adding new theme components for new widgets.
@@ -345,7 +345,7 @@ To add a new theme to the `MetricsThemeData` you should follow the next steps:
 
 That's all! Now you can use your new theme data in widgets, calling the `MetricsTheme.of(context).newTheme` method.
 
-![Add Theme Data Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/add_theme_data_diagram.puml)
+![Add Theme Data Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/add_theme_data_diagram.puml)
 
 # Dependencies
 > What is the project blocked on?
