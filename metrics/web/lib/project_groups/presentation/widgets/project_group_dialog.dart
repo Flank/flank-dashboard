@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/widgets/clearable_text_field.dart';
+import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/common/presentation/widgets/metrics_dialog.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
+import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
 import 'package:metrics/project_groups/presentation/view_model/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -70,7 +73,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            ClearableTextFormField(
+            MetricsTextFormField(
               validator: ProjectGroupValidationUtil.validateProjectGroupName,
               label: ProjectGroupsStrings.nameYourStrings,
               controller: _groupNameController,
@@ -94,19 +97,21 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                     child: Consumer<ProjectGroupsNotifier>(
                       builder: (_, projectGroupsNotifier, __) {
                         if (projectGroupsNotifier.errorMessage != null) {
-                          return Container(); //error loading
+                          return MetricsTextPlaceholder(
+                            text: projectGroupsNotifier.errorMessage,
+                          );
                         }
 
-                        final projects =
-                            projectGroupsNotifier.projects;
+                        final projects = projectGroupsNotifier.projects;
 
-                        if (projects == null) return Container(); // no projects
+                        if (projects == null) {
+                          return const LoadingPlaceholder();
+                        }
 
                         if (projects.isEmpty) {
-                          return Container(); // empty projects
-                          // return const _DashboardTablePlaceholder(
-                          //   text: DashboardStrings.noConfiguredProjects,
-                          // );
+                          return const MetricsTextPlaceholder(
+                            text: DashboardStrings.noConfiguredProjects,
+                          );
                         }
 
                         return ListView.builder(
