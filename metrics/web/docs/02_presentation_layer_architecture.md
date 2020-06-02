@@ -18,7 +18,7 @@ To make the Metrics Web Application clear, we have to create a document that wil
 > Identify success metrics and measurable goals.
 
 - Explain the architecture of the Metrics Web Application's presentation layer and it's components.
-- Create the component diagram that explains the relationships between UI components of the Metrics Web Application.
+- Create the class diagram that explains the relationships between UI components of the Metrics Web Application.
 
 # Non-Goals
 > Identify what's not in scope.
@@ -53,11 +53,11 @@ For the more detailed overview in a `view-model`, take a look at the [Widget str
 ### What is the state and why do we need it
 > Explain what the `state` of the module is.
 
-A `state`, or a `presenter`, is the part of the presentation layer that is the intermediary between the `domain` and the `presentation` layer. The `state` classes lay under the `module_name/presentation/view_model` folder.
+A `state`, or a `presenter`, is the part of the presentation layer that is the intermediary between the `domain` and the `presentation` layer. The `state` classes lay under the `module_name/presentation/state` folder. The `state` folder holds the state management mechanism for the current presentation layer.
 
 > Explain the main responsibilities of the `state`.
 
-A `state` is responsible for holding the logic of the presentation layer - loading data, creating view models from entities, saving data to the persistent store. The `presenter` is needed to separate the logic from UI to make it more testable and structured.
+A `state` is responsible for holding the logic of the presentation layer - loading data, creating view models from entities, saving data to the persistent store. The `presenter` separates the logic from UI to make both more testable and structured.
 
 ### Widget creation
 
@@ -78,17 +78,17 @@ A `page` is a very high-level widget that stands for the web-page (or screen) an
 
 2. High-level widgets
 
-`High-level widgets` are used to actually display the data for a user. Commonly, these widgets use `low-level widgets` as a building component to create the required view. Also, these widgets should accept the `view model`. See [Widget structure organization](03_widget_structure_organization.md) document to get more information about `high-level` widgets.
+`High-level widgets` are used to actually display the data for a user. Commonly, these widgets use `low-level widgets` as a building components to create the required view. Also, these widgets should accept the `view model`. See [Widget structure organization](03_widget_structure_organization.md) document to get more information about `high-level` widgets.
 
 So, to sum up: 
 
 1. Page - the widget that properly combines the high-level widgets. Represents the web page or screen of the application. These widgets lay under the `module_name/presentation/pages` folder.
-2. High-level widgets - the widgets that may, or may not, consist of low-level widgets and properly configures them. It should accept the `view model` on input. Can obtain any other params like `ThemeStrategy` to make it more testable.
+2. High-level widgets - the widgets that may, or may not, consist of low-level widgets and properly configure them. It should accept the `view model` on input. High-level widgets can obtain any other params like `ThemeStrategy` to make it more testable.
 3. Low-level widgets - the configurable widgets that simply displays the data. They should accept the Dart's native types, like `int`, `String`, `Point`, `bool` (can accept types from any UI packages if necessary). They should be highly reusable. Low-level widgets should be placed under the `common/presentation` package.
 
 > Explain the way of using the `strings` in the widgets and where to place them.
 
-Once we have widgets, we probably have some constant texts in them like titles, descriptions, error messages, etc. To make these strings reusable in different parts of our application like tests or even `ci integrations module`, we should extract strings to the separate classes. Commonly, we have a single class with strings for a module, and it is placed under the `module_name/presentation/strings` folder. Another reason to extract the strings into the separate class is translations. To add translations to our application, we have to wrap each string into `Intl.message` method from the [intl](https://pub.dev/packages/intl) package. So, if strings from our application will be placed into one file per module, it will be easy to integrate the translations, by changing the static fields to static getters. 
+Once we have widgets, we probably have some constant texts in them like titles, descriptions, error messages, etc. To make these strings reusable in different parts of our application like tests or even `ci integrations module`, we should extract strings to the separate classes. Commonly, we have a single class with strings for a module, and it is placed under the `module_name/presentation/strings` folder. Another reason to extract the strings into the separate class is translations. To add translations to our application, we have to wrap each string into `Intl.message` method from the [intl](https://pub.dev/packages/intl) package. So, if strings from our application will be placed into one file per module, it will be easier to integrate the translations, by changing the static fields to static getters. 
 
 > Explain the main principles of creating/editing widgets.
 
