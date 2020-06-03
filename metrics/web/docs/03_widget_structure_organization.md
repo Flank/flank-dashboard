@@ -34,7 +34,7 @@ To make the Metrics Web Application clear, understandable, and to lower the entr
 
 The `view model` is the simple object implementing the humble object pattern and used to provide data from the presenter (ChangeNotifier) to the view (Widgets). The view model should consists of simple Dart types (`string`s, `integer`s, `enum`s, etc.) or other `view model`s.
 
-All the `view model` classes should be placed under the `module_name/presentation/view_model` folder. There should not be any common `view model`s since they should be module-specific.
+All the `view model` classes should be placed under the `module_name/presentation/view_models` folder. There should not be any common `view model`s since they should be module-specific.
 
 <details>
   <summary>Pros & cons using the view model</summary>
