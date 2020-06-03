@@ -28,7 +28,7 @@ package dashboard.presentation {
         }
     }
 
-    package view_model {
+    package view_models {
         class ProjectTileViewModel {
             coverage : CoverageViewModel
             stability : StabilityViewModel
