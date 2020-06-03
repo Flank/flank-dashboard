@@ -146,7 +146,16 @@ void main() {
       final projectMetrics = projectMetricsNotifier.projectsMetrics.first;
       final projectCoverage = projectMetrics.coverage;
 
-      expect(projectCoverage, expectedProjectCoverage);
+      expect(projectCoverage.value, equals(expectedProjectCoverage.value));
+    });
+
+    test("loads the stability data", () async {
+      final expectedProjectStability = expectedProjectMetrics.stability;
+
+      final projectMetrics = projectMetricsNotifier.projectsMetrics.first;
+      final projectStability = projectMetrics.stability;
+
+      expect(projectStability.value, equals(expectedProjectStability.value));
     });
 
     test("loads the build number metrics", () async {
@@ -370,7 +379,7 @@ void main() {
     });
 
     test(
-        ".filterByProjectName() doesnt't apply filters to the list of the project metrics if the given value is null",
+        ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
         () {
       final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
 

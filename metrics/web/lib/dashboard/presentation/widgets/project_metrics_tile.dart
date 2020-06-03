@@ -5,10 +5,11 @@ import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/loading_builder.dart';
-import 'package:metrics/dashboard/presentation/widgets/metric_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/sparkline_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
 
 /// Displays the project name and it's metrics.
 class ProjectMetricsTile extends StatefulWidget {
@@ -108,8 +109,8 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   child: LoadingBuilder(
                     isLoading: projectMetrics == null,
                     loadingPlaceholder: const LoadingPlaceholder(),
-                    builder: (_) => MetricCirclePercentage(
-                      percent: projectMetrics.stability,
+                    builder: (_) => StabilityCirclePercentage(
+                      stability: projectMetrics.stability,
                     ),
                   ),
                 ),
@@ -117,8 +118,8 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   child: LoadingBuilder(
                     isLoading: projectMetrics == null,
                     loadingPlaceholder: const LoadingPlaceholder(),
-                    builder: (_) => MetricCirclePercentage(
-                      percent: projectMetrics.coverage,
+                    builder: (_) => CoverageCirclePercentage(
+                      coverage: projectMetrics.coverage,
                     ),
                   ),
                 ),

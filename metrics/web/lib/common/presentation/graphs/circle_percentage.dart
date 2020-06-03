@@ -131,7 +131,7 @@ class _CirclePercentageState extends State<CirclePercentage>
     );
   }
 
-  /// Animates the [AnimationController] to the [widget.value] if it is not null.
+  /// Animates the [AnimationController] to the [widget.stability] if it is not null.
   void _animate() {
     if (widget.value != null) {
       _controller.animateTo(widget.value);
