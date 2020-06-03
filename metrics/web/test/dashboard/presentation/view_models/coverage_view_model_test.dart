@@ -17,7 +17,7 @@ void main() {
 
       final coverage = CoverageViewModel(value: value);
 
-      expect(coverage.value, equals(expected));
+      expect(coverage, equals(expected));
     });
   });
 }

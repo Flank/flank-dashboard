@@ -18,7 +18,7 @@ void main() {
 
       final stability = StabilityViewModel(value: value);
 
-      expect(stability.value, equals(expected));
+      expect(stability, equals(expected));
     });
   });
 }
