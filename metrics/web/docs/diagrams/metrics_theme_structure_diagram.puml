@@ -1,0 +1,23 @@
+@startuml metrics_theme_structure_diagram
+    class MetricsThemeBuilder {
+        lightTheme : MetricsThemeData
+        darkTheme : MetricsThemeData
+    }
+
+    class MetricsTheme {
+        themeData : MetricsThemeData
+        {static} of(BuildContext) : MetricsThemeData
+    }
+
+    class MetricsThemeData {
+        concreteMetricsTheme : ConcreteMetricsThemeData
+    }
+
+    class ConcreteMetricsThemeData {}
+
+    MetricsThemeBuilder ..> MetricsThemeData : uses
+    MetricsTheme ..> MetricsThemeData : provides
+    MetricsThemeData ..> ConcreteMetricsThemeData : uses
+    ConcreteWidget ..> MetricsTheme : uses
+    ConcreteWidget ..> ConcreteMetricsThemeData : applies
+@enduml

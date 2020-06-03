@@ -1,0 +1,193 @@
+@startuml theme_data_class_diagram
+
+class MetricsThemeData {
+    **Common theme data for widgets that not**
+    **represent any metrics**
+    metricWidgetTheme : AttentionLevelThemeData
+    textTheme : TextThemeData
+
+    **Specific theme data for complex widgets**
+    circlePercentageTheme : CirclePercentageThemeData
+    barChartTheme : BarGraphThemeData
+    sparklineTheme : SparklineThemeData
+}
+
+interface AttentionLevelThemeData<T> {
+    attentionLevel : T
+}
+
+class BarGraphThemeData<BarGraphAttentionLevel> {
+    attentionLevel : BarGraphAttentionLevel
+}
+
+class BarGraphAttentionLevel {
+    low : BarGraphStyle
+    medium : BarGraphStyle
+    high : BarGraphStyle
+    unknown : BarGraphStyle
+}
+
+class BarGraphStyle {
+    {static} _xAxis : TextStyle
+    {static} _yAxis : TextStyle
+    {static} _legendItemTitle : TextStyle
+    {static} _legendItem : TextStyle
+    {static} _title : TextStyle
+
+    color : Color
+    xAxis : TextStyle
+    yAxis : TextStyle
+    legendItemTitle : TextStyle
+    legendItem : TextStyle
+    title : TextStyle
+}
+
+class CirclePercentageThemeData<CirclePercentageAttentionLevel> {
+    attentionLevel : CirclePercentageAttentionLevel
+}
+
+class CirclePercentageAttentionLevel {
+    low : CirclePercentageStyle
+    medium : CirclePercentageStyle
+    high : CirclePercentageStyle
+    unknown : CirclePercentageStyle
+}
+
+class CirclePercentageStyle {
+    {static} _circlePercent : Color
+    {static} _circleBackground : Color
+    {static} _value : TextStyle
+
+    circlePercent : Color
+    circleBackground : Color
+    value : TextStyle
+}
+
+class SparklineThemeData<SparklineAttentionLevel> {
+    attentionLevel : SparklineAttentionLevel
+}
+
+class SparklineAttentionLevel {
+    high : SparklineStyle
+    medium : SparklineStyle
+    low : SparklineStyle
+    unknown : SparklineStyle
+}
+
+class SparklineStyle {
+    {static} _graphLine : Color
+    {static} _graphFill : Color
+    {static} _axes: Color
+
+    graphLine : Color
+    graphFill : Color
+    axes: Color
+}
+
+class AnotherWidgetGroupThemeData<AnotherWidgetGroupAttentionLevel> {
+    attentionLevel : AnotherWidgetGroupAttentionLevel
+}
+
+class AnotherWidgetGroupAttentionLevel {
+    high : AnotherWidgetGroupStyle
+    medium : AnotherWidgetGroupStyle
+    low : AnotherWidgetGroupStyle
+    unknown : AnotherWidgetGroupStyle
+}
+
+class AnotherWidgetGroupStyle {
+    {static} _someColorOnWidget : Color
+    {static} _someAnotherColor : Color
+    {static} _textStyle : TextStyle
+
+    someColorOnWidget : Color
+    someAnother : Color
+    textStyle : TextStyle
+}
+
+class TextThemeData {
+    title : TextStyle
+    body : TextStyle
+}
+
+class MetricsAttentionLevelThemeData<MetricsAttentionLevel> {
+    attentionLevel : MetricsAttentionLevel
+}
+
+class MetricsAttentionLevel {
+    high : Color
+    medium : Color
+    low : Color
+    unknown : Color
+}
+
+class PerformanceSparklineGraph {
+    build(BuildContext) : Widget
+}
+
+class BuildCountSparklineGraph {
+    build(BuildContext) : Widget
+}
+
+class BuildTimeSparklineGraph {
+    build(BuildContext) : Widget
+}
+
+class FailedTestsBarGraph {
+    build(BuildContext) : Widget
+}
+
+class FlakyBuildsBarGraph {
+    build(BuildContext) : Widget
+}
+
+class BuildResultsBarGraph {
+    build(BuildContext) : Widget
+}
+
+class Stability {
+    build(BuildContext) : Widget
+}
+
+class Coverage {
+    build(BuildContext) : Widget
+}
+
+MetricsThemeData *.. MetricsAttentionLevelThemeData
+MetricsThemeData *.. TextThemeData
+MetricsThemeData *.. SparklineThemeData
+MetricsThemeData *.. CirclePercentageThemeData
+MetricsThemeData *.. BarGraphThemeData
+MetricsThemeData *.. AnotherWidgetGroupThemeData
+
+BarGraphThemeData ..|> AttentionLevelThemeData
+BarGraphThemeData *.. BarGraphAttentionLevel
+BarGraphAttentionLevel *.. BarGraphStyle
+
+CirclePercentageThemeData ..|> AttentionLevelThemeData
+CirclePercentageThemeData *... CirclePercentageAttentionLevel
+CirclePercentageAttentionLevel *.. CirclePercentageStyle
+
+SparklineThemeData ..|> AttentionLevelThemeData
+SparklineThemeData *... SparklineAttentionLevel
+SparklineAttentionLevel *.. SparklineStyle
+
+AnotherWidgetGroupThemeData ..|> AttentionLevelThemeData
+AnotherWidgetGroupThemeData *.. AnotherWidgetGroupAttentionLevel
+AnotherWidgetGroupAttentionLevel *.. AnotherWidgetGroupStyle
+
+MetricsAttentionLevelThemeData ..|> AttentionLevelThemeData
+MetricsAttentionLevelThemeData *... MetricsAttentionLevel
+
+PerformanceSparklineGraph .up.> SparklineStyle : uses
+BuildCountSparklineGraph .up.> SparklineStyle : uses
+BuildTimeSparklineGraph .up.> SparklineStyle : uses
+
+FailedTestsBarGraph .up.> BarGraphStyle : uses
+FlakyBuildsBarGraph .up.> BarGraphStyle : uses
+BuildResultsBarGraph .up.> BarGraphStyle : uses
+
+Coverage .up.> CirclePercentageStyle : uses
+Stability .up.> CirclePercentageStyle : uses
+
+@enduml
