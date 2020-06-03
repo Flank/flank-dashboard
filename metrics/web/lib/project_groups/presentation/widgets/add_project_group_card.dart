@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/widgets/metrics_button_card.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
+import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -26,9 +27,11 @@ class AddProjectGroupCard extends StatelessWidget {
         style: const TextStyle(fontSize: 24.0),
       ),
       onTap: () async {
+        Provider.of<ProjectGroupsNotifier>(context, listen: false)
+            .generateActiveProjectGroupViewModel();
         await showDialog(
           context: context,
-          child: const ProjectGroupDialog(),
+          child: ProjectGroupDialog(),
         );
       },
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_tile_card.dart';
-import 'package:metrics/project_groups/presentation/view_model/project_group_view_model.dart';
+import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_delete_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 /// A widget that represent [projectGroupViewModel].
 class ProjectGroupCard extends StatelessWidget {
-  final ProjectGroupViewModel projectGroupViewModel;
+  final ProjectGroupCardViewModel projectGroupCardViewModel;
 
   /// Creates the [ProjectGroupCard].
   ///
@@ -19,8 +19,8 @@ class ProjectGroupCard extends StatelessWidget {
   /// [projectGroupViewModel] represents project group data for UI.
   const ProjectGroupCard({
     Key key,
-    @required this.projectGroupViewModel,
-  })  : assert(projectGroupViewModel != null),
+    @required this.projectGroupCardViewModel,
+  })  : assert(projectGroupCardViewModel != null),
         super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class ProjectGroupCard extends StatelessWidget {
           themeNotifier.isDark ? Colors.grey[900] : Colors.grey[200],
       padding: const EdgeInsets.all(16.0),
       title: Text(
-        projectGroupViewModel.name,
+        projectGroupCardViewModel.name,
         overflow: TextOverflow.ellipsis,
         softWrap: false,
         maxLines: 1,
@@ -45,13 +45,12 @@ class ProjectGroupCard extends StatelessWidget {
       actions: <Widget>[
         FlatButton.icon(
           onPressed: () {
+            Provider.of<ProjectGroupsNotifier>(context, listen: false)
+                .generateActiveProjectGroupViewModel(projectGroupCardViewModel.id);
+
             showDialog(
               context: context,
-              builder: (context) {
-                return ProjectGroupDialog(
-                  projectGroupViewModel: projectGroupViewModel,
-                );
-              },
+              builder: (_) => ProjectGroupDialog(),
             );
           },
           icon: Icon(Icons.edit),
@@ -63,7 +62,8 @@ class ProjectGroupCard extends StatelessWidget {
               context: context,
               builder: (context) {
                 return ProjectGroupDeleteDialog(
-                  projectGroupViewModel: projectGroupViewModel,
+                  projectGroupId: projectGroupCardViewModel.id,
+                  projectGroupName: projectGroupCardViewModel.name,
                 );
               },
             );
@@ -77,9 +77,8 @@ class ProjectGroupCard extends StatelessWidget {
 
   /// Provides a project groups count for the given [projectGroupViewModel].
   String get _projectGroupsCount {
-    final projectsCount = projectGroupViewModel.projectIds?.length ?? 0;
-    return projectsCount == 0
+    return projectGroupCardViewModel.projectsCount == 0
         ? ProjectGroupsStrings.noProjects
-        : ProjectGroupsStrings.getProjectsCount(projectsCount);
+        : ProjectGroupsStrings.getProjectsCount(projectGroupCardViewModel.projectsCount);
   }
 }

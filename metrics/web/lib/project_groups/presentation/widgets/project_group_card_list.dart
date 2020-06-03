@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 /// A widget that displays the grid view with the list of [ProjectGroupCard].
 class ProjectGroupCardGridView extends StatefulWidget {
   @override
-  _ProjectGroupCardGridViewState createState() => _ProjectGroupCardGridViewState();
+  _ProjectGroupCardGridViewState createState() =>
+      _ProjectGroupCardGridViewState();
 }
 
 class _ProjectGroupCardGridViewState extends State<ProjectGroupCardGridView> {
@@ -24,10 +25,9 @@ class _ProjectGroupCardGridViewState extends State<ProjectGroupCardGridView> {
           );
         }
 
-        final projectGroupViewModels =
-            projectsGroupsNotifier.projectGroupViewModels;
+        final projectGroups = projectsGroupsNotifier.projectGroups;
 
-        if (projectGroupViewModels == null) return const LoadingPlaceholder();
+        if (projectGroups == null) return const LoadingPlaceholder();
 
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -36,16 +36,21 @@ class _ProjectGroupCardGridViewState extends State<ProjectGroupCardGridView> {
             mainAxisSpacing: 20,
             childAspectRatio: 2.0,
           ),
-          itemCount: projectGroupViewModels.length + 1,
+          itemCount: projectGroups.length + 1,
           itemBuilder: (context, index) {
-            if (index == projectGroupViewModels.length) {
+            if (index == projectGroups.length) {
               return AddProjectGroupCard();
             }
 
-            final projectGroupViewModel = projectGroupViewModels[index];
+            final projectGroup = projectGroups[index];
+            final projectGroupCardViewModel = ProjectGroupCardViewModel(
+              id: projectGroup.id,
+              name: projectGroup.name,
+              projectsCount: projectGroup.projectIds.length,
+            );
 
             return ProjectGroupCard(
-              projectGroupViewModel: projectGroupViewModel,
+              projectGroupCardViewModel: projectGroupCardViewModel,
             );
           },
         );
