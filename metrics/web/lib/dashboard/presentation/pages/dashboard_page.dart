@@ -31,7 +31,9 @@ class _DashboardPageState extends State<DashboardPage> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(bottom: 24.0),
-              child: ProjectSearchInput(),
+              child: ProjectSearchInput(
+                onFilter: _projectMetricsNotifier.filterByProjectName,
+              ),
             ),
             Expanded(
               child: MetricsTable(),

@@ -8,6 +8,10 @@ import 'package:rxdart/subjects.dart';
 
 /// [TextField] with the ability to search across projects.
 class ProjectSearchInput extends StatefulWidget {
+  final Function(String) onFilter;
+
+  const ProjectSearchInput({Key key, this.onFilter}) : super(key: key);
+
   @override
   _ProjectSearchInputState createState() => _ProjectSearchInputState();
 }
@@ -29,7 +33,7 @@ class _ProjectSearchInputState extends State<ProjectSearchInput> {
       onTimeout: (_) {
         if (_searchController.text == null) return;
 
-        _projectMetricsNotifier.filterByProjectName(_searchController.text);
+        widget.onFilter(_searchController.text);
       },
     ).listen((_) {});
   }

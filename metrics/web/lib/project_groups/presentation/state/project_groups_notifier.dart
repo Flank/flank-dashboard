@@ -52,6 +52,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   List<ProjectGroup> _projectGroups;
 
+  /// Optional filter value that represents a part (or full) project name used to limit the displayed data.
+  String _projectNameFilter;
+
   /// Creates the project groups store.
   ///
   /// The provided use cases should not be null.
@@ -81,13 +84,48 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   String get firestoreWriteErrorMessage => _firestoreWriteErrorMessage;
 
   /// A list of projects.
-  List<Project> get projects => _projects;
+  List<Project> get filteredProjects {
+    if (_projectNameFilter == null || _projects == null) {
+      return _projects;
+    }
+
+    return _projects
+        .where((project) => project.name
+        .toLowerCase()
+        .contains(_projectNameFilter.toLowerCase()))
+        .toList();
+  }
 
   List<ProjectGroup> get projectGroups => _projectGroups;
 
   ActiveProjectGroupDialogViewModel _activeProjectGroupDialogViewModel;
   ActiveProjectGroupDialogViewModel get activeProjectGroupDialogViewModel =>
       _activeProjectGroupDialogViewModel;
+
+  /// Adds project metrics filter using [value] provided.
+  void filterByProjectName(String value) {
+    _projectNameFilter = value;
+
+    final projectIds = _activeProjectGroupDialogViewModel.projectIds;
+    final projectSelectorViewModels = filteredProjects
+        .map(
+          (project) => ProjectSelectorViewModel(
+        id: project.id,
+        name: project.name,
+        isChecked: projectIds.contains(project.id),
+      ),
+    )
+        .toList();
+
+    _activeProjectGroupDialogViewModel = ActiveProjectGroupDialogViewModel(
+      id: _activeProjectGroupDialogViewModel.id,
+      name: _activeProjectGroupDialogViewModel.name,
+      projectSelectorViewModels: projectSelectorViewModels,
+      projectIds: projectIds,
+    );
+
+    notifyListeners();
+  }
 
   void generateActiveProjectGroupViewModel([String projectGroupId]) {
     final projectGroup = _projectGroups.firstWhere(
@@ -117,7 +155,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   }
 
   void toggleProjectCheckedStatus({String projectId, bool isChecked}) {
-    final projectIds = _activeProjectGroupDialogViewModel.projectIds;
+    final projectIds = List<String>.from(_activeProjectGroupDialogViewModel.projectIds);
     if (isChecked) {
       projectIds.add(projectId);
     } else {

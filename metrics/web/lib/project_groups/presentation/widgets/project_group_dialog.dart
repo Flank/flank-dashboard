@@ -9,6 +9,8 @@ import 'package:metrics/project_groups/presentation/view_models/active_project_g
 import 'package:metrics/project_groups/presentation/widgets/project_selector_list.dart';
 import 'package:provider/provider.dart';
 
+import '../state/project_groups_notifier.dart';
+
 /// A dialog that using for updating or creating project group data.
 class ProjectGroupDialog extends StatefulWidget {
   @override
@@ -22,6 +24,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  ProjectGroupsNotifier _projectGroupsNotifier;
   /// Controls loading state.
   bool _isLoading = false;
 
@@ -29,13 +32,13 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
   void initState() {
     super.initState();
 
-    final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
+    _projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
       context,
       listen: false,
     );
 
     _groupNameController.text =
-        projectGroupsNotifier.activeProjectGroupDialogViewModel?.name;
+        _projectGroupsNotifier.activeProjectGroupDialogViewModel?.name;
 
     _groupNameController.addListener(() {
       setState(() {});
@@ -92,7 +95,9 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
                   ),
                   child: Column(
                     children: <Widget>[
-                      ProjectSearchInput(),
+                      ProjectSearchInput(
+                        onFilter: _projectGroupsNotifier.filterByProjectName,
+                      ),
                       Flexible(
                         child: ProjectSelectorList(),
                       ),
