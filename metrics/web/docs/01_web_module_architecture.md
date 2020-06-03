@@ -35,23 +35,22 @@ The screaming architecture supposes that the root directory of the project shoul
 
 > Explain what are the application layers and why do we need them.
 
-The next level of abstraction is `layers`. We should divide our application into several layers - the `domain`, `data`, and `presentation` layers to separate the business logic from the frameworks used, like `Flutter` or `Firebase`. Each of the layers has it's own responsibilities. The `data` layer responsible for saving and loading data from persistent store, the `domain` layer responsible for data processing and interaction with `data` layer. The `presentation` layer responsible for displaying the data to the user and gives an ability for user to interact with data. So, these layers encapsulates the business logic of different application layers and makes our application more maintainable. Also, it allows us to write more granular tests and test different pieces of the application separately from each other.
+The next level of abstraction is `layers`. We should divide our application into several layers - the `domain`, `data`, and `presentation` layers to separate the business logic from the frameworks used, like `Flutter` or `Firebase`. Each of the layers has it's own responsibilities. The `data` layer responsible for saving and loading data from the persistent store, the `domain` layer responsible for data processing, and interaction with the `data` layer. The `presentation` layer responsible for displaying the data to the user and gives an ability for the user to interact with data. So, these layers encapsulate the business logic of different application parts and make our application more maintainable. Also, it allows us to write more granular tests and test different pieces of the application separately from each other.
 
 > Explain the clean architecture dependency rule.
 
-The dependency defines how the application components should behave to each other and helps to avoid dependencies that will reduce the maintainability and testability of the application. Let us consider the components diagram that explains the dependencies between the application components according to the dependency rule: 
+The dependency rule defines how the application components should behave to each other and helps to avoid dependencies that will reduce the maintainability and testability of the application. Let us consider the components diagram that explains the dependencies between the application components according to the dependency rule: 
 
 ![Dependency rule diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/dependency_rule_diagram.puml)
-
 
 ## Metrics Web Application modules
 > Explain the components of the application module.
 
-As we mentioned above, our application is divided into modules. Each module is a set of related functionality (use cases) that has at least one page (or screen) in it to display and interact with data. Also, each module is divided into `data`, `domain`, and `presentation` layers that contains different parts of functionality (persistent store interaction, data processing, etc.).
+As we mentioned above, our application is divided into modules. Each module is a set of related functionality (use cases) that has at least one page (or screen) in it to display and interact with data. Also, each module is divided into `data`, `domain`, and `presentation` layer that contains different parts of functionality (persistent store interaction, data processing, etc.).
 
 So, each module consists of: 
 1. The `data` layer that provides an ability to work with persistent storage.
-2. The `domain` layer that contains the main business logic and `entities` for this module.
+2. The `domain` layer contains the main business logic and `entities` for this module.
 3. The `presentation` layer that displays the data and provides an ability to interact with it.
 
 > List all current modules.
@@ -69,22 +68,22 @@ In the Metrics Web Application, we are using the `Clean Architecture` in combina
 
 Let us consider the class diagram that will explain the main idea of the package structure and relationships between application layers in one module. Let's call this module `cool_module`: 
 
-![Web Architecture Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/widget_stucture_organization_document/metrics/web/docs/diagrams/web_architecture_class_diagram.puml)
+![Web Architecture Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_module_architecture/metrics/web/docs/diagrams/web_architecture_class_diagram.puml)
 
 Once we have a class diagram that provides detailed information about layers and relationships between them, let's consider the details about layers and their constituents.
 
 ## Metrics Web Application data layer
 > Explain what a `data` layer is and what it consists of in terms of the Metrics Web Application.
 
-The data layer is the application layer responsible for data saving/loading from the persistent store. The data layer consists of the `model` and the `repository` packages that contain a concrete implementation of saving, loading data from the persistent store, and data serialization.
+The `data` layer is the application layer responsible for data saving/loading from the persistent store. The `data` layer consists of the `model` and the `repository` packages that contain a concrete implementation of saving, loading data from the persistent store, and data serialization.
 
 > Explain what a `model` is.
 
-The `model` is a part of the data layer that represents the entity in some persistent store. The `model`s contain the serialization methods used in concrete repository implementation. Commonly, the `model`s inherit from an entity that they represent.
+The `model` is a class that represents some data model in the persistent store. The `model`s can contain serialization methods used to map the objects into `JSON`, `CSV`, `XML`, etc. Also, the `data` layer can contain separate packages for deserializers, adapters, etc. used to map the `JSON`, `SVG` or any other formats into the data models if required.
 
 > Explain what a `repository` is.
 
-The `repository`, in it's turn, is the class that provides an ability to interact with the persistent store.
+The `repository`, in its turn, is the class that provides an ability to interact with the persistent store.
 
 ## Metrics Web Application domain layer
 > Explain what a `domain` layer is and what it consists of in terms of the Metrics Web Application.
@@ -97,7 +96,7 @@ An `entity` is an object that encapsulates the critical business rules and repre
 
 > Explain what a `Use Case` is.
 
-The `use case` is a class that represents a case of application using. This means that each use case contains a part of the application logic specific for the current module. The `use case`s are used to interact with the `data` layer from the presentation layer. Also, the use cases should not have any presentation or data-specific dependencies according to the dependency rule. 
+The `use case` is a class that represents a case of application using. This means that each `use case` contains a part of the application logic specific for the current module. The `use case`s are used to interact with the `data` layer from the presentation layer. Also, the `use case`s should not have any `presentation` or `data`-specific dependencies according to the dependency rule. 
 
 > Explain why a `domain` contains a `repository` as well.
 
@@ -106,7 +105,7 @@ Once the `domain` layer cannot depend on the `data` layer we should create an in
 ## Metrics Web Application presentation layer
 > Explain what a `presentation` layer is and what it consists of in terms of the Metrics Web Application
 
-The `presentation` layer is responsible for displaying the data for the users and provides an ability to interact with the data for the user. The presentation layer consists of the `view model`, `page`, `widgets` and `state`.
+The `presentation` layer is responsible for displaying the data for the users and provides an ability to interact with the data for the user. The presentation layer consists of the `view models`, `pages`, `widgets` and `state`.
 
 > Explain what a `view model` is.
 
@@ -118,54 +117,91 @@ A `widget` is the part of the Metrics Web Application UI that stands for display
 
 > Explain what a `state` is.
 
-A `state`, or a presenter, is the part of the presentation layer that is the intermediary between the domain and the presentation layer. A state is responsible for holding the logic of the presentation layer - loading data, creating `view model`s from `entities`, saving data to the persistent store. The presenter is needed to separate the logic from UI to make it more testable and structured.
+A `state`, or a presenter, is the part of the presentation layer that is the intermediary between the domain and the presentation layer. A state is responsible for holding the logic of the presentation layer - loading data, creating `view model`s from `entities`, saving data to the persistent store. The presenter separates the logic from UI to make it more testable and structured.
 
-To discover more details about presentation layer and widgets for the Metrics Web Application, see the [Presentation Layer](02_presentation_layer_architecture) and [Widget structure](03_widget_structure_organization) organization documents.
+To discover more details about presentation layer and widgets for the Metrics Web Application, see the [Presentation Layer](02_presentation_layer_architecture) and [Widget structure organization](03_widget_structure_organization) documents.
 
 ## Communication between layers
 > Explain and diagram how do these three layers work together more detailed.
 
+As we noticed above, the `domain` uses the `data` layer to save and load the data from the persistent store, and the `presentation` layer to display this data. Also, the `presentation` uses business logic from the `domain` to interact with the persistent store. As we can see on the diagram in the [Clean architecture in the Metrics Web Application](#Clean-architecture-in-the-Metrics-Web-Application) section, the presentation layer has a `state` (ChangeNotifier) that contains all the available use cases for this application module. The UI components (widgets) call the `state` methods to get or save some updates in the persistent store. The `state`, in its turn, works with the repository (the `data` layer) to save or load the data from the persistent store.
 
+Also, the `data` layer can notify the `domain` about data updates in the persistent store. For example, if the use case is subscribed to database collection updates. In this case, the use case, which is from the `domain` layer, triggers the `state` and it will result in UI updates.
 
 > Explain how the `presentation` layer works with the `domain` layer and how the `domain` layer works with the `data` layer.
 
 1. Add a data flow diagram explaining data migrations and transformations in the context of layers.
-    `data layer(repo)` -> `domain(use case)` -> `presentation(store)` -> `view(UI)` and vice-versa
+
+Let's consider an example of the data migrations and transformations between different layers of the Metrics Web Application. Here, the diagram shows the process of loading abstract `cool metrics` from the persistent store to display it for the user `Bob`. 
+
+![Web Layers Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_module_architecture/metrics/web/docs/diagrams/web_layers_sequence_diagram.puml)
 
 # Package structure
 > Explain and diagram the Metrics Web Application package structure.
 
-`data_unit`
+As we mentioned above, the Metrics Web Application uses the Streaming Architecture in combination with the Clean Architecture. So, on the top-level package structure, we can divide the application into modules that will contain the `data`, `domain`, and `presentation` layers.
+
+Let us consider the package structure of the `data` package (let's call it a `data_unit`): 
 > * data/
+>   * model/
 >   * deserializer/
 >   * repositories/
 
-`domain_unit`
+Such a package structure we will have in each module for the `data` package.
+
+The package structure for the `domain` layer for each module looks as follows (let's call it a `domain_unit`):
 > * domain/
 >   * entities/
 >   * usecases/
 >   * repositories/
 
-`presentation_unit`
+Similarly, the package structure for the `presentation` layer for each module looks as follows (let's call it a `presentation_unit`):
 > * presentation/
->   * view_model/
+>   * view_models/
 >   * state/
 >   * pages/
 >   * strings/
 >   * widgets/
 >       * strategy/
 
-`module_unit`
+Thus, the module's package structure according to the above statements gets its _screaming_ look:
 > * module/
 >    * `data_unit`
 >    * `domain_unit`
 >    * `presentation_unit`
 
-`common`
+Regardless of the module's purpose, its package structure must follow the same pattern described above. This helps to simplify navigation for all the application parts and make them similar to each other. 
+
+Unlike the usual module structure (`module_unit`), the `common` module structure has a bit different `presentation` package structure. In the `common/presentation` package, we have separate packages for different presentation components like `metrics_theme` or `injector` that will contain any commonly used widgets or `view model`s. Also, the `common/presentation` package contains the `widgets` package that contains the commonly used widgets that could not be grouped into any package because there are no similar widgets. Let's call this package structure unit as `common_unit`.
+
 > * common/
 >    * `data_unit`
 >    * `domain_unit`
->    * `presentation_unit`
+>    * presentation/
+>      * metrics_theme/
+>      * injector/
+>      * widgets/
+
+Also, we have the `util` package that contains all the utility classes/extensions used in the Metrics Web Application.
+
+So, to sum up, let's consider the Metrics Web Application package structure: 
+
+> * lib/
+>   * `common_unit`
+>   * dashboard/
+>     * `data_unit`
+>     * `domain_unit`
+>     * `presentation_unit`
+>   * auth/
+>     * `data_unit`
+>     * `domain_unit`
+>     * `presentation_unit`
+>   * some_another_module/
+>     * `data_unit`
+>     * `domain_unit`
+>     * `presentation_unit`
+>   * util/
+
 
 # Dependencies
 > What is the project blocked on?
@@ -187,4 +223,4 @@ No blockers.
 # Results
 > What was the outcome of the project?
 
-The document that explains the Metrics Web Application architecture and its design on a top level. 
+The document that explains the Metrics Web Application architecture and its design on a top-level. 

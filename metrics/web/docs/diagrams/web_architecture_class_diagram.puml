@@ -51,7 +51,7 @@ package domain {
 }
 
 package presentation {
-    package view_model {
+    package view_models {
         class CoolViewModel {
             coolName : String
         }
