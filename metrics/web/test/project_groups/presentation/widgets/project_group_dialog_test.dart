@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/widgets/metrics_dialog.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
+import 'package:metrics/project_groups/presentation/view_models/active_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_selector_list.dart';
+import 'package:metrics/project_groups/presentation/widgets/project_selector_list_tile.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/new_test_injection_container.dart';
+import '../../../test_utils/project_group_notifier_mock.dart';
 import '../../../test_utils/project_group_notifier_stub.dart';
 
 void main() {
   group("ProjectGroupDialog", () {
     testWidgets(
-      "contains MetricsDialog widget",
+      "contains the MetricsDialog widget",
       (tester) async {
         final projectGroupNotifier = ProjectGroupsNotifierStub();
 
@@ -66,7 +71,9 @@ void main() {
 
         expect(
           find.widgetWithText(
-              ProjectGroupDialog, ProjectGroupsStrings.addProjectGroup),
+            ProjectGroupDialog,
+            ProjectGroupsStrings.addProjectGroup,
+          ),
           findsOneWidget,
         );
 
@@ -76,7 +83,9 @@ void main() {
 
         expect(
           find.widgetWithText(
-              ProjectGroupDialog, ProjectGroupsStrings.editProjectGroup),
+            ProjectGroupDialog,
+            ProjectGroupsStrings.editProjectGroup,
+          ),
           findsOneWidget,
         );
       },

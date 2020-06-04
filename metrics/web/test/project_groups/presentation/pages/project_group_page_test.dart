@@ -52,7 +52,7 @@ class _ProjectGroupPageTestbed extends StatelessWidget {
   /// The [ProjectGroupsNotifier] to inject and use to test the [ProjectGroupPage].
   final ProjectGroupsNotifier projectGroupsNotifier;
 
-  /// Creates the [_DashboardTestbed] with the given [themeNotifier].
+  /// Creates the [_ProjectGroupPageTestbed] with the given [themeNotifier].
   const _ProjectGroupPageTestbed({
     Key key,
     this.themeNotifier,

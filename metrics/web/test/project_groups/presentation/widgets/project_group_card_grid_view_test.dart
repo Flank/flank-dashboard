@@ -3,8 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card_grid_view.dart';
-
-import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/new_test_injection_container.dart';
 
 void main() {
