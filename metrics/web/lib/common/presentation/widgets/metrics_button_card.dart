@@ -51,17 +51,21 @@ class MetricsButtonCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: iconPadding,
-              child: Icon(
-                iconData,
-                size: iconSize,
-                color: iconColor,
+            Expanded(
+              child: Padding(
+                padding: iconPadding,
+                child: Icon(
+                  iconData,
+                  size: iconSize,
+                  color: iconColor,
+                ),
               ),
             ),
-            Padding(
-              padding: titlePadding,
-              child: title,
+            Expanded(
+              child: Padding(
+                padding: titlePadding,
+                child: title,
+              ),
             ),
           ],
         ),

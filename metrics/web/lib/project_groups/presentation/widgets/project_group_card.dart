@@ -44,33 +44,38 @@ class ProjectGroupCard extends StatelessWidget {
       subtitlePadding: const EdgeInsets.all(8.0),
       actionsPadding: const EdgeInsets.only(top: 24.0),
       actions: <Widget>[
-        FlatButton.icon(
-          onPressed: () {
-            Provider.of<ProjectGroupsNotifier>(context, listen: false)
-                .generateActiveProjectGroupViewModel(projectGroupCardViewModel.id);
+        Expanded(
+          child: FlatButton.icon(
+            onPressed: () {
+              Provider.of<ProjectGroupsNotifier>(context, listen: false)
+                  .generateActiveProjectGroupViewModel(
+                      projectGroupCardViewModel.id);
 
-            showDialog(
-              context: context,
-              builder: (_) => ProjectGroupDialog(),
-            );
-          },
-          icon: Icon(Icons.edit),
-          label: const Text(CommonStrings.edit),
+              showDialog(
+                context: context,
+                builder: (_) => ProjectGroupDialog(),
+              );
+            },
+            icon: Icon(Icons.edit),
+            label: const Text(CommonStrings.edit),
+          ),
         ),
-        FlatButton.icon(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return ProjectGroupDeleteDialog(
-                  projectGroupId: projectGroupCardViewModel.id,
-                  projectGroupName: projectGroupCardViewModel.name,
-                );
-              },
-            );
-          },
-          icon: const Icon(Icons.delete_outline),
-          label: const Text(CommonStrings.delete),
+        Expanded(
+          child: FlatButton.icon(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return ProjectGroupDeleteDialog(
+                    projectGroupId: projectGroupCardViewModel.id,
+                    projectGroupName: projectGroupCardViewModel.name,
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.delete_outline),
+            label: const Text(CommonStrings.delete),
+          ),
         ),
       ],
     );
@@ -80,6 +85,7 @@ class ProjectGroupCard extends StatelessWidget {
   String get _projectGroupsCount {
     return projectGroupCardViewModel.projectsCount == 0
         ? ProjectGroupsStrings.noProjects
-        : ProjectGroupsStrings.getProjectsCount(projectGroupCardViewModel.projectsCount);
+        : ProjectGroupsStrings.getProjectsCount(
+            projectGroupCardViewModel.projectsCount);
   }
 }

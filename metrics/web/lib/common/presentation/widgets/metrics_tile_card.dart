@@ -46,29 +46,33 @@ class MetricsTileCard extends StatelessWidget {
       margin: margin,
       padding: padding,
       backgroundColor: backgroundColor,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            if (title != null)
-              Padding(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          if (title != null)
+            Expanded(
+              child: Padding(
                 padding: titlePadding,
                 child: title,
               ),
-            if (subtitle != null)
-              Padding(
+            ),
+          if (subtitle != null)
+            Expanded(
+              child: Padding(
                 padding: subtitlePadding,
                 child: subtitle,
               ),
-            if (actions != null)
-              Padding(
+            ),
+          if (actions != null)
+            Expanded(
+              child: Padding(
                 padding: actionsPadding,
                 child: Row(
                   children: actions,
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }

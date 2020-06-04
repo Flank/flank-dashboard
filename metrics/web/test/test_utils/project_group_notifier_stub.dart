@@ -11,7 +11,7 @@ import 'package:metrics_core/metrics_core.dart';
 /// Provides test implementation of the [ProjectGroupsNotifier] methods.
 class ProjectGroupsNotifierStub extends ChangeNotifier
     implements ProjectGroupsNotifier {
-  final List<ProjectGroup> _projectGroups = const [
+  final List<ProjectGroup> _testProjectGroups = const [
     ProjectGroup(id: '1', name: 'name', projectIds: []),
     ProjectGroup(id: '2', name: 'name2', projectIds: []),
   ];
@@ -24,10 +24,23 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
     selectedProjectIds: [],
   );
 
-  @override
-  List<ProjectGroup> get projectGroups => _projectGroups;
+  final List<ProjectSelectorViewModel> _testProjectSelectorViewModels = [
+    ProjectSelectorViewModel(id: '1', name: 'name1', isChecked: true),
+    ProjectSelectorViewModel(id: '2', name: 'name2', isChecked: false),
+  ];
+
+  List<ProjectGroup> _projectGroups;
 
   ActiveProjectGroupDialogViewModel _activeProjectGroupDialogViewModel;
+
+  List<ProjectSelectorViewModel> _projectSelectorViewModels;
+
+  @override
+  List<ProjectGroup> get projectGroups => _projectGroups ?? _testProjectGroups;
+
+  @override
+  List<ProjectSelectorViewModel> get projectSelectorViewModels =>
+      _projectSelectorViewModels ?? _testProjectSelectorViewModels;
 
   @override
   ActiveProjectGroupDialogViewModel get activeProjectGroupDialogViewModel =>
@@ -63,9 +76,6 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
   }
 
   @override
-  List<ProjectGroupCardViewModel> get projectGroupViewModels => null;
-
-  @override
   String get projectsErrorMessage => null;
 
   @override
@@ -92,7 +102,4 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
 
   @override
   void updateProjects(List<Project> projects, String errorMessage) {}
-
-  @override
-  List<ProjectSelectorViewModel> get projectSelectorViewModels => null;
 }
