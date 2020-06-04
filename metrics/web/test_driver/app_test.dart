@@ -117,11 +117,19 @@ void main() {
 
       group("ProjectGroup page", () {
         setUpAll(() async {
-          await _openProjectGroupPage(driver);
+          await driver.tap(find.byTooltip('Open navigation menu'));
+          await driver.waitFor(find.text(ProjectGroupsStrings.projectGroups));
+          await driver.tap(find.text(ProjectGroupsStrings.projectGroups));
+
+          await driver.waitUntilNoTransientCallbacks(
+            timeout: const Duration(seconds: 2),
+          );
         });
 
-        test("loads and shows the project groups", () async {
-          await driver.waitFor(find.byType('ProjectGroupCard'));
+        test("shows add project group card button", () async {
+          await driver.tap(find.byTooltip('Open navigation menu'));
+
+          await driver.waitFor(find.byType('AddProjectGroupCard'));
         });
       });
     },
@@ -145,22 +153,4 @@ Future<void> _authFormExists(FlutterDriver driver) async {
 
 Future<void> _authFormAbsent(FlutterDriver driver) async {
   await driver.waitForAbsent(find.byType('AuthForm'));
-}
-
-Future<void> _openProjectGroupPage(FlutterDriver driver) async {
-  await _authFormExists(driver);
-  await _login(driver);
-  await _authFormAbsent(driver);
-
-  await driver.waitUntilNoTransientCallbacks(
-    timeout: const Duration(seconds: 2),
-  );
-  await driver.tap(find.byTooltip('Open navigation menu'));
-
-  await driver.waitFor(find.text(ProjectGroupsStrings.projectGroups));
-  await driver.tap(find.text(ProjectGroupsStrings.projectGroups));
-
-  await driver.waitUntilNoTransientCallbacks(
-    timeout: const Duration(seconds: 2),
-  );
 }
