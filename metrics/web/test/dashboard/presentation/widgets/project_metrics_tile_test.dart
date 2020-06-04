@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/performance_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/circle_percentage.dart';
+import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
-import 'package:metrics/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/text_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -17,9 +19,8 @@ void main() {
       coverage: Percent(0.3),
       stability: Percent(0.4),
       buildNumberMetric: 1,
-      averageBuildDurationInMinutes: 0,
-      performanceMetrics: const [],
-      buildResultMetrics: const [],
+      performanceMetrics: const PerformanceMetricViewModel(),
+      buildResultMetrics: const BuildResultMetricViewModel(),
     );
 
     testWidgets(
@@ -115,14 +116,14 @@ void main() {
     );
 
     testWidgets(
-      "contains SparklineGraph widgets with performance metric",
+      "contains PerformanceSparklineGraph widgets with performance metric",
       (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricsTileTestbed(
           projectMetrics: testProjectMetrics,
         ));
 
         expect(
-          find.byType(SparklineGraph),
+          find.byType(PerformanceSparklineGraph),
           findsOneWidget,
         );
       },

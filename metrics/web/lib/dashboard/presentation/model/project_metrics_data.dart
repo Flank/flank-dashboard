@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:meta/meta.dart';
-import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/performance_metric_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// Represents a presentation model of the metrics of the project.
@@ -12,9 +11,8 @@ class ProjectMetricsData {
   final Percent coverage;
   final Percent stability;
   final int buildNumberMetric;
-  final int averageBuildDurationInMinutes;
-  final List<Point<int>> performanceMetrics;
-  final List<BuildResultBarData> buildResultMetrics;
+  final PerformanceMetricViewModel performanceMetrics;
+  final BuildResultMetricViewModel buildResultMetrics;
 
   /// Creates the [ProjectMetricsData].
   ///
@@ -23,7 +21,6 @@ class ProjectMetricsData {
   /// [coverage] is the tests code coverage of the project.
   /// [stability] is the percentage of the successful builds to total builds of the project.
   /// [buildNumberMetric] is the metric that represents the number of builds.
-  /// [averageBuildDurationInMinutes] is the average duration in minutes of the single build.
   /// [performanceMetrics] is metric that represents the duration of the builds.
   /// [buildResultMetrics] is the metric that represents the results of the builds.
   const ProjectMetricsData({
@@ -32,9 +29,8 @@ class ProjectMetricsData {
     this.coverage,
     this.stability,
     this.buildNumberMetric,
-    this.averageBuildDurationInMinutes,
-    this.performanceMetrics,
-    this.buildResultMetrics,
+    this.performanceMetrics = const PerformanceMetricViewModel(),
+    this.buildResultMetrics = const BuildResultMetricViewModel(),
   });
 
   /// Creates a copy of this project metrics but with the given fields replaced with the new values.
@@ -44,9 +40,8 @@ class ProjectMetricsData {
     Percent coverage,
     Percent stability,
     int buildNumberMetric,
-    int averageBuildDurationInMinutes,
-    List<Point<int>> performanceMetrics,
-    List<BuildResultBarData> buildResultMetrics,
+    PerformanceMetricViewModel performanceMetrics,
+    BuildResultMetricViewModel buildResultMetrics,
   }) {
     return ProjectMetricsData(
       projectId: projectId ?? this.projectId,
@@ -54,8 +49,6 @@ class ProjectMetricsData {
       coverage: coverage ?? this.coverage,
       stability: stability ?? this.stability,
       buildNumberMetric: buildNumberMetric ?? this.buildNumberMetric,
-      averageBuildDurationInMinutes:
-          averageBuildDurationInMinutes ?? this.averageBuildDurationInMinutes,
       performanceMetrics: performanceMetrics ?? this.performanceMetrics,
       buildResultMetrics: buildResultMetrics ?? this.buildResultMetrics,
     );

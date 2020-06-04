@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/performance_metric_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// Stub implementation of the [ProjectMetricsNotifier].
@@ -14,9 +16,8 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
     coverage: Percent(0.1),
     stability: Percent(0.2),
     buildNumberMetric: 0,
-    averageBuildDurationInMinutes: 1,
-    performanceMetrics: const [],
-    buildResultMetrics: const [],
+    performanceMetrics: const PerformanceMetricViewModel(),
+    buildResultMetrics: const BuildResultMetricViewModel(),
   );
 
   /// The list of [ProjectMetricsData].

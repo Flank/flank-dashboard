@@ -3,14 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/widgets/colored_bar.dart';
-import 'package:metrics/dashboard/presentation/widgets/placeholder_bar.dart';
+import 'package:metrics/common/presentation/graphs/colored_bar.dart';
+import 'package:metrics/common/presentation/graphs/placeholder_bar.dart';
 
 void main() {
   group("PlaceholderBar", () {
     const _width = 2.0;
-    final _inactiveColor = MetricsThemeData().inactiveWidgetTheme.primaryColor;
+    const color = Colors.grey;
 
     testWidgets(
       "displays the ColoredBar",
@@ -22,18 +21,20 @@ void main() {
     );
 
     testWidgets(
-      "displays the ColoredBar with an inactive color",
+      "delegates the given color to the ColoredBar",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed());
+        await tester.pumpWidget(_PlaceholderBarTestbed(
+          color: color,
+        ));
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 
-        expect(coloredBar.color, equals(_inactiveColor));
+        expect(coloredBar.color, equals(color));
       },
     );
 
     testWidgets(
-      "displays the ColoredBar with an inactive color borders of a 2.0 width",
+      "displays the ColoredBar with a given color borders of a 2.0 width",
       (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed());
 
@@ -41,7 +42,7 @@ void main() {
 
         expect(
           coloredBar.border,
-          equals(Border.all(color: _inactiveColor, width: 2.0)),
+          equals(Border.all(color: color, width: 2.0)),
         );
       },
     );
@@ -59,11 +60,18 @@ void main() {
   });
 }
 
+/// A testbed class required for testing the [PlaceholderBar].
 class _PlaceholderBarTestbed extends StatelessWidget {
+  /// A with of this bar.
   final double width;
 
+  /// A color of this bar.
+  final Color color;
+
+  /// Creates the [_PlaceholderBarTestbed] with the given width.
   const _PlaceholderBarTestbed({
     this.width,
+    this.color,
   });
 
   @override
@@ -72,6 +80,7 @@ class _PlaceholderBarTestbed extends StatelessWidget {
       home: Scaffold(
         body: PlaceholderBar(
           width: width,
+          color: color,
         ),
       ),
     );

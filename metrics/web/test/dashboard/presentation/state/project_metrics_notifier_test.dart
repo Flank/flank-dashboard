@@ -13,6 +13,8 @@ import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_update
 import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/performance_metric_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
@@ -74,65 +76,39 @@ void main() {
     test(
       "creates ProjectMetricsData with empty points from empty DashboardProjectMetrics",
       () async {
-        final receiveEmptyMetrics = _ReceiveProjectMetricsUpdatesStub(
-          metrics: const DashboardProjectMetrics(),
+        final receiveProjectMetricsUpdates = _ReceiveProjectMetricsUpdatesStub(
+          metrics: DashboardProjectMetrics(
+            stability: Percent(0.5),
+          ),
         );
 
-        final projectMetricsNotifier = ProjectMetricsNotifier(
-          receiveProjectUpdates,
-          receiveEmptyMetrics,
+        final receiveProjectUpdates = _ReceiveProjectUpdatesStub(
+          projects: [const Project(id: 'id', name: 'name')],
         );
 
-        await projectMetricsNotifier.subscribeToProjects();
-
-        bool hasEmptyMetrics = false;
-        final metricsListener = expectAsyncUntil0(() async {
-          final projectMetrics = projectMetricsNotifier.projectsMetrics;
-
-          if (projectMetrics == null || projectMetrics.isEmpty) return;
-
-          hasEmptyMetrics = true;
-          for (final metrics in projectMetrics) {
-            if (metrics.performanceMetrics == null ||
-                metrics.buildResultMetrics == null) {
-              hasEmptyMetrics = false;
-            } else if (metrics.performanceMetrics.isNotEmpty ||
-                metrics.buildResultMetrics.isNotEmpty) {
-              hasEmptyMetrics = false;
-            }
-          }
-
-          if (hasEmptyMetrics) projectMetricsNotifier.dispose();
-        }, () => hasEmptyMetrics);
-
-        projectMetricsNotifier.addListener(metricsListener);
-      },
-    );
-
-    test(
-      "creates ProjectMetricsData with null metrics if the DashboardProjectMetrics is null",
-      () async {
-        final receiveProjectMetricsUpdates =
-            _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
+        const emptyBuildResultMetric = BuildResultMetricViewModel();
+        const emptyPerformanceMetric = PerformanceMetricViewModel();
 
         final projectMetricsNotifier = ProjectMetricsNotifier(
           receiveProjectUpdates,
           receiveProjectMetricsUpdates,
         );
 
-        bool hasNullMetrics;
+        bool hasEmptyMetrics;
         final metricsListener = expectAsyncUntil0(() async {
           final projectMetrics = projectMetricsNotifier.projectsMetrics;
           if (projectMetrics == null || projectMetrics.isEmpty) return;
 
           final buildResultMetrics = projectMetrics.first.buildResultMetrics;
           final performanceMetrics = projectMetrics.first.performanceMetrics;
+          final stabilityMetric = projectMetrics.first.stability;
 
-          hasNullMetrics =
-              buildResultMetrics == null && performanceMetrics == null;
+          hasEmptyMetrics = buildResultMetrics == emptyBuildResultMetric &&
+              performanceMetrics == emptyPerformanceMetric &&
+              stabilityMetric != null;
 
-          if (hasNullMetrics) projectMetricsNotifier.dispose();
-        }, () => hasNullMetrics);
+          if (hasEmptyMetrics) projectMetricsNotifier.dispose();
+        }, () => hasEmptyMetrics);
 
         await projectMetricsNotifier.subscribeToProjects();
 
@@ -169,18 +145,18 @@ void main() {
       final performanceMetrics = firstProjectMetrics.performanceMetrics;
 
       expect(
-        performanceMetrics.length,
+        performanceMetrics.performance.length,
         expectedPerformanceMetrics.buildsPerformance.length,
       );
 
       expect(
-        firstProjectMetrics.averageBuildDurationInMinutes,
+        firstProjectMetrics.performanceMetrics.value,
         expectedPerformanceMetrics.averageBuildDuration.inMinutes,
       );
 
       final firstBuildPerformance =
           expectedPerformanceMetrics.buildsPerformance.first;
-      final performancePoint = performanceMetrics.first;
+      final performancePoint = performanceMetrics.performance.first;
 
       expect(
         performancePoint.x,
@@ -200,12 +176,12 @@ void main() {
       final buildResultMetrics = firstProjectMetrics.buildResultMetrics;
 
       expect(
-        buildResultMetrics.length,
+        buildResultMetrics.buildResults.length,
         expectedBuildResults.length,
       );
 
       final expectedBuildResult = expectedBuildResults.first;
-      final firstBuildResultMetric = buildResultMetrics.first;
+      final firstBuildResultMetric = buildResultMetrics.buildResults.first;
 
       expect(
         firstBuildResultMetric.value,
@@ -349,42 +325,44 @@ void main() {
     );
 
     test(
-        ".filterByProjectName() filters list of the project metrics according to the given value",
-        () async {
-      final expectedProjectMetrics = [
-        projectMetricsNotifier.projectsMetrics.last
-      ];
+      ".filterByProjectName() filters list of the project metrics according to the given value",
+      () async {
+        final expectedProjectMetrics = [
+          projectMetricsNotifier.projectsMetrics.last
+        ];
 
-      final projectNameFilter = expectedProjectMetrics.first.projectName;
+        final projectNameFilter = expectedProjectMetrics.first.projectName;
 
-      projectMetricsNotifier.filterByProjectName(projectNameFilter);
+        projectMetricsNotifier.filterByProjectName(projectNameFilter);
 
-      final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
+        final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
-      expect(
-        filteredProjectMetrics,
-        equals(expectedProjectMetrics),
-      );
+        expect(
+          filteredProjectMetrics,
+          equals(expectedProjectMetrics),
+        );
 
-      _resetProjectsFilters();
-    });
+        _resetProjectsFilters();
+      },
+    );
 
     test(
-        ".filterByProjectName() doesnt't apply filters to the list of the project metrics if the given value is null",
-        () {
-      final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
+      ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
+      () {
+        final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
-      projectMetricsNotifier.filterByProjectName(null);
+        projectMetricsNotifier.filterByProjectName(null);
 
-      final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
+        final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
-      expect(
-        filteredProjectMetrics,
-        equals(expectedProjectMetrics),
-      );
+        expect(
+          filteredProjectMetrics,
+          equals(expectedProjectMetrics),
+        );
 
-      _resetProjectsFilters();
-    });
+        _resetProjectsFilters();
+      },
+    );
 
     test(
       ".dispose() unsubscribes from all streams and removes project metrics",

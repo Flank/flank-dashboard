@@ -1,34 +1,27 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
-import 'package:metrics/dashboard/presentation/widgets/bar_graph.dart';
-import 'package:metrics/dashboard/presentation/widgets/colored_bar.dart';
-import 'package:metrics/dashboard/presentation/widgets/placeholder_bar.dart';
-import 'package:metrics_core/metrics_core.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/common/presentation/graphs/placeholder_bar.dart';
 
 /// [BarGraph] that represents the build result metric.
 ///
 /// Applies the color theme from the [MetricsThemeData.buildResultTheme].
 class BuildResultBarGraph extends StatefulWidget {
-  final List<BuildResultBarData> data;
-  final int numberOfBars;
+  final BuildResultMetricViewModel data;
 
   /// Creates the [BuildResultBarGraph] based on the given [data].
   ///
   /// The [data] must not be null.
-  /// [numberOfBars] is the number if the bars on graph.
-  /// If the [data] length will be greater than [numberOfBars],
-  /// the last [numberOfBars] of the [data] is displayed.
-  /// If there are not enough [data] to display [numberOfBars] bars,
-  /// the [PlaceholderBar]s are added to match the requested [numberOfBars].
+  /// If the [data.buildResults] length will be greater than [data.numberOfBuildsToDisplay],
+  /// the last [data.numberOfBuildsToDisplay] of the [data.buildResults] is displayed.
+  /// If there are not enough [data.buildResults] to display [data.numberOfBuildsToDisplay] bars,
+  /// the [PlaceholderBar]s are added to match the requested [data.numberOfBuildsToDisplay].
   const BuildResultBarGraph({
     Key key,
     @required this.data,
-    this.numberOfBars,
   })  : assert(data != null),
         super(key: key);
 
@@ -37,9 +30,7 @@ class BuildResultBarGraph extends StatefulWidget {
 }
 
 class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
-  static const _barWidth = 4.0;
-  static const _listEquality = ListEquality();
-  List<BuildResultBarData> _barsData;
+  List<BuildResultViewModel> _barsData;
   int _missingBarsCount = 0;
 
   @override
@@ -50,8 +41,9 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
 
   @override
   void didUpdateWidget(BuildResultBarGraph oldWidget) {
-    if (oldWidget.numberOfBars != widget.numberOfBars ||
-        !_listEquality.equals(oldWidget.data, widget.data)) {
+    if (oldWidget.data.numberOfBuildsToDisplay !=
+            widget.data.numberOfBuildsToDisplay ||
+        oldWidget.data != widget.data) {
       _calculateBarData();
     }
 
@@ -60,10 +52,8 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
 
   @override
   Widget build(BuildContext context) {
-    final widgetThemeData = MetricsTheme.of(context).buildResultTheme;
-
     return Container(
-      alignment: Alignment.bottomCenter,
+        alignment: Alignment.bottomCenter,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
@@ -73,9 +63,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
               children: List.generate(
                 _missingBarsCount,
                 (index) => const Expanded(
-                  child: PlaceholderBar(
-                    width: _barWidth,
-                  ),
+                  child: BuildResultBar(),
                 ),
               ),
             ),
@@ -83,25 +71,15 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
           Expanded(
             flex: _barsData.length,
             child: BarGraph(
-              data: _barsData,
+              data: _barsData.map((data) => data.value).toList(),
               graphPadding: EdgeInsets.zero,
-              onBarTap: _onBarTap,
-              barBuilder: (BuildResultBarData data) {
-                if (data.buildStatus == null) {
-                  return const PlaceholderBar(
-                    width: _barWidth,
-                  );
-                }
+              barBuilder: (int index) {
+                final data = _barsData[index];
 
                 return Align(
                   alignment: Alignment.center,
-                  child: ColoredBar(
-                    width: _barWidth,
-                    color: _getBuildResultColor(
-                      data.buildStatus,
-                      widgetThemeData,
-                    ),
-                    borderRadius: BorderRadius.circular(1.0),
+                  child: BuildResultBar(
+                    buildResult: data,
                   ),
                 );
               },
@@ -114,8 +92,8 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
 
   /// Calculates [_missingBarsCount] and trims the data to match the numberOfBars.
   void _calculateBarData() {
-    final numberOfBars = widget.numberOfBars;
-    _barsData = widget.data;
+    final numberOfBars = widget.data.numberOfBuildsToDisplay;
+    _barsData = widget.data.buildResults;
 
     if (numberOfBars == null) return;
 
@@ -124,27 +102,5 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
     } else {
       _missingBarsCount = numberOfBars - _barsData.length;
     }
-  }
-
-  /// Selects the color based on [buildStatus].
-  Color _getBuildResultColor(
-    BuildStatus buildStatus,
-    BuildResultsThemeData themeData,
-  ) {
-    switch (buildStatus) {
-      case BuildStatus.successful:
-        return themeData.successfulColor;
-      case BuildStatus.cancelled:
-        return themeData.canceledColor;
-      case BuildStatus.failed:
-        return themeData.failedColor;
-      default:
-        return null;
-    }
-  }
-
-  /// Opens the [BuildResultBarData] url.
-  void _onBarTap(BuildResultBarData data) {
-    launch(data.url);
   }
 }

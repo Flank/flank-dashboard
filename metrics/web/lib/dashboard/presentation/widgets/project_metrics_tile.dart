@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
-import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
-import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/loading_builder.dart';
 import 'package:metrics/dashboard/presentation/widgets/metric_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_tile.dart';
-import 'package:metrics/dashboard/presentation/widgets/sparkline_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 
 /// Displays the project name and it's metrics.
 class ProjectMetricsTile extends StatefulWidget {
@@ -73,8 +71,6 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                       loadingPlaceholder: const LoadingPlaceholder(),
                       builder: (_) => BuildResultBarGraph(
                         data: widget.projectMetrics.buildResultMetrics,
-                        numberOfBars: ReceiveProjectMetricsUpdates
-                            .lastBuildsForChartsMetrics,
                       ),
                     ),
                   ),
@@ -83,11 +79,8 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   child: LoadingBuilder(
                     isLoading: projectMetrics.performanceMetrics == null,
                     loadingPlaceholder: const LoadingPlaceholder(),
-                    builder: (_) => SparklineGraph(
-                      data: projectMetrics.performanceMetrics,
-                      value: DashboardStrings.minutes(
-                        projectMetrics.averageBuildDurationInMinutes,
-                      ),
+                    builder: (_) => PerformanceSparklineGraph(
+                      performanceMetric: projectMetrics.performanceMetrics,
                     ),
                   ),
                 ),

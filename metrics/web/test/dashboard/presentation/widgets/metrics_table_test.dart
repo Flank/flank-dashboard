@@ -7,8 +7,8 @@ import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.
 import 'package:metrics/dashboard/presentation/widgets/circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
+import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
-import 'package:metrics/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/project_metrics_notifier_mock.dart';
@@ -91,7 +91,7 @@ void main() {
         await tester.pumpAndSettle();
 
         final performanceMetricWidgetCenter = tester.getCenter(
-          find.byType(SparklineGraph),
+          find.byType(PerformanceSparklineGraph),
         );
 
         final performanceTitleCenter = tester.getCenter(
