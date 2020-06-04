@@ -12,7 +12,6 @@ import 'package:metrics/project_groups/domain/usecases/parameters/update_project
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/view_models/active_project_group_dialog_view_model.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_group_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_selector_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -32,9 +31,6 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Provides an ability to add the project group.
   final AddProjectGroupUseCase _addProjectGroupUseCase;
 
-  /// A [List] that holds [ProjectGroupViewModel]s
-  List<ProjectGroupViewModel> _projectGroupViewModels;
-
   /// The stream subscription needed to be able to stop listening
   /// to the project group updates.
   StreamSubscription _projectGroupsSubscription;
@@ -48,10 +44,13 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Holds the error message that occurred during the firestore writing operation.
   String _firestoreWriteErrorMessage;
 
+  /// A[List] that holds all loaded [ProjectGroup].
   List<ProjectGroup> _projectGroups;
 
+  /// A[List] that holds view models of all loaded[Project].
   List<ProjectSelectorViewModel> _projectSelectorViewModels;
 
+  /// Holds data of active project group dialog.
   ActiveProjectGroupDialogViewModel _activeProjectGroupDialogViewModel;
 
   /// Optional filter value that represents a part (or full) project name used to limit the displayed data.
@@ -73,10 +72,6 @@ class ProjectGroupsNotifier extends ChangeNotifier {
           'The use cases should not be null',
         );
 
-  /// Provides a list of [ProjectGroupViewModel].
-  List<ProjectGroupViewModel> get projectGroupViewModels =>
-      _projectGroupViewModels;
-
   /// Provides an error description that occurred during loading project groups data.
   String get errorMessage => _errorMessage;
 
@@ -86,6 +81,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Provides an error description that occurred during the firestore writing operation.
   String get firestoreWriteErrorMessage => _firestoreWriteErrorMessage;
 
+  /// Provides a list of project selector view model, filtered by the project name filter.
   List<ProjectSelectorViewModel> get projectSelectorViewModels {
     if (_projectNameFilter == null || _projectSelectorViewModels == null) {
       return _projectSelectorViewModels;
@@ -98,18 +94,21 @@ class ProjectGroupsNotifier extends ChangeNotifier {
         .toList();
   }
 
+  /// Provides a list of all loaded project group.
   List<ProjectGroup> get projectGroups => _projectGroups;
 
+  /// Provides data for active project group dialog.
   ActiveProjectGroupDialogViewModel get activeProjectGroupDialogViewModel =>
       _activeProjectGroupDialogViewModel;
 
-  /// Adds project metrics filter using [value] provided.
+  /// Adds projects filter using [value] provided.
   void filterByProjectName(String value) {
     _projectNameFilter = value;
 
     notifyListeners();
   }
 
+  /// Sets values needed for opened project group dialog.
   void generateActiveProjectGroupViewModel([String projectGroupId]) {
     _projectNameFilter = null;
 
@@ -138,6 +137,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Change checked status for [ProjectSelectorViewModel] by [projectId].
   void toggleProjectCheckedStatus({String projectId, bool isChecked}) {
     final projectIds = List<String>.from(
         _activeProjectGroupDialogViewModel.selectedProjectIds);
@@ -235,13 +235,13 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     return _firestoreWriteErrorMessage == null;
   }
 
-  /// Set [_firestoreWriteErrorMessage] to null.
+  /// Sets [_firestoreWriteErrorMessage] to null.
   void resetFirestoreWriteErrorMessage() {
     _firestoreWriteErrorMessage = null;
     notifyListeners();
   }
 
-  /// Update list of projects.
+  /// Updates list of project selector view models and projects error message.
   void updateProjects(List<Project> projects, String projectErrorMessage) {
     final projectIds =
         _activeProjectGroupDialogViewModel?.selectedProjectIds ?? [];
@@ -268,7 +268,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Cancels created subscription.
   Future<void> _cancelSubscriptions() async {
     await _projectGroupsSubscription?.cancel();
-    _projectGroupViewModels = null;
+    _projectGroups = null;
   }
 
   /// Saves the error [String] representation to [_errorMessage].
@@ -293,16 +293,4 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _cancelSubscriptions();
     super.dispose();
   }
-}
-
-class ProjectGroupCardViewModel {
-  final String id;
-  final String name;
-  final int projectsCount;
-
-  ProjectGroupCardViewModel({
-    this.id,
-    this.name,
-    this.projectsCount,
-  });
 }

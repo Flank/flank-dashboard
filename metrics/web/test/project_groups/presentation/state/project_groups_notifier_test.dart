@@ -117,10 +117,10 @@ void main() {
           completes,
         );
 
-        final projectGroupViewModels =
-            projectGroupsNotifier.projectGroupViewModels;
+        final projectGroups =
+            projectGroupsNotifier.projectGroups;
 
-        expect(projectGroupViewModels, isNull);
+        expect(projectGroups, isNull);
       },
     );
 
@@ -383,7 +383,7 @@ void main() {
     );
 
     test(
-      ".unsubscribeFromProjectGroups() cancels all created subscriptions and clear view models",
+      ".unsubscribeFromProjectGroups() cancels all created subscriptions and clear project groups",
       () async {
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
@@ -404,11 +404,11 @@ void main() {
           completes,
         );
 
-        expect(projectGroupsNotifier.projectGroupViewModels, isNotNull);
+        expect(projectGroupsNotifier.projectGroups, isNotNull);
 
         await projectGroupsNotifier.unsubscribeFromProjectGroups();
 
-        expect(projectGroupsNotifier.projectGroupViewModels, isNull);
+        expect(projectGroupsNotifier.projectGroups, isNull);
       },
     );
 

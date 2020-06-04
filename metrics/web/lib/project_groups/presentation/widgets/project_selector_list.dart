@@ -6,6 +6,7 @@ import 'package:metrics/project_groups/presentation/state/project_groups_notifie
 import 'package:metrics/project_groups/presentation/widgets/project_selector_list_tile.dart';
 import 'package:provider/provider.dart';
 
+/// A widget that displays the list view with the list of [ProjectSelectorListTile].
 class ProjectSelectorList extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {

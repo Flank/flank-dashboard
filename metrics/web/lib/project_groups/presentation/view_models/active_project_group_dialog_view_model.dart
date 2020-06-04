@@ -1,4 +1,4 @@
-/// Represents the data of the project group that using in UI.
+/// Represents the data of the project group that using in project group dialog.
 class ActiveProjectGroupDialogViewModel {
   final String id;
   final String name;

@@ -1,3 +1,5 @@
+/// Represents the data of the project that using in
+/// project group selector list tile.
 class ProjectSelectorViewModel {
   final String id;
   final String name;

@@ -69,7 +69,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Listens to project updates.
+  /// Updates projects and error message.
   void updateProjects(List<Project> newProjects, String errorMessage) {
     _errorMessage = errorMessage;
     

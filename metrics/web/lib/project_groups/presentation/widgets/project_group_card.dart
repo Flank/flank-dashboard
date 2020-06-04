@@ -4,11 +4,12 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_tile_card.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_delete_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
-/// A widget that represent [projectGroupViewModel].
+/// A widget that represent [projectGroupCardViewModel].
 class ProjectGroupCard extends StatelessWidget {
   final ProjectGroupCardViewModel projectGroupCardViewModel;
 
