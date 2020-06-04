@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/expandable_text.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
@@ -30,9 +29,9 @@ class CirclePercentage extends StatefulWidget {
   /// [padding] is the padding of the [value] text inside the circle graph.
   /// [strokeWidth] is the wight of the graph's stroke. Defaults to 2.0.
   /// [valueColor] is the color of the part of the graph that represents the value.
-  /// If nothing is passed, the [MetricWidgetThemeData.primaryColor] is used.
+  /// Defaults to [Colors.blue].
   /// [strokeColor] is the color of the graph's circle itself.
-  /// If nothing is passed, the [MetricWidgetThemeData.accentColor] is used.
+  /// Defaults to [Colors.grey].
   /// [backgroundColor] is the color to fill the graph.
   /// If nothing is passed, the [MetricWidgetThemeData.backgroundColor] is used.
   /// [valueStyle] is the [TextStyle] of the percent text.
@@ -44,10 +43,12 @@ class CirclePercentage extends StatefulWidget {
     this.strokeWidth = 2.0,
     this.valueStrokeWidth = 5.0,
     this.padding = EdgeInsets.zero,
-    this.valueColor,
-    this.strokeColor,
+    Color valueColor,
+    Color strokeColor,
     this.backgroundColor,
   })  : assert(value == null || (value >= 0 && value <= 1)),
+        valueColor = valueColor ?? Colors.blue,
+        strokeColor = strokeColor ?? Colors.grey,
         super(key: key);
 
   @override
@@ -79,12 +80,9 @@ class _CirclePercentageState extends State<CirclePercentage>
 
   @override
   Widget build(BuildContext context) {
-    final widgetThemeData = MetricsTheme.of(context).metricWidgetTheme;
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final initialPadding = _getChildPadding(constraints);
-        final valueColor = _getValueColor(widgetThemeData);
 
         return Align(
           alignment: Alignment.center,
@@ -96,9 +94,9 @@ class _CirclePercentageState extends State<CirclePercentage>
                 return CustomPaint(
                   painter: CirclePercentageChartPainter._(
                     percent: _controller.value,
-                    valueColor: valueColor,
-                    strokeColor: _getStrokeColor(widgetThemeData),
-                    backgroundColor: _getBackgroundColor(widgetThemeData),
+                    valueColor: widget.valueColor,
+                    strokeColor: widget.strokeColor,
+                    backgroundColor: widget.backgroundColor,
                     strokeWidth: widget.strokeWidth,
                     valueStrokeWidth: widget.valueStrokeWidth,
                   ),
@@ -108,14 +106,13 @@ class _CirclePercentageState extends State<CirclePercentage>
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         DefaultTextStyle(
-                          style: TextStyle(color: valueColor),
+                          style: TextStyle(color: widget.valueColor),
                           child: Expanded(
                             child: widget.value == null
                                 ? const NoDataPlaceholder()
                                 : ExpandableText(
                                     _getValueText(),
-                                    style: widget.valueStyle ??
-                                        widgetThemeData.textStyle,
+                                    style: widget.valueStyle,
                                   ),
                           ),
                         ),
@@ -144,23 +141,11 @@ class _CirclePercentageState extends State<CirclePercentage>
     return '${value.toInt()}%';
   }
 
-  Color _getBackgroundColor(MetricWidgetThemeData themeData) {
-    return widget.backgroundColor ?? themeData.backgroundColor;
-  }
-
-  Color _getStrokeColor(MetricWidgetThemeData themeData) {
-    return widget.strokeColor ?? themeData.accentColor;
-  }
-
-  Color _getValueColor(MetricWidgetThemeData themeData) {
-    return widget.valueColor ?? themeData.primaryColor;
-  }
-
+  /// Gets the initial child padding to fit the circle percentage.
   EdgeInsets _getChildPadding(BoxConstraints constraints) {
     final strokeWidth = widget.strokeWidth;
 
     final circleDiameter = min(constraints.maxWidth, constraints.maxHeight);
-
     final maxChildSize = (circleDiameter - strokeWidth) / 2 * sqrt(2);
 
     return EdgeInsets.all((circleDiameter - maxChildSize) / 2);
