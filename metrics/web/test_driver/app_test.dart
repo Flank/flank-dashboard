@@ -115,28 +115,15 @@ void main() {
         });
       });
 
-      // group("ProjectGroup page", () {
-      //   const String projectGroupName = 'testProjectGroupName';
+      group("ProjectGroup page", () {
+        setUpAll(() async {
+          await _openProjectGroupPage(driver);
+        });
 
-      //   setUpAll(() async {
-      //     await _openProjectGroupPage(driver);
-      //   });
-
-      //   test("loads and shows the project groups", () async {
-      //     await driver.waitFor(find.byType('ProjectGroupCard'));
-      //   });
-
-      //   test("can create a project group", () async {
-      //     await driver.waitFor(find.byType('AddProjectGroupCard'));
-      //     await driver.tap(find.byType('AddProjectGroupCard'));
-      //     await driver.waitUntilNoTransientCallbacks(
-      //       timeout: const Duration(seconds: 2),
-      //     );
-      //     await driver.tap(find.byType('ClearableTextFormField'));
-      //     await driver.enterText(projectGroupName);
-      //     await driver.tap(find.text(ProjectGroupsStrings.createGroup));
-      //   });
-      // });
+        test("loads and shows the project groups", () async {
+          await driver.waitFor(find.byType('ProjectGroupCard'));
+        });
+      });
     },
   );
 }

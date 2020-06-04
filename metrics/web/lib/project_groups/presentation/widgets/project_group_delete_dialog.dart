@@ -14,8 +14,8 @@ class ProjectGroupDeleteDialog extends StatefulWidget {
   ///
   /// [projectGroupViewModel] represents project group data for UI.
   const ProjectGroupDeleteDialog({
-    this.projectGroupId,
-    this.projectGroupName,
+    @required this.projectGroupId,
+    @required this.projectGroupName,
   });
 
   @override

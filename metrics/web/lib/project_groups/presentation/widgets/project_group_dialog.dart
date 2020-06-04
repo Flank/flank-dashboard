@@ -9,6 +9,8 @@ import 'package:metrics/project_groups/presentation/view_models/active_project_g
 import 'package:metrics/project_groups/presentation/widgets/project_selector_list.dart';
 import 'package:provider/provider.dart';
 
+import '../state/project_groups_notifier.dart';
+
 /// A dialog that using for updating or creating project group data.
 class ProjectGroupDialog extends StatefulWidget {
   @override
@@ -22,8 +24,6 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  /// A [ProjectGroupsNotifier] needed to set text editing controller text and
-  /// filter projects.
   ProjectGroupsNotifier _projectGroupsNotifier;
 
   /// Controls loading state.
