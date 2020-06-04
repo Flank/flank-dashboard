@@ -26,7 +26,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
   ProjectGroupsNotifier _projectGroupsNotifier;
 
-  /// Controls loading state.
+  /// Controls the loading state.
   bool _isLoading = false;
 
   @override

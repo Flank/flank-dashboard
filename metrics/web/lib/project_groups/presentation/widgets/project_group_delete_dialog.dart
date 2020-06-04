@@ -24,7 +24,7 @@ class ProjectGroupDeleteDialog extends StatefulWidget {
 }
 
 class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
-  /// Controls loading state.
+  /// Controls the loading state.
   bool _isLoading = false;
 
   @override
@@ -67,7 +67,7 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
     );
   }
 
-  /// Starts delete project group process.
+  /// Starts deleting process of a project group.
   Future<void> _deleteProjectGroup() async {
     final projectGroupNotifier =
         Provider.of<ProjectGroupsNotifier>(context, listen: false);

@@ -5,6 +5,7 @@ import 'package:metrics/project_groups/presentation/strings/project_groups_strin
 import 'package:metrics/project_groups/presentation/widgets/project_group_card_grid_view.dart';
 import 'package:provider/provider.dart';
 
+/// Shows the list of project gorups and button to add new.
 class ProjectGroupPage extends StatefulWidget {
   @override
   _ProjectGroupPageState createState() => _ProjectGroupPageState();

@@ -3,10 +3,11 @@ import 'package:metrics/project_groups/presentation/state/project_groups_notifie
 import 'package:metrics/project_groups/presentation/view_models/project_selector_view_model.dart';
 import 'package:provider/provider.dart';
 
-/// A widget that represent [projectSelectorViewModel].
+/// A widget that represent a [ProjectSelectorViewModel].
 class ProjectSelectorListTile extends StatelessWidget {
   final ProjectSelectorViewModel projectSelectorViewModel;
 
+  /// Creates a [ProjectSelectorListTile] with the given [projectSelectorViewModel].
   const ProjectSelectorListTile({
     Key key,
     this.projectSelectorViewModel,

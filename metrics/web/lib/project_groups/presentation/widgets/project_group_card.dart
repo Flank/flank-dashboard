@@ -9,7 +9,7 @@ import 'package:metrics/project_groups/presentation/widgets/project_group_delete
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
-/// A widget that represent [projectGroupCardViewModel].
+/// A widget that represent [ProjectGroupCardViewModel].
 class ProjectGroupCard extends StatelessWidget {
   final ProjectGroupCardViewModel projectGroupCardViewModel;
 
