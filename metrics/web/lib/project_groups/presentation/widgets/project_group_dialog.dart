@@ -25,6 +25,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   ProjectGroupsNotifier _projectGroupsNotifier;
+
   /// Controls loading state.
   bool _isLoading = false;
 
@@ -105,9 +106,11 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
                   ),
                 ),
                 Text(
-                  activeProjectGroupDialogViewModel.projectIds.isNotEmpty
+                  activeProjectGroupDialogViewModel
+                          .selectedProjectIds.isNotEmpty
                       ? ProjectGroupsStrings.getSelectedCount(
-                          activeProjectGroupDialogViewModel.projectIds.length,
+                          activeProjectGroupDialogViewModel
+                              .selectedProjectIds.length,
                         )
                       : '',
                 ),
@@ -177,11 +180,8 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
             .saveProjectGroup(
       activeProjectGroupDialogViewModel.id,
       _groupNameController.text,
-      activeProjectGroupDialogViewModel.projectIds,
+      activeProjectGroupDialogViewModel.selectedProjectIds,
     );
-    setState(() {
-      _isLoading = false;
-    });
 
     if (isSuccess) {
       Navigator.pop(context);

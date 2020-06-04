@@ -77,8 +77,6 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
     final isSuccess =
         await projectGroupNotifier.deleteProjectGroup(widget.projectGroupId);
 
-    setState(() => _isLoading = false);
-
     if (isSuccess) {
       Navigator.pop(context);
     }

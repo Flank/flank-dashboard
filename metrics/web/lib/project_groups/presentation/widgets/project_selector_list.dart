@@ -18,7 +18,7 @@ class ProjectSelectorList extends StatelessWidget {
         }
 
         final projectSelectorViewModels =
-            projectGroupsNotifier.activeProjectGroupDialogViewModel.projectSelectorViewModels;
+            projectGroupsNotifier.projectSelectorViewModels;
 
         if (projectSelectorViewModels == null) {
           return const LoadingPlaceholder();

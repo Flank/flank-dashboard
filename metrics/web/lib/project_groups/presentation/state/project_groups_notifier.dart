@@ -42,15 +42,17 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Holds the error message that occurred during loading project groups data.
   String _errorMessage;
 
+  /// Holds the error message that occurred during updating projects data.
   String _projectsErrorMessage;
 
   /// Holds the error message that occurred during the firestore writing operation.
   String _firestoreWriteErrorMessage;
 
-  /// Holds a list of projects.
-  List<Project> _projects;
-
   List<ProjectGroup> _projectGroups;
+
+  List<ProjectSelectorViewModel> _projectSelectorViewModels;
+
+  ActiveProjectGroupDialogViewModel _activeProjectGroupDialogViewModel;
 
   /// Optional filter value that represents a part (or full) project name used to limit the displayed data.
   String _projectNameFilter;
@@ -78,27 +80,26 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Provides an error description that occurred during loading project groups data.
   String get errorMessage => _errorMessage;
 
+  /// Provides an error description that occurred during loading projects data.
   String get projectsErrorMessage => _projectsErrorMessage;
 
   /// Provides an error description that occurred during the firestore writing operation.
   String get firestoreWriteErrorMessage => _firestoreWriteErrorMessage;
 
-  /// A list of projects.
-  List<Project> get filteredProjects {
-    if (_projectNameFilter == null || _projects == null) {
-      return _projects;
+  List<ProjectSelectorViewModel> get projectSelectorViewModels {
+    if (_projectNameFilter == null || _projectSelectorViewModels == null) {
+      return _projectSelectorViewModels;
     }
 
-    return _projects
+    return _projectSelectorViewModels
         .where((project) => project.name
-        .toLowerCase()
-        .contains(_projectNameFilter.toLowerCase()))
+            .toLowerCase()
+            .contains(_projectNameFilter.toLowerCase()))
         .toList();
   }
 
   List<ProjectGroup> get projectGroups => _projectGroups;
 
-  ActiveProjectGroupDialogViewModel _activeProjectGroupDialogViewModel;
   ActiveProjectGroupDialogViewModel get activeProjectGroupDialogViewModel =>
       _activeProjectGroupDialogViewModel;
 
@@ -106,35 +107,19 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   void filterByProjectName(String value) {
     _projectNameFilter = value;
 
-    final projectIds = _activeProjectGroupDialogViewModel.projectIds;
-    final projectSelectorViewModels = filteredProjects
-        .map(
-          (project) => ProjectSelectorViewModel(
-        id: project.id,
-        name: project.name,
-        isChecked: projectIds.contains(project.id),
-      ),
-    )
-        .toList();
-
-    _activeProjectGroupDialogViewModel = ActiveProjectGroupDialogViewModel(
-      id: _activeProjectGroupDialogViewModel.id,
-      name: _activeProjectGroupDialogViewModel.name,
-      projectSelectorViewModels: projectSelectorViewModels,
-      projectIds: projectIds,
-    );
-
     notifyListeners();
   }
 
   void generateActiveProjectGroupViewModel([String projectGroupId]) {
+    _projectNameFilter = null;
+
     final projectGroup = _projectGroups.firstWhere(
       (projectGroup) => projectGroup.id == projectGroupId,
       orElse: () => null,
     );
 
     final projectIds = projectGroup?.projectIds ?? [];
-    final projectSelectorViewModels = _projects
+    _projectSelectorViewModels = _projectSelectorViewModels
         .map(
           (project) => ProjectSelectorViewModel(
             id: project.id,
@@ -147,36 +132,35 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _activeProjectGroupDialogViewModel = ActiveProjectGroupDialogViewModel(
       id: projectGroup?.id,
       name: projectGroup?.name,
-      projectSelectorViewModels: projectSelectorViewModels,
-      projectIds: projectIds,
+      selectedProjectIds: projectIds,
     );
 
     notifyListeners();
   }
 
   void toggleProjectCheckedStatus({String projectId, bool isChecked}) {
-    final projectIds = List<String>.from(_activeProjectGroupDialogViewModel.projectIds);
+    final projectIds = List<String>.from(
+        _activeProjectGroupDialogViewModel.selectedProjectIds);
+
     if (isChecked) {
       projectIds.add(projectId);
     } else {
       projectIds.remove(projectId);
     }
+    final projectIndex = _projectSelectorViewModels
+        .indexWhere((project) => project.id == projectId);
+    final project = _projectSelectorViewModels[projectIndex];
 
-    final projectSelectorViewModels = _projects
-        .map(
-          (project) => ProjectSelectorViewModel(
-            id: project.id,
-            name: project.name,
-            isChecked: projectIds.contains(project.id),
-          ),
-        )
-        .toList();
+    _projectSelectorViewModels[projectIndex] = ProjectSelectorViewModel(
+      id: project.id,
+      name: project.name,
+      isChecked: isChecked,
+    );
 
     _activeProjectGroupDialogViewModel = ActiveProjectGroupDialogViewModel(
       id: _activeProjectGroupDialogViewModel.id,
       name: _activeProjectGroupDialogViewModel.name,
-      projectSelectorViewModels: projectSelectorViewModels,
-      projectIds: projectIds,
+      selectedProjectIds: projectIds,
     );
 
     notifyListeners();
@@ -258,9 +242,17 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   }
 
   /// Update list of projects.
-  void updateProjects(List<Project> projects, String errorMessage) {
-    _projects = projects;
-    _errorMessage = errorMessage;
+  void updateProjects(List<Project> projects, String projectErrorMessage) {
+    final projectIds =
+        _activeProjectGroupDialogViewModel?.selectedProjectIds ?? [];
+    _projectSelectorViewModels = projects
+        .map((project) => ProjectSelectorViewModel(
+              id: project.id,
+              name: project.name,
+              isChecked: projectIds.contains(project.id),
+            ))
+        .toList();
+    _projectsErrorMessage = projectErrorMessage;
     notifyListeners();
   }
 
@@ -271,21 +263,6 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectGroups = newProjectGroups;
 
     notifyListeners();
-
-    // _projectGroupViewModels = newProjectGroups
-    // .map(
-    //   (projectGroup) => ProjectGroupViewModel(
-    //     id: projectGroup.id,
-    //     name: projectGroup.name,
-    //     projectIds: projectGroup.projectIds,
-    //   ),
-    // )
-    // .toList();
-
-    // we need to regenerate a list of project view models ( but all data will reset)
-    // if (_editProjectGroupViewModel != null) {
-    //   generateEditProjectGroupViewModel(_editProjectGroupViewModel.id);
-    // }
   }
 
   /// Cancels created subscription.

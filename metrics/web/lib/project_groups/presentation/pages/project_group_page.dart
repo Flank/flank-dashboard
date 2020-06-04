@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_group_card_list.dart';
+import 'package:metrics/project_groups/presentation/widgets/project_group_card_grid_view.dart';
 import 'package:provider/provider.dart';
 
 class ProjectGroupPage extends StatefulWidget {
