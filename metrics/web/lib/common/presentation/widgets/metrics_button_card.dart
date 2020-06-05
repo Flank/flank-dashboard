@@ -28,20 +28,17 @@ class MetricsButtonCard extends StatelessWidget {
   /// [margin] is an empty space that surrounds the [MetricsButtonCard].
   const MetricsButtonCard({
     Key key,
-    @required this.title,
-    this.titlePadding = EdgeInsets.zero,
-    @required this.iconData,
+    this.title,
+    this.onTap,
+    this.iconData,
     this.iconSize,
     this.iconColor,
-    this.iconPadding = EdgeInsets.zero,
-    @required this.onTap,
+    this.iconPadding,
+    this.titlePadding,
     this.backgroundColor,
     this.margin,
-    this.elevation,
-  })  : assert(title != null),
-        assert(iconData != null),
-        assert(onTap != null),
-        super(key: key);
+    this.elevation = 0.0,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,26 +48,26 @@ class MetricsButtonCard extends StatelessWidget {
         elevation: elevation,
         margin: margin,
         backgroundColor: backgroundColor,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: iconPadding,
-                child: Icon(
-                  iconData,
-                  size: iconSize,
-                  color: iconColor,
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: iconPadding,
+                  child: Icon(
+                    iconData,
+                    size: iconSize,
+                    color: iconColor,
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: titlePadding,
+                  child: title,
+                ),
+              ],
             ),
-            Expanded(
-              child: Padding(
-                padding: titlePadding,
-                child: title,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

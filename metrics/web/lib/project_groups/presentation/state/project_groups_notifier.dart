@@ -12,6 +12,7 @@ import 'package:metrics/project_groups/domain/usecases/parameters/update_project
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/view_models/active_project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_selector_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -47,7 +48,10 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// A[List] that holds all loaded [ProjectGroup].
   List<ProjectGroup> _projectGroups;
 
-  /// A[List] that holds view models of all loaded[Project].
+  /// A[List] that holds view models of all loaded [ProjectGroup].
+  List<ProjectGroupCardViewModel> _projectGroupCardViewModels;
+
+  /// A[List] that holds view models of all loaded [Project].
   List<ProjectSelectorViewModel> _projectSelectorViewModels;
 
   /// Holds data of active project group dialog.
@@ -93,6 +97,10 @@ class ProjectGroupsNotifier extends ChangeNotifier {
             .contains(_projectNameFilter.toLowerCase()))
         .toList();
   }
+
+  /// Provides a list of project group card view models.
+  List<ProjectGroupCardViewModel> get projectGroupCardViewModels =>
+      _projectGroupCardViewModels;
 
   /// Provides a list of all loaded project group.
   List<ProjectGroup> get projectGroups => _projectGroups;
@@ -261,6 +269,13 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     if (newProjectGroups == null) return;
 
     _projectGroups = newProjectGroups;
+    _projectGroupCardViewModels = newProjectGroups
+        .map((project) => ProjectGroupCardViewModel(
+              id: project.id,
+              name: project.name,
+              projectsCount: project.projectIds.length,
+            ))
+        .toList();
 
     notifyListeners();
   }

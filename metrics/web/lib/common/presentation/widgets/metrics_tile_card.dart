@@ -27,18 +27,17 @@ class MetricsTileCard extends StatelessWidget {
   /// [padding] is a padding around the [MetricsTileCard]'s content.
   /// [elevation] is a elevation of this [MetricsTileCard].
   const MetricsTileCard({
-    Key key,
-    @required this.backgroundColor,
-    @required this.title,
+    this.title,
     this.titlePadding = EdgeInsets.zero,
-    @required this.subtitle,
+    this.subtitle,
     this.subtitlePadding = EdgeInsets.zero,
-    @required this.actions,
+    this.actions,
     this.actionsPadding = EdgeInsets.zero,
+    this.backgroundColor,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
     this.elevation = 0.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,23 +50,26 @@ class MetricsTileCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: titlePadding,
-              child: title,
-            ),
-            Padding(
-              padding: subtitlePadding,
-              child: subtitle,
-            ),
-            Padding(
-              padding: actionsPadding,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: actions,
+            if (title != null)
+              Padding(
+                padding: titlePadding,
+                child: title,
+              ),
+            if (subtitle != null)
+              Padding(
+                padding: subtitlePadding,
+                child: subtitle,
+              ),
+            if (actions != null)
+              Padding(
+                padding: actionsPadding,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: actions,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

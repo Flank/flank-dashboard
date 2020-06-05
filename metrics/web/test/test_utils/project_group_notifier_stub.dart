@@ -48,10 +48,7 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
       _testActiveProjectGroupDialogViewModel;
 
   @override
-  Future<bool> deleteProjectGroup(String projectGroupId) async {}
-
-  @override
-  List<Project> get filteredProjects => null;
+  Future<bool> deleteProjectGroup(String projectGroupId) async => null;
 
   @override
   String get firestoreWriteErrorMessage => null;
@@ -83,7 +80,9 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
 
   @override
   Future<bool> saveProjectGroup(String projectGroupId, String projectGroupName,
-      List<String> projectIds) async {}
+      List<String> projectIds) async {
+    return null;
+  }
 
   @override
   Future<void> subscribeToProjectGroups() async {}
@@ -102,4 +101,7 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
 
   @override
   void updateProjects(List<Project> projects, String errorMessage) {}
+
+  @override
+  List<ProjectGroupCardViewModel> get projectGroupCardViewModels => null;
 }

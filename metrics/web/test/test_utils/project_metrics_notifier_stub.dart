@@ -36,13 +36,7 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
       _projectMetrics ?? [testProjectMetrics];
 
   @override
-  Future<void> subscribeToProjects() async {}
-
-  @override
   String get errorMessage => null;
-
-  @override
-  Future<void> unsubscribeFromProjects() async {}
 
   @override
   void filterByProjectName(String value) {}

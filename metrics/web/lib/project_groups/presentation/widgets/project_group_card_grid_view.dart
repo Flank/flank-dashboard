@@ -3,7 +3,6 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
 import 'package:provider/provider.dart';
@@ -26,9 +25,12 @@ class _ProjectGroupCardGridViewState extends State<ProjectGroupCardGridView> {
           );
         }
 
-        final projectGroups = projectsGroupsNotifier.projectGroups;
+        final projectGroupCardViewModels =
+            projectsGroupsNotifier.projectGroupCardViewModels;
 
-        if (projectGroups == null) return const LoadingPlaceholder();
+        if (projectGroupCardViewModels == null) {
+          return const LoadingPlaceholder();
+        }
 
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -37,21 +39,13 @@ class _ProjectGroupCardGridViewState extends State<ProjectGroupCardGridView> {
             mainAxisSpacing: 20,
             childAspectRatio: 2.0,
           ),
-          itemCount: projectGroups.length + 1,
+          itemCount: projectGroupCardViewModels.length + 1,
           itemBuilder: (context, index) {
-            if (index == projectGroups.length) {
+            if (index == projectGroupCardViewModels.length) {
               return AddProjectGroupCard();
             }
-
-            final projectGroup = projectGroups[index];
-            final projectGroupCardViewModel = ProjectGroupCardViewModel(
-              id: projectGroup.id,
-              name: projectGroup.name,
-              projectsCount: projectGroup.projectIds.length,
-            );
-
             return ProjectGroupCard(
-              projectGroupCardViewModel: projectGroupCardViewModel,
+              projectGroupCardViewModel: projectGroupCardViewModels[index],
             );
           },
         );

@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
-import 'package:provider/provider.dart';
 import 'package:rxdart/subjects.dart';
 
 /// [TextField] with the ability to search across projects.

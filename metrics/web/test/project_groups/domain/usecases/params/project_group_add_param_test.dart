@@ -9,7 +9,7 @@ void main() {
       expect(
         () => AddProjectGroupParam(
           projectGroupName: null,
-          projectIds: [],
+          projectIds: const [],
         ),
         MatcherUtil.throwsAssertionError,
       );
