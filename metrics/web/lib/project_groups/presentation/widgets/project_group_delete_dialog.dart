@@ -37,6 +37,7 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
         style: const TextStyle(fontSize: 16.0),
       ),
       titlePadding: const EdgeInsets.symmetric(vertical: 12.0),
+      content: Container(),
       contentPadding: const EdgeInsets.symmetric(vertical: 32.0),
       actionsAlignment: MainAxisAlignment.end,
       actions: <Widget>[

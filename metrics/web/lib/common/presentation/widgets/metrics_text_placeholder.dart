@@ -9,7 +9,7 @@ class MetricsTextPlaceholder extends StatelessWidget {
   /// Creates a placeholder widget with the given [text].
   const MetricsTextPlaceholder({
     Key key,
-    this.text,
+    @required this.text,
     this.size = 20.0,
     this.color = Colors.grey,
   }) : super(key: key);
@@ -19,7 +19,10 @@ class MetricsTextPlaceholder extends StatelessWidget {
     return Center(
       child: Text(
         text,
-        style: TextStyle(fontSize: size, color: color),
+        style: TextStyle(
+          fontSize: size,
+          color: color,
+        ),
       ),
     );
   }

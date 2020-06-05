@@ -9,11 +9,11 @@ class MetricsCard extends StatelessWidget {
 
   const MetricsCard({
     Key key,
+    @required this.child,
+    @required this.backgroundColor,
     this.elevation = 0.0,
-    this.backgroundColor,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
-    this.child,
   }) : super(key: key);
 
   @override

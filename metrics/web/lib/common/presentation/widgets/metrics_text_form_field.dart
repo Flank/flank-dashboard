@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 
 class MetricsTextFormField extends StatelessWidget {
   final String label;
@@ -21,7 +20,7 @@ class MetricsTextFormField extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
-          child: Text(ProjectGroupsStrings.nameYourStrings),
+          child: Text(label),
         ),
         TextFormField(
           controller: controller,

@@ -28,17 +28,20 @@ class MetricsButtonCard extends StatelessWidget {
   /// [margin] is an empty space that surrounds the [MetricsButtonCard].
   const MetricsButtonCard({
     Key key,
-    this.title,
-    this.onTap,
-    this.iconData,
+    @required this.title,
+    this.titlePadding = EdgeInsets.zero,
+    @required this.iconData,
     this.iconSize,
     this.iconColor,
-    this.iconPadding,
-    this.titlePadding,
+    this.iconPadding = EdgeInsets.zero,
+    @required this.onTap,
     this.backgroundColor,
     this.margin,
     this.elevation,
-  }) : super(key: key);
+  })  : assert(title != null),
+        assert(iconData != null),
+        assert(onTap != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
