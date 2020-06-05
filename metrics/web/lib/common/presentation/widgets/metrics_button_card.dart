@@ -48,26 +48,22 @@ class MetricsButtonCard extends StatelessWidget {
         elevation: elevation,
         margin: margin,
         backgroundColor: backgroundColor,
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: iconPadding,
-                  child: Icon(
-                    iconData,
-                    size: iconSize,
-                    color: iconColor,
-                  ),
-                ),
-                Padding(
-                  padding: titlePadding,
-                  child: title,
-                ),
-              ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: iconPadding,
+              child: Icon(
+                iconData,
+                size: iconSize,
+                color: iconColor,
+              ),
             ),
-          ),
+            Padding(
+              padding: titlePadding,
+              child: title,
+            ),
+          ],
         ),
       ),
     );
