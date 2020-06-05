@@ -12,7 +12,7 @@ import 'package:metrics/project_groups/presentation/strings/project_groups_strin
 import 'package:metrics/project_groups/presentation/widgets/project_group_card_grid_view.dart';
 import 'package:provider/provider.dart';
 
-import '../../../test_utils/new_test_injection_container.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("ProjectGroupPage", () {
@@ -64,7 +64,7 @@ class _ProjectGroupPageTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NewTestInjectionContainer(
+    return TestInjectionContainer(
       themeNotifier: themeNotifier,
       metricsNotifier: metricsNotifier,
       authNotifier: authNotifier,

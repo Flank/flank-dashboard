@@ -8,8 +8,8 @@ import 'package:metrics/project_groups/presentation/widgets/project_selector_lis
 import 'package:metrics/project_groups/presentation/widgets/project_selector_list_tile.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../test_utils/new_test_injection_container.dart';
 import '../../../test_utils/project_group_notifier_mock.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("ProjectSelectorList", () {
@@ -96,7 +96,7 @@ class _ProjectSelectorListTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NewTestInjectionContainer(
+    return TestInjectionContainer(
       projectGroupsNotifier: projectGroupsNotifier,
       child: MaterialApp(
         home: Scaffold(

@@ -25,8 +25,6 @@ class _ProjectSearchInputState extends State<ProjectSearchInput> {
   @override
   void initState() {
     super.initState();
-    final ProjectMetricsNotifier _projectMetricsNotifier =
-        Provider.of<ProjectMetricsNotifier>(context, listen: false);
 
     _searchSubscription = _searchBehaviourSubject.timeout(
       const Duration(milliseconds: 300),

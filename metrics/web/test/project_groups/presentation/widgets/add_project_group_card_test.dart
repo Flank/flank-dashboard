@@ -7,7 +7,7 @@ import 'package:metrics/project_groups/presentation/widgets/add_project_group_ca
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
-import '../../../test_utils/new_test_injection_container.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("AddProjectGroupCard", () {
@@ -90,7 +90,7 @@ class _AddProjectGroupCardTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NewTestInjectionContainer(
+    return TestInjectionContainer(
       themeNotifier: themeNotifier,
       child: MetricsThemedTestbed(
         body: AddProjectGroupCard(),

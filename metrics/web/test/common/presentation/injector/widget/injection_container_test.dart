@@ -3,25 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
+import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   group("InjectionContainer", () {
-    testWidgets(
-      "injects a ProjectMetricsNotifier",
-      (tester) async {
-        await tester.pumpWidget(InjectionContainerTestbed());
-
-        final context = InjectionContainerTestbed.childKey.currentContext;
-
-        expect(
-          () => Provider.of<ProjectMetricsNotifier>(context, listen: false),
-          returnsNormally,
-        );
-      },
-    );
-
     testWidgets(
       "injects a AuthNotifier",
       (tester) async {

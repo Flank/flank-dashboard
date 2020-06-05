@@ -59,11 +59,15 @@ class _ProjectSearchInputTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notifier = metricsNotifier ?? ProjectMetricsNotifierStub();
+
     return TestInjectionContainer(
-      metricsNotifier: metricsNotifier ?? ProjectMetricsNotifierStub(),
+      metricsNotifier: notifier,
       child: MaterialApp(
         home: Scaffold(
-          body: ProjectSearchInput(),
+          body: ProjectSearchInput(
+            onFilter: notifier.filterByProjectName,
+          ),
         ),
       ),
     );

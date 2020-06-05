@@ -8,7 +8,7 @@ import 'package:metrics/project_groups/presentation/widgets/project_group_card.d
 import 'package:metrics/project_groups/presentation/widgets/project_group_delete_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 
-import '../../../test_utils/new_test_injection_container.dart';
+import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("ProjectGroupCard", () {
@@ -126,7 +126,7 @@ class _ProjectGroupCardTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NewTestInjectionContainer(
+    return TestInjectionContainer(
       child: MaterialApp(
         home: Scaffold(
           body: ProjectGroupCard(

@@ -8,13 +8,6 @@ void main() {
     const name = 'name';
     const List<String> projectIds = [];
 
-    test("throws an AssertionError then created with null id", () {
-      expect(
-        () => ProjectGroup(id: null, name: name, projectIds: projectIds),
-        MatcherUtil.throwsAssertionError,
-      );
-    });
-
     test("throws an AssertionError then created with null name", () {
       expect(
         () => ProjectGroup(id: id, name: null, projectIds: projectIds),
