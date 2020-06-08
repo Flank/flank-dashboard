@@ -1,0 +1,45 @@
+@startuml web_layers_sequence_diagram
+    skinparam ParticipantPadding 20
+    skinparam BoxPadding 10
+
+    actor Bob
+
+    box "presentation"
+        participant CoolPage << (C,#ADD1B2) >>
+        participant CoolNotifier << (C,#ADD1B2) >>
+    end box
+
+    box "domain"
+        participant LoadCoolEntitiesUseCase << (C,#ADD1B2) >>
+    end box
+
+    box "data"
+        participant ConcreteCoolRepository << (C,#ADD1B2) >>
+        participant CoolEntityDeserializer << (C,#ADD1B2) >>
+    end box
+
+    database "Persistent Store" as PS
+
+    Bob -> CoolPage : Load Page
+    activate CoolPage
+    CoolPage -> CoolNotifier : loadCoolModels()
+    activate CoolNotifier
+    CoolNotifier -> LoadCoolEntitiesUseCase : call()
+    activate LoadCoolEntitiesUseCase
+    LoadCoolEntitiesUseCase -> ConcreteCoolRepository : loadCoolEntities() 
+    activate ConcreteCoolRepository
+    ConcreteCoolRepository --> PS : list entities request
+    PS -> ConcreteCoolRepository : entities list JSON response
+    loop for json in list
+        ConcreteCoolRepository -> CoolEntityDeserializer : fromJson(json)
+        activate CoolEntityDeserializer
+        return CoolEntity instance
+    end
+    return entitiesList
+    return entitiesList
+    CoolNotifier -> CoolNotifier: map to view models
+    activate CoolNotifier
+    return CoolViewModel list
+    return coolModels
+    return Shows Cool Models
+@enduml
