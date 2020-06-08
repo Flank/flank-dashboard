@@ -17,6 +17,17 @@ void main() {
     );
 
     testWidgets(
+      "can't be created with null stroke width",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _SparklineGraphTestbed(
+          strokeWidth: null
+        ));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+    
+    testWidgets(
       "can't be created with negative stroke width",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _SparklineGraphTestbed(

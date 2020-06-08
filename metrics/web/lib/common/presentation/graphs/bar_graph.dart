@@ -20,6 +20,8 @@ class BarGraph<T extends num> extends StatelessWidget {
   /// Creates the [BarGraph].
   ///
   /// The [data] must not be null.
+  /// The [graphPadding] default value is [EdgeInsets.all] with 
+  /// parameter equal to `16.0`.
   const BarGraph({
     Key key,
     @required this.data,

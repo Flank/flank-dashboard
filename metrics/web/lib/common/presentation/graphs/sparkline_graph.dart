@@ -31,12 +31,13 @@ class SparklineGraph extends StatelessWidget {
 
   /// Creates the [SparklineGraph] widget.
   ///
-  /// The [data] must not be null.
-  /// The [strokeWidth] must be positive.
+  /// The [data] must not be `null`.
+  /// The [strokeWidth] must be non-null and positive.
   ///
-  /// If [strokeColor] is null, the [Colors.blue] is used.
-  /// If [fillColor] is null, the [Colors.lightBlue] is used.
-  /// If [graphPadding] is null, the [EdgeInsets.zero] is used.
+  /// The [strokeColor] default value is [Colors.blue].
+  /// The [curveType] default value is [LineCurves.linear].
+  /// The [graphPadding] default value is [EdgeInsets.zero].
+  /// If [fillColor] is `null`, the [Colors.lightBlue] is used.
   const SparklineGraph({
     Key key,
     @required this.data,
@@ -46,7 +47,7 @@ class SparklineGraph extends StatelessWidget {
     this.graphPadding = EdgeInsets.zero,
     this.strokeWidth = 4.0,
   })  : assert(data != null),
-        assert(strokeWidth >= 0.0),
+        assert(strokeWidth != null && strokeWidth >= 0.0),
         super(key: key);
 
   @override
