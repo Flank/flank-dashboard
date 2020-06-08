@@ -130,7 +130,7 @@ A `widget` is the part of the Metrics Web Application UI that stands for display
 
 A `state`, or a presenter, is the part of the `presentation` layer that is the intermediary between the `domain` and the `presentation` layer. A state is responsible for holding the logic of the `presentation` layer - loading data, creating `view model`s from `entities`, saving data to the persistent store. The presenter separates the logic from UI to makes it more testable and structured.
 
-To discover more details about the `presentation` layer and widgets for the Metrics Web Application, see the [Presentation Layer](02_presentation_layer_architecture) and [Widget structure organization](03_widget_structure_organization) documents.
+To discover more details about the `presentation` layer and widgets for the Metrics Web Application, see the [Presentation Layer](02_presentation_layer_architecture.md) and [Widget structure organization](03_widget_structure_organization.md) documents.
 
 ## Communication between layers
 > Explain and diagram how do these three layers work together more detailed.
