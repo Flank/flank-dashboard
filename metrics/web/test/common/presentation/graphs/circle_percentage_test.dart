@@ -1,15 +1,7 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -210,14 +202,17 @@ void main() {
     );
 
     testWidgets(
-      "displays no data placeholder if the value is null",
+      "displays the given placeholder if the value is null",
       (WidgetTester tester) async {
+        const placeholderText = 'placeholder';
+
         await tester.pumpWidget(const _CirclePercentageTestbed(
           value: null,
+          placeholder: Text(placeholderText),
         ));
         await tester.pumpAndSettle();
 
-        expect(find.text(DashboardStrings.noDataPlaceholder), findsOneWidget);
+        expect(find.text(placeholderText), findsOneWidget);
       },
     );
 
@@ -313,6 +308,9 @@ class _CirclePercentageTestbed extends StatelessWidget {
   /// The [MetricsThemeData] used in testbed.
   final MetricsThemeData theme;
 
+  /// The [Widget] to display if there is no [value] provided.
+  final Widget placeholder;
+
   /// Creates an instance of this testbed with the given parameters.
   ///
   /// The [value] defaults to the `0.3`.
@@ -333,6 +331,7 @@ class _CirclePercentageTestbed extends StatelessWidget {
     this.theme = const MetricsThemeData(),
     this.valueStyle,
     this.width,
+    this.placeholder,
   }) : super(key: key);
 
   @override
@@ -346,6 +345,7 @@ class _CirclePercentageTestbed extends StatelessWidget {
           width: width,
           child: CirclePercentage(
             value: value,
+            placeholder: placeholder ?? Container(),
             strokeWidth: strokeWidth,
             valueColor: valueColor,
             strokeColor: strokeColor,

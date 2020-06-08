@@ -7,8 +7,10 @@ import 'package:metrics/dashboard/presentation/widgets/themed_circle_percentage.
 /// A [CirclePercentage] widget that displays the stability metric
 /// and applies the [MetricValueThemeStrategy].
 class StabilityCirclePercentage extends StatelessWidget {
+  /// A [StabilityViewModel] to display.
   final StabilityViewModel stability;
 
+  /// Creates the [StabilityCirclePercentage] with the given [stability].
   const StabilityCirclePercentage({
     Key key,
     @required this.stability,

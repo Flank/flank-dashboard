@@ -1,44 +1,54 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/expandable_text.dart';
-import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 
 /// The widget that represents the metric percent in a circular graph.
 ///
 /// If no constraints are given by the parent widget, it will be as big as possible.
 /// Otherwise, it will match its parent's size.
 class CirclePercentage extends StatefulWidget {
+  /// The percent value of the metric.
   final double value;
+
+  /// The padding of the [value] text inside the circle graph.
   final EdgeInsets padding;
+
+  /// The wight of the graph's stroke.
   final double strokeWidth;
+
+  /// The color of the part of the graph that represents the value.
   final Color valueColor;
+
+  /// The color of the graph's circle itself.
   final Color strokeColor;
+
+  /// The color used to fill the graph.
   final Color backgroundColor;
+
+  /// The [TextStyle] of the percent text.
   final TextStyle valueStyle;
+
+  /// The width of the value (filled) stroke.
   final double valueStrokeWidth;
 
-  /// Creates the circle graph.
+  /// The [Widget] displayed instead of [value] if the [value] is `null`.
+  final Widget placeholder;
+
+  /// Creates the circle percentage graph.
   ///
-  /// The [value] must be `null` or from 0.0 (inclusive) to 1.0 (inclusive).
+  /// The [value] must be either `null` or from 0.0 (inclusive) to 1.0 (inclusive).
+  /// The [placeholder] must not be `null`. The [placeholder] is displayed,
+  /// if the [value] is `null`.
   ///
-  /// [value] is the percent value of the metric.
-  /// If the [value] is null, the [DashboardStrings.noDataPlaceholder] is displayed.
-  /// [padding] is the padding of the [value] text inside the circle graph.
-  /// [strokeWidth] is the wight of the graph's stroke. Defaults to 2.0.
-  /// [valueColor] is the color of the part of the graph that represents the value.
-  /// Defaults to [Colors.blue].
-  /// [strokeColor] is the color of the graph's circle itself.
-  /// Defaults to [Colors.grey].
-  /// [backgroundColor] is the color to fill the graph.
-  /// If nothing is passed, the [MetricWidgetThemeData.backgroundColor] is used.
-  /// [valueStyle] is the [TextStyle] of the percent text.
-  /// [valueStrokeWidth] is the width of the value (filled) stroke. Defaults to 5.0.
+  /// The [strokeWidth] default value is 2.0.
+  /// The [valueColor] default value is [Colors.blue].
+  /// The [strokeColor] default value is [Colors.grey].
+  /// The [valueStrokeWidth] default value is 5.0.
   const CirclePercentage({
     Key key,
     @required this.value,
+    @required this.placeholder,
     this.valueStyle,
     this.strokeWidth = 2.0,
     this.valueStrokeWidth = 5.0,
@@ -46,7 +56,8 @@ class CirclePercentage extends StatefulWidget {
     Color valueColor,
     Color strokeColor,
     this.backgroundColor,
-  })  : assert(value == null || (value >= 0 && value <= 1)),
+  })  : assert(placeholder != null),
+        assert(value == null || (value >= 0 && value <= 1)),
         valueColor = valueColor ?? Colors.blue,
         strokeColor = strokeColor ?? Colors.grey,
         super(key: key);
@@ -109,7 +120,7 @@ class _CirclePercentageState extends State<CirclePercentage>
                           style: TextStyle(color: widget.valueColor),
                           child: Expanded(
                             child: widget.value == null
-                                ? const NoDataPlaceholder()
+                                ? widget.placeholder
                                 : ExpandableText(
                                     _getValueText(),
                                     style: widget.valueStyle,
@@ -160,13 +171,25 @@ class _CirclePercentageState extends State<CirclePercentage>
 
 /// Paints a [CirclePercentage].
 class CirclePercentageChartPainter extends CustomPainter {
+  /// The wight of the stroke to paint.
   final double strokeWidth;
+
+  /// The width of the value (filled) stroke to paint.
   final double valueStrokeWidth;
+
+  /// The value of filled circle percantage to paint.
   final double percent;
+
+  /// The color of the filled circle percantage to paint.
   final Color valueColor;
+
+  /// The color of the circle percentage stroke.
   final Color strokeColor;
+
+  /// The background color of the circle percentage graph.
   final Color backgroundColor;
 
+  /// Creates this circle percentage painter.
   CirclePercentageChartPainter._({
     this.percent,
     this.valueColor,

@@ -4,13 +4,20 @@ import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_th
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value_based_theme_strategy.dart';
 import 'package:metrics/dashboard/presentation/view_models/percent_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 
 /// A [CirclePercentage] widget that applies the given [ValueBasedThemeStrategy].
 class ThemedCirclePercentage extends StatelessWidget {
+  /// A theme strategy applied to the [CirclePercentage] widget.
   final ValueBasedThemeStrategy themeStrategy;
+
+  /// A [PercentViewModel] to display.
   final PercentViewModel percent;
 
-  /// Creates the [ThemedCirclePercentage] with the given [percent] and [themeStrategy].
+  /// Creates the [ThemedCirclePercentage] 
+  /// with the given [percent] and [themeStrategy].
+  /// 
+  /// The both [percent] and [themeStrategy] must not be `null`.
   const ThemedCirclePercentage({
     Key key,
     @required this.percent,
@@ -25,6 +32,7 @@ class ThemedCirclePercentage extends StatelessWidget {
 
     return CirclePercentage(
       value: percent?.value,
+      placeholder: const NoDataPlaceholder(),
       valueColor: widgetTheme?.primaryColor,
       strokeColor: widgetTheme?.accentColor,
       backgroundColor: widgetTheme?.backgroundColor,

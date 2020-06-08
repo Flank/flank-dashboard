@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/percent_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/metric_value_theme_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/themed_circle_percentage.dart';
 import 'package:mockito/mockito.dart';
@@ -65,6 +66,19 @@ void main() {
         ));
 
         expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "displays the no data placeholder if percent value is null",
+      (tester) async {
+        const percent = PercentViewModel(null);
+
+        await tester.pumpWidget(const _ThemedCirclePercentageTestbed(
+          percent: percent,
+        ));
+        
+        expect(find.byType(NoDataPlaceholder), findsOneWidget);
       },
     );
   });

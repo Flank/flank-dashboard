@@ -7,8 +7,10 @@ import 'package:metrics/dashboard/presentation/widgets/themed_circle_percentage.
 /// A [CirclePercentage] widget that displays the coverage metric
 /// and applies the [MetricValueThemeStrategy].
 class CoverageCirclePercentage extends StatelessWidget {
+  /// A [CoverageViewModel] to display.
   final CoverageViewModel coverage;
 
+  /// Creates a [CoverageCirclePercentage] with the given [coverage].
   const CoverageCirclePercentage({
     Key key,
     @required this.coverage,
