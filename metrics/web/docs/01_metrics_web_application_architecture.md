@@ -47,7 +47,7 @@ The main idea is to separate the business logic from the frameworks used, like `
 
 The dependency rule defines how the application components should behave to each other and helps to avoid dependencies that will reduce the maintainability and testability of the application. Let us consider the components diagram that explains the dependencies between the application components according to the dependency rule: 
 
-![Dependency rule diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_module_architecture/metrics/web/docs/diagrams/dependency_rule_diagram.puml)
+![Dependency rule diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/dependency_rule_diagram.puml)
 
 See [The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) article to get more wide explanation of the dependency rule.
 
@@ -71,7 +71,7 @@ Currently, our application has the following modules:
 
 Let us consider the class diagram that will explain the main idea of the package structure and relationships between application layers in one module. Let's call this module `cool_module`: 
 
-![Web Architecture Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_module_architecture/metrics/web/docs/diagrams/web_architecture_class_diagram.puml)
+![Web Architecture Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/web_architecture_class_diagram.puml)
 
 Once we have a class diagram that provides detailed information about layers and relationships between them, let's consider the details about layers and their constituents.
 
@@ -130,7 +130,7 @@ A `widget` is the part of the Metrics Web Application UI that stands for display
 
 A `state`, or a presenter, is the part of the `presentation` layer that is the intermediary between the `domain` and the `presentation` layer. A state is responsible for holding the logic of the `presentation` layer - loading data, creating `view model`s from `entities`, saving data to the persistent store. The presenter separates the logic from UI to makes it more testable and structured.
 
-To discover more details about the `presentation` layer and widgets for the Metrics Web Application, see the [Presentation Layer](02_presentation_layer_architecture) and [Widget structure organization](03_widget_structure_organization) documents.
+To discover more details about the `presentation` layer and widgets for the Metrics Web Application, see the [Presentation Layer](02_presentation_layer_architecture.md) and [Widget structure organization](03_widget_structure_organization.md) documents.
 
 ## Communication between layers
 > Explain and diagram how do these three layers work together more detailed.
@@ -143,7 +143,7 @@ Also, the `data` layer can notify the `domain` about data updates in the persist
 
 Let's consider an example of the data migrations and transformations between different layers of the Metrics Web Application. Here, the diagram shows the process of loading abstract `cool metrics` from the persistent store to display it for the user `Bob`. 
 
-![Web Layers Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_module_architecture/metrics/web/docs/diagrams/web_layers_sequence_diagram.puml)
+![Web Layers Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/web_layers_sequence_diagram.puml)
 
 # Package structure
 > Explain and diagram the Metrics Web Application package structure.
