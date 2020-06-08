@@ -32,7 +32,7 @@ To make the Metrics Web Application architecture clean and understandable, we ne
 ## Clean architecture fundamentals
 > Explain the basic principles of the [Screaming architecture](https://blog.cleancoder.com/uncle-bob/2011/09/30/Screaming-Architecture.html).
 
-The `screaming architecture` supposes that the root directory of the project should describe all the main features/modules of the project. For example, our Metrics Web Application top-level package structure should "scream" that the application has the dashboard page with the sum-up of the available projects, the login module that allows users to sign in, and so on. The architecture should not tell about the technologies, approaches, or any other details of the implementation. 
+The `screaming architecture` supposes that the root directory of the project should describe all the main features/modules of the project. For example, our Metrics Web Application top-level package structure contains the `auth`, `dashboard`, `project_groups` packages, so the top-level structure states (or _screams_) about the project purpose - dashboard for project metrics.
 
 > Explain what the application layers are and why do we need them.
 
@@ -41,7 +41,7 @@ The next level of abstraction is `layers`. We should divide our application into
 - `data`
 - `presentation`
 
-The main idea is to separate the business logic from the frameworks used, like `Flutter` or `Firebase`. Each of the layers has its own responsibilities. The `data` layer is responsible for saving and loading data from the persistent store. The `domain` layer is responsible for data processing, and interaction with the `data` layer. The `presentation` layer is responsible for displaying the data to the user and gives an ability for the user to interact with data. So, these layers encapsulate the business logic of different application parts and make our application more maintainable. Also, it allows us to write more granular tests and test different pieces of the application separately from each other.
+The main idea is to separate the business logic from the frameworks used, like `Flutter` or `Firebase`. Each of the layers has its own responsibilities. The `data` layer is responsible for saving and loading data from the persistent store. The `domain` layer is responsible for data processing, and interfacing with the `data` layer. The `presentation` layer is responsible for displaying the data to the user and gives an ability for the user to interact with data.
 
 > Explain the clean architecture dependency rule.
 
@@ -108,7 +108,15 @@ Since the `domain` layer cannot depend on the `data` layer we should create an i
 ## Metrics Web Application presentation layer
 > Explain what a `presentation` layer is and what it consists of in terms of the Metrics Web Application
 
-The `presentation` layer is responsible for displaying the data for the users and provides an ability to interact with the data for the user. The `presentation` layer consists of the `view models`, `pages`, `widgets` and `state`.
+The `presentation` layer is responsible for displaying the data for the users and provides an ability to interact with the data for the user. The `presentation` layer usually consists of the following parts:
+
+- `view models`
+- `pages` 
+- `widgets`
+- `strings`
+- `state`
+
+Note that the `presentation` layer can contain other packages. Also, the `presentation` layer not always contain all of the above packages. 
 
 > Explain what a `view model` is.
 
