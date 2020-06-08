@@ -42,7 +42,7 @@ package domain {
         }
     }
 
-    package domain.repositories {
+    package repositories {
         interface CoolRepository {
             loadCoolEntities() : List<CoolEntity>
             updateCoolEntitiy(String coolId, String coolName) : void
