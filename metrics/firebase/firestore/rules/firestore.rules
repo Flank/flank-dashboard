@@ -1,13 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+  
+    match /project_groups/{projectGroupId} {
+      allow read, delete: if isLoggedIn();
+      allow create, update: if isLoggedIn() && isProjectGroupValid();
+    }
+
     match /projects/{projectId} {
       allow read: if isLoggedIn();
       allow create, update: if isLoggedIn() && isProjectValid();
       allow delete: if false;
     }
-
 
     match /build/{buildId} {
       allow read: if isLoggedIn();
@@ -21,6 +25,34 @@ service cloud.firestore {
     return request.auth.uid != null
   }
 
+  /// Checks whether project group data from the request is valid.
+  function isProjectGroupValid(){
+    return isProjectGroupDataValid() 
+      && isString("name")
+      && isList("projectIds");
+  }
+
+  /// Check whether the request data contains only allowed for project group document fields.
+  function isProjectGroupDataValid(){
+    let requestData = request.resource.data;
+
+    return requestData.keys().hasOnly(["name", "projectIds"]);
+  }
+
+  /// Checks whether a field of request data is the string.
+  function isString(field){
+    let requestData = request.resource.data;
+
+    return field in requestData && requestData[field] is string;
+  }
+
+  /// Checks whether a field of requested data is a list.
+  function isList(field) {
+    let requestData = request.resource.data;
+
+    return field in requestData && requestData[field] is list;
+  }
+
   /// Checks whether project data from the request is valid.
   function isProjectValid(){
     let requestData = request.resource.data;
@@ -31,13 +63,6 @@ service cloud.firestore {
   /// Check whether the request data contains only allowed for project document fields.
   function isProjectDataValid(data){
     return data.keys().hasOnly(["name"]);
-  }
-
-  /// Checks whether a field of request data is the string.
-  function isString(field){
-    let requestData = request.resource.data;
-
-    return field in requestData && requestData[field] is string;
   }
 
   /// Checks whether the request contains the valid build data.
@@ -90,13 +115,6 @@ service cloud.firestore {
     let requestData = request.resource.data;
 
     return isNotInRequestOrNull(field) || requestData[field] is string;
-  }
-
-  /// Checks if a field of the request data is an integer or null.
-  function isIntegerOrNull(field){
-    let requestData = request.resource.data;
-
-    return isNotInRequestOrNull(field) || requestData[field] is int;
   }
 
   /// Checks if a field is a float and in bounds from min to max or null.
