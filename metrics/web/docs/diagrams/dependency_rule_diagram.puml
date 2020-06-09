@@ -1,0 +1,9 @@
+@startuml dependency_rule_diagram
+
+[Database] --> [Repositories]
+[UI] --> [Presenters]
+[Presenters] --> [Use case]
+[Repositories] --> [Use case]
+[Use case] --> [Entities]
+
+@enduml
