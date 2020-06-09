@@ -27,7 +27,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   cloud_firestore: ^0.13.3
-  rxdart: ^0.23.1
+  rxdart: ^0.24.1
   collection: ^1.14.11
   meta: ^1.1.8
   firebase_auth: 0.15.4
