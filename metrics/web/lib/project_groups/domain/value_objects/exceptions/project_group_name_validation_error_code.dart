@@ -1,5 +1,5 @@
-/// Enum that represents the error codes of an project group name validation.
+/// Enum that represents the error codes of a project group name validation.
 enum ProjectGroupNameValidationErrorCode {
-  /// Indicates that an project group name is null.
+  /// Indicates that a project group name is null.
   isNull,
 }

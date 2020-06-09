@@ -9,6 +9,7 @@ import 'package:metrics_core/metrics_core.dart';
 ///
 /// Stores the [Project]s data.
 class ProjectsNotifier extends ChangeNotifier {
+
   /// Creates the projects store.
   ///
   /// The provided use cases should not be null.
