@@ -1,8 +1,9 @@
 import 'package:metrics/auth/presentation/model/email_validation_error_message.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// An utility class, that helps in email validation.
-class EmailValidationUtil {
+/// A class for validating an email.
+class EmailValidator {
+
   /// Validates the given [value] as an email.
   ///
   /// Returns an error message if the [value] is not a valid email,

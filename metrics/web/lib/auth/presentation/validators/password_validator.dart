@@ -1,8 +1,9 @@
 import 'package:metrics/auth/presentation/model/password_validation_error_message.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// An utility class, that helps in password validation.
-class PasswordValidationUtil {
+/// A class for validating a password.
+class PasswordValidator {
+
   /// Validates the given [value] as a password.
   ///
   /// Returns an error message if the [value] is not a valid password,

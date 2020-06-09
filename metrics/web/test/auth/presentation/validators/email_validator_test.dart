@@ -1,13 +1,13 @@
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
-import 'package:metrics/auth/presentation/util/email_validation_util.dart';
+import 'package:metrics/auth/presentation/validators/email_validator.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("EmailValidationUtil", () {
+  group("EmailValidator", () {
     test(
       ".validate() returns the email required error message if the given email is null",
       () {
-        final validationResult = EmailValidationUtil.validate(null);
+        final validationResult = EmailValidator.validate(null);
 
         expect(validationResult, equals(AuthStrings.emailRequiredErrorMessage));
       },
@@ -16,7 +16,7 @@ void main() {
     test(
       ".validate() returns the invalid email error message if the given email is malformed",
       () {
-        final validationResult = EmailValidationUtil.validate('not valid');
+        final validationResult = EmailValidator.validate('not valid');
 
         expect(validationResult, equals(AuthStrings.invalidEmailErrorMessage));
       },
@@ -26,7 +26,7 @@ void main() {
       ".validate() returns null if the given email is valid",
       () {
         final validationResult =
-            EmailValidationUtil.validate('email@mail.mail');
+            EmailValidator.validate('email@mail.mail');
 
         expect(validationResult, isNull);
       },
