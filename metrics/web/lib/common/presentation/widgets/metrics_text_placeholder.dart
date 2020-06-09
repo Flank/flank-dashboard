@@ -7,6 +7,12 @@ class MetricsTextPlaceholder extends StatelessWidget {
   final Color color;
 
   /// Creates a placeholder widget with the given [text].
+  /// 
+  /// The [text] is a string, that widget displays.
+  /// The text has the [size] with a default value of 20.0 and the [color] with
+  /// a default value of [Colors.grey].
+  /// 
+  /// The [text] argument should not be null.
   const MetricsTextPlaceholder({
     Key key,
     @required this.text,

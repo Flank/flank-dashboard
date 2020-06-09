@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// The widget that represents metrics dialog.
+/// The widget that represents a metrics dialog.
 class MetricsDialog extends StatelessWidget {
   final Color backgroundColor;
   final double elevation;
@@ -18,20 +18,23 @@ class MetricsDialog extends StatelessWidget {
   final EdgeInsetsGeometry actionsPadding;
   final MainAxisAlignment actionsAlignment;
 
-  /// Creates an [MetricsDialog].
-  ///
-  /// [backgroundColor] is a background color of the surface of this [MetricsDialog].
-  /// [elevation] is an elevation of this [MetricsDialog].
-  /// [shape] is a shape of this [MetricsDialog] border.
-  /// [padding] is a padding around the [MetricsDialog] child.
-  /// [maxWidth] is a maximum available width of this [MetricsDialog].
-  /// [title] is a title of this [MetricsDialog].
-  /// [titlePadding] is a padding around the title.
-  /// [content] is a content of this [MetricsDialog].
-  /// [contentPadding] is a padding around the content.
-  /// [actions] is a set of actions that are displayed at the bottom of this [MetricsDialog].
-  /// [actionsPadding] is a padding around the actions.
-  /// [actionsAlignment] is a main axis alignment of the [MetricsDialog]'s actions.
+  /// Creates a [MetricsDialog].
+  /// 
+  /// The given [title] is a text, that displays at the top of the dialog. 
+  /// The title is surrounded by a [titlePadding], 
+  /// that is an [EdgeInsets.zero] value by default.
+  /// The given [content] is the main part of the dialog.
+  /// The content is surrounded by a [contentPadding], 
+  /// that is the [EdgeInsets.zero] value by default.
+  /// There are [actions], at the bottom of the dialog. 
+  /// The corresponding [actionsPadding] is the [EdgeInsets.zero] value by default.
+  /// The [actionsAlignment] controls the main axis alignment of the actions.
+  /// The general [padding] is the [EdgeInsets.zero] value by default.
+  /// The metrics dialog has the [backgroundColor], the [elevation], 
+  /// and the [shape] arguments.
+  /// The [elevation] argument has a default value of 0.0.
+  /// 
+  /// [title], [subtitle], [actions] and [backgroundColor] should not be null.
   const MetricsDialog({
     this.backgroundColor,
     this.elevation,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/widgets/metrics_card.dart';
 
-/// The widget that represents metrics button card.
+/// The widget that represents metrics card with the ability 
+/// to control touch events.
 class MetricsButtonCard extends StatelessWidget {
   final IconData iconData;
   final double iconSize;
@@ -14,18 +15,17 @@ class MetricsButtonCard extends StatelessWidget {
   final double elevation;
   final EdgeInsetsGeometry margin;
 
-  /// Creates an [MetricsButtonCard].
-  ///
-  /// [iconData] is a description of an icon fulfilled by a font glyph.
-  /// [iconSize] is a size of the icon in logical pixels.
-  /// [iconColor] is a color to use when drawing the icon.
-  /// [iconPadding] is a padding around the icon.
-  /// [title] is a title of this [MetricsButtonCard].
-  /// [titlePadding] is a padding around the title.
-  /// [onTap] is callback that called when the user taps this [MetricsButtonCard].
-  /// [backgroundColor] is a background color of this [MetricsButtonCard].
-  /// [elevation] is an elevation of this [MetricsButtonCard].
-  /// [margin] is an empty space that surrounds the [MetricsButtonCard].
+  /// Creates a [MetricsButtonCard].
+  /// 
+  /// The given [iconData] is an icon, that displays in the center of the card.
+  /// The icon has the [iconSize], the [iconColor] and the [iconPadding].
+  /// Under the icon lies the given [text],
+  /// that has the [titlePadding] with an [EdgeInsets.zero] value as a default.
+  /// The callback [onTap] can react to touch events on the card.
+  /// The card has the [backgroundColor], the [margin] 
+  /// and the [elevation] arguments.
+  /// 
+  /// The [title], the [iconData], and the [onTap] should not be null.
   const MetricsButtonCard({
     Key key,
     this.title,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/widgets/metrics_card.dart';
 
-/// The widget that represents metrics card.
+/// The widget that represents a metrics tile card.
 class MetricsTileCard extends StatelessWidget {
   final Widget title;
   final EdgeInsetsGeometry titlePadding;
@@ -14,18 +14,22 @@ class MetricsTileCard extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final double elevation;
 
-  /// Creates an [MetricsTileCard].
-  ///
-  /// [title] is a title of this [MetricsTileCard].
-  /// [titlePadding] is a padding around the title.
-  /// [subtitle]  is a subtitle of this [MetricsTileCard].
-  /// [subtitlePadding] is a padding around the subtitle.
-  /// [actions] is a set of actions that are displayed at the bottom of this [MetricsTileCard].
-  /// [actionsPadding] is a padding around the actions.
-  /// [backgroundColor] is background color of this [MetricsTileCard].
-  /// [margin] is an empty space that surrounds the [MetricsTileCard].
-  /// [padding] is a padding around the [MetricsTileCard]'s content.
-  /// [elevation] is a elevation of this [MetricsTileCard].
+  /// Creates a [MetricsTileCard].
+  /// 
+  /// The metrics card tile has a specific [backgroundColor].
+  /// The given [title] is a text, that displays at the top left corner of the card. 
+  /// The title is surrounded by a [titlePadding], 
+  /// that is [EdgeInsets.zero] value by default.
+  /// The given [subtitle] is a text under the [title].
+  /// The subtitle is surrounded by a [subtitlePadding], 
+  /// that is [EdgeInsets.zero] value by default.
+  /// There are [actions], at the bottom of the card. 
+  /// The corresponding [actionsPadding] is [EdgeInsets.zero] value by default.
+  /// The metrics card has a [margin] and a [padding] arguments, 
+  /// that have [EdgeInsets.zero] value as a default.
+  /// The [elevation] argument has a default value of 0.0.
+  /// 
+  /// [title], [subtitle], [actions] and [backgroundColor] should not be null.
   const MetricsTileCard({
     this.title,
     this.titlePadding = EdgeInsets.zero,
