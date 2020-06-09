@@ -12,7 +12,6 @@ import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.da
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
 import 'package:provider/provider.dart';
 
 import '../../../test_utils/test_injection_container.dart';
@@ -34,15 +33,6 @@ void main() {
         await tester.pumpWidget(const _DashboardTestbed());
 
         expect(find.byType(MetricsTable), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "contains a project search input",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _DashboardTestbed());
-
-        expect(find.byType(ProjectSearchInput), findsOneWidget);
       },
     );
 

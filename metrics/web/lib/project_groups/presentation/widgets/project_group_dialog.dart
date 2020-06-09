@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_dialog.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
 import 'package:metrics/project_groups/presentation/view_models/active_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_selector_list.dart';
+import 'package:metrics/util/debounce.dart';
 import 'package:provider/provider.dart';
 
 import '../state/project_groups_notifier.dart';
@@ -77,8 +78,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 MetricsTextFormField(
-                  validator:
-                      ProjectGroupNameValidator.validate,
+                  validator: ProjectGroupNameValidator.validate,
                   label: ProjectGroupsStrings.nameYourStrings,
                   controller: _groupNameController,
                 ),
@@ -96,8 +96,19 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
                   ),
                   child: Column(
                     children: <Widget>[
-                      ProjectSearchInput(
-                        onFilter: _projectGroupsNotifier.filterByProjectName,
+                      TextField(
+                        onChanged: (value) {
+                          const duration = Duration(milliseconds: 300);
+                          
+                          Debounce(duration: duration)(
+                            () => _projectGroupsNotifier
+                                .filterByProjectName(value),
+                          );
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.search),
+                          hintText: CommonStrings.searchForProject,
+                        ),
                       ),
                       Flexible(
                         child: ProjectSelectorList(),
