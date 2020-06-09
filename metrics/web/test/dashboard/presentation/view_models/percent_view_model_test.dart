@@ -12,7 +12,7 @@ void main() {
       );
     });
 
-    test("creates a new view model with the given value", () {
+    test("equals to another PercentViewModel instance with the same value", () {
       const value = 1.0;
       const expected = PercentViewModel(value);
 

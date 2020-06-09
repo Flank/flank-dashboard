@@ -12,13 +12,16 @@ void main() {
       );
     });
 
-    test("creates a new view model with the given value", () {
-      const value = 1.0;
-      const expected = StabilityViewModel(value: value);
+    test(
+      "equals to another StabilityViewModel instance with the same value",
+      () {
+        const value = 1.0;
+        const expected = StabilityViewModel(value: value);
 
-      final stability = StabilityViewModel(value: value);
+        final stability = StabilityViewModel(value: value);
 
-      expect(stability, equals(expected));
-    });
+        expect(stability, equals(expected));
+      },
+    );
   });
 }
