@@ -12,6 +12,33 @@ void main() {
     const color = Colors.grey;
 
     testWidgets(
+      "can't be created with null width",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_PlaceholderBarTestbed(width: null));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "can't be created with negative width",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_PlaceholderBarTestbed(width: -2.0));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "can't be created with null color",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_PlaceholderBarTestbed(color: null));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
       "displays the ColoredBar",
       (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed(width: _width));
@@ -34,9 +61,9 @@ void main() {
     );
 
     testWidgets(
-      "displays the ColoredBar with a given color borders of a 2.0 width",
+      "displays the ColoredBar with the given color borders of a 2.0 width",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed());
+        await tester.pumpWidget(_PlaceholderBarTestbed(color: color));
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 
@@ -69,9 +96,12 @@ class _PlaceholderBarTestbed extends StatelessWidget {
   final Color color;
 
   /// Creates the [_PlaceholderBarTestbed] with the given width.
+  ///
+  /// If the [width] is not specified, the `2.0` used.
+  /// If the [color] is not specified, the [Colors.blue] used.
   const _PlaceholderBarTestbed({
-    this.width,
-    this.color,
+    this.width = 2.0,
+    this.color = Colors.blue,
   });
 
   @override

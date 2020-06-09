@@ -7,7 +7,7 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("BarGraph", () {
     testWidgets(
-      "can't create widget without data",
+      "can't be created without data",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _BarGraphTestbed(data: null));
 
@@ -16,7 +16,7 @@ void main() {
     );
 
     testWidgets(
-      "can create widget from empty data",
+      "can be created with an empty data",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _BarGraphTestbed(data: []));
 
@@ -26,7 +26,7 @@ void main() {
     );
 
     testWidgets(
-      "applies graph padding",
+      "applies the graph padding",
       (WidgetTester tester) async {
         const padding = EdgeInsets.all(8.0);
 
@@ -38,12 +38,12 @@ void main() {
           (widget) => widget is Padding && widget.child is LayoutBuilder,
         ));
 
-        expect(paddingWidget.padding, padding);
+        expect(paddingWidget.padding, equals(padding));
       },
     );
 
     testWidgets(
-      "builds all bar data from data list with the given order",
+      "builds all bar data from data list in the given order",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _BarGraphTestbed());
 
@@ -126,7 +126,7 @@ class _BarGraphTestbed extends StatelessWidget {
   final EdgeInsets graphPadding;
 
   /// The list of data to be displayed on the [BarGraph].
-  final List<num> data;
+  final List<int> data;
 
   /// Creates the instance of this testbed.
   ///

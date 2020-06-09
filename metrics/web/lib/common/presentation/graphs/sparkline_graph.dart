@@ -34,10 +34,8 @@ class SparklineGraph extends StatelessWidget {
   /// The [data] must not be `null`.
   /// The [strokeWidth] must be non-null and positive.
   ///
-  /// The [strokeColor] default value is [Colors.blue].
   /// The [curveType] default value is [LineCurves.linear].
   /// The [graphPadding] default value is [EdgeInsets.zero].
-  /// If [fillColor] is `null`, the [Colors.lightBlue] is used.
   const SparklineGraph({
     Key key,
     @required this.data,
@@ -53,8 +51,6 @@ class SparklineGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final graphData = data.toList();
-    final _strokeColor = strokeColor ?? Colors.blue;
-    final _fillColor = fillColor ?? Colors.lightBlue;
 
     return LineChart(
       chartPadding: graphPadding,
@@ -66,11 +62,11 @@ class SparklineGraph extends StatelessWidget {
           curve: curveType,
           marker: const MarkerOptions(paint: null),
           stroke: PaintOptions.stroke(
-            color: _strokeColor,
+            color: strokeColor,
             strokeWidth: strokeWidth,
           ),
           fill: PaintOptions.fill(
-            color: _fillColor,
+            color: fillColor,
           ),
           xAxis: _createChartAxis(),
           yAxis: _createChartAxis(),

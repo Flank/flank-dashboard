@@ -70,7 +70,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                       isLoading: projectMetrics.buildResultMetrics == null,
                       loadingPlaceholder: const LoadingPlaceholder(),
                       builder: (_) => BuildResultBarGraph(
-                        data: widget.projectMetrics.buildResultMetrics,
+                        buildResultMetric: widget.projectMetrics.buildResultMetrics,
                       ),
                     ),
                   ),

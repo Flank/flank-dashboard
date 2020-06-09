@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/graphs/sparkline_graph.dart';
 
+import '../../../test_utils/metrics_themed_testbed.dart';
+
 void main() {
   group("SparklineGraph", () {
     testWidgets(
@@ -28,7 +30,7 @@ void main() {
     );
     
     testWidgets(
-      "can't be created with negative stroke width",
+      "can't be created with a negative stroke width",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _SparklineGraphTestbed(
           strokeWidth: -1.0,
@@ -130,7 +132,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the stroke width to chart line",
+      "applies the stroke width to the chart line",
       (WidgetTester tester) async {
         const strokeWidth = 1.5;
 
@@ -247,9 +249,9 @@ class _SparklineGraphTestbed extends StatelessWidget {
 
   /// Creates the [_SparklineGraphTestbed].
   /// 
-  /// If no [data] provided, the [sparklineGraphTestData] is used.
-  /// If no [graphPadding] provided, the [EdgeInsets.zero] is used.
-  /// If no [strokeWidth] provided, the `2.0` is used.
+  /// If [data] is not specified, the [sparklineGraphTestData] is used.
+  /// If [graphPadding] is not specified, the [EdgeInsets.zero] is used.
+  /// If [strokeWidth] is not specified, the `2.0` is used.
   const _SparklineGraphTestbed({
     this.data = sparklineGraphTestData,
     this.graphPadding = EdgeInsets.zero,
@@ -261,7 +263,7 @@ class _SparklineGraphTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MetricsThemedTestbed(
       body: SparklineGraph(
         data: data,
         strokeColor: strokeColor,

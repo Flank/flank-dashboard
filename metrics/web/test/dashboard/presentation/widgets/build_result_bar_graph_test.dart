@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/graphs/bar_graph.dart';
-import 'package:metrics/common/presentation/graphs/colored_bar.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
-import 'package:metrics/common/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
@@ -19,80 +17,37 @@ void main() {
     testWidgets(
       "can't create widget without data",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _BuildResultBarGraphTestbed(data: null));
+        await tester.pumpWidget(
+            const _BuildResultBarGraphTestbed(buildResultMetric: null));
 
         expect(tester.takeException(), isAssertionError);
       },
     );
 
     testWidgets(
-      "creates the number of bars equal to the number of given BuildResultBarData",
+      "creates the number of BuildResultBars equal to the number of builds to display",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _BuildResultBarGraphTestbed());
+        const buildResultMetric = BuildResultMetricViewModel(
+          numberOfBuildsToDisplay: 3,
+        );
 
-        final barWidgets = tester.widgetList(find.descendant(
-          of: find.byType(LayoutBuilder),
-          matching: find.byType(ColoredBar),
+        await tester.pumpWidget(const _BuildResultBarGraphTestbed(
+          buildResultMetric: buildResultMetric,
         ));
+
+        final barWidgets = tester.widgetList(find.byType(BuildResultBar));
 
         expect(barWidgets.length, buildResults.length);
       },
     );
 
     testWidgets(
-      "creates bars with colors from MetricsTheme corresponding to build status",
-      (WidgetTester tester) async {
-        const primaryColor = Colors.green;
-        const errorColor = Colors.red;
-
-        const themeData = BuildResultsThemeData(
-          successfulColor: primaryColor,
-          failedColor: errorColor,
-          canceledColor: errorColor,
-        );
-        await tester.pumpWidget(const _BuildResultBarGraphTestbed(
-          theme: MetricsThemeData(
-            buildResultTheme: themeData,
-          ),
-        ));
-
-        final barWidgets = tester
-            .widgetList<ColoredBar>(find.descendant(
-              of: find.byType(LayoutBuilder),
-              matching: find.byType(ColoredBar),
-            ))
-            .toList();
-
-        for (int i = 0; i < buildResults.length; i++) {
-          final barWidget = barWidgets[i];
-          final buildResult = buildResults[i];
-
-          Color expectedBarColor;
-
-          switch (buildResult.buildStatus) {
-            case BuildStatus.successful:
-              expectedBarColor = themeData.successfulColor;
-              break;
-            case BuildStatus.cancelled:
-              expectedBarColor = themeData.canceledColor;
-              break;
-            case BuildStatus.failed:
-              expectedBarColor = themeData.failedColor;
-              break;
-          }
-
-          expect(barWidget.color, expectedBarColor);
-        }
-      },
-    );
-
-    testWidgets(
-      "creates placeholder bars if the number of build results is less than the max number of build results",
+      "creates an empty BuildResultBars to match the numberOfBuildsToDisplay",
       (WidgetTester tester) async {
         final numberOfBars = buildResults.length + 1;
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          data: BuildResultMetricViewModel(
+          buildResultMetric: BuildResultMetricViewModel(
             buildResults: _BuildResultBarGraphTestbed.buildResultBarTestData,
             numberOfBuildsToDisplay: numberOfBars,
           ),
@@ -100,21 +55,25 @@ void main() {
 
         final missingBuildResultsCount = numberOfBars - buildResults.length;
 
-        final placeholderBuildBars = tester.widgetList(
-          find.byType(PlaceholderBar),
+        final buildResultBars = tester.widgetList<BuildResultBar>(
+          find.byType(BuildResultBar),
         );
 
-        expect(placeholderBuildBars.length, missingBuildResultsCount);
+        final emptyBuildResultBars = buildResultBars.where(
+          (element) => element.buildResult == null,
+        );
+
+        expect(emptyBuildResultBars.length, missingBuildResultsCount);
       },
     );
 
     testWidgets(
-      "trims the bars data from the begging to match the given number of bars",
+      "trims the build results from the begging to match the given number of bars",
       (WidgetTester tester) async {
         const numberOfBars = 2;
 
         await tester.pumpWidget(const _BuildResultBarGraphTestbed(
-          data: BuildResultMetricViewModel(
+          buildResultMetric: BuildResultMetricViewModel(
             buildResults: _BuildResultBarGraphTestbed.buildResultBarTestData,
             numberOfBuildsToDisplay: numberOfBars,
           ),
@@ -130,35 +89,17 @@ void main() {
 
         final barGraphData = barGraphWidget.data;
 
-        expect(barGraphData.length, numberOfBars);
+        expect(barGraphData.length, equals(numberOfBars));
 
         expect(barGraphData, equals(trimmedData));
-      },
-    );
-
-    testWidgets(
-      "shows the placeholder bar if the build result status is null",
-      (WidgetTester tester) async {
-        const testData = [
-          BuildResultViewModel(
-            value: 20,
-          )
-        ];
-
-        await tester.pumpWidget(_BuildResultBarGraphTestbed(
-          data: BuildResultMetricViewModel(
-            buildResults: testData,
-            numberOfBuildsToDisplay: testData.length,
-          ),
-        ));
-
-        expect(find.byType(PlaceholderBar), findsOneWidget);
       },
     );
   });
 }
 
+/// A testbed class required to test the [BuildResultBarGraph].
 class _BuildResultBarGraphTestbed extends StatelessWidget {
+  /// A list of [BuildResultViewModel] test data to test the [BuildResultBarGraph].
   static const buildResultBarTestData = [
     BuildResultViewModel(
       buildStatus: BuildStatus.successful,
@@ -174,15 +115,24 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     ),
   ];
 
-  static const buildResultMetric = BuildResultMetricViewModel(
+  /// A [BuildResultMetricViewModel] test data to test the [BuildResultBarGraph].
+  static const buildResultMetricTestData = BuildResultMetricViewModel(
       buildResults: buildResultBarTestData, numberOfBuildsToDisplay: 3);
 
-  final BuildResultMetricViewModel data;
+  /// A [BuildResultMetricViewModel] to display.
+  final BuildResultMetricViewModel buildResultMetric;
+
+  /// A [MetricsThemeData] used in tests.
   final MetricsThemeData theme;
 
+  /// Creates the [_BuildResultBarGraphTestbed] with the given [buildResultMetric].
+  ///
+  /// If the [buildResultMetric] is not specified, the 
+  /// [buildResultMetricTestData] used.
+  /// If the [theme] is not specified, an empty [MetricsThemeData] used.
   const _BuildResultBarGraphTestbed({
     Key key,
-    this.data = buildResultMetric,
+    this.buildResultMetric = buildResultMetricTestData,
     this.theme = const MetricsThemeData(),
   }) : super(key: key);
 
@@ -191,7 +141,7 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     return MetricsThemedTestbed(
       metricsThemeData: theme,
       body: BuildResultBarGraph(
-        data: data,
+        buildResultMetric: buildResultMetric,
       ),
     );
   }

@@ -11,12 +11,17 @@ class PlaceholderBar extends StatelessWidget {
 
   /// Creates the [PlaceholderBar].
   ///
+  /// Either [width] and [color] must not be null. 
+  /// The [width] should be positive.
+  ///
   /// This bar displays the missing/empty build in [BarGraph].
   const PlaceholderBar({
     Key key,
     @required this.width,
-    this.color,
-  }) : super(key: key);
+    @required this.color,
+  })  : assert(width != null && width >= 0.0),
+        assert(color != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
