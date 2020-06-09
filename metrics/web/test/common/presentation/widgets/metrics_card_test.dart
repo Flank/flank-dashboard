@@ -73,8 +73,8 @@ class _MetricsCardTestbed extends StatelessWidget {
       home: Scaffold(
         body: MetricsCard(
           key: key,
-          backgroundColor: backgroundColor,
-          child: child,
+          backgroundColor: backgroundColor ?? Colors.grey,
+          child: child ?? Container(),
         ),
       ),
     );

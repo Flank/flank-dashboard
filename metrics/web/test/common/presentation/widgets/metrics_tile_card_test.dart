@@ -13,6 +13,7 @@ void main() {
           title: Text(title),
           subtitle: Text(subtitle),
           actions: <Widget>[],
+          backgroundColor: Colors.grey,
         ),
       );
 
@@ -25,6 +26,7 @@ void main() {
           title: Text(title),
           subtitle: Text(subtitle),
           actions: <Widget>[],
+          backgroundColor: Colors.grey
         ),
       );
 
@@ -40,6 +42,7 @@ void main() {
           title: Text(title),
           subtitle: Text(subtitle),
           actions: <Widget>[Text(firstAction), Text(secondAction)],
+          backgroundColor: Colors.grey
         ),
       );
 

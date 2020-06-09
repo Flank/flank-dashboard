@@ -19,8 +19,7 @@ void main() {
       expect(find.widgetWithText(MetricsButtonCard, title), findsOneWidget);
     });
 
-    testWidgets("has a default title padding equals to 0",
-        (tester) async {
+    testWidgets("has a default title padding equals to 0", (tester) async {
       await tester.pumpWidget(
         _MetricsButtonCardTestbed(
           title: const Text(title),
@@ -52,8 +51,7 @@ void main() {
       expect(metricsButtonCard.iconData, equals(iconData));
     });
 
-    testWidgets("has a default icon padding equals to 0",
-        (tester) async {
+    testWidgets("has a default icon padding equals to 0", (tester) async {
       await tester.pumpWidget(
         _MetricsButtonCardTestbed(
           title: const Text(title),
@@ -67,6 +65,25 @@ void main() {
       );
 
       expect(metricsButtonCard.iconPadding, EdgeInsets.zero);
+    });
+
+    testWidgets("sets the given background color", (tester) async {
+      const color = Colors.red;
+
+      await tester.pumpWidget(
+        _MetricsButtonCardTestbed(
+          title: const Text(title),
+          iconData: iconData,
+          onTap: () {},
+          backgroundColor: color,
+        ),
+      );
+
+      final metricsButtonCard = tester.widget<MetricsButtonCard>(
+        find.byType(MetricsButtonCard),
+      );
+
+      expect(metricsButtonCard.backgroundColor, color);
     });
 
     testWidgets("onTap callback is called after tap", (tester) async {
@@ -94,6 +111,7 @@ class _MetricsButtonCardTestbed extends StatelessWidget {
   final Widget title;
   final IconData iconData;
   final VoidCallback onTap;
+  final Color backgroundColor;
 
   /// Creates the [_MetricsButtonCardTestbed] with the given [title], [iconData] and [onTap] function,
   const _MetricsButtonCardTestbed({
@@ -101,6 +119,7 @@ class _MetricsButtonCardTestbed extends StatelessWidget {
     this.title,
     this.iconData,
     this.onTap,
+    this.backgroundColor,
   }) : super(key: key);
 
   @override
@@ -108,6 +127,7 @@ class _MetricsButtonCardTestbed extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: MetricsButtonCard(
+          backgroundColor: backgroundColor ?? Colors.grey,
           title: title,
           iconData: iconData,
           onTap: onTap,
