@@ -4,11 +4,11 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("ValidationUtil", () {
+  group("PasswordValidationUtil", () {
     test(
-      ".validatePassword() returns the password required error message if the password is null",
+      ".validate() returns the password required error message if the password is null",
           () {
-        final validationResult = PasswordValidationUtil.validatePassword(null);
+        final validationResult = PasswordValidationUtil.validate(null);
 
         expect(
             validationResult, equals(AuthStrings.passwordRequiredErrorMessage));
@@ -16,9 +16,9 @@ void main() {
     );
 
     test(
-      ".validatePassword() returns the password too short error message if the password is less than 6 characters long",
+      ".validate() returns the password too short error message if the password is less than 6 characters long",
           () {
-        final validationResult = PasswordValidationUtil.validatePassword('pass');
+        final validationResult = PasswordValidationUtil.validate('pass');
 
         expect(
           validationResult,
@@ -32,9 +32,9 @@ void main() {
     );
 
     test(
-      ".validatePassword() returns null if the given password is valid",
+      ".validate() returns null if the given password is valid",
           () {
-        final validationResult = PasswordValidationUtil.validatePassword('password');
+        final validationResult = PasswordValidationUtil.validate('password');
 
         expect(validationResult, isNull);
       },

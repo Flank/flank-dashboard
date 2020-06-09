@@ -6,7 +6,7 @@ class PasswordValidationUtil {
   ///
   /// Returns an error message if the [value] is not a valid password,
   /// otherwise returns null.
-  static String validatePassword(String value) {
+  static String validate(String value) {
     PasswordValidationErrorMessage errorMessage;
 
     try {

@@ -6,7 +6,7 @@ class EmailValidationUtil {
   ///
   /// Returns an error message if the [value] is not a valid email,
   /// otherwise returns null.
-  static String validateEmail(String value) {
+  static String validate(String value) {
     EmailValidationErrorMessage errorMessage;
 
     try {

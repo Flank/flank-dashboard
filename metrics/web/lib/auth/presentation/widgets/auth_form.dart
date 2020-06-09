@@ -35,14 +35,14 @@ class _AuthFormState extends State<AuthForm> {
             label: AuthStrings.email,
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            validator: EmailValidationUtil.validateEmail,
+            validator: EmailValidationUtil.validate,
           ),
           AuthInputField(
             key: const Key(AuthStrings.password),
             label: AuthStrings.password,
             controller: _passwordController,
             obscureText: true,
-            validator: PasswordValidationUtil.validatePassword,
+            validator: PasswordValidationUtil.validate,
           ),
           Selector<AuthNotifier, AuthErrorMessage>(
             selector: (_, state) => state.authErrorMessage,
