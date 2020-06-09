@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart
 import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
-import 'package:metrics/project_groups/presentation/util/project_group_validation_util.dart';
+import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
 import 'package:metrics/project_groups/presentation/view_models/active_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_selector_list.dart';
 import 'package:provider/provider.dart';
@@ -78,7 +78,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
               children: <Widget>[
                 MetricsTextFormField(
                   validator:
-                      ProjectGroupValidationUtil.validateProjectGroupName,
+                      ProjectGroupNameValidator.validate,
                   label: ProjectGroupsStrings.nameYourStrings,
                   controller: _groupNameController,
                 ),
