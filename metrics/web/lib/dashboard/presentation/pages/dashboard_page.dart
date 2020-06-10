@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 /// Allows to quickly get primary metrics of all available projects.
 class DashboardPage extends StatefulWidget {
@@ -20,6 +23,8 @@ class _DashboardPageState extends State<DashboardPage> {
     super.initState();
     _projectMetricsNotifier =
         Provider.of<ProjectMetricsNotifier>(context, listen: false);
+
+    _projectMetricsNotifier.subscribeToProjectsNameFilter();
   }
 
   @override
@@ -32,7 +37,7 @@ class _DashboardPageState extends State<DashboardPage> {
             Padding(
               padding: const EdgeInsets.only(bottom: 24.0),
               child: ProjectSearchInput(
-                onFilter: _projectMetricsNotifier.filterByProjectName,
+                onChanged: _projectMetricsNotifier.filterByProjectName,
               ),
             ),
             Expanded(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:metrics/common/presentation/constants/common_constants.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
@@ -15,6 +16,7 @@ import 'package:metrics/project_groups/presentation/view_models/active_project_g
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_selector_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:rxdart/rxdart.dart';
 
 /// The [ChangeNotifier] that holds the project groups state.
 ///
@@ -31,6 +33,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Provides an ability to add the project group.
   final AddProjectGroupUseCase _addProjectGroupUseCase;
+
+  /// A [PublishSubject] that provides the ability to filter projects by the name.
+  final _projectNameFilterSubject = PublishSubject<String>();
 
   /// The stream subscription needed to be able to stop listening
   /// to the project group updates.
@@ -109,11 +114,19 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   ActiveProjectGroupDialogViewModel get activeProjectGroupDialogViewModel =>
       _activeProjectGroupDialogViewModel;
 
+  /// Subscribes to a projects name filter.
+  void subscribeToProjectsNameFilter() {
+    _projectNameFilterSubject
+        .debounceTime(const Duration(milliseconds: CommonConstants.debounce))
+        .listen((value) {
+      _projectNameFilter = value;
+      notifyListeners();
+    });
+  }
+
   /// Adds projects filter using [value] provided.
   void filterByProjectName(String value) {
-    _projectNameFilter = value;
-
-    notifyListeners();
+    _projectNameFilterSubject.add(value);
   }
 
   /// Sets values needed for opened project group dialog.
@@ -306,6 +319,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   @override
   void dispose() {
     _cancelSubscriptions();
+    _projectNameFilterSubject.close();
     super.dispose();
   }
 }

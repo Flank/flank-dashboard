@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:metrics/common/presentation/constants/common_constants.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
@@ -50,8 +51,11 @@ void main() {
       await projectMetricsNotifier.dispose();
     });
 
-    void _resetProjectsFilters() {
+    Future<void> _resetProjectsFilters() async {
       projectMetricsNotifier.filterByProjectName(null);
+      await Future.delayed(
+        const Duration(milliseconds: CommonConstants.debounce + 100),
+      );
     }
 
     test(
@@ -278,7 +282,12 @@ void main() {
 
       final projectNameFilter = expectedProjectMetrics.first.projectName;
 
+      projectMetricsNotifier.subscribeToProjectsNameFilter();
       projectMetricsNotifier.filterByProjectName(projectNameFilter);
+
+      await Future.delayed(
+        const Duration(milliseconds: CommonConstants.debounce + 100),
+      );
 
       final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
@@ -287,15 +296,20 @@ void main() {
         equals(expectedProjectMetrics),
       );
 
-      _resetProjectsFilters();
+      await _resetProjectsFilters();
     });
 
     test(
         ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
-        () {
+        () async {
       final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
+      projectMetricsNotifier.subscribeToProjectsNameFilter();
       projectMetricsNotifier.filterByProjectName(null);
+
+      await Future.delayed(
+        const Duration(milliseconds: CommonConstants.debounce + 100),
+      );
 
       final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
@@ -304,7 +318,7 @@ void main() {
         equals(expectedProjectMetrics),
       );
 
-      _resetProjectsFilters();
+      await _resetProjectsFilters();
     });
 
     test(

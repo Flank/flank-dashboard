@@ -104,4 +104,7 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
 
   @override
   List<ProjectGroupCardViewModel> get projectGroupCardViewModels => null;
+
+  @override
+  void subscribeToProjectsNameFilter() {}
 }

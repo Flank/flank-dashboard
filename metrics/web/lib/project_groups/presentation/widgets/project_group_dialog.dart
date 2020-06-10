@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/widgets/metrics_dialog.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
@@ -38,6 +40,8 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
       listen: false,
     );
 
+    _projectGroupsNotifier.subscribeToProjectsNameFilter();
+
     _groupNameController.text =
         _projectGroupsNotifier.activeProjectGroupDialogViewModel?.name;
 
@@ -77,8 +81,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 MetricsTextFormField(
-                  validator:
-                      ProjectGroupNameValidator.validate,
+                  validator: ProjectGroupNameValidator.validate,
                   label: ProjectGroupsStrings.nameYourStrings,
                   controller: _groupNameController,
                 ),
@@ -97,7 +100,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
                   child: Column(
                     children: <Widget>[
                       ProjectSearchInput(
-                        onFilter: _projectGroupsNotifier.filterByProjectName,
+                        onChanged: _projectGroupsNotifier.filterByProjectName
                       ),
                       Flexible(
                         child: ProjectSelectorList(),

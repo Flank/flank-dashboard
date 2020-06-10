@@ -3,13 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
-import 'package:mockito/mockito.dart';
-
-import '../../../test_utils/project_metrics_notifier_mock.dart';
-import '../../../test_utils/project_metrics_notifier_stub.dart';
-import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("ProjectSearchInput", () {
@@ -32,20 +26,18 @@ void main() {
     );
 
     testWidgets(
-      "calls the filterByProjectName method of the ProjectMetricsNotifier after entering text",
+      "onChanged callback is called after entering a text",
       (tester) async {
-        final metricsNotifier = ProjectMetricsNotifierMock();
+        bool isCalled = false;
 
         await tester.pumpWidget(_ProjectSearchInputTestbed(
-          metricsNotifier: metricsNotifier,
+          onChanged: (_) => isCalled = true,
         ));
 
-        await tester.runAsync(() async {
-          await tester.enterText(find.byType(ProjectSearchInput), 'test');
-          await tester.pumpAndSettle();
-        });
+        await tester.enterText(find.byType(ProjectSearchInput), 'test');
+        await tester.pumpAndSettle();
 
-        verify(metricsNotifier.filterByProjectName(any)).called(1);
+        expect(isCalled, equals(isTrue));
       },
     );
   });
@@ -53,23 +45,18 @@ void main() {
 
 @immutable
 class _ProjectSearchInputTestbed extends StatelessWidget {
-  final ProjectMetricsNotifier metricsNotifier;
+  final ValueChanged<String> onChanged;
 
   const _ProjectSearchInputTestbed({
-    this.metricsNotifier,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    final notifier = metricsNotifier ?? ProjectMetricsNotifierStub();
-
-    return TestInjectionContainer(
-      metricsNotifier: notifier,
-      child: MaterialApp(
-        home: Scaffold(
-          body: ProjectSearchInput(
-            onFilter: notifier.filterByProjectName,
-          ),
+    return MaterialApp(
+      home: Scaffold(
+        body: ProjectSearchInput(
+          onChanged: onChanged,
         ),
       ),
     );
