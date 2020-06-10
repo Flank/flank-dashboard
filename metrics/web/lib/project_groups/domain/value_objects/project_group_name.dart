@@ -2,7 +2,7 @@ import 'package:metrics/project_groups/domain/value_objects/exceptions/project_g
 import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_name_validation_exception.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [ValueObject] represents a password.
+/// A [ValueObject] represents a project group name.
 class ProjectGroupName extends ValueObject<String> {
   @override
   final String value;
