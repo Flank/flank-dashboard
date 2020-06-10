@@ -16,7 +16,7 @@ class ProjectsNotifierStub extends ChangeNotifier implements ProjectsNotifier {
   Future<void> subscribeToProjects() async {}
 
   @override
-  String get errorMessage => null;
+  String get projectsErrorMessage => null;
 
   @override
   Future<void> unsubscribeFromProjects() async {}

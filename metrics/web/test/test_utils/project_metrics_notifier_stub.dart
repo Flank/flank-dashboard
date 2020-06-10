@@ -36,7 +36,7 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
       _projectMetrics ?? [testProjectMetrics];
 
   @override
-  String get errorMessage => null;
+  String get projectsErrorMessage => null;
 
   @override
   void filterByProjectName(String value) {}

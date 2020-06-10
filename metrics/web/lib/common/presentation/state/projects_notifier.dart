@@ -30,11 +30,11 @@ class ProjectsNotifier extends ChangeNotifier {
   /// Holds a list of projects.
   List<Project> _projects;
 
-  /// Holds the error message that occurred during loading data.
-  String _errorMessage;
+  /// Holds the error message that occurred during loading projects data.
+  String _projectsErrorMessage;
 
   /// Provides an error description that occurred during loading projects data.
-  String get errorMessage => _errorMessage;
+  String get projectsErrorMessage => _projectsErrorMessage;
 
   /// A list of projects.
   List<Project> get projects => _projects;
@@ -42,7 +42,7 @@ class ProjectsNotifier extends ChangeNotifier {
   /// Subscribes to projects and its metrics.
   Future<void> subscribeToProjects() async {
     final projectsStream = _receiveProjectsUpdates();
-    _errorMessage = null;
+    _projectsErrorMessage = null;
     await _projectsSubscription?.cancel();
 
     _projectsSubscription = projectsStream.listen(
@@ -74,7 +74,7 @@ class ProjectsNotifier extends ChangeNotifier {
   /// Saves the error [String] representation to [_errorMessage].
   void _errorHandler(error) {
     if (error is PlatformException) {
-      _errorMessage = error.message;
+      _projectsErrorMessage = error.message;
       notifyListeners();
     }
   }

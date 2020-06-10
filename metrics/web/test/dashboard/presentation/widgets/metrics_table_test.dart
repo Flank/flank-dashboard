@@ -49,7 +49,7 @@ void main() {
         const errorMessage = 'Unknown error';
         final metricsNotifier = ProjectMetricsNotifierMock();
 
-        when(metricsNotifier.errorMessage).thenReturn(errorMessage);
+        when(metricsNotifier.projectsErrorMessage).thenReturn(errorMessage);
 
         await tester.pumpWidget(_MetricsTableTestbed(
           metricsNotifier: metricsNotifier,

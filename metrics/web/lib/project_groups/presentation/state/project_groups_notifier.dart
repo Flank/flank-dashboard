@@ -263,7 +263,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   }
 
   /// Updates list of project selector view models and projects error message.
-  void updateProjects(List<Project> projects, String projectErrorMessage) {
+  void updateProjects(List<Project> projects, String projectsErrorMessage) {
     final projectIds =
         _activeProjectGroupDialogViewModel?.selectedProjectIds ?? [];
     _projectSelectorViewModels = projects
@@ -273,7 +273,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
               isChecked: projectIds.contains(project.id),
             ))
         .toList();
-    _projectsErrorMessage = projectErrorMessage;
+    _projectsErrorMessage = projectsErrorMessage;
     notifyListeners();
   }
 

@@ -17,9 +17,9 @@ class MetricsTable extends StatelessWidget {
         Expanded(
           child: Consumer<ProjectMetricsNotifier>(
             builder: (_, projectsMetricsNotifier, __) {
-              if (projectsMetricsNotifier.errorMessage != null) {
+              if (projectsMetricsNotifier.projectsErrorMessage != null) {
                 return _buildLoadingErrorPlaceholder(
-                  projectsMetricsNotifier.errorMessage,
+                  projectsMetricsNotifier.projectsErrorMessage,
                 );
               }
 
