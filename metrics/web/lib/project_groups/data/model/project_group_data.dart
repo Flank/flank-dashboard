@@ -3,6 +3,8 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// [DataModel] that represents the [ProjectGroup] entity.
 class ProjectGroupData extends ProjectGroup implements DataModel {
+
+  /// Creates the [ProjectGroupData] with the given [id], [name] and [projectIds].  
   const ProjectGroupData({
     String id,
     String name,
