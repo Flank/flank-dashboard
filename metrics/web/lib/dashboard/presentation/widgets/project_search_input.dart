@@ -18,8 +18,8 @@ class ProjectSearchInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       onChanged: onChanged,
-      decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.search),
+      decoration: const InputDecoration(
+        prefixIcon: Icon(Icons.search),
         hintText: CommonStrings.searchForProject,
       ),
     );

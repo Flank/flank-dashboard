@@ -71,7 +71,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Subscribes to a projects name filter.
   void subscribeToProjectsNameFilter() {
     _projectNameFilterSubject
-        .debounceTime(const Duration(milliseconds: CommonConstants.debounce))
+        .debounceTime(DurationConstants.debounce)
         .listen((value) {
       _projectNameFilter = value;
       notifyListeners();

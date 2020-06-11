@@ -45,6 +45,8 @@ void main() {
         projects,
         errorMessage,
       );
+
+      projectMetricsNotifier.subscribeToProjectsNameFilter();
     });
 
     tearDownAll(() async {
@@ -54,7 +56,7 @@ void main() {
     Future<void> _resetProjectsFilters() async {
       projectMetricsNotifier.filterByProjectName(null);
       await Future.delayed(
-        const Duration(milliseconds: CommonConstants.debounce + 100),
+        Duration(milliseconds: DurationConstants.debounce.inMilliseconds + 100),
       );
     }
 
@@ -282,11 +284,10 @@ void main() {
 
       final projectNameFilter = expectedProjectMetrics.first.projectName;
 
-      projectMetricsNotifier.subscribeToProjectsNameFilter();
       projectMetricsNotifier.filterByProjectName(projectNameFilter);
 
       await Future.delayed(
-        const Duration(milliseconds: CommonConstants.debounce + 100),
+        Duration(milliseconds: DurationConstants.debounce.inMilliseconds + 100),
       );
 
       final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
@@ -302,23 +303,22 @@ void main() {
     test(
         ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
         () async {
-      final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
+          final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
-      projectMetricsNotifier.subscribeToProjectsNameFilter();
-      projectMetricsNotifier.filterByProjectName(null);
+          projectMetricsNotifier.filterByProjectName(null);
 
-      await Future.delayed(
-        const Duration(milliseconds: CommonConstants.debounce + 100),
-      );
+          await Future.delayed(
+            Duration(milliseconds: DurationConstants.debounce.inMilliseconds + 1),
+          );
 
-      final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
+          final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
-      expect(
-        filteredProjectMetrics,
-        equals(expectedProjectMetrics),
-      );
+          expect(
+            filteredProjectMetrics,
+            equals(expectedProjectMetrics),
+          );
 
-      await _resetProjectsFilters();
+          await _resetProjectsFilters();
     });
 
     test(

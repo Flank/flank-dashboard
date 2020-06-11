@@ -117,7 +117,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Subscribes to a projects name filter.
   void subscribeToProjectsNameFilter() {
     _projectNameFilterSubject
-        .debounceTime(const Duration(milliseconds: CommonConstants.debounce))
+        .debounceTime(DurationConstants.debounce)
         .listen((value) {
       _projectNameFilter = value;
       notifyListeners();
@@ -139,12 +139,13 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     );
 
     final projectIds = projectGroup?.projectIds ?? [];
+
     _projectSelectorViewModels = _projectSelectorViewModels
         .map(
           (project) => ProjectSelectorViewModel(
             id: project.id,
             name: project.name,
-            isChecked: projectIds.contains(project.id),
+            isChecked: projectIds?.contains(project.id),
           ),
         )
         .toList();
@@ -152,7 +153,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _activeProjectGroupDialogViewModel = ActiveProjectGroupDialogViewModel(
       id: projectGroup?.id,
       name: projectGroup?.name,
-      selectedProjectIds: projectIds,
+      selectedProjectIds: List<String>.from(projectIds),
     );
 
     notifyListeners();
@@ -160,16 +161,17 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Change checked status for [ProjectSelectorViewModel] by [projectId].
   void toggleProjectCheckedStatus({String projectId, bool isChecked}) {
-    final projectIds = List<String>.from(
-        _activeProjectGroupDialogViewModel.selectedProjectIds);
+    final projectIds = _activeProjectGroupDialogViewModel.selectedProjectIds;
 
     if (isChecked) {
       projectIds.add(projectId);
     } else {
       projectIds.remove(projectId);
     }
+
     final projectIndex = _projectSelectorViewModels
         .indexWhere((project) => project.id == projectId);
+
     final project = _projectSelectorViewModels[projectIndex];
 
     _projectSelectorViewModels[projectIndex] = ProjectSelectorViewModel(
@@ -192,7 +194,6 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     final projectGroupsStream = _receiveProjectGroupUpdates();
     _errorMessage = null;
     await _projectGroupsSubscription?.cancel();
-
     _projectGroupsSubscription = projectGroupsStream.listen(
       _projectGroupListener,
       onError: _errorHandler,
@@ -280,7 +281,6 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Listens to project group updates.
   void _projectGroupListener(List<ProjectGroup> newProjectGroups) {
     if (newProjectGroups == null) return;
-
     _projectGroups = newProjectGroups;
     _projectGroupCardViewModels = newProjectGroups
         .map((project) => ProjectGroupCardViewModel(
