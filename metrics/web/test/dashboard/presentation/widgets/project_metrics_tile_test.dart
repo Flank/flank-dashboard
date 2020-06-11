@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/graphs/circle_percentage.dart';
+import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';

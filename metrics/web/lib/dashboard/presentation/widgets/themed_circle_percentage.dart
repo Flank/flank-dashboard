@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/graphs/circle_percentage.dart';
+import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value_based_theme_strategy.dart';
@@ -14,9 +14,9 @@ class ThemedCirclePercentage extends StatelessWidget {
   /// A [PercentViewModel] to display.
   final PercentViewModel percent;
 
-  /// Creates the [ThemedCirclePercentage] 
+  /// Creates the [ThemedCirclePercentage]
   /// with the given [percent] and [themeStrategy].
-  /// 
+  ///
   /// The both [percent] and [themeStrategy] must not be `null`.
   const ThemedCirclePercentage({
     Key key,

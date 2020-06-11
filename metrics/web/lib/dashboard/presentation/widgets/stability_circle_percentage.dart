@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/graphs/circle_percentage.dart';
+import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/metric_value_theme_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/themed_circle_percentage.dart';

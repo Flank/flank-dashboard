@@ -37,18 +37,14 @@ class CirclePercentage extends StatefulWidget {
 
   /// Creates the circle percentage graph.
   ///
-  /// The [value] must be either `null` or from 0.0 (inclusive) to 1.0 (inclusive).
-  /// The [placeholder] must not be `null`. The [placeholder] is displayed,
-  /// if the [value] is `null`.
-  ///
   /// The [strokeWidth] default value is 2.0.
   /// The [valueColor] default value is [Colors.blue].
   /// The [strokeColor] default value is [Colors.grey].
   /// The [valueStrokeWidth] default value is 5.0.
   const CirclePercentage({
     Key key,
-    @required this.value,
-    @required this.placeholder,
+    this.value,
+    this.placeholder,
     this.valueStyle,
     this.strokeWidth = 2.0,
     this.valueStrokeWidth = 5.0,
@@ -56,9 +52,7 @@ class CirclePercentage extends StatefulWidget {
     Color valueColor,
     Color strokeColor,
     this.backgroundColor,
-  })  : assert(placeholder != null),
-        assert(value == null || (value >= 0 && value <= 1)),
-        valueColor = valueColor ?? Colors.blue,
+  })  : valueColor = valueColor ?? Colors.blue,
         strokeColor = strokeColor ?? Colors.grey,
         super(key: key);
 
@@ -120,7 +114,7 @@ class _CirclePercentageState extends State<CirclePercentage>
                           style: TextStyle(color: widget.valueColor),
                           child: Expanded(
                             child: widget.value == null
-                                ? widget.placeholder
+                                ? widget.placeholder ?? Container()
                                 : ExpandableText(
                                     _getValueText(),
                                     style: widget.valueStyle,
@@ -139,7 +133,7 @@ class _CirclePercentageState extends State<CirclePercentage>
     );
   }
 
-  /// Animates the [AnimationController] to the [widget.stability] if it is not null.
+  /// Animates the [AnimationController] to the [widget.value] if it is not null.
   void _animate() {
     if (widget.value != null) {
       _controller.animateTo(widget.value);
@@ -177,10 +171,10 @@ class CirclePercentageChartPainter extends CustomPainter {
   /// The width of the value (filled) stroke to paint.
   final double valueStrokeWidth;
 
-  /// The value of filled circle percantage to paint.
+  /// The value of filled circle percentage to paint.
   final double percent;
 
-  /// The color of the filled circle percantage to paint.
+  /// The color of the filled circle percentage to paint.
   final Color valueColor;
 
   /// The color of the circle percentage stroke.

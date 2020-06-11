@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/graphs/circle_percentage.dart';
+import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
@@ -12,20 +12,21 @@ void main() {
     const valueColor = Colors.red;
 
     testWidgets(
-      "can't be created with value more than 1.0",
+      "shows the 100% value if the given value more than 1",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _CirclePercentageTestbed(
             value: 30.0,
           ),
         );
+        await tester.pumpAndSettle();
 
-        expect(tester.takeException(), isAssertionError);
+        expect(find.text("100%"), findsOneWidget);
       },
     );
 
     testWidgets(
-      "can't be created with value less than 0",
+      "shows the 0% value if the given value less than 0",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _CirclePercentageTestbed(
@@ -33,7 +34,7 @@ void main() {
           ),
         );
 
-        expect(tester.takeException(), isAssertionError);
+        expect(find.text("0%"), findsOneWidget);
       },
     );
 
@@ -58,6 +59,20 @@ void main() {
 
       expect(tester.takeException(), isNull);
     });
+
+    testWidgets(
+      "can be created with null placeholder and value",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _CirclePercentageTestbed(
+          value: null,
+          placeholder: null,
+        ));
+
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+      },
+    );
 
     testWidgets(
       "can be created without stroke color",
