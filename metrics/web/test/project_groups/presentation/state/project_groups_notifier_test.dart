@@ -297,6 +297,14 @@ void main() {
       () {
         const testProjectId = 'testProjectId';
         const testProjectGroupId = 'testGroupId';
+
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
             const ProjectGroup(id: 'id', name: 'name', projectIds: []),
@@ -305,13 +313,6 @@ void main() {
                 name: 'name',
                 projectIds: [testProjectId]),
           ]),
-        );
-
-        final projectGroupsNotifier = ProjectGroupsNotifier(
-          receiveProjectGroupUpdates,
-          addProjectGroupUseCase,
-          updateProjectGroupUseCase,
-          deleteProjectGroupUseCase,
         );
 
         projectGroupsNotifier.subscribeToProjectGroups();
@@ -325,26 +326,26 @@ void main() {
           false,
         );
 
-        Timer timer;
-
+        List<ProjectGroup> oldProjectGroups;
         bool projectSelectorViewModelIsChecked = false;
         final projectGroupListener = expectAsyncUntil0(() {
-          if (projectGroupsNotifier.projectGroups != null) {
-            projectGroupsNotifier
-                .generateActiveProjectGroupViewModel(testProjectGroupId);
+          if (oldProjectGroups != projectGroupsNotifier.projectGroups) {
+            oldProjectGroups = projectGroupsNotifier.projectGroups;
+
+            projectGroupsNotifier.generateActiveProjectGroupViewModel(
+              testProjectGroupId,
+            );
+
             final projectSelectorViewModel =
                 projectGroupsNotifier.projectSelectorViewModels.first;
             projectSelectorViewModelIsChecked =
                 projectSelectorViewModel.isChecked;
-            timer?.cancel();
+
             projectGroupsNotifier.dispose();
           }
         }, () => projectSelectorViewModelIsChecked);
 
-        timer = Timer.periodic(
-          const Duration(seconds: 1),
-          (timer) => projectGroupListener(),
-        );
+        projectGroupsNotifier.addListener(projectGroupListener);
       },
     );
 
@@ -352,6 +353,13 @@ void main() {
       ".generateActiveProjectGroupViewModel() generate new active project group view model by id",
       () {
         const testProjectGroupId = 'testGroupId';
+
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
 
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
@@ -364,13 +372,6 @@ void main() {
           ]),
         );
 
-        final projectGroupsNotifier = ProjectGroupsNotifier(
-          receiveProjectGroupUpdates,
-          addProjectGroupUseCase,
-          updateProjectGroupUseCase,
-          deleteProjectGroupUseCase,
-        );
-
         projectGroupsNotifier.subscribeToProjectGroups();
 
         projectGroupsNotifier.updateProjects(const [
@@ -379,24 +380,23 @@ void main() {
 
         expect(projectGroupsNotifier.activeProjectGroupDialogViewModel, isNull);
 
-        Timer timer;
-
+        List<ProjectGroup> oldProjects;
         bool activeProjectGroupDialogViewModelIsNotNull = false;
         final projectGroupListener = expectAsyncUntil0(() {
-          if (projectGroupsNotifier.projectGroups != null) {
-            projectGroupsNotifier
-                .generateActiveProjectGroupViewModel(testProjectGroupId);
+          if (oldProjects != projectGroupsNotifier.projectGroups) {
+            oldProjects = projectGroupsNotifier.projectGroups;
+            projectGroupsNotifier.generateActiveProjectGroupViewModel(
+              testProjectGroupId,
+            );
+
             activeProjectGroupDialogViewModelIsNotNull =
                 projectGroupsNotifier.activeProjectGroupDialogViewModel != null;
-            timer?.cancel();
+
             projectGroupsNotifier.dispose();
           }
         }, () => activeProjectGroupDialogViewModelIsNotNull);
 
-        timer = Timer.periodic(
-          const Duration(seconds: 1),
-          (timer) => projectGroupListener(),
-        );
+        projectGroupsNotifier.addListener(projectGroupListener);
       },
     );
 
@@ -411,6 +411,13 @@ void main() {
           Project(id: 'id2', name: filteredProjectName),
         ];
 
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
             const ProjectGroup(id: 'id', name: 'name', projectIds: []),
@@ -421,15 +428,6 @@ void main() {
             ),
           ]),
         );
-
-        final projectGroupsNotifier = ProjectGroupsNotifier(
-          receiveProjectGroupUpdates,
-          addProjectGroupUseCase,
-          updateProjectGroupUseCase,
-          deleteProjectGroupUseCase,
-        );
-
-        await projectGroupsNotifier.subscribeToProjectGroups();
 
         projectGroupsNotifier.subscribeToProjectsNameFilter();
 
@@ -445,25 +443,27 @@ void main() {
         expect(projectGroupsNotifier.projectSelectorViewModels.length,
             expectedFilteredProjectsLength);
 
-        Timer timer;
+        await projectGroupsNotifier.subscribeToProjectGroups();
 
+        List<ProjectGroup> oldProjectGroups;
         bool isFilterReset = false;
         final projectGroupListener = expectAsyncUntil0(() {
-          if (projectGroupsNotifier.projectGroups != null) {
-            projectGroupsNotifier
-                .generateActiveProjectGroupViewModel(testProjectGroupId);
+          if (oldProjectGroups != projectGroupsNotifier.projectGroups) {
+            oldProjectGroups = projectGroupsNotifier.projectGroups;
+
+            projectGroupsNotifier.generateActiveProjectGroupViewModel(
+              testProjectGroupId,
+            );
+
             isFilterReset =
                 projectGroupsNotifier.projectSelectorViewModels.length ==
                     testProjects.length;
-            timer?.cancel();
+
             projectGroupsNotifier.dispose();
           }
         }, () => isFilterReset);
 
-        timer = Timer.periodic(
-          const Duration(seconds: 1),
-          (timer) => projectGroupListener(),
-        );
+        projectGroupsNotifier.addListener(projectGroupListener);
       },
     );
 
@@ -473,8 +473,15 @@ void main() {
         const testProjectGroupId = 'testGroupId';
         const testProjectId = 'testProjectId';
 
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
         when(receiveProjectGroupUpdates()).thenAnswer(
-          (_) => Stream.value([
+              (_) => Stream.value([
             const ProjectGroup(id: 'id', name: 'name', projectIds: []),
             const ProjectGroup(
               id: testProjectGroupId,
@@ -484,41 +491,35 @@ void main() {
           ]),
         );
 
-        final projectGroupsNotifier = ProjectGroupsNotifier(
-          receiveProjectGroupUpdates,
-          addProjectGroupUseCase,
-          updateProjectGroupUseCase,
-          deleteProjectGroupUseCase,
-        );
-
         projectGroupsNotifier.subscribeToProjectGroups();
 
         projectGroupsNotifier.updateProjects(const [
           Project(id: testProjectId, name: 'name'),
         ], null);
 
-        Timer timer;
-
+        List<ProjectGroup> oldProjectGroups;
         bool projectIdIsAdded = false;
         final projectGroupListener = expectAsyncUntil0(() {
-          if (projectGroupsNotifier.projectGroups != null) {
+          if (oldProjectGroups != projectGroupsNotifier.projectGroups) {
+            oldProjectGroups = projectGroupsNotifier.projectGroups;
+
             projectGroupsNotifier
                 .generateActiveProjectGroupViewModel(testProjectGroupId);
             projectGroupsNotifier.toggleProjectCheckedStatus(
-                projectId: testProjectId, isChecked: true);
+              projectId: testProjectId,
+              isChecked: true,
+            );
+
             final newActiveViewModel =
                 projectGroupsNotifier.activeProjectGroupDialogViewModel;
             projectIdIsAdded =
                 newActiveViewModel.selectedProjectIds.contains(testProjectId);
-            timer?.cancel();
+
             projectGroupsNotifier.dispose();
           }
         }, () => projectIdIsAdded);
 
-        timer = Timer.periodic(
-          const Duration(seconds: 1),
-          (timer) => projectGroupListener(),
-        );
+        projectGroupsNotifier.addListener(projectGroupListener);
       },
     );
 
@@ -528,8 +529,15 @@ void main() {
         const testProjectGroupId = 'testGroupId';
         const testProjectId = 'testProjectId';
 
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
         when(receiveProjectGroupUpdates()).thenAnswer(
-          (_) => Stream.value([
+              (_) => Stream.value([
             const ProjectGroup(id: 'id', name: 'name', projectIds: []),
             const ProjectGroup(
               id: testProjectGroupId,
@@ -539,41 +547,36 @@ void main() {
           ]),
         );
 
-        final projectGroupsNotifier = ProjectGroupsNotifier(
-          receiveProjectGroupUpdates,
-          addProjectGroupUseCase,
-          updateProjectGroupUseCase,
-          deleteProjectGroupUseCase,
-        );
-
         projectGroupsNotifier.subscribeToProjectGroups();
 
         projectGroupsNotifier.updateProjects(const [
           Project(id: testProjectId, name: 'name'),
         ], null);
 
-        Timer timer;
-
+        List<ProjectGroup> oldProjectGroups;
         bool projectIdIsRemoved = false;
         final projectGroupListener = expectAsyncUntil0(() {
-          if (projectGroupsNotifier.projectGroups != null) {
-            projectGroupsNotifier
-                .generateActiveProjectGroupViewModel(testProjectGroupId);
+          if (oldProjectGroups != projectGroupsNotifier.projectGroups) {
+            oldProjectGroups = projectGroupsNotifier.projectGroups;
+
+            projectGroupsNotifier.generateActiveProjectGroupViewModel(
+              testProjectGroupId,
+            );
             projectGroupsNotifier.toggleProjectCheckedStatus(
-                projectId: testProjectId, isChecked: false);
+              projectId: testProjectId,
+              isChecked: false,
+            );
+
             final newActiveViewModel =
                 projectGroupsNotifier.activeProjectGroupDialogViewModel;
             projectIdIsRemoved =
                 !newActiveViewModel.selectedProjectIds.contains(testProjectId);
-            timer?.cancel();
+
             projectGroupsNotifier.dispose();
           }
         }, () => projectIdIsRemoved);
 
-        timer = Timer.periodic(
-          const Duration(seconds: 1),
-          (timer) => projectGroupListener(),
-        );
+        projectGroupsNotifier.addListener(projectGroupListener);
       },
     );
 
@@ -583,8 +586,15 @@ void main() {
         const testProjectGroupId = 'testGroupId';
         const testProjectId = 'testProjectId';
 
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
         when(receiveProjectGroupUpdates()).thenAnswer(
-          (_) => Stream.value([
+              (_) => Stream.value([
             const ProjectGroup(id: 'id', name: 'name', projectIds: []),
             const ProjectGroup(
               id: testProjectGroupId,
@@ -594,42 +604,35 @@ void main() {
           ]),
         );
 
-        final projectGroupsNotifier = ProjectGroupsNotifier(
-          receiveProjectGroupUpdates,
-          addProjectGroupUseCase,
-          updateProjectGroupUseCase,
-          deleteProjectGroupUseCase,
-        );
-
         projectGroupsNotifier.subscribeToProjectGroups();
 
         projectGroupsNotifier.updateProjects(const [
           Project(id: testProjectId, name: 'name'),
         ], null);
 
-        Timer timer;
-
+        List<ProjectGroup> oldProjectGroups;
         bool projectSelectorIsChecked = false;
         final projectGroupListener = expectAsyncUntil0(() {
-          if (projectGroupsNotifier.projectGroups != null) {
-            projectGroupsNotifier
-                .generateActiveProjectGroupViewModel(testProjectGroupId);
+          if (oldProjectGroups != projectGroupsNotifier.projectGroups) {
+            oldProjectGroups = projectGroupsNotifier.projectGroups;
+
+            projectGroupsNotifier.generateActiveProjectGroupViewModel(
+              testProjectGroupId,
+            );
             projectGroupsNotifier.toggleProjectCheckedStatus(
                 projectId: testProjectId, isChecked: true);
+
             final projectSelectorViewModel =
                 projectGroupsNotifier.projectSelectorViewModels.firstWhere(
               (project) => project.id == testProjectId,
             );
             projectSelectorIsChecked = projectSelectorViewModel.isChecked;
-            timer?.cancel();
+
             projectGroupsNotifier.dispose();
           }
         }, () => projectSelectorIsChecked);
 
-        timer = Timer.periodic(
-          const Duration(seconds: 1),
-          (timer) => projectGroupListener(),
-        );
+        projectGroupsNotifier.addListener(projectGroupListener);
       },
     );
 
