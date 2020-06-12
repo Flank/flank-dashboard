@@ -63,26 +63,26 @@ A `state` is responsible for holding the logic of the presentation layer - loadi
 
 There are three main types of the UI components in the Metrics Web Application: 
 1. `pages`
-2. `high-level widgets`
-3. `low-level widgets`
+2. `base widgets`
+3. `metrics widgets` 
 
 > Explain the difference between `page` and `widget`.
 
 1. Page
 
-A `page` is the widget that properly combines the high-level widgets. Represents the web page or screen of the application. These widgets lay under the `module_name/presentation/pages` folder. Each module should consist of at least one page.
+A `page` is the widget that properly combines the metrics widgets. Represents the web page or screen of the application. These widgets lay under the `module_name/presentation/pages` folder. Each module should consist of at least one `page`.
 
-> Explain the difference between `low-level` and `high-level` widgets.
+> Explain the difference between `base` and `metrics` widgets.
 
-2. Low-level widgets.
+2. Base widgets.
 
-`Low-level widgets` are highly-reusable widgets that should only present the given data. This type of widgets can contain only common presentation logic. For example, the logic of displaying the given points as a graph. `Low-level widgets` should not contain any project-specific functionality. The most common approach is using the `low-level widgets` to create `high-level widgets` that will properly configure them for different needs. 
+`Base widgets` are highly-reusable widgets that should only present the given data. This type of widgets can contain only common presentation logic. For example, the logic of displaying the given points as a graph. `Base widgets` should not contain any project-specific functionality. The most common approach is using the `base widgets` to create `metrics widgets` that will properly configure them for different needs. 
 
-3. High-level widgets.
+3. Metrics widgets.
 
-`High-level widgets` are specific to the Metrics Web Application widgets that use `MetricsTheme` for coloring and `view model` as input. Should use low-level widgets as much as possible. High-level widgets can obtain any other params like `ThemeStrategy` to make it more testable.
+`Metrics widgets` are specific to the Metrics Web Application widgets that use `MetricsTheme` for coloring and `view model` as input. Should use `base widgets` as much as possible. Metrics widgets can obtain any other params like `ThemeStrategy` to make it more testable.
 
-See [Widget structure organization](03_widget_structure_organization.md) document to get more information about `high-level` and `low-level` widgets.
+See [Widget structure organization](03_widget_structure_organization.md) document to get more information about `metrics` and `base` widgets.
 
 ### Strings
 
@@ -93,7 +93,7 @@ Once we have widgets, we probably have some constant texts in them like titles, 
 
 Let's consider a class diagram explaining the structure of widgets in the Metrics Web Application: 
 
-![Widget Structure Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/widget_structure_class_diagram.puml)
+![Widget Structure Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_app_docs_improvements/metrics/web/docs/diagrams/widget_structure_class_diagram.puml)
 
 > Explain the package structure of the presentation layer.
 
@@ -132,7 +132,7 @@ The presentation layer will be unit-tested and integration-tested using the core
 - Not document the presentation layer of the Metrics Web Application:
     - Cons: 
         - As the application grows, the future development of new modules and maintaining the old ones may be tricky without any document describing the presentation layer.
-        - With no written explanation in differences between top-level and low-level widgets in the context of the Metrics Web Application, it will be longer for the new team members to become productive.
+        - With no written explanation in differences between metrics and base widgets in the context of the Metrics Web Application, it will be longer for the new team members to become productive.
 
 # Results
 > What was the outcome of the project?

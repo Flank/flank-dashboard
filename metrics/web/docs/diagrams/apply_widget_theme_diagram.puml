@@ -1,6 +1,6 @@
 @startuml apply_widget_theme_diagram
 (*) -> Apply theme to the CoolWidget
-if Is a low-level widget? then
+if Is a base widget? then
 --> [Yes] (*)
 else
 ---> [No] if Needs custom theme data? then

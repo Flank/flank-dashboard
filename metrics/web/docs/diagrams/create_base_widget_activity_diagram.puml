@@ -1,0 +1,9 @@
+@startuml create_metrics_widget_activity_diagram
+
+(*) --> CoolWidget
+--> "Implement a new widget"
+--> "Place it under the **base/presentation/widgets/**"
+--> "Add an ability to configure the appearence"
+--> (*)
+
+@enduml

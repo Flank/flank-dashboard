@@ -47,7 +47,7 @@ The main idea is to separate the business logic from the frameworks used, like `
 
 The dependency rule defines how the application components should behave to each other and helps to avoid dependencies that will reduce the maintainability and testability of the application. Let us consider the components diagram that explains the dependencies between the application components according to the dependency rule: 
 
-![Dependency rule diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/dependency_rule_diagram.puml)
+![Dependency rule diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_app_docs_improvements/metrics/web/docs/diagrams/dependency_rule_diagram.puml)
 
 See [The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) article to get more wide explanation of the dependency rule.
 
@@ -71,7 +71,7 @@ Currently, our application has the following modules:
 
 Let us consider the class diagram that will explain the main idea of the package structure and relationships between application layers in one module. Let's call this module `cool_module`: 
 
-![Web Architecture Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/web_architecture_class_diagram.puml)
+![Web Architecture Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_app_docs_improvements/metrics/web/docs/diagrams/web_architecture_class_diagram.puml)
 
 Once we have a class diagram that provides detailed information about layers and relationships between them, let's consider the details about layers and their constituents.
 
@@ -143,7 +143,7 @@ Also, the `data` layer can notify the `domain` about data updates in the persist
 
 Let's consider an example of the data migrations and transformations between different layers of the Metrics Web Application. Here, the diagram shows the process of loading abstract `cool metrics` from the persistent store to display it for the user `Bob`. 
 
-![Web Layers Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/web_layers_sequence_diagram.puml)
+![Web Layers Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_app_docs_improvements/metrics/web/docs/diagrams/web_layers_sequence_diagram.puml)
 
 # Package structure
 > Explain and diagram the Metrics Web Application package structure.
@@ -197,11 +197,29 @@ Unlike the usual module structure, the `common` module structure has a bit diffe
 >      * injector/
 >      * widgets/
 
+Note that the `common/presentation` package does **NOT** contain the `base` widgets. All the widgets within the `common/presentation` are considered to be `metrics` that are used by the different modules of the Metrics Web Application. For example, the `MetricsThemeBuilder`, `InjectionContainer`, etc.
+
+## The `base` package structure
+
+Similar to the `common` package, we have the `base` package that contains all the classes that does not have any project-specific dependencies and can be easily reused in any other project. The `base` package contains all `base` widgets and generic interfaces. The `base` package structure should look like this (let's call it a `base_unit`): 
+
+> * base/
+>    * `data_layer`
+>    * `domain_layer`
+>    * presentation/
+>      * graphs/
+>      * widgets/
+
+The `domain` and the `data` layers of this module will be the same as in other packages, but the `presentation` layer will look a bit different. It will contain any packages with the widgets groups like `graphs` and the `widgets` package that contains all widgets that cannot be grouped for some reason.
+
+Please note, that the `base` module should contain only general classes that does **NOT** related to the Metrics Web Application at all.
+
 ## The Metrics Web Application package structure 
 
 So, to sum up, let's consider the Metrics Web Application package structure: 
 
 > * lib/
+>   * `base_unit`
 >   * `common_unit`
 >   * dashboard/
 >     * `data_layer`
