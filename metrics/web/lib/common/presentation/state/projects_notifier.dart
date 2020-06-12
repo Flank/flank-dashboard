@@ -59,6 +59,8 @@ class ProjectsNotifier extends ChangeNotifier {
 
   /// Updates projects subscription, based on the [isLoggedIn] user status.
   Future<void> updateProjectsSubscription({bool isLoggedIn}) async {
+    if(isLoggedIn == null) return;
+
     if (isLoggedIn) {
       await subscribeToProjects();
     } else {

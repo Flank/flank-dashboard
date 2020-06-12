@@ -481,7 +481,7 @@ void main() {
         );
 
         when(receiveProjectGroupUpdates()).thenAnswer(
-              (_) => Stream.value([
+          (_) => Stream.value([
             const ProjectGroup(id: 'id', name: 'name', projectIds: []),
             const ProjectGroup(
               id: testProjectGroupId,
@@ -537,7 +537,7 @@ void main() {
         );
 
         when(receiveProjectGroupUpdates()).thenAnswer(
-              (_) => Stream.value([
+          (_) => Stream.value([
             const ProjectGroup(id: 'id', name: 'name', projectIds: []),
             const ProjectGroup(
               id: testProjectGroupId,
@@ -594,7 +594,7 @@ void main() {
         );
 
         when(receiveProjectGroupUpdates()).thenAnswer(
-              (_) => Stream.value([
+          (_) => Stream.value([
             const ProjectGroup(id: 'id', name: 'name', projectIds: []),
             const ProjectGroup(
               id: testProjectGroupId,
