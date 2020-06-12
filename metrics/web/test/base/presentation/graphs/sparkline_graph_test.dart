@@ -3,32 +3,22 @@ import 'dart:math';
 import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/graphs/sparkline_graph.dart';
+import 'package:metrics/base/presentation/graphs/sparkline_graph.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("SparklineGraph", () {
     testWidgets(
-      "can't be created with null data",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _SparklineGraphTestbed(data: null));
-
-        expect(tester.takeException(), isAssertionError);
-      },
-    );
-
-    testWidgets(
       "can't be created with null stroke width",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _SparklineGraphTestbed(
-          strokeWidth: null
-        ));
+        await tester
+            .pumpWidget(const _SparklineGraphTestbed(strokeWidth: null));
 
         expect(tester.takeException(), isAssertionError);
       },
     );
-    
+
     testWidgets(
       "can't be created with a negative stroke width",
       (WidgetTester tester) async {
@@ -37,6 +27,15 @@ void main() {
         ));
 
         expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "can be created with null data",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _SparklineGraphTestbed(data: null));
+
+        expect(tester.takeException(), isNull);
       },
     );
 
@@ -248,7 +247,7 @@ class _SparklineGraphTestbed extends StatelessWidget {
   final double strokeWidth;
 
   /// Creates the [_SparklineGraphTestbed].
-  /// 
+  ///
   /// If [data] is not specified, the [sparklineGraphTestData] is used.
   /// If [graphPadding] is not specified, the [EdgeInsets.zero] is used.
   /// If [strokeWidth] is not specified, the `2.0` is used.

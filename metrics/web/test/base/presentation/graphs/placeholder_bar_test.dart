@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/graphs/colored_bar.dart';
-import 'package:metrics/common/presentation/graphs/placeholder_bar.dart';
+import 'package:metrics/base/presentation/graphs/colored_bar.dart';
+import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 
 void main() {
   group("PlaceholderBar", () {
@@ -30,11 +30,24 @@ void main() {
     );
 
     testWidgets(
-      "can't be created with null color",
+      "applies the grey color if no color given",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(color: null));
+        await tester.pumpWidget(_PlaceholderBarTestbed());
 
-        expect(tester.takeException(), isAssertionError);
+        final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
+
+        expect(coloredBar.color, equals(Colors.grey));
+      },
+    );
+
+    testWidgets(
+      "applies the grey color if the null is passed",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_PlaceholderBarTestbed());
+
+        final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
+
+        expect(coloredBar.color, equals(Colors.grey));
       },
     );
 
@@ -101,7 +114,7 @@ class _PlaceholderBarTestbed extends StatelessWidget {
   /// If the [color] is not specified, the [Colors.blue] used.
   const _PlaceholderBarTestbed({
     this.width = 2.0,
-    this.color = Colors.blue,
+    this.color,
   });
 
   @override

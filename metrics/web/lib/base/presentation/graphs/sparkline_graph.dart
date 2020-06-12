@@ -44,13 +44,12 @@ class SparklineGraph extends StatelessWidget {
     this.fillColor,
     this.graphPadding = EdgeInsets.zero,
     this.strokeWidth = 4.0,
-  })  : assert(data != null),
-        assert(strokeWidth != null && strokeWidth >= 0.0),
+  })  : assert(strokeWidth != null && strokeWidth >= 0.0),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final graphData = data.toList();
+    final graphData = data?.toList() ?? [];
 
     return LineChart(
       chartPadding: graphPadding,

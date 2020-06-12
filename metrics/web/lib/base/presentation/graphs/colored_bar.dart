@@ -18,7 +18,7 @@ class ColoredBar extends StatelessWidget {
   final double width;
 
   /// Creates the [ColoredBar].
-  /// 
+  ///
   /// The [padding] defaults to the [EdgeInsets.zero].
   const ColoredBar({
     Key key,
@@ -26,8 +26,9 @@ class ColoredBar extends StatelessWidget {
     this.color,
     this.borderRadius,
     this.border,
-    this.width,
-  }) : super(key: key);
+    this.width = 0.0,
+  })  : assert(width != null && width >= 0.0),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

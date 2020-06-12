@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/graphs/colored_bar.dart';
-import 'package:metrics/common/presentation/graphs/placeholder_bar.dart';
+import 'package:metrics/base/presentation/graphs/colored_bar.dart';
+import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';

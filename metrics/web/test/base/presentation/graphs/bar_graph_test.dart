@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/graphs/bar_graph.dart';
+import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("BarGraph", () {
     testWidgets(
-      "can't be created without data",
+      "can't be created without bar builder",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _BarGraphTestbed(barBuilder: null));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "can be created with null data",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _BarGraphTestbed(data: null));
 
-        expect(tester.takeException(), isAssertionError);
+        expect(tester.takeException(), isNull);
+        expect(find.byType(_BarGraphTestbed), findsOneWidget);
       },
     );
 
@@ -122,18 +132,30 @@ class _BarGraphTestbed extends StatelessWidget {
     19,
   ];
 
+  /// A default bar builder used in tests.
+  static Widget createBar(List<int> data, int index) {
+    return _GraphTestBar(
+      value: data[index].toInt(),
+    );
+  }
+
   /// The padding to inset the [BarGraph].
   final EdgeInsets graphPadding;
 
   /// The list of data to be displayed on the [BarGraph].
   final List<int> data;
 
+  /// The function for the [BarGraph.barBuilder] callback.
+  final Widget Function(List<int>, int) barBuilder;
+
   /// Creates the instance of this testbed.
   ///
   /// The [graphPadding] defaults to [EdgeInsets.all] with parameter `16.0`.
+  /// The [barBuilder] defaults to the [createBar] function.
   const _BarGraphTestbed({
     Key key,
     this.data = graphBarTestData,
+    this.barBuilder = createBar,
     this.graphPadding = const EdgeInsets.all(16.0),
   }) : super(key: key);
 
@@ -143,9 +165,8 @@ class _BarGraphTestbed extends StatelessWidget {
       body: BarGraph(
         data: data,
         graphPadding: graphPadding,
-        barBuilder: (index) => _GraphTestBar(
-          value: data[index].toInt(),
-        ),
+        barBuilder:
+            barBuilder == null ? null : (index) => barBuilder(data, index),
       ),
     );
   }

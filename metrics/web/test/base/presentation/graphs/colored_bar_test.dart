@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/graphs/colored_bar.dart';
+import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -103,8 +103,8 @@ class _ColoredBarTestbed extends StatelessWidget {
   /// The width of the [ColoredBar].
   final double width;
 
-  /// Creates the instance of this testbed. 
-  /// 
+  /// Creates the instance of this testbed.
+  ///
   /// The [padding] defaults to [EdgeInsets.all] with parameter `4.0`.
   const _ColoredBarTestbed({
     Key key,
@@ -112,7 +112,7 @@ class _ColoredBarTestbed extends StatelessWidget {
     this.borderRadius,
     this.border,
     this.padding = const EdgeInsets.all(4.0),
-    this.width,
+    this.width = 1.0,
   }) : super(key: key);
 
   @override

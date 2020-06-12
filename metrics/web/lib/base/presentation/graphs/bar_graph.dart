@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A widget builder function for building the bar graph.
 typedef BarBuilder = Widget Function(int index);
 
 /// Displays the bar graph with bars
@@ -19,15 +20,15 @@ class BarGraph<T extends num> extends StatelessWidget {
 
   /// Creates the [BarGraph].
   ///
-  /// The [data] must not be null.
-  /// The [graphPadding] default value is [EdgeInsets.all] with 
+  /// The [barBuilder] must not be `null`.
+  /// The [graphPadding] default value is [EdgeInsets.all] with
   /// parameter equal to `16.0`.
   const BarGraph({
     Key key,
-    @required this.data,
+    this.data,
     @required this.barBuilder,
     this.graphPadding = const EdgeInsets.all(16.0),
-  })  : assert(data != null),
+  })  : assert(barBuilder != null),
         super(key: key);
 
   @override

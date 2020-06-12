@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/graphs/bar_graph.dart';
+import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -127,7 +127,7 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
 
   /// Creates the [_BuildResultBarGraphTestbed] with the given [buildResultMetric].
   ///
-  /// If the [buildResultMetric] is not specified, the 
+  /// If the [buildResultMetric] is not specified, the
   /// [buildResultMetricTestData] used.
   /// If the [theme] is not specified, an empty [MetricsThemeData] used.
   const _BuildResultBarGraphTestbed({

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/graphs/colored_bar.dart';
+import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 
 /// Represents the placeholder bar of the [BarGraph].
 class PlaceholderBar extends StatelessWidget {
@@ -11,16 +11,16 @@ class PlaceholderBar extends StatelessWidget {
 
   /// Creates the [PlaceholderBar].
   ///
-  /// Either [width] and [color] must not be null. 
+  /// Either [width] and [color] must not be `null`.
   /// The [width] should be positive.
   ///
   /// This bar displays the missing/empty build in [BarGraph].
   const PlaceholderBar({
     Key key,
-    @required this.width,
-    @required this.color,
+    this.width = 0.0,
+    Color color,
   })  : assert(width != null && width >= 0.0),
-        assert(color != null),
+        color = color ?? Colors.grey,
         super(key: key);
 
   @override

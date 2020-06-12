@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/graphs/bar_graph.dart';
-import 'package:metrics/common/presentation/graphs/placeholder_bar.dart';
+import 'package:metrics/base/presentation/graphs/bar_graph.dart';
+import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -20,9 +20,9 @@ class BuildResultBarGraph extends StatefulWidget {
   /// than [BuildResultMetricViewModel.numberOfBuildsToDisplay],
   /// the last [BuildResultMetricViewModel.numberOfBuildsToDisplay] of the
   /// [BuildResultMetricViewModel.buildResults] is displayed.
-  /// If there are not enough [BuildResultMetricViewModel.buildResults] 
+  /// If there are not enough [BuildResultMetricViewModel.buildResults]
   /// to display [BuildResultMetricViewModel.numberOfBuildsToDisplay] bars,
-  /// the [PlaceholderBar]s are added to match the requested 
+  /// the [PlaceholderBar]s are added to match the requested
   /// [BuildResultMetricViewModel.numberOfBuildsToDisplay].
   const BuildResultBarGraph({
     Key key,
