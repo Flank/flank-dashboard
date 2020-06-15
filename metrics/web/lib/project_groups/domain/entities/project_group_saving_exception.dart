@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 /// Represents the project group saving exception.
 @immutable
 class ProjectGroupSavingException implements Exception {
+  /// A text description of an exception.
   final String message;
 
   /// Creates the [ProjectGroupSavingException] with the given [message].

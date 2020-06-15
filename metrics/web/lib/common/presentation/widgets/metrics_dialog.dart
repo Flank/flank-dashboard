@@ -2,33 +2,47 @@ import 'package:flutter/material.dart';
 
 /// The widget that represents a metrics dialog.
 class MetricsDialog extends StatelessWidget {
+  /// A background color of the dialog.
   final Color backgroundColor;
+
+  /// An empty space between the main content and dialog's edges.
+  ///
+  /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry padding;
+
+  /// A max width of the dialog.
   final double maxWidth;
 
+  /// A text title of the dialog.
   final Widget title;
+
+  /// An empty space surrounds the [title].
+  ///
+  /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry titlePadding;
 
+  /// A content of the dialog.
   final Widget content;
+
+  /// An empty space surrounds the [content].
+  ///
+  /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry contentPadding;
 
+  /// An action bar at the bottom of the dialog.
   final List<Widget> actions;
+
+  /// An empty space surrounds the [actions].
+  ///
+  /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry actionsPadding;
+
+  /// A horizontal alignment of the [actions].
+  ///
+  /// Has a default value of [MainAxisAlignment.start].
   final MainAxisAlignment actionsAlignment;
 
   /// Creates a [MetricsDialog].
-  ///
-  /// The given [title] is a text, that displays at the top of the dialog.
-  /// The title is surrounded by a [titlePadding],
-  /// that is an [EdgeInsets.zero] value by default.
-  /// The given [content] is the main part of the dialog.
-  /// The content is surrounded by a [contentPadding],
-  /// that is the [EdgeInsets.zero] value by default.
-  /// There are [actions], at the bottom of the dialog.
-  /// The corresponding [actionsPadding] is the [EdgeInsets.zero] value by default.
-  /// The [actionsAlignment] controls the main axis alignment of the actions.
-  /// The general [padding] is the [EdgeInsets.zero] value by default.
-  /// The metrics dialog has the [backgroundColor] argument.
   ///
   /// [title], [content], [actions] and [maxWidth] must not be null.
   const MetricsDialog({

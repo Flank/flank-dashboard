@@ -4,6 +4,7 @@ import 'package:metrics/project_groups/presentation/strings/project_groups_strin
 /// A class that provides the project group name validation error description
 /// based on [ProjectGroupNameValidationErrorCode].
 class ProjectGroupNameValidationErrorMessage {
+  /// Represents error codes of a project group name validation.
   final ProjectGroupNameValidationErrorCode _code;
 
   /// Creates the [ProjectGroupNameValidationErrorMessage] with

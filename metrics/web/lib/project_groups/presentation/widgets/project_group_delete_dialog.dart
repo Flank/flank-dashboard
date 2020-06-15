@@ -7,16 +7,21 @@ import 'package:provider/provider.dart';
 
 /// A dialog that using for deleting project group data.
 class ProjectGroupDeleteDialog extends StatefulWidget {
+  /// A project's group identifier.
   final String projectGroupId;
+
+  /// A project's group name.
   final String projectGroupName;
 
-  /// Creates the [ProjectGroupDeleteDialog].
+  /// Creates the [ProjectGroupDeleteDialog] with the given [projectGroupId] and
+  /// the [projectGroupName].
   ///
-  /// [projectGroupViewModel] represents project group data for UI.
+  /// The [projectGroupId] and the [projectGroupName] must not be null.
   const ProjectGroupDeleteDialog({
     @required this.projectGroupId,
     @required this.projectGroupName,
-  });
+  })  : assert(projectGroupId != null),
+        assert(projectGroupName != null);
 
   @override
   _ProjectGroupDeleteDialogState createState() =>

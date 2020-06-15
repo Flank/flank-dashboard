@@ -4,28 +4,40 @@ import 'package:metrics/common/presentation/widgets/metrics_card.dart';
 /// The widget that represents metrics card with the ability 
 /// to control touch events.
 class MetricsButtonCard extends StatelessWidget {
+  /// An icon, that displays in the center of the card.
   final IconData iconData;
+
+  /// A size of the icon.
   final double iconSize;
+
+  /// A color of the icon.
   final Color iconColor;
+
+  /// A padding, around the icon.
   final EdgeInsets iconPadding;
+
+  /// A text description of the [MetricsButtonCard].
   final Widget title;
+
+  /// A padding around the title.
   final EdgeInsets titlePadding;
+
+  /// A callback, that triggers after tap on the [MetricsButtonCard].
   final VoidCallback onTap;
+
+  /// A background color of the [MetricsButtonCard].
   final Color backgroundColor;
+
+  /// A [MetricsButtonCard]'s elevation.
   final double elevation;
+
+  /// A margin around the [MetricsButtonCard].
   final EdgeInsetsGeometry margin;
 
   /// Creates a [MetricsButtonCard].
   /// 
-  /// The given [iconData] is an icon, that displays in the center of the card.
-  /// The icon has the [iconSize], the [iconColor] and the [iconPadding].
-  /// Under the icon lies the given [text],
-  /// that has the [titlePadding] with an [EdgeInsets.zero] value as a default.
-  /// The callback [onTap] can react to touch events on the card.
-  /// The card has the [backgroundColor], the [margin] 
-  /// and the [elevation] arguments.
-  /// 
-  /// The [title], the [iconData], the [backgroundColor] and the [onTap] should not be null.
+  /// The [title], the [iconData], the [backgroundColor] and the [onTap]
+  /// must not be null.
   const MetricsButtonCard({
     Key key,
     @required this.title,

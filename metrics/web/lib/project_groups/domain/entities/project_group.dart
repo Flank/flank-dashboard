@@ -3,15 +3,18 @@ import 'package:meta/meta.dart';
 /// Represents the project group entity.
 @immutable
 class ProjectGroup {
+  /// A unique identifier of the project group.
   final String id;
+
+  /// A name of the project group.
   final String name;
+
+  /// A list of projects' identifiers, related to the group.
   final List<String> projectIds;
 
   /// Creates the [ProjectGroup]
   ///
-  /// [id] is the unique identifier of this project group.
-  /// [name] is the name of this project group.
-  /// [projectIds] is the list of project ids related with this project group.
+  /// Throws an ArgumentError if the [name] or the [projectIds] is null.
   ProjectGroup({
     this.id,
     @required this.name,

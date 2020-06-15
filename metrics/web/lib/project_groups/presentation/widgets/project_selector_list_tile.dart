@@ -5,13 +5,17 @@ import 'package:provider/provider.dart';
 
 /// A widget that represent a [ProjectSelectorViewModel].
 class ProjectSelectorListTile extends StatelessWidget {
+  /// Represents a data of a project that using in [CheckboxListTile].
   final ProjectSelectorViewModel projectSelectorViewModel;
 
   /// Creates a [ProjectSelectorListTile] with the given [projectSelectorViewModel].
+  ///
+  /// The [projectSelectorViewModel] must not be null.
   const ProjectSelectorListTile({
     Key key,
-    this.projectSelectorViewModel,
-  }) : super(key: key);
+    @required this.projectSelectorViewModel,
+  })  : assert(projectSelectorViewModel != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

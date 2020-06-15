@@ -5,6 +5,7 @@ import 'package:metrics/project_groups/domain/usecases/parameters/add_project_gr
 /// The use case that provides the ability to add a project group.
 class AddProjectGroupUseCase
     implements UseCase<Future<void>, AddProjectGroupParam> {
+  /// A repository, that gives an ability to update a project group.
   final ProjectGroupRepository _repository;
 
   /// Creates the [AddProjectGroupUseCase] use case with the given [ProjectGroupRepository].

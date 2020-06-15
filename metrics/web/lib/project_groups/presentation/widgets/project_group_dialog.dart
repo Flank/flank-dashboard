@@ -26,6 +26,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  /// The [ChangeNotifier] that holds the project groups state.
   ProjectGroupsNotifier _projectGroupsNotifier;
 
   /// Controls the loading state.

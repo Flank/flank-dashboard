@@ -11,13 +11,12 @@ import 'package:provider/provider.dart';
 
 /// A widget that represent [ProjectGroupCardViewModel].
 class ProjectGroupCard extends StatelessWidget {
+  /// Represents a data of a project that using in the [MetricsTileCard].
   final ProjectGroupCardViewModel projectGroupCardViewModel;
 
-  /// Creates the [ProjectGroupCard].
+  /// Creates the [ProjectGroupCard] with the given [projectGroupCardViewModel].
   ///
-  /// [projectGroupViewModel] should not be null.
-  ///
-  /// [projectGroupViewModel] represents project group data for UI.
+  /// The [projectGroupCardViewModel] must not be null.
   const ProjectGroupCard({
     Key key,
     @required this.projectGroupCardViewModel,

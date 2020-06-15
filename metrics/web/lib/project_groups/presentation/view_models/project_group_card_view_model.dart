@@ -1,17 +1,24 @@
+import 'package:meta/meta.dart';
+
 /// Represents the data of the project group that using in project group card.
 class ProjectGroupCardViewModel {
+  /// A unique identifier of the project.
   final String id;
+
+  /// A name of the project.
   final String name;
+
+  /// The count of projects, related to the group.
   final int projectsCount;
 
   /// Creates the [ProjectGroupCardViewModel]
   ///
-  /// [id] is the unique identifier of the project group.
-  /// [name] is the name of the project group.
-  /// [projectsCount] is the count of selected projects related with the project group.
+  /// The [id], the [name] and the [projectsCount] must not be null.
   ProjectGroupCardViewModel({
-    this.id,
-    this.name,
-    this.projectsCount,
-  });
+    @required this.id,
+    @required this.name,
+    @required this.projectsCount,
+  })  : assert(id != null),
+        assert(name != null),
+        assert(projectsCount != null);
 }

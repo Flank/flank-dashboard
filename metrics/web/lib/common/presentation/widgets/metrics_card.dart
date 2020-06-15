@@ -2,21 +2,30 @@ import 'package:flutter/material.dart';
 
 /// Displays a metrics card widget.
 class MetricsCard extends StatelessWidget {
+  /// An elevation of the [MetricsCard].
+  ///
+  /// Has a default value of [0.0].
   final double elevation;
+
+  /// A background color of the [MetricsCard].
   final Color backgroundColor;
+
+  /// An empty space that surrounds the [MetricsCard].
+  ///
+  /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry margin;
+
+  /// An empty space that surrounds the [child].
+  ///
+  /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry padding;
+
+  /// A widget below this widget in the tree.
   final Widget child;
 
   /// Creates a widget that represents a specific version of a [Card].
   ///
-  /// The metrics card has the specific [backgroundColor].
-  /// The given [child] is a widget, that displays inside the [Card].
-  /// The child has a [padding] that is [EdgeInsets.zero] value by default.
-  /// The card itself a [margin], that [EdgeInsets.zero] value by default.
-  /// The [elevation] argument has a default value of 0.0.
-  /// 
-  /// The [child] and the [backgroundColor] arguments should not be null.
+  /// The [child] and the [backgroundColor] arguments must not be null.
   const MetricsCard({
     Key key,
     @required this.child,
