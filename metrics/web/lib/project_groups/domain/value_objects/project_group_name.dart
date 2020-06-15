@@ -11,9 +11,7 @@ class ProjectGroupName extends ValueObject<String> {
   ///
   /// If [value] is null or empty throws a [ProjectGroupNameValidationException].
   ProjectGroupName(this.value) {
-    final preparedValue = value.trim();
-
-    if (preparedValue == null || preparedValue.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       throw ProjectGroupNameValidationException(
         ProjectGroupNameValidationErrorCode.isNull,
       );

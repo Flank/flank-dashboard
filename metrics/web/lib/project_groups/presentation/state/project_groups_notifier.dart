@@ -73,13 +73,10 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     this._addProjectGroupUseCase,
     this._updateProjectGroupUseCase,
     this._deleteProjectGroupUseCase,
-  ) : assert(
-          _receiveProjectGroupUpdates != null &&
-              _addProjectGroupUseCase != null &&
-              _updateProjectGroupUseCase != null &&
-              _deleteProjectGroupUseCase != null,
-          'The use cases should not be null',
-        );
+  )   : assert(_receiveProjectGroupUpdates != null),
+        assert(_addProjectGroupUseCase != null),
+        assert(_updateProjectGroupUseCase != null),
+        assert(_deleteProjectGroupUseCase != null);
 
   /// Provides an error description that occurred during loading project groups data.
   String get errorMessage => _errorMessage;
@@ -267,7 +264,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   void updateProjects(List<Project> projects, String projectsErrorMessage) {
     _projectsErrorMessage = projectsErrorMessage;
 
-    if(projects == null) return;
+    if (projects == null) return;
 
     final projectIds =
         _activeProjectGroupDialogViewModel?.selectedProjectIds ?? [];
