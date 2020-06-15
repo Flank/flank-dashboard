@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_dialog.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
+import 'package:metrics/common/presentation/widgets/clearable_text_form_field.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
@@ -80,7 +80,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                MetricsTextFormField(
+                ClearableTextFormField(
                   validator: ProjectGroupNameValidator.validate,
                   label: ProjectGroupsStrings.nameYourGroup,
                   controller: _groupNameController,

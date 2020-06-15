@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
-import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';

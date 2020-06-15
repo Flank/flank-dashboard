@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/dashboard/presentation/model/bar_data.dart';
+import 'package:metrics/dashboard/presentation/models/bar_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/bar_graph.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';

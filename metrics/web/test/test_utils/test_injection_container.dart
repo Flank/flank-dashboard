@@ -80,7 +80,7 @@ class TestInjectionContainer extends StatelessWidget {
           update: (_, projectsNotifier, metricsNotifier) {
             return metricsNotifier
               ..updateProjects(
-                projectsNotifier.projects,
+                projectsNotifier.projectModels,
                 projectsNotifier.projectsErrorMessage,
               );
           },
@@ -90,7 +90,7 @@ class TestInjectionContainer extends StatelessWidget {
           update: (_, projectsNotifier, projectGroupsNotifier) {
             return projectGroupsNotifier
               ..updateProjects(
-                projectsNotifier.projects,
+                projectsNotifier.projectModels,
                 projectsNotifier.projectsErrorMessage,
               );
           },

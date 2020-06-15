@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
+import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
@@ -10,7 +11,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metr
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
-import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -22,9 +23,9 @@ void main() {
   group("ProjectMetricsNotifier", () {
     const projectId = 'projectId';
     const projectIdParam = ProjectIdParam(projectId);
-    const List<Project> projects = [
-      Project(id: 'id', name: 'name'),
-      Project(id: 'id2', name: 'name2'),
+    final List<ProjectModel> projects = [
+      ProjectModel(id: 'id', name: 'name'),
+      ProjectModel(id: 'id2', name: 'name2'),
     ];
     const String errorMessage = null;
 
@@ -235,7 +236,7 @@ void main() {
 
         metricsNotifier.updateProjects(projects, errorMessage);
 
-        final List<Project> expectedProjects = [...projects];
+        final List<ProjectModel> expectedProjects = [...projects];
         List<ProjectMetricsData> actualProjects =
             metricsNotifier.projectsMetrics;
 

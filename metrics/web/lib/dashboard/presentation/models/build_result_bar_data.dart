@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:metrics/dashboard/presentation/model/bar_data.dart';
+import 'package:metrics/dashboard/presentation/models/bar_data.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// Represents the data of the bar to display in [BarGraph].

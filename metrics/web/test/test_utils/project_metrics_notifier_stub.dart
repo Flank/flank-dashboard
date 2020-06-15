@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/common/presentation/models/project_model.dart';
+import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
@@ -47,7 +48,7 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   }
 
   @override
-  void updateProjects(List<Project> newProjects, String errorMessage) {
+  void updateProjects(List<ProjectModel> newProjectModels, String projectErrorMessage) {
     return;
   }
 

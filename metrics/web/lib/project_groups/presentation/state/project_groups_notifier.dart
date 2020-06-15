@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
+import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
@@ -263,7 +264,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   }
 
   /// Updates list of project selector view models and projects error message.
-  void updateProjects(List<Project> projects, String projectsErrorMessage) {
+  void updateProjects(List<ProjectModel> projects, String projectsErrorMessage) {
     _projectsErrorMessage = projectsErrorMessage;
 
     if(projects == null) return;

@@ -1,4 +1,4 @@
-import 'package:metrics/auth/presentation/model/password_validation_error_message.dart';
+import 'package:metrics/auth/presentation/models/password_validation_error_message.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';

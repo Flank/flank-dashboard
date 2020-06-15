@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
+import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
@@ -12,7 +13,6 @@ import 'package:metrics/project_groups/domain/usecases/parameters/update_project
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
-import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:test/test.dart';
@@ -317,8 +317,8 @@ void main() {
 
         projectGroupsNotifier.subscribeToProjectGroups();
 
-        projectGroupsNotifier.updateProjects(const [
-          Project(id: testProjectId, name: '1'),
+        projectGroupsNotifier.updateProjects([
+          ProjectModel(id: testProjectId, name: '1'),
         ], null);
 
         expect(
@@ -374,8 +374,8 @@ void main() {
 
         projectGroupsNotifier.subscribeToProjectGroups();
 
-        projectGroupsNotifier.updateProjects(const [
-          Project(id: 'id', name: 'name'),
+        projectGroupsNotifier.updateProjects([
+          ProjectModel(id: 'id', name: 'name'),
         ], null);
 
         expect(projectGroupsNotifier.activeProjectGroupDialogViewModel, isNull);
@@ -406,9 +406,9 @@ void main() {
         const testProjectGroupId = 'testGroupId';
         const filteredProjectName = 'filteredProjectName';
         const expectedFilteredProjectsLength = 1;
-        const testProjects = [
-          Project(id: 'id1', name: 'name'),
-          Project(id: 'id2', name: filteredProjectName),
+        final testProjects = [
+          ProjectModel(id: 'id1', name: 'name'),
+          ProjectModel(id: 'id2', name: filteredProjectName),
         ];
 
         final projectGroupsNotifier = ProjectGroupsNotifier(
@@ -493,8 +493,8 @@ void main() {
 
         projectGroupsNotifier.subscribeToProjectGroups();
 
-        projectGroupsNotifier.updateProjects(const [
-          Project(id: testProjectId, name: 'name'),
+        projectGroupsNotifier.updateProjects([
+          ProjectModel(id: testProjectId, name: 'name'),
         ], null);
 
         List<ProjectGroup> oldProjectGroups;
@@ -503,8 +503,7 @@ void main() {
           if (oldProjectGroups != projectGroupsNotifier.projectGroups) {
             oldProjectGroups = projectGroupsNotifier.projectGroups;
 
-            projectGroupsNotifier
-                .setActiveProjectGroup(testProjectGroupId);
+            projectGroupsNotifier.setActiveProjectGroup(testProjectGroupId);
             projectGroupsNotifier.toggleProjectCheckedStatus(
               projectId: testProjectId,
               isChecked: true,
@@ -549,8 +548,8 @@ void main() {
 
         projectGroupsNotifier.subscribeToProjectGroups();
 
-        projectGroupsNotifier.updateProjects(const [
-          Project(id: testProjectId, name: 'name'),
+        projectGroupsNotifier.updateProjects([
+          ProjectModel(id: testProjectId, name: 'name'),
         ], null);
 
         List<ProjectGroup> oldProjectGroups;
@@ -606,8 +605,8 @@ void main() {
 
         projectGroupsNotifier.subscribeToProjectGroups();
 
-        projectGroupsNotifier.updateProjects(const [
-          Project(id: testProjectId, name: 'name'),
+        projectGroupsNotifier.updateProjects([
+          ProjectModel(id: testProjectId, name: 'name'),
         ], null);
 
         List<ProjectGroup> oldProjectGroups;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/dashboard/presentation/model/bar_data.dart';
+import 'package:metrics/dashboard/presentation/models/bar_data.dart';
 
 typedef BarBuilder<T> = Widget Function(T data);
 

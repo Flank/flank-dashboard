@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
+import 'package:metrics/dashboard/presentation/models/build_result_bar_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/colored_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/placeholder_bar.dart';

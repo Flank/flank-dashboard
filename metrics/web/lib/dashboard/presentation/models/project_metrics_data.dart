@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:meta/meta.dart';
-import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
+import 'package:metrics/dashboard/presentation/models/build_result_bar_data.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// Represents a presentation model of the metrics of the project.
 @immutable

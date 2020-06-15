@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/view_models/active_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_selector_view_model.dart';
-import 'package:metrics_core/metrics_core.dart';
 
 /// Stub implementation of the [ProjectGroupsNotifier].
 ///
@@ -100,7 +100,7 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
   void filterByProjectName(String value) {}
 
   @override
-  void updateProjects(List<Project> projects, String errorMessage) {}
+  void updateProjects(List<ProjectModel> projects, String projectErrorMessage) {}
 
   @override
   List<ProjectGroupCardViewModel> get projectGroupCardViewModels => null;

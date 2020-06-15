@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/auth/presentation/model/auth_error_message.dart';
+import 'package:metrics/auth/presentation/models/auth_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/validators/email_validator.dart';

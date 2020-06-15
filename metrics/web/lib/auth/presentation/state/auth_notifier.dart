@@ -6,7 +6,7 @@ import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.d
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
-import 'package:metrics/auth/presentation/model/auth_error_message.dart';
+import 'package:metrics/auth/presentation/models/auth_error_message.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the authentication state.

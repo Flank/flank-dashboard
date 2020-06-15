@@ -1,4 +1,4 @@
-import 'package:metrics/auth/presentation/model/email_validation_error_message.dart';
+import 'package:metrics/auth/presentation/models/email_validation_error_message.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';

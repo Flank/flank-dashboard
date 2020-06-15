@@ -108,7 +108,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
           update: (_, projectsNotifier, projectMetricsNotifier) {
             return projectMetricsNotifier
               ..updateProjects(
-                projectsNotifier.projects,
+                projectsNotifier.projectModels,
                 projectsNotifier.projectsErrorMessage,
               );
           },
@@ -123,7 +123,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
           update: (_, projectsNotifier, projectGroupsNotifier) {
             return projectGroupsNotifier
               ..updateProjects(
-                projectsNotifier.projects,
+                projectsNotifier.projectModels,
                 projectsNotifier.projectsErrorMessage,
               );
           },

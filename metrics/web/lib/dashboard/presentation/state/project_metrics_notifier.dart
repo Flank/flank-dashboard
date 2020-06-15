@@ -4,14 +4,15 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
+import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
-import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
-import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/models/build_result_bar_data.dart';
+import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -84,7 +85,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Updates projects and error message.
-  void updateProjects(List<Project> newProjects, String errorMessage) {
+  void updateProjects(List<ProjectModel> newProjects, String errorMessage) {
     _projectsErrorMessage = errorMessage;
 
     if (newProjects == null) return;

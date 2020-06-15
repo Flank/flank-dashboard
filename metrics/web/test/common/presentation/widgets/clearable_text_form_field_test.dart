@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
+import 'package:metrics/common/presentation/widgets/clearable_text_form_field.dart';
 
 void main() {
-  group("MetricsTextFormField", () {
+  group("ClearableTextFormField", () {
     const text = 'label';
+    const controllerText = 'controllerText';
     final controller = TextEditingController();
 
     testWidgets("displays the given label", (tester) async {
       await tester.pumpWidget(
-        _MetricsTextFormFieldTestbed(
+        _ClearableTextFormFieldTestbed(
           controller: controller,
           label: text,
         ),
@@ -22,7 +23,7 @@ void main() {
         "does not display a close icon button for clearing text as a default",
         (tester) async {
       await tester.pumpWidget(
-        _MetricsTextFormFieldTestbed(
+        _ClearableTextFormFieldTestbed(
           controller: controller,
           label: text,
         ),
@@ -31,14 +32,14 @@ void main() {
       expect(find.byIcon(Icons.close), findsNothing);
     });
 
-    testWidgets(
-        "displays a close icon button for clearing text if isClearable value is true",
+    testWidgets("displays a close icon button if controller text is not empty",
         (tester) async {
+      final controller = TextEditingController(text: controllerText);
+
       await tester.pumpWidget(
-        _MetricsTextFormFieldTestbed(
+        _ClearableTextFormFieldTestbed(
           controller: controller,
           label: text,
-          isClearable: true,
         ),
       );
 
@@ -46,15 +47,16 @@ void main() {
     });
 
     testWidgets("clears the entered text on tap on close icon", (tester) async {
+      final controller = TextEditingController(text: controllerText);
+
       await tester.pumpWidget(
-        _MetricsTextFormFieldTestbed(
+        _ClearableTextFormFieldTestbed(
           controller: controller,
           label: text,
-          isClearable: true,
         ),
       );
 
-      await tester.enterText(find.byType(MetricsTextFormField), text);
+      await tester.enterText(find.byType(ClearableTextFormField), text);
       await tester.pump();
 
       expect(controller.text, equals(text));
@@ -73,7 +75,7 @@ void main() {
 
         await tester.pumpWidget(Form(
           key: _formKey,
-          child: _MetricsTextFormFieldTestbed(
+          child: _ClearableTextFormFieldTestbed(
             controller: controller,
             label: text,
             validator: (String value) {
@@ -91,18 +93,16 @@ void main() {
   });
 }
 
-/// A testbed widget, used to test the [MetricsTextFormField] widget.
-class _MetricsTextFormFieldTestbed extends StatelessWidget {
+/// A testbed widget, used to test the [ClearableTextFormField] widget.
+class _ClearableTextFormFieldTestbed extends StatelessWidget {
   final TextEditingController controller;
   final String label;
-  final bool isClearable;
   final FormFieldValidator<String> validator;
 
-  const _MetricsTextFormFieldTestbed({
+  const _ClearableTextFormFieldTestbed({
     Key key,
     this.controller,
     this.label,
-    this.isClearable = false,
     this.validator,
   }) : super(key: key);
 
@@ -110,10 +110,9 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: MetricsTextFormField(
+        body: ClearableTextFormField(
           controller: controller,
           label: label,
-          isClearable: isClearable,
           validator: validator,
         ),
       ),

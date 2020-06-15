@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:metrics/auth/presentation/model/auth_error_message.dart';
+import 'package:metrics/auth/presentation/models/auth_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 
 /// Stub implementation on the [AuthNotifier].

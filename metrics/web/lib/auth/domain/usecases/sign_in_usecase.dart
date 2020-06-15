@@ -11,7 +11,7 @@ class SignInUseCase implements UseCase<void, UserCredentialsParam> {
 
   @override
   Future<void> call(UserCredentialsParam params) {
-    return _repository. signInWithEmailAndPassword(
+    return _repository.signInWithEmailAndPassword(
       params.email.value,
       params.password.value,
     );

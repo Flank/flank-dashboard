@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
+import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds [Project]s data.
 class ProjectsNotifier extends ChangeNotifier {
-
   /// Creates a new instance of the [ProjectsNotifier].
   ProjectsNotifier(
     this._receiveProjectsUpdates,
@@ -23,8 +23,8 @@ class ProjectsNotifier extends ChangeNotifier {
   /// to the project updates.
   StreamSubscription _projectsSubscription;
 
-  /// Holds a list of projects.
-  List<Project> _projects;
+  /// Holds a list of project models.
+  List<ProjectModel> _projectModels;
 
   /// Holds the error message that occurred during loading projects data.
   String _projectsErrorMessage;
@@ -32,8 +32,8 @@ class ProjectsNotifier extends ChangeNotifier {
   /// Provides an error description that occurred during loading projects data.
   String get projectsErrorMessage => _projectsErrorMessage;
 
-  /// A list of projects.
-  List<Project> get projects => _projects;
+  /// A list of project models.
+  List<ProjectModel> get projectModels => _projectModels;
 
   /// Subscribes to projects updates.
   Future<void> subscribeToProjects() async {
@@ -55,7 +55,14 @@ class ProjectsNotifier extends ChangeNotifier {
 
   /// Listens to project updates.
   void _projectsListener(List<Project> projects) {
-    _projects = projects;
+    if (projects == null) return;
+
+    _projectModels = projects
+        .map(
+          (project) => ProjectModel(id: project.id, name: project.name),
+        )
+        .toList();
+
     notifyListeners();
   }
 
@@ -70,12 +77,12 @@ class ProjectsNotifier extends ChangeNotifier {
   /// Cancels created projects subscription.
   Future<void> _cancelSubscription() async {
     await _projectsSubscription?.cancel();
-    _projects = null;
+    _projectModels = null;
   }
 
   @override
   void dispose() {
-    _cancelSubscription(); 
+    _cancelSubscription();
     super.dispose();
   }
 }

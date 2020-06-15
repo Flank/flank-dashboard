@@ -1,5 +1,5 @@
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
-import 'package:metrics/auth/presentation/model/auth_error_message.dart';
+import 'package:metrics/auth/presentation/models/auth_error_message.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:test/test.dart';
 

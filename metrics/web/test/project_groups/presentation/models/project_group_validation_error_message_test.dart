@@ -1,7 +1,7 @@
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_name_validation_error_code.dart';
-import 'package:metrics/project_groups/presentation/model/project_group_validation_error_message.dart';
+import 'package:metrics/project_groups/presentation/models/project_group_validation_error_message.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:test/test.dart';
 
