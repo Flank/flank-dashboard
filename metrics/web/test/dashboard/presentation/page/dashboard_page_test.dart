@@ -7,12 +7,12 @@ import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
 import 'package:provider/provider.dart';
 
 import '../../../test_utils/test_injection_container.dart';
@@ -42,7 +42,12 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(const _DashboardTestbed());
 
-        expect(find.byType(ProjectSearchInput), findsOneWidget);
+        final projectSearchInput = find.descendant(
+          of: find.byType(TextField),
+          matching: find.text(CommonStrings.searchForProject),
+        );
+
+        expect(projectSearchInput, findsOneWidget);
       },
     );
 

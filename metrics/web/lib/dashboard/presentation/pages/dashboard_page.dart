@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -34,8 +34,12 @@ class _DashboardPageState extends State<DashboardPage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
-            child: ProjectSearchInput(
+            child: TextField(
               onChanged: _projectMetricsNotifier.filterByProjectName,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.search),
+                hintText: CommonStrings.searchForProject,
+              ),
             ),
           ),
           Expanded(
