@@ -59,6 +59,24 @@ A `state`, or a `presenter`, is the part of the presentation layer that is the i
 
 A `state` is responsible for holding the logic of the presentation layer - loading data, creating view models from entities, saving data to the persistent store. The `presenter` separates the logic from UI to make both more testable and structured.
 
+> Explain the principle of interactions between `state`s.
+
+To expose the data from one `state` (ChangeNotifier) to other `state`s, we need to follow the next steps: 
+
+1. Create a `model` for the data to be exposed.
+2. Create a `ChangeNotifierProxyProvider` in the `InjectionContainer` widget that connects these notifiers.
+3. Create a method in the consumer notifier that allows updating the data from outside.
+4. Connect these notifiers using the `ChangeNotifierProxyProvider`, created in the second step.
+
+### Model
+> Explain what the `model` of the module is.
+
+A `model` is a class that transfers the data across the presentation layer components. The most common use of the `model` is transferring the data between two different `state`s (`ChangeNotifier`s).
+
+The main difference between a `model` and a `view model` is that the latter is used only by the widgets. This means that if one `state` should expose some data to use in another `state`(s), then this data must be represented by `model`.
+
+The `model`s of the current module should be placed under the `module_name/presentation/models` package.
+
 ### UI elements
 
 There are three main types of the UI components in the Metrics Web Application: 
@@ -103,6 +121,7 @@ The package structure is also an important part of the Metrics Web Application p
 >    * data/...
 >    * domain/...
 >    * presentation/
+>       * models/
 >       * view_models/
 >       * state/
 >       * pages/
@@ -110,7 +129,7 @@ The package structure is also an important part of the Metrics Web Application p
 >       * widgets/
 >           * strategy/
 
-So, each module's presentation layer consists of the `view_model`, `state`, `pages`, `strings`, and `widgets` packages. The `widgets` package can be divided into several packages that will simplify the navigation if necessary. 
+So, each module's presentation layer consists of the `view_models`, `state`, `pages`, `strings`, and `widgets` packages. The `widgets` package can be divided into several packages that will simplify the navigation if necessary. Also, there could be a `models` package that will contain all the `model`s used in this module.
 
 # Dependencies
 > What is the project blocked on?
