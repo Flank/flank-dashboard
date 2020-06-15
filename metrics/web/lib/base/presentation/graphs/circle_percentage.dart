@@ -41,6 +41,11 @@ class CirclePercentage extends StatefulWidget {
   /// The [valueColor] default value is [Colors.blue].
   /// The [strokeColor] default value is [Colors.grey].
   /// The [valueStrokeWidth] default value is 5.0.
+  /// The [padding] default value is [EdgeInsets.zero].
+  ///
+  /// If the [value] is `null`, the [placeholder] is shown.
+  /// If the [value] is out of range from 0.0 (inclusive) to 1.0 (inclusive),
+  /// the value is clamped to be within this range.
   const CirclePercentage({
     Key key,
     this.value,
