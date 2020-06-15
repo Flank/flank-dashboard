@@ -21,7 +21,7 @@ void main() {
       expect(find.text(title), findsOneWidget);
     });
 
-    testWidgets("displays the given title", (tester) async {
+    testWidgets("displays the given content", (tester) async {
       await tester.pumpWidget(
         const _MetricsDialogTestbed(
           title: Text(title),
