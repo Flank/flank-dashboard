@@ -47,7 +47,7 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text(CommonStrings.cancel),
+            child: const Text(CommonStrings.cancel),
           ),
         ),
         Container(

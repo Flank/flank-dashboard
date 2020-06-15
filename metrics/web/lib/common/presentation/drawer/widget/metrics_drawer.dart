@@ -8,8 +8,6 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:provider/provider.dart';
 
-import '../../routes/route_generator.dart';
-
 /// The application side menu widget.
 class MetricsDrawer extends StatelessWidget {
   const MetricsDrawer({
@@ -35,10 +33,10 @@ class MetricsDrawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text(ProjectGroupsStrings.projectGroups),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, RouteGenerator.projectGroupPage);
-            },
+            onTap: () => Navigator.popAndPushNamed(
+              context,
+              RouteGenerator.projectGroupPage,
+            ),
           ),
           ListTile(
             title: const Text(CommonStrings.logOut),

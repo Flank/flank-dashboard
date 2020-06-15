@@ -71,7 +71,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
               activeProjectGroupDialogViewModel.id == null
                   ? ProjectGroupsStrings.addProjectGroup
                   : ProjectGroupsStrings.editProjectGroup,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 32.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -82,11 +82,11 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
               children: <Widget>[
                 MetricsTextFormField(
                   validator: ProjectGroupNameValidator.validate,
-                  label: ProjectGroupsStrings.nameYourStrings,
+                  label: ProjectGroupsStrings.nameYourGroup,
                   controller: _groupNameController,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
+                const Padding(
+                  padding: EdgeInsets.only(top: 16.0),
                   child: Text(ProjectGroupsStrings.chooseProjectToAdd),
                 ),
                 Container(
@@ -148,7 +148,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Selector<ProjectGroupsNotifier, String>(
-                      selector: (_, state) => state.firestoreWriteErrorMessage,
+                      selector: (_, state) => state.projectGroupSavingErrorMessage,
                       builder: (_, firestoreWriteErrorMessage, __) {
                         if (firestoreWriteErrorMessage == null) {
                           return const Text('');

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:metrics/common/presentation/constants/common_constants.dart';
+import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';

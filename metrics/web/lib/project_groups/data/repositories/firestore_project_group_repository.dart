@@ -35,9 +35,9 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
       projectIds: projectIds,
     );
 
-    return _firestore
-        .collection('project_groups')
-        .add(projectGroupData.toJson());
+    return _firestore.collection('project_groups').add(
+          projectGroupData.toJson(),
+        );
   }
 
   @override

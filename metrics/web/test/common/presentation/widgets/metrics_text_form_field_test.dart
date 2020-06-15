@@ -96,7 +96,7 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final bool isClearable;
-  final String Function(String) validator;
+  final FormFieldValidator<String> validator;
 
   const _MetricsTextFormFieldTestbed({
     Key key,

@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:metrics/common/presentation/constants/common_constants.dart';
+import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
@@ -41,12 +41,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
   /// Creates the project metrics store.
   ///
-  /// The provided use cases should not be null.
+  /// The given use cases must not be null.
   ProjectMetricsNotifier(
     this._receiveProjectMetricsUpdates,
   ) : assert(
           _receiveProjectMetricsUpdates != null,
-          'The use case should not be null',
+          'The use case must not be null',
         );
 
   /// Provides a list of project metrics, filtered by the project name filter.
@@ -78,7 +78,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     });
   }
 
-  /// Adds project metrics filter using [value] provided.
+  /// Adds project metrics filter using the given [value].
   void filterByProjectName(String value) {
     _projectNameFilterSubject.add(value);
   }
@@ -129,6 +129,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Unsubscribes from project metrics.
   Future<void> unsubscribeFromBuildMetrics() async {
     await _cancelSubscriptions();
     notifyListeners();

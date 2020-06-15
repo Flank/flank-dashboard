@@ -47,7 +47,7 @@ class ProjectGroupCard extends StatelessWidget {
         FlatButton.icon(
           onPressed: () {
             Provider.of<ProjectGroupsNotifier>(context, listen: false)
-                .generateActiveProjectGroupViewModel(
+                .setActiveProjectGroup(
               projectGroupCardViewModel.id,
             );
 
@@ -56,7 +56,7 @@ class ProjectGroupCard extends StatelessWidget {
               builder: (_) => ProjectGroupDialog(),
             );
           },
-          icon: Icon(Icons.edit),
+          icon: const Icon(Icons.edit),
           label: const Text(CommonStrings.edit),
         ),
         FlatButton.icon(

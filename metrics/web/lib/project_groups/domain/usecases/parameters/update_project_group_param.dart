@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:equatable/equatable.dart';
 
 /// Represents a param for editing a project group.
-@immutable
 class UpdateProjectGroupParam extends Equatable {
   final String projectGroupId;
   final String projectGroupName;

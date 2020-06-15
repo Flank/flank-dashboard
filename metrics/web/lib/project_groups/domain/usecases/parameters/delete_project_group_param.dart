@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 /// Represents a param for deleting a project group.
-@immutable
 class DeleteProjectGroupParam extends Equatable {
   final String projectGroupId;
 

@@ -1,5 +1,5 @@
 import 'package:metrics/dashboard/domain/repositories/metrics_repository.dart';
-import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
+import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 

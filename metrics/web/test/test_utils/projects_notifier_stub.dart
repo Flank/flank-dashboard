@@ -23,7 +23,4 @@ class ProjectsNotifierStub extends ChangeNotifier implements ProjectsNotifier {
 
   @override
   List<Project> get projects => _projects;
-
-  @override
-  Future<void> updateProjectsSubscription({bool isLoggedIn}) async {}
 }

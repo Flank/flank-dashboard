@@ -51,10 +51,10 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
   Future<bool> deleteProjectGroup(String projectGroupId) async => null;
 
   @override
-  String get firestoreWriteErrorMessage => null;
+  String get projectGroupSavingErrorMessage => null;
 
   @override
-  void generateActiveProjectGroupViewModel([String projectGroupId]) {
+  void setActiveProjectGroup([String projectGroupId]) {
     if (projectGroupId == null) {
       _activeProjectGroupDialogViewModel = ActiveProjectGroupDialogViewModel(
         id: null,
@@ -76,7 +76,7 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
   String get projectsErrorMessage => null;
 
   @override
-  void resetFirestoreWriteErrorMessage() {}
+  void resetProjectGroupSavingError() {}
 
   @override
   Future<bool> saveProjectGroup(String projectGroupId, String projectGroupName,

@@ -8,7 +8,7 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
-import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
+import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/project_groups/data/repositories/firestore_project_group_repository.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
@@ -90,10 +90,17 @@ class _InjectionContainerState extends State<InjectionContainer> {
         ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
           create: (_) => ProjectsNotifier(_receiveProjectUpdates),
           update: (_, authNotifier, projectsNotifier) {
-            return projectsNotifier
-              ..updateProjectsSubscription(
-                isLoggedIn: authNotifier.isLoggedIn,
-              );
+            final isLoggedIn = authNotifier.isLoggedIn;
+
+            if (isLoggedIn != null) {
+              if(isLoggedIn) {
+                projectsNotifier.subscribeToProjects();
+              } else {
+                projectsNotifier.unsubscribeFromProjects();
+              }
+            }
+
+            return projectsNotifier;
           },
         ),
         ChangeNotifierProxyProvider<ProjectsNotifier, ProjectMetricsNotifier>(

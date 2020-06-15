@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:metrics/common/presentation/constants/common_constants.dart';
+import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
@@ -332,7 +332,7 @@ void main() {
           if (oldProjectGroups != projectGroupsNotifier.projectGroups) {
             oldProjectGroups = projectGroupsNotifier.projectGroups;
 
-            projectGroupsNotifier.generateActiveProjectGroupViewModel(
+            projectGroupsNotifier.setActiveProjectGroup(
               testProjectGroupId,
             );
 
@@ -385,7 +385,7 @@ void main() {
         final projectGroupListener = expectAsyncUntil0(() {
           if (oldProjects != projectGroupsNotifier.projectGroups) {
             oldProjects = projectGroupsNotifier.projectGroups;
-            projectGroupsNotifier.generateActiveProjectGroupViewModel(
+            projectGroupsNotifier.setActiveProjectGroup(
               testProjectGroupId,
             );
 
@@ -451,7 +451,7 @@ void main() {
           if (oldProjectGroups != projectGroupsNotifier.projectGroups) {
             oldProjectGroups = projectGroupsNotifier.projectGroups;
 
-            projectGroupsNotifier.generateActiveProjectGroupViewModel(
+            projectGroupsNotifier.setActiveProjectGroup(
               testProjectGroupId,
             );
 
@@ -504,7 +504,7 @@ void main() {
             oldProjectGroups = projectGroupsNotifier.projectGroups;
 
             projectGroupsNotifier
-                .generateActiveProjectGroupViewModel(testProjectGroupId);
+                .setActiveProjectGroup(testProjectGroupId);
             projectGroupsNotifier.toggleProjectCheckedStatus(
               projectId: testProjectId,
               isChecked: true,
@@ -559,7 +559,7 @@ void main() {
           if (oldProjectGroups != projectGroupsNotifier.projectGroups) {
             oldProjectGroups = projectGroupsNotifier.projectGroups;
 
-            projectGroupsNotifier.generateActiveProjectGroupViewModel(
+            projectGroupsNotifier.setActiveProjectGroup(
               testProjectGroupId,
             );
             projectGroupsNotifier.toggleProjectCheckedStatus(
@@ -616,7 +616,7 @@ void main() {
           if (oldProjectGroups != projectGroupsNotifier.projectGroups) {
             oldProjectGroups = projectGroupsNotifier.projectGroups;
 
-            projectGroupsNotifier.generateActiveProjectGroupViewModel(
+            projectGroupsNotifier.setActiveProjectGroup(
               testProjectGroupId,
             );
             projectGroupsNotifier.toggleProjectCheckedStatus(
@@ -667,7 +667,7 @@ void main() {
         );
 
         expect(
-          projectGroupsNotifier.firestoreWriteErrorMessage,
+          projectGroupsNotifier.projectGroupSavingErrorMessage,
           equals(CommonStrings.unknownErrorMessage),
         );
       },
@@ -685,7 +685,7 @@ void main() {
         );
 
         expect(
-          projectGroupsNotifier.firestoreWriteErrorMessage,
+          projectGroupsNotifier.projectGroupSavingErrorMessage,
           equals(CommonStrings.unknownErrorMessage),
         );
       },
@@ -699,7 +699,7 @@ void main() {
         await projectGroupsNotifier.deleteProjectGroup(projectGroupId);
 
         expect(
-          projectGroupsNotifier.firestoreWriteErrorMessage,
+          projectGroupsNotifier.projectGroupSavingErrorMessage,
           equals(CommonStrings.unknownErrorMessage),
         );
       },
@@ -717,13 +717,13 @@ void main() {
         );
 
         expect(
-          projectGroupsNotifier.firestoreWriteErrorMessage,
+          projectGroupsNotifier.projectGroupSavingErrorMessage,
           equals(CommonStrings.unknownErrorMessage),
         );
 
-        projectGroupsNotifier.resetFirestoreWriteErrorMessage();
+        projectGroupsNotifier.resetProjectGroupSavingError();
 
-        expect(projectGroupsNotifier.firestoreWriteErrorMessage, isNull);
+        expect(projectGroupsNotifier.projectGroupSavingErrorMessage, isNull);
       },
     );
 

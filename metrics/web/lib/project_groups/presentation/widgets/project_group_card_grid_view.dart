@@ -20,7 +20,7 @@ class _ProjectGroupCardGridViewState extends State<ProjectGroupCardGridView> {
     return Consumer<ProjectGroupsNotifier>(
       builder: (_, projectsGroupsNotifier, __) {
         if (projectsGroupsNotifier.errorMessage != null) {
-          return MetricsTextPlaceholder(
+          return const MetricsTextPlaceholder(
             text: CommonStrings.unknownErrorMessage,
           );
         }

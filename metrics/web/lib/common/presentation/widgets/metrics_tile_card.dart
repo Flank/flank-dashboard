@@ -15,33 +15,38 @@ class MetricsTileCard extends StatelessWidget {
   final double elevation;
 
   /// Creates a [MetricsTileCard].
-  /// 
+  ///
   /// The metrics card tile has a specific [backgroundColor].
-  /// The given [title] is a text, that displays at the top left corner of the card. 
-  /// The title is surrounded by a [titlePadding], 
+  /// The given [title] is a text, that displays at the top left corner of the card.
+  /// The title is surrounded by a [titlePadding],
   /// that is [EdgeInsets.zero] value by default.
   /// The given [subtitle] is a text under the [title].
-  /// The subtitle is surrounded by a [subtitlePadding], 
+  /// The subtitle is surrounded by a [subtitlePadding],
   /// that is [EdgeInsets.zero] value by default.
-  /// There are [actions], at the bottom of the card. 
+  /// There are [actions], at the bottom of the card.
   /// The corresponding [actionsPadding] is [EdgeInsets.zero] value by default.
-  /// The metrics card has a [margin] and a [padding] arguments, 
+  /// The metrics card has a [margin] and a [padding] arguments,
   /// that have [EdgeInsets.zero] value as a default.
   /// The [elevation] argument has a default value of 0.0.
-  /// 
+  ///
   /// [title], [subtitle], [actions] and [backgroundColor] should not be null.
   const MetricsTileCard({
-    this.title,
+    Key key,
+    @required this.backgroundColor,
+    @required this.title,
+    @required this.subtitle,
+    @required this.actions,
     this.titlePadding = EdgeInsets.zero,
-    this.subtitle,
     this.subtitlePadding = EdgeInsets.zero,
-    this.actions,
     this.actionsPadding = EdgeInsets.zero,
-    this.backgroundColor,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
     this.elevation = 0.0,
-  });
+  })  : assert(backgroundColor != null),
+        assert(title != null),
+        assert(subtitle != null),
+        assert(actions != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,26 +59,23 @@ class MetricsTileCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            if (title != null)
-              Padding(
-                padding: titlePadding,
-                child: title,
-              ),
-            if (subtitle != null)
-              Padding(
-                padding: subtitlePadding,
-                child: subtitle,
-              ),
-            if (actions != null)
-              Padding(
-                padding: actionsPadding,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: actions,
-                  ),
+            Padding(
+              padding: titlePadding,
+              child: title,
+            ),
+            Padding(
+              padding: subtitlePadding,
+              child: subtitle,
+            ),
+            Padding(
+              padding: actionsPadding,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: actions,
                 ),
               ),
+            ),
           ],
         ),
       ),

@@ -1,23 +1,19 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
+import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// The [ChangeNotifier] that holds the projects state.
-///
-/// Stores the [Project]s data.
+/// The [ChangeNotifier] that holds [Project]s data.
 class ProjectsNotifier extends ChangeNotifier {
 
-  /// Creates the projects store.
-  ///
-  /// The provided use cases should not be null.
+  /// Creates a new instance of the [ProjectsNotifier].
   ProjectsNotifier(
     this._receiveProjectsUpdates,
   ) : assert(
           _receiveProjectsUpdates != null,
-          'The use case should not be null',
+          'The use case must not be null',
         );
 
   /// Provides an ability to receive project updates.
@@ -39,7 +35,7 @@ class ProjectsNotifier extends ChangeNotifier {
   /// A list of projects.
   List<Project> get projects => _projects;
 
-  /// Subscribes to projects and its metrics.
+  /// Subscribes to projects updates.
   Future<void> subscribeToProjects() async {
     final projectsStream = _receiveProjectsUpdates();
     _projectsErrorMessage = null;
@@ -55,17 +51,6 @@ class ProjectsNotifier extends ChangeNotifier {
   Future<void> unsubscribeFromProjects() async {
     await _cancelSubscription();
     notifyListeners();
-  }
-
-  /// Updates projects subscription, based on the [isLoggedIn] user status.
-  Future<void> updateProjectsSubscription({bool isLoggedIn}) async {
-    if(isLoggedIn == null) return;
-
-    if (isLoggedIn) {
-      await subscribeToProjects();
-    } else {
-      await unsubscribeFromProjects();
-    }
   }
 
   /// Listens to project updates.

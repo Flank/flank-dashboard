@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:metrics/common/presentation/constants/common_constants.dart';
+import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
@@ -47,8 +47,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Holds the error message that occurred during updating projects data.
   String _projectsErrorMessage;
 
-  /// Holds the error message that occurred during the firestore writing operation.
-  String _firestoreWriteErrorMessage;
+  /// Holds the error message that occurred during the firestore saving operation.
+  String _projectGroupSavingErrorMessage;
 
   /// A[List] that holds all loaded [ProjectGroup].
   List<ProjectGroup> _projectGroups;
@@ -67,16 +67,19 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Creates the project groups store.
   ///
-  /// The provided use cases should not be null.
+  /// The given use cases must not be null.
   ProjectGroupsNotifier(
     this._receiveProjectGroupUpdates,
     this._addProjectGroupUseCase,
     this._updateProjectGroupUseCase,
     this._deleteProjectGroupUseCase,
-  )   : assert(_receiveProjectGroupUpdates != null),
-        assert(_addProjectGroupUseCase != null),
-        assert(_updateProjectGroupUseCase != null),
-        assert(_deleteProjectGroupUseCase != null);
+  ) : assert(
+          _receiveProjectGroupUpdates != null &&
+              _addProjectGroupUseCase != null &&
+              _updateProjectGroupUseCase != null &&
+              _deleteProjectGroupUseCase != null,
+          'The use cases must not be null',
+        );
 
   /// Provides an error description that occurred during loading project groups data.
   String get errorMessage => _errorMessage;
@@ -84,8 +87,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Provides an error description that occurred during loading projects data.
   String get projectsErrorMessage => _projectsErrorMessage;
 
-  /// Provides an error description that occurred during the firestore writing operation.
-  String get firestoreWriteErrorMessage => _firestoreWriteErrorMessage;
+  /// Provides an error description that occurred during the firestore saving operation.
+  String get projectGroupSavingErrorMessage => _projectGroupSavingErrorMessage;
 
   /// Provides a list of project selector view model, filtered by the project name filter.
   List<ProjectSelectorViewModel> get projectSelectorViewModels {
@@ -126,8 +129,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectNameFilterSubject.add(value);
   }
 
-  /// Sets values needed for opened project group dialog.
-  void generateActiveProjectGroupViewModel([String projectGroupId]) {
+  /// Creates the [ActiveProjectGroupDialogViewModel] using the given [projectGroupId].
+  void setActiveProjectGroup([String projectGroupId]) {
     _projectNameFilter = null;
 
     final projectGroup = _projectGroups.firstWhere(
@@ -192,7 +195,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _errorMessage = null;
     await _projectGroupsSubscription?.cancel();
     _projectGroupsSubscription = projectGroupsStream.listen(
-      _projectGroupListener,
+      _projectGroupsListener,
       onError: _errorHandler,
     );
   }
@@ -203,8 +206,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Saves project group data into Firestore with the given [projectGroupName],
-  /// [projectIds].
+  /// Saves the project group data with the given [projectGroupId].
   ///
   /// If [projectIds] is null, a new project group is added,
   /// otherwise existing ones are updated.
@@ -213,7 +215,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     String projectGroupName,
     List<String> projectIds,
   ) async {
-    resetFirestoreWriteErrorMessage();
+    resetProjectGroupSavingError();
 
     try {
       if (projectGroupId == null) {
@@ -233,30 +235,30 @@ class ProjectGroupsNotifier extends ChangeNotifier {
         );
       }
     } catch (e) {
-      _firestoreWriteErrorHandler(e);
+      _projectGroupSavingErrorHandler(e);
     }
 
-    return _firestoreWriteErrorMessage == null;
+    return _projectGroupSavingErrorMessage == null;
   }
 
   /// Deletes project group data from Firestore with the given [projectGroupId].
   Future<bool> deleteProjectGroup(String projectGroupId) async {
-    resetFirestoreWriteErrorMessage();
+    resetProjectGroupSavingError();
 
     try {
       await _deleteProjectGroupUseCase(
         DeleteProjectGroupParam(projectGroupId: projectGroupId),
       );
     } catch (e) {
-      _firestoreWriteErrorHandler(e);
+      _projectGroupSavingErrorHandler(e);
     }
 
-    return _firestoreWriteErrorMessage == null;
+    return _projectGroupSavingErrorMessage == null;
   }
 
-  /// Sets [_firestoreWriteErrorMessage] to null.
-  void resetFirestoreWriteErrorMessage() {
-    _firestoreWriteErrorMessage = null;
+  /// Sets [_projectGroupSavingErrorMessage] to null.
+  void resetProjectGroupSavingError() {
+    _projectGroupSavingErrorMessage = null;
     notifyListeners();
   }
 
@@ -264,7 +266,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   void updateProjects(List<Project> projects, String projectsErrorMessage) {
     _projectsErrorMessage = projectsErrorMessage;
 
-    if (projects == null) return;
+    if(projects == null) return;
 
     final projectIds =
         _activeProjectGroupDialogViewModel?.selectedProjectIds ?? [];
@@ -279,7 +281,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   }
 
   /// Listens to project group updates.
-  void _projectGroupListener(List<ProjectGroup> newProjectGroups) {
+  void _projectGroupsListener(List<ProjectGroup> newProjectGroups) {
     if (newProjectGroups == null) return;
 
     _projectGroups = newProjectGroups;
@@ -311,9 +313,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Saves the error [String] representation to [_firestoreWriteErrorMessage].
-  void _firestoreWriteErrorHandler(error) {
-    _firestoreWriteErrorMessage = CommonStrings.unknownErrorMessage;
+  /// Saves the error [String] representation to [_projectGroupSavingErrorMessage].
+  void _projectGroupSavingErrorHandler(error) {
+    _projectGroupSavingErrorMessage = CommonStrings.unknownErrorMessage;
     notifyListeners();
   }
 

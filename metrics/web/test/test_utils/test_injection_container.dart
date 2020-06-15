@@ -62,10 +62,17 @@ class TestInjectionContainer extends StatelessWidget {
         ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
           create: (_) => projectsNotifier ?? ProjectsNotifierStub(),
           update: (_, authNotifier, projectsNotifier) {
-            return projectsNotifier
-              ..updateProjectsSubscription(
-                isLoggedIn: authNotifier.isLoggedIn,
-              );
+            final isLoggedIn = authNotifier.isLoggedIn;
+
+            if (isLoggedIn != null) {
+              if(isLoggedIn) {
+                projectsNotifier.subscribeToProjects();
+              } else {
+                projectsNotifier.unsubscribeFromProjects();
+              }
+            }
+
+            return projectsNotifier;
           },
         ),
         ChangeNotifierProxyProvider<ProjectsNotifier, ProjectMetricsNotifier>(

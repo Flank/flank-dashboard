@@ -19,16 +19,16 @@ class AddProjectGroupCard extends StatelessWidget {
       iconSize: 72.0,
       iconPadding: const EdgeInsets.symmetric(vertical: 4.0),
       titlePadding: const EdgeInsets.symmetric(vertical: 4.0),
-      title: Text(
+      title: const Text(
         ProjectGroupsStrings.addProjectGroup,
         overflow: TextOverflow.ellipsis,
         softWrap: false,
         maxLines: 1,
-        style: const TextStyle(fontSize: 24.0),
+        style: TextStyle(fontSize: 24.0),
       ),
       onTap: () async {
         Provider.of<ProjectGroupsNotifier>(context, listen: false)
-            .generateActiveProjectGroupViewModel();
+            .setActiveProjectGroup();
         await showDialog(
           context: context,
           child: ProjectGroupDialog(),

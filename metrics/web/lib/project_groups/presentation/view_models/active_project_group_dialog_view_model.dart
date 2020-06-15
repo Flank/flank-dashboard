@@ -4,7 +4,7 @@ class ActiveProjectGroupDialogViewModel {
   final String name;
   final List<String> selectedProjectIds;
 
-  /// Creates the [ActiveProjectGroupDialogViewModel]
+  /// Creates the [ActiveProjectGroupDialogViewModel].
   ///
   /// [id] is the unique identifier of the project group.
   /// [name] is the name of the project group.

@@ -18,7 +18,7 @@ class ProjectSelectorListTile extends StatelessWidget {
     return CheckboxListTile(
       title: Text(
         projectSelectorViewModel.name,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
       ),

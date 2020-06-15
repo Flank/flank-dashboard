@@ -59,7 +59,7 @@ void main() {
           projectGroupsNotifier: projectGroupNotifier,
         ));
 
-        projectGroupNotifier.generateActiveProjectGroupViewModel();
+        projectGroupNotifier.setActiveProjectGroup();
 
         await tester.pump();
 
@@ -71,7 +71,7 @@ void main() {
           findsOneWidget,
         );
 
-        projectGroupNotifier.generateActiveProjectGroupViewModel('id');
+        projectGroupNotifier.setActiveProjectGroup('id');
 
         await tester.pump();
 

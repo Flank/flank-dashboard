@@ -1,26 +1,27 @@
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 
-/// Base class for project group repositories.
+/// A base class for project group repositories.
 ///
-/// Provides an ability to get and manipulate the project groups data.
+/// Provides an ability to get and update the project groups data.
 abstract class ProjectGroupRepository {
-  /// Provides the stream of [ProjectGroup]s.
+  /// Provides a stream of [ProjectGroup]s.
   Stream<List<ProjectGroup>> projectGroupsStream();
 
-  /// Provides the ability to add a project group using a [projectGroupName] and [projectIds].
+  /// Provides an ability to add a new project group with
+  /// the given [projectGroupName] and [projectIds].
   Future<void> addProjectGroup(
     String projectGroupName,
     List<String> projectIds,
   );
 
-  /// Provides the ability to update a project group
-  /// using a [projectGroupId], a [projectGroupName] and [projectIds].
+  /// Provides an ability to update a project group's [projectGroupName]
+  /// and [projectIds] for a project group with the given [projectGroupId].
   Future<void> updateProjectGroup(
     String projectGroupId,
     String projectGroupName,
     List<String> projectIds,
   );
 
-  /// Provides the ability to delete a project group by a [projectGroupId].
+  /// Provides an ability to delete a project group with the given [projectGroupId].
   Future<void> deleteProjectGroup(String projectGroupId);
 }

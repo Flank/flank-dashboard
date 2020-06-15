@@ -1,7 +1,7 @@
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// [DataModel] that represents the [ProjectGroup] entity.
+///A [DataModel] that represents the [ProjectGroup] entity.
 class ProjectGroupData extends ProjectGroup implements DataModel {
 
   /// Creates the [ProjectGroupData] with the given [id], [name] and [projectIds].  
@@ -16,6 +16,8 @@ class ProjectGroupData extends ProjectGroup implements DataModel {
     Map<String, dynamic> json,
     String documentId,
   ) {
+    if(json == null) return null;
+
     return ProjectGroupData(
       id: documentId,
       name: json['name'] as String,

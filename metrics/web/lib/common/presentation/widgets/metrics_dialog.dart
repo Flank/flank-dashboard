@@ -65,7 +65,7 @@ class MetricsDialog extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
-                  child: Icon(Icons.close),
+                  child: const Icon(Icons.close),
                 ),
               ),
               Padding(
