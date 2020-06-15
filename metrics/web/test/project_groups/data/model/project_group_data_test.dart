@@ -18,7 +18,7 @@ void main() {
     });
 
     test(".toJson() converts an instance to the json encodable map", () {
-      const projectGroupData = ProjectGroupData(
+      final projectGroupData = ProjectGroupData(
         id: id,
         name: name,
         projectIds: projectIds,

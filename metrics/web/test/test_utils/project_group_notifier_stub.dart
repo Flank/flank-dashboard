@@ -11,9 +11,9 @@ import 'package:metrics_core/metrics_core.dart';
 /// Provides test implementation of the [ProjectGroupsNotifier] methods.
 class ProjectGroupsNotifierStub extends ChangeNotifier
     implements ProjectGroupsNotifier {
-  final List<ProjectGroup> _testProjectGroups = const [
-    ProjectGroup(id: '1', name: 'name', projectIds: []),
-    ProjectGroup(id: '2', name: 'name2', projectIds: []),
+  final List<ProjectGroup> _testProjectGroups = [
+    ProjectGroup(id: '1', name: 'name', projectIds: const []),
+    ProjectGroup(id: '2', name: 'name2', projectIds: const []),
   ];
 
   final ActiveProjectGroupDialogViewModel

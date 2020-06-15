@@ -5,7 +5,7 @@ import 'package:metrics_core/metrics_core.dart';
 class ProjectGroupData extends ProjectGroup implements DataModel {
 
   /// Creates the [ProjectGroupData] with the given [id], [name] and [projectIds].  
-  const ProjectGroupData({
+  ProjectGroupData({
     String id,
     String name,
     List<String> projectIds,

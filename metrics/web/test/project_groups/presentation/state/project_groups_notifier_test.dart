@@ -307,11 +307,11 @@ void main() {
 
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
-            const ProjectGroup(id: 'id', name: 'name', projectIds: []),
-            const ProjectGroup(
+            ProjectGroup(id: 'id', name: 'name', projectIds: const []),
+            ProjectGroup(
                 id: testProjectGroupId,
                 name: 'name',
-                projectIds: [testProjectId]),
+                projectIds: const [testProjectId]),
           ]),
         );
 
@@ -363,11 +363,11 @@ void main() {
 
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
-            const ProjectGroup(id: 'id', name: 'name', projectIds: []),
-            const ProjectGroup(
+            ProjectGroup(id: 'id', name: 'name', projectIds: const []),
+            ProjectGroup(
               id: testProjectGroupId,
               name: 'name',
-              projectIds: [],
+              projectIds: const [],
             ),
           ]),
         );
@@ -420,11 +420,11 @@ void main() {
 
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
-            const ProjectGroup(id: 'id', name: 'name', projectIds: []),
-            const ProjectGroup(
+            ProjectGroup(id: 'id', name: 'name', projectIds: const []),
+            ProjectGroup(
               id: testProjectGroupId,
               name: 'name',
-              projectIds: [],
+              projectIds: const [],
             ),
           ]),
         );
@@ -482,11 +482,11 @@ void main() {
 
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
-            const ProjectGroup(id: 'id', name: 'name', projectIds: []),
-            const ProjectGroup(
+            ProjectGroup(id: 'id', name: 'name', projectIds: const []),
+            ProjectGroup(
               id: testProjectGroupId,
               name: 'name',
-              projectIds: [],
+              projectIds: const [],
             ),
           ]),
         );
@@ -538,11 +538,11 @@ void main() {
 
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
-            const ProjectGroup(id: 'id', name: 'name', projectIds: []),
-            const ProjectGroup(
+            ProjectGroup(id: 'id', name: 'name', projectIds: const []),
+            ProjectGroup(
               id: testProjectGroupId,
               name: 'name',
-              projectIds: [testProjectId],
+              projectIds: const [testProjectId],
             ),
           ]),
         );
@@ -595,11 +595,11 @@ void main() {
 
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
-            const ProjectGroup(id: 'id', name: 'name', projectIds: []),
-            const ProjectGroup(
+            ProjectGroup(id: 'id', name: 'name', projectIds: const []),
+            ProjectGroup(
               id: testProjectGroupId,
               name: 'name',
-              projectIds: [],
+              projectIds: const [],
             ),
           ]),
         );
@@ -732,8 +732,8 @@ void main() {
       () async {
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value([
-            const ProjectGroup(id: 'id', name: 'name', projectIds: []),
-            const ProjectGroup(id: 'id', name: 'name', projectIds: []),
+            ProjectGroup(id: 'id', name: 'name', projectIds: const []),
+            ProjectGroup(id: 'id', name: 'name', projectIds: const []),
           ]),
         );
 

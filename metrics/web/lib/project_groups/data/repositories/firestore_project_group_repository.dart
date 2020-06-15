@@ -3,7 +3,7 @@ import 'package:metrics/project_groups/data/model/project_group_data.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/repositories/project_group_repository.dart';
 
-/// Loads data from [Firestore].
+/// An implementation [ProjectGroupRepository] for [Firestore].
 class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
   final Firestore _firestore = Firestore.instance;
 

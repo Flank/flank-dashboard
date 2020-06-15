@@ -1,6 +1,5 @@
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:test/test.dart';
-import '../../../test_utils/matcher_util.dart';
 
 void main() {
   group("ProjectGroup", () {
@@ -8,17 +7,17 @@ void main() {
     const name = 'name';
     const List<String> projectIds = [];
 
-    test("throws an AssertionError then created with null name", () {
+    test("throws an ArgumentError then created with null name", () {
       expect(
         () => ProjectGroup(id: id, name: null, projectIds: projectIds),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
 
-    test("throws an AssertionError then created with null projectIds", () {
+    test("throws an ArgumentError then created with null projectIds", () {
       expect(
         () => ProjectGroup(id: id, name: name, projectIds: null),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
   });

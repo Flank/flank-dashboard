@@ -12,10 +12,12 @@ class ProjectGroup {
   /// [id] is the unique identifier of this project group.
   /// [name] is the name of this project group.
   /// [projectIds] is the list of project ids related with this project group.
-  const ProjectGroup({
+  ProjectGroup({
     this.id,
     @required this.name,
     @required this.projectIds,
-  })  : assert(name != null),
-        assert(projectIds != null);
+  }) {
+    ArgumentError.checkNotNull(name, 'name');
+    ArgumentError.checkNotNull(projectIds, 'projectIds');
+  }
 }
