@@ -29,23 +29,20 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
   @override
   Widget build(BuildContext context) {
     return MetricsScaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 124.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 32.0),
-              child: Text(
-                ProjectGroupsStrings.projectGroups,
-                style: TextStyle(fontSize: 32.0),
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 32.0),
+            child: Text(
+              ProjectGroupsStrings.projectGroups,
+              style: TextStyle(fontSize: 32.0),
             ),
-            Expanded(
-              child: ProjectGroupCardGridView(),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: ProjectGroupCardGridView(),
+          ),
+        ],
       ),
     );
   }

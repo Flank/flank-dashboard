@@ -30,21 +30,18 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return MetricsScaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 124.0),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 24.0),
-              child: ProjectSearchInput(
-                onChanged: _projectMetricsNotifier.filterByProjectName,
-              ),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 24.0),
+            child: ProjectSearchInput(
+              onChanged: _projectMetricsNotifier.filterByProjectName,
             ),
-            Expanded(
-              child: MetricsTable(),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: MetricsTable(),
+          ),
+        ],
       ),
     );
   }
