@@ -5,7 +5,8 @@ import 'package:metrics/project_groups/presentation/strings/project_groups_strin
 import 'package:metrics/project_groups/presentation/widgets/project_group_card_grid_view.dart';
 import 'package:provider/provider.dart';
 
-/// Shows the list of project groups and a button to add new.
+/// A page that displays the list of [ProjectGroup]s and provides an ability
+/// to add a new [ProjectGroup].
 class ProjectGroupPage extends StatefulWidget {
   @override
   _ProjectGroupPageState createState() => _ProjectGroupPageState();
