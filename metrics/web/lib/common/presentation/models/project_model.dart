@@ -1,17 +1,17 @@
 import 'package:meta/meta.dart';
 
 /// A class that represents a project model and
-/// used to communicate between change notifiers.
+/// used to communicate between [ChangeNotifier]s.
 class ProjectModel {
-  /// The project's identifier.
+  /// The identifier of this project.
   final String id;
 
-  /// The project's name.
+  /// The name of this project.
   final String name;
 
-  /// Creates an instance, using an [id] and a [name].
+  /// Creates an instance using the given [id] and [name].
   ///
-  /// Throws an ArgumentError if the [id] or the [name] is null.
+  /// Throws an ArgumentError if either the [id] or [name] is `null`.
   ProjectModel({
     @required this.id,
     @required this.name,
