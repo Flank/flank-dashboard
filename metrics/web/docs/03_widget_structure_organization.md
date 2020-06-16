@@ -7,6 +7,7 @@ Description of widget structure and organization in the Metrics Web Application.
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Clean Architecture: A Craftsman's Guide to Software Structure and Design](https://www.amazon.com/Clean-Architecture-Craftsmans-Software-Structure/dp/0134494164)
+- [View model naming convention](https://caliburnmicro.com/documentation/naming-conventions)
 
 # Motivation
 > What problem is this project solving?
@@ -221,6 +222,10 @@ Let us consider the class diagram that will explain relationships between `widge
 ![View model usage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/web_app_docs_improvements/metrics/web/docs/diagrams/view_model_usage_class_diagram.puml)
 
 On this diagram, we can see that all widgets that use the other `metrics` widgets (widgets from `dashboard/presentation/widgets` package) use a composite view model. The rest of the `metrics` widgets use a plain view model.
+
+### Naming convention for a `view model`s.
+
+According to the (View model naming convention)[https://caliburnmicro.com/documentation/naming-conventions], we should name the view models as `entityName` + `widgetName` + `ViewModel`. For example, wee have an entity named `Project` and a widget `ProjectTile` that should display the project. In this case, we should name the `view model` as a `ProjectTileViewModel`. This approach allows us to make the code more readable and navigation more simple.
 
 ## Widget creation guidelines
 > Explain and diagram an algorithm for creating a new `widget`.
