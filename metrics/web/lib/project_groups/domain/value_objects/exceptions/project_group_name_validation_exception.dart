@@ -1,7 +1,7 @@
-// ignore_for_file: implementation_imports
+
 
 import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_name_validation_error_code.dart';
-import 'package:metrics_core/src/domain/value_objects/exceptions/validation_exception.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// Represents the project group name validation exception.
 class ProjectGroupNameValidationException
