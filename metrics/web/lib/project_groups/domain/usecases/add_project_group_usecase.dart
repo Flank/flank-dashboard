@@ -2,7 +2,7 @@ import 'package:metrics/common/domain/usecases/usecase.dart';
 import 'package:metrics/project_groups/domain/repositories/project_group_repository.dart';
 import 'package:metrics/project_groups/domain/usecases/parameters/add_project_group_param.dart';
 
-/// The use case that provides the ability to add a project group.
+/// A [UseCase] that provides an ability to add a new project group.
 class AddProjectGroupUseCase
     implements UseCase<Future<void>, AddProjectGroupParam> {
   /// A repository, that gives an ability to update a project group.
@@ -10,8 +10,10 @@ class AddProjectGroupUseCase
 
   /// Creates the [AddProjectGroupUseCase] use case with the given [ProjectGroupRepository].
   ///
-  /// [ProjectGroupRepository] must not be null.
-  const AddProjectGroupUseCase(this._repository) : assert(_repository != null);
+  /// Throws an ArgumentError if the [ProjectGroupRepository] is `null`.
+  AddProjectGroupUseCase(this._repository) {
+    ArgumentError.checkNotNull(_repository, '_repository');
+  }
 
   @override
   Future<void> call(AddProjectGroupParam params) {

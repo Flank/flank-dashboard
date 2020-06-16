@@ -13,13 +13,18 @@ class UpdateProjectGroupParam extends Equatable {
 
   /// Creates the [UpdateProjectGroupParam] with the given [projectGroupId],
   /// [projectGroupName] and [projectIds].
-  const UpdateProjectGroupParam(
+  ///
+  /// Throws an ArgumentError if either the [projectGroupId] or [projectGroupName]
+  /// or [projectIds] is `null`.
+  UpdateProjectGroupParam(
     this.projectGroupId,
     this.projectGroupName,
     this.projectIds,
-  )   : assert(projectGroupId != null),
-        assert(projectGroupName != null),
-        assert(projectIds != null);
+  ) {
+    ArgumentError.checkNotNull(projectGroupId, 'projectGroupId');
+    ArgumentError.checkNotNull(projectGroupName, 'projectGroupName');
+    ArgumentError.checkNotNull(projectIds, 'projectIds');
+  }
 
   @override
   List<Object> get props => [projectGroupId, projectGroupName, projectIds];

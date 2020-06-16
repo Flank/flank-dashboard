@@ -7,9 +7,13 @@ class DeleteProjectGroupParam extends Equatable {
   final String projectGroupId;
 
   /// Creates the [DeleteProjectGroupParam] with the given [projectGroupId].
-  const DeleteProjectGroupParam({
+  ///
+  /// Throws an ArgumentError if the [projectGroupId] is `null`.
+  DeleteProjectGroupParam({
     @required this.projectGroupId,
-  }) : assert(projectGroupId != null);
+  }) {
+    ArgumentError.checkNotNull(projectGroupId, 'projectGroupId');
+  }
 
   @override
   List<Object> get props => [projectGroupId];

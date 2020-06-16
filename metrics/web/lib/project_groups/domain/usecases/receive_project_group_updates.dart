@@ -10,9 +10,10 @@ class ReceiveProjectGroupUpdates
 
   /// Creates the [ReceiveProjectGroupUpdates] use case with the given [ProjectGroupRepository].
   ///
-  /// [ProjectGroupRepository] must not be null.
-  const ReceiveProjectGroupUpdates(this._repository)
-      : assert(_repository != null);
+  /// Throws an ArgumentError if the [ProjectGroupRepository] is `null`.
+  ReceiveProjectGroupUpdates(this._repository) {
+    ArgumentError.checkNotNull(_repository, '_repository');
+  }
 
   @override
   Stream<List<ProjectGroup>> call([_]) {

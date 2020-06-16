@@ -9,24 +9,24 @@ void main() {
     const name = 'name';
     const List<String> projectIds = [];
 
-    test("throws an AssertionError when created with null id", () {
+    test("throws an ArgumentError when created with null id", () {
       expect(
         () => UpdateProjectGroupParam(null, name, projectIds),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
 
-    test("throws an AssertionError when created with null name", () {
+    test("throws an ArgumentError when created with null name", () {
       expect(
         () => UpdateProjectGroupParam(id, null, projectIds),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
 
-    test("throws an AssertionError when created with null project ids", () {
+    test("throws an ArgumentError when created with null project ids", () {
       expect(
         () => UpdateProjectGroupParam(id, name, null),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
   });

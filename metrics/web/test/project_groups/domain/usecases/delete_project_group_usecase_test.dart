@@ -3,15 +3,14 @@ import 'package:metrics/project_groups/domain/usecases/parameters/delete_project
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../test_utils/matcher_util.dart';
 import '../../../test_utils/project_group_repository_mock.dart';
 
 void main() {
   group("DeleteProjectGroupUseCase", () {
-    test("throws an AssertionError when the given repository is null", () {
+    test("throws an ArgumentError when the given repository is null", () {
       expect(
         () => DeleteProjectGroupUseCase(null),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
 
@@ -20,7 +19,7 @@ void main() {
       () async {
         final repository = ProjectGroupRepositoryMock();
         final deleteProjectGroupUseCase = DeleteProjectGroupUseCase(repository);
-        const projectGroupParam = DeleteProjectGroupParam(projectGroupId: 'id');
+        final projectGroupParam = DeleteProjectGroupParam(projectGroupId: 'id');
 
         await deleteProjectGroupUseCase(projectGroupParam);
 

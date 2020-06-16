@@ -225,7 +225,7 @@ void main() {
 
       verify(
         deleteProjectGroupUseCase(
-          const DeleteProjectGroupParam(projectGroupId: projectGroupId),
+          DeleteProjectGroupParam(projectGroupId: projectGroupId),
         ),
       ).called(1);
     });
@@ -241,7 +241,7 @@ void main() {
 
       verify(
         updateProjectGroupUseCase(
-          const UpdateProjectGroupParam(
+          UpdateProjectGroupParam(
             projectGroupId,
             projectGroupName,
             projectIds,
@@ -261,7 +261,7 @@ void main() {
 
         verify(
           addProjectGroupUseCase(
-            const AddProjectGroupParam(
+            AddProjectGroupParam(
               projectGroupName: projectGroupName,
               projectIds: projectIds,
             ),
