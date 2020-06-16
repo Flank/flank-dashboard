@@ -46,8 +46,6 @@ void main() {
         projects,
         errorMessage,
       );
-
-      projectMetricsNotifier.subscribeToProjectsNameFilter();
     });
 
     tearDownAll(() async {

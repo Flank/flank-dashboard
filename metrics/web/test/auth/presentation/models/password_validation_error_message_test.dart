@@ -25,14 +25,13 @@ void main() {
         const errorMessage = PasswordValidationErrorMessage(
           PasswordValidationErrorCode.tooShortPassword,
         );
+        final expectedMessage = AuthStrings.getPasswordMinLengthErrorMessage(
+          Password.minPasswordLength,
+        );
 
         expect(
           errorMessage.message,
-          equals(
-            AuthStrings.getPasswordMinLengthErrorMessage(
-              Password.minPasswordLength,
-            ),
-          ),
+          equals(expectedMessage),
         );
       },
     );

@@ -12,11 +12,13 @@ class ProjectGroupData extends ProjectGroup implements DataModel {
   }) : super(id: id, name: name, projectIds: projectIds);
 
   /// Creates the [ProjectGroupData] using the [json] and [documentId].
+  ///
+  /// Returns `null` if the given [json] is `null`.
   factory ProjectGroupData.fromJson(
     Map<String, dynamic> json,
     String documentId,
   ) {
-    if(json == null) return null;
+    if (json == null) return null;
 
     return ProjectGroupData(
       id: documentId,

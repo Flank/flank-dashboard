@@ -9,12 +9,21 @@ void main() {
 
     const json = {'name': name, 'projectIds': projectIds};
 
+    test(".fromJson() return null if the given json is null", () {
+      final projectGroup = ProjectGroupData.fromJson(null, id);
+
+      expect(projectGroup, isNull);
+    });
+
     test(".fromJson() creates an instance from a json map", () {
+      final expectedProjectGroup = ProjectGroupData(
+        id: id,
+        name: name,
+        projectIds: projectIds,
+      );
       final projectGroup = ProjectGroupData.fromJson(json, id);
 
-      expect(projectGroup.id, equals(id));
-      expect(projectGroup.name, equals(name));
-      expect(projectGroup.projectIds, equals(projectIds));
+      expect(projectGroup, equals(expectedProjectGroup));
     });
 
     test(".toJson() converts an instance to the json encodable map", () {

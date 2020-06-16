@@ -73,15 +73,21 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
 
   /// Starts deleting process of a project group.
   Future<void> _deleteProjectGroup() async {
-    final projectGroupNotifier =
-        Provider.of<ProjectGroupsNotifier>(context, listen: false);
-
     setState(() => _isLoading = true);
 
-    final isSuccess =
-        await projectGroupNotifier.deleteProjectGroup(widget.projectGroupId);
+    await Provider.of<ProjectGroupsNotifier>(
+      context,
+      listen: false,
+    ).deleteProjectGroup(widget.projectGroupId);
 
-    if (isSuccess) {
+    setState(() => _isLoading = false);
+
+    final projectGroupSavingError = Provider.of<ProjectGroupsNotifier>(
+      context,
+      listen: false,
+    ).projectGroupSavingError;
+
+    if (projectGroupSavingError == null) {
       Navigator.pop(context);
     }
   }

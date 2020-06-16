@@ -3,11 +3,11 @@ import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_selector_list_tile.dart';
+import 'package:metrics/project_groups/presentation/widgets/project_selection_list_tile.dart';
 import 'package:provider/provider.dart';
 
-/// A widget that displays the list view with the list of [ProjectSelectorListTile].
-class ProjectSelectorList extends StatelessWidget {
+/// A widget that displays the list of [ProjectSelectionListTile] for project selection.
+class ProjectSelectionList extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {
     return Consumer<ProjectGroupsNotifier>(
@@ -36,7 +36,7 @@ class ProjectSelectorList extends StatelessWidget {
           itemBuilder: (context, index) {
             final projectSelectorViewModel = projectSelectorViewModels[index];
 
-            return ProjectSelectorListTile(
+            return ProjectSelectionListTile(
               projectSelectorViewModel: projectSelectorViewModel,
             );
           },

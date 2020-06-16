@@ -1,8 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// Represents the project group entity.
-@immutable
-class ProjectGroup {
+class ProjectGroup extends Equatable {
   /// A unique identifier of the project group.
   final String id;
 
@@ -23,4 +23,7 @@ class ProjectGroup {
     ArgumentError.checkNotNull(name, 'name');
     ArgumentError.checkNotNull(projectIds, 'projectIds');
   }
+
+  @override
+  List<Object> get props => [id, name, projectIds];
 }

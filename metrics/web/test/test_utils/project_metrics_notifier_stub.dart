@@ -48,10 +48,8 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   }
 
   @override
-  void updateProjects(List<ProjectModel> newProjectModels, String projectErrorMessage) {
+  void updateProjects(
+      List<ProjectModel> newProjectModels, String projectErrorMessage) {
     return;
   }
-
-  @override
-  void subscribeToProjectsNameFilter() {}
 }

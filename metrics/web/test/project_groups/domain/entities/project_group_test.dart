@@ -7,14 +7,21 @@ void main() {
     const name = 'name';
     const List<String> projectIds = [];
 
-    test("throws an ArgumentError then created with null name", () {
+    test("returns normally when created with not null required parameters", () {
+      expect(
+        () => ProjectGroup(id: id, name: name, projectIds: projectIds),
+        returnsNormally,
+      );
+    });
+
+    test("throws an ArgumentError when created with null name", () {
       expect(
         () => ProjectGroup(id: id, name: null, projectIds: projectIds),
         throwsArgumentError,
       );
     });
 
-    test("throws an ArgumentError then created with null projectIds", () {
+    test("throws an ArgumentError when created with null projectIds", () {
       expect(
         () => ProjectGroup(id: id, name: name, projectIds: null),
         throwsArgumentError,

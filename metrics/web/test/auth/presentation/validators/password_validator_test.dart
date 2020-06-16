@@ -7,33 +7,34 @@ void main() {
   group("PasswordValidator", () {
     test(
       ".validate() returns the password required error message if the password is null",
-          () {
+      () {
         final validationResult = PasswordValidator.validate(null);
 
         expect(
-            validationResult, equals(AuthStrings.passwordRequiredErrorMessage));
+          validationResult,
+          equals(AuthStrings.passwordRequiredErrorMessage),
+        );
       },
     );
 
     test(
-      ".validate() returns the password too short error message if the password is less than 6 characters long",
-          () {
+      ".validate() returns the password too short error message if the password is less than Password.minPasswordLength",
+      () {
         final validationResult = PasswordValidator.validate('pass');
+        final expectedMessage = AuthStrings.getPasswordMinLengthErrorMessage(
+          Password.minPasswordLength,
+        );
 
         expect(
           validationResult,
-          equals(
-            AuthStrings.getPasswordMinLengthErrorMessage(
-              Password.minPasswordLength,
-            ),
-          ),
+          equals(expectedMessage),
         );
       },
     );
 
     test(
       ".validate() returns null if the given password is valid",
-          () {
+      () {
         final validationResult = PasswordValidator.validate('password');
 
         expect(validationResult, isNull);

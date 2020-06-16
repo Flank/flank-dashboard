@@ -3,7 +3,7 @@ import 'package:metrics/dashboard/data/deserializer/build_data_deserializer.dart
 import 'package:metrics/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// An implementation [MetricsRepository] for [Firestore].
+/// An implementation of the [MetricsRepository] for [Firestore].
 class FirestoreMetricsRepository implements MetricsRepository {
   final Firestore _firestore = Firestore.instance;
 

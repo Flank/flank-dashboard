@@ -21,7 +21,7 @@ class AddProjectGroupCard extends StatelessWidget {
             themeNotifier.isDark ? Colors.grey[900] : Colors.grey[200],
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: const <Widget>[
             Padding(
               padding: symmetricPadding,
               child: Icon(
@@ -29,7 +29,7 @@ class AddProjectGroupCard extends StatelessWidget {
                 size: 72.0,
               ),
             ),
-            const Padding(
+            Padding(
               padding: symmetricPadding,
               child: Text(
                 ProjectGroupsStrings.addProjectGroup,

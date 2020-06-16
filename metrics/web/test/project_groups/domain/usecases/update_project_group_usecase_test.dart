@@ -18,7 +18,11 @@ void main() {
       () async {
         final repository = ProjectGroupRepositoryMock();
         final updateProjectGroupUseCase = UpdateProjectGroupUseCase(repository);
-        final projectGroupParam = UpdateProjectGroupParam('id', 'name', []);
+        final projectGroupParam = UpdateProjectGroupParam(
+          'id',
+          'name',
+          const [],
+        );
 
         await updateProjectGroupUseCase(projectGroupParam);
 

@@ -1,5 +1,5 @@
-/// Represents the data of the project group that using in project group dialog.
-class ActiveProjectGroupDialogViewModel {
+/// Represents the data of the selected project group to display.
+class SelectedProjectGroupDialogViewModel {
   /// A unique identifier of the project.
   final String id;
 
@@ -9,8 +9,8 @@ class ActiveProjectGroupDialogViewModel {
   /// A list of projects' identifiers, related to the group.
   final List<String> selectedProjectIds;
 
-  /// Creates the [ActiveProjectGroupDialogViewModel].
-  ActiveProjectGroupDialogViewModel({
+  /// Creates the [SelectedProjectGroupDialogViewModel].
+  SelectedProjectGroupDialogViewModel({
     this.id,
     this.name,
     this.selectedProjectIds,

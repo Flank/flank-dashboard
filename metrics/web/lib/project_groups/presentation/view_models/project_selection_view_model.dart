@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
 /// Represents the project to display within selection list.
-class ProjectSelectorViewModel {
+class ProjectSelectionViewModel {
   /// A unique identifier of the project.
   final String id;
 
@@ -11,10 +11,10 @@ class ProjectSelectorViewModel {
   /// Determines if the project was checked.
   final bool isChecked;
 
-  /// Creates the [ProjectSelectorViewModel]
+  /// Creates the [ProjectSelectionViewModel]
   ///
   /// The [id], the [name] and the [isChecked] must not be null.
-  ProjectSelectorViewModel({
+  ProjectSelectionViewModel({
     @required this.id,
     @required this.name,
     @required this.isChecked,

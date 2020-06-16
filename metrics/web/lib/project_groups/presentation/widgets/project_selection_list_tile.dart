@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_selector_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_selection_view_model.dart';
 import 'package:provider/provider.dart';
 
-/// A widget that represent a [ProjectSelectorViewModel].
-class ProjectSelectorListTile extends StatelessWidget {
-  /// Represents a data of a project that using in [CheckboxListTile].
-  final ProjectSelectorViewModel projectSelectorViewModel;
+/// A [CheckboxListTile] widget that displays a [ProjectSelectionViewModel] for selection.
+class ProjectSelectionListTile extends StatelessWidget {
+  /// A view model with the data to display within this widget.
+  final ProjectSelectionViewModel projectSelectorViewModel;
 
-  /// Creates a [ProjectSelectorListTile] with the given [projectSelectorViewModel].
+  /// Creates a [ProjectSelectionListTile] with the given [projectSelectorViewModel].
   ///
   /// The [projectSelectorViewModel] must not be null.
-  const ProjectSelectorListTile({
+  const ProjectSelectionListTile({
     Key key,
     @required this.projectSelectorViewModel,
   })  : assert(projectSelectorViewModel != null),

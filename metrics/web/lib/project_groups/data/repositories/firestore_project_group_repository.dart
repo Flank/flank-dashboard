@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:metrics/common/domain/entities/firestore_error_code.dart';
+import 'package:metrics/common/domain/entities/firestore_exception.dart';
 import 'package:metrics/project_groups/data/model/project_group_data.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/repositories/project_group_repository.dart';
 
-/// An implementation [ProjectGroupRepository] for [Firestore].
+/// An implementation of the [ProjectGroupRepository] for [Firestore].
 class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
   final Firestore _firestore = Firestore.instance;
 
@@ -29,15 +31,19 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
   Future<void> addProjectGroup(
     String projectGroupName,
     List<String> projectIds,
-  ) {
+  ) async {
     final projectGroupData = ProjectGroupData(
       name: projectGroupName,
       projectIds: projectIds,
     );
 
-    return _firestore.collection('project_groups').add(
-          projectGroupData.toJson(),
-        );
+    try {
+      await _firestore.collection('project_groups').add(
+            projectGroupData.toJson(),
+          );
+    } catch (e) {
+      throw const FirestoreException(code: FirestoreErrorCode.unknown);
+    }
   }
 
   @override
@@ -45,24 +51,33 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
     String projectGroupId,
     String projectGroupName,
     List<String> projectIds,
-  ) {
+  ) async {
     final projectGroupData = ProjectGroupData(
       name: projectGroupName,
       projectIds: projectIds,
     );
-    return _firestore
-        .collection('project_groups')
-        .document(projectGroupId)
-        .updateData(
-          projectGroupData.toJson(),
-        );
+
+    try {
+      await _firestore
+          .collection('project_groups')
+          .document(projectGroupId)
+          .updateData(
+            projectGroupData.toJson(),
+          );
+    } catch (e) {
+      throw const FirestoreException(code: FirestoreErrorCode.unknown);
+    }
   }
 
   @override
-  Future<void> deleteProjectGroup(String projectGroupId) {
-    return _firestore
-        .collection('project_groups')
-        .document(projectGroupId)
-        .delete();
+  Future<void> deleteProjectGroup(String projectGroupId) async {
+    try {
+      await _firestore
+          .collection('project_groups')
+          .document(projectGroupId)
+          .delete();
+    } catch (e) {
+      throw const FirestoreException(code: FirestoreErrorCode.unknown);
+    }
   }
 }

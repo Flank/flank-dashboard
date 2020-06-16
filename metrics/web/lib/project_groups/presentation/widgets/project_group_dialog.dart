@@ -7,11 +7,9 @@ import 'package:metrics/common/presentation/widgets/clearable_text_form_field.da
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
-import 'package:metrics/project_groups/presentation/view_models/active_project_group_dialog_view_model.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_selector_list.dart';
+import 'package:metrics/project_groups/presentation/view_models/selected_project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/widgets/project_selection_list.dart';
 import 'package:provider/provider.dart';
-
-import '../state/project_groups_notifier.dart';
 
 /// A dialog that using for updating or creating project group data.
 class ProjectGroupDialog extends StatefulWidget {
@@ -41,10 +39,8 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
       listen: false,
     );
 
-    _projectGroupsNotifier.subscribeToProjectsNameFilter();
-
     _groupNameController.text =
-        _projectGroupsNotifier.activeProjectGroupDialogViewModel?.name;
+        _projectGroupsNotifier.selectedProjectGroupDialogViewModel?.name;
 
     _groupNameController.addListener(() {
       setState(() {});
@@ -53,8 +49,8 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<ProjectGroupsNotifier, ActiveProjectGroupDialogViewModel>(
-      selector: (_, state) => state.activeProjectGroupDialogViewModel,
+    return Selector<ProjectGroupsNotifier, SelectedProjectGroupDialogViewModel>(
+      selector: (_, state) => state.selectedProjectGroupDialogViewModel,
       builder: (_, activeProjectGroupDialogViewModel, ___) {
         final createGroupButtonText = _isLoading
             ? ProjectGroupsStrings.creatingProjectGroup
@@ -63,24 +59,25 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
             ? ProjectGroupsStrings.savingProjectGroup
             : ProjectGroupsStrings.saveChanges;
 
-        return Form(
-          key: _formKey,
-          child: MetricsDialog(
-            padding: const EdgeInsets.all(32.0),
-            title: Text(
-              activeProjectGroupDialogViewModel.id == null
-                  ? ProjectGroupsStrings.addProjectGroup
-                  : ProjectGroupsStrings.editProjectGroup,
-              style: const TextStyle(
-                fontSize: 32.0,
-                fontWeight: FontWeight.bold,
-              ),
+        return MetricsDialog(
+          padding: const EdgeInsets.all(32.0),
+          maxWidth: 500.0,
+          title: Text(
+            activeProjectGroupDialogViewModel.id == null
+                ? ProjectGroupsStrings.addProjectGroup
+                : ProjectGroupsStrings.editProjectGroup,
+            style: const TextStyle(
+              fontSize: 32.0,
+              fontWeight: FontWeight.bold,
             ),
-            titlePadding: const EdgeInsets.symmetric(vertical: 12.0),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ClearableTextFormField(
+          ),
+          titlePadding: const EdgeInsets.symmetric(vertical: 12.0),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Form(
+                key: _formKey,
+                child: ClearableTextFormField(
                   validator: ProjectGroupNameValidator.validate,
                   label: ProjectGroupsStrings.nameYourGroup,
                   controller: _groupNameController,
@@ -88,119 +85,106 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
                     borderSide: BorderSide(color: Colors.grey),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: Text(ProjectGroupsStrings.chooseProjectToAdd),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 16.0),
+                child: Text(ProjectGroupsStrings.chooseProjectToAdd),
+              ),
+              Container(
+                height: 250.0,
+                padding: const EdgeInsets.all(16.0),
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(3.0),
                 ),
+                child: Column(
+                  children: <Widget>[
+                    TextField(
+                      onChanged: _projectGroupsNotifier.filterByProjectName,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        hintText: CommonStrings.searchForProject,
+                      ),
+                    ),
+                    Flexible(
+                      child: ProjectSelectionList(),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                activeProjectGroupDialogViewModel.selectedProjectIds.isNotEmpty
+                    ? ProjectGroupsStrings.getSelectedCount(
+                        activeProjectGroupDialogViewModel
+                            .selectedProjectIds.length,
+                      )
+                    : '',
+              ),
+            ],
+          ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+          actions: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
                 Container(
-                  height: 250.0,
-                  padding: const EdgeInsets.all(16.0),
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(3.0),
+                  height: 50.0,
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    onPressed: _isLoading
+                        ? null
+                        : () => _saveProjectGroups(
+                            activeProjectGroupDialogViewModel),
+                    child: Text(
+                      activeProjectGroupDialogViewModel.id == null
+                          ? createGroupButtonText
+                          : editGroupButtonText,
+                    ),
                   ),
-                  child: Column(
-                    children: <Widget>[
-                      TextField(
-                        onChanged: _projectGroupsNotifier.filterByProjectName,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          hintText: CommonStrings.searchForProject,
-                        ),
-                      ),
-                      Flexible(
-                        child: ProjectSelectorList(),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  activeProjectGroupDialogViewModel
-                          .selectedProjectIds.isNotEmpty
-                      ? ProjectGroupsStrings.getSelectedCount(
-                          activeProjectGroupDialogViewModel
-                              .selectedProjectIds.length,
-                        )
-                      : '',
                 ),
               ],
             ),
-            contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
-            actions: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    height: 50.0,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      onPressed: _isLoading
-                          ? null
-                          : () => _saveProjectGroups(
-                              activeProjectGroupDialogViewModel),
-                      child: Text(
-                        activeProjectGroupDialogViewModel.id == null
-                            ? createGroupButtonText
-                            : editGroupButtonText,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Selector<ProjectGroupsNotifier, String>(
-                      selector: (_, state) =>
-                          state.projectGroupSavingErrorMessage,
-                      builder: (_, firestoreWriteErrorMessage, __) {
-                        if (firestoreWriteErrorMessage == null) {
-                          return const Text('');
-                        }
-
-                        return Text(
-                          firestoreWriteErrorMessage,
-                          style: const TextStyle(color: Colors.red),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-            actionsPadding: const EdgeInsets.symmetric(vertical: 12.0),
-          ),
+          ],
+          actionsPadding: const EdgeInsets.symmetric(vertical: 12.0),
         );
       },
     );
   }
 
-  /// Starts save project group process.
+  /// Saves given project group.
   Future<void> _saveProjectGroups(
-      ActiveProjectGroupDialogViewModel
-          activeProjectGroupDialogViewModel) async {
+    SelectedProjectGroupDialogViewModel selectedProjectGroupDialogViewModel,
+  ) async {
     if (!_formKey.currentState.validate()) {
       return;
     }
-    setState(() {
-      _isLoading = true;
-    });
 
-    final isSuccess =
-        await Provider.of<ProjectGroupsNotifier>(context, listen: false)
-            .saveProjectGroup(
-      activeProjectGroupDialogViewModel.id,
+    setState(() => _isLoading = true);
+
+    await _projectGroupsNotifier.saveProjectGroup(
+      selectedProjectGroupDialogViewModel.id,
       _groupNameController.text,
-      activeProjectGroupDialogViewModel.selectedProjectIds,
+      selectedProjectGroupDialogViewModel.selectedProjectIds,
     );
 
-    if (isSuccess) {
+    setState(() => _isLoading = false);
+
+    final projectGroupSavingError = Provider.of<ProjectGroupsNotifier>(
+      context,
+      listen: false,
+    ).projectGroupSavingError;
+
+    if (projectGroupSavingError == null) {
       Navigator.pop(context);
     }
   }
 
   @override
   void dispose() {
+    _projectGroupsNotifier.resetFilterName();
     _groupNameController.dispose();
     super.dispose();
   }

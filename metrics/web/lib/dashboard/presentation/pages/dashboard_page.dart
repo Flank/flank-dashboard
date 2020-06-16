@@ -20,8 +20,6 @@ class _DashboardPageState extends State<DashboardPage> {
     super.initState();
     _projectMetricsNotifier =
         Provider.of<ProjectMetricsNotifier>(context, listen: false);
-
-    _projectMetricsNotifier.subscribeToProjectsNameFilter();
   }
 
   @override

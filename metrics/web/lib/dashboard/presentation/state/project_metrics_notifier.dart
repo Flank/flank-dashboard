@@ -48,7 +48,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   ) : assert(
           _receiveProjectMetricsUpdates != null,
           'The use case must not be null',
-        );
+        ) {
+    _subscribeToProjectsNameFilter();
+  }
 
   /// Provides a list of project metrics, filtered by the project name filter.
   List<ProjectMetricsData> get projectsMetrics {
@@ -70,7 +72,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   String get projectsErrorMessage => _projectsErrorMessage;
 
   /// Subscribes to a projects name filter.
-  void subscribeToProjectsNameFilter() {
+  void _subscribeToProjectsNameFilter() {
     _projectNameFilterSubject
         .debounceTime(DurationConstants.debounce)
         .listen((value) {

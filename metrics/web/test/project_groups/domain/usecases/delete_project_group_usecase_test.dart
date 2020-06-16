@@ -15,7 +15,7 @@ void main() {
     });
 
     test(
-      "delegates call to the ProjectGroupRepository.deleteProjectGroup",
+      ".call() delegates deleting to the ProjectGroupRepository.deleteProjectGroup() method",
       () async {
         final repository = ProjectGroupRepositoryMock();
         final deleteProjectGroupUseCase = DeleteProjectGroupUseCase(repository);
