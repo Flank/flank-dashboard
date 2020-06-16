@@ -67,7 +67,6 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
           key: _formKey,
           child: MetricsDialog(
             padding: const EdgeInsets.all(32.0),
-            maxWidth: 500.0,
             title: Text(
               activeProjectGroupDialogViewModel.id == null
                   ? ProjectGroupsStrings.addProjectGroup

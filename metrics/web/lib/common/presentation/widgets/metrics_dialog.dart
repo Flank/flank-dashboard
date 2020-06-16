@@ -47,19 +47,17 @@ class MetricsDialog extends StatelessWidget {
   /// [title], [content], [actions] and [maxWidth] must not be null.
   const MetricsDialog({
     @required this.title,
-    @required this.content,
+    this.content,
     @required this.actions,
-    @required this.maxWidth,
     this.backgroundColor,
     this.padding = EdgeInsets.zero,
     this.titlePadding = EdgeInsets.zero,
     this.contentPadding = EdgeInsets.zero,
     this.actionsPadding = EdgeInsets.zero,
     this.actionsAlignment = MainAxisAlignment.start,
+    this.maxWidth = 500.0,
   })  : assert(title != null),
-        assert(content != null),
-        assert(actions != null),
-        assert(maxWidth != null);
+        assert(actions != null);
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +86,7 @@ class MetricsDialog extends StatelessWidget {
               ),
               Padding(
                 padding: contentPadding,
-                child: content,
+                child: content ?? Container(),
               ),
               Padding(
                 padding: actionsPadding,
