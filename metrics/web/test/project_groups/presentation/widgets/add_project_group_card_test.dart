@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/widgets/metrics_button_card.dart';
+import 'package:metrics/common/presentation/widgets/metrics_card.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
@@ -12,11 +12,11 @@ import '../../../test_utils/test_injection_container.dart';
 void main() {
   group("AddProjectGroupCard", () {
     testWidgets(
-      "displays a MetricsButtonCard",
+      "displays a MetricsCard",
       (tester) async {
         await tester.pumpWidget(const _AddProjectGroupCardTestbed());
 
-        expect(find.byType(MetricsButtonCard), findsOneWidget);
+        expect(find.byType(MetricsCard), findsOneWidget);
       },
     );
 
@@ -27,8 +27,8 @@ void main() {
         _AddProjectGroupCardTestbed(themeNotifier: themeNotifier),
       );
 
-      final darkMetricsButtonCard = tester.widget<MetricsButtonCard>(
-        find.byType(MetricsButtonCard),
+      final darkMetricsButtonCard = tester.widget<MetricsCard>(
+        find.byType(MetricsCard),
       );
 
       expect(darkMetricsButtonCard.backgroundColor, Colors.grey[900]);
@@ -36,8 +36,8 @@ void main() {
       themeNotifier.changeTheme();
       await tester.pump();
 
-      final lightMetricsButtonCard = tester.widget<MetricsButtonCard>(
-        find.byType(MetricsButtonCard),
+      final lightMetricsButtonCard = tester.widget<MetricsCard>(
+        find.byType(MetricsCard),
       );
 
       expect(lightMetricsButtonCard.backgroundColor, Colors.grey[200]);
