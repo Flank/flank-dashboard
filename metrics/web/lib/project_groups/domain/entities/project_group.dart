@@ -12,9 +12,9 @@ class ProjectGroup {
   /// A list of projects' identifiers, related to the group.
   final List<String> projectIds;
 
-  /// Creates the [ProjectGroup]
+  /// Creates the [ProjectGroup].
   ///
-  /// Throws an ArgumentError if the [name] or the [projectIds] is null.
+  /// Throws an ArgumentError if either the [name] or [projectIds] is `null`.
   ProjectGroup({
     this.id,
     @required this.name,
