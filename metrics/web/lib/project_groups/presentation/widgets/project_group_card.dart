@@ -70,10 +70,13 @@ class ProjectGroupCard extends StatelessWidget {
 
   /// Provides a project groups count for the given [projectGroupViewModel].
   String get _projectGroupsCount {
-    return projectGroupCardViewModel.projectsCount == 0
-        ? ProjectGroupsStrings.noProjects
-        : ProjectGroupsStrings.getProjectsCount(
-            projectGroupCardViewModel.projectsCount);
+    final projectsCount = projectGroupCardViewModel.projectsCount;
+
+    if (projectsCount == 0) {
+      return ProjectGroupsStrings.noProjects;
+    }
+
+    return ProjectGroupsStrings.getProjectsCount(projectsCount);
   }
 
   /// Shows a [ProjectGroupDialog] with an active project group.
