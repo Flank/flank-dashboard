@@ -15,7 +15,7 @@ class AddProjectGroupCard extends StatelessWidget {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     return InkWell(
-      onTap: () => _openProjectGroupDialog(context),
+      onTap: () => _showProjectGroupDialog(context),
       child: MetricsCard(
         backgroundColor:
             themeNotifier.isDark ? Colors.grey[900] : Colors.grey[200],
@@ -46,7 +46,7 @@ class AddProjectGroupCard extends StatelessWidget {
   }
 
   /// Shows a [ProjectGroupDialog] with an active project group.
-  Future<void> _openProjectGroupDialog(BuildContext context) async {
+  Future<void> _showProjectGroupDialog(BuildContext context) async {
     Provider.of<ProjectGroupsNotifier>(context, listen: false)
         .setActiveProjectGroup();
 

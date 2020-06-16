@@ -26,6 +26,7 @@ class ProjectGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    const padding = EdgeInsets.all(8.0);
 
     return MetricsTileCard(
       backgroundColor:
@@ -38,27 +39,19 @@ class ProjectGroupCard extends StatelessWidget {
         maxLines: 1,
         style: const TextStyle(fontSize: 24.0),
       ),
-      titlePadding: const EdgeInsets.all(8.0),
+      titlePadding: padding,
       subtitle: Text(_projectGroupsCount),
-      subtitlePadding: const EdgeInsets.all(8.0),
+      subtitlePadding: padding,
       actionsPadding: const EdgeInsets.only(top: 24.0),
       actions: <Widget>[
         FlatButton.icon(
-          onPressed: () {
-            Provider.of<ProjectGroupsNotifier>(context, listen: false)
-                .setActiveProjectGroup(
-              projectGroupCardViewModel.id,
-            );
-
-            showDialog(
-              context: context,
-              builder: (_) => ProjectGroupDialog(),
-            );
-          },
           icon: const Icon(Icons.edit),
           label: const Text(CommonStrings.edit),
+          onPressed: () => _showProjectGroupDialog(context),
         ),
         FlatButton.icon(
+          icon: const Icon(Icons.delete_outline),
+          label: const Text(CommonStrings.delete),
           onPressed: () {
             showDialog(
               context: context,
@@ -70,8 +63,6 @@ class ProjectGroupCard extends StatelessWidget {
               },
             );
           },
-          icon: const Icon(Icons.delete_outline),
-          label: const Text(CommonStrings.delete),
         ),
       ],
     );
@@ -83,5 +74,18 @@ class ProjectGroupCard extends StatelessWidget {
         ? ProjectGroupsStrings.noProjects
         : ProjectGroupsStrings.getProjectsCount(
             projectGroupCardViewModel.projectsCount);
+  }
+
+  /// Shows a [ProjectGroupDialog] with an active project group.
+  Future<void> _showProjectGroupDialog(BuildContext context) async {
+    Provider.of<ProjectGroupsNotifier>(context, listen: false)
+        .setActiveProjectGroup(
+      projectGroupCardViewModel.id,
+    );
+
+    await showDialog(
+      context: context,
+      builder: (_) => ProjectGroupDialog(),
+    );
   }
 }
