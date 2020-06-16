@@ -1,7 +1,6 @@
 import 'package:meta/meta.dart';
 
-/// Represents the data of the project that using in
-/// project group selector list tile.
+/// Represents the project to display within selection list.
 class ProjectSelectorViewModel {
   /// A unique identifier of the project.
   final String id;
