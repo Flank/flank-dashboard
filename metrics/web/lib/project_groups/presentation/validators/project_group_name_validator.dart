@@ -7,8 +7,8 @@ class ProjectGroupNameValidator {
 
   /// Validates the given [value] as a project group name.
   ///
-  /// Returns an error message if the [value] is not a valid project group name,
-  /// otherwise returns null.
+  /// Returns an error message if the given [value] is not a valid project group name.
+  /// Otherwise returns `null`.
   static String validate(String value) {
     ProjectGroupNameValidationErrorMessage errorMessage;
 
