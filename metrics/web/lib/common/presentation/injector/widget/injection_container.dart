@@ -90,15 +90,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
         ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
           create: (_) => ProjectsNotifier(_receiveProjectUpdates),
           update: (_, authNotifier, projectsNotifier) {
-            final isLoggedIn = authNotifier.isLoggedIn;
-
-            if (isLoggedIn != null) {
-              if(isLoggedIn) {
-                projectsNotifier.subscribeToProjects();
-              } else {
-                projectsNotifier.unsubscribeFromProjects();
-              }
-            }
+            _updateProjectsSubscription(authNotifier, projectsNotifier);
 
             return projectsNotifier;
           },
@@ -131,5 +123,21 @@ class _InjectionContainerState extends State<InjectionContainer> {
       ],
       child: widget.child,
     );
+  }
+
+  /// Update projects subscription, based on user logged in status.
+  void _updateProjectsSubscription(
+    AuthNotifier authNotifier,
+    ProjectsNotifier projectsNotifier,
+  ) {
+    final isLoggedIn = authNotifier.isLoggedIn;
+
+    if (isLoggedIn != null) {
+      if (isLoggedIn) {
+        projectsNotifier.subscribeToProjects();
+      } else {
+        projectsNotifier.unsubscribeFromProjects();
+      }
+    }
   }
 }
