@@ -85,6 +85,9 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
                   validator: ProjectGroupNameValidator.validate,
                   label: ProjectGroupsStrings.nameYourGroup,
                   controller: _groupNameController,
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 16.0),
@@ -149,7 +152,8 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Selector<ProjectGroupsNotifier, String>(
-                      selector: (_, state) => state.projectGroupSavingErrorMessage,
+                      selector: (_, state) =>
+                          state.projectGroupSavingErrorMessage,
                       builder: (_, firestoreWriteErrorMessage, __) {
                         if (firestoreWriteErrorMessage == null) {
                           return const Text('');

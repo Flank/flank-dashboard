@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Displays a clearable text form field widget.
+/// A [TextFormField] widget with an ability to clean its content.
 class ClearableTextFormField extends StatelessWidget {
   /// A text field label.
   final String label;
@@ -11,14 +11,17 @@ class ClearableTextFormField extends StatelessWidget {
   /// A text field form validator.
   final FormFieldValidator<String> validator;
 
-  /// Creates a widget that represents a specific version of a [TextFormField],
-  /// with an ability to clear the text.
+  /// The shape of the border to draw around the decoration's container.
+  final InputBorder border;
+
+  /// Creates a new instance of the [ClearableTextFormField].
   ///
   /// The [label] and the [controller] arguments must not be null.
   const ClearableTextFormField({
     @required this.label,
     @required this.controller,
     this.validator,
+    this.border,
   })  : assert(label != null),
         assert(controller != null);
 
@@ -39,13 +42,14 @@ class ClearableTextFormField extends StatelessWidget {
                 ? IconButton(
                     splashColor: Colors.transparent,
                     hoverColor: Colors.transparent,
-                    icon:const Icon(Icons.close, size: 18.0),
-                    onPressed: () => controller.clear(),
-                  )
+                    icon: const Icon(Icons.close, size: 18.0),
+                    onPressed: () {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => controller.clear(),
+                      );
+                    })
                 : null,
-            border: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
-            ),
+            border: border,
           ),
         )
       ],
