@@ -225,7 +225,7 @@ On this diagram, we can see that all widgets that use the other `metrics` widget
 
 ### Naming convention for a `view model`s.
 
-According to the (View model naming convention)[https://caliburnmicro.com/documentation/naming-conventions], we should name the view models as `entityName` + `widgetName` + `ViewModel`. For example, wee have an entity named `Project` and a widget `ProjectTile` that should display the project. In this case, we should name the `view model` as a `ProjectTileViewModel`. This approach allows us to make the code more readable and navigation more simple.
+According to the (View model naming convention)[https://caliburnmicro.com/documentation/naming-conventions], we should name the view models as `entityName` + `widgetName` + `ViewModel`. For example, we have an entity named `Project` and a widget `ProjectTile` that should display the project. In this case, we should name the `view model` as a `ProjectTileViewModel`. This approach allows us to make the code more readable and navigation more simple.
 
 ## Widget creation guidelines
 > Explain and diagram an algorithm for creating a new `widget`.
