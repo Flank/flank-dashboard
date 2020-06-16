@@ -4,6 +4,7 @@ import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/data/repositories/firestore_project_repository.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
@@ -52,8 +53,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
     final _metricsRepository = FirestoreMetricsRepository();
     final _userRepository = FirebaseUserRepository();
     final _projectGroupRepository = FirestoreProjectGroupsRepository();
+    final _projectRepository = FirestoreProjectRepository();
 
-    _receiveProjectUpdates = ReceiveProjectUpdates(_metricsRepository);
+    _receiveProjectUpdates = ReceiveProjectUpdates(_projectRepository);
     _receiveProjectMetricsUpdates =
         ReceiveProjectMetricsUpdates(_metricsRepository);
 

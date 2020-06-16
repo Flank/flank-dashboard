@@ -8,14 +8,6 @@ class FirestoreMetricsRepository implements MetricsRepository {
   final Firestore _firestore = Firestore.instance;
 
   @override
-  Stream<List<Project>> projectsStream() {
-    return _firestore.collection('projects').orderBy('name').snapshots().map(
-        (snapshot) => snapshot.documents
-            .map((doc) => ProjectData.fromJson(doc.data, doc.documentID))
-            .toList());
-  }
-
-  @override
   Stream<List<Build>> latestProjectBuildsStream(String projectId, int limit) {
     return _firestore
         .collection('build')

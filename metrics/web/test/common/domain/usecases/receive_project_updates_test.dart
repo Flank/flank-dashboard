@@ -1,4 +1,4 @@
-import 'package:metrics/dashboard/domain/repositories/metrics_repository.dart';
+import 'package:metrics/common/domain/repositories/project_repository.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -14,8 +14,8 @@ void main() {
       );
     });
 
-    test(".call() delegates call to MetricsRepository.projectsStream", () {
-      final repository = MetricsRepositoryMock();
+    test(".call() delegates call to ProjectRepository.projectsStream", () {
+      final repository = ProjectRepositoryMock();
       final receiveProjectUpdates = ReceiveProjectUpdates(repository);
 
       receiveProjectUpdates();
@@ -25,4 +25,4 @@ void main() {
   });
 }
 
-class MetricsRepositoryMock extends Mock implements MetricsRepository {}
+class ProjectRepositoryMock extends Mock implements ProjectRepository {}
