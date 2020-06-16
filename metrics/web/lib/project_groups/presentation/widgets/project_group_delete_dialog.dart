@@ -5,7 +5,7 @@ import 'package:metrics/project_groups/presentation/state/project_groups_notifie
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:provider/provider.dart';
 
-/// A dialog that using for deleting project group data.
+/// A project group delete confirmation dialog.
 class ProjectGroupDeleteDialog extends StatefulWidget {
   /// A project's group identifier.
   final String projectGroupId;
@@ -29,7 +29,7 @@ class ProjectGroupDeleteDialog extends StatefulWidget {
 }
 
 class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
-  /// Controls the loading state.
+   /// Indicates whether this widget is in the loading state or not.
   bool _isLoading = false;
 
   @override

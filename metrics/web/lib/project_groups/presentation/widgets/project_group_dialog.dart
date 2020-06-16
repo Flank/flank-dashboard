@@ -29,7 +29,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// The [ChangeNotifier] that holds the project groups state.
   ProjectGroupsNotifier _projectGroupsNotifier;
 
-  /// Controls the loading state.
+  /// Indicates whether this widget is in the loading state or not.
   bool _isLoading = false;
 
   @override
