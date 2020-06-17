@@ -31,13 +31,10 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'stable'
+          channel: 'dev'
+          flutter-version: '1.15.3'
 
       - uses: cedx/setup-dart@v2
-
-      - name: Install specific Flutter version
-        run: flutter version 1.15.3 -f && flutter doctor
-        working-directory: metrics/web/
 
       - name: Get dependencies
         run: flutter config --enable-web && flutter pub get
