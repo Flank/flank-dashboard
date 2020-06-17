@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
-import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -11,14 +11,13 @@ import 'package:provider/provider.dart';
 class AddProjectGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final widgetThemeData = MetricsTheme.of(context).inactiveWidgetTheme;
     const symmetricPadding = EdgeInsets.symmetric(vertical: 4.0);
-    final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     return InkWell(
       onTap: () => _showProjectGroupDialog(context),
       child: PaddedCard(
-        backgroundColor:
-            themeNotifier.isDark ? Colors.grey[900] : Colors.grey[200],
+        backgroundColor: widgetThemeData.backgroundColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[

@@ -61,9 +61,9 @@ class UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
 
         return InfoDialog(
           padding: const EdgeInsets.all(32.0),
-          title: Text(
+          title: const Text(
             ProjectGroupsStrings.editProjectGroup,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 32.0,
               fontWeight: FontWeight.bold,
             ),
