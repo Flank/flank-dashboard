@@ -1,0 +1,38 @@
+@startuml create_metrics_widget_activity_diagram
+(*) -> CoolWidget
+--> if Need to use base widgets? then
+--> [Yes] if Do they exist? then
+--> [Yes] Use the existing base widget
+--> ===STEP1===
+else
+--> [No] Try to create a new base widget to use
+--> ===STEP1===
+endif
+else 
+--> [No] ===STEP1===
+endif
+--> if Any child metrics widgets? then
+--> [Yes] Create Composite view model 
+--> ===STEP2===
+else
+--> [No] Create Plain view model 
+--> ===STEP2===
+endif
+--> Implement your widget
+--> if Is a common widget? then
+--> [Yes] Place it under the **common/presentation** folder
+--> Place the created view model under \n **common/presentation/view_models**
+--> ===STEP3===
+else
+--> [No] Place it under the **module_name/presentation/widgets** folder
+--> Place the created view model under \n **module_name/presentation/view_models**
+--> ===STEP3===
+endif
+--> Apply a theme data
+--> if Any constant strings? then
+--> [Yes] Extract strings to the **//ModuleName//Strings** class
+--> (*)
+else
+--> [No] (*)
+endif
+@enduml

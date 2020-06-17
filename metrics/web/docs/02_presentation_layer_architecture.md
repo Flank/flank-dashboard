@@ -59,30 +59,48 @@ A `state`, or a `presenter`, is the part of the presentation layer that is the i
 
 A `state` is responsible for holding the logic of the presentation layer - loading data, creating view models from entities, saving data to the persistent store. The `presenter` separates the logic from UI to make both more testable and structured.
 
+> Explain the principle of interactions between `state`s.
+
+To expose the data from one `state` (ChangeNotifier) to other `state`s, we need to follow the next steps: 
+
+1. Create a `model` for the data to be exposed.
+2. Create a `ChangeNotifierProxyProvider` in the `InjectionContainer` widget that connects these notifiers.
+3. Create a method in the consumer notifier that allows updating the data from outside.
+4. Connect these notifiers using the `ChangeNotifierProxyProvider`, created in the second step.
+
+### Model
+> Explain what the `model` of the module is.
+
+A `model` is a class that transfers the data across the presentation layer components. The most common use of the `model` is transferring the data between two different `state`s (`ChangeNotifier`s).
+
+The main difference between a `model` and a `view model` is that the latter is used only by the widgets. This means that if one `state` should expose some data to use in another `state`(s), then this data must be represented by `model`.
+
+The `model`s of the current module should be placed under the `module_name/presentation/models` package.
+
 ### UI elements
 
 There are three main types of the UI components in the Metrics Web Application: 
 1. `pages`
-2. `high-level widgets`
-3. `low-level widgets`
+2. `base widgets`
+3. `metrics widgets` 
 
 > Explain the difference between `page` and `widget`.
 
 1. Page
 
-A `page` is the widget that properly combines the high-level widgets. Represents the web page or screen of the application. These widgets lay under the `module_name/presentation/pages` folder. Each module should consist of at least one page.
+A `page` is the widget that properly combines the metrics widgets. Represents the web page or screen of the application. These widgets lay under the `module_name/presentation/pages` folder. Each module should consist of at least one `page`.
 
-> Explain the difference between `low-level` and `high-level` widgets.
+> Explain the difference between `base` and `metrics` widgets.
 
-2. Low-level widgets.
+2. Base widgets.
 
-`Low-level widgets` are highly-reusable widgets that should only present the given data. This type of widgets can contain only common presentation logic. For example, the logic of displaying the given points as a graph. `Low-level widgets` should not contain any project-specific functionality. The most common approach is using the `low-level widgets` to create `high-level widgets` that will properly configure them for different needs. 
+`Base widgets` are highly-reusable widgets that should only present the given data. This type of widgets can contain only common presentation logic. For example, the logic of displaying the given points as a graph. `Base widgets` should not contain any project-specific functionality. The most common approach is using the `base widgets` to create `metrics widgets` that will properly configure them for different needs. 
 
-3. High-level widgets.
+3. Metrics widgets.
 
-`High-level widgets` are specific to the Metrics Web Application widgets that use `MetricsTheme` for coloring and `view model` as input. Should use low-level widgets as much as possible. High-level widgets can obtain any other params like `ThemeStrategy` to make it more testable.
+`Metrics widgets` are specific to the Metrics Web Application widgets that use `MetricsTheme` for coloring and `view model` as input. Should use `base widgets` as much as possible. Metrics widgets can obtain any other params like `ThemeStrategy` to make it more testable.
 
-See [Widget structure organization](03_widget_structure_organization.md) document to get more information about `high-level` and `low-level` widgets.
+See [Widget structure organization](03_widget_structure_organization.md) document to get more information about `metrics` and `base` widgets.
 
 ### Strings
 
@@ -103,6 +121,7 @@ The package structure is also an important part of the Metrics Web Application p
 >    * data/...
 >    * domain/...
 >    * presentation/
+>       * models/
 >       * view_models/
 >       * state/
 >       * pages/
@@ -110,7 +129,7 @@ The package structure is also an important part of the Metrics Web Application p
 >       * widgets/
 >           * strategy/
 
-So, each module's presentation layer consists of the `view_model`, `state`, `pages`, `strings`, and `widgets` packages. The `widgets` package can be divided into several packages that will simplify the navigation if necessary. 
+So, each module's presentation layer consists of the `view_models`, `state`, `pages`, `strings`, and `widgets` packages. The `widgets` package can be divided into several packages that will simplify the navigation if necessary. Also, there could be a `models` package that will contain all the `model`s used in this module.
 
 # Dependencies
 > What is the project blocked on?
@@ -132,7 +151,7 @@ The presentation layer will be unit-tested and integration-tested using the core
 - Not document the presentation layer of the Metrics Web Application:
     - Cons: 
         - As the application grows, the future development of new modules and maintaining the old ones may be tricky without any document describing the presentation layer.
-        - With no written explanation in differences between top-level and low-level widgets in the context of the Metrics Web Application, it will be longer for the new team members to become productive.
+        - With no written explanation in differences between metrics and base widgets in the context of the Metrics Web Application, it will be longer for the new team members to become productive.
 
 # Results
 > What was the outcome of the project?

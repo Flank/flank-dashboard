@@ -7,6 +7,7 @@ Description of widget structure and organization in the Metrics Web Application.
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [Clean Architecture: A Craftsman's Guide to Software Structure and Design](https://www.amazon.com/Clean-Architecture-Craftsmans-Software-Structure/dp/0134494164)
+- [View model naming convention](https://caliburnmicro.com/documentation/naming-conventions)
 
 # Motivation
 > What problem is this project solving?
@@ -129,7 +130,7 @@ class StabilityViewModel extends PercentMetricViewModel {
 }
 ```
 
-So, to make the `view model`s in the Metrics Web Application well-structured and more scalable, we decided to use the combined approach. A Combined approach means that the main idea of using the `view model` is to create a [plain view model](#Plain-view-model) for high-level widgets that consists of low-level widgets or `Flutter` provided widgets and use the [Composite view model](#Composite-view-model) for widgets that consist of other high-level widgets.
+So, to make the `view model`s in the Metrics Web Application well-structured and more scalable, we decided to use the combined approach. A Combined approach means that the main idea of using the `view model` is to create a [plain view model](#Plain-view-model) for metrics widgets that consists of base widgets or `Flutter` provided widgets and use the [Composite view model](#Composite-view-model) for widgets that consist of other metrics widgets.
 
 <details>
   <summary>Pros & cons of described approaches</summary>
@@ -164,7 +165,7 @@ So, to make the `view model`s in the Metrics Web Application well-structured and
 
 Let's consider the concrete example of using the `plain view model` and the `composite view model`: 
 
-Assume we have a `ProjectTileViewModel` from the [previous section](#Composite-view-model) and we have a `ProjectTile` widget that consists of the `PerformanceGraph`, `BuildNumberMetric`, `Coverage`, and `Stability` widgets that are `high-level` widgets: 
+Assume we have a `ProjectTileViewModel` from the [previous section](#Composite-view-model) and we have a `ProjectTile` widget that consists of the `PerformanceGraph`, `BuildNumberMetric`, `Coverage`, and `Stability` widgets that are `metrics` widgets: 
 
 ```dart
 class ProjectTile extends StatelessWidget {
@@ -194,9 +195,9 @@ class ProjectTile extends StatelessWidget {
 }
 ```
 
-So, the `ProjectTileViewModel` is a composite view model that contains other view models for `high-level` widgets (see code sample in the [composite view model](#Composite-view-model) section). 
+So, the `ProjectTileViewModel` is a composite view model that contains other view models for `metrics` widgets (see code sample in the [composite view model](#Composite-view-model) section). 
 
-Let us take a more detailed look on one of `high-level` widgets, used in `ProjectTile`. For example, `Coverage` widget: 
+Let us take a more detailed look on one of `metrics` widgets, used in `ProjectTile`. For example, `Coverage` widget: 
 
 ```dart
 class Coverage extends StatelessWidget {
@@ -214,62 +215,84 @@ class Coverage extends StatelessWidget {
 }
 ```
 
-The `Coverage` is a `high-level` widget, as a `ProjectTile`, but it consists of the `low-level` widget `CirclePercentage` that accepts only `double` percent value and some other params like colors, styles, etc. So, the `view model` for this widget will be `plain`, because there is no need to use any other `view model`s in it (see [Composite view model](#Composite-view-model) section for concrete examples).
+The `Coverage` is a `metrics` widget, as a `ProjectTile`, but it consists of the `base` widget `CirclePercentage` that accepts only `double` percent value and some other params like colors, styles, etc. So, the `view model` for this widget will be `plain`, because there is no need to use any other `view model`s in it (see [Composite view model](#Composite-view-model) section for concrete examples).
 
 Let us consider the class diagram that will explain relationships between `widget`s and `view model`s on `ProjectTile` widget example:
 
 ![View model usage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/view_model_usage_class_diagram.puml)
 
-On this diagram, we can see that all widgets that use the other `high-level` widgets (widgets from `dashboard/presentation/widgets` package) use a composite view model. The rest of the `high-level` widgets use a plain view model.
+On this diagram, we can see that all widgets that use the other `metrics` widgets (widgets from `dashboard/presentation/widgets` package) use a composite view model. The rest of the `metrics` widgets use a plain view model.
+
+### The naming convention for `view model`s.
+
+`View model`s help the view to receive the required data to display, but these models themselves should state the view they are used in. Thus, one who looks at the `view model` should say "Oh, I know exactly where to use this". On the other hand, one who looks at the widget name should understand exactly what the `view model` is used for this widget without reading additional code documentation and examining the implementation. 
+
+The above points lead us to the naming convention for the `view model`s that makes the code more clear and readable and simplifies the navigation (for more details, consider the article in the [**View model naming convention**](https://caliburnmicro.com/documentation/naming-conventions)). To name the `view model` class we should use the following rule: 
+
+> `Entity Name` + `Widget Name` + `ViewModel`
+
+ - The `Entity Name` is the name of an `entity`, which data the `view model` provides. 
+ - The `Widget Name` is a short name of the `widget` that uses the `view model`. The _short name_ means the kind of UI element - say, `Card`, `Tile`, `Popup`, etc. 
+ - The `ViewModel` is a suffix that marks the model as a `view model`.
+
+Let's consider an example. Let there is an entity named `Project` with the project's data. This data should be displayed on the tile widget named `ProjectTile`. Hence, using the defined rule the `view model` for the `ProjectTile` widget is the following: 
+
+> `Project` + `Tile` + `ViewModel` = `ProjectTileViewModel`
 
 ## Widget creation guidelines
 > Explain and diagram an algorithm for creating a new `widget`.
 
-As mentioned in the [Presentation Layer Architecture document](02_presentation_layer_architecture), all widgets can be one of the two following types:
+As mentioned in the [Presentation Layer Architecture document](02_presentation_layer_architecture.md), all widgets can be one of the two following types:
 
-1. `Low-level widget` is the widget that is responsible for only displaying the given data. These widgets should be highly-configurable and usable out of the Metrics Web Application context. 
+1. `Base widget` is the widget that is responsible for only displaying the given data. These widgets should be highly-configurable and usable out of the Metrics Web Application context. The `base` widgets should be placed under the `base/presentation` package.
  
-2. `High-level widget` is the widget that is actually used in the Metrics Web Application context. It accepts the `view model` instance with data to display and displays the given data using `low-level widgets` and other `high-level widgets`.
+2. `Metrics widget` is the widget that is actually used in the Metrics Web Application context. It accepts the `view model` instance with data to display and displays the given data using `base widgets` and other `metrics widgets`. There are 2 types of the `metrics` widgets: 
+  - Common `metrics` widgets - the `metrics` widgets that can be used across the modules and should be placed in `common/presentation` package.
+  - Module-specific `metrics` widgets - the `metrics` widgets used only in one module. Should be placed under the `module_name/presentation` package.
 
 To make widget creation process clear we should describe it in details for all the widget types.
 
-### Low-level widget creation
+### Base widget creation
 
-To create a new low-level widget we should follow the next steps:
+To create a new base widget we should follow the next steps:
 
-1. Implement the low-level widget considering that this widget must satisfy the following criteria:  
+1. Implement the base widget considering that this widget must satisfy the following criteria:  
     - It should be highly configurable meaning that all the colors and styles can be configured from outside of this widget regardless of the default parameters used.
     - It should accept only Dart native data types like `string`s, `int`s, `bool`s, `Point`s, etc.
     - It should not apply any theme provided with the Metrics Web Application context.
-2. Place the new widget in the `common/presentation/` folder, so it can be used by any module of the Metrics Web Application. If there are a couple of similar common widgets, we can place them into a separate folder. For example, a `common/presentation/dialog` folder will contain all the common dialogs. If the `low-level` widget has no similar widgets and cannot be united with any other widgets into some group, we are placing these widgets into `common/presentation/widgets` folder.
+2. Place the new widget in the `base/presentation/` folder, so it can be used by any module of the Metrics Web Application. If there are a couple of similar common widgets, we can place them into a separate folder. For example, a `base/presentation/dialog` folder will contain all the common dialogs. If the `base` widget has no similar widgets and cannot be united with any other widgets into some group, we are placing these widgets into `base/presentation/widgets` folder.
 
-Generally speaking, the low-level widget should be implemented in the way it can be used outside of the Metrics Web Application. This allows creating high-reusable widgets not only within the Metrics Web Application scope but anywhere.
+Generally speaking, the `base` widget should be implemented in the way it can be used outside of the Metrics Web Application. This allows creating high-reusable widgets not only within the Metrics Web Application scope but anywhere.
 
-![Create Low-Level Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/create_low_level_widget_activity_diagram.puml)
+Notice, that the `base` widgets can contain only the logic that is closely related to the presentation-specific logic. It means that, for example, the `base` bar graph widget can contain the logic of displaying the points as a bar graph, but it should not contain any logic related to choosing how many bars it has to display.
 
-### High-level widget creation
+![Create Base Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/create_base_widget_activity_diagram.puml)
 
-To create a new high-level widget, we should follow the next steps: 
+### Metrics widget creation
 
-1. Create a view model for a new widget. If the widget uses other high-level widgets, we should create a [Composite view model](#Composite-view-model), otherwise, we should create a [Plain view model](#Plain-view-model).
+To create a new metrics widget, we should follow the next steps: 
 
-2. If we have to use any low-level widgets, we should check if there any already existing low-level widgets that could be used, otherwise we need to try to separate the common (low-level) part of this widget and create it, using the instructions in [Low-level widget creation](#Low-level-widget-creation) section.
+1. If we have to use any base widgets, we should check if there any already existing base widgets that could be used, otherwise we need to try to separate the common (base) part of this widget and create it, using the instructions in [Base widget creation](#Base-widget-creation) section.
 
-3. Implement your widget using the view model from the first step and low-level widgets from the previous step, if any.
+2. Create a view model for a new widget. If the widget uses other metrics widgets, we should create a [Composite view model](#Composite-view-model), otherwise, we should create a [Plain view model](#Plain-view-model). If we are creating the common widget, we should place the view model under the `common/presentation/view_models`. Otherwise, we should place the view model under the `module_name/presentation/view_models`.
 
-4. Once you've created a widget itself, its time to add some paints. To be able to change the application colors from one place, we've created the metrics theme - the single place you can configure the colors and appearance of the application. About theme approach and related guidelines see the [Metrics Theme guidelines](#Metrics-Theme-guidelines) section.
+3. Implement your widget using the view model from the previous step and base widgets from the first step, if any. If your new widget is a common `metrics` widget - place it under the `common/presentation/widgets` folder (or any specific folder like `common/presentation/graphs`), otherwise place it under the `module_name/presentation/widgets` directory.
 
-5. If the widget contains any constant strings like titles, descriptions, error messages, and so on, consider extracting them to a specialized class in the `module_name/presentation/strings` folder.
+4. Once you've created a widget itself, it's time to add some paints. To be able to change the application colors from one place, we've created the metrics theme - the single place you can configure the colors and appearance of the application. About theme approach and related guidelines see the [Metrics Theme guidelines](#Metrics-Theme-guidelines) section.
 
-The following diagram describes the process of creation of the high-level widget:
+5. If the widget contains any constant strings like titles, descriptions, error messages, and so on, consider extracting them to a specialized class under the `module_name/presentation/strings` folder, where `module_name` could be the `common` if the widget is a common one.
 
-![Create High-Level Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/create_high_level_widget_activity_diagram.puml)
+Notice, that the `metrics` widgets can contain the presentation-specific logic that belongs to the concrete implementation of the widget. For example, the `metrics` bar graph widget can decide how to display the concrete bar depending on the data it represents. However, the `metrics` bar graph cannot choose how many bars to display. Moreover, the `metrics` widget can control its appearance depending on the data given. Let's consider the situation when the `metrics` bar graph widget obtains the number of points that is less than the given number of points to display. Then the `metrics` bar graph widget can populate the lacking points with placeholder bars and display them.
+
+The following diagram describes the process of creation of the metrics widget:
+
+![Create Metrics Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/create_high_level_widget_activity_diagram.puml)
 
 ### Implementation guidelines
 
 The next question we should answer is: _"Should we create a separate widget for each UI component?"_.
 
-For example, we have one `low-level` widget that displays the circular percentage chart, and we have two metrics that should be displayed with this chart. The question is - should we create a separate widget for each of these metrics or we can create a common widget for them. 
+For example, we have one `base` widget that displays the circular percentage chart, and we have two metrics that should be displayed with this chart. The question is - should we create a separate widget for each of these metrics or we can create a common widget for them. 
 
 So, it seems to be better to create a separate widget for each view even if these widgets look identical currently. It will allow us to simply change one of them later and increase maintainability.
 
@@ -319,20 +342,20 @@ Let's consider the class diagram that represents structure of `MetricsThemeData`
 
 #### How to get the Metrics Theme
 
-Approach to applying the themes in the Metrics Web Application is to create separate theme data or a separate field in `MetricsThemeData` class with `MetricWidgetThemeData` type for each high-level widget. The low-level widgets should not apply any theme as they shouldn't be dependent on the Metrics Web Application context. If the low-level widget requires any default colors, we should set them in the constructor default params or create constants.
+Approach to applying the themes in the Metrics Web Application is to create separate theme data or a separate field in `MetricsThemeData` class with `MetricWidgetThemeData` type for each metrics widget. The base widgets should not apply any theme as they shouldn't be dependent on the Metrics Web Application context. If the base widget requires any default colors, we should set them in the constructor default params or create constants.
 
 ### Applying a Theme to a widget appearance
 > Explain the algorithm of applying the metrics theme to the widgets.
 
-The main concept of applying the themes in the Metrics Web Application is to create a separate theme data or a separate field in `MetricsThemeData` class with `MetricWidgetThemeData` type for each high-level widget. The low-level widgets should not apply any theme as they shouldn't be dependent of Metrics Web Application context. If the low-level widget requires any default colors, we should set them in the constructor default params or create some constants.
+The main concept of applying the themes in the Metrics Web Application is to create a separate theme data or a separate field in `MetricsThemeData` class with `MetricWidgetThemeData` type for each metrics widget. The base widgets should not apply any theme as they shouldn't be dependent of Metrics Web Application context. If the base widget requires any default colors, we should set them in the constructor default params or create some constants.
 
-So, the low-level widget should have the color params in the constructor, and the high-level widget that uses this low-level widget should apply the appropriate theme to it.
+So, the base widget should have the color params in the constructor, and the metrics widget that uses this base widget should apply the appropriate theme to it.
 
-If widgets require the custom theme (different from `MetricWidgetThemeData`, or any existing ones), we should create a new theme data (see [Adding a new Theme](#Adding_a_new_Theme)), specific for this widget. All the theme data classes should be stored in a `common/presentation/metrics_theme/model` folder. Let's consider the activity diagram that will explain the process of applying a theme data to a widget: 
+If widgets require the custom theme (different from `MetricWidgetThemeData`, or any existing ones), we should create a new theme data (see [Adding a new Theme](#Adding-a-new-Theme)), specific for this widget. All the theme data classes should be stored in a `common/presentation/metrics_theme/model` folder. Let's consider the activity diagram that will explain the process of applying a theme data to a widget: 
 
 ![Apply Widget Theme Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/apply_widget_theme_diagram.puml)
 
-### Adding a new Theme 
+### Adding a new Theme
 > Explain the algorithm of adding new theme components for new widgets.
 
 Before adding a new theme, you should keep in mind that there are several themes providing a common configuration of the application appearance. The `textTheme` and `metricsWidgetTheme` fields of the `MetricThemeData` provide all the common text styles and colors, respectively. So if the widget you've created can be styled using those common styles **do not** create a new theme. Consider creating a new theme data only if your widget appearance can't be styled with just common styles, but even in this case, try to use common styles to initialize parts of your custom theme data.

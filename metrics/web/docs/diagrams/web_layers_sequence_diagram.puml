@@ -39,7 +39,7 @@
     return entitiesList
     CoolNotifier -> CoolNotifier: map to view models
     activate CoolNotifier
-    return CoolViewModel list
+    return CoolTileViewModel list
     return coolModels
     return Shows Cool Models
 @enduml

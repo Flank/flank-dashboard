@@ -1,7 +1,7 @@
 @startuml widget_structure_class_diagram
 top to bottom direction
 
-package common.presentation.widgets {
+package base.presentation.graphs {
     class CoolGraph {
         coolPoints : List<Point>
         backgroundColor : Color
@@ -55,7 +55,7 @@ package cool_module.presentation {
     }
 }
 
-widgets ...> common.presentation.widgets : uses
+widgets ...> base.presentation.graphs : uses
 widgets .up.> state : uses
 
 CoolNotifier o.down. AwesomeViewModel : provides

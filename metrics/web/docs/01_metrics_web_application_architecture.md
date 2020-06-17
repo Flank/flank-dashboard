@@ -197,11 +197,29 @@ Unlike the usual module structure, the `common` module structure has a bit diffe
 >      * injector/
 >      * widgets/
 
+Note that the `common/presentation` package does **NOT** contain the `base` widgets. All the widgets within the `common/presentation` are considered to be `metrics` that are used by the multiple modules of the Metrics Web Application. For example, the `MetricsThemeBuilder`, `InjectionContainer`, etc.
+
+## The `base` package structure
+
+Similar to the `common` package, we have the `base` package that contains all the classes that does not have any project-specific dependencies and can be easily reused in any other project. The `base` package contains all `base` widgets and generic interfaces. The `base` package structure should look like this (let's call it a `base_unit`): 
+
+> * base/
+>    * `data_layer`
+>    * `domain_layer`
+>    * presentation/
+>      * graphs/
+>      * widgets/
+
+The `domain` and the `data` layers of this module will be the same as in other packages, but the `presentation` layer will look a bit different. It will contain any packages with the widgets groups like `graphs` and the `widgets` package that contains all widgets that cannot be grouped for some reason.
+
+Please note, that the `base` module should contain only general classes that does **NOT** related to the Metrics Web Application at all.
+
 ## The Metrics Web Application package structure 
 
 So, to sum up, let's consider the Metrics Web Application package structure: 
 
 > * lib/
+>   * `base_unit`
 >   * `common_unit`
 >   * dashboard/
 >     * `data_layer`
