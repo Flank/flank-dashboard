@@ -223,9 +223,21 @@ Let us consider the class diagram that will explain relationships between `widge
 
 On this diagram, we can see that all widgets that use the other `metrics` widgets (widgets from `dashboard/presentation/widgets` package) use a composite view model. The rest of the `metrics` widgets use a plain view model.
 
-### Naming convention for a `view model`s.
+### The naming convention for `view model`s.
 
-According to the (View model naming convention)[https://caliburnmicro.com/documentation/naming-conventions], we should name the view models as `entityName` + `widgetName` + `ViewModel`. For example, we have an entity named `Project` and a widget `ProjectTile` that should display the project. In this case, we should name the `view model` as a `ProjectTileViewModel`. This approach allows us to make the code more readable and navigation more simple.
+`View model`s help the view to receive the required data to display, but these models themselves should state the view they are used in. Thus, one who looks at the `view model` should say "Oh, I know exactly where to use this". On the other hand, one who looks at the widget name should understand exactly what the `view model` is used for this widget without reading additional code documentation and examining the implementation. 
+
+The above points lead us to the naming convention for the `view model`s that makes the code more clear and readable and simplifies the navigation (for more details, consider the article in the [**View model naming convention**](https://caliburnmicro.com/documentation/naming-conventions)). To name the `view model` class we should use the following rule: 
+
+> `Entity Name` + `Widget Name` + `ViewModel`
+
+ - The `Entity Name` is the name of an `entity`, which data the `view model` provides. 
+ - The `Widget Name` is a short name of the `widget` that uses the `view model`. The _short name_ means the kind of UI element - say, `Card`, `Tile`, `Popup`, etc. 
+ - The `ViewModel` is a suffix that marks the model as a `view model`.
+
+Let's consider an example. Let there is an entity named `Project` with the project's data. This data should be displayed on the tile widget named `ProjectTile`. Hence, using the defined rule the `view model` for the `ProjectTile` widget is the following: 
+
+> `Project` + `Tile` + `ViewModel` = `ProjectTileViewModel`
 
 ## Widget creation guidelines
 > Explain and diagram an algorithm for creating a new `widget`.
