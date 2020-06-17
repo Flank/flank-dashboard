@@ -53,8 +53,8 @@ jobs:
         working-directory: metrics/web/
 
       - name: Upload log artifacts
-          if: ${{ always() }}
-          uses: actions/upload-artifact@v1
-          with:
-            name: logs
-            path: metrics/web/build/flutter_logs.log
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v1
+        with:
+          name: logs
+          path: metrics/web/build/flutter_logs.log
