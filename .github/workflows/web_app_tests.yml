@@ -58,8 +58,10 @@ jobs:
 
       - name: Build release app
         run: flutter clean && flutter build web --release
+        working-directory: metrics/web/
 
       - name: Deploy to Firebase
+        working-directory: metrics/web/
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
