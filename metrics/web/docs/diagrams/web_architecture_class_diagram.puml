@@ -52,7 +52,7 @@ package domain {
 
 package presentation {
     package view_models {
-        class CoolViewModel {
+        class CoolTileViewModel {
             coolName : String
         }
     }
@@ -65,10 +65,10 @@ package presentation {
 
     package state {
         class CoolNotifier {
-            coolModels : List<CoolViewModel>
+            coolModels : List<CoolTileViewModel>
 
             loadCoolModels() : void
-            updateCoolModel(CoolViewModel) : void
+            updateCoolModel(CoolTileViewModel) : void
         }
     }
 
@@ -102,12 +102,12 @@ UpdateCoolEntityUseCase ..> CoolParameters : uses
 
 CoolNotifier *.. UpdateCoolEntityUseCase
 CoolNotifier *.. LoadCoolEntitiesUseCase
-CoolNotifier ..> CoolViewModel : provides
+CoolNotifier ..> CoolTileViewModel : provides
 
 CoolPage ..> CoolNotifier : uses
 CoolPage ..> CoolTile : uses
 CoolPage ..> CoolTable : uses
-CoolTile ..> CoolViewModel : uses
+CoolTile ..> CoolTileViewModel : uses
 
 pages .right.> strings : uses
 widgets .up.> strings : uses

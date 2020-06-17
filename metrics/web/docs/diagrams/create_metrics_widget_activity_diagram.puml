@@ -24,7 +24,7 @@ endif
 --> Place the created view model under \n **common/presentation/view_models**
 --> ===STEP3===
 else
---> [No] Place it under the **module_name/presentation/widget** folder
+--> [No] Place it under the **module_name/presentation/widgets** folder
 --> Place the created view model under \n **module_name/presentation/view_models**
 --> ===STEP3===
 endif
