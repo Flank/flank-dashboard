@@ -36,7 +36,7 @@ jobs:
       - uses: cedx/setup-dart@v2
 
       - name: Install specific Flutter version
-        run: flutter version 1.15.3 y && flutter doctor
+        run: flutter version 1.15.3 -f && flutter doctor
         working-directory: metrics/web/
 
       - name: Get dependencies
