@@ -6,7 +6,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_metric_v
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 
-/// [BarGraph] that represents the build result metric.
+/// A [BarGraph] that displays the build result metric.
 ///
 /// Applies the color theme from the [MetricsThemeData.buildResultTheme].
 class BuildResultBarGraph extends StatefulWidget {
@@ -95,7 +95,8 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
     );
   }
 
-  /// Calculates [_missingBarsCount] and trims the data to match the numberOfBars.
+  /// Calculates [_missingBarsCount] and trims the data to match
+  /// the given [BuildResultMetricViewModel.numberOfBuildsToDisplay].
   void _calculateBarData() {
     final numberOfBars = widget.buildResultMetric.numberOfBuildsToDisplay;
     _barsData = widget.buildResultMetric.buildResults;

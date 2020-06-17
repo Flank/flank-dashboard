@@ -7,7 +7,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_view_mod
 import 'package:metrics_core/metrics_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// A single bar for a [BarGraph] widget that represents the
+/// A single bar for a [BarGraph] widget that displays the
 /// result of a [BuildResultViewModel] instance.
 ///
 /// Displays the [PlaceholderBar] if either [buildResult] or
@@ -20,9 +20,6 @@ class BuildResultBar extends StatelessWidget {
   final BuildResultViewModel buildResult;
 
   /// Creates the [BuildResultBar] with the given [buildResult].
-  ///
-  /// If either [buildResult] or [BuildResultViewModel.buildStatus] is `null`,
-  /// displays the [PlaceholderBar].
   const BuildResultBar({
     Key key,
     this.buildResult,
@@ -71,7 +68,7 @@ class BuildResultBar extends StatelessWidget {
     }
   }
 
-  /// Opens the [BuildResultViewModel] url.
+  /// Opens the [BuildResultViewModel.url].
   void _onBarTap() {
     if (buildResult.url == null) return;
     launch(buildResult.url);

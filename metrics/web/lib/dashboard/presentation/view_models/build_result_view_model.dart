@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// Represents the data of the bar to display in [BarGraph].
+/// A view model that represents the data of the bar to display in [BarGraph].
 class BuildResultViewModel extends Equatable {
   /// The abstract value of the build.
   /// 

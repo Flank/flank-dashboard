@@ -7,7 +7,7 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("BarGraph", () {
     testWidgets(
-      "can't be created without bar builder",
+      "can't be created with null bar builder",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _BarGraphTestbed(barBuilder: null));
 

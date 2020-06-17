@@ -2,9 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 
-/// A view model represents the build result metric.
+/// A view model that represents the build result metric.
 class BuildResultMetricViewModel extends Equatable {
-  /// A list of build result view models.
+  /// A list of [BuildResultViewModel]s.
   final List<BuildResultViewModel> buildResults;
 
   /// A number of [buildResults] elements to display.

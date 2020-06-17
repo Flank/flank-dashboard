@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 
-/// Represents the data of the performance metric to display.
+/// A view model that represents the data of the performance metric to display.
 class PerformanceMetricViewModel extends Equatable {
   /// A list of points representing the performance of the project builds.
   final List<Point<int>> performance;
