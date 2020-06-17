@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:metrics/common/domain/repositories/project_repository.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// An implementation [ProjectRepository] for [Firestore].
+/// An implementation of the [ProjectRepository] for [Firestore].
 class FirestoreProjectRepository implements ProjectRepository {
   final Firestore _firestore = Firestore.instance;
 

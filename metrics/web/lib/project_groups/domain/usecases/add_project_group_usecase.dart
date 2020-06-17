@@ -5,14 +5,15 @@ import 'package:metrics/project_groups/domain/usecases/parameters/add_project_gr
 /// A [UseCase] that provides an ability to add a new project group.
 class AddProjectGroupUseCase
     implements UseCase<Future<void>, AddProjectGroupParam> {
-  /// A repository, that gives an ability to update a project group.
+  /// A repository that gives an ability to update a project group.
   final ProjectGroupRepository _repository;
 
-  /// Creates the [AddProjectGroupUseCase] use case with the given [ProjectGroupRepository].
+  /// Creates the [AddProjectGroupUseCase] use case
+  /// with the given [ProjectGroupRepository].
   ///
-  /// Throws an ArgumentError if the [ProjectGroupRepository] is `null`.
+  /// Throws an [ArgumentError] if the [ProjectGroupRepository] is `null`.
   AddProjectGroupUseCase(this._repository) {
-    ArgumentError.checkNotNull(_repository, '_repository');
+    ArgumentError.checkNotNull(_repository, 'repository');
   }
 
   @override

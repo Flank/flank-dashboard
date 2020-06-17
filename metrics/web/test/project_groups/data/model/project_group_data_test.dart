@@ -9,7 +9,7 @@ void main() {
 
     const json = {'name': name, 'projectIds': projectIds};
 
-    test(".fromJson() return null if the given json is null", () {
+    test(".fromJson() returns null if the given json is null", () {
       final projectGroup = ProjectGroupData.fromJson(null, id);
 
       expect(projectGroup, isNull);

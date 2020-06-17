@@ -25,8 +25,7 @@ void main() {
     test(
       ".validate() returns null if the given email is valid",
       () {
-        final validationResult =
-            EmailValidator.validate('email@mail.mail');
+        final validationResult = EmailValidator.validate('email@mail.mail');
 
         expect(validationResult, isNull);
       },

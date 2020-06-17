@@ -7,7 +7,7 @@ import '../../../test_utils/project_group_repository_mock.dart';
 
 void main() {
   group("DeleteProjectGroupUseCase", () {
-    test("constructs an instance on a valid input", () {
+    test("successfully creates an instance on a valid input", () {
       final repository = ProjectGroupRepositoryMock();
 
       expect(
@@ -24,7 +24,7 @@ void main() {
     });
 
     test(
-      ".call() delegates deleting to the ProjectGroupRepository.deleteProjectGroup() method",
+      ".call() delegates deleting to the ProjectGroupRepository.deleteProjectGroup()",
       () async {
         final repository = ProjectGroupRepositoryMock();
         final deleteProjectGroupUseCase = DeleteProjectGroupUseCase(repository);

@@ -5,12 +5,13 @@ import 'package:metrics/project_groups/domain/usecases/parameters/update_project
 /// A [UseCase] that provides an ability to update a project group.
 class UpdateProjectGroupUseCase
     implements UseCase<Future<void>, UpdateProjectGroupParam> {
-  /// A repository, that gives an ability to update a project group.
+  /// A repository that gives an ability to update a project group.
   final ProjectGroupRepository _repository;
 
-  /// Creates the [UpdateProjectGroupUseCase] use case with the given [ProjectGroupRepository].
+  /// Creates the [UpdateProjectGroupUseCase] use case
+  /// with the given [ProjectGroupRepository].
   ///
-  /// Throws an ArgumentError if the [ProjectGroupRepository] is `null`.
+  /// Throws an [ArgumentError] if the [ProjectGroupRepository] is `null`.
   UpdateProjectGroupUseCase(this._repository) {
     ArgumentError.checkNotNull(_repository, '_repository');
   }

@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("ProjectGroupDeleteParam", () {
-    test("constructs an instance on a valid input", () {
+    test("successfully creates an instance on a valid input", () {
       expect(
         () => DeleteProjectGroupParam(projectGroupId: 'id'),
         returnsNormally,

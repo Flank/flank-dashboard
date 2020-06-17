@@ -7,7 +7,7 @@ import '../../../test_utils/project_group_repository_mock.dart';
 
 void main() {
   group("AddProjectGroupUseCase", () {
-    test("constructs an instance on a valid input", () {
+    test("successfully creates an instance on a valid input", () {
       final repository = ProjectGroupRepositoryMock();
 
       expect(
@@ -24,7 +24,7 @@ void main() {
     });
 
     test(
-      ".call() delegates adding to the ProjectGroupRepository.addProjectGroup() method",
+      ".call() delegates adding to the ProjectGroupRepository.addProjectGroup()",
       () async {
         final repository = ProjectGroupRepositoryMock();
         final addProjectGroupUseCase = AddProjectGroupUseCase(repository);

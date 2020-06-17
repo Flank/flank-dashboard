@@ -7,13 +7,12 @@ import '../../../test_utils/project_group_repository_mock.dart';
 void main() {
   group("ReceiveProjectGroupUpdates", () {
     test("throws an ArgumentError when the given repository is null", () {
-      expect(
-        () => ReceiveProjectGroupUpdates(null),
-        throwsArgumentError
-      );
+      expect(() => ReceiveProjectGroupUpdates(null), throwsArgumentError);
     });
 
-    test(".call() delegates call to ProjectGroupRepository.projectsStream", () {
+    test(
+        ".call() delegates call to ProjectGroupRepository.projectGroupsStream()",
+        () {
       final repository = ProjectGroupRepositoryMock();
       final receiveProjectGroupUpdates = ReceiveProjectGroupUpdates(repository);
 

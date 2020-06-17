@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/padded_card_tile.dart';
+import 'package:metrics/base/presentation/widgets/padded_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 /// A widget that represent [ProjectGroupCardViewModel].
 class ProjectGroupCard extends StatelessWidget {
-  /// Represents a data of a project that using in the [MetricsTileCard].
+  /// A project group card viewModel with project group data to display.
   final ProjectGroupCardViewModel projectGroupCardViewModel;
 
   /// Creates the [ProjectGroupCard] with the given [projectGroupCardViewModel].
@@ -28,42 +28,45 @@ class ProjectGroupCard extends StatelessWidget {
     final widgetThemeData = MetricsTheme.of(context).inactiveWidgetTheme;
     const padding = EdgeInsets.all(8.0);
 
-    return PaddedCardTile(
-      backgroundColor: widgetThemeData.backgroundColor,
+    return PaddedCard(
       padding: const EdgeInsets.all(16.0),
-      title: Text(
-        projectGroupCardViewModel.name,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-        maxLines: 1,
-        style: const TextStyle(fontSize: 24.0),
+      backgroundColor: widgetThemeData.backgroundColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: padding,
+            child: Text(
+              projectGroupCardViewModel.name,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+              maxLines: 1,
+              style: const TextStyle(fontSize: 24.0),
+            ),
+          ),
+          Padding(
+            padding: padding,
+            child: Text(_projectGroupsCount),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 24.0),
+            child: Row(
+              children: <Widget>[
+                FlatButton.icon(
+                  icon: const Icon(Icons.edit),
+                  label: const Text(CommonStrings.edit),
+                  onPressed: () => _showProjectGroupDialog(context),
+                ),
+                FlatButton.icon(
+                  icon: const Icon(Icons.delete_outline),
+                  label: const Text(CommonStrings.delete),
+                  onPressed: () => _showProjectGroupDeleteDialog(context),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      titlePadding: padding,
-      subtitle: Text(_projectGroupsCount),
-      subtitlePadding: padding,
-      actionsPadding: const EdgeInsets.only(top: 24.0),
-      actions: <Widget>[
-        FlatButton.icon(
-          icon: const Icon(Icons.edit),
-          label: const Text(CommonStrings.edit),
-          onPressed: () => _showProjectGroupDialog(context),
-        ),
-        FlatButton.icon(
-          icon: const Icon(Icons.delete_outline),
-          label: const Text(CommonStrings.delete),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return ProjectGroupDeleteDialog(
-                  projectGroupId: projectGroupCardViewModel.id,
-                  projectGroupName: projectGroupCardViewModel.name,
-                );
-              },
-            );
-          },
-        ),
-      ],
     );
   }
 
@@ -78,14 +81,27 @@ class ProjectGroupCard extends StatelessWidget {
     return ProjectGroupsStrings.getProjectsCount(projectsCount);
   }
 
-  /// Shows a [ProjectGroupDialog] with an active project group.
-  Future<void> _showProjectGroupDialog(BuildContext context) async {
+  /// Shows a [ProjectGroupDeleteDialog] with an active project group.
+  void _showProjectGroupDeleteDialog(BuildContext context) {
     Provider.of<ProjectGroupsNotifier>(context, listen: false)
-        .setActiveProjectGroup(
+        .setActiveProjectGroupDeleteDialogViewModel(
       projectGroupCardViewModel.id,
     );
 
-    await showDialog(
+    showDialog(
+      context: context,
+      builder: (_) => ProjectGroupDeleteDialog(),
+    );
+  }
+
+  /// Shows a [UpdateProjectGroupDialog] with an active project group.
+  void _showProjectGroupDialog(BuildContext context) {
+    Provider.of<ProjectGroupsNotifier>(context, listen: false)
+        .setActiveProjectGroupDialogViewModel(
+      projectGroupCardViewModel.id,
+    );
+
+    showDialog(
       context: context,
       builder: (_) => UpdateProjectGroupDialog(),
     );

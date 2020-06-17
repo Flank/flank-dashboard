@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("ProjectGroupAddParam", () {
-    test("constructs an instance on a valid input", () {
+    test("successfully creates an instance on a valid input", () {
       expect(
         () => AddProjectGroupParam(
           projectGroupName: 'name',

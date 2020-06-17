@@ -2,14 +2,15 @@ import 'package:metrics/project_groups/domain/value_objects/exceptions/project_g
 import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_name_validation_exception.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [ValueObject] that represents a project group name.
+/// A [ValueObject] for a project group name.
 class ProjectGroupName extends ValueObject<String> {
   @override
   final String value;
 
   /// Creates the [ProjectGroupName] with the given [value].
   ///
-  /// If [value] is either `null` or empty, throws a [ProjectGroupNameValidationException].
+  /// If the [value] is either `null` or empty, throws
+  /// a [ProjectGroupNameValidationException].
   ProjectGroupName(this.value) {
     if (value == null || value.trim().isEmpty) {
       throw ProjectGroupNameValidationException(

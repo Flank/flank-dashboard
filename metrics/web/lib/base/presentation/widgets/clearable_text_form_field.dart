@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A [TextFormField] widget with an ability to clean its content.
-class ClearableTextFormField extends StatelessWidget {
+class ClearableTextFormField extends StatefulWidget {
   /// A text field label.
   final String label;
 
@@ -26,25 +26,45 @@ class ClearableTextFormField extends StatelessWidget {
         assert(controller != null);
 
   @override
+  _ClearableTextFormFieldState createState() => _ClearableTextFormFieldState();
+}
+
+class _ClearableTextFormFieldState extends State<ClearableTextFormField> {
+  /// Indicates whether this widget is ready for clearing.
+  bool _isClearable;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _isClearable = widget.controller.text.isNotEmpty;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      validator: validator,
+      controller: widget.controller,
+      validator: widget.validator,
+      onChanged: _checkClearable,
       decoration: InputDecoration(
-        labelText: label,
-        suffixIcon: controller.text.isNotEmpty
+        labelText: widget.label,
+        suffixIcon: _isClearable
             ? IconButton(
                 splashColor: Colors.transparent,
                 hoverColor: Colors.transparent,
                 icon: const Icon(Icons.close, size: 18.0),
-                onPressed: () {
-                  WidgetsBinding.instance.addPostFrameCallback(
-                    (_) => controller.clear(),
-                  );
-                })
+                onPressed: widget.controller.clear,
+              )
             : null,
-        border: border,
+        border: widget.border,
       ),
     );
+  }
+
+  /// Checks whether this widget is ready for clearing.
+  void _checkClearable(String value) {
+    setState(() {
+      _isClearable = value != null && value.isNotEmpty;
+    });
   }
 }

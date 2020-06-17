@@ -4,7 +4,6 @@ import 'package:metrics/project_groups/presentation/models/project_group_validat
 
 /// A class for validating a project group name.
 class ProjectGroupNameValidator {
-
   /// Validates the given [value] as a project group name.
   ///
   /// Returns an error message if the given [value] is not a valid project group name.

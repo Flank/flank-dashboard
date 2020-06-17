@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-/// Represents the project group to display.
+/// A class that represents the project group to display.
 class ProjectGroupCardViewModel {
   /// A unique identifier of the project.
   final String id;

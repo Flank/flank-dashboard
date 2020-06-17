@@ -6,8 +6,7 @@ import 'package:metrics/project_groups/presentation/strings/project_groups_strin
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
-/// An [AddProjectGroupCard] widget that represents a metrics card with an ability
-/// to control touch events.
+/// An [AddProjectGroupCard] widget that displays a button card.
 class AddProjectGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -41,12 +40,12 @@ class AddProjectGroupCard extends StatelessWidget {
     );
   }
 
-  /// Shows a [ProjectGroupDialog] with an active project group.
-  Future<void> _showProjectGroupDialog(BuildContext context) async {
+  /// Shows a [AddProjectGroupDialog] with an active project group.
+  void _showProjectGroupDialog(BuildContext context) {
     Provider.of<ProjectGroupsNotifier>(context, listen: false)
-        .setActiveProjectGroup();
+        .setActiveProjectGroupDialogViewModel();
 
-    await showDialog(
+    showDialog(
       context: context,
       child: AddProjectGroupDialog(),
     );

@@ -7,7 +7,7 @@ void main() {
     const name = 'name';
     const List<String> projectIds = [];
 
-    test("returns normally when created with not null required parameters", () {
+    test("successfully creates with the given required parameters", () {
       expect(
         () => ProjectGroup(id: id, name: name, projectIds: projectIds),
         returnsNormally,

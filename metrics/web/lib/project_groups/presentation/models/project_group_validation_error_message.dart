@@ -7,10 +7,6 @@ class ProjectGroupNameValidationErrorMessage {
   /// Represents error codes of a project group name validation.
   final ProjectGroupNameValidationErrorCode _code;
 
-  /// Creates the [ProjectGroupNameValidationErrorMessage] with
-  /// the given [ProjectGroupNameValidationErrorCode].
-  const ProjectGroupNameValidationErrorMessage(this._code);
-
   /// Provides the project group name validation error message based
   /// on the [ProjectGroupNameValidationErrorCode].
   String get message {
@@ -21,4 +17,8 @@ class ProjectGroupNameValidationErrorMessage {
         return null;
     }
   }
+
+  /// Creates the [ProjectGroupNameValidationErrorMessage] with
+  /// the given [ProjectGroupNameValidationErrorCode].
+  const ProjectGroupNameValidationErrorMessage(this._code);
 }

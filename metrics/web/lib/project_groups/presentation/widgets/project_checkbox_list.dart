@@ -3,11 +3,12 @@ import 'package:metrics/base/presentation/widgets/text_placeholder.dart';
 import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_selection_list_tile.dart';
+import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list_tile.dart';
 import 'package:provider/provider.dart';
 
-/// A widget that displays the list of [ProjectSelectionListTile] for project selection.
-class ProjectSelectionList extends StatelessWidget {
+/// The widget that displays a list of [ProjectCheckboxListTile]
+/// for project selection.
+class ProjectCheckboxList extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {
     return Consumer<ProjectGroupsNotifier>(
@@ -18,26 +19,26 @@ class ProjectSelectionList extends StatelessWidget {
           );
         }
 
-        final projectSelectorViewModels =
-            projectGroupsNotifier.projectSelectorViewModels;
+        final projectCheckboxViewModels =
+            projectGroupsNotifier.projectCheckboxViewModels;
 
-        if (projectSelectorViewModels == null) {
+        if (projectCheckboxViewModels == null) {
           return const LoadingPlaceholder();
         }
 
-        if (projectSelectorViewModels.isEmpty) {
+        if (projectCheckboxViewModels.isEmpty) {
           return const TextPlaceholder(
             text: DashboardStrings.noConfiguredProjects,
           );
         }
 
         return ListView.builder(
-          itemCount: projectSelectorViewModels.length,
+          itemCount: projectCheckboxViewModels.length,
           itemBuilder: (context, index) {
-            final projectSelectorViewModel = projectSelectorViewModels[index];
+            final projectCheckboxViewModel = projectCheckboxViewModels[index];
 
-            return ProjectSelectionListTile(
-              projectSelectorViewModel: projectSelectorViewModel,
+            return ProjectCheckboxListTile(
+              projectCheckboxViewModel: projectCheckboxViewModel,
             );
           },
         );

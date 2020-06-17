@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
 
-/// Displays a padded card widget.
+/// The widget that displays a card with the padding.
 class PaddedCard extends StatelessWidget {
-  /// An elevation of the [PaddedCard].
-  ///
-  /// Has a default value of [0.0].
+  /// An elevation of this card.
   final double elevation;
 
-  /// A background color of the [PaddedCard].
+  /// A background color of this card.
   final Color backgroundColor;
 
-  /// An empty space that surrounds the [PaddedCard].
-  ///
-  /// Has a default value of [EdgeInsets.zero].
+  /// An empty space that surrounds this card.
   final EdgeInsetsGeometry margin;
 
-  /// An empty space that surrounds the [child].
-  ///
-  /// Has a default value of [EdgeInsets.zero].
-  final EdgeInsetsGeometry padding;
-
-  /// A widget below this widget in the tree.
+  /// A widget below this card in the tree.
   final Widget child;
 
-  /// Creates a widget that represents a specific version of a [Card].
+  /// An empty space that surrounds the [child].
+  final EdgeInsetsGeometry padding;
+
+  /// Creates a [PaddedCard].
+  ///
+  /// The [margin] and the [padding] default value is [EdgeInsets.zero].
+  /// The [elevation] default value is 0.0.
   ///
   /// The [child] and the [backgroundColor] arguments must not be null.
   const PaddedCard({

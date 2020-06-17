@@ -14,7 +14,7 @@ void main() {
       );
     });
 
-    test(".call() delegates call to ProjectRepository.projectsStream", () {
+    test(".call() delegates call to ProjectRepository.projectsStream()", () {
       final repository = ProjectRepositoryMock();
       final receiveProjectUpdates = ReceiveProjectUpdates(repository);
 

@@ -1,54 +1,50 @@
 import 'package:flutter/material.dart';
 
-/// The widget that represents a specific version of [Dialog].
+/// The widget that displays a specific version of the [Dialog].
 class InfoDialog extends StatelessWidget {
-  /// A background color of the dialog.
+  /// A background color of this dialog.
   final Color backgroundColor;
 
   /// An empty space between the main content and dialog's edges.
-  ///
-  /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry padding;
 
-  /// A max width of the dialog.
+  /// A max width of this dialog.
   final double maxWidth;
 
-  /// A text title of the dialog.
+  /// A text title of this dialog.
   final Widget title;
 
-  /// An empty space surrounds the [title].
-  ///
-  /// Has a default value of [EdgeInsets.zero].
+  /// An empty space that surrounds the [title].
   final EdgeInsetsGeometry titlePadding;
 
-  /// A content of the dialog.
+  /// A content of this dialog.
   final Widget content;
 
-  /// An empty space surrounds the [content].
-  ///
-  /// Has a default value of [EdgeInsets.zero].
+  /// An empty space that surrounds the [content].
   final EdgeInsetsGeometry contentPadding;
 
-  /// An action bar at the bottom of the dialog.
+  /// An action bar at the bottom of this dialog.
   final List<Widget> actions;
 
-  /// An empty space surrounds the [actions].
-  ///
-  /// Has a default value of [EdgeInsets.zero].
+  /// An empty space that surrounds the [actions].
   final EdgeInsetsGeometry actionsPadding;
 
   /// A horizontal alignment of the [actions].
-  ///
-  /// Has a default value of [MainAxisAlignment.start].
   final MainAxisAlignment actionsAlignment;
 
-  /// Creates a [InfoDialog].
+  /// Creates an [InfoDialog].
+  ///
+  /// The [padding], the [titlePadding], the [contentPadding]
+  /// and the [actionsPadding] default value is [EdgeInsets.zero].
+  /// The [actionsAlignment] default value is [MainAxisAlignment.start].
+  /// The [maxWidth] default value is 500.0.
   ///
   /// [title], [content], [actions] and [maxWidth] must not be null.
   const InfoDialog({
+    Key key,
     @required this.title,
-    this.content,
     @required this.actions,
+    this.content,
     this.backgroundColor,
     this.padding = EdgeInsets.zero,
     this.titlePadding = EdgeInsets.zero,
@@ -57,7 +53,8 @@ class InfoDialog extends StatelessWidget {
     this.actionsAlignment = MainAxisAlignment.start,
     this.maxWidth = 500.0,
   })  : assert(title != null),
-        assert(actions != null);
+        assert(actions != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

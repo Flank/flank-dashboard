@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// Represents the project group entity.
+/// An entity that represents a project group data.
 class ProjectGroup extends Equatable {
   /// A unique identifier of the project group.
   final String id;
@@ -12,18 +12,18 @@ class ProjectGroup extends Equatable {
   /// A list of projects' identifiers, related to the group.
   final List<String> projectIds;
 
+  @override
+  List<Object> get props => [id, name, projectIds];
+
   /// Creates the [ProjectGroup].
   ///
-  /// Throws an ArgumentError if either the [name] or [projectIds] is `null`.
+  /// Throws an [ArgumentError] if either the [name] or [projectIds] is `null`.
   ProjectGroup({
-    this.id,
     @required this.name,
     @required this.projectIds,
+    this.id,
   }) {
     ArgumentError.checkNotNull(name, 'name');
     ArgumentError.checkNotNull(projectIds, 'projectIds');
   }
-
-  @override
-  List<Object> get props => [id, name, projectIds];
 }

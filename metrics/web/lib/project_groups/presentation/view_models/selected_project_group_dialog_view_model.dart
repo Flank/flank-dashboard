@@ -1,4 +1,4 @@
-/// Represents the data of the selected project group to display.
+/// A class that represents the data of the selected project group to display.
 class SelectedProjectGroupDialogViewModel {
   /// A unique identifier of the project.
   final String id;

@@ -4,7 +4,7 @@ import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 
-/// Responsible for generating routes.
+/// A class responsible for generating routes.
 class RouteGenerator {
   /// The route name of the dashboard page.
   static const String dashboard = '/dashboard';

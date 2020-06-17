@@ -8,14 +8,6 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds [Project]s data.
 class ProjectsNotifier extends ChangeNotifier {
-  /// Creates a new instance of the [ProjectsNotifier].
-  ProjectsNotifier(
-    this._receiveProjectsUpdates,
-  ) : assert(
-          _receiveProjectsUpdates != null,
-          'The use case must not be null',
-        );
-
   /// Provides an ability to receive project updates.
   final ReceiveProjectUpdates _receiveProjectsUpdates;
 
@@ -34,6 +26,14 @@ class ProjectsNotifier extends ChangeNotifier {
 
   /// A list of project models.
   List<ProjectModel> get projectModels => _projectModels;
+
+  /// Creates a new instance of the [ProjectsNotifier].
+  ProjectsNotifier(
+      this._receiveProjectsUpdates,
+      ) : assert(
+  _receiveProjectsUpdates != null,
+  'The use case must not be null',
+  );
 
   /// Subscribes to projects updates.
   Future<void> subscribeToProjects() async {

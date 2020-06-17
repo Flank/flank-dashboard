@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 
-/// The widget that represents text placeholder.
+/// The widget that displays text placeholder.
 class TextPlaceholder extends StatelessWidget {
-  /// A text that the widget displays.
+  /// A text to display.
   final String text;
 
   /// A size of the given [text].
-  ///
-  /// Has a default value of [20.0].
   final double size;
 
   /// A color of the given [text].
-  ///
-  /// Has a default value if [Colors.grey].
   final Color color;
 
-  /// Creates a placeholder widget with the given [text].
+  /// Creates a [TextPlaceholder] with the given [text].
+  ///
+  /// The [size] default value is 20.0.
+  /// The [color] default value is [Colors.grey].
   ///
   /// The [text] argument must not be null.
   const TextPlaceholder({

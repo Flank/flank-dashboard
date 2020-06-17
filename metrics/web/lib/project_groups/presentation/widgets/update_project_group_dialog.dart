@@ -3,26 +3,27 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/widgets/clearable_text_form_field.dart';
+import 'package:metrics/base/presentation/widgets/clearable_text_form_field.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
 import 'package:metrics/project_groups/presentation/view_models/selected_project_group_dialog_view_model.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_selection_list.dart';
+import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 import 'package:provider/provider.dart';
 
-/// A dialog that using for updating a project group.
+/// The widget that displays dialog for updating a project group.
 class UpdateProjectGroupDialog extends StatefulWidget {
   @override
-  UpdateProjectGroupDialogState createState() =>
-      UpdateProjectGroupDialogState();
+  _UpdateProjectGroupDialogState createState() =>
+      _UpdateProjectGroupDialogState();
 }
 
-class UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
-  /// Controls the group name text being edited.
+class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
+  /// A group name text editing controller.
   final TextEditingController _groupNameController = TextEditingController();
 
-  /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
+  /// A global key that uniquely identifies the [Form] widget
+  /// and allows validation of the form.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// The [ChangeNotifier] that holds the project groups state.
@@ -105,7 +106,7 @@ class UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
                       ),
                     ),
                     Flexible(
-                      child: ProjectSelectionList(),
+                      child: ProjectCheckboxList(),
                     ),
                   ],
                 ),
@@ -125,18 +126,15 @@ class UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  height: 50.0,
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    onPressed: _isLoading
-                        ? null
-                        : () => _updateProjectGroup(
-                            activeProjectGroupDialogViewModel),
-                    child: Text(editGroupButtonText),
+                RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
                   ),
+                  onPressed: _isLoading
+                      ? null
+                      : () => _updateProjectGroup(
+                          activeProjectGroupDialogViewModel),
+                  child: Text(editGroupButtonText),
                 ),
               ],
             ),
@@ -147,7 +145,7 @@ class UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
     );
   }
 
-  /// Updates given project group.
+  /// Updates the given project group.
   Future<void> _updateProjectGroup(
     SelectedProjectGroupDialogViewModel selectedProjectGroupDialogViewModel,
   ) async {

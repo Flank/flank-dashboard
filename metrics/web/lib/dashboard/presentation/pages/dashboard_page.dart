@@ -5,14 +5,16 @@ import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.da
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:provider/provider.dart';
 
-/// Allows to quickly get primary metrics of all available projects.
+/// The widget that allows to quickly get primary metrics
+/// of all available projects.
 class DashboardPage extends StatefulWidget {
   @override
   _DashboardPageState createState() => _DashboardPageState();
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  /// A [ProjectMetricsNotifier] needed to unsubscribe from project updates in [dispose].
+  /// A [ProjectMetricsNotifier] needed to unsubscribe from project
+  /// metrics in [dispose].
   ProjectMetricsNotifier _projectMetricsNotifier;
 
   @override

@@ -38,7 +38,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the given value",
+      "successfully creates an instance with the given value",
       () {
         final projectGroupName = ProjectGroupName(name);
 
@@ -47,7 +47,7 @@ void main() {
     );
 
     test(
-      "equals to another ProjectGroupName if their values are equal",
+      "equals to another ProjectGroupName if their values are the same",
       () {
         final firstProjectGroupName = ProjectGroupName(name);
         final secondProjectGroupName = ProjectGroupName(name);

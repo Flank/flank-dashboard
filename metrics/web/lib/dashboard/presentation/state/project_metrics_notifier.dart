@@ -18,9 +18,7 @@ import 'package:metrics/dashboard/presentation/view_models/stability_view_model.
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// The [ChangeNotifier] that holds the projects metrics state.
-///
-/// Stores the [Project]s and their [DashboardProjectMetrics].
+/// The [ChangeNotifier] that holds the projects metrics data.
 class ProjectMetricsNotifier extends ChangeNotifier {
   /// Provides an ability to receive project metrics updates.
   final ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
@@ -28,7 +26,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// A [Map] that holds all created [StreamSubscription].
   final Map<String, StreamSubscription> _buildMetricsSubscriptions = {};
 
-  /// A [PublishSubject] that provides the ability to filter projects by the name.
+  /// A [PublishSubject] that provides an ability to filter projects by the name.
   final _projectNameFilterSubject = PublishSubject<String>();
 
   /// A [Map] that holds all loaded [ProjectMetricsData].
@@ -37,20 +35,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Holds the error message that occurred during loading projects data.
   String _projectsErrorMessage;
 
-  /// Optional filter value that represents a part (or full) project name used to limit the displayed data.
+  /// An optional filter value that represents a part (or full) project name
+  /// used to limit the displayed data.
   String _projectNameFilter;
-
-  /// Creates the project metrics store.
-  ///
-  /// The given use cases must not be null.
-  ProjectMetricsNotifier(
-    this._receiveProjectMetricsUpdates,
-  ) : assert(
-          _receiveProjectMetricsUpdates != null,
-          'The use case must not be null',
-        ) {
-    _subscribeToProjectsNameFilter();
-  }
 
   /// Provides a list of project metrics, filtered by the project name filter.
   List<ProjectMetricsData> get projectsMetrics {
@@ -71,6 +58,18 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Provides an error description that occurred during loading metrics data.
   String get projectsErrorMessage => _projectsErrorMessage;
 
+  /// Creates a new instance of the [ProjectMetricsNotifier].
+  ///
+  /// The given [ReceiveProjectMetricsUpdates] must not be null.
+  ProjectMetricsNotifier(
+    this._receiveProjectMetricsUpdates,
+  ) : assert(
+          _receiveProjectMetricsUpdates != null,
+          'The use case must not be null',
+        ) {
+    _subscribeToProjectsNameFilter();
+  }
+
   /// Subscribes to a projects name filter.
   void _subscribeToProjectsNameFilter() {
     _projectNameFilterSubject
@@ -86,7 +85,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     _projectNameFilterSubject.add(value);
   }
 
-  /// Updates projects and error message.
+  /// Updates projects and an error message.
   void updateProjects(List<ProjectModel> newProjects, String errorMessage) {
     _projectsErrorMessage = errorMessage;
 
@@ -147,10 +146,10 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     _buildMetricsSubscriptions[projectId] =
         dashboardMetricsStream.listen((metrics) {
       _createProjectMetrics(metrics, projectId);
-    }, onError: _errorHandler);
+    }, onError: _projectsErrorHandler);
   }
 
-  /// Creates project metrics from [DashboardProjectMetrics].
+  /// Creates project metrics from the [DashboardProjectMetrics].
   void _createProjectMetrics(
       DashboardProjectMetrics dashboardMetrics, String projectId) {
     final projectsMetrics = _projectMetrics ?? {};
@@ -182,7 +181,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates the project performance metrics from [PerformanceMetric].
+  /// Creates the project performance metrics from the [PerformanceMetric].
   List<Point<int>> _getPerformanceMetrics(PerformanceMetric metric) {
     final performanceMetrics = metric?.buildsPerformance ?? DateTimeSet();
 
@@ -198,7 +197,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     }).toList();
   }
 
-  /// Creates the project build result metrics from [BuildResultMetric].
+  /// Creates the project build result metrics from the [BuildResultMetric].
   List<BuildResultBarData> _getBuildResultMetrics(BuildResultMetric metrics) {
     final buildResults = metrics?.buildResults ?? [];
 
@@ -224,8 +223,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     _buildMetricsSubscriptions.clear();
   }
 
-  /// Saves the error [String] representation to [_errorMessage].
-  void _errorHandler(error) {
+  /// Saves the error [String] representation to the [_projectsErrorMessage].
+  void _projectsErrorHandler(error) {
     if (error is PlatformException) {
       _projectsErrorMessage = error.message;
       notifyListeners();

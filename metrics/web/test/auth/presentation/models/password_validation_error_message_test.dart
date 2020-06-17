@@ -29,10 +29,7 @@ void main() {
           Password.minPasswordLength,
         );
 
-        expect(
-          errorMessage.message,
-          equals(expectedMessage),
-        );
+        expect(errorMessage.message, equals(expectedMessage));
       },
     );
 

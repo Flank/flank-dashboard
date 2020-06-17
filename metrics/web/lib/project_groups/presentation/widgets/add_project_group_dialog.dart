@@ -3,25 +3,26 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/widgets/clearable_text_form_field.dart';
+import 'package:metrics/base/presentation/widgets/clearable_text_form_field.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
 import 'package:metrics/project_groups/presentation/view_models/selected_project_group_dialog_view_model.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_selection_list.dart';
+import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 import 'package:provider/provider.dart';
 
-/// A dialog that using for adding project group.
+/// The widget that displays a dialog with the form for adding project group.
 class AddProjectGroupDialog extends StatefulWidget {
   @override
-  AddProjectGroupDialogState createState() => AddProjectGroupDialogState();
+  _AddProjectGroupDialogState createState() => _AddProjectGroupDialogState();
 }
 
-class AddProjectGroupDialogState extends State<AddProjectGroupDialog> {
-  /// Controls the group name text being edited.
+class _AddProjectGroupDialogState extends State<AddProjectGroupDialog> {
+  /// A group name text editing controller.
   final TextEditingController _groupNameController = TextEditingController();
 
-  /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
+  /// A global key that uniquely identifies the [Form] widget
+  /// and allows validation of the form.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// The [ChangeNotifier] that holds the project groups state.
@@ -38,10 +39,6 @@ class AddProjectGroupDialogState extends State<AddProjectGroupDialog> {
       context,
       listen: false,
     );
-
-    _groupNameController.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
@@ -101,7 +98,7 @@ class AddProjectGroupDialogState extends State<AddProjectGroupDialog> {
                       ),
                     ),
                     Flexible(
-                      child: ProjectSelectionList(),
+                      child: ProjectCheckboxList(),
                     ),
                   ],
                 ),
@@ -144,7 +141,7 @@ class AddProjectGroupDialogState extends State<AddProjectGroupDialog> {
     );
   }
 
-  /// Add given project group.
+  /// Adds the given project group.
   Future<void> _addProjectGroup(
     SelectedProjectGroupDialogViewModel selectedProjectGroupDialogViewModel,
   ) async {

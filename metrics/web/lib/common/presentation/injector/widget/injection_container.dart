@@ -19,7 +19,8 @@ import 'package:metrics/project_groups/domain/usecases/update_project_group_usec
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
 
-/// Creates the [ChangeNotifier]s and injects them, using the [MultiProvider] widget.
+/// The widget that creates the [ChangeNotifier]s and injects them,
+/// using the [MultiProvider] widget.
 class InjectionContainer extends StatefulWidget {
   /// A child widget to display.
   final Widget child;
@@ -127,19 +128,19 @@ class _InjectionContainerState extends State<InjectionContainer> {
     );
   }
 
-  /// Update projects subscription, based on user logged in status.
+  /// Updates projects subscription based on user logged in status.
   void _updateProjectsSubscription(
     AuthNotifier authNotifier,
     ProjectsNotifier projectsNotifier,
   ) {
     final isLoggedIn = authNotifier.isLoggedIn;
 
-    if (isLoggedIn != null) {
-      if (isLoggedIn) {
-        projectsNotifier.subscribeToProjects();
-      } else {
-        projectsNotifier.unsubscribeFromProjects();
-      }
+    if (isLoggedIn == null) return;
+
+    if (isLoggedIn) {
+      projectsNotifier.subscribeToProjects();
+    } else {
+      projectsNotifier.unsubscribeFromProjects();
     }
   }
 }

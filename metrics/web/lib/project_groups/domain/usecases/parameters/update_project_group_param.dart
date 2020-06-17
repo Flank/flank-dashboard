@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-/// Represents a param for editing a project group.
+/// A class that represents a param for editing a project group.
 class UpdateProjectGroupParam extends Equatable {
-  /// A project group's identifier.
+  /// An identifier of the project group.
   final String projectGroupId;
 
   /// A name of the project group.
@@ -11,11 +11,14 @@ class UpdateProjectGroupParam extends Equatable {
   /// A list of project identifiers, related to the project group.
   final List<String> projectIds;
 
+  @override
+  List<Object> get props => [projectGroupId, projectGroupName, projectIds];
+
   /// Creates the [UpdateProjectGroupParam] with the given [projectGroupId],
   /// [projectGroupName] and [projectIds].
   ///
-  /// Throws an ArgumentError if either the [projectGroupId] or [projectGroupName]
-  /// or [projectIds] is `null`.
+  /// Throws an [ArgumentError] if either the [projectGroupId],
+  /// [projectGroupName] or [projectIds] is `null`.
   UpdateProjectGroupParam(
     this.projectGroupId,
     this.projectGroupName,
@@ -25,7 +28,4 @@ class UpdateProjectGroupParam extends Equatable {
     ArgumentError.checkNotNull(projectGroupName, 'projectGroupName');
     ArgumentError.checkNotNull(projectIds, 'projectIds');
   }
-
-  @override
-  List<Object> get props => [projectGroupId, projectGroupName, projectIds];
 }

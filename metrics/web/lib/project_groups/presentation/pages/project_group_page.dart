@@ -51,7 +51,6 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
   @override
   void dispose() {
     _projectGroupsNotifier.unsubscribeFromProjectGroups();
-
     super.dispose();
   }
 }

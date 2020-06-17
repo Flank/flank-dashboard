@@ -16,13 +16,14 @@ import 'package:metrics/project_groups/domain/usecases/parameters/update_project
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_firestore_error_message.dart';
+import 'package:metrics/project_groups/presentation/view_models/selected_project_group_delete_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/selected_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_selection_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// Creates a new instance of the [ProjectGroupsNotifier].
+/// The [ChangeNotifier] that holds [ProjectGroup]s data.
 class ProjectGroupsNotifier extends ChangeNotifier {
   /// Provides an ability to receive project group updates.
   final ReceiveProjectGroupUpdates _receiveProjectGroupUpdates;
@@ -36,7 +37,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Provides an ability to add the project group.
   final AddProjectGroupUseCase _addProjectGroupUseCase;
 
-  /// A [PublishSubject] that provides the ability to filter projects by the name.
+  /// A [PublishSubject] that provides an ability to filter projects by the name.
   final _projectNameFilterSubject = PublishSubject<String>();
 
   /// The stream subscription needed to be able to stop listening
@@ -44,7 +45,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   StreamSubscription _projectGroupsSubscription;
 
   /// Holds the error message that occurred during loading project groups data.
-  String _errorMessage;
+  String _projectGroupsErrorMessage;
 
   /// Holds the error message that occurred during updating projects data.
   String _projectsErrorMessage;
@@ -59,34 +60,21 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   List<ProjectGroupCardViewModel> _projectGroupCardViewModels;
 
   /// A [List] that holds view models of all loaded [Project].
-  List<ProjectSelectionViewModel> _projectSelectorViewModels;
+  List<ProjectCheckboxViewModel> _projectCheckboxViewModels;
 
   /// Holds the data for a selected project group dialog.
   SelectedProjectGroupDialogViewModel _selectedProjectGroupDialogViewModel;
 
-  /// Optional filter value that represents a part (or full) project name used to limit the displayed data.
+  /// Holds the data for a selected project group delete dialog.
+  SelectedProjectGroupDeleteDialogViewModel
+      _selectedProjectGroupDeleteDialogViewModel;
+
+  /// An optional filter value that represents a part (or full) project name
+  /// used to limit the displayed data.
   String _projectNameFilter;
 
-  /// Creates the project groups store.
-  ///
-  /// The given use cases must not be null.
-  ProjectGroupsNotifier(
-    this._receiveProjectGroupUpdates,
-    this._addProjectGroupUseCase,
-    this._updateProjectGroupUseCase,
-    this._deleteProjectGroupUseCase,
-  ) : assert(
-          _receiveProjectGroupUpdates != null &&
-              _addProjectGroupUseCase != null &&
-              _updateProjectGroupUseCase != null &&
-              _deleteProjectGroupUseCase != null,
-          'The use cases must not be null',
-        ) {
-    _subscribeToProjectsNameFilter();
-  }
-
   /// Provides an error description that occurred during loading project groups data.
-  String get errorMessage => _errorMessage;
+  String get projectGroupsErrorMessage => _projectGroupsErrorMessage;
 
   /// Provides an error description that occurred during loading projects data.
   String get projectsErrorMessage => _projectsErrorMessage;
@@ -96,13 +84,13 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   ProjectGroupFirestoreErrorMessage get projectGroupSavingError =>
       _projectGroupSavingError;
 
-  /// Provides a list of project selector view model, filtered by the project name filter.
-  List<ProjectSelectionViewModel> get projectSelectorViewModels {
-    if (_projectNameFilter == null || _projectSelectorViewModels == null) {
-      return _projectSelectorViewModels;
+  /// Provides a list of [ProjectCheckboxViewModel], filtered by the project name filter.
+  List<ProjectCheckboxViewModel> get projectCheckboxViewModels {
+    if (_projectNameFilter == null || _projectCheckboxViewModels == null) {
+      return _projectCheckboxViewModels;
     }
 
-    return _projectSelectorViewModels
+    return _projectCheckboxViewModels
         .where((project) => project.name
             .toLowerCase()
             .contains(_projectNameFilter.toLowerCase()))
@@ -120,6 +108,29 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   SelectedProjectGroupDialogViewModel get selectedProjectGroupDialogViewModel =>
       _selectedProjectGroupDialogViewModel;
 
+  /// Provides data for a selected project group delete dialog.
+  SelectedProjectGroupDeleteDialogViewModel
+      get selectedProjectGroupDeleteDialogViewModel =>
+          _selectedProjectGroupDeleteDialogViewModel;
+
+  /// Creates a new instance of the [ProjectGroupsNotifier].
+  ///
+  /// The given use cases must not be null.
+  ProjectGroupsNotifier(
+    this._receiveProjectGroupUpdates,
+    this._addProjectGroupUseCase,
+    this._updateProjectGroupUseCase,
+    this._deleteProjectGroupUseCase,
+  ) : assert(
+          _receiveProjectGroupUpdates != null &&
+              _addProjectGroupUseCase != null &&
+              _updateProjectGroupUseCase != null &&
+              _deleteProjectGroupUseCase != null,
+          'The use cases must not be null',
+        ) {
+    _subscribeToProjectsNameFilter();
+  }
+
   /// Subscribes to a projects name filter.
   void _subscribeToProjectsNameFilter() {
     _projectNameFilterSubject
@@ -135,8 +146,25 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectNameFilterSubject.add(value);
   }
 
-  /// Creates the [SelectedProjectGroupDialogViewModel] using the given [projectGroupId].
-  void setActiveProjectGroup([String projectGroupId]) {
+  /// Sets the [SelectedProjectGroupDeleteDialogViewModel] using
+  /// the given [projectGroupId].
+  void setActiveProjectGroupDeleteDialogViewModel(String projectGroupId) {
+    final projectGroup = _projectGroups.firstWhere(
+      (projectGroup) => projectGroup.id == projectGroupId,
+      orElse: () => null,
+    );
+
+    _selectedProjectGroupDeleteDialogViewModel =
+        SelectedProjectGroupDeleteDialogViewModel(
+      id: projectGroup?.id,
+      name: projectGroup?.name,
+    );
+
+    notifyListeners();
+  }
+
+  /// Sets the [SelectedProjectGroupDialogViewModel] using the given [projectGroupId].
+  void setActiveProjectGroupDialogViewModel([String projectGroupId]) {
     final projectGroup = _projectGroups.firstWhere(
       (projectGroup) => projectGroup.id == projectGroupId,
       orElse: () => null,
@@ -144,9 +172,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
     final projectIds = projectGroup?.projectIds ?? [];
 
-    _projectSelectorViewModels = _projectSelectorViewModels
+    _projectCheckboxViewModels = _projectCheckboxViewModels
         .map(
-          (project) => ProjectSelectionViewModel(
+          (project) => ProjectCheckboxViewModel(
             id: project.id,
             name: project.name,
             isChecked: projectIds?.contains(project.id),
@@ -167,7 +195,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectNameFilter = null;
   }
 
-  /// Change checked status for [ProjectSelectionViewModel] by [projectId].
+  /// Changes checked status to [isChecked] for the [ProjectCheckboxViewModel]
+  /// by [projectId].
   void toggleProjectCheckedStatus({String projectId, bool isChecked}) {
     if (projectId == null && isChecked == null) return;
 
@@ -179,12 +208,12 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       projectIds.remove(projectId);
     }
 
-    final projectIndex = _projectSelectorViewModels
+    final projectIndex = _projectCheckboxViewModels
         .indexWhere((project) => project.id == projectId);
 
-    final project = _projectSelectorViewModels[projectIndex];
+    final project = _projectCheckboxViewModels[projectIndex];
 
-    _projectSelectorViewModels[projectIndex] = ProjectSelectionViewModel(
+    _projectCheckboxViewModels[projectIndex] = ProjectCheckboxViewModel(
       id: project.id,
       name: project.name,
       isChecked: isChecked,
@@ -202,7 +231,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Subscribes to project groups.
   Future<void> subscribeToProjectGroups() async {
     final projectGroupsStream = _receiveProjectGroupUpdates();
-    _errorMessage = null;
+    _projectGroupsErrorMessage = null;
     await _projectGroupsSubscription?.cancel();
     _projectGroupsSubscription = projectGroupsStream.listen(
       _projectGroupsListener,
@@ -288,8 +317,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
     final projectIds =
         _selectedProjectGroupDialogViewModel?.selectedProjectIds ?? [];
-    _projectSelectorViewModels = projects
-        .map((project) => ProjectSelectionViewModel(
+    _projectCheckboxViewModels = projects
+        .map((project) => ProjectCheckboxViewModel(
               id: project.id,
               name: project.name,
               isChecked: projectIds.contains(project.id),
@@ -320,14 +349,14 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectGroups = null;
   }
 
-  /// Saves the error [String] representation to [_errorMessage].
+  /// Saves the error [String] representation to [_projectGroupsErrorMessage].
   void _errorHandler(error) {
     if (error is PlatformException) {
-      _errorMessage = error.message;
+      _projectGroupsErrorMessage = error.message;
       return notifyListeners();
     }
 
-    _errorMessage = CommonStrings.unknownErrorMessage;
+    _projectGroupsErrorMessage = CommonStrings.unknownErrorMessage;
     notifyListeners();
   }
 
