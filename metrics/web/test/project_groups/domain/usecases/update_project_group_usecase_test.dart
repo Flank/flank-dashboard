@@ -14,7 +14,7 @@ void main() {
     });
 
     test(
-      "delegates call to the ProjectGroupRepository.updateProjectGroup",
+      ".call() delegates call to the ProjectGroupRepository.updateProjectGroup",
       () async {
         final repository = ProjectGroupRepositoryMock();
         final updateProjectGroupUseCase = UpdateProjectGroupUseCase(repository);

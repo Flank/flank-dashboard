@@ -6,8 +6,24 @@ import 'package:test/test.dart';
 void main() {
   group("ProjectGroupName", () {
     const String name = 'projectGroupName';
+
     test(
-      "throws an ProjectGroupNameValidationException with isNull error code when the value is null",
+      "throws a ProjectGroupNameValidationException with isNull error code when the value is a string with empty spaces",
+      () {
+        final projectGroupNameIsNullException =
+            ProjectGroupNameValidationException(
+          ProjectGroupNameValidationErrorCode.isNull,
+        );
+
+        expect(
+          () => ProjectGroupName(' '),
+          throwsA(equals(projectGroupNameIsNullException)),
+        );
+      },
+    );
+
+    test(
+      "throws a ProjectGroupNameValidationException with isNull error code when the value is null",
       () {
         final projectGroupNameIsNullException =
             ProjectGroupNameValidationException(
