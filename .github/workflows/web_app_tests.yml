@@ -56,9 +56,12 @@ jobs:
         run: dart test_driver/main.dart --no-verbose --store-logs-to=build/logs --email=$WEB_APP_USER_EMAIL --password=$WEB_APP_USER_PASSWORD
         working-directory: metrics/web/
 
-      - name: Upload log artifacts
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v1
-        with:
-          name: logs
-          path: metrics/web/build/logs
+      - name: Build release app
+        run: flutter clean && flutter build web --release
+
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+          with:
+            args: deploy --only hosting
+          env:
+            FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
