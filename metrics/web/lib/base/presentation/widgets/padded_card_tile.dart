@@ -73,29 +73,24 @@ class PaddedCardTile extends StatelessWidget {
       margin: margin,
       padding: padding,
       backgroundColor: backgroundColor,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: titlePadding,
-              child: title,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: titlePadding,
+            child: title,
+          ),
+          Padding(
+            padding: subtitlePadding,
+            child: subtitle,
+          ),
+          Padding(
+            padding: actionsPadding,
+            child: Row(
+              children: actions,
             ),
-            Padding(
-              padding: subtitlePadding,
-              child: subtitle,
-            ),
-            Padding(
-              padding: actionsPadding,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: actions,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
