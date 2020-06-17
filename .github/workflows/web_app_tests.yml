@@ -56,7 +56,7 @@ jobs:
         working-directory: metrics/web/
 
       - name: Upload log artifacts
-          uses: actions/upload-artifact@v1
-          with:
-            name: logs
-            path: metrics/web/build/flutteer_logs.log
+        uses: actions/upload-artifact@v1
+        with:
+          name: logs
+          path: metrics/web/build/flutter_logs.log
