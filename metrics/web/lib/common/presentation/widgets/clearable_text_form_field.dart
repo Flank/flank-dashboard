@@ -27,32 +27,24 @@ class ClearableTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Text(label),
-        ),
-        TextFormField(
-          controller: controller,
-          validator: validator,
-          decoration: InputDecoration(
-            suffixIcon: controller.text.isNotEmpty
-                ? IconButton(
-                    splashColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    icon: const Icon(Icons.close, size: 18.0),
-                    onPressed: () {
-                      WidgetsBinding.instance.addPostFrameCallback(
-                        (_) => controller.clear(),
-                      );
-                    })
-                : null,
-            border: border,
-          ),
-        )
-      ],
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label,
+        suffixIcon: controller.text.isNotEmpty
+            ? IconButton(
+                splashColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                icon: const Icon(Icons.close, size: 18.0),
+                onPressed: () {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (_) => controller.clear(),
+                  );
+                })
+            : null,
+        border: border,
+      ),
     );
   }
 }
