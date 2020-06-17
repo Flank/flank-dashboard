@@ -41,8 +41,6 @@ jobs:
 
       - name: Get dependencies
         run: flutter config --enable-web && flutter pub get
-        working-directory: ./metrics/web/
-
 
       - name: Flutter analyze
         run: flutter analyze
