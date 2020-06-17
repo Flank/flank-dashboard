@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
-import 'package:metrics/auth/presentation/model/email_validation_error_message.dart';
-import 'package:metrics/auth/presentation/model/password_validation_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 
 /// Stub implementation on the [AuthNotifier].
@@ -38,16 +36,4 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
     _isLoggedIn = false;
     notifyListeners();
   }
-
-  @override
-  void validateEmail(String value) {}
-
-  @override
-  void validatePassword(String value) {}
-
-  @override
-  EmailValidationErrorMessage get emailValidationErrorMessage => null;
-
-  @override
-  PasswordValidationErrorMessage get passwordValidationErrorMessage => null;
 }

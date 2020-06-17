@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
-import 'package:metrics/dashboard/presentation/widgets/circle_percentage.dart';
 
 /// Stores the theme data for all metric widgets.
 class MetricsThemeData {

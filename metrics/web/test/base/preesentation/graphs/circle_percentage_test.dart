@@ -1,41 +1,32 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/dashboard/presentation/widgets/circle_percentage.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
-  group("CirlcePercentage", () {
+  group("CirclePercentage", () {
     final circlePercentageTypeFinder = find.byType(CirclePercentage);
     const strokeColor = Colors.blue;
     const valueColor = Colors.red;
-    const backgroundColor = Colors.grey;
 
     testWidgets(
-      "can't be created with value more than 1.0",
+      "shows the 100% value if the given value more than 1",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _CirclePercentageTestbed(
             value: 30.0,
           ),
         );
+        await tester.pumpAndSettle();
 
-        expect(tester.takeException(), isAssertionError);
+        expect(find.text("100%"), findsOneWidget);
       },
     );
 
     testWidgets(
-      "can't be created with value less than 0",
+      "shows the 0% value if the given value less than 0",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _CirclePercentageTestbed(
@@ -43,7 +34,71 @@ void main() {
           ),
         );
 
-        expect(tester.takeException(), isAssertionError);
+        expect(find.text("0%"), findsOneWidget);
+      },
+    );
+
+    testWidgets("can be created with null stroke color", (tester) async {
+      await tester.pumpWidget(
+        const _CirclePercentageTestbed(
+          value: 0.5,
+          strokeColor: null,
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets("can be created with null value color", (tester) async {
+      await tester.pumpWidget(
+        const _CirclePercentageTestbed(
+          value: 0.5,
+          valueColor: null,
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets(
+      "can be created with null placeholder and value",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _CirclePercentageTestbed(
+          value: null,
+          placeholder: null,
+        ));
+
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
+      "can be created without stroke color",
+      (tester) async {
+        await tester.pumpWidget(
+          const _CirclePercentageTestbed(
+            value: 0.5,
+            valueColor: Colors.blue,
+          ),
+        );
+
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
+      "can be created without value color",
+      (tester) async {
+        await tester.pumpWidget(
+          const _CirclePercentageTestbed(
+            value: 0.5,
+            strokeColor: Colors.blue,
+          ),
+        );
+
+        expect(tester.takeException(), isNull);
       },
     );
 
@@ -135,7 +190,7 @@ void main() {
     );
 
     testWidgets(
-      "widgets with mirrored widgth/heights take same space",
+      "widgets with mirrored width/heights take same space",
       (WidgetTester tester) async {
         const height = 200.0;
         const width = 100.0;
@@ -162,14 +217,17 @@ void main() {
     );
 
     testWidgets(
-      "displays 'no data placeholder' text if the value is null",
+      "displays the given placeholder if the value is null",
       (WidgetTester tester) async {
+        const placeholderText = 'placeholder';
+
         await tester.pumpWidget(const _CirclePercentageTestbed(
           value: null,
+          placeholder: Text(placeholderText),
         ));
         await tester.pumpAndSettle();
 
-        expect(find.text(DashboardStrings.noDataPlaceholder), findsOneWidget);
+        expect(find.text(placeholderText), findsOneWidget);
       },
     );
 
@@ -216,66 +274,6 @@ void main() {
         expect(circlePercentagePainter.strokeColor, strokeColor);
       },
     );
-
-    testWidgets(
-      "applies the stroke color from the MetricWidgetTheme.accentColor",
-      (tester) async {
-        const metricsTheme = MetricsThemeData(
-          metricWidgetTheme: MetricWidgetThemeData(
-            accentColor: strokeColor,
-          ),
-        );
-
-        await tester.pumpWidget(const _CirclePercentageTestbed(
-          theme: metricsTheme,
-        ));
-        await tester.pumpAndSettle();
-
-        final circlePercentagePainter = _getCirclePercentagePainter(tester);
-
-        expect(circlePercentagePainter.strokeColor, strokeColor);
-      },
-    );
-
-    testWidgets(
-      "applies the value color from the MetricWidgetTheme.primaryColor",
-      (tester) async {
-        const metricsTheme = MetricsThemeData(
-          metricWidgetTheme: MetricWidgetThemeData(
-            primaryColor: valueColor,
-          ),
-        );
-
-        await tester.pumpWidget(const _CirclePercentageTestbed(
-          theme: metricsTheme,
-        ));
-        await tester.pumpAndSettle();
-
-        final circlePercentagePainter = _getCirclePercentagePainter(tester);
-
-        expect(circlePercentagePainter.valueColor, valueColor);
-      },
-    );
-
-    testWidgets(
-      "applies the backgroundColor color from the MetricWidgetTheme.backgroundColor",
-      (tester) async {
-        const metricsTheme = MetricsThemeData(
-          metricWidgetTheme: MetricWidgetThemeData(
-            backgroundColor: backgroundColor,
-          ),
-        );
-
-        await tester.pumpWidget(const _CirclePercentageTestbed(
-          theme: metricsTheme,
-        ));
-        await tester.pumpAndSettle();
-
-        final circlePercentagePainter = _getCirclePercentagePainter(tester);
-
-        expect(circlePercentagePainter.backgroundColor, backgroundColor);
-      },
-    );
   });
 }
 
@@ -290,19 +288,51 @@ CirclePercentageChartPainter _getCirclePercentagePainter(WidgetTester tester) {
   return circlePercentagePaintWidget.painter as CirclePercentageChartPainter;
 }
 
+/// A testbed class required to test the [CirclePercentage] widget.
 class _CirclePercentageTestbed extends StatelessWidget {
+  /// A percent [value] to display.
   final double value;
+
+  /// The padding of the [value] text inside the circle graph.
   final EdgeInsets padding;
+
+  /// The wight of the graph's stroke. Defaults to 2.0.
   final double strokeWidth;
+
+  /// The color of the part of the graph that represents the value.
   final Color valueColor;
+
+  /// The color of the graph's circle itself.
   final Color strokeColor;
+
+  /// The color to fill the graph with.
   final Color backgroundColor;
+
+  /// The graph alignment
   final AlignmentGeometry alignment;
+
+  /// The graph container height
   final double height;
+
+  /// The graph container width.
   final double width;
+
+  /// The [TextStyle] of the percent text.
   final TextStyle valueStyle;
+
+  /// The [MetricsThemeData] used in testbed.
   final MetricsThemeData theme;
 
+  /// The [Widget] to display if there is no [value] provided.
+  final Widget placeholder;
+
+  /// Creates an instance of this testbed with the given parameters.
+  ///
+  /// The [value] defaults to the `0.3`.
+  /// The [strokeWidth] defaults to the `5.0`.
+  /// The [padding] defaults to the [EdgeInsets.zero].
+  /// The [alignment] defaults to the [Alignment.center].
+  /// The [theme] defaults to the [MetricsThemeData].
   const _CirclePercentageTestbed({
     Key key,
     this.value = 0.3,
@@ -316,6 +346,7 @@ class _CirclePercentageTestbed extends StatelessWidget {
     this.theme = const MetricsThemeData(),
     this.valueStyle,
     this.width,
+    this.placeholder,
   }) : super(key: key);
 
   @override
@@ -329,6 +360,7 @@ class _CirclePercentageTestbed extends StatelessWidget {
           width: width,
           child: CirclePercentage(
             value: value,
+            placeholder: placeholder ?? Container(),
             strokeWidth: strokeWidth,
             valueColor: valueColor,
             strokeColor: strokeColor,

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
@@ -12,6 +12,8 @@ import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_update
 import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// The [ChangeNotifier] that holds the projects metrics state.
@@ -175,8 +177,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       buildResultMetrics: buildResultMetrics,
       buildNumberMetric: numberOfBuilds,
       averageBuildDurationInMinutes: averageBuildDuration,
-      coverage: dashboardMetrics.coverage,
-      stability: dashboardMetrics.stability,
+      coverage: CoverageViewModel(value: dashboardMetrics.coverage?.value),
+      stability: StabilityViewModel(value: dashboardMetrics.stability?.value),
     );
 
     _projectMetrics = projectsMetrics;

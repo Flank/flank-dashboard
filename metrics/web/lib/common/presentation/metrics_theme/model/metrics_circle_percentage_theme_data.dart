@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
+import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/dashboard/presentation/widgets/circle_percentage.dart';
 
 /// A theme data for the [CirclePercentage] widget.
 ///

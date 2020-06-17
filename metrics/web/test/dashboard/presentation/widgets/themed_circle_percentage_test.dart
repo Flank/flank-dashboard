@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/dashboard/presentation/widgets/circle_percentage.dart';
+import 'package:metrics/dashboard/presentation/view_models/percent_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/metric_value_theme_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/themed_circle_percentage.dart';
 import 'package:mockito/mockito.dart';
@@ -10,6 +12,17 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("ThemedCirclePercentage", () {
+    testWidgets(
+      "can't be with null percent value",
+      (tester) async {
+        await tester.pumpWidget(
+          const _ThemedCirclePercentageTestbed(percent: null),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
     testWidgets(
       "applies the colors from the MetricWidgetThemeData given by theme strategy",
       (tester) async {
@@ -55,16 +68,37 @@ void main() {
         expect(tester.takeException(), isAssertionError);
       },
     );
+
+    testWidgets(
+      "displays the no data placeholder if percent value is null",
+      (tester) async {
+        const percent = PercentViewModel(null);
+
+        await tester.pumpWidget(const _ThemedCirclePercentageTestbed(
+          percent: percent,
+        ));
+
+        expect(find.byType(NoDataPlaceholder), findsOneWidget);
+      },
+    );
   });
 }
 
+/// A testbed class required for testing the [ThemedCirclePercentage].
 class _ThemedCirclePercentageTestbed extends StatelessWidget {
+  /// A [MetricValueThemeStrategy] used to chose the theme to use in widget.
   final MetricValueThemeStrategy strategy;
-  final double value;
 
+  /// A [PercentViewModel] instance to display.
+  final PercentViewModel percent;
+
+  /// Creates this testbed instance with the given [percent] value and theme [strategy].
+  ///
+  /// The [percent] defaults to the [PercentViewModel] instance with value equals to `1.0`.
+  /// The [strategy] defaults to the [MetricValueThemeStrategy].
   const _ThemedCirclePercentageTestbed({
     Key key,
-    this.value = 1.0,
+    this.percent = const PercentViewModel(1.0),
     this.strategy = const MetricValueThemeStrategy(),
   }) : super(key: key);
 
@@ -72,7 +106,7 @@ class _ThemedCirclePercentageTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       body: ThemedCirclePercentage(
-        value: value,
+        percent: percent,
         themeStrategy: strategy,
       ),
     );
