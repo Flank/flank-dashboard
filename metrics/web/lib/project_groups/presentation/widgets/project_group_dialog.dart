@@ -49,6 +49,8 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
   @override
   Widget build(BuildContext context) {
+    const padding = EdgeInsets.symmetric(vertical: 12.0);
+
     return Selector<ProjectGroupsNotifier, SelectedProjectGroupDialogViewModel>(
       selector: (_, state) => state.selectedProjectGroupDialogViewModel,
       builder: (_, activeProjectGroupDialogViewModel, ___) {
@@ -71,7 +73,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          titlePadding: const EdgeInsets.symmetric(vertical: 12.0),
+          titlePadding: padding,
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -123,7 +125,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
               ),
             ],
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+          contentPadding: padding,
           actions: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +150,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
               ],
             ),
           ],
-          actionsPadding: const EdgeInsets.symmetric(vertical: 12.0),
+          actionsPadding: padding,
         );
       },
     );
