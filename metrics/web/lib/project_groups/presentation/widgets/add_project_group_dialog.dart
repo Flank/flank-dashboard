@@ -11,13 +11,13 @@ import 'package:metrics/project_groups/presentation/view_models/selected_project
 import 'package:metrics/project_groups/presentation/widgets/project_selection_list.dart';
 import 'package:provider/provider.dart';
 
-/// A dialog that using for updating or creating project group data.
-class ProjectGroupDialog extends StatefulWidget {
+/// A dialog that using for adding project group.
+class AddProjectGroupDialog extends StatefulWidget {
   @override
-  ProjectGroupDialogState createState() => ProjectGroupDialogState();
+  AddProjectGroupDialogState createState() => AddProjectGroupDialogState();
 }
 
-class ProjectGroupDialogState extends State<ProjectGroupDialog> {
+class AddProjectGroupDialogState extends State<AddProjectGroupDialog> {
   /// Controls the group name text being edited.
   final TextEditingController _groupNameController = TextEditingController();
 
@@ -39,9 +39,6 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
       listen: false,
     );
 
-    _groupNameController.text =
-        _projectGroupsNotifier.selectedProjectGroupDialogViewModel?.name;
-
     _groupNameController.addListener(() {
       setState(() {});
     });
@@ -57,17 +54,11 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
         final createGroupButtonText = _isLoading
             ? ProjectGroupsStrings.creatingProjectGroup
             : ProjectGroupsStrings.createGroup;
-        final editGroupButtonText = _isLoading
-            ? ProjectGroupsStrings.savingProjectGroup
-            : ProjectGroupsStrings.saveChanges;
 
         return InfoDialog(
           padding: const EdgeInsets.all(32.0),
-          maxWidth: 500.0,
           title: Text(
-            activeProjectGroupDialogViewModel.id == null
-                ? ProjectGroupsStrings.addProjectGroup
-                : ProjectGroupsStrings.editProjectGroup,
+            ProjectGroupsStrings.addProjectGroup,
             style: const TextStyle(
               fontSize: 32.0,
               fontWeight: FontWeight.bold,
@@ -138,13 +129,10 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
                     ),
                     onPressed: _isLoading
                         ? null
-                        : () => _saveProjectGroups(
-                            activeProjectGroupDialogViewModel),
-                    child: Text(
-                      activeProjectGroupDialogViewModel.id == null
-                          ? createGroupButtonText
-                          : editGroupButtonText,
-                    ),
+                        : () => _addProjectGroup(
+                              activeProjectGroupDialogViewModel,
+                            ),
+                    child: Text(createGroupButtonText),
                   ),
                 ),
               ],
@@ -156,8 +144,8 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
     );
   }
 
-  /// Saves given project group.
-  Future<void> _saveProjectGroups(
+  /// Add given project group.
+  Future<void> _addProjectGroup(
     SelectedProjectGroupDialogViewModel selectedProjectGroupDialogViewModel,
   ) async {
     if (!_formKey.currentState.validate()) {
@@ -166,7 +154,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
     setState(() => _isLoading = true);
 
-    await _projectGroupsNotifier.saveProjectGroup(
+    await _projectGroupsNotifier.addProjectGroup(
       selectedProjectGroupDialogViewModel.id,
       _groupNameController.text,
       selectedProjectGroupDialogViewModel.selectedProjectIds,

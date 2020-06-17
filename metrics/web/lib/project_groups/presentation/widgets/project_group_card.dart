@@ -6,7 +6,7 @@ import 'package:metrics/project_groups/presentation/state/project_groups_notifie
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_delete_dialog.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
+import 'package:metrics/project_groups/presentation/widgets/update_project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
 /// A widget that represent [ProjectGroupCardViewModel].
@@ -88,7 +88,7 @@ class ProjectGroupCard extends StatelessWidget {
 
     await showDialog(
       context: context,
-      builder: (_) => ProjectGroupDialog(),
+      builder: (_) => UpdateProjectGroupDialog(),
     );
   }
 }

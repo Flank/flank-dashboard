@@ -216,11 +216,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Saves the project group data with the given [projectGroupId].
-  ///
-  /// Adds a new project group, if the given [projectGroupId] is `null`.
-  /// Otherwise updates the project group with the given id.
-  Future<void> saveProjectGroup(
+  /// Creates the project group data with the given [projectGroupId]
+  /// and [projectGroupName].
+  Future<void> addProjectGroup(
     String projectGroupId,
     String projectGroupName,
     List<String> projectIds,
@@ -228,22 +226,34 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     resetProjectGroupSavingErrorMessage();
 
     try {
-      if (projectGroupId == null) {
-        await _addProjectGroupUseCase(
-          AddProjectGroupParam(
-            projectGroupName: projectGroupName,
-            projectIds: projectIds,
-          ),
-        );
-      } else {
-        await _updateProjectGroupUseCase(
-          UpdateProjectGroupParam(
-            projectGroupId,
-            projectGroupName,
-            projectIds,
-          ),
-        );
-      }
+      await _addProjectGroupUseCase(
+        AddProjectGroupParam(
+          projectGroupName: projectGroupName,
+          projectIds: projectIds,
+        ),
+      );
+    } on FirestoreException catch (exception) {
+      _projectGroupSavingErrorHandler(exception.code);
+    }
+  }
+
+  /// Updates the project group data with the given [projectGroupId],
+  /// [projectGroupName] and [projectIds].
+  Future<void> updateProjectGroup(
+    String projectGroupId,
+    String projectGroupName,
+    List<String> projectIds,
+  ) async {
+    resetProjectGroupSavingErrorMessage();
+
+    try {
+      await _updateProjectGroupUseCase(
+        UpdateProjectGroupParam(
+          projectGroupId,
+          projectGroupName,
+          projectIds,
+        ),
+      );
     } on FirestoreException catch (exception) {
       _projectGroupSavingErrorHandler(exception.code);
     }

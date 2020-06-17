@@ -3,7 +3,7 @@ import 'package:metrics/base/presentation/widgets/padded_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
+import 'package:metrics/project_groups/presentation/widgets/add_project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
 /// An [AddProjectGroupCard] widget that represents a metrics card with an ability
@@ -52,7 +52,7 @@ class AddProjectGroupCard extends StatelessWidget {
 
     await showDialog(
       context: context,
-      child: ProjectGroupDialog(),
+      child: AddProjectGroupDialog(),
     );
   }
 }
