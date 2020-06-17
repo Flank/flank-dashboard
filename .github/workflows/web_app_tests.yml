@@ -36,8 +36,12 @@ jobs:
 
       - uses: cedx/setup-dart@v2
 
+      - name: Configure Flutter
+        run: flutter config --enable-web && flutter doctor
+        working-directory: metrics/web/
+
       - name: Get dependencies
-        run: flutter config --enable-web && flutter pub get
+        run: flutter pub get
         working-directory: metrics/web/
 
       - name: Flutter analyze
