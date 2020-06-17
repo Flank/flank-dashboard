@@ -8,6 +8,7 @@ Adopt an agile process on GitHub using ZenHub that matches established engineeri
 
 - [ZenHub](https://www.zenhub.com/) is the project management software (install the [free extension](https://www.zenhub.com/extension))
 - Review and follow [Google's eng practices](https://google.github.io/eng-practices/)
+- [The anatomy of a perfect pull request](https://medium.com/@hugooodias/the-anatomy-of-a-perfect-pull-request-567382bb6067)
 
 # Motivation
 
@@ -49,6 +50,21 @@ Code should be sufficiently documented. Use [Effective Dart: Documentation](http
 Use the [Fixes #0](https://help.github.com/en/github/managing-your-work-on-github/closing-issues-using-keywords) keyword so that the relevant issue is closed when the pull request is merged.
 
 Each pull request should be [connected to an issue](https://help.zenhub.com/support/solutions/articles/43000010350-connecting-pull-requests-to-github-issues) using ZenHub.
+
+### Limits
+
+The size labels applied by Git App [Pull Request Size](https://github.com/apps/pull-request-size) to each Pull Request based on the total lines of code changed.
+
+| Name      | Description                               |
+|-----------|-------------------------------------------|
+| size/XS   | Denotes a PR that changes 0-9 lines.      |
+| size/S    | Denotes a PR that changes 10-29 lines.    |
+| size/M    | Denotes a PR that changes 30-99 lines.    |
+| size/L    | Denotes a PR that changes 100-499 lines.  |
+| size/XL   | Denotes a PR that changes 500-999 lines.  |
+| size/XXL  | Denotes a PR that changes 1000+ lines.    |
+
+PRs designed to be small and PRs of XXL size should be split into multiple logical PRs according to ["The anatomy of a perfect pull request"](https://medium.com/@hugooodias/the-anatomy-of-a-perfect-pull-request-567382bb6067). 
 
 ## Draft Pull Requests
 
