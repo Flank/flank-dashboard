@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/text_placeholder.dart';
 import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_selection_list_tile.dart';
@@ -13,7 +13,7 @@ class ProjectSelectionList extends StatelessWidget {
     return Consumer<ProjectGroupsNotifier>(
       builder: (_, projectGroupsNotifier, __) {
         if (projectGroupsNotifier.projectsErrorMessage != null) {
-          return MetricsTextPlaceholder(
+          return TextPlaceholder(
             text: projectGroupsNotifier.projectsErrorMessage,
           );
         }
@@ -26,7 +26,7 @@ class ProjectSelectionList extends StatelessWidget {
         }
 
         if (projectSelectorViewModels.isEmpty) {
-          return const MetricsTextPlaceholder(
+          return const TextPlaceholder(
             text: DashboardStrings.noConfiguredProjects,
           );
         }

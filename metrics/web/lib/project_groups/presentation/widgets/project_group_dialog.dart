@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/widgets/metrics_dialog.dart';
 import 'package:metrics/common/presentation/widgets/clearable_text_form_field.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
@@ -61,7 +61,7 @@ class ProjectGroupDialogState extends State<ProjectGroupDialog> {
             ? ProjectGroupsStrings.savingProjectGroup
             : ProjectGroupsStrings.saveChanges;
 
-        return MetricsDialog(
+        return InfoDialog(
           padding: const EdgeInsets.all(32.0),
           maxWidth: 500.0,
           title: Text(

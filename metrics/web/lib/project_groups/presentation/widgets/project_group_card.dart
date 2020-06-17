@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/padded_card_tile.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/widgets/metrics_tile_card.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
@@ -28,7 +28,7 @@ class ProjectGroupCard extends StatelessWidget {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     const padding = EdgeInsets.all(8.0);
 
-    return MetricsTileCard(
+    return PaddedCardTile(
       backgroundColor:
           themeNotifier.isDark ? Colors.grey[900] : Colors.grey[200],
       padding: const EdgeInsets.all(16.0),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// The widget that represents a metrics dialog.
-class MetricsDialog extends StatelessWidget {
+/// The widget that represents a specific version of [Dialog].
+class InfoDialog extends StatelessWidget {
   /// A background color of the dialog.
   final Color backgroundColor;
 
@@ -42,10 +42,10 @@ class MetricsDialog extends StatelessWidget {
   /// Has a default value of [MainAxisAlignment.start].
   final MainAxisAlignment actionsAlignment;
 
-  /// Creates a [MetricsDialog].
+  /// Creates a [InfoDialog].
   ///
   /// [title], [content], [actions] and [maxWidth] must not be null.
-  const MetricsDialog({
+  const InfoDialog({
     @required this.title,
     this.content,
     @required this.actions,

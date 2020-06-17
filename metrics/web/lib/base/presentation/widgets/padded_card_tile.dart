@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/widgets/metrics_card.dart';
+import 'package:metrics/base/presentation/widgets/padded_card.dart';
 
-/// The widget that represents a metrics tile card.
-class MetricsTileCard extends StatelessWidget {
+/// The widget that represents a tile card.
+class PaddedCardTile extends StatelessWidget {
   /// A text, that displays at the top left corner of the card.
   final Widget title;
 
@@ -11,7 +11,7 @@ class MetricsTileCard extends StatelessWidget {
   /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry titlePadding;
 
-  /// A text subtitle of the [MetricsTileCard].
+  /// A text subtitle of the [PaddedCardTile].
   final Widget subtitle;
 
   /// An empty space surrounds the [subtitle].
@@ -19,7 +19,7 @@ class MetricsTileCard extends StatelessWidget {
   /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry subtitlePadding;
 
-  /// An action bar at the bottom of the [MetricsTileCard].
+  /// An action bar at the bottom of the [PaddedCardTile].
   final List<Widget> actions;
 
   /// An empty space surrounds the [actions].
@@ -27,10 +27,10 @@ class MetricsTileCard extends StatelessWidget {
   /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry actionsPadding;
 
-  /// A background color of the [MetricsTileCard].
+  /// A background color of the [PaddedCardTile].
   final Color backgroundColor;
 
-  /// An empty space that surrounds the [MetricsTileCard].
+  /// An empty space that surrounds the [PaddedCardTile].
   ///
   /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry margin;
@@ -40,15 +40,15 @@ class MetricsTileCard extends StatelessWidget {
   /// Has a default value of [EdgeInsets.zero].
   final EdgeInsetsGeometry padding;
 
-  /// An elevation of the [MetricsTileCard].
+  /// An elevation of the [PaddedCardTile].
   ///
   /// Has a default value of [0.0].
   final double elevation;
 
-  /// Creates a [MetricsTileCard].
+  /// Creates a [PaddedCardTile].
   ///
   /// [title], [subtitle], [actions] and [backgroundColor] must not be null.
-  const MetricsTileCard({
+  const PaddedCardTile({
     Key key,
     @required this.backgroundColor,
     @required this.title,
@@ -68,7 +68,7 @@ class MetricsTileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MetricsCard(
+    return PaddedCard(
       elevation: elevation,
       margin: margin,
       padding: padding,
