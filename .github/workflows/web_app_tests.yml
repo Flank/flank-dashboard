@@ -52,7 +52,7 @@ jobs:
         working-directory: metrics/web/
 
       - name: Move chromdriver to make it available in tests
-        run: mkdir build/ && mv $CHROMEWEBDRIVER build/chromedriver
+        run: mv $CHROMEWEBDRIVER build/chromedriver
         working-directory: metrics/web/
 
       - name: Flutter driver test
