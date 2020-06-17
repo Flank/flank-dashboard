@@ -19,7 +19,7 @@ jobs:
     name: Run the Metrics Web Application tests
     runs-on: ubuntu-latest
     env:
-      working-directory: ./metrics/web/
+      working-directory: metrics/web/
       WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
       WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
 
@@ -41,6 +41,8 @@ jobs:
 
       - name: Get dependencies
         run: flutter config --enable-web && flutter pub get
+        working-directory: ./metrics/web/
+
 
       - name: Flutter analyze
         run: flutter analyze
