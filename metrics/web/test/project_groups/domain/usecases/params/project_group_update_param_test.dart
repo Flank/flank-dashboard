@@ -7,6 +7,13 @@ void main() {
     const name = 'name';
     const List<String> projectIds = [];
 
+    test("constructs an instance on a valid input", () {
+      expect(
+        () => UpdateProjectGroupParam(id, name, projectIds),
+        returnsNormally,
+      );
+    });
+
     test("throws an ArgumentError when created with null id", () {
       expect(
         () => UpdateProjectGroupParam(null, name, projectIds),

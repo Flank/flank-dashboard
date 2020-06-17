@@ -7,6 +7,15 @@ import '../../../test_utils/project_group_repository_mock.dart';
 
 void main() {
   group("DeleteProjectGroupUseCase", () {
+    test("constructs an instance on a valid input", () {
+      final repository = ProjectGroupRepositoryMock();
+
+      expect(
+        () => DeleteProjectGroupUseCase(repository),
+        returnsNormally,
+      );
+    });
+
     test("throws an ArgumentError when the given repository is null", () {
       expect(
         () => DeleteProjectGroupUseCase(null),
