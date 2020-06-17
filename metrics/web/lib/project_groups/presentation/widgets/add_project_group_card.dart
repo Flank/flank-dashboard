@@ -33,9 +33,6 @@ class AddProjectGroupCard extends StatelessWidget {
               padding: symmetricPadding,
               child: Text(
                 ProjectGroupsStrings.addProjectGroup,
-                overflow: TextOverflow.ellipsis,
-                softWrap: false,
-                maxLines: 1,
                 style: TextStyle(fontSize: 24.0),
               ),
             ),
