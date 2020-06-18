@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/presentation/model/auth_error_message.dart';
-import 'package:metrics/auth/presentation/model/email_validation_error_message.dart';
-import 'package:metrics/auth/presentation/model/password_validation_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
@@ -159,16 +157,4 @@ class SignInErrorAuthNotifierStub extends ChangeNotifier
 
   @override
   Future<void> signOut() async {}
-
-  @override
-  void validateEmail(String value) {}
-
-  @override
-  void validatePassword(String value) {}
-
-  @override
-  EmailValidationErrorMessage get emailValidationErrorMessage => null;
-
-  @override
-  PasswordValidationErrorMessage get passwordValidationErrorMessage => null;
 }
