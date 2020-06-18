@@ -1,0 +1,78 @@
+name: Metrics Web Application tests and deployment
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - metrics/web/lib
+      - metrics/web/test
+      - metrics/web/test_driver
+      - .github/workflows/**
+  pull_request:
+    branches:
+      - master
+    paths:
+      - metrics/web/lib
+      - metrics/web/test
+      - metrics/web/test_driver
+      - .github/workflows/**
+
+jobs:
+  test:
+    name: Run the Metrics Web Application tests and deploy to Firebase
+    runs-on: macOS-latest
+    timeout-minutes: 15
+    env:
+      WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
+      WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      PROJECT_PATH: metrics/web/
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'dev'
+          flutter-version: '1.15.3'
+
+      - uses: cedx/setup-dart@v2
+
+      - name: Configure Flutter
+        run: flutter config --enable-web && flutter doctor
+        working-directory: metrics/web/
+
+      - name: Get dependencies
+        run: flutter pub get
+        working-directory: metrics/web/
+
+      - name: Flutter analyze
+        run: flutter analyze
+        working-directory: metrics/web/
+
+      - name: Flutter test
+        run: flutter test
+        working-directory: metrics/web/
+
+      - name: Flutter driver test
+        run: dart test_driver/main.dart --no-verbose --store-logs-to=build/logs --email=$WEB_APP_USER_EMAIL --password=$WEB_APP_USER_PASSWORD
+        working-directory: metrics/web/
+
+      - name: Install Fireebase CLI
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: curl -sL https://firebase.tools | bash
+
+      - name: Build release app
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: flutter clean && flutter build web --release
+        working-directory: metrics/web/
+
+      - name: Deploy to Firebase
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: firebase deploy --only hosting
+        working-directory: metrics/web/
