@@ -2,16 +2,6 @@ name: Metrics Web Application tests and deployment
 
 on:
   push:
-    branches:
-      - master
-    paths:
-      - metrics/web/lib
-      - metrics/web/test
-      - metrics/web/test_driver
-      - .github/workflows/**
-  pull_request:
-    branches:
-      - master
     paths:
       - metrics/web/lib
       - metrics/web/test
