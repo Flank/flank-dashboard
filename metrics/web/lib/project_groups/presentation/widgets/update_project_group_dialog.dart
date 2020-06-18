@@ -88,27 +88,29 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
                 padding: EdgeInsets.only(top: 16.0),
                 child: Text(ProjectGroupsStrings.chooseProjectToAdd),
               ),
-              Container(
-                height: 250.0,
-                padding: const EdgeInsets.all(16.0),
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(3.0),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    TextField(
-                      onChanged: _projectGroupsNotifier.filterByProjectName,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        hintText: CommonStrings.searchForProject,
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(3.0),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextField(
+                        onChanged: _projectGroupsNotifier.filterByProjectName,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          hintText: CommonStrings.searchForProject,
+                        ),
                       ),
-                    ),
-                    Flexible(
-                      child: ProjectCheckboxList(),
-                    ),
-                  ],
+                      Flexible(
+                        child: ProjectCheckboxList(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 
 /// The widget that displays a specific version of the [Dialog].
 class InfoDialog extends StatelessWidget {
@@ -60,40 +61,40 @@ class InfoDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: backgroundColor,
-      child: SingleChildScrollView(
-        child: Container(
-          padding: padding,
-          constraints: BoxConstraints(
-            maxWidth: maxWidth,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Align(
-                alignment: Alignment.centerRight,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: const Icon(Icons.close),
-                ),
+      child: Container(
+        padding: padding,
+        constraints: BoxConstraints(
+          maxWidth: maxWidth,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: const Icon(Icons.close),
               ),
-              Padding(
-                padding: titlePadding,
-                child: title,
-              ),
-              Padding(
+            ),
+            Padding(
+              padding: titlePadding,
+              child: title,
+            ),
+            Flexible(
+              child: Padding(
                 padding: contentPadding,
                 child: content ?? Container(),
               ),
-              Padding(
-                padding: actionsPadding,
-                child: Row(
-                  mainAxisAlignment: actionsAlignment,
-                  children: actions,
-                ),
+            ),
+            Padding(
+              padding: actionsPadding,
+              child: Row(
+                mainAxisAlignment: actionsAlignment,
+                children: actions,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
