@@ -3,7 +3,7 @@ import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
-import 'package:metrics/project_groups/presentation/view_models/selected_project_group_delete_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_group_delete_dialog_view_model.dart';
 import 'package:provider/provider.dart';
 
 /// The widget that displays a delete confirmation dialog.
@@ -20,8 +20,8 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
   @override
   Widget build(BuildContext context) {
     return Selector<ProjectGroupsNotifier,
-        SelectedProjectGroupDeleteDialogViewModel>(
-      selector: (_, state) => state.selectedProjectGroupDeleteDialogViewModel,
+        ProjectGroupDeleteDialogViewModel>(
+      selector: (_, state) => state.projectGroupDeleteDialogViewModel,
       builder: (_, projectGroupDeleteDialogViewModel, ___) {
         return InfoDialog(
           padding: const EdgeInsets.all(32.0),
@@ -67,7 +67,7 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
 
   /// Starts deleting process of a project group.
   Future<void> _deleteProjectGroup(
-    SelectedProjectGroupDeleteDialogViewModel projectGroupDeleteDialogViewModel,
+    ProjectGroupDeleteDialogViewModel projectGroupDeleteDialogViewModel,
   ) async {
     setState(() => _isLoading = true);
 

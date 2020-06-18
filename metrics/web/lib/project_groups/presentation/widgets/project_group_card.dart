@@ -84,7 +84,7 @@ class ProjectGroupCard extends StatelessWidget {
   /// Shows a [ProjectGroupDeleteDialog] with an active project group.
   void _showProjectGroupDeleteDialog(BuildContext context) {
     Provider.of<ProjectGroupsNotifier>(context, listen: false)
-        .setActiveProjectGroupDeleteDialogViewModel(
+        .setProjectGroupDeleteDialogViewModel(
       projectGroupCardViewModel.id,
     );
 
@@ -97,7 +97,7 @@ class ProjectGroupCard extends StatelessWidget {
   /// Shows a [UpdateProjectGroupDialog] with an active project group.
   void _showProjectGroupDialog(BuildContext context) {
     Provider.of<ProjectGroupsNotifier>(context, listen: false)
-        .setActiveProjectGroupDialogViewModel(
+        .setProjectGroupDialogViewModel(
       projectGroupCardViewModel.id,
     );
 

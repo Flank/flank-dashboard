@@ -43,7 +43,7 @@ class AddProjectGroupCard extends StatelessWidget {
   /// Shows a [AddProjectGroupDialog] with an active project group.
   void _showProjectGroupDialog(BuildContext context) {
     Provider.of<ProjectGroupsNotifier>(context, listen: false)
-        .setActiveProjectGroupDialogViewModel();
+        .setProjectGroupDialogViewModel();
 
     showDialog(
       context: context,

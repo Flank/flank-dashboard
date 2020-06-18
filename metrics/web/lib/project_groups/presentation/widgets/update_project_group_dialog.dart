@@ -7,7 +7,7 @@ import 'package:metrics/base/presentation/widgets/clearable_text_form_field.dart
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
-import 'package:metrics/project_groups/presentation/view_models/selected_project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 import 'package:provider/provider.dart';
 
@@ -42,7 +42,7 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
     );
 
     _groupNameController.text =
-        _projectGroupsNotifier.selectedProjectGroupDialogViewModel?.name;
+        _projectGroupsNotifier.projectGroupDialogViewModel?.name;
 
     _groupNameController.addListener(() {
       setState(() {});
@@ -53,9 +53,9 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
   Widget build(BuildContext context) {
     const padding = EdgeInsets.symmetric(vertical: 12.0);
 
-    return Selector<ProjectGroupsNotifier, SelectedProjectGroupDialogViewModel>(
-      selector: (_, state) => state.selectedProjectGroupDialogViewModel,
-      builder: (_, activeProjectGroupDialogViewModel, ___) {
+    return Selector<ProjectGroupsNotifier, ProjectGroupDialogViewModel>(
+      selector: (_, state) => state.projectGroupDialogViewModel,
+      builder: (_, projectGroupDialogViewModel, ___) {
         final editGroupButtonText = _isLoading
             ? ProjectGroupsStrings.savingProjectGroup
             : ProjectGroupsStrings.saveChanges;
@@ -114,9 +114,9 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
                 ),
               ),
               Text(
-                activeProjectGroupDialogViewModel.selectedProjectIds.isNotEmpty
+                projectGroupDialogViewModel.selectedProjectIds.isNotEmpty
                     ? ProjectGroupsStrings.getSelectedCount(
-                        activeProjectGroupDialogViewModel
+                        projectGroupDialogViewModel
                             .selectedProjectIds.length,
                       )
                     : '',
@@ -135,7 +135,7 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
                   onPressed: _isLoading
                       ? null
                       : () => _updateProjectGroup(
-                          activeProjectGroupDialogViewModel),
+                          projectGroupDialogViewModel),
                   child: Text(editGroupButtonText),
                 ),
               ],
@@ -149,7 +149,7 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
 
   /// Updates the given project group.
   Future<void> _updateProjectGroup(
-    SelectedProjectGroupDialogViewModel selectedProjectGroupDialogViewModel,
+    ProjectGroupDialogViewModel selectedProjectGroupDialogViewModel,
   ) async {
     if (!_formKey.currentState.validate()) {
       return;
