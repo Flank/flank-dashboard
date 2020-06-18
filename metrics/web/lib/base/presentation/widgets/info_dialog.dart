@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 
 /// The widget that displays a specific version of the [Dialog].
 class InfoDialog extends StatelessWidget {

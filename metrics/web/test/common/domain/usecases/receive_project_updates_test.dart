@@ -3,14 +3,12 @@ import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../test_utils/matcher_util.dart';
-
 void main() {
   group("ReceiveProjectUpdates", () {
-    test("throws an AssertionError when the given repository is null", () {
+    test("throws an ArgumentError when the given repository is null", () {
       expect(
         () => ReceiveProjectUpdates(null),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
 
