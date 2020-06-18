@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 /// A class that represents the data of the project group to display
 /// inside a delete dialog.
 class ProjectGroupDeleteDialogViewModel {
@@ -8,8 +10,11 @@ class ProjectGroupDeleteDialogViewModel {
   final String name;
 
   /// Creates the [ProjectGroupDeleteDialogViewModel].
+  ///
+  /// The [id] and the [name] must not be null.
   ProjectGroupDeleteDialogViewModel({
-    this.id,
-    this.name,
-  });
+    @required this.id,
+    @required this.name,
+  })  : assert(id != null),
+        assert(name != null);
 }
