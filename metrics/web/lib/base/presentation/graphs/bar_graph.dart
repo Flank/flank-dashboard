@@ -6,8 +6,8 @@ typedef BarBuilder = Widget Function(int index);
 /// Displays the bar graph with bars
 /// built using the [barBuilder] function from [data].
 ///
-/// This [Widget] will try to fill all available space defined by
-/// it's parent constraints.
+/// This [Widget] will try to fill all available space defined by it's parent
+/// constraints.
 class BarGraph<T extends num> extends StatelessWidget {
   /// The padding to inset this graph.
   final EdgeInsets graphPadding;
