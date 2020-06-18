@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/info_dialog.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/base/presentation/widgets/clearable_text_form_field.dart';
+import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
@@ -43,7 +44,7 @@ class _AddProjectGroupDialogState extends State<AddProjectGroupDialog> {
 
   @override
   Widget build(BuildContext context) {
-    const padding = EdgeInsets.symmetric(vertical: 12.0);
+    final dialogThemeData = MetricsTheme.of(context).dialogThemeData;
 
     return Selector<ProjectGroupsNotifier, ProjectGroupDialogViewModel>(
       selector: (_, state) => state.projectGroupDialogViewModel,
@@ -53,15 +54,12 @@ class _AddProjectGroupDialogState extends State<AddProjectGroupDialog> {
             : ProjectGroupsStrings.createGroup;
 
         return InfoDialog(
-          padding: const EdgeInsets.all(32.0),
-          title: const Text(
+          padding: dialogThemeData.padding,
+          title: Text(
             ProjectGroupsStrings.addProjectGroup,
-            style: TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.bold,
-            ),
+            style: dialogThemeData.titleTextStyle,
           ),
-          titlePadding: padding,
+          titlePadding: dialogThemeData.titlePadding,
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -108,36 +106,32 @@ class _AddProjectGroupDialogState extends State<AddProjectGroupDialog> {
               Text(
                 projectGroupDialogViewModel.selectedProjectIds.isNotEmpty
                     ? ProjectGroupsStrings.getSelectedCount(
-                        projectGroupDialogViewModel
-                            .selectedProjectIds.length,
+                        projectGroupDialogViewModel.selectedProjectIds.length,
                       )
                     : '',
               ),
             ],
           ),
-          contentPadding: padding,
+          contentPadding: dialogThemeData.contentPadding,
           actions: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  height: 50.0,
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    onPressed: _isLoading
-                        ? null
-                        : () => _addProjectGroup(
-                              projectGroupDialogViewModel,
-                            ),
-                    child: Text(createGroupButtonText),
+                RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
                   ),
+                  onPressed: _isLoading
+                      ? null
+                      : () => _addProjectGroup(
+                            projectGroupDialogViewModel,
+                          ),
+                  child: Text(createGroupButtonText),
                 ),
               ],
             ),
           ],
-          actionsPadding: padding,
+          actionsPadding: dialogThemeData.actionsPadding,
         );
       },
     );

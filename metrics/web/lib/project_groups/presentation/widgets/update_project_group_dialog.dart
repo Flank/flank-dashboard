@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/info_dialog.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/base/presentation/widgets/clearable_text_form_field.dart';
+import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
@@ -51,7 +52,7 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
 
   @override
   Widget build(BuildContext context) {
-    const padding = EdgeInsets.symmetric(vertical: 12.0);
+    final dialogThemeData = MetricsTheme.of(context).dialogThemeData;
 
     return Selector<ProjectGroupsNotifier, ProjectGroupDialogViewModel>(
       selector: (_, state) => state.projectGroupDialogViewModel,
@@ -61,15 +62,10 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
             : ProjectGroupsStrings.saveChanges;
 
         return InfoDialog(
-          padding: const EdgeInsets.all(32.0),
-          title: const Text(
-            ProjectGroupsStrings.editProjectGroup,
-            style: TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          titlePadding: padding,
+          padding: dialogThemeData.padding,
+          title: Text(ProjectGroupsStrings.editProjectGroup,
+              style: dialogThemeData.titleTextStyle),
+          titlePadding: dialogThemeData.titlePadding,
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -116,14 +112,13 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
               Text(
                 projectGroupDialogViewModel.selectedProjectIds.isNotEmpty
                     ? ProjectGroupsStrings.getSelectedCount(
-                        projectGroupDialogViewModel
-                            .selectedProjectIds.length,
+                        projectGroupDialogViewModel.selectedProjectIds.length,
                       )
                     : '',
               ),
             ],
           ),
-          contentPadding: padding,
+          contentPadding: dialogThemeData.contentPadding,
           actions: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,14 +129,13 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
                   ),
                   onPressed: _isLoading
                       ? null
-                      : () => _updateProjectGroup(
-                          projectGroupDialogViewModel),
+                      : () => _updateProjectGroup(projectGroupDialogViewModel),
                   child: Text(editGroupButtonText),
                 ),
               ],
             ),
           ],
-          actionsPadding: padding,
+          actionsPadding: dialogThemeData.actionsPadding,
         );
       },
     );
