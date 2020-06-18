@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
@@ -34,7 +33,7 @@ void main() {
     DashboardProjectMetrics expectedProjectMetrics;
     ProjectMetricsNotifier projectMetricsNotifier;
 
-    setUpAll(() async {
+    setUp(() async {
       projectMetricsNotifier = ProjectMetricsNotifier(
         receiveProjectMetricsUpdates,
       );
@@ -42,22 +41,28 @@ void main() {
       expectedProjectMetrics =
           await receiveProjectMetricsUpdates(projectIdParam).first;
 
+      final _completer = Completer();
+
+      void initializationListener() {
+        if (projectMetricsNotifier.projectsMetrics.every(
+                (projectMetric) => projectMetric.buildNumberMetric != null) &&
+            !_completer.isCompleted) {
+          _completer.complete();
+        }
+      }
+
+      projectMetricsNotifier.addListener(initializationListener);
       projectMetricsNotifier.updateProjects(
         projects,
         errorMessage,
       );
+      await _completer.future;
+      projectMetricsNotifier.removeListener(initializationListener);
     });
 
-    tearDownAll(() async {
+    tearDown(() async {
       await projectMetricsNotifier.dispose();
     });
-
-    Future<void> _resetProjectsFilters() async {
-      projectMetricsNotifier.filterByProjectName(null);
-      await Future.delayed(
-        Duration(milliseconds: DurationConstants.debounce.inMilliseconds + 100),
-      );
-    }
 
     test(
       "throws an AssertionError if receive project metric updates use case is null",
@@ -282,42 +287,33 @@ void main() {
       ];
 
       final projectNameFilter = expectedProjectMetrics.first.projectName;
+      final listener = expectAsync0(() {
+        final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
+        expect(
+          filteredProjectMetrics,
+          equals(expectedProjectMetrics),
+        );
+      });
+      projectMetricsNotifier.addListener(listener);
       projectMetricsNotifier.filterByProjectName(projectNameFilter);
-
-      await Future.delayed(
-        Duration(milliseconds: DurationConstants.debounce.inMilliseconds + 100),
-      );
-
-      final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
-
-      expect(
-        filteredProjectMetrics,
-        equals(expectedProjectMetrics),
-      );
-
-      await _resetProjectsFilters();
     });
 
     test(
         ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
         () async {
-          final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
+      final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
-          projectMetricsNotifier.filterByProjectName(null);
+      final listener = expectAsync0(() {
+        final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
-          await Future.delayed(
-            Duration(milliseconds: DurationConstants.debounce.inMilliseconds + 1),
-          );
-
-          final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
-
-          expect(
-            filteredProjectMetrics,
-            equals(expectedProjectMetrics),
-          );
-
-          await _resetProjectsFilters();
+        expect(
+          filteredProjectMetrics,
+          equals(expectedProjectMetrics),
+        );
+      });
+      projectMetricsNotifier.addListener(listener);
+      projectMetricsNotifier.filterByProjectName(null);
     });
 
     test(
