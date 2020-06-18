@@ -1,17 +1,7 @@
-name: Metrics Web Application tests and deployment
+name: Metrics Web Application Actions
 
 on:
   push:
-    branches:
-      - master
-    paths:
-      - metrics/web/lib
-      - metrics/web/test
-      - metrics/web/test_driver
-      - .github/workflows/**
-  pull_request:
-    branches:
-      - master
     paths:
       - metrics/web/lib
       - metrics/web/test
@@ -63,7 +53,7 @@ jobs:
         run: dart test_driver/main.dart --no-verbose --store-logs-to=build/logs --email=$WEB_APP_USER_EMAIL --password=$WEB_APP_USER_PASSWORD
         working-directory: metrics/web/
 
-      - name: Install Fireebase CLI
+      - name: Install Firebase CLI
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: curl -sL https://firebase.tools | bash
 
