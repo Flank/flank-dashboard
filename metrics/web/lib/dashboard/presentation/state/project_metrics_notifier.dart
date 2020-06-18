@@ -3,56 +3,40 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:metrics/common/presentation/constants/duration_constants.dart';
+import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
-import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
-import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
-import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/models/build_result_bar_data.dart';
+import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
-import 'package:metrics_core/metrics_core.dart';
+import 'package:rxdart/rxdart.dart';
 
-/// The [ChangeNotifier] that holds the projects metrics state.
-///
-/// Stores the [Project]s and their [DashboardProjectMetrics].
+/// The [ChangeNotifier] that holds the projects metrics data.
 class ProjectMetricsNotifier extends ChangeNotifier {
-  /// Provides an ability to receive project updates.
-  final ReceiveProjectUpdates _receiveProjectsUpdates;
-
   /// Provides an ability to receive project metrics updates.
   final ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
 
   /// A [Map] that holds all created [StreamSubscription].
   final Map<String, StreamSubscription> _buildMetricsSubscriptions = {};
 
+  /// A [PublishSubject] that provides an ability to filter projects by the name.
+  final _projectNameFilterSubject = PublishSubject<String>();
+
   /// A [Map] that holds all loaded [ProjectMetricsData].
   Map<String, ProjectMetricsData> _projectMetrics;
 
-  /// The stream subscription needed to be able to stop listening
-  /// to the project updates.
-  StreamSubscription _projectsSubscription;
+  /// Holds the error message that occurred during loading projects data.
+  String _projectsErrorMessage;
 
-  /// Holds the error message that occurred during loading data.
-  String _errorMessage;
-
-  /// Optional filter value that represents a part (or full) project name used to limit the displayed data.
+  /// An optional filter value that represents a part (or full) project name
+  /// used to limit the displayed data.
   String _projectNameFilter;
-
-  /// Creates the project metrics store.
-  ///
-  /// The provided use cases should not be null.
-  ProjectMetricsNotifier(
-    this._receiveProjectsUpdates,
-    this._receiveProjectMetricsUpdates,
-  ) : assert(
-          _receiveProjectsUpdates != null &&
-              _receiveProjectMetricsUpdates != null,
-          'The use cases should not be null',
-        );
 
   /// Provides a list of project metrics, filtered by the project name filter.
   List<ProjectMetricsData> get projectsMetrics {
@@ -71,34 +55,39 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Provides an error description that occurred during loading metrics data.
-  String get errorMessage => _errorMessage;
+  String get projectsErrorMessage => _projectsErrorMessage;
 
-  /// Subscribes to projects and its metrics.
-  Future<void> subscribeToProjects() async {
-    final projectsStream = _receiveProjectsUpdates();
-    _errorMessage = null;
-    await _projectsSubscription?.cancel();
-
-    _projectsSubscription = projectsStream.listen(
-      _projectsListener,
-      onError: _errorHandler,
-    );
+  /// Creates a new instance of the [ProjectMetricsNotifier].
+  ///
+  /// The given [ReceiveProjectMetricsUpdates] must not be null.
+  ProjectMetricsNotifier(
+    this._receiveProjectMetricsUpdates,
+  ) : assert(
+          _receiveProjectMetricsUpdates != null,
+          'The use case must not be null',
+        ) {
+    _subscribeToProjectsNameFilter();
   }
 
-  /// Unsubscribes from projects and it's metrics.
-  Future<void> unsubscribeFromProjects() async {
-    await _cancelSubscriptions();
-    notifyListeners();
+  /// Subscribes to a projects name filter.
+  void _subscribeToProjectsNameFilter() {
+    _projectNameFilterSubject
+        .debounceTime(DurationConstants.debounce)
+        .listen((value) {
+      _projectNameFilter = value;
+      notifyListeners();
+    });
   }
 
-  /// Adds project metrics filter using [value] provided.
+  /// Adds project metrics filter using the given [value].
   void filterByProjectName(String value) {
-    _projectNameFilter = value;
-    notifyListeners();
+    _projectNameFilterSubject.add(value);
   }
 
-  /// Listens to project updates.
-  void _projectsListener(List<Project> newProjects) {
+  /// Updates projects and an error message.
+  void updateProjects(List<ProjectModel> newProjects, String errorMessage) {
+    _projectsErrorMessage = errorMessage;
+
     if (newProjects == null) return;
 
     if (newProjects.isEmpty) {
@@ -122,8 +111,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     for (final project in newProjects) {
       final projectId = project.id;
 
-      ProjectMetricsData projectMetrics =
-          projectsMetrics[projectId] ?? const ProjectMetricsData();
+      ProjectMetricsData projectMetrics = projectsMetrics[projectId] ??
+          ProjectMetricsData(projectId: projectId);
 
       if (projectMetrics.projectName != project.name) {
         projectMetrics = projectMetrics.copyWith(
@@ -141,6 +130,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Unsubscribes from project metrics.
+  Future<void> unsubscribeFromBuildMetrics() async {
+    await _cancelSubscriptions();
+    notifyListeners();
+  }
+
   /// Subscribes to project metrics.
   void _subscribeToBuildMetrics(String projectId) {
     final dashboardMetricsStream = _receiveProjectMetricsUpdates(
@@ -150,10 +145,10 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     _buildMetricsSubscriptions[projectId] =
         dashboardMetricsStream.listen((metrics) {
       _createProjectMetrics(metrics, projectId);
-    }, onError: _errorHandler);
+    }, onError: _projectsErrorHandler);
   }
 
-  /// Creates project metrics from [DashboardProjectMetrics].
+  /// Creates project metrics from the [DashboardProjectMetrics].
   void _createProjectMetrics(
       DashboardProjectMetrics dashboardMetrics, String projectId) {
     final projectsMetrics = _projectMetrics ?? {};
@@ -185,7 +180,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates the project performance metrics from [PerformanceMetric].
+  /// Creates the project performance metrics from the [PerformanceMetric].
   List<Point<int>> _getPerformanceMetrics(PerformanceMetric metric) {
     final performanceMetrics = metric?.buildsPerformance ?? DateTimeSet();
 
@@ -201,7 +196,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     }).toList();
   }
 
-  /// Creates the project build result metrics from [BuildResultMetric].
+  /// Creates the project build result metrics from the [BuildResultMetric].
   List<BuildResultBarData> _getBuildResultMetrics(BuildResultMetric metrics) {
     final buildResults = metrics?.buildResults ?? [];
 
@@ -220,7 +215,6 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
   /// Cancels all created subscriptions.
   Future<void> _cancelSubscriptions() async {
-    await _projectsSubscription?.cancel();
     for (final subscription in _buildMetricsSubscriptions.values) {
       await subscription?.cancel();
     }
@@ -228,17 +222,18 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     _buildMetricsSubscriptions.clear();
   }
 
-  /// Saves the error [String] representation to [_errorMessage].
-  void _errorHandler(error) {
+  /// Saves the error [String] representation to the [_projectsErrorMessage].
+  void _projectsErrorHandler(error) {
     if (error is PlatformException) {
-      _errorMessage = error.message;
+      _projectsErrorMessage = error.message;
       notifyListeners();
     }
   }
 
   @override
-  void dispose() {
-    _cancelSubscriptions();
+  FutureOr<void> dispose() async {
+    await _cancelSubscriptions();
+    await _projectNameFilterSubject.close();
     super.dispose();
   }
 }

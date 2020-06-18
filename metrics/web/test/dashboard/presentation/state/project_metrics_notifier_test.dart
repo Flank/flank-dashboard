@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
@@ -10,11 +10,9 @@ import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metr
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
-import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
-import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics_core/metrics_core.dart';
-import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 
@@ -24,48 +22,53 @@ void main() {
   group("ProjectMetricsNotifier", () {
     const projectId = 'projectId';
     const projectIdParam = ProjectIdParam(projectId);
+    final List<ProjectModel> projects = [
+      ProjectModel(id: 'id', name: 'name'),
+      ProjectModel(id: 'id2', name: 'name2'),
+    ];
+    const String errorMessage = null;
 
     final receiveProjectMetricsUpdates = _ReceiveProjectMetricsUpdatesStub();
-    final receiveProjectUpdates = _ReceiveProjectUpdatesStub();
 
     DashboardProjectMetrics expectedProjectMetrics;
     ProjectMetricsNotifier projectMetricsNotifier;
 
-    setUpAll(() async {
+    setUp(() async {
       projectMetricsNotifier = ProjectMetricsNotifier(
-        receiveProjectUpdates,
         receiveProjectMetricsUpdates,
       );
 
       expectedProjectMetrics =
           await receiveProjectMetricsUpdates(projectIdParam).first;
 
-      await projectMetricsNotifier.subscribeToProjects();
+      final _completer = Completer();
+
+      void initializationListener() {
+        if (projectMetricsNotifier.projectsMetrics.every(
+                (projectMetric) => projectMetric.buildNumberMetric != null) &&
+            !_completer.isCompleted) {
+          _completer.complete();
+        }
+      }
+
+      projectMetricsNotifier.addListener(initializationListener);
+      projectMetricsNotifier.updateProjects(
+        projects,
+        errorMessage,
+      );
+      await _completer.future;
+      projectMetricsNotifier.removeListener(initializationListener);
     });
 
-    tearDownAll(() {
-      projectMetricsNotifier.dispose();
+    tearDown(() async {
+      await projectMetricsNotifier.dispose();
     });
-
-    void _resetProjectsFilters() {
-      projectMetricsNotifier.filterByProjectName(null);
-    }
-
-    test(
-      "throws an AssertionError if receive project updates use case is null",
-      () {
-        expect(
-          () => ProjectMetricsNotifier(null, receiveProjectMetricsUpdates),
-          MatcherUtil.throwsAssertionError,
-        );
-      },
-    );
 
     test(
       "throws an AssertionError if receive project metric updates use case is null",
       () {
         expect(
-          () => ProjectMetricsNotifier(receiveProjectUpdates, null),
+          () => ProjectMetricsNotifier(null),
           MatcherUtil.throwsAssertionError,
         );
       },
@@ -79,11 +82,8 @@ void main() {
         );
 
         final projectMetricsNotifier = ProjectMetricsNotifier(
-          receiveProjectUpdates,
           receiveEmptyMetrics,
         );
-
-        await projectMetricsNotifier.subscribeToProjects();
 
         bool hasEmptyMetrics = false;
         final metricsListener = expectAsyncUntil0(() async {
@@ -102,10 +102,11 @@ void main() {
             }
           }
 
-          if (hasEmptyMetrics) projectMetricsNotifier.dispose();
+          if (hasEmptyMetrics) await projectMetricsNotifier.dispose();
         }, () => hasEmptyMetrics);
 
         projectMetricsNotifier.addListener(metricsListener);
+        projectMetricsNotifier.updateProjects(projects, errorMessage);
       },
     );
 
@@ -116,7 +117,6 @@ void main() {
             _ReceiveProjectMetricsUpdatesStub.withNullMetrics();
 
         final projectMetricsNotifier = ProjectMetricsNotifier(
-          receiveProjectUpdates,
           receiveProjectMetricsUpdates,
         );
 
@@ -131,12 +131,12 @@ void main() {
           hasNullMetrics =
               buildResultMetrics == null && performanceMetrics == null;
 
-          if (hasNullMetrics) projectMetricsNotifier.dispose();
+          if (hasNullMetrics) await projectMetricsNotifier.dispose();
         }, () => hasNullMetrics);
 
-        await projectMetricsNotifier.subscribeToProjects();
-
         projectMetricsNotifier.addListener(metricsListener);
+
+        projectMetricsNotifier.updateProjects(projects, errorMessage);
       },
     );
 
@@ -231,102 +231,38 @@ void main() {
     });
 
     test(
-      ".errorMessage provides an error description if projects stream emits a PlatformException",
-      () async {
-        final receiveProjectUpdates = _ReceiveProjectUpdatesMock();
-        final projectsController = BehaviorSubject<List<Project>>();
-        const errorMessage = 'errorMessage';
-
-        when(receiveProjectUpdates())
-            .thenAnswer((_) => projectsController.stream);
-
-        final metricsNotifier = ProjectMetricsNotifier(
-          receiveProjectUpdates,
-          receiveProjectMetricsUpdates,
-        );
-
-        await metricsNotifier.subscribeToProjects();
-
-        projectsController.addError(PlatformException(
-          message: errorMessage,
-          code: 'test_code',
-        ));
-
-        bool hasErrorDescription;
-        final metricsListener = expectAsyncUntil0(() async {
-          hasErrorDescription = metricsNotifier.errorMessage == errorMessage;
-
-          if (hasErrorDescription) metricsNotifier.dispose();
-        }, () => hasErrorDescription);
-
-        metricsNotifier.addListener(metricsListener);
-      },
-    );
-
-    test(
       "deletes the ProjectMetricsData if the project was deleted on server",
       () async {
-        final projects = _ReceiveProjectUpdatesStub.testProjects.toList();
-
-        final receiveProjectUpdates = _ReceiveProjectUpdatesStub(
-          projects: projects,
-        );
-
         final metricsNotifier = ProjectMetricsNotifier(
-          receiveProjectUpdates,
           receiveProjectMetricsUpdates,
         );
 
-        await metricsNotifier.subscribeToProjects();
+        metricsNotifier.updateProjects(projects, errorMessage);
 
-        List<Project> expectedProjects = await receiveProjectUpdates().first;
+        final List<ProjectModel> expectedProjects = [...projects];
         List<ProjectMetricsData> actualProjects =
             metricsNotifier.projectsMetrics;
 
         expect(actualProjects.length, expectedProjects.length);
 
-        projects.removeLast();
+        expectedProjects.removeLast();
 
-        expectedProjects = await receiveProjectUpdates().first;
+        metricsNotifier.updateProjects(expectedProjects, errorMessage);
+
         actualProjects = metricsNotifier.projectsMetrics;
 
         expect(actualProjects.length, expectedProjects.length);
 
-        metricsNotifier.dispose();
-      },
-    );
-
-    test(
-      ".subscribeToProjects() completes normally if received projects are null",
-      () async {
-        final receiveProjects = _ReceiveProjectUpdatesStub(projects: null);
-
-        final metricsNotifier = ProjectMetricsNotifier(
-          receiveProjects,
-          receiveProjectMetricsUpdates,
-        );
-
-        await expectLater(metricsNotifier.subscribeToProjects(), completes);
-
-        final projectMetrics = metricsNotifier.projectsMetrics;
-
-        expect(projectMetrics, isNull);
-
-        metricsNotifier.dispose();
+        await metricsNotifier.dispose();
       },
     );
 
     test(
       ".projectMetrics is an empty list when the projects parameter is an empty list",
       () async {
-        final receiveProjects = _ReceiveProjectUpdatesStub(projects: []);
-
         final metricsNotifier = ProjectMetricsNotifier(
-          receiveProjects,
           receiveProjectMetricsUpdates,
         );
-
-        await metricsNotifier.subscribeToProjects();
 
         bool hasEmptyProjectMetrics;
         final metricsListener = expectAsyncUntil0(() async {
@@ -334,26 +270,12 @@ void main() {
           hasEmptyProjectMetrics =
               projectMetrics != null && projectMetrics.isEmpty;
 
-          if (hasEmptyProjectMetrics) metricsNotifier.dispose();
+          if (hasEmptyProjectMetrics) await metricsNotifier.dispose();
         }, () => hasEmptyProjectMetrics);
 
         metricsNotifier.addListener(metricsListener);
-      },
-    );
 
-    test(
-      ".subscribeToProjects() subscribes to projects updates",
-      () async {
-        final projectUpdates = _ReceiveProjectUpdatesStub();
-        final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
-
-        final metricsNotifier =
-            ProjectMetricsNotifier(projectUpdates, metricsUpdates);
-        await metricsNotifier.subscribeToProjects();
-
-        expect(projectUpdates.hasListener, isTrue);
-
-        metricsNotifier.dispose();
+        metricsNotifier.updateProjects([], errorMessage);
       },
     );
 
@@ -365,122 +287,69 @@ void main() {
       ];
 
       final projectNameFilter = expectedProjectMetrics.first.projectName;
+      final listener = expectAsync0(() {
+        final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
+        expect(
+          filteredProjectMetrics,
+          equals(expectedProjectMetrics),
+        );
+      });
+      projectMetricsNotifier.addListener(listener);
       projectMetricsNotifier.filterByProjectName(projectNameFilter);
-
-      final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
-
-      expect(
-        filteredProjectMetrics,
-        equals(expectedProjectMetrics),
-      );
-
-      _resetProjectsFilters();
     });
 
     test(
         ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
-        () {
+        () async {
       final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
 
+      final listener = expectAsync0(() {
+        final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
+
+        expect(
+          filteredProjectMetrics,
+          equals(expectedProjectMetrics),
+        );
+      });
+      projectMetricsNotifier.addListener(listener);
       projectMetricsNotifier.filterByProjectName(null);
-
-      final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
-
-      expect(
-        filteredProjectMetrics,
-        equals(expectedProjectMetrics),
-      );
-
-      _resetProjectsFilters();
     });
 
     test(
       ".dispose() unsubscribes from all streams and removes project metrics",
       () async {
-        final projectUpdates = _ReceiveProjectUpdatesStub();
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
+        final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
 
-        final metricsNotifier = ProjectMetricsNotifier(
-          projectUpdates,
-          metricsUpdates,
-        );
+        metricsNotifier.updateProjects(projects, errorMessage);
 
-        await metricsNotifier.subscribeToProjects();
+        await expectLater(metricsUpdates.hasListener, isTrue);
 
-        expect(projectUpdates.hasListener, isTrue);
+        await metricsNotifier.dispose();
 
-        metricsNotifier.dispose();
-
-        expect(projectUpdates.hasListener, isFalse);
         expect(metricsUpdates.hasListener, isFalse);
         expect(metricsNotifier.projectsMetrics, isNull);
       },
     );
 
     test(
-      ".unsubscribeFromProjects() cancels all created subscriptions and removes project metrics",
+      ".unsubscribeFromBuildMetrics() cancels all created subscriptions and removes project metrics",
       () async {
-        final projectUpdates = _ReceiveProjectUpdatesStub();
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
+        final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
 
-        final metricsNotifier = ProjectMetricsNotifier(
-          projectUpdates,
-          metricsUpdates,
-        );
+        metricsNotifier.updateProjects(projects, errorMessage);
 
-        await metricsNotifier.subscribeToProjects();
+        await metricsNotifier.unsubscribeFromBuildMetrics();
 
-        expect(projectUpdates.hasListener, isTrue);
-
-        await metricsNotifier.unsubscribeFromProjects();
-
-        expect(projectUpdates.hasListener, isFalse);
         expect(metricsUpdates.hasListener, isFalse);
         expect(metricsNotifier.projectsMetrics, isNull);
 
-        metricsNotifier.dispose();
+        await metricsNotifier.dispose();
       },
     );
   });
-}
-
-/// A stub implementation of the [ReceiveProjectUpdates].
-class _ReceiveProjectUpdatesStub implements ReceiveProjectUpdates {
-  static const testProjects = [
-    Project(
-      id: 'id',
-      name: 'name',
-    ),
-    Project(
-      id: 'id2',
-      name: 'name2',
-    ),
-  ];
-
-  /// The list of [Project] that will be emitted by this use case.
-  final List<Project> _projects;
-
-  /// A [BehaviorSubject] that will hold the projects and provide a stream of projects.
-  ///
-  /// The [BehaviorSubject.stream] is returned from [call] method.
-  final BehaviorSubject<List<Project>> _projectsSubject = BehaviorSubject();
-
-  /// Creates the [_ReceiveProjectUpdatesStub].
-  ///
-  /// [projects] is the list of projects will be emitted by returned stream.
-  /// Defaults to [testProjects].
-  _ReceiveProjectUpdatesStub({List<Project> projects = testProjects})
-      : _projects = projects;
-
-  @override
-  Stream<List<Project>> call([_]) {
-    _projectsSubject.add(_projects);
-    return _projectsSubject.stream;
-  }
-
-  /// Detects if the stream, returned from [call] method has any listeners.
-  bool get hasListener => _projectsSubject.hasListener;
 }
 
 /// A stub implementation of the [ReceiveProjectMetricsUpdates].
@@ -539,7 +408,4 @@ class _ReceiveProjectMetricsUpdatesStub
 
   ///  Detects if the stream, returned from [call] method has any listeners.
   bool get hasListener => _metricsUpdatesSubject.hasListener;
-}
-
-class _ReceiveProjectUpdatesMock extends Mock implements ReceiveProjectUpdates {
 }

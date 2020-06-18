@@ -13,12 +13,8 @@ import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.da
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_search_input.dart';
-import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
-import '../../../test_utils/project_metrics_notifier_mock.dart';
-import '../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
@@ -46,7 +42,12 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(const _DashboardTestbed());
 
-        expect(find.byType(ProjectSearchInput), findsOneWidget);
+        final projectSearchInput = find.descendant(
+          of: find.byType(TextField),
+          matching: find.text(CommonStrings.searchForProject),
+        );
+
+        expect(projectSearchInput, findsOneWidget);
       },
     );
 
@@ -93,46 +94,6 @@ void main() {
           darkBuildNumberMetricColor,
           isNot(lightBuildNumberMetricColor),
         );
-      },
-    );
-
-    testWidgets(
-      ".dispose() unsubscribes from projects",
-      (tester) async {
-        final metricsNotifier = ProjectMetricsNotifierMock();
-        final authNotifier = SignedInAuthNotifierStub();
-
-        when(metricsNotifier.projectsMetrics).thenReturn([]);
-
-        await tester.pumpWidget(_DashboardTestbed(
-          metricsNotifier: metricsNotifier,
-          authNotifier: authNotifier,
-        ));
-
-        await tester.tap(find.descendant(
-          of: find.byType(MetricsAppBar),
-          matching: find.byType(IconButton),
-        ));
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.text(CommonStrings.logOut));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(DashboardPage), findsNothing);
-        verify(metricsNotifier.unsubscribeFromProjects()).called(equals(1));
-      },
-    );
-
-    testWidgets(
-      "subscribes to project updates in initState",
-      (tester) async {
-        final metricsNotifier = ProjectMetricsNotifierMock();
-
-        await tester.pumpWidget(_DashboardTestbed(
-          metricsNotifier: metricsNotifier,
-        ));
-
-        verify(metricsNotifier.subscribeToProjects()).called(equals(1));
       },
     );
   });

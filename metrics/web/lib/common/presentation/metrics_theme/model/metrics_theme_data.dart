@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
@@ -10,28 +11,31 @@ class MetricsThemeData {
   static const MetricWidgetThemeData _defaultWidgetThemeData =
       MetricWidgetThemeData();
 
+  /// The theme of the [CirclePercentage]
   final MetricCirclePercentageThemeData metricCirclePercentageThemeData;
+
+  /// The theme of the metrics widgets used to set the default colors
+  /// and text styles.
   final MetricWidgetThemeData metricWidgetTheme;
+
+  /// The theme of the inactive metric widgets used when there are no data
+  /// for metric.
   final MetricWidgetThemeData inactiveWidgetTheme;
+
+  /// The theme for the [BuildResultBarGraph] used to set the colors
+  /// of the graph bars.
   final BuildResultsThemeData buildResultTheme;
 
+  /// The theme for dialogs.
+  final DialogThemeData dialogThemeData;
+
   /// Creates the [MetricsThemeData].
-  ///
-  /// [metricCirclePercentageThemeData] is the theme of the [CirclePercentage].
-  ///
-  /// [metricWidgetTheme] is the theme of the metrics widgets.
-  /// Used to set the default colors and text styles.
-  ///
-  /// [inactiveWidgetTheme] is the theme of the inactive metric widgets.
-  /// This theme is used when there are no data for metric.
-  ///
-  /// [buildResultTheme] is the theme for the [BuildResultBarGraph].
-  /// Used to set the colors of the graph bars.
   const MetricsThemeData({
     MetricCirclePercentageThemeData metricCirclePercentageThemeData,
     MetricWidgetThemeData metricWidgetTheme,
     MetricWidgetThemeData inactiveWidgetTheme,
     BuildResultsThemeData buildResultTheme,
+    DialogThemeData dialogThemeData,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -41,7 +45,8 @@ class MetricsThemeData {
               canceledColor: Colors.grey,
               successfulColor: Colors.teal,
               failedColor: Colors.redAccent,
-            );
+            ),
+        dialogThemeData = dialogThemeData ?? const DialogThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -51,6 +56,7 @@ class MetricsThemeData {
     MetricCirclePercentageThemeData metricCirclePercentageThemeData,
     MetricWidgetThemeData metricWidgetTheme,
     BuildResultsThemeData buildResultTheme,
+    DialogThemeData dialogThemeData,
     Color barGraphBackgroundColor,
   }) {
     return MetricsThemeData(
@@ -58,6 +64,7 @@ class MetricsThemeData {
           this.metricCirclePercentageThemeData,
       metricWidgetTheme: metricWidgetTheme ?? this.metricWidgetTheme,
       buildResultTheme: buildResultTheme ?? this.buildResultTheme,
+      dialogThemeData: dialogThemeData ?? this.dialogThemeData,
     );
   }
 }

@@ -150,11 +150,6 @@ void main() {
 }
 
 class _MetricsRepositoryStub implements MetricsRepository {
-  static const Project _project = Project(
-    name: 'projectName',
-    id: 'projectId',
-  );
-
   static final Build lastSuccessfulBuild = Build(
     id: '2',
     startedAt: DateTime.now().subtract(const Duration(days: 1)),
@@ -217,11 +212,6 @@ class _MetricsRepositoryStub implements MetricsRepository {
       String projectId, DateTime from) {
     return Stream.value(
         _builds.where((build) => build.startedAt.isAfter(from)).toList());
-  }
-
-  @override
-  Stream<List<Project>> projectsStream() {
-    return Stream.value([_project]);
   }
 
   @override

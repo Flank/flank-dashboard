@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/pages/loading_page.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 
-/// Responsible for generating routes.
+/// A class responsible for generating routes.
 class RouteGenerator {
-  /// The Route name of the dashboard page.
+  /// The route name of the dashboard page.
   static const String dashboard = '/dashboard';
 
   /// The route name of the login page.
   static const String login = '/login';
+
+  /// The route name of the project groups page.
+  static const String projectGroup = '/projectGroups';
 
   /// Generates a route for the given route [settings]
   /// based on the [isLoggedIn] authentication status.
@@ -27,6 +31,15 @@ class RouteGenerator {
 
     if (!isLoggedIn) {
       return _createMaterialPageRoute(name: login, widget: LoginPage());
+    }
+
+    if (settings.name == dashboard) {
+      return _createMaterialPageRoute(name: dashboard, widget: DashboardPage());
+    }
+
+    if (settings.name == projectGroup) {
+      return _createMaterialPageRoute(
+          name: projectGroup, widget: ProjectGroupPage());
     }
 
     return _createMaterialPageRoute(name: dashboard, widget: DashboardPage());

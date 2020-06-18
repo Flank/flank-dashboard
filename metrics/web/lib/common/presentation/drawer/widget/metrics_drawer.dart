@@ -5,6 +5,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:provider/provider.dart';
 
 /// The application side menu widget.
@@ -29,6 +30,13 @@ class MetricsDrawer extends StatelessWidget {
                 onChanged: (_) => model.changeTheme(),
               );
             },
+          ),
+          ListTile(
+            title: const Text(ProjectGroupsStrings.projectGroups),
+            onTap: () => Navigator.popAndPushNamed(
+              context,
+              RouteGenerator.projectGroup,
+            ),
           ),
           ListTile(
             title: const Text(CommonStrings.logOut),

@@ -4,21 +4,27 @@ import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 
 /// A common [Scaffold] widget for metrics pages.
 class MetricsScaffold extends StatelessWidget {
+  /// A panel that slides in horizontally from the edge of
+  /// a Scaffold to show navigation links in an application.
   final Widget drawer;
+
+  /// A primary content of this scaffold
   final Widget body;
+
+  /// A general padding around the [body].
+  final EdgeInsets padding;
 
   /// Creates the [MetricsScaffold] widget.
   ///
-  /// Throws an [AssertionError] if the [body] is null.
+  /// The [drawer] default value is [MetricsDrawer].
+  /// The [padding] default horizontal insets' value is 124.0.
   ///
-  /// [body] is the primary content of this scaffold.
-  /// [drawer] is the panel that slides in horizontally from the edge of
-  /// a Scaffold to show navigation links in an application.
-  /// If nothing is passed the [MetricsDrawer] is used.
+  /// The [body] argument must not be null.
   const MetricsScaffold({
     Key key,
     @required this.body,
     this.drawer = const MetricsDrawer(),
+    this.padding = const EdgeInsets.symmetric(horizontal: 124.0),
   })  : assert(body != null),
         super(key: key);
 
@@ -27,7 +33,10 @@ class MetricsScaffold extends StatelessWidget {
     return Scaffold(
       appBar: MetricsAppBar(),
       endDrawer: drawer,
-      body: body,
+      body: Padding(
+        padding: padding,
+        child: body,
+      ),
     );
   }
 }
