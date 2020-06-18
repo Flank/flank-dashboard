@@ -30,14 +30,11 @@ class ClearableTextFormField extends StatefulWidget {
 }
 
 class _ClearableTextFormFieldState extends State<ClearableTextFormField> {
-  /// Indicates whether this widget is ready for clearing.
-  bool _isClearable;
-
   @override
   void initState() {
     super.initState();
 
-    _isClearable = widget.controller.text.isNotEmpty;
+    widget.controller.addListener(() => setState(() {}));
   }
 
   @override
@@ -45,10 +42,9 @@ class _ClearableTextFormFieldState extends State<ClearableTextFormField> {
     return TextFormField(
       controller: widget.controller,
       validator: widget.validator,
-      onChanged: _checkClearable,
       decoration: InputDecoration(
         labelText: widget.label,
-        suffixIcon: _isClearable
+        suffixIcon: widget.controller.text.isNotEmpty
             ? IconButton(
                 splashColor: Colors.transparent,
                 hoverColor: Colors.transparent,
@@ -59,12 +55,5 @@ class _ClearableTextFormFieldState extends State<ClearableTextFormField> {
         border: widget.border,
       ),
     );
-  }
-
-  /// Checks whether this widget is ready for clearing.
-  void _checkClearable(String value) {
-    setState(() {
-      _isClearable = value != null && value.isNotEmpty;
-    });
   }
 }

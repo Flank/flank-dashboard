@@ -44,10 +44,6 @@ class _UpdateProjectGroupDialogState extends State<UpdateProjectGroupDialog> {
 
     _groupNameController.text =
         _projectGroupsNotifier.projectGroupDialogViewModel?.name;
-
-    _groupNameController.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
