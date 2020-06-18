@@ -13,13 +13,9 @@ class ProjectGroupDialogViewModel {
   final List<String> selectedProjectIds;
 
   /// Creates the [ProjectGroupDialogViewModel].
-  ///
-  /// The [id], the [name] and the [selectedProjectIds] must not be null.
   ProjectGroupDialogViewModel({
     @required this.id,
     @required this.name,
     @required this.selectedProjectIds,
-  })  : assert(id != null),
-        assert(name != null),
-        assert(selectedProjectIds != null);
+  });
 }
