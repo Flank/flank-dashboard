@@ -10,8 +10,9 @@ import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dar
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_updates.dart';
-import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
 import 'package:metrics/dashboard/presentation/model/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -202,20 +203,22 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Creates the project build result metrics from [BuildResultMetric].
-  List<BuildResultBarData> _getBuildResultMetrics(BuildResultMetric metrics) {
+  BuildResultMetricViewModel _getBuildResultMetrics(BuildResultMetric metrics) {
     final buildResults = metrics?.buildResults ?? [];
 
     if (buildResults.isEmpty) {
-      return [];
+      return const BuildResultMetricViewModel();
     }
 
-    return buildResults.map((result) {
-      return BuildResultBarData(
+    final buildResultViewModels = buildResults.map((result) {
+      return BuildResultViewModel(
         url: result.url,
         buildStatus: result.buildStatus,
         value: result.duration.inMilliseconds,
       );
     }).toList();
+
+    return BuildResultMetricViewModel(buildResults: buildResultViewModels);
   }
 
   /// Cancels all created subscriptions.

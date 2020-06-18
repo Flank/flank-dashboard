@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:meta/meta.dart';
-import 'package:metrics/dashboard/presentation/model/build_result_bar_data.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 
@@ -15,7 +15,7 @@ class ProjectMetricsData {
   final int buildNumberMetric;
   final int averageBuildDurationInMinutes;
   final List<Point<int>> performanceMetrics;
-  final List<BuildResultBarData> buildResultMetrics;
+  final BuildResultMetricViewModel buildResultMetrics;
 
   /// Creates the [ProjectMetricsData].
   ///
@@ -35,7 +35,7 @@ class ProjectMetricsData {
     this.buildNumberMetric,
     this.averageBuildDurationInMinutes,
     this.performanceMetrics,
-    this.buildResultMetrics,
+    this.buildResultMetrics = const BuildResultMetricViewModel(),
   });
 
   /// Creates a copy of this project metrics but with the given fields replaced with the new values.
@@ -47,7 +47,7 @@ class ProjectMetricsData {
     int buildNumberMetric,
     int averageBuildDurationInMinutes,
     List<Point<int>> performanceMetrics,
-    List<BuildResultBarData> buildResultMetrics,
+    BuildResultMetricViewModel buildResultMetrics,
   }) {
     return ProjectMetricsData(
       projectId: projectId ?? this.projectId,

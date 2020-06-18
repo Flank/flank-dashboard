@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
+import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/sparkline_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/project_metrics_notifier_mock.dart';
@@ -137,12 +138,9 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsTableTestbed());
         await tester.pumpAndSettle();
-        final stabilityPercent =
-            ProjectMetricsNotifierStub.testProjectMetrics.stability;
-        final stabilityText = '${(stabilityPercent.value * 100).toInt()}%';
 
         final stabilityMetricWidgetCenter = tester.getCenter(
-          find.widgetWithText(CirclePercentage, stabilityText),
+          find.byType(StabilityCirclePercentage),
         );
 
         final stabilityTitleCenter = tester.getCenter(
@@ -163,12 +161,9 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsTableTestbed());
         await tester.pumpAndSettle();
-        final coveragePercent =
-            ProjectMetricsNotifierStub.testProjectMetrics.coverage;
-        final coverageText = '${(coveragePercent.value * 100).toInt()}%';
 
         final coverageMetricWidgetCenter = tester.getCenter(
-          find.widgetWithText(CirclePercentage, coverageText),
+          find.byType(CoverageCirclePercentage),
         );
 
         final coverageTitleCenter = tester.getCenter(
