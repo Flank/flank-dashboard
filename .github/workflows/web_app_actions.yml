@@ -1,4 +1,4 @@
-name: Metrics Web Application tests and deployment
+name: Metrics Web Application Actions
 
 on:
   push:
