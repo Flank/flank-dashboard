@@ -10,6 +10,7 @@ import 'common/presentation/metrics_theme/config/color_config.dart';
 
 void main() => runApp(MyApp());
 
+/// The entry point widget that displays the application.
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
