@@ -84,7 +84,7 @@ class InfoDialog extends StatelessWidget {
             Flexible(
               child: Padding(
                 padding: contentPadding,
-                child: content ?? Container(),
+                child: content,
               ),
             ),
             Padding(
