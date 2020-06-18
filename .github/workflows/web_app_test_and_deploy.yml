@@ -1,13 +1,17 @@
-name: Metrics Web Application tests
+name: Metrics Web Application tests and deployment
 
 on:
   push:
+    branches:
+      - master
     paths:
       - metrics/web/lib
       - metrics/web/test
       - metrics/web/test_driver
       - .github/workflows/**
   pull_request:
+    branches:
+      - master
     paths:
       - metrics/web/lib
       - metrics/web/test
@@ -16,8 +20,9 @@ on:
 
 jobs:
   test:
-    name: Run the Metrics Web Application tests
+    name: Run the Metrics Web Application tests and deploy to Firebase
     runs-on: macOS-latest
+    timeout-minutes: 15
     env:
       WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
       WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
