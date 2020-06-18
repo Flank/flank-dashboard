@@ -63,9 +63,11 @@ jobs:
         run: curl -sL https://firebase.tools | bash
 
       - name: Build release app
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: flutter clean && flutter build web --release
         working-directory: metrics/web/
 
       - name: Deploy to Firebase
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: firebase deploy --only hosting
         working-directory: metrics/web/
