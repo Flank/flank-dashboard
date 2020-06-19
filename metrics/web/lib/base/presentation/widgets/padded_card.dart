@@ -31,7 +31,6 @@ class PaddedCard extends StatelessWidget {
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
   })  : assert(child != null),
-        assert(backgroundColor != null),
         super(key: key);
 
   @override
