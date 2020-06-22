@@ -126,6 +126,25 @@ void main() {
 
       expect(widget.border, border);
     });
+
+    testWidgets(
+      "clears the text field on tap on clear icon",
+      (tester) async {
+        final controller = TextEditingController(text: 'text');
+
+        await tester.pumpWidget(
+          _ClearableTextFormFieldTestbed(label: label, controller: controller),
+        );
+
+        await tester.tap(find.descendant(
+          of: find.byType(IconButton),
+          matching: find.byIcon(Icons.close),
+        ));
+        await tester.pump();
+
+        expect(controller.text, isEmpty);
+      },
+    );
   });
 }
 

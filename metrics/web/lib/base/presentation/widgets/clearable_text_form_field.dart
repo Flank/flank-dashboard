@@ -49,11 +49,21 @@ class _ClearableTextFormFieldState extends State<ClearableTextFormField> {
                 splashColor: Colors.transparent,
                 hoverColor: Colors.transparent,
                 icon: const Icon(Icons.close, size: 18.0),
-                onPressed: widget.controller.clear,
+                onPressed: _clearField,
               )
             : null,
         border: widget.border,
       ),
     );
+  }
+
+  /// Clears the text in this text field.
+  ///
+  /// Uses the workaround with addPostFrameCallback due to issue
+  /// in the [TextEditingController] https://github.com/flutter/flutter/issues/17647
+  void _clearField() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.controller.clear();
+    });
   }
 }
