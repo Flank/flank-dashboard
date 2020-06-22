@@ -4,7 +4,7 @@ import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 
 void main() {
   group("InfoDialog", () {
-    const contentText = Text('content text');
+    const content = Text('content text');
     const padding = EdgeInsets.all(10.0);
     const text = Text("text");
     const actions = [Text("Action")];
@@ -61,9 +61,7 @@ void main() {
           ),
         );
 
-        final dialogWidget = tester.widget<Dialog>(
-          find.byType(Dialog),
-        );
+        final dialogWidget = tester.widget<Dialog>(find.byType(Dialog));
 
         expect(dialogWidget.backgroundColor, equals(backgroundColor));
       },
@@ -79,10 +77,12 @@ void main() {
           ),
         );
 
-        final containerWidget = tester.widget<Container>(find.descendant(
-          of: find.byType(Dialog),
-          matching: find.byType(Container).first,
-        ));
+        final containerWidget = tester.widget<Container>(
+          find.descendant(
+            of: find.byType(Dialog),
+            matching: find.byType(Container).first,
+          ),
+        );
 
         expect(containerWidget.padding, equals(padding));
       },
@@ -92,15 +92,14 @@ void main() {
       "applies the given title padding to the title",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _InfoDialogTestbed(
-            title: text,
-            titlePadding: padding,
-          ),
+          const _InfoDialogTestbed(title: text, titlePadding: padding),
         );
 
-        final paddingWidget = tester.widget<Padding>(find.byWidgetPredicate(
-          (widget) => widget is Padding && widget.child == text,
-        ));
+        final paddingWidget = tester.widget<Padding>(
+          find.byWidgetPredicate(
+            (widget) => widget is Padding && widget.child == text,
+          ),
+        );
 
         expect(paddingWidget.padding, equals(padding));
       },
@@ -113,13 +112,15 @@ void main() {
           const _InfoDialogTestbed(
             title: text,
             contentPadding: padding,
-            content: contentText,
+            content: content,
           ),
         );
 
-        final paddingWidget = tester.widget<Padding>(find.byWidgetPredicate(
-          (widget) => widget is Padding && widget.child == contentText,
-        ));
+        final paddingWidget = tester.widget<Padding>(
+          find.byWidgetPredicate(
+            (widget) => widget is Padding && widget.child == content,
+          ),
+        );
 
         expect(paddingWidget.padding, equals(padding));
       },
@@ -136,15 +137,17 @@ void main() {
           ),
         );
 
-        final paddingWidget =
-            tester.widget<Padding>(find.byWidgetPredicate((widget) {
-          if (widget is Padding) {
-            final childWidget = widget.child;
+        final paddingWidget = tester.widget<Padding>(
+          find.byWidgetPredicate((widget) {
+            if (widget is Padding) {
+              final childWidget = widget.child;
 
-            return childWidget is Row && childWidget.children == actions;
-          }
-          return false;
-        }));
+              return childWidget is Row && childWidget.children == actions;
+            }
+
+            return false;
+          }),
+        );
 
         expect(paddingWidget.padding, equals(padding));
       },
@@ -155,15 +158,16 @@ void main() {
       (WidgetTester tester) async {
         const expectedMaxWidth = 200.0;
 
-        await tester.pumpWidget(const _InfoDialogTestbed(
-          title: text,
-          maxWidth: expectedMaxWidth,
-        ));
+        await tester.pumpWidget(
+          const _InfoDialogTestbed(title: text, maxWidth: expectedMaxWidth),
+        );
 
-        final containerWidget = tester.widget<Container>(find.descendant(
-          of: find.byType(Dialog),
-          matching: find.byType(Container).first,
-        ));
+        final containerWidget = tester.widget<Container>(
+          find.descendant(
+            of: find.byType(Dialog),
+            matching: find.byType(Container).first,
+          ),
+        );
 
         expect(containerWidget.constraints.maxWidth, equals(expectedMaxWidth));
       },
@@ -173,13 +177,10 @@ void main() {
       "displays the given content",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _InfoDialogTestbed(
-            title: text,
-            content: contentText,
-          ),
+          const _InfoDialogTestbed(title: text, content: content),
         );
 
-        expect(find.byWidget(contentText), findsOneWidget);
+        expect(find.byWidget(content), findsOneWidget);
       },
     );
 
@@ -204,15 +205,15 @@ void main() {
       "applies the default max width value of 500.0 if nothing is passed",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _InfoDialogTestbed(
-            title: text,
-          ),
+          const _InfoDialogTestbed(title: text),
         );
 
-        final containerWidget = tester.widget<Container>(find.descendant(
-          of: find.byType(Dialog),
-          matching: find.byType(Container).first,
-        ));
+        final containerWidget = tester.widget<Container>(
+          find.descendant(
+            of: find.byType(Dialog),
+            matching: find.byType(Container).first,
+          ),
+        );
 
         expect(containerWidget.constraints.maxWidth, equals(500.0));
       },
@@ -222,15 +223,15 @@ void main() {
       "applies the default padding of zero if nothing is passed",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _InfoDialogTestbed(
-            title: text,
-          ),
+          const _InfoDialogTestbed(title: text),
         );
 
-        final containerWidget = tester.widget<Container>(find.descendant(
-          of: find.byType(Dialog),
-          matching: find.byType(Container).first,
-        ));
+        final containerWidget = tester.widget<Container>(
+          find.descendant(
+            of: find.byType(Dialog),
+            matching: find.byType(Container).first,
+          ),
+        );
 
         expect(containerWidget.padding, equals(EdgeInsets.zero));
       },
@@ -240,14 +241,14 @@ void main() {
       "applies the default title padding of zero if nothing is passed",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _InfoDialogTestbed(
-            title: text,
-          ),
+          const _InfoDialogTestbed(title: text),
         );
 
-        final widget = tester.widget<Padding>(find.byWidgetPredicate(
-          (widget) => widget is Padding && widget.child == text,
-        ));
+        final widget = tester.widget<Padding>(
+          find.byWidgetPredicate(
+            (widget) => widget is Padding && widget.child == text,
+          ),
+        );
 
         expect(widget.padding, equals(EdgeInsets.zero));
       },
@@ -256,13 +257,8 @@ void main() {
     testWidgets(
       "applies the default content padding of zero if nothing is passed",
       (WidgetTester tester) async {
-        const contentWidget = Text('content');
-
         await tester.pumpWidget(
-          const _InfoDialogTestbed(
-            title: text,
-            content: contentWidget,
-          ),
+          const _InfoDialogTestbed(title: text, content: content),
         );
 
         final widget = tester.widget<InfoDialog>(find.byType(InfoDialog));
@@ -274,20 +270,20 @@ void main() {
       "applies the default actions padding of zero if nothing is passed",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _InfoDialogTestbed(
-            title: text,
-            actions: actions,
-          ),
+          const _InfoDialogTestbed(title: text, actions: actions),
         );
 
-        final widget = tester.widget<Padding>(find.byWidgetPredicate((widget) {
-          if (widget is Padding) {
-            final childWidget = widget.child;
+        final widget = tester.widget<Padding>(
+          find.byWidgetPredicate((widget) {
+            if (widget is Padding) {
+              final childWidget = widget.child;
 
-            return childWidget is Row && childWidget.children == actions;
-          }
-          return false;
-        }));
+              return childWidget is Row && childWidget.children == actions;
+            }
+
+            return false;
+          }),
+        );
 
         expect(widget.padding, equals(EdgeInsets.zero));
       },
@@ -299,15 +295,14 @@ void main() {
         final actions = <Widget>[const Text("Action")];
 
         await tester.pumpWidget(
-          _InfoDialogTestbed(
-            title: text,
-            actions: actions,
-          ),
+          _InfoDialogTestbed(title: text, actions: actions),
         );
 
-        final widget = tester.widget<Row>(find.byWidgetPredicate(
-          (widget) => widget is Row && widget.children == actions,
-        ));
+        final widget = tester.widget<Row>(
+          find.byWidgetPredicate(
+            (widget) => widget is Row && widget.children == actions,
+          ),
+        );
 
         expect(widget.mainAxisAlignment, equals(MainAxisAlignment.start));
       },
@@ -326,9 +321,11 @@ void main() {
           ),
         );
 
-        final widget = tester.widget<Row>(find.byWidgetPredicate(
-          (widget) => widget is Row && widget.children == actions,
-        ));
+        final widget = tester.widget<Row>(
+          find.byWidgetPredicate(
+            (widget) => widget is Row && widget.children == actions,
+          ),
+        );
 
         expect(widget.mainAxisAlignment, equals(expectedAlignment));
       },

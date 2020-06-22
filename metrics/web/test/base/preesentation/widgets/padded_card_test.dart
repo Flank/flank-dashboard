@@ -22,7 +22,9 @@ void main() {
         await tester.pumpWidget(const _PaddedCardTestbed(child: child));
 
         final actualChild = find.descendant(
-            of: find.byType(PaddedCard), matching: find.byWidget(child));
+          of: find.byType(PaddedCard),
+          matching: find.byWidget(child),
+        );
 
         expect(actualChild, findsOneWidget);
       },
@@ -74,10 +76,12 @@ void main() {
           child: child,
         ));
 
-        final widget = tester.widget<Padding>(find.ancestor(
-          of: find.byWidget(child),
-          matching: find.byType(Padding).first,
-        ));
+        final widget = tester.widget<Padding>(
+          find.ancestor(
+            of: find.byWidget(child),
+            matching: find.byType(Padding).first,
+          ),
+        );
 
         expect(widget.padding, equals(EdgeInsets.zero));
       },
@@ -88,15 +92,16 @@ void main() {
       (WidgetTester tester) async {
         const padding = EdgeInsets.all(10.0);
 
-        await tester.pumpWidget(const _PaddedCardTestbed(
-          padding: padding,
-          child: child,
-        ));
+        await tester.pumpWidget(
+          const _PaddedCardTestbed(padding: padding, child: child),
+        );
 
-        final widget = tester.widget<Padding>(find.ancestor(
-          of: find.byWidget(child),
-          matching: find.byType(Padding).last,
-        ));
+        final widget = tester.widget<Padding>(
+          find.ancestor(
+            of: find.byWidget(child),
+            matching: find.byType(Padding).last,
+          ),
+        );
 
         expect(widget.padding, equals(padding));
       },
