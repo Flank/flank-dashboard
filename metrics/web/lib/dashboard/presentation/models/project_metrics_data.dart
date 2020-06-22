@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:meta/meta.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
-import 'package:metrics/dashboard/presentation/models/build_result_bar_data.dart';
 
 /// Represents a presentation model of the metrics of the project.
 @immutable
@@ -15,7 +15,7 @@ class ProjectMetricsData {
   final int buildNumberMetric;
   final int averageBuildDurationInMinutes;
   final List<Point<int>> performanceMetrics;
-  final List<BuildResultBarData> buildResultMetrics;
+  final BuildResultMetricViewModel buildResultMetrics;
 
   /// Creates the [ProjectMetricsData].
   ///
@@ -47,7 +47,7 @@ class ProjectMetricsData {
     int buildNumberMetric,
     int averageBuildDurationInMinutes,
     List<Point<int>> performanceMetrics,
-    List<BuildResultBarData> buildResultMetrics,
+    BuildResultMetricViewModel buildResultMetrics,
   }) {
     return ProjectMetricsData(
       projectId: projectId ?? this.projectId,
