@@ -4,10 +4,11 @@ import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
-import 'package:metrics/dashboard/presentation/widgets/sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/text_metric.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
@@ -19,8 +20,7 @@ void main() {
       coverage: CoverageViewModel(value: 0.3),
       stability: StabilityViewModel(value: 0.4),
       buildNumberMetric: 1,
-      averageBuildDurationInMinutes: 0,
-      performanceMetrics: [],
+      performanceSparkline: PerformanceSparklineViewModel(),
       buildResultMetrics: BuildResultMetricViewModel(),
     );
 
@@ -124,7 +124,7 @@ void main() {
         ));
 
         expect(
-          find.byType(SparklineGraph),
+          find.byType(PerformanceSparklineGraph),
           findsOneWidget,
         );
       },
