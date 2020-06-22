@@ -68,7 +68,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given padding to the container widget inside the dialog",
+      "applies the given padding to the dialog content",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(
@@ -220,95 +220,6 @@ void main() {
     );
 
     testWidgets(
-      "applies the default padding of zero if nothing is passed",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InfoDialogTestbed(title: text),
-        );
-
-        final containerWidget = tester.widget<Container>(
-          find.descendant(
-            of: find.byType(Dialog),
-            matching: find.byType(Container).first,
-          ),
-        );
-
-        expect(containerWidget.padding, equals(EdgeInsets.zero));
-      },
-    );
-
-    testWidgets(
-      "applies the default title padding of zero if nothing is passed",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InfoDialogTestbed(title: text),
-        );
-
-        final widget = tester.widget<Padding>(
-          find.byWidgetPredicate(
-            (widget) => widget is Padding && widget.child == text,
-          ),
-        );
-
-        expect(widget.padding, equals(EdgeInsets.zero));
-      },
-    );
-
-    testWidgets(
-      "applies the default content padding of zero if nothing is passed",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InfoDialogTestbed(title: text, content: content),
-        );
-
-        final widget = tester.widget<InfoDialog>(find.byType(InfoDialog));
-
-        expect(widget.contentPadding, equals(EdgeInsets.zero));
-      },
-    );
-    testWidgets(
-      "applies the default actions padding of zero if nothing is passed",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InfoDialogTestbed(title: text, actions: actions),
-        );
-
-        final widget = tester.widget<Padding>(
-          find.byWidgetPredicate((widget) {
-            if (widget is Padding) {
-              final childWidget = widget.child;
-
-              return childWidget is Row && childWidget.children == actions;
-            }
-
-            return false;
-          }),
-        );
-
-        expect(widget.padding, equals(EdgeInsets.zero));
-      },
-    );
-
-    testWidgets(
-      "applies the default main axis alignement of MainAxisAlignment.start if nothing is passed",
-      (WidgetTester tester) async {
-        final actions = <Widget>[const Text("Action")];
-
-        await tester.pumpWidget(
-          _InfoDialogTestbed(title: text, actions: actions),
-        );
-
-        final widget = tester.widget<Row>(
-          find.byWidgetPredicate(
-            (widget) => widget is Row && widget.children == actions,
-          ),
-        );
-
-        expect(widget.mainAxisAlignment, equals(MainAxisAlignment.start));
-      },
-    );
-
-    testWidgets(
       "applies actions alignment to the actions row main axis alignment widget",
       (WidgetTester tester) async {
         const expectedAlignment = MainAxisAlignment.end;
@@ -368,7 +279,7 @@ class _InfoDialogTestbed extends StatelessWidget {
   /// Creates an instance of this testbed with the given parameters.
   ///
   /// The [actions] defaults to an empty list.
-  /// The [padding], the [titlePadding], the [contentPadding]
+  /// The [padding], the [titlePadding], the [contentPadding],
   /// and the [actionsPadding] default value is [EdgeInsets.zero].
   /// The [actionsAlignment] default value is [MainAxisAlignment.start].
   /// The [maxWidth] default value is 500.0.

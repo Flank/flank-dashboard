@@ -46,17 +46,6 @@ void main() {
     );
 
     testWidgets(
-      "applies the default margin of zero to the card if no margin given",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _PaddedCardTestbed());
-
-        final cardWidget = tester.widget<Card>(find.byType(Card));
-
-        expect(cardWidget.margin, equals(EdgeInsets.zero));
-      },
-    );
-
-    testWidgets(
       "delegates the given margin to the card widget",
       (WidgetTester tester) async {
         const margin = EdgeInsets.all(10.0);
@@ -66,24 +55,6 @@ void main() {
         final cardWidget = tester.widget<Card>(find.byType(Card));
 
         expect(cardWidget.margin, equals(margin));
-      },
-    );
-
-    testWidgets(
-      "applies the default padding of zero if nothing is passed",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _PaddedCardTestbed(
-          child: child,
-        ));
-
-        final widget = tester.widget<Padding>(
-          find.ancestor(
-            of: find.byWidget(child),
-            matching: find.byType(Padding).first,
-          ),
-        );
-
-        expect(widget.padding, equals(EdgeInsets.zero));
       },
     );
 
@@ -104,17 +75,6 @@ void main() {
         );
 
         expect(widget.padding, equals(padding));
-      },
-    );
-
-    testWidgets(
-      "applies the default elevation value of 0.0 if no elevation is passed",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _PaddedCardTestbed());
-
-        final cardWidget = tester.widget<Card>(find.byType(Card));
-
-        expect(cardWidget.elevation, equals(0.0));
       },
     );
 

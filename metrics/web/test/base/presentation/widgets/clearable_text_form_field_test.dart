@@ -106,26 +106,29 @@ void main() {
       },
     );
 
-    testWidgets("applies the given border", (WidgetTester tester) async {
-      final controller = TextEditingController(text: 'text');
-      const border = OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.red),
-      );
+    testWidgets(
+      "applies the given border",
+      (WidgetTester tester) async {
+        final controller = TextEditingController(text: 'text');
+        const border = OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+        );
 
-      await tester.pumpWidget(
-        _ClearableTextFormFieldTestbed(
-          label: label,
-          controller: controller,
-          border: border,
-        ),
-      );
+        await tester.pumpWidget(
+          _ClearableTextFormFieldTestbed(
+            label: label,
+            controller: controller,
+            border: border,
+          ),
+        );
 
-      final widget = tester.widget<ClearableTextFormField>(
-        find.byType(ClearableTextFormField),
-      );
+        final widget = tester.widget<ClearableTextFormField>(
+          find.byType(ClearableTextFormField),
+        );
 
-      expect(widget.border, border);
-    });
+        expect(widget.border, border);
+      },
+    );
 
     testWidgets(
       "clears the text field on tap on clear icon",
