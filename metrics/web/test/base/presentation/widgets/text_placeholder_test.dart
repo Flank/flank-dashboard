@@ -30,7 +30,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the give size to the given text",
+      "applies the given size to the given text",
       (WidgetTester tester) async {
         const size = 10.0;
 
