@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:metrics/common/domain/entities/firestore_error_code.dart';
-import 'package:metrics/common/domain/entities/firestore_exception.dart';
+import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
+import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/project_groups/data/model/project_group_data.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/repositories/project_group_repository.dart';
@@ -42,7 +42,7 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
             projectGroupData.toJson(),
           );
     } catch (e) {
-      throw const FirestoreException(code: FirestoreErrorCode.unknown);
+      throw const PersistentStoreException(code: PersistentStoreErrorCode.unknown);
     }
   }
 
@@ -65,7 +65,7 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
             projectGroupData.toJson(),
           );
     } catch (e) {
-      throw const FirestoreException(code: FirestoreErrorCode.unknown);
+      throw const PersistentStoreException(code: PersistentStoreErrorCode.unknown);
     }
   }
 
@@ -77,7 +77,7 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
           .document(projectGroupId)
           .delete();
     } catch (e) {
-      throw const FirestoreException(code: FirestoreErrorCode.unknown);
+      throw const PersistentStoreException(code: PersistentStoreErrorCode.unknown);
     }
   }
 }

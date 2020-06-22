@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:metrics/common/domain/entities/firestore_error_code.dart';
-import 'package:metrics/common/domain/entities/firestore_exception.dart';
+import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
+import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -261,7 +261,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
           projectIds: projectIds,
         ),
       );
-    } on FirestoreException catch (exception) {
+    } on PersistentStoreException catch (exception) {
       _projectGroupSavingErrorHandler(exception.code);
     }
   }
@@ -283,7 +283,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
           projectIds,
         ),
       );
-    } on FirestoreException catch (exception) {
+    } on PersistentStoreException catch (exception) {
       _projectGroupSavingErrorHandler(exception.code);
     }
   }
@@ -296,7 +296,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       await _deleteProjectGroupUseCase(
         DeleteProjectGroupParam(projectGroupId: projectGroupId),
       );
-    } on FirestoreException catch (exception) {
+    } on PersistentStoreException catch (exception) {
       _projectGroupSavingErrorHandler(exception.code);
     }
   }
@@ -361,7 +361,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   }
 
   /// Saves the error [String] representation to [_projectGroupSavingErrorMessage].
-  void _projectGroupSavingErrorHandler(FirestoreErrorCode code) {
+  void _projectGroupSavingErrorHandler(PersistentStoreErrorCode code) {
     _projectGroupSavingError = ProjectGroupFirestoreErrorMessage(code);
     notifyListeners();
   }
