@@ -168,7 +168,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final numberOfBuilds = dashboardMetrics.buildNumberMetrics.numberOfBuilds;
 
     projectsMetrics[projectId] = projectMetrics.copyWith(
-      performanceMetrics: performanceMetrics,
+      performanceSparkline: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
       buildNumberMetric: numberOfBuilds,
       coverage: CoverageViewModel(value: dashboardMetrics.coverage?.value),

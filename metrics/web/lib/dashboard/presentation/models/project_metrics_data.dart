@@ -41,7 +41,7 @@ class ProjectMetricsData {
     CoverageViewModel coverage,
     StabilityViewModel stability,
     int buildNumberMetric,
-    PerformanceSparklineViewModel performanceMetrics,
+    PerformanceSparklineViewModel performanceSparkline,
     BuildResultMetricViewModel buildResultMetrics,
   }) {
     return ProjectMetricsData(
@@ -50,7 +50,7 @@ class ProjectMetricsData {
       coverage: coverage ?? this.coverage,
       stability: stability ?? this.stability,
       buildNumberMetric: buildNumberMetric ?? this.buildNumberMetric,
-      performanceSparkline: performanceMetrics ?? this.performanceSparkline,
+      performanceSparkline: performanceSparkline ?? this.performanceSparkline,
       buildResultMetrics: buildResultMetrics ?? this.buildResultMetrics,
     );
   }
