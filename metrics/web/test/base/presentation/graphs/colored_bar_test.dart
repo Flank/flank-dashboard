@@ -41,13 +41,11 @@ void main() {
     );
 
     testWidgets(
-      "applies the border decoration to the bar",
+      "applies the border to the bar",
       (WidgetTester tester) async {
         final border = Border.all(color: Colors.red);
-        final borderRadius = BorderRadius.circular(32.0);
 
         await tester.pumpWidget(_ColoredBarTestbed(
-          borderRadius: borderRadius,
           border: border,
         ));
 
@@ -59,6 +57,25 @@ void main() {
         final barContainerDecoration = barContainer.decoration as BoxDecoration;
 
         expect(barContainerDecoration.border, border);
+      },
+    );
+
+    testWidgets(
+      "applies the border radius to the bar",
+      (WidgetTester tester) async {
+        final borderRadius = BorderRadius.circular(32.0);
+
+        await tester.pumpWidget(_ColoredBarTestbed(
+          borderRadius: borderRadius,
+        ));
+
+        final barContainer = tester.widget<Container>(find.descendant(
+          of: find.byType(ColoredBar),
+          matching: find.byType(Container),
+        ));
+
+        final barContainerDecoration = barContainer.decoration as BoxDecoration;
+
         expect(barContainerDecoration.borderRadius, borderRadius);
       },
     );

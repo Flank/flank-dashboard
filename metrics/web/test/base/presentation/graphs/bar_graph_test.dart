@@ -7,7 +7,7 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("BarGraph", () {
     testWidgets(
-      "can't be created with null bar builder",
+      "throws an AssertionError if the bar builder is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _BarGraphTestbed(barBuilder: null));
 
@@ -16,7 +16,7 @@ void main() {
     );
 
     testWidgets(
-      "can be created with null data",
+      "throws an AssertionError if the given data is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _BarGraphTestbed(data: null));
 

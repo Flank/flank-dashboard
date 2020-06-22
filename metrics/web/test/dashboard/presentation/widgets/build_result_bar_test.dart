@@ -105,7 +105,7 @@ void main() {
   });
 }
 
-/// A testbed class required to tes the [BuildResultBar].
+/// A testbed class required to test the [BuildResultBar].
 class _BuildResultBarTestbed extends StatelessWidget {
   /// A [BuildResultViewModel] to display.
   final BuildResultViewModel buildResult;

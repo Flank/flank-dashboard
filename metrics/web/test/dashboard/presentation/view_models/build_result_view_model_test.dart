@@ -6,7 +6,7 @@ import '../../../test_utils/matcher_util.dart';
 
 void main() {
   group("BuildResultViewModel", () {
-    test("can't be created with null value", () {
+    test("throws an AssertionError if the given value is null", () {
       expect(
         () => BuildResultViewModel(
           value: null,

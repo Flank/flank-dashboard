@@ -12,7 +12,7 @@ void main() {
     const color = Colors.grey;
 
     testWidgets(
-      "can't be created with null width",
+      "throws an AssertionError if the given width is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed(width: null));
 
@@ -21,7 +21,7 @@ void main() {
     );
 
     testWidgets(
-      "can't be created with negative width",
+      "throws an AssertionError if the given width is negative",
       (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed(width: -2.0));
 
@@ -30,7 +30,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the grey color if no color given",
+      "applies the grey color if color is not specified",
       (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed());
 
@@ -41,9 +41,9 @@ void main() {
     );
 
     testWidgets(
-      "applies the grey color if the null is passed",
+      "applies the grey color if the given color is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed());
+        await tester.pumpWidget(_PlaceholderBarTestbed(color: null));
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 
@@ -74,7 +74,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the ColoredBar with the given color borders of a 2.0 width",
+      "displays the colored bar with the borders of the given color and default width",
       (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed(color: color));
 
