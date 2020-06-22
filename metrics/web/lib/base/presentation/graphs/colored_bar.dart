@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Rectangle bar of the [BarGraph] with painted in [color].
+/// Rectangle bar of the [BarGraph] painted in [color].
 class ColoredBar extends StatelessWidget {
   /// The color of this bar.
   final Color color;

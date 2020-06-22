@@ -68,7 +68,7 @@ void main() {
     );
 
     testWidgets(
-      "trims the build results from the begging to match the given number of bars",
+      "trims the build results from the beginning to match the given number of bars",
       (WidgetTester tester) async {
         const numberOfBars = 2;
 

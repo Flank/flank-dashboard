@@ -69,8 +69,14 @@ class BuildResultBar extends StatelessWidget {
   }
 
   /// Opens the [BuildResultViewModel.url].
-  void _onBarTap() {
-    if (buildResult.url == null) return;
-    launch(buildResult.url);
+  Future<void> _onBarTap() async {
+    final url = buildResult.url;
+    if (url == null) return;
+
+    final canLaunchUrl = await canLaunch(url);
+
+    if (canLaunchUrl) {
+      await launch(url);
+    }
   }
 }

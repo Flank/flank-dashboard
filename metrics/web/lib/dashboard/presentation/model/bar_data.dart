@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:metrics/dashboard/presentation/widgets/bar_graph.dart';
+import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 
 /// Base class for representing the bar in [BarGraph].
 ///
