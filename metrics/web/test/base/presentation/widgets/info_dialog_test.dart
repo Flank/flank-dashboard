@@ -154,7 +154,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given max width value to the container inside the dialog",
+      "applies the given max width value to the dialog content",
       (WidgetTester tester) async {
         const expectedMaxWidth = 200.0;
 
@@ -198,24 +198,6 @@ void main() {
 
         expect(find.byWidget(firstAction), findsOneWidget);
         expect(find.byWidget(secondAction), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies the default max width value of 500.0 if nothing is passed",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _InfoDialogTestbed(title: text),
-        );
-
-        final containerWidget = tester.widget<Container>(
-          find.descendant(
-            of: find.byType(Dialog),
-            matching: find.byType(Container).first,
-          ),
-        );
-
-        expect(containerWidget.constraints.maxWidth, equals(500.0));
       },
     );
 
