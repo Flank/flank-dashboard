@@ -8,7 +8,7 @@ class PersistentStoreErrorMessage {
 
   /// Creates the [PersistentStoreErrorMessage] with
   /// the given [PersistentStoreErrorCode].
-  PersistentStoreErrorMessage(this._code);
+  const PersistentStoreErrorMessage(this._code);
 
   /// Provides the error message based on the [PersistentStoreErrorCode].
   String get message {
