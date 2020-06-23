@@ -49,7 +49,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// during loading project groups data.
   ProjectGroupFirestoreErrorMessage _projectGroupsErrorMessage;
 
-  /// Holds the [ProjectGroupFirestoreErrorMessage].
+  /// Holds the [ProjectGroupFirestoreErrorMessage] that occurred
+  /// during the project group firestore saving operation.
   ProjectGroupFirestoreErrorMessage _projectGroupSavingError;
 
   /// A [List] that holds all loaded [ProjectGroup].
@@ -354,7 +355,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     }
   }
 
-  /// Saves the [ProjectGroupFirestoreErrorMessage].
+  /// Saves the [ProjectGroupFirestoreErrorMessage] if an error occurred
+  /// during the project group saving operation.
   void _projectGroupSavingErrorHandler(PersistentStoreErrorCode code) {
     _projectGroupSavingError = ProjectGroupFirestoreErrorMessage(code);
     notifyListeners();

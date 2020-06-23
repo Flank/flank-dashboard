@@ -2,7 +2,7 @@ import 'package:metrics/common/domain/entities/persistent_store_error_code.dart'
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 
 /// A class that provides an error description based
-/// on [PersistentStoreErrorCode].
+/// on the [PersistentStoreErrorCode].
 class PersistentStoreErrorMessage {
   final PersistentStoreErrorCode _code;
 
