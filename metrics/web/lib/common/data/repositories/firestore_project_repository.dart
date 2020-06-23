@@ -14,12 +14,17 @@ class FirestoreProjectRepository implements ProjectRepository {
         .collection('projects')
         .orderBy('name')
         .snapshots()
-        .map((snapshot) => snapshot.documents
-            .map((doc) => ProjectData.fromJson(doc.data, doc.documentID))
-            .toList())
-        .handleError((_) {
-      throw const PersistentStoreException(
-          code: PersistentStoreErrorCode.unknown);
-    });
+        .map(
+          (snapshot) => snapshot.documents
+              .map((doc) => ProjectData.fromJson(doc.data, doc.documentID))
+              .toList(),
+        )
+        .handleError(
+      (_) {
+        throw const PersistentStoreException(
+          code: PersistentStoreErrorCode.unknown,
+        );
+      },
+    );
   }
 }

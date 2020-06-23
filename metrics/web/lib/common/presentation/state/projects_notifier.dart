@@ -67,7 +67,7 @@ class ProjectsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Saves the error [String] representation to [_errorMessage].
+  /// Maps the [error] to an appropriate variable, based on the [error] type.
   void _errorHandler(error) {
     if (error is PersistentStoreException) {
       _projectsErrorMessage = PersistentStoreErrorMessage(error.code);

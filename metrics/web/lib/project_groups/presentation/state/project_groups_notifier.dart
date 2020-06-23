@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
 import 'package:metrics/project_groups/domain/usecases/delete_project_group_usecase.dart';
@@ -44,13 +42,14 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// to the project group updates.
   StreamSubscription _projectGroupsSubscription;
 
-  /// Holds the error message that occurred during loading project groups data.
-  String _projectGroupsErrorMessage;
-
   /// Holds the error message that occurred during updating projects data.
   String _projectsErrorMessage;
 
-  /// Holds the project group firestore error message.
+  /// Holds the [ProjectGroupFirestoreErrorMessage] that occurred
+  /// during loading project groups data.
+  ProjectGroupFirestoreErrorMessage _projectGroupsErrorMessage;
+
+  /// Holds the [ProjectGroupFirestoreErrorMessage].
   ProjectGroupFirestoreErrorMessage _projectGroupSavingError;
 
   /// A [List] that holds all loaded [ProjectGroup].
@@ -66,23 +65,21 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   ProjectGroupDialogViewModel _projectGroupDialogViewModel;
 
   /// Holds the data for a project group delete dialog.
-  ProjectGroupDeleteDialogViewModel
-      _projectGroupDeleteDialogViewModel;
+  ProjectGroupDeleteDialogViewModel _projectGroupDeleteDialogViewModel;
 
   /// An optional filter value that represents a part (or full) project name
   /// used to limit the displayed data.
   String _projectNameFilter;
 
   /// Provides an error description that occurred during loading project groups data.
-  String get projectGroupsErrorMessage => _projectGroupsErrorMessage;
+  String get projectGroupsErrorMessage => _projectGroupsErrorMessage?.message;
 
   /// Provides an error description that occurred during loading projects data.
   String get projectsErrorMessage => _projectsErrorMessage;
 
   /// Provides an error description that occurred during the
   /// project group firestore saving operation.
-  ProjectGroupFirestoreErrorMessage get projectGroupSavingError =>
-      _projectGroupSavingError;
+  String get projectGroupSavingError => _projectGroupSavingError?.message;
 
   /// Provides a list of [ProjectCheckboxViewModel], filtered by the project name filter.
   List<ProjectCheckboxViewModel> get projectCheckboxViewModels {
@@ -109,9 +106,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       _projectGroupDialogViewModel;
 
   /// Provides data for a project group delete dialog.
-  ProjectGroupDeleteDialogViewModel
-      get projectGroupDeleteDialogViewModel =>
-          _projectGroupDeleteDialogViewModel;
+  ProjectGroupDeleteDialogViewModel get projectGroupDeleteDialogViewModel =>
+      _projectGroupDeleteDialogViewModel;
 
   /// Creates a new instance of the [ProjectGroupsNotifier].
   ///
@@ -154,8 +150,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       orElse: () => null,
     );
 
-    _projectGroupDeleteDialogViewModel =
-        ProjectGroupDeleteDialogViewModel(
+    _projectGroupDeleteDialogViewModel = ProjectGroupDeleteDialogViewModel(
       id: projectGroup?.id,
       name: projectGroup?.name,
     );
@@ -315,8 +310,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
     if (projects == null) return;
 
-    final projectIds =
-        _projectGroupDialogViewModel?.selectedProjectIds ?? [];
+    final projectIds = _projectGroupDialogViewModel?.selectedProjectIds ?? [];
     _projectCheckboxViewModels = projects
         .map((project) => ProjectCheckboxViewModel(
               id: project.id,
@@ -349,18 +343,18 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectGroups = null;
   }
 
-  /// Saves the error [String] representation to [_projectGroupsErrorMessage].
+  /// Maps the [error] to an appropriate variable, based on the [error] type.
   void _errorHandler(error) {
-    if (error is PlatformException) {
-      _projectGroupsErrorMessage = error.message;
+    if (error is PersistentStoreException) {
+      _projectGroupsErrorMessage = ProjectGroupFirestoreErrorMessage(
+        error.code,
+      );
+
       return notifyListeners();
     }
-
-    _projectGroupsErrorMessage = CommonStrings.unknownErrorMessage;
-    notifyListeners();
   }
 
-  /// Saves the error [String] representation to [_projectGroupSavingErrorMessage].
+  /// Saves the [ProjectGroupFirestoreErrorMessage].
   void _projectGroupSavingErrorHandler(PersistentStoreErrorCode code) {
     _projectGroupSavingError = ProjectGroupFirestoreErrorMessage(code);
     notifyListeners();

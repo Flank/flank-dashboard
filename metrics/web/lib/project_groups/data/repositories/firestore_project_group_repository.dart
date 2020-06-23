@@ -24,7 +24,12 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
                 ),
               )
               .toList(),
-        );
+        )
+        .handleError((_) {
+      throw const PersistentStoreException(
+        code: PersistentStoreErrorCode.unknown,
+      );
+    });
   }
 
   @override
@@ -42,7 +47,9 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
             projectGroupData.toJson(),
           );
     } catch (e) {
-      throw const PersistentStoreException(code: PersistentStoreErrorCode.unknown);
+      throw const PersistentStoreException(
+        code: PersistentStoreErrorCode.unknown,
+      );
     }
   }
 
@@ -65,7 +72,9 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
             projectGroupData.toJson(),
           );
     } catch (e) {
-      throw const PersistentStoreException(code: PersistentStoreErrorCode.unknown);
+      throw const PersistentStoreException(
+        code: PersistentStoreErrorCode.unknown,
+      );
     }
   }
 
@@ -77,7 +86,9 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
           .document(projectGroupId)
           .delete();
     } catch (e) {
-      throw const PersistentStoreException(code: PersistentStoreErrorCode.unknown);
+      throw const PersistentStoreException(
+        code: PersistentStoreErrorCode.unknown,
+      );
     }
   }
 }

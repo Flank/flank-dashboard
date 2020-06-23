@@ -8,13 +8,25 @@ void main() {
     "ProjectGroupSavingErrorMessage",
     () {
       test(
+        "maps the null error code to the null error message",
+        () {
+          const errorMessage = ProjectGroupFirestoreErrorMessage(null);
+
+          expect(errorMessage.message, isNull);
+        },
+      );
+
+      test(
         "maps the unknown error code to unknown error message",
         () {
-          const errorMessage =
-              ProjectGroupFirestoreErrorMessage(PersistentStoreErrorCode.unknown);
+          const errorMessage = ProjectGroupFirestoreErrorMessage(
+            PersistentStoreErrorCode.unknown,
+          );
 
           expect(
-              errorMessage.message, ProjectGroupsStrings.unknownErrorMessage);
+            errorMessage.message,
+            ProjectGroupsStrings.unknownErrorMessage,
+          );
         },
       );
     },
