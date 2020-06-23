@@ -37,7 +37,6 @@ class _MyAppState extends State<MyApp> {
               brightness: Brightness.light,
               primarySwatch: Colors.teal,
               primaryColorBrightness: Brightness.light,
-              cardColor: ColorConfig.lightScaffoldColor,
               fontFamily: 'Roboto',
               appBarTheme: const AppBarTheme(
                 color: ColorConfig.lightScaffoldColor,
@@ -48,7 +47,6 @@ class _MyAppState extends State<MyApp> {
               primarySwatch: Colors.teal,
               primaryColorBrightness: Brightness.dark,
               scaffoldBackgroundColor: ColorConfig.darkScaffoldColor,
-              cardColor: ColorConfig.darkScaffoldColor,
               fontFamily: 'Roboto',
               appBarTheme: const AppBarTheme(
                 color: ColorConfig.darkScaffoldColor,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card_theme.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme.dart';
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
@@ -53,6 +55,17 @@ class LightMetricsThemeData extends MetricsThemeData {
             canceledColor: ColorConfig.accentColor,
             successfulColor: ColorConfig.primaryColor,
             failedColor: ColorConfig.accentColor,
+          ),
+          projectGroupCardTheme: const ProjectGroupCardTheme(
+            borderColor: ColorConfig.borderDarkColor,
+            hoverColor: ColorConfig.hoverColor,
+            backgroundColor: ColorConfig.darkScaffoldColor,
+            deleteColor: ColorConfig.accentColor,
+            editColor: ColorConfig.primaryColor,
+          ),
+          addProjectGroupCardTheme: const AddProjectGroupCardTheme(
+            primaryColor: ColorConfig.primaryColor,
+            backgroundColor: ColorConfig.primaryTranslucentColor,
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.lightInactiveColor,
