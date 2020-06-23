@@ -83,7 +83,7 @@ void main() {
     );
 
     testWidgets(
-      "validator callback is called on the form validation",
+      "calls the validation callback on form validation",
       (WidgetTester tester) async {
         bool _callbackIsCalled = false;
         final _formKey = GlobalKey<FormState>();
@@ -131,7 +131,7 @@ void main() {
     );
 
     testWidgets(
-      "clears the text field on tap on clear icon",
+      "clears an input on tap on a clear icon",
       (tester) async {
         final controller = TextEditingController(text: 'text');
 

@@ -23,7 +23,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given actions is null",
+      "throws an AssertionError if the given actions are null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(
