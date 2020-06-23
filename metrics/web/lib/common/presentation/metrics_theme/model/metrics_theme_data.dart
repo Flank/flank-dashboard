@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card_theme.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 
 /// Stores the theme data for all metric widgets.
@@ -32,10 +31,10 @@ class MetricsThemeData {
   final DialogThemeData dialogThemeData;
 
   /// The theme for project group cards.
-  final ProjectGroupCardTheme projectGroupCardTheme;
+  final ProjectGroupCardThemeData projectGroupCardTheme;
 
-  /// The theme for add project group cards.
-  final AddProjectGroupCardTheme addProjectGroupCardTheme;
+  /// The theme for the add project group card.
+  final ProjectGroupCardThemeData addProjectGroupCardTheme;
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
@@ -44,8 +43,8 @@ class MetricsThemeData {
     MetricWidgetThemeData inactiveWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     DialogThemeData dialogThemeData,
-    ProjectGroupCardTheme projectGroupCardTheme,
-    AddProjectGroupCardTheme addProjectGroupCardTheme,
+    ProjectGroupCardThemeData projectGroupCardTheme,
+    ProjectGroupCardThemeData addProjectGroupCardTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -58,9 +57,9 @@ class MetricsThemeData {
             ),
         dialogThemeData = dialogThemeData ?? const DialogThemeData(),
         projectGroupCardTheme =
-            projectGroupCardTheme ?? const ProjectGroupCardTheme(),
+            projectGroupCardTheme ?? const ProjectGroupCardThemeData(),
         addProjectGroupCardTheme =
-            addProjectGroupCardTheme ?? const AddProjectGroupCardTheme();
+            addProjectGroupCardTheme ?? const ProjectGroupCardThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -71,8 +70,8 @@ class MetricsThemeData {
     MetricWidgetThemeData metricWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     DialogThemeData dialogThemeData,
-    ProjectGroupCardTheme projectGroupCardTheme,
-    AddProjectGroupCardTheme addProjectGroupCardTheme,
+    ProjectGroupCardThemeData projectGroupCardTheme,
+    ProjectGroupCardThemeData addProjectGroupCardTheme,
     Color barGraphBackgroundColor,
   }) {
     return MetricsThemeData(

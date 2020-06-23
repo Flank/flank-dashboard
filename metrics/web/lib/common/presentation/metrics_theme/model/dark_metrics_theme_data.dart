@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card_theme.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
@@ -56,21 +55,31 @@ class DarkMetricsThemeData extends MetricsThemeData {
             successfulColor: ColorConfig.primaryColor,
             failedColor: ColorConfig.accentColor,
           ),
-          projectGroupCardTheme: const ProjectGroupCardTheme(
-            borderColor: ColorConfig.borderDarkColor,
-            hoverColor: ColorConfig.hoverColor,
+          projectGroupCardTheme: const ProjectGroupCardThemeData(
+            borderColor: ColorConfig.darkBorderColor,
+            hoverColor: ColorConfig.darkCardHoverColor,
             backgroundColor: ColorConfig.darkScaffoldColor,
-            deleteColor: ColorConfig.accentColor,
-            editColor: ColorConfig.primaryColor,
-            inactiveTextStyle: TextStyle(
-              color: ColorConfig.darkInactiveTextColor,
+            accentColor: ColorConfig.accentColor,
+            primaryColor: ColorConfig.primaryColor,
+            titleStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 22.0,
+              fontWeight: FontWeight.w500,
+            ),
+            subtitleStyle: TextStyle(
+              color: ColorConfig.darkSecondaryTextColor,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
             ),
           ),
-          addProjectGroupCardTheme: const AddProjectGroupCardTheme(
+          addProjectGroupCardTheme: const ProjectGroupCardThemeData(
             primaryColor: ColorConfig.primaryColor,
             backgroundColor: ColorConfig.primaryTranslucentColor,
+            titleStyle: TextStyle(
+              color: ColorConfig.primaryColor,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.darkInactiveColor,

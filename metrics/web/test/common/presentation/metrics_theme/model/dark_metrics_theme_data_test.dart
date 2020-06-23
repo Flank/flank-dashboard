@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group("DarkMetricsThemeData", () {
     test(
-      'creates a variation theme',
+      "creates a variation theme",
       () {
         final darkMetricsThemeData = DarkMetricsThemeData();
 
@@ -14,6 +14,8 @@ void main() {
         expect(darkMetricsThemeData.metricWidgetTheme, isNotNull);
         expect(darkMetricsThemeData.buildResultTheme, isNotNull);
         expect(darkMetricsThemeData.inactiveWidgetTheme, isNotNull);
+        expect(darkMetricsThemeData.projectGroupCardTheme, isNotNull);
+        expect(darkMetricsThemeData.addProjectGroupCardTheme, isNotNull);
       },
     );
   });
