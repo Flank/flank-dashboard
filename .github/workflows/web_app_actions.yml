@@ -12,7 +12,7 @@ jobs:
   test:
     name: Run the Metrics Web Application tests and deploy to Firebase
     runs-on: macOS-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
       WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
