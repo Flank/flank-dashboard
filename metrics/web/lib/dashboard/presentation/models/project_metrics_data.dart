@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:meta/meta.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 
 /// Represents a presentation model of the metrics of the project.
@@ -13,8 +12,7 @@ class ProjectMetricsData {
   final CoverageViewModel coverage;
   final StabilityViewModel stability;
   final int buildNumberMetric;
-  final int averageBuildDurationInMinutes;
-  final List<Point<int>> performanceMetrics;
+  final PerformanceSparklineViewModel performanceSparkline;
   final BuildResultMetricViewModel buildResultMetrics;
 
   /// Creates the [ProjectMetricsData].
@@ -24,8 +22,7 @@ class ProjectMetricsData {
   /// [coverage] is the view model represents the tests code coverage of the project.
   /// [stability] is the view model represents the percentage of the successful builds to total builds of the project.
   /// [buildNumberMetric] is the metric that represents the number of builds.
-  /// [averageBuildDurationInMinutes] is the average duration in minutes of the single build.
-  /// [performanceMetrics] is metric that represents the duration of the builds.
+  /// [performanceSparkline] is metric that represents the duration of the builds.
   /// [buildResultMetrics] is the metric that represents the results of the builds.
   const ProjectMetricsData({
     this.projectId,
@@ -33,8 +30,7 @@ class ProjectMetricsData {
     this.coverage = const CoverageViewModel(),
     this.stability = const StabilityViewModel(),
     this.buildNumberMetric,
-    this.averageBuildDurationInMinutes,
-    this.performanceMetrics,
+    this.performanceSparkline,
     this.buildResultMetrics,
   });
 
@@ -45,8 +41,7 @@ class ProjectMetricsData {
     CoverageViewModel coverage,
     StabilityViewModel stability,
     int buildNumberMetric,
-    int averageBuildDurationInMinutes,
-    List<Point<int>> performanceMetrics,
+    PerformanceSparklineViewModel performanceSparkline,
     BuildResultMetricViewModel buildResultMetrics,
   }) {
     return ProjectMetricsData(
@@ -55,9 +50,7 @@ class ProjectMetricsData {
       coverage: coverage ?? this.coverage,
       stability: stability ?? this.stability,
       buildNumberMetric: buildNumberMetric ?? this.buildNumberMetric,
-      averageBuildDurationInMinutes:
-          averageBuildDurationInMinutes ?? this.averageBuildDurationInMinutes,
-      performanceMetrics: performanceMetrics ?? this.performanceMetrics,
+      performanceSparkline: performanceSparkline ?? this.performanceSparkline,
       buildResultMetrics: buildResultMetrics ?? this.buildResultMetrics,
     );
   }

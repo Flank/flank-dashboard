@@ -15,6 +15,7 @@ import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart'
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -164,15 +165,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final buildResultMetrics = _getBuildResultMetrics(
       dashboardMetrics.buildResultMetrics,
     );
-    final averageBuildDuration =
-        dashboardMetrics.performanceMetrics.averageBuildDuration.inMinutes;
     final numberOfBuilds = dashboardMetrics.buildNumberMetrics.numberOfBuilds;
 
     projectsMetrics[projectId] = projectMetrics.copyWith(
-      performanceMetrics: performanceMetrics,
+      performanceSparkline: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
       buildNumberMetric: numberOfBuilds,
-      averageBuildDurationInMinutes: averageBuildDuration,
       coverage: CoverageViewModel(value: dashboardMetrics.coverage?.value),
       stability: StabilityViewModel(value: dashboardMetrics.stability?.value),
     );
@@ -181,20 +179,28 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates the project performance metrics from the [PerformanceMetric].
-  List<Point<int>> _getPerformanceMetrics(PerformanceMetric metric) {
+  /// Creates the project performance metrics from [PerformanceMetric].
+  PerformanceSparklineViewModel _getPerformanceMetrics(
+      PerformanceMetric metric) {
     final performanceMetrics = metric?.buildsPerformance ?? DateTimeSet();
 
     if (performanceMetrics.isEmpty) {
-      return [];
+      return const PerformanceSparklineViewModel();
     }
 
-    return performanceMetrics.map((metric) {
+    final performance = performanceMetrics.map((metric) {
       return Point(
         metric.date.millisecondsSinceEpoch,
         metric.duration.inMilliseconds,
       );
     }).toList();
+
+    final averageBuildDuration = metric.averageBuildDuration.inMinutes;
+
+    return PerformanceSparklineViewModel(
+      performance: performance,
+      value: averageBuildDuration,
+    );
   }
 
   /// Creates the project build result metrics from [BuildResultMetric].
