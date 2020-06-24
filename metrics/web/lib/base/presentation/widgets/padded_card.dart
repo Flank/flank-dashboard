@@ -26,12 +26,11 @@ class PaddedCard extends StatelessWidget {
   const PaddedCard({
     Key key,
     @required this.child,
-    @required this.backgroundColor,
+    this.backgroundColor,
     this.elevation = 0.0,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
   })  : assert(child != null),
-        assert(backgroundColor != null),
         super(key: key);
 
   @override
