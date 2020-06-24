@@ -30,88 +30,84 @@ class ProjectGroupCard extends StatelessWidget {
     return Container(
       width: 270.0,
       height: 156.0,
-      child: MouseRegion(
-        onEnter: print,
-        onExit: print,
-        child: PaddedCard(
-          padding: const EdgeInsets.all(24.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-            side: BorderSide(color: theme.borderColor),
-          ),
-          backgroundColor: theme.backgroundColor,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  projectGroupCardViewModel.name,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: theme.titleStyle,
-                ),
+      child: PaddedCard(
+        padding: const EdgeInsets.all(24.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+          side: BorderSide(color: theme.borderColor),
+        ),
+        backgroundColor: theme.backgroundColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                projectGroupCardViewModel.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: theme.titleStyle,
               ),
-              Text(
-                _projectGroupsCount,
-                style: theme.subtitleStyle,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    InkWell(
-                      borderRadius: BorderRadius.circular(4.0),
-                      onTap: () => _showProjectGroupDialog(context),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 6.0),
-                            child: Icon(
-                              Icons.edit,
-                              size: 20.0,
-                              color: theme.primaryColor,
-                            ),
+            ),
+            Text(
+              _projectGroupsCount,
+              style: theme.subtitleStyle,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 40.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  InkWell(
+                    borderRadius: BorderRadius.circular(4.0),
+                    onTap: () => _showProjectGroupDialog(context),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 6.0),
+                          child: Icon(
+                            Icons.edit,
+                            size: 20.0,
+                            color: theme.primaryColor,
                           ),
-                          Text(
-                            CommonStrings.edit,
-                            style: TextStyle(
-                              color: theme.primaryColor,
-                            ),
+                        ),
+                        Text(
+                          CommonStrings.edit,
+                          style: TextStyle(
+                            color: theme.primaryColor,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(4.0),
-                      onTap: () => _showProjectGroupDeleteDialog(context),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 6.0),
-                            child: Icon(
-                              Icons.delete,
-                              size: 20.0,
-                              color: theme.accentColor,
-                            ),
+                  ),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(4.0),
+                    onTap: () => _showProjectGroupDeleteDialog(context),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 6.0),
+                          child: Icon(
+                            Icons.delete,
+                            size: 20.0,
+                            color: theme.accentColor,
                           ),
-                          Text(
-                            CommonStrings.delete,
-                            style: TextStyle(
-                              color: theme.accentColor,
-                            ),
+                        ),
+                        Text(
+                          CommonStrings.delete,
+                          style: TextStyle(
+                            color: theme.accentColor,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
