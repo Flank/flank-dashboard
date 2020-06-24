@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:fcharts/fcharts.dart';
 import 'package:flutter/material.dart';
 
-/// The widget with sparkline that represents metric.
+/// The widget with sparkline.
 ///
 /// If no constraints are given by the parent of this widget,
 /// it fills all the available space.
@@ -31,9 +31,8 @@ class SparklineGraph extends StatelessWidget {
 
   /// Creates the [SparklineGraph] widget.
   ///
-  /// The [data] must not be `null`.
-  /// The [strokeWidth] must be non-null and positive.
-  ///
+  /// Throws an [AssertionError] if the given [data] is null.
+  /// Throws an [AssertionError] if the given [strokeWidth] is null or negative.
   /// The [curveType] default value is [LineCurves.linear].
   /// The [graphPadding] default value is [EdgeInsets.zero].
   const SparklineGraph({
@@ -83,9 +82,8 @@ class SparklineGraph extends StatelessWidget {
     );
   }
 
-  /// Creates the [DoubleSpan] for axes.
-  ///
-  /// The [DoubleSpan] represents the visible range of the axis.
+  /// Creates the [DoubleSpan] for axes that represent
+  /// the visible range of the axis.
   DoubleSpan _createSpan(List<num> data) {
     if (data == null || data.isEmpty) return null;
 

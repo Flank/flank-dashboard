@@ -115,7 +115,7 @@ void main() {
     );
 
     testWidgets(
-      "applies curve type to graph curve",
+      "applies curve type to graph lines",
       (WidgetTester tester) async {
         const curveType = LineCurves.linear;
 

@@ -52,7 +52,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates the performance to the SparklineGraph",
+      "delegates the data display to the SparklineGraph",
       (tester) async {
         const performance = [Point(1, 2)];
         const performanceMetric =
