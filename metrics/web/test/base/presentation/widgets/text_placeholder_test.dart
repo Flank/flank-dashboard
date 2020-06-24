@@ -30,12 +30,12 @@ void main() {
     );
 
     testWidgets(
-      "applies the given size to the given text",
+      "applies the given style to the given text",
       (WidgetTester tester) async {
-        const size = 10.0;
+        const style = TextStyle(fontSize: 20.0, color: Colors.red);
 
         await tester.pumpWidget(
-          const _TextPlaceholderTestbed(text: text, size: size),
+          const _TextPlaceholderTestbed(text: text, style: style),
         );
 
         final widget = tester.widget<Text>(
@@ -45,27 +45,7 @@ void main() {
           ),
         );
 
-        expect(widget.style.fontSize, equals(size));
-      },
-    );
-
-    testWidgets(
-      "applies the given color to the given text",
-      (WidgetTester tester) async {
-        const color = Colors.red;
-
-        await tester.pumpWidget(
-          const _TextPlaceholderTestbed(text: text, color: color),
-        );
-
-        final widget = tester.widget<Text>(
-          find.descendant(
-            of: find.byType(TextPlaceholder),
-            matching: find.text(text),
-          ),
-        );
-
-        expect(widget.style.color, equals(color));
+        expect(widget.style, equals(style));
       },
     );
   });
@@ -76,11 +56,7 @@ class _TextPlaceholderTestbed extends StatelessWidget {
   /// A text to display.
   final String text;
 
-  /// A size of the given [text].
-  final double size;
-
-  /// A color of the given [text].
-  final Color color;
+  final TextStyle style;
 
   /// Creates an instance of this testbed with the given parameters.
   ///
@@ -89,8 +65,7 @@ class _TextPlaceholderTestbed extends StatelessWidget {
   const _TextPlaceholderTestbed({
     Key key,
     this.text,
-    this.size = 20.0,
-    this.color = Colors.grey,
+    this.style,
   }) : super(key: key);
 
   @override
@@ -99,8 +74,7 @@ class _TextPlaceholderTestbed extends StatelessWidget {
       home: Scaffold(
         body: TextPlaceholder(
           text: text,
-          size: size,
-          color: color,
+          style: style,
         ),
       ),
     );

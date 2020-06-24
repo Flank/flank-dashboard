@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/text_placeholder.dart';
 import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list_tile.dart';
@@ -14,7 +14,7 @@ class ProjectCheckboxList extends StatelessWidget {
     return Consumer<ProjectGroupsNotifier>(
       builder: (_, projectGroupsNotifier, __) {
         if (projectGroupsNotifier.projectsErrorMessage != null) {
-          return TextPlaceholder(
+          return MetricsTextPlaceholder(
             text: projectGroupsNotifier.projectsErrorMessage,
           );
         }
@@ -27,7 +27,7 @@ class ProjectCheckboxList extends StatelessWidget {
         }
 
         if (projectCheckboxViewModels.isEmpty) {
-          return const TextPlaceholder(
+          return const MetricsTextPlaceholder(
             text: DashboardStrings.noConfiguredProjects,
           );
         }
