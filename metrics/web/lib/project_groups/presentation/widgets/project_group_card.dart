@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -25,6 +26,8 @@ class ProjectGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const _buttonIconPadding = EdgeInsets.only(right: 6.0);
+    final _buttonBorderRadius = BorderRadius.circular(4.0);
     final theme = MetricsTheme.of(context).projectGroupCardTheme;
 
     return Container(
@@ -58,50 +61,32 @@ class ProjectGroupCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  InkWell(
-                    borderRadius: BorderRadius.circular(4.0),
-                    onTap: () => _showProjectGroupDialog(context),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 6.0),
-                          child: Icon(
-                            Icons.edit,
-                            size: 20.0,
-                            color: theme.primaryColor,
-                          ),
-                        ),
-                        Text(
-                          CommonStrings.edit,
-                          style: TextStyle(
-                            color: theme.primaryColor,
-                          ),
-                        ),
-                      ],
+                  IconLabelButton(
+                    onPressed: () => _showProjectGroupDialog(context),
+                    borderRadius: _buttonBorderRadius,
+                    iconPadding: _buttonIconPadding,
+                    icon: Icon(
+                      Icons.edit,
+                      size: 20.0,
+                      color: theme.primaryColor,
+                    ),
+                    label: CommonStrings.edit,
+                    labelStyle: TextStyle(
+                      color: theme.primaryColor,
                     ),
                   ),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(4.0),
-                    onTap: () => _showProjectGroupDeleteDialog(context),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 6.0),
-                          child: Icon(
-                            Icons.delete,
-                            size: 20.0,
-                            color: theme.accentColor,
-                          ),
-                        ),
-                        Text(
-                          CommonStrings.delete,
-                          style: TextStyle(
-                            color: theme.accentColor,
-                          ),
-                        ),
-                      ],
+                  IconLabelButton(
+                    onPressed: () => _showProjectGroupDeleteDialog(context),
+                    borderRadius: _buttonBorderRadius,
+                    iconPadding: _buttonIconPadding,
+                    icon: Icon(
+                      Icons.delete,
+                      size: 20.0,
+                      color: theme.accentColor,
+                    ),
+                    label: CommonStrings.delete,
+                    labelStyle: TextStyle(
+                      color: theme.accentColor,
                     ),
                   ),
                 ],
