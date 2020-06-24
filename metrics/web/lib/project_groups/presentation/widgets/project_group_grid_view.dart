@@ -26,22 +26,14 @@ class ProjectGroupGridView extends StatelessWidget {
           return const LoadingPlaceholder();
         }
 
-        return GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
-            childAspectRatio: 2.0,
-          ),
-          itemCount: projectGroupCardViewModels.length + 1,
-          itemBuilder: (context, index) {
-            if (index == projectGroupCardViewModels.length) {
-              return AddProjectGroupCard();
-            }
-            return ProjectGroupCard(
-              projectGroupCardViewModel: projectGroupCardViewModels[index],
-            );
-          },
+        return Wrap(
+          spacing: 20.0,
+          runSpacing: 20.0,
+          children: <Widget>[
+            AddProjectGroupCard(),
+            for (final projectGroup in projectGroupCardViewModels)
+              ProjectGroupCard(projectGroupCardViewModel: projectGroup),
+          ],
         );
       },
     );
