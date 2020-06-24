@@ -96,12 +96,12 @@ void main() {
 
           final projectMetric = projectMetrics.first;
           final buildResultMetrics = projectMetric.buildResultMetrics;
-          final performanceMetrics = projectMetric.performanceMetrics;
+          final performanceMetrics = projectMetric.performanceSparkline;
           final stabilityMetric = projectMetric.stability;
 
           hasNullMetrics = buildResultMetrics == emptyBuildResultMetric &&
               performanceMetrics != null &&
-              performanceMetrics.isEmpty &&
+              performanceMetrics.performance.isEmpty &&
               stabilityMetric != null;
 
           if (hasNullMetrics) projectMetricsNotifier.dispose();
@@ -129,7 +129,7 @@ void main() {
           if (projectMetrics == null || projectMetrics.isEmpty) return;
 
           final buildResultMetrics = projectMetrics.first.buildResultMetrics;
-          final performanceMetrics = projectMetrics.first.performanceMetrics;
+          final performanceMetrics = projectMetrics.first.performanceSparkline;
 
           hasNullMetrics =
               buildResultMetrics == null && performanceMetrics == null;
@@ -178,21 +178,22 @@ void main() {
           expectedProjectMetrics.performanceMetrics;
 
       final firstProjectMetrics = projectMetricsNotifier.projectsMetrics.first;
-      final performanceMetrics = firstProjectMetrics.performanceMetrics;
+      final performanceMetrics = firstProjectMetrics.performanceSparkline;
+      final performancePoints = performanceMetrics.performance;
 
       expect(
-        performanceMetrics.length,
+        performancePoints.length,
         expectedPerformanceMetrics.buildsPerformance.length,
       );
 
       expect(
-        firstProjectMetrics.averageBuildDurationInMinutes,
+        performanceMetrics.value,
         expectedPerformanceMetrics.averageBuildDuration.inMinutes,
       );
 
       final firstBuildPerformance =
           expectedPerformanceMetrics.buildsPerformance.first;
-      final performancePoint = performanceMetrics.first;
+      final performancePoint = performancePoints.first;
 
       expect(
         performancePoint.x,
