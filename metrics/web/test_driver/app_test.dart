@@ -86,7 +86,7 @@ void main() {
           () async {
             await driver.waitFor(find.text(DashboardStrings.builds));
 
-            await driver.waitFor(find.byType('BuildNumberTextMetric'));
+            await driver.waitFor(find.byType('BuildNumberScorecard'));
           },
         );
 
