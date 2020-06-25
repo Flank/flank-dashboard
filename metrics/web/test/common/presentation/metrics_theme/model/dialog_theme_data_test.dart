@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 void main() {
   group("DialogThemeDataTest", () {
     test(
-      "creates the theme with the default theme data if the parameters are not specified",
+      "creates the theme data with the default values if the parameters are not specified",
       () {
         final themeData = DialogThemeData();
 

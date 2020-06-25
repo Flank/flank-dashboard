@@ -9,12 +9,12 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("MetricsTextPlaceholder", () {
-    const text = 'text';
-
     testWidgets(
       "throws an AssertionError if a text is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsTextPlaceholderTestbed());
+        await tester.pumpWidget(const _MetricsTextPlaceholderTestbed(
+          text: null,
+        ));
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -23,6 +23,8 @@ void main() {
     testWidgets(
       "applies the given text to the text placeholder",
       (WidgetTester tester) async {
+        const text = 'text';
+
         await tester.pumpWidget(
           const _MetricsTextPlaceholderTestbed(text: text),
         );
@@ -44,7 +46,7 @@ void main() {
         );
 
         await tester.pumpWidget(
-          const _MetricsTextPlaceholderTestbed(text: text, theme: theme),
+          const _MetricsTextPlaceholderTestbed(theme: theme),
         );
 
         final textPlaceholder = tester.widget<TextPlaceholder>(
@@ -62,16 +64,17 @@ class _MetricsTextPlaceholderTestbed extends StatelessWidget {
   /// A text to display.
   final String text;
 
-  /// The [MetricsThemeData] used in testbed.
+  /// The [MetricsThemeData] used in tests.
   final MetricsThemeData theme;
 
   /// Creates the [_MetricsTextPlaceholderTestbed] with the given [text]
-  /// and the [theme].
+  /// and [theme].
   ///
+  /// The [text] defaults to `text`.
   /// The [theme] defaults to [MetricsThemeData].
   const _MetricsTextPlaceholderTestbed({
     Key key,
-    this.text,
+    this.text = 'text',
     this.theme = const MetricsThemeData(),
   }) : super(key: key);
 
