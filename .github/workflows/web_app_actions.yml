@@ -9,8 +9,8 @@ on:
       - .github/workflows/**
 
 jobs:
-  test:
-    name: Run the Metrics Web Application tests and deploy to Firebase
+  metrics-actions:
+    name: Metrics actions
     runs-on: macOS-latest
     timeout-minutes: 30
     env:
