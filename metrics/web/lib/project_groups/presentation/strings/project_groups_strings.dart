@@ -14,6 +14,8 @@ class ProjectGroupsStrings {
   static const String creatingProjectGroup = 'Creating group...';
   static const String savingProjectGroup = 'Saving changes...';
   static const String deletingProjectGroup = 'Deleting group...';
+  static const String unknownErrorMessage =
+      'An unknown error occurred, please try again';
 
   static String getDeleteTextConfirmation(String name) {
     return 'Delete $name project group?';

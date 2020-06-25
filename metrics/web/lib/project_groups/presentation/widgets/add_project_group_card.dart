@@ -10,35 +10,31 @@ import 'package:provider/provider.dart';
 class AddProjectGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = MetricsTheme.of(context).addProjectGroupCardTheme;
+    final widgetThemeData = MetricsTheme.of(context).inactiveWidgetTheme;
+    const symmetricPadding = EdgeInsets.symmetric(vertical: 4.0);
 
-    return Container(
-      width: 270.0,
-      height: 156.0,
+    return InkWell(
+      onTap: () => _showProjectGroupDialog(context),
       child: PaddedCard(
-        backgroundColor: theme.backgroundColor,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-        child: InkWell(
-          onTap: () => _showProjectGroupDialog(context),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.network(
-                'icons/add-button.svg',
-                width: 32.0,
-                height: 32.0,
-                color: theme.primaryColor,
+        backgroundColor: widgetThemeData.backgroundColor,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const <Widget>[
+            Padding(
+              padding: symmetricPadding,
+              child: Icon(
+                Icons.add,
+                size: 72.0,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  ProjectGroupsStrings.addProjectGroup,
-                  style: theme.titleStyle,
-                ),
+            ),
+            Padding(
+              padding: symmetricPadding,
+              child: Text(
+                ProjectGroupsStrings.addProjectGroup,
+                style: TextStyle(fontSize: 24.0),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

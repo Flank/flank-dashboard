@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -10,9 +9,9 @@ import 'package:metrics/project_groups/presentation/widgets/project_group_delete
 import 'package:metrics/project_groups/presentation/widgets/update_project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
-/// A widget that represents [ProjectGroupCardViewModel].
+/// A widget that represent [ProjectGroupCardViewModel].
 class ProjectGroupCard extends StatelessWidget {
-  /// A [ProjectGroupCardViewModel] with project group data to display.
+  /// A project group card viewModel with project group data to display.
   final ProjectGroupCardViewModel projectGroupCardViewModel;
 
   /// Creates the [ProjectGroupCard] with the given [projectGroupCardViewModel].
@@ -26,74 +25,47 @@ class ProjectGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const _buttonIconPadding = EdgeInsets.only(right: 6.0);
-    final _buttonBorderRadius = BorderRadius.circular(4.0);
-    final theme = MetricsTheme.of(context).projectGroupCardTheme;
+    final widgetThemeData = MetricsTheme.of(context).inactiveWidgetTheme;
+    const padding = EdgeInsets.all(8.0);
 
-    return Container(
-      width: 270.0,
-      height: 156.0,
-      child: PaddedCard(
-        padding: const EdgeInsets.all(24.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
-          side: BorderSide(color: theme.borderColor),
-        ),
-        backgroundColor: theme.backgroundColor,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                projectGroupCardViewModel.name,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: theme.titleStyle,
-              ),
+    return PaddedCard(
+      padding: const EdgeInsets.all(16.0),
+      backgroundColor: widgetThemeData.backgroundColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: padding,
+            child: Text(
+              projectGroupCardViewModel.name,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+              maxLines: 1,
+              style: const TextStyle(fontSize: 24.0),
             ),
-            Text(
-              _projectGroupsCount,
-              style: theme.subtitleStyle,
+          ),
+          Padding(
+            padding: padding,
+            child: Text(_projectGroupsCount),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 24.0),
+            child: Row(
+              children: <Widget>[
+                FlatButton.icon(
+                  icon: const Icon(Icons.edit),
+                  label: const Text(CommonStrings.edit),
+                  onPressed: () => _showProjectGroupDialog(context),
+                ),
+                FlatButton.icon(
+                  icon: const Icon(Icons.delete_outline),
+                  label: const Text(CommonStrings.delete),
+                  onPressed: () => _showProjectGroupDeleteDialog(context),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconLabelButton(
-                    onPressed: () => _showProjectGroupDialog(context),
-                    borderRadius: _buttonBorderRadius,
-                    iconPadding: _buttonIconPadding,
-                    icon: Icon(
-                      Icons.edit,
-                      size: 20.0,
-                      color: theme.primaryColor,
-                    ),
-                    label: CommonStrings.edit,
-                    labelStyle: TextStyle(
-                      color: theme.primaryColor,
-                    ),
-                  ),
-                  IconLabelButton(
-                    onPressed: () => _showProjectGroupDeleteDialog(context),
-                    borderRadius: _buttonBorderRadius,
-                    iconPadding: _buttonIconPadding,
-                    icon: Icon(
-                      Icons.delete,
-                      size: 20.0,
-                      color: theme.accentColor,
-                    ),
-                    label: CommonStrings.delete,
-                    labelStyle: TextStyle(
-                      color: theme.accentColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -102,7 +74,7 @@ class ProjectGroupCard extends StatelessWidget {
   String get _projectGroupsCount {
     final projectsCount = projectGroupCardViewModel.projectsCount;
 
-    if (projectsCount == null || projectsCount == 0) {
+    if (projectsCount == 0) {
       return ProjectGroupsStrings.noProjects;
     }
 

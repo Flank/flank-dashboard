@@ -63,13 +63,11 @@ class LightMetricsThemeData extends MetricsThemeData {
             primaryColor: ColorConfig.primaryColor,
             titleStyle: TextStyle(
               color: Colors.black,
-              height: 1.09,
               fontSize: 22.0,
               fontWeight: FontWeight.w500,
             ),
             subtitleStyle: TextStyle(
               color: ColorConfig.darkSecondaryTextColor,
-              height: 1.23,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
             ),
@@ -79,7 +77,6 @@ class LightMetricsThemeData extends MetricsThemeData {
             backgroundColor: ColorConfig.primaryTranslucentColor,
             titleStyle: TextStyle(
               color: ColorConfig.primaryColor,
-              height: 1.5,
               fontSize: 16.0,
               fontWeight: FontWeight.w500,
             ),

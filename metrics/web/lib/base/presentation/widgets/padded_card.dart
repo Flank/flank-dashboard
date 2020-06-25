@@ -17,9 +17,6 @@ class PaddedCard extends StatelessWidget {
   /// An empty space that surrounds the [child].
   final EdgeInsetsGeometry padding;
 
-  /// A shape of this card.
-  final ShapeBorder shape;
-
   /// Creates a [PaddedCard].
   ///
   /// The [margin] and the [padding] default value is [EdgeInsets.zero].
@@ -33,7 +30,6 @@ class PaddedCard extends StatelessWidget {
     this.elevation = 0.0,
     this.margin = EdgeInsets.zero,
     this.padding = EdgeInsets.zero,
-    this.shape,
   })  : assert(child != null),
         super(key: key);
 
@@ -43,7 +39,6 @@ class PaddedCard extends StatelessWidget {
       margin: margin,
       elevation: elevation,
       color: backgroundColor,
-      shape: shape,
       child: Padding(
         padding: padding,
         child: child,

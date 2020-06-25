@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
+import 'package:flutter/services.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
-import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -19,23 +18,22 @@ class ProjectsNotifier extends ChangeNotifier {
   /// Holds a list of project models.
   List<ProjectModel> _projectModels;
 
-  /// Holds the [PersistentStoreErrorMessage] that occurred during loading 
-  /// projects data.
-  PersistentStoreErrorMessage _projectsErrorMessage;
+  /// Holds the error message that occurred during loading projects data.
+  String _projectsErrorMessage;
 
   /// Provides an error description that occurred during loading projects data.
-  String get projectsErrorMessage => _projectsErrorMessage?.message;
+  String get projectsErrorMessage => _projectsErrorMessage;
 
   /// A list of project models.
   List<ProjectModel> get projectModels => _projectModels;
 
   /// Creates a new instance of the [ProjectsNotifier].
   ProjectsNotifier(
-    this._receiveProjectsUpdates,
-  ) : assert(
-          _receiveProjectsUpdates != null,
-          'The use case must not be null',
-        );
+      this._receiveProjectsUpdates,
+      ) : assert(
+  _receiveProjectsUpdates != null,
+  'The use case must not be null',
+  );
 
   /// Subscribes to projects updates.
   Future<void> subscribeToProjects() async {
@@ -68,10 +66,10 @@ class ProjectsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Handles an [error] occurred in projects stream.
+  /// Saves the error [String] representation to [_errorMessage].
   void _errorHandler(error) {
-    if (error is PersistentStoreException) {
-      _projectsErrorMessage = PersistentStoreErrorMessage(error.code);
+    if (error is PlatformException) {
+      _projectsErrorMessage = error.message;
       notifyListeners();
     }
   }
