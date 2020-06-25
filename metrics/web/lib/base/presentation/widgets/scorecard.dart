@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/dashboard/presentation/widgets/expandable_text.dart';
 
-/// The widget stands for displaying the [value] text with some [description].
-class TextMetric extends StatelessWidget {
+/// A widget that stands for displaying the [value] text with [description].
+class Scorecard extends StatelessWidget {
+  /// The text that describes the [value].
   final String description;
+
+  /// The text to display.
   final String value;
+
+  /// The padding of the [value] text.
   final EdgeInsets valuePadding;
+
+  /// The [TextStyle] of the [value] text.
   final TextStyle valueStyle;
+
+  /// The [TextStyle] of the [description] text.
   final TextStyle descriptionStyle;
 
-  /// Creates the [TextMetric] with given [description] and [value] texts.
+  /// Creates the [Scorecard] with given [description] and [value] texts.
   ///
-  /// The [description] and [value] must not be null.
-  ///
-  /// [valuePadding] is the padding of the value text.
-  /// [valueStyle] is the [TextStyle] of the value text.
-  /// [descriptionStyle] is the [TextStyle] of the title text.
-  const TextMetric({
+  /// The [valuePadding] defaults to the [EdgeInsets.zero].
+  const Scorecard({
     Key key,
     @required this.description,
     @required this.value,
     this.valuePadding = EdgeInsets.zero,
     this.valueStyle,
     this.descriptionStyle,
-  })  : assert(description != null),
-        assert(value != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

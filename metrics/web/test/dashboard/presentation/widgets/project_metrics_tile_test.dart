@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
+import 'package:metrics/base/presentation/widgets/scorecard.dart';
 import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
@@ -9,7 +11,6 @@ import 'package:metrics/dashboard/presentation/view_models/stability_view_model.
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
-import 'package:metrics/dashboard/presentation/widgets/text_metric.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -19,7 +20,7 @@ void main() {
       projectName: 'Test project name',
       coverage: CoverageViewModel(value: 0.3),
       stability: StabilityViewModel(value: 0.4),
-      buildNumberMetric: 1,
+      buildNumberMetric: BuildNumberScorecardViewModel(numberOfBuilds: 3),
       performanceSparkline: PerformanceSparklineViewModel(),
       buildResultMetrics: BuildResultMetricViewModel(),
     );
@@ -103,14 +104,15 @@ void main() {
     testWidgets(
       "contains TextMetric with build number metric",
       (WidgetTester tester) async {
-        final buildNumber = testProjectMetrics.buildNumberMetric;
+        final numberOfBuilds =
+            testProjectMetrics.buildNumberMetric.numberOfBuilds;
 
         await tester.pumpWidget(const _ProjectMetricsTileTestbed(
           projectMetrics: testProjectMetrics,
         ));
 
         expect(
-          find.widgetWithText(TextMetric, '$buildNumber'),
+          find.widgetWithText(Scorecard, '$numberOfBuilds'),
           findsOneWidget,
         );
       },

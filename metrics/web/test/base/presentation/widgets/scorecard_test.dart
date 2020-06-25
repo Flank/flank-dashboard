@@ -1,47 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/dashboard/presentation/widgets/text_metric.dart';
+import 'package:metrics/base/presentation/widgets/scorecard.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("TextMetric", () {
     testWidgets(
-      "can't be created with null description",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _TextMetricTestbed(
-          description: null,
-          value: 'value',
-        ));
-
-        expect(
-          tester.takeException(),
-          isAssertionError,
-        );
-      },
-    );
-
-    testWidgets(
-      "can't be created with null value",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _TextMetricTestbed(
-          value: null,
-          description: 'description',
-        ));
-
-        expect(
-          tester.takeException(),
-          isAssertionError,
-        );
-      },
-    );
-
-    testWidgets(
       "displays the description text",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _TextMetricTestbed());
+        await tester.pumpWidget(const _ScorecardTestbed());
 
-        expect(find.text(_TextMetricTestbed.defaultDescriptionText),
+        expect(find.text(_ScorecardTestbed.defaultDescriptionText),
             findsOneWidget);
       },
     );
@@ -49,9 +19,9 @@ void main() {
     testWidgets(
       "displays the value text",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _TextMetricTestbed());
+        await tester.pumpWidget(const _ScorecardTestbed());
 
-        expect(find.text(_TextMetricTestbed.defaultValueText), findsOneWidget);
+        expect(find.text(_ScorecardTestbed.defaultValueText), findsOneWidget);
       },
     );
 
@@ -60,12 +30,12 @@ void main() {
       (WidgetTester tester) async {
         const valueStyle = TextStyle(color: Colors.red);
 
-        await tester.pumpWidget(const _TextMetricTestbed(
+        await tester.pumpWidget(const _ScorecardTestbed(
           valueStyle: valueStyle,
         ));
 
         final valueWidget = tester.widget<Text>(
-          find.text(_TextMetricTestbed.defaultValueText),
+          find.text(_ScorecardTestbed.defaultValueText),
         );
 
         expect(valueWidget.style.color, valueStyle.color);
@@ -77,12 +47,12 @@ void main() {
       (WidgetTester tester) async {
         const titleStyle = TextStyle(color: Colors.blue);
 
-        await tester.pumpWidget(const _TextMetricTestbed(
+        await tester.pumpWidget(const _ScorecardTestbed(
           descriptionStyle: titleStyle,
         ));
 
         final titleWidget = tester.widget<Text>(
-          find.text(_TextMetricTestbed.defaultDescriptionText),
+          find.text(_ScorecardTestbed.defaultDescriptionText),
         );
 
         expect(titleWidget.style.color, titleStyle.color);
@@ -94,12 +64,12 @@ void main() {
       (WidgetTester tester) async {
         const valuePadding = EdgeInsets.all(8.0);
 
-        await tester.pumpWidget(const _TextMetricTestbed(
+        await tester.pumpWidget(const _ScorecardTestbed(
           valuePadding: valuePadding,
         ));
 
         final valuePaddingWidget = tester.widget<Padding>(
-          find.widgetWithText(Padding, _TextMetricTestbed.defaultValueText),
+          find.widgetWithText(Padding, _ScorecardTestbed.defaultValueText),
         );
 
         expect(valuePaddingWidget.padding, valuePadding);
@@ -108,17 +78,36 @@ void main() {
   });
 }
 
-class _TextMetricTestbed extends StatelessWidget {
+/// A testbed class needed to test the [Scorecard] widget.
+class _ScorecardTestbed extends StatelessWidget {
+  /// A default description text used in tests.
   static const defaultDescriptionText = 'description';
+
+  /// A default value text used in tests.
   static const defaultValueText = 'value';
 
+  /// The text that describes the [value].
   final String description;
+
+  /// The text to display.
   final String value;
+
+  /// The [TextStyle] of the [description] text.
   final TextStyle descriptionStyle;
+
+  /// The [TextStyle] of the [value] text.
   final TextStyle valueStyle;
+
+  /// The padding of the [value] text.
   final EdgeInsets valuePadding;
 
-  const _TextMetricTestbed({
+  /// Creates a new instance of this testbed.
+  ///
+  /// If the [description] is not provided, the [defaultDescriptionText] used.
+  /// If the [value] is not provided, the [defaultValueText] used.
+  /// If the [valuePadding] is not provided,
+  /// the [EdgeInsets.all] with value equals to `32.0` used.
+  const _ScorecardTestbed({
     Key key,
     this.description = defaultDescriptionText,
     this.value = defaultValueText,
@@ -130,7 +119,7 @@ class _TextMetricTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
-      body: TextMetric(
+      body: Scorecard(
         description: description,
         value: value,
         descriptionStyle: descriptionStyle,
