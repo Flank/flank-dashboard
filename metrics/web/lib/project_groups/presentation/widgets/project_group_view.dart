@@ -7,8 +7,8 @@ import 'package:metrics/project_groups/presentation/widgets/add_project_group_ca
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
 import 'package:provider/provider.dart';
 
-/// A [GridView] widget that displays the project groups.
-class ProjectGroupGridView extends StatelessWidget {
+/// A widget that displays the project groups.
+class ProjectGroupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<ProjectGroupsNotifier>(
