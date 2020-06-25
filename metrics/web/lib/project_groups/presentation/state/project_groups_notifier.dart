@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
+import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
@@ -13,7 +14,6 @@ import 'package:metrics/project_groups/domain/usecases/parameters/delete_project
 import 'package:metrics/project_groups/domain/usecases/parameters/update_project_group_param.dart';
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
-import 'package:metrics/project_groups/presentation/models/project_group_persistent_store_error_message.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_delete_dialog_view_model.dart';
@@ -47,11 +47,11 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Holds the [ProjectGroupPersistentStoreErrorMessage] that occurred
   /// during loading project groups data.
-  ProjectGroupPersistentStoreErrorMessage _projectGroupsErrorMessage;
+  PersistentStoreErrorMessage _projectGroupsErrorMessage;
 
   /// Holds the [ProjectGroupPersistentStoreErrorMessage] that occurred
   /// during the project group saving.
-  ProjectGroupPersistentStoreErrorMessage _projectGroupSavingError;
+  PersistentStoreErrorMessage _projectGroupSavingError;
 
   /// A [List] that holds all loaded [ProjectGroup].
   List<ProjectGroup> _projectGroups;
@@ -347,7 +347,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Handles an [error] occurred in project groups stream.
   void _errorHandler(error) {
     if (error is PersistentStoreException) {
-      _projectGroupsErrorMessage = ProjectGroupPersistentStoreErrorMessage(
+      _projectGroupsErrorMessage = PersistentStoreErrorMessage(
         error.code,
       );
 
@@ -357,7 +357,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Handles an error occurred during saving the project group.
   void _projectGroupSavingErrorHandler(PersistentStoreErrorCode code) {
-    _projectGroupSavingError = ProjectGroupPersistentStoreErrorMessage(code);
+    _projectGroupSavingError = PersistentStoreErrorMessage(code);
     notifyListeners();
   }
 

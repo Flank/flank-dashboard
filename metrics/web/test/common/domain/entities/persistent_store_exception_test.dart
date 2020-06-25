@@ -9,10 +9,10 @@ void main() {
     test(
       "creates an instance with an unknown error code when the given code is null",
       () {
-        final firestoreException = PersistentStoreException(code: null);
+        final persistentStoreException = PersistentStoreException(code: null);
 
         expect(
-          firestoreException.code,
+          persistentStoreException.code,
           equals(PersistentStoreErrorCode.unknown),
         );
       },
