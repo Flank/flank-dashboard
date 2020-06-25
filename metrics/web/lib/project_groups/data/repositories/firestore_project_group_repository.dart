@@ -46,7 +46,7 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
       await _firestore.collection('project_groups').add(
             projectGroupData.toJson(),
           );
-    } catch (e) {
+    } catch (_) {
       throw const PersistentStoreException(
         code: PersistentStoreErrorCode.unknown,
       );
@@ -71,7 +71,7 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
           .updateData(
             projectGroupData.toJson(),
           );
-    } catch (e) {
+    } catch (_) {
       throw const PersistentStoreException(
         code: PersistentStoreErrorCode.unknown,
       );
@@ -85,7 +85,7 @@ class FirestoreProjectGroupsRepository implements ProjectGroupRepository {
           .collection('project_groups')
           .document(projectGroupId)
           .delete();
-    } catch (e) {
+    } catch (_) {
       throw const PersistentStoreException(
         code: PersistentStoreErrorCode.unknown,
       );

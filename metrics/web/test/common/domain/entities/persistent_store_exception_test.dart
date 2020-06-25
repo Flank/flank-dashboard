@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 void main() {
   group("PersistentStoreException", () {
     test(
-      "creates an instance with an unknown error code when the given codee is null",
+      "creates an instance with an unknown error code when the given code is null",
       () {
         final firestoreException = PersistentStoreException(code: null);
 

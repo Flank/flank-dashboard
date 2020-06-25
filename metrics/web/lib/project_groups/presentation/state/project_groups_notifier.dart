@@ -344,19 +344,18 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectGroups = null;
   }
 
-  /// Maps the [error] to an appropriate variable, based on the [error] type.
+  /// Handles an [error] occurred in project groups stream.
   void _errorHandler(error) {
     if (error is PersistentStoreException) {
       _projectGroupsErrorMessage = ProjectGroupPersistentStoreErrorMessage(
         error.code,
       );
 
-      return notifyListeners();
+      notifyListeners();
     }
   }
 
-  /// Saves the [ProjectGroupPersistentStoreErrorMessage] if an error occurred
-  /// during the project group saving operation.
+  /// Handles an error occurred during saving the project group.
   void _projectGroupSavingErrorHandler(PersistentStoreErrorCode code) {
     _projectGroupSavingError = ProjectGroupPersistentStoreErrorMessage(code);
     notifyListeners();

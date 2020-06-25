@@ -8,7 +8,7 @@ void main() {
     "ProjectGroupPersistentStoreErrorMessage",
     () {
       test(
-        "maps the null error code to the null error message",
+        ".message returns null if the given code is null",
         () {
           const errorMessage = ProjectGroupPersistentStoreErrorMessage(null);
 
@@ -17,7 +17,7 @@ void main() {
       );
 
       test(
-        "maps the unknown error code to unknown error message",
+        ".message returns unknown error message if the given code is unknown error code",
         () {
           const errorMessage = ProjectGroupPersistentStoreErrorMessage(
             PersistentStoreErrorCode.unknown,

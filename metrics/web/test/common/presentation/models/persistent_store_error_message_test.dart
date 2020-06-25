@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group("PersistentStoreErrorMessage", () {
     test(
-      "maps the null error code to the null error message",
+      ".message returns null if the given code is null",
       () {
         final errorMessage = PersistentStoreErrorMessage(null);
 
@@ -17,7 +17,7 @@ void main() {
     );
 
     test(
-      "maps the unknown error code to the unknown error message",
+      ".message returns an unknown error message if the given error code is the unknown error code",
       () {
         final errorMessage = PersistentStoreErrorMessage(
           PersistentStoreErrorCode.unknown,

@@ -6,7 +6,8 @@ import 'package:metrics/project_groups/presentation/strings/project_groups_strin
 class ProjectGroupPersistentStoreErrorMessage {
   final PersistentStoreErrorCode _code;
 
-  /// Provides the firestore error message based on the [PersistentStoreErrorCode].
+  /// Provides the persistent store error message
+  /// based on the [PersistentStoreErrorCode].
   String get message {
     switch (_code) {
       case PersistentStoreErrorCode.unknown:

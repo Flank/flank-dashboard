@@ -8,7 +8,7 @@ class PersistentStoreException implements Exception {
 
   /// Creates the [PersistentStoreException] with the given [code].
   ///
-  /// If null code is passed - the [PersistentStoreErrorCode.unknown] is used.
+  /// If the given [code] is null, the [PersistentStoreErrorCode.unknown] used.
   const PersistentStoreException({
     PersistentStoreErrorCode code,
   }) : code = code ?? PersistentStoreErrorCode.unknown;
