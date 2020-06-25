@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
+import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
+import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
@@ -34,7 +36,7 @@ void main() {
     );
 
     test(
-      ".subscribeToProjects() completes normally if the stream value from the receive project updates use case is null",
+      ".subscribeToProjects() completes normally if the receive project updates stream emits null",
       () async {
         when(receiveProjectUpdatesMock()).thenAnswer((_) => Stream.value(null));
 
@@ -43,7 +45,7 @@ void main() {
     );
 
     test(
-      ".subscribeProjects() delegates to the receive project updates use case",
+      ".subscribeToProjects() delegates to the receive project updates use case",
       () {
         when(receiveProjectUpdatesMock()).thenAnswer((_) => Stream.value(null));
 
@@ -54,7 +56,7 @@ void main() {
     );
 
     test(
-      ".subscribeProjects() subscribes to project updates",
+      ".subscribeToProjects() subscribes to the receive project updates use case stream",
       () async {
         final projectsController = StreamController<List<Project>>();
 
@@ -69,17 +71,35 @@ void main() {
     );
 
     test(
-      ".projectsErrorMessage provides an error description if a projects stream emits a platform exception",
+      ".subscribeToProjects() creates an empty list of project models if the receive project updates stream emits an empty list",
+      () {
+        final projectsNotifier = ProjectsNotifier(receiveProjectUpdatesMock);
+
+        when(receiveProjectUpdatesMock()).thenAnswer((_) => Stream.value([]));
+
+        projectsNotifier.subscribeToProjects();
+
+        final listener = expectAsync0(() {
+          expect(projectsNotifier.projectModels, isEmpty);
+        });
+
+        projectsNotifier.addListener(listener);
+      },
+    );
+
+    test(
+      ".projectsErrorMessage provides an error description if a project updates use case stream emits a persistent store exception",
       () async {
+        const errorCode = PersistentStoreErrorCode.unknown;
         final projectsController = StreamController<List<Project>>();
-        const expectedErrorMessage = 'error';
+        const errorMessage = PersistentStoreErrorMessage(errorCode);
 
         when(receiveProjectUpdatesMock()).thenAnswer(
           (_) => projectsController.stream,
         );
 
         projectsController.addError(
-          PlatformException(message: expectedErrorMessage, code: 'test_code'),
+          const PersistentStoreException(code: errorCode),
         );
 
         final projectsNotifier = ProjectsNotifier(receiveProjectUpdatesMock);
@@ -87,9 +107,7 @@ void main() {
         await projectsNotifier.subscribeToProjects();
 
         final listener = expectAsync0(() {
-          final actualError = projectsNotifier.projectsErrorMessage;
-
-          expect(actualError, equals(expectedErrorMessage));
+          expect(projectsNotifier.projectsErrorMessage, errorMessage.message);
         });
 
         projectsNotifier.addListener(listener);
@@ -138,7 +156,6 @@ void main() {
       ".dispose() cancels projects subscription",
       () async {
         final projectsNotifier = ProjectsNotifier(receiveProjectUpdatesMock);
-
         final projectsController = StreamController<List<Project>>();
 
         when(receiveProjectUpdatesMock()).thenAnswer(
