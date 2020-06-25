@@ -4,6 +4,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_th
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dialog_theme_data.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -13,10 +14,11 @@ void main() {
       () {
         const themeData = MetricsThemeData();
 
-        expect(themeData.buildResultTheme, isNotNull);
+        expect(themeData.metricCirclePercentageThemeData, isNotNull);
         expect(themeData.metricWidgetTheme, isNotNull);
-        expect(themeData.metricCirclePercentageThemeData, isNotNull);
-        expect(themeData.metricCirclePercentageThemeData, isNotNull);
+        expect(themeData.inactiveWidgetTheme, isNotNull);
+        expect(themeData.buildResultTheme, isNotNull);
+        expect(themeData.dialogThemeData, isNotNull);
         expect(themeData.projectGroupCardTheme, isNotNull);
         expect(themeData.addProjectGroupCardTheme, isNotNull);
       },
@@ -28,14 +30,18 @@ void main() {
         const themeData = MetricsThemeData(
           metricCirclePercentageThemeData: null,
           metricWidgetTheme: null,
+          inactiveWidgetTheme: null,
           buildResultTheme: null,
-          addProjectGroupCardTheme: null,
+          dialogThemeData: null,
           projectGroupCardTheme: null,
+          addProjectGroupCardTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
         expect(themeData.metricWidgetTheme, isNotNull);
+        expect(themeData.inactiveWidgetTheme, isNotNull);
         expect(themeData.buildResultTheme, isNotNull);
+        expect(themeData.dialogThemeData, isNotNull);
         expect(themeData.projectGroupCardTheme, isNotNull);
         expect(themeData.addProjectGroupCardTheme, isNotNull);
       },
@@ -68,9 +74,17 @@ void main() {
           canceledColor: backgroundColor,
         );
 
-        const projectGroupCardTheme = ProjectGroupCardThemeData();
+        const projectGroupCardTheme = ProjectGroupCardThemeData(
+          primaryColor: primaryColor,
+        );
 
-        const addProjectGroupTheme = ProjectGroupCardThemeData();
+        const addProjectGroupTheme = ProjectGroupCardThemeData(
+          primaryColor: primaryColor,
+        );
+
+        const dialogThemeData = DialogThemeData(
+          titlePadding: EdgeInsets.zero,
+        );
 
         const themeData = MetricsThemeData();
 
@@ -81,6 +95,7 @@ void main() {
           buildResultTheme: buildResultsTheme,
           projectGroupCardTheme: projectGroupCardTheme,
           addProjectGroupCardTheme: addProjectGroupTheme,
+          dialogThemeData: dialogThemeData,
         );
 
         expect(
@@ -98,6 +113,10 @@ void main() {
         expect(
           copiedTheme.addProjectGroupCardTheme,
           equals(addProjectGroupTheme),
+        );
+        expect(
+          copiedTheme.dialogThemeData,
+          equals(dialogThemeData),
         );
       },
     );
@@ -128,6 +147,14 @@ void main() {
         expect(
           themeData.addProjectGroupCardTheme,
           copiedTheme.addProjectGroupCardTheme,
+        );
+        expect(
+          themeData.dialogThemeData,
+          copiedTheme.dialogThemeData,
+        );
+        expect(
+          themeData.inactiveWidgetTheme,
+          copiedTheme.inactiveWidgetTheme,
         );
       },
     );

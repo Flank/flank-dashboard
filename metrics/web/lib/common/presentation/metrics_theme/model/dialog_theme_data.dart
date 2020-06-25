@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 /// A class that specifies the dialog theme.
 class DialogThemeData {
+  /// The padding used as a default.
+  static const _defaultPadding = EdgeInsets.symmetric(vertical: 12.0);
+
   /// An empty space between the main content and dialog's edges.
   final EdgeInsets padding;
 
@@ -16,9 +19,6 @@ class DialogThemeData {
 
   /// The [TextStyle] of the dialog title.
   final TextStyle titleTextStyle;
-
-  /// The padding used as a default.
-  static const _defaultPadding = EdgeInsets.symmetric(vertical: 12.0);
 
   /// Creates the new instance of the [DialogThemeData].
   ///
