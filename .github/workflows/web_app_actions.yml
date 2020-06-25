@@ -10,7 +10,6 @@ on:
 
 jobs:
   test:
-    name: Run the Metrics Web Application tests and deploy to Firebase
     runs-on: macOS-latest
     timeout-minutes: 30
     env:
