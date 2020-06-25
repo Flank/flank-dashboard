@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/dialog_theme_data.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -54,7 +54,7 @@ void main() {
         const accentColor = Colors.orange;
         const backgroundColor = Colors.black;
 
-        const sparklineTheme = MetricWidgetThemeData(
+        const metricWidgetTheme = MetricWidgetThemeData(
           primaryColor: primaryColor,
           accentColor: accentColor,
           backgroundColor: backgroundColor,
@@ -86,25 +86,28 @@ void main() {
           titlePadding: EdgeInsets.zero,
         );
 
+        const inactiveThemeData = MetricWidgetThemeData(
+          primaryColor: primaryColor,
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
-          metricWidgetTheme: sparklineTheme,
+          metricWidgetTheme: metricWidgetTheme,
           metricCirclePercentageThemeData: circlePercentageTheme,
-          barGraphBackgroundColor: backgroundColor,
           buildResultTheme: buildResultsTheme,
           projectGroupCardTheme: projectGroupCardTheme,
           addProjectGroupCardTheme: addProjectGroupTheme,
           dialogThemeData: dialogThemeData,
+          inactiveWidgetTheme: inactiveThemeData,
         );
 
         expect(
           copiedTheme.metricCirclePercentageThemeData,
           equals(circlePercentageTheme),
         );
-        expect(copiedTheme.metricWidgetTheme, equals(sparklineTheme));
-        expect(copiedTheme.buildResultTheme, equals(buildResultsTheme));
-        expect(copiedTheme.buildResultTheme, equals(buildResultsTheme));
+        expect(copiedTheme.metricWidgetTheme, equals(metricWidgetTheme));
+        expect(copiedTheme.inactiveWidgetTheme, equals(inactiveThemeData));
         expect(copiedTheme.buildResultTheme, equals(buildResultsTheme));
         expect(
           copiedTheme.projectGroupCardTheme,
