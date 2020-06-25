@@ -12,22 +12,23 @@ import 'package:test/test.dart';
 import '../../../test_utils/matcher_util.dart';
 
 void main() {
-  final receiveProjectUpdatesMock = ReceiveProjectUpdatesMock();
-  final projectsNotifier = ProjectsNotifier(receiveProjectUpdatesMock);
-  const projects = [
-    Project(id: 'id1', name: 'name1'),
-    Project(id: 'id2', name: 'name2'),
-  ];
-
-  tearDown(() {
-    reset(receiveProjectUpdatesMock);
-  });
-
-  tearDownAll(() {
-    projectsNotifier.dispose();
-  });
-
   group("ProjectsNotifier", () {
+    final receiveProjectUpdatesMock = ReceiveProjectUpdatesMock();
+    ProjectsNotifier projectsNotifier;
+    const projects = [
+      Project(id: 'id1', name: 'name1'),
+      Project(id: 'id2', name: 'name2'),
+    ];
+
+    setUp(() {
+      reset(receiveProjectUpdatesMock);
+      projectsNotifier = ProjectsNotifier(receiveProjectUpdatesMock);
+    });
+
+    tearDown(() {
+      projectsNotifier.dispose();
+    });
+
     test(
       "throws an AssertionError if the receive project updates use case is null",
       () {
@@ -71,23 +72,6 @@ void main() {
     );
 
     test(
-      ".subscribeToProjects() creates an empty list of project models if the receive project updates stream emits an empty list",
-      () {
-        final projectsNotifier = ProjectsNotifier(receiveProjectUpdatesMock);
-
-        when(receiveProjectUpdatesMock()).thenAnswer((_) => Stream.value([]));
-
-        projectsNotifier.subscribeToProjects();
-
-        final listener = expectAsync0(() {
-          expect(projectsNotifier.projectModels, isEmpty);
-        });
-
-        projectsNotifier.addListener(listener);
-      },
-    );
-
-    test(
       ".projectsErrorMessage provides an error description if a project updates use case stream emits a persistent store exception",
       () async {
         const errorCode = PersistentStoreErrorCode.unknown;
@@ -98,17 +82,18 @@ void main() {
           (_) => projectsController.stream,
         );
 
-        projectsController.addError(
-          const PersistentStoreException(code: errorCode),
-        );
+        projectsController.addError(const PersistentStoreException(
+          code: errorCode,
+        ));
 
         final projectsNotifier = ProjectsNotifier(receiveProjectUpdatesMock);
 
         await projectsNotifier.subscribeToProjects();
 
-        final listener = expectAsync0(() {
-          expect(projectsNotifier.projectsErrorMessage, errorMessage.message);
-        });
+        final listener = expectAsyncUntil0(
+          () {},
+          () => projectsNotifier.projectsErrorMessage == errorMessage.message,
+        );
 
         projectsNotifier.addListener(listener);
       },
@@ -130,6 +115,23 @@ void main() {
         await projectsNotifier.unsubscribeFromProjects();
 
         expect(projectsController.hasListener, isFalse);
+      },
+    );
+
+    test(
+      ".projectModels returns an empty list if the receive project updates stream emits an empty list",
+      () async {
+        when(receiveProjectUpdatesMock()).thenAnswer(
+          (_) => Stream.value([]),
+        );
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () => projectsNotifier.projectModels?.isEmpty,
+        );
+
+        projectsNotifier.addListener(listener);
+        await projectsNotifier.subscribeToProjects();
       },
     );
 

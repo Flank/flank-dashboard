@@ -6,16 +6,16 @@ void main() {
     const id = 'id';
     const name = 'name';
 
-    test("successfully creates an instance on a valid input", () {
-      expect(() => ProjectModel(id: id, name: name), returnsNormally);
-    });
-
     test("throws an ArgumentError if the given id is null", () {
       expect(() => ProjectModel(id: null, name: name), throwsArgumentError);
     });
 
     test("throws an ArgumentError if the given name is null", () {
       expect(() => ProjectModel(id: id, name: null), throwsArgumentError);
+    });
+
+    test("successfully creates an instance on a valid input", () {
+      expect(() => ProjectModel(id: id, name: name), returnsNormally);
     });
   });
 }
