@@ -5,14 +5,34 @@ import 'package:metrics/base/presentation/widgets/scorecard.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
-  group("TextMetric", () {
+  group("Scorecard", () {
+    testWidgets(
+      'displays null text if the given value is null',
+      (tester) async {
+        await tester.pumpWidget(const _ScorecardTestbed(value: null));
+
+        expect(find.text('null'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'displays null text if the given description is null',
+      (tester) async {
+        await tester.pumpWidget(const _ScorecardTestbed(value: null));
+
+        expect(find.text('null'), findsOneWidget);
+      },
+    );
+
     testWidgets(
       "displays the description text",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ScorecardTestbed());
 
-        expect(find.text(_ScorecardTestbed.defaultDescriptionText),
-            findsOneWidget);
+        expect(
+          find.text(_ScorecardTestbed.defaultDescriptionText),
+          findsOneWidget,
+        );
       },
     );
 

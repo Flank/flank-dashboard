@@ -9,8 +9,7 @@ import 'package:metrics/base/presentation/widgets/scorecard.dart';
 /// Widget that displays the [Scorecard] with the build number metric.
 ///
 /// Applies the text styles from the [MetricsThemeData.metricWidgetTheme].
-/// If the [buildNumberMetric] is either `null` or equal to 0, displays the [NoDataPlaceholder]
-/// and applies the text styles from the [MetricsThemeData.inactiveWidgetTheme] to it.
+/// If the [buildNumberMetric] is either `null` or equal to 0, displays the [NoDataPlaceholder].
 class BuildNumberScorecard extends StatelessWidget {
   /// The [BuildNumberMetricViewModel] with data to display.
   final BuildNumberScorecardViewModel buildNumberMetric;

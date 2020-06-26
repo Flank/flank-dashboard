@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/scorecard.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
@@ -10,7 +11,7 @@ import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart'
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
-  group("BuildNumberTextMetric", () {
+  group("BuildNumberScorecard", () {
     testWidgets(
       'displays the `no data placeholder` if the given build number metric is null',
       (tester) async {
@@ -54,7 +55,25 @@ void main() {
     );
 
     testWidgets(
-      "applies the text style for the metric widget theme",
+      "displays the Scorecard widget with the DashboardStrings.perWeek as a description",
+      (tester) async {
+        const buildNumber = BuildNumberScorecardViewModel(
+          numberOfBuilds: 1,
+        );
+        await tester.pumpWidget(const _BuildNumberScorecardTestbed(
+          buildNumberViewModel: buildNumber,
+        ));
+
+        final scorecardWidget = tester.widget<Scorecard>(
+          find.byType(Scorecard),
+        );
+
+        expect(scorecardWidget.description, equals(DashboardStrings.perWeek));
+      },
+    );
+
+    testWidgets(
+      "applies the text style from the metric widget theme",
       (WidgetTester tester) async {
         const textStyle = TextStyle(color: Colors.red);
         const numberOfBuilds = 3;
