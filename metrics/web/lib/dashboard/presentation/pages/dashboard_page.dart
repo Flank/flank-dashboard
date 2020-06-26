@@ -7,23 +7,7 @@ import 'package:provider/provider.dart';
 
 /// The widget that allows to quickly get primary metrics
 /// of all available projects.
-class DashboardPage extends StatefulWidget {
-  @override
-  _DashboardPageState createState() => _DashboardPageState();
-}
-
-class _DashboardPageState extends State<DashboardPage> {
-  /// A [ProjectMetricsNotifier] needed to unsubscribe from project
-  /// metrics in [dispose].
-  ProjectMetricsNotifier _projectMetricsNotifier;
-
-  @override
-  void initState() {
-    super.initState();
-    _projectMetricsNotifier =
-        Provider.of<ProjectMetricsNotifier>(context, listen: false);
-  }
-
+class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MetricsScaffold(
@@ -32,7 +16,10 @@ class _DashboardPageState extends State<DashboardPage> {
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
             child: ProjectSearchInput(
-                onChanged: _projectMetricsNotifier.filterByProjectName),
+              onChanged:
+                  Provider.of<ProjectMetricsNotifier>(context, listen: false)
+                      .filterByProjectName,
+            ),
           ),
           Expanded(
             child: MetricsTable(),
@@ -40,10 +27,5 @@ class _DashboardPageState extends State<DashboardPage> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
