@@ -21,7 +21,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given text to the text placeholder",
+      "displays the given text in the text placeholder",
       (WidgetTester tester) async {
         const text = 'text';
 
