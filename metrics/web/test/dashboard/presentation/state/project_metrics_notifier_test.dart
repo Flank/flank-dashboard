@@ -168,7 +168,7 @@ void main() {
       final firstProjectMetrics = projectMetricsNotifier.projectsMetrics.first;
 
       expect(
-        firstProjectMetrics.buildNumberMetric,
+        firstProjectMetrics.buildNumberMetric.numberOfBuilds,
         expectedBuildNumberMetrics.numberOfBuilds,
       );
     });

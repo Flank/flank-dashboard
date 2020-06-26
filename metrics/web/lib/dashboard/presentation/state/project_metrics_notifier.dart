@@ -12,6 +12,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dar
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
@@ -170,7 +171,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     projectsMetrics[projectId] = projectMetrics.copyWith(
       performanceSparkline: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
-      buildNumberMetric: numberOfBuilds,
+      buildNumberMetric: BuildNumberScorecardViewModel(
+        numberOfBuilds: numberOfBuilds,
+      ),
       coverage: CoverageViewModel(value: dashboardMetrics.coverage?.value),
       stability: StabilityViewModel(value: dashboardMetrics.stability?.value),
     );

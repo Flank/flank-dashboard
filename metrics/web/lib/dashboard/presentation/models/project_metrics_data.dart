@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
@@ -11,7 +12,7 @@ class ProjectMetricsData {
   final String projectName;
   final CoverageViewModel coverage;
   final StabilityViewModel stability;
-  final int buildNumberMetric;
+  final BuildNumberScorecardViewModel buildNumberMetric;
   final PerformanceSparklineViewModel performanceSparkline;
   final BuildResultMetricViewModel buildResultMetrics;
 
@@ -40,7 +41,7 @@ class ProjectMetricsData {
     String projectName,
     CoverageViewModel coverage,
     StabilityViewModel stability,
-    int buildNumberMetric,
+    BuildNumberScorecardViewModel buildNumberMetric,
     PerformanceSparklineViewModel performanceSparkline,
     BuildResultMetricViewModel buildResultMetrics,
   }) {
