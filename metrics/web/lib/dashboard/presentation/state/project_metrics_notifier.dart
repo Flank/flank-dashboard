@@ -88,10 +88,16 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Updates projects and an error message.
-  void updateProjects(List<ProjectModel> newProjects, String errorMessage) {
+  Future<void> updateProjects(
+    List<ProjectModel> newProjects,
+    String errorMessage,
+  ) async {
     _projectsErrorMessage = errorMessage;
 
-    if (newProjects == null) return;
+    if (newProjects == null) {
+      await _unsubscribeFromBuildMetrics();
+      return;
+    }
 
     if (newProjects.isEmpty) {
       _projectMetrics = {};
@@ -134,7 +140,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Unsubscribes from project metrics.
-  Future<void> unsubscribeFromBuildMetrics() async {
+  Future<void> _unsubscribeFromBuildMetrics() async {
     await _cancelSubscriptions();
     notifyListeners();
   }

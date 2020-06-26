@@ -53,7 +53,7 @@ void main() {
       }
 
       projectMetricsNotifier.addListener(initializationListener);
-      projectMetricsNotifier.updateProjects(
+      await projectMetricsNotifier.updateProjects(
         projects,
         errorMessage,
       );
@@ -109,7 +109,7 @@ void main() {
 
         projectMetricsNotifier.addListener(metricsListener);
 
-        projectMetricsNotifier.updateProjects(projects, errorMessage);
+        await projectMetricsNotifier.updateProjects(projects, errorMessage);
       },
     );
 
@@ -139,7 +139,7 @@ void main() {
 
         projectMetricsNotifier.addListener(metricsListener);
 
-        projectMetricsNotifier.updateProjects(projects, errorMessage);
+        await projectMetricsNotifier.updateProjects(projects, errorMessage);
       },
     );
 
@@ -241,7 +241,7 @@ void main() {
           receiveProjectMetricsUpdates,
         );
 
-        metricsNotifier.updateProjects(projects, errorMessage);
+        await metricsNotifier.updateProjects(projects, errorMessage);
 
         final List<ProjectModel> expectedProjects = [...projects];
         List<ProjectMetricsData> actualProjects =
@@ -251,7 +251,7 @@ void main() {
 
         expectedProjects.removeLast();
 
-        metricsNotifier.updateProjects(expectedProjects, errorMessage);
+        await metricsNotifier.updateProjects(expectedProjects, errorMessage);
 
         actualProjects = metricsNotifier.projectsMetrics;
 
@@ -279,7 +279,7 @@ void main() {
 
         metricsNotifier.addListener(metricsListener);
 
-        metricsNotifier.updateProjects([], errorMessage);
+        await metricsNotifier.updateProjects([], errorMessage);
       },
     );
 
@@ -326,7 +326,7 @@ void main() {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
         final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
 
-        metricsNotifier.updateProjects(projects, errorMessage);
+        await metricsNotifier.updateProjects(projects, errorMessage);
 
         await expectLater(metricsUpdates.hasListener, isTrue);
 
@@ -338,14 +338,14 @@ void main() {
     );
 
     test(
-      ".unsubscribeFromBuildMetrics() cancels all created subscriptions and removes project metrics",
+      ".updateProjects() cancels all created subscriptions and removes project metrics if the given projects are null",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
         final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
 
-        metricsNotifier.updateProjects(projects, errorMessage);
+        await metricsNotifier.updateProjects(projects, errorMessage);
 
-        await metricsNotifier.unsubscribeFromBuildMetrics();
+        await metricsNotifier.updateProjects(null, null);
 
         expect(metricsUpdates.hasListener, isFalse);
         expect(metricsNotifier.projectsMetrics, isNull);
