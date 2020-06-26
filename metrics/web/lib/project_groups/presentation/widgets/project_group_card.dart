@@ -6,7 +6,7 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_group_delete_dialog.dart';
+import 'package:metrics/project_groups/presentation/widgets/delete_project_group_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/update_project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -109,7 +109,7 @@ class ProjectGroupCard extends StatelessWidget {
     return ProjectGroupsStrings.getProjectsCount(projectsCount);
   }
 
-  /// Shows a [ProjectGroupDeleteDialog] with an active project group.
+  /// Shows a [DeleteProjectGroupDialog] with an active project group.
   void _showProjectGroupDeleteDialog(BuildContext context) {
     Provider.of<ProjectGroupsNotifier>(context, listen: false)
         .setProjectGroupDeleteDialogViewModel(
@@ -118,7 +118,7 @@ class ProjectGroupCard extends StatelessWidget {
 
     showDialog(
       context: context,
-      builder: (_) => ProjectGroupDeleteDialog(),
+      builder: (_) => DeleteProjectGroupDialog(),
     );
   }
 

@@ -63,10 +63,10 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   List<ProjectCheckboxViewModel> _projectCheckboxViewModels;
 
   /// Holds the data for a project group dialog.
-  ProjectGroupDialogViewModel _projectGroupDialogViewModel;
+  ProjectGroupDialogEditViewModel _projectGroupDialogViewModel;
 
   /// Holds the data for a project group delete dialog.
-  ProjectGroupDeleteDialogViewModel _projectGroupDeleteDialogViewModel;
+  ProjectGroupDialogViewModel _projectGroupDeleteDialogViewModel;
 
   /// An optional filter value that represents a part (or full) project name
   /// used to limit the displayed data.
@@ -103,11 +103,11 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   List<ProjectGroup> get projectGroups => _projectGroups;
 
   /// Provides data for a project group dialog.
-  ProjectGroupDialogViewModel get projectGroupDialogViewModel =>
+  ProjectGroupDialogEditViewModel get projectGroupDialogViewModel =>
       _projectGroupDialogViewModel;
 
   /// Provides data for a project group delete dialog.
-  ProjectGroupDeleteDialogViewModel get projectGroupDeleteDialogViewModel =>
+  ProjectGroupDialogViewModel get projectGroupDeleteDialogViewModel =>
       _projectGroupDeleteDialogViewModel;
 
   /// Creates a new instance of the [ProjectGroupsNotifier].
@@ -143,7 +143,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectNameFilterSubject.add(value);
   }
 
-  /// Sets the [ProjectGroupDeleteDialogViewModel] using
+  /// Sets the [ProjectGroupDialogViewModel] using
   /// the given [projectGroupId].
   void setProjectGroupDeleteDialogViewModel(String projectGroupId) {
     final projectGroup = _projectGroups.firstWhere(
@@ -151,7 +151,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       orElse: () => null,
     );
 
-    _projectGroupDeleteDialogViewModel = ProjectGroupDeleteDialogViewModel(
+    _projectGroupDeleteDialogViewModel = ProjectGroupDialogViewModel(
       id: projectGroup?.id,
       name: projectGroup?.name,
     );
@@ -159,7 +159,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Sets the [ProjectGroupDialogViewModel] using the given [projectGroupId].
+  /// Sets the [ProjectGroupDialogEditViewModel] using the given [projectGroupId].
   void setProjectGroupDialogViewModel([String projectGroupId]) {
     final projectGroup = _projectGroups.firstWhere(
       (projectGroup) => projectGroup.id == projectGroupId,
@@ -178,7 +178,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
         )
         .toList();
 
-    _projectGroupDialogViewModel = ProjectGroupDialogViewModel(
+    _projectGroupDialogViewModel = ProjectGroupDialogEditViewModel(
       id: projectGroup?.id,
       name: projectGroup?.name,
       selectedProjectIds: List<String>.from(projectIds),
@@ -215,7 +215,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       isChecked: isChecked,
     );
 
-    _projectGroupDialogViewModel = ProjectGroupDialogViewModel(
+    _projectGroupDialogViewModel = ProjectGroupDialogEditViewModel(
       id: _projectGroupDialogViewModel.id,
       name: _projectGroupDialogViewModel.name,
       selectedProjectIds: projectIds,

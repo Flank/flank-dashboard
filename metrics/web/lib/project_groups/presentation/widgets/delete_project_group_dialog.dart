@@ -8,13 +8,13 @@ import 'package:metrics/project_groups/presentation/view_models/project_group_de
 import 'package:provider/provider.dart';
 
 /// The widget that displays a delete confirmation dialog.
-class ProjectGroupDeleteDialog extends StatefulWidget {
+class DeleteProjectGroupDialog extends StatefulWidget {
   @override
-  _ProjectGroupDeleteDialogState createState() =>
-      _ProjectGroupDeleteDialogState();
+  _DeleteProjectGroupDialogState createState() =>
+      _DeleteProjectGroupDialogState();
 }
 
-class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
+class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
   /// Indicates whether this widget is in the loading state or not.
   bool _isLoading = false;
 
@@ -22,14 +22,18 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
   Widget build(BuildContext context) {
     final dialogThemeData = MetricsTheme.of(context).dialogThemeData;
 
-    return Selector<ProjectGroupsNotifier, ProjectGroupDeleteDialogViewModel>(
+    return Selector<ProjectGroupsNotifier, ProjectGroupDialogViewModel>(
       selector: (_, state) => state.projectGroupDeleteDialogViewModel,
-      builder: (_, projectGroupDeleteDialogViewModel, ___) {
+      builder: (_, deleteViewModel, ___) {
+        final buttonText = _isLoading
+            ? ProjectGroupsStrings.deletingProjectGroup
+            : ProjectGroupsStrings.deleteProjectGroup;
+
         return InfoDialog(
           padding: dialogThemeData.padding,
           title: Text(
             ProjectGroupsStrings.getDeleteTextConfirmation(
-              projectGroupDeleteDialogViewModel.name,
+              deleteViewModel.name,
             ),
             style: const TextStyle(fontSize: 16.0),
           ),
@@ -52,14 +56,8 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
               ),
               onPressed: _isLoading
                   ? null
-                  : () => _deleteProjectGroup(
-                        projectGroupDeleteDialogViewModel,
-                      ),
-              child: Text(
-                _isLoading
-                    ? ProjectGroupsStrings.deletingProjectGroup
-                    : ProjectGroupsStrings.deleteProjectGroup,
-              ),
+                  : () => _deleteProjectGroup(deleteViewModel),
+              child: Text(buttonText),
             ),
           ],
         );
@@ -69,24 +67,25 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
 
   /// Starts deleting process of a project group.
   Future<void> _deleteProjectGroup(
-    ProjectGroupDeleteDialogViewModel projectGroupDeleteDialogViewModel,
+    ProjectGroupDialogViewModel projectGroupDeleteDialogViewModel,
   ) async {
-    setState(() => _isLoading = true);
+    final notifier = Provider.of<ProjectGroupsNotifier>(context, listen: false);
 
-    await Provider.of<ProjectGroupsNotifier>(
-      context,
-      listen: false,
-    ).deleteProjectGroup(projectGroupDeleteDialogViewModel.id);
+    _changeLoading(true);
 
-    setState(() => _isLoading = false);
+    await notifier.deleteProjectGroup(projectGroupDeleteDialogViewModel.id);
 
-    final projectGroupSavingError = Provider.of<ProjectGroupsNotifier>(
-      context,
-      listen: false,
-    ).projectGroupSavingError;
+    _changeLoading(false);
+
+    final projectGroupSavingError = notifier.projectGroupSavingError;
 
     if (projectGroupSavingError == null) {
       Navigator.pop(context);
     }
+  }
+
+  /// Changes the [_isLoading] state to the given [value].
+  void _changeLoading(bool value) {
+    setState(() => _isLoading = value);
   }
 }
