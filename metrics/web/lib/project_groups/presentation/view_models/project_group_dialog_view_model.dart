@@ -22,7 +22,8 @@ class ProjectGroupDialogViewModel extends Equatable {
   /// The [selectedProjectIds] must not be null.
   const ProjectGroupDialogViewModel({
     this.id,
-    this.name,
+    @required this.name,
     @required this.selectedProjectIds,
-  }) : assert(selectedProjectIds != null);
+  })  : assert(name != null),
+        assert(selectedProjectIds != null);
 }

@@ -22,17 +22,6 @@ void main() {
       );
     });
 
-    test("throws an AssertionError if an id parameter is null", () {
-      expect(
-        () => ProjectGroupDialogViewModel(
-          id: null,
-          name: name,
-          selectedProjectIds: projectIds,
-        ),
-        MatcherUtil.throwsAssertionError,
-      );
-    });
-
     test("throws an AssertionError if a name parameter is null", () {
       expect(
         () => ProjectGroupDialogViewModel(
