@@ -27,12 +27,14 @@ void main() {
       },
     );
 
-    test(".getSelectedCount() returns a message that contains the given count",
-        () {
-      expect(
-        ProjectGroupsStrings.getSelectedCount(count),
-        contains(count.toString()),
-      );
-    });
+    test(
+      ".getSelectedCount() returns a message that contains the given count",
+      () {
+        expect(
+          ProjectGroupsStrings.getSelectedCount(count),
+          contains(count.toString()),
+        );
+      },
+    );
   });
 }
