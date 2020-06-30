@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
@@ -116,7 +116,7 @@ void main() {
         await tester.pumpAndSettle();
 
         final buildNumberMetricWidgetCenter = tester.getCenter(
-          find.byType(BuildNumberTextMetric),
+          find.byType(BuildNumberScorecard),
         );
 
         final buildNumberTitleCenter = tester.getCenter(

@@ -50,5 +50,17 @@ void main() {
         expect(route.settings.name, equals(RouteGenerator.dashboard));
       },
     );
+
+    test(
+      '.generateRoute() generates a route to the project groups page if a route name is projectGroups',
+      () {
+        final MaterialPageRoute route = RouteGenerator.generateRoute(
+          settings: const RouteSettings(name: '/projectGroups'),
+          isLoggedIn: true,
+        );
+
+        expect(route.settings.name, equals(RouteGenerator.projectGroup));
+      },
+    );
   });
 }

@@ -72,7 +72,7 @@ class MetricsThemeData {
     DialogThemeData dialogThemeData,
     ProjectGroupCardThemeData projectGroupCardTheme,
     ProjectGroupCardThemeData addProjectGroupCardTheme,
-    Color barGraphBackgroundColor,
+    MetricWidgetThemeData inactiveWidgetTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -84,6 +84,7 @@ class MetricsThemeData {
           projectGroupCardTheme ?? this.projectGroupCardTheme,
       addProjectGroupCardTheme:
           addProjectGroupCardTheme ?? this.addProjectGroupCardTheme,
+      inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
     );
   }
 }

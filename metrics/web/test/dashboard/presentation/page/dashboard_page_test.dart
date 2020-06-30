@@ -11,7 +11,7 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:provider/provider.dart';
 
@@ -102,7 +102,7 @@ void main() {
 Color _getBuildNumberMetricColor(WidgetTester tester) {
   final buildNumberTextWidget = tester.widget<Text>(
     find.descendant(
-      of: find.byType(BuildNumberTextMetric),
+      of: find.byType(BuildNumberScorecard),
       matching: find.text(DashboardStrings.noDataPlaceholder),
     ),
   );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_number_text_metric.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/loading_builder.dart';
@@ -92,7 +92,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                     builder: (_) {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: BuildNumberTextMetric(
+                        child: BuildNumberScorecard(
                           buildNumberMetric: projectMetrics.buildNumberMetric,
                         ),
                       );

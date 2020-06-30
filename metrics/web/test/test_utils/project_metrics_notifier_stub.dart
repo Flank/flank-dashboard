@@ -3,6 +3,7 @@ import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
@@ -17,7 +18,7 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
     projectName: 'project',
     coverage: CoverageViewModel(value: 0.1),
     stability: StabilityViewModel(value: 0.2),
-    buildNumberMetric: 0,
+    buildNumberMetric: BuildNumberScorecardViewModel(numberOfBuilds: 0),
     performanceSparkline: PerformanceSparklineViewModel(),
     buildResultMetrics: BuildResultMetricViewModel(),
   );
