@@ -22,7 +22,7 @@ void main() {
       () {
         expect(
           ProjectGroupsStrings.getProjectsCount(count),
-          contains(count.toString()),
+          contains('$count'),
         );
       },
     );
@@ -32,7 +32,7 @@ void main() {
       () {
         expect(
           ProjectGroupsStrings.getSelectedCount(count),
-          contains(count.toString()),
+          contains('$count'),
         );
       },
     );
