@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
-import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
@@ -11,15 +11,16 @@ import 'package:metrics/dashboard/presentation/widgets/stability_circle_percenta
 
 /// Displays the project name and it's metrics.
 class ProjectMetricsTile extends StatefulWidget {
-  final ProjectMetricsData projectMetrics;
+  /// A [ProjectMetricsTileViewModel] to display.
+  final ProjectMetricsTileViewModel projectMetricsViewModel;
 
   /// Creates the [ProjectMetricsTile].
   ///
-  /// [projectMetrics] is the metrics of the project to be displayed.
+  /// Throws an [AssertionError] is the given [projectMetricsViewModel] is null.
   const ProjectMetricsTile({
     Key key,
-    @required this.projectMetrics,
-  })  : assert(projectMetrics != null),
+    @required this.projectMetricsViewModel,
+  })  : assert(projectMetricsViewModel != null),
         super(key: key);
 
   @override
@@ -28,6 +29,7 @@ class ProjectMetricsTile extends StatefulWidget {
 
 class _ProjectMetricsTileState extends State<ProjectMetricsTile>
     with AutomaticKeepAliveClientMixin {
+  /// A height of this tile.
   static const double _tileHeight = 144.0;
 
   @override
@@ -36,7 +38,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final projectMetrics = widget.projectMetrics;
+    final projectMetrics = widget.projectMetricsViewModel;
     final brightness = Theme.of(context).brightness;
 
     return Container(
@@ -72,7 +74,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                       loadingPlaceholder: const LoadingPlaceholder(),
                       builder: (_) => BuildResultBarGraph(
                         buildResultMetric:
-                            widget.projectMetrics.buildResultMetrics,
+                            widget.projectMetricsViewModel.buildResultMetrics,
                       ),
                     ),
                   ),
