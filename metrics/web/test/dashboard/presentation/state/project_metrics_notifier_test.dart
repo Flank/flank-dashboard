@@ -53,7 +53,7 @@ void main() {
       }
 
       projectMetricsNotifier.addListener(initializationListener);
-      await projectMetricsNotifier.updateProjects(
+      await projectMetricsNotifier.setProjects(
         projects,
         errorMessage,
       );
@@ -103,13 +103,13 @@ void main() {
               performanceMetrics != null &&
               performanceMetrics.performance.isEmpty &&
               stabilityMetric != null;
-
-          if (hasNullMetrics) projectMetricsNotifier.dispose();
         }, () => hasNullMetrics);
 
         projectMetricsNotifier.addListener(metricsListener);
 
-        await projectMetricsNotifier.updateProjects(projects, errorMessage);
+        await projectMetricsNotifier.setProjects(projects, errorMessage);
+
+        addTearDown(projectMetricsNotifier.dispose);
       },
     );
 
@@ -139,7 +139,7 @@ void main() {
 
         projectMetricsNotifier.addListener(metricsListener);
 
-        await projectMetricsNotifier.updateProjects(projects, errorMessage);
+        await projectMetricsNotifier.setProjects(projects, errorMessage);
       },
     );
 
@@ -241,7 +241,7 @@ void main() {
           receiveProjectMetricsUpdates,
         );
 
-        await metricsNotifier.updateProjects(projects, errorMessage);
+        await metricsNotifier.setProjects(projects, errorMessage);
 
         final List<ProjectModel> expectedProjects = [...projects];
         List<ProjectMetricsData> actualProjects =
@@ -251,7 +251,7 @@ void main() {
 
         expectedProjects.removeLast();
 
-        await metricsNotifier.updateProjects(expectedProjects, errorMessage);
+        await metricsNotifier.setProjects(expectedProjects, errorMessage);
 
         actualProjects = metricsNotifier.projectsMetrics;
 
@@ -279,7 +279,7 @@ void main() {
 
         metricsNotifier.addListener(metricsListener);
 
-        await metricsNotifier.updateProjects([], errorMessage);
+        await metricsNotifier.setProjects([], errorMessage);
       },
     );
 
@@ -326,7 +326,7 @@ void main() {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
         final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
 
-        await metricsNotifier.updateProjects(projects, errorMessage);
+        await metricsNotifier.setProjects(projects, errorMessage);
 
         await expectLater(metricsUpdates.hasListener, isTrue);
 
@@ -338,17 +338,38 @@ void main() {
     );
 
     test(
-      ".updateProjects() cancels all created subscriptions and removes project metrics if the given projects are null",
+      ".setProjects() cancels all created subscriptions and removes project metrics if the given projects are null",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
         final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
 
-        await metricsNotifier.updateProjects(projects, errorMessage);
+        await metricsNotifier.setProjects(projects, errorMessage);
 
-        await metricsNotifier.updateProjects(null, null);
+        expect(metricsUpdates.hasListener, isTrue);
+
+        await metricsNotifier.setProjects(null, null);
 
         expect(metricsUpdates.hasListener, isFalse);
         expect(metricsNotifier.projectsMetrics, isNull);
+
+        await metricsNotifier.dispose();
+      },
+    );
+
+    test(
+      ".setProjects() cancels all created subscriptions and removes project metrics if the given projects are empty",
+      () async {
+        final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
+        final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
+
+        await metricsNotifier.setProjects(projects, errorMessage);
+
+        expect(metricsUpdates.hasListener, isTrue);
+
+        await metricsNotifier.setProjects([], null);
+
+        expect(metricsUpdates.hasListener, isFalse);
+        expect(metricsNotifier.projectsMetrics, isEmpty);
 
         await metricsNotifier.dispose();
       },
