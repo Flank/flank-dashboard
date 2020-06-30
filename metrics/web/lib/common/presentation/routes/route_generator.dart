@@ -39,7 +39,9 @@ class RouteGenerator {
 
     if (settings.name == projectGroup) {
       return _createMaterialPageRoute(
-          name: projectGroup, widget: ProjectGroupPage());
+        name: projectGroup,
+        widget: ProjectGroupPage(),
+      );
     }
 
     return _createMaterialPageRoute(name: dashboard, widget: DashboardPage());
