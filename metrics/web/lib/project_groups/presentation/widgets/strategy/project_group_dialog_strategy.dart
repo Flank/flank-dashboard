@@ -1,8 +1,8 @@
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 
 /// A base class for a [ProjectGroupDialog] strategy that provides the 
-/// text to display and action to perform on the project group of 
-/// the dialog.
+/// text to display and action to perform on the dialog of
+/// the project group.
 abstract class ProjectGroupDialogStrategy {
   /// A title text to display on the dialog.
   String get title;

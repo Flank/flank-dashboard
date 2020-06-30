@@ -13,7 +13,8 @@ import 'package:metrics/project_groups/presentation/widgets/project_checkbox_lis
 import 'package:metrics/project_groups/presentation/widgets/strategy/project_group_dialog_strategy.dart';
 import 'package:provider/provider.dart';
 
-/// The widget that displays a dialog with the form for adding project group.
+/// A widget that displays a dialog with the project group form and uses
+/// the given [ProjectGroupDialogStrategy].
 class ProjectGroupDialog extends StatefulWidget {
   /// A [ProjectGroupDialogStrategy] strategy applied to this dialog.
   final ProjectGroupDialogStrategy strategy;
@@ -33,14 +34,14 @@ class ProjectGroupDialog extends StatefulWidget {
 }
 
 class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
-  /// A group name text editing controller.
+  /// A text editing controller for a group name.
   final TextEditingController _groupNameController = TextEditingController();
 
   /// A global key that uniquely identifies the [Form] widget
-  /// and allows validation of the form.
+  /// and allows accessing form validation.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  /// The [ChangeNotifier] that holds the project groups state.
+  /// A [ChangeNotifier] that holds the project groups state.
   ProjectGroupsNotifier _projectGroupsNotifier;
 
   /// Indicates whether this widget is in the loading state or not.

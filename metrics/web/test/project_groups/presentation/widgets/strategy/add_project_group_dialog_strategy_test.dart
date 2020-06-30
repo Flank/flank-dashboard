@@ -1,8 +1,9 @@
-import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:metrics/project_groups/presentation/widgets/strategy/add_project_group_dialog_strategy.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
+
+import '../../../../test_utils/project_groups_notifier_mock.dart';
 
 void main() {
   group("AddProjectGroupDialogStrategy", () {
@@ -38,15 +39,14 @@ void main() {
         const id = 'groupId';
         const name = 'groupName';
         const projectIds = <String>[];
-        final notifier = ProjectGroupNotifierMock();
+        final notifier = ProjectGroupsNotifierMock();
 
         strategy.action(notifier, id, name, projectIds);
 
-        verify(notifier.addProjectGroup(id, name, projectIds))
-            .called(equals(1));
+        verify(
+          notifier.addProjectGroup(id, name, projectIds),
+        ).called(equals(1));
       },
     );
   });
 }
-
-class ProjectGroupNotifierMock extends Mock implements ProjectGroupsNotifier {}

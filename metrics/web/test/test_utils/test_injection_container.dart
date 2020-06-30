@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_notifier_stub.dart';
+import 'project_groups_notifier_mock.dart';
 import 'project_metrics_notifier_stub.dart';
 import 'signed_in_auth_notifier_stub.dart';
 
@@ -22,17 +24,22 @@ class TestInjectionContainer extends StatelessWidget {
   /// A [ThemeNotifier] to inject.
   final ThemeNotifier themeNotifier;
 
+  /// A [ProjectGroupsNotifier] to inject.
+  final ProjectGroupsNotifier projectGroupsNotifier;
+
   /// Creates the [TestInjectionContainer] with the given notifiers.
   ///
-  /// If [metricsNotifier] not passed, the [ProjectMetricsNotifierStub] used.
-  /// If [authNotifier] not passed, the [SignedInAuthNotifierStub] used.
-  /// If [themeNotifier] not passed, the [ThemeNotifier] used.
+  /// If [metricsNotifier] is null, the [ProjectMetricsNotifierStub] is used.
+  /// If [authNotifier] is null, the [SignedInAuthNotifierStub] is used.
+  /// If [themeNotifier] is null, the [ThemeNotifier] is used.
+  /// If [projectGroupsNotifier] is null, the [ProjectGroupsNotifierMock] is used.
   const TestInjectionContainer({
     Key key,
     this.child,
     this.metricsNotifier,
     this.authNotifier,
     this.themeNotifier,
+    this.projectGroupsNotifier,
   }) : super(key: key);
 
   @override
@@ -48,6 +55,9 @@ class TestInjectionContainer extends StatelessWidget {
         ChangeNotifierProvider<ThemeNotifier>(
           create: (_) => themeNotifier ?? ThemeNotifier(),
         ),
+        ChangeNotifierProvider<ProjectGroupsNotifier>(
+          create: (_) => projectGroupsNotifier ?? ProjectGroupsNotifierMock(),
+        )
       ],
       child: child,
     );

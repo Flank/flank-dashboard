@@ -3,17 +3,17 @@ import 'package:metrics/project_groups/presentation/strings/project_groups_strin
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/strategy/project_group_dialog_strategy.dart';
 
-/// The [ProjectGroupDialogStrategy] implementation for the [AddProjectGroupDialog] 
-/// and adding a new project group.
+/// The [ProjectGroupDialogStrategy] implementation for the
+/// [AddProjectGroupDialog] and adding a new project group.
 class AddProjectGroupDialogStrategy implements ProjectGroupDialogStrategy {
   @override
-  final String loadingText = ProjectGroupsStrings.creatingProjectGroup;
+  final String title = ProjectGroupsStrings.addProjectGroup;
 
   @override
   final String text = ProjectGroupsStrings.createGroup;
 
   @override
-  final String title = ProjectGroupsStrings.addProjectGroup;
+  final String loadingText = ProjectGroupsStrings.creatingProjectGroup;
 
   @override
   Future<void> action(

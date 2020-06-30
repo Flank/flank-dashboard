@@ -3,17 +3,17 @@ import 'package:metrics/project_groups/presentation/strings/project_groups_strin
 import 'package:metrics/project_groups/presentation/widgets/strategy/project_group_dialog_strategy.dart';
 import 'package:metrics/project_groups/presentation/widgets/update_project_group_dialog.dart';
 
-/// The [ProjectGroupDialogStrategy] implementation for the [UpdateProjectGroupDialog]
-/// and updating a project group.
+/// The [ProjectGroupDialogStrategy] implementation for the
+/// [UpdateProjectGroupDialog] and updating a project group.
 class UpdateProjectGroupDialogStrategy implements ProjectGroupDialogStrategy {
   @override
-  final String loadingText = ProjectGroupsStrings.savingProjectGroup;
+  final String title = ProjectGroupsStrings.editProjectGroup;
 
   @override
   final String text = ProjectGroupsStrings.saveChanges;
 
   @override
-  final String title = ProjectGroupsStrings.editProjectGroup;
+  final String loadingText = ProjectGroupsStrings.savingProjectGroup;
 
   @override
   Future<void> action(
