@@ -11,12 +11,10 @@ class ProjectModel {
 
   /// Creates an instance using the given [id] and [name].
   ///
-  /// Throws an [ArgumentError] if either the [id] or [name] is `null`.
+  /// Throws an [AssertionError] if either the [id] or [name] is `null`.
   ProjectModel({
     @required this.id,
     @required this.name,
-  }) {
-    ArgumentError.checkNotNull(id, 'id');
-    ArgumentError.checkNotNull(name, 'name');
-  }
+  })  : assert(id != null),
+        assert(name != null);
 }
