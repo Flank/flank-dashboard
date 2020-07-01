@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_view.dart';
 import 'package:provider/provider.dart';
 
@@ -30,20 +30,10 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
   @override
   Widget build(BuildContext context) {
     return MetricsScaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 32.0),
-            child: Text(
-              CommonStrings.projectGroups,
-              style: TextStyle(fontSize: 32.0),
-            ),
-          ),
-          Expanded(
-            child: ProjectGroupView(),
-          ),
-        ],
+      bodyTitle: ProjectGroupsStrings.projectGroups,
+      padding: const EdgeInsets.only(top: 40.0),
+      body: SingleChildScrollView(
+        child: ProjectGroupView(),
       ),
     );
   }

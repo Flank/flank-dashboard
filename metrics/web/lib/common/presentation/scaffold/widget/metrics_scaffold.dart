@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
+import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
 
 /// A common [Scaffold] widget for metrics pages.
 class MetricsScaffold extends StatelessWidget {
@@ -14,6 +15,9 @@ class MetricsScaffold extends StatelessWidget {
   /// A general padding around the [body].
   final EdgeInsets padding;
 
+  /// A title for the body of this scaffold.
+  final String bodyTitle;
+
   /// Creates the [MetricsScaffold] widget.
   ///
   /// Throws an [AssertionError] if the [body] is null.
@@ -22,18 +26,43 @@ class MetricsScaffold extends StatelessWidget {
     Key key,
     @required this.body,
     this.drawer = const MetricsDrawer(),
-    this.padding = const EdgeInsets.symmetric(horizontal: 124.0),
+    this.padding = EdgeInsets.zero,
+    this.bodyTitle,
   })  : assert(body != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MetricsAppBar(),
       endDrawer: drawer,
-      body: Padding(
-        padding: padding,
-        child: body,
+      body: Center(
+        child: Container(
+          constraints: BoxConstraints.tight(
+            const Size.fromWidth(1140.0),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.only(bottom: 40.0),
+                child: MetricsAppBar(),
+              ),
+              if (bodyTitle != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 40.0),
+                  child: MetricsPageTitle(
+                    title: bodyTitle,
+                  ),
+                ),
+              Expanded(
+                child: Padding(
+                  padding: padding,
+                  child: body,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
