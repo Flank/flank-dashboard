@@ -7,25 +7,25 @@ import 'package:metrics/dashboard/presentation/view_models/stability_view_model.
 
 /// Represents a view model of the metrics of the project.
 class ProjectMetricsTileViewModel extends Equatable {
-  /// The unique identifier of the project this view model belongs to.
+  /// A unique identifier of the project this view model belongs to.
   final String projectId;
 
-  /// The name of the project this view model belongs to.
+  /// A name of the project this view model belongs to.
   final String projectName;
 
-  /// The coverage circle percentage view model.
+  /// A coverage circle percentage view model.
   final CoverageViewModel coverage;
 
-  /// The stability circle percentage view model.
+  /// A stability circle percentage view model.
   final StabilityViewModel stability;
 
-  /// The build number scorecard metrics view model.
+  /// A build number scorecard metrics view model.
   final BuildNumberScorecardViewModel buildNumberMetric;
 
-  /// The performance sparkline graph view model.
+  /// A performance sparkline graph view model.
   final PerformanceSparklineViewModel performanceSparkline;
 
-  /// The build result bar graph view model.
+  /// A build result bar graph view model.
   final BuildResultMetricViewModel buildResultMetrics;
 
   @override
