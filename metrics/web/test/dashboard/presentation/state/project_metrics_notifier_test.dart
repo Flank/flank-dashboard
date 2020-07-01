@@ -379,7 +379,7 @@ void main() {
         await metricsNotifier.setProjects([], null);
 
         expect(metricsUpdates.hasListener, isFalse);
-        expect(metricsNotifier.projectsMetrics, isEmpty);
+        expect(metricsNotifier.projectsMetricsTileViewModels, isEmpty);
 
         await metricsNotifier.dispose();
       },
