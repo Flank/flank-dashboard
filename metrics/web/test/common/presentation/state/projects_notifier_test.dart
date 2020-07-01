@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
+import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
@@ -132,6 +134,62 @@ void main() {
 
         projectsNotifier.addListener(listener);
         await projectsNotifier.subscribeToProjects();
+      },
+    );
+
+    test(
+      "converts the Projects into ProjectModels",
+      () async {
+        when(receiveProjectUpdatesMock()).thenAnswer(
+          (_) => Stream.value(projects),
+        );
+
+        final expectedProjectModels = projects
+            .map((project) => ProjectModel(id: project.id, name: project.name))
+            .toList();
+
+        final listener = expectAsyncUntil0(() {}, () {
+          final projectModels = projectsNotifier.projectModels;
+          if (projectModels == null || projectModels.isEmpty) return false;
+
+          return listEquals(projectModels, expectedProjectModels);
+        });
+
+        projectsNotifier.addListener(listener);
+        await projectsNotifier.subscribeToProjects();
+      },
+    );
+
+    test(
+      "updates ProjectModels if receive project updates use case emits a new list",
+      () async {
+        const newProjects = [
+          Project(id: 'new1', name: 'new'),
+          Project(id: 'new2', name: 'new_projects'),
+        ];
+
+        final projectsController = StreamController<List<Project>>();
+        projectsController.add(projects);
+
+        when(receiveProjectUpdatesMock()).thenAnswer(
+          (_) => projectsController.stream,
+        );
+
+        await projectsNotifier.subscribeToProjects();
+        projectsController.add(newProjects);
+
+        final expectedProjectModels = newProjects
+            .map((project) => ProjectModel(id: project.id, name: project.name))
+            .toList();
+
+        final listener = expectAsyncUntil0(() {}, () {
+          final projectModels = projectsNotifier.projectModels;
+          if (projectModels == null || projectModels.isEmpty) return false;
+
+          return listEquals(projectModels, expectedProjectModels);
+        });
+
+        projectsNotifier.addListener(listener);
       },
     );
 
