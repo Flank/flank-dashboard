@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/edit_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/strategy/update_project_group_dialog_strategy.dart';
 import 'package:metrics/project_groups/presentation/widgets/update_project_group_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
@@ -16,11 +16,11 @@ void main() {
     testWidgets(
       "displays the ProjectGroupDialog with the update project group strategy",
       (WidgetTester tester) async {
-        final notifierMock = ProjectGroupsNotifierMock();
-        final projectGroup = ProjectGroupDialogEditViewModel(
+        const projectGroup = EditProjectGroupDialogViewModel(
           id: 'id',
           name: 'name',
         );
+        final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.projectGroupDialogViewModel).thenReturn(projectGroup);
 
         await tester.pumpWidget(_UpdateProjectGroupDialogTestbed(

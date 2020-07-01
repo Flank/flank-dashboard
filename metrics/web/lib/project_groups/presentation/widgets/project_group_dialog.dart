@@ -8,7 +8,7 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/edit_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 import 'package:metrics/project_groups/presentation/widgets/strategy/project_group_dialog_strategy.dart';
 import 'package:provider/provider.dart';
@@ -65,7 +65,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     final dialogTheme = MetricsTheme.of(context).dialogThemeData;
     final strategy = widget.strategy;
 
-    return Selector<ProjectGroupsNotifier, ProjectGroupDialogEditViewModel>(
+    return Selector<ProjectGroupsNotifier, EditProjectGroupDialogViewModel>(
       selector: (_, state) => state.projectGroupDialogViewModel,
       builder: (_, projectGroup, __) {
         final buttonText = _isLoading ? strategy.loadingText : strategy.text;
@@ -146,7 +146,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   }
 
   /// Returns a text to display as a counter for the selected projects.
-  String _getCounterText(ProjectGroupDialogEditViewModel projectGroup) {
+  String _getCounterText(EditProjectGroupDialogViewModel projectGroup) {
     final selectedProjectIds = projectGroup.selectedProjectIds;
 
     if (selectedProjectIds.isEmpty) return '';
@@ -156,7 +156,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
   /// A callback for this dialog action button.
   Future<void> _actionCallback(
-      ProjectGroupDialogEditViewModel projectGroup) async {
+      EditProjectGroupDialogViewModel projectGroup) async {
     if (!_formKey.currentState.validate()) return;
 
     _changeLoading(true);

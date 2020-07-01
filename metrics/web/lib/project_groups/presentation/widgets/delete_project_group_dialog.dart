@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_group_delete_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:provider/provider.dart';
 
 /// The widget that displays a delete confirmation dialog.
@@ -22,8 +22,8 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
   Widget build(BuildContext context) {
     final dialogThemeData = MetricsTheme.of(context).dialogThemeData;
 
-    return Selector<ProjectGroupsNotifier, ProjectGroupDialogViewModel>(
-      selector: (_, state) => state.projectGroupDeleteDialogViewModel,
+    return Selector<ProjectGroupsNotifier, DeleteProjectGroupDialogViewModel>(
+      selector: (_, state) => state.deleteProjectGroupDialogViewModel,
       builder: (_, deleteViewModel, ___) {
         final buttonText = _isLoading
             ? ProjectGroupsStrings.deletingProjectGroup
@@ -67,7 +67,7 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
 
   /// Starts deleting process of a project group.
   Future<void> _deleteProjectGroup(
-    ProjectGroupDialogViewModel projectGroupDeleteDialogViewModel,
+    DeleteProjectGroupDialogViewModel projectGroupDeleteDialogViewModel,
   ) async {
     final notifier = Provider.of<ProjectGroupsNotifier>(context, listen: false);
 

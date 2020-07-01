@@ -7,7 +7,8 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
-import '../../test_utils/metrics_themed_testbed.dart';
+
+import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("ProjectGroupCard", () {
