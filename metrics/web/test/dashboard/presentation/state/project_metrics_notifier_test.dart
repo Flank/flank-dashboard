@@ -367,6 +367,25 @@ void main() {
     );
 
     test(
+      ".setProjects() cancels all created subscriptions and removes project metrics if the given projects are null",
+      () async {
+        final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
+        final metricsNotifier = ProjectMetricsNotifier(metricsUpdates);
+
+        await metricsNotifier.setProjects(projects, errorMessage);
+
+        expect(metricsUpdates.hasListener, isTrue);
+
+        await metricsNotifier.setProjects(null, null);
+
+        expect(metricsUpdates.hasListener, isFalse);
+        expect(metricsNotifier.projectsMetricsTileViewModels, isEmpty);
+
+        await metricsNotifier.dispose();
+      },
+    );
+
+    test(
       ".setProjects() cancels all created subscriptions and removes project metrics if the given projects are empty",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
@@ -379,7 +398,7 @@ void main() {
         await metricsNotifier.setProjects([], null);
 
         expect(metricsUpdates.hasListener, isFalse);
-        expect(metricsNotifier.projectsMetricsTileViewModels, isEmpty);
+        expect(metricsNotifier.projectsMetrics, isEmpty);
 
         await metricsNotifier.dispose();
       },
