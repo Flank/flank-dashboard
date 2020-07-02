@@ -14,10 +14,10 @@ import 'package:metrics/project_groups/domain/usecases/parameters/delete_project
 import 'package:metrics/project_groups/domain/usecases/parameters/update_project_group_param.dart';
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_group_delete_dialog_view_model.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -66,7 +66,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   ProjectGroupDialogViewModel _projectGroupDialogViewModel;
 
   /// Holds the data for a project group delete dialog.
-  ProjectGroupDeleteDialogViewModel _projectGroupDeleteDialogViewModel;
+  DeleteProjectGroupDialogViewModel _deleteProjectGroupDialogViewModel;
 
   /// An optional filter value that represents a part (or full) project name
   /// used to limit the displayed data.
@@ -107,8 +107,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       _projectGroupDialogViewModel;
 
   /// Provides data for a project group delete dialog.
-  ProjectGroupDeleteDialogViewModel get projectGroupDeleteDialogViewModel =>
-      _projectGroupDeleteDialogViewModel;
+  DeleteProjectGroupDialogViewModel get deleteProjectGroupDialogViewModel =>
+      _deleteProjectGroupDialogViewModel;
 
   /// Creates a new instance of the [ProjectGroupsNotifier].
   ///
@@ -143,7 +143,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectNameFilterSubject.add(value);
   }
 
-  /// Sets the [ProjectGroupDeleteDialogViewModel] using
+  /// Sets the [DeleteProjectGroupDialogViewModel] using
   /// the given [projectGroupId].
   void setProjectGroupDeleteDialogViewModel(String projectGroupId) {
     final projectGroup = _projectGroups.firstWhere(
@@ -151,7 +151,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       orElse: () => null,
     );
 
-    _projectGroupDeleteDialogViewModel = ProjectGroupDeleteDialogViewModel(
+    _deleteProjectGroupDialogViewModel = DeleteProjectGroupDialogViewModel(
       id: projectGroup?.id,
       name: projectGroup?.name,
     );
