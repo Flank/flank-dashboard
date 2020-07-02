@@ -23,7 +23,8 @@ class MetricsTable extends StatelessWidget {
                 );
               }
 
-              final projects = projectsMetricsNotifier.projectsMetrics;
+              final projects =
+                  projectsMetricsNotifier.projectsMetricsTileViewModels;
 
               if (projects == null) return const LoadingPlaceholder();
 
@@ -38,7 +39,7 @@ class MetricsTable extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final project = projects[index];
 
-                  return ProjectMetricsTile(projectMetrics: project);
+                  return ProjectMetricsTile(projectMetricsViewModel: project);
                 },
               );
             },
