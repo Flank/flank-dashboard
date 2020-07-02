@@ -4,17 +4,17 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_group_delete_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:provider/provider.dart';
 
 /// The widget that displays a delete confirmation dialog.
-class ProjectGroupDeleteDialog extends StatefulWidget {
+class DeleteProjectGroupDialog extends StatefulWidget {
   @override
-  _ProjectGroupDeleteDialogState createState() =>
-      _ProjectGroupDeleteDialogState();
+  _DeleteProjectGroupDialogState createState() =>
+      _DeleteProjectGroupDialogState();
 }
 
-class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
+class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
   /// Indicates whether this widget is in the loading state or not.
   bool _isLoading = false;
 
@@ -22,14 +22,18 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
   Widget build(BuildContext context) {
     final dialogThemeData = MetricsTheme.of(context).dialogThemeData;
 
-    return Selector<ProjectGroupsNotifier, ProjectGroupDeleteDialogViewModel>(
-      selector: (_, state) => state.projectGroupDeleteDialogViewModel,
-      builder: (_, projectGroupDeleteDialogViewModel, ___) {
+    return Selector<ProjectGroupsNotifier, DeleteProjectGroupDialogViewModel>(
+      selector: (_, state) => state.deleteProjectGroupDialogViewModel,
+      builder: (_, deleteViewModel, ___) {
+        final buttonText = _isLoading
+            ? ProjectGroupsStrings.deletingProjectGroup
+            : ProjectGroupsStrings.deleteProjectGroup;
+
         return InfoDialog(
           padding: dialogThemeData.padding,
           title: Text(
             ProjectGroupsStrings.getDeleteTextConfirmation(
-              projectGroupDeleteDialogViewModel.name,
+              deleteViewModel.name,
             ),
             style: const TextStyle(fontSize: 16.0),
           ),
@@ -52,14 +56,8 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
               ),
               onPressed: _isLoading
                   ? null
-                  : () => _deleteProjectGroup(
-                        projectGroupDeleteDialogViewModel,
-                      ),
-              child: Text(
-                _isLoading
-                    ? ProjectGroupsStrings.deletingProjectGroup
-                    : ProjectGroupsStrings.deleteProjectGroup,
-              ),
+                  : () => _deleteProjectGroup(deleteViewModel),
+              child: Text(buttonText),
             ),
           ],
         );
@@ -69,24 +67,25 @@ class _ProjectGroupDeleteDialogState extends State<ProjectGroupDeleteDialog> {
 
   /// Starts deleting process of a project group.
   Future<void> _deleteProjectGroup(
-    ProjectGroupDeleteDialogViewModel projectGroupDeleteDialogViewModel,
+    DeleteProjectGroupDialogViewModel projectGroupDeleteDialogViewModel,
   ) async {
-    setState(() => _isLoading = true);
+    final notifier = Provider.of<ProjectGroupsNotifier>(context, listen: false);
 
-    await Provider.of<ProjectGroupsNotifier>(
-      context,
-      listen: false,
-    ).deleteProjectGroup(projectGroupDeleteDialogViewModel.id);
+    _setLoading(true);
 
-    setState(() => _isLoading = false);
+    await notifier.deleteProjectGroup(projectGroupDeleteDialogViewModel.id);
 
-    final projectGroupSavingError = Provider.of<ProjectGroupsNotifier>(
-      context,
-      listen: false,
-    ).projectGroupSavingError;
+    _setLoading(false);
+
+    final projectGroupSavingError = notifier.projectGroupSavingError;
 
     if (projectGroupSavingError == null) {
       Navigator.pop(context);
     }
+  }
+
+  /// Changes the [_isLoading] state to the given [value].
+  void _setLoading(bool value) {
+    setState(() => _isLoading = value);
   }
 }
