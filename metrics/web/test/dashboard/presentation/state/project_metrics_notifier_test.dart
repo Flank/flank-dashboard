@@ -23,7 +23,7 @@ void main() {
   group("ProjectMetricsNotifier", () {
     const projectId = 'projectId';
     const projectIdParam = ProjectIdParam(projectId);
-    final List<ProjectModel> projects = [
+    const List<ProjectModel> projects = [
       ProjectModel(id: 'id', name: 'name'),
       ProjectModel(id: 'id2', name: 'name2'),
     ];
@@ -81,7 +81,7 @@ void main() {
         final receiveEmptyMetrics = _ReceiveProjectMetricsUpdatesStub(
           metrics: const DashboardProjectMetrics(),
         );
-        final projects = [ProjectModel(id: 'id', name: 'name')];
+        const projects = [ProjectModel(id: 'id', name: 'name')];
 
         const emptyBuildResultMetric = BuildResultMetricViewModel();
 
