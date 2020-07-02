@@ -31,7 +31,7 @@ dependencies:
   collection: ^1.14.11
   meta: ^1.1.8
   firebase_auth: 0.15.4
-  google_fonts: ^1.1.0
+  google_fonts: ^1.0.0
   metrics_core:
     path: ../core
 
