@@ -11,12 +11,12 @@ import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metr
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
-import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -31,8 +31,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// A [PublishSubject] that provides an ability to filter projects by the name.
   final _projectNameFilterSubject = PublishSubject<String>();
 
-  /// A [Map] that holds all loaded [ProjectMetricsData].
-  Map<String, ProjectMetricsData> _projectMetrics;
+  /// A [Map] that holds all loaded [ProjectMetricsTileViewModel]s.
+  Map<String, ProjectMetricsTileViewModel> _projectMetrics;
 
   /// Holds the error message that occurred during loading projects data.
   String _projectsErrorMessage;
@@ -44,16 +44,17 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Holds the list of current [ProjectModel]s.
   List<ProjectModel> _projects;
 
-  /// Provides a list of project metrics, filtered by the project name filter.
-  List<ProjectMetricsData> get projectsMetrics {
-    final List<ProjectMetricsData> projectMetricsData =
+  /// Provides a list of [ProjectMetricsTileViewModel]s,
+  /// filtered by the project name filter.
+  List<ProjectMetricsTileViewModel> get projectsMetricsTileViewModels {
+    final List<ProjectMetricsTileViewModel> projectsMetricsTileViewModels =
         _projectMetrics?.values?.toList();
 
-    if (_projectNameFilter == null || projectMetricsData == null) {
-      return projectMetricsData;
+    if (_projectNameFilter == null || projectsMetricsTileViewModels == null) {
+      return projectsMetricsTileViewModels;
     }
 
-    return projectMetricsData
+    return projectsMetricsTileViewModels
         .where((project) => project.projectName
             .toLowerCase()
             .contains(_projectNameFilter.toLowerCase()))
@@ -125,8 +126,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     for (final project in projects) {
       final projectId = project.id;
 
-      ProjectMetricsData projectMetrics = projectsMetrics[projectId] ??
-          ProjectMetricsData(projectId: projectId);
+      ProjectMetricsTileViewModel projectMetrics = projectsMetrics[projectId] ??
+          ProjectMetricsTileViewModel(projectId: projectId);
 
       if (projectMetrics.projectName != project.name) {
         projectMetrics = projectMetrics.copyWith(

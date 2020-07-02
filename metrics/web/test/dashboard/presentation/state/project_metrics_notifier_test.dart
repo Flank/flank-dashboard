@@ -10,9 +10,9 @@ import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metr
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
-import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
@@ -23,7 +23,7 @@ void main() {
   group("ProjectMetricsNotifier", () {
     const projectId = 'projectId';
     const projectIdParam = ProjectIdParam(projectId);
-    final List<ProjectModel> projects = [
+    const List<ProjectModel> projects = [
       ProjectModel(id: 'id', name: 'name'),
       ProjectModel(id: 'id2', name: 'name2'),
     ];
@@ -45,7 +45,7 @@ void main() {
       final _completer = Completer();
 
       void initializationListener() {
-        if (projectMetricsNotifier.projectsMetrics.every(
+        if (projectMetricsNotifier.projectsMetricsTileViewModels.every(
                 (projectMetric) => projectMetric.buildNumberMetric != null) &&
             !_completer.isCompleted) {
           _completer.complete();
@@ -81,7 +81,7 @@ void main() {
         final receiveEmptyMetrics = _ReceiveProjectMetricsUpdatesStub(
           metrics: const DashboardProjectMetrics(),
         );
-        final projects = [ProjectModel(id: 'id', name: 'name')];
+        const projects = [ProjectModel(id: 'id', name: 'name')];
 
         const emptyBuildResultMetric = BuildResultMetricViewModel();
 
@@ -91,7 +91,8 @@ void main() {
 
         bool hasNullMetrics;
         final metricsListener = expectAsyncUntil0(() async {
-          final projectMetrics = projectMetricsNotifier.projectsMetrics;
+          final projectMetrics =
+              projectMetricsNotifier.projectsMetricsTileViewModels;
           if (projectMetrics == null || projectMetrics.isEmpty) return;
 
           final projectMetric = projectMetrics.first;
@@ -125,7 +126,8 @@ void main() {
 
         bool hasNullMetrics;
         final metricsListener = expectAsyncUntil0(() async {
-          final projectMetrics = projectMetricsNotifier.projectsMetrics;
+          final projectMetrics =
+              projectMetricsNotifier.projectsMetricsTileViewModels;
           if (projectMetrics == null || projectMetrics.isEmpty) return;
 
           final buildResultMetrics = projectMetrics.first.buildResultMetrics;
@@ -146,7 +148,8 @@ void main() {
     test("loads the coverage data", () async {
       final expectedProjectCoverage = expectedProjectMetrics.coverage;
 
-      final projectMetrics = projectMetricsNotifier.projectsMetrics.first;
+      final projectMetrics =
+          projectMetricsNotifier.projectsMetricsTileViewModels.first;
       final projectCoverage = projectMetrics.coverage;
 
       expect(projectCoverage.value, equals(expectedProjectCoverage.value));
@@ -155,7 +158,8 @@ void main() {
     test("loads the stability data", () async {
       final expectedProjectStability = expectedProjectMetrics.stability;
 
-      final projectMetrics = projectMetricsNotifier.projectsMetrics.first;
+      final projectMetrics =
+          projectMetricsNotifier.projectsMetricsTileViewModels.first;
       final projectStability = projectMetrics.stability;
 
       expect(projectStability.value, equals(expectedProjectStability.value));
@@ -165,7 +169,8 @@ void main() {
       final expectedBuildNumberMetrics =
           expectedProjectMetrics.buildNumberMetrics;
 
-      final firstProjectMetrics = projectMetricsNotifier.projectsMetrics.first;
+      final firstProjectMetrics =
+          projectMetricsNotifier.projectsMetricsTileViewModels.first;
 
       expect(
         firstProjectMetrics.buildNumberMetric.numberOfBuilds,
@@ -177,7 +182,8 @@ void main() {
       final expectedPerformanceMetrics =
           expectedProjectMetrics.performanceMetrics;
 
-      final firstProjectMetrics = projectMetricsNotifier.projectsMetrics.first;
+      final firstProjectMetrics =
+          projectMetricsNotifier.projectsMetricsTileViewModels.first;
       final performanceMetrics = firstProjectMetrics.performanceSparkline;
       final performancePoints = performanceMetrics.performance;
 
@@ -209,7 +215,8 @@ void main() {
       final expectedBuildResults =
           expectedProjectMetrics.buildResultMetrics.buildResults;
 
-      final firstProjectMetrics = projectMetricsNotifier.projectsMetrics.first;
+      final firstProjectMetrics =
+          projectMetricsNotifier.projectsMetricsTileViewModels.first;
       final buildResultMetrics = firstProjectMetrics.buildResultMetrics;
 
       expect(
@@ -244,8 +251,8 @@ void main() {
         await metricsNotifier.setProjects(projects, errorMessage);
 
         final List<ProjectModel> expectedProjects = [...projects];
-        List<ProjectMetricsData> actualProjects =
-            metricsNotifier.projectsMetrics;
+        List<ProjectMetricsTileViewModel> actualProjects =
+            metricsNotifier.projectsMetricsTileViewModels;
 
         expect(actualProjects.length, expectedProjects.length);
 
@@ -253,7 +260,7 @@ void main() {
 
         await metricsNotifier.setProjects(expectedProjects, errorMessage);
 
-        actualProjects = metricsNotifier.projectsMetrics;
+        actualProjects = metricsNotifier.projectsMetricsTileViewModels;
 
         expect(actualProjects.length, expectedProjects.length);
 
@@ -270,7 +277,7 @@ void main() {
 
         bool hasEmptyProjectMetrics;
         final metricsListener = expectAsyncUntil0(() async {
-          final projectMetrics = metricsNotifier.projectsMetrics;
+          final projectMetrics = metricsNotifier.projectsMetricsTileViewModels;
           hasEmptyProjectMetrics =
               projectMetrics != null && projectMetrics.isEmpty;
 
@@ -287,12 +294,13 @@ void main() {
         ".filterByProjectName() filters list of the project metrics according to the given value",
         () async {
       final expectedProjectMetrics = [
-        projectMetricsNotifier.projectsMetrics.last
+        projectMetricsNotifier.projectsMetricsTileViewModels.last
       ];
 
       final projectNameFilter = expectedProjectMetrics.first.projectName;
       final listener = expectAsync0(() {
-        final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
+        final filteredProjectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels;
 
         expect(
           filteredProjectMetrics,
@@ -306,10 +314,12 @@ void main() {
     test(
         ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
         () async {
-      final expectedProjectMetrics = projectMetricsNotifier.projectsMetrics;
+      final expectedProjectMetrics =
+          projectMetricsNotifier.projectsMetricsTileViewModels;
 
       final listener = expectAsync0(() {
-        final filteredProjectMetrics = projectMetricsNotifier.projectsMetrics;
+        final filteredProjectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels;
 
         expect(
           filteredProjectMetrics,
@@ -333,7 +343,7 @@ void main() {
         await metricsNotifier.dispose();
 
         expect(metricsUpdates.hasListener, isFalse);
-        expect(metricsNotifier.projectsMetrics, isNull);
+        expect(metricsNotifier.projectsMetricsTileViewModels, isNull);
       },
     );
 
@@ -350,7 +360,7 @@ void main() {
         await metricsNotifier.setProjects(null, null);
 
         expect(metricsUpdates.hasListener, isFalse);
-        expect(metricsNotifier.projectsMetrics, isNull);
+        expect(metricsNotifier.projectsMetricsTileViewModels, isNull);
 
         await metricsNotifier.dispose();
       },
@@ -369,7 +379,7 @@ void main() {
         await metricsNotifier.setProjects([], null);
 
         expect(metricsUpdates.hasListener, isFalse);
-        expect(metricsNotifier.projectsMetrics, isEmpty);
+        expect(metricsNotifier.projectsMetricsTileViewModels, isEmpty);
 
         await metricsNotifier.dispose();
       },

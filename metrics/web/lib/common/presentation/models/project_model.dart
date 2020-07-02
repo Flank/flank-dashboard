@@ -1,22 +1,24 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// A class that represents a project model used to
 /// transfer project data between [ChangeNotifier]s.
-class ProjectModel {
+class ProjectModel extends Equatable {
   /// The identifier of this project.
   final String id;
 
   /// The name of this project.
   final String name;
 
+  @override
+  List<Object> get props => [id, name];
+
   /// Creates an instance using the given [id] and [name].
   ///
-  /// Throws an [ArgumentError] if either the [id] or [name] is `null`.
-  ProjectModel({
+  /// Throws an [AssertionError] if either the [id] or [name] is `null`.
+  const ProjectModel({
     @required this.id,
     @required this.name,
-  }) {
-    ArgumentError.checkNotNull(id, 'id');
-    ArgumentError.checkNotNull(name, 'name');
-  }
+  })  : assert(id != null),
+        assert(name != null);
 }

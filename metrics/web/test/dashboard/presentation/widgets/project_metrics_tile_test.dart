@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/base/presentation/widgets/scorecard.dart';
-import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
@@ -16,7 +16,8 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("ProjectMetricsTile", () {
-    const ProjectMetricsData testProjectMetrics = ProjectMetricsData(
+    const ProjectMetricsTileViewModel testProjectMetrics =
+        ProjectMetricsTileViewModel(
       projectName: 'Test project name',
       coverage: CoverageViewModel(value: 0.3),
       stability: StabilityViewModel(value: 0.4),
@@ -39,7 +40,7 @@ void main() {
     testWidgets(
       "displays the project name even if it is very long",
       (WidgetTester tester) async {
-        const ProjectMetricsData metrics = ProjectMetricsData(
+        const ProjectMetricsTileViewModel metrics = ProjectMetricsTileViewModel(
           projectName:
               'Some very long name to display that may overflow on some screens but should be displayed properly. Also, this project name has a description that placed to the project name, but we still can display it properly with any overflows.',
         );
@@ -55,7 +56,7 @@ void main() {
     testWidgets(
       "displays the ProjectMetricsData even when the project name is null",
       (WidgetTester tester) async {
-        const metrics = ProjectMetricsData();
+        const metrics = ProjectMetricsTileViewModel();
 
         await tester.pumpWidget(const _ProjectMetricsTileTestbed(
           projectMetrics: metrics,
@@ -147,8 +148,8 @@ void main() {
 
 /// A testbed class required to test the [ProjectMetricsTile] widget.
 class _ProjectMetricsTileTestbed extends StatelessWidget {
-  /// The [ProjectMetricsData] instance to display.
-  final ProjectMetricsData projectMetrics;
+  /// The [ProjectMetricsTileViewModel] instance to display.
+  final ProjectMetricsTileViewModel projectMetrics;
 
   /// Creates an instance of this testbed with the given [projectMetrics].
   const _ProjectMetricsTileTestbed({
@@ -160,7 +161,7 @@ class _ProjectMetricsTileTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       body: ProjectMetricsTile(
-        projectMetrics: projectMetrics,
+        projectMetricsViewModel: projectMetrics,
       ),
     );
   }
