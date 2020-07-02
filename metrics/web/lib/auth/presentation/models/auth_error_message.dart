@@ -3,6 +3,8 @@ import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 
 /// A class that provides the authentication error description, based on [AuthErrorCode].
 class AuthErrorMessage {
+  /// An [AuthErrorCode] provides an information about
+  /// concrete authentication error.
   final AuthErrorCode _code;
 
   /// Creates the [AuthErrorMessage] from the given [AuthErrorCode].

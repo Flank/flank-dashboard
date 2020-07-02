@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/auth/presentation/models/auth_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/validators/email_validator.dart';
 import 'package:metrics/auth/presentation/validators/password_validator.dart';
-import 'package:metrics/auth/presentation/widgets/auth_input_field.dart';
 import 'package:provider/provider.dart';
 
 /// Shows an authentication form to sign in.
@@ -30,21 +28,25 @@ class _AuthFormState extends State<AuthForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          AuthInputField(
+          TextFormField(
             key: const Key(AuthStrings.email),
-            label: AuthStrings.email,
+            decoration: const InputDecoration(
+              labelText: AuthStrings.email,
+            ),
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             validator: EmailValidator.validate,
           ),
-          AuthInputField(
+          TextFormField(
             key: const Key(AuthStrings.password),
-            label: AuthStrings.password,
+            decoration: const InputDecoration(
+              labelText: AuthStrings.password,
+            ),
             controller: _passwordController,
             obscureText: true,
             validator: PasswordValidator.validate,
           ),
-          Selector<AuthNotifier, AuthErrorMessage>(
+          Selector<AuthNotifier, String>(
             selector: (_, state) => state.authErrorMessage,
             builder: (_, authErrorMessage, __) {
               if (authErrorMessage == null) return Container();
@@ -52,7 +54,7 @@ class _AuthFormState extends State<AuthForm> {
               return Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Text(
-                  authErrorMessage.message,
+                  authErrorMessage,
                   style: const TextStyle(color: Colors.red),
                 ),
               );
