@@ -25,6 +25,15 @@ void main() {
     );
 
     test(
+      ".validate() returns the project group name required error message if the given value is an empty string with spaces",
+      () {
+        final actualErrorMessage = ProjectGroupNameValidator.validate(' ');
+
+        expect(actualErrorMessage, equals(expectedErrorMessage));
+      },
+    );
+
+    test(
       ".validate() returns null if the given value is valid",
       () {
         final actualErrorMessage = ProjectGroupNameValidator.validate('name');
