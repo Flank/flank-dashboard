@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
@@ -37,7 +38,9 @@ class _MyAppState extends State<MyApp> {
               brightness: Brightness.light,
               primarySwatch: Colors.teal,
               primaryColorBrightness: Brightness.light,
-              fontFamily: 'Roboto',
+              textTheme: GoogleFonts.robotoTextTheme(
+                Typography.blackMountainView,
+              ),
               appBarTheme: const AppBarTheme(
                 color: ColorConfig.lightScaffoldColor,
               ),
@@ -46,8 +49,10 @@ class _MyAppState extends State<MyApp> {
               brightness: Brightness.dark,
               primarySwatch: Colors.teal,
               primaryColorBrightness: Brightness.dark,
+              textTheme: GoogleFonts.robotoTextTheme(
+                Typography.whiteMountainView,
+              ),
               scaffoldBackgroundColor: ColorConfig.darkScaffoldColor,
-              fontFamily: 'Roboto',
               appBarTheme: const AppBarTheme(
                 color: ColorConfig.darkScaffoldColor,
               ),
