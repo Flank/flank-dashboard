@@ -16,7 +16,7 @@ class ProjectMetricsTile extends StatefulWidget {
 
   /// Creates the [ProjectMetricsTile].
   ///
-  /// Throws an [AssertionError] is the given [projectMetricsViewModel] is null.
+  /// Throws an [AssertionError] when the given [projectMetricsViewModel] is null.
   const ProjectMetricsTile({
     Key key,
     @required this.projectMetricsViewModel,

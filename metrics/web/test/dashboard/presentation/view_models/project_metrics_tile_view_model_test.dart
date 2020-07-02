@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
@@ -6,6 +5,8 @@ import 'package:metrics/dashboard/presentation/view_models/performance_sparkline
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:test/test.dart';
+
+// ignore_for_file: prefer_const_constructors
 
 void main() {
   group("ProjectMetricsTileViewModel", () {
@@ -92,6 +93,13 @@ void main() {
         final metricsTileViewModel = ProjectMetricsTileViewModel(
           projectId: id,
           projectName: name,
+          stability: StabilityViewModel(value: 0.2),
+          coverage: CoverageViewModel(value: 0.4),
+          performanceSparkline: PerformanceSparklineViewModel(value: 30),
+          buildNumberMetric: BuildNumberScorecardViewModel(numberOfBuilds: 1),
+          buildResultMetrics: BuildResultMetricViewModel(
+            numberOfBuildsToDisplay: 1,
+          ),
         );
 
         final copiedMetricsTileViewModel = metricsTileViewModel.copyWith(
