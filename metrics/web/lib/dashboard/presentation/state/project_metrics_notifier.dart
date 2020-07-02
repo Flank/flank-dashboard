@@ -41,6 +41,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// used to limit the displayed data.
   String _projectNameFilter;
 
+  /// Holds the list of current [ProjectModel]s.
+  List<ProjectModel> _projects;
+
   /// Provides a list of project metrics, filtered by the project name filter.
   List<ProjectMetricsData> get projectsMetrics {
     final List<ProjectMetricsData> projectMetricsData =
@@ -88,20 +91,28 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Updates projects and an error message.
-  void updateProjects(List<ProjectModel> newProjects, String errorMessage) {
+  Future<void> setProjects(
+    List<ProjectModel> newProjects,
+    String errorMessage,
+  ) async {
+    _projects = newProjects;
     _projectsErrorMessage = errorMessage;
 
-    if (newProjects == null) return;
+    await _refreshMetricsSubscriptions();
+  }
 
-    if (newProjects.isEmpty) {
-      _projectMetrics = {};
+  Future<void> _refreshMetricsSubscriptions() async {
+    if (_projects == null) {
+      await _unsubscribeFromBuildMetrics();
       notifyListeners();
       return;
     }
 
     final projectsMetrics = _projectMetrics ?? {};
+    final projects = _projects.toList();
 
-    final projectIds = newProjects.map((project) => project.id);
+    final projectIds = projects.map((project) => project.id);
+
     projectsMetrics.removeWhere((projectId, value) {
       final remove = !projectIds.contains(projectId);
       if (remove) {
@@ -111,7 +122,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       return remove;
     });
 
-    for (final project in newProjects) {
+    for (final project in projects) {
       final projectId = project.id;
 
       ProjectMetricsData projectMetrics = projectsMetrics[projectId] ??
@@ -134,7 +145,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Unsubscribes from project metrics.
-  Future<void> unsubscribeFromBuildMetrics() async {
+  Future<void> _unsubscribeFromBuildMetrics() async {
     await _cancelSubscriptions();
     notifyListeners();
   }

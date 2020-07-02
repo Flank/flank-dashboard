@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/presentation/models/project_metrics_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
@@ -45,13 +45,8 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   void filterByProjectName(String value) {}
 
   @override
-  Future<void> unsubscribeFromBuildMetrics() async {
-    return;
-  }
-
-  @override
-  void updateProjects(
-      List<ProjectModel> newProjectModels, String projectErrorMessage) {
+  Future<void> setProjects(
+      List<ProjectModel> newProjectModels, String projectErrorMessage) async {
     return;
   }
 }
