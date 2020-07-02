@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
-import 'package:metrics/project_groups/presentation/view_models/edit_project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/strategy/add_project_group_dialog_strategy.dart';
@@ -16,7 +16,7 @@ void main() {
     testWidgets(
       "displays the ProjectGroupDialog with the add project group strategy",
       (tester) async {
-        const projectGroup = EditProjectGroupDialogViewModel(
+        const projectGroup = ProjectGroupDialogViewModel(
           id: 'id',
           name: 'name',
         );

@@ -7,7 +7,7 @@ import 'package:metrics/project_groups/presentation/state/project_groups_notifie
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/delete_project_group_dialog.dart';
-import 'package:metrics/project_groups/presentation/widgets/update_project_group_dialog.dart';
+import 'package:metrics/project_groups/presentation/widgets/edit_project_group_dialog.dart';
 import 'package:provider/provider.dart';
 
 /// A widget that represents [ProjectGroupCardViewModel].
@@ -140,7 +140,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     );
   }
 
-  /// Shows a [UpdateProjectGroupDialog] with an active project group.
+  /// Shows a [EditProjectGroupDialog] with an active project group.
   void _showProjectGroupDialog(BuildContext context) {
     Provider.of<ProjectGroupsNotifier>(context, listen: false)
         .setProjectGroupDialogViewModel(
@@ -149,7 +149,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
 
     showDialog(
       context: context,
-      builder: (_) => UpdateProjectGroupDialog(),
+      builder: (_) => EditProjectGroupDialog(),
     );
   }
 }

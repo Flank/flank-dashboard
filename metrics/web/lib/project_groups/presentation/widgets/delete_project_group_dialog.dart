@@ -71,11 +71,11 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
   ) async {
     final notifier = Provider.of<ProjectGroupsNotifier>(context, listen: false);
 
-    _changeLoading(true);
+    _setLoading(true);
 
     await notifier.deleteProjectGroup(projectGroupDeleteDialogViewModel.id);
 
-    _changeLoading(false);
+    _setLoading(false);
 
     final projectGroupSavingError = notifier.projectGroupSavingError;
 
@@ -85,7 +85,7 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
   }
 
   /// Changes the [_isLoading] state to the given [value].
-  void _changeLoading(bool value) {
+  void _setLoading(bool value) {
     setState(() => _isLoading = value);
   }
 }

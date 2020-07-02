@@ -8,7 +8,7 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
-import 'package:metrics/project_groups/presentation/view_models/edit_project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 import 'package:metrics/project_groups/presentation/widgets/strategy/project_group_dialog_strategy.dart';
 import 'package:provider/provider.dart';
@@ -65,7 +65,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     final dialogTheme = MetricsTheme.of(context).dialogThemeData;
     final strategy = widget.strategy;
 
-    return Selector<ProjectGroupsNotifier, EditProjectGroupDialogViewModel>(
+    return Selector<ProjectGroupsNotifier, ProjectGroupDialogViewModel>(
       selector: (_, state) => state.projectGroupDialogViewModel,
       builder: (_, projectGroup, __) {
         final buttonText = _isLoading ? strategy.loadingText : strategy.text;
@@ -146,7 +146,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   }
 
   /// Returns a text to display as a counter for the selected projects.
-  String _getCounterText(EditProjectGroupDialogViewModel projectGroup) {
+  String _getCounterText(ProjectGroupDialogViewModel projectGroup) {
     final selectedProjectIds = projectGroup.selectedProjectIds;
 
     if (selectedProjectIds.isEmpty) return '';
@@ -156,10 +156,10 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
   /// A callback for this dialog action button.
   Future<void> _actionCallback(
-      EditProjectGroupDialogViewModel projectGroup) async {
+      ProjectGroupDialogViewModel projectGroup) async {
     if (!_formKey.currentState.validate()) return;
 
-    _changeLoading(true);
+    _setLoading(true);
 
     await widget.strategy.action(
       _projectGroupsNotifier,
@@ -168,7 +168,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
       projectGroup.selectedProjectIds,
     );
 
-    _changeLoading(false);
+    _setLoading(false);
 
     final projectGroupSavingError =
         _projectGroupsNotifier.projectGroupSavingError;
@@ -179,7 +179,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   }
 
   /// Changes the [_isLoading] state to the given [value].
-  void _changeLoading(bool value) {
+  void _setLoading(bool value) {
     setState(() => _isLoading = value);
   }
 

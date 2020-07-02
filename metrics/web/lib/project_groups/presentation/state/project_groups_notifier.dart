@@ -14,7 +14,7 @@ import 'package:metrics/project_groups/domain/usecases/parameters/delete_project
 import 'package:metrics/project_groups/domain/usecases/parameters/update_project_group_param.dart';
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
-import 'package:metrics/project_groups/presentation/view_models/edit_project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
@@ -63,7 +63,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   List<ProjectCheckboxViewModel> _projectCheckboxViewModels;
 
   /// Holds the data for a project group dialog.
-  EditProjectGroupDialogViewModel _projectGroupDialogViewModel;
+  ProjectGroupDialogViewModel _projectGroupDialogViewModel;
 
   /// Holds the data for a project group delete dialog.
   DeleteProjectGroupDialogViewModel _deleteProjectGroupDialogViewModel;
@@ -103,7 +103,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   List<ProjectGroup> get projectGroups => _projectGroups;
 
   /// Provides data for a project group dialog.
-  EditProjectGroupDialogViewModel get projectGroupDialogViewModel =>
+  ProjectGroupDialogViewModel get projectGroupDialogViewModel =>
       _projectGroupDialogViewModel;
 
   /// Provides data for a project group delete dialog.
@@ -159,7 +159,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Sets the [EditProjectGroupDialogViewModel] using the given [projectGroupId].
+  /// Sets the [ProjectGroupDialogViewModel] using the given [projectGroupId].
   void setProjectGroupDialogViewModel([String projectGroupId]) {
     final projectGroup = _projectGroups.firstWhere(
       (projectGroup) => projectGroup.id == projectGroupId,
@@ -178,7 +178,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
         )
         .toList();
 
-    _projectGroupDialogViewModel = EditProjectGroupDialogViewModel(
+    _projectGroupDialogViewModel = ProjectGroupDialogViewModel(
       id: projectGroup?.id,
       name: projectGroup?.name,
       selectedProjectIds: List<String>.from(projectIds),
@@ -215,7 +215,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       isChecked: isChecked,
     );
 
-    _projectGroupDialogViewModel = EditProjectGroupDialogViewModel(
+    _projectGroupDialogViewModel = ProjectGroupDialogViewModel(
       id: _projectGroupDialogViewModel.id,
       name: _projectGroupDialogViewModel.name,
       selectedProjectIds: projectIds,
