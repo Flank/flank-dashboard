@@ -17,7 +17,7 @@ void main() {
     );
 
     testWidgets(
-      "can't be created with null isLoading",
+      "can't be created when the isLoading is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _LoadingBuilderTestbed(isLoading: null));
 
@@ -26,7 +26,7 @@ void main() {
     );
 
     testWidgets(
-      "can't be created with null loadingPlaceholder",
+      "can't be created when the loadingPlaceholder is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _LoadingBuilderTestbed(loadingPlaceholder: null),

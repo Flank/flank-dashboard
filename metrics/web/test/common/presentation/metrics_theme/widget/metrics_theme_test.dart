@@ -26,7 +26,7 @@ void main() {
     );
 
     testWidgets(
-      ".of() provides the given theme data",
+      ".of() provides the theme data from the given context",
       (WidgetTester tester) async {
         final childKey = GlobalKey();
         const metricsThemeData = MetricsThemeData();

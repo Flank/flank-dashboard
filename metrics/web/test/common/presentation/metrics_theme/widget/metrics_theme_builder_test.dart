@@ -22,7 +22,7 @@ void main() {
     );
 
     testWidgets(
-      "creates default theme data if nothing was specified",
+      "creates the default theme data if no parameters provided",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsThemeBuilderTestbed());
 
