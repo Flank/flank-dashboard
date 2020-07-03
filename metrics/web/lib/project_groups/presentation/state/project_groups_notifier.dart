@@ -115,13 +115,10 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     this._addProjectGroupUseCase,
     this._updateProjectGroupUseCase,
     this._deleteProjectGroupUseCase,
-  ) : assert(
-          _receiveProjectGroupUpdates != null &&
-              _addProjectGroupUseCase != null &&
-              _updateProjectGroupUseCase != null &&
-              _deleteProjectGroupUseCase != null,
-          'The use cases must not be null',
-        ) {
+  )   : assert(_receiveProjectGroupUpdates != null),
+        assert(_addProjectGroupUseCase != null),
+        assert(_updateProjectGroupUseCase != null),
+        assert(_deleteProjectGroupUseCase != null) {
     _subscribeToProjectsNameFilter();
   }
 
@@ -259,6 +256,10 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     String projectGroupName,
     List<String> projectIds,
   ) async {
+    if (projectGroupId == null ||
+        projectGroupName == null ||
+        projectIds == null) return;
+
     _resetProjectGroupSavingErrorMessage();
 
     try {
@@ -280,6 +281,10 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     String projectGroupName,
     List<String> projectIds,
   ) async {
+    if (projectGroupId == null ||
+        projectGroupName == null ||
+        projectIds == null) return;
+
     _resetProjectGroupSavingErrorMessage();
 
     try {
@@ -297,6 +302,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Deletes the project group with the given [projectGroupId].
   Future<void> deleteProjectGroup(String projectGroupId) async {
+    if (projectGroupId == null) return;
+
     _resetProjectGroupSavingErrorMessage();
 
     try {
