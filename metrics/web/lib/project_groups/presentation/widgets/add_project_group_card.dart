@@ -17,8 +17,9 @@ class AddProjectGroupCard extends StatelessWidget {
       height: 156.0,
       child: PaddedCard(
         backgroundColor: theme.backgroundColor,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+        ),
         child: InkWell(
           onTap: () => _showProjectGroupDialog(context),
           child: Column(
@@ -45,13 +46,21 @@ class AddProjectGroupCard extends StatelessWidget {
   }
 
   /// Shows a [AddProjectGroupDialog] with an active project group.
-  void _showProjectGroupDialog(BuildContext context) {
-    Provider.of<ProjectGroupsNotifier>(context, listen: false)
-        .setProjectGroupDialogViewModel();
+  Future<void> _showProjectGroupDialog(BuildContext context) async {
+    final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
+      context,
+      listen: false,
+    );
 
-    showDialog(
+    projectGroupsNotifier.initProjectGroupDialogViewModel();
+
+    if (projectGroupsNotifier.projectGroupDialogViewModel == null) return;
+
+    await showDialog(
       context: context,
       child: AddProjectGroupDialog(),
     );
+
+    projectGroupsNotifier.resetProjectGroupDialogViewModel();
   }
 }

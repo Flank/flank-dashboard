@@ -14,10 +14,10 @@ import 'package:metrics/project_groups/domain/usecases/parameters/delete_project
 import 'package:metrics/project_groups/domain/usecases/parameters/update_project_group_param.dart';
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
-import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
-import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
+import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -99,9 +99,6 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   List<ProjectGroupCardViewModel> get projectGroupCardViewModels =>
       _projectGroupCardViewModels;
 
-  /// Provides a list of all loaded project group.
-  List<ProjectGroup> get projectGroups => _projectGroups;
-
   /// Provides data for a project group dialog.
   ProjectGroupDialogViewModel get projectGroupDialogViewModel =>
       _projectGroupDialogViewModel;
@@ -143,13 +140,15 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectNameFilterSubject.add(value);
   }
 
-  /// Sets the [DeleteProjectGroupDialogViewModel] using
+  /// Initiates the [DeleteProjectGroupDialogViewModel] using
   /// the given [projectGroupId].
-  void setProjectGroupDeleteDialogViewModel(String projectGroupId) {
+  void initDeleteProjectGroupDialogViewModel(String projectGroupId) {
     final projectGroup = _projectGroups.firstWhere(
       (projectGroup) => projectGroup.id == projectGroupId,
       orElse: () => null,
     );
+
+    if (projectGroup == null) return;
 
     _deleteProjectGroupDialogViewModel = DeleteProjectGroupDialogViewModel(
       id: projectGroup?.id,
@@ -159,8 +158,13 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Sets the [ProjectGroupDialogViewModel] using the given [projectGroupId].
-  void setProjectGroupDialogViewModel([String projectGroupId]) {
+  /// Sets the [DeleteProjectGroupDialogViewModel] to null.
+  void resetDeleteProjectGroupDialogViewModel() {
+    _deleteProjectGroupDialogViewModel = null;
+  }
+
+  /// Initiates the [ProjectGroupDialogViewModel] using the given [projectGroupId].
+  void initProjectGroupDialogViewModel([String projectGroupId]) {
     final projectGroup = _projectGroups.firstWhere(
       (projectGroup) => projectGroup.id == projectGroupId,
       orElse: () => null,
@@ -187,21 +191,28 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Sets the [ProjectGroupDialogViewModel] to null.
+  void resetProjectGroupDialogViewModel() {
+    _projectGroupDialogViewModel = null;
+  }
+
+  /// Sets the project name filter to null.
   void resetFilterName() {
     _projectNameFilter = null;
   }
 
-  /// Changes checked status to [isChecked] for the [ProjectCheckboxViewModel]
-  /// by [projectId].
-  void toggleProjectCheckedStatus({String projectId, bool isChecked}) {
-    if (projectId == null && isChecked == null) return;
+  /// Changes a checked status to an opposite for the [ProjectCheckboxViewModel]
+  /// by the [projectId].
+  void toggleProjectCheckedStatus(String projectId) {
+    if (projectId == null) return;
 
     final projectIds = _projectGroupDialogViewModel.selectedProjectIds;
+    final isChecked = projectIds.contains(projectId);
 
     if (isChecked) {
-      projectIds.add(projectId);
-    } else {
       projectIds.remove(projectId);
+    } else {
+      projectIds.add(projectId);
     }
 
     final projectIndex = _projectCheckboxViewModels
@@ -212,7 +223,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectCheckboxViewModels[projectIndex] = ProjectCheckboxViewModel(
       id: project.id,
       name: project.name,
-      isChecked: isChecked,
+      isChecked: !isChecked,
     );
 
     _projectGroupDialogViewModel = ProjectGroupDialogViewModel(
@@ -241,14 +252,14 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates the project group data with the given [projectGroupId]
-  /// and [projectGroupName].
+  /// Creates the project group data with the given [projectGroupId],
+  /// [projectGroupName], and [projectIds].
   Future<void> addProjectGroup(
     String projectGroupId,
     String projectGroupName,
     List<String> projectIds,
   ) async {
-    resetProjectGroupSavingErrorMessage();
+    _resetProjectGroupSavingErrorMessage();
 
     try {
       await _addProjectGroupUseCase(
@@ -263,13 +274,13 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   }
 
   /// Updates the project group data with the given [projectGroupId],
-  /// [projectGroupName] and [projectIds].
+  /// [projectGroupName], and [projectIds].
   Future<void> updateProjectGroup(
     String projectGroupId,
     String projectGroupName,
     List<String> projectIds,
   ) async {
-    resetProjectGroupSavingErrorMessage();
+    _resetProjectGroupSavingErrorMessage();
 
     try {
       await _updateProjectGroupUseCase(
@@ -286,7 +297,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Deletes the project group with the given [projectGroupId].
   Future<void> deleteProjectGroup(String projectGroupId) async {
-    resetProjectGroupSavingErrorMessage();
+    _resetProjectGroupSavingErrorMessage();
 
     try {
       await _deleteProjectGroupUseCase(
@@ -298,18 +309,29 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   }
 
   /// Resets the [projectGroupSavingErrorMessage].
-  void resetProjectGroupSavingErrorMessage() {
+  void _resetProjectGroupSavingErrorMessage() {
     _projectGroupSavingError = null;
     notifyListeners();
   }
 
   /// Sets current project with a loading error message to the given [projects]
   /// and [projectsErrorMessage] respectively.
-  void updateProjects(
-      List<ProjectModel> projects, String projectsErrorMessage) {
+  void setProjects(
+    List<ProjectModel> projects, [
+    String projectsErrorMessage,
+  ]) {
     _projectsErrorMessage = projectsErrorMessage;
 
-    if (projects == null) return;
+    _refreshProjectCheckboxViewModels(projects);
+  }
+
+  /// Refreshes a [ProjectCheckboxViewModel] using the given [projects].
+  void _refreshProjectCheckboxViewModels(List<ProjectModel> projects) {
+    if (projects == null) {
+      _projectCheckboxViewModels = null;
+      notifyListeners();
+      return;
+    }
 
     final projectIds = _projectGroupDialogViewModel?.selectedProjectIds ?? [];
     _projectCheckboxViewModels = projects

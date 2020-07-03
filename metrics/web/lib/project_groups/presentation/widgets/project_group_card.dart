@@ -136,28 +136,44 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
   }
 
   /// Shows a [DeleteProjectGroupDialog] with an active project group.
-  void _showProjectGroupDeleteDialog(BuildContext context) {
-    Provider.of<ProjectGroupsNotifier>(context, listen: false)
-        .setProjectGroupDeleteDialogViewModel(
+  Future<void> _showProjectGroupDeleteDialog(BuildContext context) async {
+    final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
+      context,
+      listen: false,
+    );
+
+    projectGroupsNotifier.initDeleteProjectGroupDialogViewModel(
       widget.projectGroupCardViewModel.id,
     );
 
-    showDialog(
+    if (projectGroupsNotifier.deleteProjectGroupDialogViewModel == null) return;
+
+    await showDialog(
       context: context,
       builder: (_) => DeleteProjectGroupDialog(),
     );
+
+    projectGroupsNotifier.resetDeleteProjectGroupDialogViewModel();
   }
 
   /// Shows a [EditProjectGroupDialog] with an active project group.
-  void _showProjectGroupDialog(BuildContext context) {
-    Provider.of<ProjectGroupsNotifier>(context, listen: false)
-        .setProjectGroupDialogViewModel(
+  Future<void> _showProjectGroupDialog(BuildContext context) async {
+    final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
+      context,
+      listen: false,
+    );
+
+    projectGroupsNotifier.initProjectGroupDialogViewModel(
       widget.projectGroupCardViewModel.id,
     );
 
-    showDialog(
+    if (projectGroupsNotifier.projectGroupDialogViewModel == null) return;
+
+    await showDialog(
       context: context,
       builder: (_) => EditProjectGroupDialog(),
     );
+
+    projectGroupsNotifier.resetProjectGroupDialogViewModel();
   }
 }
