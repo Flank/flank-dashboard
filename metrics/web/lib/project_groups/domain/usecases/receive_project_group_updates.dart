@@ -1,5 +1,5 @@
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
-import 'package:metrics/common/domain/usecases/usecase.dart';
+import 'package:metrics/base/domain/usecases/usecase.dart';
 import 'package:metrics/project_groups/domain/repositories/project_group_repository.dart';
 
 /// A [UseCase] that provides an ability to receive [ProjectGroup]s updates.

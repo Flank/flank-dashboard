@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
-import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_view.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +36,7 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 32.0),
             child: Text(
-              ProjectGroupsStrings.projectGroups,
+              CommonStrings.projectGroups,
               style: TextStyle(fontSize: 32.0),
             ),
           ),

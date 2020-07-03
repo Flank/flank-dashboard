@@ -10,64 +10,77 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_
 import '../../../../test_utils/test_injection_container.dart';
 
 void main() {
-  testWidgets(
-    "Can't build the widget without builder",
-    (WidgetTester tester) async {
-      await tester.pumpWidget(const _MetricsThemeBuilderTestbed(builder: null));
+  group("MetricsThemeBuilder", () {
+    testWidgets(
+      "can't be created with the null builder",
+      (WidgetTester tester) async {
+        await tester
+            .pumpWidget(const _MetricsThemeBuilderTestbed(builder: null));
 
-      expect(tester.takeException(), isAssertionError);
-    },
-  );
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
 
-  testWidgets(
-    "Changes the theme on notifier changing",
-    (WidgetTester tester) async {
-      final themeNotifier = ThemeNotifier();
+    testWidgets(
+      "creates the default theme data if no parameters provided",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _MetricsThemeBuilderTestbed());
 
-      await tester.pumpWidget(_MetricsThemeBuilderTestbed(
-        themeNotifier: themeNotifier,
-      ));
+        final themeWidget = tester
+            .widget<MetricsThemeBuilder>(find.byType(MetricsThemeBuilder));
 
-      final themeWidget = tester.widget<MetricsTheme>(
-        find.byType(MetricsTheme),
-      );
+        expect(themeWidget.lightTheme, isA<LightMetricsThemeData>());
+        expect(themeWidget.darkTheme, isA<DarkMetricsThemeData>());
+      },
+    );
 
-      final currentTheme = themeWidget.data;
+    testWidgets(
+      "changes the theme on notifier changing",
+      (WidgetTester tester) async {
+        final themeNotifier = ThemeNotifier();
 
-      themeNotifier.changeTheme();
-      await tester.pump();
+        await tester.pumpWidget(_MetricsThemeBuilderTestbed(
+          themeNotifier: themeNotifier,
+        ));
 
-      final newThemeWidget = tester.widget<MetricsTheme>(
-        find.byType(MetricsTheme),
-      );
+        final themeWidget = tester.widget<MetricsTheme>(
+          find.byType(MetricsTheme),
+        );
 
-      final newTheme = newThemeWidget.data;
+        final currentTheme = themeWidget.data;
 
-      expect(newTheme, isNot(currentTheme));
-    },
-  );
+        themeNotifier.changeTheme();
+        await tester.pump();
 
-  testWidgets(
-    "Creates default theme data if nothing was specified",
-    (WidgetTester tester) async {
-      await tester.pumpWidget(const _MetricsThemeBuilderTestbed());
+        final newThemeWidget = tester.widget<MetricsTheme>(
+          find.byType(MetricsTheme),
+        );
 
-      final themeWidget =
-          tester.widget<MetricsThemeBuilder>(find.byType(MetricsThemeBuilder));
+        final newTheme = newThemeWidget.data;
 
-      expect(themeWidget.lightTheme, isA<LightMetricsThemeData>());
-      expect(themeWidget.darkTheme, isA<DarkMetricsThemeData>());
-    },
-  );
+        expect(newTheme, isNot(currentTheme));
+      },
+    );
+  });
 }
 
 /// A testbed widget, used to test the [MetricsThemeBuilder] widget.
 class _MetricsThemeBuilderTestbed extends StatelessWidget {
+  /// A light variant of the [MetricsThemeData].
   final MetricsThemeData lightTheme;
+
+  /// A dark variant of the [MetricsThemeData].
   final MetricsThemeData darkTheme;
+
+  /// A [ThemeNotifier] used in tests.
   final ThemeNotifier themeNotifier;
+
+  /// A [ThemeBuilder] used to build the child with the [ThemeNotifier] provided.
   final ThemeBuilder builder;
 
+  /// Creates a [_MetricsThemeBuilderTestbed].
+  ///
+  /// If the [builder] is not specified, the default [_builder] function used.
   const _MetricsThemeBuilderTestbed({
     Key key,
     this.lightTheme,
@@ -90,6 +103,7 @@ class _MetricsThemeBuilderTestbed extends StatelessWidget {
     );
   }
 
+  /// A default [ThemeBuilder] function used if the [builder] is not specified.
   static Widget _builder(BuildContext context, ThemeNotifier themeNotifier) {
     return Container();
   }

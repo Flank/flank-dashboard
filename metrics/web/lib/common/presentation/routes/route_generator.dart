@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/pages/loading_page.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
+import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 
-/// A class responsible for generating routes.
+/// Responsible for generating routes.
 class RouteGenerator {
-  /// The route name of the dashboard page.
-  static const String dashboard = '/dashboard';
-
-  /// The route name of the login page.
-  static const String login = '/login';
-
-  /// The route name of the project groups page.
-  static const String projectGroup = '/projectGroups';
-
   /// Generates a route for the given route [settings]
   /// based on the [isLoggedIn] authentication status.
   ///
@@ -30,30 +22,43 @@ class RouteGenerator {
     }
 
     if (!isLoggedIn) {
-      return _createMaterialPageRoute(name: login, widget: LoginPage());
-    }
-
-    if (settings.name == dashboard) {
-      return _createMaterialPageRoute(name: dashboard, widget: DashboardPage());
-    }
-
-    if (settings.name == projectGroup) {
       return _createMaterialPageRoute(
-        name: projectGroup,
+        name: RouteName.login,
+        widget: LoginPage(),
+      );
+    }
+
+    if (settings.name == RouteName.dashboard) {
+      return _createMaterialPageRoute(
+        name: RouteName.dashboard,
+        widget: DashboardPage(),
+      );
+    }
+
+    if (settings.name == RouteName.projectGroup) {
+      return _createMaterialPageRoute(
+        name: RouteName.projectGroup,
         widget: ProjectGroupPage(),
       );
     }
 
-    return _createMaterialPageRoute(name: dashboard, widget: DashboardPage());
+    return _createMaterialPageRoute(
+      name: RouteName.dashboard,
+      widget: DashboardPage(),
+    );
   }
 
   /// Creates [MaterialPageRoute] with the given [name] and the [widget].
   ///
   /// Throws an [AssertionError] if the [widget] is null.
-  static MaterialPageRoute _createMaterialPageRoute(
-      {String name, @required Widget widget}) {
+  static MaterialPageRoute _createMaterialPageRoute({
+    String name,
+    @required Widget widget,
+  }) {
     assert(widget != null);
     return MaterialPageRoute(
-        builder: (context) => widget, settings: RouteSettings(name: name));
+      builder: (_) => widget,
+      settings: RouteSettings(name: name),
+    );
   }
 }

@@ -5,10 +5,16 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 ///
 /// Notifies the subscribed widgets to rebuild when the theme is changed.
 class MetricsTheme extends InheritedWidget {
+  /// A default [MetricsThemeData] returned if there is
+  /// no [MetricsTheme] in the widget tree.
   static const MetricsThemeData _defaultMetricsThemeData = MetricsThemeData();
 
+  /// A [MetricsThemeData] provided by this inherited widget.
   final MetricsThemeData data;
 
+  /// Creates the [MetricsTheme] with the given [data] and [child].
+  ///
+  /// Both [child] and [data] must not be null.
   const MetricsTheme({
     @required Widget child,
     @required this.data,

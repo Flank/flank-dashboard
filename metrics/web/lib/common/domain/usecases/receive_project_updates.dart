@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:metrics/common/domain/repositories/project_repository.dart';
-import 'package:metrics/common/domain/usecases/usecase.dart';
+import 'package:metrics/base/domain/usecases/usecase.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// A [UseCase] that provides an ability to receive [Project]s updates.

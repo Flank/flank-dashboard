@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:metrics/base/presentation/widgets/expandable_text.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -70,12 +70,23 @@ void main() {
   });
 }
 
+/// A testbed class needed to test the [ExpandableText].
 class _ExpandableTextTestbed extends StatelessWidget {
+  /// A [text] to display.
   final String text;
+
+  /// A [TextStyle] of the text.
   final TextStyle style;
+
+  /// A height of the contains containing the [ExpandableText].
   final double height;
+
+  /// A width of the contains containing the [ExpandableText].
   final double width;
 
+  /// Creates an instance of this testbed.
+  ///
+  /// If the [text] is not specified, the value `text` is used.
   const _ExpandableTextTestbed({
     Key key,
     this.text = 'text',

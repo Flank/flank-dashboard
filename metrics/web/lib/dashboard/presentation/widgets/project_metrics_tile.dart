@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/base/presentation/widgets/loading_builder.dart';
+import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
-import 'package:metrics/dashboard/presentation/widgets/loading_builder.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';

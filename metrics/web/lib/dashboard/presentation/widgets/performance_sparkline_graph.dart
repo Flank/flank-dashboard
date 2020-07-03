@@ -3,7 +3,7 @@ import 'package:metrics/base/presentation/graphs/sparkline_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:metrics/base/presentation/widgets/expandable_text.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 
 /// A [SparklineGraph] that displays the performance metric.

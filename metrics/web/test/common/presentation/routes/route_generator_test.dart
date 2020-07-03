@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
@@ -19,11 +20,11 @@ void main() {
       '.generateRoute() generates a route to the login page if a user is not logged in',
       () {
         final MaterialPageRoute route = RouteGenerator.generateRoute(
-          settings: const RouteSettings(name: RouteGenerator.login),
+          settings: const RouteSettings(name: RouteName.login),
           isLoggedIn: false,
         );
 
-        expect(route.settings.name, equals(RouteGenerator.login));
+        expect(route.settings.name, equals(RouteName.login));
       },
     );
 
@@ -31,11 +32,11 @@ void main() {
       '.generateRoute() generates a route to the dashboard page if a user is logged in',
       () {
         final MaterialPageRoute route = RouteGenerator.generateRoute(
-          settings: const RouteSettings(name: RouteGenerator.login),
+          settings: const RouteSettings(name: RouteName.login),
           isLoggedIn: true,
         );
 
-        expect(route.settings.name, equals(RouteGenerator.dashboard));
+        expect(route.settings.name, equals(RouteName.dashboard));
       },
     );
 
@@ -47,7 +48,7 @@ void main() {
           isLoggedIn: true,
         );
 
-        expect(route.settings.name, equals(RouteGenerator.dashboard));
+        expect(route.settings.name, equals(RouteName.dashboard));
       },
     );
 
@@ -55,11 +56,11 @@ void main() {
       '.generateRoute() generates a route to the project groups page if a route name is projectGroups',
       () {
         final MaterialPageRoute route = RouteGenerator.generateRoute(
-          settings: const RouteSettings(name: '/projectGroups'),
+          settings: const RouteSettings(name: RouteName.projectGroup),
           isLoggedIn: true,
         );
 
-        expect(route.settings.name, equals(RouteGenerator.projectGroup));
+        expect(route.settings.name, equals(RouteName.projectGroup));
       },
     );
   });

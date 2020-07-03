@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
-import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
     if (isLoggedIn != null && isLoggedIn) {
       Navigator.pushNamedAndRemoveUntil(
         context,
-        RouteGenerator.dashboard,
+        RouteName.dashboard,
         (Route<dynamic> route) => false,
       );
     }

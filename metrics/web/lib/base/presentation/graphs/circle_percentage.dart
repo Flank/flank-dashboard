@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:metrics/base/presentation/widgets/expandable_text.dart';
 
 /// The widget that represents the metric percent in a circular graph.
 ///

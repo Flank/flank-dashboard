@@ -1,6 +1,6 @@
 import 'package:metrics/auth/domain/repositories/user_repository.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
-import 'package:metrics/common/domain/usecases/usecase.dart';
+import 'package:metrics/base/domain/usecases/usecase.dart';
 
 /// The use case that provides an ability to sign in user.
 class SignInUseCase implements UseCase<void, UserCredentialsParam> {

@@ -19,8 +19,7 @@ import 'package:metrics/project_groups/domain/usecases/update_project_group_usec
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
 
-/// The widget that creates the [ChangeNotifier]s and injects them,
-/// using the [MultiProvider] widget.
+/// Creates the [ChangeNotifier]s and injects them, using the [MultiProvider] widget.
 class InjectionContainer extends StatefulWidget {
   /// A child widget to display.
   final Widget child;
@@ -38,15 +37,32 @@ class InjectionContainer extends StatefulWidget {
 }
 
 class _InjectionContainerState extends State<InjectionContainer> {
-  ReceiveProjectUpdates _receiveProjectUpdates;
-  ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
-  ReceiveAuthenticationUpdates _receiveAuthUpdates;
-  ReceiveProjectGroupUpdates _receiveProjectGroupUpdates;
-  AddProjectGroupUseCase _addProjectGroupUseCase;
-  UpdateProjectGroupUseCase _updateProjectGroupUseCase;
-  DeleteProjectGroupUseCase _deleteProjectGroupUseCase;
+  /// A use case needed to be able to sign in a user.
   SignInUseCase _signInUseCase;
+
+  /// A use case needed to be able to sign out a user.
   SignOutUseCase _signOutUseCase;
+
+  /// A use case needed to be able to receive the project updates.
+  ReceiveProjectUpdates _receiveProjectUpdates;
+
+  /// A use case needed to be able to receive the project metrics updates.
+  ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
+
+  /// A use case needed to receive the authentication updates.
+  ReceiveAuthenticationUpdates _receiveAuthUpdates;
+
+  /// A use case needed to receive the project group updates.
+  ReceiveProjectGroupUpdates _receiveProjectGroupUpdates;
+
+  /// A use case needed to be able to add a new project group.
+  AddProjectGroupUseCase _addProjectGroupUseCase;
+
+  /// A use case needed to be able to update the existing project group.
+  UpdateProjectGroupUseCase _updateProjectGroupUseCase;
+
+  /// A use case needed to be able to delete a project group.
+  DeleteProjectGroupUseCase _deleteProjectGroupUseCase;
 
   @override
   void initState() {
