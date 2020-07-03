@@ -1,6 +1,6 @@
 import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_name_validation_exception.dart';
 import 'package:metrics/project_groups/domain/value_objects/project_group_name.dart';
-import 'package:metrics/project_groups/presentation/models/project_group_validation_error_message.dart';
+import 'package:metrics/project_groups/presentation/models/project_group_name_validation_error_message.dart';
 
 /// A class for validating a project group name.
 class ProjectGroupNameValidator {

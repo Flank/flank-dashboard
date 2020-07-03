@@ -13,6 +13,8 @@ class LoginPage extends StatefulWidget {
 
 /// The logic and internal state for the [LoginPage] widget.
 class _LoginPageState extends State<LoginPage> {
+  /// An [AuthNotifier] needed to be able to remove the listener
+  /// in the [dispose] method.
   AuthNotifier _authNotifier;
 
   @override
@@ -23,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
+  /// Navigates to the dashboard screen once the user becomes logged in.
   void _loggedInListener() {
     final isLoggedIn = _authNotifier.isLoggedIn;
 
