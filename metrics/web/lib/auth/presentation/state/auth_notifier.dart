@@ -45,7 +45,7 @@ class AuthNotifier extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
 
   /// Returns an [AuthErrorMessage], containing an authentication error message.
-  AuthErrorMessage get authErrorMessage => _authErrorMessage;
+  String get authErrorMessage => _authErrorMessage?.message;
 
   /// Subscribes to a user authentication updates
   /// to get notified when the user got signed in or signed out.

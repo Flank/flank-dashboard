@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:metrics/auth/presentation/models/auth_error_message.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 
 /// Stub implementation on the [AuthNotifier].
@@ -7,7 +6,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 /// Provides test implementation of the [AuthNotifier] methods.
 class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   @override
-  AuthErrorMessage get authErrorMessage => null;
+  String get authErrorMessage => null;
 
   /// Contains a user's authentication status.
   bool _isLoggedIn;

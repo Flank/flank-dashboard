@@ -75,6 +75,7 @@ void main() {
 
 /// A testbed widget, used to test the [LoadingPage] widget.
 class _LoadingPageTestbed extends StatelessWidget {
+  /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
 
   /// Creates the [_LoadingPageTestbed] with the given [authNotifier].
