@@ -29,6 +29,9 @@ class ProjectGroupCard extends StatefulWidget {
 }
 
 class _ProjectGroupCardState extends State<ProjectGroupCard> {
+  /// The length of the icon box side.
+  static const double _iconBoxSide = 20.0;
+
   /// Indicates whether this widget is hovered or not.
   bool _isHovered = false;
 
@@ -50,7 +53,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
             borderRadius: BorderRadius.circular(4.0),
             side: BorderSide(color: theme.borderColor),
           ),
-          backgroundColor: _isHovered ? theme.hoverColor : theme.backgroundColor,
+          backgroundColor:
+              _isHovered ? theme.hoverColor : theme.backgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -77,9 +81,11 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                         onPressed: () => _showProjectGroupDialog(context),
                         borderRadius: _buttonBorderRadius,
                         iconPadding: _buttonIconPadding,
-                        icon: Icon(
-                          Icons.edit,
-                          size: 20.0,
+                        icon: Image.network(
+                          'icons/edit.svg',
+                          width: _iconBoxSide,
+                          height: _iconBoxSide,
+                          fit: BoxFit.contain,
                           color: theme.primaryColor,
                         ),
                         label: CommonStrings.edit,
@@ -91,9 +97,11 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                         onPressed: () => _showProjectGroupDeleteDialog(context),
                         borderRadius: _buttonBorderRadius,
                         iconPadding: _buttonIconPadding,
-                        icon: Icon(
-                          Icons.delete,
-                          size: 20.0,
+                        icon: Image.network(
+                          'icons/delete.svg',
+                          width: _iconBoxSide,
+                          height: _iconBoxSide,
+                          fit: BoxFit.contain,
                           color: theme.accentColor,
                         ),
                         label: CommonStrings.delete,
@@ -128,28 +136,44 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
   }
 
   /// Shows a [DeleteProjectGroupDialog] with an active project group.
-  void _showProjectGroupDeleteDialog(BuildContext context) {
-    Provider.of<ProjectGroupsNotifier>(context, listen: false)
-        .setProjectGroupDeleteDialogViewModel(
+  Future<void> _showProjectGroupDeleteDialog(BuildContext context) async {
+    final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
+      context,
+      listen: false,
+    );
+
+    projectGroupsNotifier.initDeleteProjectGroupDialogViewModel(
       widget.projectGroupCardViewModel.id,
     );
 
-    showDialog(
+    if (projectGroupsNotifier.deleteProjectGroupDialogViewModel == null) return;
+
+    await showDialog(
       context: context,
       builder: (_) => DeleteProjectGroupDialog(),
     );
+
+    projectGroupsNotifier.resetDeleteProjectGroupDialogViewModel();
   }
 
   /// Shows a [EditProjectGroupDialog] with an active project group.
-  void _showProjectGroupDialog(BuildContext context) {
-    Provider.of<ProjectGroupsNotifier>(context, listen: false)
-        .setProjectGroupDialogViewModel(
+  Future<void> _showProjectGroupDialog(BuildContext context) async {
+    final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
+      context,
+      listen: false,
+    );
+
+    projectGroupsNotifier.initProjectGroupDialogViewModel(
       widget.projectGroupCardViewModel.id,
     );
 
-    showDialog(
+    if (projectGroupsNotifier.projectGroupDialogViewModel == null) return;
+
+    await showDialog(
       context: context,
       builder: (_) => EditProjectGroupDialog(),
     );
+
+    projectGroupsNotifier.resetProjectGroupDialogViewModel();
   }
 }

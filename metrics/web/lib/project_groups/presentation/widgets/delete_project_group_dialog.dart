@@ -75,12 +75,12 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
 
     await notifier.deleteProjectGroup(projectGroupDeleteDialogViewModel.id);
 
-    _setLoading(false);
-
     final projectGroupSavingError = notifier.projectGroupSavingError;
 
     if (projectGroupSavingError == null) {
       Navigator.pop(context);
+    } else {
+      _setLoading(false);
     }
   }
 

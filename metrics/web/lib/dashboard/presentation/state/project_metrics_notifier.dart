@@ -102,6 +102,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     await _refreshMetricsSubscriptions();
   }
 
+  /// Refreshes the project metrics subscriptions according to [ProjectModel]s.
   Future<void> _refreshMetricsSubscriptions() async {
     if (_projects == null) {
       await _unsubscribeFromBuildMetrics();

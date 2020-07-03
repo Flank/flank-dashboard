@@ -28,20 +28,19 @@ class ProjectCheckboxListTile extends StatelessWidget {
       ),
       controlAffinity: ListTileControlAffinity.leading,
       value: projectCheckboxViewModel.isChecked,
-      onChanged: (isChecked) {
-        _toggleProjectCheckedStatus(context, isChecked);
+      onChanged: (_) {
+        _toggleProjectCheckedStatus(context);
       },
     );
   }
 
-  /// Changes checked status to [isChecked] for the [ProjectCheckboxViewModel].
-  void _toggleProjectCheckedStatus(BuildContext context, bool isChecked) {
+  /// Changes checked status for the [ProjectCheckboxViewModel].
+  void _toggleProjectCheckedStatus(BuildContext context) {
     Provider.of<ProjectGroupsNotifier>(
       context,
       listen: false,
     ).toggleProjectCheckedStatus(
-      projectId: projectCheckboxViewModel.id,
-      isChecked: isChecked,
+      projectCheckboxViewModel.id,
     );
   }
 }
