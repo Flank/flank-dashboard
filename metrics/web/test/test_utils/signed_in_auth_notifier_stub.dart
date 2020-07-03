@@ -10,7 +10,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 /// ensures that a user is already logged in into the application.
 class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   @override
-  AuthErrorMessage get authErrorMessage => _authExceptionDescription;
+  String get authErrorMessage => _authExceptionDescription?.message;
 
   /// Contains text description of any authentication exception that may occur.
   AuthErrorMessage _authExceptionDescription;

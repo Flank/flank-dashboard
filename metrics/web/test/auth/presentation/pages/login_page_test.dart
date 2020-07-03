@@ -1,12 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
-import 'package:metrics/auth/presentation/widgets/auth_input_field.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
@@ -43,7 +40,16 @@ void main() {
           authNotifier: AuthNotifierStub(),
         ));
 
-        await _signIn(tester);
+        await tester.enterText(
+          find.widgetWithText(TextFormField, AuthStrings.email),
+          'test@email.com',
+        );
+        await tester.enterText(
+          find.widgetWithText(TextFormField, AuthStrings.password),
+          'testPassword',
+        );
+        await tester.tap(find.widgetWithText(RaisedButton, AuthStrings.signIn));
+
         await tester.pumpAndSettle();
 
         expect(find.byType(DashboardPage), findsOneWidget);
@@ -52,21 +58,12 @@ void main() {
   });
 }
 
-Future<void> _signIn(WidgetTester tester) async {
-  await tester.enterText(
-    find.widgetWithText(AuthInputField, AuthStrings.email),
-    'test@email.com',
-  );
-  await tester.enterText(
-    find.widgetWithText(AuthInputField, AuthStrings.password),
-    'testPassword',
-  );
-  await tester.tap(find.widgetWithText(RaisedButton, AuthStrings.signIn));
-}
-
 /// A testbed widget, used to test the [LoginPage] widget.
 class _LoginPageTestbed extends StatelessWidget {
+  /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
+
+  /// A [ProjectMetricsNotifier] used in tests.
   final ProjectMetricsNotifier metricsNotifier;
 
   /// Creates the [_LoginPageTestbed] with the given [authNotifier] and [metricsNotifier].

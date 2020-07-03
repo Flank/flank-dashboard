@@ -3,6 +3,8 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class that provides the password validation error description based on [PasswordValidationErrorMessage].
 class PasswordValidationErrorMessage {
+  /// A [PasswordValidationErrorCode] provides an information
+  /// of concrete password validation error.
   final PasswordValidationErrorCode _code;
 
   /// Creates the [PasswordValidationErrorMessage] with the given [PasswordValidationErrorCode].

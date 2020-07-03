@@ -1,8 +1,11 @@
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that provides the email validation error description based on [EmailValidationErrorCode].
+/// A class that provides the email validation error description
+/// based on [EmailValidationErrorCode].
 class EmailValidationErrorMessage {
+  /// A [EmailValidationErrorCode] provides an information
+  /// of concrete email validation error.
   final EmailValidationErrorCode _code;
 
   /// Creates the [EmailValidationErrorMessage] with the given [EmailValidationErrorCode].
