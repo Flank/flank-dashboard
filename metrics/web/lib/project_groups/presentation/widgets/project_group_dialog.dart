@@ -155,8 +155,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   }
 
   /// A callback for this dialog action button.
-  Future<void> _actionCallback(
-      ProjectGroupDialogViewModel projectGroup) async {
+  Future<void> _actionCallback(ProjectGroupDialogViewModel projectGroup) async {
     if (!_formKey.currentState.validate()) return;
 
     _setLoading(true);
@@ -168,13 +167,13 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
       projectGroup.selectedProjectIds,
     );
 
-    _setLoading(false);
-
     final projectGroupSavingError =
         _projectGroupsNotifier.projectGroupSavingError;
 
     if (projectGroupSavingError == null) {
       Navigator.pop(context);
+    } else {
+      _setLoading(false);
     }
   }
 
