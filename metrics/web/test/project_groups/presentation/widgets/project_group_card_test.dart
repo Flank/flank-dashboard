@@ -7,6 +7,7 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -59,16 +60,18 @@ void main() {
     testWidgets(
       "applies the hover color from theme if the widget is hovered",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_ProjectGroupCardTestbed(
-          theme: testTheme,
-          projectGroupCardViewModel: projectGroupCardViewModel,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupCardTestbed(
+            theme: testTheme,
+            projectGroupCardViewModel: projectGroupCardViewModel,
+          ));
+        });
 
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
         const pointerEnterEvent = PointerEnterEvent();
         mouseRegion.onEnter(pointerEnterEvent);
 
-        await tester.pump();
+        await mockNetworkImagesFor(() => tester.pump());
 
         final paddedCard = tester.widget<PaddedCard>(find.descendant(
           of: find.byType(ProjectGroupCard),
@@ -100,16 +103,18 @@ void main() {
     testWidgets(
       "shows the edit button if the widget is hovered",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_ProjectGroupCardTestbed(
-          theme: testTheme,
-          projectGroupCardViewModel: projectGroupCardViewModel,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupCardTestbed(
+            theme: testTheme,
+            projectGroupCardViewModel: projectGroupCardViewModel,
+          ));
+        });
 
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
         const pointerEnterEvent = PointerEnterEvent();
         mouseRegion.onEnter(pointerEnterEvent);
 
-        await tester.pump();
+        await mockNetworkImagesFor(() => tester.pump());
 
         expect(find.text(CommonStrings.edit), findsOneWidget);
       },
@@ -136,16 +141,18 @@ void main() {
     testWidgets(
       "shows the delete button if the widget is hovered",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_ProjectGroupCardTestbed(
-          theme: testTheme,
-          projectGroupCardViewModel: projectGroupCardViewModel,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupCardTestbed(
+            theme: testTheme,
+            projectGroupCardViewModel: projectGroupCardViewModel,
+          ));
+        });
 
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
         const pointerEnterEvent = PointerEnterEvent();
         mouseRegion.onEnter(pointerEnterEvent);
 
-        await tester.pump();
+        await mockNetworkImagesFor(() => tester.pump());
 
         expect(find.text(CommonStrings.delete), findsOneWidget);
       },

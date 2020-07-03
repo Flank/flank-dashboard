@@ -25,7 +25,7 @@ class AddProjectGroupCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Image.network(
-                'icons/add-button.svg',
+                'icons/add.svg',
                 width: 32.0,
                 height: 32.0,
                 color: theme.primaryColor,
