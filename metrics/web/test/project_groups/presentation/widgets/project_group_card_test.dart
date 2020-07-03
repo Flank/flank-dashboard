@@ -16,7 +16,7 @@ void main() {
     const testBackgroundColor = Colors.white;
     const testHoverColor = Colors.black;
 
-    final projectGroupCardViewModel = ProjectGroupCardViewModel(
+    const projectGroupCardViewModel = ProjectGroupCardViewModel(
       id: 'id',
       name: 'name',
       projectsCount: 1,
@@ -37,7 +37,7 @@ void main() {
     testWidgets(
       "applies the background color from theme if widget is not hovered",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_ProjectGroupCardTestbed(
+        await tester.pumpWidget(const _ProjectGroupCardTestbed(
           theme: testTheme,
           projectGroupCardViewModel: projectGroupCardViewModel,
         ));
@@ -61,7 +61,7 @@ void main() {
       "applies the hover color from theme if the widget is hovered",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_ProjectGroupCardTestbed(
+          return tester.pumpWidget(const _ProjectGroupCardTestbed(
             theme: testTheme,
             projectGroupCardViewModel: projectGroupCardViewModel,
           ));
@@ -85,7 +85,7 @@ void main() {
     testWidgets(
       "hides the edit button if the widget is not hovered",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_ProjectGroupCardTestbed(
+        await tester.pumpWidget(const _ProjectGroupCardTestbed(
           theme: testTheme,
           projectGroupCardViewModel: projectGroupCardViewModel,
         ));
@@ -104,7 +104,7 @@ void main() {
       "shows the edit button if the widget is hovered",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_ProjectGroupCardTestbed(
+          return tester.pumpWidget(const _ProjectGroupCardTestbed(
             theme: testTheme,
             projectGroupCardViewModel: projectGroupCardViewModel,
           ));
@@ -123,7 +123,7 @@ void main() {
     testWidgets(
       "hides the delete button if the widget is not hovered",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_ProjectGroupCardTestbed(
+        await tester.pumpWidget(const _ProjectGroupCardTestbed(
           theme: testTheme,
           projectGroupCardViewModel: projectGroupCardViewModel,
         ));
@@ -142,7 +142,7 @@ void main() {
       "shows the delete button if the widget is hovered",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_ProjectGroupCardTestbed(
+          return tester.pumpWidget(const _ProjectGroupCardTestbed(
             theme: testTheme,
             projectGroupCardViewModel: projectGroupCardViewModel,
           ));
