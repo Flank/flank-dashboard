@@ -40,7 +40,7 @@ class ProjectCheckboxListTile extends StatelessWidget {
       context,
       listen: false,
     ).toggleProjectCheckedStatus(
-      projectId: projectCheckboxViewModel.id,
+      projectCheckboxViewModel.id,
     );
   }
 }

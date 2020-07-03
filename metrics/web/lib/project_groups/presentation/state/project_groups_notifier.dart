@@ -203,7 +203,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Changes a checked status to an opposite for the [ProjectCheckboxViewModel]
   /// by the [projectId].
-  void toggleProjectCheckedStatus({String projectId}) {
+  void toggleProjectCheckedStatus(String projectId) {
     if (projectId == null) return;
 
     final projectIds = _projectGroupDialogViewModel.selectedProjectIds;
