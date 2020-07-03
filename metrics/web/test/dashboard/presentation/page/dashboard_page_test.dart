@@ -13,6 +13,7 @@ import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.da
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 import 'package:provider/provider.dart';
 
 import '../../../test_utils/test_injection_container.dart';
@@ -22,7 +23,9 @@ void main() {
     testWidgets(
       "contains the MetricsAppBar widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _DashboardTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _DashboardTestbed());
+        });
 
         expect(find.byType(MetricsAppBar), findsOneWidget);
       },
@@ -31,7 +34,9 @@ void main() {
     testWidgets(
       "contains the MetricsTable widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _DashboardTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _DashboardTestbed());
+        });
 
         expect(find.byType(MetricsTable), findsOneWidget);
       },
@@ -40,7 +45,9 @@ void main() {
     testWidgets(
       "contains a project search input",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _DashboardTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _DashboardTestbed());
+        });
 
         final projectSearchInput = find.descendant(
           of: find.byType(TextField),
@@ -54,12 +61,15 @@ void main() {
     testWidgets(
       "displays the MetricsDrawer on tap on the menu button",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _DashboardTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _DashboardTestbed());
+        });
+
         await tester.pumpAndSettle();
 
         await tester.tap(find.descendant(
           of: find.byType(MetricsAppBar),
-          matching: find.byType(IconButton),
+          matching: find.byType(InkWell),
         ));
         await tester.pumpAndSettle();
 
@@ -72,16 +82,19 @@ void main() {
       (WidgetTester tester) async {
         final themeNotifier = ThemeNotifier();
 
-        await tester.pumpWidget(_DashboardTestbed(
-          themeNotifier: themeNotifier,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_DashboardTestbed(
+            themeNotifier: themeNotifier,
+          ));
+        });
+
         await tester.pumpAndSettle();
 
         final darkBuildNumberMetricColor = _getBuildNumberMetricColor(tester);
 
         await tester.tap(find.descendant(
           of: find.byType(MetricsAppBar),
-          matching: find.byType(IconButton),
+          matching: find.byType(InkWell),
         ));
         await tester.pumpAndSettle();
 

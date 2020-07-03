@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -12,7 +13,9 @@ void main() {
     testWidgets(
       "throws an AssertionError if trying to create without a body",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsScaffoldTestbed(body: null));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsScaffoldTestbed(body: null));
+        });
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -28,6 +31,26 @@ void main() {
         });
 
         expect(find.byWidget(body), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "constraints width to the dimensions config content width",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsScaffoldTestbed());
+        });
+
+        final container = tester.widget<Container>(find.byType(Container));
+
+        expect(
+          container.constraints,
+          equals(
+            BoxConstraints.tight(
+              Size.fromWidth(DimensionsConfig.contentWidth),
+            ),
+          ),
+        );
       },
     );
 
@@ -135,6 +158,7 @@ void main() {
   });
 }
 
+/// A testbed widget, used to test the [MetricsScaffold] widget.
 class _MetricsScaffoldTestbed extends StatelessWidget {
   /// A primary content of this scaffold.
   final Widget body;
