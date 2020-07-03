@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:test/test.dart';
 
 import 'arguments/model/user_credentials.dart';
@@ -118,8 +117,8 @@ void main() {
       group("ProjectGroup page", () {
         setUpAll(() async {
           await driver.tap(find.byTooltip('Open navigation menu'));
-          await driver.waitFor(find.text(ProjectGroupsStrings.projectGroups));
-          await driver.tap(find.text(ProjectGroupsStrings.projectGroups));
+          await driver.waitFor(find.text(CommonStrings.projectGroups));
+          await driver.tap(find.text(CommonStrings.projectGroups));
 
           await driver.waitUntilNoTransientCallbacks(
             timeout: const Duration(seconds: 2),

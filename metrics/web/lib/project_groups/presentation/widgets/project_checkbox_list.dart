@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';

@@ -69,10 +69,18 @@ void main() {
   });
 }
 
+/// A testbed class needed to test the [MetricsScaffold].
 class _MetricsScaffoldTestbed extends StatelessWidget {
+  /// The primary content of the [MetricsScaffold].
   final Widget body;
+
+  /// The panel that slides in horizontally from the edge of
+  /// a Scaffold to show navigation links in an application.
   final Widget drawer;
 
+  /// Creates a [_MetricsScaffoldTestbed] with the given [body] and [drawer].
+  ///
+  /// If the [body] is not specified, the [SizedBox] used.
   const _MetricsScaffoldTestbed({
     Key key,
     this.body = const SizedBox(),

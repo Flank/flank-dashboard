@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/dashboard/presentation/widgets/expandable_text.dart';
+import 'package:metrics/base/presentation/widgets/expandable_text.dart';
 
 /// A widget that stands for displaying the [value] text with [description].
 class Scorecard extends StatelessWidget {

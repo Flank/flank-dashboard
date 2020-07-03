@@ -6,22 +6,30 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:provider/provider.dart';
 
+/// A widget builder function that provides a [ThemeNotifier]
+/// and a [BuildContext] to the children of the [MetricsThemeBuilder].
 typedef ThemeBuilder = Widget Function(
     BuildContext context, ThemeNotifier themeNotifier);
 
 /// Widget to rebuild the [MetricsApp] when the [ThemeNotifier] is changed.
 class MetricsThemeBuilder extends StatelessWidget {
+  /// A light variant of the [MetricsThemeData].
   final MetricsThemeData lightTheme;
+
+  /// A dark variant of the [MetricsThemeData].
   final MetricsThemeData darkTheme;
+
+  /// A [ThemeBuilder] used to build the child with the [ThemeNotifier] provided.
   final ThemeBuilder builder;
 
   /// Creates the [MetricsThemeBuilder].
   ///
   /// The [builder] should not be null.
   ///
+  /// If the [lightTheme] is null, the [LightMetricsThemeData] used.
+  /// If the [darkTheme] is null, the [DarkMetricsThemeData] used.
+  ///
   /// Rebuilds a [MetricsApp] when a [ThemeNotifier] changes.
-  /// [builder] is the function used to build the child depending
-  /// on current theme state.
   const MetricsThemeBuilder({
     Key key,
     @required this.builder,
@@ -44,7 +52,7 @@ class MetricsThemeBuilder extends StatelessWidget {
     );
   }
 
-  /// Gets a [MetricsThemeData] from a [ThemeNotifier].
+  /// Gets a [MetricsThemeData] depending on [ThemeNotifier.isDark].
   MetricsThemeData _getThemeData(ThemeNotifier themeNotifier) {
     if (themeNotifier == null || !themeNotifier.isDark) return lightTheme;
 

@@ -1,4 +1,4 @@
-import 'package:metrics/common/domain/usecases/usecase.dart';
+import 'package:metrics/base/domain/usecases/usecase.dart';
 import 'package:metrics/project_groups/domain/repositories/project_group_repository.dart';
 import 'package:metrics/project_groups/domain/usecases/parameters/add_project_group_param.dart';
 

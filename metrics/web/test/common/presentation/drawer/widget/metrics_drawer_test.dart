@@ -9,51 +9,79 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../test_utils/auth_notifier_mock.dart';
 import '../../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../../test_utils/test_injection_container.dart';
 
 void main() {
-  testWidgets(
-    "Changes theme state on tap on a checkbox",
-    (WidgetTester tester) async {
-      final themeNotifier = ThemeNotifier();
+  group("MetricsDrawer", () {
+    testWidgets(
+      "calls the ThemeNotifier.changeTheme() on tap on a checkbox",
+          (WidgetTester tester) async {
+        final themeNotifier = ThemeNotifierMock();
 
-      await tester.pumpWidget(MetricsDrawerTestbed(
-        themeNotifier: themeNotifier,
-      ));
+        when(themeNotifier.isDark).thenReturn(false);
 
-      expect(themeNotifier.isDark, isTrue);
+        await tester.pumpWidget(MetricsDrawerTestbed(
+          themeNotifier: themeNotifier,
+        ));
 
-      await tester.tap(find.byType(Checkbox));
-      await tester.pumpAndSettle();
+        await tester.tap(find.byType(Checkbox));
+        await tester.pump();
 
-      expect(themeNotifier.isDark, isFalse);
-    },
-  );
+        verify(themeNotifier.changeTheme()).called(equals(1));
+      },
+    );
 
-  testWidgets(
-    "After a user taps on 'Log out' - application navigates back to the login screen",
-    (WidgetTester tester) async {
-      await tester.pumpWidget(MetricsDrawerTestbed(
-        authNotifier: SignedInAuthNotifierStub(),
-      ));
+    testWidgets(
+      "calls the AuthNotifier.signOut() on tap on `Log out`",
+          (tester) async {
+        final authNotifier = AuthNotifierMock();
 
-      await tester.tap(find.text(CommonStrings.logOut));
-      await tester.pumpAndSettle();
+        when(authNotifier.isLoggedIn).thenReturn(true);
 
-      expect(find.byType(LoginPage), findsOneWidget);
-    },
-  );
+        await tester.pumpWidget(MetricsDrawerTestbed(
+          authNotifier: authNotifier,
+        ));
+
+        await tester.tap(find.text(CommonStrings.logOut));
+        await tester.pump();
+
+        verify(authNotifier.signOut()).called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "after a user taps on 'Log out' - application navigates back to the login screen",
+          (WidgetTester tester) async {
+        await tester.pumpWidget(MetricsDrawerTestbed(
+          authNotifier: SignedInAuthNotifierStub(),
+        ));
+
+        await tester.tap(find.text(CommonStrings.logOut));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(LoginPage), findsOneWidget);
+      },
+    );
+  });
 }
 
 /// A testbed widget, used to test the [MetricsDrawer] widget.
 class MetricsDrawerTestbed extends StatelessWidget {
+  /// A [ThemeNotifier] used in tests.
   final ThemeNotifier themeNotifier;
+
+  /// A [ProjectMetricsNotifier] used in tests.
   final ProjectMetricsNotifier metricsNotifier;
+
+  /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
 
+  /// Creates a [MetricsDrawerTestbed].
   const MetricsDrawerTestbed({
     Key key,
     this.themeNotifier,
@@ -76,7 +104,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
             onGenerateRoute: (settings) => RouteGenerator.generateRoute(
               settings: settings,
               isLoggedIn:
-                  Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
+              Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
           );
         },
@@ -84,3 +112,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
     );
   }
 }
+
+class ThemeNotifierMock extends Mock
+    with ChangeNotifier
+    implements ThemeNotifier {}

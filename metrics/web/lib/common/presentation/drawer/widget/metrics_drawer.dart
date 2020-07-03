@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:provider/provider.dart';
 
 /// The application side menu widget.
 class MetricsDrawer extends StatelessWidget {
+  /// Creates a [MetricsDrawer].
   const MetricsDrawer({
     Key key,
   }) : super(key: key);
@@ -32,10 +32,10 @@ class MetricsDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text(ProjectGroupsStrings.projectGroups),
+            title: const Text(CommonStrings.projectGroups),
             onTap: () => Navigator.popAndPushNamed(
               context,
-              RouteGenerator.projectGroup,
+              RouteName.projectGroup,
             ),
           ),
           ListTile(
@@ -53,6 +53,6 @@ class MetricsDrawer extends StatelessWidget {
 
     await authNotifier.signOut();
     await Navigator.pushNamedAndRemoveUntil(
-        context, RouteGenerator.login, (Route<dynamic> route) => false);
+        context, RouteName.login, (Route<dynamic> route) => false);
   }
 }

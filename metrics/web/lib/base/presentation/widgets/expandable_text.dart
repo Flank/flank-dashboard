@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 /// The widget that expands [text] to fill all available space if
 /// wrapped by [Flexible] widgets.
 class ExpandableText extends StatelessWidget {
+  /// A [String] to display.
   final String text;
+
+  /// A [TextStyle] used to display the [text].
   final TextStyle style;
 
   /// Creates the [ExpandableText] with the given [text] and [style].

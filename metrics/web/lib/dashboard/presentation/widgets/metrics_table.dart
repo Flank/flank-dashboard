@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';

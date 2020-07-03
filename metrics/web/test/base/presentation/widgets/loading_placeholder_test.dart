@@ -2,7 +2,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
 
 void main() {
   group("LoadingPlaceholder", () {

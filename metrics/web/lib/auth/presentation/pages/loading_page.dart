@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
 
@@ -77,9 +77,9 @@ class _LoadingPageState extends State<LoadingPage>
     if (isLoggedIn == null) return;
 
     if (isLoggedIn) {
-      _navigateTo(RouteGenerator.dashboard);
+      _navigateTo(RouteName.dashboard);
     } else {
-      _navigateTo(RouteGenerator.login);
+      _navigateTo(RouteName.login);
     }
   }
 
