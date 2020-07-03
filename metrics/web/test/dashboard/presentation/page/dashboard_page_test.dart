@@ -92,10 +92,8 @@ void main() {
 
         final darkBuildNumberMetricColor = _getBuildNumberMetricColor(tester);
 
-        await tester.tap(find.descendant(
-          of: find.byType(MetricsAppBar),
-          matching: find.byType(InkWell),
-        ));
+        await tester.tap(find.byTooltip("Open navigation menu"));
+
         await tester.pumpAndSettle();
 
         await tester.tap(find.byType(CheckboxListTile));

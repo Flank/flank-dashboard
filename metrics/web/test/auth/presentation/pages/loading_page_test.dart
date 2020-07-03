@@ -60,8 +60,9 @@ void main() {
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
-        await tester
-            .pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
+        await tester.pumpWidget(
+          _LoadingPageTestbed(authNotifier: authNotifier),
+        );
 
         when(authNotifier.isLoggedIn).thenReturn(true);
         authNotifier.notifyListeners();

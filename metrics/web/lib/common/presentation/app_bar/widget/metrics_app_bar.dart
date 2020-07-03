@@ -23,14 +23,17 @@ class MetricsAppBar extends StatelessWidget {
             height: 32.0,
             fit: BoxFit.contain,
           ),
-          InkWell(
-            onTap: () => _openDrawer(context),
-            customBorder: const CircleBorder(),
-            child: Image.network(
-              'icons/ico-avatar.svg',
-              width: 32.0,
-              height: 32.0,
-              fit: BoxFit.contain,
+          Tooltip(
+            message: "Open navigation menu",
+            child: InkWell(
+              onTap: () => _openDrawer(context),
+              customBorder: const CircleBorder(),
+              child: Image.network(
+                'icons/ico-avatar.svg',
+                width: 32.0,
+                height: 32.0,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ],

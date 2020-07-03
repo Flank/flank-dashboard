@@ -135,7 +135,7 @@ void main() {
     );
 
     testWidgets(
-      "opens the given drawer on tap on the ink well widget",
+      "opens the given drawer on tap on the icon by tooltip",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsScaffoldTestbed(
@@ -143,12 +143,7 @@ void main() {
           ));
         });
 
-        await tester.tap(
-          find.descendant(
-            of: find.byType(MetricsAppBar),
-            matching: find.byType(InkWell),
-          ),
-        );
+        await tester.tap(find.byTooltip("Open navigation menu"));
 
         await tester.pump();
 
