@@ -36,7 +36,7 @@ void main() {
     });
 
     testWidgets(
-      "email input shows an error message if a value is empty",
+      "email input shows an error message if a value is empty on submit",
       (WidgetTester tester) async {
         await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
 
@@ -51,7 +51,7 @@ void main() {
     );
 
     testWidgets(
-      "email input shows an error message if a value is not a valid email",
+      "email input shows an error message if a value is not a valid email on submit",
       (WidgetTester tester) async {
         await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
         await tester.enterText(emailInputFinder, 'notAnEmail');
@@ -64,7 +64,7 @@ void main() {
     );
 
     testWidgets(
-      "password input shows an error message if a value is empty",
+      "password input shows an error message if a value is empty on submit",
       (WidgetTester tester) async {
         await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
 
@@ -79,7 +79,7 @@ void main() {
     );
 
     testWidgets(
-      "calls signInWithEmailAndPassword() method on tap on the sign in button",
+      "uses the AuthNotifier to sign in a user",
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
