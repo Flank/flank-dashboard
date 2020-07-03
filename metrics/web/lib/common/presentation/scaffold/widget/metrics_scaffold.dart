@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimentions_config.dart';
 import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
 
 /// A common [Scaffold] widget for metrics pages.
@@ -38,7 +39,7 @@ class MetricsScaffold extends StatelessWidget {
       body: Center(
         child: Container(
           constraints: BoxConstraints.tight(
-            const Size.fromWidth(1140.0),
+            const Size.fromWidth(DimentionsConfig.contentWidth),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

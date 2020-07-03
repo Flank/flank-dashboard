@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimentions_config.dart';
 
 /// A common for the metrics application [AppBar] widget.
 class MetricsAppBar extends StatelessWidget {
@@ -10,8 +11,8 @@ class MetricsAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 1140.0,
-      height: 64.0,
+      width: DimentionsConfig.contentWidth,
+      height: DimentionsConfig.appBarHeight,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
