@@ -1,7 +1,5 @@
-import 'package:meta/meta.dart';
-
 /// A class that represents the data of the project group to display
-/// inside a dialog.
+/// within dialogs for adding and editing a project group.
 class ProjectGroupDialogViewModel {
   /// A unique identifier of the project.
   final String id;
@@ -13,9 +11,13 @@ class ProjectGroupDialogViewModel {
   final List<String> selectedProjectIds;
 
   /// Creates the [ProjectGroupDialogViewModel].
-  ProjectGroupDialogViewModel({
-    @required this.id,
-    @required this.name,
-    @required this.selectedProjectIds,
-  });
+  ///
+  /// The [selectedProjectIds] defaults to an empty list.
+  ///
+  /// The [selectedProjectIds] must not be null.
+  const ProjectGroupDialogViewModel({
+    this.id,
+    this.name,
+    this.selectedProjectIds = const [],
+  }) : assert(selectedProjectIds != null);
 }
