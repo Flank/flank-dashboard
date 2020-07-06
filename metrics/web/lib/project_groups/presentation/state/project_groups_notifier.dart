@@ -249,15 +249,13 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates the project group data with the given [projectGroupId],
-  /// [projectGroupName], and [projectIds].
+  /// Creates the project group data with the given [projectGroupName],
+  /// and [projectIds].
   Future<void> addProjectGroup(
-    String projectGroupId,
     String projectGroupName,
     List<String> projectIds,
   ) async {
-    if (projectGroupId == null ||
-        projectGroupName == null ||
+    if (projectGroupName == null ||
         projectIds == null) return;
 
     _resetProjectGroupSavingErrorMessage();

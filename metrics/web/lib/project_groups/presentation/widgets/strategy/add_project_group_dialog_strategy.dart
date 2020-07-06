@@ -22,6 +22,6 @@ class AddProjectGroupDialogStrategy implements ProjectGroupDialogStrategy {
     String groupName,
     List<String> projectIds,
   ) {
-    return notifier.addProjectGroup(groupId, groupName, projectIds);
+    return notifier.addProjectGroup(groupName, projectIds);
   }
 }

@@ -44,7 +44,7 @@ void main() {
         strategy.action(notifier, id, name, projectIds);
 
         verify(
-          notifier.addProjectGroup(id, name, projectIds),
+          notifier.addProjectGroup(name, projectIds),
         ).called(equals(1));
       },
     );
