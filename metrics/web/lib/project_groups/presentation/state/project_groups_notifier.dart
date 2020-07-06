@@ -255,8 +255,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     String projectGroupName,
     List<String> projectIds,
   ) async {
-    if (projectGroupName == null ||
-        projectIds == null) return;
+    if (projectGroupName == null || projectIds == null) return;
 
     _resetProjectGroupSavingErrorMessage();
 
