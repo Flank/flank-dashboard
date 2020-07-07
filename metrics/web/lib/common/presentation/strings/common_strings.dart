@@ -1,6 +1,8 @@
 /// Holds the strings used across the whole project.
 class CommonStrings {
-  static const String projectGroups = 'Project Groups';
+  static const String projectGroups = 'Project groups';
+  static const String navigateBack = "Back";
+  static const String openUserMenu = 'Open user menu';
   static const String metrics = 'metrics';
   static const String logOut = 'Log out';
   static const String searchForProject = 'Search for project...';
@@ -11,5 +13,5 @@ class CommonStrings {
       'An unknown error occurred, please try again';
 
   static String getLoadingErrorMessage(String errorMessage) =>
-      "An error occurred during loading: $errorMessage";
+      'An error occurred during loading: $errorMessage';
 }

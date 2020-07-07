@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -76,7 +77,7 @@ void main() {
     });
 
     testWidgets(
-      "hides the metrics page tile widget if the body title is null",
+      "hides the metrics page title widget if the body title is null",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -135,7 +136,7 @@ void main() {
     );
 
     testWidgets(
-      "opens the given drawer on tap on the icon by tooltip",
+      "opens the given drawer on tap on the icon by the tooltip",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsScaffoldTestbed(
@@ -143,7 +144,7 @@ void main() {
           ));
         });
 
-        await tester.tap(find.byTooltip("Open navigation menu"));
+        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
 
         await tester.pump();
 
@@ -186,7 +187,7 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
     return MaterialApp(
       home: MetricsScaffold(
         body: body,
-        bodyTitle: bodyTitle,
+        title: bodyTitle,
         padding: padding,
         drawer: drawer,
       ),

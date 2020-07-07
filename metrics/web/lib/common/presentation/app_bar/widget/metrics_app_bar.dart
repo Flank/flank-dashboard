@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 
 /// A common for the metrics application [AppBar] widget.
 class MetricsAppBar extends StatelessWidget {
@@ -24,7 +25,7 @@ class MetricsAppBar extends StatelessWidget {
             fit: BoxFit.contain,
           ),
           Tooltip(
-            message: "Open navigation menu",
+            message: CommonStrings.openUserMenu,
             child: InkWell(
               onTap: () => _openDrawer(context),
               customBorder: const CircleBorder(),

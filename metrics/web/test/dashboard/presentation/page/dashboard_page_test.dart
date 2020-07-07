@@ -67,8 +67,10 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byTooltip("Open navigation menu"));
-
+        await tester.tap(find.descendant(
+          of: find.byType(MetricsAppBar),
+          matching: find.byType(InkWell),
+        ));
         await tester.pumpAndSettle();
 
         expect(find.byType(MetricsDrawer), findsOneWidget);
@@ -90,7 +92,7 @@ void main() {
 
         final darkBuildNumberMetricColor = _getBuildNumberMetricColor(tester);
 
-        await tester.tap(find.byTooltip("Open navigation menu"));
+        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
 
         await tester.pumpAndSettle();
 
