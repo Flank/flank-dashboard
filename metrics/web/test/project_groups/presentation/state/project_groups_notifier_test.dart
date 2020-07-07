@@ -31,7 +31,7 @@ void main() {
     final projectGroup = ProjectGroup(
       id: projectGroupId,
       name: projectGroupName,
-      projectIds: const [],
+      projectIds: List.from([]),
     );
 
     const project = ProjectModel(id: 'projectId', name: 'projectName');
@@ -44,8 +44,8 @@ void main() {
 
     final projectGroups = [
       projectGroup,
-      ProjectGroup(id: '1', name: 'name1', projectIds: const []),
-      ProjectGroup(id: '2', name: 'name2', projectIds: const []),
+      ProjectGroup(id: '1', name: 'name1', projectIds: List.from([])),
+      ProjectGroup(id: '2', name: 'name2', projectIds: List.from([])),
     ];
 
     final addProjectGroupUseCase = AddProjectGroupUseCaseMock();
@@ -277,6 +277,72 @@ void main() {
     );
 
     test(
+      ".projectGroupDialogViewModel can't contain a project id if there is no project with such id",
+      () async {
+        const invalidGroupId = '1';
+        final invalidProjectGroup = ProjectGroup(
+          id: invalidGroupId,
+          name: 'name1',
+          projectIds: List.from(['id1', 'id2']),
+        );
+
+        final projectGroups = [
+          invalidProjectGroup,
+          ProjectGroup(
+            id: '2',
+            name: 'name2',
+            projectIds: List.from(['id1']),
+          ),
+        ];
+
+        const projects = [
+          ProjectModel(id: 'id1', name: 'name1'),
+        ];
+
+        final availableProjectIds = projects.map((project) => project.id);
+
+        when(receiveProjectGroupUpdates())
+            .thenAnswer((_) => Stream.value(projectGroups));
+
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
+        projectGroupsNotifier.setProjects(projects);
+        await projectGroupsNotifier.subscribeToProjectGroups();
+
+        final listener = expectAsyncUntil0(() {
+          final projectGroupCardViewModels =
+              projectGroupsNotifier.projectGroupCardViewModels;
+
+          if (projectGroupCardViewModels == null ||
+              projectGroupCardViewModels.isEmpty) {
+            return;
+          }
+
+          if (projectGroupsNotifier.projectGroupDialogViewModel == null) {
+            projectGroupsNotifier
+                .initProjectGroupDialogViewModel(invalidGroupId);
+          }
+        }, () {
+          final projectGroupDialogViewModel =
+              projectGroupsNotifier.projectGroupDialogViewModel;
+
+          if (projectGroupDialogViewModel == null) return false;
+
+          return projectGroupDialogViewModel.selectedProjectIds
+              .every((id) => availableProjectIds.contains(id));
+        });
+
+        projectGroupsNotifier.addListener(listener);
+        addTearDown(projectGroupsNotifier.dispose);
+      },
+    );
+
+    test(
       ".resetProjectGroupDialogViewModel() sets the project group dialog view model to null",
       () {
         projectGroupsNotifier.initProjectGroupDialogViewModel(projectGroup.id);
@@ -309,6 +375,25 @@ void main() {
             .firstWhere((viewModel) => viewModel.id == project.id);
 
         expect(projectCheckboxViewModel.isChecked, isTrue);
+      },
+    );
+
+    test(
+      ".toggleProjectCheckedStatus() changes the project group dialog view model",
+      () {
+        projectGroupsNotifier.initProjectGroupDialogViewModel(projectGroup.id);
+
+        final initialViewModel =
+            projectGroupsNotifier.projectGroupDialogViewModel;
+
+        projectGroupsNotifier.toggleProjectCheckedStatus(
+          project.id,
+        );
+
+        expect(
+          projectGroupsNotifier.projectGroupDialogViewModel,
+          isNot(equals(initialViewModel)),
+        );
       },
     );
 
@@ -446,6 +531,8 @@ void main() {
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value(projectGroups),
         );
+
+        projectGroupsNotifier.setProjects([]);
 
         final expectedProjectGroupCardViewModels = projectGroups
             .map((projectGroup) => ProjectGroupCardViewModel(
