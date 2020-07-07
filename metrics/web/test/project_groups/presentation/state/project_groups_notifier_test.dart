@@ -895,6 +895,86 @@ void main() {
     );
 
     test(
+      ".setProjects() updates the list of project group card view models corresponding to new projects",
+      () {
+        const firstProjectId = "id1";
+        const secondProjectId = "id2";
+        const firstProject = ProjectModel(id: firstProjectId, name: 'name');
+        const secondProject = ProjectModel(id: secondProjectId, name: 'name');
+
+        const projects = [
+          firstProject,
+          secondProject,
+        ];
+
+        final projectGroups = [
+          ProjectGroup(
+            id: 'id',
+            name: 'name',
+            projectIds: List.from([firstProjectId, secondProjectId]),
+          ),
+        ];
+
+        const newProjects = [secondProject];
+        final availableProjectIds = newProjects.map((project) => project.id);
+
+        final expectedProjectGroupCardViewModels =
+            <ProjectGroupCardViewModel>[];
+
+        for (final group in projectGroups) {
+          final selectedIds = List<String>.from(group.projectIds);
+          selectedIds.removeWhere(
+              (projectId) => !availableProjectIds.contains(projectId));
+
+          expectedProjectGroupCardViewModels.add(ProjectGroupCardViewModel(
+            id: group.id,
+            name: group.name,
+            projectsCount: selectedIds.length,
+          ));
+        }
+
+        when(receiveProjectGroupUpdates())
+            .thenAnswer((_) => Stream.value(projectGroups));
+
+        projectGroupsNotifier.setProjects(projects);
+        projectGroupsNotifier.subscribeToProjectGroups();
+
+        VoidCallback listener;
+
+        listener = () {
+          final projectGroupCardViewModels =
+              projectGroupsNotifier.projectGroupCardViewModels;
+
+          if (projectGroupCardViewModels == null ||
+              projectGroupCardViewModels.isEmpty) {
+            return;
+          }
+
+          print('listener -- $projectGroupCardViewModels');
+
+          projectGroupsNotifier.removeListener(listener);
+          projectGroupsNotifier.setProjects(newProjects);
+        };
+
+        final expectListener = expectAsyncUntil0(
+          () {},
+          () {
+            final projectGroupCardViewModels =
+                projectGroupsNotifier.projectGroupCardViewModels;
+
+            return listEquals(
+              projectGroupCardViewModels,
+              expectedProjectGroupCardViewModels,
+            );
+          },
+        );
+
+        projectGroupsNotifier.addListener(expectListener);
+        projectGroupsNotifier.addListener(listener);
+      },
+    );
+
+    test(
       ".setProjects() sets a list of project checkbox view models to null if the given projects are null",
       () {
         projectGroupsNotifier.setProjects(null);

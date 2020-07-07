@@ -242,7 +242,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projectGroupsErrorMessage = null;
     await _projectGroupsSubscription?.cancel();
     _projectGroupsSubscription = projectGroupsStream.listen(
-      _projectGroupsListener,
+      _refreshProjectGroupCardViewModels,
       onError: _errorHandler,
     );
   }
@@ -332,6 +332,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projects = projects;
 
     _refreshProjectCheckboxViewModels(projects);
+    _refreshProjectGroupCardViewModels(_projectGroups);
   }
 
   /// Refreshes a [ProjectCheckboxViewModel] using the given [projects].
@@ -353,16 +354,18 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Updates the current project groups with the given [newProjectGroups] list.
-  void _projectGroupsListener(List<ProjectGroup> newProjectGroups) {
+  /// Updates the project groups card view models with the given [newProjectGroups] list.
+  void _refreshProjectGroupCardViewModels(List<ProjectGroup> newProjectGroups) {
     if (newProjectGroups == null) return;
 
     _projectGroups = newProjectGroups;
     final projectGroupCardViewModels = <ProjectGroupCardViewModel>[];
 
+    final projects = _projects ?? [];
+    final currentProjectIds = projects.map((project) => project.id);
+
     for (final group in newProjectGroups) {
       final selectedProjectIds = group.projectIds;
-      final currentProjectIds = _projects.map((project) => project.id);
 
       selectedProjectIds.removeWhere((id) => !currentProjectIds.contains(id));
 
