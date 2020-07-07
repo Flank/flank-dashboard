@@ -200,7 +200,7 @@ void main() {
     );
 
     test(
-      ".initDeleteProjectGroupDialogViewModel() does not create a view model if the project groups does not contain a group with the given id",
+      ".initDeleteProjectGroupDialogViewModel() does not create a view model if the project groups do not contain a group with the given id",
       () {
         final initialDeleteDialogViewModel =
             projectGroupsNotifier.deleteProjectGroupDialogViewModel;
@@ -237,7 +237,7 @@ void main() {
     );
 
     test(
-      ".initProjectGroupDialogViewModel() sets the ProjectGroupDialogViewModel using the given project group id",
+      ".initProjectGroupDialogViewModel() sets the projectGroupDialogViewModel using the given project group id",
       () {
         projectGroupsNotifier.initProjectGroupDialogViewModel(projectGroup.id);
 
@@ -249,7 +249,7 @@ void main() {
     );
 
     test(
-      ".initProjectGroupDialogViewModel() sets an empty ProjectGroupDialogViewModel if there is no project group with the given id",
+      ".initProjectGroupDialogViewModel() sets an empty projectGroupDialogViewModel if there is no project group with the given id",
       () {
         const expectedViewModel = ProjectGroupDialogViewModel();
 
@@ -263,7 +263,7 @@ void main() {
     );
 
     test(
-      ".initProjectGroupDialogViewModel() sets an empty ProjectGroupDialogViewModel if there is no project group with the given id",
+      ".initProjectGroupDialogViewModel() sets an empty projectGroupDialogViewModel if there is no project group with the given id",
       () {
         const expectedViewModel = ProjectGroupDialogViewModel();
 
@@ -313,7 +313,7 @@ void main() {
     );
 
     test(
-      ".toggleProjectCheckedStatus() does not changes the project checkbox view models if the given id is null",
+      ".toggleProjectCheckedStatus() does not change the project checkbox view models if the given id is null",
       () {
         final expectedProjectCheckboxViewModels =
             projectGroupsNotifier.projectCheckboxViewModels;
@@ -331,7 +331,7 @@ void main() {
     );
 
     test(
-      ".toggleProjectCheckedStatus() does not changes the selected project ids if the given id is null",
+      ".toggleProjectCheckedStatus() does not change the selected project ids if the given id is null",
       () {
         projectGroupsNotifier.initProjectGroupDialogViewModel(projectGroup.id);
 
@@ -546,7 +546,7 @@ void main() {
     );
 
     test(
-      ".addProjectGroup() does not call the use case if the given project ids are null",
+      ".addProjectGroup() does not call the use case if the given project ids list is null",
       () async {
         await projectGroupsNotifier.addProjectGroup(
           projectGroupName,
@@ -649,7 +649,7 @@ void main() {
     );
 
     test(
-      ".updateProjectGroup() does not call the use case if the given project ids are null",
+      ".updateProjectGroup() does not call the use case if the given project ids list is null",
       () async {
         await projectGroupsNotifier.updateProjectGroup(
           projectGroupId,
