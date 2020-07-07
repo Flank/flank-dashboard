@@ -17,9 +17,9 @@ class PerformanceSparklineViewModel extends Equatable {
 
   /// Creates the [PerformanceSparklineViewModel] with the given parameters.
   ///
-  /// The [performance] and [value] must not be `null`.
-  /// The [performance] default value is an empty list.
   /// The [value] default value is `0`.
+  ///
+  /// The [performance] and [value] must not be `null`.
   const PerformanceSparklineViewModel({
     @required this.performance,
     this.value = 0,

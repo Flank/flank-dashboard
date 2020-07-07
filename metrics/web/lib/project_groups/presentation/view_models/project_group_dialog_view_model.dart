@@ -19,8 +19,6 @@ class ProjectGroupDialogViewModel extends Equatable {
 
   /// Creates the [ProjectGroupDialogViewModel].
   ///
-  /// The [selectedProjectIds] defaults to an empty list.
-  ///
   /// The [selectedProjectIds] must not be null.
   const ProjectGroupDialogViewModel({
     this.id,

@@ -17,7 +17,9 @@ class BuildResultMetricViewModel extends Equatable {
 
   /// Creates the [BuildResultMetricViewModel] with the given [buildResults].
   ///
-  /// The default value of the [buildResults] is an empty list.
+  /// The [numberOfBuildsToDisplay] default value is
+  /// [ReceiveProjectMetricsUpdates.lastBuildsForChartsMetrics].
+  ///
   /// The [buildResults] must not be `null`.
   /// The [numberOfBuildsToDisplay] must not be `null`.
   const BuildResultMetricViewModel({
