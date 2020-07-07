@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
@@ -13,15 +14,18 @@ import 'package:metrics/dashboard/presentation/view_models/stability_view_model.
 /// Provides test implementation of the [ProjectMetricsNotifier] methods.
 class ProjectMetricsNotifierStub extends ChangeNotifier
     implements ProjectMetricsNotifier {
-  static const ProjectMetricsTileViewModel testProjectMetrics =
-      ProjectMetricsTileViewModel(
+  final _testProjectMetrics = ProjectMetricsTileViewModel(
     projectId: '1',
     projectName: 'project',
-    coverage: CoverageViewModel(value: 0.1),
-    stability: StabilityViewModel(value: 0.2),
-    buildNumberMetric: BuildNumberScorecardViewModel(numberOfBuilds: 0),
-    performanceSparkline: PerformanceSparklineViewModel(),
-    buildResultMetrics: BuildResultMetricViewModel(),
+    coverage: const CoverageViewModel(value: 0.1),
+    stability: const StabilityViewModel(value: 0.2),
+    buildNumberMetric: const BuildNumberScorecardViewModel(numberOfBuilds: 0),
+    performanceSparkline: PerformanceSparklineViewModel(
+      performance: UnmodifiableListView([]),
+    ),
+    buildResultMetrics: BuildResultMetricViewModel(
+      buildResults: UnmodifiableListView([]),
+    ),
   );
 
   /// The list of [ProjectMetricsTileViewModel]s.
@@ -30,14 +34,14 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   /// Creates the [ProjectMetricsNotifierStub] with the given [projectsMetrics].
   ///
   /// If [projectsMetrics] is not passed or the `null`
-  /// is passed the list containing [testProjectMetrics] used.
+  /// is passed the list containing [_testProjectMetrics] used.
   ProjectMetricsNotifierStub({
     List<ProjectMetricsTileViewModel> projectsMetrics,
   }) : _projectMetrics = projectsMetrics;
 
   @override
   List<ProjectMetricsTileViewModel> get projectsMetricsTileViewModels =>
-      _projectMetrics ?? [testProjectMetrics];
+      _projectMetrics ?? [_testProjectMetrics];
 
   @override
   String get projectsErrorMessage => null;

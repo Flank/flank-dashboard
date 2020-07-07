@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 /// A class that represents the data of the project group to display
 /// within dialogs for adding and editing a project group.
@@ -10,7 +12,7 @@ class ProjectGroupDialogViewModel extends Equatable {
   final String name;
 
   /// A list of projects' identifiers, related to the group.
-  final List<String> selectedProjectIds;
+  final UnmodifiableListView<String> selectedProjectIds;
 
   @override
   List<Object> get props => [id, name, selectedProjectIds];
@@ -23,6 +25,6 @@ class ProjectGroupDialogViewModel extends Equatable {
   const ProjectGroupDialogViewModel({
     this.id,
     this.name,
-    this.selectedProjectIds = const [],
+    @required this.selectedProjectIds,
   }) : assert(selectedProjectIds != null);
 }

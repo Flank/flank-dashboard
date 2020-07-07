@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
@@ -15,8 +16,12 @@ void main() {
     const coverage = CoverageViewModel(value: 1);
     const stability = StabilityViewModel(value: 1);
     const buildNumber = BuildNumberScorecardViewModel(numberOfBuilds: 3);
-    const performance = PerformanceSparklineViewModel();
-    const buildResult = BuildResultMetricViewModel();
+    final performance = PerformanceSparklineViewModel(
+      performance: UnmodifiableListView([]),
+    );
+    final buildResult = BuildResultMetricViewModel(
+      buildResults: UnmodifiableListView([]),
+    );
 
     test(
       "uses the default coverage view model if the coverage parameter is not specified",
@@ -95,9 +100,13 @@ void main() {
           projectName: name,
           stability: StabilityViewModel(value: 0.2),
           coverage: CoverageViewModel(value: 0.4),
-          performanceSparkline: PerformanceSparklineViewModel(value: 30),
+          performanceSparkline: PerformanceSparklineViewModel(
+            value: 30,
+            performance: UnmodifiableListView([]),
+          ),
           buildNumberMetric: BuildNumberScorecardViewModel(numberOfBuilds: 1),
           buildResultMetrics: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView([]),
             numberOfBuildsToDisplay: 1,
           ),
         );

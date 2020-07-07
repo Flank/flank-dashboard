@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -16,9 +17,10 @@ void main() {
     testWidgets(
       "displays the ProjectGroupDialog with the edit project group strategy",
       (WidgetTester tester) async {
-        const projectGroup = ProjectGroupDialogViewModel(
+        final projectGroup = ProjectGroupDialogViewModel(
           id: 'id',
           name: 'name',
+          selectedProjectIds: UnmodifiableListView([])
         );
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.projectGroupDialogViewModel).thenReturn(projectGroup);

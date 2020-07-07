@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
@@ -16,14 +17,18 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("ProjectMetricsTile", () {
-    const ProjectMetricsTileViewModel testProjectMetrics =
+    final ProjectMetricsTileViewModel testProjectMetrics =
         ProjectMetricsTileViewModel(
       projectName: 'Test project name',
-      coverage: CoverageViewModel(value: 0.3),
-      stability: StabilityViewModel(value: 0.4),
-      buildNumberMetric: BuildNumberScorecardViewModel(numberOfBuilds: 3),
-      performanceSparkline: PerformanceSparklineViewModel(),
-      buildResultMetrics: BuildResultMetricViewModel(),
+      coverage: const CoverageViewModel(value: 0.3),
+      stability: const StabilityViewModel(value: 0.4),
+      buildNumberMetric: const BuildNumberScorecardViewModel(numberOfBuilds: 3),
+      performanceSparkline: PerformanceSparklineViewModel(
+        performance: UnmodifiableListView([]),
+      ),
+      buildResultMetrics: BuildResultMetricViewModel(
+        buildResults: UnmodifiableListView([]),
+      ),
     );
 
     testWidgets(
@@ -72,7 +77,7 @@ void main() {
         final coveragePercent = testProjectMetrics.coverage;
         final coverageText = '${(coveragePercent.value * 100).toInt()}%';
 
-        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
           projectMetrics: testProjectMetrics,
         ));
         await tester.pumpAndSettle();
@@ -90,7 +95,7 @@ void main() {
         final stabilityPercent = testProjectMetrics.coverage;
         final stabilityText = '${(stabilityPercent.value * 100).toInt()}%';
 
-        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
           projectMetrics: testProjectMetrics,
         ));
         await tester.pumpAndSettle();
@@ -108,7 +113,7 @@ void main() {
         final numberOfBuilds =
             testProjectMetrics.buildNumberMetric.numberOfBuilds;
 
-        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
           projectMetrics: testProjectMetrics,
         ));
 
@@ -122,7 +127,7 @@ void main() {
     testWidgets(
       "contains SparklineGraph widgets with performance metric",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
           projectMetrics: testProjectMetrics,
         ));
 
@@ -136,7 +141,7 @@ void main() {
     testWidgets(
       "contains the bar graph with the build results",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
           projectMetrics: testProjectMetrics,
         ));
 

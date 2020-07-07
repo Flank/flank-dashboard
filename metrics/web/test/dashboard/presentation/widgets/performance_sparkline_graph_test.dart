@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/sparkline_graph.dart';
@@ -15,8 +16,8 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("PerformanceSparklineGraph", () {
     const performanceMetricValue = 1;
-    const performanceMetric = PerformanceSparklineViewModel(
-      performance: [Point(1, 2)],
+    final performanceMetric = PerformanceSparklineViewModel(
+      performance: UnmodifiableListView([const Point(1, 2)]),
       value: performanceMetricValue,
     );
 
@@ -40,7 +41,7 @@ void main() {
     testWidgets(
       "displays the value text",
       (tester) async {
-        await tester.pumpWidget(const _PerformanceSparklineGraphTestbed(
+        await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
           performanceSparkline: performanceMetric,
         ));
 
@@ -55,10 +56,11 @@ void main() {
       "delegates the data display to the SparklineGraph",
       (tester) async {
         const performance = [Point(1, 2)];
-        const performanceMetric =
-            PerformanceSparklineViewModel(performance: performance);
+        final performanceMetric = PerformanceSparklineViewModel(
+          performance: UnmodifiableListView(performance),
+        );
 
-        await tester.pumpWidget(const _PerformanceSparklineGraphTestbed(
+        await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
           performanceSparkline: performanceMetric,
         ));
 
@@ -73,9 +75,11 @@ void main() {
     testWidgets(
       "displays the no data placeholder if the given performance metric is empty",
       (tester) async {
-        const performanceMetric = PerformanceSparklineViewModel();
+        final performanceMetric = PerformanceSparklineViewModel(
+          performance: UnmodifiableListView([]),
+        );
 
-        await tester.pumpWidget(const _PerformanceSparklineGraphTestbed(
+        await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
           performanceSparkline: performanceMetric,
         ));
 
@@ -89,7 +93,7 @@ void main() {
     testWidgets(
       "applies the metricsWidgetTheme primary color to the value text",
       (tester) async {
-        await tester.pumpWidget(const _PerformanceSparklineGraphTestbed(
+        await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
           performanceSparkline: performanceMetric,
           metricsTheme: metricsTheme,
         ));
@@ -107,7 +111,7 @@ void main() {
     testWidgets(
       "applies the metricsWidgetTheme primary color to the sparkline graph's stroke color",
       (tester) async {
-        await tester.pumpWidget(const _PerformanceSparklineGraphTestbed(
+        await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
           performanceSparkline: performanceMetric,
           metricsTheme: metricsTheme,
         ));
@@ -126,7 +130,7 @@ void main() {
     testWidgets(
       "applies the metricsWidgetTheme accent color to the sparkline graph's fill color",
       (tester) async {
-        await tester.pumpWidget(const _PerformanceSparklineGraphTestbed(
+        await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
           performanceSparkline: performanceMetric,
           metricsTheme: metricsTheme,
         ));
@@ -146,11 +150,6 @@ void main() {
 
 /// A testbed class needed to test the [PerformanceSparklineGraph] widget.
 class _PerformanceSparklineGraphTestbed extends StatelessWidget {
-  /// A [PerformanceMetricViewModel] test data used as a default value in this testbed.
-  static const _performanceSparklineTestData = PerformanceSparklineViewModel(
-    performance: [Point(1, 2)],
-  );
-
   /// A [PerformanceMetricViewModel] to display.
   final PerformanceSparklineViewModel performanceSparkline;
 
@@ -160,7 +159,7 @@ class _PerformanceSparklineGraphTestbed extends StatelessWidget {
   /// Creates a [_PerformanceSparklineGraphTestbed] with the given [performanceSparkline].
   const _PerformanceSparklineGraphTestbed({
     Key key,
-    this.performanceSparkline = _performanceSparklineTestData,
+    this.performanceSparkline,
     this.metricsTheme = const MetricsThemeData(),
   }) : super(key: key);
 
