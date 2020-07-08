@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:test/test.dart';
 
@@ -19,24 +20,37 @@ void main() {
     test("throws an AssertionError is the given value is null", () {
       expect(
         () => PerformanceSparklineViewModel(
-          value: null,
-        ),
+            value: null, performance: UnmodifiableListView([])),
         MatcherUtil.throwsAssertionError,
       );
     });
+
+    test(
+      ".performance is an UnmodifiableListView",
+      () {
+        final performanceSparklineViewModel = PerformanceSparklineViewModel(
+          performance: UnmodifiableListView([]),
+        );
+
+        expect(
+          performanceSparklineViewModel.performance,
+          isA<UnmodifiableListView>(),
+        );
+      },
+    );
 
     test(
       "equals to another PerformanceSparklineViewModel with the same parameters",
       () {
         const performance = <Point<int>>[];
         const value = 10;
-        const expected = PerformanceSparklineViewModel(
-          performance: performance,
+        final expected = PerformanceSparklineViewModel(
+          performance: UnmodifiableListView(performance),
           value: value,
         );
 
-        const performanceMetric = PerformanceSparklineViewModel(
-          performance: performance,
+        final performanceMetric = PerformanceSparklineViewModel(
+          performance: UnmodifiableListView(performance),
           value: value,
         );
 

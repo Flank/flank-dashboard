@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
@@ -83,7 +84,9 @@ void main() {
         );
         const projects = [ProjectModel(id: 'id', name: 'name')];
 
-        const emptyBuildResultMetric = BuildResultMetricViewModel();
+        final emptyBuildResultMetric = BuildResultMetricViewModel(
+          buildResults: UnmodifiableListView([]),
+        );
 
         final projectMetricsNotifier = ProjectMetricsNotifier(
           receiveEmptyMetrics,

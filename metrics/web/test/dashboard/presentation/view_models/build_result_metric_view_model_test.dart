@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:test/test.dart';
@@ -16,14 +17,24 @@ void main() {
     });
 
     test(
-        "throws an AssertionError if the given numberOfBuildsToDisplay is null",
-        () {
-      expect(
-        () => BuildResultMetricViewModel(
-          numberOfBuildsToDisplay: null,
-        ),
-        MatcherUtil.throwsAssertionError,
+      "throws an AssertionError if the given numberOfBuildsToDisplay is null",
+      () {
+        expect(
+          () => BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView([]),
+            numberOfBuildsToDisplay: null,
+          ),
+          MatcherUtil.throwsAssertionError,
+        );
+      },
+    );
+
+    test(".buildResults is an UnmodifiableListView", () {
+      final buildResultMetric = BuildResultMetricViewModel(
+        buildResults: UnmodifiableListView([]),
       );
+
+      expect(buildResultMetric.buildResults, isA<UnmodifiableListView>());
     });
 
     test(
@@ -31,13 +42,13 @@ void main() {
       () {
         const buildResults = <BuildResultViewModel>[];
         const numberOfBuildsToDisplay = 10;
-        const expected = BuildResultMetricViewModel(
-          buildResults: buildResults,
+        final expected = BuildResultMetricViewModel(
+          buildResults: UnmodifiableListView(buildResults),
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
         );
 
-        const buildResultMetric = BuildResultMetricViewModel(
-          buildResults: buildResults,
+        final buildResultMetric = BuildResultMetricViewModel(
+          buildResults: UnmodifiableListView(buildResults),
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
         );
 

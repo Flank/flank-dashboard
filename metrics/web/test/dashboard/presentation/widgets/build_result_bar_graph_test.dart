@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
@@ -27,11 +29,12 @@ void main() {
     testWidgets(
       "creates the number of BuildResultBars equal to the number of builds to display",
       (WidgetTester tester) async {
-        const buildResultMetric = BuildResultMetricViewModel(
+        final buildResultMetric = BuildResultMetricViewModel(
+          buildResults: UnmodifiableListView([]),
           numberOfBuildsToDisplay: 3,
         );
 
-        await tester.pumpWidget(const _BuildResultBarGraphTestbed(
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: buildResultMetric,
         ));
 
@@ -48,7 +51,9 @@ void main() {
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
-            buildResults: _BuildResultBarGraphTestbed.buildResultBarTestData,
+            buildResults: UnmodifiableListView(
+              _BuildResultBarGraphTestbed.buildResultBarTestData,
+            ),
             numberOfBuildsToDisplay: numberOfBars,
           ),
         ));
@@ -72,9 +77,11 @@ void main() {
       (WidgetTester tester) async {
         const numberOfBars = 2;
 
-        await tester.pumpWidget(const _BuildResultBarGraphTestbed(
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
-            buildResults: _BuildResultBarGraphTestbed.buildResultBarTestData,
+            buildResults: UnmodifiableListView(
+              _BuildResultBarGraphTestbed.buildResultBarTestData,
+            ),
             numberOfBuildsToDisplay: numberOfBars,
           ),
         ));
@@ -115,10 +122,6 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
     ),
   ];
 
-  /// A [BuildResultMetricViewModel] test data to test the [BuildResultBarGraph].
-  static const buildResultMetricTestData = BuildResultMetricViewModel(
-      buildResults: buildResultBarTestData, numberOfBuildsToDisplay: 3);
-
   /// A [BuildResultMetricViewModel] to display.
   final BuildResultMetricViewModel buildResultMetric;
 
@@ -132,7 +135,7 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
   /// If the [theme] is not specified, an empty [MetricsThemeData] used.
   const _BuildResultBarGraphTestbed({
     Key key,
-    this.buildResultMetric = buildResultMetricTestData,
+    this.buildResultMetric,
     this.theme = const MetricsThemeData(),
   }) : super(key: key);
 
