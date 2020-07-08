@@ -223,6 +223,55 @@ Let us consider the class diagram that will explain relationships between `widge
 
 On this diagram, we can see that all widgets that use the other `metrics` widgets (widgets from `dashboard/presentation/widgets` package) use a composite view model. The rest of the `metrics` widgets use a plain view model.
 
+### Immutability
+
+`View model`s must be immutable, which means all fields must be `final`. To make a class immutable, except `final` keywords, you must:
+
+- Add an `@immutable` annotation or extend an `Equatable` class, that is already an `@immutable`.
+
+    ```dart
+    import 'package:meta/meta.dart';
+
+    @immutable
+    class BuildNumberScorecardViewModel {
+      final int numberOfBuilds;
+
+      const BuildNumberScorecardViewModel({
+        this.numberOfBuilds,
+      });
+    }
+    ```
+
+    ```dart
+    import 'package:equatable/equatable.dart';
+
+    class PercentViewModel extends Equatable {
+      final double value;
+
+      @override
+      List<Object> get props => [value];
+
+      const PercentViewModel(this.value);
+    }
+    ```
+
+- Use `immutable` collections from package [collection](https://pub.dev/packages/collection) to make sure that the `view model` won't change somewhere.
+
+    For example, if you have a `List` field, you must use an `UnmodifiableListView`, to make it `immutable`.
+
+    ```dart
+    import 'package:collection/collection.dart';
+    import 'package:equatable/equatable.dart';
+
+    class ProjectGroupDialogViewModel extends Equatable {
+      final UnmodifiableListView<String> selectedProjectIds;
+
+      const ProjectGroupDialogViewModel({
+        this.selectedProjectIds,
+      });
+    }
+    ```
+
 ### The naming convention for `view model`s.
 
 `View model`s help the view to receive the required data to display, but these models themselves should state the view they are used in. Thus, one who looks at the `view model` should say "Oh, I know exactly where to use this". On the other hand, one who looks at the widget name should understand exactly what the `view model` is used for this widget without reading additional code documentation and examining the implementation. 
@@ -286,7 +335,7 @@ Notice, that the `metrics` widgets can contain the presentation-specific logic t
 
 The following diagram describes the process of creation of the metrics widget:
 
-![Create Metrics Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/create_high_level_widget_activity_diagram.puml)
+![Create Metrics Widget Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/web/docs/diagrams/create_metrics_widget_activity_diagram.puml)
 
 ### Implementation guidelines
 
