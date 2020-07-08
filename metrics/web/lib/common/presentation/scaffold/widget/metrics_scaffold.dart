@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
+import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
 
 /// A common [Scaffold] widget for metrics pages.
 class MetricsScaffold extends StatelessWidget {
-  /// The panel that slides in horizontally from the edge of
+  /// A panel that slides in horizontally from the edge of
   /// a Scaffold to show navigation links in an application.
   final Widget drawer;
 
@@ -14,26 +16,58 @@ class MetricsScaffold extends StatelessWidget {
   /// A general padding around the [body].
   final EdgeInsets padding;
 
+  /// A title for the body of this scaffold.
+  final String title;
+
   /// Creates the [MetricsScaffold] widget.
   ///
-  /// Throws an [AssertionError] if the [body] is null.
-  /// If the [drawer] is not specified, the [MetricsDrawer] is used.
+  /// The [drawer] default value is [MetricsDrawer].
+  /// The [padding] default value is [EdgeInsets.zero].
+  ///
+  /// The [body] argument must not be null.
   const MetricsScaffold({
     Key key,
     @required this.body,
     this.drawer = const MetricsDrawer(),
-    this.padding = const EdgeInsets.symmetric(horizontal: 124.0),
+    this.padding = EdgeInsets.zero,
+    this.title,
   })  : assert(body != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    const _pageElementsPadding = EdgeInsets.only(bottom: 40.0);
+
     return Scaffold(
-      appBar: MetricsAppBar(),
       endDrawer: drawer,
-      body: Padding(
-        padding: padding,
-        child: body,
+      body: Center(
+        child: Container(
+          constraints: BoxConstraints.tight(
+            const Size.fromWidth(DimensionsConfig.contentWidth),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Padding(
+                padding: _pageElementsPadding,
+                child: MetricsAppBar(),
+              ),
+              if (title != null)
+                Padding(
+                  padding: _pageElementsPadding,
+                  child: MetricsPageTitle(
+                    title: title,
+                  ),
+                ),
+              Expanded(
+                child: Padding(
+                  padding: padding,
+                  child: body,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

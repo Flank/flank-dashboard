@@ -10,6 +10,7 @@ import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../test_utils/auth_notifier_mock.dart';
@@ -48,7 +49,10 @@ void main() {
         ));
 
         await tester.tap(find.text(CommonStrings.logOut));
-        await tester.pump();
+
+        await mockNetworkImagesFor(() {
+          return tester.pump();
+        });
 
         verify(authNotifier.signOut()).called(equals(1));
       },

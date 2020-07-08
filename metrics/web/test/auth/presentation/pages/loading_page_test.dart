@@ -7,6 +7,7 @@ import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 import 'package:provider/provider.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
@@ -59,13 +60,16 @@ void main() {
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
-        await tester
-            .pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
+        await tester.pumpWidget(
+          _LoadingPageTestbed(authNotifier: authNotifier),
+        );
 
         when(authNotifier.isLoggedIn).thenReturn(true);
         authNotifier.notifyListeners();
 
-        await tester.pumpAndSettle();
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
 
         expect(find.byType(DashboardPage), findsOneWidget);
       },

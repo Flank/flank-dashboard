@@ -30,20 +30,10 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
   @override
   Widget build(BuildContext context) {
     return MetricsScaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 32.0),
-            child: Text(
-              CommonStrings.projectGroups,
-              style: TextStyle(fontSize: 32.0),
-            ),
-          ),
-          Expanded(
-            child: ProjectGroupView(),
-          ),
-        ],
+      title: CommonStrings.projectGroups,
+      padding: const EdgeInsets.only(top: 40.0),
+      body: SingleChildScrollView(
+        child: ProjectGroupView(),
       ),
     );
   }

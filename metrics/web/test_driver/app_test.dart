@@ -40,7 +40,7 @@ void main() {
         test("can log out from the app", () async {
           await driver.waitUntilNoTransientCallbacks(
               timeout: const Duration(seconds: 2));
-          await driver.tap(find.byTooltip('Open navigation menu'));
+          await driver.tap(find.byTooltip(CommonStrings.openUserMenu));
           await driver.waitFor(find.text(CommonStrings.logOut));
           await driver.tap(find.text(CommonStrings.logOut));
           await driver.waitUntilNoTransientCallbacks(
@@ -116,7 +116,7 @@ void main() {
 
       group("ProjectGroup page", () {
         setUpAll(() async {
-          await driver.tap(find.byTooltip('Open navigation menu'));
+          await driver.tap(find.byTooltip(CommonStrings.openUserMenu));
           await driver.waitFor(find.text(CommonStrings.projectGroups));
           await driver.tap(find.text(CommonStrings.projectGroups));
 
@@ -126,7 +126,7 @@ void main() {
         });
 
         test("shows add project group card button", () async {
-          await driver.tap(find.byTooltip('Open navigation menu'));
+          await driver.tap(find.byTooltip(CommonStrings.openUserMenu));
 
           await driver.waitFor(find.byType('AddProjectGroupCard'));
         });
