@@ -20,7 +20,7 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final dialogThemeData = MetricsTheme.of(context).dialogThemeData;
+    final dialogThemeData = MetricsTheme.of(context).projectGroupDialogTheme;
 
     return Selector<ProjectGroupsNotifier, DeleteProjectGroupDialogViewModel>(
       selector: (_, state) => state.deleteProjectGroupDialogViewModel,

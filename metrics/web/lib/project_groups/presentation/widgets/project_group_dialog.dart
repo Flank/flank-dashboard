@@ -62,7 +62,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final dialogTheme = MetricsTheme.of(context).dialogThemeData;
+    final dialogTheme = MetricsTheme.of(context).projectGroupDialogTheme;
     final strategy = widget.strategy;
 
     return Selector<ProjectGroupsNotifier, ProjectGroupDialogViewModel>(

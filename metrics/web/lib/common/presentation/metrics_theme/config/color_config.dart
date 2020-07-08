@@ -10,6 +10,7 @@ class ColorConfig {
   static const Color lightScaffoldColor = Color(0xFFFAFAFA);
   static const Color darkInactiveColor = Color(0xFF43494d);
   static const Color darkSecondaryTextColor = Color(0xFF9c9ca6);
+  static const Color darkInputSecondaryTextColor = Color(0xFF8c8c8e);
   static const Color darkInactiveBackgroundColor = Color(0xFF232729);
   static const Color lightInactiveColor = Color(0xFFBDBDBD);
   static const Color lightInactiveBackgroundColor = Color(0xFFEEEEEE);
@@ -17,4 +18,5 @@ class ColorConfig {
   static const Color yellowTranslucent = Color(0x1DFED100);
   static const Color darkBorderColor = Color(0xFF2d2d33);
   static const Color darkCardHoverColor = Color(0xFF212124);
+  static const Color darkInputColor = Color(0xFF0d0d0d);
 }

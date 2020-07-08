@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
@@ -83,6 +86,28 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontSize: 16.0,
               fontWeight: FontWeight.w500,
             ),
+          ),
+          projectGroupDialogTheme: const ProjectGroupDialogThemeData(
+            padding: EdgeInsets.all(24.0),
+            contentPadding: EdgeInsets.symmetric(vertical: 32.0),
+            actionsPadding: EdgeInsets.only(top: 32.0),
+            accentColor: ColorConfig.accentColor,
+            primaryColor: ColorConfig.primaryColor,
+            backgroundColor: ColorConfig.darkScaffoldColor,
+            contentBorderColor: ColorConfig.darkBorderColor,
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 26.0,
+              fontWeight: FontWeight.w500,
+            ),
+            actionsTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+            ),
+            textFieldDecoration: TextFieldConfig.inputDecoration,
+            contentTextStyle: TextStyleConfig.darkBodyTextStyle,
+            contentSecondaryTextStyle: TextStyleConfig.captionTextStyle,
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.darkInactiveColor,
