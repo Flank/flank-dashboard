@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
@@ -201,7 +202,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final performanceMetrics = metric?.buildsPerformance ?? DateTimeSet();
 
     if (performanceMetrics.isEmpty) {
-      return const PerformanceSparklineViewModel();
+      return PerformanceSparklineViewModel(
+        performance: UnmodifiableListView([]),
+      );
     }
 
     final performance = performanceMetrics.map((metric) {
@@ -214,7 +217,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final averageBuildDuration = metric.averageBuildDuration.inMinutes;
 
     return PerformanceSparklineViewModel(
-      performance: performance,
+      performance: UnmodifiableListView(performance),
       value: averageBuildDuration,
     );
   }
@@ -224,7 +227,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final buildResults = metrics?.buildResults ?? [];
 
     if (buildResults.isEmpty) {
-      return const BuildResultMetricViewModel();
+      return BuildResultMetricViewModel(
+        buildResults: UnmodifiableListView([]),
+      );
     }
 
     final buildResultViewModels = buildResults.map((result) {
@@ -235,7 +240,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       );
     }).toList();
 
-    return BuildResultMetricViewModel(buildResults: buildResultViewModels);
+    return BuildResultMetricViewModel(
+      buildResults: UnmodifiableListView(buildResultViewModels),
+    );
   }
 
   /// Cancels all created subscriptions.
