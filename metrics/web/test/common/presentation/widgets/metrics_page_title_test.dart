@@ -42,12 +42,10 @@ void main() {
     });
 
     testWidgets(
-      "pops the given screen if can pop on tap on the icon by the tooltip",
+      "navigates back to the previous screen",
       (WidgetTester tester) async {
         await tester.pumpWidget(_NavigationTestbed());
-
         await tester.tap(find.byType(_NavigationTestbed));
-
         await mockNetworkImagesFor(() {
           return tester.pumpAndSettle();
         });
@@ -55,7 +53,6 @@ void main() {
         expect(find.byType(MetricsPageTitle), findsOneWidget);
 
         await tester.tap(find.byTooltip(CommonStrings.navigateBack));
-
         await tester.pumpAndSettle();
 
         expect(find.byType(MetricsPageTitle), findsNothing);
@@ -63,14 +60,12 @@ void main() {
     );
 
     testWidgets(
-      "doesn't pop the given screen if can't pop on tap on the icon by the tooltip",
+      "doesn't navigate back if there is no previous page",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsPageTitleTestbed());
         });
-
         await tester.tap(find.byTooltip(CommonStrings.navigateBack));
-
         await tester.pumpAndSettle();
 
         expect(find.byType(MetricsPageTitle), findsOneWidget);

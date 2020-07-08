@@ -171,7 +171,7 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
 
   /// Creates the [_MetricsScaffoldTestbed].
   ///
-  /// The [body] defaults to the sized box widget.
+  /// The [body] defaults to the [SizedBox] widget.
   /// The [padding] defaults to the [EdgeInsets.zero].
   /// The [bodyTitle] defaults to the `title`.
   const _MetricsScaffoldTestbed({

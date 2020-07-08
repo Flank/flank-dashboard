@@ -22,7 +22,7 @@ class MetricsScaffold extends StatelessWidget {
   /// Creates the [MetricsScaffold] widget.
   ///
   /// The [drawer] default value is [MetricsDrawer].
-  /// The [padding] default horizontal insets' value is 124.0.
+  /// The [padding] default value is [EdgeInsets.zero].
   ///
   /// The [body] argument must not be null.
   const MetricsScaffold({
@@ -36,6 +36,8 @@ class MetricsScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const _pageElementsPadding = EdgeInsets.only(bottom: 40.0);
+
     return Scaffold(
       endDrawer: drawer,
       body: Center(
@@ -47,12 +49,12 @@ class MetricsScaffold extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const Padding(
-                padding: EdgeInsets.only(bottom: 40.0),
+                padding: _pageElementsPadding,
                 child: MetricsAppBar(),
               ),
               if (title != null)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 40.0),
+                  padding: _pageElementsPadding,
                   child: MetricsPageTitle(
                     title: title,
                   ),

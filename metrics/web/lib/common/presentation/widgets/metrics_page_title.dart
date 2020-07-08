@@ -28,7 +28,7 @@ class MetricsPageTitle extends StatelessWidget {
               customBorder: const CircleBorder(),
               onTap: () => _navigateBack(context),
               child: Image.network(
-                'icons/ico-arrow-back.svg',
+                'icons/arrow-back.svg',
                 width: 33.0,
                 height: 22.0,
                 fit: BoxFit.contain,

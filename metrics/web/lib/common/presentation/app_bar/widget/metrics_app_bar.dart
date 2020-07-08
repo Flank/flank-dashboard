@@ -30,7 +30,7 @@ class MetricsAppBar extends StatelessWidget {
               onTap: () => _openDrawer(context),
               customBorder: const CircleBorder(),
               child: Image.network(
-                'icons/ico-avatar.svg',
+                'icons/avatar.svg',
                 width: 32.0,
                 height: 32.0,
                 fit: BoxFit.contain,

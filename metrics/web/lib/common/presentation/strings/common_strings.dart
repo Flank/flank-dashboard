@@ -1,7 +1,7 @@
 /// Holds the strings used across the whole project.
 class CommonStrings {
   static const String projectGroups = 'Project groups';
-  static const String navigateBack = "Back";
+  static const String navigateBack = 'Back';
   static const String openUserMenu = 'Open user menu';
   static const String metrics = 'metrics';
   static const String logOut = 'Log out';
