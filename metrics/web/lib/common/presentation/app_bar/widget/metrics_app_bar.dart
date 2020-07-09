@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
+import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 
 /// A common for the metrics application [AppBar] widget.
@@ -18,11 +19,17 @@ class MetricsAppBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Image.network(
-            'icons/logo-metrics.svg',
-            width: 130.0,
-            height: 32.0,
-            fit: BoxFit.contain,
+          Tooltip(
+            message: CommonStrings.home,
+            child: GestureDetector(
+              onTap: () => _navigateHome(context),
+              child: Image.network(
+                'icons/logo-metrics.svg',
+                width: 130.0,
+                height: 32.0,
+                fit: BoxFit.contain,
+              ),
+            ),
           ),
           Tooltip(
             message: CommonStrings.openUserMenu,
@@ -46,5 +53,14 @@ class MetricsAppBar extends StatelessWidget {
   void _openDrawer(BuildContext context) {
     final scaffold = Scaffold.of(context);
     return scaffold.openEndDrawer();
+  }
+
+  void _navigateHome(BuildContext context) {
+    final _navigator = Navigator.of(context);
+
+    _navigator.pushNamedAndRemoveUntil(
+      RouteName.dashboard,
+      ModalRoute.withName(Navigator.defaultRouteName),
+    );
   }
 }
