@@ -2,4 +2,6 @@
 class DurationConstants {
   /// Holds the debounce time duration.
   static const Duration debounce = Duration(milliseconds: 300);
+
+  static const Duration animation = Duration(milliseconds: 200);
 }

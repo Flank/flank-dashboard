@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown.dart';
 import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
 import 'package:provider/provider.dart';
 
@@ -15,10 +16,17 @@ class DashboardPage extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
-            child: ProjectSearchInput(
-              onChanged:
-                  Provider.of<ProjectMetricsNotifier>(context, listen: false)
-                      .filterByProjectName,
+            child: Row(
+              children: <Widget>[
+                Flexible(
+                  child: ProjectSearchInput(
+                    onChanged: Provider.of<ProjectMetricsNotifier>(context,
+                            listen: false)
+                        .filterByProjectName,
+                  ),
+                ),
+                ProjectGroupsDropdown(),
+              ],
             ),
           ),
           Expanded(

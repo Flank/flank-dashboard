@@ -149,6 +149,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
   /// Returns a text to display as a counter for the selected projects.
   String _getCounterText(ProjectGroupDialogViewModel projectGroup) {
+    print('get counter -- ${projectGroup.selectedProjectIds.length}');
     final selectedProjectIds = projectGroup.selectedProjectIds;
 
     if (selectedProjectIds.isEmpty) return '';
