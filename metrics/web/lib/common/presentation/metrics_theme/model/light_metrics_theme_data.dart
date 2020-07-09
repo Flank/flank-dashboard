@@ -105,8 +105,11 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontSize: 16.0,
               fontWeight: FontWeight.w500,
             ),
-            textFieldDecoration: TextFieldConfig.inputDecoration,
-            contentTextStyle: TextStyleConfig.darkBodyTextStyle,
+            textFieldTextStyle: TextFieldConfig.lightFieldTextStyle,
+            contentTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 14.0,
+            ),
             contentSecondaryTextStyle: TextStyleConfig.captionTextStyle,
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(

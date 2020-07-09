@@ -32,7 +32,7 @@ void main() {
         expect(themeData.actionsTextStyle, isNull);
         expect(themeData.contentSecondaryTextStyle, isNull);
         expect(themeData.contentTextStyle, isNull);
-        expect(themeData.textFieldDecoration, isNull);
+        expect(themeData.textFieldTextStyle, isNull);
       },
     );
 
@@ -52,7 +52,7 @@ void main() {
       const actionsTextStyle = defaultTextStyle;
       const contentSecondaryTextStyle = defaultTextStyle;
       const contentTextStyle = defaultTextStyle;
-      const textFieldDecoration = InputDecoration();
+      const textFieldTextStyle = defaultTextStyle;
 
       final themeData = ProjectGroupDialogThemeData(
         primaryColor: primaryColor,
@@ -67,7 +67,7 @@ void main() {
         actionsTextStyle: actionsTextStyle,
         contentSecondaryTextStyle: contentSecondaryTextStyle,
         contentTextStyle: contentTextStyle,
-        textFieldDecoration: textFieldDecoration,
+        textFieldTextStyle: textFieldTextStyle,
       );
 
       expect(themeData.primaryColor, equals(primaryColor));
@@ -85,7 +85,7 @@ void main() {
         equals(contentSecondaryTextStyle),
       );
       expect(themeData.contentTextStyle, equals(contentTextStyle));
-      expect(themeData.textFieldDecoration, equals(textFieldDecoration));
+      expect(themeData.textFieldTextStyle, equals(textFieldTextStyle));
     });
   });
 }

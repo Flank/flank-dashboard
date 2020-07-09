@@ -9,14 +9,4 @@ class TextStyleConfig {
     fontSize: 13.0,
     fontWeight: FontWeight.w500,
   );
-
-  static const TextStyle bodyTextStyle = TextStyle(
-    color: Colors.black,
-    fontSize: 14.0,
-  );
-
-  static const TextStyle darkBodyTextStyle = TextStyle(
-    color: Colors.white,
-    fontSize: 14.0,
-  );
 }
