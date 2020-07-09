@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
@@ -251,7 +252,9 @@ void main() {
     test(
       ".initProjectGroupDialogViewModel() sets an empty projectGroupDialogViewModel if there is no project group with the given id",
       () {
-        const expectedViewModel = ProjectGroupDialogViewModel();
+        final expectedViewModel = ProjectGroupDialogViewModel(
+          selectedProjectIds: UnmodifiableListView([]),
+        );
 
         projectGroupsNotifier.initProjectGroupDialogViewModel(null);
 
@@ -265,7 +268,9 @@ void main() {
     test(
       ".initProjectGroupDialogViewModel() sets an empty projectGroupDialogViewModel if there is no project group with the given id",
       () {
-        const expectedViewModel = ProjectGroupDialogViewModel();
+        final expectedViewModel = ProjectGroupDialogViewModel(
+          selectedProjectIds: UnmodifiableListView([]),
+        );
 
         projectGroupsNotifier.initProjectGroupDialogViewModel('invalid_id');
 
@@ -902,6 +907,13 @@ void main() {
         const firstProject = ProjectModel(id: firstProjectId, name: 'name');
         const secondProject = ProjectModel(id: secondProjectId, name: 'name');
 
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
         const projects = [
           firstProject,
           secondProject,
@@ -950,8 +962,6 @@ void main() {
             return;
           }
 
-          print('listener -- $projectGroupCardViewModels');
-
           projectGroupsNotifier.removeListener(listener);
           projectGroupsNotifier.setProjects(newProjects);
         };
@@ -971,6 +981,8 @@ void main() {
 
         projectGroupsNotifier.addListener(expectListener);
         projectGroupsNotifier.addListener(listener);
+
+        addTearDown(projectGroupsNotifier.dispose);
       },
     );
 
