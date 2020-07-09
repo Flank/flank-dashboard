@@ -61,4 +61,7 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
       List<ProjectModel> newProjectModels, String projectErrorMessage) async {
     return;
   }
+
+  @override
+  List<ProjectGroupDropdownItemViewModel> get projectGroupDropdownItems => null;
 }
