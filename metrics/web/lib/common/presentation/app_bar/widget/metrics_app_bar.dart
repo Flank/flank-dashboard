@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -21,26 +22,30 @@ class MetricsAppBar extends StatelessWidget {
         children: <Widget>[
           Tooltip(
             message: CommonStrings.home,
-            child: GestureDetector(
-              onTap: () => _navigateHome(context),
-              child: Image.network(
-                'icons/logo-metrics.svg',
-                width: 130.0,
-                height: 32.0,
-                fit: BoxFit.contain,
+            child: HandCursor(
+              child: GestureDetector(
+                onTap: () => _navigateHome(context),
+                child: Image.network(
+                  'icons/logo-metrics.svg',
+                  width: 130.0,
+                  height: 32.0,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
           Tooltip(
             message: CommonStrings.openUserMenu,
-            child: InkWell(
-              onTap: () => _openDrawer(context),
-              customBorder: const CircleBorder(),
-              child: Image.network(
-                'icons/avatar.svg',
-                width: 32.0,
-                height: 32.0,
-                fit: BoxFit.contain,
+            child: HandCursor(
+              child: InkWell(
+                onTap: () => _openDrawer(context),
+                customBorder: const CircleBorder(),
+                child: Image.network(
+                  'icons/avatar.svg',
+                  width: 32.0,
+                  height: 32.0,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),

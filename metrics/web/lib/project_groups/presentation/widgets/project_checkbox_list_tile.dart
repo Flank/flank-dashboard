@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:provider/provider.dart';
@@ -19,18 +20,20 @@ class ProjectCheckboxListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CheckboxListTile(
-      title: Text(
-        projectCheckboxViewModel.name,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
+    return HandCursor(
+      child: CheckboxListTile(
+        title: Text(
+          projectCheckboxViewModel.name,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        controlAffinity: ListTileControlAffinity.leading,
+        value: projectCheckboxViewModel.isChecked,
+        onChanged: (_) {
+          _toggleProjectCheckedStatus(context);
+        },
       ),
-      controlAffinity: ListTileControlAffinity.leading,
-      value: projectCheckboxViewModel.isChecked,
-      onChanged: (_) {
-        _toggleProjectCheckedStatus(context);
-      },
     );
   }
 

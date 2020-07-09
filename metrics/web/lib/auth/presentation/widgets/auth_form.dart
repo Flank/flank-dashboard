@@ -3,6 +3,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/validators/email_validator.dart';
 import 'package:metrics/auth/presentation/validators/password_validator.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:provider/provider.dart';
 
 /// Shows an authentication form to sign in.
@@ -63,10 +64,12 @@ class _AuthFormState extends State<AuthForm> {
           Container(
             margin: const EdgeInsets.only(top: 10.0),
             alignment: Alignment.centerRight,
-            child: RaisedButton(
-              key: const Key(AuthStrings.signIn),
-              onPressed: () => _submit(),
-              child: const Text(AuthStrings.signIn),
+            child: HandCursor(
+              child: RaisedButton(
+                key: const Key(AuthStrings.signIn),
+                onPressed: () => _submit(),
+                child: const Text(AuthStrings.signIn),
+              ),
             ),
           ),
         ],
