@@ -88,9 +88,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
           ),
           projectGroupDialogTheme: const ProjectGroupDialogThemeData(
-            padding: EdgeInsets.all(24.0),
-            contentPadding: EdgeInsets.symmetric(vertical: 32.0),
-            actionsPadding: EdgeInsets.only(top: 32.0),
             accentColor: ColorConfig.accentColor,
             primaryColor: ColorConfig.primaryColor,
             backgroundColor: ColorConfig.darkScaffoldColor,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
-import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
@@ -20,8 +19,6 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final dialogThemeData = MetricsTheme.of(context).projectGroupDialogTheme;
-
     return Selector<ProjectGroupsNotifier, DeleteProjectGroupDialogViewModel>(
       selector: (_, state) => state.deleteProjectGroupDialogViewModel,
       builder: (_, deleteViewModel, ___) {
@@ -30,16 +27,15 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
             : ProjectGroupsStrings.deleteProjectGroup;
 
         return InfoDialog(
-          padding: dialogThemeData.padding,
+          padding: const EdgeInsets.all(24.0),
           title: Text(
             ProjectGroupsStrings.getDeleteTextConfirmation(
               deleteViewModel.name,
             ),
             style: const TextStyle(fontSize: 16.0),
           ),
-          titlePadding: dialogThemeData.titlePadding,
           actionsAlignment: MainAxisAlignment.end,
-          contentPadding: dialogThemeData.contentPadding,
+          contentPadding: const EdgeInsets.symmetric(vertical: 32.0),
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),

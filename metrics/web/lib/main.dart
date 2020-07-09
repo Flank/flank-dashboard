@@ -42,15 +42,14 @@ class _MyAppState extends State<MyApp> {
               textTheme: GoogleFonts.robotoTextTheme(
                 Typography.blackMountainView,
               ),
-              appBarTheme: const AppBarTheme(
-                color: ColorConfig.lightScaffoldColor,
-              ),
+              scaffoldBackgroundColor: ColorConfig.lightScaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
-                  filled: true,
-                  fillColor: ColorConfig.lightInputColor,
-                  border: TextFieldConfig.border,
-                  hintStyle: TextFieldConfig.hintStyle,
-                  contentPadding: EdgeInsets.all(16.0)),
+                filled: true,
+                fillColor: ColorConfig.lightInputColor,
+                border: TextFieldConfig.border,
+                hintStyle: TextFieldConfig.hintStyle,
+                contentPadding: EdgeInsets.all(16.0),
+              ),
             ),
             darkTheme: ThemeData(
               brightness: Brightness.dark,
@@ -60,9 +59,6 @@ class _MyAppState extends State<MyApp> {
                 Typography.whiteMountainView,
               ),
               scaffoldBackgroundColor: ColorConfig.darkScaffoldColor,
-              appBarTheme: const AppBarTheme(
-                color: ColorConfig.darkScaffoldColor,
-              ),
               inputDecorationTheme: const InputDecorationTheme(
                 filled: true,
                 fillColor: ColorConfig.darkInputColor,

@@ -16,10 +16,6 @@ void main() {
         expect(themeData.primaryColor, isNotNull);
         expect(themeData.backgroundColor, isNotNull);
         expect(themeData.contentBorderColor, isNotNull);
-        expect(themeData.padding, isNotNull);
-        expect(themeData.contentPadding, isNotNull);
-        expect(themeData.titlePadding, isNotNull);
-        expect(themeData.actionsPadding, isNotNull);
       },
     );
 
@@ -37,17 +33,12 @@ void main() {
     );
 
     test("creates an instance with the given values", () {
-      const defaultPadding = EdgeInsets.zero;
       const defaultTextStyle = TextStyle();
 
       const primaryColor = Colors.blue;
       const accentColor = Colors.red;
       const backgroundColor = Colors.white;
       const contentBorderColor = Colors.grey;
-      const padding = defaultPadding;
-      const contentPadding = defaultPadding;
-      const titlePadding = defaultPadding;
-      const actionsPadding = defaultPadding;
       const titleTextStyle = defaultTextStyle;
       const actionsTextStyle = defaultTextStyle;
       const contentSecondaryTextStyle = defaultTextStyle;
@@ -59,10 +50,6 @@ void main() {
         accentColor: accentColor,
         backgroundColor: backgroundColor,
         contentBorderColor: contentBorderColor,
-        padding: padding,
-        contentPadding: contentPadding,
-        titlePadding: titlePadding,
-        actionsPadding: actionsPadding,
         titleTextStyle: titleTextStyle,
         actionsTextStyle: actionsTextStyle,
         contentSecondaryTextStyle: contentSecondaryTextStyle,
@@ -74,10 +61,6 @@ void main() {
       expect(themeData.accentColor, equals(accentColor));
       expect(themeData.backgroundColor, equals(backgroundColor));
       expect(themeData.contentBorderColor, equals(contentBorderColor));
-      expect(themeData.padding, equals(padding));
-      expect(themeData.contentPadding, equals(contentPadding));
-      expect(themeData.titlePadding, equals(titlePadding));
-      expect(themeData.actionsPadding, equals(actionsPadding));
       expect(themeData.titleTextStyle, equals(titleTextStyle));
       expect(themeData.actionsTextStyle, equals(actionsTextStyle));
       expect(
