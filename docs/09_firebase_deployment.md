@@ -100,7 +100,7 @@ To configure the Flutter for Web application to use recently created Firestore D
 and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
 2. Scroll down and find your Firebase Web Application. 
 3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
-4. Go to the `web/index.js` file in the application directory and replace the following piece of code with the copied one in step 3: 
+4. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 3:
     ```
         var firebaseConfig = {
           apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
@@ -145,7 +145,7 @@ Once you've deployed the metrics application to Firebase Hosting, you should fin
 The `metrics/firebase` folder contains Firestore security rules, Firestore indexes, and a `seedData` Cloud function needed to create a test data for our application. To deploy all of these components, follow the next steps: 
 
 1. Activate the `seedData` function: go to the `metrics/firebase/functions/index.js` file and change the `const inactive = true;` to `const inactive = false;`.
-2. 0pen the terminal and navigate to `metrics/firebase` folder.
+2. 0pen the terminal, navigate to `metrics/firebase` folder and ensure all dependencies are installed by running: `npm install`.
 3. Run the `firebase deploy` command to deploy all components.
 4. Once command execution finished, you'll find the `seedData` function URL, that can be used to trigger function execution in the console. Save this URL somewhere - you will need it a bit later.
 
