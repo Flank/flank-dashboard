@@ -37,7 +37,7 @@ void main() {
     });
 
     testWidgets(
-      "navigates to the dashboard page on tap on the app logo",
+      "navigates to the dashboard page when the app logo is tapped",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());
