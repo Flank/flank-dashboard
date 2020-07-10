@@ -6,6 +6,11 @@ void main() {
   group("ClearableTextFormField", () {
     const label = 'label';
 
+    final clearIconButtonFinder = find.descendant(
+      of: find.byType(IconButton),
+      matching: find.byIcon(Icons.close),
+    );
+
     testWidgets(
       "throws an AssertionError if the given label is null",
       (tester) async {
@@ -53,13 +58,7 @@ void main() {
           _ClearableTextFormFieldTestbed(label: label, controller: controller),
         );
 
-        expect(
-          find.descendant(
-            of: find.byType(IconButton),
-            matching: find.byIcon(Icons.close),
-          ),
-          findsNothing,
-        );
+        expect(clearIconButtonFinder, findsNothing);
       },
     );
 
@@ -72,13 +71,20 @@ void main() {
           _ClearableTextFormFieldTestbed(label: label, controller: controller),
         );
 
-        expect(
-          find.descendant(
-            of: find.byType(IconButton),
-            matching: find.byIcon(Icons.close),
-          ),
-          findsOneWidget,
+        expect(clearIconButtonFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "changes the cursor style for the clear icon",
+      (WidgetTester tester) async {
+        final controller = TextEditingController(text: 'text');
+
+        await tester.pumpWidget(
+          _ClearableTextFormFieldTestbed(label: label, controller: controller),
         );
+
+        expect(clearIconButtonFinder, findsOneWidget);
       },
     );
 
@@ -139,10 +145,7 @@ void main() {
           _ClearableTextFormFieldTestbed(label: label, controller: controller),
         );
 
-        await tester.tap(find.descendant(
-          of: find.byType(IconButton),
-          matching: find.byIcon(Icons.close),
-        ));
+        await tester.tap(clearIconButtonFinder);
         await tester.pump();
 
         expect(controller.text, isEmpty);

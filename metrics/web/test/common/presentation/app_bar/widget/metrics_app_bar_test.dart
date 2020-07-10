@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -23,6 +24,22 @@ void main() {
       expect(finder, findsOneWidget);
     });
 
+    testWidgets(
+      "changes the cursor style for the app logo",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsAppBarTestbed());
+        });
+
+        final finder = find.descendant(
+          of: find.byTooltip(CommonStrings.home),
+          matching: find.byType(HandCursor),
+        );
+
+        expect(finder, findsOneWidget);
+      },
+    );
+
     testWidgets("displays the user menu icon", (WidgetTester tester) async {
       await mockNetworkImagesFor(() {
         return tester.pumpWidget(const _MetricsAppBarTestbed());
@@ -35,6 +52,22 @@ void main() {
 
       expect(finder, findsOneWidget);
     });
+
+    testWidgets(
+      "changes the cursor style for the user menu icon",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsAppBarTestbed());
+        });
+
+        final finder = find.descendant(
+          of: find.byTooltip(CommonStrings.openUserMenu),
+          matching: find.byType(HandCursor),
+        );
+
+        expect(finder, findsOneWidget);
+      },
+    );
 
     testWidgets(
       "navigates to the dashboard page when the app logo is tapped",
@@ -100,7 +133,7 @@ class _MetricsAppBarTestbed extends StatelessWidget {
     return TestInjectionContainer(
       child: MaterialApp(
         routes: {
-          '/dashboard' : (context) => DashboardPage(),
+          '/dashboard': (context) => DashboardPage(),
         },
         home: const Scaffold(
           body: MetricsAppBar(),

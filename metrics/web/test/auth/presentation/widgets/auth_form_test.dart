@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
@@ -108,6 +109,21 @@ void main() {
           find.text(SignInErrorAuthNotifierStub.errorMessage),
           findsOneWidget,
         );
+      },
+    );
+
+    testWidgets(
+      "changes the cursor style for the submit button",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+
+        await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
+        final finder = find.ancestor(
+          of: submitButtonFinder,
+          matching: find.byType(HandCursor),
+        );
+
+        expect(finder, findsOneWidget);
       },
     );
   });

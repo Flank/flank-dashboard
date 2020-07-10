@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 
 void main() {
@@ -221,6 +222,26 @@ void main() {
         );
 
         expect(widget.mainAxisAlignment, equals(expectedAlignment));
+      },
+    );
+
+    testWidgets(
+      "changes the cursor style for the close icon button",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const _InfoDialogTestbed(
+            title: text,
+            contentPadding: padding,
+            content: content,
+          ),
+        );
+
+        final finder = find.ancestor(
+          of: find.byIcon(Icons.close),
+          matching: find.byType(HandCursor),
+        );
+
+        expect(finder, findsOneWidget);
       },
     );
   });
