@@ -227,7 +227,7 @@ On this diagram, we can see that all widgets that use the other `metrics` widget
 
 `View model`s must be immutable, which means all fields must be `final`. To make a class immutable, except `final` keywords, you must:
 
-- Add an `@immutable` annotation or extend an `Equatable` class, that is already an `@immutable`.
+- Add an `@immutable` annotation or extend an `Equatable` class, that is already `@immutable`.
 
     ```dart
     import 'package:meta/meta.dart';
