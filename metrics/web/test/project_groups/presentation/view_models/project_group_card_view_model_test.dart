@@ -59,21 +59,21 @@ void main() {
     test(
       "equals to another ProjectGroupCardViewModel with the same parameters",
       () {
-        final firstViewModel = ProjectGroupCardViewModel(
+        final expected = ProjectGroupCardViewModel(
           id: id,
           name: name,
           projectsCount: projectsCount,
         );
 
-        final secondViewModel = ProjectGroupCardViewModel(
+        final projectGroupCardViewModel = ProjectGroupCardViewModel(
           id: id,
           name: name,
           projectsCount: projectsCount,
         );
 
         expect(
-          firstViewModel,
-          equals(secondViewModel),
+          projectGroupCardViewModel,
+          equals(expected),
         );
       },
     );

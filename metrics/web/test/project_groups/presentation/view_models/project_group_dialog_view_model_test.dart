@@ -40,21 +40,21 @@ void main() {
     test(
       "equals to another ProjectGroupDialogViewModel with the same parameters",
       () {
-        final firstViewModel = ProjectGroupDialogViewModel(
+        final expected = ProjectGroupDialogViewModel(
           id: id,
           name: name,
           selectedProjectIds: projectIds,
         );
 
-        final secondViewModel = ProjectGroupDialogViewModel(
+        final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
           id: id,
           name: name,
           selectedProjectIds: projectIds,
         );
 
         expect(
-          firstViewModel,
-          equals(secondViewModel),
+          projectGroupDialogViewModel,
+          equals(expected),
         );
       },
     );

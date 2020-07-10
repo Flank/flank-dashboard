@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import '../../../test_utils/matcher_util.dart';
 
 void main() {
-  group("ProjectGroupDeleteDialogViewModel", () {
+  group("DeleteProjectGroupDialogViewModel", () {
     const id = 'id';
     const name = 'name';
 

@@ -58,21 +58,21 @@ void main() {
     test(
       "equals to another ProjectCheckboxViewModel with the same parameters",
       () {
-        final firstViewModel = ProjectCheckboxViewModel(
+        final expected = ProjectCheckboxViewModel(
           id: id,
           name: name,
           isChecked: isChecked,
         );
 
-        final secondViewModel = ProjectCheckboxViewModel(
+        final projectCheckboxViewModel = ProjectCheckboxViewModel(
           id: id,
           name: name,
           isChecked: isChecked,
         );
 
         expect(
-          firstViewModel,
-          equals(secondViewModel),
+          projectCheckboxViewModel,
+          equals(expected),
         );
       },
     );
