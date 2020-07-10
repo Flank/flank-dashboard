@@ -1,5 +1,6 @@
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
+import 'package:collection/collection.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:test/test.dart';
 
@@ -9,7 +10,7 @@ void main() {
   group("ProjectGroupDialogViewModel", () {
     const id = 'id';
     const name = 'name';
-    const projectIds = <String>[];
+    final projectIds = UnmodifiableListView<String>([]);
 
     test("successfully creates an instance on a valid input", () {
       expect(
