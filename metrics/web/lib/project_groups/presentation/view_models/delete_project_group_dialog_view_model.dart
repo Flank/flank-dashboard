@@ -11,5 +11,9 @@ class DeleteProjectGroupDialogViewModel {
   final String name;
 
   /// Creates the [DeleteProjectGroupDialogViewModel].
-  const DeleteProjectGroupDialogViewModel({this.id, this.name});
+  const DeleteProjectGroupDialogViewModel({
+    @required this.id,
+    @required this.name,
+  })  : assert(id != null),
+        assert(name != null);
 }
