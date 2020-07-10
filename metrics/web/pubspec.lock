@@ -502,6 +502,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.24.1"
+  selection_menu:
+    dependency: "direct main"
+    description:
+      name: selection_menu
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.0"
   shelf:
     dependency: transitive
     description:
