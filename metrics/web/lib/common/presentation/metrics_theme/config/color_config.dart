@@ -19,5 +19,5 @@ class ColorConfig {
   static const Color darkCardHoverColor = Color(0xFF212124);
   static const Color lightInputColor = Colors.white;
   static const Color darkInputColor = Color(0xFF0d0d0d);
-  static const Color inputSecondaryTextColor = Color(0xFF8c8c8e);
+  static const Color inputSecondaryTextColor = Color(0xFF545459);
 }
