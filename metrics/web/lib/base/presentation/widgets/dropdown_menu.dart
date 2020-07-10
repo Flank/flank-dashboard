@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:selection_menu/components_configurations.dart';
 import 'package:selection_menu/selection_menu.dart';
 
+/// A [Function] used to build a dropdown menu item.
 typedef DropdownItemBuilder<T> = Widget Function(BuildContext context, T item);
 
 /// A dropdown menu widget.
@@ -41,7 +42,7 @@ class DropdownMenu<T> extends StatelessWidget {
 
   /// Creates a [DropdownMenu] widget.
   ///
-  /// If [items] is not specified, an empty list used.
+  /// If [items] are null, an empty list used.
   /// If the [menuAnimationCurve] is null the [Curves.linear] used.
   /// If the [menuAnimationDuration] is null the empty [Duration] used.
   /// If the [itemHeight] is null the [kMinInteractiveDimension] used.
@@ -73,7 +74,7 @@ class DropdownMenu<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SelectionMenu<T>(
-      itemsList: items ?? [],
+      itemsList: items,
       initiallySelectedItemIndex: initiallySelectedItemIndex,
       itemBuilder: (_, item, onItemSelected) {
         return GestureDetector(

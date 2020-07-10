@@ -47,7 +47,7 @@ void main() {
     testWidgets(
       "uses an empty list as a default if the items parameter is null",
       (tester) async {
-        await tester.pumpWidget(const _DropdownMenuTestbed());
+        await tester.pumpWidget(const _DropdownMenuTestbed(items: null));
 
         final selectionMenuWidget = tester.widget<SelectionMenu>(
           selectionMenuFinder,
@@ -115,7 +115,7 @@ void main() {
     );
 
     testWidgets(
-      "uses a zero padding as a default if the menuPadding parameter is not specified",
+      "uses a zero padding as a default if the menuPadding parameter is null",
       (tester) async {
         final menuWidget = Container(
           height: 30.0,
@@ -123,6 +123,7 @@ void main() {
         );
 
         await tester.pumpWidget(_DropdownMenuTestbed(
+          menuPadding: null,
           menuBuilder: (data) {
             if (data.menuState == MenuState.OpeningStart) {
               data.opened();
@@ -203,7 +204,7 @@ void main() {
 
         final actualItems = itemWidgets.map((item) => item.item).toList();
 
-        expect(items, equals(actualItems));
+        expect(actualItems, equals(items));
       },
     );
 
@@ -283,9 +284,7 @@ void main() {
         );
 
         await tester.pumpWidget(_DropdownMenuTestbed(
-          menuBuilder: (_) {
-            return menuWidget;
-          },
+          menuBuilder: (_) => menuWidget,
         ));
 
         await tester.tap(
@@ -308,12 +307,7 @@ void main() {
 
         await tester.pumpWidget(_DropdownMenuTestbed(
           menuPadding: expectedPadding,
-          menuBuilder: (data) {
-            if (data.menuState == MenuState.OpeningStart) {
-              data.opened();
-            }
-            return menuWidget;
-          },
+          menuBuilder: (_) => menuWidget,
         ));
 
         await tester.tap(
@@ -379,9 +373,7 @@ void main() {
           itemBuilder: (_, item) => _DropdownTestItem(item: item),
         ));
 
-        await tester.tap(
-          find.byWidgetPredicate((widget) => widget is DropdownMenu),
-        );
+        await tester.tap(selectionMenuFinder);
         await tester.pumpAndSettle();
 
         expect(find.byType(_DropdownTestItem), findsWidgets);
@@ -396,36 +388,20 @@ void main() {
     testWidgets(
       "closes a dropdown menu with dropdown items after tap outside of the menu",
       (tester) async {
-        final menuWidget = Container(
-          height: 30.0,
-          color: Colors.red,
-        );
-
         await tester.pumpWidget(_DropdownMenuTestbed(
-          menuBuilder: (data) {
-            if (data.menuState == MenuState.OpeningStart) {
-              data.opened();
-            } else if (data.menuState == MenuState.ClosingEnd) {
-              data.closed();
-            }
-
-            return menuWidget;
-          },
+          items: items,
+          itemBuilder: (_, item) => _DropdownTestItem(item: item),
         ));
 
-        await tester.tap(
-          find.byWidgetPredicate((widget) => widget is DropdownMenu),
-        );
+        await tester.tap(selectionMenuFinder);
         await tester.pumpAndSettle();
 
-        expect(find.byWidget(menuWidget), findsOneWidget);
+        expect(find.byType(_DropdownTestItem), findsWidgets);
 
-        await tester.tap(
-          find.byType(MetricsThemedTestbed),
-        );
+        await tester.tapAt(Offset.zero);
         await tester.pumpAndSettle();
 
-        expect(find.byWidget(menuWidget), findsNothing);
+        expect(find.byType(_DropdownTestItem), findsNothing);
       },
     );
   });
