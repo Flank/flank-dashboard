@@ -17,14 +17,14 @@ void main() {
       );
     });
 
-    test("throws an AssertionError if an id parameter is null", () {
+    test("throws an AssertionError if the id parameter is null", () {
       expect(
         () => DeleteProjectGroupDialogViewModel(id: null, name: name),
         MatcherUtil.throwsAssertionError,
       );
     });
 
-    test("throws an AssertionError if a name parameter is null", () {
+    test("throws an AssertionError if the name parameter is null", () {
       expect(
         () => DeleteProjectGroupDialogViewModel(id: id, name: null),
         MatcherUtil.throwsAssertionError,

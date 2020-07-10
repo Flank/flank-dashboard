@@ -22,7 +22,7 @@ void main() {
       );
     });
 
-    test("throws an AssertionError if an id parameter is null", () {
+    test("throws an AssertionError if the id parameter is null", () {
       expect(
         () => ProjectCheckboxViewModel(
           id: null,
@@ -33,7 +33,7 @@ void main() {
       );
     });
 
-    test("throws an AssertionError if a name parameter is null", () {
+    test("throws an AssertionError if the name parameter is null", () {
       expect(
         () => ProjectCheckboxViewModel(
           id: id,
@@ -44,7 +44,7 @@ void main() {
       );
     });
 
-    test("throws an AssertionError if an isChecked parameter is null", () {
+    test("throws an AssertionError if the isChecked parameter is null", () {
       expect(
         () => ProjectCheckboxViewModel(
           id: id,
@@ -54,5 +54,27 @@ void main() {
         MatcherUtil.throwsAssertionError,
       );
     });
+
+    test(
+      "equals to another ProjectCheckboxViewModel with the same parameters",
+      () {
+        final firstViewModel = ProjectCheckboxViewModel(
+          id: id,
+          name: name,
+          isChecked: isChecked,
+        );
+
+        final secondViewModel = ProjectCheckboxViewModel(
+          id: id,
+          name: name,
+          isChecked: isChecked,
+        );
+
+        expect(
+          firstViewModel,
+          equals(secondViewModel),
+        );
+      },
+    );
   });
 }

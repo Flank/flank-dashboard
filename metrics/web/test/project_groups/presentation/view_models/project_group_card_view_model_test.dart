@@ -22,7 +22,7 @@ void main() {
       );
     });
 
-    test("throws an AssertionError if an id parameter is null", () {
+    test("throws an AssertionError if the id parameter is null", () {
       expect(
         () => ProjectGroupCardViewModel(
           id: null,
@@ -33,7 +33,7 @@ void main() {
       );
     });
 
-    test("throws an AssertionError if a name parameter is null", () {
+    test("throws an AssertionError if the name parameter is null", () {
       expect(
         () => ProjectGroupCardViewModel(
           id: id,
@@ -44,7 +44,8 @@ void main() {
       );
     });
 
-    test("throws an AssertionError if a projects count parameter is null", () {
+    test("throws an AssertionError if the projects count parameter is null",
+        () {
       expect(
         () => ProjectGroupCardViewModel(
           id: id,
@@ -54,5 +55,27 @@ void main() {
         MatcherUtil.throwsAssertionError,
       );
     });
+
+    test(
+      "equals to another ProjectGroupCardViewModel with the same parameters",
+      () {
+        final firstViewModel = ProjectGroupCardViewModel(
+          id: id,
+          name: name,
+          projectsCount: projectsCount,
+        );
+
+        final secondViewModel = ProjectGroupCardViewModel(
+          id: id,
+          name: name,
+          projectsCount: projectsCount,
+        );
+
+        expect(
+          firstViewModel,
+          equals(secondViewModel),
+        );
+      },
+    );
   });
 }

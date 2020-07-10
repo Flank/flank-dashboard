@@ -24,7 +24,7 @@ void main() {
     });
 
     test(
-      "throws an AssertionError if a selected project ids parameter is null",
+      "throws an AssertionError if the selected project ids parameter is null",
       () {
         expect(
           () => ProjectGroupDialogViewModel(
@@ -33,6 +33,28 @@ void main() {
             selectedProjectIds: null,
           ),
           MatcherUtil.throwsAssertionError,
+        );
+      },
+    );
+
+    test(
+      "equals to another ProjectGroupDialogViewModel with the same parameters",
+      () {
+        final firstViewModel = ProjectGroupDialogViewModel(
+          id: id,
+          name: name,
+          selectedProjectIds: projectIds,
+        );
+
+        final secondViewModel = ProjectGroupDialogViewModel(
+          id: id,
+          name: name,
+          selectedProjectIds: projectIds,
+        );
+
+        expect(
+          firstViewModel,
+          equals(secondViewModel),
         );
       },
     );
