@@ -47,7 +47,6 @@ class _ProjectGroupDropdownMenuState extends State<ProjectGroupDropdownMenu> {
     }
 
     return Container(
-      margin: const EdgeInsets.only(top: 48.0),
       width: 212.0,
       constraints: BoxConstraints(
         maxHeight: data.constraints.biggest.height,

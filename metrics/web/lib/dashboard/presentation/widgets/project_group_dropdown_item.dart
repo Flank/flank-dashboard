@@ -37,7 +37,7 @@ class _ProjectGroupDropdownItemState extends State<ProjectGroupDropdownItem> {
         width: 210.0,
         height: 40.0,
         color: backgroundColor,
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0),
         alignment: Alignment.centerLeft,
         child: Text(
           widget.projectGroupDropdownItemViewModel.name,
