@@ -11,12 +11,15 @@ void main() {
         final lightMetricsThemeData = LightMetricsThemeData();
 
         expect(
-            lightMetricsThemeData.metricCirclePercentageThemeData, isNotNull);
+          lightMetricsThemeData.metricCirclePercentageThemeData,
+          isNotNull,
+        );
         expect(lightMetricsThemeData.metricWidgetTheme, isNotNull);
         expect(lightMetricsThemeData.buildResultTheme, isNotNull);
         expect(lightMetricsThemeData.inactiveWidgetTheme, isNotNull);
         expect(lightMetricsThemeData.projectGroupCardTheme, isNotNull);
         expect(lightMetricsThemeData.addProjectGroupCardTheme, isNotNull);
+        expect(lightMetricsThemeData.projectGroupDialogTheme, isNotNull);
       },
     );
   });

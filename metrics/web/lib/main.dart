@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -41,8 +42,13 @@ class _MyAppState extends State<MyApp> {
               textTheme: GoogleFonts.robotoTextTheme(
                 Typography.blackMountainView,
               ),
-              appBarTheme: const AppBarTheme(
-                color: ColorConfig.lightScaffoldColor,
+              scaffoldBackgroundColor: ColorConfig.lightScaffoldColor,
+              inputDecorationTheme: const InputDecorationTheme(
+                filled: true,
+                fillColor: ColorConfig.lightInputColor,
+                border: TextFieldConfig.border,
+                hintStyle: TextFieldConfig.hintStyle,
+                contentPadding: EdgeInsets.all(16.0),
               ),
             ),
             darkTheme: ThemeData(
@@ -53,8 +59,12 @@ class _MyAppState extends State<MyApp> {
                 Typography.whiteMountainView,
               ),
               scaffoldBackgroundColor: ColorConfig.darkScaffoldColor,
-              appBarTheme: const AppBarTheme(
-                color: ColorConfig.darkScaffoldColor,
+              inputDecorationTheme: const InputDecorationTheme(
+                filled: true,
+                fillColor: ColorConfig.darkInputColor,
+                border: TextFieldConfig.border,
+                hintStyle: TextFieldConfig.hintStyle,
+                contentPadding: EdgeInsets.all(16.0),
               ),
             ),
           );

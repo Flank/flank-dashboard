@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
+  /// The default [TextStyle] for [TextField]s within the application.
+  static const _defaultTextFieldTextStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 16.0,
+  );
+
   /// Creates the light theme with the default widget theme configuration.
   const LightMetricsThemeData()
       : super(
@@ -80,6 +88,35 @@ class LightMetricsThemeData extends MetricsThemeData {
             titleStyle: TextStyle(
               color: ColorConfig.primaryColor,
               height: 1.5,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          projectGroupDialogTheme: const ProjectGroupDialogThemeData(
+            accentColor: ColorConfig.accentColor,
+            primaryColor: ColorConfig.primaryColor,
+            backgroundColor: ColorConfig.lightScaffoldColor,
+            closeIconColor: Colors.black,
+            contentBorderColor: ColorConfig.darkBorderColor,
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 26.0,
+              fontWeight: FontWeight.w500,
+            ),
+            groupNameTextStyle: _defaultTextFieldTextStyle,
+            searchForProjectTextStyle: _defaultTextFieldTextStyle,
+            uncheckedProjectTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 14.0,
+            ),
+            checkedProjectTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+            ),
+            counterTextStyle: TextStyleConfig.captionTextStyle,
+            actionsTextStyle: TextStyle(
+              color: Colors.black,
               fontSize: 16.0,
               fontWeight: FontWeight.w500,
             ),
