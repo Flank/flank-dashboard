@@ -26,7 +26,12 @@ void main() {
         );
       });
 
-      expect(find.byTooltip(CommonStrings.navigateBack), findsOneWidget);
+      final finder = find.descendant(
+        of: find.byTooltip(CommonStrings.navigateBack),
+        matching: find.byType(Image),
+      );
+
+      expect(finder, findsOneWidget);
     });
 
     testWidgets("displays the given title", (WidgetTester tester) async {
@@ -45,6 +50,7 @@ void main() {
       "navigates back to the previous screen",
       (WidgetTester tester) async {
         await tester.pumpWidget(_NavigationTestbed());
+
         await tester.tap(find.byType(_NavigationTestbed));
         await mockNetworkImagesFor(() {
           return tester.pumpAndSettle();
@@ -65,6 +71,7 @@ void main() {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsPageTitleTestbed());
         });
+
         await tester.tap(find.byTooltip(CommonStrings.navigateBack));
         await tester.pumpAndSettle();
 
