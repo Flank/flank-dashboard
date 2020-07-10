@@ -11,20 +11,31 @@ class ProjectGroupDialogThemeData {
   /// A background [Color] of the project group dialog.
   final Color backgroundColor;
 
-  /// A [TextStyle] for the [TextField]s of the project group dialog.
-  final TextStyle textFieldTextStyle;
+  /// A [Color] of the close icon of the project group dialog.
+  final Color closeIconColor;
 
   /// A [TextStyle] of the dialog title.
   final TextStyle titleTextStyle;
 
+  /// A [TextStyle] for the [TextField]s of the project group dialog.
+  final TextStyle groupNameTextStyle;
+
+  /// A [TextStyle] for the search for project text field
+  /// of the project group dialog.
+  final TextStyle searchForProjectTextStyle;
+
   /// A border [Color] of the project group dialog content.
   final Color contentBorderColor;
 
-  /// A [TextStyle] of the content text for the project group dialog.
-  final TextStyle contentTextStyle;
+  /// A [TextStyle] of the unchecked project within the project group dialog.
+  final TextStyle uncheckedProjectTextStyle;
 
-  /// A [TextStyle] of the content secondary text for the project group dialog.
-  final TextStyle contentSecondaryTextStyle;
+  /// A [TextStyle] of the checked project within the project group dialog.
+  final TextStyle checkedProjectTextStyle;
+
+  /// A [TextStyle] of the counter text of selected projects within
+  /// the project group dialog.
+  final TextStyle counterTextStyle;
 
   /// A [TextStyle] of the actions text for the project group dialog.
   final TextStyle actionsTextStyle;
@@ -34,11 +45,14 @@ class ProjectGroupDialogThemeData {
     this.primaryColor = Colors.blue,
     this.accentColor = Colors.red,
     this.backgroundColor = Colors.white,
+    this.closeIconColor = Colors.black,
     this.contentBorderColor = Colors.grey,
     this.titleTextStyle,
-    this.textFieldTextStyle,
-    this.contentTextStyle,
-    this.contentSecondaryTextStyle,
+    this.groupNameTextStyle,
+    this.searchForProjectTextStyle,
+    this.uncheckedProjectTextStyle,
+    this.checkedProjectTextStyle,
+    this.counterTextStyle,
     this.actionsTextStyle,
   });
 }

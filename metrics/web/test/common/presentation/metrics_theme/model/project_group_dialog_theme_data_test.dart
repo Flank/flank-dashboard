@@ -12,9 +12,10 @@ void main() {
       () {
         const themeData = ProjectGroupDialogThemeData();
 
-        expect(themeData.accentColor, isNotNull);
         expect(themeData.primaryColor, isNotNull);
+        expect(themeData.accentColor, isNotNull);
         expect(themeData.backgroundColor, isNotNull);
+        expect(themeData.closeIconColor, isNotNull);
         expect(themeData.contentBorderColor, isNotNull);
       },
     );
@@ -25,10 +26,12 @@ void main() {
         const themeData = ProjectGroupDialogThemeData();
 
         expect(themeData.titleTextStyle, isNull);
+        expect(themeData.groupNameTextStyle, isNull);
+        expect(themeData.searchForProjectTextStyle, isNull);
+        expect(themeData.uncheckedProjectTextStyle, isNull);
+        expect(themeData.checkedProjectTextStyle, isNull);
+        expect(themeData.counterTextStyle, isNull);
         expect(themeData.actionsTextStyle, isNull);
-        expect(themeData.contentSecondaryTextStyle, isNull);
-        expect(themeData.contentTextStyle, isNull);
-        expect(themeData.textFieldTextStyle, isNull);
       },
     );
 
@@ -38,37 +41,53 @@ void main() {
       const primaryColor = Colors.blue;
       const accentColor = Colors.red;
       const backgroundColor = Colors.white;
+      const closeIconColor = Colors.black;
       const contentBorderColor = Colors.grey;
+
       const titleTextStyle = defaultTextStyle;
+      const groupNameTextStyle = defaultTextStyle;
+      const searchForProjectTextStyle = defaultTextStyle;
+      const uncheckedProjectTextStyle = defaultTextStyle;
+      const checkedProjectTextStyle = defaultTextStyle;
+      const counterTextStyle = defaultTextStyle;
       const actionsTextStyle = defaultTextStyle;
-      const contentSecondaryTextStyle = defaultTextStyle;
-      const contentTextStyle = defaultTextStyle;
-      const textFieldTextStyle = defaultTextStyle;
 
       final themeData = ProjectGroupDialogThemeData(
         primaryColor: primaryColor,
         accentColor: accentColor,
         backgroundColor: backgroundColor,
+        closeIconColor: closeIconColor,
         contentBorderColor: contentBorderColor,
         titleTextStyle: titleTextStyle,
+        groupNameTextStyle: groupNameTextStyle,
+        searchForProjectTextStyle: searchForProjectTextStyle,
+        uncheckedProjectTextStyle: uncheckedProjectTextStyle,
+        checkedProjectTextStyle: checkedProjectTextStyle,
+        counterTextStyle: counterTextStyle,
         actionsTextStyle: actionsTextStyle,
-        contentSecondaryTextStyle: contentSecondaryTextStyle,
-        contentTextStyle: contentTextStyle,
-        textFieldTextStyle: textFieldTextStyle,
       );
 
       expect(themeData.primaryColor, equals(primaryColor));
       expect(themeData.accentColor, equals(accentColor));
       expect(themeData.backgroundColor, equals(backgroundColor));
+      expect(themeData.closeIconColor, equals(closeIconColor));
       expect(themeData.contentBorderColor, equals(contentBorderColor));
       expect(themeData.titleTextStyle, equals(titleTextStyle));
-      expect(themeData.actionsTextStyle, equals(actionsTextStyle));
+      expect(themeData.groupNameTextStyle, equals(groupNameTextStyle));
       expect(
-        themeData.contentSecondaryTextStyle,
-        equals(contentSecondaryTextStyle),
+        themeData.searchForProjectTextStyle,
+        equals(searchForProjectTextStyle),
       );
-      expect(themeData.contentTextStyle, equals(contentTextStyle));
-      expect(themeData.textFieldTextStyle, equals(textFieldTextStyle));
+      expect(
+        themeData.uncheckedProjectTextStyle,
+        equals(uncheckedProjectTextStyle),
+      );
+      expect(
+        themeData.checkedProjectTextStyle,
+        equals(checkedProjectTextStyle),
+      );
+      expect(themeData.counterTextStyle, equals(counterTextStyle));
+      expect(themeData.actionsTextStyle, equals(actionsTextStyle));
     });
   });
 }
