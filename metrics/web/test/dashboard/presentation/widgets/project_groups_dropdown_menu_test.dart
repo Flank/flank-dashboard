@@ -57,6 +57,29 @@ void main() {
     );
 
     testWidgets(
+      "does not overflows on a very long selected project group name",
+      (tester) async {
+        when(metricsNotifier.projectGroupDropdownItems).thenReturn(const [
+          ProjectGroupDropdownItemViewModel(
+            name:
+                'Some very long name to test that project groups dropdown menu widget does not overflows with a very long text in it',
+          ),
+        ]);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
+          );
+        });
+
+        expect(
+          tester.takeException(),
+          isNull,
+        );
+      },
+    );
+
+    testWidgets(
       "applies an animation duration constant to the DropdownMenu widget menuAnimationDuration parameter",
       (tester) async {
         await mockNetworkImagesFor(() {
