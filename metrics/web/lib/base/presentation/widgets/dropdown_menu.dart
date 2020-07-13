@@ -48,7 +48,7 @@ class DropdownMenu<T> extends StatelessWidget {
   /// If the [itemHeight] is null the [kMinInteractiveDimension] used.
   /// If the [menuPadding] is null the [EdgeInsets.zero] used.
   ///
-  /// [itemBuilder], [buttonBuilder], and [menuBuilder] must not be null.
+  /// [itemBuilder], [buttonBuilder] and [menuBuilder] must not be null.
   const DropdownMenu({
     Key key,
     @required this.itemBuilder,

@@ -5,8 +5,6 @@ import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 import 'package:selection_menu/selection_menu.dart';
 
-import '../../../test_utils/metrics_themed_testbed.dart';
-
 void main() {
   group("DropdownMenu", () {
     const items = ['1', '2', '3'];
@@ -460,18 +458,20 @@ class _DropdownMenuTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MetricsThemedTestbed(
-      body: DropdownMenu(
-        itemBuilder: itemBuilder,
-        buttonBuilder: buttonBuilder,
-        menuBuilder: menuBuilder,
-        items: items,
-        itemHeight: itemHeight,
-        menuAnimationDuration: menuAnimationDuration,
-        menuAnimationCurve: menuAnimationCurve,
-        initiallySelectedItemIndex: initiallySelectedItemIndex,
-        onItemSelected: onItemSelected,
-        menuPadding: menuPadding,
+    return MaterialApp(
+      home: Scaffold(
+        body: DropdownMenu(
+          itemBuilder: itemBuilder,
+          buttonBuilder: buttonBuilder,
+          menuBuilder: menuBuilder,
+          items: items,
+          itemHeight: itemHeight,
+          menuAnimationDuration: menuAnimationDuration,
+          menuAnimationCurve: menuAnimationCurve,
+          initiallySelectedItemIndex: initiallySelectedItemIndex,
+          onItemSelected: onItemSelected,
+          menuPadding: menuPadding,
+        ),
       ),
     );
   }
