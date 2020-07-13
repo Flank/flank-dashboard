@@ -21,7 +21,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the cursor style for the cancel button",
+      "applies a hand cursor to the cancel button",
       (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
 
@@ -42,7 +42,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the cursor style for the delete button",
+      "applies a hand cursor to the delete button",
       (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
 

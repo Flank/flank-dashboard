@@ -226,7 +226,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the cursor style for the close icon button",
+      "applies a hand cursor to the close icon button",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(

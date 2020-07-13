@@ -66,7 +66,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the cursor style for the ColoredBar",
+      "applies a hand cursor to the ColoredBar",
       (WidgetTester tester) async {
         const buildResult = BuildResultViewModel(
           value: 20,

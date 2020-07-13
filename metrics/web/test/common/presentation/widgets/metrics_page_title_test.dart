@@ -36,7 +36,7 @@ void main() {
     });
 
     testWidgets(
-      "changes the cursor style for the arrow back icon",
+      "applies a hand cursor to the arrow back icon",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(

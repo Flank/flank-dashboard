@@ -113,7 +113,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the cursor style for the submit button",
+      "applies a hand cursor to the submit button",
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 

@@ -235,7 +235,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the cursor style for the icon label button",
+      "applies a hand cursor to the icon label button",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed());
 

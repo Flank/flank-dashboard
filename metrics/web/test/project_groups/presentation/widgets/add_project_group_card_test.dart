@@ -12,7 +12,7 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("AddProjectGroupCard", () {
     testWidgets(
-      "changes the cursor style for the card",
+      "applies a hand cursor to the card",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _AddProjectGroupCardTestbed());

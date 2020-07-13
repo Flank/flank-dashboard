@@ -18,7 +18,7 @@ void main() {
     const buttonText = 'testText';
 
     testWidgets(
-      "changes the cursor style for the project group dialog action button",
+      "applies a hand cursor to the project group dialog action button",
       (WidgetTester tester) async {
         final projectGroup = ProjectGroupDialogViewModel(
           id: 'id',

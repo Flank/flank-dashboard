@@ -10,7 +10,7 @@ import '../../../test_utils/test_injection_container.dart';
 void main() {
   group("ProjectCheckboxListTile", () {
     testWidgets(
-      "changes the cursor style for the checkbox list tile",
+      "applies a hand cursor to the checkbox list tile",
       (WidgetTester tester) async {
         const projectCheckboxViewModel = ProjectCheckboxViewModel(
           id: 'id',

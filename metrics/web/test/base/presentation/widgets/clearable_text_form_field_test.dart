@@ -76,7 +76,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the cursor style for the clear icon",
+      "applies a hand cursor to the clear icon",
       (WidgetTester tester) async {
         final controller = TextEditingController(text: 'text');
 

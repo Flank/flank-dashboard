@@ -25,7 +25,7 @@ void main() {
     });
 
     testWidgets(
-      "changes the cursor style for the app logo",
+      "applies a hand cursor to the app logo",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());
@@ -54,7 +54,7 @@ void main() {
     });
 
     testWidgets(
-      "changes the cursor style for the user menu icon",
+      "applies a hand cursor to the user menu icon",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());

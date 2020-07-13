@@ -39,7 +39,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the cursor style for the theme checkbox",
+      "applies a hand cursor to the theme checkbox",
       (WidgetTester tester) async {
         final themeNotifier = ThemeNotifierMock();
 
@@ -59,7 +59,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the cursor style for the 'Project groups' tile",
+      "applies a hand cursor to the 'Project groups' tile",
       (WidgetTester tester) async {
         final themeNotifier = ThemeNotifierMock();
 
@@ -79,7 +79,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the cursor style for the 'Log out' tile",
+      "applies a hand cursor to the 'Log out' tile",
       (WidgetTester tester) async {
         final themeNotifier = ThemeNotifierMock();
 
