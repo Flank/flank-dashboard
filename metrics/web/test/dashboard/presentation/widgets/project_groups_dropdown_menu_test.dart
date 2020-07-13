@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
@@ -5,8 +6,8 @@ import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_item.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_menu.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_body.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_menu.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -15,7 +16,7 @@ import '../../../test_utils/project_metrics_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
-  group("ProjectGroupsDropdown", () {
+  group("ProjectGroupsDropdownMenu", () {
     ProjectMetricsNotifier metricsNotifier;
 
     const firstDropdownItem = ProjectGroupDropdownItemViewModel(
@@ -44,7 +45,7 @@ void main() {
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _ProjectGroupsDropdownTestbed(metricsNotifier: metricsNotifier),
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
           );
         });
 
@@ -60,7 +61,7 @@ void main() {
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _ProjectGroupsDropdownTestbed(metricsNotifier: metricsNotifier),
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
           );
         });
 
@@ -74,11 +75,11 @@ void main() {
     );
 
     testWidgets(
-      "delegates a list of project group dropdown item view models to the dropdown menu widget",
+      "delegates a list of project group dropdown item view models to the DropdownMenu widget",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _ProjectGroupsDropdownTestbed(metricsNotifier: metricsNotifier),
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
           );
         });
 
@@ -93,12 +94,12 @@ void main() {
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _ProjectGroupsDropdownTestbed(metricsNotifier: metricsNotifier),
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
           );
         });
 
         final initialViewModelFinder = find.descendant(
-          of: find.byType(ProjectGroupsDropdown),
+          of: find.byType(ProjectGroupsDropdownMenu),
           matching: find.text(firstDropdownItem.name),
         );
 
@@ -107,21 +108,18 @@ void main() {
     );
 
     testWidgets(
-      "contains a ProjectGroupDropdownMenu widget as a menu of the dropdown menu widget",
+      "displays a ProjectGroupDropdownMenu widget as a menu of the DropdownMenu widget",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _ProjectGroupsDropdownTestbed(metricsNotifier: metricsNotifier),
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
           );
         });
 
-        await tester.tap(
-          find.byWidgetPredicate((widget) => widget is ProjectGroupsDropdown),
-        );
-
+        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
         await tester.pumpAndSettle();
 
-        expect(find.byType(ProjectGroupDropdownMenu), findsOneWidget);
+        expect(find.byType(ProjectGroupDropdownBody), findsOneWidget);
       },
     );
 
@@ -130,17 +128,21 @@ void main() {
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _ProjectGroupsDropdownTestbed(metricsNotifier: metricsNotifier),
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
           );
         });
 
-        await tester.tap(
-          find.byWidgetPredicate((widget) => widget is ProjectGroupsDropdown),
-        );
-
+        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
         await tester.pumpAndSettle();
 
-        expect(find.byType(ProjectGroupDropdownItem), findsWidgets);
+        final actualDropdownItems = tester
+            .widgetList<ProjectGroupDropdownItem>(
+              find.byType(ProjectGroupDropdownItem),
+            )
+            .map((item) => item.projectGroupDropdownItemViewModel)
+            .toList();
+
+        expect(listEquals(actualDropdownItems, dropdownItems), isTrue);
       },
     );
 
@@ -149,14 +151,11 @@ void main() {
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _ProjectGroupsDropdownTestbed(metricsNotifier: metricsNotifier),
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
           );
         });
 
-        await tester.tap(
-          find.byWidgetPredicate((widget) => widget is ProjectGroupsDropdown),
-        );
-
+        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
         await tester.pumpAndSettle();
 
         await tester.tap(find.text(secondDropdownItem.name));
@@ -168,18 +167,18 @@ void main() {
     );
 
     testWidgets(
-      "has a dropdown button that contains the dropdown icon",
+      "displays a dropdown button that contains the dropdown icon",
       (tester) async {
         const expectedImage = NetworkImage("icons/dropdown.svg");
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _ProjectGroupsDropdownTestbed(metricsNotifier: metricsNotifier),
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
           );
         });
 
         final imageFinder = find.descendant(
-          of: find.byType(ProjectGroupsDropdown),
+          of: find.byType(ProjectGroupsDropdownMenu),
           matching: find.byType(Image),
         );
 
@@ -191,13 +190,13 @@ void main() {
   });
 }
 
-/// A testbed class used to test the [ProjectGroupsDropdown] widget.
-class _ProjectGroupsDropdownTestbed extends StatelessWidget {
+/// A testbed class used to test the [ProjectGroupsDropdownMenu] widget.
+class _ProjectGroupsDropdownMenuTestbed extends StatelessWidget {
   /// A [ProjectMetricsNotifier] used in tests.
   final ProjectMetricsNotifier metricsNotifier;
 
   /// Creates the testbed with the given [metricsNotifier].
-  const _ProjectGroupsDropdownTestbed({
+  const _ProjectGroupsDropdownMenuTestbed({
     Key key,
     this.metricsNotifier,
   }) : super(key: key);
@@ -207,7 +206,7 @@ class _ProjectGroupsDropdownTestbed extends StatelessWidget {
     return TestInjectionContainer(
       metricsNotifier: metricsNotifier,
       child: MetricsThemedTestbed(
-        body: ProjectGroupsDropdown(),
+        body: ProjectGroupsDropdownMenu(),
       ),
     );
   }

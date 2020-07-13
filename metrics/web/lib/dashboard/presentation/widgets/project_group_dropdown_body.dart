@@ -2,23 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:selection_menu/components_configurations.dart';
 
 /// A widget that displays the dropdown menu.
-class ProjectGroupDropdownMenu extends StatefulWidget {
+class ProjectGroupDropdownBody extends StatefulWidget {
   /// An [AnimationComponentData] that provides an information about menu animation.
   final AnimationComponentData data;
 
-  /// Creates a [ProjectGroupDropdownMenu] with the given [data].
-  const ProjectGroupDropdownMenu({
+  /// Creates a [ProjectGroupDropdownBody] with the given [data].
+  const ProjectGroupDropdownBody({
     Key key,
     @required this.data,
   })  : assert(data != null),
         super(key: key);
 
   @override
-  _ProjectGroupDropdownMenuState createState() =>
-      _ProjectGroupDropdownMenuState();
+  _ProjectGroupDropdownBodyState createState() =>
+      _ProjectGroupDropdownBodyState();
 }
 
-class _ProjectGroupDropdownMenuState extends State<ProjectGroupDropdownMenu> {
+class _ProjectGroupDropdownBodyState extends State<ProjectGroupDropdownBody>
+    with SingleTickerProviderStateMixin {
   /// An animation controller used to animate the project group dropdown menu.
   AnimationController _controller;
 
@@ -28,7 +29,7 @@ class _ProjectGroupDropdownMenuState extends State<ProjectGroupDropdownMenu> {
     _controller = AnimationController(
       duration: data.menuAnimationDurations.forward,
       reverseDuration: data.menuAnimationDurations.reverse,
-      vsync: data.tickerProvider,
+      vsync: this,
     );
 
     _controller.addStatusListener(_animationStatusListener);

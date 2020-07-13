@@ -13,7 +13,7 @@ import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.da
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_menu.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:provider/provider.dart';
 
@@ -44,13 +44,13 @@ void main() {
     );
 
     testWidgets(
-      "contains the ProjectGroupsDropdown widget",
+      "contains the ProjectGroupsDropdownMenu widget",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DashboardTestbed());
         });
 
-        expect(find.byType(ProjectGroupsDropdown), findsOneWidget);
+        expect(find.byType(ProjectGroupsDropdownMenu), findsOneWidget);
       },
     );
 

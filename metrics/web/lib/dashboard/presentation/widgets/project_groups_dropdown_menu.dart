@@ -4,11 +4,11 @@ import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_item.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_menu.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_body.dart';
 import 'package:provider/provider.dart';
 
-/// A dropdown widget providing an ability to select a project group.
-class ProjectGroupsDropdown extends StatelessWidget {
+/// A dropdown menu widget providing an ability to select a project group.
+class ProjectGroupsDropdownMenu extends StatelessWidget {
   static const double _menuButtonHeight = 48.0;
 
   @override
@@ -25,7 +25,7 @@ class ProjectGroupsDropdown extends StatelessWidget {
           items: items,
           menuPadding: const EdgeInsets.only(top: _menuButtonHeight),
           menuBuilder: (data) {
-            return ProjectGroupDropdownMenu(data: data);
+            return ProjectGroupDropdownBody(data: data);
           },
           itemBuilder: (_, item) {
             return ProjectGroupDropdownItem(
@@ -44,7 +44,9 @@ class ProjectGroupsDropdown extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(item?.name ?? ''),
+                Flexible(
+                  child: Text(item?.name ?? ''),
+                ),
                 Image.network(
                   "icons/dropdown.svg",
                   height: 20.0,
