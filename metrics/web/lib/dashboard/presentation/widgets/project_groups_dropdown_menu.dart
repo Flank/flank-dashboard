@@ -3,8 +3,8 @@ import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_item.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_body.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_item.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_body.dart';
 import 'package:provider/provider.dart';
 
 /// A dropdown menu widget providing an ability to select a project group.
@@ -25,10 +25,10 @@ class ProjectGroupsDropdownMenu extends StatelessWidget {
           items: items,
           menuPadding: const EdgeInsets.only(top: _menuButtonHeight),
           menuBuilder: (data) {
-            return ProjectGroupDropdownBody(data: data);
+            return ProjectGroupsDropdownBody(data: data);
           },
           itemBuilder: (_, item) {
-            return ProjectGroupDropdownItem(
+            return ProjectGroupsDropdownItem(
               projectGroupDropdownItemViewModel: item,
             );
           },

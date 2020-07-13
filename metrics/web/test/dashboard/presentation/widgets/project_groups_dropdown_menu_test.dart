@@ -5,8 +5,8 @@ import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_item.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_body.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_body.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_item.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_menu.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -121,17 +121,17 @@ void main() {
           );
         });
 
-        final initialViewModelFinder = find.descendant(
+        final selectedItemFinder = find.descendant(
           of: find.byType(ProjectGroupsDropdownMenu),
           matching: find.text(firstDropdownItem.name),
         );
 
-        expect(initialViewModelFinder, findsOneWidget);
+        expect(selectedItemFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays a ProjectGroupDropdownMenu widget as a menu of the DropdownMenu widget",
+      "displays a ProjectGroupsDropdownBody widget as a menu of the DropdownMenu widget",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -142,7 +142,7 @@ void main() {
         await tester.tap(find.byType(ProjectGroupsDropdownMenu));
         await tester.pumpAndSettle();
 
-        expect(find.byType(ProjectGroupDropdownBody), findsOneWidget);
+        expect(find.byType(ProjectGroupsDropdownBody), findsOneWidget);
       },
     );
 
@@ -159,8 +159,8 @@ void main() {
         await tester.pumpAndSettle();
 
         final actualDropdownItems = tester
-            .widgetList<ProjectGroupDropdownItem>(
-              find.byType(ProjectGroupDropdownItem),
+            .widgetList<ProjectGroupsDropdownItem>(
+              find.byType(ProjectGroupsDropdownItem),
             )
             .map((item) => item.projectGroupDropdownItemViewModel)
             .toList();

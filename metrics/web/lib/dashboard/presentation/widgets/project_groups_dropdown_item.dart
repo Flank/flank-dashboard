@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 
 /// A widget that displays a project group within a dropdown.
-class ProjectGroupDropdownItem extends StatefulWidget {
+class ProjectGroupsDropdownItem extends StatefulWidget {
   /// A [ProjectGroupDropdownItemViewModel] with project group data to display.
   final ProjectGroupDropdownItemViewModel projectGroupDropdownItemViewModel;
 
-  /// Creates the [ProjectGroupDropdownItem]
+  /// Creates the [ProjectGroupsDropdownItem]
   /// with the given [projectGroupDropdownItemViewModel].
   ///
   /// The [projectGroupDropdownItemViewModel] must not be null.
-  const ProjectGroupDropdownItem({
+  const ProjectGroupsDropdownItem({
     Key key,
     @required this.projectGroupDropdownItemViewModel,
   })  : assert(projectGroupDropdownItemViewModel != null),
         super(key: key);
 
   @override
-  _ProjectGroupDropdownItemState createState() =>
-      _ProjectGroupDropdownItemState();
+  _ProjectGroupsDropdownItemState createState() =>
+      _ProjectGroupsDropdownItemState();
 }
 
-class _ProjectGroupDropdownItemState extends State<ProjectGroupDropdownItem> {
+class _ProjectGroupsDropdownItemState extends State<ProjectGroupsDropdownItem> {
   /// Indicates whether this widget is hovered or not.
   bool _isHovered = false;
 

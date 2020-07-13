@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/dashboard/presentation/widgets/project_group_dropdown_body.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_body.dart';
 import 'package:selection_menu/components_configurations.dart';
 
 void main() {
-  group("ProjectGroupDropdownBody", () {
+  group("ProjectGroupsDropdownBody", () {
     testWidgets(
       "throws an AssertionError if the given data is null",
       (tester) async {
@@ -101,7 +101,7 @@ void main() {
   });
 }
 
-/// A testbed class used to test the [ProjectGroupDropdownBody] widget.
+/// A testbed class used to test the [ProjectGroupsDropdownBody] widget.
 class _ProjectGroupsDropdownBodyTestbed extends StatefulWidget {
   /// An [AnimationComponentData] that provides an information about menu animation.
   final AnimationComponentData data;
@@ -128,7 +128,7 @@ class _ProjectGroupsDropdownBodyTestbedState
       home: Scaffold(
         body: Column(
           children: <Widget>[
-            ProjectGroupDropdownBody(data: widget.data),
+            ProjectGroupsDropdownBody(data: widget.data),
             FlatButton(
               key: _ProjectGroupsDropdownBodyTestbed.updateButtonKey,
               onPressed: () => setState(() {}),
