@@ -223,7 +223,83 @@ be started in [Intellij](https://youtrack.jetbrains.com/issue/WEB-44842)
       /// Test URL used for Jenkins configuration.
       static const String url = 'url';
     ```
+
+  ## Immutable classes
+
+  1. PREFER using the `@immutable` annotation for immutable classes.
+
+      `Good:`
+
+      ```dart
+      /// A view model class with the build number metric data.
+      @immutable
+      class BuildNumberScorecardViewModel {
+        /// A number of builds to display.
+        final int numberOfBuilds;
+
+        /// Creates the [BuildNumberScorecardViewModel] instance with
+        /// the given [numberOfBuilds].
+        const BuildNumberScorecardViewModel({
+          this.numberOfBuilds,
+        });
+      }
+      ```
+
+      `Bad:`
+
+      ```dart
+      /// A view model class with the build number metric data.
+      class BuildNumberScorecardViewModel {
+        /// A number of builds to display.
+        final int numberOfBuilds;
+
+        /// Creates the [BuildNumberScorecardViewModel] instance with
+        /// the given [numberOfBuilds].
+        const BuildNumberScorecardViewModel({
+          this.numberOfBuilds,
+        });
+      }
+      ```
+    
   
+  2. AVOID using the `@immutable` annotation when extending or implementing an immutable classes.
+
+      `Good:`
+
+      ```dart
+      /// A view model that contains the data for the percent displaying widgets.
+      class PercentViewModel extends Equatable {
+      ```
+      
+      `Bad:`
+
+      ```dart
+      /// A view model that contains the data for the percent displaying widgets.
+      @immutable
+      class PercentViewModel extends Equatable {
+      ```
+  
+  3. DO use the `immutable` collections in classes extending `Equatable`.
+
+      `Good:`
+
+      ```dart
+      /// A view model that represents the data of the performance metric to display.
+      class PerformanceSparklineViewModel extends Equatable {
+        /// A list of points representing the performance of the project builds.
+        final UnmodifiableListView<Point<int>> performance;
+      ```
+      
+      `Bad:`
+
+      ```dart
+      /// A view model that represents the data of the performance metric to display.
+      class PerformanceSparklineViewModel extends Equatable {
+        /// A list of points representing the performance of the project builds.
+        final List<Point<int>> performance;
+      ```
+  
+
 # Testing
 
 > How will the project be tested?
