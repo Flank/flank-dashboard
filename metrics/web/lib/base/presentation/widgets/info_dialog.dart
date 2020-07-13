@@ -9,8 +9,14 @@ class InfoDialog extends StatelessWidget {
   /// An empty space between the main content and dialog's edges.
   final EdgeInsetsGeometry padding;
 
+  /// An empty space that surrounds the close button.
+  final EdgeInsetsGeometry closeButtonPadding;
+
   /// A max width of this dialog.
   final double maxWidth;
+
+  /// A max height of this dialog.
+  final double maxHeight;
 
   /// A text title of this dialog.
   final Widget title;
@@ -51,8 +57,10 @@ class InfoDialog extends StatelessWidget {
     this.titlePadding = EdgeInsets.zero,
     this.contentPadding = EdgeInsets.zero,
     this.actionsPadding = EdgeInsets.zero,
+    this.closeButtonPadding = EdgeInsets.zero,
     this.actionsAlignment = MainAxisAlignment.start,
-    this.maxWidth = 500.0,
+    this.maxWidth = 480.0,
+    this.maxHeight = 726.0,
   })  : assert(title != null),
         assert(actions != null),
         super(key: key);
@@ -62,38 +70,48 @@ class InfoDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: backgroundColor,
       child: Container(
-        padding: padding,
         constraints: BoxConstraints(
           maxWidth: maxWidth,
+          maxHeight: maxHeight,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: <Widget>[
+            Padding(
+              padding: padding,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: titlePadding,
+                    child: title,
+                  ),
+                  Flexible(
+                    child: Padding(
+                      padding: contentPadding,
+                      child: content,
+                    ),
+                  ),
+                  Padding(
+                    padding: actionsPadding,
+                    child: Row(
+                      mainAxisAlignment: actionsAlignment,
+                      children: actions,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: Alignment.topRight,
               child: HandCursor(
                 child: GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
-                  child: const Icon(Icons.close),
+                  child: Padding(
+                    padding: closeButtonPadding,
+                    child: const Icon(Icons.close),
+                  ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: titlePadding,
-              child: title,
-            ),
-            Flexible(
-              child: Padding(
-                padding: contentPadding,
-                child: content,
-              ),
-            ),
-            Padding(
-              padding: actionsPadding,
-              child: Row(
-                mainAxisAlignment: actionsAlignment,
-                children: actions,
               ),
             ),
           ],

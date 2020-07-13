@@ -3,8 +3,11 @@ import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 
 /// A [TextFormField] widget with an ability to clean its content.
 class ClearableTextFormField extends StatefulWidget {
-  /// A text field label.
-  final String label;
+  /// A text field hint text. // todo change naming tests.
+  final String hintText;
+
+  /// The style to use for the text being edited. //todo add test
+  final TextStyle textStyle;
 
   /// A text field controller.
   final TextEditingController controller;
@@ -17,13 +20,14 @@ class ClearableTextFormField extends StatefulWidget {
 
   /// Creates a new instance of the [ClearableTextFormField].
   ///
-  /// The [label] and the [controller] arguments must not be null.
+  /// The [hintText] and the [controller] arguments must not be null.
   const ClearableTextFormField({
-    @required this.label,
+    @required this.hintText,
     @required this.controller,
     this.validator,
     this.border,
-  })  : assert(label != null),
+    this.textStyle,
+  })  : assert(hintText != null),
         assert(controller != null);
 
   @override
@@ -43,8 +47,9 @@ class _ClearableTextFormFieldState extends State<ClearableTextFormField> {
     return TextFormField(
       controller: widget.controller,
       validator: widget.validator,
+      style: widget.textStyle,
       decoration: InputDecoration(
-        labelText: widget.label,
+        hintText: widget.hintText,
         suffixIcon: widget.controller.text.isNotEmpty
             ? HandCursor(
                 child: IconButton(

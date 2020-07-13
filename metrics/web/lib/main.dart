@@ -9,6 +9,7 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
 
 import 'common/presentation/metrics_theme/config/color_config.dart';
+import 'common/presentation/metrics_theme/config/dimensions_config.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,6 +43,9 @@ class _MyAppState extends State<MyApp> {
               textTheme: GoogleFonts.robotoTextTheme(
                 Typography.blackMountainView,
               ),
+              buttonTheme: const ButtonThemeData(
+                height: DimensionsConfig.buttonHeight,
+              ),
               scaffoldBackgroundColor: ColorConfig.lightScaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
                 filled: true,
@@ -57,6 +61,9 @@ class _MyAppState extends State<MyApp> {
               primaryColorBrightness: Brightness.dark,
               textTheme: GoogleFonts.robotoTextTheme(
                 Typography.whiteMountainView,
+              ),
+              buttonTheme: const ButtonThemeData(
+                height: DimensionsConfig.buttonHeight,
               ),
               scaffoldBackgroundColor: ColorConfig.darkScaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(

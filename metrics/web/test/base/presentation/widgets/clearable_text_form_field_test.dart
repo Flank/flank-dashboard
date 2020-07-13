@@ -188,7 +188,7 @@ class _ClearableTextFormFieldTestbed extends StatelessWidget {
         body: Form(
           key: formKey,
           child: ClearableTextFormField(
-            label: label,
+            hintText: label,
             controller: controller,
             validator: validator,
             border: border,
