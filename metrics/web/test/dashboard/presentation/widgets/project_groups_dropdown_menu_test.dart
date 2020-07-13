@@ -50,7 +50,7 @@ void main() {
         });
 
         expect(
-          find.byWidgetPredicate((widget) => widget is DropdownMenu),
+          dropdownMenuFinder,
           findsOneWidget,
         );
       },
