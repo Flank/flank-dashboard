@@ -74,7 +74,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a primary color from the metrics theme to the color of the image widget",
+      "applies a primary color from the metrics theme to the image widget color",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -89,7 +89,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a text style from the metrics theme to the text style of the add project group text",
+      "applies a text style from the metrics theme to the add project group text style",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -203,7 +203,7 @@ void main() {
     );
 
     testWidgets(
-      "resets project group dialog view model from project groups notifier after closing the add project group dialog",
+      "resets project group dialog view model after closing the add project group dialog",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 

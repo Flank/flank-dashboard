@@ -122,7 +122,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the border color from the metrics theme to the border side of the padded card",
+      "applies the border color from the metrics theme to the padded card",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ProjectGroupCardTestbed(
           theme: testTheme,
@@ -137,7 +137,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the title style from the metrics theme to the project group card view model name text",
+      "applies the title style from the metrics theme to the name text",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ProjectGroupCardTestbed(
           theme: testTheme,
@@ -153,7 +153,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the subtitle style from the metrics theme to the project groups count text",
+      "applies the subtitle style from the metrics theme to the count text",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ProjectGroupCardTestbed(
           theme: testTheme,
@@ -173,7 +173,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the primary color from the metrics theme to the label style of the edit button",
+      "applies the primary color from the metrics theme to the edit button label",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ProjectGroupCardTestbed(
           theme: testTheme,
@@ -193,7 +193,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the primary color from the metrics theme to the label style of the delete button",
+      "applies the primary color from the metrics theme to the delete button label",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ProjectGroupCardTestbed(
           theme: testTheme,
@@ -314,7 +314,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the no projects text if a projects count equals to 0",
+      "displays the no projects text if the projects count equals to 0",
       (WidgetTester tester) async {
         const projectGroupCardViewModel = ProjectGroupCardViewModel(
           id: 'id',
@@ -364,7 +364,7 @@ void main() {
     );
 
     testWidgets(
-      "inits project group dialog view model in project groups notifier on tap on the edit button",
+      "inits project group dialog view model on tap on the edit button",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
         const projectId = 'id1';
