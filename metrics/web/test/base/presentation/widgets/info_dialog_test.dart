@@ -292,7 +292,6 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(
-            title: text,
             contentPadding: padding,
             content: content,
           ),
