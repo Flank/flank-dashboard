@@ -4,32 +4,16 @@ import 'package:metrics/base/presentation/widgets/clearable_text_form_field.dart
 
 void main() {
   group("ClearableTextFormField", () {
-    const label = 'label';
-
     final clearIconButtonFinder = find.descendant(
       of: find.byType(IconButton),
       matching: find.byIcon(Icons.close),
     );
 
     testWidgets(
-      "throws an AssertionError if the given label is null",
-      (tester) async {
-        await tester.pumpWidget(
-          _ClearableTextFormFieldTestbed(
-            label: null,
-            controller: TextEditingController(),
-          ),
-        );
-
-        expect(tester.takeException(), isAssertionError);
-      },
-    );
-
-    testWidgets(
       "throws an AssertionError if the given controller is null",
       (tester) async {
         await tester.pumpWidget(
-          const _ClearableTextFormFieldTestbed(label: label, controller: null),
+          const _ClearableTextFormFieldTestbed(controller: null),
         );
 
         expect(tester.takeException(), isAssertionError);
@@ -37,38 +21,52 @@ void main() {
     );
 
     testWidgets(
-      "applies the given label",
+      "applies the given text editing controller",
       (WidgetTester tester) async {
-        final controller = TextEditingController();
+        final testController = TextEditingController();
 
         await tester.pumpWidget(
-          _ClearableTextFormFieldTestbed(label: label, controller: controller),
+          _ClearableTextFormFieldTestbed(
+            controller: testController,
+          ),
         );
 
-        expect(find.text(label), findsOneWidget);
+        final textField = tester.widget<TextField>(find.byType(TextField));
+
+        expect(textField.controller, equals(testController));
       },
     );
 
     testWidgets(
-      "does not display a clear icon if an input is empty",
+      "applies the given validator",
       (WidgetTester tester) async {
         final controller = TextEditingController();
+        String validator(String value) {
+          return null;
+        }
 
         await tester.pumpWidget(
-          _ClearableTextFormFieldTestbed(label: label, controller: controller),
+          _ClearableTextFormFieldTestbed(
+            controller: controller,
+            validator: validator,
+          ),
         );
 
-        expect(clearIconButtonFinder, findsNothing);
+        final textFormField = tester.widget<TextFormField>(
+          find.byType(TextFormField),
+        );
+
+        expect(textFormField.validator, equals(validator));
       },
     );
 
     testWidgets(
-      "displays a clear icon if an input is not empty",
+      "displays the default clear icon if it's null an input is not empty",
       (WidgetTester tester) async {
         final controller = TextEditingController(text: 'text');
 
         await tester.pumpWidget(
-          _ClearableTextFormFieldTestbed(label: label, controller: controller),
+          _ClearableTextFormFieldTestbed(controller: controller),
         );
 
         expect(clearIconButtonFinder, findsOneWidget);
@@ -76,8 +74,122 @@ void main() {
     );
 
     testWidgets(
-      "applies a hand cursor to the clear icon",
+      "does not display the default clear icon if it's null an input is empty",
       (WidgetTester tester) async {
+        final controller = TextEditingController(text: 'text');
+
+        await tester.pumpWidget(
+          _ClearableTextFormFieldTestbed(controller: controller),
+        );
+
+        expect(
+          clearIconButtonFinder,
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      "applies the default input decoration if it's null",
+      (WidgetTester tester) async {
+        final controller = TextEditingController();
+
+        await tester.pumpWidget(
+          _ClearableTextFormFieldTestbed(controller: controller),
+        );
+
+        final textField = tester.widget<TextField>(find.byType(TextField));
+
+        expect(textField.decoration, isNotNull);
+      },
+    );
+
+    testWidgets(
+      "applies the given input decoration",
+      (WidgetTester tester) async {
+        const inputDecoration = InputDecoration();
+        final globalKey = GlobalKey();
+        final controller = TextEditingController();
+
+        await tester.pumpWidget(
+          _ClearableTextFormFieldTestbed(
+            key: globalKey,
+            controller: controller,
+            inputDecoration: inputDecoration,
+          ),
+        );
+
+        final theme = Theme.of(globalKey.currentContext);
+        final defaultInputDecoration = inputDecoration.applyDefaults(
+          theme.inputDecorationTheme,
+        );
+        final textField = tester.widget<TextField>(find.byType(TextField));
+
+        expect(textField.decoration, equals(defaultInputDecoration));
+      },
+    );
+
+    testWidgets("applies the given textStyle", (WidgetTester tester) async {
+      const testTextStyle = TextStyle();
+      final controller = TextEditingController();
+
+      await tester.pumpWidget(
+        _ClearableTextFormFieldTestbed(
+          controller: controller,
+          textStyle: testTextStyle,
+        ),
+      );
+
+      final textField = tester.widget<TextField>(
+        find.byType(TextField),
+      );
+
+      expect(textField.style, equals(testTextStyle));
+    });
+
+    testWidgets(
+      "does not display the given clear icon if an input is empty",
+      (WidgetTester tester) async {
+        const clearIcon = Icon(Icons.close);
+        final controller = TextEditingController();
+
+        await tester.pumpWidget(
+          _ClearableTextFormFieldTestbed(
+            controller: controller,
+            clearIcon: clearIcon,
+          ),
+        );
+
+        expect(
+          find.byWidget(clearIcon),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets(
+      "displays the given clear icon if an input is not empty",
+      (WidgetTester tester) async {
+        const clearIcon = Icon(Icons.close);
+        final controller = TextEditingController(text: 'text');
+
+        await tester.pumpWidget(
+          _ClearableTextFormFieldTestbed(
+            controller: controller,
+            clearIcon: clearIcon,
+          ),
+        );
+
+        expect(
+          find.byWidget(clearIcon),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      "applies a hand cursor to the clear icon",
+          (WidgetTester tester) async {
         final controller = TextEditingController(text: 'text');
 
         await tester.pumpWidget(
@@ -91,14 +203,15 @@ void main() {
     testWidgets(
       "calls the validation callback on form validation",
       (WidgetTester tester) async {
+        final controller = TextEditingController(text: 'text');
+
         bool _callbackIsCalled = false;
         final _formKey = GlobalKey<FormState>();
 
         await tester.pumpWidget(
           _ClearableTextFormFieldTestbed(
             formKey: _formKey,
-            label: label,
-            controller: TextEditingController(text: 'text'),
+            controller: controller,
             validator: (String value) {
               _callbackIsCalled = true;
               return null;
@@ -113,36 +226,12 @@ void main() {
     );
 
     testWidgets(
-      "applies the given border",
+      "clears an input on tap on a clear icon",
       (WidgetTester tester) async {
         final controller = TextEditingController(text: 'text');
-        const border = OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-        );
 
         await tester.pumpWidget(
-          _ClearableTextFormFieldTestbed(
-            label: label,
-            controller: controller,
-            border: border,
-          ),
-        );
-
-        final widget = tester.widget<ClearableTextFormField>(
-          find.byType(ClearableTextFormField),
-        );
-
-        expect(widget.border, border);
-      },
-    );
-
-    testWidgets(
-      "clears an input on tap on a clear icon",
-      (tester) async {
-        final controller = TextEditingController(text: 'text');
-
-        await tester.pumpWidget(
-          _ClearableTextFormFieldTestbed(label: label, controller: controller),
+          _ClearableTextFormFieldTestbed(controller: controller),
         );
 
         await tester.tap(clearIconButtonFinder);
@@ -156,8 +245,11 @@ void main() {
 
 /// A testbed class required to test the [ClearableTextFormField] widget.
 class _ClearableTextFormFieldTestbed extends StatelessWidget {
-  /// A text field label.
-  final String label;
+  /// The style to use for the text being edited.
+  final TextStyle textStyle;
+
+  /// The icon to use for the clear content button within this text field.
+  final Widget clearIcon;
 
   /// A text field controller.
   final TextEditingController controller;
@@ -165,8 +257,11 @@ class _ClearableTextFormFieldTestbed extends StatelessWidget {
   /// A text field form validator.
   final FormFieldValidator<String> validator;
 
-  /// The shape of the border to draw around the decoration's container.
-  final InputBorder border;
+  /// The decoration to show around this text field.
+  ///
+  /// The [InputDecoration.suffixIcon] is ignored and replaced with
+  /// the clear [IconButton]. To change the clear button use the [clearIcon].
+  final InputDecoration inputDecoration;
 
   /// The unique key for accessing the [Form].
   final GlobalKey formKey;
@@ -175,10 +270,11 @@ class _ClearableTextFormFieldTestbed extends StatelessWidget {
   const _ClearableTextFormFieldTestbed({
     Key key,
     this.formKey,
-    this.label,
     this.controller,
     this.validator,
-    this.border,
+    this.clearIcon,
+    this.inputDecoration,
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -188,10 +284,11 @@ class _ClearableTextFormFieldTestbed extends StatelessWidget {
         body: Form(
           key: formKey,
           child: ClearableTextFormField(
-            hintText: label,
             controller: controller,
             validator: validator,
-            border: border,
+            inputDecoration: inputDecoration,
+            textStyle: textStyle,
+            clearIcon: clearIcon,
           ),
         ),
       ),

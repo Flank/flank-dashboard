@@ -3,11 +3,11 @@ import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 
 /// A [TextFormField] widget with an ability to clean its content.
 class ClearableTextFormField extends StatefulWidget {
-  /// A text field hint text. // todo change naming tests.
-  final String hintText;
-
-  /// The style to use for the text being edited. //todo add test
+  /// A [TextStyle] to use for the text being edited.
   final TextStyle textStyle;
+
+  /// An icon to use for the clear content button within this text field.
+  final Widget clearIcon;
 
   /// A text field controller.
   final TextEditingController controller;
@@ -15,20 +15,27 @@ class ClearableTextFormField extends StatefulWidget {
   /// A text field form validator.
   final FormFieldValidator<String> validator;
 
-  /// The shape of the border to draw around the decoration's container.
-  final InputBorder border;
+  /// The decoration to show around this text field.
+  ///
+  /// The [InputDecoration.suffixIcon] is ignored and replaced with
+  /// the clear [IconButton]. To change the clear button use the [clearIcon].
+  final InputDecoration inputDecoration;
 
   /// Creates a new instance of the [ClearableTextFormField].
   ///
-  /// The [hintText] and the [controller] arguments must not be null.
+  /// If the [inputDecoration] is null, the empty [InputDecoration] is used.
+  /// If the [clearIcon] is null, the [Icon] with [Icons.close] is used.
+  ///
+  /// The [controller] argument must not be null.
   const ClearableTextFormField({
-    @required this.hintText,
     @required this.controller,
+    InputDecoration inputDecoration,
+    Widget clearIcon,
     this.validator,
-    this.border,
     this.textStyle,
-  })  : assert(hintText != null),
-        assert(controller != null);
+  })  : assert(controller != null),
+        inputDecoration = inputDecoration ?? const InputDecoration(),
+        clearIcon = clearIcon ?? const Icon(Icons.close, size: 18.0);
 
   @override
   _ClearableTextFormFieldState createState() => _ClearableTextFormFieldState();
@@ -48,19 +55,17 @@ class _ClearableTextFormFieldState extends State<ClearableTextFormField> {
       controller: widget.controller,
       validator: widget.validator,
       style: widget.textStyle,
-      decoration: InputDecoration(
-        hintText: widget.hintText,
+      decoration: widget.inputDecoration.copyWith(
         suffixIcon: widget.controller.text.isNotEmpty
             ? HandCursor(
                 child: IconButton(
                   splashColor: Colors.transparent,
                   hoverColor: Colors.transparent,
-                  icon: const Icon(Icons.close, size: 18.0),
+                  icon: widget.clearIcon,
                   onPressed: _clearField,
                 ),
               )
             : null,
-        border: widget.border,
       ),
     );
   }

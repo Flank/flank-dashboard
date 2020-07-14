@@ -6,6 +6,9 @@ class InfoDialog extends StatelessWidget {
   /// A background color of this dialog.
   final Color backgroundColor;
 
+  /// A widget that is displayed as a close button for this dialog.
+  final Widget closeIcon;
+
   /// An empty space between the main content and dialog's edges.
   final EdgeInsetsGeometry padding;
 
@@ -42,13 +45,18 @@ class InfoDialog extends StatelessWidget {
   /// Creates an [InfoDialog].
   ///
   /// The [padding], the [titlePadding], the [contentPadding]
-  /// and the [actionsPadding] default value is [EdgeInsets.zero].
-  /// The [actionsAlignment] default value is [MainAxisAlignment.start].
-  /// The [maxWidth] default value is 500.0.
+  /// and the [actionsPadding] and the [closeButtonPadding]
+  /// default value is [EdgeInsets.zero].
   ///
-  /// [title], [content], [actions] and [maxWidth] must not be null.
+  /// The [actionsAlignment] default value is [MainAxisAlignment.start].
+  /// The [maxWidth] default value is 480.0.
+  /// The [maxHeight] default value is 726.0.
+  /// If the [closeIcon] is null, the [Icon] with [Icons.close] is used.
+  ///
+  /// The [title] and the [actions] must not be null.
   const InfoDialog({
     Key key,
+    Widget closeIcon,
     @required this.title,
     @required this.actions,
     this.content,
@@ -63,6 +71,7 @@ class InfoDialog extends StatelessWidget {
     this.maxHeight = 726.0,
   })  : assert(title != null),
         assert(actions != null),
+        closeIcon = closeIcon ?? const Icon(Icons.close),
         super(key: key);
 
   @override
@@ -109,7 +118,7 @@ class InfoDialog extends StatelessWidget {
                   onTap: () => Navigator.of(context).pop(),
                   child: Padding(
                     padding: closeButtonPadding,
-                    child: const Icon(Icons.close),
+                    child: closeIcon,
                   ),
                 ),
               ),
