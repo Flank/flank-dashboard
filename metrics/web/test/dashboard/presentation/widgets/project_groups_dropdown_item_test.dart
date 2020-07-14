@@ -49,6 +49,26 @@ void main() {
     );
 
     testWidgets(
+      "does not overflows on a very long project group name",
+      (tester) async {
+        const projectGroupDropdownItemViewModel =
+            ProjectGroupDropdownItemViewModel(
+          name:
+              "very long name to test that the widget does not overflows if the name of the project group is very long",
+        );
+
+        await tester.pumpWidget(const _ProjectGroupsDropdownTestbed(
+          projectGroupDropdownItemViewModel: projectGroupDropdownItemViewModel,
+        ));
+
+        expect(
+          tester.takeException(),
+          isNull,
+        );
+      },
+    );
+
+    testWidgets(
       "changes a background color if the widget is hovered",
       (tester) async {
         await tester.pumpWidget(const _ProjectGroupsDropdownTestbed(

@@ -20,9 +20,11 @@ void main() {
     testWidgets(
       "applies the biggest height from the AnimationComponentData constraints to the Container constraints",
       (tester) async {
+        final animationComponentData = _AnimationComponentDataStub();
+
         await tester.pumpWidget(
           _ProjectGroupsDropdownBodyTestbed(
-            data: _AnimationComponentDataStub(),
+            data: animationComponentData,
           ),
         );
 
@@ -35,7 +37,7 @@ void main() {
 
         expect(
           container.constraints.maxHeight,
-          equals(_AnimationComponentDataStub.maxHeight),
+          equals(animationComponentData.constraints.maxHeight),
         );
       },
     );
@@ -147,9 +149,6 @@ class _ProjectGroupsDropdownBodyTestbedState
 class _AnimationComponentDataStub implements AnimationComponentData {
   static const Duration _animationDuration = Duration(milliseconds: 100);
 
-  static const maxHeight = 120.0;
-  static const widgetText = 'child';
-
   /// Holds an info if [opened] was called at least once.
   bool _isOpenedCalled = false;
 
@@ -166,11 +165,11 @@ class _AnimationComponentDataStub implements AnimationComponentData {
   MenuState menuState = MenuState.OpeningStart;
 
   @override
-  final Widget child = const Text(widgetText);
+  final Widget child = const Text('child');
 
   @override
   final BoxConstraints constraints = const BoxConstraints(
-    maxHeight: maxHeight,
+    maxHeight: 120.0,
   );
 
   @override
