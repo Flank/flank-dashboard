@@ -43,22 +43,20 @@ void main() {
       },
     );
 
-    group("AddProjectGroupCard", () {
-      testWidgets(
-        "applies a hand cursor to the card",
-        (WidgetTester tester) async {
-          await mockNetworkImagesFor(() {
-            return tester.pumpWidget(const _AddProjectGroupCardTestbed());
-          });
+    testWidgets(
+      "applies a hand cursor to the card",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _AddProjectGroupCardTestbed());
+        });
 
-          final finder = find.byWidgetPredicate(
-            (widget) => widget is PaddedCard && widget.child is HandCursor,
-          );
+        final finder = find.byWidgetPredicate(
+          (widget) => widget is PaddedCard && widget.child is HandCursor,
+        );
 
-          expect(finder, findsOneWidget);
-        },
-      );
-    });
+        expect(finder, findsOneWidget);
+      },
+    );
 
     testWidgets(
       "applies a background color from the metrics theme to the padded card widget",
@@ -76,7 +74,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a primary color from the metrics add project group card theme to the color of the image widget",
+      "applies a primary color from the metrics theme to the color of the image widget",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -91,7 +89,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a text style from the metrics add project group card theme to the text style of the add project group text",
+      "applies a text style from the metrics theme to the text style of the add project group text",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -150,7 +148,7 @@ void main() {
     );
 
     testWidgets(
-      "calls the .initProjectGroupDialogViewModel() method from project groups notifier on tap on the card",
+      "inits the project group dialog view model on tap on the card",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
