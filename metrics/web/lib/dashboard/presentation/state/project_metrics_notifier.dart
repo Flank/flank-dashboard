@@ -46,6 +46,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Holds the list of current [ProjectModel]s.
   List<ProjectModel> _projects;
 
+  /// Holds the list of current [ProjectGroupDropdownItemViewModel]s.
   static const List<ProjectGroupDropdownItemViewModel>
       _projectGroupDropdownItems = [
     ProjectGroupDropdownItemViewModel(name: 'All projects'),
@@ -54,6 +55,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     ProjectGroupDropdownItemViewModel(name: 'CLI tools'),
   ];
 
+  /// Provides a list of [ProjectMetricsTileViewModel]s.
   List<ProjectGroupDropdownItemViewModel> get projectGroupDropdownItems =>
       _projectGroupDropdownItems;
 

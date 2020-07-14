@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:selection_menu/components_configurations.dart';
 
-/// A widget that displays the dropdown menu.
+/// A widget that displays the dropdown body.
 class ProjectGroupsDropdownBody extends StatefulWidget {
-  /// An [AnimationComponentData] that provides an information about menu animation.
+  /// An [AnimationComponentData] that provides an information
+  /// about dropdown body animation.
   final AnimationComponentData data;
 
   /// Creates a [ProjectGroupsDropdownBody] with the given [data].
+  ///
+  /// The [data] must not be null.
   const ProjectGroupsDropdownBody({
     Key key,
     @required this.data,
@@ -20,7 +23,7 @@ class ProjectGroupsDropdownBody extends StatefulWidget {
 
 class _ProjectGroupsDropdownBodyState extends State<ProjectGroupsDropdownBody>
     with SingleTickerProviderStateMixin {
-  /// An animation controller used to animate the project group dropdown menu.
+  /// An animation controller used to animate the project group dropdown body.
   AnimationController _controller;
 
   @override
