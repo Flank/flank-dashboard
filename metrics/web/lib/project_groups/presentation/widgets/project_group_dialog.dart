@@ -72,13 +72,14 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
         final buttonText = _isLoading ? strategy.loadingText : strategy.text;
 
         return InfoDialog(
-          closeButtonPadding: const EdgeInsets.only(top: 19.0, right: 20.0),
+          closeIconPadding: const EdgeInsets.only(top: 16.0, right: 16.0),
           backgroundColor: dialogTheme.backgroundColor,
           padding: const EdgeInsets.all(40.0),
           title: Text(
             strategy.title,
             style: dialogTheme.titleTextStyle,
           ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 32.0),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -134,7 +135,6 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
               ),
             ],
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 32.0),
           actions: <Widget>[
             Expanded(
               child: HandCursor(

@@ -7,7 +7,7 @@ void main() {
   group("InfoDialog", () {
     const content = Text('content text');
     const padding = EdgeInsets.all(10.0);
-    const actions = [Text("Action")];
+    const actions = [Text('Action')];
     const title = Text('title');
 
     testWidgets(
@@ -39,15 +39,13 @@ void main() {
     testWidgets(
       "displays the given title",
       (WidgetTester tester) async {
-        const text = Text("text");
-
         await tester.pumpWidget(
           const _InfoDialogTestbed(
-            title: text,
+            title: title,
           ),
         );
 
-        expect(find.byWidget(text), findsOneWidget);
+        expect(find.byWidget(title), findsOneWidget);
       },
     );
 
@@ -88,7 +86,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given padding to the close button",
+      "applies the given padding to the close icon",
       (WidgetTester tester) async {
         const closeIcon = Icon(Icons.close);
 
@@ -201,17 +199,13 @@ void main() {
           const _InfoDialogTestbed(maxHeight: expectedMaxHeight),
         );
 
-        final containerWidget = tester.widget<Container>(
-          find.descendant(
-            of: find.byType(Dialog),
-            matching: find.byType(Container).first,
-          ),
-        );
+        final containerWidget = tester.widget<Container>(find.descendant(
+          of: find.byType(Dialog),
+          matching: find.byType(Container).first,
+        ));
+        final constraints = containerWidget.constraints;
 
-        expect(
-          containerWidget.constraints.maxHeight,
-          equals(expectedMaxHeight),
-        );
+        expect(constraints.maxHeight, equals(expectedMaxHeight));
       },
     );
 
@@ -244,24 +238,20 @@ void main() {
     );
 
     testWidgets(
-      "display the default close icon if it's null",
+      "displays the default close icon if the given is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(),
         );
 
-        expect(
-          find.descendant(
-            of: find.byType(GestureDetector),
-            matching: find.byType(Icon),
-          ),
-          findsOneWidget,
-        );
+        final iconFinder = find.byIcon(Icons.close);
+
+        expect(iconFinder, findsOneWidget);
       },
     );
 
-    testWidgets("display the given close icon", (WidgetTester tester) async {
-      const closeIcon = Icon(Icons.close);
+    testWidgets("displays the given close icon", (WidgetTester tester) async {
+      const closeIcon = Icon(Icons.cancel);
 
       await tester.pumpWidget(
         const _InfoDialogTestbed(
@@ -386,7 +376,7 @@ class _InfoDialogTestbed extends StatelessWidget {
     this.closeButtonPadding = EdgeInsets.zero,
     this.actionsAlignment = MainAxisAlignment.start,
     this.maxHeight = 726.0,
-    this.maxWidth = 500.0,
+    this.maxWidth = 480.0,
   }) : super(key: key);
 
   @override
@@ -400,7 +390,7 @@ class _InfoDialogTestbed extends StatelessWidget {
           backgroundColor: backgroundColor,
           padding: padding,
           closeIcon: closeIcon,
-          closeButtonPadding: closeButtonPadding,
+          closeIconPadding: closeButtonPadding,
           titlePadding: titlePadding,
           contentPadding: contentPadding,
           actionsPadding: actionsPadding,
