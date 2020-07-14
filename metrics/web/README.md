@@ -26,8 +26,6 @@ samples, guidance on mobile development, and a full API reference.
 * [collection](https://pub.dev/packages/collection) - Collections and utilities functions and classes related to collections.
 * [args](https://pub.dev/packages/args) - args is a library for defining parsers for parsing raw command-line arguments into a set of options and values using GNU and POSIX style options.
 
-
-
 ## Tutorials
 
 * [Flutter TDD Clean Architecture Course](https://resocoder.com/category/tutorials/flutter/tdd-clean-architecture/) - A tutorial series to learn how to architect Flutter apps using test driven development.
