@@ -223,8 +223,8 @@ void main() {
     testWidgets(
       "displays the given actions",
       (WidgetTester tester) async {
-        const firstAction = Text('first action text');
-        const secondAction = Text('second action text');
+        const firstAction = Text('first action');
+        const secondAction = Text('second action');
 
         const actions = [firstAction, secondAction];
 
