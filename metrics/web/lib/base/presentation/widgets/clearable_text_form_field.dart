@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 
 /// A [TextFormField] widget with an ability to clean its content.
 class ClearableTextFormField extends StatefulWidget {
@@ -45,11 +46,13 @@ class _ClearableTextFormFieldState extends State<ClearableTextFormField> {
       decoration: InputDecoration(
         labelText: widget.label,
         suffixIcon: widget.controller.text.isNotEmpty
-            ? IconButton(
-                splashColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                icon: const Icon(Icons.close, size: 18.0),
-                onPressed: _clearField,
+            ? HandCursor(
+                child: IconButton(
+                  splashColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  icon: const Icon(Icons.close, size: 18.0),
+                  onPressed: _clearField,
+                ),
               )
             : null,
         border: widget.border,

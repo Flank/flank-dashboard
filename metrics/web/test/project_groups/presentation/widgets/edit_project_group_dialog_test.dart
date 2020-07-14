@@ -18,10 +18,9 @@ void main() {
       "displays the ProjectGroupDialog with the edit project group strategy",
       (WidgetTester tester) async {
         final projectGroup = ProjectGroupDialogViewModel(
-          id: 'id',
-          name: 'name',
-          selectedProjectIds: UnmodifiableListView([])
-        );
+            id: 'id',
+            name: 'name',
+            selectedProjectIds: UnmodifiableListView([]));
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.projectGroupDialogViewModel).thenReturn(projectGroup);
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -39,21 +40,25 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(CommonStrings.cancel),
+              child: HandCursor(
+                child: FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(CommonStrings.cancel),
+                ),
               ),
             ),
-            RaisedButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
+            HandCursor(
+              child: RaisedButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                onPressed: _isLoading
+                    ? null
+                    : () => _deleteProjectGroup(deleteViewModel),
+                child: Text(buttonText),
               ),
-              onPressed: _isLoading
-                  ? null
-                  : () => _deleteProjectGroup(deleteViewModel),
-              child: Text(buttonText),
             ),
           ],
         );

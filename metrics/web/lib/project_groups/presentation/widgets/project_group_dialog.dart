@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/clearable_text_form_field.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -127,13 +128,15 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+                HandCursor(
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    onPressed:
+                        _isLoading ? null : () => _actionCallback(projectGroup),
+                    child: Text(buttonText),
                   ),
-                  onPressed:
-                      _isLoading ? null : () => _actionCallback(projectGroup),
-                  child: Text(buttonText),
                 ),
               ],
             ),

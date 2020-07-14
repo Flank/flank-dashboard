@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -20,25 +21,27 @@ class AddProjectGroupCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
         ),
-        child: InkWell(
-          onTap: () => _showProjectGroupDialog(context),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.network(
-                'icons/add.svg',
-                width: 32.0,
-                height: 32.0,
-                color: theme.primaryColor,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  ProjectGroupsStrings.addProjectGroup,
-                  style: theme.titleStyle,
+        child: HandCursor(
+          child: InkWell(
+            onTap: () => _showProjectGroupDialog(context),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.network(
+                  'icons/add.svg',
+                  width: 32.0,
+                  height: 32.0,
+                  color: theme.primaryColor,
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    ProjectGroupsStrings.addProjectGroup,
+                    style: theme.titleStyle,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

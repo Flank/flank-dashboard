@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 
 /// A widget that displays the metrics page title with the navigate back arrow.
@@ -24,14 +25,16 @@ class MetricsPageTitle extends StatelessWidget {
           padding: const EdgeInsets.only(right: 16.0),
           child: Tooltip(
             message: CommonStrings.navigateBack,
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () => _navigateBack(context),
-              child: Image.network(
-                'icons/arrow-back.svg',
-                width: 33.0,
-                height: 22.0,
-                fit: BoxFit.contain,
+            child: HandCursor(
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: () => _navigateBack(context),
+                child: Image.network(
+                  'icons/arrow-back.svg',
+                  width: 33.0,
+                  height: 22.0,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),

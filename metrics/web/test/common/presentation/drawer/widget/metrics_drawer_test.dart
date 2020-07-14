@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
@@ -21,7 +22,7 @@ void main() {
   group("MetricsDrawer", () {
     testWidgets(
       "calls the ThemeNotifier.changeTheme() on tap on a checkbox",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         final themeNotifier = ThemeNotifierMock();
 
         when(themeNotifier.isDark).thenReturn(false);
@@ -38,8 +39,68 @@ void main() {
     );
 
     testWidgets(
-      "calls the AuthNotifier.signOut() on tap on `Log out`",
-          (tester) async {
+      "applies a hand cursor to the theme checkbox",
+      (WidgetTester tester) async {
+        final themeNotifier = ThemeNotifierMock();
+
+        when(themeNotifier.isDark).thenReturn(false);
+
+        await tester.pumpWidget(MetricsDrawerTestbed(
+          themeNotifier: themeNotifier,
+        ));
+
+        final finder = find.ancestor(
+          of: find.text(CommonStrings.darkTheme),
+          matching: find.byType(HandCursor),
+        );
+
+        expect(finder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies a hand cursor to the 'Project groups' tile",
+      (WidgetTester tester) async {
+        final themeNotifier = ThemeNotifierMock();
+
+        when(themeNotifier.isDark).thenReturn(false);
+
+        await tester.pumpWidget(MetricsDrawerTestbed(
+          themeNotifier: themeNotifier,
+        ));
+
+        final finder = find.ancestor(
+          of: find.text(CommonStrings.projectGroups),
+          matching: find.byType(HandCursor),
+        );
+
+        expect(finder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies a hand cursor to the 'Log out' tile",
+      (WidgetTester tester) async {
+        final themeNotifier = ThemeNotifierMock();
+
+        when(themeNotifier.isDark).thenReturn(false);
+
+        await tester.pumpWidget(MetricsDrawerTestbed(
+          themeNotifier: themeNotifier,
+        ));
+
+        final finder = find.ancestor(
+          of: find.text(CommonStrings.logOut),
+          matching: find.byType(HandCursor),
+        );
+
+        expect(finder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "calls the AuthNotifier.signOut() on tap on 'Log out'",
+      (tester) async {
         final authNotifier = AuthNotifierMock();
 
         when(authNotifier.isLoggedIn).thenReturn(true);
@@ -60,7 +121,7 @@ void main() {
 
     testWidgets(
       "after a user taps on 'Log out' - application navigates back to the login screen",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await tester.pumpWidget(MetricsDrawerTestbed(
           authNotifier: SignedInAuthNotifierStub(),
         ));
@@ -108,7 +169,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
             onGenerateRoute: (settings) => RouteGenerator.generateRoute(
               settings: settings,
               isLoggedIn:
-              Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
+                  Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
           );
         },
