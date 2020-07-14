@@ -89,7 +89,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                   child: ClearableTextFormField(
                     textStyle: dialogTheme.groupNameTextStyle,
                     validator: ProjectGroupNameValidator.validate,
-                    inputDecoration: InputDecoration(
+                    inputDecoration: const InputDecoration(
                       hintText: ProjectGroupsStrings.nameYourGroup,
                     ),
                     controller: _groupNameController,

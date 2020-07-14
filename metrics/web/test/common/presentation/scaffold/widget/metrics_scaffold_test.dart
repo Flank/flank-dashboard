@@ -48,7 +48,7 @@ void main() {
           container.constraints,
           equals(
             BoxConstraints.tight(
-              Size.fromWidth(DimensionsConfig.contentWidth),
+              const Size.fromWidth(DimensionsConfig.contentWidth),
             ),
           ),
         );
