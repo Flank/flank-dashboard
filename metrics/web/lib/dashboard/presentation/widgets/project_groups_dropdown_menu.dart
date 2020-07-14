@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 /// A dropdown menu widget providing an ability to select a project group.
 class ProjectGroupsDropdownMenu extends StatelessWidget {
+  /// A height of the dropdown menu button.
   static const double _menuButtonHeight = 48.0;
 
   @override
