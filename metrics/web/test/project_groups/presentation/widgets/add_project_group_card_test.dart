@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -45,13 +46,13 @@ void main() {
     group("AddProjectGroupCard", () {
       testWidgets(
         "applies a hand cursor to the card",
-            (WidgetTester tester) async {
+        (WidgetTester tester) async {
           await mockNetworkImagesFor(() {
             return tester.pumpWidget(const _AddProjectGroupCardTestbed());
           });
 
           final finder = find.byWidgetPredicate(
-                (widget) => widget is PaddedCard && widget.child is HandCursor,
+            (widget) => widget is PaddedCard && widget.child is HandCursor,
           );
 
           expect(finder, findsOneWidget);
@@ -60,7 +61,7 @@ void main() {
     });
 
     testWidgets(
-      "applies a background color from the metrics add project group card theme to the padded card widget",
+      "applies a background color from the metrics theme to the padded card widget",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -131,7 +132,7 @@ void main() {
     );
 
     testWidgets(
-      "does not opens the add project group dialog if the project group dialog view model is null",
+      "does not open the add project group dialog if the project group dialog view model is null",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
@@ -149,7 +150,7 @@ void main() {
     );
 
     testWidgets(
-      "calls the .initProjectGroupDialogViewModel() method from project groups notifier no tap on the card",
+      "calls the .initProjectGroupDialogViewModel() method from project groups notifier on tap on the card",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
@@ -204,7 +205,7 @@ void main() {
     );
 
     testWidgets(
-      "calls the .resetProjectGroupDialogViewModel() method from project groups notifier after closing the add project group dialog",
+      "resets project group dialog view model from project groups notifier after closing the add project group dialog",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 

@@ -282,7 +282,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a name of the project group card view model",
+      "displays a name",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ProjectGroupCardTestbed(
           projectGroupCardViewModel: projectGroupCardViewModel,
@@ -364,7 +364,7 @@ void main() {
     );
 
     testWidgets(
-      "calls the .initProjectGroupDialogViewModel() method of the project groups notifier on tap on the edit button",
+      "inits project group dialog view model in project groups notifier on tap on the edit button",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
         const projectId = 'id1';
@@ -445,7 +445,7 @@ void main() {
     );
 
     testWidgets(
-      "does not opens the edit project group dialog if the project group dialog view model is null",
+      "does not open the edit project group dialog if the project group dialog view model is null",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
@@ -567,7 +567,7 @@ void main() {
     );
 
     testWidgets(
-      "does not opens the delete project group dialog if the delete project group dialog view model is null",
+      "does not open the delete project group dialog if the delete project group dialog view model is null",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
@@ -595,7 +595,7 @@ void main() {
 
 /// A testbed widget, used to test the [ProjectGroupCard] widget.
 class _ProjectGroupCardTestbed extends StatelessWidget {
-  /// A project group card viewModel with project group data to display.
+  /// A project group card view model with project group data to display.
   final ProjectGroupCardViewModel projectGroupCardViewModel;
 
   /// A [ProjectGroupsNotifier] used in testbed.
