@@ -1,30 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:selection_menu/components_configurations.dart';
 
-/// A [Function] used to build a dropdown body.
-typedef DropdownBodyBuilder = Widget Function(
-  BuildContext context,
-  Widget child,
-);
-
 /// A widget that displays the dropdown body.
 class DropdownBody extends StatefulWidget {
-  /// An [AnimationComponentData] that provides an information
-  /// about dropdown body animation.
-  final AnimationComponentData data;
+  /// A [Curve] to use in the animation.
+  final Curve animationCurve;
 
-  /// A [DropdownBodyBuilder] used to build a dropdown body.
-  final DropdownBodyBuilder builder;
+  /// A [Duration] to use in the animation.
+  final Duration animationDuration;
 
-  /// Creates a [DropdownBody] with the given [data] and the [builder].
+  /// A max height of this this dropdown body.
+  final double maxHeight;
+
+  /// A [ValueChanged] callback used to notify about opened state changes.
+  final ValueChanged<bool> onOpenedStateChanged;
+
+  /// A current state of this widget.
+  final MenuState state;
+
+  /// A child widget of this dropdown body.
+  final Widget child;
+
+  /// Creates a [DropdownBody].
   ///
-  /// The [data] and the [builder] must not be null.
+  /// The [animationCurve] defaults to `Curves.linear`.
+  /// The [animationDuration] defaults to a zero duration.
+  ///
+  /// The [state] must not be null.
+  /// The [animationCurve] must not be null.
+  /// The [animationDuration] must not be null.
   const DropdownBody({
     Key key,
-    @required this.data,
-    @required this.builder,
-  })  : assert(data != null),
-        assert(builder != null),
+    @required this.state,
+    this.animationCurve = Curves.linear,
+    this.animationDuration = const Duration(),
+    this.maxHeight,
+    this.onOpenedStateChanged,
+    this.child,
+  })  : assert(state != null),
+        assert(animationCurve != null),
+        assert(animationDuration != null),
         super(key: key);
 
   @override
@@ -41,17 +56,16 @@ class _DropdownBodyState extends State<DropdownBody>
 
   @override
   void initState() {
-    final data = widget.data;
     _controller = AnimationController(
-      duration: data.menuAnimationDurations.forward,
-      reverseDuration: data.menuAnimationDurations.reverse,
+      duration: widget.animationDuration,
+      reverseDuration: widget.animationDuration,
       vsync: this,
     );
 
     _animation = CurvedAnimation(
       parent: _controller,
-      curve: data.menuAnimationCurves.forward,
-      reverseCurve: data.menuAnimationCurves.reverse,
+      curve: widget.animationCurve,
+      reverseCurve: widget.animationCurve,
     );
 
     _animation.addStatusListener(_animationStatusListener);
@@ -61,33 +75,29 @@ class _DropdownBodyState extends State<DropdownBody>
 
   @override
   Widget build(BuildContext context) {
-    final data = widget.data;
-
-    if (data.menuState == MenuState.OpeningStart) {
+    if (widget.state == MenuState.OpeningStart) {
       _controller.forward();
-    } else if (data.menuState == MenuState.ClosingStart) {
+    } else if (widget.state == MenuState.ClosingStart) {
       _controller.reverse();
     }
 
     return Container(
       constraints: BoxConstraints(
-        maxHeight: data.constraints.biggest.height,
+        maxHeight: widget.maxHeight,
       ),
       child: SizeTransition(
         sizeFactor: _animation,
-        child: widget.builder(context, data.child),
+        child: widget.child,
       ),
     );
   }
 
   /// Listens to animation status updates.
   void _animationStatusListener(AnimationStatus status) {
-    final data = widget.data;
-
     if (status == AnimationStatus.completed) {
-      data.opened();
+      widget.onOpenedStateChanged?.call(true);
     } else if (status == AnimationStatus.dismissed) {
-      data.closed();
+      widget.onOpenedStateChanged?.call(false);
     }
   }
 

@@ -7,12 +7,6 @@ typedef DropdownItemBuilder<T> = Widget Function(BuildContext context, T item);
 
 /// A dropdown menu widget.
 class DropdownMenu<T> extends StatefulWidget {
-  /// A [Curve] of the menu opening animation.
-  final Curve menuAnimationCurve;
-
-  /// A [Duration] of the menu opening animation.
-  final Duration menuAnimationDuration;
-
   /// A list of items to select from.
   final List<T> items;
 
@@ -43,8 +37,6 @@ class DropdownMenu<T> extends StatefulWidget {
   /// Creates a [DropdownMenu] widget.
   ///
   /// If [items] are null, an empty list used.
-  /// If the [menuAnimationCurve] is null the [Curves.linear] used.
-  /// If the [menuAnimationDuration] is null the empty [Duration] used.
   /// If the [itemHeight] is null the [kMinInteractiveDimension] used.
   /// If the [menuPadding] is null the [EdgeInsets.zero] used.
   ///
@@ -58,12 +50,8 @@ class DropdownMenu<T> extends StatefulWidget {
     this.initiallySelectedItemIndex,
     List<T> items,
     double itemHeight,
-    Curve menuAnimationCurve,
-    Duration menuAnimationDuration,
     EdgeInsets menuPadding,
   })  : items = items ?? const [],
-        menuAnimationCurve = menuAnimationCurve ?? Curves.linear,
-        menuAnimationDuration = menuAnimationDuration ?? const Duration(),
         itemHeight = itemHeight ?? kMinInteractiveDimension,
         menuPadding = menuPadding ?? EdgeInsets.zero,
         assert(itemBuilder != null),
@@ -90,14 +78,6 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
       },
       onItemSelected: (item) => widget.onItemSelected?.call(item),
       componentsConfiguration: DropdownComponentsConfiguration(
-        menuAnimationCurves: MenuAnimationCurves(
-          forward: widget.menuAnimationCurve,
-          reverse: widget.menuAnimationCurve,
-        ),
-        menuAnimationDurations: MenuAnimationDurations(
-          forward: widget.menuAnimationDuration,
-          reverse: widget.menuAnimationDuration,
-        ),
         menuPositionAndSizeComponent: MenuPositionAndSizeComponent(
           builder: (data) {
             return MenuPositionAndSize(

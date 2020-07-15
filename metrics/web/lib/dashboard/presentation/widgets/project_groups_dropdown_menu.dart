@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
-import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_item.dart';
@@ -19,8 +18,6 @@ class ProjectGroupsDropdownMenu extends StatelessWidget {
       selector: (_, notifier) => notifier.projectGroupDropdownItems,
       builder: (_, items, __) {
         return DropdownMenu<ProjectGroupDropdownItemViewModel>(
-          menuAnimationCurve: Curves.linear,
-          menuAnimationDuration: DurationConstants.animation,
           itemHeight: 40.0,
           initiallySelectedItemIndex: 0,
           items: items,
