@@ -42,7 +42,7 @@ In contrast with the above components, `Web` requires more steps to follow:
 # Guardian :shield:
 Detect flaky tests by analyzing JUnit XML files and orchestrate tools like Slack, Jira to notify the team.
 
-# Design :dress:
+# Design :art:
 Follow the next links to get acquainted with the Metrics project design: 
 - [design/](design/)
 
