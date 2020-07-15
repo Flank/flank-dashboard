@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -21,6 +22,7 @@ void main() {
         expect(themeData.projectGroupDialogTheme, isNotNull);
         expect(themeData.projectGroupCardTheme, isNotNull);
         expect(themeData.addProjectGroupCardTheme, isNotNull);
+        expect(themeData.loginTheme, isNotNull);
       },
     );
 
@@ -35,6 +37,7 @@ void main() {
           projectGroupCardTheme: null,
           addProjectGroupCardTheme: null,
           projectGroupDialogTheme: null,
+          loginTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -44,6 +47,7 @@ void main() {
         expect(themeData.projectGroupCardTheme, isNotNull);
         expect(themeData.addProjectGroupCardTheme, isNotNull);
         expect(themeData.projectGroupDialogTheme, isNotNull);
+        expect(themeData.loginTheme, isNotNull);
       },
     );
 
@@ -88,6 +92,8 @@ void main() {
           primaryColor: primaryColor,
         );
 
+        const loginTheme = LoginThemeData(primaryColor: primaryColor);
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -98,6 +104,7 @@ void main() {
           addProjectGroupCardTheme: addProjectGroupTheme,
           projectGroupDialogTheme: projectGroupDialogTheme,
           inactiveWidgetTheme: inactiveThemeData,
+          loginTheme: loginTheme,
         );
 
         expect(
@@ -119,6 +126,7 @@ void main() {
           copiedTheme.projectGroupDialogTheme,
           equals(projectGroupDialogTheme),
         );
+        expect(copiedTheme.loginTheme, equals(loginTheme));
       },
     );
 
@@ -131,32 +139,33 @@ void main() {
         expect(themeData, isNot(copiedTheme));
         expect(
           themeData.metricWidgetTheme,
-          copiedTheme.metricWidgetTheme,
+          equals(copiedTheme.metricWidgetTheme),
         );
         expect(
           themeData.metricCirclePercentageThemeData,
-          copiedTheme.metricCirclePercentageThemeData,
+          equals(copiedTheme.metricCirclePercentageThemeData),
         );
         expect(
           themeData.buildResultTheme,
-          copiedTheme.buildResultTheme,
+          equals(copiedTheme.buildResultTheme),
         );
         expect(
           themeData.projectGroupCardTheme,
-          copiedTheme.projectGroupCardTheme,
+          equals(copiedTheme.projectGroupCardTheme),
         );
         expect(
           themeData.addProjectGroupCardTheme,
-          copiedTheme.addProjectGroupCardTheme,
+          equals(copiedTheme.addProjectGroupCardTheme),
         );
         expect(
           themeData.projectGroupDialogTheme,
-          copiedTheme.projectGroupDialogTheme,
+          equals(copiedTheme.projectGroupDialogTheme),
         );
         expect(
           themeData.inactiveWidgetTheme,
-          copiedTheme.inactiveWidgetTheme,
+          equals(copiedTheme.inactiveWidgetTheme),
         );
+        expect(themeData.loginTheme, equals(copiedTheme.loginTheme));
       },
     );
   });

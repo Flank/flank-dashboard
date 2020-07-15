@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -130,6 +131,27 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontSize: 32.0,
               fontWeight: FontWeight.bold,
             ),
+          ),
+          loginTheme: const LoginThemeData(
+            primaryColor: ColorConfig.primaryColor,
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 26.0,
+              fontWeight: FontWeight.bold,
+            ),
+            textFieldHoverColor: Colors.black,
+            textFieldHoverBorderColor: ColorConfig.darkInputHoverBorderColor,
+            loginButtonTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+            ),
+            loginOptionTextStyle: TextStyle(
+              color: ColorConfig.darkOptionTextColor,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+            ),
+            loginOptionColor: Colors.white,
           ),
         );
 }

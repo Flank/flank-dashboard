@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
@@ -36,6 +37,9 @@ class MetricsThemeData {
   /// The theme for the add project group card.
   final ProjectGroupCardThemeData addProjectGroupCardTheme;
 
+  /// The theme for the login page.
+  final LoginThemeData loginTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricCirclePercentageThemeData metricCirclePercentageThemeData,
@@ -45,6 +49,7 @@ class MetricsThemeData {
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
     ProjectGroupCardThemeData addProjectGroupCardTheme,
+    LoginThemeData loginTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -60,7 +65,8 @@ class MetricsThemeData {
         projectGroupCardTheme =
             projectGroupCardTheme ?? const ProjectGroupCardThemeData(),
         addProjectGroupCardTheme =
-            addProjectGroupCardTheme ?? const ProjectGroupCardThemeData();
+            addProjectGroupCardTheme ?? const ProjectGroupCardThemeData(),
+        loginTheme = loginTheme ?? const LoginThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -74,6 +80,7 @@ class MetricsThemeData {
     ProjectGroupCardThemeData projectGroupCardTheme,
     ProjectGroupCardThemeData addProjectGroupCardTheme,
     MetricWidgetThemeData inactiveWidgetTheme,
+    LoginThemeData loginTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -87,6 +94,7 @@ class MetricsThemeData {
       addProjectGroupCardTheme:
           addProjectGroupCardTheme ?? this.addProjectGroupCardTheme,
       inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
+      loginTheme: loginTheme ?? this.loginTheme,
     );
   }
 }

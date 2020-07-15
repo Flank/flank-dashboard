@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group("ProjectGroupDialogThemeData", () {
     test(
-      "creates an instance with the default colors and paddings if the parameters are not specified",
+      "creates an instance with the default colors if the parameters are not specified",
       () {
         const themeData = ProjectGroupDialogThemeData();
 
@@ -21,7 +21,7 @@ void main() {
     );
 
     test(
-      "creates an instance with null text styles and text field decoration if the parameters are not specified",
+      "creates an instance with null text styles if the parameters are not specified",
       () {
         const themeData = ProjectGroupDialogThemeData();
 
