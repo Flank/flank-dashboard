@@ -5,9 +5,9 @@ The Flutter web application that displays project metrics on easy to navigate Da
 ## Getting Started
 
 This application is a part of Metrics project. It is developed using different solutions described in the documents under the `docs` folder. The purpose of this documentation is to collect and structurize knowledge used for developing the Metrics Web Application. Here is the easy to navigate list of these documents: 
-1. [Metrics Web Application architecture :walking:](metrics/web/docs/01_metrics_web_application_architecture.md)
-2. [Metrics Web presentation layer architecture :running:](metrics/web/docs/02_presentation_layer_architecture.md)
-3. [Widget structure organization :bicyclist:](metrics/web/docs/03_widget_structure_organization.md)
+1. [Metrics Web Application architecture :walking:](docs/01_metrics_web_application_architecture.md)
+2. [Metrics Web presentation layer architecture :running:](docs/02_presentation_layer_architecture.md)
+3. [Widget structure organization :bicyclist:](docs/03_widget_structure_organization.md)
 
 ## Setup 
 
