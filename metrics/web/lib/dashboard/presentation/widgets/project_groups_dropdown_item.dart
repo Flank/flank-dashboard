@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/dropdown_item.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 
 /// A widget that displays a project group within a dropdown.
-class ProjectGroupsDropdownItem extends StatefulWidget {
+class ProjectGroupsDropdownItem extends StatelessWidget {
   /// A [ProjectGroupDropdownItemViewModel] with project group data to display.
   final ProjectGroupDropdownItemViewModel projectGroupDropdownItemViewModel;
 
@@ -17,38 +18,18 @@ class ProjectGroupsDropdownItem extends StatefulWidget {
         super(key: key);
 
   @override
-  _ProjectGroupsDropdownItemState createState() =>
-      _ProjectGroupsDropdownItemState();
-}
-
-class _ProjectGroupsDropdownItemState extends State<ProjectGroupsDropdownItem> {
-  /// Indicates whether this widget is hovered or not.
-  bool _isHovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    final backgroundColor =
-        _isHovered ? const Color(0xFF1d1d20) : Colors.transparent;
-
-    return MouseRegion(
-      onEnter: (_) => _changeHover(true),
-      onExit: (_) => _changeHover(false),
-      child: Container(
-        width: 210.0,
-        height: 40.0,
-        color: backgroundColor,
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0),
-        alignment: Alignment.centerLeft,
-        child: Text(
-          widget.projectGroupDropdownItemViewModel.name,
-          style: const TextStyle(fontSize: 16.0),
-        ),
+    return DropdownItem(
+      height: 40.0,
+      width: 210.0,
+      alignment: Alignment.centerLeft,
+      backgroundColor: Colors.transparent,
+      hoverColor: const Color(0xFF1d1d20),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0),
+      child: Text(
+        projectGroupDropdownItemViewModel.name,
+        style: const TextStyle(fontSize: 16.0),
       ),
     );
-  }
-
-  /// Changes [_isHovered] value to the given [value].
-  void _changeHover(bool value) {
-    setState(() => _isHovered = value);
   }
 }

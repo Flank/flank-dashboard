@@ -6,7 +6,7 @@ import 'package:selection_menu/selection_menu.dart';
 typedef DropdownItemBuilder<T> = Widget Function(BuildContext context, T item);
 
 /// A dropdown menu widget.
-class DropdownMenu<T> extends StatelessWidget {
+class DropdownMenu<T> extends StatefulWidget {
   /// A [Curve] of the menu opening animation.
   final Curve menuAnimationCurve;
 
@@ -72,25 +72,31 @@ class DropdownMenu<T> extends StatelessWidget {
         super(key: key);
 
   @override
+  _DropdownMenuState<T> createState() => _DropdownMenuState<T>();
+}
+
+class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
+  @override
   Widget build(BuildContext context) {
     return SelectionMenu<T>(
-      itemsList: items,
-      initiallySelectedItemIndex: initiallySelectedItemIndex,
+      itemsList: widget.items,
+      initiallySelectedItemIndex:
+          widget.items.isEmpty ? null : widget.initiallySelectedItemIndex,
       itemBuilder: (_, item, onItemSelected) {
         return GestureDetector(
           onTap: onItemSelected,
-          child: itemBuilder(context, item),
+          child: widget.itemBuilder(context, item),
         );
       },
-      onItemSelected: (item) => onItemSelected?.call(item),
+      onItemSelected: (item) => widget.onItemSelected?.call(item),
       componentsConfiguration: DropdownComponentsConfiguration(
         menuAnimationCurves: MenuAnimationCurves(
-          forward: menuAnimationCurve,
-          reverse: menuAnimationCurve,
+          forward: widget.menuAnimationCurve,
+          reverse: widget.menuAnimationCurve,
         ),
         menuAnimationDurations: MenuAnimationDurations(
-          forward: menuAnimationDuration,
-          reverse: menuAnimationDuration,
+          forward: widget.menuAnimationDuration,
+          reverse: widget.menuAnimationDuration,
         ),
         menuPositionAndSizeComponent: MenuPositionAndSizeComponent(
           builder: (data) {
@@ -99,7 +105,7 @@ class DropdownMenu<T> extends StatelessWidget {
               constraints: BoxConstraints.loose(
                 Size(
                   data?.triggerPositionAndSize?.size?.width ?? 0.0,
-                  items.length * itemHeight,
+                  widget.items.length * widget.itemHeight,
                 ),
               ),
             );
@@ -108,8 +114,8 @@ class DropdownMenu<T> extends StatelessWidget {
         animationComponent: AnimationComponent(
           builder: (data) {
             return Padding(
-              padding: menuPadding,
-              child: menuBuilder(data),
+              padding: widget.menuPadding,
+              child: widget.menuBuilder(data),
             );
           },
         ),
@@ -126,7 +132,7 @@ class DropdownMenu<T> extends StatelessWidget {
           builder: (data) {
             return GestureDetector(
               onTap: data.triggerMenu,
-              child: buttonBuilder(context, data.selectedItem as T),
+              child: widget.buttonBuilder(context, data.selectedItem as T),
             );
           },
         ),

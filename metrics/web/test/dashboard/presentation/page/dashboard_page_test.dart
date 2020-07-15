@@ -44,17 +44,6 @@ void main() {
     );
 
     testWidgets(
-      "contains the ProjectGroupsDropdownMenu widget",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _DashboardTestbed());
-        });
-
-        expect(find.byType(ProjectGroupsDropdownMenu), findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "contains a project search input",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
