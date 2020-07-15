@@ -34,10 +34,11 @@ class DropdownBody extends StatefulWidget {
     @required this.state,
     this.animationCurve = Curves.linear,
     this.animationDuration = const Duration(),
-    this.maxHeight,
+    double maxHeight,
     this.onOpenedStateChanged,
     this.child,
-  })  : assert(state != null),
+  })  : maxHeight = maxHeight ?? double.infinity,
+        assert(state != null),
         assert(animationCurve != null),
         assert(animationDuration != null),
         super(key: key);
