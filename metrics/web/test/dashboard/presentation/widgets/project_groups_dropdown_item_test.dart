@@ -24,7 +24,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given projectGroupDropdownItemViewModel is null",
+      "throws an AssertionError if the given project group dropdown item view model is null",
       (tester) async {
         await tester.pumpWidget(const _ProjectGroupsDropdownTestbed(
           projectGroupDropdownItemViewModel: null,
@@ -35,7 +35,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a name of the given projectGroupDropdownItemViewModel",
+      "displays a name of the given project group dropdown item view model",
       (tester) async {
         await tester.pumpWidget(const _ProjectGroupsDropdownTestbed(
           projectGroupDropdownItemViewModel: projectGroupDropdownItemViewModel,
@@ -49,7 +49,7 @@ void main() {
     );
 
     testWidgets(
-      "does not overflows on a very long project group name",
+      "does not overflow on a very long project group name",
       (tester) async {
         const projectGroupDropdownItemViewModel =
             ProjectGroupDropdownItemViewModel(

@@ -57,7 +57,7 @@ void main() {
     );
 
     testWidgets(
-      "does not overflows on a very long selected project group name",
+      "does not overflow on a very long selected project group name",
       (tester) async {
         when(metricsNotifier.projectGroupDropdownItems).thenReturn(const [
           ProjectGroupDropdownItemViewModel(
@@ -80,7 +80,7 @@ void main() {
     );
 
     testWidgets(
-      "applies an animation duration constant to the DropdownMenu widget menuAnimationDuration parameter",
+      "applies an animation duration constant to the dropdown menu widget menu animation duration parameter",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -98,7 +98,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates a list of project group dropdown item view models to the DropdownMenu widget",
+      "delegates a list of project group dropdown item view models to the dropdown menu widget",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -131,7 +131,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a ProjectGroupsDropdownBody widget as a menu of the DropdownMenu widget",
+      "displays a project groups dropdown body widget as a menu of the dropdown menu widget",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -147,7 +147,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the given items using the ProjectGroupDropdownItem widget",
+      "displays the given items using the project group dropdown item widget",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -170,7 +170,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the selected ProjectGroupDropdownItemViewModel",
+      "displays the selected project group dropdown item view model",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(

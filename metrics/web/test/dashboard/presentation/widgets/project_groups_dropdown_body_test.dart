@@ -18,7 +18,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the biggest height from the AnimationComponentData constraints to the Container constraints",
+      "applies the biggest height from the animation component data constraints to the container constraints",
       (tester) async {
         final animationComponentData = _AnimationComponentDataStub();
 
@@ -43,7 +43,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the child widget from the AnimationComponentData",
+      "displays the child widget from the animation component data",
       (tester) async {
         final animationComponentData = _AnimationComponentDataStub();
 
@@ -61,7 +61,7 @@ void main() {
     );
 
     testWidgets(
-      "calls the AnimationComponentData.opened() method after the menu finished opening",
+      "informs about menu state changes after the menu finished opening",
       (tester) async {
         final animationComponentData = _AnimationComponentDataStub();
 
@@ -76,7 +76,7 @@ void main() {
     );
 
     testWidgets(
-      "calls the AnimationComponentData.closed() method after the menu finished closing",
+      "informs about menu state changes after the menu finished closing",
       (tester) async {
         final animationComponentData = _AnimationComponentDataStub();
 
