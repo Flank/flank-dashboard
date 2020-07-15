@@ -434,7 +434,7 @@ void main() {
               of: find.byType(InfoDialog),
               matching: find.byIcon(Icons.close),
             )
-            .first;
+            .last;
 
         await tester.tap(closeIconFinder);
         await tester.pump();
