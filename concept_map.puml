@@ -22,9 +22,8 @@ skinparam rectangle {
 skinparam ArrowColor #4f4f56
 
 cloud Jenkins
+cloud "GitHub Actions" as GA
 cloud Buildkite
-cloud Bitrise
-cloud CircleCI
 
 rectangle "CI integrations" as CI
 
@@ -40,14 +39,12 @@ together {
 
 rectangle Web
 
-Jenkins -[hidden]right-> Buildkite
-Buildkite -[hidden]right-> Bitrise
-Bitrise -[hidden]right-> CircleCI
+Jenkins -[hidden]right-> GA
+GA -[hidden]right-> Buildkite
 
 Jenkins -down-> CI : data
+GA -down-> CI : data
 Buildkite -down-> CI : data
-Bitrise -down-> CI : data
-CircleCI -down-> CI : data
 
 CI -down-> Firestore : stores and \l manipulates metrics
 CI -down-> Authentication : authenticates
