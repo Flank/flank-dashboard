@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/metrics_theme/config/color_config.da
 /// A class that holds the common text styles for application themes.
 class TextStyleConfig {
   static const TextStyle captionTextStyle = TextStyle(
-    color: ColorConfig.darkSecondaryTextColor,
+    color: ColorConfig.secondaryTextColor,
     height: 1.23,
     fontSize: 13.0,
     fontWeight: FontWeight.w500,

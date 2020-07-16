@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -45,7 +46,7 @@ class _MyAppState extends State<MyApp> {
               scaffoldBackgroundColor: ColorConfig.lightScaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
                 filled: true,
-                fillColor: ColorConfig.lightInputColor,
+                fillColor: Colors.white,
                 border: TextFieldConfig.border,
                 hintStyle: TextFieldConfig.hintStyle,
                 contentPadding: EdgeInsets.all(16.0),
@@ -61,7 +62,7 @@ class _MyAppState extends State<MyApp> {
               scaffoldBackgroundColor: ColorConfig.darkScaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
                 filled: true,
-                fillColor: ColorConfig.darkInputColor,
+                fillColor: DarkMetricsThemeData.inputColor,
                 border: TextFieldConfig.border,
                 hintStyle: TextFieldConfig.hintStyle,
                 contentPadding: EdgeInsets.all(16.0),

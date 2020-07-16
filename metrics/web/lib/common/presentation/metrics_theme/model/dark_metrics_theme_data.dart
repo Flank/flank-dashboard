@@ -11,6 +11,13 @@ import 'package:metrics/common/presentation/metrics_theme/model/project_group_di
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
+  static const Color inactiveColor = Color(0xFF43494d);
+  static const Color inactiveBackgroundColor = Color(0xFF232729);
+  static const Color cardHoverColor = Color(0xFF212124);
+  static const Color optionTextColor = Color(0xFF757575);
+  static const Color inputColor = Color(0xFF0d0d0d);
+  static const Color inputHoverBorderColor = Color(0xFF37373f);
+
   /// The default [TextStyle] for [TextField]s within the application.
   static const _defaultTextFieldTextStyle = TextStyle(
     color: Colors.white,
@@ -65,8 +72,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             failedColor: ColorConfig.accentColor,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
-            borderColor: ColorConfig.darkBorderColor,
-            hoverColor: ColorConfig.darkCardHoverColor,
+            borderColor: ColorConfig.borderColor,
+            hoverColor: cardHoverColor,
             backgroundColor: ColorConfig.darkScaffoldColor,
             accentColor: ColorConfig.accentColor,
             primaryColor: ColorConfig.primaryColor,
@@ -77,7 +84,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
             subtitleStyle: TextStyle(
-              color: ColorConfig.darkSecondaryTextColor,
+              color: ColorConfig.secondaryTextColor,
               height: 1.23,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
@@ -98,7 +105,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             primaryColor: ColorConfig.primaryColor,
             backgroundColor: ColorConfig.darkScaffoldColor,
             closeIconColor: Colors.white,
-            contentBorderColor: ColorConfig.darkBorderColor,
+            contentBorderColor: ColorConfig.borderColor,
             titleTextStyle: TextStyle(
               color: Colors.white,
               fontSize: 26.0,
@@ -123,11 +130,11 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(
-            primaryColor: ColorConfig.darkInactiveColor,
+            primaryColor: inactiveColor,
             accentColor: Colors.transparent,
-            backgroundColor: ColorConfig.darkInactiveBackgroundColor,
+            backgroundColor: inactiveBackgroundColor,
             textStyle: TextStyle(
-              color: ColorConfig.darkInactiveColor,
+              color: inactiveColor,
               fontSize: 32.0,
               fontWeight: FontWeight.bold,
             ),
@@ -140,14 +147,14 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.bold,
             ),
             textFieldHoverColor: Colors.black,
-            textFieldHoverBorderColor: ColorConfig.darkInputHoverBorderColor,
+            textFieldHoverBorderColor: inputHoverBorderColor,
             loginButtonTextStyle: TextStyle(
               color: Colors.black,
               fontSize: 16.0,
               fontWeight: FontWeight.w500,
             ),
             loginOptionTextStyle: TextStyle(
-              color: ColorConfig.darkOptionTextColor,
+              color: optionTextColor,
               fontSize: 16.0,
               fontWeight: FontWeight.w500,
             ),

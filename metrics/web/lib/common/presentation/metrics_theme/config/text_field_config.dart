@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 
 /// A class that holds the common text field styles for application themes.
 class TextFieldConfig {
+  static const Color inputHintTextColor = Color(0xFF545459);
+
   static const TextStyle hintStyle = TextStyle(
-    color: ColorConfig.inputSecondaryTextColor,
+    color: inputHintTextColor,
     fontSize: 16.0,
   );
 
