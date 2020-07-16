@@ -15,7 +15,7 @@ A web application that displays project metrics on easy to navigate Dashboard.
 
 The following diagram demonstrates the relationships between the above constitutes of Metrics:
 
-![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/readme_update/concept_map.puml)
+![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/readme_update/concept_map.puml)
 
 # Getting started with Metrics :beginner:
 The project is full of documents explaining different aspects and solutions used within Metrics. Reading all of this massive documentation is not an easy task and requires a lot of time and patience. To get yourself ready for joining Metrics and to understand all of its basic approaches, we collected the very common documents that may help with a newcomer's first steps. 
