@@ -7,12 +7,6 @@ typedef DropdownItemBuilder<T> = Widget Function(BuildContext context, T item);
 
 /// A dropdown menu widget.
 class DropdownMenu<T> extends StatefulWidget {
-  /// A list of items to select from.
-  final List<T> items;
-
-  /// A height of the item in items list.
-  final double itemHeight;
-
   /// An [AnimationBuilder] needed to build the dropdown menu widget.
   ///
   /// Should call the [AnimationComponentData.opened] once menu opening finished
@@ -31,6 +25,12 @@ class DropdownMenu<T> extends StatefulWidget {
   /// An initially selected item index in the given [items] list.
   final int initiallySelectedItemIndex;
 
+  /// A list of items to select from.
+  final List<T> items;
+
+  /// A height of the item in items list.
+  final double itemHeight;
+
   /// An [EdgeInsets] representing an empty space around the dropdown menu.
   final EdgeInsets menuPadding;
 
@@ -40,12 +40,12 @@ class DropdownMenu<T> extends StatefulWidget {
   /// If the [itemHeight] is null the [kMinInteractiveDimension] used.
   /// If the [menuPadding] is null the [EdgeInsets.zero] used.
   ///
-  /// [itemBuilder], [buttonBuilder] and [menuBuilder] must not be null.
+  /// [itemBuilder], [buttonBuilder] and [menuBuilder] must not be `null`.
   const DropdownMenu({
     Key key,
+    @required this.menuBuilder,
     @required this.itemBuilder,
     @required this.buttonBuilder,
-    @required this.menuBuilder,
     this.onItemSelected,
     this.initiallySelectedItemIndex,
     List<T> items,
@@ -54,9 +54,9 @@ class DropdownMenu<T> extends StatefulWidget {
   })  : items = items ?? const [],
         itemHeight = itemHeight ?? kMinInteractiveDimension,
         menuPadding = menuPadding ?? EdgeInsets.zero,
+        assert(menuBuilder != null),
         assert(itemBuilder != null),
         assert(buttonBuilder != null),
-        assert(menuBuilder != null),
         super(key: key);
 
   @override

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 
-/// A widget that displays a dropdown item.
+/// A widget that used with a [DropdownMenu] to display the dropdown
+/// items that can be selected.
+///
+/// Changes it's background color on pointer hover changed
+/// from [backgroundColor] to [hoverColor] and vice versa.
 class DropdownItem extends StatefulWidget {
   /// A child widget to display.
   final Widget child;
-
-  /// A [Color] of the widget if it is not hovered.
-  final Color backgroundColor;
-
-  /// A [Color] of the widget if it is hovered.
-  final Color hoverColor;
 
   /// A width of this widget.
   final double width;
@@ -17,15 +16,21 @@ class DropdownItem extends StatefulWidget {
   /// A height of this widget.
   final double height;
 
-  /// A padding of this widget.
-  final EdgeInsets padding;
-
   /// An alignment of this widget.
   final Alignment alignment;
 
+  /// A padding of this widget.
+  final EdgeInsets padding;
+
+  /// A background [Color] of the widget, when hovered [hoverColor] is used instead.
+  final Color backgroundColor;
+
+  /// A background [Color] of the widget if it is hovered.
+  final Color hoverColor;
+
   /// Creates the [DropdownItem].
   ///
-  /// The [child] must not be null.
+  /// The [child] must not be `null`.
   const DropdownItem({
     Key key,
     @required this.child,

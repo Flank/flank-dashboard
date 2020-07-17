@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 
-/// A widget that displays the dropdown body.
+/// A widget that used with [DropdownMenu] to display open dropdown body.
+///
+/// Animates the [child] using the given [animationCurve] and [animationDuration]
+/// depending on the [menuState].
 class DropdownBody extends StatefulWidget {
+  /// A current state of this widget.
+  final MenuState state;
+
   /// A [Curve] to use in the animation.
   final Curve animationCurve;
 
@@ -13,10 +20,7 @@ class DropdownBody extends StatefulWidget {
   final double maxHeight;
 
   /// A [ValueChanged] callback used to notify about opened state changes.
-  final ValueChanged<bool> onOpenedStateChanged;
-
-  /// A current state of this widget.
-  final MenuState state;
+  final ValueChanged<bool> onOpenStateChanged;
 
   /// A child widget of this dropdown body.
   final Widget child;
@@ -26,16 +30,16 @@ class DropdownBody extends StatefulWidget {
   /// The [animationCurve] defaults to `Curves.linear`.
   /// The [animationDuration] defaults to a zero duration.
   ///
-  /// The [state] must not be null.
-  /// The [animationCurve] must not be null.
-  /// The [animationDuration] must not be null.
+  /// The [state] must not be `null`.
+  /// The [animationCurve] must not be `null`.
+  /// The [animationDuration] must not be `null`.
   const DropdownBody({
     Key key,
     @required this.state,
     this.animationCurve = Curves.linear,
     this.animationDuration = const Duration(),
     double maxHeight,
-    this.onOpenedStateChanged,
+    this.onOpenStateChanged,
     this.child,
   })  : maxHeight = maxHeight ?? double.infinity,
         assert(state != null),
@@ -96,9 +100,9 @@ class _DropdownBodyState extends State<DropdownBody>
   /// Listens to animation status updates.
   void _animationStatusListener(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
-      widget.onOpenedStateChanged?.call(true);
+      widget.onOpenStateChanged?.call(true);
     } else if (status == AnimationStatus.dismissed) {
-      widget.onOpenedStateChanged?.call(false);
+      widget.onOpenStateChanged?.call(false);
     }
   }
 

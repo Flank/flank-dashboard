@@ -25,7 +25,7 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
       animationCurve: Curves.linear,
       animationDuration: DurationConstants.animation,
       maxHeight: data.constraints.maxHeight,
-      onOpenedStateChanged: _onOpenedStateChanges,
+      onOpenStateChanged: _onOpenStateChanges,
       child: Container(
         width: 212.0,
         child: Card(
@@ -47,8 +47,8 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
   }
 
   /// Listens to opened state changes.
-  void _onOpenedStateChanges(bool isOpened) {
-    if (isOpened) {
+  void _onOpenStateChanges(bool isOpen) {
+    if (isOpen) {
       data.opened();
     } else {
       data.closed();
