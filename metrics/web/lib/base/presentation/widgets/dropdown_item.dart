@@ -27,7 +27,7 @@ class DropdownItem extends StatefulWidget {
   /// A background [Color] of the widget if it is hovered.
   final Color hoverColor;
 
-  /// Creates the [DropdownItem].
+  /// Creates a widget that displays a dropdown item of the [DropdownMenu].
   ///
   /// The [child] must not be `null`.
   const DropdownItem({

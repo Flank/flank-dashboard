@@ -25,7 +25,7 @@ class DropdownBody extends StatefulWidget {
   /// A child widget of this dropdown body.
   final Widget child;
 
-  /// Creates a [DropdownBody].
+  /// Creates a widget that displays an open [DropdownMenu] body.
   ///
   /// The [animationCurve] defaults to `Curves.linear`.
   /// The [animationDuration] defaults to a zero duration.

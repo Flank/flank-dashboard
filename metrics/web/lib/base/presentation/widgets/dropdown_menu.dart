@@ -5,12 +5,15 @@ import 'package:selection_menu/selection_menu.dart';
 /// A [Function] used to build a dropdown menu item.
 typedef DropdownItemBuilder<T> = Widget Function(BuildContext context, T item);
 
-/// A dropdown menu widget.
+/// A customizable dropdown menu widget.
+///
+/// Based on [SelectionMenu] widget. Usually used with [DropdownItem]s
+/// and displays a [DropdownBody] in open state.
 class DropdownMenu<T> extends StatefulWidget {
   /// An [AnimationBuilder] needed to build the dropdown menu widget.
   ///
   /// Should call the [AnimationComponentData.opened] once menu opening finished
-  /// and [AnimationComponentData.closed] once menu closing finished
+  /// and [AnimationComponentData.closed] once menu closing finished.
   final AnimationBuilder menuBuilder;
 
   /// A [DropdownItemBuilder] needed to build a single dropdown menu item.
@@ -34,7 +37,11 @@ class DropdownMenu<T> extends StatefulWidget {
   /// An [EdgeInsets] representing an empty space around the dropdown menu.
   final EdgeInsets menuPadding;
 
-  /// Creates a [DropdownMenu] widget.
+  /// Creates a dropdown menu widget.
+  ///
+  /// Builds the opened menu using the [menuBuilder]. The [menuBuilder] should
+  /// call the [AnimationComponentData.opened] and [AnimationComponentData.closed]
+  /// callbacks on menu open state changes.
   ///
   /// If [items] are null, an empty list used.
   /// If the [itemHeight] is null the [kMinInteractiveDimension] used.
