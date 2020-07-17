@@ -6,6 +6,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_number_scorecar
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 
@@ -27,6 +28,12 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
       buildResults: UnmodifiableListView([]),
     ),
   );
+
+  @override
+  List<ProjectGroupDropdownItemViewModel> get projectGroupDropdownItems =>
+      const [
+        ProjectGroupDropdownItemViewModel(name: 'All projects'),
+      ];
 
   /// The list of [ProjectMetricsTileViewModel]s.
   final List<ProjectMetricsTileViewModel> _projectMetrics;
