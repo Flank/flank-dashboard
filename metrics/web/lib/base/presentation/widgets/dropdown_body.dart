@@ -7,7 +7,7 @@ import 'package:selection_menu/components_configurations.dart';
 /// Animates the [child] using the given [animationCurve] and [animationDuration]
 /// depending on the [menuState].
 class DropdownBody extends StatefulWidget {
-  /// A current state of this widget.
+  /// A current state of the [DropdownMenu].
   final MenuState state;
 
   /// A [Curve] to use in the animation.
