@@ -4,8 +4,7 @@ import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 /// A widget that used with a [DropdownMenu] to display the dropdown
 /// items that can be selected.
 ///
-/// Changes it's background color on pointer hover changed
-/// from [backgroundColor] to [hoverColor] and vice versa.
+/// Changes it's background color on hover from [backgroundColor] to [hoverColor].
 class DropdownItem extends StatefulWidget {
   /// A child widget to display.
   final Widget child;
