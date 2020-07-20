@@ -38,7 +38,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates the menuState to the DropdownBody",
+      "delegates the menuState to the dropdown body",
       (tester) async {
         final animationComponentData = _AnimationComponentDataStub();
 
@@ -60,7 +60,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates the max height to the DropdownBody",
+      "delegates the max height to the dropdown body",
       (tester) async {
         final animationComponentData = _AnimationComponentDataStub();
 
@@ -82,7 +82,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the animation duration constant to the DropdownBody",
+      "applies the animation duration constant to the dropdown body",
       (tester) async {
         await tester.pumpWidget(
           _ProjectGroupsDropdownBodyTestbed(
@@ -102,7 +102,7 @@ void main() {
     );
 
     testWidgets(
-      "notifies about the DropdownMenu finishes opening",
+      "notifies about the dropdown menu finishes opening",
       (tester) async {
         final animationComponentData = _AnimationComponentDataStub();
 
@@ -126,7 +126,7 @@ void main() {
     );
 
     testWidgets(
-      "notifies about the DropdownMenu finishes closing",
+      "notifies about the dropdown menu finishes closing",
       (tester) async {
         final animationComponentData = _AnimationComponentDataStub();
 

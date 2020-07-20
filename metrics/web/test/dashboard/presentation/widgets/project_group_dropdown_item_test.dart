@@ -24,7 +24,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a name of the given project group dropdown item view model",
+      "displays a name of the given project group",
       (tester) async {
         await tester.pumpWidget(const _ProjectGroupsDropdownTestbed(
           projectGroupDropdownItemViewModel: projectGroupDropdownItemViewModel,

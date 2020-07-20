@@ -39,7 +39,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given max height to the inner container",
+      "applies the given max height",
       (tester) async {
         const maxHeight = 11.0;
         await tester.pumpWidget(
@@ -54,6 +54,51 @@ void main() {
         );
 
         expect(container.constraints.maxHeight, equals(maxHeight));
+      },
+    );
+
+    testWidgets(
+      "applies the given animation curve",
+      (tester) async {
+        const animationCurve = Curves.linear;
+        await tester.pumpWidget(
+          const _DropdownBodyTestbed(animationCurve: animationCurve),
+        );
+
+        final container = tester.widget<SizeTransition>(
+          find.descendant(
+            of: find.byType(DropdownBody),
+            matching: find.byType(SizeTransition),
+          ),
+        );
+
+        final animation = container.sizeFactor as CurvedAnimation;
+
+        expect(animation.curve, equals(animationCurve));
+        expect(animation.reverseCurve, equals(animationCurve));
+      },
+    );
+
+    testWidgets(
+      "applies the given animation duration",
+      (tester) async {
+        const animationDuration = Duration(milliseconds: 200);
+        await tester.pumpWidget(
+          const _DropdownBodyTestbed(animationDuration: animationDuration),
+        );
+
+        final container = tester.widget<SizeTransition>(
+          find.descendant(
+            of: find.byType(DropdownBody),
+            matching: find.byType(SizeTransition),
+          ),
+        );
+
+        final animation = container.sizeFactor as CurvedAnimation;
+        final animationController = animation.parent as AnimationController;
+
+        expect(animationController.duration, equals(animationDuration));
+        expect(animationController.reverseDuration, equals(animationDuration));
       },
     );
 

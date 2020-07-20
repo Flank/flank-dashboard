@@ -36,7 +36,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given width to the inner container",
+      "applies the given width",
       (tester) async {
         const width = 100.0;
         const expectedConstraints = BoxConstraints.tightFor(width: width);
@@ -52,7 +52,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given height to the inner container",
+      "applies the given height",
       (tester) async {
         const height = 100.0;
         const expectedConstraints = BoxConstraints.tightFor(height: height);
@@ -68,7 +68,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given alignment to the inner container",
+      "applies the given alignment",
       (tester) async {
         const expectedAlignment = Alignment.bottomRight;
 
@@ -85,7 +85,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given padding to the inner container",
+      "applies the given padding",
       (tester) async {
         const expectedPadding = EdgeInsets.all(10.0);
 
@@ -102,7 +102,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given background color if the widget is not hovered",
+      "applies the given background color if is not hovered",
       (tester) async {
         const backgroundColor = Colors.red;
         const expectedDecoration = BoxDecoration(color: backgroundColor);
@@ -118,7 +118,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given hover color if the widget is hovered",
+      "applies the given hover color if is hovered",
       (tester) async {
         const hoverColor = Colors.red;
         const expectedDecoration = BoxDecoration(color: hoverColor);

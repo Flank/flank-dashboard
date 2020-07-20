@@ -112,7 +112,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a ProjectGroupsDropdown widget as a menu of the dropdown menu widget",
+      "displays a project groups dropdown body when opened",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -151,7 +151,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the selected project group dropdown item",
+      "displays the selected project group",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
