@@ -34,17 +34,16 @@ abstract class MetricsButton extends StatelessWidget {
     return HandCursor(
       child: RaisedButton(
         color: style.color,
-        textColor: style.labelColor,
         hoverColor: style.hoverColor,
         disabledColor: inactiveStyle.color,
-        disabledTextColor: inactiveStyle.labelColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
         ),
         onPressed: onPressed,
         child: Text(
           label,
-          style: style.labelStyle,
+          style:
+              onPressed == null ? inactiveStyle.labelStyle : style.labelStyle,
         ),
       ),
     );

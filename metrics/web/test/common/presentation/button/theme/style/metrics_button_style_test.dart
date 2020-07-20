@@ -14,7 +14,6 @@ void main() {
 
         expect(style.color, isNotNull);
         expect(style.hoverColor, isNotNull);
-        expect(style.labelColor, isNotNull);
       },
     );
 
@@ -30,19 +29,16 @@ void main() {
     test("creates an instance with the given values", () {
       const color = Colors.red;
       const hoverColor = Colors.grey;
-      const labelColor = Colors.black;
       const labelStyle = TextStyle();
 
       final style = MetricsButtonStyle(
         color: color,
         hoverColor: hoverColor,
-        labelColor: labelColor,
         labelStyle: labelStyle,
       );
 
       expect(style.color, equals(color));
       expect(style.hoverColor, equals(hoverColor));
-      expect(style.labelColor, equals(labelColor));
       expect(style.labelStyle, equals(labelStyle));
     });
   });

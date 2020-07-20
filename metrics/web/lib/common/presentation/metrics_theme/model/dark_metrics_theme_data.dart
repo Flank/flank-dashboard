@@ -138,23 +138,35 @@ class DarkMetricsThemeData extends MetricsThemeData {
             buttonAttentionLevel: MetricsButtonAttentionLevel(
               positive: MetricsButtonStyle(
                 color: ColorConfig.primaryColor,
-                labelColor: Colors.black,
-                labelStyle: TextStyleConfig.buttonLabelStyle,
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               neutral: MetricsButtonStyle(
                 color: ColorConfig.inactiveColor,
-                labelColor: Colors.white,
-                labelStyle: TextStyleConfig.buttonLabelStyle,
+                labelStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               negative: MetricsButtonStyle(
                 color: ColorConfig.accentColor,
-                labelColor: Colors.black,
-                labelStyle: TextStyleConfig.buttonLabelStyle,
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               inactive: MetricsButtonStyle(
                 color: ColorConfig.inactiveColor,
-                labelColor: ColorConfig.inactiveTextColor,
-                labelStyle: TextStyleConfig.buttonLabelStyle,
+                labelStyle: TextStyle(
+                  color: ColorConfig.inactiveTextColor,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
