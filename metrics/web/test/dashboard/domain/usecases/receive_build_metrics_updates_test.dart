@@ -257,6 +257,14 @@ void main() {
       expect(actualCoverage, expectedCoverage);
     });
 
+    test("loads the build status from last build", () {
+      final actualLastBuildStatus = projectMetrics.lastBuildStatus;
+      final expectedLastBuildStatus =
+          _MetricsRepositoryStub.testBuilds.last.buildStatus;
+
+      expect(actualLastBuildStatus, expectedLastBuildStatus);
+    });
+
     test("calculates stability metric", () {
       final actualStability = projectMetrics.stability;
 

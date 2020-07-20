@@ -94,6 +94,7 @@ class ReceiveProjectMetricsUpdates
       lastBuildsForChartsMetrics,
     );
 
+    final lastBuildStatus = builds.last.buildStatus;
     final buildNumberMetrics = _getBuildNumberMetrics(builds);
     final buildResultMetrics = _getBuildResultMetrics(lastBuilds);
     final performanceMetrics = _getPerformanceMetrics(builds);
@@ -102,6 +103,7 @@ class ReceiveProjectMetricsUpdates
 
     return DashboardProjectMetrics(
       projectId: projectId,
+      lastBuildStatus: lastBuildStatus,
       buildNumberMetrics: buildNumberMetrics,
       performanceMetrics: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
