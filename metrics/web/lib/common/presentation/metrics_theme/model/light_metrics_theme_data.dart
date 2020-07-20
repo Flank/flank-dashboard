@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
@@ -129,6 +132,30 @@ class LightMetricsThemeData extends MetricsThemeData {
               color: Colors.grey,
               fontSize: 32.0,
               fontWeight: FontWeight.bold,
+            ),
+          ),
+          metricsButtonTheme: const MetricsButtonThemeData(
+            buttonAttentionLevel: MetricsButtonAttentionLevel(
+              positive: MetricsButtonStyle(
+                color: ColorConfig.primaryColor,
+                labelColor: Colors.black,
+                labelStyle: TextStyleConfig.buttonLabelStyle,
+              ),
+              neutral: MetricsButtonStyle(
+                color: ColorConfig.inactiveColor,
+                labelColor: Colors.white,
+                labelStyle: TextStyleConfig.buttonLabelStyle,
+              ),
+              negative: MetricsButtonStyle(
+                color: ColorConfig.accentColor,
+                labelColor: Colors.black,
+                labelStyle: TextStyleConfig.buttonLabelStyle,
+              ),
+              inactive: MetricsButtonStyle(
+                color: ColorConfig.inactiveColor,
+                labelColor: ColorConfig.inactiveTextColor,
+                labelStyle: TextStyleConfig.buttonLabelStyle,
+              ),
             ),
           ),
         );
