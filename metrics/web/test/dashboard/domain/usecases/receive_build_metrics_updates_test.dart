@@ -14,6 +14,7 @@ import '../../../test_utils/matcher_util.dart';
 void main() {
   group("ReceiveProjectMetricUpdates", () {
     const projectId = 'projectId';
+    final emptyBuildsStream = Stream<List<Build>>.value([]);
     final repository = _MetricsRepositoryStub();
     final receiveProjectMetricsUpdates =
         ReceiveProjectMetricsUpdates(repository);
@@ -43,11 +44,11 @@ void main() {
       final repository = _MetricsRepositoryMock();
 
       when(repository.latestProjectBuildsStream(any, any))
-          .thenAnswer((_) => Stream.value([]));
+          .thenAnswer((_) => emptyBuildsStream);
       when(repository.lastSuccessfulBuildStream(any))
-          .thenAnswer((_) => Stream.value([]));
+          .thenAnswer((_) => emptyBuildsStream);
       when(repository.projectBuildsFromDateStream(any, any))
-          .thenAnswer((_) => Stream.value([]));
+          .thenAnswer((_) => emptyBuildsStream);
 
       final receiveProjectMetricsUpdates =
           ReceiveProjectMetricsUpdates(repository);
@@ -68,11 +69,11 @@ void main() {
       final repository = _MetricsRepositoryMock();
 
       when(repository.latestProjectBuildsStream(any, any))
-          .thenAnswer((_) => Stream.value([]));
+          .thenAnswer((_) => emptyBuildsStream);
       when(repository.lastSuccessfulBuildStream(any))
-          .thenAnswer((_) => Stream.value([]));
+          .thenAnswer((_) => emptyBuildsStream);
       when(repository.projectBuildsFromDateStream(any, any))
-          .thenAnswer((_) => Stream.value([]));
+          .thenAnswer((_) => emptyBuildsStream);
 
       final receiveProjectMetricsUpdates =
           ReceiveProjectMetricsUpdates(repository);
@@ -91,11 +92,11 @@ void main() {
       final repository = _MetricsRepositoryMock();
 
       when(repository.latestProjectBuildsStream(any, any))
-          .thenAnswer((_) => Stream.value([]));
+          .thenAnswer((_) => emptyBuildsStream);
       when(repository.lastSuccessfulBuildStream(any))
-          .thenAnswer((_) => Stream.value([]));
+          .thenAnswer((_) => emptyBuildsStream);
       when(repository.projectBuildsFromDateStream(any, any))
-          .thenAnswer((_) => Stream.value([]));
+          .thenAnswer((_) => emptyBuildsStream);
 
       final receiveProjectMetricsUpdates =
           ReceiveProjectMetricsUpdates(repository);
@@ -190,7 +191,7 @@ void main() {
       final actualBuildNumberMetrics = projectMetrics.buildNumberMetrics;
 
       final sevenDaysBeforeDate = DateTime.now().subtract(
-          ReceiveProjectMetricsUpdates.buildNumberLoadingPeriod,
+        ReceiveProjectMetricsUpdates.buildNumberLoadingPeriod,
       );
 
       final thisWeekBuilds = builds
