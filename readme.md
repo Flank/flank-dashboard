@@ -18,15 +18,13 @@ The following diagram demonstrates the relationships between the above constitut
 ![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/readme_update/concept_map.puml)
 
 # Getting started with Metrics :beginner:
-The project is full of documents explaining different aspects and solutions used within Metrics. Reading all of this massive documentation is not an easy task and requires a lot of time and patience. To get yourself ready for joining Metrics and to understand all of its basic approaches, we collected the very common documents that may help with a newcomer's first steps. 
-
-The following list is a base and stands for an introduction to the project, solutions it involves, and the philosophy of its development: 
+We've tried to document all important decisions & approaches used for the development of this project. Reading each document is not an easy task and requires some time and patience. To help you get started, we collected the most useful documents that should help you to make fist steps:
 1. [Why create a metrics platform? :thinking:](docs/01_design_doc.md)
 2. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
 3. [Dart code style :nail_care:](docs/10_dart_code_style.md)
 4. [Collaboration :raised_hands:](docs/11_collaboration.md)
 
-Furthermore, every Metrics component requires related documentation. Thus, to get started with the `CI integrations` it is recommended to get familiar with the following documents: 
+Furthermore, every Metrics component requires component-specific documentation. Thus, to get started with the `CI integrations` it is recommended to get familiar with the following documents: 
 1. [CI integrations module architecture :building_construction:](metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
 
 Similarly, here is a list for the `Firebase` component:
@@ -47,7 +45,7 @@ Follow the next links to get acquainted with the Metrics project design:
 - [design/](design/)
 
 # Documentation :books:
-You can find the Metrics project documentation using the following links:
-- [base documentation](docs/)
+You can find complete Metrics documentation using the following links:
+- [general documentation](docs/)
 - [CI integrations documentation](metrics/ci_integrations/docs/)
 - [web documentation](metrics/web/docs/)
