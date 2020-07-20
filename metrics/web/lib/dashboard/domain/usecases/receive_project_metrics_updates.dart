@@ -17,7 +17,7 @@ import 'package:rxdart/rxdart.dart';
 /// Provides an ability to get the [DashboardProjectMetrics] updates.
 class ReceiveProjectMetricsUpdates
     implements UseCase<Stream<DashboardProjectMetrics>, ProjectIdParam> {
-  static const int lastBuildsForChartsMetrics = 14;
+  static const int lastBuildsForChartsMetrics = 20;
   static const Duration buildNumberLoadingPeriod = Duration(days: 7);
 
   final MetricsRepository _repository;
@@ -89,18 +89,15 @@ class ReceiveProjectMetricsUpdates
       );
     }
 
-    List<Build> latestBuilds = builds;
-
-    if (latestBuilds.length > lastBuildsForChartsMetrics) {
-      latestBuilds = latestBuilds.sublist(
-        latestBuilds.length - lastBuildsForChartsMetrics,
-      );
-    }
+    final lastBuilds = _getLastBuilds(
+      builds,
+      lastBuildsForChartsMetrics,
+    );
 
     final buildNumberMetrics = _getBuildNumberMetrics(builds);
-    final buildResultMetrics = _getBuildResultMetrics(latestBuilds);
-    final performanceMetrics = _getPerformanceMetrics(latestBuilds);
-    final stability = _getStability(latestBuilds);
+    final buildResultMetrics = _getBuildResultMetrics(lastBuilds);
+    final performanceMetrics = _getPerformanceMetrics(builds);
+    final stability = _getStability(lastBuilds);
     final coverage = _getCoverage(builds);
 
     return DashboardProjectMetrics(
@@ -111,6 +108,19 @@ class ReceiveProjectMetricsUpdates
       coverage: coverage,
       stability: stability,
     );
+  }
+
+  /// Returns last [numberOfBuilds] from [builds].
+  List<Build> _getLastBuilds(List<Build> builds, int numberOfBuilds) {
+    List<Build> latestBuilds = builds;
+
+    if (latestBuilds.length > numberOfBuilds) {
+      latestBuilds = latestBuilds.sublist(
+        latestBuilds.length - numberOfBuilds,
+      );
+    }
+
+    return latestBuilds;
   }
 
   /// Gets the coverage of the last successful build in [builds].
