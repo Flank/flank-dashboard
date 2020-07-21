@@ -8,6 +8,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -25,6 +26,7 @@ void main() {
         expect(themeData.projectGroupCardTheme, isNotNull);
         expect(themeData.addProjectGroupCardTheme, isNotNull);
         expect(themeData.metricsButtonTheme, isNotNull);
+        expect(themeData.textFieldTheme, isNotNull);
       },
     );
 
@@ -40,6 +42,7 @@ void main() {
           addProjectGroupCardTheme: null,
           projectGroupDialogTheme: null,
           metricsButtonTheme: null,
+          textFieldTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -50,6 +53,7 @@ void main() {
         expect(themeData.addProjectGroupCardTheme, isNotNull);
         expect(themeData.projectGroupDialogTheme, isNotNull);
         expect(themeData.metricsButtonTheme, isNotNull);
+        expect(themeData.textFieldTheme, isNotNull);
       },
     );
 
@@ -100,6 +104,8 @@ void main() {
           ),
         );
 
+        const textFieldTheme = TextFieldThemeData(focusColor: Colors.black);
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -111,6 +117,7 @@ void main() {
           projectGroupDialogTheme: projectGroupDialogTheme,
           inactiveWidgetTheme: inactiveThemeData,
           metricsButtonTheme: metricsButtonTheme,
+          textFieldTheme: textFieldTheme,
         );
 
         expect(
@@ -133,6 +140,7 @@ void main() {
           equals(projectGroupDialogTheme),
         );
         expect(copiedTheme.metricsButtonTheme, equals(metricsButtonTheme));
+        expect(copiedTheme.textFieldTheme, equals(textFieldTheme));
       },
     );
 
@@ -175,6 +183,7 @@ void main() {
           themeData.metricsButtonTheme,
           equals(copiedTheme.metricsButtonTheme),
         );
+        expect(themeData.textFieldTheme, equals(themeData.textFieldTheme));
       },
     );
   });
