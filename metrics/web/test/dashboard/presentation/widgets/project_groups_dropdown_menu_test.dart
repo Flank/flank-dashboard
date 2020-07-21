@@ -79,7 +79,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates a list of items to the dropdown menu widget",
+      "applies the project group dropdown items to the dropdown menu widget",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(

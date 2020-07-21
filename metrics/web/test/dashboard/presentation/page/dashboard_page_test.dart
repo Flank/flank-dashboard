@@ -44,7 +44,7 @@ void main() {
     );
 
     testWidgets(
-      "contains the ProjectGroupsDropdownMenu widget",
+      "contains the project groups dropdown menu",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DashboardTestbed());

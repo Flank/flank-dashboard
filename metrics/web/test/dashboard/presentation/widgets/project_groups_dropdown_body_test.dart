@@ -38,9 +38,12 @@ void main() {
     );
 
     testWidgets(
-      "delegates the menuState to the dropdown body",
+      "applies the menuState from the given data to the dropdown body",
       (tester) async {
-        final animationComponentData = _AnimationComponentDataStub();
+        const menuState = MenuState.Opened;
+        final animationComponentData = _AnimationComponentDataStub(
+          menuState: menuState,
+        );
 
         await tester.pumpWidget(
           _ProjectGroupsDropdownBodyTestbed(
@@ -54,15 +57,20 @@ void main() {
 
         expect(
           dropdownBodyWidget.state,
-          equals(animationComponentData.menuState),
+          equals(menuState),
         );
       },
     );
 
     testWidgets(
-      "delegates the max height to the dropdown body",
+      "applies the max height from the given data to the dropdown body",
       (tester) async {
-        final animationComponentData = _AnimationComponentDataStub();
+        const maxHeight = 30.0;
+        final animationComponentData = _AnimationComponentDataStub(
+          constraints: const BoxConstraints(
+            maxHeight: maxHeight,
+          ),
+        );
 
         await tester.pumpWidget(
           _ProjectGroupsDropdownBodyTestbed(
@@ -76,7 +84,7 @@ void main() {
 
         expect(
           dropdownBodyWidget.maxHeight,
-          equals(animationComponentData.constraints.maxHeight),
+          equals(maxHeight),
         );
       },
     );
@@ -104,7 +112,11 @@ void main() {
     testWidgets(
       "notifies about the dropdown menu finishes opening",
       (tester) async {
-        final animationComponentData = _AnimationComponentDataStub();
+        bool isOpenedCalled = false;
+
+        final animationComponentData = _AnimationComponentDataStub(opened: () {
+          isOpenedCalled = true;
+        });
 
         await tester.pumpWidget(
           _ProjectGroupsDropdownBodyTestbed(
@@ -119,7 +131,7 @@ void main() {
         dropdownBodyWidget.onOpenStateChanged(true);
 
         expect(
-          animationComponentData.isOpenedCalled,
+          isOpenedCalled,
           isTrue,
         );
       },
@@ -128,7 +140,13 @@ void main() {
     testWidgets(
       "notifies about the dropdown menu finishes closing",
       (tester) async {
-        final animationComponentData = _AnimationComponentDataStub();
+        bool isClosedCalled = false;
+
+        final animationComponentData = _AnimationComponentDataStub(
+          closed: () {
+            isClosedCalled = true;
+          },
+        );
 
         await tester.pumpWidget(
           _ProjectGroupsDropdownBodyTestbed(
@@ -143,7 +161,7 @@ void main() {
         dropdownBodyWidget.onOpenStateChanged(false);
 
         expect(
-          animationComponentData.isClosedCalled,
+          isClosedCalled,
           isTrue,
         );
       },
@@ -178,35 +196,37 @@ class _ProjectGroupsDropdownBodyTestbed extends StatelessWidget {
 class _AnimationComponentDataStub implements AnimationComponentData {
   static const Duration _animationDuration = Duration(milliseconds: 100);
 
-  /// Holds an info if [opened] was called at least once.
-  bool _isOpenedCalled = false;
-
-  /// Holds an info if [closed] was called at least once.
-  bool _isClosedCalled = false;
-
-  /// Determines whether the [opened] callback was called at least once.
-  bool get isOpenedCalled => _isOpenedCalled;
-
-  /// Determines whether the [opened] callback was called at least once.
-  bool get isClosedCalled => _isClosedCalled;
+  @override
+  final MenuState menuState;
 
   @override
-  MenuState menuState = MenuState.OpeningStart;
+  final Widget child;
 
   @override
-  final Widget child = const Text('child');
+  final BoxConstraints constraints;
 
   @override
-  final BoxConstraints constraints = const BoxConstraints(
-    maxHeight: 120.0,
-  );
+  final MenuAnimationDurations menuAnimationDurations;
 
   @override
-  final MenuAnimationDurations menuAnimationDurations =
-      const MenuAnimationDurations(
-    forward: _animationDuration,
-    reverse: _animationDuration,
-  );
+  final MenuStateChanged opened;
+
+  @override
+  final MenuStateChanged closed;
+
+  _AnimationComponentDataStub({
+    this.menuState = MenuState.OpeningStart,
+    this.child = const Text('child'),
+    this.constraints = const BoxConstraints(
+      maxHeight: 120.0,
+    ),
+    this.menuAnimationDurations = const MenuAnimationDurations(
+      forward: _animationDuration,
+      reverse: _animationDuration,
+    ),
+    this.opened,
+    this.closed,
+  });
 
   @override
   TickerProvider get tickerProvider => null;
@@ -219,16 +239,6 @@ class _AnimationComponentDataStub implements AnimationComponentData {
 
   @override
   dynamic get selectedItem => null;
-
-  @override
-  MenuStateChanged get opened => () {
-        _isOpenedCalled = true;
-      };
-
-  @override
-  MenuStateChanged get closed => () {
-        _isClosedCalled = true;
-      };
 
   @override
   MenuStateWillChangeAfter get willCloseAfter => null;
