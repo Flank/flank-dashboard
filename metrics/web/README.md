@@ -14,10 +14,10 @@ Here is the easy to navigate list of these documents:
 ## Setup :rocket:
 
 Please use the [official documentation](https://flutter.dev/docs/get-started/install) to install & configure Flutter for web. Here are the relevant sections: 
-1. System Requirements
-2. Get the Flutter SDK
-3. Run `flutter doctor`
-4. Update your path
+1. System Requirements.
+2. Get the Flutter SDK.
+3. Run `flutter doctor`.
+4. Update your `PATH`.
 
 After the above steps are complete, use the following commands to ensure proper Flutter version installed and web is enabled:
 ```
