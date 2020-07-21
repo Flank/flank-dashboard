@@ -1,16 +1,21 @@
 # Metrics :bar_chart:
+
 Metrics is a set of applications to collect and review software project metrics like performance, build stability, and codebase quality.
 
 ### CI integrations
+
 A CLI application that integrates with popular CI tools to collect software project metrics.
 
 ### Core
+
 Provides a common classes to use within Metrics applications.
 
 ### Firebase
+
 Stores configurations for Firestore, Firebase Cloud Functions and deployment on Firebase Hosting.
 
 ### Web
+
 A web application that displays project metrics on easy to navigate Dashboard.
 
 The following diagram demonstrates the relationships between the above constitutes of Metrics:
@@ -18,6 +23,7 @@ The following diagram demonstrates the relationships between the above constitut
 ![Concept map](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/concept_map.puml)
 
 # Getting started with Metrics :beginner:
+
 We've tried to document all important decisions & approaches used for the development of this project. Reading each document is not an easy task and requires some time and patience. To help you get started, we collected the most useful documents that should help you to make fist steps:
 1. [Why create a metrics platform? :thinking:](docs/01_design_doc.md)
 2. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
@@ -38,13 +44,16 @@ In contrast with the above components, `Web` requires more steps to follow:
 5. [Widget structure organization :bicyclist:](metrics/web/docs/03_widget_structure_organization.md)
 
 # Guardian :shield:
+
 Detect flaky tests by analyzing JUnit XML files and orchestrate tools like Slack, Jira to notify the team.
 
 # Design :art:
+
 Follow the next links to get acquainted with the Metrics project design: 
 - [design/](design/)
 
 # Documentation :books:
+
 You can find complete Metrics documentation using the following links:
 - [general documentation](docs/)
 - [CI integrations documentation](metrics/ci_integrations/docs/)
