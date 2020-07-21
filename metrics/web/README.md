@@ -1,35 +1,36 @@
-# metrics
+# Metrics Web Application :tada:
 
-A new Flutter project.
+The Flutter web application that displays project metrics on easy to navigate Dashboard.
 
-## Getting Started
+## Getting Started :beginner:
 
-This project is a starting point for a Flutter application.
+This application is a part of Metrics project: make sure to get yourself familiar with the Metrics project documentation first. The web component documentation is located under the `docs` folder. 
 
-A few resources to get you started if this is your first Flutter project:
+Here is the easy to navigate list of these documents: 
+1. [Metrics Web Application architecture :walking:](docs/01_metrics_web_application_architecture.md)
+2. [Metrics Web presentation layer architecture :running:](docs/02_presentation_layer_architecture.md)
+3. [Widget structure organization :bicyclist:](docs/03_widget_structure_organization.md)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Setup :rocket:
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Please use the [official documentation](https://flutter.dev/docs/get-started/install) to install & configure Flutter for web. Here are the relevant sections: 
+1. System Requirements.
+2. Get the Flutter SDK.
+3. Run `flutter doctor`.
+4. Update your `PATH`.
 
-## Libraries
+After the above steps are complete, use the following commands to ensure proper Flutter version installed and web is enabled:
+```shell script
+flutter version 1.15.3
+flutter upgrade
+flutter config --enable-web
+```
 
-* [states_rebuilder](https://pub.dev/packages/states_rebuilder) - states_rebuilder is a flutter state management solution that allows for clear and sharp separation of concern between the user interface (UI) logic and the business logic. The separation is clear and sharp to the point that the business logic is written with pure, vanilla, plain old dart classes without extending any external library-specific classes and without annotation or code generation.
-* [equatable](https://pub.dev/packages/equatable) - Equatable is an abstract class that helps to implement equality without needing to explicitly override == and hashCode.
-* [fcharts](https://pub.dev/packages/fcharts) - fcharts is a chart library for flutter. Create beautiful, animated, responsive charts using a simple and intuitive API.
-* [url_launcher](https://pub.dev/packages/url_launcher) - url_launcher is a flutter plugin for launching a URL on Android and iOS. Supports web, phone, SMS, and email schemes.
-* [test](https://pub.dev/packages/test) - test is a full featured library for writing and running Dart tests.
-* [lint](https://pub.dev/packages/lint) - lint is an opinionated, community-driven set of lint rules for Dart and Flutter projects. Like pedantic but stricter.
-* [collection](https://pub.dev/packages/collection) - Collections and utilities functions and classes related to collections.
-* [args](https://pub.dev/packages/args) - args is a library for defining parsers for parsing raw command-line arguments into a set of options and values using GNU and POSIX style options.
+That is, your machine is ready to run the Metrics Web Application! :champagne:
 
+## Run :runner:
 
-
-## Tutorials
-
-* [Flutter TDD Clean Architecture Course](https://resocoder.com/category/tutorials/flutter/tdd-clean-architecture/) - A tutorial series to learn how to architect Flutter apps using test driven development.
-* [States Rebuilder](https://resocoder.com/2019/12/30/states-rebuilder-zero-boilerplate-flutter-state-management/) - A ZERO Boilerplate Flutter State Management library.
-
+To run the Metrics Web Application, you can use your IDE runner with Chrome device selected. To run the application from command-line, use the following command:
+```shell script
+flutter run -d chrome
+```
