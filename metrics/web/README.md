@@ -4,7 +4,9 @@ The Flutter web application that displays project metrics on easy to navigate Da
 
 ## Getting Started :beginner:
 
-This application is a part of Metrics project: make sure to get yourself familiar with the Metrics project documentation first. Web component documentation is located under `docs` folder. Here is the easy to navigate list of these documents: 
+This application is a part of Metrics project: make sure to get yourself familiar with the Metrics project documentation first. Web component documentation is located under `docs` folder. 
+
+Here is the easy to navigate list of these documents: 
 1. [Metrics Web Application architecture :walking:](docs/01_metrics_web_application_architecture.md)
 2. [Metrics Web presentation layer architecture :running:](docs/02_presentation_layer_architecture.md)
 3. [Widget structure organization :bicyclist:](docs/03_widget_structure_organization.md)
