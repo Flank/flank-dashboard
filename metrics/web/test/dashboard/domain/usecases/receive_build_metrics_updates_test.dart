@@ -257,8 +257,8 @@ void main() {
       expect(actualCoverage, expectedCoverage);
     });
 
-    test("loads the build status from last build", () {
-      final actualLastBuildStatus = projectMetrics.lastBuildStatus;
+    test("loads the project build status metric", () {
+      final actualLastBuildStatus = projectMetrics.projectBuildStatusMetric;
       final expectedLastBuildStatus =
           _MetricsRepositoryStub.testBuilds.last.buildStatus;
 

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// Represent the main project metrics available for users
@@ -10,8 +11,8 @@ class DashboardProjectMetrics extends Equatable {
   /// A unique identifier of the project these metrics belong to.
   final String projectId;
 
-  /// A status of the last build of the project these metrics belong to.
-  final BuildStatus lastBuildStatus;
+  /// A status of the build of the project these metrics belong to.
+  final ProjectBuildStatusMetric projectBuildStatusMetric;
 
   /// A [BuildNumberMetric] of project with [projectId].
   final BuildNumberMetric buildNumberMetrics;
@@ -31,7 +32,7 @@ class DashboardProjectMetrics extends Equatable {
   @override
   List<Object> get props => [
         projectId,
-        lastBuildStatus,
+        projectBuildStatusMetric,
         buildNumberMetrics,
         performanceMetrics,
         buildResultMetrics,
@@ -46,7 +47,7 @@ class DashboardProjectMetrics extends Equatable {
   /// The [buildResultMetrics] defaults to an empty [BuildResultMetric].
   const DashboardProjectMetrics({
     this.projectId,
-    this.lastBuildStatus,
+    this.projectBuildStatusMetric,
     this.buildNumberMetrics = const BuildNumberMetric(),
     this.performanceMetrics = const PerformanceMetric(),
     this.buildResultMetrics = const BuildResultMetric(),

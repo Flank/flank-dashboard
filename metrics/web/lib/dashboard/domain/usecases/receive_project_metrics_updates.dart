@@ -8,6 +8,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/util/date.dart';
@@ -94,7 +95,9 @@ class ReceiveProjectMetricsUpdates
       lastBuildsForChartsMetrics,
     );
 
-    final lastBuildStatus = builds.last.buildStatus;
+    final projectBuildStatusMetric = ProjectBuildStatusMetric(
+      status: builds.last.buildStatus,
+    );
     final buildNumberMetrics = _getBuildNumberMetrics(builds);
     final buildResultMetrics = _getBuildResultMetrics(lastBuilds);
     final performanceMetrics = _getPerformanceMetrics(builds);
@@ -103,7 +106,7 @@ class ReceiveProjectMetricsUpdates
 
     return DashboardProjectMetrics(
       projectId: projectId,
-      lastBuildStatus: lastBuildStatus,
+      projectBuildStatusMetric: projectBuildStatusMetric,
       buildNumberMetrics: buildNumberMetrics,
       performanceMetrics: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
