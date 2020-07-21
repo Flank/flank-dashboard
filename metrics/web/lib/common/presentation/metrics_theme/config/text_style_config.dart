@@ -9,4 +9,9 @@ class TextStyleConfig {
     fontSize: 13.0,
     fontWeight: FontWeight.w500,
   );
+
+  static const TextStyle buttonLabelStyle = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.w500,
+  );
 }

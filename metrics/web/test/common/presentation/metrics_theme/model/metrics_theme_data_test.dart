@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -21,6 +24,7 @@ void main() {
         expect(themeData.projectGroupDialogTheme, isNotNull);
         expect(themeData.projectGroupCardTheme, isNotNull);
         expect(themeData.addProjectGroupCardTheme, isNotNull);
+        expect(themeData.metricsButtonTheme, isNotNull);
       },
     );
 
@@ -35,6 +39,7 @@ void main() {
           projectGroupCardTheme: null,
           addProjectGroupCardTheme: null,
           projectGroupDialogTheme: null,
+          metricsButtonTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -44,6 +49,7 @@ void main() {
         expect(themeData.projectGroupCardTheme, isNotNull);
         expect(themeData.addProjectGroupCardTheme, isNotNull);
         expect(themeData.projectGroupDialogTheme, isNotNull);
+        expect(themeData.metricsButtonTheme, isNotNull);
       },
     );
 
@@ -88,6 +94,12 @@ void main() {
           primaryColor: primaryColor,
         );
 
+        const metricsButtonTheme = MetricsButtonThemeData(
+          buttonAttentionLevel: MetricsButtonAttentionLevel(
+            positive: MetricsButtonStyle(color: Colors.green),
+          ),
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -98,6 +110,7 @@ void main() {
           addProjectGroupCardTheme: addProjectGroupTheme,
           projectGroupDialogTheme: projectGroupDialogTheme,
           inactiveWidgetTheme: inactiveThemeData,
+          metricsButtonTheme: metricsButtonTheme,
         );
 
         expect(
@@ -119,6 +132,7 @@ void main() {
           copiedTheme.projectGroupDialogTheme,
           equals(projectGroupDialogTheme),
         );
+        expect(copiedTheme.metricsButtonTheme, equals(metricsButtonTheme));
       },
     );
 
@@ -131,31 +145,35 @@ void main() {
         expect(themeData, isNot(copiedTheme));
         expect(
           themeData.metricWidgetTheme,
-          copiedTheme.metricWidgetTheme,
+          equals(copiedTheme.metricWidgetTheme),
         );
         expect(
           themeData.metricCirclePercentageThemeData,
-          copiedTheme.metricCirclePercentageThemeData,
+          equals(copiedTheme.metricCirclePercentageThemeData),
         );
         expect(
           themeData.buildResultTheme,
-          copiedTheme.buildResultTheme,
+          equals(copiedTheme.buildResultTheme),
         );
         expect(
           themeData.projectGroupCardTheme,
-          copiedTheme.projectGroupCardTheme,
+          equals(copiedTheme.projectGroupCardTheme),
         );
         expect(
           themeData.addProjectGroupCardTheme,
-          copiedTheme.addProjectGroupCardTheme,
+          equals(copiedTheme.addProjectGroupCardTheme),
         );
         expect(
           themeData.projectGroupDialogTheme,
-          copiedTheme.projectGroupDialogTheme,
+          equals(copiedTheme.projectGroupDialogTheme),
         );
         expect(
           themeData.inactiveWidgetTheme,
-          copiedTheme.inactiveWidgetTheme,
+          equals(copiedTheme.inactiveWidgetTheme),
+        );
+        expect(
+          themeData.metricsButtonTheme,
+          equals(copiedTheme.metricsButtonTheme),
         );
       },
     );

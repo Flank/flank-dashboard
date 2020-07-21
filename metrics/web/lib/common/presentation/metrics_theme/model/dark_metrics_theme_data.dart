@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
@@ -129,6 +132,42 @@ class DarkMetricsThemeData extends MetricsThemeData {
               color: ColorConfig.darkInactiveColor,
               fontSize: 32.0,
               fontWeight: FontWeight.bold,
+            ),
+          ),
+          metricsButtonTheme: const MetricsButtonThemeData(
+            buttonAttentionLevel: MetricsButtonAttentionLevel(
+              positive: MetricsButtonStyle(
+                color: ColorConfig.primaryColor,
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              neutral: MetricsButtonStyle(
+                color: ColorConfig.inactiveColor,
+                labelStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              negative: MetricsButtonStyle(
+                color: ColorConfig.accentColor,
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              inactive: MetricsButtonStyle(
+                color: ColorConfig.inactiveColor,
+                labelStyle: TextStyle(
+                  color: ColorConfig.inactiveTextColor,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ),
         );
