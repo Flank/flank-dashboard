@@ -56,48 +56,6 @@ void main() {
     );
 
     testWidgets(
-      "uses a linear animation curve as a default if the menuAnimationCurve parameter is null",
-      (tester) async {
-        const expectedAnimationCurve = Curves.linear;
-
-        await tester.pumpWidget(const _DropdownMenuTestbed(
-          menuAnimationCurve: null,
-        ));
-
-        final selectionMenuWidget = tester.widget<SelectionMenu>(
-          selectionMenuFinder,
-        );
-
-        final animationCurves =
-            selectionMenuWidget.componentsConfiguration.menuAnimationCurves;
-
-        expect(animationCurves.forward, equals(expectedAnimationCurve));
-        expect(animationCurves.reverse, equals(expectedAnimationCurve));
-      },
-    );
-
-    testWidgets(
-      "uses a zero duration as a default if the menuAnimationDuration parameter is null",
-      (tester) async {
-        const expectedDuration = Duration();
-
-        await tester.pumpWidget(const _DropdownMenuTestbed(
-          menuAnimationDuration: null,
-        ));
-
-        final selectionMenuWidget = tester.widget<SelectionMenu>(
-          selectionMenuFinder,
-        );
-
-        final animationDurations =
-            selectionMenuWidget.componentsConfiguration.menuAnimationDurations;
-
-        expect(animationDurations.forward, equals(expectedDuration));
-        expect(animationDurations.reverse, equals(expectedDuration));
-      },
-    );
-
-    testWidgets(
       "uses a minimum interactive dimension constant as a default if the itemHeight parameter is null",
       (tester) async {
         await tester.pumpWidget(const _DropdownMenuTestbed(itemHeight: null));
@@ -228,48 +186,6 @@ void main() {
         await tester.tap(find.byType(_DropdownTestItem).first);
 
         expect(tappedItem, equals(expectedTappedItem));
-      },
-    );
-
-    testWidgets(
-      "delegates the menu animation curves with the given menuAnimationCurve parameter to the SelectionMenu widget",
-      (tester) async {
-        const expectedAnimationCurve = Curves.ease;
-
-        await tester.pumpWidget(const _DropdownMenuTestbed(
-          menuAnimationCurve: expectedAnimationCurve,
-        ));
-
-        final selectionMenuWidget = tester.widget<SelectionMenu>(
-          selectionMenuFinder,
-        );
-
-        final animationCurves =
-            selectionMenuWidget.componentsConfiguration.menuAnimationCurves;
-
-        expect(animationCurves.forward, expectedAnimationCurve);
-        expect(animationCurves.reverse, expectedAnimationCurve);
-      },
-    );
-
-    testWidgets(
-      "delegates the menu animation durations to the SelectionMenu widget",
-      (tester) async {
-        const expectedAnimationDuration = Duration(milliseconds: 700);
-
-        await tester.pumpWidget(const _DropdownMenuTestbed(
-          menuAnimationDuration: expectedAnimationDuration,
-        ));
-
-        final selectionMenuWidget = tester.widget<SelectionMenu>(
-          selectionMenuFinder,
-        );
-
-        final animationDurations =
-            selectionMenuWidget.componentsConfiguration.menuAnimationDurations;
-
-        expect(animationDurations.forward, expectedAnimationDuration);
-        expect(animationDurations.reverse, expectedAnimationDuration);
       },
     );
 
@@ -407,12 +323,6 @@ void main() {
 
 /// A testbed class needed to test the [DropdownMenu] widget.
 class _DropdownMenuTestbed extends StatelessWidget {
-  /// A [Curve] of the menu opening animation.
-  final Curve menuAnimationCurve;
-
-  /// A [Duration] of the menu opening animation.
-  final Duration menuAnimationDuration;
-
   /// A list of items to select from.
   final List<String> items;
 
@@ -451,8 +361,6 @@ class _DropdownMenuTestbed extends StatelessWidget {
     this.initiallySelectedItemIndex,
     this.items,
     this.itemHeight,
-    this.menuAnimationCurve,
-    this.menuAnimationDuration,
     this.menuPadding,
   }) : super(key: key);
 
@@ -466,8 +374,6 @@ class _DropdownMenuTestbed extends StatelessWidget {
           menuBuilder: menuBuilder,
           items: items,
           itemHeight: itemHeight,
-          menuAnimationDuration: menuAnimationDuration,
-          menuAnimationCurve: menuAnimationCurve,
           initiallySelectedItemIndex: initiallySelectedItemIndex,
           onItemSelected: onItemSelected,
           menuPadding: menuPadding,
