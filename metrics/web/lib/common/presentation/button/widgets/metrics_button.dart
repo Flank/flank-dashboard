@@ -5,7 +5,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
-/// An abstract widget that displays a [RaisedButton] and
+/// An abstract widget that displays a metrics styled button and
 /// applies the [MetricsThemeData.metricsButtonTheme].
 abstract class MetricsButton extends StatelessWidget {
   /// A callback that is called when this button is pressed.

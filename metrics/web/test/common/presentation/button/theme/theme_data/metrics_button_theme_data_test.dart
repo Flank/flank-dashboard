@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 void main() {
   group("MetricsButtonThemeData", () {
     test(
-      "creates a theme with default attention level if the given is null",
+      "creates a theme with default attention level if the given attention level is null",
       () {
         final theme = MetricsButtonThemeData(
           buttonAttentionLevel: null,

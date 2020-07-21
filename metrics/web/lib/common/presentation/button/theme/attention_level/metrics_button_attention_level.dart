@@ -4,8 +4,7 @@ import 'package:metrics/common/presentation/button/theme/style/metrics_button_st
 /// levels for buttons within application.
 class MetricsButtonAttentionLevel {
   /// A [MetricsButtonStyle] for buttons that provide positive visual feedback.
-  /// They are usually buttons that submit signing in, adding or
-  /// editing configurations, etc.
+  /// They are usually buttons that sign in, add or edit configurations, etc.
   final MetricsButtonStyle positive;
 
   /// A [MetricsButtonStyle] for buttons that provide neutral visual feedback.
