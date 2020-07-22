@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -48,7 +50,7 @@ class _MyAppState extends State<MyApp> {
                 fillColor: ColorConfig.lightInputColor,
                 hoverColor: Colors.black,
                 border: TextFieldConfig.border,
-                focusedBorder: TextFieldConfig.focusedBorder,
+                focusedBorder: LightMetricsThemeData.inputFocusedBorder,
                 errorStyle: TextFieldConfig.errorStyle,
                 errorBorder: TextFieldConfig.errorBorder,
                 focusedErrorBorder: TextFieldConfig.errorBorder,
@@ -69,7 +71,7 @@ class _MyAppState extends State<MyApp> {
                 fillColor: ColorConfig.darkInputColor,
                 hoverColor: Colors.black,
                 border: TextFieldConfig.border,
-                focusedBorder: TextFieldConfig.focusedBorder,
+                focusedBorder: DarkMetricsThemeData.inputFocusedBorder,
                 errorStyle: TextFieldConfig.errorStyle,
                 errorBorder: TextFieldConfig.errorBorder,
                 focusedErrorBorder: TextFieldConfig.errorBorder,

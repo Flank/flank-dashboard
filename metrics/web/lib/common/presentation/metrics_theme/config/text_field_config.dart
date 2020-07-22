@@ -20,11 +20,6 @@ class TextFieldConfig {
     borderSide: BorderSide.none,
   );
 
-  static const focusedBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(4.0)),
-    borderSide: BorderSide(color: ColorConfig.focusedBorderColor),
-  );
-
   static const errorBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: ColorConfig.accentColor),
