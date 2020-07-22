@@ -9,6 +9,6 @@ class ProjectBuildStatusMetric extends Equatable {
   @override
   List<Object> get props => [status];
 
-  /// Creates a [ProjectBuildStatusMetric].
+  /// Creates a [ProjectBuildStatusMetric] with the given [status].
   const ProjectBuildStatusMetric({this.status});
 }
