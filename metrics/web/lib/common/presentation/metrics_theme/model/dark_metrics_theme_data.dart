@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
+import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
-import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
+  static const Color focusedBorderColor = Color(0xFF878799);
+  static const inputFocusedBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+    borderSide: BorderSide(color: focusedBorderColor),
+  );
+
   /// The default [TextStyle] for [TextField]s within the application.
   static const _defaultTextFieldTextStyle = TextStyle(
     color: Colors.white,
@@ -168,6 +175,15 @@ class DarkMetricsThemeData extends MetricsThemeData {
                   fontWeight: FontWeight.w500,
                 ),
               ),
+            ),
+          ),
+          textFieldTheme: const TextFieldThemeData(
+            focusColor: Colors.black,
+            hoverBorderColor: ColorConfig.hoverBorderColor,
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+              height: 1.0,
             ),
           ),
         );

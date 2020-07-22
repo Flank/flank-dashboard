@@ -6,10 +6,22 @@ class TextFieldConfig {
   static const TextStyle hintStyle = TextStyle(
     color: ColorConfig.inputSecondaryTextColor,
     fontSize: 16.0,
+    height: 1.0,
+  );
+
+  static const TextStyle errorStyle = TextStyle(
+    color: ColorConfig.accentColor,
+    fontSize: 16.0,
+    height: 1.0,
   );
 
   static const border = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide.none,
+  );
+
+  static const errorBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+    borderSide: BorderSide(color: ColorConfig.accentColor),
   );
 }
