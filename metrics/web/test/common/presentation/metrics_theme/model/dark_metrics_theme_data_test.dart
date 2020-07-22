@@ -17,6 +17,8 @@ void main() {
         expect(darkMetricsThemeData.projectGroupCardTheme, isNotNull);
         expect(darkMetricsThemeData.addProjectGroupCardTheme, isNotNull);
         expect(darkMetricsThemeData.projectGroupDialogTheme, isNotNull);
+        expect(darkMetricsThemeData.metricsButtonTheme, isNotNull);
+        expect(darkMetricsThemeData.textFieldTheme, isNotNull);
       },
     );
   });

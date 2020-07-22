@@ -12,7 +12,7 @@ jobs:
   metrics-actions:
     name: Metrics actions
     runs-on: macOS-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
       WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}

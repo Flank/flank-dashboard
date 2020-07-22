@@ -17,6 +17,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_metric_v
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -44,6 +45,19 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
   /// Holds the list of current [ProjectModel]s.
   List<ProjectModel> _projects;
+
+  /// Holds the list of current [ProjectGroupDropdownItemViewModel]s.
+  static const List<ProjectGroupDropdownItemViewModel>
+      _projectGroupDropdownItems = [
+    ProjectGroupDropdownItemViewModel(name: 'All projects'),
+    ProjectGroupDropdownItemViewModel(name: 'Android'),
+    ProjectGroupDropdownItemViewModel(name: 'iOS'),
+    ProjectGroupDropdownItemViewModel(name: 'CLI tools'),
+  ];
+
+  /// Provides a list of [ProjectMetricsTileViewModel]s.
+  List<ProjectGroupDropdownItemViewModel> get projectGroupDropdownItems =>
+      _projectGroupDropdownItems;
 
   /// Provides a list of [ProjectMetricsTileViewModel]s,
   /// filtered by the project name filter.
