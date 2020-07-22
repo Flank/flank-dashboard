@@ -381,7 +381,7 @@ class _MetricsRepositoryStub implements MetricsRepository {
   /// A list of [Build]s used in this stub.
   List<Build> _builds;
 
-  /// Creates a new instance of this stub
+  /// Creates a new instance of this stub.
   _MetricsRepositoryStub({List<Build> builds}) {
     _builds = builds ?? testBuilds;
   }
