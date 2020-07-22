@@ -258,7 +258,8 @@ void main() {
     });
 
     test("loads the project build status metric", () {
-      final actualLastBuildStatus = projectMetrics.projectBuildStatusMetric;
+      final actualLastBuildStatus =
+          projectMetrics.projectBuildStatusMetric.status;
       final expectedLastBuildStatus =
           _MetricsRepositoryStub.testBuilds.last.buildStatus;
 
