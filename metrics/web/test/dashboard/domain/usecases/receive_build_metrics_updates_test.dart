@@ -256,7 +256,6 @@ void main() {
       final buildsInPeriod = builds
           .where((element) => element.startedAt.isAfter(sevenDaysBeforeDate))
           .toList();
-      ;
 
       expect(
         performanceMetrics.buildsPerformance.length,
