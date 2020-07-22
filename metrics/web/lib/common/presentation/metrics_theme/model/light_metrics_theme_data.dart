@@ -14,6 +14,12 @@ import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
+  static const Color focusedBorderColor = Colors.blue;
+  static const inputFocusedBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+    borderSide: BorderSide(color: focusedBorderColor),
+  );
+
   /// The default [TextStyle] for [TextField]s within the application.
   static const _defaultTextFieldTextStyle = TextStyle(
     color: Colors.black,

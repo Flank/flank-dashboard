@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group("TextFieldThemeData", () {
     test(
-      "creates the theme with the default colors for text fields if the parameters are not specified",
+      "creates a theme with the default colors for text fields if the parameters are not specified",
       () {
         const themeData = TextFieldThemeData();
 
@@ -18,7 +18,7 @@ void main() {
     );
 
     test(
-      "creates the theme with null text styles for text fields if the text styles are not specified",
+      "creates a theme with null text styles for text fields if the text styles are not specified",
       () {
         const themeData = TextFieldThemeData();
 

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 /// A class that stores the theme data for the text fields within application.
 class TextFieldThemeData {
-  /// A [Color] to fill the text field with when field is focused.
+  /// A [Color] to fill the text field when the field is focused.
   final Color focusColor;
 
-  /// A [Color] of the text field border when field is hovered.
+  /// A [Color] of the text field border when the field is hovered.
   final Color hoverBorderColor;
 
   /// A [TextStyle] to use for the text being edited.

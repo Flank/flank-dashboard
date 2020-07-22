@@ -25,7 +25,7 @@ class MetricsTextFormField extends StatefulWidget {
   /// Text that describes this input field.
   final String label;
 
-  /// Creates a new instance of the [MetricsTextFormField].
+  /// Creates a new instance of the Metrics text form field.
   const MetricsTextFormField({
     Key key,
     this.controller,
@@ -89,17 +89,17 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
 
   @override
   void didChangeDependencies() {
-    final theme = MetricsTheme.of(context).textFieldTheme;
-    final border = Theme.of(context).inputDecorationTheme.border;
+    final textFieldTheme = MetricsTheme.of(context).textFieldTheme;
+    final decorationTheme = Theme.of(context).inputDecorationTheme;
 
     _hoverDecoration = _defaultDecoration.copyWith(
-      border: border.copyWith(
-        borderSide: BorderSide(color: theme.hoverBorderColor),
+      border: decorationTheme.border.copyWith(
+        borderSide: BorderSide(color: textFieldTheme.hoverBorderColor),
       ),
     );
 
     _focusDecoration = _defaultDecoration.copyWith(
-      fillColor: theme.focusColor,
+      fillColor: textFieldTheme.focusColor,
     );
 
     super.didChangeDependencies();
@@ -107,7 +107,7 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = MetricsTheme.of(context).textFieldTheme;
+    final textFieldTheme = MetricsTheme.of(context).textFieldTheme;
     final decorationTheme = Theme.of(context).inputDecorationTheme;
 
     return Column(
@@ -129,7 +129,7 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
             focusNode: _focusNode,
             controller: widget.controller,
             validator: widget.validator,
-            style: theme.textStyle,
+            style: textFieldTheme.textStyle,
             decoration: _decoration,
           ),
         ),
