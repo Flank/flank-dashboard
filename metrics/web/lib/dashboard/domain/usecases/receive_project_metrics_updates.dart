@@ -94,13 +94,17 @@ class ReceiveProjectMetricsUpdates
       builds,
       lastBuildsForChartsMetrics,
     );
+    final lastBuildsInPeriod = _getBuildsInPeriod(
+      builds,
+      buildNumberLoadingPeriod,
+    );
 
     final projectBuildStatusMetric = ProjectBuildStatusMetric(
       status: builds.last.buildStatus,
     );
-    final buildNumberMetrics = _getBuildNumberMetrics(builds);
+    final buildNumberMetrics = _getBuildNumberMetrics(lastBuildsInPeriod);
     final buildResultMetrics = _getBuildResultMetrics(lastBuilds);
-    final performanceMetrics = _getPerformanceMetrics(builds);
+    final performanceMetrics = _getPerformanceMetrics(lastBuildsInPeriod);
     final stability = _getStability(lastBuilds);
     final coverage = _getCoverage(builds);
 
@@ -113,6 +117,16 @@ class ReceiveProjectMetricsUpdates
       coverage: coverage,
       stability: stability,
     );
+  }
+
+  /// Gets the builds from [builds] started in [period] before now.
+  List<Build> _getBuildsInPeriod(List<Build> builds, Duration period) {
+    final buildsLoadingPeriod = DateTime.now().subtract(period);
+
+    final lastBuildsInPeriod = builds
+        .where((element) => element.startedAt.isAfter(buildsLoadingPeriod))
+        .toList();
+    return lastBuildsInPeriod;
   }
 
   /// Returns last [numberOfBuilds] from [builds].
@@ -177,13 +191,8 @@ class ReceiveProjectMetricsUpdates
 
   /// Calculates the [BuildNumberMetric] from [builds].
   BuildNumberMetric _getBuildNumberMetrics(List<Build> builds) {
-    final buildsPeriodStart = DateTime.now().subtract(buildNumberLoadingPeriod);
-    final thisWeekBuilds = builds
-        .where((element) => element.startedAt.isAfter(buildsPeriodStart))
-        .toList();
-
     return BuildNumberMetric(
-      numberOfBuilds: thisWeekBuilds.length,
+      numberOfBuilds: builds.length,
     );
   }
 

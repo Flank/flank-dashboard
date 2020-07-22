@@ -1,6 +1,10 @@
+import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
@@ -205,13 +209,58 @@ void main() {
       expect(actualBuildNumberMetrics, equals(expectedBuildNumberMetrics));
     });
 
+    test("loads the performance metric for last 7 days", () {
+      final actualPerformanceMetric = projectMetrics.performanceMetrics;
+
+      final sevenDaysBeforeDate = DateTime.now().subtract(
+        ReceiveProjectMetricsUpdates.buildNumberLoadingPeriod,
+      );
+
+      final thisWeekBuilds = builds
+          .where((build) => build.startedAt.isAfter(sevenDaysBeforeDate))
+          .toList();
+
+      final buildsPerformance = thisWeekBuilds.map((build) => BuildPerformance(
+            date: build.startedAt,
+            duration: build.duration,
+          ));
+
+      final averageDuration = thisWeekBuilds.fold<Duration>(
+              const Duration(), (value, element) => value + element.duration) ~/
+          thisWeekBuilds.length;
+
+      final expectedBuildNumberMetrics = PerformanceMetric(
+        buildsPerformance: DateTimeSet.from(buildsPerformance),
+        averageBuildDuration: averageDuration,
+      );
+
+      expect(
+        actualPerformanceMetric.buildsPerformance.length,
+        equals(expectedBuildNumberMetrics.buildsPerformance.length),
+      );
+
+      expect(
+        actualPerformanceMetric.averageBuildDuration,
+        equals(expectedBuildNumberMetrics.averageBuildDuration),
+      );
+    });
+
     test("loads all fields in the performance metrics", () {
       final performanceMetrics = projectMetrics.performanceMetrics;
       final firstPerformanceMetric = performanceMetrics.buildsPerformance.last;
 
+      final sevenDaysBeforeDate = DateTime.now().subtract(
+        ReceiveProjectMetricsUpdates.buildNumberLoadingPeriod,
+      );
+
+      final buildsInPeriod = builds
+          .where((element) => element.startedAt.isAfter(sevenDaysBeforeDate))
+          .toList();
+      ;
+
       expect(
         performanceMetrics.buildsPerformance.length,
-        builds.length,
+        buildsInPeriod.length,
       );
 
       expect(
@@ -258,12 +307,12 @@ void main() {
     });
 
     test("loads the project build status metric", () {
-      final actualLastBuildStatus =
-          projectMetrics.projectBuildStatusMetric.status;
-      final expectedLastBuildStatus =
-          _MetricsRepositoryStub.testBuilds.last.buildStatus;
+      final expectedProjectBuildStatus = ProjectBuildStatusMetric(
+        status: _MetricsRepositoryStub.testBuilds.last.buildStatus,
+      );
+      final actualProjectBuildStatus = projectMetrics.projectBuildStatusMetric;
 
-      expect(actualLastBuildStatus, expectedLastBuildStatus);
+      expect(actualProjectBuildStatus, expectedProjectBuildStatus);
     });
 
     test("calculates stability metric", () {
