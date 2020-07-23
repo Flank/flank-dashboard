@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
+import 'package:test/test.dart';
+
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
-
-import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_group_dropdown_item_theme_data.dart';
-import 'package:test/test.dart';
 
 void main() {
   group("ProjectGroupDropdownItemThemeData", () {
@@ -12,7 +12,7 @@ void main() {
       const textStyle = TextStyle(fontSize: 13.0);
       const hoverColor = Colors.orange;
 
-      final themeData = ProjectGroupDropdownItemThemeData(
+      final themeData = ProjectGroupsDropdownItemThemeData(
         backgroundColor: backgroundColor,
         textStyle: textStyle,
         hoverColor: hoverColor,

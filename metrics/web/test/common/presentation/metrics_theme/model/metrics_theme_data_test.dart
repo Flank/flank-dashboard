@@ -5,8 +5,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_th
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_group_dropdown_item_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_group_dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
@@ -114,12 +114,12 @@ void main() {
 
         const textFieldTheme = TextFieldThemeData(focusColor: Colors.black);
 
-        const projectGroupDropdownTheme = ProjectGroupDropdownThemeData(
+        const projectGroupDropdownTheme = ProjectGroupsDropdownThemeData(
           backgroundColor: backgroundColor,
         );
 
         const projectGroupDropdownItemTheme =
-            ProjectGroupDropdownItemThemeData(backgroundColor: backgroundColor);
+            ProjectGroupsDropdownItemThemeData(backgroundColor: backgroundColor);
 
         const themeData = MetricsThemeData();
 

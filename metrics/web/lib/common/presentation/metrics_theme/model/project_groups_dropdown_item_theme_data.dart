@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Stores the theme data for the project group dropdown item.
-class ProjectGroupDropdownItemThemeData {
+class ProjectGroupsDropdownItemThemeData {
   /// A background [Color] of the project group dropdown item.
   final Color backgroundColor;
 
@@ -11,8 +11,8 @@ class ProjectGroupDropdownItemThemeData {
   /// A [TextStyle] of the project group dropdown item text.
   final TextStyle textStyle;
 
-  /// Creates the [ProjectgroupDropdownItemThemeData].
-  const ProjectGroupDropdownItemThemeData({
+  /// Creates the [ProjectGroupsDropdownItemThemeData].
+  const ProjectGroupsDropdownItemThemeData({
     this.backgroundColor,
     this.hoverColor,
     this.textStyle,
