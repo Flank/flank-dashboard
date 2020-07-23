@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -618,6 +619,11 @@ class _ProjectGroupCardTestbed extends StatelessWidget {
     return TestInjectionContainer(
       projectGroupsNotifier: projectGroupsNotifier,
       child: MetricsThemedTestbed(
+        themeData: ThemeData(
+          inputDecorationTheme: InputDecorationTheme(
+            border: TextFieldConfig.border,
+          ),
+        ),
         metricsThemeData: theme,
         body: ProjectGroupCard(
           projectGroupCardViewModel: projectGroupCardViewModel,

@@ -20,12 +20,6 @@ class LightMetricsThemeData extends MetricsThemeData {
     borderSide: BorderSide(color: focusedBorderColor),
   );
 
-  /// The default [TextStyle] for [TextField]s within the application.
-  static const _defaultTextFieldTextStyle = TextStyle(
-    color: Colors.black,
-    fontSize: 16.0,
-  );
-
   /// Creates the light theme with the default widget theme configuration.
   const LightMetricsThemeData()
       : super(
@@ -103,9 +97,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             ),
           ),
           projectGroupDialogTheme: const ProjectGroupDialogThemeData(
-            accentColor: ColorConfig.accentColor,
             primaryColor: ColorConfig.primaryColor,
-            backgroundColor: ColorConfig.lightScaffoldColor,
             closeIconColor: Colors.black,
             contentBorderColor: ColorConfig.darkBorderColor,
             titleTextStyle: TextStyle(
@@ -113,8 +105,6 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontSize: 26.0,
               fontWeight: FontWeight.w500,
             ),
-            groupNameTextStyle: _defaultTextFieldTextStyle,
-            searchForProjectTextStyle: _defaultTextFieldTextStyle,
             uncheckedProjectTextStyle: TextStyle(
               color: Colors.black,
               fontSize: 14.0,
@@ -125,11 +115,6 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
-            actionsTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
-            ),
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.lightInactiveColor,

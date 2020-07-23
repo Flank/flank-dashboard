@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/clearable_text_form_field.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
@@ -87,13 +87,10 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: Form(
                   key: _formKey,
-                  child: ClearableTextFormField(
-                    textStyle: dialogTheme.groupNameTextStyle,
-                    validator: ProjectGroupNameValidator.validate,
-                    inputDecoration: const InputDecoration(
-                      hintText: ProjectGroupsStrings.nameYourGroup,
-                    ),
+                  child: MetricsTextFormField(
                     controller: _groupNameController,
+                    hint: ProjectGroupsStrings.nameYourGroup,
+                    validator: ProjectGroupNameValidator.validate,
                   ),
                 ),
               ),
@@ -110,13 +107,10 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
-                        child: TextField(
+                        child: MetricsTextFormField(
                           onChanged: _projectGroupsNotifier.filterByProjectName,
-                          style: dialogTheme.searchForProjectTextStyle,
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search),
-                            hintText: CommonStrings.searchForProject,
-                          ),
+                          prefixIcon: const Icon(Icons.search),
+                          hint: CommonStrings.searchForProject,
                         ),
                       ),
                       Flexible(
@@ -137,19 +131,10 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
           ),
           actions: <Widget>[
             Expanded(
-              child: HandCursor(
-                child: RaisedButton(
-                  color: dialogTheme.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  onPressed:
-                      _isLoading ? null : () => _actionCallback(projectGroup),
-                  child: Text(
-                    buttonText,
-                    style: dialogTheme.actionsTextStyle,
-                  ),
-                ),
+              child: MetricsPositiveButton(
+                label: buttonText,
+                onPressed:
+                    _isLoading ? null : () => _actionCallback(projectGroup),
               ),
             ),
           ],

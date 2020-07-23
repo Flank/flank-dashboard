@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/strategy/edit_project_group_dialog_strategy.dart';
@@ -57,6 +58,11 @@ class _EditProjectGroupDialogTestbed extends StatelessWidget {
     return TestInjectionContainer(
       projectGroupsNotifier: projectGroupsNotifier,
       child: MetricsThemedTestbed(
+        themeData: ThemeData(
+          inputDecorationTheme: InputDecorationTheme(
+            border: TextFieldConfig.border,
+          ),
+        ),
         body: EditProjectGroupDialog(),
       ),
     );

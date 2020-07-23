@@ -11,6 +11,9 @@ class MetricsTextFormField extends StatefulWidget {
   /// A text field form validator.
   final FormFieldValidator<String> validator;
 
+  /// The callback that report that a text field values has changed.
+  final ValueChanged<String> onChanged;
+
   /// An icon that appears before the editable part of this text field,
   /// within the decoration's container.
   final Widget prefixIcon;
@@ -30,6 +33,7 @@ class MetricsTextFormField extends StatefulWidget {
     Key key,
     this.controller,
     this.validator,
+    this.onChanged,
     this.prefixIcon,
     this.suffixIcon,
     this.hint,
@@ -126,6 +130,7 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
           onEnter: (_) => _setHovered(true),
           onExit: (_) => _setHovered(false),
           child: TextFormField(
+            onChanged: widget.onChanged,
             focusNode: _focusNode,
             controller: widget.controller,
             validator: widget.validator,
