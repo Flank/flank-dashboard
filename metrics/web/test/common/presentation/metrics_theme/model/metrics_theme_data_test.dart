@@ -5,6 +5,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_th
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
@@ -27,6 +29,8 @@ void main() {
         expect(themeData.addProjectGroupCardTheme, isNotNull);
         expect(themeData.metricsButtonTheme, isNotNull);
         expect(themeData.textFieldTheme, isNotNull);
+        expect(themeData.projectGroupDropdownTheme, isNotNull);
+        expect(themeData.projectGroupDropdownItemTheme, isNotNull);
       },
     );
 
@@ -43,6 +47,8 @@ void main() {
           projectGroupDialogTheme: null,
           metricsButtonTheme: null,
           textFieldTheme: null,
+          projectGroupDropdownTheme: null,
+          projectGroupDropdownItemTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -54,6 +60,8 @@ void main() {
         expect(themeData.projectGroupDialogTheme, isNotNull);
         expect(themeData.metricsButtonTheme, isNotNull);
         expect(themeData.textFieldTheme, isNotNull);
+        expect(themeData.projectGroupDropdownTheme, isNotNull);
+        expect(themeData.projectGroupDropdownItemTheme, isNotNull);
       },
     );
 
@@ -106,6 +114,13 @@ void main() {
 
         const textFieldTheme = TextFieldThemeData(focusColor: Colors.black);
 
+        const projectGroupDropdownTheme = ProjectGroupsDropdownThemeData(
+          backgroundColor: backgroundColor,
+        );
+
+        const projectGroupDropdownItemTheme =
+            ProjectGroupsDropdownItemThemeData(backgroundColor: backgroundColor);
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -118,6 +133,8 @@ void main() {
           inactiveWidgetTheme: inactiveThemeData,
           metricsButtonTheme: metricsButtonTheme,
           textFieldTheme: textFieldTheme,
+          projectGroupDropdownTheme: projectGroupDropdownTheme,
+          projectGroupDropdownItemTheme: projectGroupDropdownItemTheme,
         );
 
         expect(
@@ -141,6 +158,14 @@ void main() {
         );
         expect(copiedTheme.metricsButtonTheme, equals(metricsButtonTheme));
         expect(copiedTheme.textFieldTheme, equals(textFieldTheme));
+        expect(
+          copiedTheme.projectGroupDropdownTheme,
+          equals(projectGroupDropdownTheme),
+        );
+        expect(
+          copiedTheme.projectGroupDropdownItemTheme,
+          equals(projectGroupDropdownItemTheme),
+        );
       },
     );
 
@@ -184,6 +209,14 @@ void main() {
           equals(copiedTheme.metricsButtonTheme),
         );
         expect(themeData.textFieldTheme, equals(themeData.textFieldTheme));
+        expect(
+          themeData.projectGroupDropdownTheme,
+          copiedTheme.projectGroupDropdownTheme,
+        );
+        expect(
+          themeData.projectGroupDropdownItemTheme,
+          copiedTheme.projectGroupDropdownItemTheme,
+        );
       },
     );
   });
