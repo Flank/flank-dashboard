@@ -4,6 +4,8 @@ import 'package:metrics/common/presentation/button/theme/theme_data/metrics_butt
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
@@ -44,6 +46,12 @@ class MetricsThemeData {
   /// The theme for the text fields.
   final TextFieldThemeData textFieldTheme;
 
+  /// The theme for the project group dropdown.
+  final ProjectGroupDropdownThemeData projectGroupDropdownTheme;
+
+  /// The theme for the project group dropdown item.
+  final ProjectGroupDropdownItemThemeData projectGroupDropdownItemTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricCirclePercentageThemeData metricCirclePercentageThemeData,
@@ -55,6 +63,8 @@ class MetricsThemeData {
     ProjectGroupCardThemeData addProjectGroupCardTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
+    ProjectGroupDropdownThemeData projectGroupDropdownTheme,
+    ProjectGroupDropdownItemThemeData projectGroupDropdownItemTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -73,7 +83,11 @@ class MetricsThemeData {
             addProjectGroupCardTheme ?? const ProjectGroupCardThemeData(),
         metricsButtonTheme =
             metricsButtonTheme ?? const MetricsButtonThemeData(),
-        textFieldTheme = textFieldTheme ?? const TextFieldThemeData();
+        textFieldTheme = textFieldTheme ?? const TextFieldThemeData(),
+        projectGroupDropdownTheme =
+            projectGroupDropdownTheme ?? const ProjectGroupDropdownThemeData(),
+        projectGroupDropdownItemTheme = projectGroupDropdownItemTheme ??
+            const ProjectGroupDropdownItemThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -89,6 +103,8 @@ class MetricsThemeData {
     MetricWidgetThemeData inactiveWidgetTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
+    ProjectGroupDropdownThemeData projectGroupDropdownTheme,
+    ProjectGroupDropdownItemThemeData projectGroupDropdownItemTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -104,6 +120,10 @@ class MetricsThemeData {
       inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
       metricsButtonTheme: metricsButtonTheme ?? this.metricsButtonTheme,
       textFieldTheme: textFieldTheme ?? this.textFieldTheme,
+      projectGroupDropdownTheme:
+          projectGroupDropdownTheme ?? this.projectGroupDropdownTheme,
+      projectGroupDropdownItemTheme:
+          projectGroupDropdownItemTheme ?? this.projectGroupDropdownItemTheme,
     );
   }
 }

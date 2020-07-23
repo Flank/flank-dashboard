@@ -11,6 +11,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_dropdown_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
@@ -185,6 +187,22 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontSize: 16.0,
               height: 1.0,
             ),
+          ),
+          projectGroupDropdownTheme: const ProjectGroupDropdownThemeData(
+            backgroundColor: Colors.black,
+            openedButtonBackgroundColor: Colors.black,
+            hoverBackgroundColor: Colors.black,
+            hoverBorderColor: ColorConfig.darkDropdownHoverBorderColor,
+            openedButtonBorderColor: ColorConfig.darkDropdownBorderColor,
+            closedButtonBackgroundColor: ColorConfig.darkInputColor,
+            closedButtonBorderColor: ColorConfig.darkInputColor,
+            textStyle: _defaultTextFieldTextStyle,
+          ),
+          projectGroupDropdownItemTheme:
+              const ProjectGroupDropdownItemThemeData(
+            backgroundColor: Colors.transparent,
+            hoverColor: ColorConfig.darkDropdownHoverColor,
+            textStyle: _defaultTextFieldTextStyle,
           ),
         );
 }
