@@ -73,6 +73,11 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
         return InfoDialog(
           closeIconPadding: const EdgeInsets.only(top: 16.0, right: 16.0),
+          closeIcon: Image.network(
+            'icons/close.svg',
+            height: 24.0,
+            width: 24.0,
+          ),
           backgroundColor: dialogTheme.backgroundColor,
           padding: const EdgeInsets.all(40.0),
           title: Text(
@@ -109,7 +114,11 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: MetricsTextFormField(
                           onChanged: _projectGroupsNotifier.filterByProjectName,
-                          prefixIcon: Image.network('icons/search.svg'),
+                          prefixIcon: Image.network(
+                            'icons/search.svg',
+                            width: 20.0,
+                            height: 20.0,
+                          ),
                           hint: CommonStrings.searchForProject,
                         ),
                       ),
