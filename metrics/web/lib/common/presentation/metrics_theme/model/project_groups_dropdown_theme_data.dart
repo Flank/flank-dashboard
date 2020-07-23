@@ -38,12 +38,12 @@ class ProjectGroupsDropdownThemeData {
   const ProjectGroupsDropdownThemeData({
     this.backgroundColor,
     this.textStyle,
-    this.hoverBackgroundColor,
+    Color openedButtonBorderColor,
     this.openedButtonBackgroundColor,
+    Color closedButtonBorderColor,
     this.closedButtonBackgroundColor,
     Color hoverBorderColor,
-    Color openedButtonBorderColor,
-    Color closedButtonBorderColor,
+    this.hoverBackgroundColor,
   })  : hoverBorderColor = hoverBorderColor ?? _defaultBorderColor,
         openedButtonBorderColor =
             openedButtonBorderColor ?? _defaultBorderColor,
