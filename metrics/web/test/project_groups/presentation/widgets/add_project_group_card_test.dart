@@ -203,7 +203,7 @@ void main() {
     );
 
     testWidgets(
-      "resets project group dialog view model after closing the add project group dialog",
+      "resets a project group dialog view model after closing the add project group dialog",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
