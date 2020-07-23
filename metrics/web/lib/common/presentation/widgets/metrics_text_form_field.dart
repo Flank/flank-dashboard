@@ -96,8 +96,9 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
     final textFieldTheme = MetricsTheme.of(context).textFieldTheme;
     final decorationTheme = Theme.of(context).inputDecorationTheme;
 
+    final border = decorationTheme.border ?? InputBorder.none;
     _hoverDecoration = _defaultDecoration.copyWith(
-      border: decorationTheme.border.copyWith(
+      border: border.copyWith(
         borderSide: BorderSide(color: textFieldTheme.hoverBorderColor),
       ),
     );

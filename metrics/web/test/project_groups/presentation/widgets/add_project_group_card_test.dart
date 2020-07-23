@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
-import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -263,11 +262,6 @@ class _AddProjectGroupCardTestbed extends StatelessWidget {
     return TestInjectionContainer(
       projectGroupsNotifier: projectGroupsNotifier,
       child: MetricsThemedTestbed(
-        themeData: ThemeData(
-          inputDecorationTheme: InputDecorationTheme(
-            border: TextFieldConfig.border,
-          ),
-        ),
         metricsThemeData: theme,
         body: AddProjectGroupCard(),
       ),
