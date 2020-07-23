@@ -36,7 +36,7 @@ class MetricsScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const _pageElementsPadding = EdgeInsets.only(bottom: 40.0);
+    const _pageElementsPadding = EdgeInsets.only(bottom: 38.0);
 
     return Scaffold(
       endDrawer: drawer,

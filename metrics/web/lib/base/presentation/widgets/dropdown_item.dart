@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 
 /// A widget that used with a [DropdownMenu] to display the dropdown
 /// items that can be selected.
@@ -54,16 +55,18 @@ class _DropdownItemState extends State<DropdownItem> {
   Widget build(BuildContext context) {
     final color = _isHovered ? widget.hoverColor : widget.backgroundColor;
 
-    return MouseRegion(
-      onEnter: (_) => _changeHover(true),
-      onExit: (_) => _changeHover(false),
-      child: Container(
-        width: widget.width,
-        height: widget.height,
-        color: color,
-        padding: widget.padding,
-        alignment: widget.alignment,
-        child: widget.child,
+    return HandCursor(
+      child: MouseRegion(
+        onEnter: (_) => _changeHover(true),
+        onExit: (_) => _changeHover(false),
+        child: Container(
+          width: widget.width,
+          height: widget.height,
+          color: color,
+          padding: widget.padding,
+          alignment: widget.alignment,
+          child: widget.child,
+        ),
       ),
     );
   }

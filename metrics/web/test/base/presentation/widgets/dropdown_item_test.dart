@@ -7,7 +7,7 @@ void main() {
   group("DropdownItem", () {
     final mouseRegionFinder = find.descendant(
       of: find.byType(DropdownItem),
-      matching: find.byType(MouseRegion),
+      matching: find.byType(MouseRegion).last,
     );
 
     final containerFinder = find.descendant(

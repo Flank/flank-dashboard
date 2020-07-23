@@ -1,14 +1,17 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_body.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_dropdown_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_item.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_menu.dart';
-import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_metrics_notifier_mock.dart';
@@ -30,14 +33,19 @@ void main() {
 
     const dropdownItems = [firstDropdownItem, secondDropdownItem];
 
-    setUp(() {
-      metricsNotifier = ProjectMetricsNotifierMock();
-      when(metricsNotifier.projectGroupDropdownItems).thenReturn(dropdownItems);
-    });
+    final mouseRegionFinder = find.descendant(
+      of: find.byType(ProjectGroupsDropdownMenu),
+      matching: find.byType(MouseRegion).last,
+    );
 
     final dropdownMenuFinder = find.byWidgetPredicate(
       (widget) => widget is DropdownMenu,
     );
+
+    setUp(() {
+      metricsNotifier = ProjectMetricsNotifierMock();
+      when(metricsNotifier.projectGroupDropdownItems).thenReturn(dropdownItems);
+    });
 
     testWidgets(
       "contains the dropdown menu widget",
@@ -191,6 +199,239 @@ void main() {
         expect(actualImage, equals(expectedImage));
       },
     );
+
+    testWidgets(
+      "applies the closed button background color from metrics theme",
+      (tester) async {
+        const backgroundColor = Colors.red;
+        const theme = MetricsThemeData(
+          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+            closedButtonBackgroundColor: backgroundColor,
+          ),
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _ProjectGroupsDropdownMenuTestbed(
+              theme: theme,
+            ),
+          );
+        });
+
+        final buttonContainer = tester.widget<Container>(find.descendant(
+          of: find.byType(ProjectGroupsDropdownMenu),
+          matching: find.byType(Container),
+        ));
+
+        final buttonDecoration = buttonContainer.decoration as BoxDecoration;
+
+        expect(buttonDecoration.color, equals(backgroundColor));
+      },
+    );
+
+    testWidgets(
+      "applies the opened button background color from the metrics theme if the dropdown is opened",
+      (tester) async {
+        const backgroundColor = Colors.red;
+        const theme = MetricsThemeData(
+          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+            openedButtonBackgroundColor: backgroundColor,
+          ),
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _ProjectGroupsDropdownMenuTestbed(
+              theme: theme,
+            ),
+          );
+        });
+
+        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
+        await tester.pumpAndSettle();
+
+        final buttonContainer = tester.widget<Container>(find.descendant(
+          of: find.byType(ProjectGroupsDropdownMenu),
+          matching: find.byType(Container),
+        ));
+
+        final buttonDecoration = buttonContainer.decoration as BoxDecoration;
+
+        expect(buttonDecoration.color, equals(backgroundColor));
+      },
+    );
+
+    testWidgets(
+      "applies the hover background color from the metrics theme if the dropdown is hovered",
+      (tester) async {
+        const backgroundColor = Colors.red;
+        const theme = MetricsThemeData(
+          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+            hoverBackgroundColor: backgroundColor,
+          ),
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _ProjectGroupsDropdownMenuTestbed(
+              theme: theme,
+            ),
+          );
+        });
+
+        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+        const pointerExitEvent = PointerEnterEvent();
+        mouseRegion.onEnter(pointerExitEvent);
+
+        await tester.pump();
+
+        final buttonContainer = tester.widget<Container>(find.descendant(
+          of: find.byType(ProjectGroupsDropdownMenu),
+          matching: find.byType(Container),
+        ));
+
+        final buttonDecoration = buttonContainer.decoration as BoxDecoration;
+
+        expect(buttonDecoration.color, equals(backgroundColor));
+      },
+    );
+
+    testWidgets(
+      "applies the closed button border color from the metrics theme if the dropdown is opened",
+      (tester) async {
+        const borderColor = Colors.red;
+        const theme = MetricsThemeData(
+          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+            closedButtonBorderColor: borderColor,
+          ),
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _ProjectGroupsDropdownMenuTestbed(
+              theme: theme,
+            ),
+          );
+        });
+
+        final buttonContainer = tester.widget<Container>(find.descendant(
+          of: find.byType(ProjectGroupsDropdownMenu),
+          matching: find.byType(Container),
+        ));
+
+        final buttonDecoration = buttonContainer.decoration as BoxDecoration;
+        final boxBorder = buttonDecoration.border as Border;
+
+        expect(boxBorder.top.color, equals(borderColor));
+        expect(boxBorder.bottom.color, equals(borderColor));
+        expect(boxBorder.right.color, equals(borderColor));
+        expect(boxBorder.left.color, equals(borderColor));
+      },
+    );
+
+    testWidgets(
+      "applies the opened button border color from the metrics theme if the dropdown is opened",
+      (tester) async {
+        const borderColor = Colors.red;
+        const theme = MetricsThemeData(
+          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+            openedButtonBorderColor: borderColor,
+          ),
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _ProjectGroupsDropdownMenuTestbed(
+              theme: theme,
+            ),
+          );
+        });
+
+        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
+        await tester.pumpAndSettle();
+
+        final buttonContainer = tester.widget<Container>(find.descendant(
+          of: find.byType(ProjectGroupsDropdownMenu),
+          matching: find.byType(Container),
+        ));
+
+        final buttonDecoration = buttonContainer.decoration as BoxDecoration;
+        final boxBorder = buttonDecoration.border as Border;
+
+        expect(boxBorder.top.color, equals(borderColor));
+        expect(boxBorder.bottom.color, equals(borderColor));
+        expect(boxBorder.right.color, equals(borderColor));
+        expect(boxBorder.left.color, equals(borderColor));
+      },
+    );
+
+    testWidgets(
+      "applies the hover border color from the metrics theme if the dropdown is hovered",
+      (tester) async {
+        const borderColor = Colors.red;
+        const theme = MetricsThemeData(
+          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+            hoverBorderColor: borderColor,
+          ),
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _ProjectGroupsDropdownMenuTestbed(
+              theme: theme,
+            ),
+          );
+        });
+
+        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+        const pointerExitEvent = PointerEnterEvent();
+        mouseRegion.onEnter(pointerExitEvent);
+
+        await tester.pump();
+
+        final buttonContainer = tester.widget<Container>(find.descendant(
+          of: find.byType(ProjectGroupsDropdownMenu),
+          matching: find.byType(Container),
+        ));
+
+        final buttonDecoration = buttonContainer.decoration as BoxDecoration;
+        final boxBorder = buttonDecoration.border as Border;
+
+        expect(boxBorder.top.color, equals(borderColor));
+        expect(boxBorder.bottom.color, equals(borderColor));
+        expect(boxBorder.right.color, equals(borderColor));
+        expect(boxBorder.left.color, equals(borderColor));
+      },
+    );
+
+    testWidgets(
+      "applies the text style from the metrics theme to the button text",
+      (tester) async {
+        const textStyle = TextStyle(fontSize: 13.0);
+
+        const theme = MetricsThemeData(
+          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+            textStyle: textStyle,
+          ),
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(
+              metricsNotifier: metricsNotifier,
+              theme: theme,
+            ),
+          );
+        });
+
+        final textContainer = tester.widget<Text>(find.descendant(
+          of: find.byType(ProjectGroupsDropdownMenu),
+          matching: find.byType(Text),
+        ));
+
+        expect(textContainer.style, equals(textStyle));
+      },
+    );
   });
 }
 
@@ -199,10 +440,14 @@ class _ProjectGroupsDropdownMenuTestbed extends StatelessWidget {
   /// A [ProjectMetricsNotifier] used in tests.
   final ProjectMetricsNotifier metricsNotifier;
 
+  /// A [MetricsThemeData] used in tests.
+  final MetricsThemeData theme;
+
   /// Creates the testbed with the given [metricsNotifier].
   const _ProjectGroupsDropdownMenuTestbed({
     Key key,
     this.metricsNotifier,
+    this.theme = const MetricsThemeData(),
   }) : super(key: key);
 
   @override
@@ -210,6 +455,7 @@ class _ProjectGroupsDropdownMenuTestbed extends StatelessWidget {
     return TestInjectionContainer(
       metricsNotifier: metricsNotifier,
       child: MetricsThemedTestbed(
+        metricsThemeData: theme,
         body: ProjectGroupsDropdownMenu(),
       ),
     );
