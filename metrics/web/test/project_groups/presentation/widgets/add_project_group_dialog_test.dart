@@ -7,6 +7,7 @@ import 'package:metrics/project_groups/presentation/widgets/add_project_group_di
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/strategy/add_project_group_dialog_strategy.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
@@ -25,9 +26,11 @@ void main() {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.projectGroupDialogViewModel).thenReturn(projectGroup);
 
-        await tester.pumpWidget(_AddProjectGroupDialogTestbed(
-          projectGroupsNotifier: notifierMock,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_AddProjectGroupDialogTestbed(
+            projectGroupsNotifier: notifierMock,
+          ));
+        });
 
         final projectDialog = tester.widget<ProjectGroupDialog>(
           find.byType(ProjectGroupDialog),

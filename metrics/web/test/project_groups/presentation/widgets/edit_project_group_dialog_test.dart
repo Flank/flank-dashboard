@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
-import 'package:metrics/project_groups/presentation/widgets/strategy/edit_project_group_dialog_strategy.dart';
 import 'package:metrics/project_groups/presentation/widgets/edit_project_group_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
+import 'package:metrics/project_groups/presentation/widgets/strategy/edit_project_group_dialog_strategy.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
@@ -24,9 +25,11 @@ void main() {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.projectGroupDialogViewModel).thenReturn(projectGroup);
 
-        await tester.pumpWidget(_EditProjectGroupDialogTestbed(
-          projectGroupsNotifier: notifierMock,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_EditProjectGroupDialogTestbed(
+            projectGroupsNotifier: notifierMock,
+          ));
+        });
 
         final projectDialog = tester.widget<ProjectGroupDialog>(
           find.byType(ProjectGroupDialog),

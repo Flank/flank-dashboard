@@ -7,6 +7,7 @@ import 'package:metrics/project_groups/presentation/view_models/project_group_di
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/strategy/project_group_dialog_strategy.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
@@ -32,10 +33,12 @@ void main() {
         when(strategyMock.title).thenReturn(title);
         when(strategyMock.text).thenReturn(buttonText);
 
-        await tester.pumpWidget(_ProjectGroupDialogTestbed(
-          projectGroupsNotifier: notifierMock,
-          strategy: strategyMock,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            projectGroupsNotifier: notifierMock,
+            strategy: strategyMock,
+          ));
+        });
 
         final finder = find.ancestor(
           of: find.text(buttonText),
