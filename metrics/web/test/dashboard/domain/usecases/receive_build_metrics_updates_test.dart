@@ -22,6 +22,10 @@ void main() {
     final repository = _MetricsRepositoryStub();
     final receiveProjectMetricsUpdates =
         ReceiveProjectMetricsUpdates(repository);
+    const extraBuildsToGenerate = 5;
+    const numberOfBuildsToGenerate =
+        ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics +
+            extraBuildsToGenerate;
 
     List<Build> builds;
     Build lastBuild;
@@ -115,14 +119,12 @@ void main() {
     test(
       "loads the build result metric for last number of builds to load for chart metrics",
       () async {
-        const numberOfBuilds =
-            ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics + 5;
         final builds = List.generate(
-          numberOfBuilds,
+          numberOfBuildsToGenerate,
           (index) => Build(
             id: '$index',
-            startedAt:
-                DateTime.now().subtract(Duration(days: numberOfBuilds - index)),
+            startedAt: DateTime.now()
+                .subtract(Duration(days: numberOfBuildsToGenerate - index)),
             duration: const Duration(minutes: 10),
             coverage: Percent(0.5),
             buildStatus: BuildStatus.successful,
@@ -162,11 +164,8 @@ void main() {
       "loads the stability metric for number of builds to load for chart metrics",
       () async {
         final buildStatuses = BuildStatus.values.toList();
-        const numberOfBuilds =
-            ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics + 5;
-
         final builds = List<Build>.generate(
-          numberOfBuilds,
+          numberOfBuildsToGenerate,
           (index) {
             return Build(
               id: '${index + 1}',
