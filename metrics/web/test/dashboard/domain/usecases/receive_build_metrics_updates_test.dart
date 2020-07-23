@@ -44,7 +44,7 @@ void main() {
       );
     });
 
-    test("subscribes to builds for last 7 days", () {
+    test("subscribes to builds for common builds loading periods", () {
       final repository = _MetricsRepositoryMock();
 
       when(repository.latestProjectBuildsStream(any, any))
