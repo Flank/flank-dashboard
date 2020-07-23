@@ -109,7 +109,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: MetricsTextFormField(
                           onChanged: _projectGroupsNotifier.filterByProjectName,
-                          prefixIcon: const Icon(Icons.search),
+                          prefixIcon: Image.network('icons/search.svg'),
                           hint: CommonStrings.searchForProject,
                         ),
                       ),
