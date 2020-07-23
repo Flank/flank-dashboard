@@ -5,17 +5,22 @@ class ProjectGroupsDropdownThemeData {
   /// A default [Color] of the dropdown button border.
   static const Color _defaultBorderColor = Colors.transparent;
 
-  /// The background [Color] for main elements of the project group dropdown.
+  /// The background [Color] that can be applied to a trigger button,
+  /// a menu and an item of the project group dropdown.
   final Color backgroundColor;
 
-  /// The [TextStyle] for the for main elements of the project group dropdown.
+  /// The [TextStyle] that can be applied to a trigger button,
+  /// a menu or an item of the project group dropdown.
   final TextStyle textStyle;
 
-  /// The background [Color] of the project group dropdown button when hovered.
-  final Color hoverBackgroundColor;
+  /// The border [Color] of the project group dropdown button when open.
+  final Color openedButtonBorderColor;
 
   /// The background [Color] of the project group dropdown button when open.
   final Color openedButtonBackgroundColor;
+
+  /// The border [Color] of the project group dropdown button when closed.
+  final Color closedButtonBorderColor;
 
   /// The background [Color] of the project group dropdown button when closed.
   final Color closedButtonBackgroundColor;
@@ -23,11 +28,8 @@ class ProjectGroupsDropdownThemeData {
   /// The background [Color] of the project group dropdown button when hovered.
   final Color hoverBorderColor;
 
-  /// The border [Color] of the project group dropdown button when open.
-  final Color openedButtonBorderColor;
-
-  /// The border [Color] of the project group dropdown button when closed.
-  final Color closedButtonBorderColor;
+  /// The background [Color] of the project group dropdown button when hovered.
+  final Color hoverBackgroundColor;
 
   /// Creates the [ProjectGroupsDropdownThemeData].
   ///

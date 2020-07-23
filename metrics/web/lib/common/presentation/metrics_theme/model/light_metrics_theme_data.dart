@@ -16,6 +16,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/project_groups_d
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
+  static const Color lightDropdownHoverColor = Color(0xFF1d1d20);
   static const Color focusedBorderColor = Colors.blue;
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
@@ -192,7 +193,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           projectGroupDropdownItemTheme:
               const ProjectGroupsDropdownItemThemeData(
             backgroundColor: Colors.transparent,
-            hoverColor: ColorConfig.darkDropdownHoverColor,
+            hoverColor: lightDropdownHoverColor,
             textStyle: TextStyle(fontSize: 16.0),
           ),
         );

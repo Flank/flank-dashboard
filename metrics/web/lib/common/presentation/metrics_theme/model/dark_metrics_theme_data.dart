@@ -16,6 +16,9 @@ import 'package:metrics/common/presentation/metrics_theme/model/project_groups_d
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
+  static const Color darkDropdownBorderColor = Color(0xFF878799);
+  static const Color darkDropdownHoverColor = Color(0xFF1d1d20);
+  static const Color darkDropdownHoverBorderColor = Color(0xFF37373f);
   static const Color focusedBorderColor = Color(0xFF878799);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
@@ -192,8 +195,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             backgroundColor: Colors.black,
             openedButtonBackgroundColor: Colors.black,
             hoverBackgroundColor: Colors.black,
-            hoverBorderColor: ColorConfig.darkDropdownHoverBorderColor,
-            openedButtonBorderColor: ColorConfig.darkDropdownBorderColor,
+            hoverBorderColor: darkDropdownHoverBorderColor,
+            openedButtonBorderColor: darkDropdownBorderColor,
             closedButtonBackgroundColor: ColorConfig.darkInputColor,
             closedButtonBorderColor: ColorConfig.darkInputColor,
             textStyle: _defaultTextFieldTextStyle,
@@ -201,7 +204,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           projectGroupDropdownItemTheme:
               const ProjectGroupsDropdownItemThemeData(
             backgroundColor: Colors.transparent,
-            hoverColor: ColorConfig.darkDropdownHoverColor,
+            hoverColor: darkDropdownHoverColor,
             textStyle: _defaultTextFieldTextStyle,
           ),
         );
