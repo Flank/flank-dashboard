@@ -113,63 +113,70 @@ void main() {
     });
 
     test(
-        "loads the build result metric for last number of builds to load for chart metrics",
-        () async {
-      const numberOfBuilds = 25;
-      final builds = List.generate(
-        numberOfBuilds,
-        (index) => Build(
-          id: '$index',
-          startedAt:
-              DateTime.now().subtract(Duration(days: numberOfBuilds - index)),
-          duration: const Duration(minutes: 10),
-          coverage: Percent(0.5),
-          buildStatus: BuildStatus.successful,
-        ),
-      );
+      "loads the build result metric for last number of builds to load for chart metrics",
+      () async {
+        const numberOfBuilds =
+            ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics + 5;
+        final builds = List.generate(
+          numberOfBuilds,
+          (index) => Build(
+            id: '$index',
+            startedAt:
+                DateTime.now().subtract(Duration(days: numberOfBuilds - index)),
+            duration: const Duration(minutes: 10),
+            coverage: Percent(0.5),
+            buildStatus: BuildStatus.successful,
+          ),
+        );
 
-      final repository = _MetricsRepositoryStub(builds: builds);
+        final repository = _MetricsRepositoryStub(builds: builds);
 
-      final lastBuilds = builds.sublist(builds.length -
-          ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics);
+        final lastBuilds = builds.sublist(builds.length -
+            ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics);
 
-      final buildResults = lastBuilds
-          .map((build) => BuildResult(
-                date: build.startedAt,
-                duration: build.duration,
-                buildStatus: build.buildStatus,
-                url: build.url,
-              ))
-          .toList();
+        final buildResults = lastBuilds
+            .map((build) => BuildResult(
+                  date: build.startedAt,
+                  duration: build.duration,
+                  buildStatus: build.buildStatus,
+                  url: build.url,
+                ))
+            .toList();
 
-      final receiveMetricUpdates = ReceiveProjectMetricsUpdates(repository);
+        final receiveMetricUpdates = ReceiveProjectMetricsUpdates(repository);
 
-      final metricsStream =
-          receiveMetricUpdates(const ProjectIdParam(projectId));
+        final metricsStream =
+            receiveMetricUpdates(const ProjectIdParam(projectId));
 
-      final metrics =
-          await metricsStream.firstWhere((metrics) => metrics != null);
+        final metrics =
+            await metricsStream.firstWhere((metrics) => metrics != null);
 
-      expect(
-        metrics.buildResultMetrics.buildResults,
-        equals(buildResults),
-      );
-    });
+        expect(
+          metrics.buildResultMetrics.buildResults,
+          equals(buildResults),
+        );
+      },
+    );
 
     test(
       "loads the stability metric for number of builds to load for chart metrics",
       () async {
         final buildStatuses = BuildStatus.values.toList();
+        const numberOfBuilds =
+            ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics + 5;
 
-        final builds = List<Build>.generate(21, (index) {
-          return Build(
-            id: '${index + 1}',
-            startedAt: DateTime.now().subtract(const Duration(days: 1)),
-            duration: const Duration(minutes: 1),
-            coverage: Percent(0.1),
-            buildStatus: (buildStatuses..shuffle()).first,
-          );
-        });
+        final builds = List<Build>.generate(
+          numberOfBuilds,
+          (index) {
+            return Build(
+              id: '${index + 1}',
+              startedAt: DateTime.now().subtract(const Duration(days: 1)),
+              duration: const Duration(minutes: 1),
+              coverage: Percent(0.1),
+              buildStatus: (buildStatuses..shuffle()).first,
+            );
+          },
+        );
 
         final repository = _MetricsRepositoryStub(builds: builds);
 
@@ -200,16 +207,16 @@ void main() {
     test("loads the build number metric for common builds loading period", () {
       final actualBuildNumberMetrics = projectMetrics.buildNumberMetrics;
 
-      final sevenDaysBeforeDate = DateTime.now().subtract(
+      final periodStartDate = DateTime.now().subtract(
         ReceiveProjectMetricsUpdates.commonBuildsLoadingPeriod,
       );
 
-      final thisWeekBuilds = builds
-          .where((element) => element.startedAt.isAfter(sevenDaysBeforeDate))
+      final buildsInPeriod = builds
+          .where((element) => element.startedAt.isAfter(periodStartDate))
           .toList();
 
       final expectedBuildNumberMetrics = BuildNumberMetric(
-        numberOfBuilds: thisWeekBuilds.length,
+        numberOfBuilds: buildsInPeriod.length,
       );
 
       expect(actualBuildNumberMetrics, equals(expectedBuildNumberMetrics));
@@ -218,22 +225,22 @@ void main() {
     test("loads the performance metric for common builds loading period", () {
       final actualPerformanceMetric = projectMetrics.performanceMetrics;
 
-      final sevenDaysBeforeDate = DateTime.now().subtract(
+      final periodStartDate = DateTime.now().subtract(
         ReceiveProjectMetricsUpdates.commonBuildsLoadingPeriod,
       );
 
-      final thisWeekBuilds = builds
-          .where((build) => build.startedAt.isAfter(sevenDaysBeforeDate))
+      final buildsInPeriod = builds
+          .where((build) => build.startedAt.isAfter(periodStartDate))
           .toList();
 
-      final buildsPerformance = thisWeekBuilds.map((build) => BuildPerformance(
+      final buildsPerformance = buildsInPeriod.map((build) => BuildPerformance(
             date: build.startedAt,
             duration: build.duration,
           ));
 
-      final averageDuration = thisWeekBuilds.fold<Duration>(
+      final averageDuration = buildsInPeriod.fold<Duration>(
               const Duration(), (value, element) => value + element.duration) ~/
-          thisWeekBuilds.length;
+          buildsInPeriod.length;
 
       final expectedBuildNumberMetrics = PerformanceMetric(
         buildsPerformance: DateTimeSet.from(buildsPerformance),
@@ -255,12 +262,12 @@ void main() {
       final performanceMetrics = projectMetrics.performanceMetrics;
       final firstPerformanceMetric = performanceMetrics.buildsPerformance.last;
 
-      final sevenDaysBeforeDate = DateTime.now().subtract(
+      final periodStartDate = DateTime.now().subtract(
         ReceiveProjectMetricsUpdates.commonBuildsLoadingPeriod,
       );
 
       final buildsInPeriod = builds
-          .where((element) => element.startedAt.isAfter(sevenDaysBeforeDate))
+          .where((element) => element.startedAt.isAfter(periodStartDate))
           .toList();
 
       expect(
