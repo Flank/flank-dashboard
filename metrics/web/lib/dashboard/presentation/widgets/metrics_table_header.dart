@@ -18,7 +18,7 @@ class MetricsTableHeader extends StatelessWidget {
       ),
       child: MetricsTableTile(
         leading: Container(),
-        buildResultsColumn: Text(DashboardStrings.lastBuilds),
+        buildResultsColumn: const Text(DashboardStrings.lastBuilds),
         performanceColumn: const Text(DashboardStrings.performance),
         buildNumberColumn: const Text(DashboardStrings.builds),
         stabilityColumn: const Text(DashboardStrings.stability),
