@@ -66,7 +66,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the maxVisibleItems parameter is less than zero",
+      "throws an AssertionError if the maxVisibleItems parameter is negative",
       (tester) async {
         await tester.pumpWidget(
           const _DropdownMenuTestbed(maxVisibleItems: -4),
@@ -288,7 +288,7 @@ void main() {
     );
 
     testWidgets(
-      "has a maxHeight equals to the height of all items if the given items count is less than the given maxVisibleItems",
+      "height equals to the height of all items if their number is less than the given maxVisibleItems",
       (tester) async {
         final expectedMaxHeight = itemHeight * items.length;
 
@@ -314,7 +314,7 @@ void main() {
     );
 
     testWidgets(
-      "has a maxHeight equals to the sum of max visible items plus half of the item height if the given items count is greater than the given maxVisibleItems",
+      "height equals to the sum of max visible items and a half if items more than max visible items",
       (tester) async {
         const maxVisibleItems = 2;
         const expectedMaxHeight = itemHeight * maxVisibleItems + itemHeight / 2;

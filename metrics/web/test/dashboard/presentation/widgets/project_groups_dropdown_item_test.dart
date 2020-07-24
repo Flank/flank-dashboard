@@ -1,6 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/gestures.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
@@ -60,20 +60,6 @@ void main() {
     );
 
     testWidgets(
-      "displays a name of the given project group",
-      (tester) async {
-        await tester.pumpWidget(const _ProjectGroupsDropdownTestbed(
-          projectGroupDropdownItemViewModel: projectGroupDropdownItemViewModel,
-        ));
-
-        expect(
-          find.text(projectGroupDropdownItemViewModel.name),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets(
       "applies the hover color from the metrics theme if the widget is hovered",
       (tester) async {
         const boxDecoration = BoxDecoration(color: hoverColor);
@@ -99,6 +85,36 @@ void main() {
     );
 
     testWidgets(
+      "applies the text style from the metrics theme",
+      (tester) async {
+        await tester.pumpWidget(const _ProjectGroupsDropdownTestbed(
+          projectGroupDropdownItemViewModel: projectGroupDropdownItemViewModel,
+          theme: theme,
+        ));
+
+        final textWidget = tester.widget<Text>(
+          find.text(projectGroupDropdownItemViewModel.name),
+        );
+
+        expect(textWidget.style, equals(textStyle));
+      },
+    );
+
+    testWidgets(
+      "displays a name of the given project group",
+      (tester) async {
+        await tester.pumpWidget(const _ProjectGroupsDropdownTestbed(
+          projectGroupDropdownItemViewModel: projectGroupDropdownItemViewModel,
+        ));
+
+        expect(
+          find.text(projectGroupDropdownItemViewModel.name),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
       "does not overflow on a very long project group name",
       (tester) async {
         const projectGroupDropdownItemViewModel =
@@ -115,22 +131,6 @@ void main() {
           tester.takeException(),
           isNull,
         );
-      },
-    );
-
-    testWidgets(
-      "applies the text style from the metrics theme",
-      (tester) async {
-        await tester.pumpWidget(const _ProjectGroupsDropdownTestbed(
-          projectGroupDropdownItemViewModel: projectGroupDropdownItemViewModel,
-          theme: theme,
-        ));
-
-        final textWidget = tester.widget<Text>(
-          find.text(projectGroupDropdownItemViewModel.name),
-        );
-
-        expect(textWidget.style, equals(textStyle));
       },
     );
   });

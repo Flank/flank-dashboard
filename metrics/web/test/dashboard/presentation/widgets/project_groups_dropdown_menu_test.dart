@@ -3,15 +3,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_body.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_item.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_menu.dart';
-import 'package:network_image_mock/network_image_mock.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_metrics_notifier_mock.dart';
@@ -46,159 +46,6 @@ void main() {
       metricsNotifier = ProjectMetricsNotifierMock();
       when(metricsNotifier.projectGroupDropdownItems).thenReturn(dropdownItems);
     });
-
-    testWidgets(
-      "contains the dropdown menu widget",
-      (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
-          );
-        });
-
-        expect(
-          dropdownMenuFinder,
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets(
-      "does not overflow on a very long project group name",
-      (tester) async {
-        when(metricsNotifier.projectGroupDropdownItems).thenReturn(const [
-          ProjectGroupDropdownItemViewModel(
-            name:
-                'Some very long name to test that project groups dropdown menu widget does not overflows with a very long text in it',
-          ),
-        ]);
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
-          );
-        });
-
-        expect(
-          tester.takeException(),
-          isNull,
-        );
-      },
-    );
-
-    testWidgets(
-      "applies the project group dropdown items to the dropdown menu widget",
-      (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
-          );
-        });
-
-        final dropdownMenu = tester.widget<DropdownMenu>(dropdownMenuFinder);
-
-        expect(dropdownMenu.items, equals(dropdownItems));
-      },
-    );
-
-    testWidgets(
-      "selects the first item initially",
-      (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
-          );
-        });
-
-        final selectedItemFinder = find.descendant(
-          of: find.byType(ProjectGroupsDropdownMenu),
-          matching: find.text(firstDropdownItem.name),
-        );
-
-        expect(selectedItemFinder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "displays a project groups dropdown body when opened",
-      (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
-          );
-        });
-
-        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(ProjectGroupsDropdownBody), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "displays the given items with the ProjectGroupDropdownItem widget",
-      (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
-          );
-        });
-
-        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
-        await tester.pumpAndSettle();
-
-        final actualDropdownItems = tester
-            .widgetList<ProjectGroupsDropdownItem>(
-              find.byType(ProjectGroupsDropdownItem),
-            )
-            .map((item) => item.projectGroupDropdownItemViewModel)
-            .toList();
-
-        expect(listEquals(actualDropdownItems, dropdownItems), isTrue);
-      },
-    );
-
-    testWidgets(
-      "displays the selected project group",
-      (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
-          );
-        });
-
-        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.text(secondDropdownItem.name));
-
-        await tester.pumpAndSettle();
-
-        expect(find.text(secondDropdownItem.name), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "displays a dropdown button that contains the dropdown icon",
-      (tester) async {
-        const expectedImage = NetworkImage("icons/dropdown.svg");
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
-          );
-        });
-
-        final imageFinder = find.descendant(
-          of: find.byType(ProjectGroupsDropdownMenu),
-          matching: find.byType(Image),
-        );
-
-        final actualImage = tester.widget<Image>(imageFinder)?.image;
-
-        expect(actualImage, equals(expectedImage));
-      },
-    );
 
     testWidgets(
       "applies the closed button background color from metrics theme",
@@ -430,6 +277,159 @@ void main() {
         ));
 
         expect(textContainer.style, equals(textStyle));
+      },
+    );
+
+    testWidgets(
+      "contains the dropdown menu widget",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
+          );
+        });
+
+        expect(
+          dropdownMenuFinder,
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      "does not overflow on a very long project group name",
+      (tester) async {
+        when(metricsNotifier.projectGroupDropdownItems).thenReturn(const [
+          ProjectGroupDropdownItemViewModel(
+            name:
+                'Some very long name to test that project groups dropdown menu widget does not overflows with a very long text in it',
+          ),
+        ]);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
+          );
+        });
+
+        expect(
+          tester.takeException(),
+          isNull,
+        );
+      },
+    );
+
+    testWidgets(
+      "applies the project group dropdown items to the dropdown menu widget",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
+          );
+        });
+
+        final dropdownMenu = tester.widget<DropdownMenu>(dropdownMenuFinder);
+
+        expect(dropdownMenu.items, equals(dropdownItems));
+      },
+    );
+
+    testWidgets(
+      "selects the first item initially",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
+          );
+        });
+
+        final selectedItemFinder = find.descendant(
+          of: find.byType(ProjectGroupsDropdownMenu),
+          matching: find.text(firstDropdownItem.name),
+        );
+
+        expect(selectedItemFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays a project groups dropdown body when opened",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
+          );
+        });
+
+        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ProjectGroupsDropdownBody), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the given items with the ProjectGroupDropdownItem widget",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
+          );
+        });
+
+        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
+        await tester.pumpAndSettle();
+
+        final actualDropdownItems = tester
+            .widgetList<ProjectGroupsDropdownItem>(
+              find.byType(ProjectGroupsDropdownItem),
+            )
+            .map((item) => item.projectGroupDropdownItemViewModel)
+            .toList();
+
+        expect(listEquals(actualDropdownItems, dropdownItems), isTrue);
+      },
+    );
+
+    testWidgets(
+      "displays the selected project group",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
+          );
+        });
+
+        await tester.tap(find.byType(ProjectGroupsDropdownMenu));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text(secondDropdownItem.name));
+
+        await tester.pumpAndSettle();
+
+        expect(find.text(secondDropdownItem.name), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays a dropdown button that contains the dropdown icon",
+      (tester) async {
+        const expectedImage = NetworkImage("icons/dropdown.svg");
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
+          );
+        });
+
+        final imageFinder = find.descendant(
+          of: find.byType(ProjectGroupsDropdownMenu),
+          matching: find.byType(Image),
+        );
+
+        final actualImage = tester.widget<Image>(imageFinder)?.image;
+
+        expect(actualImage, equals(expectedImage));
       },
     );
   });
