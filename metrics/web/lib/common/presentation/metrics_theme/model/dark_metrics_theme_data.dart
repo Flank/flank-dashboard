@@ -11,9 +11,14 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
+  static const Color dropdownBorderColor = Color(0xFF878799);
+  static const Color dropdownHoverColor = Color(0xFF1d1d20);
+  static const Color dropdownHoverBorderColor = Color(0xFF37373f);
   static const Color focusedBorderColor = Color(0xFF878799);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
@@ -171,6 +176,22 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontSize: 16.0,
               height: 1.0,
             ),
+          ),
+          projectGroupDropdownTheme: const ProjectGroupsDropdownThemeData(
+            backgroundColor: Colors.black,
+            openedButtonBackgroundColor: Colors.black,
+            hoverBackgroundColor: Colors.black,
+            hoverBorderColor: dropdownHoverBorderColor,
+            openedButtonBorderColor: dropdownBorderColor,
+            closedButtonBackgroundColor: ColorConfig.darkInputColor,
+            closedButtonBorderColor: ColorConfig.darkInputColor,
+            textStyle: _defaultTextFieldTextStyle,
+          ),
+          projectGroupDropdownItemTheme:
+              const ProjectGroupsDropdownItemThemeData(
+            backgroundColor: Colors.transparent,
+            hoverColor: dropdownHoverColor,
+            textStyle: _defaultTextFieldTextStyle,
           ),
         );
 }

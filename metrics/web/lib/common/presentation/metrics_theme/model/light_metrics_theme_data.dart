@@ -11,9 +11,12 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
+  static const Color dropdownHoverColor = Color(0xFF1d1d20);
   static const Color focusedBorderColor = Colors.blue;
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
@@ -170,6 +173,13 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontSize: 16.0,
               height: 1.0,
             ),
+          ),
+          projectGroupDropdownTheme: const ProjectGroupsDropdownThemeData(),
+          projectGroupDropdownItemTheme:
+              const ProjectGroupsDropdownItemThemeData(
+            backgroundColor: Colors.transparent,
+            hoverColor: dropdownHoverColor,
+            textStyle: TextStyle(fontSize: 16.0),
           ),
         );
 }

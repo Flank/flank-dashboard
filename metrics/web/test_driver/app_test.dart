@@ -76,7 +76,7 @@ void main() {
           () async {
             await driver.waitFor(find.text(DashboardStrings.performance));
 
-            await driver.waitFor(find.byType('SparklineGraph'));
+            await driver.waitFor(find.byType('PerformanceSparklineGraph'));
           },
         );
 
