@@ -5,7 +5,7 @@ import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
-import 'package:metrics/dashboard/presentation/widgets/metrics_table_tile.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
 
@@ -55,15 +55,15 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: MetricsTableTile(
-            leading: Container(
+          child: MetricsTableRow(
+            name: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 projectMetrics.projectName ?? '',
                 style: const TextStyle(fontSize: 22.0),
               ),
             ),
-            buildResultsColumn: Container(
+            buildResults: Container(
               height: 80.0,
               child: LoadingBuilder(
                 isLoading: projectMetrics.buildResultMetrics == null,
@@ -74,7 +74,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                 ),
               ),
             ),
-            performanceColumn: Container(
+            performance: Container(
               height: 81.0,
               child: LoadingBuilder(
                 isLoading: projectMetrics.performanceSparkline == null,
@@ -84,7 +84,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                 ),
               ),
             ),
-            buildNumberColumn: Container(
+            buildNumber: Container(
               height: 80.0,
               child: LoadingBuilder(
                 isLoading: projectMetrics.buildNumberMetric == null,
@@ -98,7 +98,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                 },
               ),
             ),
-            stabilityColumn: Container(
+            stability: Container(
               height: 72.0,
               child: LoadingBuilder(
                 isLoading: projectMetrics == null,
@@ -108,7 +108,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                 ),
               ),
             ),
-            coverageColumn: Container(
+            coverage: Container(
               height: 72.0,
               child: LoadingBuilder(
                 isLoading: projectMetrics == null,

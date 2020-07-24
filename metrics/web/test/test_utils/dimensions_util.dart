@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// A utility class provides an ability to configure dimension constraints
 /// for testing widgets.
-class DimensionUtil {
+class DimensionsUtil {
   /// A [TestWidgetsFlutterBinding] used to configure tests.
   static final _testBinding = TestWidgetsFlutterBinding.ensureInitialized()
       as TestWidgetsFlutterBinding;

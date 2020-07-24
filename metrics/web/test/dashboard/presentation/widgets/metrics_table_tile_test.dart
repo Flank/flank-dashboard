@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/dashboard/presentation/widgets/metrics_table_tile.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 
-import '../../../test_utils/dimension_util.dart';
+import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
-  group("MetricsTableTile", () {
-    const leadingText = 'leading';
+  group("MetricsTableRow", () {
+    const nameText = 'name';
 
     setUpAll(() {
-      DimensionUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
+      DimensionsUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
     });
 
     tearDownAll(() {
-      DimensionUtil.clearTestWindowSize();
+      DimensionsUtil.clearTestWindowSize();
     });
 
     testWidgets(
-      "throws an AssertionError if the given leading is null",
+      "throws an AssertionError if the given name is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(leading: null),
+          const _DashboardTableTileTestbed(name: null),
         );
 
         expect(tester.takeException(), isAssertionError);
@@ -30,11 +30,11 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given build number column is null",
+      "throws an AssertionError if the given build number is null",
       (tester) async {
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            buildNumberColumn: null,
+            buildNumber: null,
           ),
         );
 
@@ -43,11 +43,11 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given build results column is null",
+      "throws an AssertionError if the given build results is null",
       (tester) async {
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            buildResultsColumn: null,
+            buildResults: null,
           ),
         );
 
@@ -56,11 +56,11 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given performance column is null",
+      "throws an AssertionError if the given performance is null",
       (tester) async {
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            performanceColumn: null,
+            performance: null,
           ),
         );
 
@@ -69,11 +69,11 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given stability column is null",
+      "throws an AssertionError if the given stability is null",
       (tester) async {
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            stabilityColumn: null,
+            stability: null,
           ),
         );
 
@@ -82,11 +82,11 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given coverage column is null",
+      "throws an AssertionError if the given coverage is null",
       (tester) async {
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            stabilityColumn: null,
+            coverageColumn: null,
           ),
         );
 
@@ -95,39 +95,39 @@ void main() {
     );
 
     testWidgets(
-      "displays the given leading",
+      "displays the given name",
       (tester) async {
-        const leading = Text(leadingText);
+        const name = Text(nameText);
 
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(leading: leading),
+          const _DashboardTableTileTestbed(name: name),
         );
 
-        expect(find.byWidget(leading), findsOneWidget);
+        expect(find.byWidget(name), findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the given build results column",
+      "displays the given build results",
       (tester) async {
-        const buildResultsColumn = Text('build results column');
+        const buildResults = Text('build results');
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            buildResultsColumn: buildResultsColumn,
+            buildResults: buildResults,
           ),
         );
 
-        expect(find.byWidget(buildResultsColumn), findsOneWidget);
+        expect(find.byWidget(buildResults), findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the given performance column",
+      "displays the given performance",
       (tester) async {
-        const performance = Text('performance column');
+        const performance = Text('performance');
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            performanceColumn: performance,
+            performance: performance,
           ),
         );
 
@@ -136,13 +136,12 @@ void main() {
     );
 
     testWidgets(
-      "displays the given build number column",
+      "displays the given build number",
       (tester) async {
-        const buildNumber = Text('build number column');
+        const buildNumber = Text('build number');
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            leading: Text(leadingText),
-            buildNumberColumn: buildNumber,
+            buildNumber: buildNumber,
           ),
         );
 
@@ -151,13 +150,12 @@ void main() {
     );
 
     testWidgets(
-      "displays the given stability column",
+      "displays the given stability",
       (tester) async {
-        const stability = Text('stability column');
+        const stability = Text('stability');
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            leading: Text(leadingText),
-            stabilityColumn: stability,
+            stability: stability,
           ),
         );
 
@@ -166,12 +164,11 @@ void main() {
     );
 
     testWidgets(
-      "displays the given coverage column",
+      "displays the given coverage",
       (tester) async {
-        const coverage = Text('coverage column');
+        const coverage = Text('coverage');
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            leading: Text(leadingText),
             coverageColumn: coverage,
           ),
         );
@@ -182,51 +179,51 @@ void main() {
   });
 }
 
-/// A testbed class needed to test the [MetricsTableTile].
+/// A testbed class needed to test the [MetricsTableRow].
 class _DashboardTableTileTestbed extends StatelessWidget {
   /// A first column of this widget.
-  final Widget leading;
+  final Widget name;
 
-  /// A column that displays an information about build results.
-  final Widget buildResultsColumn;
+  /// A [Widget] that displays an information about build results.
+  final Widget buildResults;
 
-  /// A column that displays an information about a performance metric.
-  final Widget performanceColumn;
+  /// A [Widget] that displays an information about a performance metric.
+  final Widget performance;
 
-  /// A column that displays an information about a builds count.
-  final Widget buildNumberColumn;
+  /// A [Widget] that displays an information about a builds count.
+  final Widget buildNumber;
 
-  /// A column that displays an information about a stability metric.
-  final Widget stabilityColumn;
+  /// A [Widget] that displays an information about a stability metric.
+  final Widget stability;
 
-  /// A column that displays an information about a coverage metric.
+  /// A [Widget] that displays an information about a coverage metric.
   final Widget coverageColumn;
 
   /// Creates the instance of this testbed.
   ///
-  /// If the [leading], [buildResultsColumn], [performanceColumn],
-  /// [buildNumberColumn], [stabilityColumn] or [coverageColumn] is not specified,
+  /// If the [name], [buildResults], [performance],
+  /// [buildNumber], [stability] or [coverageColumn] is not specified,
   /// the [SizedBox] used.
   const _DashboardTableTileTestbed({
     Key key,
-    this.leading = const SizedBox(),
-    this.buildResultsColumn = const SizedBox(),
-    this.performanceColumn = const SizedBox(),
-    this.buildNumberColumn = const SizedBox(),
-    this.stabilityColumn = const SizedBox(),
+    this.name = const SizedBox(),
+    this.buildResults = const SizedBox(),
+    this.performance = const SizedBox(),
+    this.buildNumber = const SizedBox(),
+    this.stability = const SizedBox(),
     this.coverageColumn = const SizedBox(),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
-      body: MetricsTableTile(
-        leading: leading,
-        buildResultsColumn: buildResultsColumn,
-        performanceColumn: performanceColumn,
-        buildNumberColumn: buildNumberColumn,
-        stabilityColumn: stabilityColumn,
-        coverageColumn: coverageColumn,
+      body: MetricsTableRow(
+        name: name,
+        buildResults: buildResults,
+        performance: performance,
+        buildNumber: buildNumber,
+        stability: stability,
+        coverage: coverageColumn,
       ),
     );
   }

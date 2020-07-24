@@ -15,17 +15,17 @@ import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_gra
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
-import '../../../test_utils/dimension_util.dart';
+import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("ProjectMetricsTile", () {
     setUpAll(() {
-      DimensionUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
+      DimensionsUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
     });
 
     tearDownAll(() {
-      DimensionUtil.clearTestWindowSize();
+      DimensionsUtil.clearTestWindowSize();
     });
 
     final ProjectMetricsTileViewModel testProjectMetrics =
