@@ -61,7 +61,7 @@ void main() {
     );
 
     testWidgets(
-      "contains the wrap widget",
+      "wraps content",
       (tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
