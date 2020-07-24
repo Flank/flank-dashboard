@@ -22,7 +22,7 @@ void main() {
       "throws an AssertionError if the given name is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(name: null),
+          const _MetricsTableRowTestbed(name: null),
         );
 
         expect(tester.takeException(), isAssertionError);
@@ -33,7 +33,7 @@ void main() {
       "throws an AssertionError if the given build number is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(
+          const _MetricsTableRowTestbed(
             buildNumber: null,
           ),
         );
@@ -46,7 +46,7 @@ void main() {
       "throws an AssertionError if the given build results is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(
+          const _MetricsTableRowTestbed(
             buildResults: null,
           ),
         );
@@ -59,7 +59,7 @@ void main() {
       "throws an AssertionError if the given performance is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(
+          const _MetricsTableRowTestbed(
             performance: null,
           ),
         );
@@ -72,7 +72,7 @@ void main() {
       "throws an AssertionError if the given stability is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(
+          const _MetricsTableRowTestbed(
             stability: null,
           ),
         );
@@ -85,7 +85,7 @@ void main() {
       "throws an AssertionError if the given coverage is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(
+          const _MetricsTableRowTestbed(
             coverage: null,
           ),
         );
@@ -100,7 +100,7 @@ void main() {
         const name = Text(nameText);
 
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(name: name),
+          const _MetricsTableRowTestbed(name: name),
         );
 
         expect(find.byWidget(name), findsOneWidget);
@@ -112,7 +112,7 @@ void main() {
       (tester) async {
         const buildResults = Text('build results');
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(
+          const _MetricsTableRowTestbed(
             buildResults: buildResults,
           ),
         );
@@ -126,7 +126,7 @@ void main() {
       (tester) async {
         const performance = Text('performance');
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(
+          const _MetricsTableRowTestbed(
             performance: performance,
           ),
         );
@@ -140,7 +140,7 @@ void main() {
       (tester) async {
         const buildNumber = Text('build number');
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(
+          const _MetricsTableRowTestbed(
             buildNumber: buildNumber,
           ),
         );
@@ -154,7 +154,7 @@ void main() {
       (tester) async {
         const stability = Text('stability');
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(
+          const _MetricsTableRowTestbed(
             stability: stability,
           ),
         );
@@ -168,7 +168,7 @@ void main() {
       (tester) async {
         const coverage = Text('coverage');
         await tester.pumpWidget(
-          const _DashboardTableRowTestbed(
+          const _MetricsTableRowTestbed(
             coverage: coverage,
           ),
         );
@@ -180,7 +180,7 @@ void main() {
 }
 
 /// A testbed class needed to test the [MetricsTableRow].
-class _DashboardTableRowTestbed extends StatelessWidget {
+class _MetricsTableRowTestbed extends StatelessWidget {
   /// A first column of this widget.
   final Widget name;
 
@@ -204,7 +204,7 @@ class _DashboardTableRowTestbed extends StatelessWidget {
   /// If the [name], [buildResults], [performance],
   /// [buildNumber], [stability] or [coverage] is not specified,
   /// the [SizedBox] used.
-  const _DashboardTableRowTestbed({
+  const _MetricsTableRowTestbed({
     Key key,
     this.name = const SizedBox(),
     this.buildResults = const SizedBox(),
