@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_tile.dart';
 
+import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("MetricsTableTile", () {
+    const leadingText = 'leading';
+
+    setUpAll(() {
+      DimensionsUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
+    });
+
+    tearDownAll(() {
+      DimensionsUtil.clearTestWindowSize();
+    });
+
     testWidgets(
-      "can't be created with null leading",
+      "throws an AssertionError if the given leading is null",
       (tester) async {
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(leading: null),
@@ -18,10 +30,64 @@ void main() {
     );
 
     testWidgets(
-      "can't be created with null trailing",
+      "throws an AssertionError if the given build number column is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(trailing: null),
+          const _DashboardTableTileTestbed(
+            buildNumberColumn: null,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given build results column is null",
+      (tester) async {
+        await tester.pumpWidget(
+          const _DashboardTableTileTestbed(
+            buildResultsColumn: null,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given performance column is null",
+      (tester) async {
+        await tester.pumpWidget(
+          const _DashboardTableTileTestbed(
+            performanceColumn: null,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given stability column is null",
+      (tester) async {
+        await tester.pumpWidget(
+          const _DashboardTableTileTestbed(
+            stabilityColumn: null,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given coverage column is null",
+      (tester) async {
+        await tester.pumpWidget(
+          const _DashboardTableTileTestbed(
+            stabilityColumn: null,
+          ),
         );
 
         expect(tester.takeException(), isAssertionError);
@@ -31,55 +97,120 @@ void main() {
     testWidgets(
       "displays the given leading",
       (tester) async {
-        const testText = 'test_text';
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(leading: Text(testText)),
+          const _DashboardTableTileTestbed(leading: Text(leadingText)),
         );
 
-        expect(find.text(testText), findsOneWidget);
+        expect(find.text(leadingText), findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the given trailing",
+      "displays the given builds column",
       (tester) async {
-        const testText = 'test_text';
+        const textWidget = Text('build results column');
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(trailing: Text(testText)),
+          const _DashboardTableTileTestbed(
+            leading: Text(leadingText),
+            buildResultsColumn: textWidget,
+          ),
         );
 
-        expect(find.text(testText), findsOneWidget);
+        expect(find.byWidget(textWidget), findsOneWidget);
       },
     );
 
     testWidgets(
-      "display the leading and trailing with widths in a ratio of 3:5",
+      "displays the given performance column",
       (tester) async {
-        final leading = Container();
-        final trailing = Container();
+        const textWidget = Text('performance column');
+        await tester.pumpWidget(
+          const _DashboardTableTileTestbed(
+            leading: Text(leadingText),
+            performanceColumn: textWidget,
+          ),
+        );
 
-        await tester.pumpWidget(_DashboardTableTileTestbed(
-          leading: leading,
-          trailing: trailing,
-        ));
+        expect(find.byWidget(textWidget), findsOneWidget);
+      },
+    );
 
-        final leadingSize = tester.getSize(find.byWidget(leading));
-        final trailingSize = tester.getSize(find.byWidget(trailing));
+    testWidgets(
+      "displays the given builds count column",
+      (tester) async {
+        const textWidget = Text('build number column');
+        await tester.pumpWidget(
+          const _DashboardTableTileTestbed(
+            leading: Text(leadingText),
+            buildNumberColumn: textWidget,
+          ),
+        );
 
-        expect(leadingSize.width / trailingSize.width, equals(3 / 5));
+        expect(find.byWidget(textWidget), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the given stability column",
+      (tester) async {
+        const textWidget = Text('stability column');
+        await tester.pumpWidget(
+          const _DashboardTableTileTestbed(
+            leading: Text(leadingText),
+            stabilityColumn: textWidget,
+          ),
+        );
+
+        expect(find.byWidget(textWidget), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the given coverage column",
+      (tester) async {
+        const textWidget = Text('coverage column');
+        await tester.pumpWidget(
+          const _DashboardTableTileTestbed(
+            leading: Text(leadingText),
+            coverageColumn: textWidget,
+          ),
+        );
+
+        expect(find.byWidget(textWidget), findsOneWidget);
       },
     );
   });
 }
 
+/// A testbed class needed to test the [MetricsTableTile].
 class _DashboardTableTileTestbed extends StatelessWidget {
+  /// A first column of this widget.
   final Widget leading;
-  final Widget trailing;
 
+  /// A column that displays an information about build results.
+  final Widget buildResultsColumn;
+
+  /// A column that displays an information about a performance metric.
+  final Widget performanceColumn;
+
+  /// A column that displays an information about a builds count.
+  final Widget buildNumberColumn;
+
+  /// A column that displays an information about a stability metric.
+  final Widget stabilityColumn;
+
+  /// A column that displays an information about a coverage metric.
+  final Widget coverageColumn;
+
+  /// Creates the instance of this testbed.
   const _DashboardTableTileTestbed({
     Key key,
     this.leading = const SizedBox(),
-    this.trailing = const SizedBox(),
+    this.buildResultsColumn = const SizedBox(),
+    this.performanceColumn = const SizedBox(),
+    this.buildNumberColumn = const SizedBox(),
+    this.stabilityColumn = const SizedBox(),
+    this.coverageColumn = const SizedBox(),
   }) : super(key: key);
 
   @override
@@ -87,7 +218,11 @@ class _DashboardTableTileTestbed extends StatelessWidget {
     return MetricsThemedTestbed(
       body: MetricsTableTile(
         leading: leading,
-        trailing: trailing,
+        buildResultsColumn: buildResultsColumn,
+        performanceColumn: performanceColumn,
+        buildNumberColumn: buildNumberColumn,
+        stabilityColumn: stabilityColumn,
+        coverageColumn: coverageColumn,
       ),
     );
   }

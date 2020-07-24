@@ -1,15 +1,26 @@
-// https://github.com/software-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_tile.dart';
 
+import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
+
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
 
 void main() {
   group("MetricsTableHeader", () {
+    setUpAll(() {
+      DimensionsUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
+    });
+
+    tearDownAll(() {
+      DimensionsUtil.clearTestWindowSize();
+    });
+
     testWidgets(
       "contains MetricsTableTile",
       (tester) async {

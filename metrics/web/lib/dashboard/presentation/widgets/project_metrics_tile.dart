@@ -43,7 +43,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
 
     return Container(
       height: _tileHeight,
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      margin: const EdgeInsets.only(bottom: 5.0),
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2.0),
@@ -63,63 +63,60 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                 style: const TextStyle(fontSize: 22.0),
               ),
             ),
-            trailing: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: LoadingBuilder(
-                      isLoading: projectMetrics.buildResultMetrics == null,
-                      loadingPlaceholder: const LoadingPlaceholder(),
-                      builder: (_) => BuildResultBarGraph(
-                        buildResultMetric:
-                            widget.projectMetricsViewModel.buildResultMetrics,
-                      ),
+            buildResultsColumn: Container(
+              height: 80.0,
+              child: LoadingBuilder(
+                isLoading: projectMetrics.buildResultMetrics == null,
+                loadingPlaceholder: const LoadingPlaceholder(),
+                builder: (_) => BuildResultBarGraph(
+                  buildResultMetric:
+                      widget.projectMetricsViewModel.buildResultMetrics,
+                ),
+              ),
+            ),
+            performanceColumn: Container(
+              height: 81.0,
+              child: LoadingBuilder(
+                isLoading: projectMetrics.performanceSparkline == null,
+                loadingPlaceholder: const LoadingPlaceholder(),
+                builder: (_) => PerformanceSparklineGraph(
+                  performanceSparkline: projectMetrics.performanceSparkline,
+                ),
+              ),
+            ),
+            buildNumberColumn: Container(
+              height: 80.0,
+              child: LoadingBuilder(
+                isLoading: projectMetrics.buildNumberMetric == null,
+                builder: (_) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: BuildNumberScorecard(
+                      buildNumberMetric: projectMetrics.buildNumberMetric,
                     ),
-                  ),
+                  );
+                },
+              ),
+            ),
+            stabilityColumn: Container(
+              height: 72.0,
+              child: LoadingBuilder(
+                isLoading: projectMetrics == null,
+                loadingPlaceholder: const LoadingPlaceholder(),
+                builder: (_) => StabilityCirclePercentage(
+                  stability: projectMetrics.stability,
                 ),
-                Expanded(
-                  child: LoadingBuilder(
-                    isLoading: projectMetrics.performanceSparkline == null,
-                    loadingPlaceholder: const LoadingPlaceholder(),
-                    builder: (_) => PerformanceSparklineGraph(
-                      performanceSparkline: projectMetrics.performanceSparkline,
-                    ),
-                  ),
+              ),
+            ),
+            coverageColumn: Container(
+              height: 72.0,
+              child: LoadingBuilder(
+                isLoading: projectMetrics == null,
+                loadingPlaceholder: const LoadingPlaceholder(),
+                builder: (_) => CoverageCirclePercentage(
+                  coverage: projectMetrics.coverage,
                 ),
-                Expanded(
-                  child: LoadingBuilder(
-                    isLoading: projectMetrics.buildNumberMetric == null,
-                    builder: (_) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: BuildNumberScorecard(
-                          buildNumberMetric: projectMetrics.buildNumberMetric,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: LoadingBuilder(
-                    isLoading: projectMetrics == null,
-                    loadingPlaceholder: const LoadingPlaceholder(),
-                    builder: (_) => StabilityCirclePercentage(
-                      stability: projectMetrics.stability,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: LoadingBuilder(
-                    isLoading: projectMetrics == null,
-                    loadingPlaceholder: const LoadingPlaceholder(),
-                    builder: (_) => CoverageCirclePercentage(
-                      coverage: projectMetrics.coverage,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

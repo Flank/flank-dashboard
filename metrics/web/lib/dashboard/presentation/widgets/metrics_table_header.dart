@@ -10,49 +10,19 @@ class MetricsTableHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: DefaultTextStyle(
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Theme.of(context).textTheme.subtitle1.color,
-          fontSize: 16.0,
-          fontWeight: FontWeight.w500,
-        ),
-        child: MetricsTableTile(
-          leading: Container(),
-          trailing: Builder(builder: (context) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(child: Container()),
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: const Text(
-                      DashboardStrings.performance,
-                    ),
-                  ),
-                ),
-                const Expanded(
-                  child: Text(
-                    DashboardStrings.builds,
-                  ),
-                ),
-                const Expanded(
-                  child: Text(
-                    DashboardStrings.stability,
-                  ),
-                ),
-                const Expanded(
-                  child: Text(
-                    DashboardStrings.coverage,
-                  ),
-                ),
-              ],
-            );
-          }),
-        ),
+    return DefaultTextStyle(
+      textAlign: TextAlign.center,
+      style: const TextStyle(
+        color: Color(0xFF79858b),
+        fontWeight: FontWeight.w200,
+      ),
+      child: MetricsTableTile(
+        leading: Container(),
+        buildResultsColumn: Text(DashboardStrings.lastBuilds),
+        performanceColumn: const Text(DashboardStrings.performance),
+        buildNumberColumn: const Text(DashboardStrings.builds),
+        stabilityColumn: const Text(DashboardStrings.stability),
+        coverageColumn: const Text(DashboardStrings.coverage),
       ),
     );
   }
