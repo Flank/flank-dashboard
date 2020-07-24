@@ -8,6 +8,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/util/date.dart';
@@ -17,8 +18,8 @@ import 'package:rxdart/rxdart.dart';
 /// Provides an ability to get the [DashboardProjectMetrics] updates.
 class ReceiveProjectMetricsUpdates
     implements UseCase<Stream<DashboardProjectMetrics>, ProjectIdParam> {
-  static const int lastBuildsForChartsMetrics = 14;
-  static const Duration buildNumberLoadingPeriod = Duration(days: 7);
+  static const int buildsToLoadForChartMetrics = 20;
+  static const Duration commonBuildsLoadingPeriod = Duration(days: 7);
 
   final MetricsRepository _repository;
 
@@ -33,12 +34,12 @@ class ReceiveProjectMetricsUpdates
 
     final lastBuildsStream = _repository.latestProjectBuildsStream(
       projectId,
-      lastBuildsForChartsMetrics,
+      buildsToLoadForChartMetrics,
     );
 
     final projectBuildsInPeriod = _repository.projectBuildsFromDateStream(
       projectId,
-      DateTime.now().subtract(buildNumberLoadingPeriod).date,
+      DateTime.now().subtract(commonBuildsLoadingPeriod).date,
     );
 
     final lastSuccessfulBuildStream = _repository.lastSuccessfulBuildStream(
@@ -89,28 +90,56 @@ class ReceiveProjectMetricsUpdates
       );
     }
 
-    List<Build> latestBuilds = builds;
+    final lastBuilds = _getLastBuilds(
+      builds,
+      buildsToLoadForChartMetrics,
+    );
+    final lastBuildsInPeriod = _getBuildsInPeriod(
+      builds,
+      commonBuildsLoadingPeriod,
+    );
 
-    if (latestBuilds.length > lastBuildsForChartsMetrics) {
-      latestBuilds = latestBuilds.sublist(
-        latestBuilds.length - lastBuildsForChartsMetrics,
-      );
-    }
-
-    final buildNumberMetrics = _getBuildNumberMetrics(builds);
-    final buildResultMetrics = _getBuildResultMetrics(latestBuilds);
-    final performanceMetrics = _getPerformanceMetrics(latestBuilds);
-    final stability = _getStability(latestBuilds);
+    final projectBuildStatusMetric = ProjectBuildStatusMetric(
+      status: builds.last.buildStatus,
+    );
+    final buildNumberMetrics = _getBuildNumberMetrics(lastBuildsInPeriod);
+    final buildResultMetrics = _getBuildResultMetrics(lastBuilds);
+    final performanceMetrics = _getPerformanceMetrics(lastBuildsInPeriod);
+    final stability = _getStability(lastBuilds);
     final coverage = _getCoverage(builds);
 
     return DashboardProjectMetrics(
       projectId: projectId,
+      projectBuildStatusMetric: projectBuildStatusMetric,
       buildNumberMetrics: buildNumberMetrics,
       performanceMetrics: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
       coverage: coverage,
       stability: stability,
     );
+  }
+
+  /// Gets the builds from [builds] started in [period] before now.
+  List<Build> _getBuildsInPeriod(List<Build> builds, Duration period) {
+    final buildsLoadingPeriod = DateTime.now().subtract(period);
+
+    final lastBuildsInPeriod = builds
+        .where((element) => element.startedAt.isAfter(buildsLoadingPeriod))
+        .toList();
+    return lastBuildsInPeriod;
+  }
+
+  /// Returns last [numberOfBuilds] from [builds].
+  List<Build> _getLastBuilds(List<Build> builds, int numberOfBuilds) {
+    List<Build> latestBuilds = builds;
+
+    if (latestBuilds.length > numberOfBuilds) {
+      latestBuilds = latestBuilds.sublist(
+        latestBuilds.length - numberOfBuilds,
+      );
+    }
+
+    return latestBuilds;
   }
 
   /// Gets the coverage of the last successful build in [builds].
@@ -162,13 +191,8 @@ class ReceiveProjectMetricsUpdates
 
   /// Calculates the [BuildNumberMetric] from [builds].
   BuildNumberMetric _getBuildNumberMetrics(List<Build> builds) {
-    final buildsPeriodStart = DateTime.now().subtract(buildNumberLoadingPeriod);
-    final thisWeekBuilds = builds
-        .where((element) => element.startedAt.isAfter(buildsPeriodStart))
-        .toList();
-
     return BuildNumberMetric(
-      numberOfBuilds: thisWeekBuilds.length,
+      numberOfBuilds: builds.length,
     );
   }
 

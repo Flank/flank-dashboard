@@ -18,14 +18,14 @@ class BuildResultMetricViewModel extends Equatable {
   /// Creates the [BuildResultMetricViewModel] with the given [buildResults].
   ///
   /// The [numberOfBuildsToDisplay] default value is
-  /// [ReceiveProjectMetricsUpdates.lastBuildsForChartsMetrics].
+  /// [ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics].
   ///
   /// The [buildResults] must not be `null`.
   /// The [numberOfBuildsToDisplay] must not be `null`.
   const BuildResultMetricViewModel({
     @required this.buildResults,
     this.numberOfBuildsToDisplay =
-        ReceiveProjectMetricsUpdates.lastBuildsForChartsMetrics,
+        ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics,
   })  : assert(buildResults != null),
         assert(numberOfBuildsToDisplay != null);
 }

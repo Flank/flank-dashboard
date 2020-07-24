@@ -2,21 +2,37 @@ import 'package:equatable/equatable.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// Represent the main project metrics available for users
 /// to have a quick understanding of project status.
 class DashboardProjectMetrics extends Equatable {
+  /// A unique identifier of the project these metrics belong to.
   final String projectId;
+
+  /// A status of the build of the project these metrics belong to.
+  final ProjectBuildStatusMetric projectBuildStatusMetric;
+
+  /// A [BuildNumberMetric] of project with [projectId].
   final BuildNumberMetric buildNumberMetrics;
+
+  /// A [PerformanceMetric] of project with [projectId].
   final PerformanceMetric performanceMetrics;
+
+  /// A [BuildResultMetric] of project with [projectId].
   final BuildResultMetric buildResultMetrics;
+
+  /// A test coverage percent of the project with [projectId].
   final Percent coverage;
+
+  /// A percentage of successful builds to loaded builds.
   final Percent stability;
 
   @override
   List<Object> get props => [
         projectId,
+        projectBuildStatusMetric,
         buildNumberMetrics,
         performanceMetrics,
         buildResultMetrics,
@@ -26,14 +42,12 @@ class DashboardProjectMetrics extends Equatable {
 
   /// Creates the [DashboardProjectMetrics].
   ///
-  /// [projectId] is the unique identifier of the project these metrics belong to.
-  /// [buildNumberMetrics] is the [BuildNumberMetric] of project with [projectId].
-  /// [performanceMetrics] is the [PerformanceMetric] of project with [projectId].
-  /// [buildResultMetrics] is the [BuildResultMetric] of project with [projectId].
-  /// [coverage] is the test coverage percent of the project with [projectId].
-  /// [stability] is the percentage of successful builds to loaded builds.
+  /// The [buildNumberMetrics] defaults to an empty [BuildNumberMetric].
+  /// The [performanceMetrics] defaults to an empty [PerformanceMetric].
+  /// The [buildResultMetrics] defaults to an empty [BuildResultMetric].
   const DashboardProjectMetrics({
     this.projectId,
+    this.projectBuildStatusMetric,
     this.buildNumberMetrics = const BuildNumberMetric(),
     this.performanceMetrics = const PerformanceMetric(),
     this.buildResultMetrics = const BuildResultMetric(),
