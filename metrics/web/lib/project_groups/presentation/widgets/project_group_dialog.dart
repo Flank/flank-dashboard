@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/clearable_text_form_field.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
@@ -72,45 +72,54 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
         final buttonText = _isLoading ? strategy.loadingText : strategy.text;
 
         return InfoDialog(
-          padding: const EdgeInsets.all(24.0),
+          closeIconPadding: const EdgeInsets.only(top: 16.0, right: 16.0),
+          closeIcon: Image.network(
+            'icons/close.svg',
+            height: 24.0,
+            width: 24.0,
+          ),
+          backgroundColor: dialogTheme.backgroundColor,
+          padding: const EdgeInsets.all(40.0),
           title: Text(
             strategy.title,
             style: dialogTheme.titleTextStyle,
           ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 32.0),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Form(
-                key: _formKey,
-                child: ClearableTextFormField(
-                  validator: ProjectGroupNameValidator.validate,
-                  label: ProjectGroupsStrings.nameYourGroup,
-                  controller: _groupNameController,
-                  border: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Form(
+                  key: _formKey,
+                  child: MetricsTextFormField(
+                    controller: _groupNameController,
+                    hint: ProjectGroupsStrings.nameYourGroup,
+                    validator: ProjectGroupNameValidator.validate,
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0),
-                child: Text(ProjectGroupsStrings.chooseProjectToAdd),
-              ),
               Flexible(
                 child: Container(
-                  padding: const EdgeInsets.all(16.0),
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.all(24.0),
+                  margin: const EdgeInsets.symmetric(vertical: 16.0),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(3.0),
+                    border: Border.all(color: dialogTheme.contentBorderColor),
+                    borderRadius: BorderRadius.circular(4.0),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      TextField(
-                        onChanged: _projectGroupsNotifier.filterByProjectName,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          hintText: CommonStrings.searchForProject,
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: MetricsTextFormField(
+                          onChanged: _projectGroupsNotifier.filterByProjectName,
+                          prefixIcon: Image.network(
+                            'icons/search.svg',
+                            width: 20.0,
+                            height: 20.0,
+                          ),
+                          hint: CommonStrings.searchForProject,
                         ),
                       ),
                       Flexible(
@@ -120,28 +129,24 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                   ),
                 ),
               ),
-              Text(_getCounterText(projectGroup)),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Text(
+                  _getCounterText(projectGroup),
+                  style: dialogTheme.counterTextStyle,
+                ),
+              ),
             ],
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 32.0),
           actions: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                HandCursor(
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    onPressed:
-                        _isLoading ? null : () => _actionCallback(projectGroup),
-                    child: Text(buttonText),
-                  ),
-                ),
-              ],
+            Expanded(
+              child: MetricsPositiveButton(
+                label: buttonText,
+                onPressed:
+                    _isLoading ? null : () => _actionCallback(projectGroup),
+              ),
             ),
           ],
-          actionsPadding: const EdgeInsets.only(top: 32.0),
         );
       },
     );

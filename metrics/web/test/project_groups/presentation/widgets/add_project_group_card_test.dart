@@ -224,12 +224,10 @@ void main() {
 
         expect(find.byType(AddProjectGroupDialog), findsOneWidget);
 
-        final closeIconFinder = find.descendant(
-          of: find.byType(InfoDialog),
-          matching: find.byIcon(Icons.close),
-        );
+        final dialog = tester.widget<InfoDialog>(find.byType(InfoDialog));
+        final closeIcon = dialog.closeIcon;
 
-        await tester.tap(closeIconFinder);
+        await tester.tap(find.byWidget(closeIcon));
         await tester.pump();
 
         verify(projectGroupsNotifier.resetProjectGroupDialogViewModel())

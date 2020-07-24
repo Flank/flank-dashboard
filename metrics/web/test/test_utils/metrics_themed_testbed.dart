@@ -4,6 +4,9 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 
 /// Metrics themed page used in tests.
 class MetricsThemedTestbed extends StatelessWidget {
+  /// A [ThemeData] used in tests.
+  final ThemeData themeData;
+
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData metricsThemeData;
 
@@ -20,12 +23,14 @@ class MetricsThemedTestbed extends StatelessWidget {
     @required this.body,
     this.metricsThemeData = const MetricsThemeData(),
     this.navigatorKey,
+    this.themeData,
   });
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
+      theme: themeData,
       home: Scaffold(
         body: MetricsTheme(
           data: metricsThemeData,

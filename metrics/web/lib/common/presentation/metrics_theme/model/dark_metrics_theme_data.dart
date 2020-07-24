@@ -25,8 +25,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
     borderSide: BorderSide(color: focusedBorderColor),
   );
 
-  /// The default [TextStyle] for [TextField]s within the application.
-  static const _defaultTextFieldTextStyle = TextStyle(
+  /// The default [TextStyle] for dropdown within the application.
+  static const _defaultDropdownTextStyle = TextStyle(
     color: Colors.white,
     fontSize: 16.0,
   );
@@ -108,7 +108,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
           ),
           projectGroupDialogTheme: const ProjectGroupDialogThemeData(
-            accentColor: ColorConfig.accentColor,
             primaryColor: ColorConfig.primaryColor,
             backgroundColor: ColorConfig.darkScaffoldColor,
             closeIconColor: Colors.white,
@@ -118,8 +117,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontSize: 26.0,
               fontWeight: FontWeight.w500,
             ),
-            groupNameTextStyle: _defaultTextFieldTextStyle,
-            searchForProjectTextStyle: _defaultTextFieldTextStyle,
             uncheckedProjectTextStyle: TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -130,11 +127,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
-            actionsTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
-            ),
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.darkInactiveColor,
@@ -199,13 +191,13 @@ class DarkMetricsThemeData extends MetricsThemeData {
             openedButtonBorderColor: dropdownBorderColor,
             closedButtonBackgroundColor: ColorConfig.darkInputColor,
             closedButtonBorderColor: ColorConfig.darkInputColor,
-            textStyle: _defaultTextFieldTextStyle,
+            textStyle: _defaultDropdownTextStyle,
           ),
           projectGroupDropdownItemTheme:
               const ProjectGroupsDropdownItemThemeData(
             backgroundColor: Colors.transparent,
             hoverColor: dropdownHoverColor,
-            textStyle: _defaultTextFieldTextStyle,
+            textStyle: _defaultDropdownTextStyle,
           ),
         );
 }

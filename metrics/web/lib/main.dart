@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
@@ -9,8 +11,6 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
-
-import 'common/presentation/metrics_theme/config/color_config.dart';
 
 void main() => runApp(MyApp());
 
@@ -44,6 +44,9 @@ class _MyAppState extends State<MyApp> {
               textTheme: GoogleFonts.robotoTextTheme(
                 Typography.blackMountainView,
               ),
+              buttonTheme: const ButtonThemeData(
+                height: DimensionsConfig.buttonHeight,
+              ),
               scaffoldBackgroundColor: ColorConfig.lightScaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
                 filled: true,
@@ -64,6 +67,9 @@ class _MyAppState extends State<MyApp> {
               primaryColorBrightness: Brightness.dark,
               textTheme: GoogleFonts.robotoTextTheme(
                 Typography.whiteMountainView,
+              ),
+              buttonTheme: const ButtonThemeData(
+                height: DimensionsConfig.buttonHeight,
               ),
               scaffoldBackgroundColor: ColorConfig.darkScaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(

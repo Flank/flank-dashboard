@@ -7,8 +7,8 @@ void main() {
   group("InfoDialog", () {
     const content = Text('content text');
     const padding = EdgeInsets.all(10.0);
-    const text = Text("text");
-    const actions = [Text("Action")];
+    const actions = [Text('Action')];
+    const title = Text('title');
 
     testWidgets(
       "throws an AssertionError if the given title is null",
@@ -28,7 +28,6 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(
-            title: text,
             actions: null,
           ),
         );
@@ -42,11 +41,11 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(
-            title: text,
+            title: title,
           ),
         );
 
-        expect(find.byWidget(text), findsOneWidget);
+        expect(find.byWidget(title), findsOneWidget);
       },
     );
 
@@ -57,7 +56,6 @@ void main() {
 
         await tester.pumpWidget(
           const _InfoDialogTestbed(
-            title: text,
             backgroundColor: backgroundColor,
           ),
         );
@@ -69,23 +67,43 @@ void main() {
     );
 
     testWidgets(
-      "applies the given padding to the dialog content",
+      "applies the given padding to the dialog",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(
-            title: text,
             padding: padding,
           ),
         );
 
-        final containerWidget = tester.widget<Container>(
-          find.descendant(
-            of: find.byType(Dialog),
-            matching: find.byType(Container).first,
+        final paddingWidget = tester.widget<Padding>(
+          find.byWidgetPredicate(
+            (widget) => widget is Padding && widget.child is Column,
           ),
         );
 
-        expect(containerWidget.padding, equals(padding));
+        expect(paddingWidget.padding, equals(padding));
+      },
+    );
+
+    testWidgets(
+      "applies the given padding to the close icon",
+      (WidgetTester tester) async {
+        const closeIcon = Icon(Icons.close);
+
+        await tester.pumpWidget(
+          const _InfoDialogTestbed(
+            closeIcon: closeIcon,
+            closeButtonPadding: padding,
+          ),
+        );
+
+        final paddingWidget = tester.widget<Padding>(
+          find.byWidgetPredicate(
+            (widget) => widget is Padding && widget.child == closeIcon,
+          ),
+        );
+
+        expect(paddingWidget.padding, equals(padding));
       },
     );
 
@@ -93,12 +111,12 @@ void main() {
       "applies the given title padding to the title",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _InfoDialogTestbed(title: text, titlePadding: padding),
+          const _InfoDialogTestbed(title: title, titlePadding: padding),
         );
 
         final paddingWidget = tester.widget<Padding>(
           find.byWidgetPredicate(
-            (widget) => widget is Padding && widget.child == text,
+            (widget) => widget is Padding && widget.child == title,
           ),
         );
 
@@ -111,7 +129,6 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(
-            title: text,
             contentPadding: padding,
             content: content,
           ),
@@ -132,7 +149,6 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(
-            title: text,
             actions: actions,
             actionsPadding: padding,
           ),
@@ -160,7 +176,7 @@ void main() {
         const expectedMaxWidth = 200.0;
 
         await tester.pumpWidget(
-          const _InfoDialogTestbed(title: text, maxWidth: expectedMaxWidth),
+          const _InfoDialogTestbed(maxWidth: expectedMaxWidth),
         );
 
         final containerWidget = tester.widget<Container>(
@@ -175,10 +191,29 @@ void main() {
     );
 
     testWidgets(
+      "applies the given max height value to the dialog content",
+      (WidgetTester tester) async {
+        const expectedMaxHeight = 200.0;
+
+        await tester.pumpWidget(
+          const _InfoDialogTestbed(maxHeight: expectedMaxHeight),
+        );
+
+        final containerWidget = tester.widget<Container>(find.descendant(
+          of: find.byType(Dialog),
+          matching: find.byType(Container).first,
+        ));
+        final constraints = containerWidget.constraints;
+
+        expect(constraints.maxHeight, equals(expectedMaxHeight));
+      },
+    );
+
+    testWidgets(
       "displays the given content",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _InfoDialogTestbed(title: text, content: content),
+          const _InfoDialogTestbed(content: content),
         );
 
         expect(find.byWidget(content), findsOneWidget);
@@ -188,13 +223,13 @@ void main() {
     testWidgets(
       "displays the given actions",
       (WidgetTester tester) async {
-        const firstAction = Text('first action text');
-        const secondAction = Text('second action text');
+        const firstAction = Text('first action');
+        const secondAction = Text('second action');
 
         const actions = [firstAction, secondAction];
 
         await tester.pumpWidget(
-          const _InfoDialogTestbed(title: text, actions: actions),
+          const _InfoDialogTestbed(actions: actions),
         );
 
         expect(find.byWidget(firstAction), findsOneWidget);
@@ -203,13 +238,40 @@ void main() {
     );
 
     testWidgets(
+      "displays the default close icon if the given is null",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const _InfoDialogTestbed(),
+        );
+
+        final iconFinder = find.byIcon(Icons.close);
+
+        expect(iconFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets("displays the given close icon", (WidgetTester tester) async {
+      const closeIcon = Icon(Icons.cancel);
+
+      await tester.pumpWidget(
+        const _InfoDialogTestbed(
+          closeIcon: closeIcon,
+        ),
+      );
+
+      expect(
+        find.byWidget(closeIcon),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets(
       "applies actions alignment to the actions row main axis alignment widget",
       (WidgetTester tester) async {
         const expectedAlignment = MainAxisAlignment.end;
 
         await tester.pumpWidget(
           const _InfoDialogTestbed(
-            title: text,
             actions: actions,
             actionsAlignment: expectedAlignment,
           ),
@@ -230,7 +292,6 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(
-            title: text,
             contentPadding: padding,
             content: content,
           ),
@@ -254,6 +315,15 @@ class _InfoDialogTestbed extends StatelessWidget {
 
   /// An empty space between the main content and dialog's edges.
   final EdgeInsetsGeometry padding;
+
+  /// A widget that is displayed as a close button for this dialog.
+  final Widget closeIcon;
+
+  /// An empty space that surrounds the close button.
+  final EdgeInsetsGeometry closeButtonPadding;
+
+  /// A max height of this dialog.
+  final double maxHeight;
 
   /// A max width of this dialog.
   final double maxWidth;
@@ -281,23 +351,31 @@ class _InfoDialogTestbed extends StatelessWidget {
 
   /// Creates an instance of this testbed with the given parameters.
   ///
-  /// The [actions] defaults to an empty list.
   /// The [padding], the [titlePadding], the [contentPadding],
-  /// and the [actionsPadding] default value is [EdgeInsets.zero].
+  /// the [actionsPadding], and the [closeButtonPadding]
+  /// default value is [EdgeInsets.zero].
+  ///
   /// The [actionsAlignment] default value is [MainAxisAlignment.start].
-  /// The [maxWidth] default value is 500.0.
+  /// The [maxWidth] default value is 480.0.
+  /// The [maxHeight] default value is 726.0.
+  /// If the [closeIcon] is null, the [Icon] with [Icons.close] is used.
+  ///
+  /// The [title] and the [actions] must not be null.
   const _InfoDialogTestbed({
     Key key,
-    this.title,
+    this.title = const Text('text'),
     this.actions = const <Widget>[],
     this.content,
+    this.closeIcon,
     this.backgroundColor,
     this.padding = EdgeInsets.zero,
     this.titlePadding = EdgeInsets.zero,
     this.contentPadding = EdgeInsets.zero,
     this.actionsPadding = EdgeInsets.zero,
+    this.closeButtonPadding = EdgeInsets.zero,
     this.actionsAlignment = MainAxisAlignment.start,
-    this.maxWidth = 500.0,
+    this.maxHeight = 726.0,
+    this.maxWidth = 480.0,
   }) : super(key: key);
 
   @override
@@ -310,9 +388,12 @@ class _InfoDialogTestbed extends StatelessWidget {
           content: content,
           backgroundColor: backgroundColor,
           padding: padding,
+          closeIcon: closeIcon,
+          closeIconPadding: closeButtonPadding,
           titlePadding: titlePadding,
           contentPadding: contentPadding,
           actionsPadding: actionsPadding,
+          maxHeight: maxHeight,
           maxWidth: maxWidth,
           actionsAlignment: actionsAlignment,
         ),
