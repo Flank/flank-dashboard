@@ -351,8 +351,8 @@ class _InfoDialogTestbed extends StatelessWidget {
 
   /// Creates an instance of this testbed with the given parameters.
   ///
-  /// The [padding], the [titlePadding], the [contentPadding]
-  /// and the [actionsPadding] and the [closeButtonPadding]
+  /// The [padding], the [titlePadding], the [contentPadding],
+  /// the [actionsPadding], and the [closeButtonPadding]
   /// default value is [EdgeInsets.zero].
   ///
   /// The [actionsAlignment] default value is [MainAxisAlignment.start].

@@ -11,7 +11,7 @@ class MetricsTextFormField extends StatefulWidget {
   /// A text field form validator.
   final FormFieldValidator<String> validator;
 
-  /// The callback that report that a text field values has changed.
+  /// The callback that is called when text field value has changed.
   final ValueChanged<String> onChanged;
 
   /// An icon that appears before the editable part of this text field,
