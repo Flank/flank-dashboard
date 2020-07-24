@@ -11,10 +11,11 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("ProjectCheckboxListTile", () {
-    const checkboxListTileViewModels = [
-      ProjectCheckboxViewModel(id: 'id', name: 'name', isChecked: false),
-      ProjectCheckboxViewModel(id: 'id', name: 'name', isChecked: true),
-    ];
+    const projectCheckboxViewModel = ProjectCheckboxViewModel(
+      id: 'id',
+      name: 'name',
+      isChecked: false,
+    );
 
     testWidgets(
       "throws an AssertionError if the given project checkbox view model is null",
@@ -30,17 +31,15 @@ void main() {
     testWidgets(
       "displays the name of the project checkbox view model in the checkbox list tile",
       (WidgetTester tester) async {
-        final viewModel = checkboxListTileViewModels.first;
-
         await tester.pumpWidget(
-          _ProjectCheckboxListTileTestbed(
-            projectCheckboxViewModel: viewModel,
+          const _ProjectCheckboxListTileTestbed(
+            projectCheckboxViewModel: projectCheckboxViewModel,
           ),
         );
 
         final checkboxListTileFinder = find.widgetWithText(
           CheckboxListTile,
-          viewModel.name,
+          projectCheckboxViewModel.name,
         );
 
         expect(checkboxListTileFinder, findsOneWidget);
@@ -50,11 +49,9 @@ void main() {
     testWidgets(
       "applies the checkbox value corresponding to the project checkbox view model isChecked value",
       (WidgetTester tester) async {
-        final checkedViewModel = checkboxListTileViewModels.first;
-
         await tester.pumpWidget(
-          _ProjectCheckboxListTileTestbed(
-            projectCheckboxViewModel: checkedViewModel,
+          const _ProjectCheckboxListTileTestbed(
+            projectCheckboxViewModel: projectCheckboxViewModel,
           ),
         );
 
@@ -62,16 +59,15 @@ void main() {
           find.byType(CheckboxListTile),
         );
 
-        expect(widget.value, equals(checkedViewModel.isChecked));
+        expect(widget.value, equals(projectCheckboxViewModel.isChecked));
       },
     );
 
     testWidgets(
-      ".toggleProjectCheckedStatus() is called on tap on checkbox list tile",
+      "toggles the project checkbox status on tap",
       (WidgetTester tester) async {
         final projectGroupsNotifierMock = ProjectGroupsNotifierMock();
 
-        final projectCheckboxViewModel = checkboxListTileViewModels.first;
         await tester.pumpWidget(
           _ProjectCheckboxListTileTestbed(
             projectGroupsNotifier: projectGroupsNotifierMock,

@@ -59,52 +59,17 @@ class TestInjectionContainer extends StatelessWidget {
         ChangeNotifierProvider<ThemeNotifier>(
           create: (_) => themeNotifier ?? ThemeNotifier(),
         ),
-        ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
-          create: (_) => projectsNotifier ?? ProjectsNotifierStub(),
-          update: (_, authNotifier, projectsNotifier) {
-            _updateProjectsSubscription(authNotifier, projectsNotifier);
-
-            return projectsNotifier;
-          },
-        ),
-        ChangeNotifierProxyProvider<ProjectsNotifier, ProjectMetricsNotifier>(
+        ChangeNotifierProvider<ProjectMetricsNotifier>(
           create: (_) => metricsNotifier ?? ProjectMetricsNotifierStub(),
-          update: (_, projectsNotifier, metricsNotifier) {
-            return metricsNotifier
-              ..setProjects(
-                projectsNotifier.projectModels,
-                projectsNotifier.projectsErrorMessage,
-              );
-          },
         ),
-        ChangeNotifierProxyProvider<ProjectsNotifier, ProjectGroupsNotifier>(
+        ChangeNotifierProvider<ProjectsNotifier>(
+          create: (_) => projectsNotifier ?? ProjectsNotifierStub(),
+        ),
+        ChangeNotifierProvider<ProjectGroupsNotifier>(
           create: (_) => projectGroupsNotifier ?? ProjectGroupsNotifierStub(),
-          update: (_, projectsNotifier, projectGroupsNotifier) {
-            return projectGroupsNotifier
-              ..setProjects(
-                projectsNotifier.projectModels,
-                projectsNotifier.projectsErrorMessage,
-              );
-          },
         ),
       ],
       child: child,
     );
-  }
-
-  /// Updates projects subscription based on user logged in status.
-  void _updateProjectsSubscription(
-      AuthNotifier authNotifier,
-      ProjectsNotifier projectsNotifier,
-      ) {
-    final isLoggedIn = authNotifier.isLoggedIn;
-
-    if (isLoggedIn == null) return;
-
-    if (isLoggedIn) {
-      projectsNotifier.subscribeToProjects();
-    } else {
-      projectsNotifier.unsubscribeFromProjects();
-    }
   }
 }

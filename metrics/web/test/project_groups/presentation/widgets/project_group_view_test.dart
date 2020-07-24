@@ -22,7 +22,7 @@ void main() {
     ];
 
     testWidgets(
-      "displays the metrics text placeholder with the project groups error message if it is not null",
+      "displays the project groups error message if it is not null",
       (tester) async {
         const errorMessage = 'error';
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
@@ -44,7 +44,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the loading placeholder if a list of project group card view models is null",
+      "displays the loading placeholder if project group card view models are null",
       (tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 

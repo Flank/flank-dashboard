@@ -43,7 +43,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the text placeholder with an error message if the project groups notifier has a projects error",
+      "displays the text placeholder with an error message if there is a projects error",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
         const error = 'error';
@@ -82,7 +82,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the text placeholder with the no configured projects text if a list of project checkbox view models is empty",
+      "displays the no configured projects placeholder if project checkbox view models are empty",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
         when(projectGroupsNotifier.projectCheckboxViewModels).thenReturn([]);
