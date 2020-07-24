@@ -22,7 +22,7 @@ void main() {
       "throws an AssertionError if the given name is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(name: null),
+          const _DashboardTableRowTestbed(name: null),
         );
 
         expect(tester.takeException(), isAssertionError);
@@ -33,7 +33,7 @@ void main() {
       "throws an AssertionError if the given build number is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(
+          const _DashboardTableRowTestbed(
             buildNumber: null,
           ),
         );
@@ -46,7 +46,7 @@ void main() {
       "throws an AssertionError if the given build results is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(
+          const _DashboardTableRowTestbed(
             buildResults: null,
           ),
         );
@@ -59,7 +59,7 @@ void main() {
       "throws an AssertionError if the given performance is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(
+          const _DashboardTableRowTestbed(
             performance: null,
           ),
         );
@@ -72,7 +72,7 @@ void main() {
       "throws an AssertionError if the given stability is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(
+          const _DashboardTableRowTestbed(
             stability: null,
           ),
         );
@@ -85,8 +85,8 @@ void main() {
       "throws an AssertionError if the given coverage is null",
       (tester) async {
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(
-            coverageColumn: null,
+          const _DashboardTableRowTestbed(
+            coverage: null,
           ),
         );
 
@@ -100,7 +100,7 @@ void main() {
         const name = Text(nameText);
 
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(name: name),
+          const _DashboardTableRowTestbed(name: name),
         );
 
         expect(find.byWidget(name), findsOneWidget);
@@ -112,7 +112,7 @@ void main() {
       (tester) async {
         const buildResults = Text('build results');
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(
+          const _DashboardTableRowTestbed(
             buildResults: buildResults,
           ),
         );
@@ -126,7 +126,7 @@ void main() {
       (tester) async {
         const performance = Text('performance');
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(
+          const _DashboardTableRowTestbed(
             performance: performance,
           ),
         );
@@ -140,7 +140,7 @@ void main() {
       (tester) async {
         const buildNumber = Text('build number');
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(
+          const _DashboardTableRowTestbed(
             buildNumber: buildNumber,
           ),
         );
@@ -154,7 +154,7 @@ void main() {
       (tester) async {
         const stability = Text('stability');
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(
+          const _DashboardTableRowTestbed(
             stability: stability,
           ),
         );
@@ -168,8 +168,8 @@ void main() {
       (tester) async {
         const coverage = Text('coverage');
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(
-            coverageColumn: coverage,
+          const _DashboardTableRowTestbed(
+            coverage: coverage,
           ),
         );
 
@@ -180,7 +180,7 @@ void main() {
 }
 
 /// A testbed class needed to test the [MetricsTableRow].
-class _DashboardTableTileTestbed extends StatelessWidget {
+class _DashboardTableRowTestbed extends StatelessWidget {
   /// A first column of this widget.
   final Widget name;
 
@@ -197,21 +197,21 @@ class _DashboardTableTileTestbed extends StatelessWidget {
   final Widget stability;
 
   /// A [Widget] that displays an information about a coverage metric.
-  final Widget coverageColumn;
+  final Widget coverage;
 
   /// Creates the instance of this testbed.
   ///
   /// If the [name], [buildResults], [performance],
-  /// [buildNumber], [stability] or [coverageColumn] is not specified,
+  /// [buildNumber], [stability] or [coverage] is not specified,
   /// the [SizedBox] used.
-  const _DashboardTableTileTestbed({
+  const _DashboardTableRowTestbed({
     Key key,
     this.name = const SizedBox(),
     this.buildResults = const SizedBox(),
     this.performance = const SizedBox(),
     this.buildNumber = const SizedBox(),
     this.stability = const SizedBox(),
-    this.coverageColumn = const SizedBox(),
+    this.coverage = const SizedBox(),
   }) : super(key: key);
 
   @override
@@ -223,7 +223,7 @@ class _DashboardTableTileTestbed extends StatelessWidget {
         performance: performance,
         buildNumber: buildNumber,
         stability: stability,
-        coverage: coverageColumn,
+        coverage: coverage,
       ),
     );
   }
