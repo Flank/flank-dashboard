@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_tile.dart';
 
-import '../../../test_utils/dimensions_util.dart';
+import '../../../test_utils/dimension_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
@@ -11,11 +11,11 @@ void main() {
     const leadingText = 'leading';
 
     setUpAll(() {
-      DimensionsUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
+      DimensionUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
     });
 
     tearDownAll(() {
-      DimensionsUtil.clearTestWindowSize();
+      DimensionUtil.clearTestWindowSize();
     });
 
     testWidgets(
@@ -97,86 +97,86 @@ void main() {
     testWidgets(
       "displays the given leading",
       (tester) async {
+        const leading = Text(leadingText);
+
         await tester.pumpWidget(
-          const _DashboardTableTileTestbed(leading: Text(leadingText)),
+          const _DashboardTableTileTestbed(leading: leading),
         );
 
-        expect(find.text(leadingText), findsOneWidget);
+        expect(find.byWidget(leading), findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the given builds column",
+      "displays the given build results column",
       (tester) async {
-        const textWidget = Text('build results column');
+        const buildResultsColumn = Text('build results column');
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            leading: Text(leadingText),
-            buildResultsColumn: textWidget,
+            buildResultsColumn: buildResultsColumn,
           ),
         );
 
-        expect(find.byWidget(textWidget), findsOneWidget);
+        expect(find.byWidget(buildResultsColumn), findsOneWidget);
       },
     );
 
     testWidgets(
       "displays the given performance column",
       (tester) async {
-        const textWidget = Text('performance column');
+        const performance = Text('performance column');
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
-            leading: Text(leadingText),
-            performanceColumn: textWidget,
+            performanceColumn: performance,
           ),
         );
 
-        expect(find.byWidget(textWidget), findsOneWidget);
+        expect(find.byWidget(performance), findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the given builds count column",
+      "displays the given build number column",
       (tester) async {
-        const textWidget = Text('build number column');
+        const buildNumber = Text('build number column');
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
             leading: Text(leadingText),
-            buildNumberColumn: textWidget,
+            buildNumberColumn: buildNumber,
           ),
         );
 
-        expect(find.byWidget(textWidget), findsOneWidget);
+        expect(find.byWidget(buildNumber), findsOneWidget);
       },
     );
 
     testWidgets(
       "displays the given stability column",
       (tester) async {
-        const textWidget = Text('stability column');
+        const stability = Text('stability column');
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
             leading: Text(leadingText),
-            stabilityColumn: textWidget,
+            stabilityColumn: stability,
           ),
         );
 
-        expect(find.byWidget(textWidget), findsOneWidget);
+        expect(find.byWidget(stability), findsOneWidget);
       },
     );
 
     testWidgets(
       "displays the given coverage column",
       (tester) async {
-        const textWidget = Text('coverage column');
+        const coverage = Text('coverage column');
         await tester.pumpWidget(
           const _DashboardTableTileTestbed(
             leading: Text(leadingText),
-            coverageColumn: textWidget,
+            coverageColumn: coverage,
           ),
         );
 
-        expect(find.byWidget(textWidget), findsOneWidget);
+        expect(find.byWidget(coverage), findsOneWidget);
       },
     );
   });
@@ -203,6 +203,10 @@ class _DashboardTableTileTestbed extends StatelessWidget {
   final Widget coverageColumn;
 
   /// Creates the instance of this testbed.
+  ///
+  /// If the [leading], [buildResultsColumn], [performanceColumn],
+  /// [buildNumberColumn], [stabilityColumn] or [coverageColumn] is not specified,
+  /// the [SizedBox] used.
   const _DashboardTableTileTestbed({
     Key key,
     this.leading = const SizedBox(),

@@ -22,7 +22,8 @@ class MetricsTableTile extends StatelessWidget {
 
   /// Creates the [MetricsTableTile].
   ///
-  /// Throws an [AssertionError] if at least one of the required parameters is null.
+  /// The [leading], [buildResultsColumn], [performanceColumn],
+  /// [buildNumberColumn], [stabilityColumn], and [coverageColumn] must not be null.
   const MetricsTableTile({
     Key key,
     @required this.leading,

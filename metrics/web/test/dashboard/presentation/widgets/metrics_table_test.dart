@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
@@ -120,7 +120,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the performance title above the sparkline graph widget",
+      "displays the performance title above the performance sparkline graph widget",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsTableTestbed());

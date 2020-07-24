@@ -5,7 +5,7 @@ import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_tile.dart';
 
-import '../../../test_utils/dimensions_util.dart';
+import '../../../test_utils/dimension_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
@@ -14,11 +14,11 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("MetricsTableHeader", () {
     setUpAll(() {
-      DimensionsUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
+      DimensionUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
     });
 
     tearDownAll(() {
-      DimensionsUtil.clearTestWindowSize();
+      DimensionUtil.clearTestWindowSize();
     });
 
     testWidgets(
