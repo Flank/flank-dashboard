@@ -8,6 +8,7 @@ import 'package:metrics/project_groups/presentation/view_models/delete_project_g
 import 'package:metrics/project_groups/presentation/widgets/delete_project_group_dialog.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list_tile.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
@@ -28,9 +29,11 @@ void main() {
         when(notifierMock.deleteProjectGroupDialogViewModel).thenReturn(
           deleteProjectGroupDialogViewModel,
         );
-        await tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
-          projectGroupsNotifier: notifierMock,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
+            projectGroupsNotifier: notifierMock,
+          ));
+        });
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.cancel),
@@ -49,12 +52,14 @@ void main() {
         when(notifierMock.deleteProjectGroupDialogViewModel).thenReturn(
           deleteProjectGroupDialogViewModel,
         );
-        await tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
-          projectGroupsNotifier: notifierMock,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
+            projectGroupsNotifier: notifierMock,
+          ));
+        });
 
         final finder = find.ancestor(
-          of: find.text(ProjectGroupsStrings.deleteProjectGroup),
+          of: find.text(ProjectGroupsStrings.delete),
           matching: find.byType(HandCursor),
         );
 

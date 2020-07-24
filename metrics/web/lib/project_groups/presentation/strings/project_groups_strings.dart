@@ -6,6 +6,7 @@ class ProjectGroupsStrings {
   static const String noProjects = 'No projects';
   static const String nameYourGroup = 'Name your group';
   static const String saveChanges = 'Save changes';
+  static const String delete = 'Delete';
   static const String createGroup = 'Create group';
   static const String chooseProjectToAdd = 'Choose project to add';
   static const String projectGroupNameRequired =
@@ -13,10 +14,8 @@ class ProjectGroupsStrings {
   static const String creatingProjectGroup = 'Creating group...';
   static const String savingProjectGroup = 'Saving changes...';
   static const String deletingProjectGroup = 'Deleting group...';
-
-  static String getDeleteTextConfirmation(String name) {
-    return 'Delete $name project group?';
-  }
+  static const String deleteConfirmation = 'Are you sure you want to delete';
+  static const String deleteConfirmationQuestion = 'project group?';
 
   static String getProjectsCount(int count) => '$count projects';
 

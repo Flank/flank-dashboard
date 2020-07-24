@@ -1,7 +1,8 @@
-// https://github.com/software-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
 import 'package:test/test.dart';
+
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
 
 void main() {
   group("DarkMetricsThemeData", () {
@@ -16,6 +17,7 @@ void main() {
         expect(darkMetricsThemeData.inactiveWidgetTheme, isNotNull);
         expect(darkMetricsThemeData.projectGroupCardTheme, isNotNull);
         expect(darkMetricsThemeData.addProjectGroupCardTheme, isNotNull);
+        expect(darkMetricsThemeData.deleteDialogTheme, isNotNull);
         expect(darkMetricsThemeData.projectGroupDialogTheme, isNotNull);
         expect(darkMetricsThemeData.metricsButtonTheme, isNotNull);
         expect(darkMetricsThemeData.textFieldTheme, isNotNull);

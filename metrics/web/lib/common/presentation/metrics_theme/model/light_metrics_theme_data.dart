@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/button/theme/theme_data/metrics_butt
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -21,6 +22,13 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _focusedBorderColor),
+  );
+
+  /// A [TextStyle] of the dialog title.
+  static const TextStyle _titleTextStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 26.0,
+    fontWeight: FontWeight.w500,
   );
 
   /// Creates the light theme with the default widget theme configuration.
@@ -89,35 +97,36 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
           ),
-          addProjectGroupCardTheme: const ProjectGroupCardThemeData(
-            primaryColor: ColorConfig.primaryColor,
-            backgroundColor: ColorConfig.primaryTranslucentColor,
-            titleStyle: TextStyle(
-              color: ColorConfig.primaryColor,
-              height: 1.5,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          projectGroupDialogTheme: const ProjectGroupDialogThemeData(
-            primaryColor: ColorConfig.primaryColor,
-            closeIconColor: Colors.black,
-            contentBorderColor: ColorConfig.darkBorderColor,
-            titleTextStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 26.0,
-              fontWeight: FontWeight.w500,
-            ),
-            uncheckedProjectTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 14.0,
-            ),
-            checkedProjectTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w500,
-            ),
-            counterTextStyle: TextStyleConfig.captionTextStyle,
+    addProjectGroupCardTheme: const ProjectGroupCardThemeData(
+      primaryColor: ColorConfig.primaryColor,
+      backgroundColor: ColorConfig.primaryTranslucentColor,
+      titleStyle: TextStyle(
+        color: ColorConfig.primaryColor,
+        height: 1.5,
+        fontSize: 16.0,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+    deleteDialogTheme: const DeleteDialogThemeData(
+      backgroundColor: ColorConfig.lightScaffoldColor,
+      closeIconColor: Colors.black,
+      titleTextStyle: _titleTextStyle,
+    ),
+    projectGroupDialogTheme: const ProjectGroupDialogThemeData(
+      primaryColor: ColorConfig.primaryColor,
+      closeIconColor: Colors.black,
+      contentBorderColor: ColorConfig.darkBorderColor,
+      titleTextStyle: _titleTextStyle,
+      uncheckedProjectTextStyle: TextStyle(
+        color: Colors.black,
+        fontSize: 14.0,
+      ),
+      checkedProjectTextStyle: TextStyle(
+        color: Colors.black,
+        fontSize: 14.0,
+        fontWeight: FontWeight.w500,
+      ),
+      counterTextStyle: TextStyleConfig.captionTextStyle,
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.lightInactiveColor,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_neutral_button.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
@@ -20,44 +22,69 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final dialogTheme = MetricsTheme.of(context).deleteDialogTheme;
+    final contentTextStyle = Theme.of(context)
+        .textTheme
+        .bodyText1
+        .merge(dialogTheme.contentTextStyle);
+
     return Selector<ProjectGroupsNotifier, DeleteProjectGroupDialogViewModel>(
       selector: (_, state) => state.deleteProjectGroupDialogViewModel,
       builder: (_, deleteViewModel, ___) {
         final buttonText = _isLoading
             ? ProjectGroupsStrings.deletingProjectGroup
-            : ProjectGroupsStrings.deleteProjectGroup;
+            : ProjectGroupsStrings.delete;
 
         return InfoDialog(
-          padding: const EdgeInsets.all(24.0),
-          title: Text(
-            ProjectGroupsStrings.getDeleteTextConfirmation(
-              deleteViewModel.name,
-            ),
-            style: const TextStyle(fontSize: 16.0),
+          maxHeight: 262.0,
+          closeIconPadding: const EdgeInsets.only(top: 16.0, right: 16.0),
+          closeIcon: Image.network(
+            'icons/close.svg',
+            height: 24.0,
+            width: 24.0,
           ),
-          actionsAlignment: MainAxisAlignment.end,
-          contentPadding: const EdgeInsets.symmetric(vertical: 32.0),
+          backgroundColor: dialogTheme.backgroundColor,
+          padding: const EdgeInsets.all(40.0),
+          title: Text(
+            ProjectGroupsStrings.deleteProjectGroup,
+            style: dialogTheme.titleTextStyle,
+          ),
+          titlePadding: const EdgeInsets.only(bottom: 16.0),
+          contentPadding: const EdgeInsets.only(bottom: 16.0),
+          content: RichText(
+            text: TextSpan(
+              text: ProjectGroupsStrings.deleteConfirmation,
+              style: contentTextStyle,
+              children: [
+                TextSpan(
+                  text: ' ${deleteViewModel.name} ',
+                  style: contentTextStyle.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const TextSpan(
+                  text: ProjectGroupsStrings.deleteConfirmationQuestion,
+                ),
+              ],
+            ),
+          ),
           actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: HandCursor(
-                child: FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(CommonStrings.cancel),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: MetricsNeutralButton(
+                  label: CommonStrings.cancel,
+                  onPressed: () => Navigator.pop(context),
                 ),
               ),
             ),
-            HandCursor(
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: MetricsNegativeButton(
+                  label: buttonText,
+                  onPressed: _isLoading
+                      ? null
+                      : () => _deleteProjectGroup(deleteViewModel),
                 ),
-                onPressed: _isLoading
-                    ? null
-                    : () => _deleteProjectGroup(deleteViewModel),
-                child: Text(buttonText),
               ),
             ),
           ],
