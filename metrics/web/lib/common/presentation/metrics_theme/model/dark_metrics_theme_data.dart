@@ -105,42 +105,42 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
           ),
-    addProjectGroupCardTheme: const ProjectGroupCardThemeData(
-      primaryColor: ColorConfig.primaryColor,
-      backgroundColor: ColorConfig.primaryTranslucentColor,
-      titleStyle: TextStyle(
-        color: ColorConfig.primaryColor,
-        height: 1.5,
-        fontSize: 16.0,
-        fontWeight: FontWeight.w500,
-      ),
-    ),
-    deleteDialogTheme: const DeleteDialogThemeData(
-      backgroundColor: ColorConfig.darkScaffoldColor,
-      closeIconColor: Colors.white,
-      titleTextStyle: _titleTextStyle,
-      contentTextStyle: TextStyle(
-        fontSize: 16.0,
-        color: Colors.white,
-        height: 1.5,
-      ),
-    ),
-    projectGroupDialogTheme: const ProjectGroupDialogThemeData(
-      primaryColor: ColorConfig.primaryColor,
-      backgroundColor: ColorConfig.darkScaffoldColor,
-      closeIconColor: Colors.white,
-      contentBorderColor: ColorConfig.darkBorderColor,
-      titleTextStyle: _titleTextStyle,
-      uncheckedProjectTextStyle: TextStyle(
-        color: Colors.white,
-        fontSize: 14.0,
-      ),
-      checkedProjectTextStyle: TextStyle(
-        color: Colors.white,
-        fontSize: 14.0,
-        fontWeight: FontWeight.w500,
-      ),
-      counterTextStyle: TextStyleConfig.captionTextStyle,
+          addProjectGroupCardTheme: const ProjectGroupCardThemeData(
+            primaryColor: ColorConfig.primaryColor,
+            backgroundColor: ColorConfig.primaryTranslucentColor,
+            titleStyle: TextStyle(
+              color: ColorConfig.primaryColor,
+              height: 1.5,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          deleteDialogTheme: const DeleteDialogThemeData(
+            backgroundColor: ColorConfig.darkScaffoldColor,
+            closeIconColor: Colors.white,
+            titleTextStyle: _titleTextStyle,
+            contentTextStyle: TextStyle(
+              fontSize: 16.0,
+              color: Colors.white,
+              height: 1.5,
+            ),
+          ),
+          projectGroupDialogTheme: const ProjectGroupDialogThemeData(
+            primaryColor: ColorConfig.primaryColor,
+            backgroundColor: ColorConfig.darkScaffoldColor,
+            closeIconColor: Colors.white,
+            contentBorderColor: ColorConfig.darkBorderColor,
+            titleTextStyle: _titleTextStyle,
+            uncheckedProjectTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 14.0,
+            ),
+            checkedProjectTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+            ),
+            counterTextStyle: TextStyleConfig.captionTextStyle,
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.darkInactiveColor,

@@ -119,12 +119,12 @@ class MetricsThemeData {
       metricWidgetTheme: metricWidgetTheme ?? this.metricWidgetTheme,
       buildResultTheme: buildResultTheme ?? this.buildResultTheme,
       projectGroupDialogTheme:
-      projectGroupDialogTheme ?? this.projectGroupDialogTheme,
+          projectGroupDialogTheme ?? this.projectGroupDialogTheme,
       deleteDialogTheme: deleteDialogTheme ?? this.deleteDialogTheme,
       projectGroupCardTheme:
-      projectGroupCardTheme ?? this.projectGroupCardTheme,
+          projectGroupCardTheme ?? this.projectGroupCardTheme,
       addProjectGroupCardTheme:
-      addProjectGroupCardTheme ?? this.addProjectGroupCardTheme,
+          addProjectGroupCardTheme ?? this.addProjectGroupCardTheme,
       inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
       metricsButtonTheme: metricsButtonTheme ?? this.metricsButtonTheme,
       textFieldTheme: textFieldTheme ?? this.textFieldTheme,

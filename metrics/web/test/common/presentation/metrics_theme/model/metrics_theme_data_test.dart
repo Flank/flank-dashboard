@@ -132,7 +132,7 @@ void main() {
         );
 
         const dropdownItemTheme =
-        DropdownItemThemeData(
+            DropdownItemThemeData(
           backgroundColor: backgroundColor,
         );
 
