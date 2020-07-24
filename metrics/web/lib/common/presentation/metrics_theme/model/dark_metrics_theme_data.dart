@@ -25,6 +25,12 @@ class DarkMetricsThemeData extends MetricsThemeData {
     borderSide: BorderSide(color: focusedBorderColor),
   );
 
+  /// The default [TextStyle] for dropdown within the application.
+  static const _defaultDropdownTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 16.0,
+  );
+
   /// Creates the dark theme with the default widget theme configuration.
   const DarkMetricsThemeData()
       : super(
@@ -185,13 +191,13 @@ class DarkMetricsThemeData extends MetricsThemeData {
             openedButtonBorderColor: dropdownBorderColor,
             closedButtonBackgroundColor: ColorConfig.darkInputColor,
             closedButtonBorderColor: ColorConfig.darkInputColor,
-            textStyle: _defaultTextFieldTextStyle,
+            textStyle: _defaultDropdownTextStyle,
           ),
           projectGroupDropdownItemTheme:
               const ProjectGroupsDropdownItemThemeData(
             backgroundColor: Colors.transparent,
             hoverColor: dropdownHoverColor,
-            textStyle: _defaultTextFieldTextStyle,
+            textStyle: _defaultDropdownTextStyle,
           ),
         );
 }
