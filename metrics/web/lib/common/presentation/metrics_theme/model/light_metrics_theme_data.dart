@@ -174,8 +174,8 @@ class LightMetricsThemeData extends MetricsThemeData {
               height: 1.0,
             ),
           ),
-          projectGroupDropdownTheme: const ProjectGroupsDropdownThemeData(),
-          projectGroupDropdownItemTheme:
+          projectGroupsDropdownTheme: const ProjectGroupsDropdownThemeData(),
+          projectGroupsDropdownItemTheme:
               const ProjectGroupsDropdownItemThemeData(
             backgroundColor: Colors.transparent,
             hoverColor: dropdownHoverColor,

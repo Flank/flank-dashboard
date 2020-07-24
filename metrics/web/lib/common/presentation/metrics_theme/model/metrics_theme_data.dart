@@ -46,11 +46,11 @@ class MetricsThemeData {
   /// A theme for the text fields.
   final TextFieldThemeData textFieldTheme;
 
-  /// A theme for the project group dropdown.
-  final ProjectGroupsDropdownThemeData projectGroupDropdownTheme;
+  /// A theme for the project groups dropdown.
+  final ProjectGroupsDropdownThemeData projectGroupsDropdownTheme;
 
-  /// A theme for the project group dropdown item.
-  final ProjectGroupsDropdownItemThemeData projectGroupDropdownItemTheme;
+  /// A theme for the project groups dropdown items.
+  final ProjectGroupsDropdownItemThemeData projectGroupsDropdownItemTheme;
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
@@ -63,8 +63,8 @@ class MetricsThemeData {
     ProjectGroupCardThemeData addProjectGroupCardTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
-    ProjectGroupsDropdownThemeData projectGroupDropdownTheme,
-    ProjectGroupsDropdownItemThemeData projectGroupDropdownItemTheme,
+    ProjectGroupsDropdownThemeData projectGroupsDropdownTheme,
+    ProjectGroupsDropdownItemThemeData projectGroupsDropdownItemTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -84,9 +84,9 @@ class MetricsThemeData {
         metricsButtonTheme =
             metricsButtonTheme ?? const MetricsButtonThemeData(),
         textFieldTheme = textFieldTheme ?? const TextFieldThemeData(),
-        projectGroupDropdownTheme =
-            projectGroupDropdownTheme ?? const ProjectGroupsDropdownThemeData(),
-        projectGroupDropdownItemTheme = projectGroupDropdownItemTheme ??
+        projectGroupsDropdownTheme =
+            projectGroupsDropdownTheme ?? const ProjectGroupsDropdownThemeData(),
+        projectGroupsDropdownItemTheme = projectGroupsDropdownItemTheme ??
             const ProjectGroupsDropdownItemThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
@@ -103,8 +103,8 @@ class MetricsThemeData {
     MetricWidgetThemeData inactiveWidgetTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
-    ProjectGroupsDropdownThemeData projectGroupDropdownTheme,
-    ProjectGroupsDropdownItemThemeData projectGroupDropdownItemTheme,
+    ProjectGroupsDropdownThemeData projectGroupsDropdownTheme,
+    ProjectGroupsDropdownItemThemeData projectGroupsDropdownItemTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -120,10 +120,10 @@ class MetricsThemeData {
       inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
       metricsButtonTheme: metricsButtonTheme ?? this.metricsButtonTheme,
       textFieldTheme: textFieldTheme ?? this.textFieldTheme,
-      projectGroupDropdownTheme:
-          projectGroupDropdownTheme ?? this.projectGroupDropdownTheme,
-      projectGroupDropdownItemTheme:
-          projectGroupDropdownItemTheme ?? this.projectGroupDropdownItemTheme,
+      projectGroupsDropdownTheme:
+          projectGroupsDropdownTheme ?? this.projectGroupsDropdownTheme,
+      projectGroupsDropdownItemTheme:
+          projectGroupsDropdownItemTheme ?? this.projectGroupsDropdownItemTheme,
     );
   }
 }

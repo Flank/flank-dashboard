@@ -22,8 +22,8 @@ void main() {
         expect(lightMetricsThemeData.projectGroupDialogTheme, isNotNull);
         expect(lightMetricsThemeData.metricsButtonTheme, isNotNull);
         expect(lightMetricsThemeData.textFieldTheme, isNotNull);
-        expect(lightMetricsThemeData.projectGroupDropdownTheme, isNotNull);
-        expect(lightMetricsThemeData.projectGroupDropdownItemTheme, isNotNull);
+        expect(lightMetricsThemeData.projectGroupsDropdownTheme, isNotNull);
+        expect(lightMetricsThemeData.projectGroupsDropdownItemTheme, isNotNull);
       },
     );
   });

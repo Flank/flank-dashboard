@@ -3,11 +3,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_body.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_group_dropdown_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_item.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_menu.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -205,7 +205,7 @@ void main() {
       (tester) async {
         const backgroundColor = Colors.red;
         const theme = MetricsThemeData(
-          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+          projectGroupsDropdownTheme: ProjectGroupsDropdownThemeData(
             closedButtonBackgroundColor: backgroundColor,
           ),
         );
@@ -234,7 +234,7 @@ void main() {
       (tester) async {
         const backgroundColor = Colors.red;
         const theme = MetricsThemeData(
-          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+          projectGroupsDropdownTheme: ProjectGroupsDropdownThemeData(
             openedButtonBackgroundColor: backgroundColor,
           ),
         );
@@ -266,7 +266,7 @@ void main() {
       (tester) async {
         const backgroundColor = Colors.red;
         const theme = MetricsThemeData(
-          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+          projectGroupsDropdownTheme: ProjectGroupsDropdownThemeData(
             hoverBackgroundColor: backgroundColor,
           ),
         );
@@ -301,7 +301,7 @@ void main() {
       (tester) async {
         const borderColor = Colors.red;
         const theme = MetricsThemeData(
-          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+          projectGroupsDropdownTheme: ProjectGroupsDropdownThemeData(
             closedButtonBorderColor: borderColor,
           ),
         );
@@ -334,7 +334,7 @@ void main() {
       (tester) async {
         const borderColor = Colors.red;
         const theme = MetricsThemeData(
-          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+          projectGroupsDropdownTheme: ProjectGroupsDropdownThemeData(
             openedButtonBorderColor: borderColor,
           ),
         );
@@ -370,7 +370,7 @@ void main() {
       (tester) async {
         const borderColor = Colors.red;
         const theme = MetricsThemeData(
-          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+          projectGroupsDropdownTheme: ProjectGroupsDropdownThemeData(
             hoverBorderColor: borderColor,
           ),
         );
@@ -410,7 +410,7 @@ void main() {
         const textStyle = TextStyle(fontSize: 13.0);
 
         const theme = MetricsThemeData(
-          projectGroupDropdownTheme: ProjectGroupDropdownThemeData(
+          projectGroupsDropdownTheme: ProjectGroupsDropdownThemeData(
             textStyle: textStyle,
           ),
         );

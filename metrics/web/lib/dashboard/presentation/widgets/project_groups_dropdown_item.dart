@@ -20,7 +20,7 @@ class ProjectGroupsDropdownItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = MetricsTheme.of(context).projectGroupDropdownItemTheme;
+    final theme = MetricsTheme.of(context).projectGroupsDropdownItemTheme;
 
     return DropdownItem(
       height: 40.0,

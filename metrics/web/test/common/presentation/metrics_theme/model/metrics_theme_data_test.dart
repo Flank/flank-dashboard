@@ -29,8 +29,8 @@ void main() {
         expect(themeData.addProjectGroupCardTheme, isNotNull);
         expect(themeData.metricsButtonTheme, isNotNull);
         expect(themeData.textFieldTheme, isNotNull);
-        expect(themeData.projectGroupDropdownTheme, isNotNull);
-        expect(themeData.projectGroupDropdownItemTheme, isNotNull);
+        expect(themeData.projectGroupsDropdownTheme, isNotNull);
+        expect(themeData.projectGroupsDropdownItemTheme, isNotNull);
       },
     );
 
@@ -47,8 +47,8 @@ void main() {
           projectGroupDialogTheme: null,
           metricsButtonTheme: null,
           textFieldTheme: null,
-          projectGroupDropdownTheme: null,
-          projectGroupDropdownItemTheme: null,
+          projectGroupsDropdownTheme: null,
+          projectGroupsDropdownItemTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -60,8 +60,8 @@ void main() {
         expect(themeData.projectGroupDialogTheme, isNotNull);
         expect(themeData.metricsButtonTheme, isNotNull);
         expect(themeData.textFieldTheme, isNotNull);
-        expect(themeData.projectGroupDropdownTheme, isNotNull);
-        expect(themeData.projectGroupDropdownItemTheme, isNotNull);
+        expect(themeData.projectGroupsDropdownTheme, isNotNull);
+        expect(themeData.projectGroupsDropdownItemTheme, isNotNull);
       },
     );
 
@@ -133,8 +133,8 @@ void main() {
           inactiveWidgetTheme: inactiveThemeData,
           metricsButtonTheme: metricsButtonTheme,
           textFieldTheme: textFieldTheme,
-          projectGroupDropdownTheme: projectGroupDropdownTheme,
-          projectGroupDropdownItemTheme: projectGroupDropdownItemTheme,
+          projectGroupsDropdownTheme: projectGroupDropdownTheme,
+          projectGroupsDropdownItemTheme: projectGroupDropdownItemTheme,
         );
 
         expect(
@@ -159,11 +159,11 @@ void main() {
         expect(copiedTheme.metricsButtonTheme, equals(metricsButtonTheme));
         expect(copiedTheme.textFieldTheme, equals(textFieldTheme));
         expect(
-          copiedTheme.projectGroupDropdownTheme,
+          copiedTheme.projectGroupsDropdownTheme,
           equals(projectGroupDropdownTheme),
         );
         expect(
-          copiedTheme.projectGroupDropdownItemTheme,
+          copiedTheme.projectGroupsDropdownItemTheme,
           equals(projectGroupDropdownItemTheme),
         );
       },
@@ -210,12 +210,12 @@ void main() {
         );
         expect(themeData.textFieldTheme, equals(themeData.textFieldTheme));
         expect(
-          themeData.projectGroupDropdownTheme,
-          copiedTheme.projectGroupDropdownTheme,
+          themeData.projectGroupsDropdownTheme,
+          copiedTheme.projectGroupsDropdownTheme,
         );
         expect(
-          themeData.projectGroupDropdownItemTheme,
-          copiedTheme.projectGroupDropdownItemTheme,
+          themeData.projectGroupsDropdownItemTheme,
+          copiedTheme.projectGroupsDropdownItemTheme,
         );
       },
     );

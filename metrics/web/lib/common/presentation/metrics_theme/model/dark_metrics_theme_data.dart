@@ -183,7 +183,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               height: 1.0,
             ),
           ),
-          projectGroupDropdownTheme: const ProjectGroupsDropdownThemeData(
+          projectGroupsDropdownTheme: const ProjectGroupsDropdownThemeData(
             backgroundColor: Colors.black,
             openedButtonBackgroundColor: Colors.black,
             hoverBackgroundColor: Colors.black,
@@ -193,7 +193,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             closedButtonBorderColor: ColorConfig.darkInputColor,
             textStyle: _defaultDropdownTextStyle,
           ),
-          projectGroupDropdownItemTheme:
+          projectGroupsDropdownItemTheme:
               const ProjectGroupsDropdownItemThemeData(
             backgroundColor: Colors.transparent,
             hoverColor: dropdownHoverColor,

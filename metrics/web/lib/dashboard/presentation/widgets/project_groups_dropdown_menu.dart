@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_group_dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
@@ -29,7 +29,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = MetricsTheme.of(context).projectGroupDropdownTheme;
+    final theme = MetricsTheme.of(context).projectGroupsDropdownTheme;
 
     return Selector<ProjectMetricsNotifier,
         List<ProjectGroupDropdownItemViewModel>>(
@@ -112,7 +112,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
   }
 
   /// Selects the border color from the theme corresponding to current state.
-  Color _getBorderColor(ProjectGroupDropdownThemeData theme) {
+  Color _getBorderColor(ProjectGroupsDropdownThemeData theme) {
     if (_isHovered) return theme.hoverBorderColor;
 
     if (_isOpened) return theme.openedButtonBorderColor;
@@ -121,7 +121,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
   }
 
   /// Selects the background color from the theme corresponding to current state.
-  Color _getBackgroundColor(ProjectGroupDropdownThemeData theme) {
+  Color _getBackgroundColor(ProjectGroupsDropdownThemeData theme) {
     if (_isHovered) return theme.hoverBackgroundColor;
 
     if (_isOpened) return theme.openedButtonBackgroundColor;
