@@ -12,7 +12,6 @@ import 'package:selection_menu/components_configurations.dart';
 /// A dropdown menu widget providing an ability to select a project group.
 class ProjectGroupsDropdownMenu extends StatefulWidget {
   /// A height of the dropdown menu button.
-  /// A height of the dropdown menu button.
   static const double _menuButtonHeight = 48.0;
 
   @override
@@ -111,7 +110,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
     setState(() => _isHovered = value);
   }
 
-  /// Selects the border color from the theme corresponding to current state.
+  /// Selects the border color from the theme corresponding to a current state.
   Color _getBorderColor(ProjectGroupsDropdownThemeData theme) {
     if (_isHovered) return theme.hoverBorderColor;
 
@@ -120,7 +119,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
     return theme.closedButtonBorderColor;
   }
 
-  /// Selects the background color from the theme corresponding to current state.
+  /// Selects the background color from the theme corresponding to a current state.
   Color _getBackgroundColor(ProjectGroupsDropdownThemeData theme) {
     if (_isHovered) return theme.hoverBackgroundColor;
 
