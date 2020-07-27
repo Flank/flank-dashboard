@@ -51,6 +51,7 @@ class DropdownMenu<T> extends StatefulWidget {
   /// call the [AnimationComponentData.opened] and [AnimationComponentData.closed]
   /// callbacks on menu open state changes.
   ///
+  /// If the [maxVisibleItems] is not specified, the default value of `5` used.
   /// If [items] are null, an empty list used.
   /// If the [itemHeight] is null the [kMinInteractiveDimension] used.
   /// If the [menuPadding] is null the [EdgeInsets.zero] used.

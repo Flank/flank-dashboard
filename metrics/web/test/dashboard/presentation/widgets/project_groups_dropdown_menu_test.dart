@@ -144,7 +144,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the closed button border color from the metrics theme if the dropdown is opened",
+      "applies the closed button border color from the metrics theme if the dropdown is closed",
       (tester) async {
         const borderColor = Colors.red;
         const theme = MetricsThemeData(
