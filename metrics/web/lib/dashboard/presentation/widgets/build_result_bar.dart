@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 /// [BuildResultViewModel.buildStatus] is `null`.
 class BuildResultBar extends StatelessWidget {
   /// A width of this bar.
-  static const double _barWidth = 4.0;
+  static const double _barWidth = 10.0;
 
   /// A [BuildResultViewModel] to display.
   final BuildResultViewModel buildResult;
@@ -35,6 +35,7 @@ class BuildResultBar extends StatelessWidget {
       final inactiveTheme = metricsTheme.inactiveWidgetTheme;
       return PlaceholderBar(
         width: _barWidth,
+        height: 4.0,
         color: inactiveTheme.primaryColor,
       );
     }
