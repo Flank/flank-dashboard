@@ -131,8 +131,8 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
           onEnter: (_) => _setHovered(true),
           onExit: (_) => _setHovered(false),
           child: TextFormField(
-            onChanged: widget.onChanged,
             focusNode: _focusNode,
+            onChanged: widget.onChanged,
             controller: widget.controller,
             validator: widget.validator,
             style: textFieldTheme.textStyle,
