@@ -24,7 +24,4 @@ class ColorConfig {
   static const Color lightInputColor = Colors.white;
   static const Color darkInputColor = Color(0xFF0d0d0d);
   static const Color inputSecondaryTextColor = Color(0xFF545459);
-  static const Color darkDropdownBorderColor = Color(0xFF878799);
-  static const Color darkDropdownHoverColor = Color(0xFF1d1d20);
-  static const Color darkDropdownHoverBorderColor = Color(0xFF37373f);
 }
