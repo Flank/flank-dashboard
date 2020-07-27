@@ -40,6 +40,7 @@ class BarGraph<T extends num> extends StatelessWidget {
           final valueUnitHeight = _calculateValueUnitHeight(constraints);
 
           return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: _createChartBars(data, valueUnitHeight),
           );
@@ -70,7 +71,7 @@ class BarGraph<T extends num> extends StatelessWidget {
       final barHeight = barData.toDouble() * valueUnitHeight;
 
       bars.add(
-        Expanded(
+        Flexible(
           child: Container(
             constraints: BoxConstraints(
               minHeight: barHeight,

@@ -6,20 +6,25 @@ class PlaceholderBar extends StatelessWidget {
   /// The width of this bar.
   final double width;
 
+  /// The height of this bar.
+  final double height;
+
   /// The color of this bar.
   final Color color;
 
   /// Creates the [PlaceholderBar].
   ///
-  /// Either [width] and [color] must not be `null`.
-  /// The [width] should be positive.
+  /// Either [width] and [height] must not be `null` and must be positive.
+  /// If the [color] is null, the `Colors.grey` used.
   ///
   /// This bar displays the missing/empty build in [BarGraph].
   const PlaceholderBar({
     Key key,
     this.width = 0.0,
+    this.height = 0.0,
     Color color,
   })  : assert(width != null && width >= 0.0),
+        assert(height != null && height >= 0.0),
         color = color ?? Colors.grey,
         super(key: key);
 
@@ -27,7 +32,7 @@ class PlaceholderBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.bottomCenter,
-      height: 6.0,
+      height: height,
       child: ColoredBar(
         color: color,
         width: width,
