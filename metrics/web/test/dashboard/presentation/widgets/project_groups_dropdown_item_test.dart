@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_item.dart';
 
@@ -15,7 +15,7 @@ void main() {
     const textStyle = TextStyle(fontSize: 13.0);
 
     const theme = MetricsThemeData(
-      projectGroupsDropdownItemTheme: ProjectGroupsDropdownItemThemeData(
+      dropdownItemTheme: DropdownItemThemeData(
         backgroundColor: backgroundColor,
         hoverColor: hoverColor,
         textStyle: textStyle,

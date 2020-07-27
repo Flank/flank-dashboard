@@ -5,24 +5,24 @@ import 'package:metrics/common/presentation/button/theme/theme_data/metrics_butt
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
-  static const Color dropdownBorderColor = Color(0xFF878799);
-  static const Color dropdownHoverColor = Color(0xFF1d1d20);
-  static const Color dropdownHoverBorderColor = Color(0xFF37373f);
-  static const Color focusedBorderColor = Color(0xFF878799);
+  static const Color _dropdownBorderColor = Color(0xFF878799);
+  static const Color _dropdownHoverColor = Color(0xFF1d1d20);
+  static const Color _dropdownHoverBorderColor = Color(0xFF37373f);
+  static const Color _focusedBorderColor = Color(0xFF878799);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
-    borderSide: BorderSide(color: focusedBorderColor),
+    borderSide: BorderSide(color: _focusedBorderColor),
   );
 
   /// The default [TextStyle] for dropdown within the application.
@@ -183,20 +183,19 @@ class DarkMetricsThemeData extends MetricsThemeData {
               height: 1.0,
             ),
           ),
-          projectGroupsDropdownTheme: const ProjectGroupsDropdownThemeData(
+          dropdownTheme: const DropdownThemeData(
             backgroundColor: Colors.black,
             openedButtonBackgroundColor: Colors.black,
             hoverBackgroundColor: Colors.black,
-            hoverBorderColor: dropdownHoverBorderColor,
-            openedButtonBorderColor: dropdownBorderColor,
+            hoverBorderColor: _dropdownHoverBorderColor,
+            openedButtonBorderColor: _dropdownBorderColor,
             closedButtonBackgroundColor: ColorConfig.darkInputColor,
             closedButtonBorderColor: ColorConfig.darkInputColor,
             textStyle: _defaultDropdownTextStyle,
           ),
-          projectGroupsDropdownItemTheme:
-              const ProjectGroupsDropdownItemThemeData(
+          dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.transparent,
-            hoverColor: dropdownHoverColor,
+            hoverColor: _dropdownHoverColor,
             textStyle: _defaultDropdownTextStyle,
           ),
         );

@@ -4,8 +4,8 @@ import 'package:metrics/common/presentation/button/theme/theme_data/metrics_butt
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
@@ -46,11 +46,11 @@ class MetricsThemeData {
   /// A theme for the text fields.
   final TextFieldThemeData textFieldTheme;
 
-  /// A theme for the project groups dropdown.
-  final ProjectGroupsDropdownThemeData projectGroupsDropdownTheme;
+  /// A theme for the dropdowns.
+  final DropdownThemeData dropdownTheme;
 
-  /// A theme for the project groups dropdown items.
-  final ProjectGroupsDropdownItemThemeData projectGroupsDropdownItemTheme;
+  /// A theme for the dropdown items.
+  final DropdownItemThemeData dropdownItemTheme;
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
@@ -63,8 +63,8 @@ class MetricsThemeData {
     ProjectGroupCardThemeData addProjectGroupCardTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
-    ProjectGroupsDropdownThemeData projectGroupsDropdownTheme,
-    ProjectGroupsDropdownItemThemeData projectGroupsDropdownItemTheme,
+    DropdownThemeData dropdownTheme,
+    DropdownItemThemeData dropdownItemTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -84,10 +84,10 @@ class MetricsThemeData {
         metricsButtonTheme =
             metricsButtonTheme ?? const MetricsButtonThemeData(),
         textFieldTheme = textFieldTheme ?? const TextFieldThemeData(),
-        projectGroupsDropdownTheme =
-            projectGroupsDropdownTheme ?? const ProjectGroupsDropdownThemeData(),
-        projectGroupsDropdownItemTheme = projectGroupsDropdownItemTheme ??
-            const ProjectGroupsDropdownItemThemeData();
+        dropdownTheme =
+            dropdownTheme ?? const DropdownThemeData(),
+        dropdownItemTheme = dropdownItemTheme ??
+            const DropdownItemThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -103,8 +103,8 @@ class MetricsThemeData {
     MetricWidgetThemeData inactiveWidgetTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
-    ProjectGroupsDropdownThemeData projectGroupsDropdownTheme,
-    ProjectGroupsDropdownItemThemeData projectGroupsDropdownItemTheme,
+    DropdownThemeData dropdownTheme,
+    DropdownItemThemeData dropdownItemTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -120,10 +120,10 @@ class MetricsThemeData {
       inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
       metricsButtonTheme: metricsButtonTheme ?? this.metricsButtonTheme,
       textFieldTheme: textFieldTheme ?? this.textFieldTheme,
-      projectGroupsDropdownTheme:
-          projectGroupsDropdownTheme ?? this.projectGroupsDropdownTheme,
-      projectGroupsDropdownItemTheme:
-          projectGroupsDropdownItemTheme ?? this.projectGroupsDropdownItemTheme,
+      dropdownTheme:
+          dropdownTheme ?? this.dropdownTheme,
+      dropdownItemTheme:
+          dropdownItemTheme ?? this.dropdownItemTheme,
     );
   }
 }
