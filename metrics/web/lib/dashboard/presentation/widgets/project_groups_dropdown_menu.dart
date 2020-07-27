@@ -77,7 +77,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
                   children: <Widget>[
                     Flexible(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 17.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Text(
                           item?.name ?? '',
                           style: theme.textStyle,
