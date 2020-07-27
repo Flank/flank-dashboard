@@ -3,14 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/project_metrics_notifier_mock.dart';
 import '../../../test_utils/project_metrics_notifier_stub.dart';
@@ -21,7 +23,9 @@ void main() {
     testWidgets(
       "contains MetricsTableHeader widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsTableTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTestbed());
+        });
 
         expect(find.byType(MetricsTableHeader), findsOneWidget);
       },
@@ -30,7 +34,9 @@ void main() {
     testWidgets(
       "contains a list of projects with their metrics",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsTableTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTestbed());
+        });
         await tester.pumpAndSettle();
 
         expect(
@@ -52,9 +58,11 @@ void main() {
 
         when(metricsNotifier.projectsErrorMessage).thenReturn(errorMessage);
 
-        await tester.pumpWidget(_MetricsTableTestbed(
-          metricsNotifier: metricsNotifier,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_MetricsTableTestbed(
+            metricsNotifier: metricsNotifier,
+          ));
+        });
 
         await tester.pumpAndSettle();
 
@@ -72,9 +80,12 @@ void main() {
       "displays the placeholder when there are no available projects",
       (WidgetTester tester) async {
         final metricsNotifier = ProjectMetricsNotifierStub(projectsMetrics: []);
-        await tester.pumpWidget(_MetricsTableTestbed(
-          metricsNotifier: metricsNotifier,
-        ));
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_MetricsTableTestbed(
+            metricsNotifier: metricsNotifier,
+          ));
+        });
 
         await tester.pumpAndSettle();
 
@@ -86,9 +97,34 @@ void main() {
     );
 
     testWidgets(
-      "displays performance title above the sparkline graph widget",
+      "displays the last builds title above the build result bar graph widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsTableTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTestbed());
+        });
+        await tester.pumpAndSettle();
+
+        final buildResultBarGraphWidgetCenter = tester.getCenter(
+          find.byType(BuildResultBarGraph),
+        );
+
+        final lastBuildsTitleCenter = tester.getCenter(
+          find.text(DashboardStrings.lastBuilds),
+        );
+
+        expect(
+          buildResultBarGraphWidgetCenter.dx,
+          equals(lastBuildsTitleCenter.dx),
+        );
+      },
+    );
+
+    testWidgets(
+      "displays the performance title above the performance sparkline graph widget",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTestbed());
+        });
         await tester.pumpAndSettle();
 
         final performanceMetricWidgetCenter = tester.getCenter(
@@ -96,10 +132,7 @@ void main() {
         );
 
         final performanceTitleCenter = tester.getCenter(
-          find.descendant(
-            of: find.byType(Expanded),
-            matching: find.text(DashboardStrings.performance),
-          ),
+          find.text(DashboardStrings.performance),
         );
 
         expect(
@@ -110,9 +143,11 @@ void main() {
     );
 
     testWidgets(
-      "displays builds title above the build number text metric widget",
+      "displays the builds title above the build number scorecard widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsTableTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTestbed());
+        });
         await tester.pumpAndSettle();
 
         final buildNumberMetricWidgetCenter = tester.getCenter(
@@ -120,10 +155,7 @@ void main() {
         );
 
         final buildNumberTitleCenter = tester.getCenter(
-          find.descendant(
-            of: find.byType(Expanded),
-            matching: find.text(DashboardStrings.builds),
-          ),
+          find.text(DashboardStrings.builds),
         );
 
         expect(
@@ -136,7 +168,9 @@ void main() {
     testWidgets(
       "displays stability title above the stability circle percentage widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsTableTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTestbed());
+        });
         await tester.pumpAndSettle();
 
         final stabilityMetricWidgetCenter = tester.getCenter(
@@ -144,9 +178,7 @@ void main() {
         );
 
         final stabilityTitleCenter = tester.getCenter(
-          find.descendant(
-              of: find.byType(Expanded),
-              matching: find.text(DashboardStrings.stability)),
+          find.text(DashboardStrings.stability),
         );
 
         expect(
@@ -159,7 +191,9 @@ void main() {
     testWidgets(
       "displays coverage title above the coverage circle percentage widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsTableTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTestbed());
+        });
         await tester.pumpAndSettle();
 
         final coverageMetricWidgetCenter = tester.getCenter(
@@ -167,10 +201,7 @@ void main() {
         );
 
         final coverageTitleCenter = tester.getCenter(
-          find.descendant(
-            of: find.byType(Expanded),
-            matching: find.text(DashboardStrings.coverage),
-          ),
+          find.text(DashboardStrings.coverage),
         );
 
         expect(

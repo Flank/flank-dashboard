@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/base/presentation/widgets/scorecard.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
@@ -12,11 +13,21 @@ import 'package:metrics/dashboard/presentation/view_models/stability_view_model.
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("ProjectMetricsTile", () {
+    setUpAll(() {
+      DimensionsUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
+    });
+
+    tearDownAll(() {
+      DimensionsUtil.clearTestWindowSize();
+    });
+
     final ProjectMetricsTileViewModel testProjectMetrics =
         ProjectMetricsTileViewModel(
       projectName: 'Test project name',
@@ -50,9 +61,11 @@ void main() {
               'Some very long name to display that may overflow on some screens but should be displayed properly. Also, this project name has a description that placed to the project name, but we still can display it properly with any overflows.',
         );
 
-        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
-          projectMetrics: metrics,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _ProjectMetricsTileTestbed(
+            projectMetrics: metrics,
+          ));
+        });
 
         expect(tester.takeException(), isNull);
       },
@@ -63,9 +76,11 @@ void main() {
       (WidgetTester tester) async {
         const metrics = ProjectMetricsTileViewModel();
 
-        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
-          projectMetrics: metrics,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _ProjectMetricsTileTestbed(
+            projectMetrics: metrics,
+          ));
+        });
 
         expect(tester.takeException(), isNull);
       },
@@ -77,9 +92,11 @@ void main() {
         final coveragePercent = testProjectMetrics.coverage;
         final coverageText = '${(coveragePercent.value * 100).toInt()}%';
 
-        await tester.pumpWidget(_ProjectMetricsTileTestbed(
-          projectMetrics: testProjectMetrics,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            projectMetrics: testProjectMetrics,
+          ));
+        });
         await tester.pumpAndSettle();
 
         expect(
@@ -95,9 +112,11 @@ void main() {
         final stabilityPercent = testProjectMetrics.coverage;
         final stabilityText = '${(stabilityPercent.value * 100).toInt()}%';
 
-        await tester.pumpWidget(_ProjectMetricsTileTestbed(
-          projectMetrics: testProjectMetrics,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            projectMetrics: testProjectMetrics,
+          ));
+        });
         await tester.pumpAndSettle();
 
         expect(
@@ -113,9 +132,11 @@ void main() {
         final numberOfBuilds =
             testProjectMetrics.buildNumberMetric.numberOfBuilds;
 
-        await tester.pumpWidget(_ProjectMetricsTileTestbed(
-          projectMetrics: testProjectMetrics,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            projectMetrics: testProjectMetrics,
+          ));
+        });
 
         expect(
           find.widgetWithText(Scorecard, '$numberOfBuilds'),
@@ -127,9 +148,11 @@ void main() {
     testWidgets(
       "contains SparklineGraph widgets with performance metric",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_ProjectMetricsTileTestbed(
-          projectMetrics: testProjectMetrics,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            projectMetrics: testProjectMetrics,
+          ));
+        });
 
         expect(
           find.byType(PerformanceSparklineGraph),
@@ -141,9 +164,11 @@ void main() {
     testWidgets(
       "contains the bar graph with the build results",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_ProjectMetricsTileTestbed(
-          projectMetrics: testProjectMetrics,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            projectMetrics: testProjectMetrics,
+          ));
+        });
 
         expect(find.byType(BuildResultBarGraph), findsOneWidget);
       },
