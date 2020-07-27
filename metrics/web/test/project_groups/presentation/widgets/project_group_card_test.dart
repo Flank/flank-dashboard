@@ -65,7 +65,7 @@ void main() {
     }
 
     testWidgets(
-      "throws an AssertionError if a project group card view model is null",
+      "throws an AssertionError if the given project group card view model is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _ProjectGroupCardTestbed(projectGroupCardViewModel: null),
