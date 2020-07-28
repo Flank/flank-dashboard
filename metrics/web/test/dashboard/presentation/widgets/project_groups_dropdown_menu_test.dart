@@ -448,7 +448,7 @@ void main() {
     );
 
     testWidgets(
-      "sets the project group filter on selecting a project group item",
+      "sets the project group filter on tap on a project group item",
       (tester) async {
         when(metricsNotifier.projectGroupDropdownItems)
             .thenReturn(dropdownItems);

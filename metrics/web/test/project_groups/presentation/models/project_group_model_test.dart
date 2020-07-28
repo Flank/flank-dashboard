@@ -23,18 +23,18 @@ void main() {
       );
     });
 
-    test("successfully creates an instance if the given id is null", () {
-      expect(
-        () => ProjectGroupModel(id: null, name: name, projectIds: projectIds),
-        returnsNormally,
-      );
-    });
+    test("creates an instance with the given parameters", () {
+      const id = "id";
 
-    test("successfully creates an instance on a valid input", () {
-      expect(
-        () => ProjectGroupModel(id: 'id', name: name, projectIds: projectIds),
-        returnsNormally,
+      final projectGroupModel = ProjectGroupModel(
+        id: id,
+        name: name,
+        projectIds: projectIds,
       );
+
+      expect(projectGroupModel.id, equals(id));
+      expect(projectGroupModel.name, equals(name));
+      expect(projectGroupModel.projectIds, equals(projectIds));
     });
   });
 }

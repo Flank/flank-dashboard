@@ -453,7 +453,7 @@ void main() {
     );
 
     test(
-      ".selectProjectGroupFilter() updates a selected project group",
+      ".setProjectGroups() updates a selected project group",
       () {
         const projectGroupId = "groupId";
 

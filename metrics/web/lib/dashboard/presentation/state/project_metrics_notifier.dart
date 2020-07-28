@@ -26,6 +26,8 @@ import 'package:rxdart/rxdart.dart';
 
 /// The [ChangeNotifier] that holds the projects metrics data.
 class ProjectMetricsNotifier extends ChangeNotifier {
+  /// A [ProjectGroupDropdownItemViewModel] representing
+  /// a project group with all projects.
   static const _allProjectsGroupDropdownItemViewModel =
       ProjectGroupDropdownItemViewModel(name: "All projects");
 
