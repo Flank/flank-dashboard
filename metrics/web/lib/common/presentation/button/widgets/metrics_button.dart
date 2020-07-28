@@ -36,6 +36,11 @@ abstract class MetricsButton extends StatelessWidget {
         color: style.color,
         hoverColor: style.hoverColor,
         disabledColor: inactiveStyle.color,
+        elevation: style.elevation,
+        hoverElevation: style.elevation,
+        focusElevation: style.elevation,
+        highlightElevation: style.elevation,
+        disabledElevation: inactiveStyle.elevation,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
         ),

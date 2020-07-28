@@ -151,6 +151,7 @@ class LightMetricsThemeData extends MetricsThemeData {
               ),
               neutral: MetricsButtonStyle(
                 color: ColorConfig.inactiveColor,
+                elevation: 0.0,
                 labelStyle: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,

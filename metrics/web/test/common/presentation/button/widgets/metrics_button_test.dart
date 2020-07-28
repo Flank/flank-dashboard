@@ -17,6 +17,7 @@ void main() {
         buttonAttentionLevel: MetricsButtonAttentionLevel(
           neutral: MetricsButtonStyle(
             color: Colors.blue,
+            elevation: 1.0,
             labelStyle: TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -24,6 +25,7 @@ void main() {
           ),
           inactive: MetricsButtonStyle(
             color: Colors.grey,
+            elevation: 0.0,
             labelStyle: TextStyle(
               color: Colors.black,
               fontSize: 14.0,
@@ -133,6 +135,24 @@ void main() {
     );
 
     testWidgets(
+      "applies the disabled elevation to the button from the inactive button style if the given on pressed is null",
+      (tester) async {
+        final buttonTheme = metricsThemeData.metricsButtonTheme;
+        final expectedElevation = buttonTheme.attentionLevel.inactive.elevation;
+
+        await tester.pumpWidget(const _MetricsButtonTestbed(
+          metricsThemeData: metricsThemeData,
+          label: label,
+          onPressed: null,
+        ));
+        final button = tester.widget<RaisedButton>(buttonFinder);
+        final elevation = button.disabledElevation;
+
+        expect(elevation, equals(expectedElevation));
+      },
+    );
+
+    testWidgets(
       "applies a color to the button from the button style in a theme",
       (tester) async {
         final buttonTheme = metricsThemeData.metricsButtonTheme;
@@ -184,6 +204,26 @@ void main() {
         final textStyle = text.style;
 
         expect(textStyle, equals(expectedLabelStyle));
+      },
+    );
+
+    testWidgets(
+      "applies the elevation to the button from the button style in a theme",
+      (tester) async {
+        final buttonTheme = metricsThemeData.metricsButtonTheme;
+        final expectedElevation = buttonTheme.attentionLevel.neutral.elevation;
+
+        await tester.pumpWidget(_MetricsButtonTestbed(
+          metricsThemeData: metricsThemeData,
+          label: label,
+          onPressed: defaultOnPressed,
+        ));
+        final button = tester.widget<RaisedButton>(buttonFinder);
+
+        expect(button.elevation, equals(expectedElevation));
+        expect(button.hoverElevation, equals(expectedElevation));
+        expect(button.focusElevation, equals(expectedElevation));
+        expect(button.highlightElevation, equals(expectedElevation));
       },
     );
   });

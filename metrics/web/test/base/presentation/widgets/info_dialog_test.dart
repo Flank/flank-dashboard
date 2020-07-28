@@ -305,11 +305,31 @@ void main() {
         expect(finder, findsOneWidget);
       },
     );
+
+    testWidgets(
+      "applies the given shape to the dialog's border",
+      (WidgetTester tester) async {
+        const shape = RoundedRectangleBorder(
+          side: BorderSide(color: Colors.green),
+        );
+
+        await tester.pumpWidget(
+          const _InfoDialogTestbed(shape: shape),
+        );
+
+        final dialog = tester.widget<Dialog>(find.byType(Dialog));
+
+        expect(dialog.shape, equals(shape));
+      },
+    );
   });
 }
 
 /// A testbed class required to test the [InfoDialog] widget.
 class _InfoDialogTestbed extends StatelessWidget {
+  /// A shape of this dialog's border.
+  final ShapeBorder shape;
+
   /// A background color of this dialog.
   final Color backgroundColor;
 
@@ -365,6 +385,7 @@ class _InfoDialogTestbed extends StatelessWidget {
     Key key,
     this.title = const Text('text'),
     this.actions = const <Widget>[],
+    this.shape,
     this.content,
     this.closeIcon,
     this.backgroundColor,
@@ -383,6 +404,7 @@ class _InfoDialogTestbed extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: InfoDialog(
+          shape: shape,
           title: title,
           actions: actions,
           content: content,

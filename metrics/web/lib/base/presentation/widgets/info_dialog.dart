@@ -3,6 +3,9 @@ import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 
 /// The widget that displays a specific version of the [Dialog].
 class InfoDialog extends StatelessWidget {
+  /// A shape of this dialog's border.
+  final ShapeBorder shape;
+
   /// A background color of this dialog.
   final Color backgroundColor;
 
@@ -52,6 +55,7 @@ class InfoDialog extends StatelessWidget {
   /// The [maxWidth] default value is 480.0.
   /// The [maxHeight] default value is 726.0.
   /// If the [closeIcon] is null, the [Icon] with [Icons.close] is used.
+  /// The [shape] default value is a [RoundedRectangleBorder] default instance.
   ///
   /// The [title] and [actions] must not be null.
   const InfoDialog({
@@ -59,6 +63,7 @@ class InfoDialog extends StatelessWidget {
     Widget closeIcon,
     @required this.title,
     @required this.actions,
+    this.shape = const RoundedRectangleBorder(),
     this.content,
     this.backgroundColor,
     this.padding = EdgeInsets.zero,
@@ -77,6 +82,7 @@ class InfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      shape: shape,
       backgroundColor: backgroundColor,
       child: Container(
         constraints: BoxConstraints(
