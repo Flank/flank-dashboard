@@ -22,8 +22,8 @@ class MetricsThemedTestbed extends StatelessWidget {
   const MetricsThemedTestbed({
     @required this.body,
     this.metricsThemeData = const MetricsThemeData(),
-    this.navigatorKey,
     this.themeData,
+    this.navigatorKey,
   });
 
   @override
