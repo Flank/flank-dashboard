@@ -17,6 +17,9 @@ class BuildResultBar extends StatelessWidget {
   /// A width of this bar.
   static const double _barWidth = 10.0;
 
+  /// A border radius of this bar.
+  static const _borderRadius = Radius.circular(1.0);
+
   /// A [BuildResultViewModel] to display.
   final BuildResultViewModel buildResult;
 
@@ -45,7 +48,10 @@ class BuildResultBar extends StatelessWidget {
         onTap: _onBarTap,
         child: ColoredBar(
           width: _barWidth,
-          borderRadius: BorderRadius.circular(1.0),
+          borderRadius: const BorderRadius.only(
+            topLeft: _borderRadius,
+            topRight: _borderRadius,
+          ),
           color: _getBuildResultColor(
             buildResult.buildStatus,
             widgetThemeData,
