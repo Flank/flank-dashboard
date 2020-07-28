@@ -13,18 +13,21 @@ void main() {
       );
     });
 
-    test(
-      "successfully creates an instance on a valid input",
-      () {
-        expect(
-          () => ProjectBuildStatusViewModel(value: BuildStatus.failed),
-          returnsNormally,
-        );
-      },
-    );
+    test("creates an instance with the given value", () {
+      const status = BuildStatus.failed;
+
+      final statusViewModel = ProjectBuildStatusViewModel(
+        value: BuildStatus.failed,
+      );
+
+      expect(
+        statusViewModel.value,
+        equals(status),
+      );
+    });
 
     test(
-      "equals to another project build status view model instance with the same value",
+      "equals to another ProjectBuildStatusViewModel with the same value",
       () {
         final firstViewModel = ProjectBuildStatusViewModel(
           value: BuildStatus.cancelled,

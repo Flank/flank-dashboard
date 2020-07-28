@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -139,9 +138,9 @@ void main() {
     );
 
     testWidgets(
-      "applies the dark inactive background color if the build status is unknown",
+      "applies the inactive background color if the build status is unknown",
       (tester) async {
-        const expectedColor = ColorConfig.darkInactiveColor;
+        const expectedColor = ColorConfig.inactiveColor;
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -184,7 +183,6 @@ class _ProjectBuildStatusTestbed extends StatelessWidget {
   /// Creates an instance of this testbed.
   ///
   /// The [buildStatus] defaults to the empty [ProjectBuildStatusViewModel].
-  /// The [theme] defaults to the empty [MetricsThemeData].
   const _ProjectBuildStatusTestbed({
     Key key,
     this.buildStatus = const ProjectBuildStatusViewModel(),

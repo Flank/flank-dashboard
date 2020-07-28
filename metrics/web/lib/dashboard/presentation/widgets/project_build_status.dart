@@ -20,7 +20,6 @@ class ProjectBuildStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 40.0,
-      width: 40.0,
       decoration: BoxDecoration(
         color: _getBackgroundColor(),
         shape: BoxShape.circle,
@@ -29,7 +28,7 @@ class ProjectBuildStatus extends StatelessWidget {
     );
   }
 
-  /// Returns the different background [Color] based on the [buildStatus] value.
+  /// Returns the background [Color] based on the [buildStatus] value.
   Color _getBackgroundColor() {
     switch (buildStatus.value) {
       case BuildStatus.successful:
@@ -38,7 +37,7 @@ class ProjectBuildStatus extends StatelessWidget {
       case BuildStatus.failed:
         return ColorConfig.accentTranslucentColor;
       default:
-        return ColorConfig.darkInactiveColor;
+        return ColorConfig.inactiveColor;
     }
   }
 

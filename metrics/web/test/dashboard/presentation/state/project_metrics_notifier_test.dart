@@ -103,13 +103,11 @@ void main() {
           final buildResultMetrics = projectMetric.buildResultMetrics;
           final performanceMetrics = projectMetric.performanceSparkline;
           final stabilityMetric = projectMetric.stability;
-          final buildStatusMetric = projectMetric.buildStatus;
 
           hasNullMetrics = buildResultMetrics == emptyBuildResultMetric &&
               performanceMetrics != null &&
               performanceMetrics.performance.isEmpty &&
-              stabilityMetric != null &&
-              buildStatusMetric != null;
+              stabilityMetric != null;
         }, () => hasNullMetrics);
 
         projectMetricsNotifier.addListener(metricsListener);
@@ -159,7 +157,10 @@ void main() {
           projectMetricsNotifier.projectsMetricsTileViewModels.first;
       final projectBuildStatus = projectMetrics.buildStatus;
 
-      expect(projectBuildStatus.value, equals(expectedProjectBuildStatus.status));
+      expect(
+        projectBuildStatus.value,
+        equals(expectedProjectBuildStatus.status),
+      );
     });
 
     test("loads the coverage data", () async {

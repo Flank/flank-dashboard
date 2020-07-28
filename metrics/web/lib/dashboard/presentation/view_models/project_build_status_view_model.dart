@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A view model that represents a status of the build to display.
+/// A view model that represents a status of the project build to display.
 class ProjectBuildStatusViewModel extends Equatable {
-  /// A status of the build.
+  /// A status of the project build.
   final BuildStatus value;
 
   @override

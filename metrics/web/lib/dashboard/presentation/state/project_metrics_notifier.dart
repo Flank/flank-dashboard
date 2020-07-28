@@ -201,13 +201,15 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       value: dashboardMetrics.projectBuildStatusMetric?.status,
     );
 
+    final buildNumber = BuildNumberScorecardViewModel(
+      numberOfBuilds: numberOfBuilds,
+    );
+
     projectsMetrics[projectId] = projectMetrics.copyWith(
       performanceSparkline: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
       buildStatus: buildStatus,
-      buildNumberMetric: BuildNumberScorecardViewModel(
-        numberOfBuilds: numberOfBuilds,
-      ),
+      buildNumberMetric: buildNumber,
       coverage: CoverageViewModel(value: dashboardMetrics.coverage?.value),
       stability: StabilityViewModel(value: dashboardMetrics.stability?.value),
     );

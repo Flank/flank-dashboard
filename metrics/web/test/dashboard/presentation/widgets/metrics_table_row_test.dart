@@ -228,7 +228,7 @@ class _MetricsTableRowTestbed extends StatelessWidget {
 
   /// Creates the instance of this testbed.
   ///
-  /// If the [name], [buildResults], [performance],
+  /// If the [status], [name], [buildResults], [performance],
   /// [buildNumber], [stability] or [coverage] is not specified,
   /// the [SizedBox] used.
   const _MetricsTableRowTestbed({

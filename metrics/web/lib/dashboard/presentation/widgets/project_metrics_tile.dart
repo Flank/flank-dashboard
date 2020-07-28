@@ -74,8 +74,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                 isLoading: projectMetrics.buildResultMetrics == null,
                 loadingPlaceholder: const LoadingPlaceholder(),
                 builder: (_) => BuildResultBarGraph(
-                  buildResultMetric:
-                      widget.projectMetricsViewModel.buildResultMetrics,
+                  buildResultMetric: projectMetrics.buildResultMetrics,
                 ),
               ),
             ),
