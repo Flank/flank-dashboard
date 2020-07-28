@@ -5,22 +5,31 @@ import 'package:metrics/common/presentation/button/theme/theme_data/metrics_butt
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
   static const Color _dropdownHoverColor = Color(0xFF1d1d20);
   static const Color _focusedBorderColor = Colors.blue;
+  static const Color _inactiveBackgroundColor = Color(0xFFEEEEEE);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _focusedBorderColor),
+  );
+
+  /// A [TextStyle] of the dialog title.
+  static const TextStyle _dialogTitleTextStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 26.0,
+    fontWeight: FontWeight.w500,
   );
 
   /// Creates the light theme with the default widget theme configuration.
@@ -99,15 +108,16 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
           ),
+          deleteDialogTheme: const DeleteDialogThemeData(
+            backgroundColor: ColorConfig.lightScaffoldColor,
+            closeIconColor: Colors.black,
+            titleTextStyle: _dialogTitleTextStyle,
+          ),
           projectGroupDialogTheme: const ProjectGroupDialogThemeData(
             primaryColor: ColorConfig.primaryColor,
             closeIconColor: Colors.black,
             contentBorderColor: ColorConfig.darkBorderColor,
-            titleTextStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 26.0,
-              fontWeight: FontWeight.w500,
-            ),
+            titleTextStyle: _dialogTitleTextStyle,
             uncheckedProjectTextStyle: TextStyle(
               color: Colors.black,
               fontSize: 14.0,
@@ -122,7 +132,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.lightInactiveColor,
             accentColor: Colors.transparent,
-            backgroundColor: ColorConfig.lightInactiveBackgroundColor,
+            backgroundColor: _inactiveBackgroundColor,
             textStyle: TextStyle(
               color: Colors.grey,
               fontSize: 32.0,
@@ -141,6 +151,7 @@ class LightMetricsThemeData extends MetricsThemeData {
               ),
               neutral: MetricsButtonStyle(
                 color: ColorConfig.inactiveColor,
+                elevation: 0.0,
                 labelStyle: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,

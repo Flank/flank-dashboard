@@ -18,28 +18,32 @@ void main() {
     );
 
     test(
-      "creates an instance with null text styles for buttons if the text styles are not specified",
+      "creates an instance with null text styles and elevation for buttons if the text styles are not specified",
       () {
         const style = MetricsButtonStyle();
 
         expect(style.labelStyle, isNull);
+        expect(style.elevation, isNull);
       },
     );
 
     test("creates an instance with the given values", () {
       const color = Colors.red;
       const hoverColor = Colors.grey;
+      const elevation = 1.0;
       const labelStyle = TextStyle();
 
       final style = MetricsButtonStyle(
         color: color,
         hoverColor: hoverColor,
         labelStyle: labelStyle,
+        elevation: elevation,
       );
 
       expect(style.color, equals(color));
       expect(style.hoverColor, equals(hoverColor));
       expect(style.labelStyle, equals(labelStyle));
+      expect(style.elevation, equals(elevation));
     });
   });
 }

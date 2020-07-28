@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
@@ -34,6 +35,9 @@ class MetricsThemeData {
   /// A theme for dialogs.
   final ProjectGroupDialogThemeData projectGroupDialogTheme;
 
+  /// A theme for delete dialogs.
+  final DeleteDialogThemeData deleteDialogTheme;
+
   /// A theme for project group cards.
   final ProjectGroupCardThemeData projectGroupCardTheme;
 
@@ -59,6 +63,7 @@ class MetricsThemeData {
     MetricWidgetThemeData inactiveWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
+    DeleteDialogThemeData deleteDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
     ProjectGroupCardThemeData addProjectGroupCardTheme,
     MetricsButtonThemeData metricsButtonTheme,
@@ -77,6 +82,7 @@ class MetricsThemeData {
             ),
         projectGroupDialogTheme =
             projectGroupDialogTheme ?? const ProjectGroupDialogThemeData(),
+        deleteDialogTheme = deleteDialogTheme ?? const DeleteDialogThemeData(),
         projectGroupCardTheme =
             projectGroupCardTheme ?? const ProjectGroupCardThemeData(),
         addProjectGroupCardTheme =
@@ -98,6 +104,7 @@ class MetricsThemeData {
     MetricWidgetThemeData metricWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
+    DeleteDialogThemeData deleteDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
     ProjectGroupCardThemeData addProjectGroupCardTheme,
     MetricWidgetThemeData inactiveWidgetTheme,
@@ -113,6 +120,7 @@ class MetricsThemeData {
       buildResultTheme: buildResultTheme ?? this.buildResultTheme,
       projectGroupDialogTheme:
           projectGroupDialogTheme ?? this.projectGroupDialogTheme,
+      deleteDialogTheme: deleteDialogTheme ?? this.deleteDialogTheme,
       projectGroupCardTheme:
           projectGroupCardTheme ?? this.projectGroupCardTheme,
       addProjectGroupCardTheme:

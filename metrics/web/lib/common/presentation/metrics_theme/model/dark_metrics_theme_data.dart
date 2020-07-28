@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/button/theme/theme_data/metrics_butt
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
@@ -20,6 +21,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _dropdownHoverColor = Color(0xFF1d1d20);
   static const Color _dropdownHoverBorderColor = Color(0xFF37373f);
   static const Color _focusedBorderColor = Color(0xFF878799);
+  static const Color _inactiveBackgroundColor = Color(0xFF242729);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _focusedBorderColor),
@@ -29,6 +31,13 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const _defaultDropdownTextStyle = TextStyle(
     color: Colors.white,
     fontSize: 16.0,
+  );
+
+  /// A [TextStyle] of the dialog title.
+  static const TextStyle _dialogTitleTextStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 26.0,
+    fontWeight: FontWeight.w500,
   );
 
   /// Creates the dark theme with the default widget theme configuration.
@@ -107,16 +116,22 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
           ),
+          deleteDialogTheme: const DeleteDialogThemeData(
+            backgroundColor: ColorConfig.darkScaffoldColor,
+            closeIconColor: Colors.white,
+            titleTextStyle: _dialogTitleTextStyle,
+            contentTextStyle: TextStyle(
+              fontSize: 16.0,
+              color: Colors.white,
+              height: 1.5,
+            ),
+          ),
           projectGroupDialogTheme: const ProjectGroupDialogThemeData(
             primaryColor: ColorConfig.primaryColor,
             backgroundColor: ColorConfig.darkScaffoldColor,
             closeIconColor: Colors.white,
             contentBorderColor: ColorConfig.darkBorderColor,
-            titleTextStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 26.0,
-              fontWeight: FontWeight.w500,
-            ),
+            titleTextStyle: _dialogTitleTextStyle,
             uncheckedProjectTextStyle: TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -131,7 +146,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.darkInactiveColor,
             accentColor: Colors.transparent,
-            backgroundColor: ColorConfig.darkInactiveBackgroundColor,
+            backgroundColor: _inactiveBackgroundColor,
             textStyle: TextStyle(
               color: ColorConfig.darkInactiveColor,
               fontSize: 32.0,
@@ -150,6 +165,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               ),
               neutral: MetricsButtonStyle(
                 color: ColorConfig.inactiveColor,
+                elevation: 0.0,
                 labelStyle: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,

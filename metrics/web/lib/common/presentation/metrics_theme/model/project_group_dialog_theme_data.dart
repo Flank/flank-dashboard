@@ -1,19 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dialog_theme_data.dart';
 
-/// A class that stores the theme data for the project group dialogues.
-class ProjectGroupDialogThemeData {
-  /// A primary [Color] for main elements of the project group dialog.
-  final Color primaryColor;
-
-  /// A background [Color] of the project group dialog.
-  final Color backgroundColor;
-
-  /// A [Color] of the close icon of the project group dialog.
-  final Color closeIconColor;
-
-  /// A [TextStyle] of the dialog title.
-  final TextStyle titleTextStyle;
-
+class ProjectGroupDialogThemeData extends DialogThemeData {
   /// A border [Color] of the project group dialog content.
   final Color contentBorderColor;
 
@@ -27,15 +15,19 @@ class ProjectGroupDialogThemeData {
   /// the project group dialog.
   final TextStyle counterTextStyle;
 
-  /// Creates a new instance of the [ProjectGroupDialogThemeData].
   const ProjectGroupDialogThemeData({
-    this.primaryColor = Colors.blue,
-    this.backgroundColor = Colors.white,
-    this.closeIconColor = Colors.black,
+    Color primaryColor,
+    Color backgroundColor,
+    Color closeIconColor,
+    TextStyle titleTextStyle,
     this.contentBorderColor = Colors.grey,
-    this.titleTextStyle,
     this.uncheckedProjectTextStyle,
     this.checkedProjectTextStyle,
     this.counterTextStyle,
-  });
+  }) : super(
+          primaryColor: primaryColor,
+          backgroundColor: backgroundColor,
+          closeIconColor: closeIconColor,
+          titleTextStyle: titleTextStyle,
+        );
 }

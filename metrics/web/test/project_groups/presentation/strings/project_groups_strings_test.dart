@@ -6,18 +6,6 @@ void main() {
     const count = 2;
 
     test(
-      ".getDeleteTextConfirmation() returns a message that contains the given name",
-      () {
-        const name = 'name';
-
-        expect(
-          ProjectGroupsStrings.getDeleteTextConfirmation(name),
-          contains(name),
-        );
-      },
-    );
-
-    test(
       ".getProjectsCount() returns a message that contains the given count",
       () {
         expect(
