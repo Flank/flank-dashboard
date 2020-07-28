@@ -33,7 +33,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
     return Consumer<ProjectMetricsNotifier>(
       builder: (_, notifier, __) {
         final items = notifier.projectGroupDropdownItems;
-        final selectedItem = notifier.projectGroupFilter;
+        final selectedItem = notifier.selectedProjectGroup;
 
         return DropdownMenu<ProjectGroupDropdownItemViewModel>(
           itemHeight: 40.0,
@@ -42,7 +42,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
           items: items,
           onItemSelected: (item) {
             Provider.of<ProjectMetricsNotifier>(context, listen: false)
-                .setProjectGroupFilter(item.id);
+                .selectProjectGroup(item.id);
           },
           menuPadding: const EdgeInsets.only(
             top: ProjectGroupsDropdownMenu._menuButtonHeight,

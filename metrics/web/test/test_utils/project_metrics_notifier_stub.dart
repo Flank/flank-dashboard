@@ -37,7 +37,7 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
       ];
 
   @override
-  ProjectGroupDropdownItemViewModel get projectGroupFilter =>
+  ProjectGroupDropdownItemViewModel get selectedProjectGroup =>
       null;
 
   /// The list of [ProjectMetricsTileViewModel]s.
@@ -71,5 +71,5 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   void setProjectGroups(List<ProjectGroupModel> projectGroupModels) {}
 
   @override
-  void setProjectGroupFilter(String id) {}
+  void selectProjectGroup(String id) {}
 }

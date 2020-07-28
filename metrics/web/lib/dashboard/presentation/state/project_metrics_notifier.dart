@@ -51,7 +51,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   String _projectNameFilter;
 
   /// Holds currently selected [ProjectGroupDropdownItemViewModel]
-  ProjectGroupDropdownItemViewModel _projectGroupFilter;
+  ProjectGroupDropdownItemViewModel _selectedProjectGroup;
 
   /// Holds the list of current [ProjectModel]s.
   List<ProjectModel> _projects;
@@ -67,8 +67,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       _projectGroupDropdownItems;
 
   /// Provides selected [ProjectGroupDropdownItemViewModel].
-  ProjectGroupDropdownItemViewModel get projectGroupFilter =>
-      _projectGroupFilter;
+  ProjectGroupDropdownItemViewModel get selectedProjectGroup =>
+      _selectedProjectGroup;
 
   /// Provides a filtered list of [ProjectMetricsTileViewModel]s.
   List<ProjectMetricsTileViewModel> get projectsMetricsTileViewModels {
@@ -95,12 +95,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     return projectsMetricsTileViewModels;
   }
 
-  /// Filters the [ProjectMetricsTileViewModel]s using the [projectGroupFilter].
+  /// Filters the [ProjectMetricsTileViewModel]s using the [selectedProjectGroup].
   List<ProjectMetricsTileViewModel> _filterByProjectGroup(
     List<ProjectMetricsTileViewModel> projectsMetricsTileViewModels,
   ) {
     final projectGroupModel = _projectGroupModels.firstWhere(
-      (model) => model.id == _projectGroupFilter?.id,
+      (model) => model.id == _selectedProjectGroup?.id,
       orElse: () => null,
     );
 
@@ -144,7 +144,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   }
 
   /// Adds a project group filter using the given project group [id].
-  void setProjectGroupFilter(String id) {
+  void selectProjectGroup(String id) {
     final projectGroup = _projectGroupDropdownItems.firstWhere(
       (group) => group.id == id,
       orElse: () => null,
@@ -152,7 +152,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
     if (projectGroup == null) return;
 
-    _projectGroupFilter = projectGroup;
+    _selectedProjectGroup = projectGroup;
 
     notifyListeners();
   }
@@ -191,8 +191,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
             ))
         .toList());
 
-    _projectGroupFilter = _projectGroupDropdownItems.firstWhere(
-      (group) => group.id == _projectGroupFilter?.id,
+    _selectedProjectGroup = _projectGroupDropdownItems.firstWhere(
+      (group) => group.id == _selectedProjectGroup?.id,
       orElse: () => _allProjectsGroupDropdownItemViewModel,
     );
 
