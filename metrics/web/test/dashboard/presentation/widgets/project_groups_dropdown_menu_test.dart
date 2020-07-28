@@ -466,15 +466,15 @@ void main() {
         await tester.tap(find.text(itemViewModel.name));
         await tester.pumpAndSettle();
 
-        verify(metricsNotifier.selectProjectGroupFilter(itemViewModel.id))
+        verify(metricsNotifier.setProjectGroupFilter(itemViewModel.id))
             .called(equals(1));
       },
     );
 
     testWidgets(
-      "displays the name of the selected project group",
+      "displays the name of the project group filter",
       (tester) async {
-        when(metricsNotifier.selectedProjectGroupDropdownItem)
+        when(metricsNotifier.projectGroupFilter)
             .thenReturn(firstDropdownItem);
 
         await mockNetworkImagesFor(

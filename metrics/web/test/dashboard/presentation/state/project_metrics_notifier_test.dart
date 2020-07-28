@@ -453,7 +453,7 @@ void main() {
     );
 
     test(
-      ".setProjectGroups() updates a selected project group",
+      ".setProjectGroups() updates a project group filter",
       () {
         const projectGroupId = "groupId";
 
@@ -466,7 +466,7 @@ void main() {
         ];
 
         projectMetricsNotifier.setProjectGroups(projectGroups);
-        projectMetricsNotifier.selectProjectGroupFilter(projectGroupId);
+        projectMetricsNotifier.setProjectGroupFilter(projectGroupId);
 
         final updatedProjectGroup = ProjectGroupModel(
           id: projectGroupId,
@@ -478,18 +478,18 @@ void main() {
         projectMetricsNotifier.setProjectGroups(newProjectGroups);
 
         expect(
-          projectMetricsNotifier.selectedProjectGroupDropdownItem.id,
+          projectMetricsNotifier.projectGroupFilter.id,
           equals(projectGroupId),
         );
         expect(
-          projectMetricsNotifier.selectedProjectGroupDropdownItem.name,
+          projectMetricsNotifier.projectGroupFilter.name,
           equals(updatedProjectGroup.name),
         );
       },
     );
 
     test(
-      ".setProjectGroups() selects the all projects group if the selected one was deleted",
+      ".setProjectGroups() sets the all projects filter if the project group filter was deleted",
       () {
         const expectedSelectedProjectGroup = ProjectGroupDropdownItemViewModel(
           name: "All projects",
@@ -513,10 +513,10 @@ void main() {
         ];
 
         projectMetricsNotifier.setProjectGroups(projectGroups);
-        projectMetricsNotifier.selectProjectGroupFilter(projectGroupId);
+        projectMetricsNotifier.setProjectGroupFilter(projectGroupId);
 
         expect(
-          projectMetricsNotifier.selectedProjectGroupDropdownItem.id,
+          projectMetricsNotifier.projectGroupFilter.id,
           equals(projectGroupId),
         );
 
@@ -525,14 +525,14 @@ void main() {
         projectMetricsNotifier.setProjectGroups(newProjectGroups);
 
         expect(
-          projectMetricsNotifier.selectedProjectGroupDropdownItem,
+          projectMetricsNotifier.projectGroupFilter,
           equals(expectedSelectedProjectGroup),
         );
       },
     );
 
     test(
-      ".selectProjectGroupFilter() filters a list of project metrics according to the given project group id",
+      ".setProjectGroupFilter() filters a list of project metrics according to the given project group id",
       () {
         const projectId = "projectId";
         const projectGroupId = "groupId";
@@ -558,7 +558,7 @@ void main() {
 
         projectMetricsNotifier.setProjects(projects, null);
         projectMetricsNotifier.setProjectGroups(projectGroups);
-        projectMetricsNotifier.selectProjectGroupFilter(projectGroupId);
+        projectMetricsNotifier.setProjectGroupFilter(projectGroupId);
 
         final projectMetricsTileIds = projectMetricsNotifier
             .projectsMetricsTileViewModels
@@ -573,7 +573,7 @@ void main() {
     );
 
     test(
-      ".selectProjectGroupFilter() selects project group with the given id",
+      ".setProjectGroupFilter() set the project group filter with the given id",
       () {
         const projectGroupId = "id";
 
@@ -591,17 +591,17 @@ void main() {
         ];
 
         projectMetricsNotifier.setProjectGroups(projectGroups);
-        projectMetricsNotifier.selectProjectGroupFilter(projectGroupId);
+        projectMetricsNotifier.setProjectGroupFilter(projectGroupId);
 
         expect(
-          projectMetricsNotifier.selectedProjectGroupDropdownItem.id,
+          projectMetricsNotifier.projectGroupFilter.id,
           equals(projectGroupId),
         );
       },
     );
 
     test(
-      ".selectProjectGroupFilter() doesn't selects project group if there is no project group with the given id",
+      ".setProjectGroupFilter() doesn't set the project group filter if there is no project group with the given id",
       () {
         final projectGroups = [
           ProjectGroupModel(
@@ -615,16 +615,16 @@ void main() {
             projectIds: UnmodifiableListView([]),
           ),
         ];
-        
+
         projectMetricsNotifier.setProjectGroups(projectGroups);
 
         final initialSelectedProjectGroup =
-            projectMetricsNotifier.selectedProjectGroupDropdownItem;
+            projectMetricsNotifier.projectGroupFilter;
 
-        projectMetricsNotifier.selectProjectGroupFilter("no_such_id");
+        projectMetricsNotifier.setProjectGroupFilter("no_such_id");
 
         expect(
-          projectMetricsNotifier.selectedProjectGroupDropdownItem,
+          projectMetricsNotifier.projectGroupFilter,
           equals(initialSelectedProjectGroup),
         );
       },
