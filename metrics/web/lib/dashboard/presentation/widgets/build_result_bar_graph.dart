@@ -81,11 +81,8 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
               barBuilder: (int index) {
                 final data = _barsData[index];
 
-                return Align(
-                  alignment: Alignment.center,
-                  child: BuildResultBar(
-                    buildResult: data,
-                  ),
+                return BuildResultBar(
+                  buildResult: data,
                 );
               },
             ),

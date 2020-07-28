@@ -30,6 +30,24 @@ void main() {
     );
 
     testWidgets(
+      "throws an AssertionError if the given height is null",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_PlaceholderBarTestbed(height: null));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given height is negative",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_PlaceholderBarTestbed(height: -2.0));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
       "applies the grey color if color is not specified",
       (WidgetTester tester) async {
         await tester.pumpWidget(_PlaceholderBarTestbed());
@@ -105,15 +123,19 @@ class _PlaceholderBarTestbed extends StatelessWidget {
   /// A with of this bar.
   final double width;
 
+  /// A height of this bar.
+  final double height;
+
   /// A color of this bar.
   final Color color;
 
   /// Creates the [_PlaceholderBarTestbed] with the given width.
   ///
   /// If the [width] is not specified, the `2.0` used.
-  /// If the [color] is not specified, the [Colors.blue] used.
+  /// If the [height] is not specified, the `2.0` used.
   const _PlaceholderBarTestbed({
     this.width = 2.0,
+    this.height = 2.0,
     this.color,
   });
 
@@ -123,6 +145,7 @@ class _PlaceholderBarTestbed extends StatelessWidget {
       home: Scaffold(
         body: PlaceholderBar(
           width: width,
+          height: height,
           color: color,
         ),
       ),
