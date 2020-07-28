@@ -19,13 +19,14 @@ import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme
 class LightMetricsThemeData extends MetricsThemeData {
   static const Color _dropdownHoverColor = Color(0xFF1d1d20);
   static const Color _focusedBorderColor = Colors.blue;
+  static const Color _inactiveBackgroundColor = Color(0xFFEEEEEE);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _focusedBorderColor),
   );
 
   /// A [TextStyle] of the dialog title.
-  static const TextStyle _titleTextStyle = TextStyle(
+  static const TextStyle _dialogTitleTextStyle = TextStyle(
     color: Colors.black,
     fontSize: 26.0,
     fontWeight: FontWeight.w500,
@@ -110,13 +111,13 @@ class LightMetricsThemeData extends MetricsThemeData {
           deleteDialogTheme: const DeleteDialogThemeData(
             backgroundColor: ColorConfig.lightScaffoldColor,
             closeIconColor: Colors.black,
-            titleTextStyle: _titleTextStyle,
+            titleTextStyle: _dialogTitleTextStyle,
           ),
           projectGroupDialogTheme: const ProjectGroupDialogThemeData(
             primaryColor: ColorConfig.primaryColor,
             closeIconColor: Colors.black,
             contentBorderColor: ColorConfig.darkBorderColor,
-            titleTextStyle: _titleTextStyle,
+            titleTextStyle: _dialogTitleTextStyle,
             uncheckedProjectTextStyle: TextStyle(
               color: Colors.black,
               fontSize: 14.0,
@@ -131,7 +132,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.lightInactiveColor,
             accentColor: Colors.transparent,
-            backgroundColor: ColorConfig.lightInactiveBackgroundColor,
+            backgroundColor: _inactiveBackgroundColor,
             textStyle: TextStyle(
               color: Colors.grey,
               fontSize: 32.0,

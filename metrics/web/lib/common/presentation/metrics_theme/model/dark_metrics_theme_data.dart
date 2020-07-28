@@ -21,6 +21,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _dropdownHoverColor = Color(0xFF1d1d20);
   static const Color _dropdownHoverBorderColor = Color(0xFF37373f);
   static const Color _focusedBorderColor = Color(0xFF878799);
+  static const Color _inactiveBackgroundColor = Color(0xFF242729);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _focusedBorderColor),
@@ -33,7 +34,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   );
 
   /// A [TextStyle] of the dialog title.
-  static const TextStyle _titleTextStyle = TextStyle(
+  static const TextStyle _dialogTitleTextStyle = TextStyle(
     color: Colors.white,
     fontSize: 26.0,
     fontWeight: FontWeight.w500,
@@ -118,7 +119,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           deleteDialogTheme: const DeleteDialogThemeData(
             backgroundColor: ColorConfig.darkScaffoldColor,
             closeIconColor: Colors.white,
-            titleTextStyle: _titleTextStyle,
+            titleTextStyle: _dialogTitleTextStyle,
             contentTextStyle: TextStyle(
               fontSize: 16.0,
               color: Colors.white,
@@ -130,7 +131,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             backgroundColor: ColorConfig.darkScaffoldColor,
             closeIconColor: Colors.white,
             contentBorderColor: ColorConfig.darkBorderColor,
-            titleTextStyle: _titleTextStyle,
+            titleTextStyle: _dialogTitleTextStyle,
             uncheckedProjectTextStyle: TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -145,7 +146,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.darkInactiveColor,
             accentColor: Colors.transparent,
-            backgroundColor: ColorConfig.darkInactiveBackgroundColor,
+            backgroundColor: _inactiveBackgroundColor,
             textStyle: TextStyle(
               color: ColorConfig.darkInactiveColor,
               fontSize: 32.0,

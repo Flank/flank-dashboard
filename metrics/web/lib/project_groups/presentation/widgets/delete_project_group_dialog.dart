@@ -18,7 +18,7 @@ class DeleteProjectGroupDialog extends StatefulWidget {
 
 class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
   /// Indicates whether this widget is in the loading state or not.
-  bool _isLoading = false;
+  bool _isDeleting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
     return Selector<ProjectGroupsNotifier, DeleteProjectGroupDialogViewModel>(
       selector: (_, state) => state.deleteProjectGroupDialogViewModel,
       builder: (_, deleteViewModel, ___) {
-        final buttonText = _isLoading
+        final buttonText = _isDeleting
             ? ProjectGroupsStrings.deletingProjectGroup
             : ProjectGroupsStrings.delete;
 
@@ -81,7 +81,7 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: MetricsNegativeButton(
                   label: buttonText,
-                  onPressed: _isLoading
+                  onPressed: _isDeleting
                       ? null
                       : () => _deleteProjectGroup(deleteViewModel),
                 ),
@@ -112,8 +112,8 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
     }
   }
 
-  /// Changes the [_isLoading] state to the given [value].
+  /// Changes the [_isDeleting] state to the given [value].
   void _setLoading(bool value) {
-    setState(() => _isLoading = value);
+    setState(() => _isDeleting = value);
   }
 }
