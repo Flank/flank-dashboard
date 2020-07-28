@@ -8,6 +8,7 @@ import 'package:selection_menu/selection_menu.dart';
 void main() {
   group("DropdownMenu", () {
     const items = ['1', '2', '3'];
+    const itemHeight = 15.0;
 
     final selectionMenuFinder = find.byWidgetPredicate(
       (widget) => widget is SelectionMenu,
@@ -37,6 +38,39 @@ void main() {
       "throws an AssertionError if the menuBuilder parameter is null",
       (tester) async {
         await tester.pumpWidget(const _DropdownMenuTestbed(menuBuilder: null));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the maxVisibleItems parameter is null",
+      (tester) async {
+        await tester.pumpWidget(
+          const _DropdownMenuTestbed(maxVisibleItems: null),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the maxVisibleItems parameter is zero",
+      (tester) async {
+        await tester.pumpWidget(
+          const _DropdownMenuTestbed(maxVisibleItems: 0),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the maxVisibleItems parameter is negative",
+      (tester) async {
+        await tester.pumpWidget(
+          const _DropdownMenuTestbed(maxVisibleItems: -4),
+        );
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -254,14 +288,41 @@ void main() {
     );
 
     testWidgets(
-      "creates box constraints for the dropdown menu with the maxHeight equals to the height of all items",
+      "height equals to the height of all items if their number is less than the given maxVisibleItems",
       (tester) async {
-        const itemHeight = 15.0;
         final expectedMaxHeight = itemHeight * items.length;
 
         await tester.pumpWidget(const _DropdownMenuTestbed(
           itemHeight: itemHeight,
+          maxVisibleItems: 5,
           items: items,
+        ));
+
+        final selectionMenuWidget = tester.widget<SelectionMenu>(
+          selectionMenuFinder,
+        );
+
+        final menuPositionAndSize = selectionMenuWidget
+            .componentsConfiguration.menuPositionAndSizeComponent
+            .builder(null);
+
+        expect(
+          menuPositionAndSize.constraints.maxHeight,
+          equals(expectedMaxHeight),
+        );
+      },
+    );
+
+    testWidgets(
+      "height equals to the sum of max visible items and a half if items more than max visible items",
+      (tester) async {
+        const maxVisibleItems = 2;
+        const expectedMaxHeight = itemHeight * maxVisibleItems + itemHeight / 2;
+
+        await tester.pumpWidget(const _DropdownMenuTestbed(
+          itemHeight: itemHeight,
+          items: items,
+          maxVisibleItems: maxVisibleItems,
         ));
 
         final selectionMenuWidget = tester.widget<SelectionMenu>(
@@ -323,6 +384,13 @@ void main() {
 
 /// A testbed class needed to test the [DropdownMenu] widget.
 class _DropdownMenuTestbed extends StatelessWidget {
+  /// A number of maximum visible items when the menu is open.
+  ///
+  /// If the [items.length] is greater than this number,
+  /// the [maxVisibleItems] and a half of the next item will be visible.
+  /// Otherwise all items will be visible.
+  final int maxVisibleItems;
+
   /// A list of items to select from.
   final List<String> items;
 
@@ -352,11 +420,13 @@ class _DropdownMenuTestbed extends StatelessWidget {
   /// If the [itemBuilder] is not specified, the default item builder used.
   /// If the [buttonBuilder] is not specified, the default button builder used.
   /// If the [menuBuilder] is not specified, the default menu builder used.
+  /// If the [maxVisibleItems] is not specified, the default value of `5` used.
   const _DropdownMenuTestbed({
     Key key,
     this.itemBuilder = _itemBuilder,
     this.buttonBuilder = _buttonBuilder,
     this.menuBuilder = _menuBuilder,
+    this.maxVisibleItems = 5,
     this.onItemSelected,
     this.initiallySelectedItemIndex,
     this.items,
@@ -374,6 +444,7 @@ class _DropdownMenuTestbed extends StatelessWidget {
           menuBuilder: menuBuilder,
           items: items,
           itemHeight: itemHeight,
+          maxVisibleItems: maxVisibleItems,
           initiallySelectedItemIndex: initiallySelectedItemIndex,
           onItemSelected: onItemSelected,
           menuPadding: menuPadding,

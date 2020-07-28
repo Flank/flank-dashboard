@@ -19,8 +19,8 @@ void main() {
         expect(darkMetricsThemeData.projectGroupDialogTheme, isNotNull);
         expect(darkMetricsThemeData.metricsButtonTheme, isNotNull);
         expect(darkMetricsThemeData.textFieldTheme, isNotNull);
-        expect(darkMetricsThemeData.projectGroupDropdownTheme, isNotNull);
-        expect(darkMetricsThemeData.projectGroupDropdownItemTheme, isNotNull);
+        expect(darkMetricsThemeData.dropdownTheme, isNotNull);
+        expect(darkMetricsThemeData.dropdownItemTheme, isNotNull);
       },
     );
   });
