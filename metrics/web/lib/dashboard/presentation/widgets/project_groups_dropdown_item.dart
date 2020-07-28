@@ -32,6 +32,7 @@ class ProjectGroupsDropdownItem extends StatelessWidget {
       child: Text(
         projectGroupDropdownItemViewModel.name,
         style: theme.textStyle,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

@@ -30,15 +30,20 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
   Widget build(BuildContext context) {
     final theme = MetricsTheme.of(context).dropdownTheme;
 
-    return Selector<ProjectMetricsNotifier,
-        List<ProjectGroupDropdownItemViewModel>>(
-      selector: (_, notifier) => notifier.projectGroupDropdownItems,
-      builder: (_, items, __) {
+    return Consumer<ProjectMetricsNotifier>(
+      builder: (_, notifier, __) {
+        final items = notifier.projectGroupDropdownItems;
+        final selectedItem = notifier.selectedProjectGroupDropdownItem;
+
         return DropdownMenu<ProjectGroupDropdownItemViewModel>(
           itemHeight: 40.0,
           initiallySelectedItemIndex: 0,
           maxVisibleItems: 5,
           items: items,
+          onItemSelected: (item) {
+            Provider.of<ProjectMetricsNotifier>(context, listen: false)
+                .selectProjectGroupFilter(item.id);
+          },
           menuPadding: const EdgeInsets.only(
             top: ProjectGroupsDropdownMenu._menuButtonHeight,
           ),
@@ -79,7 +84,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Text(
-                          item?.name ?? '',
+                          selectedItem?.name ?? '',
                           style: theme.textStyle,
                         ),
                       ),

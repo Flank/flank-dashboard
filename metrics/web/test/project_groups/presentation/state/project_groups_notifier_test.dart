@@ -66,7 +66,7 @@ void main() {
         (_) => Stream.value(projectGroups),
       );
 
-      await projectGroupsNotifier.subscribeToProjectGroups();
+      projectGroupsNotifier.subscribeToProjectGroups();
       projectGroupsNotifier.setProjects(projects);
     });
 
@@ -317,7 +317,7 @@ void main() {
         );
 
         projectGroupsNotifier.setProjects(projects);
-        await projectGroupsNotifier.subscribeToProjectGroups();
+        projectGroupsNotifier.subscribeToProjectGroups();
 
         final listener = expectAsyncUntil0(() {
           final projectGroupCardViewModels =
@@ -482,15 +482,15 @@ void main() {
     );
 
     test(
-      ".subscribeToProjectGroups() completes normally if the receive project group updates stream emits null",
+      ".subscribeToProjectGroups() return normally if the receive project group updates stream emits null",
       () async {
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => Stream.value(null),
         );
 
-        await expectLater(
-          projectGroupsNotifier.subscribeToProjectGroups(),
-          completes,
+        expect(
+          () => projectGroupsNotifier.subscribeToProjectGroups(),
+          returnsNormally,
         );
       },
     );
@@ -498,6 +498,13 @@ void main() {
     test(
       ".subscribeToProjectGroups() delegates to the receive project group updates use case",
       () {
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
         when(receiveProjectGroupUpdates.call()).thenAnswer(
           (_) => const Stream.empty(),
         );
@@ -505,21 +512,30 @@ void main() {
         projectGroupsNotifier.subscribeToProjectGroups();
 
         verify(receiveProjectGroupUpdates()).called(equals(1));
+        addTearDown(projectGroupsNotifier.dispose);
       },
     );
 
     test(
       ".subscribeToProjectGroups() subscribes to the project groups updates stream",
       () async {
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
         final projectGroupsController = StreamController<List<ProjectGroup>>();
 
         when(receiveProjectGroupUpdates.call()).thenAnswer(
           (_) => projectGroupsController.stream,
         );
 
-        await projectGroupsNotifier.subscribeToProjectGroups();
+        projectGroupsNotifier.subscribeToProjectGroups();
 
         expect(projectGroupsController.hasListener, isTrue);
+        addTearDown(projectGroupsNotifier.dispose);
       },
     );
 
@@ -553,7 +569,7 @@ void main() {
                 expectedProjectGroupCardViewModels));
 
         projectGroupsNotifier.addListener(listener);
-        await projectGroupsNotifier.subscribeToProjectGroups();
+        projectGroupsNotifier.subscribeToProjectGroups();
 
         addTearDown(projectGroupsNotifier.dispose);
       },
@@ -562,17 +578,83 @@ void main() {
     test(
       ".unsubscribeFromProjectGroups() unsubscribes from project groups updates",
       () async {
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
         final projectGroupsController = StreamController<List<ProjectGroup>>();
 
         when(receiveProjectGroupUpdates()).thenAnswer(
           (_) => projectGroupsController.stream,
         );
 
-        await projectGroupsNotifier.subscribeToProjectGroups();
+        projectGroupsNotifier.subscribeToProjectGroups();
         expect(projectGroupsController.hasListener, isTrue);
 
         await projectGroupsNotifier.unsubscribeFromProjectGroups();
         expect(projectGroupsController.hasListener, isFalse);
+        addTearDown(projectGroupsNotifier.dispose);
+      },
+    );
+
+    test(
+      ".unsubscribeFromProjectGroups() sets project group models to null",
+      () async {
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
+        when(receiveProjectGroupUpdates()).thenAnswer(
+          (_) => Stream.value(projectGroups),
+        );
+
+        final asyncListener = expectAsyncUntil0(
+          () {},
+          () => projectGroupsNotifier.projectGroupModels != null,
+        );
+
+        VoidCallback listener;
+
+        listener = () {
+          if (projectGroupsNotifier.projectGroupModels == null) return;
+
+          projectGroupsNotifier.unsubscribeFromProjectGroups();
+          projectGroupsNotifier.addListener(asyncListener);
+          projectGroupsNotifier.removeListener(listener);
+        };
+
+        projectGroupsNotifier.addListener(listener);
+        projectGroupsNotifier.subscribeToProjectGroups();
+
+        addTearDown(projectGroupsNotifier.dispose);
+      },
+    );
+
+    test(
+      ".subscribeToProjectGroups() does not call the use case if already subscribed",
+      () async {
+        final projectGroupsNotifier = ProjectGroupsNotifier(
+          receiveProjectGroupUpdates,
+          addProjectGroupUseCase,
+          updateProjectGroupUseCase,
+          deleteProjectGroupUseCase,
+        );
+
+        when(receiveProjectGroupUpdates()).thenAnswer(
+          (_) => Stream.value(projectGroups),
+        );
+
+        projectGroupsNotifier.subscribeToProjectGroups();
+        projectGroupsNotifier.subscribeToProjectGroups();
+
+        verify(receiveProjectGroupUpdates()).called(equals(1));
+        addTearDown(projectGroupsNotifier.dispose);
       },
     );
 
@@ -606,7 +688,7 @@ void main() {
         );
 
         projectGroupsNotifier.addListener(listener);
-        await projectGroupsNotifier.subscribeToProjectGroups();
+        projectGroupsNotifier.subscribeToProjectGroups();
 
         addTearDown(projectGroupsNotifier.dispose);
       },
@@ -1028,7 +1110,7 @@ void main() {
           (_) => projectGroupsController.stream,
         );
 
-        await projectGroupsNotifier.subscribeToProjectGroups();
+        projectGroupsNotifier.subscribeToProjectGroups();
 
         expect(projectGroupsController.hasListener, isTrue);
 

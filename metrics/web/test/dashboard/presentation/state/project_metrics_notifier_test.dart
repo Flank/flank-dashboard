@@ -14,7 +14,9 @@ import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.da
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
+import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
@@ -402,12 +404,238 @@ void main() {
         await metricsNotifier.dispose();
       },
     );
+
+    test(
+      ".setProjectGroups() refreshes a list of project group dropdown item view models",
+      () {
+        final projectGroups = [
+          ProjectGroupModel(
+            id: "id",
+            name: "name",
+            projectIds: UnmodifiableListView([]),
+          ),
+          ProjectGroupModel(
+            id: "id2",
+            name: "name1",
+            projectIds: UnmodifiableListView([]),
+          ),
+        ];
+
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        final newProjectGroups = [
+          ProjectGroupModel(
+            id: "id",
+            name: "name",
+            projectIds: UnmodifiableListView(['id1']),
+          ),
+          ProjectGroupModel(
+            id: "id2",
+            name: "name2",
+            projectIds: UnmodifiableListView(['id2']),
+          ),
+        ];
+
+        final newProjectGroupItemViewModels = newProjectGroups.map(
+          (projectGroup) => ProjectGroupDropdownItemViewModel(
+            id: projectGroup.id,
+            name: projectGroup.name,
+          ),
+        );
+
+        projectMetricsNotifier.setProjectGroups(newProjectGroups);
+
+        expect(
+          projectMetricsNotifier.projectGroupDropdownItems,
+          containsAll(newProjectGroupItemViewModels),
+        );
+      },
+    );
+
+    test(
+      ".selectProjectGroupFilter() updates a selected project group",
+      () {
+        const projectGroupId = "groupId";
+
+        final List<ProjectGroupModel> projectGroups = [
+          ProjectGroupModel(
+            id: projectGroupId,
+            name: "name",
+            projectIds: UnmodifiableListView([]),
+          ),
+        ];
+
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroupFilter(projectGroupId);
+
+        final updatedProjectGroup = ProjectGroupModel(
+          id: projectGroupId,
+          name: "name1",
+          projectIds: UnmodifiableListView([]),
+        );
+        final newProjectGroups = [updatedProjectGroup];
+
+        projectMetricsNotifier.setProjectGroups(newProjectGroups);
+
+        expect(
+          projectMetricsNotifier.selectedProjectGroupDropdownItem.id,
+          equals(projectGroupId),
+        );
+        expect(
+          projectMetricsNotifier.selectedProjectGroupDropdownItem.name,
+          equals(updatedProjectGroup.name),
+        );
+      },
+    );
+
+    test(
+      ".setProjectGroups() selects the all projects group if the selected one was deleted",
+      () {
+        const expectedSelectedProjectGroup = ProjectGroupDropdownItemViewModel(
+          name: "All projects",
+        );
+        const projectGroupId = "groupId";
+
+        final firstProjectGroup = ProjectGroupModel(
+          id: projectGroupId,
+          name: "name",
+          projectIds: UnmodifiableListView([]),
+        );
+        final secondProjectGroup = ProjectGroupModel(
+          id: "groupId2",
+          name: "name1",
+          projectIds: UnmodifiableListView([]),
+        );
+
+        final List<ProjectGroupModel> projectGroups = [
+          firstProjectGroup,
+          secondProjectGroup,
+        ];
+
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroupFilter(projectGroupId);
+
+        expect(
+          projectMetricsNotifier.selectedProjectGroupDropdownItem.id,
+          equals(projectGroupId),
+        );
+
+        final newProjectGroups = [secondProjectGroup];
+
+        projectMetricsNotifier.setProjectGroups(newProjectGroups);
+
+        expect(
+          projectMetricsNotifier.selectedProjectGroupDropdownItem,
+          equals(expectedSelectedProjectGroup),
+        );
+      },
+    );
+
+    test(
+      ".selectProjectGroupFilter() filters a list of project metrics according to the given project group id",
+      () {
+        const projectId = "projectId";
+        const projectGroupId = "groupId";
+        const selectedProjectIds = [projectId];
+
+        const projects = [
+          ProjectModel(id: projectId, name: 'name'),
+          ProjectModel(id: 'projectId2', name: 'name'),
+        ];
+
+        final List<ProjectGroupModel> projectGroups = [
+          ProjectGroupModel(
+            id: projectGroupId,
+            name: "name",
+            projectIds: UnmodifiableListView(selectedProjectIds),
+          ),
+          ProjectGroupModel(
+            id: "groupId2",
+            name: "name1",
+            projectIds: UnmodifiableListView([]),
+          ),
+        ];
+
+        projectMetricsNotifier.setProjects(projects, null);
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroupFilter(projectGroupId);
+
+        final projectMetricsTileIds = projectMetricsNotifier
+            .projectsMetricsTileViewModels
+            .map((tile) => tile.projectId)
+            .toList();
+
+        expect(
+          projectMetricsTileIds,
+          equals(selectedProjectIds),
+        );
+      },
+    );
+
+    test(
+      ".selectProjectGroupFilter() selects project group with the given id",
+      () {
+        const projectGroupId = "id";
+
+        final List<ProjectGroupModel> projectGroups = [
+          ProjectGroupModel(
+            id: projectGroupId,
+            name: "name",
+            projectIds: UnmodifiableListView([]),
+          ),
+          ProjectGroupModel(
+            id: "id2",
+            name: "name1",
+            projectIds: UnmodifiableListView([]),
+          ),
+        ];
+
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+        projectMetricsNotifier.selectProjectGroupFilter(projectGroupId);
+
+        expect(
+          projectMetricsNotifier.selectedProjectGroupDropdownItem.id,
+          equals(projectGroupId),
+        );
+      },
+    );
+
+    test(
+      ".selectProjectGroupFilter() doesn't selects project group if there is no project group with the given id",
+      () {
+        final projectGroups = [
+          ProjectGroupModel(
+            id: "id",
+            name: "name",
+            projectIds: UnmodifiableListView([]),
+          ),
+          ProjectGroupModel(
+            id: "id2",
+            name: "name1",
+            projectIds: UnmodifiableListView([]),
+          ),
+        ];
+        
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        final initialSelectedProjectGroup =
+            projectMetricsNotifier.selectedProjectGroupDropdownItem;
+
+        projectMetricsNotifier.selectProjectGroupFilter("no_such_id");
+
+        expect(
+          projectMetricsNotifier.selectedProjectGroupDropdownItem,
+          equals(initialSelectedProjectGroup),
+        );
+      },
+    );
   });
 }
 
 /// A stub implementation of the [ReceiveProjectMetricsUpdates].
 class _ReceiveProjectMetricsUpdatesStub
     implements ReceiveProjectMetricsUpdates {
+  /// A test [DashboardProjectMetrics] used in tests.
   static final _projectMetrics = DashboardProjectMetrics(
     projectId: 'id',
     performanceMetrics: PerformanceMetric(

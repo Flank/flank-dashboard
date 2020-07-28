@@ -21,10 +21,14 @@ import 'package:metrics/dashboard/presentation/view_models/project_build_status_
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
+import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// The [ChangeNotifier] that holds the projects metrics data.
 class ProjectMetricsNotifier extends ChangeNotifier {
+  static const _allProjectsGroupDropdownItemViewModel =
+      ProjectGroupDropdownItemViewModel(name: "All projects");
+
   /// Provides an ability to receive project metrics updates.
   final ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
 
@@ -44,36 +48,66 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// used to limit the displayed data.
   String _projectNameFilter;
 
+  /// Holds currently selected [ProjectGroupDropdownItemViewModel]
+  ProjectGroupDropdownItemViewModel _selectedProjectGroup;
+
   /// Holds the list of current [ProjectModel]s.
   List<ProjectModel> _projects;
 
+  /// Holds the list of current [ProjectGroupModel]s.
+  List<ProjectGroupModel> _projectGroupModels;
+
   /// Holds the list of current [ProjectGroupDropdownItemViewModel]s.
-  static const List<ProjectGroupDropdownItemViewModel>
-      _projectGroupDropdownItems = [
-    ProjectGroupDropdownItemViewModel(name: 'All projects'),
-    ProjectGroupDropdownItemViewModel(name: 'Android'),
-    ProjectGroupDropdownItemViewModel(name: 'iOS'),
-    ProjectGroupDropdownItemViewModel(name: 'CLI tools'),
-  ];
+  List<ProjectGroupDropdownItemViewModel> _projectGroupDropdownItems = [];
 
   /// Provides a list of [ProjectMetricsTileViewModel]s.
   List<ProjectGroupDropdownItemViewModel> get projectGroupDropdownItems =>
       _projectGroupDropdownItems;
 
-  /// Provides a list of [ProjectMetricsTileViewModel]s,
-  /// filtered by the project name filter.
+  /// Provides selected [ProjectGroupDropdownItemViewModel].
+  ProjectGroupDropdownItemViewModel get selectedProjectGroupDropdownItem =>
+      _selectedProjectGroup;
+
+  /// Provides a filtered list of [ProjectMetricsTileViewModel]s.
   List<ProjectMetricsTileViewModel> get projectsMetricsTileViewModels {
-    final List<ProjectMetricsTileViewModel> projectsMetricsTileViewModels =
+    List<ProjectMetricsTileViewModel> projectsMetricsTileViewModels =
         _projectMetrics?.values?.toList();
 
-    if (_projectNameFilter == null || projectsMetricsTileViewModels == null) {
+    if (projectsMetricsTileViewModels == null) {
       return projectsMetricsTileViewModels;
     }
 
+    if (_projectNameFilter != null) {
+      projectsMetricsTileViewModels = projectsMetricsTileViewModels
+          .where((project) => project.projectName
+              .toLowerCase()
+              .contains(_projectNameFilter.toLowerCase()))
+          .toList();
+    }
+
+    if (_projectGroupModels != null) {
+      projectsMetricsTileViewModels =
+          _filterByProjectGroup(projectsMetricsTileViewModels);
+    }
+
+    return projectsMetricsTileViewModels;
+  }
+
+  /// Filters the [ProjectMetricsTileViewModel]s using the [selectedProjectGroupDropdownItem].
+  List<ProjectMetricsTileViewModel> _filterByProjectGroup(
+    List<ProjectMetricsTileViewModel> projectsMetricsTileViewModels,
+  ) {
+    final projectGroupModel = _projectGroupModels.firstWhere(
+      (model) => model.id == _selectedProjectGroup?.id,
+      orElse: () => null,
+    );
+
+    if (projectGroupModel == null) return projectsMetricsTileViewModels;
+
     return projectsMetricsTileViewModels
-        .where((project) => project.projectName
-            .toLowerCase()
-            .contains(_projectNameFilter.toLowerCase()))
+        .where((project) => projectGroupModel.projectIds.contains(
+              project.projectId,
+            ))
         .toList();
   }
 
@@ -107,6 +141,20 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     _projectNameFilterSubject.add(value);
   }
 
+  /// Adds a project group filter using the given project group [id].
+  void selectProjectGroupFilter(String id) {
+    final projectGroup = _projectGroupDropdownItems.firstWhere(
+      (group) => group.id == id,
+      orElse: () => null,
+    );
+
+    if (projectGroup == null) return;
+
+    _selectedProjectGroup = projectGroup;
+
+    notifyListeners();
+  }
+
   /// Updates projects and an error message.
   Future<void> setProjects(
     List<ProjectModel> newProjects,
@@ -116,6 +164,37 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     _projectsErrorMessage = errorMessage;
 
     await _refreshMetricsSubscriptions();
+  }
+
+  /// Sets the current project group models.
+  void setProjectGroups(List<ProjectGroupModel> projectGroupModels) {
+    _projectGroupModels = projectGroupModels;
+
+    _refreshProjectGroupDropdownItemViewModels();
+  }
+
+  /// Refreshes the project group dropdown item view models
+  /// according to current project group models.
+  void _refreshProjectGroupDropdownItemViewModels() {
+    if (_projectGroupModels == null) return;
+
+    _projectGroupDropdownItems = [
+      _allProjectsGroupDropdownItemViewModel,
+    ];
+
+    _projectGroupDropdownItems.addAll(_projectGroupModels
+        .map((group) => ProjectGroupDropdownItemViewModel(
+              id: group.id,
+              name: group.name,
+            ))
+        .toList());
+
+    _selectedProjectGroup = _projectGroupDropdownItems.firstWhere(
+      (group) => group.id == _selectedProjectGroup?.id,
+      orElse: () => _allProjectsGroupDropdownItemViewModel,
+    );
+
+    notifyListeners();
   }
 
   /// Refreshes the project metrics subscriptions according to [ProjectModel]s.
