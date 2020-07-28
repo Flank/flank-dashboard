@@ -17,6 +17,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_metric_v
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
@@ -196,9 +197,14 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     );
     final numberOfBuilds = dashboardMetrics.buildNumberMetrics.numberOfBuilds;
 
+    final buildStatus = ProjectBuildStatusViewModel(
+      value: dashboardMetrics.projectBuildStatusMetric?.status,
+    );
+
     projectsMetrics[projectId] = projectMetrics.copyWith(
       performanceSparkline: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
+      buildStatus: buildStatus,
       buildNumberMetric: BuildNumberScorecardViewModel(
         numberOfBuilds: numberOfBuilds,
       ),

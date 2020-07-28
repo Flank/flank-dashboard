@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 /// A widget that represents the metrics table row.
 class MetricsTableRow extends StatelessWidget {
+  /// A [Widget] that displays a project status.
+  final Widget status;
+
   /// A [Widget] that displays a project name.
   final Widget name;
 
@@ -22,17 +25,19 @@ class MetricsTableRow extends StatelessWidget {
 
   /// Creates the [MetricsTableRow].
   ///
-  /// The [name], [buildResults], [performance],
+  /// The [status], [name], [buildResults], [performance],
   /// [buildNumber], [stability], and [coverage] must not be null.
   const MetricsTableRow({
     Key key,
+    @required this.status,
     @required this.name,
     @required this.buildResults,
     @required this.performance,
     @required this.buildNumber,
     @required this.stability,
     @required this.coverage,
-  })  : assert(name != null),
+  })  : assert(status != null),
+        assert(name != null),
         assert(buildResults != null),
         assert(performance != null),
         assert(buildNumber != null),
@@ -43,11 +48,12 @@ class MetricsTableRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      padding: const EdgeInsets.all(16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Expanded(
+          status,
+          Flexible(
             child: Container(
               width: 326.0,
               child: name,

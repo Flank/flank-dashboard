@@ -7,7 +7,7 @@ class ColorConfig {
   static const Color inactiveColor = Color(0xFF242729);
   static const Color inactiveTextColor = Color(0xFF1b1b1b);
   static const Color primaryTranslucentColor = Color(0xFF182b27);
-  static const Color accentTranslucentColor = Color(0x1DF45531);
+  static const Color accentTranslucentColor = Color(0xFF2d1f1f);
   static const Color darkScaffoldColor = Color(0xFF1b1b1d);
   static const Color lightScaffoldColor = Color(0xFFFAFAFA);
   static const Color hoverBorderColor = Color(0xFF37373F);

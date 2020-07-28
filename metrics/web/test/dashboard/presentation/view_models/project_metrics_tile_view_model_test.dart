@@ -3,8 +3,10 @@ import 'package:metrics/dashboard/presentation/view_models/build_number_scorecar
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
+import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 // ignore_for_file: prefer_const_constructors
@@ -21,6 +23,9 @@ void main() {
     );
     final buildResult = BuildResultMetricViewModel(
       buildResults: UnmodifiableListView([]),
+    );
+    final buildStatus = ProjectBuildStatusViewModel(
+      value: BuildStatus.successful,
     );
 
     test(
@@ -44,6 +49,16 @@ void main() {
     );
 
     test(
+      "uses the default project build status view model if the build status parameter is not specified",
+      () {
+        const expectedViewModel = ProjectBuildStatusViewModel();
+        const projectMetrics = ProjectMetricsTileViewModel();
+
+        expect(projectMetrics.buildStatus, equals(expectedViewModel));
+      },
+    );
+
+    test(
       "equals to another ProjectMetricsTileViewModel with the same params",
       () {
         final firstViewModel = ProjectMetricsTileViewModel(
@@ -54,6 +69,7 @@ void main() {
           buildNumberMetric: buildNumber,
           buildResultMetrics: buildResult,
           performanceSparkline: performance,
+          buildStatus: buildStatus,
         );
 
         final secondViewModel = ProjectMetricsTileViewModel(
@@ -64,6 +80,7 @@ void main() {
           buildNumberMetric: buildNumber,
           buildResultMetrics: buildResult,
           performanceSparkline: performance,
+          buildStatus: buildStatus,
         );
 
         expect(firstViewModel, equals(secondViewModel));
@@ -81,6 +98,7 @@ void main() {
           buildNumberMetric: buildNumber,
           buildResultMetrics: buildResult,
           performanceSparkline: performance,
+          buildStatus: buildStatus,
         );
 
         final secondViewModel = firstViewModel.copyWith();
@@ -109,6 +127,9 @@ void main() {
             buildResults: UnmodifiableListView([]),
             numberOfBuildsToDisplay: 1,
           ),
+          buildStatus: ProjectBuildStatusViewModel(
+            value: BuildStatus.cancelled,
+          ),
         );
 
         final copiedMetricsTileViewModel = metricsTileViewModel.copyWith(
@@ -117,6 +138,7 @@ void main() {
           performanceSparkline: performance,
           buildNumberMetric: buildNumber,
           buildResultMetrics: buildResult,
+          buildStatus: buildStatus,
         );
 
         expect(
@@ -146,6 +168,10 @@ void main() {
         expect(
           copiedMetricsTileViewModel.buildResultMetrics,
           equals(buildResult),
+        );
+        expect(
+          copiedMetricsTileViewModel.buildStatus,
+          equals(buildStatus),
         );
       },
     );

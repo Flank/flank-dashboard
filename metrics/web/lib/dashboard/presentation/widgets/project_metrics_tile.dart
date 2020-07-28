@@ -7,6 +7,7 @@ import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.da
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
 
 /// Displays the project name and it's metrics.
@@ -56,11 +57,15 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: MetricsTableRow(
-            name: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            status: ProjectBuildStatus(
+              buildStatus: projectMetrics.buildStatus,
+            ),
+            name: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
               child: Text(
                 projectMetrics.projectName ?? '',
                 style: const TextStyle(fontSize: 22.0),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             buildResults: Container(

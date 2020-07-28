@@ -9,6 +9,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
@@ -102,11 +103,13 @@ void main() {
           final buildResultMetrics = projectMetric.buildResultMetrics;
           final performanceMetrics = projectMetric.performanceSparkline;
           final stabilityMetric = projectMetric.stability;
+          final buildStatusMetric = projectMetric.buildStatus;
 
           hasNullMetrics = buildResultMetrics == emptyBuildResultMetric &&
               performanceMetrics != null &&
               performanceMetrics.performance.isEmpty &&
-              stabilityMetric != null;
+              stabilityMetric != null &&
+              buildStatusMetric != null;
         }, () => hasNullMetrics);
 
         projectMetricsNotifier.addListener(metricsListener);
@@ -147,6 +150,17 @@ void main() {
         await projectMetricsNotifier.setProjects(projects, errorMessage);
       },
     );
+
+    test("loads the build status data", () async {
+      final expectedProjectBuildStatus =
+          expectedProjectMetrics.projectBuildStatusMetric;
+
+      final projectMetrics =
+          projectMetricsNotifier.projectsMetricsTileViewModels.first;
+      final projectBuildStatus = projectMetrics.buildStatus;
+
+      expect(projectBuildStatus.value, equals(expectedProjectBuildStatus.status));
+    });
 
     test("loads the coverage data", () async {
       final expectedProjectCoverage = expectedProjectMetrics.coverage;
@@ -418,6 +432,9 @@ class _ReceiveProjectMetricsUpdatesStub
     ),
     coverage: Percent(0.2),
     stability: Percent(0.5),
+    projectBuildStatusMetric: const ProjectBuildStatusMetric(
+      status: BuildStatus.successful,
+    ),
   );
 
   /// A [BehaviorSubject] that holds the [DashboardProjectMetrics] and provides a stream of them.
