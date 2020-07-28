@@ -11,16 +11,16 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_item_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
-  static const Color dropdownHoverColor = Color(0xFF1d1d20);
-  static const Color focusedBorderColor = Colors.blue;
+  static const Color _dropdownHoverColor = Color(0xFF1d1d20);
+  static const Color _focusedBorderColor = Colors.blue;
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
-    borderSide: BorderSide(color: focusedBorderColor),
+    borderSide: BorderSide(color: _focusedBorderColor),
   );
 
   /// Creates the light theme with the default widget theme configuration.
@@ -174,11 +174,10 @@ class LightMetricsThemeData extends MetricsThemeData {
               height: 1.0,
             ),
           ),
-          projectGroupDropdownTheme: const ProjectGroupsDropdownThemeData(),
-          projectGroupDropdownItemTheme:
-              const ProjectGroupsDropdownItemThemeData(
+          dropdownTheme: const DropdownThemeData(),
+          dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.transparent,
-            hoverColor: dropdownHoverColor,
+            hoverColor: _dropdownHoverColor,
             textStyle: TextStyle(fontSize: 16.0),
           ),
         );

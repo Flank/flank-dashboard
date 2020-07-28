@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:selection_menu/components_configurations.dart';
 import 'package:selection_menu/selection_menu.dart';
 
@@ -22,6 +23,13 @@ class DropdownMenu<T> extends StatefulWidget {
   /// A [DropdownItemBuilder] needed to build a dropdown button.
   final DropdownItemBuilder<T> buttonBuilder;
 
+  /// A number of maximum visible items when the menu is open.
+  ///
+  /// If the [items.length] is greater than this number,
+  /// the [maxVisibleItems] and a half of the next item will be visible.
+  /// Otherwise all items will be visible.
+  final int maxVisibleItems;
+
   /// A [ValueChanged] callback called when selecting an item from the list.
   final ValueChanged<T> onItemSelected;
 
@@ -43,6 +51,7 @@ class DropdownMenu<T> extends StatefulWidget {
   /// call the [AnimationComponentData.opened] and [AnimationComponentData.closed]
   /// callbacks on menu open state changes.
   ///
+  /// If the [maxVisibleItems] is not specified, the default value of `5` used.
   /// If [items] are null, an empty list used.
   /// If the [itemHeight] is null the [kMinInteractiveDimension] used.
   /// If the [menuPadding] is null the [EdgeInsets.zero] used.
@@ -53,6 +62,7 @@ class DropdownMenu<T> extends StatefulWidget {
     @required this.menuBuilder,
     @required this.itemBuilder,
     @required this.buttonBuilder,
+    this.maxVisibleItems = 5,
     this.onItemSelected,
     this.initiallySelectedItemIndex,
     List<T> items,
@@ -61,6 +71,7 @@ class DropdownMenu<T> extends StatefulWidget {
   })  : items = items ?? const [],
         itemHeight = itemHeight ?? kMinInteractiveDimension,
         menuPadding = menuPadding ?? EdgeInsets.zero,
+        assert(maxVisibleItems != null && maxVisibleItems > 0),
         assert(menuBuilder != null),
         assert(itemBuilder != null),
         assert(buttonBuilder != null),
@@ -92,7 +103,7 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
               constraints: BoxConstraints.loose(
                 Size(
                   data?.triggerPositionAndSize?.size?.width ?? 0.0,
-                  widget.items.length * widget.itemHeight,
+                  _calculateMenuHeight(),
                 ),
               ),
             );
@@ -119,11 +130,27 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
           builder: (data) {
             return GestureDetector(
               onTap: data.triggerMenu,
-              child: widget.buttonBuilder(context, data.selectedItem as T),
+              child: HandCursor(
+                child: widget.buttonBuilder(context, data.selectedItem as T),
+              ),
             );
           },
         ),
       ),
     );
+  }
+
+  /// Calculates a height of the menu by the given items,
+  /// itemHeight and maxVisibleItems.
+  double _calculateMenuHeight() {
+    final numberOfItems = widget.items.length;
+    final itemHeight = widget.itemHeight;
+    final maxVisibleItems = widget.maxVisibleItems;
+
+    if (numberOfItems > maxVisibleItems) {
+      return maxVisibleItems * itemHeight + itemHeight / 2;
+    }
+
+    return numberOfItems * itemHeight;
   }
 }

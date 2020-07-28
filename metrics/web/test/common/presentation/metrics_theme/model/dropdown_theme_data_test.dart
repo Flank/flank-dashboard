@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_groups_dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:test/test.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 
 void main() {
-  group("ProjectGroupDropdownThemeData", () {
+  group("DropdownThemeData", () {
     test(
       "creates an instance with the default openedButtonBorderColor if given color is null",
       () {
-        final themeData = ProjectGroupsDropdownThemeData(
+        final themeData = DropdownThemeData(
           openedButtonBorderColor: null,
         );
 
@@ -21,7 +21,7 @@ void main() {
     test(
       "creates an instance with the default closedButtonBorderColor if given color is null",
       () {
-        final themeData = ProjectGroupsDropdownThemeData(
+        final themeData = DropdownThemeData(
           closedButtonBorderColor: null,
         );
 
@@ -32,7 +32,7 @@ void main() {
     test(
       "creates an instance with the default hoverBorderColor if given color is null",
       () {
-        final themeData = ProjectGroupsDropdownThemeData(
+        final themeData = DropdownThemeData(
           hoverBorderColor: null,
         );
 
@@ -48,7 +48,7 @@ void main() {
       const openedButtonBorderColor = Colors.white;
       const closedButtonBorderColor = Colors.blue;
 
-      final themeData = ProjectGroupsDropdownThemeData(
+      final themeData = DropdownThemeData(
         backgroundColor: backgroundColor,
         textStyle: textStyle,
         openedButtonBackgroundColor: openedButtonBackgroundColor,

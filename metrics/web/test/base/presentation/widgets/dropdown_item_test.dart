@@ -5,9 +5,8 @@ import 'package:metrics/base/presentation/widgets/dropdown_item.dart';
 
 void main() {
   group("DropdownItem", () {
-    final mouseRegionFinder = find.descendant(
-      of: find.byType(DropdownItem),
-      matching: find.byType(MouseRegion),
+    final mouseRegionFinder = find.byWidgetPredicate(
+      (widget) => widget is MouseRegion && widget.child is Container,
     );
 
     final containerFinder = find.descendant(
