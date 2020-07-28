@@ -17,7 +17,7 @@ void main() {
     const buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
 
     testWidgets(
-      "can't create widget without data",
+      "throws an AssertionError if the given build result metric is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
             const _BuildResultBarGraphTestbed(buildResultMetric: null));
