@@ -143,7 +143,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     _projectNameFilterSubject.add(value);
   }
 
-  /// Adds a project group filter using the given project group [id].
+  /// Sets the [selectedProjectGroup] to project group with the given [id].
   void selectProjectGroup(String id) {
     final projectGroup = _projectGroupDropdownItems.firstWhere(
       (group) => group.id == id,
