@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/expandable_text.dart';
 
 /// The widget that represents the metric percent in a circular graph.
 ///
@@ -120,9 +119,11 @@ class _CirclePercentageState extends State<CirclePercentage>
                           child: Expanded(
                             child: widget.value == null
                                 ? widget.placeholder ?? Container()
-                                : ExpandableText(
-                                    _getValueText(),
-                                    style: widget.valueStyle,
+                                : Center(
+                                    child: Text(
+                                      _getValueText(),
+                                      style: widget.valueStyle,
+                                    ),
                                   ),
                           ),
                         ),
