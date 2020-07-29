@@ -6,6 +6,7 @@ import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart
 import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
@@ -21,18 +22,6 @@ void main() {
       value: BuildStatus.cancelled,
     );
 
-    NetworkImage findNetworkImageWidget(WidgetTester tester) {
-      final imageWidget = tester.widget<Image>(find.byType(Image));
-
-      return imageWidget.image as NetworkImage;
-    }
-
-    BoxDecoration findBoxDecoration(WidgetTester tester) {
-      final containerWidget = tester.widget<Container>(find.byType(Container));
-
-      return containerWidget.decoration as BoxDecoration;
-    }
-
     testWidgets(
       "applies the primary translucent background color if the build status is successful",
       (tester) async {
@@ -46,7 +35,7 @@ void main() {
           ),
         );
 
-        final boxDecoration = findBoxDecoration(tester);
+        final boxDecoration = FinderUtil.findBoxDecoration(tester);
 
         expect(boxDecoration.color, equals(expectedColor));
       },
@@ -63,7 +52,7 @@ void main() {
           ),
         );
 
-        final networkImage = findNetworkImageWidget(tester);
+        final networkImage = FinderUtil.findNetworkImageWidget(tester);
 
         expect(networkImage.url, equals('icons/successful_status.svg'));
       },
@@ -80,7 +69,7 @@ void main() {
           ),
         );
 
-        final boxDecoration = findBoxDecoration(tester);
+        final boxDecoration = FinderUtil.findBoxDecoration(tester);
 
         expect(boxDecoration.color, equals(expectedColor));
       },
@@ -97,7 +86,7 @@ void main() {
           ),
         );
 
-        final networkImage = findNetworkImageWidget(tester);
+        final networkImage = FinderUtil.findNetworkImageWidget(tester);
 
         expect(networkImage.url, equals('icons/failed_status.svg'));
       },
@@ -114,7 +103,7 @@ void main() {
           ),
         );
 
-        final boxDecoration = findBoxDecoration(tester);
+        final boxDecoration = FinderUtil.findBoxDecoration(tester);
 
         expect(boxDecoration.color, equals(expectedColor));
       },
@@ -131,7 +120,7 @@ void main() {
           ),
         );
 
-        final networkImage = findNetworkImageWidget(tester);
+        final networkImage = FinderUtil.findNetworkImageWidget(tester);
 
         expect(networkImage.url, equals('icons/failed_status.svg'));
       },
@@ -150,7 +139,7 @@ void main() {
           ),
         );
 
-        final boxDecoration = findBoxDecoration(tester);
+        final boxDecoration = FinderUtil.findBoxDecoration(tester);
 
         expect(boxDecoration.color, equals(expectedColor));
       },
@@ -167,7 +156,7 @@ void main() {
           ),
         );
 
-        final networkImage = findNetworkImageWidget(tester);
+        final networkImage = FinderUtil.findNetworkImageWidget(tester);
 
         expect(networkImage.url, equals('icons/unknown_status.svg'));
       },
