@@ -8,6 +8,7 @@ import 'package:metrics/project_groups/presentation/view_models/project_checkbox
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list_tile.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -27,9 +28,11 @@ void main() {
         when(projectGroupsNotifier.projectCheckboxViewModels)
             .thenReturn(projectCheckboxViewModels);
 
-        await tester.pumpWidget(_ProjectCheckboxListTestbed(
-          projectGroupsNotifier: projectGroupsNotifier,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectCheckboxListTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
 
         final projectCheckboxWidgets = tester.widgetList(
           find.byType(ProjectCheckboxListTile),

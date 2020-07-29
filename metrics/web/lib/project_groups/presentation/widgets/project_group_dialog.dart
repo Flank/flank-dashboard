@@ -101,7 +101,6 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
               ),
               Flexible(
                 child: Container(
-                  padding: const EdgeInsets.all(24.0),
                   margin: const EdgeInsets.symmetric(vertical: 16.0),
                   decoration: BoxDecoration(
                     border: Border.all(color: dialogTheme.contentBorderColor),
@@ -111,7 +110,8 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
+                        padding:
+                            const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 8.0),
                         child: MetricsTextFormField(
                           onChanged: _projectGroupsNotifier.filterByProjectName,
                           prefixIcon: Image.network(
