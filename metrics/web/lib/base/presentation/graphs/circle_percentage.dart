@@ -114,18 +114,15 @@ class _CirclePercentageState extends State<CirclePercentage>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        DefaultTextStyle(
-                          style: TextStyle(color: widget.valueColor),
-                          child: Expanded(
-                            child: widget.value == null
-                                ? widget.placeholder ?? Container()
-                                : Center(
-                                    child: Text(
-                                      _getValueText(),
-                                      style: widget.valueStyle,
-                                    ),
+                        Expanded(
+                          child: widget.value == null
+                              ? widget.placeholder ?? Container()
+                              : Center(
+                                  child: Text(
+                                    _getValueText(),
+                                    style: widget.valueStyle,
                                   ),
-                          ),
+                                ),
                         ),
                       ],
                     ),
