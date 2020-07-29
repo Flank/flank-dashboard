@@ -6,6 +6,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/build_results_th
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -33,6 +34,7 @@ void main() {
         expect(themeData.textFieldTheme, isNotNull);
         expect(themeData.dropdownTheme, isNotNull);
         expect(themeData.dropdownItemTheme, isNotNull);
+        expect(themeData.loginTheme, isNotNull);
       },
     );
 
@@ -52,6 +54,7 @@ void main() {
           textFieldTheme: null,
           dropdownTheme: null,
           dropdownItemTheme: null,
+          loginTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -66,6 +69,7 @@ void main() {
         expect(themeData.textFieldTheme, isNotNull);
         expect(themeData.dropdownTheme, isNotNull);
         expect(themeData.dropdownItemTheme, isNotNull);
+        expect(themeData.loginTheme, isNotNull);
       },
     );
 
@@ -128,9 +132,12 @@ void main() {
           backgroundColor: backgroundColor,
         );
 
-        const dropdownItemTheme =
-            DropdownItemThemeData(
+        const dropdownItemTheme = DropdownItemThemeData(
           backgroundColor: backgroundColor,
+        );
+
+        const loginTheme = LoginThemeData(
+          titleTextStyle: TextStyle(color: Colors.red),
         );
 
         const themeData = MetricsThemeData();
@@ -148,6 +155,7 @@ void main() {
           textFieldTheme: textFieldTheme,
           dropdownTheme: dropdownTheme,
           dropdownItemTheme: dropdownItemTheme,
+          loginTheme: loginTheme,
         );
 
         expect(
@@ -177,6 +185,7 @@ void main() {
         expect(copiedTheme.textFieldTheme, equals(textFieldTheme));
         expect(copiedTheme.dropdownTheme, equals(dropdownTheme));
         expect(copiedTheme.dropdownItemTheme, equals(dropdownItemTheme));
+        expect(copiedTheme.loginTheme, equals(loginTheme));
       },
     );
 
@@ -224,8 +233,8 @@ void main() {
           equals(copiedTheme.metricsButtonTheme),
         );
         expect(themeData.textFieldTheme, equals(themeData.textFieldTheme));
-        expect(themeData.dropdownTheme, copiedTheme.dropdownTheme);
-        expect(themeData.dropdownItemTheme, copiedTheme.dropdownItemTheme);
+        expect(themeData.dropdownTheme, equals(copiedTheme.dropdownTheme));
+        expect(themeData.loginTheme, equals(copiedTheme.loginTheme));
       },
     );
   });
