@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/build_results_th
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
@@ -56,6 +57,9 @@ class MetricsThemeData {
   /// A theme for the dropdown items.
   final DropdownItemThemeData dropdownItemTheme;
 
+  /// The theme for the login page.
+  final LoginThemeData loginTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricCirclePercentageThemeData metricCirclePercentageThemeData,
@@ -70,6 +74,7 @@ class MetricsThemeData {
     TextFieldThemeData textFieldTheme,
     DropdownThemeData dropdownTheme,
     DropdownItemThemeData dropdownItemTheme,
+    LoginThemeData loginTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -90,10 +95,9 @@ class MetricsThemeData {
         metricsButtonTheme =
             metricsButtonTheme ?? const MetricsButtonThemeData(),
         textFieldTheme = textFieldTheme ?? const TextFieldThemeData(),
-        dropdownTheme =
-            dropdownTheme ?? const DropdownThemeData(),
-        dropdownItemTheme = dropdownItemTheme ??
-            const DropdownItemThemeData();
+        dropdownTheme = dropdownTheme ?? const DropdownThemeData(),
+        dropdownItemTheme = dropdownItemTheme ?? const DropdownItemThemeData(),
+        loginTheme = loginTheme ?? const LoginThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -112,6 +116,7 @@ class MetricsThemeData {
     TextFieldThemeData textFieldTheme,
     DropdownThemeData dropdownTheme,
     DropdownItemThemeData dropdownItemTheme,
+    LoginThemeData loginTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -128,10 +133,9 @@ class MetricsThemeData {
       inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
       metricsButtonTheme: metricsButtonTheme ?? this.metricsButtonTheme,
       textFieldTheme: textFieldTheme ?? this.textFieldTheme,
-      dropdownTheme:
-          dropdownTheme ?? this.dropdownTheme,
-      dropdownItemTheme:
-          dropdownItemTheme ?? this.dropdownItemTheme,
+      dropdownTheme: dropdownTheme ?? this.dropdownTheme,
+      dropdownItemTheme: dropdownItemTheme ?? this.dropdownItemTheme,
+      loginTheme: loginTheme ?? this.loginTheme,
     );
   }
 }

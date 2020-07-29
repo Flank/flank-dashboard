@@ -23,6 +23,7 @@ void main() {
         expect(darkMetricsThemeData.textFieldTheme, isNotNull);
         expect(darkMetricsThemeData.dropdownTheme, isNotNull);
         expect(darkMetricsThemeData.dropdownItemTheme, isNotNull);
+        expect(darkMetricsThemeData.loginTheme, isNotNull);
       },
     );
   });

@@ -26,6 +26,7 @@ void main() {
         expect(lightMetricsThemeData.textFieldTheme, isNotNull);
         expect(lightMetricsThemeData.dropdownTheme, isNotNull);
         expect(lightMetricsThemeData.dropdownItemTheme, isNotNull);
+        expect(lightMetricsThemeData.loginTheme, isNotNull);
       },
     );
   });

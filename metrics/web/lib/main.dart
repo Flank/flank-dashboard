@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
-import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
@@ -47,10 +46,10 @@ class _MyAppState extends State<MyApp> {
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
               ),
-              scaffoldBackgroundColor: ColorConfig.lightScaffoldColor,
+              scaffoldBackgroundColor: LightMetricsThemeData.scaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
                 filled: true,
-                fillColor: ColorConfig.lightInputColor,
+                fillColor: Colors.white,
                 hoverColor: Colors.black,
                 border: TextFieldConfig.border,
                 focusedBorder: LightMetricsThemeData.inputFocusedBorder,
@@ -71,10 +70,10 @@ class _MyAppState extends State<MyApp> {
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
               ),
-              scaffoldBackgroundColor: ColorConfig.darkScaffoldColor,
+              scaffoldBackgroundColor: DarkMetricsThemeData.scaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
                 filled: true,
-                fillColor: ColorConfig.darkInputColor,
+                fillColor: DarkMetricsThemeData.inputColor,
                 hoverColor: Colors.black,
                 border: TextFieldConfig.border,
                 focusedBorder: DarkMetricsThemeData.inputFocusedBorder,
