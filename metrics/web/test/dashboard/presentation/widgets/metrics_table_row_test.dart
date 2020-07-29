@@ -19,6 +19,17 @@ void main() {
     });
 
     testWidgets(
+      "throws an AssertionError if the given status is null",
+      (tester) async {
+        await tester.pumpWidget(
+          const _MetricsTableRowTestbed(status: null),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
       "throws an AssertionError if the given name is null",
       (tester) async {
         await tester.pumpWidget(
@@ -91,6 +102,19 @@ void main() {
         );
 
         expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "displays the given status",
+      (tester) async {
+        const status = Text("status");
+
+        await tester.pumpWidget(
+          const _MetricsTableRowTestbed(status: status),
+        );
+
+        expect(find.byWidget(status), findsOneWidget);
       },
     );
 
@@ -181,7 +205,10 @@ void main() {
 
 /// A testbed class needed to test the [MetricsTableRow].
 class _MetricsTableRowTestbed extends StatelessWidget {
-  /// A first column of this widget.
+  /// A [Widget] that displays a project status.
+  final Widget status;
+
+  /// A [Widget] that displays a project name.
   final Widget name;
 
   /// A [Widget] that displays an information about build results.
@@ -201,11 +228,12 @@ class _MetricsTableRowTestbed extends StatelessWidget {
 
   /// Creates the instance of this testbed.
   ///
-  /// If the [name], [buildResults], [performance],
+  /// If the [status], [name], [buildResults], [performance],
   /// [buildNumber], [stability] or [coverage] is not specified,
   /// the [SizedBox] used.
   const _MetricsTableRowTestbed({
     Key key,
+    this.status = const SizedBox(),
     this.name = const SizedBox(),
     this.buildResults = const SizedBox(),
     this.performance = const SizedBox(),
@@ -218,6 +246,7 @@ class _MetricsTableRowTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       body: MetricsTableRow(
+        status: status,
         name: name,
         buildResults: buildResults,
         performance: performance,

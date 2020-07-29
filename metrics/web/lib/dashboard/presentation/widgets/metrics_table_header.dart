@@ -17,6 +17,7 @@ class MetricsTableHeader extends StatelessWidget {
         fontWeight: FontWeight.w200,
       ),
       child: MetricsTableRow(
+        status: Container(),
         name: Container(),
         buildResults: const Text(DashboardStrings.lastBuilds),
         performance: const Text(DashboardStrings.performance),

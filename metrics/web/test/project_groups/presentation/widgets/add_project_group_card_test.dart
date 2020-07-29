@@ -14,6 +14,7 @@ import 'package:metrics/project_groups/presentation/widgets/add_project_group_di
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -181,8 +182,7 @@ void main() {
           () => tester.pumpWidget(const _AddProjectGroupCardTestbed()),
         );
 
-        final imageWidget = tester.widget<Image>(find.byType(Image));
-        final networkImage = imageWidget.image as NetworkImage;
+        final networkImage = FinderUtil.findNetworkImageWidget(tester);
 
         expect(networkImage.url, equals('icons/add.svg'));
       },

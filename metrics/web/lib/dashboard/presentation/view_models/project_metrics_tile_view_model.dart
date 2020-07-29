@@ -3,6 +3,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_number_scorecar
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 
 /// Represents a view model of the metrics of the project.
@@ -12,6 +13,9 @@ class ProjectMetricsTileViewModel extends Equatable {
 
   /// A name of the project this view model belongs to.
   final String projectName;
+
+  /// A project build status view model.
+  final ProjectBuildStatusViewModel buildStatus;
 
   /// A coverage circle percentage view model.
   final CoverageViewModel coverage;
@@ -43,9 +47,11 @@ class ProjectMetricsTileViewModel extends Equatable {
   ///
   /// The [coverage] defaults to [CoverageViewModel].
   /// The [stability] defaults to [StabilityViewModel].
+  /// The [buildStatus] defaults to [ProjectBuildStatusViewModel].
   const ProjectMetricsTileViewModel({
     this.projectId,
     this.projectName,
+    this.buildStatus = const ProjectBuildStatusViewModel(),
     this.coverage = const CoverageViewModel(),
     this.stability = const StabilityViewModel(),
     this.buildNumberMetric,
@@ -63,6 +69,7 @@ class ProjectMetricsTileViewModel extends Equatable {
     BuildNumberScorecardViewModel buildNumberMetric,
     PerformanceSparklineViewModel performanceSparkline,
     BuildResultMetricViewModel buildResultMetrics,
+    ProjectBuildStatusViewModel buildStatus,
   }) {
     return ProjectMetricsTileViewModel(
       projectId: projectId ?? this.projectId,
@@ -72,6 +79,7 @@ class ProjectMetricsTileViewModel extends Equatable {
       buildNumberMetric: buildNumberMetric ?? this.buildNumberMetric,
       performanceSparkline: performanceSparkline ?? this.performanceSparkline,
       buildResultMetrics: buildResultMetrics ?? this.buildResultMetrics,
+      buildStatus: buildStatus ?? this.buildStatus,
     );
   }
 }

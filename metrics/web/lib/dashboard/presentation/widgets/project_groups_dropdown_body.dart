@@ -35,6 +35,7 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
             borderRadius: BorderRadius.circular(4.0),
           ),
           child: Padding(
+            key: UniqueKey(),
             padding: const EdgeInsets.symmetric(
               vertical: 4.0,
               horizontal: 1.0,
