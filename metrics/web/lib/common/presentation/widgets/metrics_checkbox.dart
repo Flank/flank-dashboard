@@ -23,6 +23,9 @@ class MetricsCheckbox extends StatelessWidget {
     final state = value ? CrossFadeState.showFirst : CrossFadeState.showSecond;
 
     return InkWell(
+      customBorder: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
       onTap: () => onChanged(!value),
       child: AnimatedCrossFade(
         crossFadeState: state,
