@@ -214,7 +214,7 @@ void main() {
 
       expect(
         performanceMetrics.value,
-        expectedPerformanceMetrics.averageBuildDuration.inMinutes,
+        expectedPerformanceMetrics.averageBuildDuration,
       );
 
       final firstBuildPerformance =

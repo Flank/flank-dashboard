@@ -119,7 +119,7 @@ void main() {
           stability: StabilityViewModel(value: 0.2),
           coverage: CoverageViewModel(value: 0.4),
           performanceSparkline: PerformanceSparklineViewModel(
-            value: 30,
+            value: Duration(minutes: 30),
             performance: UnmodifiableListView([]),
           ),
           buildNumberMetric: BuildNumberScorecardViewModel(numberOfBuilds: 1),

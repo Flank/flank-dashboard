@@ -317,11 +317,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       );
     }).toList();
 
-    final averageBuildDuration = metric.averageBuildDuration.inMinutes;
-
     return PerformanceSparklineViewModel(
       performance: UnmodifiableListView(performance),
-      value: averageBuildDuration,
+      value: metric.averageBuildDuration,
     );
   }
 
