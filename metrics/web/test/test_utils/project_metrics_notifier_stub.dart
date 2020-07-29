@@ -9,6 +9,7 @@ import 'package:metrics/dashboard/presentation/view_models/performance_sparkline
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
+import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 
 /// Stub implementation of the [ProjectMetricsNotifier].
 ///
@@ -34,6 +35,10 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
       const [
         ProjectGroupDropdownItemViewModel(name: 'All projects'),
       ];
+
+  @override
+  ProjectGroupDropdownItemViewModel get selectedProjectGroup =>
+      null;
 
   /// The list of [ProjectMetricsTileViewModel]s.
   final List<ProjectMetricsTileViewModel> _projectMetrics;
@@ -61,4 +66,10 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
       List<ProjectModel> newProjectModels, String projectErrorMessage) async {
     return;
   }
+
+  @override
+  void setProjectGroups(List<ProjectGroupModel> projectGroupModels) {}
+
+  @override
+  void selectProjectGroup(String id) {}
 }

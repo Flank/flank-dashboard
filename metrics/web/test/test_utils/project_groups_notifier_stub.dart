@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
+import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
@@ -109,4 +110,7 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
 
   @override
   void toggleProjectCheckedStatus(String projectId) {}
+
+  @override
+  List<ProjectGroupModel> get projectGroupModels => null;
 }

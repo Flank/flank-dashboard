@@ -107,6 +107,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
           create: (_) => ThemeNotifier(),
         ),
         ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
+          lazy: false,
           create: (_) => ProjectsNotifier(_receiveProjectUpdates),
           update: (_, authNotifier, projectsNotifier) {
             _updateProjectsSubscription(authNotifier, projectsNotifier);
@@ -114,29 +115,46 @@ class _InjectionContainerState extends State<InjectionContainer> {
             return projectsNotifier;
           },
         ),
-        ChangeNotifierProxyProvider<ProjectsNotifier, ProjectMetricsNotifier>(
-          create: (_) => ProjectMetricsNotifier(_receiveProjectMetricsUpdates),
-          update: (_, projectsNotifier, projectMetricsNotifier) {
-            return projectMetricsNotifier
-              ..setProjects(
-                projectsNotifier.projectModels,
-                projectsNotifier.projectsErrorMessage,
-              );
-          },
-        ),
-        ChangeNotifierProxyProvider<ProjectsNotifier, ProjectGroupsNotifier>(
+        ChangeNotifierProxyProvider2<AuthNotifier, ProjectsNotifier,
+            ProjectGroupsNotifier>(
           create: (_) => ProjectGroupsNotifier(
             _receiveProjectGroupUpdates,
             _addProjectGroupUseCase,
             _updateProjectGroupUseCase,
             _deleteProjectGroupUseCase,
           ),
-          update: (_, projectsNotifier, projectGroupsNotifier) {
-            return projectGroupsNotifier
-              ..setProjects(
-                projectsNotifier.projectModels,
-                projectsNotifier.projectsErrorMessage,
-              );
+          update: (_, authNotifier, projectsNotifier, projectGroupsNotifier) {
+            final isLoggedIn = authNotifier.isLoggedIn;
+
+            if (isLoggedIn != null && isLoggedIn) {
+              projectGroupsNotifier.subscribeToProjectGroups();
+            } else {
+              projectGroupsNotifier.unsubscribeFromProjectGroups();
+            }
+
+            projectGroupsNotifier.setProjects(
+              projectsNotifier.projectModels,
+              projectsNotifier.projectsErrorMessage,
+            );
+
+            return projectGroupsNotifier;
+          },
+        ),
+        ChangeNotifierProxyProvider2<ProjectsNotifier, ProjectGroupsNotifier,
+            ProjectMetricsNotifier>(
+          create: (_) => ProjectMetricsNotifier(_receiveProjectMetricsUpdates),
+          update: (_, projectsNotifier, projectGroupsNotifier,
+              projectMetricsNotifier) {
+            projectMetricsNotifier.setProjects(
+              projectsNotifier.projectModels,
+              projectsNotifier.projectsErrorMessage,
+            );
+
+            projectMetricsNotifier.setProjectGroups(
+              projectGroupsNotifier.projectGroupModels,
+            );
+
+            return projectMetricsNotifier;
           },
         ),
       ],
