@@ -15,6 +15,7 @@ import 'package:metrics/project_groups/domain/usecases/parameters/delete_project
 import 'package:metrics/project_groups/domain/usecases/parameters/update_project_group_param.dart';
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
+import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
@@ -54,8 +55,8 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// during the project group saving.
   PersistentStoreErrorMessage _projectGroupSavingError;
 
-  /// A [List] that holds all loaded [ProjectGroup].
-  List<ProjectGroup> _projectGroups;
+  /// A [List] that holds all loaded [ProjectGroupModel]s.
+  List<ProjectGroupModel> _projectGroupModels;
 
   /// A [List] that holds view models of all loaded [ProjectGroup].
   List<ProjectGroupCardViewModel> _projectGroupCardViewModels;
@@ -75,6 +76,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Holds the list of current [ProjectModel]s.
   List<ProjectModel> _projects;
+
+  /// Provides loaded [ProjectGroupModel]s.
+  List<ProjectGroupModel> get projectGroupModels => _projectGroupModels;
 
   /// Provides an error description that occurred during loading project groups data.
   String get projectGroupsErrorMessage => _projectGroupsErrorMessage?.message;
@@ -144,7 +148,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Initiates the [DeleteProjectGroupDialogViewModel] using
   /// the given [projectGroupId].
   void initDeleteProjectGroupDialogViewModel(String projectGroupId) {
-    final projectGroup = _projectGroups.firstWhere(
+    final projectGroup = _projectGroupModels.firstWhere(
       (projectGroup) => projectGroup.id == projectGroupId,
       orElse: () => null,
     );
@@ -166,12 +170,16 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Initiates the [ProjectGroupDialogViewModel] using the given [projectGroupId].
   void initProjectGroupDialogViewModel([String projectGroupId]) {
-    final projectGroup = _projectGroups.firstWhere(
+    final projectGroup = _projectGroupModels.firstWhere(
       (projectGroup) => projectGroup.id == projectGroupId,
       orElse: () => null,
     );
 
     final projectIds = List<String>.from(projectGroup?.projectIds ?? []);
+
+    final projects = _projects ?? [];
+    final currentProjectIds = projects.map((project) => project.id);
+    projectIds.removeWhere((id) => !currentProjectIds.contains(id));
 
     _projectCheckboxViewModels = _projectCheckboxViewModels
         .map(
@@ -237,12 +245,13 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   }
 
   /// Subscribes to project groups.
-  Future<void> subscribeToProjectGroups() async {
+  void subscribeToProjectGroups() {
+    if (_projectGroupsSubscription != null) return;
+
     final projectGroupsStream = _receiveProjectGroupUpdates();
     _projectGroupsErrorMessage = null;
-    await _projectGroupsSubscription?.cancel();
     _projectGroupsSubscription = projectGroupsStream.listen(
-      _refreshProjectGroupCardViewModels,
+      _refreshProjectGroupModels,
       onError: _errorHandler,
     );
   }
@@ -250,6 +259,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Unsubscribes from project groups.
   Future<void> unsubscribeFromProjectGroups() async {
     await _cancelSubscriptions();
+    _projectGroupModels = null;
     notifyListeners();
   }
 
@@ -332,7 +342,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     _projects = projects;
 
     _refreshProjectCheckboxViewModels(projects);
-    _refreshProjectGroupCardViewModels(_projectGroups);
+    _refreshProjectGroupCardViewModels();
   }
 
   /// Refreshes a [ProjectCheckboxViewModel] using the given [projects].
@@ -354,18 +364,31 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Updates the project groups card view models with the given [newProjectGroups] list.
-  void _refreshProjectGroupCardViewModels(List<ProjectGroup> newProjectGroups) {
-    if (newProjectGroups == null) return;
+  void _refreshProjectGroupModels(List<ProjectGroup> newProjectGroups) {
+    _projectGroupModels = newProjectGroups
+        .map((group) => ProjectGroupModel(
+              id: group.id,
+              name: group.name,
+              projectIds: UnmodifiableListView(group.projectIds),
+            ))
+        .toList();
 
-    _projectGroups = newProjectGroups;
+    notifyListeners();
+
+    _refreshProjectGroupCardViewModels();
+  }
+
+  /// Updates the project groups card view models with current project groups.
+  void _refreshProjectGroupCardViewModels() {
+    if (_projectGroupModels == null) return;
+
     final projectGroupCardViewModels = <ProjectGroupCardViewModel>[];
 
     final projects = _projects ?? [];
     final currentProjectIds = projects.map((project) => project.id);
 
-    for (final group in newProjectGroups) {
-      final selectedProjectIds = group.projectIds;
+    for (final group in _projectGroupModels) {
+      final selectedProjectIds = group.projectIds.toList();
 
       selectedProjectIds.removeWhere((id) => !currentProjectIds.contains(id));
 
@@ -383,7 +406,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Cancels created subscription.
   Future<void> _cancelSubscriptions() async {
     await _projectGroupsSubscription?.cancel();
-    _projectGroups = null;
+    _projectGroupsSubscription = null;
   }
 
   /// Handles an [error] occurred in project groups stream.
