@@ -9,6 +9,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
@@ -72,6 +73,9 @@ class MetricsThemeData {
   /// The theme for the performance sparkline.
   final SparklineThemeData performanceSparklineTheme;
 
+  /// A theme for the project build status.
+  final ProjectBuildStatusThemeData projectBuildStatusTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricCirclePercentageThemeData metricCirclePercentageThemeData,
@@ -90,6 +94,7 @@ class MetricsThemeData {
     ProjectMetricsTableThemeData projectMetricsTableTheme,
     ScorecardThemeData buildNumberScorecardTheme,
     SparklineThemeData performanceSparklineTheme,
+    ProjectBuildStatusThemeData projectBuildStatusTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -118,7 +123,9 @@ class MetricsThemeData {
         buildNumberScorecardTheme =
             buildNumberScorecardTheme ?? const ScorecardThemeData(),
         performanceSparklineTheme =
-            performanceSparklineTheme ?? const SparklineThemeData();
+            performanceSparklineTheme ?? const SparklineThemeData(),
+        projectBuildStatusTheme =
+            projectBuildStatusTheme ?? const ProjectBuildStatusThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -141,6 +148,7 @@ class MetricsThemeData {
     ProjectMetricsTableThemeData projectMetricsTableTheme,
     ScorecardThemeData buildNumberScorecardTheme,
     SparklineThemeData performanceSparklineTheme,
+    ProjectBuildStatusThemeData projectBuildStatusTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -165,6 +173,8 @@ class MetricsThemeData {
       buildNumberScorecardTheme: buildNumberScorecardTheme ?? this.buildNumberScorecardTheme,
       performanceSparklineTheme:
           performanceSparklineTheme ?? this.performanceSparklineTheme,
+      projectBuildStatusTheme:
+          projectBuildStatusTheme ?? this.projectBuildStatusTheme,
     );
   }
 }

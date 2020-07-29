@@ -59,6 +59,16 @@ void main() {
     );
 
     test(
+      "uses the default project build status view model if the build status parameter is not specified",
+      () {
+        const expectedViewModel = ProjectBuildStatusViewModel();
+        const projectMetrics = ProjectMetricsTileViewModel();
+
+        expect(projectMetrics.buildStatus, equals(expectedViewModel));
+      },
+    );
+
+    test(
       "equals to another ProjectMetricsTileViewModel with the same params",
       () {
         final firstViewModel = ProjectMetricsTileViewModel(

@@ -15,6 +15,9 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/th
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/attention_level/project_build_status_attention_level.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
@@ -285,6 +288,19 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
             strokeColor: _sparklineStrokeColor,
             fillColor: _sparklineFillColor,
+          ),
+          projectBuildStatusTheme: const ProjectBuildStatusThemeData(
+            attentionLevel: ProjectBuildStatusAttentionLevel(
+              successful: ProjectBuildStatusStyle(
+                backgroundColor: ColorConfig.primaryTranslucentColor,
+              ),
+              failed: ProjectBuildStatusStyle(
+                backgroundColor: ColorConfig.accentTranslucentColor,
+              ),
+              unknown: ProjectBuildStatusStyle(
+                backgroundColor: ColorConfig.inactiveColor,
+              ),
+            ),
           ),
         );
 }

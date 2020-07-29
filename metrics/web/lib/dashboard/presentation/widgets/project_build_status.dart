@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// A class that displays an image representation of the project build status.
@@ -9,48 +11,39 @@ class ProjectBuildStatus extends StatelessWidget {
   /// to display.
   final ProjectBuildStatusViewModel buildStatus;
 
+  /// A class that provides a [ProjectBuildStatusStyle] and icon image
+  /// based on the [BuildStatus].
+  final ProjectBuildStatusStrategy strategy;
+
   /// Creates an instance of the [ProjectBuildStatus]
-  /// with the given [buildStatus].
+  /// with the given [buildStatus] and [strategy].
+  ///
+  /// Both [buildStatus] and [strategy] must not be null.
   const ProjectBuildStatus({
     Key key,
-    this.buildStatus,
-  }) : super(key: key);
+    @required this.buildStatus,
+    @required this.strategy,
+  })  : assert(buildStatus != null),
+        assert(strategy != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final projectBuildStatus = buildStatus?.value;
+    final iconImage = strategy.getIconImage(projectBuildStatus);
+    final theme = strategy.getWidgetStyle(
+      MetricsTheme.of(context),
+      projectBuildStatus,
+    );
+
     return Container(
       height: 40.0,
+      width: 40.0,
       decoration: BoxDecoration(
-        color: _getBackgroundColor(),
+        color: theme.backgroundColor,
         shape: BoxShape.circle,
       ),
-      child: Image.network(_getIconImage()),
+      child: Image.network(iconImage),
     );
-  }
-
-  /// Returns the background [Color] based on the [buildStatus] value.
-  Color _getBackgroundColor() {
-    switch (buildStatus.value) {
-      case BuildStatus.successful:
-        return ColorConfig.primaryTranslucentColor;
-      case BuildStatus.cancelled:
-      case BuildStatus.failed:
-        return ColorConfig.accentTranslucentColor;
-      default:
-        return ColorConfig.inactiveColor;
-    }
-  }
-
-  /// Returns the icon image path, based on the [buildStatus] value.
-  String _getIconImage() {
-    switch (buildStatus.value) {
-      case BuildStatus.successful:
-        return "icons/successful_status.svg";
-      case BuildStatus.cancelled:
-      case BuildStatus.failed:
-        return "icons/failed_status.svg";
-      default:
-        return "icons/unknown_status.svg";
-    }
   }
 }
