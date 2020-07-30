@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/button/theme/style/metrics_button_st
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/dropdown/theme/theme_data/metrics_dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
@@ -33,7 +33,7 @@ void main() {
         expect(themeData.metricsButtonTheme, isNotNull);
         expect(themeData.textFieldTheme, isNotNull);
         expect(themeData.dropdownTheme, isNotNull);
-        expect(themeData.dropdownItemTheme, isNotNull);
+        expect(themeData.metricsDropdownItemTheme, isNotNull);
         expect(themeData.loginTheme, isNotNull);
       },
     );
@@ -53,7 +53,7 @@ void main() {
           metricsButtonTheme: null,
           textFieldTheme: null,
           dropdownTheme: null,
-          dropdownItemTheme: null,
+          metricsDropdownItemTheme: null,
           loginTheme: null,
         );
 
@@ -68,7 +68,7 @@ void main() {
         expect(themeData.metricsButtonTheme, isNotNull);
         expect(themeData.textFieldTheme, isNotNull);
         expect(themeData.dropdownTheme, isNotNull);
-        expect(themeData.dropdownItemTheme, isNotNull);
+        expect(themeData.metricsDropdownItemTheme, isNotNull);
         expect(themeData.loginTheme, isNotNull);
       },
     );
@@ -132,7 +132,7 @@ void main() {
           backgroundColor: backgroundColor,
         );
 
-        const dropdownItemTheme = DropdownItemThemeData(
+        const metricsDropdownItemTheme = MetricsDropdownItemThemeData(
           backgroundColor: backgroundColor,
         );
 
@@ -154,7 +154,7 @@ void main() {
           metricsButtonTheme: metricsButtonTheme,
           textFieldTheme: textFieldTheme,
           dropdownTheme: dropdownTheme,
-          dropdownItemTheme: dropdownItemTheme,
+          metricsDropdownItemTheme: metricsDropdownItemTheme,
           loginTheme: loginTheme,
         );
 
@@ -184,7 +184,8 @@ void main() {
         expect(copiedTheme.metricsButtonTheme, equals(metricsButtonTheme));
         expect(copiedTheme.textFieldTheme, equals(textFieldTheme));
         expect(copiedTheme.dropdownTheme, equals(dropdownTheme));
-        expect(copiedTheme.dropdownItemTheme, equals(dropdownItemTheme));
+        expect(copiedTheme.metricsDropdownItemTheme,
+            equals(metricsDropdownItemTheme));
         expect(copiedTheme.loginTheme, equals(loginTheme));
       },
     );
@@ -234,6 +235,10 @@ void main() {
         );
         expect(themeData.textFieldTheme, equals(themeData.textFieldTheme));
         expect(themeData.dropdownTheme, equals(copiedTheme.dropdownTheme));
+        expect(
+          themeData.metricsDropdownItemTheme,
+          equals(copiedTheme.metricsDropdownItemTheme),
+        );
         expect(themeData.loginTheme, equals(copiedTheme.loginTheme));
       },
     );

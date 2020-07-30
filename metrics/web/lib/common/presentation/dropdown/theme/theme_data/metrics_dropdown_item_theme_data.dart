@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Stores the theme data for the metrics styled dropdown item.
-class DropdownItemThemeData {
+class MetricsDropdownItemThemeData {
   /// A background [Color] of the dropdown item.
   final Color backgroundColor;
 
@@ -11,8 +11,8 @@ class DropdownItemThemeData {
   /// A [TextStyle] of the dropdown item text.
   final TextStyle textStyle;
 
-  /// Creates the [DropdownItemThemeData].
-  const DropdownItemThemeData({
+  /// Creates the [MetricsDropdownItemThemeData].
+  const MetricsDropdownItemThemeData({
     this.backgroundColor,
     this.hoverColor,
     this.textStyle,
