@@ -59,6 +59,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               accentColor: Colors.transparent,
               backgroundColor: ColorConfig.accentTranslucentColor,
               textStyle: TextStyle(
+                fontSize: 24.0,
                 color: ColorConfig.accentColor,
                 fontWeight: FontWeight.bold,
               ),
@@ -68,6 +69,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               accentColor: Colors.transparent,
               backgroundColor: ColorConfig.yellowTranslucent,
               textStyle: TextStyle(
+                fontSize: 24.0,
                 color: ColorConfig.yellow,
                 fontWeight: FontWeight.bold,
               ),
@@ -77,6 +79,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               accentColor: Colors.transparent,
               backgroundColor: ColorConfig.primaryTranslucentColor,
               textStyle: TextStyle(
+                fontSize: 24.0,
                 color: ColorConfig.primaryColor,
                 fontWeight: FontWeight.bold,
               ),

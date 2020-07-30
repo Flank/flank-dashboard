@@ -33,6 +33,7 @@ class ThemedCirclePercentage extends StatelessWidget {
     return CirclePercentage(
       value: percent?.value,
       placeholder: const NoDataPlaceholder(),
+      valueStrokeWidth: 3.0,
       valueColor: widgetTheme?.primaryColor,
       strokeColor: widgetTheme?.accentColor,
       backgroundColor: widgetTheme?.backgroundColor,
