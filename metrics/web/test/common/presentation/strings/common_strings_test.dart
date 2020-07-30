@@ -14,7 +14,7 @@ void main() {
     );
 
     test(
-      ".duration() returns an string representing the given duration",
+      ".duration() returns a string representing the given duration",
       () {
         const duration = Duration(hours: 1, minutes: 40, seconds: 20);
         final expected = prettyDuration(
