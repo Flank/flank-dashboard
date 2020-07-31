@@ -4,6 +4,8 @@ import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
@@ -12,23 +14,57 @@ import 'package:network_image_mock/network_image_mock.dart';
 import 'package:provider/provider.dart';
 
 import '../../../test_utils/auth_notifier_stub.dart';
+import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("LoginPage", () {
-    testWidgets(
-      "contains project's title",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _LoginPageTestbed());
+    const metricsThemeData = MetricsThemeData(
+      loginTheme: LoginThemeData(
+        titleTextStyle: TextStyle(
+          color: Colors.blue,
+          fontSize: 20.0,
+        ),
+      ),
+    );
 
-        expect(find.text(CommonStrings.metrics), findsOneWidget);
+    testWidgets(
+      "displays the welcome message",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _LoginPageTestbed());
+        });
+
+        expect(find.text(CommonStrings.welcomeMetrics), findsOneWidget);
       },
     );
 
     testWidgets(
-      "contains authentication form",
+      "applies the title text style from the theme to the welcome message",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _LoginPageTestbed());
+        final expectedStyle = metricsThemeData.loginTheme.titleTextStyle;
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _LoginPageTestbed(
+            metricsThemeData: metricsThemeData,
+          ));
+        });
+
+        final text = tester.widget<Text>(
+          find.text(CommonStrings.welcomeMetrics),
+        );
+        final style = text.style;
+
+        expect(style, equals(expectedStyle));
+      },
+    );
+
+    testWidgets(
+      "displays the authentication form",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _LoginPageTestbed());
+        });
 
         expect(find.byType(AuthForm), findsOneWidget);
       },
@@ -37,9 +73,11 @@ void main() {
     testWidgets(
       "navigates to the dashboard page if the login was successful",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_LoginPageTestbed(
-          authNotifier: AuthNotifierStub(),
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_LoginPageTestbed(
+            authNotifier: AuthNotifierStub(),
+          ));
+        });
 
         await tester.enterText(
           find.widgetWithText(TextFormField, AuthStrings.email),
@@ -63,6 +101,9 @@ void main() {
 
 /// A testbed widget, used to test the [LoginPage] widget.
 class _LoginPageTestbed extends StatelessWidget {
+  /// A [MetricsThemeData] to use in tests.
+  final MetricsThemeData metricsThemeData;
+
   /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
 
@@ -70,7 +111,10 @@ class _LoginPageTestbed extends StatelessWidget {
   final ProjectMetricsNotifier metricsNotifier;
 
   /// Creates the [_LoginPageTestbed] with the given [authNotifier] and [metricsNotifier].
+  ///
+  /// The [metricsThemeData] defaults to an empty [MetricsThemeData] instance.
   const _LoginPageTestbed({
+    this.metricsThemeData = const MetricsThemeData(),
     this.authNotifier,
     this.metricsNotifier,
   });
@@ -82,14 +126,14 @@ class _LoginPageTestbed extends StatelessWidget {
       metricsNotifier: metricsNotifier,
       child: Builder(
         builder: (context) {
-          return MaterialApp(
-            title: CommonStrings.metrics,
-            home: LoginPage(),
+          return MetricsThemedTestbed(
+            metricsThemeData: metricsThemeData,
             onGenerateRoute: (settings) => RouteGenerator.generateRoute(
               settings: settings,
               isLoggedIn:
                   Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
+            body: LoginPage(),
           );
         },
       ),

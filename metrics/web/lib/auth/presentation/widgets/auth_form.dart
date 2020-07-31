@@ -3,7 +3,10 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/validators/email_validator.dart';
 import 'package:metrics/auth/presentation/validators/password_validator.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
+import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_strategy.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:provider/provider.dart';
 
 /// Shows an authentication form to sign in.
@@ -28,24 +31,24 @@ class _AuthFormState extends State<AuthForm> {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          TextFormField(
+          MetricsTextFormField(
             key: const Key(AuthStrings.email),
-            decoration: const InputDecoration(
-              labelText: AuthStrings.email,
-            ),
             controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
             validator: EmailValidator.validate,
+            hint: AuthStrings.email,
+            keyboardType: TextInputType.emailAddress,
           ),
-          TextFormField(
-            key: const Key(AuthStrings.password),
-            decoration: const InputDecoration(
-              labelText: AuthStrings.password,
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: MetricsTextFormField(
+              key: const Key(AuthStrings.password),
+              controller: _passwordController,
+              validator: PasswordValidator.validate,
+              obscureText: true,
+              hint: AuthStrings.password,
             ),
-            controller: _passwordController,
-            obscureText: true,
-            validator: PasswordValidator.validate,
           ),
           Selector<AuthNotifier, String>(
             selector: (_, state) => state.authErrorMessage,
@@ -61,16 +64,15 @@ class _AuthFormState extends State<AuthForm> {
               );
             },
           ),
-          Container(
-            margin: const EdgeInsets.only(top: 10.0),
-            alignment: Alignment.centerRight,
-            child: HandCursor(
-              child: RaisedButton(
-                key: const Key(AuthStrings.signIn),
-                onPressed: () => _submit(),
-                child: const Text(AuthStrings.signIn),
-              ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0, top: 72.0),
+            child: MetricsPositiveButton(
+              onPressed: () => _submit(),
+              label: AuthStrings.signIn,
             ),
+          ),
+          SignInOptionButton(
+            strategy: GoogleSignInOptionStrategy(),
           ),
         ],
       ),

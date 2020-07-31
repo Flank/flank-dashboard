@@ -3,8 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
+import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_strategy.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -13,11 +17,11 @@ import '../state/auth_notifier_test.dart';
 void main() {
   group("AuthForm", () {
     final emailInputFinder =
-        find.widgetWithText(TextFormField, AuthStrings.email);
+        find.widgetWithText(MetricsTextFormField, AuthStrings.email);
     final passwordInputFinder =
-        find.widgetWithText(TextFormField, AuthStrings.password);
+        find.widgetWithText(MetricsTextFormField, AuthStrings.password);
     final submitButtonFinder =
-        find.widgetWithText(RaisedButton, AuthStrings.signIn);
+        find.widgetWithText(MetricsPositiveButton, AuthStrings.signIn);
 
     const testEmail = 'test@email.com';
     const testPassword = 'testPassword';
@@ -39,7 +43,11 @@ void main() {
     testWidgets(
       "email input shows an error message if a value is empty on submit",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
 
         await tester.tap(submitButtonFinder);
         await tester.pumpAndSettle();
@@ -54,7 +62,12 @@ void main() {
     testWidgets(
       "email input shows an error message if a value is not a valid email on submit",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+
         await tester.enterText(emailInputFinder, 'notAnEmail');
 
         await tester.tap(submitButtonFinder);
@@ -67,7 +80,11 @@ void main() {
     testWidgets(
       "password input shows an error message if a value is empty on submit",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
 
         await tester.tap(submitButtonFinder);
         await tester.pump();
@@ -84,7 +101,12 @@ void main() {
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
-        await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+
         await tester.enterText(emailInputFinder, testEmail);
         await tester.enterText(passwordInputFinder, testPassword);
         await tester.tap(submitButtonFinder);
@@ -97,9 +119,12 @@ void main() {
     testWidgets(
       "shows an auth error text if the login process went wrong",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_AuthFormTestbed(
-          authNotifier: SignInErrorAuthNotifierStub(),
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_AuthFormTestbed(
+            authNotifier: SignInErrorAuthNotifierStub(),
+          ));
+        });
+
         await tester.enterText(emailInputFinder, 'test@email.com');
         await tester.enterText(passwordInputFinder, 'testPassword');
         await tester.tap(submitButtonFinder);
@@ -113,14 +138,20 @@ void main() {
     );
 
     testWidgets(
-      "applies a hand cursor to the submit button",
+      "displays the google sign in option button",
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
-        await tester.pumpWidget(_AuthFormTestbed(authNotifier: authNotifier));
-        final finder = find.ancestor(
-          of: submitButtonFinder,
-          matching: find.byType(HandCursor),
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+
+        final finder = find.byWidgetPredicate(
+          (widget) =>
+              widget is SignInOptionButton &&
+              widget.strategy is GoogleSignInOptionStrategy,
         );
 
         expect(finder, findsOneWidget);

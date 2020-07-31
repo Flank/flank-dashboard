@@ -30,6 +30,50 @@ void main() {
 
     String defaultValidator(String value) => null;
 
+    TextField findTextField(WidgetTester tester) {
+      return tester.widget<TextField>(find.byType(TextField));
+    }
+
+    testWidgets(
+      "throws an AssertionError if the given obscure text is null",
+      (tester) async {
+        await tester.pumpWidget(const _MetricsTextFormFieldTestbed(
+          obscureText: null,
+        ));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "applies the given obscure text to the text form field",
+      (tester) async {
+        await tester.pumpWidget(const _MetricsTextFormFieldTestbed(
+          obscureText: true,
+        ));
+
+        final textField = findTextField(tester);
+
+        expect(textField.obscureText, isTrue);
+      },
+    );
+
+    testWidgets(
+      "applies the given keyboard type to the text form field",
+      (tester) async {
+        const expectedKeyboardType = TextInputType.emailAddress;
+
+        await tester.pumpWidget(const _MetricsTextFormFieldTestbed(
+          keyboardType: expectedKeyboardType,
+        ));
+
+        final textField = findTextField(tester);
+        final keyboardType = textField.keyboardType;
+
+        expect(keyboardType, equals(expectedKeyboardType));
+      },
+    );
+
     testWidgets(
       "applies the given controller to the text form field",
       (tester) async {
@@ -119,7 +163,7 @@ void main() {
           hint: hint,
         ));
 
-        final textField = tester.widget<TextField>(find.byType(TextField));
+        final textField = findTextField(tester);
         final hintText = textField.decoration.hintText;
 
         expect(hintText, equals(hint));
@@ -135,7 +179,7 @@ void main() {
           prefixIcon: searchIcon,
         ));
 
-        final textField = tester.widget<TextField>(find.byType(TextField));
+        final textField = findTextField(tester);
         final prefixIcon = textField.decoration.prefixIcon;
 
         expect(prefixIcon, equals(searchIcon));
@@ -151,7 +195,7 @@ void main() {
           suffixIcon: lockIcon,
         ));
 
-        final textField = tester.widget<TextField>(find.byType(TextField));
+        final textField = findTextField(tester);
         final suffixIcon = textField.decoration.suffixIcon;
 
         expect(suffixIcon, equals(lockIcon));
@@ -167,7 +211,7 @@ void main() {
           metricsThemeData: metricsThemeData,
         ));
 
-        final textField = tester.widget<TextField>(find.byType(TextField));
+        final textField = findTextField(tester);
         final textStyle = textField.style;
 
         expect(textStyle, equals(themeStyle));
@@ -211,7 +255,7 @@ void main() {
         mouseRegion.onEnter(pointerEnterEvent);
         await tester.pump();
 
-        final textField = tester.widget<TextField>(find.byType(TextField));
+        final textField = findTextField(tester);
         final borderColor = textField.decoration.border.borderSide.color;
 
         expect(borderColor, equals(themeHoverBorderColor));
@@ -240,7 +284,7 @@ void main() {
         mouseRegion.onEnter(pointerEnterEvent);
         await tester.pump();
 
-        final textField = tester.widget<TextField>(find.byType(TextField));
+        final textField = findTextField(tester);
         final borderColor = textField.decoration.border.borderSide.color;
 
         expect(borderColor, isNot(equals(themeHoverBorderColor)));
@@ -265,7 +309,7 @@ void main() {
         mouseRegion.onExit(pointerExitEvent);
         await tester.pump();
 
-        final textField = tester.widget<TextField>(find.byType(TextField));
+        final textField = findTextField(tester);
         final border = textField.decoration.border;
 
         expect(border, equals(themeBorder));
@@ -285,7 +329,7 @@ void main() {
         await tester.tap(find.byType(TextField));
         await tester.pump();
 
-        final textField = tester.widget<TextField>(find.byType(TextField));
+        final textField = findTextField(tester);
         final fillColor = textField.decoration.fillColor;
 
         expect(fillColor, equals(themeFocusColor));
@@ -307,7 +351,7 @@ void main() {
         await tester.tap(find.text(label));
         await tester.pump();
 
-        final textField = tester.widget<TextField>(find.byType(TextField));
+        final textField = findTextField(tester);
         final fillColor = textField.decoration.fillColor;
 
         expect(fillColor, equals(themeFillColor));
@@ -333,6 +377,12 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   /// A callback for value changes for the text field.
   final ValueChanged<String> onChanged;
 
+  /// Indicates whether to hide the text being edited.
+  final bool obscureText;
+
+  /// A type of keyboard to use for editing the text.
+  final TextInputType keyboardType;
+
   /// A prefix icon for the text field under tests.
   final Widget prefixIcon;
 
@@ -348,9 +398,12 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   /// Creates a new instance of the Metrics text form field testbed.
   ///
   /// The [metricsThemeData] defaults to the default [MetricsThemeData] instance.
+  /// The [obscureText] defaults to `false`.
   const _MetricsTextFormFieldTestbed({
     Key key,
     this.metricsThemeData = const MetricsThemeData(),
+    this.obscureText = false,
+    this.keyboardType,
     this.themeData,
     this.controller,
     this.validator,
@@ -370,6 +423,8 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
         controller: controller,
         validator: validator,
         onChanged: onChanged,
+        obscureText: obscureText,
+        keyboardType: keyboardType,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         hint: hint,

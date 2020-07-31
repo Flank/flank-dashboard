@@ -1,8 +1,9 @@
 /// Holds the strings for the authentication module.
 class AuthStrings {
-  static const String email = 'Email';
+  static const String email = 'Email address';
   static const String password = 'Password';
   static const String signIn = 'Sign in';
+  static const String signInWithGoogle = 'Sign in with Google';
 
   static const String emailRequiredErrorMessage = 'Email address is required';
   static const String invalidEmailErrorMessage = 'Invalid email address';

@@ -10,6 +10,8 @@ class LoginThemeData {
   final MetricsButtonStyle loginOptionButtonStyle;
 
   /// Creates a new instance of the [LoginThemeData].
+  ///
+  /// The [titleTextStyle] defaults to an empty [MetricsButtonStyle] instance.
   const LoginThemeData({
     this.loginOptionButtonStyle = const MetricsButtonStyle(),
     this.titleTextStyle,
