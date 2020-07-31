@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/dropdown/theme/theme_data/metrics_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:test/test.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 
 void main() {
-  group("MetricsDropdownItemThemeData", () {
+  group("DropdownItemThemeData", () {
     test("creates an instance with the given values", () {
       const backgroundColor = Colors.red;
       const textStyle = TextStyle(fontSize: 13.0);
       const hoverColor = Colors.orange;
 
-      final themeData = MetricsDropdownItemThemeData(
+      final themeData = DropdownItemThemeData(
         backgroundColor: backgroundColor,
         textStyle: textStyle,
         hoverColor: hoverColor,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
-import 'package:metrics/common/presentation/dropdown/theme/theme_data/metrics_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
@@ -195,7 +195,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             ),
           ),
           dropdownTheme: const DropdownThemeData(),
-          metricsDropdownItemTheme: const MetricsDropdownItemThemeData(
+          dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.transparent,
             hoverColor: _dropdownHoverColor,
             textStyle: TextStyle(fontSize: 16.0),

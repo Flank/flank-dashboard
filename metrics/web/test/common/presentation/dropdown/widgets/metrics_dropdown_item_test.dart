@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_item.dart';
-import 'package:metrics/common/presentation/dropdown/theme/theme_data/metrics_dropdown_item_theme_data.dart';
+import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/widgets/metrics_dropdown_item.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 
@@ -15,7 +15,7 @@ void main() {
     const textStyle = TextStyle(fontSize: 13.0);
 
     const theme = MetricsThemeData(
-      metricsDropdownItemTheme: MetricsDropdownItemThemeData(
+      dropdownItemTheme: DropdownItemThemeData(
         backgroundColor: backgroundColor,
         hoverColor: hoverColor,
         textStyle: textStyle,

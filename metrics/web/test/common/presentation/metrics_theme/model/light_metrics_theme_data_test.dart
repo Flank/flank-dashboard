@@ -25,7 +25,7 @@ void main() {
         expect(lightMetricsThemeData.metricsButtonTheme, isNotNull);
         expect(lightMetricsThemeData.textFieldTheme, isNotNull);
         expect(lightMetricsThemeData.dropdownTheme, isNotNull);
-        expect(lightMetricsThemeData.metricsDropdownItemTheme, isNotNull);
+        expect(lightMetricsThemeData.dropdownItemTheme, isNotNull);
         expect(lightMetricsThemeData.loginTheme, isNotNull);
       },
     );
