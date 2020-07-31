@@ -184,8 +184,7 @@ void main() {
         expect(copiedTheme.metricsButtonTheme, equals(metricsButtonTheme));
         expect(copiedTheme.textFieldTheme, equals(textFieldTheme));
         expect(copiedTheme.dropdownTheme, equals(dropdownTheme));
-        expect(copiedTheme.dropdownItemTheme,
-            equals(dropdownItemTheme));
+        expect(copiedTheme.dropdownItemTheme, equals(dropdownItemTheme));
         expect(copiedTheme.loginTheme, equals(loginTheme));
       },
     );
