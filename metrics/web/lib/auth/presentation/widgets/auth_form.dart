@@ -67,6 +67,7 @@ class _AuthFormState extends State<AuthForm> {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0, top: 72.0),
             child: MetricsPositiveButton(
+              key: const Key(AuthStrings.signIn),
               onPressed: () => _submit(),
               label: AuthStrings.signIn,
             ),
