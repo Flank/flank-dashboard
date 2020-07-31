@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_table_header_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:test/test.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
@@ -16,7 +16,7 @@ void main() {
       },
     );
 
-    test("creates an instance with the given values", () {
+    test("creates a theme with the given text style", () {
       final textStyle = TextStyle(color: Colors.red);
       final themeData = MetricsTableHeaderThemeData(textStyle: textStyle);
 
