@@ -9,9 +9,12 @@ import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_d
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_metrics_table_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:test/test.dart';
 
@@ -35,6 +38,7 @@ void main() {
         expect(themeData.dropdownTheme, isNotNull);
         expect(themeData.dropdownItemTheme, isNotNull);
         expect(themeData.loginTheme, isNotNull);
+        expect(themeData.projectMetricsTableTheme, isNotNull);
       },
     );
 
@@ -55,6 +59,7 @@ void main() {
           dropdownTheme: null,
           dropdownItemTheme: null,
           loginTheme: null,
+          projectMetricsTableTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -70,6 +75,7 @@ void main() {
         expect(themeData.dropdownTheme, isNotNull);
         expect(themeData.dropdownItemTheme, isNotNull);
         expect(themeData.loginTheme, isNotNull);
+        expect(themeData.projectMetricsTableTheme, isNotNull);
       },
     );
 
@@ -140,6 +146,15 @@ void main() {
           titleTextStyle: TextStyle(color: Colors.red),
         );
 
+        const projectMetricsTableTheme = ProjectMetricsTableThemeData(
+          projectMetricsTileTheme: ProjectMetricsTileThemeData(
+            backgroundColor: Colors.red,
+          ),
+          metricsTableHeaderTheme: MetricsTableHeaderThemeData(
+            textStyle: TextStyle(color: Colors.red),
+          ),
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -156,6 +171,7 @@ void main() {
           dropdownTheme: dropdownTheme,
           dropdownItemTheme: dropdownItemTheme,
           loginTheme: loginTheme,
+          projectMetricsTableTheme: projectMetricsTableTheme,
         );
 
         expect(
@@ -186,6 +202,10 @@ void main() {
         expect(copiedTheme.dropdownTheme, equals(dropdownTheme));
         expect(copiedTheme.dropdownItemTheme, equals(dropdownItemTheme));
         expect(copiedTheme.loginTheme, equals(loginTheme));
+        expect(
+          copiedTheme.projectMetricsTableTheme,
+          equals(projectMetricsTableTheme),
+        );
       },
     );
 
@@ -239,6 +259,10 @@ void main() {
           equals(copiedTheme.dropdownItemTheme),
         );
         expect(themeData.loginTheme, equals(copiedTheme.loginTheme));
+        expect(
+          themeData.projectMetricsTableTheme,
+          equals(copiedTheme.projectMetricsTableTheme),
+        );
       },
     );
   });

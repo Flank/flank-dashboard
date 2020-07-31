@@ -4,6 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/base/presentation/widgets/scorecard.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_metrics_table_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_metrics_tile_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
@@ -11,6 +14,7 @@ import 'package:metrics/dashboard/presentation/view_models/performance_sparkline
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -50,6 +54,108 @@ void main() {
         ));
 
         expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "applies the background color from the metrics theme",
+      (WidgetTester tester) async {
+        const backgroundColor = Colors.black;
+
+        const themeData = MetricsThemeData(
+          projectMetricsTableTheme: ProjectMetricsTableThemeData(
+            projectMetricsTileTheme: ProjectMetricsTileThemeData(
+              backgroundColor: backgroundColor,
+            ),
+          ),
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            themeData: themeData,
+            projectMetrics: testProjectMetrics,
+          ));
+        });
+
+        final projectMetricsTileContainer = tester.widget<DecoratedBox>(
+          find.ancestor(
+            of: find.byType(MetricsTableRow),
+            matching: find.byType(DecoratedBox),
+          ),
+        );
+
+        final decoration =
+            projectMetricsTileContainer.decoration as BoxDecoration;
+
+        expect(decoration.color, equals(backgroundColor));
+      },
+    );
+
+    testWidgets(
+      "applies the border color from the metrics theme",
+      (WidgetTester tester) async {
+        const borderColor = Colors.black;
+
+        const themeData = MetricsThemeData(
+          projectMetricsTableTheme: ProjectMetricsTableThemeData(
+            projectMetricsTileTheme: ProjectMetricsTileThemeData(
+              borderColor: borderColor,
+            ),
+          ),
+        );
+
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
+          themeData: themeData,
+          projectMetrics: testProjectMetrics,
+        ));
+
+        final projectMetricsTileContainer = tester.widget<DecoratedBox>(
+          find.ancestor(
+            of: find.byType(MetricsTableRow),
+            matching: find.byType(DecoratedBox),
+          ),
+        );
+
+        final decoration =
+            projectMetricsTileContainer.decoration as BoxDecoration;
+        final border = decoration.border as Border;
+
+        expect(border.top.color, equals(borderColor));
+        expect(border.bottom.color, equals(borderColor));
+        expect(border.left.color, equals(borderColor));
+        expect(border.right.color, equals(borderColor));
+      },
+    );
+
+    testWidgets(
+      "applies the text style from the metrics theme",
+      (WidgetTester tester) async {
+        const textStyle = TextStyle(
+          color: Colors.red,
+        );
+        const projectName = 'projectName';
+        const tileViewModel = ProjectMetricsTileViewModel(
+          projectName: projectName,
+        );
+
+        const themeData = MetricsThemeData(
+          projectMetricsTableTheme: ProjectMetricsTableThemeData(
+            projectMetricsTileTheme: ProjectMetricsTileThemeData(
+              textStyle: textStyle,
+            ),
+          ),
+        );
+
+        await tester.pumpWidget(const _ProjectMetricsTileTestbed(
+          themeData: themeData,
+          projectMetrics: tileViewModel,
+        ));
+
+        final projectNameText = tester.widget<Text>(
+          find.text(projectName),
+        );
+
+        expect(projectNameText.style, equals(textStyle));
       },
     );
 
@@ -181,15 +287,23 @@ class _ProjectMetricsTileTestbed extends StatelessWidget {
   /// The [ProjectMetricsTileViewModel] instance to display.
   final ProjectMetricsTileViewModel projectMetrics;
 
-  /// Creates an instance of this testbed with the given [projectMetrics].
+  /// A [MetricsThemeData] used in tests.
+  final MetricsThemeData themeData;
+
+  /// Creates an instance of this testbed
+  /// with the given [projectMetrics] and [themeData].
+  ///
+  /// If the [themeData] is not specified, the [MetricsThemeData] used.
   const _ProjectMetricsTileTestbed({
     Key key,
     this.projectMetrics,
+    this.themeData = const MetricsThemeData(),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
+      metricsThemeData: themeData,
       body: ProjectMetricsTile(
         projectMetricsViewModel: projectMetrics,
       ),

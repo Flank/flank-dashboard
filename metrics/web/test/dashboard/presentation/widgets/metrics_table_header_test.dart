@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_table_header_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_metrics_table_theme_data.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
@@ -65,13 +68,53 @@ void main() {
         expect(find.text(DashboardStrings.coverage), findsOneWidget);
       },
     );
+
+    testWidgets(
+      "applies the text style from the metrics theme",
+      (tester) async {
+        const textStyle = TextStyle(color: Colors.red);
+
+        const themeData = MetricsThemeData(
+          projectMetricsTableTheme: ProjectMetricsTableThemeData(
+            metricsTableHeaderTheme:
+                MetricsTableHeaderThemeData(textStyle: textStyle),
+          ),
+        );
+
+        await tester.pumpWidget(
+          _DashboardTableHeaderTestbed(themeData: themeData),
+        );
+
+        final defaultTextStyle = tester.widget<DefaultTextStyle>(
+          find.descendant(
+            of: find.byType(MetricsTableHeader),
+            matching: find.byType(DefaultTextStyle),
+          ),
+        );
+
+        expect(defaultTextStyle.style, equals(textStyle));
+      },
+    );
   });
 }
 
+/// A testbed class required to test the [MetricsTableHeader] widget.
 class _DashboardTableHeaderTestbed extends StatelessWidget {
+  /// A [MetricsThemeData] used in tests.
+  final MetricsThemeData themeData;
+
+  /// Creates an instance of this testbed with the given [themeData].
+  ///
+  /// If the [themeData] is not specified, the [MetricsThemeData] used.
+  const _DashboardTableHeaderTestbed({
+    Key key,
+    this.themeData = const MetricsThemeData(),
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
+      metricsThemeData: themeData,
       body: MetricsTableHeader(),
     );
   }
