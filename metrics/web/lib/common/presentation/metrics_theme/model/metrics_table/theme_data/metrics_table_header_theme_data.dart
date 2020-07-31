@@ -9,6 +9,6 @@ class MetricsTableHeaderThemeData {
   ///
   /// The [textStyle] defaults to an empty `TextStyle`.
   const MetricsTableHeaderThemeData({
-    this.textStyle = const TextStyle(),
-  });
+    TextStyle textStyle,
+  }) : textStyle = textStyle ?? const TextStyle();
 }

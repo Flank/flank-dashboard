@@ -8,9 +8,9 @@ import 'package:test/test.dart';
 void main() {
   group("MetricsTableHeaderThemeData", () {
     test(
-      "creates an instance with a default text style if the parameter is not specified",
+      "creates an instance with a default text style if the given text style is null",
       () {
-        const themeData = MetricsTableHeaderThemeData();
+        const themeData = MetricsTableHeaderThemeData(textStyle: null);
 
         expect(themeData.textStyle, isNotNull);
       },
