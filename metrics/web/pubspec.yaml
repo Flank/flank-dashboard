@@ -80,31 +80,15 @@ flutter:
       fonts:
         - asset: fonts/Roboto-Black.ttf
           weight: 900
-        - asset: fonts/Roboto-BlackItalic.ttf
-          style: italic
-          weight: 900
         - asset: fonts/Roboto-Bold.ttf
           weight: 700
-        - asset: fonts/Roboto-BoldItalic.ttf
-          style: italic
-          weight: 700
-        - asset: fonts/Roboto-Italic.ttf
-          style: italic
         - asset: fonts/Roboto-Light.ttf
-          weight: 300
-        - asset: fonts/Roboto-LightItalic.ttf
-          style: italic
           weight: 300
         - asset: fonts/Roboto-Medium.ttf
           weight: 500
-        - asset: fonts/Roboto-MediumItalic.ttf
-          style: italic
-          weight: 500
         - asset: fonts/Roboto-Regular.ttf
+          weight: 400
         - asset: fonts/Roboto-Thin.ttf
-          weight: 100
-        - asset: fonts/Roboto-ThinItalic.ttf
-          style: italic
           weight: 100
   #   - family: Trajan Pro
   #     fonts:
