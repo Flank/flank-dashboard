@@ -46,6 +46,20 @@ void main() {
       ),
     );
 
+    const backgroundColor = Colors.black;
+    const borderColor = Colors.black;
+    const textStyle = TextStyle(color: Colors.red);
+
+    const themeData = MetricsThemeData(
+      projectMetricsTableTheme: ProjectMetricsTableThemeData(
+        projectMetricsTileTheme: ProjectMetricsTileThemeData(
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          textStyle: textStyle,
+        ),
+      ),
+    );
+
     testWidgets(
       "throws an AssertionError if a projectMetrics parameter is null",
       (WidgetTester tester) async {
@@ -60,16 +74,6 @@ void main() {
     testWidgets(
       "applies the background color from the metrics theme",
       (WidgetTester tester) async {
-        const backgroundColor = Colors.black;
-
-        const themeData = MetricsThemeData(
-          projectMetricsTableTheme: ProjectMetricsTableThemeData(
-            projectMetricsTileTheme: ProjectMetricsTileThemeData(
-              backgroundColor: backgroundColor,
-            ),
-          ),
-        );
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectMetricsTileTestbed(
             themeData: themeData,
@@ -94,16 +98,6 @@ void main() {
     testWidgets(
       "applies the border color from the metrics theme",
       (WidgetTester tester) async {
-        const borderColor = Colors.black;
-
-        const themeData = MetricsThemeData(
-          projectMetricsTableTheme: ProjectMetricsTableThemeData(
-            projectMetricsTileTheme: ProjectMetricsTileThemeData(
-              borderColor: borderColor,
-            ),
-          ),
-        );
-
         await tester.pumpWidget(_ProjectMetricsTileTestbed(
           themeData: themeData,
           projectMetrics: testProjectMetrics,
@@ -130,20 +124,9 @@ void main() {
     testWidgets(
       "applies the text style from the metrics theme",
       (WidgetTester tester) async {
-        const textStyle = TextStyle(
-          color: Colors.red,
-        );
         const projectName = 'projectName';
         const tileViewModel = ProjectMetricsTileViewModel(
           projectName: projectName,
-        );
-
-        const themeData = MetricsThemeData(
-          projectMetricsTableTheme: ProjectMetricsTableThemeData(
-            projectMetricsTileTheme: ProjectMetricsTileThemeData(
-              textStyle: textStyle,
-            ),
-          ),
         );
 
         await tester.pumpWidget(const _ProjectMetricsTileTestbed(

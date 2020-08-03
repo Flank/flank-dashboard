@@ -32,9 +32,9 @@ void main() {
     );
 
     test("creates an instance with the given values", () {
-      final textStyle = TextStyle(color: Colors.red);
-      final borderColor = Colors.black;
-      final backgroundColor = Colors.green;
+      const textStyle = TextStyle(color: Colors.red);
+      const borderColor = Colors.black;
+      const backgroundColor = Colors.green;
 
       final themeData = ProjectMetricsTableThemeData(
         metricsTableHeaderTheme: MetricsTableHeaderThemeData(
