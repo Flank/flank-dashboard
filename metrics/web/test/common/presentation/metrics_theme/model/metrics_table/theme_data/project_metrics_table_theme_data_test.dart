@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 // ignore_for_file: prefer_const_constructors
 
 void main() {
-  group("MetricsTableHeaderThemeData", () {
+  group("ProjectMetricsTableThemeData", () {
     test(
       "creates an instance with the default metrics table header theme if the given parameter is null",
       () {
@@ -32,31 +32,23 @@ void main() {
     );
 
     test("creates an instance with the given values", () {
-      const textStyle = TextStyle(color: Colors.red);
-      const borderColor = Colors.black;
-      const backgroundColor = Colors.green;
+      final headerTheme = MetricsTableHeaderThemeData(
+        textStyle: TextStyle(color: Colors.red),
+      );
+
+      final tileTheme = ProjectMetricsTileThemeData(
+        textStyle: TextStyle(color: Colors.blue),
+        borderColor: Colors.black,
+        backgroundColor: Colors.green,
+      );
 
       final themeData = ProjectMetricsTableThemeData(
-        metricsTableHeaderTheme: MetricsTableHeaderThemeData(
-          textStyle: textStyle,
-        ),
-        projectMetricsTileTheme: ProjectMetricsTileThemeData(
-          textStyle: textStyle,
-          borderColor: borderColor,
-          backgroundColor: backgroundColor,
-        ),
+        metricsTableHeaderTheme: headerTheme,
+        projectMetricsTileTheme: tileTheme,
       );
 
-      expect(themeData.metricsTableHeaderTheme.textStyle, equals(textStyle));
-      expect(themeData.projectMetricsTileTheme.textStyle, equals(textStyle));
-      expect(
-        themeData.projectMetricsTileTheme.borderColor,
-        equals(borderColor),
-      );
-      expect(
-        themeData.projectMetricsTileTheme.backgroundColor,
-        equals(backgroundColor),
-      );
+      expect(themeData.metricsTableHeaderTheme, equals(headerTheme));
+      expect(themeData.projectMetricsTileTheme, equals(tileTheme));
     });
   });
 }

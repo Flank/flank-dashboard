@@ -13,7 +13,7 @@ class ProjectMetricsTileThemeData {
 
   /// Creates an instance of the [ProjectMetricsTileThemeData].
   ///
-  /// The [borderColor] defaults to [Colors.grey].
+  /// If the given [borderColor] is null, the [Colors.grey] used.
   const ProjectMetricsTileThemeData({
     this.backgroundColor,
     this.textStyle,
