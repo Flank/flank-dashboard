@@ -17,6 +17,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/th
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
@@ -40,6 +41,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _loginOptionTextColor = Color(0xFF757575);
   static const Color _tileBorderColor = Color(0xFF0e0d0d);
   static const Color _tableHeaderColor = Color(0xFF79858b);
+  static const Color _metricsLightGrey = Color(0xFFDCDCE5);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = TextStyle(
@@ -257,6 +259,18 @@ class DarkMetricsThemeData extends MetricsThemeData {
               backgroundColor: scaffoldColor,
               borderColor: _tileBorderColor,
               textStyle: TextStyle(fontSize: 24.0),
+            ),
+          ),
+          scorecardTheme: const ScorecardThemeData(
+            valueTextStyle: TextStyle(
+              fontSize: 24.0,
+              color: _metricsLightGrey,
+              fontWeight: FontWeight.bold,
+            ),
+            descriptionTextStyle: TextStyle(
+              fontSize: 14.0,
+              color: _metricsLightGrey,
+              fontWeight: FontWeight.bold,
             ),
           ),
         );
