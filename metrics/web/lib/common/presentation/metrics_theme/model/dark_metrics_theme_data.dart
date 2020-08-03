@@ -261,7 +261,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               textStyle: TextStyle(fontSize: 24.0),
             ),
           ),
-          scorecardTheme: const ScorecardThemeData(
+          buildNumberScorecardTheme: const ScorecardThemeData(
             valueTextStyle: TextStyle(
               fontSize: 24.0,
               color: _metricsLightGrey,

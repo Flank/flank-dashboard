@@ -40,7 +40,7 @@ void main() {
         expect(themeData.dropdownItemTheme, isNotNull);
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
-        expect(themeData.scorecardTheme, isNotNull);
+        expect(themeData.buildNumberScorecardTheme, isNotNull);
       },
     );
 
@@ -62,7 +62,7 @@ void main() {
           dropdownItemTheme: null,
           loginTheme: null,
           projectMetricsTableTheme: null,
-          scorecardTheme: null,
+          buildNumberScorecardTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -79,7 +79,7 @@ void main() {
         expect(themeData.dropdownItemTheme, isNotNull);
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
-        expect(themeData.scorecardTheme, isNotNull);
+        expect(themeData.buildNumberScorecardTheme, isNotNull);
       },
     );
 
@@ -180,7 +180,7 @@ void main() {
           dropdownItemTheme: dropdownItemTheme,
           loginTheme: loginTheme,
           projectMetricsTableTheme: projectMetricsTableTheme,
-          scorecardTheme: scorecardTheme,
+          buildNumberScorecardTheme: scorecardTheme,
         );
 
         expect(
@@ -215,7 +215,7 @@ void main() {
           copiedTheme.projectMetricsTableTheme,
           equals(projectMetricsTableTheme),
         );
-        expect(copiedTheme.scorecardTheme, equals(scorecardTheme));
+        expect(copiedTheme.buildNumberScorecardTheme, equals(scorecardTheme));
       },
     );
 
@@ -273,7 +273,7 @@ void main() {
           themeData.projectMetricsTableTheme,
           equals(copiedTheme.projectMetricsTableTheme),
         );
-        expect(themeData.scorecardTheme, equals(copiedTheme.scorecardTheme));
+        expect(themeData.buildNumberScorecardTheme, equals(copiedTheme.buildNumberScorecardTheme));
       },
     );
   });

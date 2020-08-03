@@ -66,7 +66,7 @@ class MetricsThemeData {
   final ProjectMetricsTableThemeData projectMetricsTableTheme;
 
   /// A theme for the build number scorecard.
-  final ScorecardThemeData scorecardTheme;
+  final ScorecardThemeData buildNumberScorecardTheme;
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
@@ -84,7 +84,7 @@ class MetricsThemeData {
     DropdownItemThemeData dropdownItemTheme,
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
-    ScorecardThemeData scorecardTheme,
+    ScorecardThemeData buildNumberScorecardTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -110,7 +110,8 @@ class MetricsThemeData {
         loginTheme = loginTheme ?? const LoginThemeData(),
         projectMetricsTableTheme =
             projectMetricsTableTheme ?? const ProjectMetricsTableThemeData(),
-        scorecardTheme = scorecardTheme ?? const ScorecardThemeData();
+        buildNumberScorecardTheme =
+            buildNumberScorecardTheme ?? const ScorecardThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -131,7 +132,7 @@ class MetricsThemeData {
     DropdownItemThemeData dropdownItemTheme,
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
-    ScorecardThemeData scorecardTheme,
+    ScorecardThemeData buildNumberScorecardTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -153,7 +154,7 @@ class MetricsThemeData {
       loginTheme: loginTheme ?? this.loginTheme,
       projectMetricsTableTheme:
           projectMetricsTableTheme ?? this.projectMetricsTableTheme,
-      scorecardTheme: scorecardTheme ?? this.scorecardTheme,
+      buildNumberScorecardTheme: buildNumberScorecardTheme ?? this.buildNumberScorecardTheme,
     );
   }
 }

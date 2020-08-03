@@ -75,7 +75,7 @@ void main() {
       (WidgetTester tester) async {
         const textStyle = TextStyle(color: Colors.red);
         const theme = MetricsThemeData(
-          scorecardTheme: ScorecardThemeData(
+          buildNumberScorecardTheme: ScorecardThemeData(
             valueTextStyle: textStyle,
           ),
         );
@@ -97,7 +97,7 @@ void main() {
       (WidgetTester tester) async {
         const textStyle = TextStyle(color: Colors.red);
         const theme = MetricsThemeData(
-          scorecardTheme: ScorecardThemeData(
+          buildNumberScorecardTheme: ScorecardThemeData(
             descriptionTextStyle: textStyle,
           ),
         );

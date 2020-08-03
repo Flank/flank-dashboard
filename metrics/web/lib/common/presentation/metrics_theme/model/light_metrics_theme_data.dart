@@ -233,6 +233,6 @@ class LightMetricsThemeData extends MetricsThemeData {
               textStyle: TextStyle(fontSize: 22.0),
             ),
           ),
-          scorecardTheme: const ScorecardThemeData(),
+          buildNumberScorecardTheme: const ScorecardThemeData(),
         );
 }

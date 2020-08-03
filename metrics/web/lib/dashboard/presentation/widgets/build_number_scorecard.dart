@@ -22,7 +22,7 @@ class BuildNumberScorecard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final widgetTheme = MetricsTheme.of(context).scorecardTheme;
+    final widgetTheme = MetricsTheme.of(context).buildNumberScorecardTheme;
 
     if (buildNumberMetric?.numberOfBuilds == null ||
         buildNumberMetric?.numberOfBuilds == 0) {
