@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
@@ -37,12 +36,10 @@ class _MyAppState extends State<MyApp> {
             ),
             themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
             theme: ThemeData(
+              fontFamily: 'Roboto',
               brightness: Brightness.light,
               primarySwatch: Colors.teal,
               primaryColorBrightness: Brightness.light,
-              textTheme: GoogleFonts.robotoTextTheme(
-                Typography.blackMountainView,
-              ),
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
               ),
@@ -61,12 +58,10 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             darkTheme: ThemeData(
+              fontFamily: 'Roboto',
               brightness: Brightness.dark,
               primarySwatch: Colors.teal,
               primaryColorBrightness: Brightness.dark,
-              textTheme: GoogleFonts.robotoTextTheme(
-                Typography.whiteMountainView,
-              ),
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
               ),
