@@ -9,18 +9,18 @@ import 'package:test/test.dart';
 
 void main() {
   group("ProjectBuildStatusStrategy", () {
-    const successfulStyle = ProjectBuildStatusStyle(
+    const positiveStyle = ProjectBuildStatusStyle(
       backgroundColor: Colors.green,
     );
-    const failedStyle = ProjectBuildStatusStyle(backgroundColor: Colors.red);
-    const unknownStyle = ProjectBuildStatusStyle(backgroundColor: Colors.grey);
+    const negativeStyle = ProjectBuildStatusStyle(backgroundColor: Colors.red);
+    const inactiveStyle = ProjectBuildStatusStyle(backgroundColor: Colors.grey);
 
     const theme = MetricsThemeData(
       projectBuildStatusTheme: ProjectBuildStatusThemeData(
         attentionLevel: ProjectBuildStatusAttentionLevel(
-          successful: successfulStyle,
-          failed: failedStyle,
-          unknown: unknownStyle,
+          positive: positiveStyle,
+          negative: negativeStyle,
+          inactive: inactiveStyle,
         ),
       ),
     );
@@ -28,47 +28,47 @@ void main() {
     const themeStrategy = ProjectBuildStatusStrategy();
 
     test(
-      ".getWidgetStyle() returns the successful style if the given build status is successful",
+      ".getWidgetStyle() returns the positive style if the given build status is successful",
       () {
         final actualStyle = themeStrategy.getWidgetStyle(
           theme,
           BuildStatus.successful,
         );
 
-        expect(actualStyle, equals(successfulStyle));
+        expect(actualStyle, equals(positiveStyle));
       },
     );
 
     test(
-      ".getWidgetStyle() returns the failed style if the given build status is failed",
+      ".getWidgetStyle() returns the negative style if the given build status is failed",
       () {
         final actualStyle = themeStrategy.getWidgetStyle(
           theme,
           BuildStatus.failed,
         );
 
-        expect(actualStyle, equals(failedStyle));
+        expect(actualStyle, equals(negativeStyle));
       },
     );
 
     test(
-      ".getWidgetStyle() returns the failed style if the given build status is cancelled",
+      ".getWidgetStyle() returns the negative style if the given build status is cancelled",
       () {
         final actualStyle = themeStrategy.getWidgetStyle(
           theme,
           BuildStatus.cancelled,
         );
 
-        expect(actualStyle, equals(failedStyle));
+        expect(actualStyle, equals(negativeStyle));
       },
     );
 
     test(
-      ".getWidgetStyle() returns the unknown style if the given build status is null",
+      ".getWidgetStyle() returns the inactive style if the given build status is null",
       () {
         final actualStyle = themeStrategy.getWidgetStyle(theme, null);
 
-        expect(actualStyle, equals(unknownStyle));
+        expect(actualStyle, equals(inactiveStyle));
       },
     );
 

@@ -18,13 +18,13 @@ class ProjectBuildStatusStrategy {
 
     switch (value) {
       case BuildStatus.successful:
-        return attentionLevelTheme.successful;
+        return attentionLevelTheme.positive;
       case BuildStatus.cancelled:
-        return attentionLevelTheme.failed;
+        return attentionLevelTheme.negative;
       case BuildStatus.failed:
-        return attentionLevelTheme.failed;
+        return attentionLevelTheme.negative;
       default:
-        return attentionLevelTheme.unknown;
+        return attentionLevelTheme.inactive;
     }
   }
 

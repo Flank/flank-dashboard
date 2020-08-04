@@ -13,26 +13,26 @@ void main() {
       () {
         const attentionLevel = ProjectBuildStatusAttentionLevel();
 
-        expect(attentionLevel.successful, isNotNull);
-        expect(attentionLevel.failed, isNotNull);
-        expect(attentionLevel.unknown, isNotNull);
+        expect(attentionLevel.positive, isNotNull);
+        expect(attentionLevel.negative, isNotNull);
+        expect(attentionLevel.inactive, isNotNull);
       },
     );
 
     test("creates an instance with the given styles", () {
-      const successful = ProjectBuildStatusStyle(backgroundColor: Colors.green);
-      const failed = ProjectBuildStatusStyle(backgroundColor: Colors.blue);
-      const unknown = ProjectBuildStatusStyle(backgroundColor: Colors.red);
+      const positive = ProjectBuildStatusStyle(backgroundColor: Colors.green);
+      const negative = ProjectBuildStatusStyle(backgroundColor: Colors.blue);
+      const inactive = ProjectBuildStatusStyle(backgroundColor: Colors.red);
 
       final attentionLevel = ProjectBuildStatusAttentionLevel(
-        successful: successful,
-        failed: failed,
-        unknown: unknown,
+        positive: positive,
+        negative: negative,
+        inactive: inactive,
       );
 
-      expect(attentionLevel.successful, equals(successful));
-      expect(attentionLevel.failed, equals(failed));
-      expect(attentionLevel.unknown, equals(unknown));
+      expect(attentionLevel.positive, equals(positive));
+      expect(attentionLevel.negative, equals(negative));
+      expect(attentionLevel.inactive, equals(inactive));
     });
   });
 }

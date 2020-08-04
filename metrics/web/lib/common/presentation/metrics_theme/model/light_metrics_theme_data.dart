@@ -241,13 +241,13 @@ class LightMetricsThemeData extends MetricsThemeData {
           performanceSparklineTheme: const SparklineThemeData(),
           projectBuildStatusTheme: const ProjectBuildStatusThemeData(
             attentionLevel: ProjectBuildStatusAttentionLevel(
-              successful: ProjectBuildStatusStyle(
+              positive: ProjectBuildStatusStyle(
                 backgroundColor: ColorConfig.primaryTranslucentColor,
               ),
-              failed: ProjectBuildStatusStyle(
+              negative: ProjectBuildStatusStyle(
                 backgroundColor: ColorConfig.accentTranslucentColor,
               ),
-              unknown: ProjectBuildStatusStyle(
+              inactive: ProjectBuildStatusStyle(
                 backgroundColor: ColorConfig.inactiveColor,
               ),
             ),

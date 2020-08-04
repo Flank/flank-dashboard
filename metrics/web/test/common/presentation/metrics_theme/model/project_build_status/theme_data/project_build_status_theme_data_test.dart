@@ -22,7 +22,7 @@ void main() {
 
     test("creates a theme with the given attention level", () {
       const attentionLevel = ProjectBuildStatusAttentionLevel(
-        successful: ProjectBuildStatusStyle(
+        positive: ProjectBuildStatusStyle(
           backgroundColor: Colors.red,
         ),
       );
