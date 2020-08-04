@@ -10,7 +10,7 @@ class PerformanceSparklineViewModel extends Equatable {
   final UnmodifiableListView<Point<int>> performance;
 
   /// A performance value.
-  final int value;
+  final Duration value;
 
   @override
   List<Object> get props => [performance, value];
@@ -22,7 +22,7 @@ class PerformanceSparklineViewModel extends Equatable {
   /// The [performance] and [value] must not be `null`.
   const PerformanceSparklineViewModel({
     @required this.performance,
-    this.value = 0,
+    this.value = const Duration(),
   })  : assert(performance != null),
         assert(value != null);
 }

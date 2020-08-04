@@ -1,3 +1,5 @@
+import 'package:duration/duration.dart';
+
 /// Holds the strings used across the whole project.
 class CommonStrings {
   static const String home = 'Home';
@@ -14,6 +16,13 @@ class CommonStrings {
   static const String cancel = 'Cancel';
   static const String unknownErrorMessage =
       'An unknown error occurred, please try again';
+
+  static String duration(Duration duration) => prettyDuration(
+        duration,
+        abbreviated: true,
+        spacer: '',
+        delimiter: ' ',
+      );
 
   static String getLoadingErrorMessage(String errorMessage) =>
       'An error occurred during loading: $errorMessage';
