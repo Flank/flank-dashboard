@@ -105,7 +105,7 @@ class _DashboardTableHeaderTestbed extends StatelessWidget {
 
   /// Creates an instance of this testbed with the given [themeData].
   ///
-  /// If the [themeData] is not specified, the [MetricsThemeData] used.
+  /// The [themeData] defaults to a [MetricsThemeData].
   const _DashboardTableHeaderTestbed({
     Key key,
     this.themeData = const MetricsThemeData(),

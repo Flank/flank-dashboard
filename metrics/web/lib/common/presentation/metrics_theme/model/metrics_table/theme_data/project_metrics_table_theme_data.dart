@@ -11,9 +11,9 @@ class ProjectMetricsTableThemeData {
 
   /// Creates an instance of the [ProjectMetricsTableThemeData].
   ///
-  /// If the [metricsTableHeaderTheme] is null an instance of
+  /// If the [metricsTableHeaderTheme] is null, an instance of
   /// the [MetricsTableHeaderThemeData] used.
-  /// If the [projectMetricsTileTheme] is null an instance of
+  /// If the [projectMetricsTileTheme] is null, an instance of
   /// the [ProjectMetricsTileThemeData] used.
   const ProjectMetricsTableThemeData({
     MetricsTableHeaderThemeData metricsTableHeaderTheme,

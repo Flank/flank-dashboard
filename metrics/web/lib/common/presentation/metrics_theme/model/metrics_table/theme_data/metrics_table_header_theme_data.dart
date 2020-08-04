@@ -7,7 +7,7 @@ class MetricsTableHeaderThemeData {
 
   /// Creates an instance of the [MetricsTableHeaderThemeData].
   ///
-  /// The [textStyle] defaults to an empty `TextStyle`.
+  /// If the [textStyle] is null, an instance of the `TextStyle` used.
   const MetricsTableHeaderThemeData({
     TextStyle textStyle,
   }) : textStyle = textStyle ?? const TextStyle();
