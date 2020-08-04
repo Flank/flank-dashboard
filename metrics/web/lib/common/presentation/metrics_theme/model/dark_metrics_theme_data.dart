@@ -208,7 +208,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
             textStyle: TextStyle(
               color: Colors.white,
               fontSize: 16.0,
-              height: 1.0,
             ),
           ),
           dropdownTheme: const DropdownThemeData(

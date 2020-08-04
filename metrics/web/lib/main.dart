@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
                 errorBorder: TextFieldConfig.errorBorder,
                 focusedErrorBorder: TextFieldConfig.errorBorder,
                 hintStyle: TextFieldConfig.hintStyle,
-                contentPadding: EdgeInsets.all(16.0),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
               ),
             ),
             darkTheme: ThemeData(
@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> {
                 errorBorder: TextFieldConfig.errorBorder,
                 focusedErrorBorder: TextFieldConfig.errorBorder,
                 hintStyle: TextFieldConfig.hintStyle,
-                contentPadding: EdgeInsets.all(16.0),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
               ),
             ),
           );

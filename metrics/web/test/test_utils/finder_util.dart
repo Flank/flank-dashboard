@@ -16,4 +16,9 @@ class FinderUtil {
 
     return containerWidget.decoration as BoxDecoration;
   }
+
+  /// Finds the [TextField] in the widget tree under tests using the given [tester].
+  static TextField findTextField(WidgetTester tester) {
+    return tester.widget<TextField>(find.byType(TextField));
+  }
 }

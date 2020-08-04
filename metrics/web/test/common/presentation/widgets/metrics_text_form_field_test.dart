@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 
+import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
@@ -30,10 +31,6 @@ void main() {
 
     String defaultValidator(String value) => null;
 
-    TextField findTextField(WidgetTester tester) {
-      return tester.widget<TextField>(find.byType(TextField));
-    }
-
     testWidgets(
       "throws an AssertionError if the given obscure text is null",
       (tester) async {
@@ -52,7 +49,7 @@ void main() {
           obscureText: true,
         ));
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
 
         expect(textField.obscureText, isTrue);
       },
@@ -67,7 +64,7 @@ void main() {
           keyboardType: expectedKeyboardType,
         ));
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
         final keyboardType = textField.keyboardType;
 
         expect(keyboardType, equals(expectedKeyboardType));
@@ -163,7 +160,7 @@ void main() {
           hint: hint,
         ));
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
         final hintText = textField.decoration.hintText;
 
         expect(hintText, equals(hint));
@@ -179,7 +176,7 @@ void main() {
           prefixIcon: searchIcon,
         ));
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
         final prefixIcon = textField.decoration.prefixIcon;
 
         expect(prefixIcon, equals(searchIcon));
@@ -195,7 +192,7 @@ void main() {
           suffixIcon: lockIcon,
         ));
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
         final suffixIcon = textField.decoration.suffixIcon;
 
         expect(suffixIcon, equals(lockIcon));
@@ -211,7 +208,7 @@ void main() {
           metricsThemeData: metricsThemeData,
         ));
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
         final textStyle = textField.style;
 
         expect(textStyle, equals(themeStyle));
@@ -255,7 +252,7 @@ void main() {
         mouseRegion.onEnter(pointerEnterEvent);
         await tester.pump();
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
         final borderColor = textField.decoration.border.borderSide.color;
 
         expect(borderColor, equals(themeHoverBorderColor));
@@ -284,7 +281,7 @@ void main() {
         mouseRegion.onEnter(pointerEnterEvent);
         await tester.pump();
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
         final borderColor = textField.decoration.border.borderSide.color;
 
         expect(borderColor, isNot(equals(themeHoverBorderColor)));
@@ -309,7 +306,7 @@ void main() {
         mouseRegion.onExit(pointerExitEvent);
         await tester.pump();
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
         final border = textField.decoration.border;
 
         expect(border, equals(themeBorder));
@@ -329,7 +326,7 @@ void main() {
         await tester.tap(find.byType(TextField));
         await tester.pump();
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
         final fillColor = textField.decoration.fillColor;
 
         expect(fillColor, equals(themeFocusColor));
@@ -351,7 +348,7 @@ void main() {
         await tester.tap(find.text(label));
         await tester.pump();
 
-        final textField = findTextField(tester);
+        final textField = FinderUtil.findTextField(tester);
         final fillColor = textField.decoration.fillColor;
 
         expect(fillColor, equals(themeFillColor));
