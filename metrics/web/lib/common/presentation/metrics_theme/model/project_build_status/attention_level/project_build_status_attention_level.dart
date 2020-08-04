@@ -16,8 +16,7 @@ class ProjectBuildStatusAttentionLevel {
   /// displaying the negative status.
   final ProjectBuildStatusStyle negative;
 
-  /// A [ProjectBuildStatusStyle] for project build status widget
-  /// displaying the inactive status.
+  /// A [ProjectBuildStatusStyle] for inactive project build status widget.
   final ProjectBuildStatusStyle inactive;
 
   /// Creates a new instance of [ProjectBuildStatusAttentionLevel].
