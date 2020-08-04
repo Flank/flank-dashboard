@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/sparkline_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
@@ -15,7 +15,7 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("PerformanceSparklineGraph", () {
-    const performanceMetricValue = 1;
+    const performanceMetricValue = Duration(minutes: 1);
     final performanceMetric = PerformanceSparklineViewModel(
       performance: UnmodifiableListView([const Point(1, 2)]),
       value: performanceMetricValue,
@@ -46,7 +46,7 @@ void main() {
         ));
 
         expect(
-          find.text(DashboardStrings.minutes(performanceMetricValue)),
+          find.text(CommonStrings.duration(performanceMetricValue)),
           findsOneWidget,
         );
       },
@@ -99,7 +99,7 @@ void main() {
         ));
 
         final valueText = tester.widget<Text>(
-            find.text(DashboardStrings.minutes(performanceMetricValue)));
+            find.text(CommonStrings.duration(performanceMetricValue)));
 
         expect(
           valueText.style.color,

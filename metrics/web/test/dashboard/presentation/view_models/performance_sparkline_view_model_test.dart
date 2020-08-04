@@ -43,7 +43,7 @@ void main() {
       "equals to another PerformanceSparklineViewModel with the same parameters",
       () {
         const performance = <Point<int>>[];
-        const value = 10;
+        const value = Duration(minutes: 10);
         final expected = PerformanceSparklineViewModel(
           performance: UnmodifiableListView(performance),
           value: value,
