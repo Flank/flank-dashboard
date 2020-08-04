@@ -191,7 +191,6 @@ class LightMetricsThemeData extends MetricsThemeData {
             textStyle: TextStyle(
               color: Colors.black,
               fontSize: 16.0,
-              height: 1.0,
             ),
           ),
           dropdownTheme: const DropdownThemeData(),

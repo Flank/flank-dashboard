@@ -14,6 +14,12 @@ class MetricsTextFormField extends StatefulWidget {
   /// The callback that is called when text field value has changed.
   final ValueChanged<String> onChanged;
 
+  /// Indicates whether to hide the text being edited.
+  final bool obscureText;
+
+  /// A type of keyboard to use for editing the text.
+  final TextInputType keyboardType;
+
   /// An icon that appears before the editable part of this text field,
   /// within the decoration's container.
   final Widget prefixIcon;
@@ -29,16 +35,21 @@ class MetricsTextFormField extends StatefulWidget {
   final String label;
 
   /// Creates a new instance of the Metrics text form field.
+  ///
+  /// The [obscureText] defaults to `false` and must not be `null`.
   const MetricsTextFormField({
     Key key,
+    this.obscureText = false,
     this.controller,
     this.validator,
     this.onChanged,
+    this.keyboardType,
     this.prefixIcon,
     this.suffixIcon,
     this.hint,
     this.label,
-  }) : super(key: key);
+  })  : assert(obscureText != null),
+        super(key: key);
 
   @override
   _MetricsTextFormFieldState createState() => _MetricsTextFormFieldState();
@@ -135,6 +146,8 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
             onChanged: widget.onChanged,
             controller: widget.controller,
             validator: widget.validator,
+            obscureText: widget.obscureText,
+            keyboardType: widget.keyboardType,
             style: textFieldTheme.textStyle,
             decoration: _decoration,
           ),

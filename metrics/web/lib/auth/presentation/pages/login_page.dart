@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
@@ -40,21 +41,31 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loginTheme = MetricsTheme.of(context).loginTheme;
+
     return Scaffold(
       body: Center(
         child: SizedBox(
-          width: 300,
+          width: 480,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
+              Container(
+                padding: const EdgeInsets.only(bottom: 104.0),
+                alignment: Alignment.center,
+                child: Image.network(
+                  'icons/logo-metrics.svg',
+                  width: 180.0,
+                  height: 44.0,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 24.0),
                 child: Text(
-                  CommonStrings.metrics,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  CommonStrings.welcomeMetrics,
+                  style: loginTheme.titleTextStyle,
                 ),
               ),
               AuthForm(),

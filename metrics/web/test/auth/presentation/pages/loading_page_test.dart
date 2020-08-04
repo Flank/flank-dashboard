@@ -49,7 +49,9 @@ void main() {
         when(authNotifier.isLoggedIn).thenReturn(false);
         authNotifier.notifyListeners();
 
-        await tester.pumpAndSettle();
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
 
         expect(find.byType(LoginPage), findsOneWidget);
       },

@@ -4,6 +4,7 @@
 import 'dart:io';
 
 import 'package:flutter_driver/flutter_driver.dart';
+import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:test/test.dart';
@@ -139,11 +140,11 @@ Future<void> _login(FlutterDriver driver) async {
   final environment = Platform.environment;
   final credentials = UserCredentials.fromMap(environment);
 
-  await driver.tap(find.byValueKey('Email'));
+  await driver.tap(find.byValueKey(AuthStrings.email));
   await driver.enterText(credentials.email);
-  await driver.tap(find.byValueKey('Password'));
+  await driver.tap(find.byValueKey(AuthStrings.password));
   await driver.enterText(credentials.password);
-  await driver.tap(find.byValueKey('Sign in'));
+  await driver.tap(find.byValueKey(AuthStrings.signIn));
 }
 
 Future<void> _authFormExists(FlutterDriver driver) async {
