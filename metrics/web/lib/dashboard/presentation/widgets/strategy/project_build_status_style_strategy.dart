@@ -1,18 +1,17 @@
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_status_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents the strategy of applying the [MetricsThemeData]
+/// A class that represents the [BuildStatusStyleStrategy] of applying the [MetricsThemeData]
 /// based on the [BuildStatus] value.
-class ProjectBuildStatusStrategy {
-  /// Creates a new instance of the [ProjectBuildStatusStrategy].
-  const ProjectBuildStatusStrategy();
+class ProjectBuildStatusStyleStrategy implements BuildStatusStyleStrategy {
+  /// Creates a new instance of the [ProjectBuildStatusStyleStrategy].
+  const ProjectBuildStatusStyleStrategy();
 
-  /// Returns the [ProjectBuildStatusStyle] based on the [BuildStatus] value.
-  ProjectBuildStatusStyle getWidgetStyle(
-    MetricsThemeData themeData,
-    BuildStatus value,
-  ) {
+  @override
+  ProjectBuildStatusStyle getWidgetTheme(
+      MetricsThemeData themeData, BuildStatus value) {
     final attentionLevelTheme =
         themeData.projectBuildStatusTheme.attentionLevel;
 
@@ -28,7 +27,7 @@ class ProjectBuildStatusStrategy {
     }
   }
 
-  /// Returns the icon image, based on the [BuildStatus] value.
+  @override
   String getIconImage(BuildStatus value) {
     switch (value) {
       case BuildStatus.successful:

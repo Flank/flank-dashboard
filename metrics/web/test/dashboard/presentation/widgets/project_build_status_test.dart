@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -97,31 +97,31 @@ class _ProjectBuildStatusTestbed extends StatelessWidget {
 
   /// A class that represents the strategy of applying the [MetricsThemeData]
   /// based on the [BuildStatus] value.
-  final ProjectBuildStatusStrategy strategy;
+  final ProjectBuildStatusStyleStrategy strategy;
 
   /// Creates an instance of this testbed.
   ///
   /// The [buildStatus] defaults to an empty [ProjectBuildStatusViewModel].
-  /// The [strategy] defaults to [ProjectBuildStatusStrategy].
+  /// The [strategy] defaults to [ProjectBuildStatusStyleStrategy].
   const _ProjectBuildStatusTestbed({
     Key key,
     this.buildStatus = const ProjectBuildStatusViewModel(),
-    this.strategy = const ProjectBuildStatusStrategy(),
+    this.strategy = const ProjectBuildStatusStyleStrategy(),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       body: ProjectBuildStatus(
-        projectBuildStatusStrategy: strategy,
+        buildStatusStyleStrategy: strategy,
         buildStatus: buildStatus,
       ),
     );
   }
 }
 
-/// A stub implementation of the [ProjectBuildStatusStrategy].
-class _BuildResultThemeStrategyStub implements ProjectBuildStatusStrategy {
+/// A stub implementation of the [ProjectBuildStatusStyleStrategy].
+class _BuildResultThemeStrategyStub implements ProjectBuildStatusStyleStrategy {
   /// A default test icon image.
   static const _testIconImage = "icons/test_icon.svg";
 
@@ -145,7 +145,7 @@ class _BuildResultThemeStrategyStub implements ProjectBuildStatusStrategy {
   String getIconImage(BuildStatus value) => _iconImage;
 
   @override
-  ProjectBuildStatusStyle getWidgetStyle(
+  ProjectBuildStatusStyle getWidgetTheme(
     MetricsThemeData themeData,
     BuildStatus value,
   ) {

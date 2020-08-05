@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_status_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// A class that displays an image representation of the project build status.
@@ -13,7 +13,7 @@ class ProjectBuildStatus extends StatelessWidget {
 
   /// A class that provides a [ProjectBuildStatusStyle] and icon image
   /// based on the [BuildStatus].
-  final ProjectBuildStatusStrategy projectBuildStatusStrategy;
+  final BuildStatusStyleStrategy buildStatusStyleStrategy;
 
   /// Creates an instance of the [ProjectBuildStatus]
   /// with the given [buildStatus] and [strategy].
@@ -22,16 +22,16 @@ class ProjectBuildStatus extends StatelessWidget {
   const ProjectBuildStatus({
     Key key,
     @required this.buildStatus,
-    @required this.projectBuildStatusStrategy,
+    @required this.buildStatusStyleStrategy,
   })  : assert(buildStatus != null),
-        assert(projectBuildStatusStrategy != null),
+        assert(buildStatusStyleStrategy != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final projectBuildStatus = buildStatus?.value;
-    final iconImage = projectBuildStatusStrategy.getIconImage(projectBuildStatus);
-    final theme = projectBuildStatusStrategy.getWidgetStyle(
+    final iconImage = buildStatusStyleStrategy.getIconImage(projectBuildStatus);
+    final theme = buildStatusStyleStrategy.getWidgetTheme(
       MetricsTheme.of(context),
       projectBuildStatus,
     );

@@ -10,7 +10,7 @@ import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_style_strategy.dart';
 
 /// Displays the project name and it's metrics.
 class ProjectMetricsTile extends StatefulWidget {
@@ -60,7 +60,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
           child: MetricsTableRow(
             status: ProjectBuildStatus(
               buildStatus: projectMetrics.buildStatus,
-              projectBuildStatusStrategy: const ProjectBuildStatusStrategy(),
+              buildStatusStyleStrategy: const ProjectBuildStatusStyleStrategy(),
             ),
             name: Padding(
               padding: const EdgeInsets.only(left: 16.0),
