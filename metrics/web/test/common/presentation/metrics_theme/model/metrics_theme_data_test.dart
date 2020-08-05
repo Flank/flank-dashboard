@@ -42,7 +42,7 @@ void main() {
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
-        expect(themeData.sparklineTheme, isNotNull);
+        expect(themeData.performanceSparklineTheme, isNotNull);
       },
     );
 
@@ -65,7 +65,7 @@ void main() {
           loginTheme: null,
           projectMetricsTableTheme: null,
           buildNumberScorecardTheme: null,
-          sparklineTheme: null,
+          performanceSparklineTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -83,7 +83,7 @@ void main() {
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
-        expect(themeData.sparklineTheme, isNotNull);
+        expect(themeData.performanceSparklineTheme, isNotNull);
       },
     );
 
@@ -167,7 +167,7 @@ void main() {
           valueTextStyle: TextStyle(color: Colors.red),
         );
 
-        const sparklineTheme = SparklineThemeData(
+        const performanceSparklineTheme = SparklineThemeData(
           fillColor: primaryColor,
         );
 
@@ -189,7 +189,7 @@ void main() {
           loginTheme: loginTheme,
           projectMetricsTableTheme: projectMetricsTableTheme,
           buildNumberScorecardTheme: scorecardTheme,
-          sparklineTheme: sparklineTheme,
+          performanceSparklineTheme: performanceSparklineTheme,
         );
 
         expect(
@@ -225,7 +225,10 @@ void main() {
           equals(projectMetricsTableTheme),
         );
         expect(copiedTheme.buildNumberScorecardTheme, equals(scorecardTheme));
-        expect(copiedTheme.sparklineTheme, equals(sparklineTheme));
+        expect(
+          copiedTheme.performanceSparklineTheme,
+          equals(performanceSparklineTheme),
+        );
       },
     );
 
@@ -284,7 +287,10 @@ void main() {
           equals(copiedTheme.projectMetricsTableTheme),
         );
         expect(themeData.buildNumberScorecardTheme, equals(copiedTheme.buildNumberScorecardTheme));
-        expect(themeData.sparklineTheme, equals(copiedTheme.sparklineTheme));
+        expect(
+          themeData.performanceSparklineTheme,
+          equals(copiedTheme.performanceSparklineTheme),
+        );
       },
     );
   });

@@ -69,8 +69,8 @@ class MetricsThemeData {
   /// A theme for the build number scorecard.
   final ScorecardThemeData buildNumberScorecardTheme;
 
-  /// The theme for the sparkline.
-  final SparklineThemeData sparklineTheme;
+  /// The theme for the performance sparkline.
+  final SparklineThemeData performanceSparklineTheme;
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
@@ -89,7 +89,7 @@ class MetricsThemeData {
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
     ScorecardThemeData buildNumberScorecardTheme,
-    SparklineThemeData sparklineTheme,
+    SparklineThemeData performanceSparklineTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -117,7 +117,8 @@ class MetricsThemeData {
             projectMetricsTableTheme ?? const ProjectMetricsTableThemeData(),
         buildNumberScorecardTheme =
             buildNumberScorecardTheme ?? const ScorecardThemeData(),
-        sparklineTheme = sparklineTheme ?? const SparklineThemeData();
+        performanceSparklineTheme =
+            performanceSparklineTheme ?? const SparklineThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -139,7 +140,7 @@ class MetricsThemeData {
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
     ScorecardThemeData buildNumberScorecardTheme,
-    SparklineThemeData sparklineTheme,
+    SparklineThemeData performanceSparklineTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -162,7 +163,8 @@ class MetricsThemeData {
       projectMetricsTableTheme:
           projectMetricsTableTheme ?? this.projectMetricsTableTheme,
       buildNumberScorecardTheme: buildNumberScorecardTheme ?? this.buildNumberScorecardTheme,
-      sparklineTheme: sparklineTheme ?? this.sparklineTheme,
+      performanceSparklineTheme:
+          performanceSparklineTheme ?? this.performanceSparklineTheme,
     );
   }
 }

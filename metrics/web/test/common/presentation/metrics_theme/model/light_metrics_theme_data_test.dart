@@ -29,7 +29,7 @@ void main() {
         expect(lightMetricsThemeData.loginTheme, isNotNull);
         expect(lightMetricsThemeData.projectMetricsTableTheme, isNotNull);
         expect(lightMetricsThemeData.buildNumberScorecardTheme, isNotNull);
-        expect(lightMetricsThemeData.sparklineTheme, isNotNull);
+        expect(lightMetricsThemeData.performanceSparklineTheme, isNotNull);
       },
     );
   });

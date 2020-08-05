@@ -235,6 +235,6 @@ class LightMetricsThemeData extends MetricsThemeData {
             ),
           ),
           buildNumberScorecardTheme: const ScorecardThemeData(),
-          sparklineTheme: const SparklineThemeData(),
+          performanceSparklineTheme: const SparklineThemeData(),
         );
 }

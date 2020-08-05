@@ -26,7 +26,7 @@ void main() {
         expect(darkMetricsThemeData.loginTheme, isNotNull);
         expect(darkMetricsThemeData.projectMetricsTableTheme, isNotNull);
         expect(darkMetricsThemeData.buildNumberScorecardTheme, isNotNull);
-        expect(darkMetricsThemeData.sparklineTheme, isNotNull);
+        expect(darkMetricsThemeData.performanceSparklineTheme, isNotNull);
       },
     );
   });

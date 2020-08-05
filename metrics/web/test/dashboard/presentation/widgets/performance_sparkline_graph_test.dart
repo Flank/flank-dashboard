@@ -26,7 +26,7 @@ void main() {
     const textStyle = TextStyle(color: strokeColor);
 
     const metricsTheme = MetricsThemeData(
-      sparklineTheme: SparklineThemeData(
+      performanceSparklineTheme: SparklineThemeData(
         fillColor: fillColor,
         strokeColor: strokeColor,
         textStyle: textStyle,

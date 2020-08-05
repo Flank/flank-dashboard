@@ -277,7 +277,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.bold,
             ),
           ),
-          sparklineTheme: const SparklineThemeData(
+          performanceSparklineTheme: const SparklineThemeData(
             textStyle: TextStyle(
               color: _sparklineTextColor,
               fontWeight: FontWeight.bold,

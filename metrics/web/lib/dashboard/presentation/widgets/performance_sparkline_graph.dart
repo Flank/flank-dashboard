@@ -25,7 +25,7 @@ class PerformanceSparklineGraph extends StatelessWidget {
       return const NoDataPlaceholder();
     }
 
-    final sparklineTheme = MetricsTheme.of(context).sparklineTheme;
+    final sparklineTheme = MetricsTheme.of(context).performanceSparklineTheme;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
