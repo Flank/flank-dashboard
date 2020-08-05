@@ -15,24 +15,24 @@ void main() {
 
         expect(attentionLevel.positive, isNotNull);
         expect(attentionLevel.negative, isNotNull);
-        expect(attentionLevel.inactive, isNotNull);
+        expect(attentionLevel.unknown, isNotNull);
       },
     );
 
     test("creates an instance with the given styles", () {
       const positive = ProjectBuildStatusStyle(backgroundColor: Colors.green);
       const negative = ProjectBuildStatusStyle(backgroundColor: Colors.blue);
-      const inactive = ProjectBuildStatusStyle(backgroundColor: Colors.red);
+      const unknown = ProjectBuildStatusStyle(backgroundColor: Colors.red);
 
       final attentionLevel = ProjectBuildStatusAttentionLevel(
         positive: positive,
         negative: negative,
-        inactive: inactive,
+        unknown: unknown,
       );
 
       expect(attentionLevel.positive, equals(positive));
       expect(attentionLevel.negative, equals(negative));
-      expect(attentionLevel.inactive, equals(inactive));
+      expect(attentionLevel.unknown, equals(unknown));
     });
   });
 }

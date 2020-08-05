@@ -13,7 +13,7 @@ class ProjectBuildStatus extends StatelessWidget {
 
   /// A class that provides a [ProjectBuildStatusStyle] and icon image
   /// based on the [BuildStatus].
-  final ProjectBuildStatusStrategy strategy;
+  final ProjectBuildStatusStrategy projectBuildStatusStrategy;
 
   /// Creates an instance of the [ProjectBuildStatus]
   /// with the given [buildStatus] and [strategy].
@@ -22,16 +22,16 @@ class ProjectBuildStatus extends StatelessWidget {
   const ProjectBuildStatus({
     Key key,
     @required this.buildStatus,
-    @required this.strategy,
+    @required this.projectBuildStatusStrategy,
   })  : assert(buildStatus != null),
-        assert(strategy != null),
+        assert(projectBuildStatusStrategy != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final projectBuildStatus = buildStatus?.value;
-    final iconImage = strategy.getIconImage(projectBuildStatus);
-    final theme = strategy.getWidgetStyle(
+    final iconImage = projectBuildStatusStrategy.getIconImage(projectBuildStatus);
+    final theme = projectBuildStatusStrategy.getWidgetStyle(
       MetricsTheme.of(context),
       projectBuildStatus,
     );

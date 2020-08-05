@@ -113,7 +113,7 @@ class _ProjectBuildStatusTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       body: ProjectBuildStatus(
-        strategy: strategy,
+        projectBuildStatusStrategy: strategy,
         buildStatus: buildStatus,
       ),
     );

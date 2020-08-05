@@ -13,14 +13,14 @@ void main() {
       backgroundColor: Colors.green,
     );
     const negativeStyle = ProjectBuildStatusStyle(backgroundColor: Colors.red);
-    const inactiveStyle = ProjectBuildStatusStyle(backgroundColor: Colors.grey);
+    const unknownStyle = ProjectBuildStatusStyle(backgroundColor: Colors.grey);
 
     const theme = MetricsThemeData(
       projectBuildStatusTheme: ProjectBuildStatusThemeData(
         attentionLevel: ProjectBuildStatusAttentionLevel(
           positive: positiveStyle,
           negative: negativeStyle,
-          inactive: inactiveStyle,
+          unknown: unknownStyle,
         ),
       ),
     );
@@ -64,11 +64,11 @@ void main() {
     );
 
     test(
-      ".getWidgetStyle() returns the inactive style if the given build status is null",
+      ".getWidgetStyle() returns the unknown style if the given build status is null",
       () {
         final actualStyle = themeStrategy.getWidgetStyle(theme, null);
 
-        expect(actualStyle, equals(inactiveStyle));
+        expect(actualStyle, equals(unknownStyle));
       },
     );
 

@@ -24,7 +24,7 @@ class ProjectBuildStatusStrategy {
       case BuildStatus.failed:
         return attentionLevelTheme.negative;
       default:
-        return attentionLevelTheme.inactive;
+        return attentionLevelTheme.unknown;
     }
   }
 

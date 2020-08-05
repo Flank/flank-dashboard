@@ -60,7 +60,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
           child: MetricsTableRow(
             status: ProjectBuildStatus(
               buildStatus: projectMetrics.buildStatus,
-              strategy: const ProjectBuildStatusStrategy(),
+              projectBuildStatusStrategy: const ProjectBuildStatusStrategy(),
             ),
             name: Padding(
               padding: const EdgeInsets.only(left: 16.0),

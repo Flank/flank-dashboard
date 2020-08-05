@@ -297,7 +297,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               negative: ProjectBuildStatusStyle(
                 backgroundColor: ColorConfig.accentTranslucentColor,
               ),
-              inactive: ProjectBuildStatusStyle(
+              unknown: ProjectBuildStatusStyle(
                 backgroundColor: ColorConfig.inactiveColor,
               ),
             ),

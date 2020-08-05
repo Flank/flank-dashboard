@@ -16,18 +16,18 @@ class ProjectBuildStatusAttentionLevel {
   /// displaying the negative status.
   final ProjectBuildStatusStyle negative;
 
-  /// A [ProjectBuildStatusStyle] for inactive project build status widget.
-  final ProjectBuildStatusStyle inactive;
+  /// A [ProjectBuildStatusStyle] for unknown project build status widget.
+  final ProjectBuildStatusStyle unknown;
 
   /// Creates a new instance of [ProjectBuildStatusAttentionLevel].
   ///
-  /// If [positive], [negative] or [inactive] is null,
+  /// If [positive], [negative] or [unknown] is null,
   /// an empty [ProjectBuildStatusStyle] used.
   const ProjectBuildStatusAttentionLevel({
     ProjectBuildStatusStyle positive,
     ProjectBuildStatusStyle negative,
-    ProjectBuildStatusStyle inactive,
+    ProjectBuildStatusStyle unknown,
   })  : positive = positive ?? _defaultProjectBuildStatusStyle,
         negative = negative ?? _defaultProjectBuildStatusStyle,
-        inactive = inactive ?? _defaultProjectBuildStatusStyle;
+        unknown = unknown ?? _defaultProjectBuildStatusStyle;
 }
