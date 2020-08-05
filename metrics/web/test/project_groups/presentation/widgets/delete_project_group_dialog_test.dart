@@ -118,7 +118,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the background color from the metrics theme to the info dialog widget",
+      "applies the background color from the metrics theme",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed(
@@ -147,7 +147,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the title style from the metrics theme to the delete project group title",
+      "applies the title style from the metrics theme",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed(
@@ -180,7 +180,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the content style from the metrics theme to the content text of the info dialog widget",
+      "applies the content style from the metrics theme",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
@@ -247,7 +247,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the metrics theme to the deleting project group name text in the content of the info dialog widget",
+      "applies the text style of the deleting project group name text from the metrics theme",
       (tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
 
