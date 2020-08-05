@@ -91,28 +91,29 @@ class BasePopup extends StatelessWidget {
         barrierColor: barrierColor,
         barrierDismissible: barrierDismissible,
         barrierLabel: barrierLabel,
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            transitionBuilder(
-          context,
-          animation,
-          secondaryAnimation,
-          Stack(
-            children: <Widget>[
-              Positioned(
-                left: offset.dx,
-                top: offset.dy,
-                child: CompositedTransformFollower(
-                  link: layerLink,
-                  offset: offset,
-                  child: ConstrainedBox(
-                    constraints: boxConstraints,
-                    child: popup,
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return transitionBuilder(
+            context,
+            animation,
+            secondaryAnimation,
+            Stack(
+              children: <Widget>[
+                Positioned(
+                  left: offset.dx,
+                  top: offset.dy,
+                  child: CompositedTransformFollower(
+                    link: layerLink,
+                    offset: offset,
+                    child: ConstrainedBox(
+                      constraints: boxConstraints,
+                      child: popup,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
