@@ -11,6 +11,9 @@ import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_d
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
@@ -35,6 +38,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _borderColor = Color(0xFF2d2d33);
   static const Color _loginOptionHoverColor = Color(0xFFe5e5e5);
   static const Color _loginOptionTextColor = Color(0xFF757575);
+  static const Color _tileBorderColor = Color(0xFF0e0d0d);
+  static const Color _tableHeaderColor = Color(0xFF79858b);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = TextStyle(
@@ -239,6 +244,19 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 fontSize: 16.0,
                 fontWeight: FontWeight.w500,
               ),
+            ),
+          ),
+          projectMetricsTableTheme: const ProjectMetricsTableThemeData(
+            metricsTableHeaderTheme: MetricsTableHeaderThemeData(
+              textStyle: TextStyle(
+                color: _tableHeaderColor,
+                fontWeight: FontWeight.w200,
+              ),
+            ),
+            projectMetricsTileTheme: ProjectMetricsTileThemeData(
+              backgroundColor: scaffoldColor,
+              borderColor: _tileBorderColor,
+              textStyle: TextStyle(fontSize: 24.0),
             ),
           ),
         );

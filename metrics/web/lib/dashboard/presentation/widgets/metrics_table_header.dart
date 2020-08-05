@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 
@@ -10,12 +11,13 @@ class MetricsTableHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = MetricsTheme.of(context)
+        .projectMetricsTableTheme
+        .metricsTableHeaderTheme;
+
     return DefaultTextStyle(
       textAlign: TextAlign.center,
-      style: const TextStyle(
-        color: Color(0xFF79858b),
-        fontWeight: FontWeight.w200,
-      ),
+      style: theme.textStyle,
       child: MetricsTableRow(
         status: Container(),
         name: Container(),

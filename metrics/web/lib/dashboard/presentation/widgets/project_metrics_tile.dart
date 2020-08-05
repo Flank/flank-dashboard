@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/loading_builder.dart';
 import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
@@ -40,19 +41,18 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
   Widget build(BuildContext context) {
     super.build(context);
     final projectMetrics = widget.projectMetricsViewModel;
-    final brightness = Theme.of(context).brightness;
+    final theme = MetricsTheme.of(context)
+        .projectMetricsTableTheme
+        .projectMetricsTileTheme;
 
     return Container(
       height: _tileHeight,
       margin: const EdgeInsets.only(bottom: 5.0),
       child: DecoratedBox(
         decoration: BoxDecoration(
+          color: theme.backgroundColor,
           borderRadius: BorderRadius.circular(2.0),
-          border: Border.all(
-            color: brightness == Brightness.dark
-                ? Colors.black54
-                : Colors.grey[300],
-          ),
+          border: Border.all(color: theme.borderColor),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -64,7 +64,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
               padding: const EdgeInsets.only(left: 16.0),
               child: Text(
                 projectMetrics.projectName ?? '',
-                style: const TextStyle(fontSize: 22.0),
+                style: theme.textStyle,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

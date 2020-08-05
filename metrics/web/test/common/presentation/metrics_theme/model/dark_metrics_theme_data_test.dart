@@ -24,6 +24,7 @@ void main() {
         expect(darkMetricsThemeData.dropdownTheme, isNotNull);
         expect(darkMetricsThemeData.dropdownItemTheme, isNotNull);
         expect(darkMetricsThemeData.loginTheme, isNotNull);
+        expect(darkMetricsThemeData.projectMetricsTableTheme, isNotNull);
       },
     );
   });
