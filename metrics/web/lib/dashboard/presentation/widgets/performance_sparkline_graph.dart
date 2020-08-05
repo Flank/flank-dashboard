@@ -25,7 +25,7 @@ class PerformanceSparklineGraph extends StatelessWidget {
       return const NoDataPlaceholder();
     }
 
-    final performanceTheme = MetricsTheme.of(context).metricWidgetTheme;
+    final sparklineTheme = MetricsTheme.of(context).sparklineTheme;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,18 +33,14 @@ class PerformanceSparklineGraph extends StatelessWidget {
         Expanded(
           child: Text(
             CommonStrings.duration(performanceSparkline.value),
-            style: TextStyle(
-              fontSize: 22.0,
-              color: performanceTheme.primaryColor,
-              fontWeight: FontWeight.bold,
-            ),
+            style: sparklineTheme.textStyle,
           ),
         ),
         Expanded(
           child: SparklineGraph(
             data: performanceSparkline.performance,
-            strokeColor: performanceTheme.primaryColor,
-            fillColor: performanceTheme.accentColor,
+            strokeColor: sparklineTheme.strokeColor,
+            fillColor: sparklineTheme.fillColor,
           ),
         ),
       ],

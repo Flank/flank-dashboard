@@ -18,6 +18,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 
 /// Stores the theme data for light metrics theme.
@@ -234,5 +235,6 @@ class LightMetricsThemeData extends MetricsThemeData {
             ),
           ),
           buildNumberScorecardTheme: const ScorecardThemeData(),
+          sparklineTheme: const SparklineThemeData(),
         );
 }
