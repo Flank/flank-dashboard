@@ -3,6 +3,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
@@ -36,7 +37,7 @@ class _MyAppState extends State<MyApp> {
             ),
             themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
             theme: ThemeData(
-              fontFamily: 'Roboto',
+              fontFamily: TextStyleConfig.defaultFontFamily,
               brightness: Brightness.light,
               primarySwatch: Colors.teal,
               primaryColorBrightness: Brightness.light,
@@ -58,7 +59,7 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             darkTheme: ThemeData(
-              fontFamily: 'Roboto',
+              fontFamily: TextStyleConfig.defaultFontFamily,
               brightness: Brightness.dark,
               primarySwatch: Colors.teal,
               primaryColorBrightness: Brightness.dark,
