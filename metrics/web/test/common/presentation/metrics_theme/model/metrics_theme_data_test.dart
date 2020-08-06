@@ -15,6 +15,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/project_group_ca
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:test/test.dart';
 
@@ -39,6 +40,7 @@ void main() {
         expect(themeData.dropdownItemTheme, isNotNull);
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
+        expect(themeData.buildNumberScorecardTheme, isNotNull);
       },
     );
 
@@ -60,6 +62,7 @@ void main() {
           dropdownItemTheme: null,
           loginTheme: null,
           projectMetricsTableTheme: null,
+          buildNumberScorecardTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -76,6 +79,7 @@ void main() {
         expect(themeData.dropdownItemTheme, isNotNull);
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
+        expect(themeData.buildNumberScorecardTheme, isNotNull);
       },
     );
 
@@ -155,6 +159,10 @@ void main() {
           ),
         );
 
+        const scorecardTheme = ScorecardThemeData(
+          valueTextStyle: TextStyle(color: Colors.red),
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -172,6 +180,7 @@ void main() {
           dropdownItemTheme: dropdownItemTheme,
           loginTheme: loginTheme,
           projectMetricsTableTheme: projectMetricsTableTheme,
+          buildNumberScorecardTheme: scorecardTheme,
         );
 
         expect(
@@ -206,6 +215,7 @@ void main() {
           copiedTheme.projectMetricsTableTheme,
           equals(projectMetricsTableTheme),
         );
+        expect(copiedTheme.buildNumberScorecardTheme, equals(scorecardTheme));
       },
     );
 
@@ -263,6 +273,7 @@ void main() {
           themeData.projectMetricsTableTheme,
           equals(copiedTheme.projectMetricsTableTheme),
         );
+        expect(themeData.buildNumberScorecardTheme, equals(copiedTheme.buildNumberScorecardTheme));
       },
     );
   });
