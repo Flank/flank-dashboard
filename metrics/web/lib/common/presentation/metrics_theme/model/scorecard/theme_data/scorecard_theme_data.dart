@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A class that stores the theme data for the scorecard widget.
+/// A class that stores theme data for the scorecard widget.
 class ScorecardThemeData {
   /// A [TextStyle] of the scorecard's description.
   final TextStyle descriptionTextStyle;
