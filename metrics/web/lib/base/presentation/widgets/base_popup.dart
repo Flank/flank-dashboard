@@ -3,40 +3,32 @@ import 'package:flutter/material.dart';
 /// Signature for the function that builds an offset using the [childSize].
 typedef OffsetBuilder = Offset Function(Size childSize);
 
-/// A widget that displays the given [child] that opens the given [popup]
-/// when is triggered.
-class BasePopup extends StatelessWidget {
-  /// A widget to display as a [popup] trigger.
-  final Widget child;
+/// Signature for the function that builds a trigger widget
+/// using the [openPopup] and the [closePopup] callbacks.
+typedef TriggerBuilder = Widget Function(
+  BuildContext context,
+  VoidCallback openPopup,
+  VoidCallback closePopup,
+);
 
-  /// A widget to display when a [child] is triggered.
-  final Widget popup;
+/// A widget that displays the trigger widget built by the [triggerBuilder]
+/// that opens the given [popup] when user triggers.
+class BasePopup extends StatefulWidget {
+  /// A [RouteObserver] to subscribe to the route callbacks.
+  final RouteObserver routeObserver;
 
   /// An additional constraints to apply to the [popup].
-  final BoxConstraints boxConstraints;
+  final BoxConstraints popupConstraints;
 
-  /// A callback that is called to build the [popup] offset from the [child].
+  /// A callback that is called to build the [popup] offset from
+  /// the trigger widget.
   final OffsetBuilder offsetBuilder;
 
-  /// A callback that is called to build the route transitions
-  /// to display a [popup].
-  final RouteTransitionsBuilder transitionBuilder;
+  /// A callback that is called to build the trigger widget.
+  final TriggerBuilder triggerBuilder;
 
-  /// Duration of the transition going forwards.
-  final Duration transitionDuration;
-
-  /// Indicates whether you can dismiss a [popup] route by tapping the
-  /// modal barrier.
-  final bool barrierDismissible;
-
-  /// A color to use for the [popup] modal barrier.
-  ///
-  /// If this is null, the barrier will be transparent.
-  final Color barrierColor;
-
-  /// A semantic label used for a dismissible barrier when
-  /// a [popup] is triggered.
-  final String barrierLabel;
+  /// A widget to display when the trigger widget is triggered.
+  final Widget popup;
 
   /// Creates a new instance of the base popup.
   ///
@@ -44,115 +36,106 @@ class BasePopup extends StatelessWidget {
   /// If the [boxConstraints] is null, an empty instance of
   /// the [BoxConstraints] is used.
   ///
-  /// All the required parameters and the [barrierDismissible] must not be null.
+  /// All the required parameters must not be null.
   const BasePopup({
     Key key,
-    BoxConstraints boxConstraints,
-    @required this.popup,
+    BoxConstraints popupConstraints,
     @required this.offsetBuilder,
-    @required this.transitionBuilder,
-    @required this.child,
-    @required this.transitionDuration,
-    this.barrierDismissible = true,
-    this.barrierColor,
-    this.barrierLabel,
-  })  : boxConstraints = boxConstraints ?? const BoxConstraints(),
-        assert(popup != null),
+    @required this.triggerBuilder,
+    @required this.popup,
+    this.routeObserver,
+  })  : popupConstraints = popupConstraints ?? const BoxConstraints(),
         assert(offsetBuilder != null),
-        assert(transitionBuilder != null),
-        assert(child != null),
-        assert(transitionDuration != null),
-        assert(barrierDismissible != null),
+        assert(triggerBuilder != null),
+        assert(popup != null),
         super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _layerLink = LayerLink();
-
-    return GestureDetector(
-      onTap: () => _openPopup(context, _layerLink),
-      child: CompositedTransformTarget(
-        link: _layerLink,
-        child: child,
-      ),
-    );
-  }
-
-  /// Opens a [popup] using the [context] and the [layerLink].
-  void _openPopup(BuildContext context, LayerLink layerLink) {
-    final childBox = context.findRenderObject() as RenderBox;
-    final childSize = childBox.size;
-    final offset = offsetBuilder(childSize);
-
-    Navigator.push(
-      context,
-      _PopupRoute(
-        transitionDuration: transitionDuration,
-        barrierColor: barrierColor,
-        barrierDismissible: barrierDismissible,
-        barrierLabel: barrierLabel,
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return transitionBuilder(
-            context,
-            animation,
-            secondaryAnimation,
-            Stack(
-              children: <Widget>[
-                Positioned(
-                  left: offset.dx,
-                  top: offset.dy,
-                  child: CompositedTransformFollower(
-                    link: layerLink,
-                    offset: offset,
-                    child: ConstrainedBox(
-                      constraints: boxConstraints,
-                      child: popup,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
+  _BasePopupState createState() => _BasePopupState();
 }
 
-/// A popup route that overlays a widget over the current route.
-class _PopupRoute extends PopupRoute {
-  /// A callback that is called to build the route primary contents.
-  final RoutePageBuilder pageBuilder;
+class _BasePopupState extends State<BasePopup> with RouteAware {
+  /// A [OverlayEntry] where used to display a [BasePopup.popup].
+  OverlayEntry _overlayEntry;
+
+  /// The [LayerLink] that allows a [BasePopup.popup] to follow the trigger.
+  final _layerLink = LayerLink();
 
   @override
-  final Color barrierColor;
+  void didChangeDependencies() {
+    widget.routeObserver?.subscribe(this, ModalRoute.of(context));
+    super.didChangeDependencies();
+  }
 
   @override
-  final bool barrierDismissible;
+  Widget build(BuildContext context) {
+    return CompositedTransformTarget(
+      link: _layerLink,
+      child: widget.triggerBuilder(
+        context,
+        _openPopup,
+        _closePopup,
+      ),
+    );
+  }
+
+  /// Opens a [BasePopup.popup].
+  void _openPopup() {
+    final childBox = context.findRenderObject() as RenderBox;
+    final childSize = childBox.size;
+    final offset = widget.offsetBuilder(childSize);
+
+    final _widget = GestureDetector(
+      onTap: _closePopup,
+      child: Container(
+        color: Colors.transparent,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              left: offset.dx,
+              top: offset.dy,
+              child: CompositedTransformFollower(
+                link: _layerLink,
+                offset: offset,
+                child: ConstrainedBox(
+                  constraints: widget.popupConstraints,
+                  child: widget.popup,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    _overlayEntry = OverlayEntry(builder: (context) => _widget);
+    Overlay.of(context).insert(_overlayEntry);
+  }
 
   @override
-  final String barrierLabel;
+  void didPop() {
+    _closePopup();
+    super.didPop();
+  }
 
   @override
-  final Duration transitionDuration;
+  void didPushNext() {
+    _closePopup();
+    super.didPushNext();
+  }
 
-  /// Create a new instance of the popup route.
-  ///
-  /// The [barrierDismissible] defaults to `true`.
-  _PopupRoute({
-    this.barrierDismissible = true,
-    this.barrierColor,
-    this.barrierLabel,
-    this.pageBuilder,
-    this.transitionDuration,
-  });
+  /// Closes a [BasePopup.popup].
+  void _closePopup() {
+    if (_overlayEntry != null) {
+      _overlayEntry.remove();
+      _overlayEntry = null;
+    }
+  }
 
   @override
-  Widget buildPage(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-  ) {
-    return pageBuilder(context, animation, secondaryAnimation);
+  void dispose() {
+    widget.routeObserver?.unsubscribe(this);
+    _closePopup();
+    super.dispose();
   }
 }
