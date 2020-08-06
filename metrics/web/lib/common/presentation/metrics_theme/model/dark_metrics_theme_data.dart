@@ -281,6 +281,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             textStyle: TextStyle(
               color: _sparklineTextColor,
               fontWeight: FontWeight.bold,
+              fontSize: 22.0,
             ),
             strokeColor: _sparklineStrokeColor,
             fillColor: _sparklineFillColor,
