@@ -22,7 +22,7 @@ class BuildNumberScorecard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final widgetTheme = MetricsTheme.of(context).metricWidgetTheme;
+    final widgetTheme = MetricsTheme.of(context).buildNumberScorecardTheme;
 
     if (buildNumberMetric?.numberOfBuilds == null ||
         buildNumberMetric?.numberOfBuilds == 0) {
@@ -31,9 +31,9 @@ class BuildNumberScorecard extends StatelessWidget {
 
     return Scorecard(
       value: '${buildNumberMetric.numberOfBuilds}',
+      valueStyle: widgetTheme.valueTextStyle,
       description: DashboardStrings.perWeek,
-      descriptionStyle: widgetTheme.textStyle,
-      valueStyle: widgetTheme.textStyle,
+      descriptionStyle: widgetTheme.descriptionTextStyle,
     );
   }
 }

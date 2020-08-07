@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/expandable_text.dart';
 
 /// A widget that stands for displaying the [value] text with [description].
 class Scorecard extends StatelessWidget {
@@ -33,22 +32,22 @@ class Scorecard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Expanded(
-          flex: 3,
+        Flexible(
           child: Padding(
             padding: valuePadding,
-            child: ExpandableText(
+            child: Text(
               '$value',
               style: valueStyle,
             ),
           ),
         ),
-        Expanded(
+        Flexible(
           child: Padding(
             padding: EdgeInsets.zero,
-            child: ExpandableText(
+            child: Text(
               '$description',
               style: descriptionStyle,
             ),

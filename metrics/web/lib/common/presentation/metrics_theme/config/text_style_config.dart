@@ -3,6 +3,8 @@ import 'package:metrics/common/presentation/metrics_theme/config/color_config.da
 
 /// A class that holds the common text styles for application themes.
 class TextStyleConfig {
+  static const String defaultFontFamily = 'Roboto';
+
   static const TextStyle captionTextStyle = TextStyle(
     color: ColorConfig.secondaryTextColor,
     height: 1.23,

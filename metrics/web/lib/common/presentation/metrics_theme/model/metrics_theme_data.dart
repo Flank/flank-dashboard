@@ -11,6 +11,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_p
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 
@@ -58,11 +59,14 @@ class MetricsThemeData {
   /// A theme for the dropdown items.
   final DropdownItemThemeData dropdownItemTheme;
 
-  /// The theme for the login page.
+  /// A theme for the login page.
   final LoginThemeData loginTheme;
 
   /// A theme for the project metrics table.
   final ProjectMetricsTableThemeData projectMetricsTableTheme;
+
+  /// A theme for the build number scorecard.
+  final ScorecardThemeData buildNumberScorecardTheme;
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
@@ -80,6 +84,7 @@ class MetricsThemeData {
     DropdownItemThemeData dropdownItemTheme,
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
+    ScorecardThemeData buildNumberScorecardTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -104,7 +109,9 @@ class MetricsThemeData {
         dropdownItemTheme = dropdownItemTheme ?? const DropdownItemThemeData(),
         loginTheme = loginTheme ?? const LoginThemeData(),
         projectMetricsTableTheme =
-            projectMetricsTableTheme ?? const ProjectMetricsTableThemeData();
+            projectMetricsTableTheme ?? const ProjectMetricsTableThemeData(),
+        buildNumberScorecardTheme =
+            buildNumberScorecardTheme ?? const ScorecardThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -125,6 +132,7 @@ class MetricsThemeData {
     DropdownItemThemeData dropdownItemTheme,
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
+    ScorecardThemeData buildNumberScorecardTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -146,6 +154,7 @@ class MetricsThemeData {
       loginTheme: loginTheme ?? this.loginTheme,
       projectMetricsTableTheme:
           projectMetricsTableTheme ?? this.projectMetricsTableTheme,
+      buildNumberScorecardTheme: buildNumberScorecardTheme ?? this.buildNumberScorecardTheme,
     );
   }
 }
