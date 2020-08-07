@@ -306,13 +306,13 @@ class DarkMetricsThemeData extends MetricsThemeData {
         ),
       ),
     ),
-    metricsToggleTheme: const MetricsToggleThemeData(
+    toggleTheme: const MetricsToggleThemeData(
       activeColor: ColorConfig.primaryColor,
       activeHoverColor: ColorConfig.primaryHoverColor,
       inactiveColor: _inactiveToggleColor,
       inactiveHoverColor: _inactiveToggleHoverColor,
     ),
-    metricsUserMenuTheme: const MetricsUserMenuThemeData(
+    userMenuTheme: const MetricsUserMenuThemeData(
       backgroundColor: Colors.black,
       dividerColor: scaffoldColor,
       contentTextStyle: TextStyle(

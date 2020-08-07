@@ -47,8 +47,8 @@ void main() {
         expect(themeData.buildNumberScorecardTheme, isNotNull);
         expect(themeData.toggleTheme, isNotNull);
         expect(themeData.userMenuTheme, isNotNull);
-        expect(themeData.metricsToggleTheme, isNotNull);
-        expect(themeData.metricsUserMenuTheme, isNotNull);
+        expect(themeData.toggleTheme, isNotNull);
+        expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
       },
@@ -75,8 +75,8 @@ void main() {
           buildNumberScorecardTheme: null,
           performanceSparklineTheme: null,
           projectBuildStatusTheme: null,
-          metricsToggleTheme: null,
-          metricsUserMenuTheme: null,
+          toggleTheme: null,
+          userMenuTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -217,8 +217,8 @@ void main() {
           buildNumberScorecardTheme: scorecardTheme,
           performanceSparklineTheme: performanceSparklineTheme,
           projectBuildStatusTheme: projectBuildStatusTheme,
-          metricsToggleTheme: metricsToggleTheme,
-          metricsUserMenuTheme: metricsUserMenuTheme,
+          toggleTheme: metricsToggleTheme,
+          userMenuTheme: metricsUserMenuTheme,
         );
 
         expect(
