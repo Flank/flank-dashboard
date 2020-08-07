@@ -9,7 +9,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha --recursive --exit"
+    "test": "mocha --recursive --exit --timeout 5000"
   },
   "license": "ISC",
   "dependencies": {
