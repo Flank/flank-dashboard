@@ -107,7 +107,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given box constraints to the popup widget",
+      "applies the given popup constraints to the popup widget",
       (WidgetTester tester) async {
         const boxConstraints = BoxConstraints(maxWidth: 50.0, maxHeight: 50.0);
 
@@ -133,7 +133,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the default box constraints to the child widget if the given box constraints is null",
+      "applies the default box constraints to the popup widget if the given popup constraints is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(
@@ -157,7 +157,7 @@ void main() {
     );
 
     testWidgets(
-      "closes a popup after tap outside of this popup content",
+      "closes a popup after tap outside of the popup content",
       (tester) async {
         const defaultSize = 20.0;
 
@@ -177,7 +177,7 @@ void main() {
     );
 
     testWidgets(
-      "closes a popup after push a new route",
+      "closes a popup after pushing a new route",
       (tester) async {
         final _key = GlobalKey<NavigatorState>();
 
@@ -197,7 +197,7 @@ void main() {
     );
 
     testWidgets(
-      "closes a popup after pop the current route",
+      "closes a popup after popping the current route",
       (tester) async {
         final _key = GlobalKey<NavigatorState>();
 
@@ -245,7 +245,7 @@ class _BasePopupTestbed extends StatelessWidget {
   /// A [RouteObserver] to subscribe to the route callbacks.
   final RouteObserver routeObserver;
 
-  /// A widget to display when a [child] is triggered.
+  /// A widget to display when a trigger widget is activated.
   final Widget popup;
 
   /// An additional constraints to apply to the [popup].

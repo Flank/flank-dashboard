@@ -12,7 +12,7 @@ typedef TriggerBuilder = Widget Function(
 );
 
 /// A widget that displays the trigger widget built by the [triggerBuilder]
-/// that opens the given [popup] when user triggers.
+/// that opens the given [popup] when the trigger widget is activated.
 class BasePopup extends StatefulWidget {
   /// A [RouteObserver] to subscribe to the route callbacks.
   final RouteObserver routeObserver;
@@ -33,7 +33,7 @@ class BasePopup extends StatefulWidget {
   /// Creates a new instance of the base popup.
   ///
   /// The [barrierDismissible] defaults to `true`.
-  /// If the [boxConstraints] is null, an empty instance of
+  /// If the [popupConstraints] is null, an empty instance of
   /// the [BoxConstraints] is used.
   ///
   /// All the required parameters must not be null.
