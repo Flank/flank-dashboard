@@ -31,8 +31,8 @@ void main() {
         expect(lightMetricsThemeData.buildNumberScorecardTheme, isNotNull);
         expect(lightMetricsThemeData.performanceSparklineTheme, isNotNull);
         expect(lightMetricsThemeData.projectBuildStatusTheme, isNotNull);
-        expect(lightMetricsThemeData.metricsToggleTheme, isNotNull);
-        expect(lightMetricsThemeData.metricsUserMenuTheme, isNotNull);
+        expect(lightMetricsThemeData.toggleTheme, isNotNull);
+        expect(lightMetricsThemeData.userMenuTheme, isNotNull);
       },
     );
   });

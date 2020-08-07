@@ -79,10 +79,10 @@ class MetricsThemeData {
   final ProjectBuildStatusThemeData projectBuildStatusTheme;
 
   /// A theme for the toggle widgets.
-  final MetricsToggleThemeData metricsToggleTheme;
+  final MetricsToggleThemeData toggleTheme;
 
   /// A theme for the user menu popup.
-  final MetricsUserMenuThemeData metricsUserMenuTheme;
+  final MetricsUserMenuThemeData userMenuTheme;
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
@@ -132,6 +132,7 @@ class MetricsThemeData {
             projectMetricsTableTheme ?? const ProjectMetricsTableThemeData(),
         buildNumberScorecardTheme =
             buildNumberScorecardTheme ?? const ScorecardThemeData(),
+        toggleTheme =
         performanceSparklineTheme =
             performanceSparklineTheme ?? const SparklineThemeData(),
         projectBuildStatusTheme =
@@ -139,7 +140,7 @@ class MetricsThemeData {
             buildNumberScorecardTheme ?? const ScorecardThemeData(),
         metricsToggleTheme =
             metricsToggleTheme ?? const MetricsToggleThemeData(),
-        metricsUserMenuTheme =
+        userMenuTheme =
             metricsUserMenuTheme ?? const MetricsUserMenuThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
@@ -194,8 +195,8 @@ class MetricsThemeData {
           projectBuildStatusTheme ?? this.projectBuildStatusTheme,
       buildNumberScorecardTheme:
           buildNumberScorecardTheme ?? this.buildNumberScorecardTheme,
-      metricsToggleTheme: metricsToggleTheme ?? this.metricsToggleTheme,
-      metricsUserMenuTheme: metricsUserMenuTheme ?? this.metricsUserMenuTheme,
+      metricsToggleTheme: metricsToggleTheme ?? this.toggleTheme,
+      metricsUserMenuTheme: metricsUserMenuTheme ?? this.userMenuTheme,
     );
   }
 }

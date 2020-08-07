@@ -12,6 +12,9 @@ class MetricsUserMenuThemeData {
   final TextStyle contentTextStyle;
 
   /// Creates a new instance of the [MetricsUserMenuThemeData].
+  ///
+  /// The [backgroundColor] defaults to [Colors.black].
+  /// The [dividerColor] defaults to [Colors.grey].
   const MetricsUserMenuThemeData({
     this.backgroundColor = Colors.black,
     this.dividerColor = Colors.grey,

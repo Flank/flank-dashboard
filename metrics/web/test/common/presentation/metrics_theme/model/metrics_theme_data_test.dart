@@ -45,6 +45,8 @@ void main() {
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
+        expect(themeData.toggleTheme, isNotNull);
+        expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.metricsToggleTheme, isNotNull);
         expect(themeData.metricsUserMenuTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
@@ -92,6 +94,8 @@ void main() {
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
+        expect(themeData.toggleTheme, isNotNull);
+        expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.metricsToggleTheme, isNotNull);
         expect(themeData.metricsUserMenuTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
@@ -250,6 +254,8 @@ void main() {
           equals(projectMetricsTableTheme),
         );
         expect(copiedTheme.buildNumberScorecardTheme, equals(scorecardTheme));
+        expect(copiedTheme.toggleTheme, equals(metricsToggleTheme));
+        expect(copiedTheme.userMenuTheme, equals(metricsUserMenuTheme));
         expect(copiedTheme.metricsToggleTheme, equals(metricsToggleTheme));
         expect(copiedTheme.metricsUserMenuTheme, equals(metricsUserMenuTheme));
         expect(
@@ -331,12 +337,12 @@ void main() {
           equals(copiedTheme.buildNumberScorecardTheme),
         );
         expect(
-          themeData.metricsToggleTheme,
-          equals(copiedTheme.metricsToggleTheme),
+          themeData.toggleTheme,
+          equals(copiedTheme.toggleTheme),
         );
         expect(
-          themeData.metricsUserMenuTheme,
-          equals(copiedTheme.metricsUserMenuTheme),
+          themeData.userMenuTheme,
+          equals(copiedTheme.userMenuTheme),
         );
       },
     );

@@ -15,6 +15,11 @@ class MetricsToggleThemeData {
   final Color activeHoverColor;
 
   /// Creates a new instance of the [MetricsToggleThemeData].
+  ///
+  /// The [inactiveColor] defaults to [Colors.grey].
+  /// The [inactiveHoverColor] defaults to [Colors.black87].
+  /// The [activeColor] defaults to [Colors.green].
+  /// The [activeHoverColor] defaults to [Colors.lightGreen].
   const MetricsToggleThemeData({
     this.inactiveColor = Colors.grey,
     this.inactiveHoverColor = Colors.black87,
