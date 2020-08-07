@@ -46,7 +46,7 @@ service cloud.firestore {
     let projectGroupNameMaxSize = 255;
     let requestData = request.resource.data;
 
-    return requestData.name.size() < projectGroupNameMaxSize;
+    return requestData.name.size() <= projectGroupNameMaxSize;
   }
 
   /// Validates the project group ids value.
