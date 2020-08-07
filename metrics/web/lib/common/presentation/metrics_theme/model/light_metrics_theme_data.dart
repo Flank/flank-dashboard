@@ -18,6 +18,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/attention_level/project_build_status_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_toggle_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
@@ -40,6 +42,8 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _borderColor = Color(0xFF2d2d33);
   static const Color _tileBorderColor = Color(0xFFE0E0E0);
   static const Color _tableHeaderColor = Color(0xFF79858b);
+  static const Color _inactiveToggleColor = Color(0xFF88889B);
+  static const Color _inactiveToggleHoverColor = Color(0xFF5D5D6A);
 
   /// A [TextStyle] of the dialog title.
   static const TextStyle _dialogTitleTextStyle = TextStyle(
@@ -250,6 +254,21 @@ class LightMetricsThemeData extends MetricsThemeData {
               unknown: ProjectBuildStatusStyle(
                 backgroundColor: ColorConfig.inactiveColor,
               ),
+            ),
+          ),
+          metricsToggleTheme: const MetricsToggleThemeData(
+            activeColor: ColorConfig.primaryColor,
+            activeHoverColor: ColorConfig.primaryHoverColor,
+            inactiveColor: _inactiveToggleColor,
+            inactiveHoverColor: _inactiveToggleHoverColor,
+          ),
+          metricsUserMenuTheme: const MetricsUserMenuThemeData(
+            backgroundColor: Colors.white,
+            dividerColor: scaffoldColor,
+            contentTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 16.0,
+              height: 1.0,
             ),
           ),
         );

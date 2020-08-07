@@ -12,6 +12,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_p
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_toggle_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
@@ -43,6 +45,8 @@ void main() {
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
+        expect(themeData.metricsToggleTheme, isNotNull);
+        expect(themeData.metricsUserMenuTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
       },
@@ -69,6 +73,8 @@ void main() {
           buildNumberScorecardTheme: null,
           performanceSparklineTheme: null,
           projectBuildStatusTheme: null,
+          metricsToggleTheme: null,
+          metricsUserMenuTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -86,6 +92,8 @@ void main() {
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
+        expect(themeData.metricsToggleTheme, isNotNull);
+        expect(themeData.metricsUserMenuTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
       },
@@ -134,7 +142,7 @@ void main() {
           backgroundColor: Colors.black,
         );
 
-        const inactiveThemeData = MetricWidgetThemeData(
+        const inactiveTheme = MetricWidgetThemeData(
           primaryColor: primaryColor,
         );
 
@@ -171,6 +179,14 @@ void main() {
           valueTextStyle: TextStyle(color: Colors.red),
         );
 
+        const metricsUserMenuTheme = MetricsUserMenuThemeData(
+          backgroundColor: Colors.white,
+        );
+
+        const metricsToggleTheme = MetricsToggleThemeData(
+          activeColor: Colors.green,
+        );
+
         const performanceSparklineTheme = SparklineThemeData(
           fillColor: primaryColor,
         );
@@ -187,7 +203,7 @@ void main() {
           addProjectGroupCardTheme: addProjectGroupTheme,
           deleteDialogTheme: deleteDialogTheme,
           projectGroupDialogTheme: projectGroupDialogTheme,
-          inactiveWidgetTheme: inactiveThemeData,
+          inactiveWidgetTheme: inactiveTheme,
           metricsButtonTheme: metricsButtonTheme,
           textFieldTheme: textFieldTheme,
           dropdownTheme: dropdownTheme,
@@ -197,6 +213,8 @@ void main() {
           buildNumberScorecardTheme: scorecardTheme,
           performanceSparklineTheme: performanceSparklineTheme,
           projectBuildStatusTheme: projectBuildStatusTheme,
+          metricsToggleTheme: metricsToggleTheme,
+          metricsUserMenuTheme: metricsUserMenuTheme,
         );
 
         expect(
@@ -204,7 +222,7 @@ void main() {
           equals(circlePercentageTheme),
         );
         expect(copiedTheme.metricWidgetTheme, equals(metricWidgetTheme));
-        expect(copiedTheme.inactiveWidgetTheme, equals(inactiveThemeData));
+        expect(copiedTheme.inactiveWidgetTheme, equals(inactiveTheme));
         expect(copiedTheme.buildResultTheme, equals(buildResultsTheme));
         expect(
           copiedTheme.projectGroupCardTheme,
@@ -232,6 +250,8 @@ void main() {
           equals(projectMetricsTableTheme),
         );
         expect(copiedTheme.buildNumberScorecardTheme, equals(scorecardTheme));
+        expect(copiedTheme.metricsToggleTheme, equals(metricsToggleTheme));
+        expect(copiedTheme.metricsUserMenuTheme, equals(metricsUserMenuTheme));
         expect(
           copiedTheme.performanceSparklineTheme,
           equals(performanceSparklineTheme),
@@ -305,6 +325,18 @@ void main() {
         expect(
           themeData.projectBuildStatusTheme,
           copiedTheme.projectBuildStatusTheme,
+        );
+        expect(
+          themeData.buildNumberScorecardTheme,
+          equals(copiedTheme.buildNumberScorecardTheme),
+        );
+        expect(
+          themeData.metricsToggleTheme,
+          equals(copiedTheme.metricsToggleTheme),
+        );
+        expect(
+          themeData.metricsUserMenuTheme,
+          equals(copiedTheme.metricsUserMenuTheme),
         );
       },
     );
