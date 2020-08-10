@@ -30,6 +30,7 @@ void main() {
         expect(lightMetricsThemeData.projectMetricsTableTheme, isNotNull);
         expect(lightMetricsThemeData.buildNumberScorecardTheme, isNotNull);
         expect(lightMetricsThemeData.performanceSparklineTheme, isNotNull);
+        expect(lightMetricsThemeData.projectBuildStatusTheme, isNotNull);
       },
     );
   });

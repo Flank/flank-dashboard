@@ -11,6 +11,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_th
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
@@ -43,6 +44,7 @@ void main() {
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
+        expect(themeData.projectBuildStatusTheme, isNotNull);
       },
     );
 
@@ -66,6 +68,7 @@ void main() {
           projectMetricsTableTheme: null,
           buildNumberScorecardTheme: null,
           performanceSparklineTheme: null,
+          projectBuildStatusTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -84,6 +87,7 @@ void main() {
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
+        expect(themeData.projectBuildStatusTheme, isNotNull);
       },
     );
 
@@ -171,6 +175,8 @@ void main() {
           fillColor: primaryColor,
         );
 
+        const projectBuildStatusTheme = ProjectBuildStatusThemeData();
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -190,6 +196,7 @@ void main() {
           projectMetricsTableTheme: projectMetricsTableTheme,
           buildNumberScorecardTheme: scorecardTheme,
           performanceSparklineTheme: performanceSparklineTheme,
+          projectBuildStatusTheme: projectBuildStatusTheme,
         );
 
         expect(
@@ -228,6 +235,10 @@ void main() {
         expect(
           copiedTheme.performanceSparklineTheme,
           equals(performanceSparklineTheme),
+        );
+        expect(
+          copiedTheme.projectBuildStatusTheme,
+          equals(projectBuildStatusTheme),
         );
       },
     );
@@ -290,6 +301,10 @@ void main() {
         expect(
           themeData.performanceSparklineTheme,
           equals(copiedTheme.performanceSparklineTheme),
+        );
+        expect(
+          themeData.projectBuildStatusTheme,
+          copiedTheme.projectBuildStatusTheme,
         );
       },
     );

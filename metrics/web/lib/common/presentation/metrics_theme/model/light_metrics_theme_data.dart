@@ -15,6 +15,9 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/th
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/attention_level/project_build_status_attention_level.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
@@ -236,5 +239,18 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           buildNumberScorecardTheme: const ScorecardThemeData(),
           performanceSparklineTheme: const SparklineThemeData(),
+          projectBuildStatusTheme: const ProjectBuildStatusThemeData(
+            attentionLevel: ProjectBuildStatusAttentionLevel(
+              positive: ProjectBuildStatusStyle(
+                backgroundColor: ColorConfig.primaryTranslucentColor,
+              ),
+              negative: ProjectBuildStatusStyle(
+                backgroundColor: ColorConfig.accentTranslucentColor,
+              ),
+              unknown: ProjectBuildStatusStyle(
+                backgroundColor: ColorConfig.inactiveColor,
+              ),
+            ),
+          ),
         );
 }
