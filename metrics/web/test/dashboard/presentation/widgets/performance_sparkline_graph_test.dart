@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/sparkline_graph.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
@@ -21,11 +21,17 @@ void main() {
       value: performanceMetricValue,
     );
 
+    const fillColor = Colors.blue;
+    const strokeColor = Colors.grey;
+    const textStyle = TextStyle(color: strokeColor);
+
     const metricsTheme = MetricsThemeData(
-        metricWidgetTheme: MetricWidgetThemeData(
-      primaryColor: Colors.blue,
-      accentColor: Colors.grey,
-    ));
+      performanceSparklineTheme: SparklineThemeData(
+        fillColor: fillColor,
+        strokeColor: strokeColor,
+        textStyle: textStyle,
+      ),
+    );
 
     testWidgets(
       "throws an AssertionError if the given performance sparkline is null",
@@ -91,7 +97,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the metricsWidgetTheme primary color to the value text",
+      "applies the text style from the metrics theme to the value text",
       (tester) async {
         await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
           performanceSparkline: performanceMetric,
@@ -101,15 +107,12 @@ void main() {
         final valueText = tester.widget<Text>(
             find.text(CommonStrings.duration(performanceMetricValue)));
 
-        expect(
-          valueText.style.color,
-          equals(metricsTheme.metricWidgetTheme.primaryColor),
-        );
+        expect(valueText.style, equals(textStyle));
       },
     );
 
     testWidgets(
-      "applies the metricsWidgetTheme primary color to the sparkline graph's stroke color",
+      "applies the stroke color from the metrics theme to the sparkline graph's stroke color",
       (tester) async {
         await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
           performanceSparkline: performanceMetric,
@@ -120,15 +123,12 @@ void main() {
           find.byType(SparklineGraph),
         );
 
-        expect(
-          sparklineGraph.strokeColor,
-          equals(metricsTheme.metricWidgetTheme.primaryColor),
-        );
+        expect(sparklineGraph.strokeColor, equals(strokeColor));
       },
     );
 
     testWidgets(
-      "applies the metricsWidgetTheme accent color to the sparkline graph's fill color",
+      "applies the fill color metrics theme to the sparkline graph's fill color",
       (tester) async {
         await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
           performanceSparkline: performanceMetric,
@@ -139,10 +139,7 @@ void main() {
           find.byType(SparklineGraph),
         );
 
-        expect(
-          sparklineGraph.fillColor,
-          equals(metricsTheme.metricWidgetTheme.accentColor),
-        );
+        expect(sparklineGraph.fillColor, equals(fillColor));
       },
     );
   });

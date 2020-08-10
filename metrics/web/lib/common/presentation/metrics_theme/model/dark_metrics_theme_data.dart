@@ -18,6 +18,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
@@ -42,6 +43,9 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _tileBorderColor = Color(0xFF0e0d0d);
   static const Color _tableHeaderColor = Color(0xFF79858b);
   static const Color _metricsLightGrey = Color(0xFFDCDCE5);
+  static const Color _sparklineStrokeColor = Color(0xFFDCDCE5);
+  static const Color _sparklineTextColor = Color(0xFFD7D7E5);
+  static const Color _sparklineFillColor = Color(0xFF29292B);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = TextStyle(
@@ -272,6 +276,15 @@ class DarkMetricsThemeData extends MetricsThemeData {
               color: _metricsLightGrey,
               fontWeight: FontWeight.bold,
             ),
+          ),
+          performanceSparklineTheme: const SparklineThemeData(
+            textStyle: TextStyle(
+              color: _sparklineTextColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 22.0,
+            ),
+            strokeColor: _sparklineStrokeColor,
+            fillColor: _sparklineFillColor,
           ),
         );
 }
