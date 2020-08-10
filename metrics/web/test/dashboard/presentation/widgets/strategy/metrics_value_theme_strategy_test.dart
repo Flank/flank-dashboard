@@ -8,7 +8,7 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/metrics_value_th
 import 'package:test/test.dart';
 
 void main() {
-  group("MetricValueThemeStrategy", () {
+  group("MetricsValueThemeStrategy", () {
     final circlePercentageTheme = MetricCirclePercentageThemeData(
       lowPercentTheme: MetricWidgetThemeData(
         primaryColor: Colors.red[100],
