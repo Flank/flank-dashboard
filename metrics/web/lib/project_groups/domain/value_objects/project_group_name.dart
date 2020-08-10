@@ -12,7 +12,7 @@ class ProjectGroupName extends ValueObject<String> {
 
   /// Creates the [ProjectGroupName] with the given [value].
   ///
-  /// If the [value] is `null`, empty or exceed the [_charactersLimit], throws
+  /// If the [value] is `null`, empty or exceed the [charactersLimit], throws
   /// a [ProjectGroupNameValidationException].
   ProjectGroupName(this.value) {
     if (value == null || value.trim().isEmpty) {
