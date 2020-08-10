@@ -28,9 +28,9 @@ void main() {
     const themeStrategy = ProjectBuildStatusStyleStrategy();
 
     test(
-      ".getWidgetTheme() returns the positive style if the given build status is successful",
+      ".getWidgetAppearance() returns the positive style if the given build status is successful",
       () {
-        final actualStyle = themeStrategy.getWidgetTheme(
+        final actualStyle = themeStrategy.getWidgetAppearance(
           theme,
           BuildStatus.successful,
         );
@@ -40,9 +40,9 @@ void main() {
     );
 
     test(
-      ".getWidgetTheme() returns the negative style if the given build status is failed",
+      ".getWidgetAppearance() returns the negative style if the given build status is failed",
       () {
-        final actualStyle = themeStrategy.getWidgetTheme(
+        final actualStyle = themeStrategy.getWidgetAppearance(
           theme,
           BuildStatus.failed,
         );
@@ -52,9 +52,9 @@ void main() {
     );
 
     test(
-      ".getWidgetTheme() returns the negative style if the given build status is cancelled",
+      ".getWidgetAppearance() returns the negative style if the given build status is cancelled",
       () {
-        final actualStyle = themeStrategy.getWidgetTheme(
+        final actualStyle = themeStrategy.getWidgetAppearance(
           theme,
           BuildStatus.cancelled,
         );
@@ -64,9 +64,9 @@ void main() {
     );
 
     test(
-      ".getWidgetTheme() returns the unknown style if the given build status is null",
+      ".getWidgetAppearance() returns the unknown style if the given build status is null",
       () {
-        final actualStyle = themeStrategy.getWidgetTheme(theme, null);
+        final actualStyle = themeStrategy.getWidgetAppearance(theme, null);
 
         expect(actualStyle, equals(unknownStyle));
       },

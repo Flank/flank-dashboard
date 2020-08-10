@@ -6,6 +6,7 @@ import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_i
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
@@ -13,7 +14,6 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/th
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/attention_level/project_build_status_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
@@ -57,39 +57,6 @@ class LightMetricsThemeData extends MetricsThemeData {
   /// Creates the light theme with the default widget theme configuration.
   const LightMetricsThemeData()
       : super(
-          metricCirclePercentageThemeData:
-              const MetricCirclePercentageThemeData(
-            lowPercentTheme: MetricWidgetThemeData(
-              primaryColor: ColorConfig.accentColor,
-              accentColor: Colors.transparent,
-              backgroundColor: ColorConfig.accentTranslucentColor,
-              textStyle: TextStyle(
-                fontSize: 24.0,
-                color: ColorConfig.accentColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            mediumPercentTheme: MetricWidgetThemeData(
-              primaryColor: ColorConfig.yellow,
-              accentColor: Colors.transparent,
-              backgroundColor: ColorConfig.yellowTranslucent,
-              textStyle: TextStyle(
-                fontSize: 24.0,
-                color: ColorConfig.yellow,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            highPercentTheme: MetricWidgetThemeData(
-              primaryColor: ColorConfig.primaryColor,
-              accentColor: Colors.transparent,
-              backgroundColor: ColorConfig.primaryTranslucentColor,
-              textStyle: TextStyle(
-                fontSize: 24.0,
-                color: ColorConfig.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           metricWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
             accentColor: ColorConfig.primaryTranslucentColor,
@@ -279,5 +246,6 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontSize: 14.0,
             ),
           ),
+          circlePercentageTheme: const CirclePercentageThemeData(),
         );
 }

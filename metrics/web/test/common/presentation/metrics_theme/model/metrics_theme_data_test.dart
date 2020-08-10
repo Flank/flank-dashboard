@@ -3,12 +3,14 @@ import 'package:metrics/common/presentation/button/theme/attention_level/metrics
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
@@ -32,7 +34,6 @@ void main() {
       () {
         const themeData = MetricsThemeData();
 
-        expect(themeData.metricCirclePercentageThemeData, isNotNull);
         expect(themeData.metricWidgetTheme, isNotNull);
         expect(themeData.inactiveWidgetTheme, isNotNull);
         expect(themeData.buildResultTheme, isNotNull);
@@ -60,7 +61,6 @@ void main() {
       "creates a theme with the default metric widgets theme data if nulls are passed",
       () {
         const themeData = MetricsThemeData(
-          metricCirclePercentageThemeData: null,
           metricWidgetTheme: null,
           inactiveWidgetTheme: null,
           buildResultTheme: null,
@@ -81,9 +81,9 @@ void main() {
           userMenuTheme: null,
           textPlaceholderTheme: null,
           inputPlaceholderTheme: null,
+          circlePercentageTheme: null,
         );
 
-        expect(themeData.metricCirclePercentageThemeData, isNotNull);
         expect(themeData.metricWidgetTheme, isNotNull);
         expect(themeData.inactiveWidgetTheme, isNotNull);
         expect(themeData.buildResultTheme, isNotNull);
@@ -104,6 +104,7 @@ void main() {
         expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.textPlaceholderTheme, isNotNull);
         expect(themeData.inputPlaceholderTheme, isNotNull);
+        expect(themeData.circlePercentageTheme, isNotNull);
       },
     );
 
@@ -118,14 +119,6 @@ void main() {
           primaryColor: primaryColor,
           accentColor: accentColor,
           backgroundColor: backgroundColor,
-        );
-
-        const circlePercentageTheme = MetricCirclePercentageThemeData(
-          lowPercentTheme: MetricWidgetThemeData(
-            primaryColor: primaryColor,
-            accentColor: accentColor,
-            backgroundColor: backgroundColor,
-          ),
         );
 
         const buildResultsTheme = BuildResultsThemeData(
@@ -209,11 +202,18 @@ void main() {
           backgroundColor: Colors.red,
         );
 
+        const circlePercentageTheme = CirclePercentageThemeData(
+          attentionLevel: CirclePercentageAttentionLevel(
+            positive: CirclePercentageStyle(
+              valueColor: Colors.red,
+            ),
+          ),
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
           metricWidgetTheme: metricWidgetTheme,
-          metricCirclePercentageThemeData: circlePercentageTheme,
           buildResultTheme: buildResultsTheme,
           projectGroupCardTheme: projectGroupCardTheme,
           addProjectGroupCardTheme: addProjectGroupTheme,
@@ -233,12 +233,9 @@ void main() {
           userMenuTheme: userMenuTheme,
           textPlaceholderTheme: textPlaceholderTheme,
           inputPlaceholderTheme: inputPlaceholderTheme,
+          circlePercentageTheme: circlePercentageTheme,
         );
 
-        expect(
-          copiedTheme.metricCirclePercentageThemeData,
-          equals(circlePercentageTheme),
-        );
         expect(copiedTheme.metricWidgetTheme, equals(metricWidgetTheme));
         expect(copiedTheme.inactiveWidgetTheme, equals(inactiveTheme));
         expect(copiedTheme.buildResultTheme, equals(buildResultsTheme));
@@ -283,6 +280,10 @@ void main() {
           copiedTheme.inputPlaceholderTheme,
           equals(inputPlaceholderTheme),
         );
+        expect(
+          copiedTheme.circlePercentageTheme,
+          equals(circlePercentageTheme),
+        );
       },
     );
 
@@ -296,10 +297,6 @@ void main() {
         expect(
           themeData.metricWidgetTheme,
           equals(copiedTheme.metricWidgetTheme),
-        );
-        expect(
-          themeData.metricCirclePercentageThemeData,
-          equals(copiedTheme.metricCirclePercentageThemeData),
         );
         expect(
           themeData.buildResultTheme,
@@ -365,6 +362,10 @@ void main() {
         expect(
           themeData.inputPlaceholderTheme,
           equals(copiedTheme.inputPlaceholderTheme),
+        );
+        expect(
+          themeData.circlePercentageTheme,
+          equals(copiedTheme.circlePercentageTheme),
         );
       },
     );

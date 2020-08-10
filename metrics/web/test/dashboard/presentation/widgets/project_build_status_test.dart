@@ -145,7 +145,7 @@ class _BuildResultThemeStrategyStub implements ProjectBuildStatusStyleStrategy {
   String getIconImage(BuildStatus value) => _iconImage;
 
   @override
-  ProjectBuildStatusStyle getWidgetTheme(
+  ProjectBuildStatusStyle getWidgetAppearance(
     MetricsThemeData themeData,
     BuildStatus value,
   ) {

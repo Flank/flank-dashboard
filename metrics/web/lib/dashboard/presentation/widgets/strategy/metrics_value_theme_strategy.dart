@@ -1,7 +1,7 @@
+import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value_based_theme_strategy.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value_based_appearance_strategy.dart';
 
 /// A class that represents the strategy of applying the [MetricWidgetThemeData]
 /// to the [ThemedCirclePercentage] widget based on the percent value.
@@ -12,7 +12,7 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value
 /// * if the percent value is greater than or equal to [mediumPercentBound] and less than [highPercentBound], applies the [MetricCirclePercentageThemeData.mediumPercentTheme]
 /// * if the percent value is greater or equal to [highPercentBound], applies the [MetricCirclePercentageThemeData.highPercentTheme].
 class MetricsValueThemeStrategy
-    implements ValueBasedThemeStrategy<MetricWidgetThemeData, double> {
+    implements ValueBasedAppearanceStrategy<CirclePercentageStyle, double> {
   /// Is the lower bound of the [value]
   /// to return the [MetricCirclePercentageThemeData.highPercentTheme].
   static const double highPercentBound = 0.8;
@@ -28,24 +28,25 @@ class MetricsValueThemeStrategy
   const MetricsValueThemeStrategy();
 
   @override
-  MetricWidgetThemeData getWidgetTheme(
+  CirclePercentageStyle getWidgetAppearance(
     MetricsThemeData metricsTheme,
     double value,
   ) {
-    final circlePercentageTheme = metricsTheme.metricCirclePercentageThemeData;
-    final inactiveTheme = metricsTheme.inactiveWidgetTheme;
+    final circlePercentageTheme = metricsTheme.circlePercentageTheme;
+    final inactiveStyle =
+        metricsTheme.circlePercentageTheme.attentionLevel.inactive;
     final percent = value;
 
-    if (percent == null) return inactiveTheme;
+    if (percent == null) return inactiveStyle;
 
     if (percent >= highPercentBound) {
-      return circlePercentageTheme.highPercentTheme;
+      return circlePercentageTheme.attentionLevel.positive;
     } else if (percent >= mediumPercentBound) {
-      return circlePercentageTheme.mediumPercentTheme;
+      return circlePercentageTheme.attentionLevel.neutral;
     } else if (percent > lowPercentBound) {
-      return circlePercentageTheme.lowPercentTheme;
+      return circlePercentageTheme.attentionLevel.negative;
     } else {
-      return inactiveTheme;
+      return inactiveStyle;
     }
   }
 }

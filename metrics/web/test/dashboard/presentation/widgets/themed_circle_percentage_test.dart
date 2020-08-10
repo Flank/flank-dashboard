@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:metrics/dashboard/presentation/view_models/percent_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/metrics_value_theme_strategy.dart';
@@ -12,6 +12,22 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("ThemedCirclePercentage", () {
+    const style = CirclePercentageStyle(
+      valueColor: Colors.red,
+      strokeColor: Colors.blue,
+      backgroundColor: Colors.white,
+      valueStyle: TextStyle(
+        color: Colors.orange,
+      ),
+    );
+
+    final themeStrategy = CirclePercentageThemeStrategyMock();
+
+    setUp(() {
+      reset(themeStrategy);
+      when(themeStrategy.getWidgetAppearance(any, any)).thenReturn(style);
+    });
+
     testWidgets(
       "can't be with null percent value",
       (tester) async {
@@ -24,18 +40,8 @@ void main() {
     );
 
     testWidgets(
-      "applies the colors from the MetricWidgetThemeData given by theme strategy",
+      "applies the value color from the metrics theme given by theme strategy",
       (tester) async {
-        const metricWidgetTheme = MetricWidgetThemeData(
-          primaryColor: Colors.red,
-          accentColor: Colors.blue,
-          backgroundColor: Colors.white,
-        );
-        final themeStrategy = CirclePercentageThemeStrategyMock();
-
-        when(themeStrategy.getWidgetTheme(any, any))
-            .thenReturn(metricWidgetTheme);
-
         await tester.pumpWidget(_ThemedCirclePercentageTestbed(
           strategy: themeStrategy,
         ));
@@ -45,15 +51,58 @@ void main() {
 
         expect(
           circlePercentageWidget.valueColor,
-          metricWidgetTheme.primaryColor,
+          style.valueColor,
         );
+      },
+    );
+
+    testWidgets(
+      "applies the stroke color from the metrics theme given by theme strategy",
+      (tester) async {
+        await tester.pumpWidget(_ThemedCirclePercentageTestbed(
+          strategy: themeStrategy,
+        ));
+
+        final circlePercentageWidget =
+            tester.widget<CirclePercentage>(find.byType(CirclePercentage));
+
         expect(
           circlePercentageWidget.strokeColor,
-          metricWidgetTheme.accentColor,
+          style.strokeColor,
         );
+      },
+    );
+
+    testWidgets(
+      "applies the background color from the metrics theme given by theme strategy",
+      (tester) async {
+        await tester.pumpWidget(_ThemedCirclePercentageTestbed(
+          strategy: themeStrategy,
+        ));
+
+        final circlePercentageWidget =
+            tester.widget<CirclePercentage>(find.byType(CirclePercentage));
+
         expect(
           circlePercentageWidget.backgroundColor,
-          metricWidgetTheme.backgroundColor,
+          style.backgroundColor,
+        );
+      },
+    );
+
+    testWidgets(
+      "applies the value style from the metrics theme given by theme strategy",
+      (tester) async {
+        await tester.pumpWidget(_ThemedCirclePercentageTestbed(
+          strategy: themeStrategy,
+        ));
+
+        final circlePercentageWidget =
+            tester.widget<CirclePercentage>(find.byType(CirclePercentage));
+
+        expect(
+          circlePercentageWidget.valueStyle,
+          style.valueStyle,
         );
       },
     );
