@@ -1,4 +1,5 @@
 import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_name_validation_error_code.dart';
+import 'package:metrics/project_groups/domain/value_objects/project_group_name.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_name_validation_error_message.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:test/test.dart';
@@ -21,6 +22,22 @@ void main() {
         expect(
           errorMessage.message,
           ProjectGroupsStrings.projectGroupNameRequired,
+        );
+      },
+    );
+
+    test(
+      ".message returns project group name limit exceeded if the given code is ProjectGroupNameValidationErrorCode.charactersLimitExceeded",
+      () {
+        const errorMessage = ProjectGroupNameValidationErrorMessage(
+          ProjectGroupNameValidationErrorCode.charactersLimitExceeded,
+        );
+
+        expect(
+          errorMessage.message,
+          ProjectGroupsStrings.getProjectGroupNameLimitExceeded(
+            ProjectGroupName.charactersLimit,
+          ),
         );
       },
     );
