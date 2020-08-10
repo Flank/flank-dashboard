@@ -37,11 +37,23 @@ class PerformanceSparklineGraph extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: SparklineGraph(
-            data: performanceSparkline.performance,
-            strokeColor: sparklineTheme.strokeColor,
-            fillColor: sparklineTheme.fillColor,
-          ),
+          child: performanceSparkline.performance.length == 1
+              ? Container(
+                  decoration: BoxDecoration(
+                    color: sparklineTheme.fillColor,
+                    border: Border(
+                      top: BorderSide(
+                        color: sparklineTheme.strokeColor,
+                        width: 4.0,
+                      ),
+                    ),
+                  ),
+                )
+              : SparklineGraph(
+                  data: performanceSparkline.performance,
+                  strokeColor: sparklineTheme.strokeColor,
+                  fillColor: sparklineTheme.fillColor,
+                ),
         ),
       ],
     );
