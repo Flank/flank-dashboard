@@ -10,8 +10,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_th
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_toggle_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_user_menu_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
@@ -79,10 +79,10 @@ class MetricsThemeData {
   final ProjectBuildStatusThemeData projectBuildStatusTheme;
 
   /// A theme for the toggle widgets.
-  final MetricsToggleThemeData toggleTheme;
+  final ToggleThemeData toggleTheme;
 
   /// A theme for the user menu popup.
-  final MetricsUserMenuThemeData userMenuTheme;
+  final UserMenuThemeData userMenuTheme;
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
@@ -101,12 +101,11 @@ class MetricsThemeData {
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
     ScorecardThemeData buildNumberScorecardTheme,
-    MetricsToggleThemeData toggleTheme,
-    MetricsUserMenuThemeData userMenuTheme,
+    ToggleThemeData toggleTheme,
+    UserMenuThemeData userMenuTheme,
     SparklineThemeData performanceSparklineTheme,
     ProjectBuildStatusThemeData projectBuildStatusTheme,
-  })
-      : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
+  })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
       const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricWidgetTheme = metricWidgetTheme ?? _defaultWidgetThemeData,
@@ -133,12 +132,12 @@ class MetricsThemeData {
             projectMetricsTableTheme ?? const ProjectMetricsTableThemeData(),
         buildNumberScorecardTheme =
             buildNumberScorecardTheme ?? const ScorecardThemeData(),
-        toggleTheme = performanceSparklineTheme =
+        performanceSparklineTheme =
             performanceSparklineTheme ?? const SparklineThemeData(),
         projectBuildStatusTheme =
             projectBuildStatusTheme ?? const ProjectBuildStatusThemeData(),
-        toggleTheme = toggleTheme ?? const MetricsToggleThemeData(),
-        userMenuTheme = userMenuTheme ?? const MetricsUserMenuThemeData();
+        toggleTheme = toggleTheme ?? const ToggleThemeData(),
+        userMenuTheme = userMenuTheme ?? const UserMenuThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -160,36 +159,39 @@ class MetricsThemeData {
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
     ScorecardThemeData buildNumberScorecardTheme,
-    MetricsToggleThemeData toggleTheme,
-    MetricsUserMenuThemeData userMenuTheme,
+    SparklineThemeData performanceSparklineTheme,
+    ProjectBuildStatusThemeData projectBuildStatusTheme,
+    ToggleThemeData toggleTheme,
+    UserMenuThemeData userMenuTheme,
   }) {
     return MetricsThemeData(
-        metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
-            this.metricCirclePercentageThemeData,
-        metricWidgetTheme: metricWidgetTheme ?? this.metricWidgetTheme,
-        buildResultTheme: buildResultTheme ?? this.buildResultTheme,
-        projectGroupDialogTheme:
-        projectGroupDialogTheme ?? this.projectGroupDialogTheme,
-        deleteDialogTheme: deleteDialogTheme ?? this.deleteDialogTheme,
-        projectGroupCardTheme:
-        projectGroupCardTheme ?? this.projectGroupCardTheme,
-        addProjectGroupCardTheme:
-        addProjectGroupCardTheme ?? this.addProjectGroupCardTheme,
-        inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
-        metricsButtonTheme: metricsButtonTheme ?? this.metricsButtonTheme,
-        textFieldTheme: textFieldTheme ?? this.textFieldTheme,
-        dropdownTheme: dropdownTheme ?? this.dropdownTheme,
-        dropdownItemTheme: dropdownItemTheme ?? this.dropdownItemTheme,
-        loginTheme: loginTheme ?? this.loginTheme,
-        projectMetricsTableTheme:
-        projectMetricsTableTheme ?? this.projectMetricsTableTheme,
-        buildNumberScorecardTheme: buildNumberScorecardTheme ?? this.buildNumberScorecardTheme,
-        performanceSparklineTheme:
-        performanceSparklineTheme ?? this.performanceSparklineTheme,
-        projectBuildStatusTheme:
-        projectBuildStatusTheme ?? this.projectBuildStatusTheme,
-        toggleTheme: toggleTheme ?? const MetricsToggleThemeData(),
-        userMenuTheme: userMenuTheme ?? const MetricsUserMenuThemeData();
+      metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
+          this.metricCirclePercentageThemeData,
+      metricWidgetTheme: metricWidgetTheme ?? this.metricWidgetTheme,
+      buildResultTheme: buildResultTheme ?? this.buildResultTheme,
+      projectGroupDialogTheme:
+      projectGroupDialogTheme ?? this.projectGroupDialogTheme,
+      deleteDialogTheme: deleteDialogTheme ?? this.deleteDialogTheme,
+      projectGroupCardTheme:
+      projectGroupCardTheme ?? this.projectGroupCardTheme,
+      addProjectGroupCardTheme:
+      addProjectGroupCardTheme ?? this.addProjectGroupCardTheme,
+      inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
+      metricsButtonTheme: metricsButtonTheme ?? this.metricsButtonTheme,
+      textFieldTheme: textFieldTheme ?? this.textFieldTheme,
+      dropdownTheme: dropdownTheme ?? this.dropdownTheme,
+      dropdownItemTheme: dropdownItemTheme ?? this.dropdownItemTheme,
+      loginTheme: loginTheme ?? this.loginTheme,
+      projectMetricsTableTheme:
+      projectMetricsTableTheme ?? this.projectMetricsTableTheme,
+      buildNumberScorecardTheme:
+      buildNumberScorecardTheme ?? this.buildNumberScorecardTheme,
+      performanceSparklineTheme:
+      performanceSparklineTheme ?? this.performanceSparklineTheme,
+      projectBuildStatusTheme:
+      projectBuildStatusTheme ?? this.projectBuildStatusTheme,
+      toggleTheme: toggleTheme ?? this.toggleTheme,
+      userMenuTheme: userMenuTheme ?? this.userMenuTheme,
     );
   }
 }

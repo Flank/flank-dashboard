@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A class that stores the theme data for the metrics user menu.
-class MetricsUserMenuThemeData {
+class UserMenuThemeData {
   /// A background color of the user menu.
   final Color backgroundColor;
 
@@ -11,13 +11,10 @@ class MetricsUserMenuThemeData {
   /// The [TextStyle] for the text of the user menu.
   final TextStyle contentTextStyle;
 
-  /// Creates a new instance of the [MetricsUserMenuThemeData].
-  ///
-  /// The [backgroundColor] defaults to [Colors.black].
-  /// The [dividerColor] defaults to [Colors.grey].
-  const MetricsUserMenuThemeData({
-    this.backgroundColor = Colors.black,
-    this.dividerColor = Colors.grey,
+  /// Creates a new instance of the [UserMenuThemeData].
+  const UserMenuThemeData({
+    this.backgroundColor,
+    this.dividerColor,
     this.contentTextStyle,
   });
 }
