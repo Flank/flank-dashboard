@@ -134,6 +134,29 @@ void main() {
         expect(container.constraints, equals(constraints));
       },
     );
+
+    testWidgets(
+      "does not add a border width to the height and width of its child",
+      (tester) async {
+        const width = 120.0;
+        const height = 100.0;
+        const expectedSize = Size(width, height);
+        const sizedBox = SizedBox.expand();
+
+        await tester.pumpWidget(
+          _DecoratedContainerTestbed(
+            decoration: BoxDecoration(border: Border.all(width: 10.0)),
+            width: width,
+            height: height,
+            child: sizedBox,
+          ),
+        );
+
+        final actualSize = tester.getSize(find.byType(SizedBox));
+
+        expect(actualSize, equals(expectedSize));
+      },
+    );
   });
 }
 
