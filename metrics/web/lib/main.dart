@@ -11,14 +11,14 @@ import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MetricsApp());
 
-class MyApp extends StatefulWidget {
+class MetricsApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _MetricsAppState createState() => _MetricsAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MetricsAppState extends State<MetricsApp> {
   @override
   Widget build(BuildContext context) {
     return InjectionContainer(
