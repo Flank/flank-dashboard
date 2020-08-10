@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// A [Container] widget that does not insets its child
+/// by the widths of the borders.
 class DecoratedContainer extends StatelessWidget {
   /// A [Decoration] of this container.
   final Decoration decoration;
