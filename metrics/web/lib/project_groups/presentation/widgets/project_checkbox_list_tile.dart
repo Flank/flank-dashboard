@@ -29,7 +29,7 @@ class ProjectCheckboxListTile extends StatelessWidget {
         onTap: () => _toggleProjectCheckedStatus(context),
         child: Container(
           height: 48.0,
-          padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 13.0),
+          padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 14.0),
           child: Row(
             children: <Widget>[
               Padding(

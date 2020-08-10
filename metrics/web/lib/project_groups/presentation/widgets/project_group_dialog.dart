@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
@@ -100,7 +101,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                 ),
               ),
               Flexible(
-                child: Container(
+                child: DecoratedContainer(
                   margin: const EdgeInsets.symmetric(vertical: 16.0),
                   decoration: BoxDecoration(
                     border: Border.all(color: dialogTheme.contentBorderColor),
