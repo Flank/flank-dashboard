@@ -12,6 +12,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_p
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
@@ -45,6 +47,8 @@ void main() {
         expect(themeData.buildNumberScorecardTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
+        expect(themeData.userMenuTheme, isNotNull);
+        expect(themeData.toggleTheme, isNotNull);
       },
     );
 
@@ -69,6 +73,8 @@ void main() {
           buildNumberScorecardTheme: null,
           performanceSparklineTheme: null,
           projectBuildStatusTheme: null,
+          toggleTheme: null,
+          userMenuTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -88,6 +94,8 @@ void main() {
         expect(themeData.buildNumberScorecardTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
+        expect(themeData.toggleTheme, isNotNull);
+        expect(themeData.userMenuTheme, isNotNull);
       },
     );
 
@@ -134,7 +142,7 @@ void main() {
           backgroundColor: Colors.black,
         );
 
-        const inactiveThemeData = MetricWidgetThemeData(
+        const inactiveTheme = MetricWidgetThemeData(
           primaryColor: primaryColor,
         );
 
@@ -177,6 +185,14 @@ void main() {
 
         const projectBuildStatusTheme = ProjectBuildStatusThemeData();
 
+        const userMenuTheme = UserMenuThemeData(
+          backgroundColor: Colors.white,
+        );
+
+        const toggleTheme = ToggleThemeData(
+          activeColor: Colors.green,
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -187,7 +203,7 @@ void main() {
           addProjectGroupCardTheme: addProjectGroupTheme,
           deleteDialogTheme: deleteDialogTheme,
           projectGroupDialogTheme: projectGroupDialogTheme,
-          inactiveWidgetTheme: inactiveThemeData,
+          inactiveWidgetTheme: inactiveTheme,
           metricsButtonTheme: metricsButtonTheme,
           textFieldTheme: textFieldTheme,
           dropdownTheme: dropdownTheme,
@@ -197,6 +213,8 @@ void main() {
           buildNumberScorecardTheme: scorecardTheme,
           performanceSparklineTheme: performanceSparklineTheme,
           projectBuildStatusTheme: projectBuildStatusTheme,
+          toggleTheme: toggleTheme,
+          userMenuTheme: userMenuTheme,
         );
 
         expect(
@@ -204,7 +222,7 @@ void main() {
           equals(circlePercentageTheme),
         );
         expect(copiedTheme.metricWidgetTheme, equals(metricWidgetTheme));
-        expect(copiedTheme.inactiveWidgetTheme, equals(inactiveThemeData));
+        expect(copiedTheme.inactiveWidgetTheme, equals(inactiveTheme));
         expect(copiedTheme.buildResultTheme, equals(buildResultsTheme));
         expect(
           copiedTheme.projectGroupCardTheme,
@@ -240,6 +258,8 @@ void main() {
           copiedTheme.projectBuildStatusTheme,
           equals(projectBuildStatusTheme),
         );
+        expect(copiedTheme.toggleTheme, equals(toggleTheme));
+        expect(copiedTheme.userMenuTheme, equals(userMenuTheme));
       },
     );
 
@@ -297,7 +317,10 @@ void main() {
           themeData.projectMetricsTableTheme,
           equals(copiedTheme.projectMetricsTableTheme),
         );
-        expect(themeData.buildNumberScorecardTheme, equals(copiedTheme.buildNumberScorecardTheme));
+        expect(
+          themeData.buildNumberScorecardTheme,
+          equals(copiedTheme.buildNumberScorecardTheme),
+        );
         expect(
           themeData.performanceSparklineTheme,
           equals(copiedTheme.performanceSparklineTheme),
@@ -305,6 +328,18 @@ void main() {
         expect(
           themeData.projectBuildStatusTheme,
           copiedTheme.projectBuildStatusTheme,
+        );
+        expect(
+          themeData.buildNumberScorecardTheme,
+          equals(copiedTheme.buildNumberScorecardTheme),
+        );
+        expect(
+          themeData.toggleTheme,
+          equals(copiedTheme.toggleTheme),
+        );
+        expect(
+          themeData.userMenuTheme,
+          equals(copiedTheme.userMenuTheme),
         );
       },
     );

@@ -28,6 +28,8 @@ void main() {
         expect(darkMetricsThemeData.buildNumberScorecardTheme, isNotNull);
         expect(darkMetricsThemeData.performanceSparklineTheme, isNotNull);
         expect(darkMetricsThemeData.projectBuildStatusTheme, isNotNull);
+        expect(darkMetricsThemeData.toggleTheme, isNotNull);
+        expect(darkMetricsThemeData.userMenuTheme, isNotNull);
       },
     );
   });

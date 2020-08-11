@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 /// Holds the common colors for application themes.
 class ColorConfig {
   static const Color primaryColor = Color(0xFF20CE9A);
+  static const Color primaryHoverColor = Color(0xFF00B383);
   static const Color accentColor = Color(0xFFF45531);
   static const Color inactiveColor = Color(0xFF242729);
   static const Color inactiveTextColor = Color(0xFF1b1b1b);
