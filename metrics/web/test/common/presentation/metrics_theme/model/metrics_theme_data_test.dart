@@ -317,7 +317,10 @@ void main() {
           themeData.projectMetricsTableTheme,
           equals(copiedTheme.projectMetricsTableTheme),
         );
-        expect(themeData.buildNumberScorecardTheme, equals(copiedTheme.buildNumberScorecardTheme));
+        expect(
+          themeData.buildNumberScorecardTheme,
+          equals(copiedTheme.buildNumberScorecardTheme),
+        );
         expect(
           themeData.performanceSparklineTheme,
           equals(copiedTheme.performanceSparklineTheme),

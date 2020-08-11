@@ -22,7 +22,7 @@ import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.da
 /// Stores the theme data for all metric widgets.
 class MetricsThemeData {
   static const MetricWidgetThemeData _defaultWidgetThemeData =
-  MetricWidgetThemeData();
+      MetricWidgetThemeData();
 
   /// A theme of the [CirclePercentage]
   final MetricCirclePercentageThemeData metricCirclePercentageThemeData;
@@ -106,7 +106,7 @@ class MetricsThemeData {
     ToggleThemeData toggleTheme,
     UserMenuThemeData userMenuTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
-      const MetricCirclePercentageThemeData(),
+            const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricWidgetTheme = metricWidgetTheme ?? _defaultWidgetThemeData,
         buildResultTheme = buildResultTheme ??
@@ -170,12 +170,12 @@ class MetricsThemeData {
       metricWidgetTheme: metricWidgetTheme ?? this.metricWidgetTheme,
       buildResultTheme: buildResultTheme ?? this.buildResultTheme,
       projectGroupDialogTheme:
-      projectGroupDialogTheme ?? this.projectGroupDialogTheme,
+          projectGroupDialogTheme ?? this.projectGroupDialogTheme,
       deleteDialogTheme: deleteDialogTheme ?? this.deleteDialogTheme,
       projectGroupCardTheme:
-      projectGroupCardTheme ?? this.projectGroupCardTheme,
+          projectGroupCardTheme ?? this.projectGroupCardTheme,
       addProjectGroupCardTheme:
-      addProjectGroupCardTheme ?? this.addProjectGroupCardTheme,
+          addProjectGroupCardTheme ?? this.addProjectGroupCardTheme,
       inactiveWidgetTheme: inactiveWidgetTheme ?? this.inactiveWidgetTheme,
       metricsButtonTheme: metricsButtonTheme ?? this.metricsButtonTheme,
       textFieldTheme: textFieldTheme ?? this.textFieldTheme,
@@ -183,13 +183,13 @@ class MetricsThemeData {
       dropdownItemTheme: dropdownItemTheme ?? this.dropdownItemTheme,
       loginTheme: loginTheme ?? this.loginTheme,
       projectMetricsTableTheme:
-      projectMetricsTableTheme ?? this.projectMetricsTableTheme,
+          projectMetricsTableTheme ?? this.projectMetricsTableTheme,
       buildNumberScorecardTheme:
-      buildNumberScorecardTheme ?? this.buildNumberScorecardTheme,
+          buildNumberScorecardTheme ?? this.buildNumberScorecardTheme,
       performanceSparklineTheme:
-      performanceSparklineTheme ?? this.performanceSparklineTheme,
+          performanceSparklineTheme ?? this.performanceSparklineTheme,
       projectBuildStatusTheme:
-      projectBuildStatusTheme ?? this.projectBuildStatusTheme,
+          projectBuildStatusTheme ?? this.projectBuildStatusTheme,
       toggleTheme: toggleTheme ?? this.toggleTheme,
       userMenuTheme: userMenuTheme ?? this.userMenuTheme,
     );
