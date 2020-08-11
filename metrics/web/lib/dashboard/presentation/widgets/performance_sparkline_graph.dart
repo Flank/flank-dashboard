@@ -21,7 +21,9 @@ class PerformanceSparklineGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (performanceSparkline.performance.isEmpty) {
+    final performance = performanceSparkline.performance;
+
+    if (performance.isEmpty) {
       return const NoDataPlaceholder();
     }
 
@@ -37,7 +39,7 @@ class PerformanceSparklineGraph extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: performanceSparkline.performance.length == 1
+          child: performance.length == 1
               ? Container(
                   decoration: BoxDecoration(
                     color: sparklineTheme.fillColor,
@@ -50,7 +52,7 @@ class PerformanceSparklineGraph extends StatelessWidget {
                   ),
                 )
               : SparklineGraph(
-                  data: performanceSparkline.performance,
+                  data: performance,
                   strokeColor: sparklineTheme.strokeColor,
                   fillColor: sparklineTheme.fillColor,
                 ),
