@@ -73,11 +73,7 @@ void main() {
           );
         });
 
-        final buttonContainer =
-            tester.widget<DecoratedContainer>(find.descendant(
-          of: find.byType(ProjectGroupsDropdownMenu),
-          matching: find.byType(DecoratedContainer),
-        ));
+        final buttonContainer = _getDecoratedContainer(tester);
 
         final buttonDecoration = buttonContainer.decoration as BoxDecoration;
 

@@ -165,16 +165,16 @@ class _DecoratedContainerTestbed extends StatelessWidget {
   /// A default child widget used in tests.
   static const Widget _defaultChild = Text('default text');
 
-  /// A [Decoration] of this container.
+  /// A [Decoration] of the [DecoratedContainer].
   final Decoration decoration;
 
-  /// A widget below this container in the tree.
+  /// A widget below of the [DecoratedContainer] in the tree.
   final Widget child;
 
-  /// A height of this container.
+  /// A height of the [DecoratedContainer].
   final double height;
 
-  /// A width of this container.
+  /// A width of the [DecoratedContainer].
   final double width;
 
   /// An empty space surrounds the [child].
@@ -183,7 +183,7 @@ class _DecoratedContainerTestbed extends StatelessWidget {
   /// An empty space to around the [decoration] and [child].
   final EdgeInsetsGeometry margin;
 
-  /// A [BoxConstraints] of this container.
+  /// A [BoxConstraints] of the [DecoratedContainer].
   final BoxConstraints constraints;
 
   /// Creates an instance of this testbed with the given parameters.
