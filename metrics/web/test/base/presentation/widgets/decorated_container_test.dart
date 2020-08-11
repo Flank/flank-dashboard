@@ -43,15 +43,15 @@ void main() {
     testWidgets(
       "displays the decorated box with the given child",
       (tester) async {
-        const text = 'test';
+        const textWidget = Text('test');
 
         await tester.pumpWidget(
-          const _DecoratedContainerTestbed(child: Text(text)),
+          const _DecoratedContainerTestbed(child: textWidget),
         );
 
         final child = find.descendant(
           of: find.byType(DecoratedBox),
-          matching: find.text(text),
+          matching: find.byWidget(textWidget),
         );
 
         expect(child, findsOneWidget);
