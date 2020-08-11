@@ -40,14 +40,16 @@ class MetricsTable extends StatelessWidget {
                     final projectNameFilter =
                         projectsMetricsNotifier.projectNameFilter;
 
-                    if (projectNameFilter != null &&
-                        projectNameFilter.isNotEmpty) {
+                    final hasProjectNameFilter = projectNameFilter != null &&
+                        projectNameFilter.isNotEmpty;
+
+                    if (hasProjectNameFilter) {
                       return Container();
-                    } else {
-                      return const _DashboardTablePlaceholder(
-                        text: DashboardStrings.noConfiguredProjects,
-                      );
                     }
+
+                    return const _DashboardTablePlaceholder(
+                      text: DashboardStrings.noConfiguredProjects,
+                    );
                   }
 
                   return ListView.builder(
