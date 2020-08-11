@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 
 /// A utility class needed to find widgets in the widget tree under tests.
 class FinderUtil {
@@ -12,7 +13,9 @@ class FinderUtil {
 
   /// Finds [BoxDecoration] in the widget tree under tests using the given [tester].
   static BoxDecoration findBoxDecoration(WidgetTester tester) {
-    final containerWidget = tester.widget<Container>(find.byType(Container));
+    final containerWidget = tester.widget<DecoratedContainer>(
+      find.byType(DecoratedContainer),
+    );
 
     return containerWidget.decoration as BoxDecoration;
   }

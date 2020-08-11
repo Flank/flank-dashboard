@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
@@ -36,7 +37,7 @@ class ProjectBuildStatus extends StatelessWidget {
       projectBuildStatus,
     );
 
-    return Container(
+    return DecoratedContainer(
       height: 40.0,
       width: 40.0,
       decoration: BoxDecoration(

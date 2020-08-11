@@ -2,9 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_body.dart';
@@ -42,6 +43,13 @@ void main() {
       (widget) => widget is DropdownMenu,
     );
 
+    DecoratedContainer _getDecoratedContainer(WidgetTester tester) {
+      return tester.widget<DecoratedContainer>(find.descendant(
+        of: find.byType(ProjectGroupsDropdownMenu),
+        matching: find.byType(DecoratedContainer),
+      ));
+    }
+
     setUp(() {
       metricsNotifier = ProjectMetricsNotifierMock();
       when(metricsNotifier.projectGroupDropdownItems).thenReturn(dropdownItems);
@@ -65,10 +73,7 @@ void main() {
           );
         });
 
-        final buttonContainer = tester.widget<Container>(find.descendant(
-          of: find.byType(ProjectGroupsDropdownMenu),
-          matching: find.byType(Container),
-        ));
+        final buttonContainer = _getDecoratedContainer(tester);
 
         final buttonDecoration = buttonContainer.decoration as BoxDecoration;
 
@@ -97,10 +102,7 @@ void main() {
         await tester.tap(find.byType(ProjectGroupsDropdownMenu));
         await tester.pumpAndSettle();
 
-        final buttonContainer = tester.widget<Container>(find.descendant(
-          of: find.byType(ProjectGroupsDropdownMenu),
-          matching: find.byType(Container),
-        ));
+        final buttonContainer = _getDecoratedContainer(tester);
 
         final buttonDecoration = buttonContainer.decoration as BoxDecoration;
 
@@ -132,10 +134,7 @@ void main() {
 
         await tester.pump();
 
-        final buttonContainer = tester.widget<Container>(find.descendant(
-          of: find.byType(ProjectGroupsDropdownMenu),
-          matching: find.byType(Container),
-        ));
+        final buttonContainer = _getDecoratedContainer(tester);
 
         final buttonDecoration = buttonContainer.decoration as BoxDecoration;
 
@@ -161,10 +160,7 @@ void main() {
           );
         });
 
-        final buttonContainer = tester.widget<Container>(find.descendant(
-          of: find.byType(ProjectGroupsDropdownMenu),
-          matching: find.byType(Container),
-        ));
+        final buttonContainer = _getDecoratedContainer(tester);
 
         final buttonDecoration = buttonContainer.decoration as BoxDecoration;
         final boxBorder = buttonDecoration.border as Border;
@@ -197,10 +193,7 @@ void main() {
         await tester.tap(find.byType(ProjectGroupsDropdownMenu));
         await tester.pumpAndSettle();
 
-        final buttonContainer = tester.widget<Container>(find.descendant(
-          of: find.byType(ProjectGroupsDropdownMenu),
-          matching: find.byType(Container),
-        ));
+        final buttonContainer = _getDecoratedContainer(tester);
 
         final buttonDecoration = buttonContainer.decoration as BoxDecoration;
         final boxBorder = buttonDecoration.border as Border;
@@ -236,10 +229,7 @@ void main() {
 
         await tester.pump();
 
-        final buttonContainer = tester.widget<Container>(find.descendant(
-          of: find.byType(ProjectGroupsDropdownMenu),
-          matching: find.byType(Container),
-        ));
+        final buttonContainer = _getDecoratedContainer(tester);
 
         final buttonDecoration = buttonContainer.decoration as BoxDecoration;
         final boxBorder = buttonDecoration.border as Border;
