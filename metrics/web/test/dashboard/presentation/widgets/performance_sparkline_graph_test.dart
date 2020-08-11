@@ -11,7 +11,6 @@ import 'package:metrics/dashboard/presentation/view_models/performance_sparkline
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 
-import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
@@ -177,7 +176,8 @@ void main() {
           metricsTheme: metricsTheme,
         ));
 
-        final decoration = FinderUtil.findBoxDecoration(tester);
+        final container = tester.widget<Container>(find.byType(Container));
+        final decoration = container.decoration as BoxDecoration;
 
         expect(decoration.color, equals(fillColor));
       },
@@ -195,7 +195,8 @@ void main() {
           metricsTheme: metricsTheme,
         ));
 
-        final decoration = FinderUtil.findBoxDecoration(tester);
+        final container = tester.widget<Container>(find.byType(Container));
+        final decoration = container.decoration as BoxDecoration;
 
         expect(decoration.border.top.color, equals(strokeColor));
       },
