@@ -355,11 +355,10 @@ void main() {
       () async {
         const expectedProjectNameFilter = 'some project';
 
-        bool isUpdated() =>
-            projectMetricsNotifier.projectNameFilter ==
-            expectedProjectNameFilter;
-
-        final listener = expectAsyncUntil0(() {}, isUpdated);
+        final listener = expectAsyncUntil0(() {}, () {
+          return projectMetricsNotifier.projectNameFilter ==
+              expectedProjectNameFilter;
+        });
 
         projectMetricsNotifier.addListener(listener);
         projectMetricsNotifier.filterByProjectName(expectedProjectNameFilter);
