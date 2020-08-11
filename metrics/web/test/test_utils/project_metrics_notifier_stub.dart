@@ -30,6 +30,10 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
     ),
   );
 
+  /// The value of a project name filter.
+  /// Used for testing no search results case.
+  String _projectNameFilter;
+
   @override
   List<ProjectGroupDropdownItemViewModel> get projectGroupDropdownItems =>
       const [
@@ -37,8 +41,7 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
       ];
 
   @override
-  ProjectGroupDropdownItemViewModel get selectedProjectGroup =>
-      null;
+  ProjectGroupDropdownItemViewModel get selectedProjectGroup => null;
 
   /// The list of [ProjectMetricsTileViewModel]s.
   final List<ProjectMetricsTileViewModel> _projectMetrics;
@@ -59,7 +62,9 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   String get projectsErrorMessage => null;
 
   @override
-  void filterByProjectName(String value) {}
+  void filterByProjectName(String value) {
+    _projectNameFilter = value;
+  }
 
   @override
   Future<void> setProjects(
@@ -72,4 +77,7 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
 
   @override
   void selectProjectGroup(String id) {}
+
+  @override
+  String get projectNameFilter => _projectNameFilter;
 }

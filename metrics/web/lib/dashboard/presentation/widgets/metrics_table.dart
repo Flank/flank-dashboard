@@ -37,9 +37,19 @@ class MetricsTable extends StatelessWidget {
                   if (projects == null) return const LoadingPlaceholder();
 
                   if (projects.isEmpty) {
-                    return const _DashboardTablePlaceholder(
-                      text: DashboardStrings.noConfiguredProjects,
-                    );
+                    final projectNameFilter =
+                        projectsMetricsNotifier.projectNameFilter;
+
+                    if (projectNameFilter != null &&
+                        projectNameFilter.isNotEmpty) {
+                      return const _DashboardTablePlaceholder(
+                        text: DashboardStrings.emptyPlaceholder,
+                      );
+                    } else {
+                      return const _DashboardTablePlaceholder(
+                        text: DashboardStrings.noConfiguredProjects,
+                      );
+                    }
                   }
 
                   return ListView.builder(

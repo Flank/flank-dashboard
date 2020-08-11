@@ -97,6 +97,27 @@ void main() {
     );
 
     testWidgets(
+      "displays an empty placeholder when there are no project search results",
+      (WidgetTester tester) async {
+        final metricsNotifier = ProjectMetricsNotifierStub(projectsMetrics: []);
+        metricsNotifier.filterByProjectName('some project name');
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_MetricsTableTestbed(
+            metricsNotifier: metricsNotifier,
+          ));
+        });
+
+        await tester.pumpAndSettle();
+
+        expect(
+          find.text(DashboardStrings.emptyPlaceholder),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
       "displays the last builds title above the build result bar graph widget",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
