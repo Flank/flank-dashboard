@@ -20,4 +20,7 @@ class ProjectGroupsStrings {
   static String getProjectsCount(int count) => '$count projects';
 
   static String getSelectedCount(int count) => '$count selected';
+
+  static String getProjectGroupNameLimitExceeded(int count) =>
+      'The name exceeds $count characters limit';
 }

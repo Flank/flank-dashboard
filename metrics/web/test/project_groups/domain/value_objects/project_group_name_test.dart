@@ -38,6 +38,22 @@ void main() {
     );
 
     test(
+      "throws a ProjectGroupNameValidationException with charactersLimitExceeded error code when the value is greater then max limit",
+      () {
+        final projectGroupNameException = ProjectGroupNameValidationException(
+          ProjectGroupNameValidationErrorCode.charactersLimitExceeded,
+        );
+
+        expect(
+          () => ProjectGroupName(
+            List.generate(255, (index) => index).toString(),
+          ),
+          throwsA(equals(projectGroupNameException)),
+        );
+      },
+    );
+
+    test(
       "successfully creates an instance with the given value",
       () {
         final projectGroupName = ProjectGroupName(name);

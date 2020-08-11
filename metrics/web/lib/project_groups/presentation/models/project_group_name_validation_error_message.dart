@@ -1,4 +1,5 @@
 import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_name_validation_error_code.dart';
+import 'package:metrics/project_groups/domain/value_objects/project_group_name.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 
 /// A class that provides the project group name validation error description
@@ -13,6 +14,10 @@ class ProjectGroupNameValidationErrorMessage {
     switch (_code) {
       case ProjectGroupNameValidationErrorCode.isNull:
         return ProjectGroupsStrings.projectGroupNameRequired;
+      case ProjectGroupNameValidationErrorCode.charactersLimitExceeded:
+        return ProjectGroupsStrings.getProjectGroupNameLimitExceeded(
+          ProjectGroupName.charactersLimit,
+        );
       default:
         return null;
     }
