@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 
 /// Rectangle bar of the [BarGraph] painted in [color].
 class ColoredBar extends StatelessWidget {
@@ -34,7 +35,7 @@ class ColoredBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: padding,
-      child: Container(
+      child: DecoratedContainer(
         width: width,
         decoration: BoxDecoration(
           color: color,

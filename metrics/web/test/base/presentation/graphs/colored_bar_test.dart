@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 
+import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
@@ -13,12 +15,7 @@ void main() {
 
         await tester.pumpWidget(const _ColoredBarTestbed(color: color));
 
-        final barContainer = tester.widget<Container>(find.descendant(
-          of: find.byType(ColoredBar),
-          matching: find.byType(Container),
-        ));
-
-        final barContainerDecoration = barContainer.decoration as BoxDecoration;
+        final barContainerDecoration = FinderUtil.findBoxDecoration(tester);
 
         expect(barContainerDecoration.color, color);
       },
@@ -49,12 +46,7 @@ void main() {
           border: border,
         ));
 
-        final barContainer = tester.widget<Container>(find.descendant(
-          of: find.byType(ColoredBar),
-          matching: find.byType(Container),
-        ));
-
-        final barContainerDecoration = barContainer.decoration as BoxDecoration;
+        final barContainerDecoration = FinderUtil.findBoxDecoration(tester);
 
         expect(barContainerDecoration.border, border);
       },
@@ -69,12 +61,7 @@ void main() {
           borderRadius: borderRadius,
         ));
 
-        final barContainer = tester.widget<Container>(find.descendant(
-          of: find.byType(ColoredBar),
-          matching: find.byType(Container),
-        ));
-
-        final barContainerDecoration = barContainer.decoration as BoxDecoration;
+        final barContainerDecoration = FinderUtil.findBoxDecoration(tester);
 
         expect(barContainerDecoration.borderRadius, borderRadius);
       },
@@ -89,15 +76,12 @@ void main() {
           width: width,
         ));
 
-        final barContainer = tester.widget<Container>(find.descendant(
+        final barContainer = tester.widget<DecoratedContainer>(find.descendant(
           of: find.byType(ColoredBar),
-          matching: find.byType(Container),
+          matching: find.byType(DecoratedContainer),
         ));
 
-        final barConstraints = barContainer.constraints;
-
-        expect(barConstraints.maxWidth, width);
-        expect(barConstraints.minWidth, width);
+        expect(barContainer.width, width);
       },
     );
   });
