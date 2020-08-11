@@ -30,8 +30,8 @@ service cloud.firestore {
     return isProjectGroupDataValid() 
       && isString("name")
       && isList("projectIds")
-      && validateProjectGroupName()
-      && validateProjectGroupIds();
+      && isProjectGroupNameValid()
+      && isProjectGroupIdsValid();
   }
 
   /// Check whether the request data contains only allowed for project group document fields.
@@ -41,16 +41,16 @@ service cloud.firestore {
     return requestData.keys().hasOnly(["name", "projectIds"]);
   }
 
-  /// Validates the project group name value.
-  function validateProjectGroupName() {
+  /// Checks whether the project group name field from the request is valid.
+  function isProjectGroupNameValid() {
     let projectGroupNameMaxSize = 255;
     let requestData = request.resource.data;
 
     return requestData.name.size() <= projectGroupNameMaxSize;
   }
 
-  /// Validates the project group ids value.
-  function validateProjectGroupIds() {
+  /// Checks whether the project ids field from the request is valid.
+  function isProjectGroupIdsValid() {
     let projectIdsMaxSize = 20;
     let requestData = request.resource.data;
 
