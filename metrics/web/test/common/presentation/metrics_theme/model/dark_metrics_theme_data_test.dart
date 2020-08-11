@@ -26,12 +26,10 @@ void main() {
         expect(darkMetricsThemeData.loginTheme, isNotNull);
         expect(darkMetricsThemeData.projectMetricsTableTheme, isNotNull);
         expect(darkMetricsThemeData.buildNumberScorecardTheme, isNotNull);
-        expect(darkMetricsThemeData.toggleTheme, isNotNull);
-        expect(darkMetricsThemeData.userMenuTheme, isNotNull);
         expect(darkMetricsThemeData.performanceSparklineTheme, isNotNull);
         expect(darkMetricsThemeData.projectBuildStatusTheme, isNotNull);
-        expect(darkMetricsThemeData.metricsToggleTheme, isNotNull);
-        expect(darkMetricsThemeData.metricsUserMenuTheme, isNotNull);
+        expect(darkMetricsThemeData.toggleTheme, isNotNull);
+        expect(darkMetricsThemeData.userMenuTheme, isNotNull);
       },
     );
   });

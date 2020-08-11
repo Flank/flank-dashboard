@@ -45,12 +45,10 @@ void main() {
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
-        expect(themeData.toggleTheme, isNotNull);
-        expect(themeData.userMenuTheme, isNotNull);
-        expect(themeData.toggleTheme, isNotNull);
-        expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
+        expect(themeData.userMenuTheme, isNotNull);
+        expect(themeData.toggleTheme, isNotNull);
       },
     );
 
@@ -94,10 +92,10 @@ void main() {
         expect(themeData.loginTheme, isNotNull);
         expect(themeData.projectMetricsTableTheme, isNotNull);
         expect(themeData.buildNumberScorecardTheme, isNotNull);
-        expect(themeData.toggleTheme, isNotNull);
-        expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
+        expect(themeData.toggleTheme, isNotNull);
+        expect(themeData.userMenuTheme, isNotNull);
       },
     );
 
@@ -181,6 +179,12 @@ void main() {
           valueTextStyle: TextStyle(color: Colors.red),
         );
 
+        const performanceSparklineTheme = SparklineThemeData(
+          fillColor: primaryColor,
+        );
+
+        const projectBuildStatusTheme = ProjectBuildStatusThemeData();
+
         const userMenuTheme = UserMenuThemeData(
           backgroundColor: Colors.white,
         );
@@ -188,12 +192,6 @@ void main() {
         const toggleTheme = ToggleThemeData(
           activeColor: Colors.green,
         );
-
-        const performanceSparklineTheme = SparklineThemeData(
-          fillColor: primaryColor,
-        );
-
-        const projectBuildStatusTheme = ProjectBuildStatusThemeData();
 
         const themeData = MetricsThemeData();
 
@@ -252,8 +250,6 @@ void main() {
           equals(projectMetricsTableTheme),
         );
         expect(copiedTheme.buildNumberScorecardTheme, equals(scorecardTheme));
-        expect(copiedTheme.toggleTheme, equals(toggleTheme));
-        expect(copiedTheme.userMenuTheme, equals(userMenuTheme));
         expect(
           copiedTheme.performanceSparklineTheme,
           equals(performanceSparklineTheme),
@@ -262,6 +258,8 @@ void main() {
           copiedTheme.projectBuildStatusTheme,
           equals(projectBuildStatusTheme),
         );
+        expect(copiedTheme.toggleTheme, equals(toggleTheme));
+        expect(copiedTheme.userMenuTheme, equals(userMenuTheme));
       },
     );
 

@@ -101,10 +101,10 @@ class MetricsThemeData {
     LoginThemeData loginTheme,
     ProjectMetricsTableThemeData projectMetricsTableTheme,
     ScorecardThemeData buildNumberScorecardTheme,
-    ToggleThemeData toggleTheme,
-    UserMenuThemeData userMenuTheme,
     SparklineThemeData performanceSparklineTheme,
     ProjectBuildStatusThemeData projectBuildStatusTheme,
+    ToggleThemeData toggleTheme,
+    UserMenuThemeData userMenuTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
       const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
