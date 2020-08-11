@@ -4,7 +4,7 @@ import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/percent_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/metric_value_theme_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/metrics_value_theme_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/themed_circle_percentage.dart';
 import 'package:mockito/mockito.dart';
 
@@ -86,8 +86,8 @@ void main() {
 
 /// A testbed class required for testing the [ThemedCirclePercentage].
 class _ThemedCirclePercentageTestbed extends StatelessWidget {
-  /// A [MetricValueThemeStrategy] used to chose the theme to use in widget.
-  final MetricValueThemeStrategy strategy;
+  /// A [MetricsValueThemeStrategy] used to chose the theme to use in widget.
+  final MetricsValueThemeStrategy strategy;
 
   /// A [PercentViewModel] instance to display.
   final PercentViewModel percent;
@@ -95,11 +95,11 @@ class _ThemedCirclePercentageTestbed extends StatelessWidget {
   /// Creates this testbed instance with the given [percent] value and theme [strategy].
   ///
   /// The [percent] defaults to the [PercentViewModel] instance with value equals to `1.0`.
-  /// The [strategy] defaults to the [MetricValueThemeStrategy].
+  /// The [strategy] defaults to the [MetricsValueThemeStrategy].
   const _ThemedCirclePercentageTestbed({
     Key key,
     this.percent = const PercentViewModel(1.0),
-    this.strategy = const MetricValueThemeStrategy(),
+    this.strategy = const MetricsValueThemeStrategy(),
   }) : super(key: key);
 
   @override
@@ -114,4 +114,4 @@ class _ThemedCirclePercentageTestbed extends StatelessWidget {
 }
 
 class CirclePercentageThemeStrategyMock extends Mock
-    implements MetricValueThemeStrategy {}
+    implements MetricsValueThemeStrategy {}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
@@ -68,7 +69,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
             return MouseRegion(
               onEnter: (_) => _changeHover(true),
               onExit: (_) => _changeHover(false),
-              child: Container(
+              child: DecoratedContainer(
                 height: ProjectGroupsDropdownMenu._menuButtonHeight,
                 width: 212.0,
                 decoration: BoxDecoration(

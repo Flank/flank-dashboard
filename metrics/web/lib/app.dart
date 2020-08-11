@@ -7,5 +7,5 @@ import 'package:metrics/main.dart';
 void main() {
   enableFlutterDriverExtension();
 
-  runApp(MyApp());
+  runApp(MetricsApp());
 }

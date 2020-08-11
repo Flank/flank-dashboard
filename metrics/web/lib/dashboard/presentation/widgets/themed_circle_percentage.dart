@@ -9,7 +9,7 @@ import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart'
 /// A [CirclePercentage] widget that applies the given [ValueBasedThemeStrategy].
 class ThemedCirclePercentage extends StatelessWidget {
   /// A theme strategy applied to the [CirclePercentage] widget.
-  final ValueBasedThemeStrategy themeStrategy;
+  final ValueBasedThemeStrategy<MetricWidgetThemeData, double> themeStrategy;
 
   /// A [PercentViewModel] to display.
   final PercentViewModel percent;

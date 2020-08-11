@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/metric_value_theme_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/metrics_value_theme_strategy.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("MetricValueThemeStrategy", () {
+  group("MetricsValueThemeStrategy", () {
     final circlePercentageTheme = MetricCirclePercentageThemeData(
       lowPercentTheme: MetricWidgetThemeData(
         primaryColor: Colors.red[100],
@@ -35,7 +35,7 @@ void main() {
       ),
     );
 
-    final themeStrategy = MetricValueThemeStrategy();
+    final themeStrategy = MetricsValueThemeStrategy();
 
     test(
       "returns low percent theme if the given value is in bounds from 0.01 to 0.5",

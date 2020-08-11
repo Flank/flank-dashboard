@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 /// A base class for a theme strategy based on some value.
 ///
 /// Represents the strategy of applying the [MetricWidgetThemeData] to the metric widgets.
-abstract class ValueBasedThemeStrategy<T> {
-  /// Provides the [MetricWidgetThemeData] accordingly to the [value].
-  MetricWidgetThemeData getWidgetTheme(MetricsThemeData themeData, T value);
+abstract class ValueBasedThemeStrategy<ReturnType, ValueType> {
+  /// Provides the theme accordingly to the [value].
+  ReturnType getWidgetTheme(MetricsThemeData themeData, ValueType value);
 }

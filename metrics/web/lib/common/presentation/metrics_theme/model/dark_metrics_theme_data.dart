@@ -15,9 +15,15 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/th
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/attention_level/project_build_status_attention_level.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
@@ -42,6 +48,11 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _tileBorderColor = Color(0xFF0e0d0d);
   static const Color _tableHeaderColor = Color(0xFF79858b);
   static const Color _metricsLightGrey = Color(0xFFDCDCE5);
+  static const Color _sparklineStrokeColor = Color(0xFFDCDCE5);
+  static const Color _sparklineTextColor = Color(0xFFD7D7E5);
+  static const Color _sparklineFillColor = Color(0xFF29292B);
+  static const Color _inactiveToggleColor = Color(0xFF2F2F33);
+  static const Color _inactiveToggleHoverColor = Color(0xFF262626);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = TextStyle(
@@ -271,6 +282,43 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontSize: 14.0,
               color: _metricsLightGrey,
               fontWeight: FontWeight.bold,
+            ),
+          ),
+          performanceSparklineTheme: const SparklineThemeData(
+            textStyle: TextStyle(
+              color: _sparklineTextColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 22.0,
+            ),
+            strokeColor: _sparklineStrokeColor,
+            fillColor: _sparklineFillColor,
+          ),
+          projectBuildStatusTheme: const ProjectBuildStatusThemeData(
+            attentionLevel: ProjectBuildStatusAttentionLevel(
+              positive: ProjectBuildStatusStyle(
+                backgroundColor: ColorConfig.primaryTranslucentColor,
+              ),
+              negative: ProjectBuildStatusStyle(
+                backgroundColor: ColorConfig.accentTranslucentColor,
+              ),
+              unknown: ProjectBuildStatusStyle(
+                backgroundColor: ColorConfig.inactiveColor,
+              ),
+            ),
+          ),
+          toggleTheme: const ToggleThemeData(
+            activeColor: ColorConfig.primaryColor,
+            activeHoverColor: ColorConfig.primaryHoverColor,
+            inactiveColor: _inactiveToggleColor,
+            inactiveHoverColor: _inactiveToggleHoverColor,
+          ),
+          userMenuTheme: const UserMenuThemeData(
+            backgroundColor: Colors.black,
+            dividerColor: scaffoldColor,
+            contentTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+              height: 1.0,
             ),
           ),
         );
