@@ -168,7 +168,7 @@ class _DecoratedContainerTestbed extends StatelessWidget {
   /// A [Decoration] of the [DecoratedContainer].
   final Decoration decoration;
 
-  /// A widget below of the [DecoratedContainer] in the tree.
+  /// A widget below the [DecoratedContainer] in the tree.
   final Widget child;
 
   /// A height of the [DecoratedContainer].
