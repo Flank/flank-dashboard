@@ -98,7 +98,7 @@ void main() {
     );
 
     testWidgets(
-      "displays an empty placeholder when there are no project search results",
+      "displays an empty table when there are no project search results",
       (WidgetTester tester) async {
         final metricsNotifier = ProjectMetricsNotifierMock();
 
