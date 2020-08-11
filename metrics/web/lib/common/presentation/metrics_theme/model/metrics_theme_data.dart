@@ -10,7 +10,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_th
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/switch/theme/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
