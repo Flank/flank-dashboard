@@ -49,7 +49,7 @@ service cloud.firestore {
     return requestData.name.size() <= projectGroupNameMaxSize;
   }
 
-  /// Checks whether the project ids field from the request is valid.
+  /// Checks whether the project group ids field from the request is valid.
   function isProjectGroupIdsValid() {
     let projectIdsMaxSize = 20;
     let requestData = request.resource.data;
