@@ -17,7 +17,7 @@ void main() {
   group("PerformanceSparklineGraph", () {
     const performanceMetricValue = Duration(minutes: 1);
     final performanceMetric = PerformanceSparklineViewModel(
-      performance: UnmodifiableListView([const Point(1, 2)]),
+      performance: UnmodifiableListView([const Point(1, 2), const Point(3, 4)]),
       value: performanceMetricValue,
     );
 
@@ -61,7 +61,7 @@ void main() {
     testWidgets(
       "delegates the data display to the SparklineGraph",
       (tester) async {
-        const performance = [Point(1, 2)];
+        const performance = [Point(1, 2), Point(3, 4)];
         final performanceMetric = PerformanceSparklineViewModel(
           performance: UnmodifiableListView(performance),
         );
@@ -140,6 +140,65 @@ void main() {
         );
 
         expect(sparklineGraph.fillColor, equals(fillColor));
+      },
+    );
+
+    testWidgets(
+      "displays the styled container if the performance list contains a single value",
+      (tester) async {
+        final performanceMetric = PerformanceSparklineViewModel(
+          performance: UnmodifiableListView([const Point(1, 2)]),
+        );
+
+        await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
+          performanceSparkline: performanceMetric,
+          metricsTheme: metricsTheme,
+        ));
+
+        final finder = find.descendant(
+          of: find.byType(PerformanceSparklineGraph),
+          matching: find.byType(Container),
+        );
+
+        expect(finder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies the fill color from the metrics theme to the container's color",
+      (tester) async {
+        final performanceMetric = PerformanceSparklineViewModel(
+          performance: UnmodifiableListView([const Point(1, 2)]),
+        );
+
+        await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
+          performanceSparkline: performanceMetric,
+          metricsTheme: metricsTheme,
+        ));
+
+        final container = tester.widget<Container>(find.byType(Container));
+        final decoration = container.decoration as BoxDecoration;
+
+        expect(decoration.color, equals(fillColor));
+      },
+    );
+
+    testWidgets(
+      "applies the stroke color from the metrics theme to the container's border",
+      (tester) async {
+        final performanceMetric = PerformanceSparklineViewModel(
+          performance: UnmodifiableListView([const Point(1, 2)]),
+        );
+
+        await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
+          performanceSparkline: performanceMetric,
+          metricsTheme: metricsTheme,
+        ));
+
+        final container = tester.widget<Container>(find.byType(Container));
+        final decoration = container.decoration as BoxDecoration;
+
+        expect(decoration.border.top.color, equals(strokeColor));
       },
     );
   });
