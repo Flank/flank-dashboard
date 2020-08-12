@@ -11,7 +11,7 @@ void main() {
     testWidgets(
       "throws an AssertionError if a text is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsTextPlaceholderTestbed(
+        await tester.pumpWidget(const _TextPlaceholderTestbed(
           text: null,
         ));
 
@@ -25,7 +25,7 @@ void main() {
         const text = 'text';
 
         await tester.pumpWidget(
-          const _MetricsTextPlaceholderTestbed(text: text),
+          const _TextPlaceholderTestbed(text: text),
         );
 
         expect(find.text(text), findsOneWidget);
@@ -45,7 +45,7 @@ void main() {
         );
 
         await tester.pumpWidget(
-          const _MetricsTextPlaceholderTestbed(theme: theme),
+          const _TextPlaceholderTestbed(theme: theme),
         );
 
         final text = tester.widget<Text>(
@@ -59,19 +59,19 @@ void main() {
 }
 
 /// A testbed widget, used to test the [TextPlaceholder] widget.
-class _MetricsTextPlaceholderTestbed extends StatelessWidget {
+class _TextPlaceholderTestbed extends StatelessWidget {
   /// A text to display.
   final String text;
 
   /// The [MetricsThemeData] used in tests.
   final MetricsThemeData theme;
 
-  /// Creates the [_MetricsTextPlaceholderTestbed] with the given [text]
+  /// Creates the [_TextPlaceholderTestbed] with the given [text]
   /// and [theme].
   ///
   /// The [text] defaults to `text`.
   /// The [theme] defaults to [MetricsThemeData].
-  const _MetricsTextPlaceholderTestbed({
+  const _TextPlaceholderTestbed({
     Key key,
     this.text = 'text',
     this.theme = const MetricsThemeData(),
