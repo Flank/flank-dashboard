@@ -10,6 +10,18 @@ import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("MetricsSwitch", () {
+    const inactiveColor = Colors.red;
+    const activeColor = Colors.blue;
+    const activeHoverColor = Colors.green;
+    const inactiveHoverColor = Colors.yellow;
+    const metricsTheme = MetricsThemeData(
+      toggleTheme: ToggleThemeData(
+        inactiveColor: inactiveColor,
+        activeColor: activeColor,
+        activeHoverColor: activeHoverColor,
+        inactiveHoverColor: inactiveHoverColor,
+      ),
+    );
     final flutterSwitchFinder = find.byType(FlutterSwitch);
     final mouseRegionFinder = find.ancestor(
       of: flutterSwitchFinder,
@@ -63,13 +75,6 @@ void main() {
     testWidgets(
       "applies the inactive color when the toggle is off",
       (WidgetTester tester) async {
-        const inActiveColor = Colors.red;
-        const metricsTheme = MetricsThemeData(
-          toggleTheme: ToggleThemeData(
-            inactiveColor: inActiveColor,
-          ),
-        );
-
         await tester.pumpWidget(const _MetricsSwitchTestbed(
           metricsThemeData: metricsTheme,
           value: true,
@@ -77,20 +82,13 @@ void main() {
 
         final switchWidget = tester.widget<FlutterSwitch>(flutterSwitchFinder);
 
-        expect(switchWidget.inactiveColor, equals(inActiveColor));
+        expect(switchWidget.inactiveColor, equals(inactiveColor));
       },
     );
 
     testWidgets(
       "applies the active color when the toggle is on",
       (WidgetTester tester) async {
-        const activeColor = Colors.red;
-        const metricsTheme = MetricsThemeData(
-          toggleTheme: ToggleThemeData(
-            activeColor: activeColor,
-          ),
-        );
-
         await tester.pumpWidget(const _MetricsSwitchTestbed(
           metricsThemeData: metricsTheme,
           value: true,
@@ -105,13 +103,6 @@ void main() {
     testWidgets(
       "applies the inactive hover color when the toggle is off and hovered",
       (WidgetTester tester) async {
-        const inactiveHoverColor = Colors.red;
-        const metricsTheme = MetricsThemeData(
-          toggleTheme: ToggleThemeData(
-            inactiveHoverColor: inactiveHoverColor,
-          ),
-        );
-
         await tester.pumpWidget(const _MetricsSwitchTestbed(
           metricsThemeData: metricsTheme,
           value: false,
@@ -132,13 +123,6 @@ void main() {
     testWidgets(
       "applies the active hover color when the toggle is on and hovered",
       (WidgetTester tester) async {
-        const activeHoverColor = Colors.red;
-        const metricsTheme = MetricsThemeData(
-          toggleTheme: ToggleThemeData(
-            activeHoverColor: activeHoverColor,
-          ),
-        );
-
         await tester.pumpWidget(const _MetricsSwitchTestbed(
           metricsThemeData: metricsTheme,
           value: true,
