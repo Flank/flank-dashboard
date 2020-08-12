@@ -7,20 +7,20 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("Scorecard", () {
     testWidgets(
-      'displays null text if the given value is null',
+      'displays an empty text if the given value is null',
       (tester) async {
         await tester.pumpWidget(const _ScorecardTestbed(value: null));
 
-        expect(find.text('null'), findsOneWidget);
+        expect(find.text(''), findsOneWidget);
       },
     );
 
     testWidgets(
-      'displays null text if the given description is null',
+      'displays an empty text if the given description is null',
       (tester) async {
         await tester.pumpWidget(const _ScorecardTestbed(value: null));
 
-        expect(find.text('null'), findsOneWidget);
+        expect(find.text(''), findsOneWidget);
       },
     );
 
