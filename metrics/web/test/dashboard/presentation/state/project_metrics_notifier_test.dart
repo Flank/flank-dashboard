@@ -351,6 +351,21 @@ void main() {
     });
 
     test(
+      ".filterByProjectName() updates the project name filter value",
+      () async {
+        const expectedProjectNameFilter = 'some project';
+
+        final listener = expectAsyncUntil0(() {}, () {
+          return projectMetricsNotifier.projectNameFilter ==
+              expectedProjectNameFilter;
+        });
+
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(expectedProjectNameFilter);
+      },
+    );
+
+    test(
       ".dispose() unsubscribes from all streams and removes project metrics",
       () async {
         final metricsUpdates = _ReceiveProjectMetricsUpdatesStub();
