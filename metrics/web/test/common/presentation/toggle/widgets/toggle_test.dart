@@ -32,7 +32,7 @@ void main() {
       "throws an AssertionError if a value is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const _MetricsSwitchTestbed(
+          const _ToggleTestbed(
             value: null,
           ),
         );
@@ -46,7 +46,7 @@ void main() {
       (WidgetTester tester) async {
         const value = true;
 
-        await tester.pumpWidget(const _MetricsSwitchTestbed(
+        await tester.pumpWidget(const _ToggleTestbed(
           value: value,
         ));
 
@@ -62,7 +62,7 @@ void main() {
         // ignore: avoid_positional_boolean_parameters
         void testCallback(bool value) {}
 
-        await tester.pumpWidget(_MetricsSwitchTestbed(
+        await tester.pumpWidget(_ToggleTestbed(
           onToggle: testCallback,
         ));
 
@@ -75,7 +75,7 @@ void main() {
     testWidgets(
       "applies the inactive color from the metrics theme",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsSwitchTestbed(
+        await tester.pumpWidget(const _ToggleTestbed(
           metricsThemeData: metricsTheme,
         ));
 
@@ -88,7 +88,7 @@ void main() {
     testWidgets(
       "applies the active color from the metrics theme",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsSwitchTestbed(
+        await tester.pumpWidget(const _ToggleTestbed(
           metricsThemeData: metricsTheme,
         ));
 
@@ -101,7 +101,7 @@ void main() {
     testWidgets(
       "applies the inactive hover color from the metrics theme when the toggle is hovered",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsSwitchTestbed(
+        await tester.pumpWidget(const _ToggleTestbed(
           metricsThemeData: metricsTheme,
         ));
 
@@ -120,7 +120,7 @@ void main() {
     testWidgets(
       "applies the active hover color from the metrics theme when the toggle is hovered",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsSwitchTestbed(
+        await tester.pumpWidget(const _ToggleTestbed(
           metricsThemeData: metricsTheme,
         ));
 
@@ -143,7 +143,7 @@ void main() {
         bool changedValue;
 
         await tester.pumpWidget(
-          _MetricsSwitchTestbed(
+          _ToggleTestbed(
             value: value,
             onToggle: (value) => changedValue = value,
           ),
@@ -159,25 +159,25 @@ void main() {
 }
 
 /// A testbed class required to test the [Toggle] widget.
-class _MetricsSwitchTestbed extends StatelessWidget {
-  /// Indicates whether the [Toggle] is on or off.
+class _ToggleTestbed extends StatelessWidget {
+  /// Indicates whether the [Toggle] is enabled or not.
   final bool value;
-
-  /// A callback that is called when the user toggles the [Toggle].
-  final ValueChanged<bool> onToggle;
 
   /// A [MetricsThemeData] to use in tests.
   final MetricsThemeData metricsThemeData;
 
-  /// Creates a new instance of the [_MetricsSwitchTestbed].
+  /// A [ValueChanged] callback used to notify about [value] changed.
+  final ValueChanged<bool> onToggle;
+
+  /// Creates a new instance of the [_ToggleTestbed].
   ///
   /// The [value] defaults to `false`.
   /// The [metricsThemeData] defaults to an empty [MetricsThemeData] instance.
-  const _MetricsSwitchTestbed({
+  const _ToggleTestbed({
     Key key,
     this.value = false,
-    this.onToggle,
     this.metricsThemeData = const MetricsThemeData(),
+    this.onToggle,
   }) : super(key: key);
 
   @override
