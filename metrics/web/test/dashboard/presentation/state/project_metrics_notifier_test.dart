@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
@@ -313,20 +314,23 @@ void main() {
     test(
         ".filterByProjectName() filters list of the project metrics according to the given value",
         () async {
+      final metricsTileViewModel =
+          projectMetricsNotifier.projectsMetricsTileViewModels.last;
+
       final expectedProjectMetrics = [
-        projectMetricsNotifier.projectsMetricsTileViewModels.last
+        metricsTileViewModel,
       ];
+      final projectNameFilter = metricsTileViewModel.projectName;
 
-      final projectNameFilter = expectedProjectMetrics.first.projectName;
-      final listener = expectAsync0(() {
-        final filteredProjectMetrics =
-            projectMetricsNotifier.projectsMetricsTileViewModels;
+      final listener = expectAsyncUntil0(
+        () {},
+        () {
+          final filteredProjectMetrics =
+              projectMetricsNotifier.projectsMetricsTileViewModels;
+          return listEquals(filteredProjectMetrics, expectedProjectMetrics);
+        },
+      );
 
-        expect(
-          filteredProjectMetrics,
-          equals(expectedProjectMetrics),
-        );
-      });
       projectMetricsNotifier.addListener(listener);
       projectMetricsNotifier.filterByProjectName(projectNameFilter);
     });
@@ -337,15 +341,15 @@ void main() {
       final expectedProjectMetrics =
           projectMetricsNotifier.projectsMetricsTileViewModels;
 
-      final listener = expectAsync0(() {
-        final filteredProjectMetrics =
-            projectMetricsNotifier.projectsMetricsTileViewModels;
+      final listener = expectAsyncUntil0(
+        () {},
+        () {
+          final filteredProjectMetrics =
+              projectMetricsNotifier.projectsMetricsTileViewModels;
+          return listEquals(filteredProjectMetrics, expectedProjectMetrics);
+        },
+      );
 
-        expect(
-          filteredProjectMetrics,
-          equals(expectedProjectMetrics),
-        );
-      });
       projectMetricsNotifier.addListener(listener);
       projectMetricsNotifier.filterByProjectName(null);
     });
@@ -355,10 +359,13 @@ void main() {
       () async {
         const expectedProjectNameFilter = 'some project';
 
-        final listener = expectAsyncUntil0(() {}, () {
-          return projectMetricsNotifier.projectNameFilter ==
-              expectedProjectNameFilter;
-        });
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            return projectMetricsNotifier.projectNameFilter ==
+                expectedProjectNameFilter;
+          },
+        );
 
         projectMetricsNotifier.addListener(listener);
         projectMetricsNotifier.filterByProjectName(expectedProjectNameFilter);
