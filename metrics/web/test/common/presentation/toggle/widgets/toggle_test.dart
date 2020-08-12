@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/switch/theme/toggle_theme_data.dart';
-import 'package:metrics/common/presentation/switch/widgets/metrics_switch.dart';
+import 'package:metrics/common/presentation/toggle/theme/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
-  group("MetricsSwitch", () {
+  group("Toggle", () {
     const inactiveColor = Colors.red;
     const activeColor = Colors.blue;
     const activeHoverColor = Colors.green;
@@ -42,7 +42,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given value to the switch widget",
+      "applies the given value to the toggle widget",
       (WidgetTester tester) async {
         const value = true;
 
@@ -57,7 +57,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given on toggle callback to the switch widget",
+      "applies the given on toggle callback to the toggle widget",
       (WidgetTester tester) async {
         // ignore: avoid_positional_boolean_parameters
         void testCallback(bool value) {}
@@ -142,12 +142,12 @@ void main() {
   });
 }
 
-/// A testbed class required to test the [MetricsSwitch] widget.
+/// A testbed class required to test the [Toggle] widget.
 class _MetricsSwitchTestbed extends StatelessWidget {
-  /// Indicates whether the [MetricsSwitch] is on or off.
+  /// Indicates whether the [Toggle] is on or off.
   final bool value;
 
-  /// A callback that is called when the user toggles the [MetricsSwitch].
+  /// A callback that is called when the user toggles the [Toggle].
   final ValueChanged<bool> onToggle;
 
   /// A [MetricsThemeData] to use in tests.
@@ -168,7 +168,7 @@ class _MetricsSwitchTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       metricsThemeData: metricsThemeData,
-      body: MetricsSwitch(
+      body: Toggle(
         value: value,
         onToggle: onToggle,
       ),

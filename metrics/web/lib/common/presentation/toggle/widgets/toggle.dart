@@ -3,17 +3,17 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
 /// A widget that used to toggle the on/off state of a single setting.
-class MetricsSwitch extends StatefulWidget {
+class Toggle extends StatefulWidget {
   /// Indicates whether this switch is on or off.
   final bool value;
 
   /// A callback that is called when the user toggles this switch.
   final ValueChanged<bool> onToggle;
 
-  /// Creates a new instance of the [MetricsSwitch].
+  /// Creates a new instance of the [Toggle].
   ///
   /// The [value] must not be null.
-  const MetricsSwitch({
+  const Toggle({
     Key key,
     @required this.value,
     this.onToggle,
@@ -21,10 +21,10 @@ class MetricsSwitch extends StatefulWidget {
         super(key: key);
 
   @override
-  _MetricsSwitchState createState() => _MetricsSwitchState();
+  _ToggleState createState() => _ToggleState();
 }
 
-class _MetricsSwitchState extends State<MetricsSwitch> {
+class _ToggleState extends State<Toggle> {
   /// Indicates whether this switch is hovered.
   bool _isHovered = false;
 
