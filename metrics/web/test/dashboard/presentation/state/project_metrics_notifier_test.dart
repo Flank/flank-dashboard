@@ -312,47 +312,46 @@ void main() {
     );
 
     test(
-        ".filterByProjectName() filters list of the project metrics according to the given value",
-        () async {
-      final metricsTileViewModel =
-          projectMetricsNotifier.projectsMetricsTileViewModels.last;
+      ".filterByProjectName() filters list of the project metrics according to the given value",
+      () async {
+        final metricsTileViewModel =
+            projectMetricsNotifier.projectsMetricsTileViewModels.last;
+        final expectedProjectMetrics = [metricsTileViewModel];
+        final projectNameFilter = metricsTileViewModel.projectName;
 
-      final expectedProjectMetrics = [
-        metricsTileViewModel,
-      ];
-      final projectNameFilter = metricsTileViewModel.projectName;
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            final filteredProjectMetrics =
+                projectMetricsNotifier.projectsMetricsTileViewModels;
+            return listEquals(filteredProjectMetrics, expectedProjectMetrics);
+          },
+        );
 
-      final listener = expectAsyncUntil0(
-        () {},
-        () {
-          final filteredProjectMetrics =
-              projectMetricsNotifier.projectsMetricsTileViewModels;
-          return listEquals(filteredProjectMetrics, expectedProjectMetrics);
-        },
-      );
-
-      projectMetricsNotifier.addListener(listener);
-      projectMetricsNotifier.filterByProjectName(projectNameFilter);
-    });
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(projectNameFilter);
+      },
+    );
 
     test(
-        ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
-        () async {
-      final expectedProjectMetrics =
-          projectMetricsNotifier.projectsMetricsTileViewModels;
+      ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
+      () async {
+        final expectedProjectMetrics =
+            projectMetricsNotifier.projectsMetricsTileViewModels;
 
-      final listener = expectAsyncUntil0(
-        () {},
-        () {
-          final filteredProjectMetrics =
-              projectMetricsNotifier.projectsMetricsTileViewModels;
-          return listEquals(filteredProjectMetrics, expectedProjectMetrics);
-        },
-      );
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            final filteredProjectMetrics =
+                projectMetricsNotifier.projectsMetricsTileViewModels;
+            return listEquals(filteredProjectMetrics, expectedProjectMetrics);
+          },
+        );
 
-      projectMetricsNotifier.addListener(listener);
-      projectMetricsNotifier.filterByProjectName(null);
-    });
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(null);
+      },
+    );
 
     test(
       ".filterByProjectName() updates the project name filter value",
