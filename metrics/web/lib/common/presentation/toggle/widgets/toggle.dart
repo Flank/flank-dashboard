@@ -4,10 +4,10 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 
 /// A widget that used to toggle the on/off state of a single setting.
 class Toggle extends StatefulWidget {
-  /// Indicates whether this switch is on or off.
+  /// Indicates whether this toggle is enabled or not.
   final bool value;
 
-  /// A callback that is called when the user toggles this switch.
+  /// A [ValueChanged] callback used to notify about [value] changed.
   final ValueChanged<bool> onToggle;
 
   /// Creates a new instance of the [Toggle].

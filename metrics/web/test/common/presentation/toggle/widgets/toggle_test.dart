@@ -42,7 +42,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given value to the toggle widget",
+      "applies the given value to the flutter switch widget",
       (WidgetTester tester) async {
         const value = true;
 
@@ -57,7 +57,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given on toggle callback to the toggle widget",
+      "applies the given on toggle callback to the flutter switch widget",
       (WidgetTester tester) async {
         // ignore: avoid_positional_boolean_parameters
         void testCallback(bool value) {}
@@ -73,11 +73,10 @@ void main() {
     );
 
     testWidgets(
-      "applies the inactive color when the toggle is off",
+      "applies the inactive color from the metrics theme",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsSwitchTestbed(
           metricsThemeData: metricsTheme,
-          value: true,
         ));
 
         final switchWidget = tester.widget<FlutterSwitch>(flutterSwitchFinder);
@@ -87,11 +86,10 @@ void main() {
     );
 
     testWidgets(
-      "applies the active color when the toggle is on",
+      "applies the active color from the metrics theme",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsSwitchTestbed(
           metricsThemeData: metricsTheme,
-          value: true,
         ));
 
         final switchWidget = tester.widget<FlutterSwitch>(flutterSwitchFinder);
@@ -101,11 +99,10 @@ void main() {
     );
 
     testWidgets(
-      "applies the inactive hover color when the toggle is off and hovered",
+      "applies the inactive hover color from the metrics theme when the toggle is hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsSwitchTestbed(
           metricsThemeData: metricsTheme,
-          value: false,
         ));
 
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
@@ -121,11 +118,10 @@ void main() {
     );
 
     testWidgets(
-      "applies the active hover color when the toggle is on and hovered",
+      "applies the active hover color from the metrics theme when the toggle is hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsSwitchTestbed(
           metricsThemeData: metricsTheme,
-          value: true,
         ));
 
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
@@ -137,6 +133,26 @@ void main() {
         final switchWidget = tester.widget<FlutterSwitch>(flutterSwitchFinder);
 
         expect(switchWidget.activeColor, equals(activeHoverColor));
+      },
+    );
+
+    testWidgets(
+      "calls the given on toggle callback with a new value when is tapped",
+      (WidgetTester tester) async {
+        const value = true;
+        bool changedValue;
+
+        await tester.pumpWidget(
+          _MetricsSwitchTestbed(
+            value: value,
+            onToggle: (value) => changedValue = value,
+          ),
+        );
+
+        await tester.tap(find.byType(Toggle));
+        await tester.pumpAndSettle();
+
+        expect(changedValue, equals(!value));
       },
     );
   });
