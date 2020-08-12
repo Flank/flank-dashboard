@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -176,9 +177,9 @@ void main() {
           ));
         });
 
-        final contentContainer = tester.widget<Container>(
+        final contentContainer = tester.widget<DecoratedContainer>(
           find.byWidgetPredicate(
-              (widget) => widget is Container && widget.child is Column),
+              (widget) => widget is DecoratedContainer && widget.child is Column),
         );
 
         final decoration = contentContainer.decoration as BoxDecoration;
