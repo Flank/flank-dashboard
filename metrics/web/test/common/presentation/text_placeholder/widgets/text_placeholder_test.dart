@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/text_placeholder.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
+import 'package:metrics/common/presentation/text_placeholder/theme/text_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/text_placeholder/widgets/text_placeholder.dart';
 
-import '../../../test_utils/metrics_themed_testbed.dart';
+import '../../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
-  group("MetricsTextPlaceholder", () {
+  group("TextPlaceholder", () {
     testWidgets(
       "throws an AssertionError if a text is null",
       (WidgetTester tester) async {
@@ -21,7 +20,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the given text in the text placeholder",
+      "displays the given text",
       (WidgetTester tester) async {
         const text = 'text';
 
@@ -29,12 +28,12 @@ void main() {
           const _MetricsTextPlaceholderTestbed(text: text),
         );
 
-        expect(find.widgetWithText(TextPlaceholder, text), findsOneWidget);
+        expect(find.text(text), findsOneWidget);
       },
     );
 
     testWidgets(
-      "applies the text style from the metrics inactive widget theme to the text placeholder",
+      "applies the text style from the text placeholder theme to the text",
       (WidgetTester tester) async {
         const textStyle = TextStyle(
           color: Colors.red,
@@ -42,24 +41,24 @@ void main() {
         );
 
         const theme = MetricsThemeData(
-          inactiveWidgetTheme: MetricWidgetThemeData(textStyle: textStyle),
+          textPlaceholderTheme: TextPlaceholderThemeData(textStyle: textStyle),
         );
 
         await tester.pumpWidget(
           const _MetricsTextPlaceholderTestbed(theme: theme),
         );
 
-        final textPlaceholder = tester.widget<TextPlaceholder>(
-          find.byType(TextPlaceholder),
+        final text = tester.widget<Text>(
+          find.byType(Text),
         );
 
-        expect(textPlaceholder.style, equals(textStyle));
+        expect(text.style, equals(textStyle));
       },
     );
   });
 }
 
-/// A testbed widget, used to test the [MetricsTextPlaceholder] widget.
+/// A testbed widget, used to test the [TextPlaceholder] widget.
 class _MetricsTextPlaceholderTestbed extends StatelessWidget {
   /// A text to display.
   final String text;
@@ -82,7 +81,7 @@ class _MetricsTextPlaceholderTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       metricsThemeData: theme,
-      body: MetricsTextPlaceholder(text: text),
+      body: TextPlaceholder(text: text),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
+import 'package:metrics/common/presentation/text_placeholder/widgets/text_placeholder.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
@@ -13,8 +13,10 @@ class ProjectGroupView extends StatelessWidget {
     return Consumer<ProjectGroupsNotifier>(
       builder: (_, projectsGroupsNotifier, __) {
         if (projectsGroupsNotifier.projectGroupsErrorMessage != null) {
-          return MetricsTextPlaceholder(
-            text: projectsGroupsNotifier.projectGroupsErrorMessage,
+          return Center(
+            child: TextPlaceholder(
+              text: projectsGroupsNotifier.projectGroupsErrorMessage,
+            ),
           );
         }
 
