@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/common/presentation/text_placeholder/widgets/text_placeholder.dart';
-import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list_tile.dart';
@@ -98,7 +98,7 @@ void main() {
 
         final textPlaceholderFinder = find.widgetWithText(
           TextPlaceholder,
-          DashboardStrings.noConfiguredProjects,
+          ProjectGroupsStrings.noSearchResults,
         );
 
         expect(textPlaceholderFinder, findsOneWidget);
