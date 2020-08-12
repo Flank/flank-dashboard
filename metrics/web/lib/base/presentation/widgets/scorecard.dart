@@ -39,7 +39,7 @@ class Scorecard extends StatelessWidget {
           child: Padding(
             padding: valuePadding,
             child: Text(
-              '$value',
+              value ?? '',
               style: valueStyle,
             ),
           ),
@@ -48,7 +48,7 @@ class Scorecard extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.zero,
             child: Text(
-              '$description',
+              description ?? '',
               style: descriptionStyle,
             ),
           ),
