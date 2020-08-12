@@ -9,8 +9,6 @@ void main() {
       (widget) => widget is MouseRegion && widget.child is Container,
     );
 
-//    Implement metrics switch. Move toggle_theme_data to the switch folder. Add tests.
-
     final containerFinder = find.descendant(
       of: find.byType(DropdownItem),
       matching: find.byType(Container),
