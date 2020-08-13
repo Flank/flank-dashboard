@@ -57,22 +57,6 @@ void main() {
     );
 
     testWidgets(
-      "applies the given on toggle callback to the flutter switch widget",
-      (WidgetTester tester) async {
-        // ignore: avoid_positional_boolean_parameters
-        void testCallback(bool value) {}
-
-        await tester.pumpWidget(_ToggleTestbed(
-          onToggle: testCallback,
-        ));
-
-        final switchWidget = tester.widget<FlutterSwitch>(flutterSwitchFinder);
-
-        expect(switchWidget.onToggle, equals(testCallback));
-      },
-    );
-
-    testWidgets(
       "applies the inactive color from the metrics theme",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ToggleTestbed(
@@ -137,22 +121,22 @@ void main() {
     );
 
     testWidgets(
-      "calls the given on toggle callback with a new value when is tapped",
+      "calls the given on toggle callback once the value changed",
       (WidgetTester tester) async {
-        const value = true;
-        bool changedValue;
+        const initialValue = true;
+        bool value = initialValue;
 
         await tester.pumpWidget(
           _ToggleTestbed(
             value: value,
-            onToggle: (value) => changedValue = value,
+            onToggle: (newValue) => value = newValue,
           ),
         );
 
         await tester.tap(find.byType(Toggle));
         await tester.pumpAndSettle();
 
-        expect(changedValue, equals(!value));
+        expect(initialValue, isNot(value));
       },
     );
   });
