@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 
-/// A widget that displays a [DashboardStrings.noSearchResults] text in a center.
+/// A widget that displays a [DashboardStrings.noSearchResults] text inside a bordered container.
 class NoSearchResultsPlaceholder extends StatelessWidget {
   const NoSearchResultsPlaceholder({Key key}) : super(key: key);
 
