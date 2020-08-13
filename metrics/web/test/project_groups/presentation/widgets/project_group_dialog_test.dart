@@ -10,6 +10,7 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
+import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
@@ -118,10 +119,6 @@ void main() {
     testWidgets(
       "applies the title text style from the metrics theme",
       (WidgetTester tester) async {
-        const title = "title text";
-
-        when(strategy.title).thenReturn(title);
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             theme: theme,
@@ -178,8 +175,8 @@ void main() {
         });
 
         final contentContainer = tester.widget<DecoratedContainer>(
-          find.byWidgetPredicate(
-              (widget) => widget is DecoratedContainer && widget.child is Column),
+          find.byWidgetPredicate((widget) =>
+              widget is DecoratedContainer && widget.child is Column),
         );
 
         final decoration = contentContainer.decoration as BoxDecoration;
@@ -227,7 +224,7 @@ void main() {
     );
 
     testWidgets(
-      "displays a loading text from the strategy if widget is in loading state",
+      "displays a loading text from the strategy if the widget is in the loading state",
       (WidgetTester tester) async {
         const loading = "loading";
         const text = "text";
@@ -250,7 +247,7 @@ void main() {
     );
 
     testWidgets(
-      "calls the action of the given strategy on tap on action button",
+      "calls the action of the given strategy on tap on the action button",
       (WidgetTester tester) async {
         const text = "text";
         const groupId = "id";
@@ -285,7 +282,60 @@ void main() {
     );
 
     testWidgets(
-      "closes after action successfully finished",
+      "does not call the action callback if the project group name is not valid",
+      (WidgetTester tester) async {
+        const text = "text";
+        final projectIds = UnmodifiableListView<String>([]);
+
+        final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
+          selectedProjectIds: projectIds,
+        );
+
+        final projectGroupsNotifier = ProjectGroupsNotifierMock();
+
+        when(strategy.text).thenReturn(text);
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectGroupDialogViewModel);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.tap(find.text(text));
+        await tester.pump();
+
+        verifyNever(strategy.action(any, any, any, any));
+      },
+    );
+
+    testWidgets(
+      "does not call the action if the widget is in loading state",
+      (WidgetTester tester) async {
+        const loading = "loading";
+        const text = "text";
+
+        when(strategy.text).thenReturn(text);
+        when(strategy.loadingText).thenReturn(loading);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+          ));
+        });
+
+        await tester.tap(find.text(text));
+        await tester.tap(find.text(text));
+        await tester.pump();
+
+        verify(strategy.action(any, any, any, any)).called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "closes after the action completes successfully",
       (WidgetTester tester) async {
         const text = "text";
 
@@ -360,7 +410,7 @@ void main() {
     );
 
     testWidgets(
-      "searches for projects on search text field value changed",
+      "searches for the projects on the search text field value changed",
       (tester) async {
         const searchText = "search";
 
@@ -427,6 +477,69 @@ void main() {
     );
 
     testWidgets(
+      "applies the project group name validator to the project group name text field",
+      (tester) async {
+        const name = "name";
+        final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
+          name: name,
+          selectedProjectIds: UnmodifiableListView<String>([]),
+        );
+
+        final projectGroupsNotifier = ProjectGroupsNotifierMock();
+
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectGroupDialogViewModel);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        final projectGroupNameTextField = tester.widget<MetricsTextFormField>(
+          find.widgetWithText(MetricsTextFormField, name),
+        );
+
+        expect(
+          projectGroupNameTextField.validator,
+          equals(ProjectGroupNameValidator.validate),
+        );
+      },
+    );
+
+    testWidgets(
+      "validates the project group name field on tap on action button",
+      (tester) async {
+        const text = 'text';
+        final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
+          selectedProjectIds: UnmodifiableListView<String>([]),
+        );
+
+        final projectGroupsNotifier = ProjectGroupsNotifierMock();
+
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectGroupDialogViewModel);
+        when(strategy.text).thenReturn(text);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.tap(find.text(text));
+        await tester.pump();
+
+        expect(
+          find.text(ProjectGroupsStrings.projectGroupNameRequired),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
       "displays the search for project text as a hint of the metrics text form field",
       (tester) async {
         await mockNetworkImagesFor(() {
@@ -484,6 +597,33 @@ void main() {
         expect(find.text(expectedCounterText), findsOneWidget);
       },
     );
+
+    testWidgets(
+      "does not display a counter of the selected projects if no projects selected",
+      (tester) async {
+        final selectedProjectIds = <String>[];
+        final projectGroup = ProjectGroupDialogViewModel(
+          selectedProjectIds: UnmodifiableListView(selectedProjectIds),
+        );
+
+        final notifier = ProjectGroupsNotifierMock();
+
+        when(notifier.projectGroupDialogViewModel).thenReturn(projectGroup);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            projectGroupsNotifier: notifier,
+            strategy: strategy,
+          ));
+        });
+
+        final expectedCounterText = ProjectGroupsStrings.getSelectedCount(
+          selectedProjectIds.length,
+        );
+
+        expect(find.text(expectedCounterText), findsNothing);
+      },
+    );
   });
 }
 
@@ -492,7 +632,7 @@ class _ProjectGroupDialogTestbed extends StatelessWidget {
   /// A [ProjectGroupsNotifier] that will be injected and used in tests.
   final ProjectGroupsNotifier projectGroupsNotifier;
 
-  /// A [ProjectGroupDialogStrategy] strategy applied to this dialog.
+  /// A [ProjectGroupDialogStrategy] strategy applied to the [ProjectGroupDialog].
   final ProjectGroupDialogStrategy strategy;
 
   /// A [MetricsThemeData] used in tests.
@@ -500,6 +640,8 @@ class _ProjectGroupDialogTestbed extends StatelessWidget {
 
   /// Creates a new instance of the [_ProjectGroupDialogTestbed]
   /// with the given [strategy] and [projectGroupsNotifier].
+  ///
+  /// The [theme] defaults to an empty [MetricsThemeData].
   const _ProjectGroupDialogTestbed({
     Key key,
     this.strategy,
