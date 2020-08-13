@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
+import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -44,7 +45,7 @@ class MetricsTable extends StatelessWidget {
                         projectNameFilter.isNotEmpty;
 
                     if (hasProjectNameFilter) {
-                      return Container();
+                      return const NoSearchResultsPlaceholder();
                     }
 
                     return const _DashboardTablePlaceholder(

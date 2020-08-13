@@ -9,6 +9,7 @@ import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.da
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
+import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
@@ -78,7 +79,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the placeholder when there are no available projects",
+      "displays the no configured projects placeholder when there are no available projects",
       (WidgetTester tester) async {
         final metricsNotifier = ProjectMetricsNotifierStub(projectsMetrics: []);
 
@@ -98,7 +99,7 @@ void main() {
     );
 
     testWidgets(
-      "displays an empty table when there are no project search results",
+      "displays a no search results placeholder when there are no project search results",
       (WidgetTester tester) async {
         final metricsNotifier = ProjectMetricsNotifierMock();
 
@@ -115,8 +116,8 @@ void main() {
           ),
         );
 
-        expect(find.byType(ProjectMetricsTile), findsNothing);
-        expect(find.text(DashboardStrings.noConfiguredProjects), findsNothing);
+        expect(find.byType(NoSearchResultsPlaceholder), findsOneWidget);
+        expect(find.text(DashboardStrings.noSearchResults), findsOneWidget);
       },
     );
 
