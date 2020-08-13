@@ -35,7 +35,7 @@ void main() {
 
         await tester.tap(find.byType(MetricsCheckbox));
 
-        expect(initialValue, isNot(value));
+        expect(value, isNot(initialValue));
       },
     );
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/toggle/theme/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
@@ -136,7 +136,7 @@ void main() {
         await tester.tap(find.byType(Toggle));
         await tester.pumpAndSettle();
 
-        expect(initialValue, isNot(value));
+        expect(value, isNot(initialValue));
       },
     );
   });

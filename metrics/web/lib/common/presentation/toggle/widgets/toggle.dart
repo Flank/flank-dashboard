@@ -25,12 +25,16 @@ class Toggle extends StatefulWidget {
 }
 
 class _ToggleState extends State<Toggle> {
-  /// Indicates whether this switch is hovered.
+  /// Indicates whether this toggle is hovered.
   bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
     final toggleTheme = MetricsTheme.of(context).toggleTheme;
+    final inactiveColor =
+        _isHovered ? toggleTheme.inactiveHoverColor : toggleTheme.inactiveColor;
+    final activeColor =
+        _isHovered ? toggleTheme.activeHoverColor : toggleTheme.activeColor;
 
     return MouseRegion(
       onEnter: (_) => _setHovered(true),
@@ -42,11 +46,8 @@ class _ToggleState extends State<Toggle> {
         padding: 2.0,
         onToggle: widget.onToggle,
         value: widget.value,
-        inactiveColor: _isHovered
-            ? toggleTheme.inactiveHoverColor
-            : toggleTheme.inactiveColor,
-        activeColor:
-            _isHovered ? toggleTheme.activeHoverColor : toggleTheme.activeColor,
+        inactiveColor: inactiveColor,
+        activeColor: activeColor,
       ),
     );
   }
