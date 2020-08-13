@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
-/// A widget that display the text placeholder.
+/// A widget that displays the placeholder text.
 ///
 /// Applies the text style from the [MetricsThemeData.textPlaceholderTheme].
 class TextPlaceholder extends StatelessWidget {

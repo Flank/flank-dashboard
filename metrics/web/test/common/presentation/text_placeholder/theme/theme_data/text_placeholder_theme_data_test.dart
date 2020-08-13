@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/text_placeholder/theme/text_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:test/test.dart';
 
 // https://github.com/software-platform/monorepo/issues/140

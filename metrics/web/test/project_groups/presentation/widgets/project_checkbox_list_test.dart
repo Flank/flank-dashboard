@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/common/presentation/text_placeholder/widgets/text_placeholder.dart';
+import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
@@ -25,6 +26,7 @@ void main() {
           ProjectCheckboxViewModel(isChecked: false, id: 'id', name: 'name'),
           ProjectCheckboxViewModel(isChecked: false, id: 'id', name: 'name'),
         ];
+
         when(projectGroupsNotifier.projectCheckboxViewModels)
             .thenReturn(projectCheckboxViewModels);
 
@@ -72,6 +74,7 @@ void main() {
       "displays the loading placeholder if a list of project checkbox view models is null",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
+
         when(projectGroupsNotifier.projectCheckboxViewModels).thenReturn(null);
 
         await tester.pumpWidget(
@@ -85,10 +88,34 @@ void main() {
     );
 
     testWidgets(
-      "displays the no search results placeholder if project checkbox view models are empty",
+      "displays the no configured projects placeholder if project checkbox view models are empty",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
+
         when(projectGroupsNotifier.projectCheckboxViewModels).thenReturn([]);
+
+        await tester.pumpWidget(
+          _ProjectCheckboxListTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+          ),
+        );
+
+        final textPlaceholderFinder = find.widgetWithText(
+          TextPlaceholder,
+          DashboardStrings.noConfiguredProjects,
+        );
+
+        expect(textPlaceholderFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the no configured projects placeholder if project checkbox view models are empty and filtered",
+          (WidgetTester tester) async {
+        final projectGroupsNotifier = ProjectGroupsNotifierMock();
+
+        when(projectGroupsNotifier.projectCheckboxViewModels).thenReturn([]);
+        when(projectGroupsNotifier.projectNameFilter).thenReturn('filter');
 
         await tester.pumpWidget(
           _ProjectCheckboxListTestbed(

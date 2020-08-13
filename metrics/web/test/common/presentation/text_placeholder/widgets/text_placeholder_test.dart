@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/text_placeholder/theme/text_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/widgets/text_placeholder.dart';
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
@@ -33,8 +33,9 @@ void main() {
     );
 
     testWidgets(
-      "applies the text style from the text placeholder theme to the text",
+      "applies the text style from the text placeholder theme",
       (WidgetTester tester) async {
+        const text = 'test-text';
         const textStyle = TextStyle(
           color: Colors.red,
           fontWeight: FontWeight.bold,
@@ -45,14 +46,14 @@ void main() {
         );
 
         await tester.pumpWidget(
-          const _TextPlaceholderTestbed(theme: theme),
+          const _TextPlaceholderTestbed(theme: theme, text: text),
         );
 
-        final text = tester.widget<Text>(
-          find.byType(Text),
+        final textWidget = tester.widget<Text>(
+          find.text(text),
         );
 
-        expect(text.style, equals(textStyle));
+        expect(textWidget.style, equals(textStyle));
       },
     );
   });
