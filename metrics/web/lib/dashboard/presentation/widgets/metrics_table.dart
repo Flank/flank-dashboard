@@ -45,7 +45,10 @@ class MetricsTable extends StatelessWidget {
                         projectNameFilter.isNotEmpty;
 
                     if (hasProjectNameFilter) {
-                      return const NoSearchResultsPlaceholder();
+                      return const Align(
+                        alignment: Alignment.topCenter,
+                        child: NoSearchResultsPlaceholder(),
+                      );
                     }
 
                     return const _DashboardTablePlaceholder(

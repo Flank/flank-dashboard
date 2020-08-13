@@ -8,23 +8,20 @@ class NoSearchResultsPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: DecoratedContainer(
-        width: 1140.0,
-        height: 144.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(2.0),
-          border: Border.all(color: const Color(0xff0e0d0d)),
-        ),
-        child: const Center(
-          child: Text(
-            DashboardStrings.noSearchResults,
-            style: TextStyle(
-              color: Color(0xff51585c),
-              fontFamily: 'Roboto',
-              fontSize: 14.0,
-            ),
+    return DecoratedContainer(
+      width: 1140.0,
+      height: 144.0,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(2.0),
+        border: Border.all(color: const Color(0xff0e0d0d)),
+      ),
+      child: const Center(
+        child: Text(
+          DashboardStrings.noSearchResults,
+          style: TextStyle(
+            color: Color(0xff51585c),
+            fontFamily: 'Roboto',
+            fontSize: 14.0,
           ),
         ),
       ),
