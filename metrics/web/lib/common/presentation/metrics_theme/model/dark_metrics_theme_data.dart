@@ -18,6 +18,10 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/attention_level/project_build_status_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
@@ -47,6 +51,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _loginOptionHoverColor = Color(0xFFe5e5e5);
   static const Color _loginOptionTextColor = Color(0xFF757575);
   static const Color _tileBorderColor = Color(0xFF0e0d0d);
+  static const Color _tileLoadingBackgroundColor = Color(0xFF242425);
   static const Color _tableHeaderColor = Color(0xFF79858b);
   static const Color _metricsLightGrey = Color(0xFFDCDCE5);
   static const Color _sparklineStrokeColor = Color(0xFFDCDCE5);
@@ -272,6 +277,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
               backgroundColor: scaffoldColor,
               borderColor: _tileBorderColor,
               textStyle: TextStyle(fontSize: 24.0),
+            ),
+            projectMetricsTilePlaceholderTheme: ShimmerPlaceholderThemeData(
+              backgroundColor: _tileLoadingBackgroundColor,
+              shimmerColor: ColorConfig.focusedBorderColor,
             ),
           ),
           buildNumberScorecardTheme: const ScorecardThemeData(
