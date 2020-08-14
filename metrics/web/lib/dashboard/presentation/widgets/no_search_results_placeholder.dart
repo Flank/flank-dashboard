@@ -16,7 +16,7 @@ class NoSearchResultsPlaceholder extends StatelessWidget {
         borderRadius: BorderRadius.circular(2.0),
         border: Border.all(color: const Color(0xff0e0d0d)),
       ),
-      child: Center(
+      child: const Center(
         child: TextPlaceholder(text: DashboardStrings.noSearchResults),
       ),
     );
