@@ -72,7 +72,7 @@ void main() {
     });
 
     testWidgets(
-      "throws an assertion error if the given strategy is null",
+      "throws an AssertionError if the given strategy is null",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _ProjectGroupDialogTestbed(
@@ -478,7 +478,7 @@ void main() {
     );
 
     testWidgets(
-      "validates the project group name field on tap on action button",
+      "validates the project group name field on tap on the action button",
       (tester) async {
         final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
           selectedProjectIds: UnmodifiableListView<String>([]),
@@ -606,7 +606,7 @@ class _ProjectGroupDialogTestbed extends StatelessWidget {
   final MetricsThemeData theme;
 
   /// Creates a new instance of the [_ProjectGroupDialogTestbed]
-  /// with the given [strategy] and [projectGroupsNotifier].
+  /// with the given [strategy], [projectGroupsNotifier] and [theme].
   ///
   /// The [theme] defaults to an empty [MetricsThemeData].
   const _ProjectGroupDialogTestbed({
