@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
@@ -311,44 +312,64 @@ void main() {
     );
 
     test(
-        ".filterByProjectName() filters list of the project metrics according to the given value",
-        () async {
-      final expectedProjectMetrics = [
-        projectMetricsNotifier.projectsMetricsTileViewModels.last
-      ];
+      ".filterByProjectName() filters list of the project metrics according to the given value",
+      () async {
+        final metricsTileViewModel =
+            projectMetricsNotifier.projectsMetricsTileViewModels.last;
+        final expectedProjectMetrics = [metricsTileViewModel];
+        final projectNameFilter = metricsTileViewModel.projectName;
 
-      final projectNameFilter = expectedProjectMetrics.first.projectName;
-      final listener = expectAsync0(() {
-        final filteredProjectMetrics =
-            projectMetricsNotifier.projectsMetricsTileViewModels;
-
-        expect(
-          filteredProjectMetrics,
-          equals(expectedProjectMetrics),
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            final filteredProjectMetrics =
+                projectMetricsNotifier.projectsMetricsTileViewModels;
+            return listEquals(filteredProjectMetrics, expectedProjectMetrics);
+          },
         );
-      });
-      projectMetricsNotifier.addListener(listener);
-      projectMetricsNotifier.filterByProjectName(projectNameFilter);
-    });
+
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(projectNameFilter);
+      },
+    );
 
     test(
-        ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
-        () async {
-      final expectedProjectMetrics =
-          projectMetricsNotifier.projectsMetricsTileViewModels;
-
-      final listener = expectAsync0(() {
-        final filteredProjectMetrics =
+      ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
+      () async {
+        final expectedProjectMetrics =
             projectMetricsNotifier.projectsMetricsTileViewModels;
 
-        expect(
-          filteredProjectMetrics,
-          equals(expectedProjectMetrics),
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            final filteredProjectMetrics =
+                projectMetricsNotifier.projectsMetricsTileViewModels;
+            return listEquals(filteredProjectMetrics, expectedProjectMetrics);
+          },
         );
-      });
-      projectMetricsNotifier.addListener(listener);
-      projectMetricsNotifier.filterByProjectName(null);
-    });
+
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(null);
+      },
+    );
+
+    test(
+      ".filterByProjectName() updates the project name filter value",
+      () async {
+        const expectedProjectNameFilter = 'some project';
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            return projectMetricsNotifier.projectNameFilter ==
+                expectedProjectNameFilter;
+          },
+        );
+
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(expectedProjectNameFilter);
+      },
+    );
 
     test(
       ".dispose() unsubscribes from all streams and removes project metrics",

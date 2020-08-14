@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
+import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
@@ -93,6 +94,29 @@ void main() {
           find.text(DashboardStrings.noConfiguredProjects),
           findsOneWidget,
         );
+      },
+    );
+
+    testWidgets(
+      "displays an empty table when there are no project search results",
+      (WidgetTester tester) async {
+        final metricsNotifier = ProjectMetricsNotifierMock();
+
+        const String projectNameFilter = 'some project';
+        const projectsMetricsTileViewModels = <ProjectMetricsTileViewModel>[];
+
+        when(metricsNotifier.projectNameFilter).thenReturn(projectNameFilter);
+        when(metricsNotifier.projectsMetricsTileViewModels)
+            .thenReturn(projectsMetricsTileViewModels);
+
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(
+            _MetricsTableTestbed(metricsNotifier: metricsNotifier),
+          ),
+        );
+
+        expect(find.byType(ProjectMetricsTile), findsNothing);
+        expect(find.text(DashboardStrings.noConfiguredProjects), findsNothing);
       },
     );
 

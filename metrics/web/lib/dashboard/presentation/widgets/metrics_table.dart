@@ -37,6 +37,16 @@ class MetricsTable extends StatelessWidget {
                   if (projects == null) return const LoadingPlaceholder();
 
                   if (projects.isEmpty) {
+                    final projectNameFilter =
+                        projectsMetricsNotifier.projectNameFilter;
+
+                    final hasProjectNameFilter = projectNameFilter != null &&
+                        projectNameFilter.isNotEmpty;
+
+                    if (hasProjectNameFilter) {
+                      return Container();
+                    }
+
                     return const _DashboardTablePlaceholder(
                       text: DashboardStrings.noConfiguredProjects,
                     );

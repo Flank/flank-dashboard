@@ -109,7 +109,10 @@ void main() {
           await driver.tap(find.byType('ProjectSearchInput'));
           await driver.enterText('_test_filters_project_name_');
 
-          await driver.waitFor(
+          await driver.waitForAbsent(
+            find.byType('ProjectMetricsTile'),
+          );
+          await driver.waitForAbsent(
             find.text(DashboardStrings.noConfiguredProjects),
           );
         });

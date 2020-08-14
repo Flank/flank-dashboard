@@ -116,6 +116,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Provides an error description that occurred during loading metrics data.
   String get projectsErrorMessage => _projectsErrorMessage;
 
+  /// Provides the currently applied project name filter.
+  String get projectNameFilter => _projectNameFilter;
+
   /// Creates a new instance of the [ProjectMetricsNotifier].
   ///
   /// The given [ReceiveProjectMetricsUpdates] must not be null.
