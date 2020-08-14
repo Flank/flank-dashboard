@@ -11,6 +11,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_p
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
@@ -84,6 +85,9 @@ class MetricsThemeData {
   /// A theme for the user menu popup.
   final UserMenuThemeData userMenuTheme;
 
+  /// A theme for the text placeholders.
+  final TextPlaceholderThemeData textPlaceholderTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricCirclePercentageThemeData metricCirclePercentageThemeData,
@@ -105,6 +109,7 @@ class MetricsThemeData {
     ProjectBuildStatusThemeData projectBuildStatusTheme,
     ToggleThemeData toggleTheme,
     UserMenuThemeData userMenuTheme,
+    TextPlaceholderThemeData textPlaceholderTheme,
   })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
             const MetricCirclePercentageThemeData(),
         inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -137,7 +142,9 @@ class MetricsThemeData {
         projectBuildStatusTheme =
             projectBuildStatusTheme ?? const ProjectBuildStatusThemeData(),
         toggleTheme = toggleTheme ?? const ToggleThemeData(),
-        userMenuTheme = userMenuTheme ?? const UserMenuThemeData();
+        userMenuTheme = userMenuTheme ?? const UserMenuThemeData(),
+        textPlaceholderTheme =
+            textPlaceholderTheme ?? const TextPlaceholderThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -163,6 +170,7 @@ class MetricsThemeData {
     ProjectBuildStatusThemeData projectBuildStatusTheme,
     ToggleThemeData toggleTheme,
     UserMenuThemeData userMenuTheme,
+    TextPlaceholderThemeData textPlaceholderTheme,
   }) {
     return MetricsThemeData(
       metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
@@ -192,6 +200,7 @@ class MetricsThemeData {
           projectBuildStatusTheme ?? this.projectBuildStatusTheme,
       toggleTheme: toggleTheme ?? this.toggleTheme,
       userMenuTheme: userMenuTheme ?? this.userMenuTheme,
+      textPlaceholderTheme: textPlaceholderTheme ?? this.textPlaceholderTheme,
     );
   }
 }

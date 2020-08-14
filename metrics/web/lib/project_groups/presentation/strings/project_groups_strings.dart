@@ -16,6 +16,7 @@ class ProjectGroupsStrings {
   static const String deletingProjectGroup = 'Deleting group...';
   static const String deleteConfirmation = 'Are you sure you want to delete';
   static const String deleteConfirmationQuestion = 'project group?';
+  static const String noSearchResults = 'No search results...';
 
   static String getProjectsCount(int count) => '$count projects';
 

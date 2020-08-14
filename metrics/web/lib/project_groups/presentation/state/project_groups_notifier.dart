@@ -77,6 +77,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Holds the list of current [ProjectModel]s.
   List<ProjectModel> _projects;
 
+  /// Provides a project name filter value.
+  String get projectNameFilter => _projectNameFilter;
+
   /// Provides loaded [ProjectGroupModel]s.
   List<ProjectGroupModel> get projectGroupModels => _projectGroupModels;
 
