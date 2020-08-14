@@ -12,7 +12,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_p
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';

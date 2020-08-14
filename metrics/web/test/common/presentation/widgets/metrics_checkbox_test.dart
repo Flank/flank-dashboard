@@ -21,21 +21,21 @@ void main() {
     testWidgets(
       "calls the given on changed callback with a new value when checkbox is tapped",
       (tester) async {
-        const value = true;
-        bool changedValue;
+        const initialValue = true;
+        bool value = initialValue;
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _MetricsCheckboxTestbed(
               value: value,
-              onChanged: (value) => changedValue = value,
+              onChanged: (newValue) => value = newValue,
             ),
           );
         });
 
         await tester.tap(find.byType(MetricsCheckbox));
 
-        expect(changedValue, equals(!value));
+        expect(value, isNot(initialValue));
       },
     );
 

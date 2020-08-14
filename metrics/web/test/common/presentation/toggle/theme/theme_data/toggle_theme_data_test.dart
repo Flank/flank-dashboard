@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:test/test.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
