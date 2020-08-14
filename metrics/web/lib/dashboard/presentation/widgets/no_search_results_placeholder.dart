@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
+import 'package:metrics/common/presentation/text_placeholder/widgets/text_placeholder.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 
 /// A widget that displays a [DashboardStrings.noSearchResults] text inside a bordered container.
@@ -15,15 +16,8 @@ class NoSearchResultsPlaceholder extends StatelessWidget {
         borderRadius: BorderRadius.circular(2.0),
         border: Border.all(color: const Color(0xff0e0d0d)),
       ),
-      child: const Center(
-        child: Text(
-          DashboardStrings.noSearchResults,
-          style: TextStyle(
-            color: Color(0xff51585c),
-            fontFamily: 'Roboto',
-            fontSize: 14.0,
-          ),
-        ),
+      child: Center(
+        child: TextPlaceholder(text: DashboardStrings.noSearchResults),
       ),
     );
   }
