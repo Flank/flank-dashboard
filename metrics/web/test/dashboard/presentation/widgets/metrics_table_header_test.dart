@@ -72,7 +72,7 @@ void main() {
     testWidgets(
       "applies the text style from the metrics theme",
       (tester) async {
-        const textStyle = TextStyle(color: Colors.red);
+        const textStyle = TextStyle(color: Colors.red, inherit: false);
 
         const themeData = MetricsThemeData(
           projectMetricsTableTheme: ProjectMetricsTableThemeData(

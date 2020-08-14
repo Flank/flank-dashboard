@@ -65,11 +65,10 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
           Expanded(
             flex: _missingBarsCount,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(
                 _missingBarsCount,
-                (index) => const Expanded(
-                  child: BuildResultBar(),
-                ),
+                (index) => const BuildResultBar(),
               ),
             ),
           ),

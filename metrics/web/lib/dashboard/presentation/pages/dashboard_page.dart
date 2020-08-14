@@ -15,7 +15,7 @@ class DashboardPage extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(bottom: 58.0),
+            padding: const EdgeInsets.only(bottom: 60.0),
             child: Row(
               children: <Widget>[
                 Flexible(

@@ -19,7 +19,7 @@ class MetricsTable extends StatelessWidget {
         child: Column(
           children: <Widget>[
             const Padding(
-              padding: EdgeInsets.only(bottom: 17.0),
+              padding: EdgeInsets.only(bottom: 16.0),
               child: MetricsTableHeader(),
             ),
             Expanded(

@@ -177,7 +177,14 @@ void main() {
         ));
 
         final textField = FinderUtil.findTextField(tester);
-        final prefixIcon = textField.decoration.prefixIcon;
+        final prefixIconWidget = textField.decoration.prefixIcon;
+
+        final prefixIcon = tester.widget<Icon>(
+          find.descendant(
+            of: find.byWidget(prefixIconWidget),
+            matching: find.byType(Icon),
+          ),
+        );
 
         expect(prefixIcon, equals(searchIcon));
       },
