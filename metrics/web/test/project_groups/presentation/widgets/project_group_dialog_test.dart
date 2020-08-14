@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -36,6 +37,12 @@ void main() {
       color: Colors.blue,
     );
 
+    final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
+      id: "id",
+      name: "name",
+      selectedProjectIds: UnmodifiableListView<String>([]),
+    );
+
     const theme = MetricsThemeData(
       projectGroupDialogTheme: ProjectGroupDialogThemeData(
         backgroundColor: backgroundColor,
@@ -46,15 +53,22 @@ void main() {
     );
 
     final strategy = ProjectGroupDialogStrategyMock();
+    ProjectGroupsNotifier projectGroupsNotifier;
 
     setUp(() {
       when(strategy.title).thenReturn(title);
       when(strategy.text).thenReturn(buttonText);
       when(strategy.loadingText).thenReturn(loadingText);
+
+      projectGroupsNotifier = ProjectGroupsNotifierMock();
+
+      when(projectGroupsNotifier.projectGroupDialogViewModel)
+          .thenReturn(projectGroupDialogViewModel);
     });
 
     tearDown(() {
       reset(strategy);
+      reset(projectGroupsNotifier);
     });
 
     testWidgets(
@@ -73,18 +87,9 @@ void main() {
     testWidgets(
       "applies a hand cursor to the project group dialog action button",
       (WidgetTester tester) async {
-        final projectGroup = ProjectGroupDialogViewModel(
-          id: 'id',
-          name: 'name',
-          selectedProjectIds: UnmodifiableListView([]),
-        );
-        final notifierMock = ProjectGroupsNotifierMock();
-
-        when(notifierMock.projectGroupDialogViewModel).thenReturn(projectGroup);
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
-            projectGroupsNotifier: notifierMock,
+            projectGroupsNotifier: projectGroupsNotifier,
             strategy: strategy,
           ));
         });
@@ -207,7 +212,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the text from the given strategy",
+      "applies the text from the given strategy to the action button",
       (WidgetTester tester) async {
         const text = "test title";
 
@@ -219,17 +224,18 @@ void main() {
           ));
         });
 
-        expect(find.text(text), findsOneWidget);
+        expect(
+          find.widgetWithText(MetricsPositiveButton, text),
+          findsOneWidget,
+        );
       },
     );
 
     testWidgets(
-      "displays a loading text from the strategy if the widget is in the loading state",
+      "displays the loading text from the strategy if the widget is in the loading state",
       (WidgetTester tester) async {
         const loading = "loading";
-        const text = "text";
 
-        when(strategy.text).thenReturn(text);
         when(strategy.loadingText).thenReturn(loading);
 
         await mockNetworkImagesFor(() {
@@ -238,7 +244,7 @@ void main() {
           ));
         });
 
-        await tester.tap(find.text(text));
+        await tester.tap(find.text(strategy.text));
         await tester.pump();
         await tester.idle();
 
@@ -273,7 +279,7 @@ void main() {
           ));
         });
 
-        await tester.tap(find.text(text));
+        await tester.tap(find.text(strategy.text));
         await tester.pump();
 
         verify(strategy.action(any, groupId, groupName, projectIds))
@@ -284,16 +290,12 @@ void main() {
     testWidgets(
       "does not call the action callback if the project group name is not valid",
       (WidgetTester tester) async {
-        const text = "text";
-        final projectIds = UnmodifiableListView<String>([]);
-
         final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
-          selectedProjectIds: projectIds,
+          selectedProjectIds: UnmodifiableListView<String>([]),
         );
 
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
-        when(strategy.text).thenReturn(text);
         when(projectGroupsNotifier.projectGroupDialogViewModel)
             .thenReturn(projectGroupDialogViewModel);
 
@@ -304,7 +306,7 @@ void main() {
           ));
         });
 
-        await tester.tap(find.text(text));
+        await tester.tap(find.text(strategy.text));
         await tester.pump();
 
         verifyNever(strategy.action(any, any, any, any));
@@ -312,22 +314,16 @@ void main() {
     );
 
     testWidgets(
-      "does not call the action if the widget is in loading state",
+      "does not call the action if the widget is in the loading state",
       (WidgetTester tester) async {
-        const loading = "loading";
-        const text = "text";
-
-        when(strategy.text).thenReturn(text);
-        when(strategy.loadingText).thenReturn(loading);
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             strategy: strategy,
           ));
         });
 
-        await tester.tap(find.text(text));
-        await tester.tap(find.text(text));
+        await tester.tap(find.text(strategy.text));
+        await tester.tap(find.text(strategy.text));
         await tester.pump();
 
         verify(strategy.action(any, any, any, any)).called(equals(1));
@@ -337,17 +333,13 @@ void main() {
     testWidgets(
       "closes after the action completes successfully",
       (WidgetTester tester) async {
-        const text = "text";
-
-        when(strategy.text).thenReturn(text);
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             strategy: strategy,
           ));
         });
 
-        await tester.tap(find.text(text));
+        await tester.tap(find.text(strategy.text));
         await tester.pumpAndSettle();
 
         expect(find.byType(ProjectGroupDialog), findsNothing);
@@ -357,18 +349,6 @@ void main() {
     testWidgets(
       "changes the state from the loading to not loading on action failed",
       (WidgetTester tester) async {
-        const text = "text";
-        final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
-          id: "id",
-          name: "name",
-          selectedProjectIds: UnmodifiableListView<String>([]),
-        );
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-
-        when(strategy.text).thenReturn(text);
-        when(projectGroupsNotifier.projectGroupDialogViewModel).thenReturn(
-          projectGroupDialogViewModel,
-        );
         when(projectGroupsNotifier.projectGroupSavingError).thenReturn("error");
 
         await mockNetworkImagesFor(() {
@@ -378,10 +358,10 @@ void main() {
           ));
         });
 
-        await tester.tap(find.text(text));
+        await tester.tap(find.text(strategy.text));
         await tester.pump();
 
-        expect(find.text(text), findsOneWidget);
+        expect(find.text(strategy.text), findsOneWidget);
       },
     );
 
@@ -414,17 +394,6 @@ void main() {
       (tester) async {
         const searchText = "search";
 
-        final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
-          id: "id",
-          name: "name",
-          selectedProjectIds: UnmodifiableListView<String>([]),
-        );
-
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-
-        when(projectGroupsNotifier.projectGroupDialogViewModel)
-            .thenReturn(projectGroupDialogViewModel);
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             strategy: strategy,
@@ -450,7 +419,6 @@ void main() {
       (tester) async {
         const name = "search";
         final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
-          id: "id",
           name: name,
           selectedProjectIds: UnmodifiableListView<String>([]),
         );
@@ -479,9 +447,7 @@ void main() {
     testWidgets(
       "applies the project group name validator to the project group name text field",
       (tester) async {
-        const name = "name";
         final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
-          name: name,
           selectedProjectIds: UnmodifiableListView<String>([]),
         );
 
@@ -498,7 +464,10 @@ void main() {
         });
 
         final projectGroupNameTextField = tester.widget<MetricsTextFormField>(
-          find.widgetWithText(MetricsTextFormField, name),
+          find.widgetWithText(
+            MetricsTextFormField,
+            ProjectGroupsStrings.nameYourGroup,
+          ),
         );
 
         expect(
@@ -511,7 +480,6 @@ void main() {
     testWidgets(
       "validates the project group name field on tap on action button",
       (tester) async {
-        const text = 'text';
         final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
           selectedProjectIds: UnmodifiableListView<String>([]),
         );
@@ -520,7 +488,6 @@ void main() {
 
         when(projectGroupsNotifier.projectGroupDialogViewModel)
             .thenReturn(projectGroupDialogViewModel);
-        when(strategy.text).thenReturn(text);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
@@ -529,7 +496,7 @@ void main() {
           ));
         });
 
-        await tester.tap(find.text(text));
+        await tester.tap(find.text(strategy.text));
         await tester.pump();
 
         expect(
