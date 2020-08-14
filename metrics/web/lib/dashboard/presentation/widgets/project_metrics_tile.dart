@@ -49,7 +49,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
 
     return DecoratedContainer(
       height: _tileHeight,
-      margin: const EdgeInsets.only(bottom: 5.0),
+      margin: const EdgeInsets.only(bottom: 4.0),
       decoration: BoxDecoration(
         color: theme.backgroundColor,
         borderRadius: BorderRadius.circular(2.0),
