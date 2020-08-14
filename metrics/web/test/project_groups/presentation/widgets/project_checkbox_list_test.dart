@@ -110,8 +110,8 @@ void main() {
     );
 
     testWidgets(
-      "displays the no configured projects placeholder if project checkbox view models are empty and filtered",
-          (WidgetTester tester) async {
+      "displays the no search results placeholder if project checkbox view models are empty and filtered",
+      (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
         when(projectGroupsNotifier.projectCheckboxViewModels).thenReturn([]);
