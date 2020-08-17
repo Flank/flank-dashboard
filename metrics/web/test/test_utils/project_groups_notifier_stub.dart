@@ -71,6 +71,9 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
       _deleteProjectGroupDialogViewModel;
 
   @override
+  String get projectSelectionErrorMessage => null;
+
+  @override
   Future<void> deleteProjectGroup(String projectGroupId) async {}
 
   @override

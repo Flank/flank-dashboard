@@ -130,12 +130,22 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Text(
-                  _getCounterText(projectGroup),
-                  style: dialogTheme.counterTextStyle,
-                ),
+              Selector<ProjectGroupsNotifier, String>(
+                selector: (_, state) => state.projectSelectionErrorMessage,
+                builder: (_, projectsErrorMessage, __) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: projectsErrorMessage == null
+                        ? Text(
+                            _getCounterText(projectGroup),
+                            style: dialogTheme.counterTextStyle,
+                          )
+                        : Text(
+                            projectsErrorMessage,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                  );
+                },
               ),
             ],
           ),
@@ -164,7 +174,8 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
   /// A callback for this dialog action button.
   Future<void> _actionCallback(ProjectGroupDialogViewModel projectGroup) async {
-    if (!_formKey.currentState.validate()) return;
+    if (!_formKey.currentState.validate() ||
+        _projectGroupsNotifier.projectSelectionErrorMessage != null) return;
 
     _setLoading(true);
 

@@ -42,6 +42,9 @@ void main() {
       name: "name",
       selectedProjectIds: UnmodifiableListView<String>([]),
     );
+    final projectSelectionError = ProjectGroupsStrings.getProjectSelectionError(
+      ProjectGroupsNotifier.maxSelectedProjects,
+    );
 
     const theme = MetricsThemeData(
       projectGroupDialogTheme: ProjectGroupDialogThemeData(
@@ -592,6 +595,46 @@ void main() {
         );
 
         expect(find.text(expectedCounterText), findsNothing);
+      },
+    );
+
+    testWidgets(
+      "displays an error message if the project selection error message is not null",
+      (WidgetTester tester) async {
+        when(projectGroupsNotifier.projectSelectionErrorMessage)
+            .thenReturn(projectSelectionError);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+            strategy: strategy,
+          ));
+        });
+
+        expect(find.text(projectSelectionError), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "does not call the action if project selection error message is not null",
+      (WidgetTester tester) async {
+        when(projectGroupsNotifier.projectSelectionErrorMessage)
+            .thenReturn(projectSelectionError);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+            strategy: strategy,
+          ));
+        });
+
+        final buttonFinder = find.widgetWithText(
+          MetricsPositiveButton,
+          buttonText,
+        );
+        await tester.tap(buttonFinder);
+
+        verifyNever(strategy.action(any, any, any, any));
       },
     );
   });
