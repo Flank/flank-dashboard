@@ -255,7 +255,6 @@ void main() {
     testWidgets(
       "calls the action of the given strategy on tap on the action button",
       (WidgetTester tester) async {
-        const text = "text";
         const groupId = "id";
         const groupName = "name";
         final projectIds = UnmodifiableListView<String>([]);
@@ -268,7 +267,6 @@ void main() {
 
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
-        when(strategy.text).thenReturn(text);
         when(projectGroupsNotifier.projectGroupDialogViewModel)
             .thenReturn(projectGroupDialogViewModel);
 
