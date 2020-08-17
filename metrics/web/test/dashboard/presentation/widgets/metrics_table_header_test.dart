@@ -72,22 +72,22 @@ void main() {
     testWidgets(
       "applies the given text style from the metrics theme with default font-family",
       (tester) async {
-        const expectedTextStyle = TextStyle(color: Colors.red);
-        const expectedFontFamily = 'Roboto';
-        final key = GlobalKey();
+        const testTextStyle = TextStyle(color: Colors.red);
+        const testFontFamily = 'Roboto';
+        final testKey = GlobalKey();
 
         const themeData = MetricsThemeData(
           projectMetricsTableTheme: ProjectMetricsTableThemeData(
             metricsTableHeaderTheme:
-                MetricsTableHeaderThemeData(textStyle: expectedTextStyle),
+                MetricsTableHeaderThemeData(textStyle: testTextStyle),
           ),
         );
 
         await tester.pumpWidget(
           _DashboardTableHeaderTestbed(
-            key: key,
+            key: testKey,
             metricsThemeData: themeData,
-            themeData: ThemeData(fontFamily: expectedFontFamily),
+            themeData: ThemeData(fontFamily: testFontFamily),
           ),
         );
 
@@ -98,10 +98,12 @@ void main() {
           ),
         );
         final fontFamily =
-            Theme.of(key.currentContext).textTheme.bodyText1.fontFamily;
-        final style = expectedTextStyle.copyWith(fontFamily: fontFamily);
+            Theme.of(testKey.currentContext).textTheme.bodyText1.fontFamily;
+        final expectedTextStyle = testTextStyle.copyWith(
+          fontFamily: fontFamily,
+        );
 
-        expect(style, equals(defaultTextStyle.style));
+        expect(defaultTextStyle.style, equals(expectedTextStyle));
       },
     );
   });
@@ -115,7 +117,7 @@ class _DashboardTableHeaderTestbed extends StatelessWidget {
   /// A [ThemeData] used in tests.
   final ThemeData themeData;
 
-  /// Creates an instance of this testbed with the given [metricsThemeData].
+  /// Creates a new instance of the [_DashboardTableHeaderTestbed].
   ///
   /// The [metricsThemeData] defaults to a [MetricsThemeData].
   const _DashboardTableHeaderTestbed({
