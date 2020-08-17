@@ -10,7 +10,6 @@ import 'package:metrics/project_groups/presentation/state/project_groups_notifie
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/delete_project_group_dialog.dart';
-import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list_tile.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -147,7 +146,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the title style from the metrics theme",
+      "applies the title style from the metrics theme to the delete project group title",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed(
@@ -420,7 +419,7 @@ void main() {
   });
 }
 
-/// A testbed class required to test the [ProjectCheckboxListTile] widget.
+/// A testbed class required to test the [DeleteProjectGroupDialog] widget.
 class _DeleteProjectGroupDialogTestbed extends StatelessWidget {
   /// A [ProjectGroupsNotifier] that will be injected and used in tests.
   final ProjectGroupsNotifier projectGroupsNotifier;
@@ -432,7 +431,10 @@ class _DeleteProjectGroupDialogTestbed extends StatelessWidget {
   final ThemeData themeData;
 
   /// Creates a new instance of the [_DeleteProjectGroupDialogTestbed]
-  /// with the given [projectGroupsNotifier], [theme] and [themeData].
+  /// with the given [projectGroupsNotifier], [metricsThemeData]
+  /// and [themeData].
+  ///
+  /// The [metricsThemeData] defaults to an empty [MetricsThemeData].
   const _DeleteProjectGroupDialogTestbed({
     Key key,
     this.projectGroupsNotifier,
