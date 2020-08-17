@@ -9,7 +9,7 @@ void main() {
 
       themeNotifier.changeTheme();
 
-      expect(themeNotifier.isDark, equals(!initialTheme));
+      expect(themeNotifier.isDark, isNot(initialTheme));
     });
 
     test(".changeTheme() notifies listeners about theme change", () {

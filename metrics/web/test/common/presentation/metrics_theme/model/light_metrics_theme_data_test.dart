@@ -33,6 +33,7 @@ void main() {
         expect(lightMetricsThemeData.projectBuildStatusTheme, isNotNull);
         expect(lightMetricsThemeData.toggleTheme, isNotNull);
         expect(lightMetricsThemeData.userMenuTheme, isNotNull);
+        expect(lightMetricsThemeData.textPlaceholderTheme, isNotNull);
       },
     );
   });

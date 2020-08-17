@@ -40,18 +40,6 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
   );
 
   @override
-  Future<void> addProjectGroup(
-    String projectGroupName,
-    List<String> projectIds,
-  ) async {}
-
-  @override
-  Future<void> deleteProjectGroup(String projectGroupId) async {}
-
-  @override
-  void filterByProjectName(String value) {}
-
-  @override
   List<ProjectCheckboxViewModel> get projectCheckboxViewModels =>
       _projectCheckboxViewModels;
 
@@ -64,10 +52,35 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
       _projectGroupDialogViewModel;
 
   @override
+  List<ProjectGroupModel> get projectGroupModels => null;
+
+  @override
+  String get projectNameFilter => null;
+
+  @override
   String get projectGroupsErrorMessage => null;
 
   @override
   String get projectsErrorMessage => null;
+
+  @override
+  String get projectGroupSavingError => null;
+
+  @override
+  DeleteProjectGroupDialogViewModel get deleteProjectGroupDialogViewModel =>
+      _deleteProjectGroupDialogViewModel;
+
+  @override
+  Future<void> deleteProjectGroup(String projectGroupId) async {}
+
+  @override
+  void filterByProjectName(String value) {}
+
+  @override
+  Future<void> addProjectGroup(
+    String projectGroupName,
+    List<String> projectIds,
+  ) async {}
 
   @override
   void resetFilterName() {}
@@ -84,13 +97,6 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
     String projectGroupName,
     List<String> projectIds,
   ) async {}
-
-  @override
-  String get projectGroupSavingError => null;
-
-  @override
-  DeleteProjectGroupDialogViewModel get deleteProjectGroupDialogViewModel =>
-      _deleteProjectGroupDialogViewModel;
 
   @override
   void initDeleteProjectGroupDialogViewModel(String projectGroupId) {}
@@ -110,7 +116,4 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
 
   @override
   void toggleProjectCheckedStatus(String projectId) {}
-
-  @override
-  List<ProjectGroupModel> get projectGroupModels => null;
 }

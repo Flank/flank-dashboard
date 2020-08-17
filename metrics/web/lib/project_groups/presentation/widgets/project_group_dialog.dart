@@ -123,7 +123,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                           hint: CommonStrings.searchForProject,
                         ),
                       ),
-                      Flexible(
+                      Expanded(
                         child: ProjectCheckboxList(),
                       ),
                     ],

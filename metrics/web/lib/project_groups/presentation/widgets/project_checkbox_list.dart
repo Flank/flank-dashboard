@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_placeholder.dart';
+import 'package:metrics/common/presentation/text_placeholder/widgets/text_placeholder.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -11,11 +12,16 @@ import 'package:provider/provider.dart';
 class ProjectCheckboxList extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {
+    const placeholderPadding = EdgeInsets.only(top: 16.0);
+
     return Consumer<ProjectGroupsNotifier>(
       builder: (_, projectGroupsNotifier, __) {
         if (projectGroupsNotifier.projectsErrorMessage != null) {
-          return MetricsTextPlaceholder(
-            text: projectGroupsNotifier.projectsErrorMessage,
+          return Padding(
+            padding: placeholderPadding,
+            child: TextPlaceholder(
+              text: projectGroupsNotifier.projectsErrorMessage,
+            ),
           );
         }
 
@@ -27,8 +33,13 @@ class ProjectCheckboxList extends StatelessWidget {
         }
 
         if (projectCheckboxViewModels.isEmpty) {
-          return const MetricsTextPlaceholder(
-            text: DashboardStrings.noConfiguredProjects,
+          return Padding(
+            padding: placeholderPadding,
+            child: TextPlaceholder(
+              text: projectGroupsNotifier.projectNameFilter == null
+                  ? DashboardStrings.noConfiguredProjects
+                  : ProjectGroupsStrings.noSearchResults,
+            ),
           );
         }
 
