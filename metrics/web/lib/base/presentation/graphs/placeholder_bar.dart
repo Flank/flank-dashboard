@@ -31,7 +31,6 @@ class PlaceholderBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
       height: height,
       child: ColoredBar(
         color: color,

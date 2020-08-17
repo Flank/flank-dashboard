@@ -265,7 +265,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
             metricsTableHeaderTheme: MetricsTableHeaderThemeData(
               textStyle: TextStyle(
                 color: _tableHeaderColor,
-                fontWeight: FontWeight.w300,
               ),
             ),
             projectMetricsTileTheme: ProjectMetricsTileThemeData(

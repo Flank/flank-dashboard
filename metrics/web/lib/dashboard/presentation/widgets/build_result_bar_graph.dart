@@ -57,37 +57,34 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Expanded(
-            flex: _missingBarsCount,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                _missingBarsCount,
-                (index) => const BuildResultBar(),
-              ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Expanded(
+          flex: _missingBarsCount,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(
+              _missingBarsCount,
+              (index) => const BuildResultBar(),
             ),
           ),
-          Expanded(
-            flex: _barsData.length,
-            child: BarGraph(
-              data: _barsData.map((data) => data.value).toList(),
-              graphPadding: EdgeInsets.zero,
-              barBuilder: (int index) {
-                final data = _barsData[index];
+        ),
+        Expanded(
+          flex: _barsData.length,
+          child: BarGraph(
+            data: _barsData.map((data) => data.value).toList(),
+            graphPadding: EdgeInsets.zero,
+            barBuilder: (int index) {
+              final data = _barsData[index];
 
-                return BuildResultBar(
-                  buildResult: data,
-                );
-              },
-            ),
+              return BuildResultBar(
+                buildResult: data,
+              );
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

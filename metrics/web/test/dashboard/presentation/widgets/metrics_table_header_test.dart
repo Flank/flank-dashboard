@@ -70,19 +70,25 @@ void main() {
     );
 
     testWidgets(
-      "applies the text style from the metrics theme",
+      "applies the given text style from the metrics theme with default font-family",
       (tester) async {
-        const textStyle = TextStyle(color: Colors.red, inherit: false);
+        const expectedTextStyle = TextStyle(color: Colors.red);
+        const expectedFontFamily = 'Roboto';
+        final key = GlobalKey();
 
         const themeData = MetricsThemeData(
           projectMetricsTableTheme: ProjectMetricsTableThemeData(
             metricsTableHeaderTheme:
-                MetricsTableHeaderThemeData(textStyle: textStyle),
+                MetricsTableHeaderThemeData(textStyle: expectedTextStyle),
           ),
         );
 
         await tester.pumpWidget(
-          _DashboardTableHeaderTestbed(themeData: themeData),
+          _DashboardTableHeaderTestbed(
+            key: key,
+            metricsThemeData: themeData,
+            themeData: ThemeData(fontFamily: expectedFontFamily),
+          ),
         );
 
         final defaultTextStyle = tester.widget<DefaultTextStyle>(
@@ -91,8 +97,11 @@ void main() {
             matching: find.byType(DefaultTextStyle),
           ),
         );
+        final fontFamily =
+            Theme.of(key.currentContext).textTheme.bodyText1.fontFamily;
+        final style = expectedTextStyle.copyWith(fontFamily: fontFamily);
 
-        expect(defaultTextStyle.style, equals(textStyle));
+        expect(style, equals(defaultTextStyle.style));
       },
     );
   });
@@ -101,20 +110,25 @@ void main() {
 /// A testbed class required to test the [MetricsTableHeader] widget.
 class _DashboardTableHeaderTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in tests.
-  final MetricsThemeData themeData;
+  final MetricsThemeData metricsThemeData;
 
-  /// Creates an instance of this testbed with the given [themeData].
+  /// A [ThemeData] used in tests.
+  final ThemeData themeData;
+
+  /// Creates an instance of this testbed with the given [metricsThemeData].
   ///
-  /// The [themeData] defaults to a [MetricsThemeData].
+  /// The [metricsThemeData] defaults to a [MetricsThemeData].
   const _DashboardTableHeaderTestbed({
     Key key,
-    this.themeData = const MetricsThemeData(),
+    this.themeData,
+    this.metricsThemeData = const MetricsThemeData(),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
-      metricsThemeData: themeData,
+      metricsThemeData: metricsThemeData,
+      themeData: themeData,
       body: MetricsTableHeader(),
     );
   }

@@ -14,10 +14,9 @@ class MetricsTableHeader extends StatelessWidget {
     final metricsTableHeaderTheme = MetricsTheme.of(context)
         .projectMetricsTableTheme
         .metricsTableHeaderTheme;
-    final textStyle = Theme.of(context)
-        .textTheme
-        .bodyText1
-        .merge(metricsTableHeaderTheme.textStyle);
+    final defaultFontFamily = Theme.of(context).textTheme.bodyText1.fontFamily;
+    final textStyle = metricsTableHeaderTheme.textStyle
+        .copyWith(fontFamily: defaultFontFamily);
 
     return DefaultTextStyle(
       textAlign: TextAlign.center,
