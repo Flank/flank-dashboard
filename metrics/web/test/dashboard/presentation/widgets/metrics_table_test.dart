@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/shimmer_container.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
@@ -11,6 +10,7 @@ import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentag
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_loading_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
@@ -239,7 +239,7 @@ void main() {
     );
 
     testWidgets(
-      "displays shimmer container widgets instead of project metrics tiles if the metrics are null",
+      "displays the metrics table loading placeholder when the metrics are loading",
       (WidgetTester tester) async {
         final metricsNotifier = ProjectMetricsNotifierMock();
         when(metricsNotifier.isMetricsLoading).thenReturn(true);
@@ -250,8 +250,7 @@ void main() {
           ));
         });
 
-        expect(find.byType(ProjectMetricsTile), findsNothing);
-        expect(find.byType(ShimmerContainer), findsWidgets);
+        expect(find.byType(MetricsTableLoadingPlaceholder), findsOneWidget);
       },
     );
   });

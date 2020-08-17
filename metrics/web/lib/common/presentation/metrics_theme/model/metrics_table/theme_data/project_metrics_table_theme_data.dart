@@ -1,6 +1,6 @@
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 
 /// A class that stores the theme data for the project metrics table.
 class ProjectMetricsTableThemeData {

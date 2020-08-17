@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A class that stores the theme data
-/// for the metrics placeholders with shimmer effect.
+/// for the placeholders with a shimmer effect.
 class ShimmerPlaceholderThemeData {
   /// A background [Color] of the placeholder.
   final Color backgroundColor;

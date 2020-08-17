@@ -120,6 +120,23 @@ void main() {
       );
 
       testWidgets(
+        "applies the given decoration to the container widget",
+        (tester) async {
+          const decoration = BoxDecoration(
+            color: Colors.blue,
+          );
+
+          await tester.pumpWidget(
+            const _ShimmerContainerTestbed(decoration: decoration),
+          );
+
+          final container = tester.widget<Container>(containerFinder);
+
+          expect(container.decoration, equals(decoration));
+        },
+      );
+
+      testWidgets(
         "applies the given shimmer color to the shimmer widget",
         (tester) async {
           const color = Colors.red;
@@ -218,6 +235,9 @@ class _ShimmerContainerTestbed extends StatelessWidget {
   /// A height of the [ShimmerContainer].
   final double height;
 
+  /// A decoration of the [ShimmerContainer].
+  final Decoration decoration;
+
   /// A [Color] of the [ShimmerContainer]'s animation.
   final Color shimmerColor;
 
@@ -250,6 +270,7 @@ class _ShimmerContainerTestbed extends StatelessWidget {
     Key key,
     this.width,
     this.height,
+    this.decoration,
     this.shimmerColor,
     this.child,
     this.padding = EdgeInsets.zero,
@@ -267,6 +288,7 @@ class _ShimmerContainerTestbed extends StatelessWidget {
           key: key,
           width: width,
           height: height,
+          decoration: decoration,
           shimmerColor: shimmerColor,
           padding: padding,
           duration: duration,

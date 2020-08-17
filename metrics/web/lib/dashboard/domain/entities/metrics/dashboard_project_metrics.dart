@@ -41,16 +41,12 @@ class DashboardProjectMetrics extends Equatable {
       ];
 
   /// Creates the [DashboardProjectMetrics].
-  ///
-  /// The [buildNumberMetrics] defaults to an empty [BuildNumberMetric].
-  /// The [performanceMetrics] defaults to an empty [PerformanceMetric].
-  /// The [buildResultMetrics] defaults to an empty [BuildResultMetric].
   const DashboardProjectMetrics({
     this.projectId,
     this.projectBuildStatusMetric,
-    this.buildNumberMetrics = const BuildNumberMetric(),
-    this.performanceMetrics = const PerformanceMetric(),
-    this.buildResultMetrics = const BuildResultMetric(),
+    this.buildNumberMetrics,
+    this.performanceMetrics,
+    this.buildResultMetrics,
     this.coverage,
     this.stability,
   });

@@ -70,7 +70,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   ProjectGroupDropdownItemViewModel get selectedProjectGroup =>
       _selectedProjectGroup;
 
-  /// Determines the metrics loading status.
+  /// Determines whether project metrics are loading or not.
   bool get isMetricsLoading {
     final List<ProjectMetricsTileViewModel> projectMetrics =
         _projectMetrics?.values?.toList();
@@ -295,7 +295,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final buildResultMetrics = _getBuildResultMetrics(
       dashboardMetrics.buildResultMetrics,
     );
-    final numberOfBuilds = dashboardMetrics.buildNumberMetrics.numberOfBuilds;
+    final numberOfBuilds = dashboardMetrics.buildNumberMetrics?.numberOfBuilds;
 
     final buildStatus = ProjectBuildStatusViewModel(
       value: dashboardMetrics.projectBuildStatusMetric?.status,

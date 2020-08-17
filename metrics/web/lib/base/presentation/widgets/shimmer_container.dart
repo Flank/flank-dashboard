@@ -9,6 +9,9 @@ class ShimmerContainer extends StatelessWidget {
   /// A height of this container.
   final double height;
 
+  /// A [Decoration] of this container.
+  final Decoration decoration;
+
   /// A [Color] of the shimmer animation.
   final Color shimmerColor;
 
@@ -47,6 +50,7 @@ class ShimmerContainer extends StatelessWidget {
     Key key,
     this.width,
     this.height,
+    this.decoration,
     this.shimmerColor,
     this.color,
     this.child,
@@ -77,6 +81,7 @@ class ShimmerContainer extends StatelessWidget {
             width: width,
             height: height,
             color: color,
+            decoration: decoration,
             child: child,
           ),
         ),
