@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 
 /// [TextField] with the ability to search across projects.
 class ProjectSearchInput extends StatelessWidget {
@@ -16,12 +17,10 @@ class ProjectSearchInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return MetricsTextFormField(
       onChanged: onChanged,
-      decoration: const InputDecoration(
-        prefixIcon: Icon(Icons.search),
-        hintText: CommonStrings.searchForProject,
-      ),
+      prefixIcon: Image.network("icons/search.svg"),
+      hint: CommonStrings.searchForProject,
     );
   }
 }

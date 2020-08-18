@@ -11,13 +11,16 @@ class MetricsTableHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = MetricsTheme.of(context)
+    final metricsTableHeaderTheme = MetricsTheme.of(context)
         .projectMetricsTableTheme
         .metricsTableHeaderTheme;
+    final textStyle = DefaultTextStyle.of(context)
+        .style
+        .merge(metricsTableHeaderTheme.textStyle);
 
     return DefaultTextStyle(
       textAlign: TextAlign.center,
-      style: theme.textStyle,
+      style: textStyle,
       child: MetricsTableRow(
         status: Container(),
         name: Container(),

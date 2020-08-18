@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
@@ -72,17 +72,19 @@ void main() {
     testWidgets(
       "applies the text style from the metrics theme",
       (tester) async {
-        const textStyle = TextStyle(color: Colors.red);
+        const expectedTextStyle = TextStyle(color: Colors.red, inherit: false);
 
         const themeData = MetricsThemeData(
           projectMetricsTableTheme: ProjectMetricsTableThemeData(
             metricsTableHeaderTheme:
-                MetricsTableHeaderThemeData(textStyle: textStyle),
+                MetricsTableHeaderThemeData(textStyle: expectedTextStyle),
           ),
         );
 
         await tester.pumpWidget(
-          _DashboardTableHeaderTestbed(themeData: themeData),
+          _DashboardTableHeaderTestbed(
+            metricsThemeData: themeData,
+          ),
         );
 
         final defaultTextStyle = tester.widget<DefaultTextStyle>(
@@ -91,8 +93,9 @@ void main() {
             matching: find.byType(DefaultTextStyle),
           ),
         );
+        final textStyle = defaultTextStyle.style;
 
-        expect(defaultTextStyle.style, equals(textStyle));
+        expect(textStyle, equals(expectedTextStyle));
       },
     );
   });
@@ -101,20 +104,20 @@ void main() {
 /// A testbed class required to test the [MetricsTableHeader] widget.
 class _DashboardTableHeaderTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in tests.
-  final MetricsThemeData themeData;
+  final MetricsThemeData metricsThemeData;
 
-  /// Creates an instance of this testbed with the given [themeData].
+  /// Creates a new instance of the [_DashboardTableHeaderTestbed].
   ///
-  /// The [themeData] defaults to a [MetricsThemeData].
+  /// The [metricsThemeData] defaults to an empty [MetricsThemeData] instance.
   const _DashboardTableHeaderTestbed({
     Key key,
-    this.themeData = const MetricsThemeData(),
+    this.metricsThemeData = const MetricsThemeData(),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
-      metricsThemeData: themeData,
+      metricsThemeData: metricsThemeData,
       body: MetricsTableHeader(),
     );
   }

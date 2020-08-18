@@ -92,8 +92,8 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                        vertical: 13.0,
-                        horizontal: 10.0,
+                        vertical: 14.0,
+                        horizontal: 12.0,
                       ),
                       child: Image.network(
                         "icons/dropdown.svg",
