@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_neutral_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
@@ -54,54 +53,16 @@ void main() {
       ProjectGroupsStrings.delete,
     );
 
-    testWidgets(
-      "applies a hand cursor to the cancel button",
-      (WidgetTester tester) async {
-        final notifierMock = ProjectGroupsNotifierMock();
+    List<TextSpan> _getContentTextSpans(WidgetTester tester) {
+      final infoDialog = FinderUtil.findInfoDialog(tester);
 
-        when(notifierMock.deleteProjectGroupDialogViewModel).thenReturn(
-          deleteProjectGroupDialogViewModel,
-        );
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
-            projectGroupsNotifier: notifierMock,
-          ));
-        });
-
-        final finder = find.ancestor(
-          of: find.text(CommonStrings.cancel),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
+      final content = infoDialog.content as RichText;
+      final textSpan = content.text as TextSpan;
+      return List<TextSpan>.from(textSpan.children);
+    }
 
     testWidgets(
-      "applies a hand cursor to the delete button",
-      (WidgetTester tester) async {
-        final notifierMock = ProjectGroupsNotifierMock();
-
-        when(notifierMock.deleteProjectGroupDialogViewModel).thenReturn(
-          deleteProjectGroupDialogViewModel,
-        );
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
-            projectGroupsNotifier: notifierMock,
-          ));
-        });
-
-        final finder = find.ancestor(
-          of: find.text(ProjectGroupsStrings.delete),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies the close icon to the dialog widget",
+      "applies the close icon to the info dialog widget",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
@@ -146,7 +107,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the title style from the metrics theme to the delete project group title",
+      "applies the title style from the metrics theme",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed(
@@ -204,16 +165,14 @@ void main() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
         });
 
-        final infoDialog = FinderUtil.findInfoDialog(tester);
+        final contentTextSpan = _getContentTextSpans(tester);
 
-        final content = infoDialog.content as RichText;
-        final textSpan = content.text as TextSpan;
-        final deleteConfirmationTextSpan = textSpan.children.last as TextSpan;
-
-        expect(
-          deleteConfirmationTextSpan.text,
-          equals(ProjectGroupsStrings.deleteConfirmationQuestion),
+        final confirmationTextFinder = contentTextSpan.any(
+          (span) =>
+              span.text == ProjectGroupsStrings.deleteConfirmationQuestion,
         );
+
+        expect(confirmationTextFinder, isTrue);
       },
     );
 
@@ -232,16 +191,13 @@ void main() {
           ));
         });
 
-        final infoDialog = FinderUtil.findInfoDialog(tester);
+        final contentTextSpans = _getContentTextSpans(tester);
 
-        final content = infoDialog.content as RichText;
-        final textSpan = content.text as TextSpan;
-        final projectGroupNameTextSpan = textSpan.children.first as TextSpan;
-
-        expect(
-          projectGroupNameTextSpan.text.trim(),
-          equals(deleteProjectGroupDialogViewModel.name),
+        final groupNameFinder = contentTextSpans.any(
+          (span) => span.text == ' ${deleteProjectGroupDialogViewModel.name} ',
         );
+
+        expect(groupNameFinder, isTrue);
       },
     );
 
@@ -256,7 +212,6 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
-            themeData: themeData,
             metricsThemeData: metricsThemeData,
             projectGroupsNotifier: notifierMock,
           ));
@@ -266,19 +221,20 @@ void main() {
           fontWeight: FontWeight.bold,
         );
 
-        final infoDialog = FinderUtil.findInfoDialog(tester);
+        final contentTextSpans = _getContentTextSpans(tester);
 
-        final content = infoDialog.content as RichText;
-        final textSpan = content.text as TextSpan;
-        final projectGroupNameTextSpan = textSpan.children.first as TextSpan;
+        final groupNameSpan = contentTextSpans.firstWhere(
+          (span) => span.text == ' ${deleteProjectGroupDialogViewModel.name} ',
+          orElse: () => null,
+        );
 
-        expect(projectGroupNameTextSpan.style, equals(boldContentStyle));
+        expect(groupNameSpan?.style, equals(boldContentStyle));
       },
     );
 
     testWidgets(
-      "contains the cancel button",
-      (tester) async {
+      "displays the cancel metrics neutral button",
+      (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
         });
@@ -302,8 +258,8 @@ void main() {
     );
 
     testWidgets(
-      "contains the delete button",
-      (tester) async {
+      "displays the delete metrics negative button",
+      (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
         });
@@ -328,7 +284,7 @@ void main() {
         });
 
         await tester.tap(deleteButtonFinder);
-        await tester.pumpAndSettle();
+        await tester.pump();
 
         verify(
           notifierMock.deleteProjectGroup(deleteProjectGroupDialogViewModel.id),
