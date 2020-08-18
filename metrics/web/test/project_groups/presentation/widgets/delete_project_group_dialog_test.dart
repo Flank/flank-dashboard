@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
@@ -289,6 +291,37 @@ void main() {
         verify(
           notifierMock.deleteProjectGroup(deleteProjectGroupDialogViewModel.id),
         ).called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "does not delete the project group if deletion process is in progress",
+      (tester) async {
+        final notifierMock = ProjectGroupsNotifierMock();
+        final invocationCompleter = Completer();
+
+        when(notifierMock.deleteProjectGroupDialogViewModel).thenReturn(
+          deleteProjectGroupDialogViewModel,
+        );
+        when(notifierMock.deleteProjectGroup(any))
+            .thenAnswer((realInvocation) => invocationCompleter.future);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
+            projectGroupsNotifier: notifierMock,
+          ));
+        });
+
+        await tester.tap(deleteButtonFinder);
+        await tester.pump();
+        await tester.tap(find.widgetWithText(
+          MetricsNegativeButton,
+          ProjectGroupsStrings.deletingProjectGroup,
+        ));
+        await tester.pumpAndSettle();
+
+        verify(notifierMock.deleteProjectGroup(any)).called(equals(1));
+        invocationCompleter.complete();
       },
     );
 
