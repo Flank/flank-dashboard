@@ -7,7 +7,7 @@ import 'package:metrics/project_groups/presentation/widgets/strategy/project_gro
 /// [AddProjectGroupDialog] and adding a new project group.
 class AddProjectGroupDialogStrategy implements ProjectGroupDialogStrategy {
   @override
-  final String title = ProjectGroupsStrings.addProjectGroup;
+  final String title = ProjectGroupsStrings.createProjectGroup;
 
   @override
   final String text = ProjectGroupsStrings.createGroup;
