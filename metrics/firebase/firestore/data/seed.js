@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
-
-const serviceAccount = require('/Users/radek/Documents/Projects/monorepo/metrics/firebase/key.json');
+const SERVICE_ACCOUNT_KEY_PATH = process.env.SERVICE_ACCOUNT_KEY_PATH;
+const serviceAccount = require(SERVICE_ACCOUNT_KEY_PATH);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)

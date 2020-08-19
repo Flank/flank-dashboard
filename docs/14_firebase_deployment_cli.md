@@ -1,54 +1,4 @@
-# Metrics firebase deployment
-
-> Summary of the proposed change
-
-Describe the process of deployment of the Metrics application to the Firebase Hosting and deploying the Cloud functions needed to create test data for the application.
-
-
-# References
-
-> Link to supporting documentation, GitHub tickets, etc.
-
-- [Getting started with Firestore](https://cloud.google.com/firestore/docs/client/get-firebase)
-- [Deploying to Firebase Hosting](https://firebaseopensource.com/projects/firebase/emberfire/docs/guide/deploying-to-firebase-hosting.md/)
-- [Getting started with Firebase Cloud Functions](https://firebase.google.com/docs/functions/get-started)
-
-# Motivation
-
-> What problem is this project solving?
-
-The Metrics application instance accessible via a link.
-
-# Goals
-
-> Identify success metrics and measurable goals.
-
-- Web application is deployed to Firebase Hosting and available for everyone via the link.
-- The Cloud Functions required for creating test data are deployed.
-
-# Non-Goals
-
-> Identify what's not in scope.
-
-Deployment to other platforms is out of scope.
-
-# Design
-
-> Explain and diagram the technical design
-
-`Metrics Web Source` -> `Build` -> `Deploy` ->  `Firebase Hosting`
-
-`Metrics Web Cloud Functions` -> `Deploy` -> `Firebase Cloud Functions`
-
-`Metrics Web Security Rules` -> `Deploy` -> `Firestore Security Rules`
-
-`Metrics Web Indexes` -> `Deploy` -> `Firestore Indexes`
-
-> Identify risks and edge cases
-
-# API
-
-> What will the proposed API look like?
+# Metrics firebase deployment with CLI
 
 
 ## Before you begin
@@ -145,14 +95,12 @@ Before deploying metrics application, make sure you have the correct Flutter ver
 
 ```
 flutter --version
-
 ```
 
 If the version is different you should run the command.
 
 ```
 flutter version 1.15.3
-
 ```
 
 Also, you should enable flutter web support by running the command below.
@@ -196,17 +144,40 @@ Once you've deployed the metrics application to Firebase Hosting, you should fin
 The `metrics/firebase` folder contains Firestore security rules, Firestore indexes, and a `seedData` Cloud function needed to create a test data for our application. To deploy all of these components, follow the next steps: 
 
 1. Activate the `seedData` function: go to the `metrics/firebase/functions/index.js` file and change the `const inactive = true;` to `const inactive = false;`.
-2. 0pen the terminal, navigate to `metrics/firebase` folder and ensure all dependencies are installed by running: `npm install`.
-3. Run the `firebase deploy` command to deploy all components.
+2. 0pen the terminal, navigate to `metrics/firebase` folder and ensure all dependencies are installed by running: 
+```
+npm install
+```
+
+3. Run the  command to deploy all components.
+
+```
+firebase deploy
+```
 4. Once command execution finished, you'll find the `seedData` function URL, that can be used to trigger function execution in the console. Save this URL somewhere - you will need it a bit later.
 
 Now you can create test projects in your Firestore database: 
 
-1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
-2. Go to the database section on the left panel and tap on the `Start collection` button.
-3. Add collection with `projects` identifier and tap `Next`.
-4. In the document creation window tap on the `Auto-ID` button or enter the project identifier you want.
-5. Add a field named `name` with the `String` type and the name for your project as a value.
+1. List service accounst 
+
+```
+gcloud iam service-accounts list
+```
+3. Generate key if you don't have one already 
+```
+gcloud iam service-accounts keys create ~/key.json --iam-account $SERVICE_ACCOUNT_EMAIL
+```
+4. Set env variable SERVICE_ACCOUNT_KEY_PATH to point to your key
+
+```
+export SERVICE_ACCOUNT_KEY_PATH=~/key.json
+```
+
+2. Run import script
+
+```
+npm run seed
+``` 
 
 So, you've created the test projects in the database. It is time to generate test builds. In the previous steps you've got the `seedData` function URL. Now you can trigger this function to create builds for the project, using this URL. This HTTP function has the following query parameters:
   - buildsCount (required) - the number of builds to generate.
@@ -215,10 +186,19 @@ So, you've created the test projects in the database. It is time to generate tes
       property in the range from the `startDate` to `startDate - 7` days. Defaults to the current date.
   - delay (optional) - is the delay in milliseconds between adding builds to the project.
 
+Example command 
+
+```
+curl $FUNCTION_URL?buildsCount=3&projectId=1
+```
+
 Once you've finished creating test data, you should deactivate the `seedData` cloud function. To deactivate this function, follow the next steps:
 
 1. Go to the `metrics/firebase/functions/index.js` file and change the `inactive` constant back to `true`.
-2. Redeploy this function, using the `firebase deploy --only functions` command.
+2. Redeploy this function, using the command.
+```
+firebase deploy --only functions
+```
 
 ## Creating a new Firebase User
 
@@ -232,41 +212,3 @@ Once you've finished deploying the Metrics application and created the test data
 With that in place, you can use your credentials, that you've used to create the user, to fill an authentication form of the web application. 
 
 After logging in, you should see a dashboard page with a list of test projects and their metrics if you've created them in the previous steps or no data. The app should provide an ability to switch between light/dark themes.
-
-# Dependencies
-
-> What is the project blocked on?
-
-No blockers.
-
-> What will be impacted by the project?
-
-All the deployment process for a flutter web application(s) within the Metrics project will be impacted.
-
-# Testing
-
-> How will the project be tested?
-
-This project will be tested manually by opening an application using the obtained link.
-
-# Alternatives Considered
-
-> Summarize alternative designs (pros & cons)
-
-No alternatives considered.
-
-# Timeline
-
-> Document milestones and deadlines.
-
-DONE:
-
-- Deploy Metrics application to Firebase Hosting.
-- Deploy the Cloud Function for creating test data.
-- Deploy Firestore Security Rules & Indexes.
-
-# Results
-
-> What was the outcome of the project?
-
-The Metrics application and the Cloud Function for creating test data are deployed and available via the links.
