@@ -9,12 +9,16 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha --recursive --exit --timeout 5000"
+    "test": "mocha --recursive --exit --timeout 5000",
+    "seed": "node firestore/data/seed.js",
+    "deploy": "firebase deploy"
   },
   "license": "ISC",
   "dependencies": {
     "clone-deep": "^4.0.1",
-    "firebase": "7.14.3"
+    "firebase": "7.14.3",
+    "firebase-admin": "^9.1.0",
+    "firebase-functions": "^3.9.1"
   },
   "devDependencies": {
     "mocha": "^7.1.2",

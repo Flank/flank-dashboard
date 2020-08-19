@@ -120,11 +120,7 @@ firebase apps:sdkconfig WEB $APP_ID
 
 To configure the Flutter for Web application to use recently created Firestore Database follow the next steps: 
 
-1. Open the [Firebase console](https://console.firebase.google.com/), choose your project 
-and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
-2. Scroll down and find your Firebase Web Application. 
-3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
-4. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 3:
+1. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 9:
     ```
         var firebaseConfig = {
           apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
@@ -145,21 +141,52 @@ It's time to deploy your Flutter application to the Firebase Hosting!
 
 ### Preparing your environment 
 Before deploying metrics application, make sure you have the correct Flutter version installed,
- by running the `flutter --version` command. You should have `v1.15.3` installed. 
-If the version is different you should run the `flutter version 1.15.3` command.
+ by running the  command. You should have `v1.15.3` installed. 
 
-Also, you should enable flutter web support by running the `flutter config --enable-web` command.
+```
+flutter --version
+
+```
+
+If the version is different you should run the command.
+
+```
+flutter version 1.15.3
+
+```
+
+Also, you should enable flutter web support by running the command below.
+
+```
+flutter config --enable-web
+```
 
 ### Building and deploying Flutter application
  
 1. Open the terminal and navigate to the metrics project folder.
-2. Run `firebase login` command and follow the instructions to log in to the Firebase CLI with your Google account.
+2. Run  command and follow the instructions to log in to the Firebase CLI with your Google account.
  Use the same account that you used to create your Firebase project (or the one that has access to it).
-3. After you have logged in, run the `firebase use --add` command, and select the project id of the project, created in previous steps.
+
+```
+firebase login
+```
+3. After you have logged in, run the  command below and select the project id of the project, created in previous steps.
+
+```
+firebase use --add
+```
 4. Give an alias to your project.
-5. Run the `flutter build web` command from the root of the metrics project to build the release version of the application.
- It is recommended to add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer.
-6. Run the `firebase deploy --only hosting` command to deploy an application to the Firebase Hosting.
+5. Run the  command from the root of the metrics project to build the release version of the application.
+   It is recommended to add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer.
+```
+flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
+```
+
+6. Run the  command to deploy an application to the Firebase Hosting.
+
+```
+firebase deploy --only hosting
+```
 
 After the deployment process finished, your application will be accessible using the `Hosting URL`, printed to console.
 
