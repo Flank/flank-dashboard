@@ -11,34 +11,16 @@ import 'package:test/test.dart';
 void main() {
   group("ProjectMetricsTableThemeData", () {
     test(
-      "creates an instance with the default metrics table header theme if the given parameter is null",
+      "creates an instance with default values if the given parameters are null",
       () {
         final themeData = ProjectMetricsTableThemeData(
           metricsTableHeaderTheme: null,
-        );
-
-        expect(themeData.metricsTableHeaderTheme, isNotNull);
-      },
-    );
-
-    test(
-      "creates an instance with the default project metrics tile theme if the given parameter is null",
-      () {
-        final themeData = ProjectMetricsTableThemeData(
           projectMetricsTileTheme: null,
-        );
-
-        expect(themeData.projectMetricsTileTheme, isNotNull);
-      },
-    );
-
-    test(
-      "creates an instance with the default project metrics tile placeholder theme if the given parameter is null",
-      () {
-        final themeData = ProjectMetricsTableThemeData(
           projectMetricsTilePlaceholderTheme: null,
         );
 
+        expect(themeData.metricsTableHeaderTheme, isNotNull);
+        expect(themeData.projectMetricsTileTheme, isNotNull);
         expect(themeData.projectMetricsTilePlaceholderTheme, isNotNull);
       },
     );
