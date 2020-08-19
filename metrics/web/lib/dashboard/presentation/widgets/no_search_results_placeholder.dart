@@ -15,11 +15,11 @@ class NoSearchResultsPlaceholder extends StatelessWidget {
         .projectMetricsTileTheme;
 
     return DecoratedContainer(
-      width: 1140.0,
       height: 144.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2.0),
         border: Border.all(color: theme.borderColor),
+        color: theme.backgroundColor,
       ),
       child: const Center(
         child: TextPlaceholder(text: DashboardStrings.noSearchResults),

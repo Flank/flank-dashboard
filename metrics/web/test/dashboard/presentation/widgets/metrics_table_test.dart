@@ -117,7 +117,6 @@ void main() {
         );
 
         expect(find.byType(NoSearchResultsPlaceholder), findsOneWidget);
-        expect(find.text(DashboardStrings.noSearchResults), findsOneWidget);
       },
     );
 
