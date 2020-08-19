@@ -58,8 +58,8 @@ void main() {
       (WidgetTester tester) async {
         const errorMessage = 'Unknown error';
         final metricsNotifier = ProjectMetricsNotifierMock();
-        when(metricsNotifier.isMetricsLoading).thenReturn(false);
 
+        when(metricsNotifier.isMetricsLoading).thenReturn(false);
         when(metricsNotifier.projectsErrorMessage).thenReturn(errorMessage);
 
         await mockNetworkImagesFor(() {

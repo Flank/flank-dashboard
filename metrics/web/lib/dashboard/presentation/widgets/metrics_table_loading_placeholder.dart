@@ -29,7 +29,7 @@ class MetricsTableLoadingPlaceholder extends StatelessWidget {
     );
   }
 
-  /// Calculates an item count for the [ListView] based on the [maxHeight].
+  /// Calculates a number of items to display based on the given [maxHeight].
   int _calculateItemCount(double maxHeight) {
     final itemCount = maxHeight / _itemHeight;
 

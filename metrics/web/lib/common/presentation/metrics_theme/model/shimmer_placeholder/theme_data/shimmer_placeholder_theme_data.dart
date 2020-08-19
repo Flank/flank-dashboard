@@ -11,7 +11,8 @@ class ShimmerPlaceholderThemeData {
 
   /// Creates an instance of the [ShimmerPlaceholderThemeData].
   const ShimmerPlaceholderThemeData({
-    this.backgroundColor,
-    this.shimmerColor,
-  });
+    Color backgroundColor,
+    Color shimmerColor,
+  })  : backgroundColor = backgroundColor ?? Colors.grey,
+        shimmerColor = shimmerColor ?? Colors.blueGrey;
 }

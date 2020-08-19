@@ -4,227 +4,228 @@ import 'package:metrics/base/presentation/widgets/shimmer_container.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 void main() {
-  group(
-    "ShimmerContainer",
-    () {
-      final containerFinder = find.descendant(
-        of: find.byType(ShimmerContainer),
-        matching: find.byType(Container).first,
-      );
+  group("ShimmerContainer", () {
+    final containerFinder = find.descendant(
+      of: find.byType(ShimmerContainer),
+      matching: find.byType(Container).first,
+    );
 
-      testWidgets(
-        "throws an AssertionError if the given padding is null",
-        (tester) async {
-          await tester.pumpWidget(const _ShimmerContainerTestbed(
-            padding: null,
-          ));
+    Shimmer findShimmer(WidgetTester tester) {
+      return tester.widget<Shimmer>(find.byType(Shimmer));
+    }
 
-          expect(tester.takeException(), isAssertionError);
-        },
-      );
+    testWidgets(
+      "throws an AssertionError if the given padding is null",
+      (tester) async {
+        await tester.pumpWidget(const _ShimmerContainerTestbed(
+          padding: null,
+        ));
 
-      testWidgets(
-        "throws an AssertionError if the given duration is null",
-        (tester) async {
-          await tester.pumpWidget(const _ShimmerContainerTestbed(
-            duration: null,
-          ));
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
 
-          expect(tester.takeException(), isAssertionError);
-        },
-      );
+    testWidgets(
+      "throws an AssertionError if the given duration is null",
+      (tester) async {
+        await tester.pumpWidget(const _ShimmerContainerTestbed(
+          duration: null,
+        ));
 
-      testWidgets(
-        "throws an AssertionError if the given direction is null",
-        (tester) async {
-          await tester.pumpWidget(const _ShimmerContainerTestbed(
-            direction: null,
-          ));
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
 
-          expect(tester.takeException(), isAssertionError);
-        },
-      );
+    testWidgets(
+      "throws an AssertionError if the given direction is null",
+      (tester) async {
+        await tester.pumpWidget(const _ShimmerContainerTestbed(
+          direction: null,
+        ));
 
-      testWidgets(
-        "throws an AssertionError if the given border radius is null",
-        (tester) async {
-          await tester.pumpWidget(const _ShimmerContainerTestbed(
-            borderRadius: null,
-          ));
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
 
-          expect(tester.takeException(), isAssertionError);
-        },
-      );
+    testWidgets(
+      "throws an AssertionError if the given border radius is null",
+      (tester) async {
+        await tester.pumpWidget(const _ShimmerContainerTestbed(
+          borderRadius: null,
+        ));
 
-      testWidgets(
-        "throws an AssertionError if the enabled parameter is null",
-        (tester) async {
-          await tester.pumpWidget(const _ShimmerContainerTestbed(
-            enabled: null,
-          ));
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
 
-          expect(tester.takeException(), isAssertionError);
-        },
-      );
+    testWidgets(
+      "throws an AssertionError if the enabled parameter is null",
+      (tester) async {
+        await tester.pumpWidget(const _ShimmerContainerTestbed(
+          enabled: null,
+        ));
 
-      testWidgets(
-        "applies the given padding",
-        (tester) async {
-          const padding = EdgeInsets.all(10.0);
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
 
-          await tester.pumpWidget(const _ShimmerContainerTestbed(
-            padding: padding,
-          ));
+    testWidgets(
+      "applies the given padding",
+      (tester) async {
+        const padding = EdgeInsets.all(10.0);
 
-          final paddingWidget = tester.widget<Padding>(
-            find.ancestor(
-              of: find.byType(ClipRRect),
-              matching: find.byType(Padding),
-            ),
-          );
+        await tester.pumpWidget(const _ShimmerContainerTestbed(
+          padding: padding,
+        ));
 
-          expect(paddingWidget.padding, equals(padding));
-        },
-      );
+        final paddingWidget = tester.widget<Padding>(
+          find.ancestor(
+            of: find.byType(ClipRRect),
+            matching: find.byType(Padding),
+          ),
+        );
 
-      testWidgets(
-        "applies the given width to the container widget",
-        (tester) async {
-          const width = 10.0;
+        expect(paddingWidget.padding, equals(padding));
+      },
+    );
 
-          await tester.pumpWidget(
-            const _ShimmerContainerTestbed(width: width),
-          );
+    testWidgets(
+      "applies the given width",
+      (tester) async {
+        const width = 10.0;
 
-          final container = tester.widget<Container>(containerFinder);
+        await tester.pumpWidget(
+          const _ShimmerContainerTestbed(width: width),
+        );
 
-          expect(container.constraints.maxWidth, equals(width));
-          expect(container.constraints.minWidth, equals(width));
-        },
-      );
+        final container = tester.widget<Container>(containerFinder);
 
-      testWidgets(
-        "applies the given height to the container widget",
-        (tester) async {
-          const height = 11.0;
+        expect(container.constraints.maxWidth, equals(width));
+        expect(container.constraints.minWidth, equals(width));
+      },
+    );
 
-          await tester.pumpWidget(
-            const _ShimmerContainerTestbed(height: height),
-          );
+    testWidgets(
+      "applies the given height",
+      (tester) async {
+        const height = 11.0;
 
-          final container = tester.widget<Container>(containerFinder);
+        await tester.pumpWidget(
+          const _ShimmerContainerTestbed(height: height),
+        );
 
-          expect(container.constraints.maxHeight, equals(height));
-          expect(container.constraints.minHeight, equals(height));
-        },
-      );
+        final container = tester.widget<Container>(containerFinder);
 
-      testWidgets(
-        "applies the given decoration to the container widget",
-        (tester) async {
-          const decoration = BoxDecoration(
-            color: Colors.blue,
-          );
+        expect(container.constraints.maxHeight, equals(height));
+        expect(container.constraints.minHeight, equals(height));
+      },
+    );
 
-          await tester.pumpWidget(
-            const _ShimmerContainerTestbed(decoration: decoration),
-          );
+    testWidgets(
+      "applies the given decoration",
+      (tester) async {
+        const decoration = BoxDecoration(
+          color: Colors.blue,
+        );
 
-          final container = tester.widget<Container>(containerFinder);
+        await tester.pumpWidget(
+          const _ShimmerContainerTestbed(decoration: decoration),
+        );
 
-          expect(container.decoration, equals(decoration));
-        },
-      );
+        final container = tester.widget<Container>(containerFinder);
 
-      testWidgets(
-        "applies the given shimmer color to the shimmer widget",
-        (tester) async {
-          const color = Colors.red;
+        expect(container.decoration, equals(decoration));
+      },
+    );
 
-          await tester.pumpWidget(
-            const _ShimmerContainerTestbed(shimmerColor: color),
-          );
+    testWidgets(
+      "applies the given shimmer color to the shimmer animation",
+      (tester) async {
+        const color = Colors.red;
 
-          final shimmer = tester.widget<Shimmer>(find.byType(Shimmer));
+        await tester.pumpWidget(
+          const _ShimmerContainerTestbed(shimmerColor: color),
+        );
 
-          expect(shimmer.color, equals(color));
-        },
-      );
+        final shimmer = findShimmer(tester);
 
-      testWidgets(
-        "displays the given child widget",
-        (tester) async {
-          const child = Text('test');
+        expect(shimmer.color, equals(color));
+      },
+    );
 
-          await tester.pumpWidget(
-            const _ShimmerContainerTestbed(child: child),
-          );
+    testWidgets(
+      "displays the given child widget",
+      (tester) async {
+        const child = Text('test');
 
-          expect(find.byWidget(child), findsOneWidget);
-        },
-      );
+        await tester.pumpWidget(
+          const _ShimmerContainerTestbed(child: child),
+        );
 
-      testWidgets(
-        "applies the given duration to the shimmer widget",
-        (tester) async {
-          const duration = Duration(seconds: 2);
+        expect(find.byWidget(child), findsOneWidget);
+      },
+    );
 
-          await tester.pumpWidget(
-            const _ShimmerContainerTestbed(duration: duration),
-          );
+    testWidgets(
+      "applies the given duration to the shimmer animation",
+      (tester) async {
+        const duration = Duration(seconds: 2);
 
-          final shimmer = tester.widget<Shimmer>(find.byType(Shimmer));
+        await tester.pumpWidget(
+          const _ShimmerContainerTestbed(duration: duration),
+        );
 
-          expect(shimmer.duration, equals(duration));
-        },
-      );
+        final shimmer = findShimmer(tester);
 
-      testWidgets(
-        "applies the given direction to the shimmer widget",
-        (tester) async {
-          const direction = ShimmerDirection.fromLeftToRight();
+        expect(shimmer.duration, equals(duration));
+      },
+    );
 
-          await tester.pumpWidget(
-            const _ShimmerContainerTestbed(direction: direction),
-          );
+    testWidgets(
+      "applies the given direction to the shimmer animation",
+      (tester) async {
+        const direction = ShimmerDirection.fromLeftToRight();
 
-          final shimmer = tester.widget<Shimmer>(find.byType(Shimmer));
+        await tester.pumpWidget(
+          const _ShimmerContainerTestbed(direction: direction),
+        );
 
-          expect(shimmer.direction, equals(direction));
-        },
-      );
+        final shimmer = findShimmer(tester);
 
-      testWidgets(
-        "applies the border radius to the clip rect widget",
-        (tester) async {
-          final borderRadius = BorderRadius.circular(10.0);
+        expect(shimmer.direction, equals(direction));
+      },
+    );
 
-          await tester.pumpWidget(
-            _ShimmerContainerTestbed(borderRadius: borderRadius),
-          );
+    testWidgets(
+      "applies the border radius",
+      (tester) async {
+        final borderRadius = BorderRadius.circular(10.0);
 
-          final shimmer = tester.widget<ClipRRect>(find.byType(ClipRRect));
+        await tester.pumpWidget(
+          _ShimmerContainerTestbed(borderRadius: borderRadius),
+        );
 
-          expect(shimmer.borderRadius, equals(borderRadius));
-        },
-      );
+        final shimmer = tester.widget<ClipRRect>(find.byType(ClipRRect));
 
-      testWidgets(
-        "applies the given enabled parameter to the shimmer widget",
-        (tester) async {
-          const enabled = false;
+        expect(shimmer.borderRadius, equals(borderRadius));
+      },
+    );
 
-          await tester.pumpWidget(
-            const _ShimmerContainerTestbed(enabled: enabled),
-          );
+    testWidgets(
+      "applies the given enabled parameter to the shimmer animation",
+      (tester) async {
+        const enabled = false;
 
-          final shimmer = tester.widget<Shimmer>(find.byType(Shimmer));
+        await tester.pumpWidget(
+          const _ShimmerContainerTestbed(enabled: enabled),
+        );
 
-          expect(shimmer.enabled, equals(enabled));
-        },
-      );
-    },
-  );
+        final shimmer = findShimmer(tester);
+
+        expect(shimmer.enabled, equals(enabled));
+      },
+    );
+  });
 }
 
 /// A testbed class required to test the [ShimmerContainer] widget.

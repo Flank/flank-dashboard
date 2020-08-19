@@ -62,6 +62,7 @@ void main() {
         final expectedItemCount = (height / itemHeight).ceil();
 
         DimensionsUtil.setTestWindowSize(height: height);
+        addTearDown(DimensionsUtil.clearTestWindowSize);
 
         await tester.pumpWidget(
           const _MetricsTableLoadingPlaceholderTestbed(),
@@ -72,8 +73,6 @@ void main() {
             .length;
 
         expect(actualItemCount, equals(expectedItemCount));
-
-        addTearDown(DimensionsUtil.clearTestWindowSize);
       },
     );
   });

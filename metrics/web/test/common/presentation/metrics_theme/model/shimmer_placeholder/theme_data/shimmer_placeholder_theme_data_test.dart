@@ -7,6 +7,28 @@ import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placehol
 
 void main() {
   group("ShimmerPlaceholderThemeData", () {
+    test(
+      "creates an instance with the default background color if the given parameter is null",
+      () {
+        final themeData = ShimmerPlaceholderThemeData(
+          backgroundColor: null,
+        );
+
+        expect(themeData.backgroundColor, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with the default shimmer color if the given parameter is null",
+      () {
+        final themeData = ShimmerPlaceholderThemeData(
+          shimmerColor: null,
+        );
+
+        expect(themeData.shimmerColor, isNotNull);
+      },
+    );
+
     test("successfully creates an instance with the given values", () {
       const backgroundColor = Colors.blue;
       const shimmerColor = Colors.red;
