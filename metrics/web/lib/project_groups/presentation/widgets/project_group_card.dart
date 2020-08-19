@@ -37,7 +37,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
 
   @override
   Widget build(BuildContext context) {
-    const _buttonIconPadding = EdgeInsets.only(right: 6.0);
+    const _buttonIconPadding = EdgeInsets.only(right: 8.0);
     final _buttonBorderRadius = BorderRadius.circular(4.0);
     final theme = MetricsTheme.of(context).projectGroupCardTheme;
 
@@ -60,16 +60,22 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  widget.projectGroupCardViewModel.name,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: theme.titleStyle,
+                child: Container(
+                  height: 24.0,
+                  child: Text(
+                    widget.projectGroupCardViewModel.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: theme.titleStyle,
+                  ),
                 ),
               ),
-              Text(
-                _projectGroupsCount,
-                style: theme.subtitleStyle,
+              Container(
+                height: 16.0,
+                child: Text(
+                  _projectGroupsCount,
+                  style: theme.subtitleStyle,
+                ),
               ),
               if (_isHovered)
                 Padding(
