@@ -57,25 +57,25 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
               _isHovered ? theme.hoverColor : theme.backgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Container(
-                  height: 24.0,
-                  child: Text(
-                    widget.projectGroupCardViewModel.name,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: theme.titleStyle,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      widget.projectGroupCardViewModel.name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: theme.titleStyle,
+                    ),
                   ),
-                ),
-              ),
-              Container(
-                height: 16.0,
-                child: Text(
-                  _projectGroupsCount,
-                  style: theme.subtitleStyle,
-                ),
+                  Text(
+                    _projectGroupsCount,
+                    style: theme.subtitleStyle,
+                  ),
+                ],
               ),
               if (_isHovered)
                 Padding(
