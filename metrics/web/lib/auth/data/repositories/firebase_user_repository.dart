@@ -47,7 +47,9 @@ class FirebaseUserRepository implements UserRepository {
 
   @override
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
-    await _firebaseAuth.signOut();
+    if (_googleSignIn.currentUser != null) {
+      await _googleSignIn.signOut();
+    }
+    return _firebaseAuth.signOut();
   }
 }
