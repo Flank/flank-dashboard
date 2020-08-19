@@ -32,6 +32,9 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
       String email, String password) async {}
 
   @override
+  Future<void> signInWithGoogle() async {}
+
+  @override
   Future<void> signOut() async {
     _isLoggedIn = false;
     notifyListeners();

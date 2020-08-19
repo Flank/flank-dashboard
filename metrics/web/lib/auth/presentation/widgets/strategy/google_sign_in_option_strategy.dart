@@ -11,5 +11,7 @@ class GoogleSignInOptionStrategy implements SignInOptionStrategy {
   final String label = AuthStrings.signInWithGoogle;
 
   @override
-  void signIn(AuthNotifier notifier) {}
+  void signIn(AuthNotifier notifier) {
+    notifier.signInWithGoogle();
+  }
 }

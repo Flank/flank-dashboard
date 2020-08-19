@@ -4,7 +4,6 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
-import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_strategy.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:mockito/mockito.dart';
@@ -22,11 +21,14 @@ void main() {
         find.widgetWithText(MetricsTextFormField, AuthStrings.password);
     final submitButtonFinder =
         find.widgetWithText(MetricsPositiveButton, AuthStrings.signIn);
+    final googleSignInButtonFinder =
+        find.widgetWithText(SignInOptionButton, AuthStrings.signInWithGoogle);
 
     const testEmail = 'test@email.com';
     const testPassword = 'testPassword';
 
     final signInUseCase = SignInUseCaseMock();
+    final googleSignInUseCase = GoogleSignInUseCaseMock();
     final signOutUseCase = SignOutUseCaseMock();
     final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
 
@@ -36,6 +38,7 @@ void main() {
       authNotifier = AuthNotifier(
         receiveAuthUpdates,
         signInUseCase,
+        googleSignInUseCase,
         signOutUseCase,
       );
     });
@@ -117,6 +120,23 @@ void main() {
     );
 
     testWidgets(
+      "uses the AuthNotifier to sign in a user with Google",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+
+        await tester.tap(googleSignInButtonFinder);
+
+        verify(authNotifier.signInWithGoogle()).called(equals(1));
+      },
+    );
+
+    testWidgets(
       "shows an auth error text if the login process went wrong",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
@@ -138,6 +158,25 @@ void main() {
     );
 
     testWidgets(
+      "shows an auth error text if the sign in with Google process went wrong",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_AuthFormTestbed(
+            authNotifier: SignInErrorAuthNotifierStub(),
+          ));
+        });
+
+        await tester.tap(googleSignInButtonFinder);
+        await tester.pumpAndSettle();
+
+        expect(
+          find.text(SignInErrorAuthNotifierStub.errorMessage),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
       "displays the google sign in option button",
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
@@ -148,13 +187,7 @@ void main() {
           );
         });
 
-        final finder = find.byWidgetPredicate(
-          (widget) =>
-              widget is SignInOptionButton &&
-              widget.strategy is GoogleSignInOptionStrategy,
-        );
-
-        expect(finder, findsOneWidget);
+        expect(googleSignInButtonFinder, findsOneWidget);
       },
     );
   });
@@ -200,6 +233,12 @@ class SignInErrorAuthNotifierStub extends ChangeNotifier
 
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
+    _authExceptionDescription = errorMessage;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> signInWithGoogle() async {
     _authExceptionDescription = errorMessage;
     notifyListeners();
   }

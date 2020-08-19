@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/data/repositories/firebase_user_repository.dart';
+import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
@@ -40,6 +41,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// A use case needed to be able to sign in a user.
   SignInUseCase _signInUseCase;
 
+  /// A use case needed to be able to sign in a user with Google.
+  GoogleSignInUseCase _googleSignInUseCase;
+
   /// A use case needed to be able to sign out a user.
   SignOutUseCase _signOutUseCase;
 
@@ -78,6 +82,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
     _receiveAuthUpdates = ReceiveAuthenticationUpdates(_userRepository);
     _signInUseCase = SignInUseCase(_userRepository);
+    _googleSignInUseCase = GoogleSignInUseCase(_userRepository);
     _signOutUseCase = SignOutUseCase(_userRepository);
 
     _receiveProjectGroupUpdates = ReceiveProjectGroupUpdates(
@@ -100,6 +105,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
           create: (_) => AuthNotifier(
             _receiveAuthUpdates,
             _signInUseCase,
+            _googleSignInUseCase,
             _signOutUseCase,
           ),
         ),

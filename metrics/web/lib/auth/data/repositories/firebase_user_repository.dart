@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:metrics/auth/data/adapter/firebase_user_adapter.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
@@ -8,6 +9,7 @@ import 'package:metrics/auth/domain/repositories/user_repository.dart';
 /// Provides methods for interaction with the [FirebaseAuth].
 class FirebaseUserRepository implements UserRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn.standard(scopes: ['email']);
 
   @override
   Stream<User> authenticationStream() {
@@ -28,7 +30,24 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
+  Future<void> signInWithGoogle() async {
+    try {
+      final account = await _googleSignIn.signIn();
+      final authentication = await account.authentication;
+
+      final credential = GoogleAuthProvider.getCredential(
+        accessToken: authentication.accessToken,
+        idToken: authentication.idToken,
+      );
+      await _firebaseAuth.signInWithCredential(credential);
+    } catch (error) {
+      throw const AuthenticationException(code: AuthErrorCode.unknown);
+    }
+  }
+
+  @override
   Future<void> signOut() async {
-    return _firebaseAuth.signOut();
+    await _googleSignIn.signOut();
+    await _firebaseAuth.signOut();
   }
 }
