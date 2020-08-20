@@ -186,11 +186,6 @@ So, you've created the test projects in the database. It is time to generate tes
       property in the range from the `startDate` to `startDate - 7` days. Defaults to the current date.
   - delay (optional) - is the delay in milliseconds between adding builds to the project.
 
-Example command 
-
-```
-curl $FUNCTION_URL?buildsCount=3&projectId=1
-```
 
 Once you've finished creating test data, you should deactivate the `seedData` cloud function. To deactivate this function, follow the next steps:
 
@@ -212,3 +207,11 @@ Once you've finished deploying the Metrics application and created the test data
 With that in place, you can use your credentials, that you've used to create the user, to fill an authentication form of the web application. 
 
 After logging in, you should see a dashboard page with a list of test projects and their metrics if you've created them in the previous steps or no data. The app should provide an ability to switch between light/dark themes.
+
+## Delete
+
+to delete project run:
+
+```
+gcloud projects delete $PROJECT_ID
+```
