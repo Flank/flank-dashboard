@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_loading_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +35,9 @@ class MetricsTable extends StatelessWidget {
                   final projects =
                       projectsMetricsNotifier.projectsMetricsTileViewModels;
 
-                  if (projects == null) return const LoadingPlaceholder();
+                  if (projectsMetricsNotifier.isMetricsLoading) {
+                    return MetricsTableLoadingPlaceholder();
+                  }
 
                   if (projects.isEmpty) {
                     final projectNameFilter =

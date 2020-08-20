@@ -10,6 +10,7 @@ import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentag
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_loading_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
@@ -58,6 +59,7 @@ void main() {
         const errorMessage = 'Unknown error';
         final metricsNotifier = ProjectMetricsNotifierMock();
 
+        when(metricsNotifier.isMetricsLoading).thenReturn(false);
         when(metricsNotifier.projectsErrorMessage).thenReturn(errorMessage);
 
         await mockNetworkImagesFor(() {
@@ -66,7 +68,7 @@ void main() {
           ));
         });
 
-        await tester.pumpAndSettle();
+        await tester.pump();
 
         final loadingErrorMessage =
             CommonStrings.getLoadingErrorMessage('$errorMessage');
@@ -106,6 +108,7 @@ void main() {
         const String projectNameFilter = 'some project';
         const projectsMetricsTileViewModels = <ProjectMetricsTileViewModel>[];
 
+        when(metricsNotifier.isMetricsLoading).thenReturn(false);
         when(metricsNotifier.projectNameFilter).thenReturn(projectNameFilter);
         when(metricsNotifier.projectsMetricsTileViewModels)
             .thenReturn(projectsMetricsTileViewModels);
@@ -232,6 +235,22 @@ void main() {
           coverageMetricWidgetCenter.dx,
           equals(coverageTitleCenter.dx),
         );
+      },
+    );
+
+    testWidgets(
+      "displays the metrics table loading placeholder when the metrics are loading",
+      (WidgetTester tester) async {
+        final metricsNotifier = ProjectMetricsNotifierMock();
+        when(metricsNotifier.isMetricsLoading).thenReturn(true);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_MetricsTableTestbed(
+            metricsNotifier: metricsNotifier,
+          ));
+        });
+
+        expect(find.byType(MetricsTableLoadingPlaceholder), findsOneWidget);
       },
     );
   });

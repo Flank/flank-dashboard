@@ -70,6 +70,22 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   ProjectGroupDropdownItemViewModel get selectedProjectGroup =>
       _selectedProjectGroup;
 
+  /// Indicates whether project metrics are loading or not.
+  bool get isMetricsLoading {
+    final List<ProjectMetricsTileViewModel> projectMetrics =
+        _projectMetrics?.values?.toList();
+
+    if (projectMetrics == null) return true;
+
+    return projectMetrics.any((projectMetric) {
+      return projectMetric.buildResultMetrics == null ||
+          projectMetric.performanceSparkline == null ||
+          projectMetric.buildNumberMetric == null ||
+          projectMetric.coverage == null ||
+          projectMetric.stability == null;
+    });
+  }
+
   /// Provides a filtered list of [ProjectMetricsTileViewModel]s.
   List<ProjectMetricsTileViewModel> get projectsMetricsTileViewModels {
     List<ProjectMetricsTileViewModel> projectsMetricsTileViewModels =
@@ -279,7 +295,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final buildResultMetrics = _getBuildResultMetrics(
       dashboardMetrics.buildResultMetrics,
     );
-    final numberOfBuilds = dashboardMetrics.buildNumberMetrics.numberOfBuilds;
+    final numberOfBuilds = dashboardMetrics.buildNumberMetrics?.numberOfBuilds;
 
     final buildStatus = ProjectBuildStatusViewModel(
       value: dashboardMetrics.projectBuildStatusMetric?.status,
