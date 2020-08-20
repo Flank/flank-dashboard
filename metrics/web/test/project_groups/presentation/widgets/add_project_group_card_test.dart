@@ -267,7 +267,7 @@ class _AddProjectGroupCardTestbed extends StatelessWidget {
       projectGroupsNotifier: projectGroupsNotifier,
       child: MetricsThemedTestbed(
         metricsThemeData: theme,
-        body: AddProjectGroupCard(),
+        body: const AddProjectGroupCard(),
       ),
     );
   }
