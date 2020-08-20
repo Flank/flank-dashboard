@@ -260,12 +260,13 @@ class _ShimmerContainerTestbed extends StatelessWidget {
   /// Enable or disable an animation;
   final bool enabled;
 
-  /// Creates an instance of this testbed.
+  /// Creates a new instance of the shimmer container testbed.
   ///
-  /// The [padding] defaults to `EdgeInsets.zero`.
-  /// the [duration] defaults to `const Duration(seconds: 3)`.
-  /// the [direction] defaults to `const ShimmerDirection.fromLTRB()`.
-  /// the [borderRadius] defaults to `BorderRadius.zero`.
+  /// The [padding] defaults to the [EdgeInsets.zero].
+  /// The [duration] defaults to three seconds.
+  /// The [direction] defaults to an empty instance of
+  /// The [ShimmerDirection.fromLTRB].
+  /// The [borderRadius] defaults to the [BorderRadius.zero].
   /// The [enabled] defaults to `true`.
   const _ShimmerContainerTestbed({
     Key key,
