@@ -27,6 +27,12 @@ class ProjectGroupView extends StatelessWidget {
           return const LoadingPlaceholder();
         }
 
+        if (projectsGroupsNotifier.noConfiguredProjects) {
+          return const Text('No Projects');
+
+          /// Disabled [AddProjectGroupCard]
+        }
+
         return Wrap(
           spacing: 20.0,
           runSpacing: 20.0,
