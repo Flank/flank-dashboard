@@ -59,7 +59,7 @@ jobs:
 
       - name: Build release app
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: flutter clean && flutter build web --release
+        run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_USE_EXPERIMENTAL_CANVAS_TEXT=true
         working-directory: metrics/web/
 
       - name: Deploy to Firebase
