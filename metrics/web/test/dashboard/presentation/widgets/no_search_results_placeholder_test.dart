@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
 
@@ -12,23 +11,19 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   const backgroundColor = Colors.red;
-  const textStyle = TextStyle(color: Colors.red);
-
+  const borderColor = Colors.green;
   const metricsThemeData = MetricsThemeData(
     projectMetricsTableTheme: ProjectMetricsTableThemeData(
       projectMetricsTileTheme: ProjectMetricsTileThemeData(
         backgroundColor: backgroundColor,
-        textStyle: textStyle,
+        borderColor: borderColor,
       ),
-    ),
-    textPlaceholderTheme: TextPlaceholderThemeData(
-      textStyle: textStyle,
     ),
   );
 
   group("NoSearchResultsPlaceholder", () {
     testWidgets(
-      "displays the no search results placeholder",
+      "displays the no search results text",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _NoSearchResultsPlaceholderTestbed());
 
@@ -52,7 +47,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the text style from the metrics theme",
+      "applies the border color from the metrics theme",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _NoSearchResultsPlaceholderTestbed(
@@ -60,11 +55,13 @@ void main() {
           ),
         );
 
-        final text = tester.firstWidget<Text>(
-          find.text(DashboardStrings.noSearchResults),
-        );
+        final decoration = FinderUtil.findBoxDecoration(tester);
+        final border = decoration.border as Border;
 
-        expect(text.style, equals(textStyle));
+        expect(border.top.color, equals(borderColor));
+        expect(border.left.color, equals(borderColor));
+        expect(border.right.color, equals(borderColor));
+        expect(border.bottom.color, equals(borderColor));
       },
     );
   });

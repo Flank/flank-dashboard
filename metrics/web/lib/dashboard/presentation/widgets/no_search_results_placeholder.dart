@@ -4,7 +4,8 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/common/presentation/text_placeholder/widgets/text_placeholder.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 
-/// A widget that displays a [DashboardStrings.noSearchResults] text.
+/// A widget that displays a placeholder, providing information
+/// that the search has no results.
 class NoSearchResultsPlaceholder extends StatelessWidget {
   /// Creates a new instance of the [NoSearchResultsPlaceholder].
   const NoSearchResultsPlaceholder({Key key}) : super(key: key);
