@@ -20,7 +20,7 @@ void main() {
     final isAMetricsTableHeaderPlaceholder =
         isA<MetricsTableHeaderLoadingPlaceholder>();
 
-    MetricsTableRow _findMetricsTableRow(WidgetTester tester) {
+    MetricsTableRow findMetricsTableRow(WidgetTester tester) {
       return tester.widget<MetricsTableRow>(
         find.byType(MetricsTableRow),
       );
@@ -31,7 +31,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(_MetricsTableLoadingHeaderTestbed());
 
-        final metricsTableRowWidget = _findMetricsTableRow(tester);
+        final metricsTableRowWidget = findMetricsTableRow(tester);
 
         expect(metricsTableRowWidget.status, isA<Container>());
       },
@@ -42,7 +42,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(_MetricsTableLoadingHeaderTestbed());
 
-        final metricsTableRowWidget = _findMetricsTableRow(tester);
+        final metricsTableRowWidget = findMetricsTableRow(tester);
 
         expect(metricsTableRowWidget.name, isA<Container>());
       },
@@ -53,7 +53,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(_MetricsTableLoadingHeaderTestbed());
 
-        final metricsTableRowWidget = _findMetricsTableRow(tester);
+        final metricsTableRowWidget = findMetricsTableRow(tester);
 
         expect(
           metricsTableRowWidget.buildResults,
@@ -67,7 +67,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(_MetricsTableLoadingHeaderTestbed());
 
-        final metricsTableRowWidget = _findMetricsTableRow(tester);
+        final metricsTableRowWidget = findMetricsTableRow(tester);
 
         expect(
           metricsTableRowWidget.performance,
@@ -81,7 +81,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(_MetricsTableLoadingHeaderTestbed());
 
-        final metricsTableRowWidget = _findMetricsTableRow(tester);
+        final metricsTableRowWidget = findMetricsTableRow(tester);
 
         expect(
           metricsTableRowWidget.buildNumber,
@@ -95,7 +95,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(_MetricsTableLoadingHeaderTestbed());
 
-        final metricsTableRowWidget = _findMetricsTableRow(tester);
+        final metricsTableRowWidget = findMetricsTableRow(tester);
 
         expect(
           metricsTableRowWidget.stability,
@@ -109,7 +109,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(_MetricsTableLoadingHeaderTestbed());
 
-        final metricsTableRowWidget = _findMetricsTableRow(tester);
+        final metricsTableRowWidget = findMetricsTableRow(tester);
 
         expect(
           metricsTableRowWidget.coverage,
@@ -124,7 +124,7 @@ void main() {
 class _MetricsTableLoadingHeaderTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         body: MetricsTableLoadingHeader(),
       ),

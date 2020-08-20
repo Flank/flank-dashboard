@@ -4,16 +4,21 @@ import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 
 /// A widget that displays a metrics table header in a loading state.
 class MetricsTableLoadingHeader extends StatelessWidget {
+  /// Creates a new instance of the [MetricsTableLoadingHeader].
+  const MetricsTableLoadingHeader({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MetricsTableRow(
       status: Container(),
       name: Container(),
-      buildResults: MetricsTableHeaderLoadingPlaceholder(),
-      performance: MetricsTableHeaderLoadingPlaceholder(),
-      buildNumber: MetricsTableHeaderLoadingPlaceholder(),
-      stability: MetricsTableHeaderLoadingPlaceholder(),
-      coverage: MetricsTableHeaderLoadingPlaceholder(),
+      buildResults: const MetricsTableHeaderLoadingPlaceholder(),
+      performance: const MetricsTableHeaderLoadingPlaceholder(),
+      buildNumber: const MetricsTableHeaderLoadingPlaceholder(),
+      stability: const MetricsTableHeaderLoadingPlaceholder(),
+      coverage: const MetricsTableHeaderLoadingPlaceholder(),
     );
   }
 }

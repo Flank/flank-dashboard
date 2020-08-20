@@ -5,6 +5,11 @@ import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 
 /// A widget that displays a metrics table header with metrics titles.
 class MetricsTableTitleHeader extends StatelessWidget {
+  /// Creates a new instance of the [MetricsTableTitleHeader].
+  const MetricsTableTitleHeader({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final metricsTableHeaderTheme = MetricsTheme.of(context)

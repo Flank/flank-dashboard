@@ -76,7 +76,7 @@ class _MetricsTableHeaderLoadingPlaceholderTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       metricsThemeData: themeData,
-      body: MetricsTableHeaderLoadingPlaceholder(),
+      body: const MetricsTableHeaderLoadingPlaceholder(),
     );
   }
 }

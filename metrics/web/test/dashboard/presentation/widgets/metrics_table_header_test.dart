@@ -25,7 +25,7 @@ void main() {
     });
 
     testWidgets(
-      "displays the metrics table header title if project metrics is not loading",
+      "displays the metrics table header title if project metrics are not loading",
       (tester) async {
         final notifier = ProjectMetricsNotifierMock();
         when(notifier.isMetricsLoading).thenReturn(false);
@@ -39,7 +39,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the metrics table loading header if project metrics is loading",
+      "displays the metrics table loading header if project metrics are loading",
       (tester) async {
         final notifier = ProjectMetricsNotifierMock();
         when(notifier.isMetricsLoading).thenReturn(true);

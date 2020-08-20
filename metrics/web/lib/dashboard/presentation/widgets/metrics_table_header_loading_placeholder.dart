@@ -5,6 +5,11 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 /// A widget that displays a placeholder for the metrics table header
 /// with a shimmer effect.
 class MetricsTableHeaderLoadingPlaceholder extends StatelessWidget {
+  /// Creates a new instance of the [MetricsTableHeaderLoadingPlaceholder].
+  const MetricsTableHeaderLoadingPlaceholder({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final theme = MetricsTheme.of(context)

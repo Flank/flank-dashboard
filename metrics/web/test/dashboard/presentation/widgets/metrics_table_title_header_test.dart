@@ -134,7 +134,7 @@ class _MetricsTableTitleHeaderTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       metricsThemeData: metricsThemeData,
-      body: MetricsTableTitleHeader(),
+      body: const MetricsTableTitleHeader(),
     );
   }
 }

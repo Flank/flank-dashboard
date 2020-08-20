@@ -19,9 +19,9 @@ class MetricsTableHeader extends StatelessWidget {
     return Selector<ProjectMetricsNotifier, bool>(
       selector: (_, state) => state.isMetricsLoading,
       builder: (_, isLoading, __) {
-        if (isLoading) return MetricsTableLoadingHeader();
+        if (isLoading) return const MetricsTableLoadingHeader();
 
-        return MetricsTableTitleHeader();
+        return const MetricsTableTitleHeader();
       },
     );
   }
