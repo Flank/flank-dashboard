@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -314,13 +312,8 @@ void main() {
     );
 
     testWidgets(
-      "does not call the action if the widget is in the loading state",
+      "disables the action button if the action is in progress",
       (WidgetTester tester) async {
-        final invocationCompleter = Completer();
-
-        when(strategy.action(any, any, any, any))
-            .thenAnswer((realInvocation) => invocationCompleter.future);
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             strategy: strategy,
@@ -329,12 +322,14 @@ void main() {
 
         await tester.tap(find.text(strategy.text));
         await tester.pump();
+        await tester.idle();
 
-        await tester.tap(find.text(strategy.loadingText));
-        await tester.pump();
+        final actionButton = tester.widget<RaisedButton>(find.widgetWithText(
+          RaisedButton,
+          strategy.loadingText,
+        ));
 
-        verify(strategy.action(any, any, any, any)).called(equals(1));
-        invocationCompleter.complete();
+        expect(actionButton.enabled, isFalse);
       },
     );
 

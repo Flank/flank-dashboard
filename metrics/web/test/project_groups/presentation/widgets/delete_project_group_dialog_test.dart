@@ -124,7 +124,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the delete confirmation text as the content of the info dialog widget",
+      "displays the delete confirmation text",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
@@ -159,7 +159,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the delete confirmation question text as the content of the info dialog widget",
+      "displays the delete confirmation question text",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
@@ -177,7 +177,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the name of the deleting project group as the content of the info dialog widget",
+      "displays the name of the deleting project group",
       (tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
 
