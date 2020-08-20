@@ -8,7 +8,6 @@ import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/project_groups/domain/entities/project_group.dart';
-import 'package:metrics/project_groups/domain/entities/project_group_selection_error_code.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
 import 'package:metrics/project_groups/domain/usecases/delete_project_group_usecase.dart';
 import 'package:metrics/project_groups/domain/usecases/parameters/add_project_group_param.dart';
@@ -17,7 +16,7 @@ import 'package:metrics/project_groups/domain/usecases/parameters/update_project
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
-import 'package:metrics/project_groups/presentation/models/project_group_selecting_error_message.dart';
+import 'package:metrics/project_groups/presentation/validators/project_group_project_ids_validator.dart';
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
@@ -27,9 +26,6 @@ import 'package:rxdart/rxdart.dart';
 
 /// The [ChangeNotifier] that holds [ProjectGroup]s data.
 class ProjectGroupsNotifier extends ChangeNotifier {
-  /// The max number of selected projects.
-  static const maxSelectedProjects = 20;
-
   /// Provides an ability to receive project group updates.
   final ReceiveProjectGroupUpdates _receiveProjectGroupUpdates;
 
@@ -52,9 +48,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
   /// Holds the error message that occurred during updating projects data.
   String _projectsErrorMessage;
 
-  /// Holds the [ProjectGroupSelectionErrorMessage] that occurred during
+  /// Holds the error message that occurred during
   /// selecting projects on the project group.
-  ProjectGroupSelectionErrorMessage _projectSelectionErrorMessage;
+  String _projectSelectionErrorMessage;
 
   /// Holds the [ProjectGroupPersistentStoreErrorMessage] that occurred
   /// during loading project groups data.
@@ -97,8 +93,7 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Provides an error description that occurred during selecting
   /// projects on the project group.
-  String get projectSelectionErrorMessage =>
-      _projectSelectionErrorMessage?.message;
+  String get projectSelectionErrorMessage => _projectSelectionErrorMessage;
 
   /// Provides an error description that occurred during loading projects data.
   String get projectsErrorMessage => _projectsErrorMessage;
@@ -243,13 +238,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
       projectIds.add(projectId);
     }
 
-    if (projectIds.length <= maxSelectedProjects) {
-      _projectSelectionErrorMessage = null;
-    } else {
-      _projectSelectionErrorMessage = const ProjectGroupSelectionErrorMessage(
-        ProjectGroupSelectionErrorCode.selectionError,
-      );
-    }
+    _projectSelectionErrorMessage = ProjectGroupProjectIdsValidator.validate(
+      projectIds,
+    );
 
     final projectIndex = _projectCheckboxViewModels
         .indexWhere((project) => project.id == projectId);

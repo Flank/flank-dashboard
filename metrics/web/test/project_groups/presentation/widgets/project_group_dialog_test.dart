@@ -9,6 +9,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
+import 'package:metrics/project_groups/domain/value_objects/project_group_project_ids.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
@@ -43,7 +44,7 @@ void main() {
       selectedProjectIds: UnmodifiableListView<String>([]),
     );
     final projectSelectionError = ProjectGroupsStrings.getProjectSelectionError(
-      ProjectGroupsNotifier.maxSelectedProjects,
+      ProjectGroupProjectIds.projectIdsSelectionSizeLimit,
     );
 
     const theme = MetricsThemeData(
