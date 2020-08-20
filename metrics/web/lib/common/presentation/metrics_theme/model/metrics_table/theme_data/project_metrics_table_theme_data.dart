@@ -7,6 +7,9 @@ class ProjectMetricsTableThemeData {
   /// A theme for the metrics table header.
   final MetricsTableHeaderThemeData metricsTableHeaderTheme;
 
+  /// A theme for the metrics table header placeholder.
+  final ShimmerPlaceholderThemeData metricsTableHeaderPlaceholderTheme;
+
   /// A theme for the project metrics tile.
   final ProjectMetricsTileThemeData projectMetricsTileTheme;
 
@@ -17,16 +20,22 @@ class ProjectMetricsTableThemeData {
   ///
   /// If the [metricsTableHeaderTheme] is null, an instance of
   /// the [MetricsTableHeaderThemeData] used.
+  /// If the [metricsTableHeaderPlaceholderTheme] is null, an instance of
+  /// the [ShimmerPlaceholderThemeData] used.
   /// If the [projectMetricsTileTheme] is null, an instance of
   /// the [ProjectMetricsTileThemeData] used.
   /// If the [projectMetricsTilePlaceholderTheme] is null, an instance of
   /// the [ShimmerPlaceholderThemeData] used.
   const ProjectMetricsTableThemeData({
     MetricsTableHeaderThemeData metricsTableHeaderTheme,
+    ShimmerPlaceholderThemeData metricsTableHeaderPlaceholderTheme,
     ProjectMetricsTileThemeData projectMetricsTileTheme,
     ShimmerPlaceholderThemeData projectMetricsTilePlaceholderTheme,
   })  : metricsTableHeaderTheme =
             metricsTableHeaderTheme ?? const MetricsTableHeaderThemeData(),
+        metricsTableHeaderPlaceholderTheme =
+            metricsTableHeaderPlaceholderTheme ??
+                const ShimmerPlaceholderThemeData(),
         projectMetricsTileTheme =
             projectMetricsTileTheme ?? const ProjectMetricsTileThemeData(),
         projectMetricsTilePlaceholderTheme =

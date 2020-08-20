@@ -50,6 +50,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _tileBorderColor = Color(0xFF0e0d0d);
   static const Color _tileLoadingBackgroundColor = Color(0xFF242425);
   static const Color _tableHeaderColor = Color(0xFF79858b);
+  static const Color _tableHeaderLoadingBackgroundColor = Color(0xFF363537);
   static const Color _metricsLightGrey = Color(0xFFDCDCE5);
   static const Color _sparklineStrokeColor = Color(0xFFDCDCE5);
   static const Color _sparklineTextColor = Color(0xFFD7D7E5);
@@ -269,6 +270,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 color: _tableHeaderColor,
                 fontWeight: FontWeight.normal,
               ),
+            ),
+            metricsTableHeaderPlaceholderTheme: ShimmerPlaceholderThemeData(
+              backgroundColor: _tableHeaderLoadingBackgroundColor,
+              shimmerColor: _tileBorderColor,
             ),
             projectMetricsTileTheme: ProjectMetricsTileThemeData(
               backgroundColor: scaffoldColor,
