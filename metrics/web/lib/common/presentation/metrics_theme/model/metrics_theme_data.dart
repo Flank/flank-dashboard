@@ -10,15 +10,17 @@ import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_th
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
-import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
-import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
+import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+
+import 'create_project_group_card_theme_data.dart';
 
 /// Stores the theme data for all metric widgets.
 class MetricsThemeData {
@@ -50,7 +52,7 @@ class MetricsThemeData {
   final ProjectGroupCardThemeData projectGroupCardTheme;
 
   /// A theme for the add project group card.
-  final ProjectGroupCardThemeData addProjectGroupCardTheme;
+  final CreateProjectGroupCardThemeData addProjectGroupCardTheme;
 
   /// A theme for the buttons.
   final MetricsButtonThemeData metricsButtonTheme;
@@ -97,7 +99,7 @@ class MetricsThemeData {
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     DeleteDialogThemeData deleteDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
-    ProjectGroupCardThemeData addProjectGroupCardTheme,
+    CreateProjectGroupCardThemeData addProjectGroupCardTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
     DropdownThemeData dropdownTheme,
@@ -126,7 +128,7 @@ class MetricsThemeData {
         projectGroupCardTheme =
             projectGroupCardTheme ?? const ProjectGroupCardThemeData(),
         addProjectGroupCardTheme =
-            addProjectGroupCardTheme ?? const ProjectGroupCardThemeData(),
+            addProjectGroupCardTheme ?? const CreateProjectGroupCardThemeData(),
         metricsButtonTheme =
             metricsButtonTheme ?? const MetricsButtonThemeData(),
         textFieldTheme = textFieldTheme ?? const TextFieldThemeData(),
@@ -157,7 +159,7 @@ class MetricsThemeData {
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     DeleteDialogThemeData deleteDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
-    ProjectGroupCardThemeData addProjectGroupCardTheme,
+    CreateProjectGroupCardThemeData addProjectGroupCardTheme,
     MetricWidgetThemeData inactiveWidgetTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,

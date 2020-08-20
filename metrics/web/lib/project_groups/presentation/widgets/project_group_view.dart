@@ -27,17 +27,21 @@ class ProjectGroupView extends StatelessWidget {
           return const LoadingPlaceholder();
         }
 
-        if (projectsGroupsNotifier.noConfiguredProjects) {
-          return const Text('No Projects');
+        final noConfiguredProjects =
+            projectsGroupsNotifier.noConfiguredProjects;
 
-          /// Disabled [AddProjectGroupCard]
+        bool isAddProjectGroupCardEnabled = true;
+        if (noConfiguredProjects) {
+          isAddProjectGroupCardEnabled = false;
         }
 
         return Wrap(
           spacing: 20.0,
           runSpacing: 20.0,
           children: <Widget>[
-            AddProjectGroupCard(),
+            AddProjectGroupCard(
+              isEnabled: isAddProjectGroupCardEnabled,
+            ),
             for (final projectGroup in projectGroupCardViewModels)
               ProjectGroupCard(projectGroupCardViewModel: projectGroup),
           ],

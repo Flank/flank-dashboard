@@ -9,35 +9,47 @@ import 'package:provider/provider.dart';
 
 /// An [AddProjectGroupCard] widget that displays a button card.
 class AddProjectGroupCard extends StatelessWidget {
+  /// Indicates whether this add project group card is disabled.
+  final bool isEnabled;
+
+  /// Creates a new [AddProjectGroupCard] instance.
+  ///
+  /// [isEnabled] defaults to `true`.
+  const AddProjectGroupCard({this.isEnabled = true});
+
   @override
   Widget build(BuildContext context) {
-    final theme = MetricsTheme.of(context).addProjectGroupCardTheme;
+    final theme = isEnabled
+        ? MetricsTheme.of(context).addProjectGroupCardTheme.enabledStyle
+        : MetricsTheme.of(context).addProjectGroupCardTheme.disabledStyle;
+
+    final iconPath = isEnabled ? 'icons/add.svg' : 'icons/disabled_add.svg';
 
     return Container(
       width: 270.0,
       height: 156.0,
       child: PaddedCard(
-        backgroundColor: theme.backgroundColor,
+        backgroundColor: theme.color,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
         ),
         child: HandCursor(
           child: InkWell(
-            onTap: () => _showProjectGroupDialog(context),
+            onTap: isEnabled ? () => _showProjectGroupDialog(context) : null,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Image.network(
-                  'icons/add.svg',
+                  iconPath,
                   width: 32.0,
                   height: 32.0,
-                  color: theme.primaryColor,
+                  color: Colors.red,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
-                    ProjectGroupsStrings.addProjectGroup,
-                    style: theme.titleStyle,
+                    ProjectGroupsStrings.createGroup,
+                    style: theme.labelStyle,
                   ),
                 ),
               ],
