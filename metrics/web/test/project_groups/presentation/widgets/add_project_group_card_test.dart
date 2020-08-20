@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/create_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
@@ -26,10 +27,15 @@ void main() {
     const primaryColor = Colors.red;
 
     const metricsTheme = MetricsThemeData(
-      addProjectGroupCardTheme: ProjectGroupCardThemeData(
-        backgroundColor: backgroundColor,
-        primaryColor: primaryColor,
-        titleStyle: style,
+      addProjectGroupCardTheme: CreateProjectGroupCardThemeData(
+        enabledStyle: MetricsButtonStyle(
+          color: Colors.red,
+          labelStyle: style,
+        ),
+        disabledStyle: MetricsButtonStyle(
+          color: Colors.green,
+          labelStyle: style,
+        ),
       ),
     );
 
@@ -99,7 +105,7 @@ void main() {
         );
 
         final textWidget = tester.widget<Text>(
-          find.text(ProjectGroupsStrings.addProjectGroup),
+          find.text(ProjectGroupsStrings.createGroup),
         );
 
         expect(textWidget.style, equals(style));
@@ -196,7 +202,7 @@ void main() {
         );
 
         expect(
-          find.text(ProjectGroupsStrings.addProjectGroup),
+          find.text(ProjectGroupsStrings.createGroup),
           findsOneWidget,
         );
       },

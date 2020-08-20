@@ -66,6 +66,7 @@ void main() {
 
         when(projectGroupsNotifier.projectGroupCardViewModels)
             .thenReturn(projectGroupCardViewModels);
+        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(false);
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -92,6 +93,7 @@ void main() {
 
         when(projectGroupsNotifier.projectGroupCardViewModels)
             .thenReturn(projectGroupCardViewModels);
+        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(false);
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -112,6 +114,7 @@ void main() {
 
         when(projectGroupsNotifier.projectGroupCardViewModels)
             .thenReturn(projectGroupCardViewModels);
+        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(false);
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -135,6 +138,7 @@ void main() {
 
         when(projectGroupsNotifier.projectGroupCardViewModels)
             .thenReturn(projectGroupCardViewModels);
+        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(false);
 
         await tester.pumpWidget(_ProjectGroupViewTestbed(
           projectGroupsNotifier: projectGroupsNotifier,

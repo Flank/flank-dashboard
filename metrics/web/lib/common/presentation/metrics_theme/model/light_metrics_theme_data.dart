@@ -92,14 +92,24 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
           ),
-          addProjectGroupCardTheme: const ProjectGroupCardThemeData(
-            primaryColor: ColorConfig.primaryColor,
-            backgroundColor: ColorConfig.primaryTranslucentColor,
-            titleStyle: TextStyle(
-              color: ColorConfig.primaryColor,
-              height: 1.5,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
+          addProjectGroupCardTheme: const CreateProjectGroupCardThemeData(
+            enabledStyle: MetricsButtonStyle(
+              color: ColorConfig.primaryTranslucentColor,
+              labelStyle: TextStyle(
+                color: ColorConfig.primaryColor,
+                height: 1.5,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            disabledStyle: MetricsButtonStyle(
+              color: _inactiveBackgroundColor,
+              labelStyle: TextStyle(
+                color: scaffoldColor,
+                height: 1.5,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           deleteDialogTheme: const DeleteDialogThemeData(

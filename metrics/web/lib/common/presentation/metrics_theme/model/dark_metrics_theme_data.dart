@@ -30,6 +30,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 
+import 'create_project_group_card_theme_data.dart';
+
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
   static const Color scaffoldColor = Color(0xFF1b1b1d);
@@ -110,14 +112,24 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
           ),
-          addProjectGroupCardTheme: const ProjectGroupCardThemeData(
-            primaryColor: ColorConfig.primaryColor,
-            backgroundColor: ColorConfig.primaryTranslucentColor,
-            titleStyle: TextStyle(
-              color: ColorConfig.primaryColor,
-              height: 1.5,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
+          addProjectGroupCardTheme: const CreateProjectGroupCardThemeData(
+            enabledStyle: MetricsButtonStyle(
+              color: ColorConfig.primaryTranslucentColor,
+              labelStyle: TextStyle(
+                color: ColorConfig.primaryColor,
+                height: 1.5,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            disabledStyle: MetricsButtonStyle(
+              color: _inactiveBackgroundColor,
+              labelStyle: TextStyle(
+                color: scaffoldColor,
+                height: 1.5,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           deleteDialogTheme: const DeleteDialogThemeData(
