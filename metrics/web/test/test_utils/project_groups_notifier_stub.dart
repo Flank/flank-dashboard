@@ -116,4 +116,7 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
 
   @override
   void toggleProjectCheckedStatus(String projectId) {}
+
+  @override
+  bool get noConfiguredProjects => null;
 }
