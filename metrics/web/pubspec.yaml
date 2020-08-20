@@ -35,6 +35,7 @@ dependencies:
   selection_menu: ^0.9.0
   duration: ^2.0.15
   flutter_switch: ^0.1.1
+  shimmer_animation: ^0.0.9
   metrics_core:
     path: ../core
 

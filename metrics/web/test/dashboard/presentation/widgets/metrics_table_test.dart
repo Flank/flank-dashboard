@@ -9,6 +9,8 @@ import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.da
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart';
+import 'package:metrics/dashboard/presentation/widgets/no_search_results_placeholder.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_loading_placeholder.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
@@ -57,6 +59,7 @@ void main() {
         const errorMessage = 'Unknown error';
         final metricsNotifier = ProjectMetricsNotifierMock();
 
+        when(metricsNotifier.isMetricsLoading).thenReturn(false);
         when(metricsNotifier.projectsErrorMessage).thenReturn(errorMessage);
 
         await mockNetworkImagesFor(() {
@@ -65,7 +68,7 @@ void main() {
           ));
         });
 
-        await tester.pumpAndSettle();
+        await tester.pump();
 
         final loadingErrorMessage =
             CommonStrings.getLoadingErrorMessage('$errorMessage');
@@ -78,7 +81,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the placeholder when there are no available projects",
+      "displays the no configured projects placeholder when there are no available projects",
       (WidgetTester tester) async {
         final metricsNotifier = ProjectMetricsNotifierStub(projectsMetrics: []);
 
@@ -98,13 +101,14 @@ void main() {
     );
 
     testWidgets(
-      "displays an empty table when there are no project search results",
+      "displays a no search results placeholder when there are no project search results",
       (WidgetTester tester) async {
         final metricsNotifier = ProjectMetricsNotifierMock();
 
         const String projectNameFilter = 'some project';
         const projectsMetricsTileViewModels = <ProjectMetricsTileViewModel>[];
 
+        when(metricsNotifier.isMetricsLoading).thenReturn(false);
         when(metricsNotifier.projectNameFilter).thenReturn(projectNameFilter);
         when(metricsNotifier.projectsMetricsTileViewModels)
             .thenReturn(projectsMetricsTileViewModels);
@@ -115,8 +119,7 @@ void main() {
           ),
         );
 
-        expect(find.byType(ProjectMetricsTile), findsNothing);
-        expect(find.text(DashboardStrings.noConfiguredProjects), findsNothing);
+        expect(find.byType(NoSearchResultsPlaceholder), findsOneWidget);
       },
     );
 
@@ -232,6 +235,22 @@ void main() {
           coverageMetricWidgetCenter.dx,
           equals(coverageTitleCenter.dx),
         );
+      },
+    );
+
+    testWidgets(
+      "displays the metrics table loading placeholder when the metrics are loading",
+      (WidgetTester tester) async {
+        final metricsNotifier = ProjectMetricsNotifierMock();
+        when(metricsNotifier.isMetricsLoading).thenReturn(true);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_MetricsTableTestbed(
+            metricsNotifier: metricsNotifier,
+          ));
+        });
+
+        expect(find.byType(MetricsTableLoadingPlaceholder), findsOneWidget);
       },
     );
   });
