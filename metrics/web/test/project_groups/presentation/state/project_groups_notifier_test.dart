@@ -273,12 +273,21 @@ void main() {
     );
 
     test(
-      ".noConfiguredProjects is true when there are no configured projects",
+      ".hasConfiguredProjects is true when there are configured projects",
+      () {
+        projectGroupsNotifier.setProjects(projects);
+
+        expect(projectGroupsNotifier.hasConfiguredProjects, isTrue);
+      },
+    );
+
+    test(
+      ".hasConfiguredProjects is false when there are no configured projects",
       () {
         const emptyProjectList = <ProjectModel>[];
         projectGroupsNotifier.setProjects(emptyProjectList);
 
-        expect(projectGroupsNotifier.noConfiguredProjects, isTrue);
+        expect(projectGroupsNotifier.hasConfiguredProjects, isFalse);
       },
     );
 

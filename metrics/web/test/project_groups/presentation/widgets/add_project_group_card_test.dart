@@ -5,7 +5,7 @@ import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/create_project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
@@ -23,21 +23,20 @@ import '../../../test_utils/test_injection_container.dart';
 void main() {
   group("AddProjectGroupCard", () {
     const enabledBackgroundColor = Colors.red;
-    const enabledStyle = TextStyle(color: Colors.red);
+    const enabledLabelStyle = TextStyle(color: Colors.red);
 
     const disabledBackgroundColor = Colors.grey;
-    const disabledStyle = TextStyle(color: Colors.grey);
-    const primaryColor = Colors.red;
+    const disabledLabelStyle = TextStyle(color: Colors.grey);
 
     const metricsTheme = MetricsThemeData(
-      addProjectGroupCardTheme: CreateProjectGroupCardThemeData(
+      addProjectGroupCardTheme: AddProjectGroupCardThemeData(
         enabledStyle: MetricsButtonStyle(
           color: enabledBackgroundColor,
-          labelStyle: enabledStyle,
+          labelStyle: enabledLabelStyle,
         ),
         disabledStyle: MetricsButtonStyle(
           color: disabledBackgroundColor,
-          labelStyle: disabledStyle,
+          labelStyle: disabledLabelStyle,
         ),
       ),
     );
@@ -69,7 +68,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a background color from the metrics theme to the padded card widget",
+      "applies the enabled background color from the theme to the enabled add project group",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -84,22 +83,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a primary color from the metrics theme to the image widget color",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            const _AddProjectGroupCardTestbed(theme: metricsTheme),
-          ),
-        );
-
-        final imageWidget = tester.widget<Image>(find.byType(Image));
-
-        expect(imageWidget.color, equals(primaryColor));
-      },
-    );
-
-    testWidgets(
-      "applies a text style from the metrics theme to the add project group text style",
+      "applies the enabled text style from the theme to the enabled add project group text style",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -111,38 +95,58 @@ void main() {
           find.text(ProjectGroupsStrings.createGroup),
         );
 
-        expect(textWidget.style, equals(enabledStyle));
+        expect(textWidget.style, equals(enabledLabelStyle));
       },
     );
 
     testWidgets(
-      'applies a disabled metrics theme when the card is disabled',
+      "applies the disabled background color from the theme when the add project group card is disabled",
       (WidgetTester tester) async {
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.hasConfiguredProjects).thenReturn(false);
+
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
-            const _AddProjectGroupCardTestbed(
+            _AddProjectGroupCardTestbed(
               theme: metricsTheme,
-              isEnabled: false,
+              projectGroupsNotifier: notifierMock,
             ),
           ),
         );
-
         final cardWidget = tester.widget<PaddedCard>(find.byType(PaddedCard));
+
+        expect(cardWidget.backgroundColor, equals(disabledBackgroundColor));
+      },
+    );
+
+    testWidgets(
+      "applies the disabled text style from the theme when the add project group card is disabled",
+      (WidgetTester tester) async {
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.hasConfiguredProjects).thenReturn(false);
+
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(
+            _AddProjectGroupCardTestbed(
+              theme: metricsTheme,
+              projectGroupsNotifier: notifierMock,
+            ),
+          ),
+        );
         final textWidget = tester.widget<Text>(
           find.text(ProjectGroupsStrings.createGroup),
         );
 
-        expect(cardWidget.backgroundColor, equals(disabledBackgroundColor));
-        expect(textWidget.style, equals(disabledStyle));
+        expect(textWidget.style, equals(disabledLabelStyle));
       },
     );
 
     testWidgets(
       "shows the add project group dialog on tap",
       (WidgetTester tester) async {
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-
-        when(projectGroupsNotifier.projectGroupDialogViewModel).thenReturn(
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.hasConfiguredProjects).thenReturn(true);
+        when(notifierMock.projectGroupDialogViewModel).thenReturn(
           ProjectGroupDialogViewModel(
             selectedProjectIds: UnmodifiableListView([]),
           ),
@@ -150,7 +154,7 @@ void main() {
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(_AddProjectGroupCardTestbed(
-            projectGroupsNotifier: projectGroupsNotifier,
+            projectGroupsNotifier: notifierMock,
           )),
         );
 
@@ -162,13 +166,34 @@ void main() {
     );
 
     testWidgets(
-      "does not open the add project group dialog if the project group dialog view model is null",
+      "does not open the add project group dialog if the card is disabled",
       (WidgetTester tester) async {
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.hasConfiguredProjects).thenReturn(false);
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(_AddProjectGroupCardTestbed(
-            projectGroupsNotifier: projectGroupsNotifier,
+            projectGroupsNotifier: notifierMock,
+          )),
+        );
+
+        await tester.tap(find.byType(AddProjectGroupCard));
+        await tester.pump();
+
+        expect(find.byType(AddProjectGroupDialog), findsNothing);
+      },
+    );
+
+    testWidgets(
+      "does not open the add project group dialog if the project group dialog view model is null",
+      (WidgetTester tester) async {
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.projectGroupDialogViewModel).thenReturn(null);
+        when(notifierMock.hasConfiguredProjects).thenReturn(true);
+
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(_AddProjectGroupCardTestbed(
+            projectGroupsNotifier: notifierMock,
           )),
         );
 
@@ -182,9 +207,9 @@ void main() {
     testWidgets(
       "inits the project group dialog view model on tap on the card",
       (WidgetTester tester) async {
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-
-        when(projectGroupsNotifier.projectGroupDialogViewModel).thenReturn(
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.hasConfiguredProjects).thenReturn(true);
+        when(notifierMock.projectGroupDialogViewModel).thenReturn(
           ProjectGroupDialogViewModel(
             id: 'id',
             name: 'name',
@@ -194,14 +219,14 @@ void main() {
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(_AddProjectGroupCardTestbed(
-            projectGroupsNotifier: projectGroupsNotifier,
+            projectGroupsNotifier: notifierMock,
           )),
         );
 
         await tester.tap(find.byType(AddProjectGroupCard));
         await tester.pump();
 
-        verify(projectGroupsNotifier.initProjectGroupDialogViewModel())
+        verify(notifierMock.initProjectGroupDialogViewModel())
             .called(equals(1));
       },
     );
@@ -216,6 +241,24 @@ void main() {
         final networkImage = FinderUtil.findNetworkImageWidget(tester);
 
         expect(networkImage.url, equals('icons/add.svg'));
+      },
+    );
+
+    testWidgets(
+      "displays the network image with the disabled add button svg when card is disabled",
+      (WidgetTester tester) async {
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.hasConfiguredProjects).thenReturn(false);
+
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(_AddProjectGroupCardTestbed(
+            projectGroupsNotifier: notifierMock,
+          )),
+        );
+
+        final networkImage = FinderUtil.findNetworkImageWidget(tester);
+
+        expect(networkImage.url, equals('icons/disabled-add.svg'));
       },
     );
 
@@ -236,9 +279,9 @@ void main() {
     testWidgets(
       "resets a project group dialog view model after closing the add project group dialog",
       (WidgetTester tester) async {
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-
-        when(projectGroupsNotifier.projectGroupDialogViewModel).thenReturn(
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.hasConfiguredProjects).thenReturn(true);
+        when(notifierMock.projectGroupDialogViewModel).thenReturn(
           ProjectGroupDialogViewModel(
             selectedProjectIds: UnmodifiableListView([]),
           ),
@@ -246,7 +289,7 @@ void main() {
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(_AddProjectGroupCardTestbed(
-            projectGroupsNotifier: projectGroupsNotifier,
+            projectGroupsNotifier: notifierMock,
           )),
         );
 
@@ -261,7 +304,7 @@ void main() {
         await tester.tap(find.byWidget(closeIcon));
         await tester.pump();
 
-        verify(projectGroupsNotifier.resetProjectGroupDialogViewModel())
+        verify(notifierMock.resetProjectGroupDialogViewModel())
             .called(equals(1));
       },
     );
@@ -276,9 +319,6 @@ class _AddProjectGroupCardTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData theme;
 
-  /// Indicates whether this [AddProjectGroupCard] is enabled.
-  final bool isEnabled;
-
   /// Creates the [_AddProjectGroupCardTestbed] with the given [theme]
   /// and the [projectGroupsNotifier].
   ///
@@ -286,7 +326,6 @@ class _AddProjectGroupCardTestbed extends StatelessWidget {
   const _AddProjectGroupCardTestbed({
     Key key,
     this.projectGroupsNotifier,
-    this.isEnabled = true,
     this.theme = const MetricsThemeData(),
   }) : super(key: key);
 
@@ -296,9 +335,7 @@ class _AddProjectGroupCardTestbed extends StatelessWidget {
       projectGroupsNotifier: projectGroupsNotifier,
       child: MetricsThemedTestbed(
         metricsThemeData: theme,
-        body: AddProjectGroupCard(
-          isEnabled: isEnabled,
-        ),
+        body: const AddProjectGroupCard(),
       ),
     );
   }

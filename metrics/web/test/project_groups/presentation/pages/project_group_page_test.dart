@@ -4,11 +4,9 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_view.dart';
-import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
-import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
@@ -16,15 +14,8 @@ void main() {
     testWidgets(
       "displays the project group text",
       (WidgetTester tester) async {
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(false);
-
         await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            _ProjectGroupPageTestbed(
-              projectGroupsNotifier: projectGroupsNotifier,
-            ),
-          ),
+          () => tester.pumpWidget(const _ProjectGroupPageTestbed()),
         );
 
         expect(
@@ -37,15 +28,8 @@ void main() {
     testWidgets(
       "contains the project group view",
       (WidgetTester tester) async {
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(false);
-
         await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            _ProjectGroupPageTestbed(
-              projectGroupsNotifier: projectGroupsNotifier,
-            ),
-          ),
+          () => tester.pumpWidget(const _ProjectGroupPageTestbed()),
         );
 
         expect(find.byType(ProjectGroupView), findsOneWidget);

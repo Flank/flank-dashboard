@@ -9,57 +9,57 @@ import 'package:provider/provider.dart';
 
 /// An [AddProjectGroupCard] widget that displays a button card.
 class AddProjectGroupCard extends StatelessWidget {
-  /// Indicates whether this add project group card is disabled.
-  final bool isEnabled;
-
   /// Creates a new [AddProjectGroupCard] instance.
-  ///
-  /// [isEnabled] defaults to `true`.
-  const AddProjectGroupCard({
-    Key key,
-    this.isEnabled = true,
-  }) : super(key: key);
+  const AddProjectGroupCard({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final theme = isEnabled
-        ? MetricsTheme.of(context).addProjectGroupCardTheme.enabledStyle
-        : MetricsTheme.of(context).addProjectGroupCardTheme.disabledStyle;
+    return Selector<ProjectGroupsNotifier, bool>(
+      selector: (_, notifier) => notifier.hasConfiguredProjects,
+      builder: (context, hasConfiguredProjects, _) {
+        final theme = hasConfiguredProjects
+            ? MetricsTheme.of(context).addProjectGroupCardTheme.enabledStyle
+            : MetricsTheme.of(context).addProjectGroupCardTheme.disabledStyle;
 
-    final iconPath = isEnabled ? 'icons/add.svg' : 'icons/disabled_add.svg';
+        final asset =
+            hasConfiguredProjects ? 'icons/add.svg' : 'icons/disabled-add.svg';
 
-    return Container(
-      width: 270.0,
-      height: 156.0,
-      child: PaddedCard(
-        backgroundColor: theme.color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
-        ),
-        child: HandCursor(
-          child: InkWell(
-            onTap: isEnabled ? () => _showProjectGroupDialog(context) : null,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.network(
-                  iconPath,
-                  width: 32.0,
-                  height: 32.0,
-                  color: Colors.red,
+        return Container(
+          width: 270.0,
+          height: 156.0,
+          child: PaddedCard(
+            backgroundColor: theme.color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: HandCursor(
+              child: InkWell(
+                onTap: hasConfiguredProjects
+                    ? () => _showProjectGroupDialog(context)
+                    : null,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.network(
+                      asset,
+                      width: 32.0,
+                      height: 32.0,
+                      color: Colors.red,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        ProjectGroupsStrings.createGroup,
+                        style: theme.labelStyle,
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    ProjectGroupsStrings.createGroup,
-                    style: theme.labelStyle,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

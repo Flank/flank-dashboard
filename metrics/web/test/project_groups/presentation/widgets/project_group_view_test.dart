@@ -66,7 +66,7 @@ void main() {
 
         when(projectGroupsNotifier.projectGroupCardViewModels)
             .thenReturn(projectGroupCardViewModels);
-        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(false);
+        when(projectGroupsNotifier.hasConfiguredProjects).thenReturn(true);
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -93,7 +93,7 @@ void main() {
 
         when(projectGroupsNotifier.projectGroupCardViewModels)
             .thenReturn(projectGroupCardViewModels);
-        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(false);
+        when(projectGroupsNotifier.hasConfiguredProjects).thenReturn(true);
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -108,38 +108,13 @@ void main() {
     );
 
     testWidgets(
-      'displays the disabled add project group card when there are no configured projects',
-      (WidgetTester tester) async {
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-
-        when(projectGroupsNotifier.projectGroupCardViewModels)
-            .thenReturn(projectGroupCardViewModels);
-        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(true);
-
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            _ProjectGroupViewTestbed(
-              projectGroupsNotifier: projectGroupsNotifier,
-            ),
-          ),
-        );
-
-        final addProjectGroupCard = tester.widget<AddProjectGroupCard>(
-          find.byType(AddProjectGroupCard),
-        );
-
-        expect(addProjectGroupCard.isEnabled, isFalse);
-      },
-    );
-
-    testWidgets(
       "displays the add project group card widget before any other project group card widgets",
       (tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 
         when(projectGroupsNotifier.projectGroupCardViewModels)
             .thenReturn(projectGroupCardViewModels);
-        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(false);
+        when(projectGroupsNotifier.hasConfiguredProjects).thenReturn(true);
 
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -163,7 +138,7 @@ void main() {
 
         when(projectGroupsNotifier.projectGroupCardViewModels)
             .thenReturn(projectGroupCardViewModels);
-        when(projectGroupsNotifier.noConfiguredProjects).thenReturn(false);
+        when(projectGroupsNotifier.hasConfiguredProjects).thenReturn(true);
 
         await tester.pumpWidget(_ProjectGroupViewTestbed(
           projectGroupsNotifier: projectGroupsNotifier,

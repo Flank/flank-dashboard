@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/button/theme/theme_data/metrics_butt
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
@@ -29,8 +30,6 @@ import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
-
-import 'create_project_group_card_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
@@ -112,7 +111,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
           ),
-          addProjectGroupCardTheme: const CreateProjectGroupCardThemeData(
+          addProjectGroupCardTheme: const AddProjectGroupCardThemeData(
             enabledStyle: MetricsButtonStyle(
               color: ColorConfig.primaryTranslucentColor,
               labelStyle: TextStyle(
