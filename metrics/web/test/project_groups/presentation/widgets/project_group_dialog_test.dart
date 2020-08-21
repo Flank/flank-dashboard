@@ -312,7 +312,7 @@ void main() {
     );
 
     testWidgets(
-      "does not call the action if the widget is in the loading state",
+      "disables the action button if the action is in progress",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
@@ -321,10 +321,15 @@ void main() {
         });
 
         await tester.tap(find.text(strategy.text));
-        await tester.tap(find.text(strategy.text));
         await tester.pump();
+        await tester.idle();
 
-        verify(strategy.action(any, any, any, any)).called(equals(1));
+        final actionButton = tester.widget<RaisedButton>(find.widgetWithText(
+          RaisedButton,
+          strategy.loadingText,
+        ));
+
+        expect(actionButton.enabled, isFalse);
       },
     );
 
