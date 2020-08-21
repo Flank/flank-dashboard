@@ -273,6 +273,16 @@ void main() {
     );
 
     test(
+      ".noConfiguredProjects is true when there are no configured projects",
+      () {
+        const emptyProjectList = <ProjectModel>[];
+        projectGroupsNotifier.setProjects(emptyProjectList);
+
+        expect(projectGroupsNotifier.noConfiguredProjects, isTrue);
+      },
+    );
+
+    test(
       ".initProjectGroupDialogViewModel() sets an empty projectGroupDialogViewModel if there is no project group with the given id",
       () {
         final expectedViewModel = ProjectGroupDialogViewModel(
