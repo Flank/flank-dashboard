@@ -177,7 +177,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the name of the deleting project group",
+      "displays the name of the project group to delete",
       (tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
 
@@ -193,16 +193,16 @@ void main() {
 
         final contentTextSpans = _getContentTextSpans(tester);
 
-        final groupNameFinder = contentTextSpans.any(
+        final isGroupNameDisplayed = contentTextSpans.any(
           (span) => span.text == ' ${deleteProjectGroupDialogViewModel.name} ',
         );
 
-        expect(groupNameFinder, isTrue);
+        expect(isGroupNameDisplayed, isTrue);
       },
     );
 
     testWidgets(
-      "applies the text style of the deleting project group name text from the metrics theme",
+      "applies the text style from theme to the project group name to delete",
       (tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
 
@@ -233,7 +233,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the cancel metrics neutral button",
+      "displays the cancel button",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
@@ -258,7 +258,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the delete metrics negative button",
+      "displays the delete button",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
@@ -293,7 +293,7 @@ void main() {
     );
 
     testWidgets(
-      "disables the delete button if deletion process is in progress",
+      "disables the delete button if the deleting is in progress",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
@@ -327,18 +327,17 @@ void main() {
         await tester.pump();
         await tester.idle();
 
-        expect(
-          find.widgetWithText(
-            MetricsNegativeButton,
-            ProjectGroupsStrings.deletingProjectGroup,
-          ),
-          findsOneWidget,
+        final deletingProjectGroupFinder = find.widgetWithText(
+          MetricsNegativeButton,
+          ProjectGroupsStrings.deletingProjectGroup,
         );
+
+        expect(deletingProjectGroupFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "closes the dialog if the deletion was successful",
+      "closes the dialog if the project group deleting is successful",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
@@ -352,7 +351,7 @@ void main() {
     );
 
     testWidgets(
-      "does not close the dialog if the deletion finished with an error",
+      "does not close the dialog if the deleting is finished with an error",
       (tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
 
@@ -375,7 +374,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the delete project group button text if the deletion finished with an error",
+      "displays the delete project group button text if the deleting is finished with an error",
       (tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
 
