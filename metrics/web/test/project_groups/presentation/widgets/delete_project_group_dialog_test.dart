@@ -233,17 +233,6 @@ void main() {
     );
 
     testWidgets(
-      "displays the cancel button",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
-        });
-
-        expect(cancelButtonFinder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "closes the dialog on tap on the cancel button",
       (tester) async {
         await mockNetworkImagesFor(() {
@@ -254,17 +243,6 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(DeleteProjectGroupDialog), findsNothing);
-      },
-    );
-
-    testWidgets(
-      "displays the delete button",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
-        });
-
-        expect(deleteButtonFinder, findsOneWidget);
       },
     );
 
