@@ -18,6 +18,10 @@ import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
+import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
+import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 
@@ -92,6 +96,9 @@ class MetricsThemeData {
   /// A theme for the circle percentage.
   final CirclePercentageThemeData circlePercentageTheme;
 
+  /// A theme for the toasts.
+  final ToastThemeData toastTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricWidgetThemeData metricWidgetTheme,
@@ -115,6 +122,7 @@ class MetricsThemeData {
     TextPlaceholderThemeData textPlaceholderTheme,
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
     CirclePercentageThemeData circlePercentageTheme,
+    ToastThemeData toastTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricWidgetTheme = metricWidgetTheme ?? _defaultWidgetThemeData,
         buildResultTheme = buildResultTheme ??
@@ -151,7 +159,8 @@ class MetricsThemeData {
         inputPlaceholderTheme =
             inputPlaceholderTheme ?? const ShimmerPlaceholderThemeData(),
         circlePercentageTheme =
-            circlePercentageTheme ?? const CirclePercentageThemeData();
+            circlePercentageTheme ?? const CirclePercentageThemeData(),
+        toastTheme = toastTheme ?? const ToastThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -179,6 +188,7 @@ class MetricsThemeData {
     TextPlaceholderThemeData textPlaceholderTheme,
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
     CirclePercentageThemeData circlePercentageTheme,
+    ToastThemeData toastTheme,
   }) {
     return MetricsThemeData(
       metricWidgetTheme: metricWidgetTheme ?? this.metricWidgetTheme,
@@ -211,6 +221,7 @@ class MetricsThemeData {
           inputPlaceholderTheme ?? this.inputPlaceholderTheme,
       circlePercentageTheme:
           circlePercentageTheme ?? this.circlePercentageTheme,
+      toastTheme: toastTheme ?? this.toastTheme,
     );
   }
 }
