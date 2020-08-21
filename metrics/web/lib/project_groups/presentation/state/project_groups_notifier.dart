@@ -17,7 +17,7 @@ import 'package:metrics/project_groups/domain/usecases/receive_project_group_upd
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_projects_validation_error_message.dart';
-import 'package:metrics/project_groups/presentation/validators/project_group_project_ids_validator.dart';
+import 'package:metrics/project_groups/presentation/validators/project_group_projects_validator.dart';
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
