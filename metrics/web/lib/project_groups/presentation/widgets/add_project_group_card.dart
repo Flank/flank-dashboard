@@ -15,7 +15,10 @@ class AddProjectGroupCard extends StatelessWidget {
   /// Creates a new [AddProjectGroupCard] instance.
   ///
   /// [isEnabled] defaults to `true`.
-  const AddProjectGroupCard({this.isEnabled = true});
+  const AddProjectGroupCard({
+    Key key,
+    this.isEnabled = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

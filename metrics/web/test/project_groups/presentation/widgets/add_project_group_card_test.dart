@@ -22,19 +22,22 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("AddProjectGroupCard", () {
-    const style = TextStyle(color: Colors.red);
-    const backgroundColor = Colors.red;
+    const enabledBackgroundColor = Colors.red;
+    const enabledStyle = TextStyle(color: Colors.red);
+
+    const disabledBackgroundColor = Colors.grey;
+    const disabledStyle = TextStyle(color: Colors.grey);
     const primaryColor = Colors.red;
 
     const metricsTheme = MetricsThemeData(
       addProjectGroupCardTheme: CreateProjectGroupCardThemeData(
         enabledStyle: MetricsButtonStyle(
-          color: Colors.red,
-          labelStyle: style,
+          color: enabledBackgroundColor,
+          labelStyle: enabledStyle,
         ),
         disabledStyle: MetricsButtonStyle(
-          color: Colors.green,
-          labelStyle: style,
+          color: disabledBackgroundColor,
+          labelStyle: disabledStyle,
         ),
       ),
     );
@@ -76,7 +79,7 @@ void main() {
 
         final cardWidget = tester.widget<PaddedCard>(find.byType(PaddedCard));
 
-        expect(cardWidget.backgroundColor, equals(backgroundColor));
+        expect(cardWidget.backgroundColor, equals(enabledBackgroundColor));
       },
     );
 
@@ -108,7 +111,29 @@ void main() {
           find.text(ProjectGroupsStrings.createGroup),
         );
 
-        expect(textWidget.style, equals(style));
+        expect(textWidget.style, equals(enabledStyle));
+      },
+    );
+
+    testWidgets(
+      'applies a disabled metrics theme when the card is disabled',
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(
+            const _AddProjectGroupCardTestbed(
+              theme: metricsTheme,
+              isEnabled: false,
+            ),
+          ),
+        );
+
+        final cardWidget = tester.widget<PaddedCard>(find.byType(PaddedCard));
+        final textWidget = tester.widget<Text>(
+          find.text(ProjectGroupsStrings.createGroup),
+        );
+
+        expect(cardWidget.backgroundColor, equals(disabledBackgroundColor));
+        expect(textWidget.style, equals(disabledStyle));
       },
     );
 
@@ -251,6 +276,9 @@ class _AddProjectGroupCardTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData theme;
 
+  /// Indicates whether this [AddProjectGroupCard] is enabled.
+  final bool isEnabled;
+
   /// Creates the [_AddProjectGroupCardTestbed] with the given [theme]
   /// and the [projectGroupsNotifier].
   ///
@@ -258,6 +286,7 @@ class _AddProjectGroupCardTestbed extends StatelessWidget {
   const _AddProjectGroupCardTestbed({
     Key key,
     this.projectGroupsNotifier,
+    this.isEnabled = true,
     this.theme = const MetricsThemeData(),
   }) : super(key: key);
 
@@ -267,7 +296,9 @@ class _AddProjectGroupCardTestbed extends StatelessWidget {
       projectGroupsNotifier: projectGroupsNotifier,
       child: MetricsThemedTestbed(
         metricsThemeData: theme,
-        body: const AddProjectGroupCard(),
+        body: AddProjectGroupCard(
+          isEnabled: isEnabled,
+        ),
       ),
     );
   }
