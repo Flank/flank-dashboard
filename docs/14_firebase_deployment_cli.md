@@ -1,54 +1,4 @@
-# Metrics firebase deployment
-
-> Summary of the proposed change
-
-Describe the process of deployment of the Metrics application to the Firebase Hosting and deploying the Cloud functions needed to create test data for the application.
-
-
-# References
-
-> Link to supporting documentation, GitHub tickets, etc.
-
-- [Getting started with Firestore](https://cloud.google.com/firestore/docs/client/get-firebase)
-- [Deploying to Firebase Hosting](https://firebaseopensource.com/projects/firebase/emberfire/docs/guide/deploying-to-firebase-hosting.md/)
-- [Getting started with Firebase Cloud Functions](https://firebase.google.com/docs/functions/get-started)
-
-# Motivation
-
-> What problem is this project solving?
-
-The Metrics application instance accessible via a link.
-
-# Goals
-
-> Identify success metrics and measurable goals.
-
-- Web application is deployed to Firebase Hosting and available for everyone via the link.
-- The Cloud Functions required for creating test data are deployed.
-
-# Non-Goals
-
-> Identify what's not in scope.
-
-Deployment to other platforms is out of scope.
-
-# Design
-
-> Explain and diagram the technical design
-
-`Metrics Web Source` -> `Build` -> `Deploy` ->  `Firebase Hosting`
-
-`Metrics Web Cloud Functions` -> `Deploy` -> `Firebase Cloud Functions`
-
-`Metrics Web Security Rules` -> `Deploy` -> `Firestore Security Rules`
-
-`Metrics Web Indexes` -> `Deploy` -> `Firestore Indexes`
-
-> Identify risks and edge cases
-
-# API
-
-> What will the proposed API look like?
+# Metrics firebase deployment with CLI
 
 
 ## Before you begin
@@ -120,11 +70,7 @@ firebase apps:sdkconfig WEB $APP_ID
 
 To configure the Flutter for Web application to use recently created Firestore Database follow the next steps: 
 
-1. Open the [Firebase console](https://console.firebase.google.com/), choose your project 
-and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
-2. Scroll down and find your Firebase Web Application. 
-3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
-4. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 3:
+1. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 9:
     ```
         var firebaseConfig = {
           apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
@@ -145,21 +91,50 @@ It's time to deploy your Flutter application to the Firebase Hosting!
 
 ### Preparing your environment 
 Before deploying metrics application, make sure you have the correct Flutter version installed,
- by running the `flutter --version` command. You should have `v1.15.3` installed. 
-If the version is different you should run the `flutter version 1.15.3` command.
+ by running the  command. You should have `v1.15.3` installed. 
 
-Also, you should enable flutter web support by running the `flutter config --enable-web` command.
+```
+flutter --version
+```
+
+If the version is different you should run the command.
+
+```
+flutter version 1.15.3
+```
+
+Also, you should enable flutter web support by running the command below.
+
+```
+flutter config --enable-web
+```
 
 ### Building and deploying Flutter application
  
 1. Open the terminal and navigate to the metrics project folder.
-2. Run `firebase login` command and follow the instructions to log in to the Firebase CLI with your Google account.
+2. Run  command and follow the instructions to log in to the Firebase CLI with your Google account.
  Use the same account that you used to create your Firebase project (or the one that has access to it).
-3. After you have logged in, run the `firebase use --add` command, and select the project id of the project, created in previous steps.
+
+```
+firebase login
+```
+3. After you have logged in, run the  command below and select the project id of the project, created in previous steps.
+
+```
+firebase use --add
+```
 4. Give an alias to your project.
-5. Run the `flutter build web` command from the root of the metrics project to build the release version of the application.
- It is recommended to add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer.
-6. Run the `firebase deploy --only hosting` command to deploy an application to the Firebase Hosting.
+5. Run the  command from the root of the metrics project to build the release version of the application.
+   It is recommended to add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer.
+```
+flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
+```
+
+6. Run the  command to deploy an application to the Firebase Hosting.
+
+```
+firebase deploy --only hosting
+```
 
 After the deployment process finished, your application will be accessible using the `Hosting URL`, printed to console.
 
@@ -169,17 +144,40 @@ Once you've deployed the metrics application to Firebase Hosting, you should fin
 The `metrics/firebase` folder contains Firestore security rules, Firestore indexes, and a `seedData` Cloud function needed to create a test data for our application. To deploy all of these components, follow the next steps: 
 
 1. Activate the `seedData` function: go to the `metrics/firebase/functions/index.js` file and change the `const inactive = true;` to `const inactive = false;`.
-2. 0pen the terminal, navigate to `metrics/firebase` folder and ensure all dependencies are installed by running: `npm install`.
-3. Run the `firebase deploy` command to deploy all components.
+2. 0pen the terminal, navigate to `metrics/firebase` folder and ensure all dependencies are installed by running: 
+```
+npm install
+```
+
+3. Run the  command to deploy all components.
+
+```
+firebase deploy
+```
 4. Once command execution finished, you'll find the `seedData` function URL, that can be used to trigger function execution in the console. Save this URL somewhere - you will need it a bit later.
 
 Now you can create test projects in your Firestore database: 
 
-1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
-2. Go to the database section on the left panel and tap on the `Start collection` button.
-3. Add collection with `projects` identifier and tap `Next`.
-4. In the document creation window tap on the `Auto-ID` button or enter the project identifier you want.
-5. Add a field named `name` with the `String` type and the name for your project as a value.
+1. List service accounst 
+
+```
+gcloud iam service-accounts list
+```
+3. Generate key if you don't have one already 
+```
+gcloud iam service-accounts keys create ~/key.json --iam-account $SERVICE_ACCOUNT_EMAIL
+```
+4. Set env variable SERVICE_ACCOUNT_KEY_PATH to point to your key
+
+```
+export SERVICE_ACCOUNT_KEY_PATH=~/key.json
+```
+
+2. Run import script
+
+```
+npm run seed
+``` 
 
 So, you've created the test projects in the database. It is time to generate test builds. In the previous steps you've got the `seedData` function URL. Now you can trigger this function to create builds for the project, using this URL. This HTTP function has the following query parameters:
   - buildsCount (required) - the number of builds to generate.
@@ -188,10 +186,14 @@ So, you've created the test projects in the database. It is time to generate tes
       property in the range from the `startDate` to `startDate - 7` days. Defaults to the current date.
   - delay (optional) - is the delay in milliseconds between adding builds to the project.
 
+
 Once you've finished creating test data, you should deactivate the `seedData` cloud function. To deactivate this function, follow the next steps:
 
 1. Go to the `metrics/firebase/functions/index.js` file and change the `inactive` constant back to `true`.
-2. Redeploy this function, using the `firebase deploy --only functions` command.
+2. Redeploy this function, using the command.
+```
+firebase deploy --only functions
+```
 
 ## Creating a new Firebase User
 
@@ -206,40 +208,10 @@ With that in place, you can use your credentials, that you've used to create the
 
 After logging in, you should see a dashboard page with a list of test projects and their metrics if you've created them in the previous steps or no data. The app should provide an ability to switch between light/dark themes.
 
-# Dependencies
+## Delete
 
-> What is the project blocked on?
+to delete project run:
 
-No blockers.
-
-> What will be impacted by the project?
-
-All the deployment process for a flutter web application(s) within the Metrics project will be impacted.
-
-# Testing
-
-> How will the project be tested?
-
-This project will be tested manually by opening an application using the obtained link.
-
-# Alternatives Considered
-
-> Summarize alternative designs (pros & cons)
-
-No alternatives considered.
-
-# Timeline
-
-> Document milestones and deadlines.
-
-DONE:
-
-- Deploy Metrics application to Firebase Hosting.
-- Deploy the Cloud Function for creating test data.
-- Deploy Firestore Security Rules & Indexes.
-
-# Results
-
-> What was the outcome of the project?
-
-The Metrics application and the Cloud Function for creating test data are deployed and available via the links.
+```
+gcloud projects delete $PROJECT_ID
+```
