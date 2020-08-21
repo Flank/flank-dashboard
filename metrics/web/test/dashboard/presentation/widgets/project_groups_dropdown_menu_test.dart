@@ -293,7 +293,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the metrics input loading placeholder if the project group dropdown items are null",
+      "displays the metrics input loading placeholder if project group dropdown items are null",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -308,7 +308,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the metrics input loading placeholder if the project group dropdown items are empty",
+      "displays the metrics input loading placeholder if project group dropdown items are empty",
       (tester) async {
         final metricsNotifier = ProjectMetricsNotifierMock();
         when(metricsNotifier.projectGroupDropdownItems).thenReturn([]);

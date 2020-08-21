@@ -39,9 +39,9 @@ class _MetricsInputPlaceholderTestbed extends StatelessWidget {
   /// The [MetricsThemeData] used in tests.
   final MetricsThemeData theme;
 
-  /// Creates the [_MetricsInputPlaceholderTestbed].
+  /// Creates the metrics input placeholder testbed.
   ///
-  /// The [theme] defaults to [MetricsThemeData].
+  /// The [theme] defaults to an empty [MetricsThemeData] instance.
   const _MetricsInputPlaceholderTestbed({
     Key key,
     this.theme = const MetricsThemeData(),
