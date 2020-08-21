@@ -23,7 +23,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the shimmer color from the metrics theme to the shimmer animation",
+      "applies the shimmer color from the metrics theme",
       (tester) async {
         await tester.pumpWidget(
           const _MetricsTableHeaderLoadingPlaceholderTestbed(
@@ -40,7 +40,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the background color from the metrics theme to the shimmer animation",
+      "applies the background color from the metrics theme",
       (tester) async {
         await tester.pumpWidget(
           const _MetricsTableHeaderLoadingPlaceholderTestbed(

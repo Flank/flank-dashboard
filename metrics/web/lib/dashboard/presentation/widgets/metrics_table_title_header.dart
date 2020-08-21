@@ -3,7 +3,7 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 
-/// A widget that displays a metrics table header with metrics titles.
+/// A widget that displays a metrics table header with titles of the metrics.
 class MetricsTableTitleHeader extends StatelessWidget {
   /// Creates a new instance of the [MetricsTableTitleHeader].
   const MetricsTableTitleHeader({

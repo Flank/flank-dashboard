@@ -3,7 +3,7 @@ import 'package:metrics/base/presentation/widgets/shimmer_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
 /// A widget that displays a placeholder for the metrics table header
-/// with a shimmer effect.
+/// with a shimmer effect displayed while the metrics are loading.
 class MetricsTableHeaderLoadingPlaceholder extends StatelessWidget {
   /// Creates a new instance of the [MetricsTableHeaderLoadingPlaceholder].
   const MetricsTableHeaderLoadingPlaceholder({
