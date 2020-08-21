@@ -30,6 +30,6 @@ class ProjectGroupDialogThemeData extends DialogThemeData {
           backgroundColor: backgroundColor,
           closeIconColor: closeIconColor,
           titleTextStyle: titleTextStyle,
-          errorStyle: errorStyle,
+          errorTextStyle: errorStyle,
         );
 }

@@ -142,7 +142,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                           )
                         : Text(
                             projectsErrorMessage,
-                            style: dialogTheme.errorStyle,
+                            style: dialogTheme.errorTextStyle,
                           ),
                   );
                 },

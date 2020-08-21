@@ -18,14 +18,14 @@ class DialogThemeData {
   final TextStyle titleTextStyle;
 
   /// A [TextStyle] of the dialog error message.
-  final TextStyle errorStyle;
+  final TextStyle errorTextStyle;
 
   const DialogThemeData({
     Color primaryColor,
     Color accentColor,
     Color backgroundColor,
     Color closeIconColor,
-    this.errorStyle,
+    this.errorTextStyle,
     this.titleTextStyle,
   })  : primaryColor = primaryColor ?? Colors.blue,
         accentColor = accentColor ?? Colors.red,
