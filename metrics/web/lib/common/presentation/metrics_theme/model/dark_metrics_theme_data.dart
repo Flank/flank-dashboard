@@ -340,5 +340,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontSize: 14.0,
             ),
           ),
+          inputPlaceholderTheme: const ShimmerPlaceholderThemeData(
+            backgroundColor: inputColor,
+          ),
         );
 }

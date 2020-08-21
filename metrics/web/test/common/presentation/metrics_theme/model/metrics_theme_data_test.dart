@@ -12,6 +12,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_p
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
@@ -51,6 +52,7 @@ void main() {
         expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.toggleTheme, isNotNull);
         expect(themeData.textPlaceholderTheme, isNotNull);
+        expect(themeData.inputPlaceholderTheme, isNotNull);
       },
     );
 
@@ -78,6 +80,7 @@ void main() {
           toggleTheme: null,
           userMenuTheme: null,
           textPlaceholderTheme: null,
+          inputPlaceholderTheme: null,
         );
 
         expect(themeData.metricCirclePercentageThemeData, isNotNull);
@@ -100,6 +103,7 @@ void main() {
         expect(themeData.toggleTheme, isNotNull);
         expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.textPlaceholderTheme, isNotNull);
+        expect(themeData.inputPlaceholderTheme, isNotNull);
       },
     );
 
@@ -201,6 +205,10 @@ void main() {
           textStyle: TextStyle(color: Colors.red),
         );
 
+        const inputPlaceholderTheme = ShimmerPlaceholderThemeData(
+          backgroundColor: Colors.red,
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -224,6 +232,7 @@ void main() {
           toggleTheme: toggleTheme,
           userMenuTheme: userMenuTheme,
           textPlaceholderTheme: textPlaceholderTheme,
+          inputPlaceholderTheme: inputPlaceholderTheme,
         );
 
         expect(
@@ -270,6 +279,10 @@ void main() {
         expect(copiedTheme.toggleTheme, equals(toggleTheme));
         expect(copiedTheme.userMenuTheme, equals(userMenuTheme));
         expect(copiedTheme.textPlaceholderTheme, equals(textPlaceholderTheme));
+        expect(
+          copiedTheme.inputPlaceholderTheme,
+          equals(inputPlaceholderTheme),
+        );
       },
     );
 
@@ -348,6 +361,10 @@ void main() {
         expect(
           themeData.textPlaceholderTheme,
           equals(copiedTheme.textPlaceholderTheme),
+        );
+        expect(
+          themeData.inputPlaceholderTheme,
+          equals(copiedTheme.inputPlaceholderTheme),
         );
       },
     );
