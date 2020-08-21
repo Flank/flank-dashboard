@@ -22,6 +22,9 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   bool get isLoggedIn => _isLoggedIn;
 
   @override
+  bool get isLoading => false;
+
+  @override
   void subscribeToAuthenticationUpdates() {
     _isLoggedIn = true;
     notifyListeners();

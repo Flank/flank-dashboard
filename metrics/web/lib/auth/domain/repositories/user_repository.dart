@@ -15,7 +15,8 @@ abstract class UserRepository {
   /// Throws an [AuthenticationException] if sign in is failed.
   Future<void> signInWithEmailAndPassword(String email, String password);
 
-  /// Provides an ability to sign in a user with Google.
+  /// Provides an ability to sign in a user to the app
+  /// using Google authentication.
   ///
   /// Throws an [AuthenticationException] if sign in is failed.
   Future<void> signInWithGoogle();
