@@ -146,6 +146,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
+            errorStyle: TextStyle(color: Colors.red),
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: _inactiveColor,

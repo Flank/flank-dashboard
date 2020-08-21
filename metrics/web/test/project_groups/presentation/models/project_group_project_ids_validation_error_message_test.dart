@@ -1,29 +1,29 @@
-import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_project_ids_validation_error_code.dart';
-import 'package:metrics/project_groups/domain/value_objects/project_group_project_ids.dart';
-import 'package:metrics/project_groups/presentation/models/project_group_project_ids_validation_error_message.dart';
+import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_projects_validation_error_code.dart';
+import 'package:metrics/project_groups/domain/value_objects/project_group_projects.dart';
+import 'package:metrics/project_groups/presentation/models/project_group_projects_validation_error_message.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("ProjectGroupProjectIdsValidationErrorMessage", () {
+  group("ProjectGroupProjectsValidationErrorMessage", () {
     test(".message returns null if the given code is null", () {
-      const errorMessage = ProjectGroupProjectIdsValidationErrorMessage(null);
+      const errorMessage = ProjectGroupProjectsValidationErrorMessage(null);
 
       expect(errorMessage.message, isNull);
     });
 
     test(
-      ".message returns project group project ids size limit exceeded if the given code is ProjectGroupProjectIdsValidationErrorCode.projectsSelectionLimitExceeded",
+      ".message returns project group project ids size limit exceeded if the given code is ProjectGroupProjectsValidationErrorCode.projectsSelectionLimitExceeded",
       () {
-        const errorMessage = ProjectGroupProjectIdsValidationErrorMessage(
-          ProjectGroupProjectIdsValidationErrorCode
-              .projectsSelectionLimitExceeded,
+        const errorMessage = ProjectGroupProjectsValidationErrorMessage(
+          ProjectGroupProjectsValidationErrorCode
+              .maxProjectsLimitExceeded,
         );
 
         expect(
           errorMessage.message,
           ProjectGroupsStrings.getProjectSelectionError(
-            ProjectGroupProjectIds.projectIdsSelectionSizeLimit,
+            ProjectGroupProjects.maxNumberOfProjects,
           ),
         );
       },

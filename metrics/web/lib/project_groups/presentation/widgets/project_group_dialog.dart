@@ -142,7 +142,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                           )
                         : Text(
                             projectsErrorMessage,
-                            style: const TextStyle(color: Colors.red),
+                            style: dialogTheme.errorStyle,
                           ),
                   );
                 },
