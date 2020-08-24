@@ -3,9 +3,7 @@ name: Metrics Web Application Actions
 on:
   push:
     paths:
-      - metrics/web/lib/**
-      - metrics/web/test/**
-      - metrics/web/test_driver/**
+      - metrics/**
       - .github/workflows/**
 
 jobs:

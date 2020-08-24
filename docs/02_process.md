@@ -85,6 +85,10 @@ Pull requests are code reviewed and approved by someone other than the author be
 * `Squash and merge`
   * If the pull request contains a bunch of work in progress intermediate commits, use the`Squash and merge` button so the PR is collapsed into one logical change.
 
+### Automatic PR merge
+
+We use [Mergify](https://mergify.io) to automatically merge Pull Requests when all GitHub Actions pass. See configuration script [.mergify.yaml](../.mergify.yaml) to know more.
+
 ## Rewrite commits into logical changes
 
 Git commits are organized into logical changes before merging to master.
