@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - metrics/**
-      - .github/workflows/**
+      - .github/**
 
 jobs:
   metrics-actions:
