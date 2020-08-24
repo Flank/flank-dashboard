@@ -117,6 +117,16 @@ and go to the project setting (tap on the setting gear icon near the `Project Ov
 Finally, you have a configured Flutter application that works with your Firebase instance.
 It's time to deploy your Flutter application to the Firebase Hosting!
  
+## Firebase Google Sign-In configuration
+
+To allow users sign-in using Google, please follow the next steps:
+
+1. Open the [Firebase console](https://console.firebase.google.com/), choose your project 
+2. Navigate to `Authentication` -> `Sign-in method`.
+3. Enable `Google`.
+4. Expand `Web SDK Configuration` and copy `Web client ID`, then press `Save`.
+5. Open `web/index.html` and replace `content` of `meta` tag with `name = "google-signin-client_id"` with the value from clipboard.
+
 ## Building and deploying the application to the Firebase Hosting
 
 ### Preparing your environment 
