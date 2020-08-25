@@ -12,8 +12,6 @@ import '../../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("Toast", () {
     const message = 'test';
-    const longMessage =
-        "Some very long message to test that the created metrics toast does not overflows and displays a full message even if it is a very long one";
     const backgroundColor = Colors.red;
     const textStyle = TextStyle(color: Colors.black);
 
@@ -79,7 +77,8 @@ void main() {
       (tester) async {
         await tester.pumpWidget(const _ToastTestbed(
           metricsThemeData: metricsThemeData,
-          message: longMessage,
+          message:
+              "Some very long message to test that the created metrics toast does not overflows and displays a full message even if it is a very long one",
         ));
 
         expect(tester.takeException(), isNull);
@@ -93,7 +92,7 @@ class _ToastTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData metricsThemeData;
 
-  /// A message for the [Toast].
+  /// A message to display in the [Toast].
   final String message;
 
   /// Creates an instance of the toast testbed.

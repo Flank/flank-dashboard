@@ -22,7 +22,6 @@ abstract class Toast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final toastTheme = MetricsTheme.of(context).toastTheme;
-
     final style = getStyle(toastTheme.attentionLevel);
 
     return FittedBox(
