@@ -1,10 +1,9 @@
 name: Metrics Web Application Actions
 
 on:
-  push:
-    paths:
-      - metrics/**
-      - .github/**
+  pull_request:
+    types: [opened, edited, synchronize]
+
 
 jobs:
   metrics-actions:
