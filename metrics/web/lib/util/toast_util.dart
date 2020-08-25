@@ -4,8 +4,8 @@ import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/toast/widgets/toast.dart';
 
 class ToastUtil {
-  static void showToast(Toast toast, BuildContext context) {
-    showToastWidget(
+  static ToastFuture showToast(Toast toast, BuildContext context) {
+    return showToastWidget(
       toast,
       context: context,
       duration: DurationConstants.toast,
