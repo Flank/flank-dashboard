@@ -9,17 +9,19 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("MetricsInputPlaceholder", () {
+    const backgroundColor = Colors.black;
+    const shimmerColor = Colors.grey;
+
+    const theme = MetricsThemeData(
+      inputPlaceholderTheme: ShimmerPlaceholderThemeData(
+        backgroundColor: backgroundColor,
+        shimmerColor: shimmerColor,
+      ),
+    );
+
     testWidgets(
       "applies a background color from the metrics theme to a color of the shimmer container",
       (tester) async {
-        const backgroundColor = Colors.black;
-
-        const theme = MetricsThemeData(
-          inputPlaceholderTheme: ShimmerPlaceholderThemeData(
-            backgroundColor: backgroundColor,
-          ),
-        );
-
         await tester.pumpWidget(const _MetricsInputPlaceholderTestbed(
           theme: theme,
         ));
@@ -29,6 +31,21 @@ void main() {
         );
 
         expect(shimmerContainer.color, equals(backgroundColor));
+      },
+    );
+
+    testWidgets(
+      "applies a shimmer color from the metrics theme to a color of the shimmer container",
+      (tester) async {
+        await tester.pumpWidget(const _MetricsInputPlaceholderTestbed(
+          theme: theme,
+        ));
+
+        final shimmerContainer = tester.widget<ShimmerContainer>(
+          find.byType(ShimmerContainer),
+        );
+
+        expect(shimmerContainer.shimmerColor, equals(shimmerColor));
       },
     );
   });
