@@ -42,6 +42,25 @@ void main() {
         expect(find.byType(ProjectSearchInput), findsOneWidget);
       },
     );
+
+    testWidgets(
+      "filters the projects by the given name on project search input value changes",
+      (tester) async {
+        const searchText = "search";
+        final notifier = ProjectMetricsNotifierMock();
+        when(notifier.isMetricsLoading).thenReturn(false);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsSearchInputTestbed(
+            metricsNotifier: notifier,
+          ));
+        });
+
+        await tester.enterText(find.byType(ProjectSearchInput), searchText);
+
+        verify(notifier.filterByProjectName(searchText)).called(equals(1));
+      },
+    );
   });
 }
 
