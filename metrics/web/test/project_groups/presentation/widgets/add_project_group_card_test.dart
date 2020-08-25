@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
-import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
@@ -22,21 +23,31 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("AddProjectGroupCard", () {
-    const enabledBackgroundColor = Colors.red;
-    const enabledLabelStyle = TextStyle(color: Colors.red);
+    const positiveBackgroundColor = Colors.red;
+    const positiveLabelStyle = TextStyle(color: Colors.red);
+    const positiveIconColor = Colors.red;
+    const positiveHoverColor = Colors.red;
 
-    const disabledBackgroundColor = Colors.grey;
-    const disabledLabelStyle = TextStyle(color: Colors.grey);
+    const inactiveBackgroundColor = Colors.grey;
+    const inactiveLabelStyle = TextStyle(color: Colors.grey);
+    const inactiveIconColor = Colors.grey;
+    const inactiveHoverColor = Colors.grey;
 
     const metricsTheme = MetricsThemeData(
       addProjectGroupCardTheme: AddProjectGroupCardThemeData(
-        enabledStyle: MetricsButtonStyle(
-          color: enabledBackgroundColor,
-          labelStyle: enabledLabelStyle,
-        ),
-        disabledStyle: MetricsButtonStyle(
-          color: disabledBackgroundColor,
-          labelStyle: disabledLabelStyle,
+        attentionLevel: AddProjectGroupCardAttentionLevel(
+          positiveStyle: AddProjectGroupCardStyle(
+            backgroundColor: positiveBackgroundColor,
+            iconColor: positiveIconColor,
+            hoverColor: positiveHoverColor,
+            labelStyle: positiveLabelStyle,
+          ),
+          inactiveStyle: AddProjectGroupCardStyle(
+            backgroundColor: inactiveBackgroundColor,
+            iconColor: inactiveIconColor,
+            hoverColor: inactiveHoverColor,
+            labelStyle: inactiveLabelStyle,
+          ),
         ),
       ),
     );
@@ -78,7 +89,7 @@ void main() {
 
         final cardWidget = tester.widget<PaddedCard>(find.byType(PaddedCard));
 
-        expect(cardWidget.backgroundColor, equals(enabledBackgroundColor));
+        expect(cardWidget.backgroundColor, equals(positiveBackgroundColor));
       },
     );
 
@@ -95,7 +106,7 @@ void main() {
           find.text(ProjectGroupsStrings.createGroup),
         );
 
-        expect(textWidget.style, equals(enabledLabelStyle));
+        expect(textWidget.style, equals(positiveLabelStyle));
       },
     );
 
@@ -115,7 +126,7 @@ void main() {
         );
         final cardWidget = tester.widget<PaddedCard>(find.byType(PaddedCard));
 
-        expect(cardWidget.backgroundColor, equals(disabledBackgroundColor));
+        expect(cardWidget.backgroundColor, equals(inactiveBackgroundColor));
       },
     );
 
@@ -137,7 +148,7 @@ void main() {
           find.text(ProjectGroupsStrings.createGroup),
         );
 
-        expect(textWidget.style, equals(disabledLabelStyle));
+        expect(textWidget.style, equals(inactiveLabelStyle));
       },
     );
 

@@ -5,7 +5,9 @@ import 'package:metrics/common/presentation/button/theme/theme_data/metrics_butt
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
@@ -49,6 +51,8 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveToggleColor = Color(0xFF88889B);
   static const Color _inactiveToggleHoverColor = Color(0xFF5D5D6A);
   static const Color _textPlaceholderColor = Color(0xFF51585c);
+  static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
+  static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
 
   /// A [TextStyle] of the dialog title.
   static const TextStyle _dialogTitleTextStyle = TextStyle(
@@ -94,22 +98,27 @@ class LightMetricsThemeData extends MetricsThemeData {
             ),
           ),
           addProjectGroupCardTheme: const AddProjectGroupCardThemeData(
-            enabledStyle: MetricsButtonStyle(
-              color: ColorConfig.primaryTranslucentColor,
-              labelStyle: TextStyle(
-                color: ColorConfig.primaryColor,
-                height: 1.5,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w500,
+            attentionLevel: AddProjectGroupCardAttentionLevel(
+              positiveStyle: AddProjectGroupCardStyle(
+                backgroundColor: _addProjectGroupCardBackgroundColor,
+                iconColor: ColorConfig.primaryColor,
+                hoverColor: _addProjectGroupCardHoverColor,
+                labelStyle: TextStyle(
+                  color: ColorConfig.primaryColor,
+                  height: 1.5,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            disabledStyle: MetricsButtonStyle(
-              color: _inactiveBackgroundColor,
-              labelStyle: TextStyle(
-                color: scaffoldColor,
-                height: 1.5,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w500,
+              inactiveStyle: AddProjectGroupCardStyle(
+                backgroundColor: _inactiveBackgroundColor,
+                iconColor: scaffoldColor,
+                labelStyle: TextStyle(
+                  color: scaffoldColor,
+                  height: 1.5,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),

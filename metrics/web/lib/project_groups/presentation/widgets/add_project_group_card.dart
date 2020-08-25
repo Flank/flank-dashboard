@@ -18,8 +18,14 @@ class AddProjectGroupCard extends StatelessWidget {
       selector: (_, notifier) => notifier.hasConfiguredProjects,
       builder: (context, hasConfiguredProjects, _) {
         final theme = hasConfiguredProjects
-            ? MetricsTheme.of(context).addProjectGroupCardTheme.enabledStyle
-            : MetricsTheme.of(context).addProjectGroupCardTheme.disabledStyle;
+            ? MetricsTheme.of(context)
+                .addProjectGroupCardTheme
+                .attentionLevel
+                .positiveStyle
+            : MetricsTheme.of(context)
+                .addProjectGroupCardTheme
+                .attentionLevel
+                .inactiveStyle;
 
         final asset =
             hasConfiguredProjects ? 'icons/add.svg' : 'icons/disabled-add.svg';
@@ -28,7 +34,7 @@ class AddProjectGroupCard extends StatelessWidget {
           width: 270.0,
           height: 156.0,
           child: PaddedCard(
-            backgroundColor: theme.color,
+            backgroundColor: theme.backgroundColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
             ),
@@ -44,7 +50,7 @@ class AddProjectGroupCard extends StatelessWidget {
                       asset,
                       width: 32.0,
                       height: 32.0,
-                      color: Colors.red,
+                      color: theme.iconColor,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
