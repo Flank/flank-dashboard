@@ -27,56 +27,68 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          MetricsTextFormField(
-            key: const Key(AuthStrings.email),
-            controller: _emailController,
-            validator: EmailValidator.validate,
-            hint: AuthStrings.email,
-            keyboardType: TextInputType.emailAddress,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: MetricsTextFormField(
-              key: const Key(AuthStrings.password),
-              controller: _passwordController,
-              validator: PasswordValidator.validate,
-              obscureText: true,
-              hint: AuthStrings.password,
-            ),
-          ),
-          Selector<AuthNotifier, String>(
-            selector: (_, state) => state.authErrorMessage,
-            builder: (_, authErrorMessage, __) {
-              if (authErrorMessage == null) return Container();
-
-              return Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Text(
-                  authErrorMessage,
-                  style: const TextStyle(color: Colors.red),
+    return Consumer<AuthNotifier>(
+      builder: (_, notifier, __) {
+        return Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              MetricsTextFormField(
+                key: const Key(AuthStrings.email),
+                controller: _emailController,
+                validator: EmailValidator.validate,
+                hint: AuthStrings.email,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: MetricsTextFormField(
+                  key: const Key(AuthStrings.password),
+                  controller: _passwordController,
+                  validator: PasswordValidator.validate,
+                  obscureText: true,
+                  hint: AuthStrings.password,
                 ),
-              );
-            },
+              ),
+              Builder(
+                builder: (context) {
+                  if (notifier.isLoading) {
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: LinearProgressIndicator(),
+                    );
+                  }
+
+                  if (notifier.authErrorMessage != null) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        notifier.authErrorMessage,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    );
+                  }
+
+                  return Container();
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0, top: 72.0),
+                child: MetricsPositiveButton(
+                  key: const Key(AuthStrings.signIn),
+                  onPressed: notifier.isLoading ? null : () => _submit(),
+                  label: AuthStrings.signIn,
+                ),
+              ),
+              SignInOptionButton(
+                strategy: GoogleSignInOptionStrategy(),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0, top: 72.0),
-            child: MetricsPositiveButton(
-              key: const Key(AuthStrings.signIn),
-              onPressed: () => _submit(),
-              label: AuthStrings.signIn,
-            ),
-          ),
-          SignInOptionButton(
-            strategy: GoogleSignInOptionStrategy(),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

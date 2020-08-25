@@ -15,7 +15,7 @@ class CommonStrings {
   static const String delete = 'Delete';
   static const String cancel = 'Cancel';
   static const String unknownErrorMessage =
-      'An unknown error occurred, please try again';
+      'An unknown error occurred, please try again.';
 
   static String duration(Duration duration) => prettyDuration(
         duration,

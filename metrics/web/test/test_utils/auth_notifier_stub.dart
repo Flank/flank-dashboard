@@ -15,10 +15,19 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   bool get isLoggedIn => _isLoggedIn;
 
   @override
+  bool get isLoading => false;
+
+  @override
   void subscribeToAuthenticationUpdates() {}
 
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
+    _isLoggedIn = true;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> signInWithGoogle() async {
     _isLoggedIn = true;
     notifyListeners();
   }

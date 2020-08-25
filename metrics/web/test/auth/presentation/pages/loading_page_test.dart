@@ -47,6 +47,7 @@ void main() {
             .pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
 
         when(authNotifier.isLoggedIn).thenReturn(false);
+        when(authNotifier.isLoading).thenReturn(false);
         authNotifier.notifyListeners();
 
         await mockNetworkImagesFor(() {
@@ -67,6 +68,7 @@ void main() {
         );
 
         when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.isLoading).thenReturn(false);
         authNotifier.notifyListeners();
 
         await mockNetworkImagesFor(() {

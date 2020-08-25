@@ -27,6 +27,7 @@ void main() {
     const testPassword = 'testPassword';
 
     final signInUseCase = SignInUseCaseMock();
+    final googleSignInUseCase = GoogleSignInUseCaseMock();
     final signOutUseCase = SignOutUseCaseMock();
     final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
 
@@ -36,6 +37,7 @@ void main() {
       authNotifier = AuthNotifier(
         receiveAuthUpdates,
         signInUseCase,
+        googleSignInUseCase,
         signOutUseCase,
       );
     });
@@ -97,10 +99,11 @@ void main() {
     );
 
     testWidgets(
-      "uses the AuthNotifier to sign in a user",
+      "uses the AuthNotifier to sign in a user with login and password",
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
 
+        when(authNotifier.isLoading).thenReturn(false);
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _AuthFormTestbed(authNotifier: authNotifier),
@@ -117,7 +120,7 @@ void main() {
     );
 
     testWidgets(
-      "shows an auth error text if the login process went wrong",
+      "shows an auth error text if the sign in process went wrong",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_AuthFormTestbed(
@@ -125,42 +128,86 @@ void main() {
           ));
         });
 
-        await tester.enterText(emailInputFinder, 'test@email.com');
-        await tester.enterText(passwordInputFinder, 'testPassword');
+        await tester.enterText(emailInputFinder, testEmail);
+        await tester.enterText(passwordInputFinder, testPassword);
         await tester.tap(submitButtonFinder);
         await tester.pumpAndSettle();
 
-        expect(
-          find.text(SignInErrorAuthNotifierStub.errorMessage),
-          findsOneWidget,
-        );
+        final finder = find.text(SignInErrorAuthNotifierStub.errorMessage);
+
+        expect(finder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the google sign in option button",
+      "shows a progress indicator if the sign in process is in progress",
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
+
+        when(authNotifier.authErrorMessage).thenReturn(null);
+        when(authNotifier.isLoading).thenReturn(true);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_AuthFormTestbed(
+            authNotifier: authNotifier,
+          ));
+        });
+
+        final finder = find.byType(LinearProgressIndicator);
+
+        expect(finder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "disables the submit button if the sign in process is in progress",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+
+        when(authNotifier.authErrorMessage).thenReturn(null);
+        when(authNotifier.isLoading).thenReturn(true);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_AuthFormTestbed(
+            authNotifier: authNotifier,
+          ));
+        });
+
+        final button = tester.widget<RaisedButton>(
+          find.descendant(
+            of: submitButtonFinder,
+            matching: find.byType(RaisedButton),
+          ),
+        );
+
+        expect(button.enabled, isFalse);
+      },
+    );
+
+    testWidgets(
+      "displays the google sign in option button with google sign in strategy",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+
+        when(authNotifier.isLoading).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _AuthFormTestbed(authNotifier: authNotifier),
           );
         });
-
-        final finder = find.byWidgetPredicate(
-          (widget) =>
-              widget is SignInOptionButton &&
-              widget.strategy is GoogleSignInOptionStrategy,
+        final googleSignInButton = tester.widget<SignInOptionButton>(
+          find.widgetWithText(SignInOptionButton, AuthStrings.signInWithGoogle),
         );
 
-        expect(finder, findsOneWidget);
+        expect(googleSignInButton, isNotNull);
+        expect(googleSignInButton.strategy, isA<GoogleSignInOptionStrategy>());
       },
     );
   });
 }
 
-/// A testbed widget, used to test the [AuthForm] widget.
+/// A testbed widget used to test the [AuthForm] widget.
 class _AuthFormTestbed extends StatelessWidget {
   /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
@@ -193,6 +240,9 @@ class SignInErrorAuthNotifierStub extends ChangeNotifier
   bool get isLoggedIn => false;
 
   @override
+  bool get isLoading => false;
+
+  @override
   String get authErrorMessage => _authExceptionDescription;
 
   /// Contains text description of any authentication exception that may occur.
@@ -200,6 +250,12 @@ class SignInErrorAuthNotifierStub extends ChangeNotifier
 
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
+    _authExceptionDescription = errorMessage;
+    notifyListeners();
+  }
+
+  @override
+  Future<void> signInWithGoogle() async {
     _authExceptionDescription = errorMessage;
     notifyListeners();
   }

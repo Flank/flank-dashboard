@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
+import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
@@ -20,6 +21,9 @@ class AuthNotifier extends ChangeNotifier {
   /// Used to sign in a user.
   final SignInUseCase _signInUseCase;
 
+  /// Used to sign in a user via Google.
+  final GoogleSignInUseCase _googleSignInUseCase;
+
   /// Used to sign out a user.
   final SignOutUseCase _signOutUseCase;
 
@@ -30,19 +34,30 @@ class AuthNotifier extends ChangeNotifier {
   /// from authentication state updates.
   StreamSubscription _authUpdatesSubscription;
 
+  /// Stores the loading status for the sign-in process.
+  bool _isLoading = false;
+
   /// Contains a text description of any authentication exception that may occur.
   AuthErrorMessage _authErrorMessage;
 
+  /// Creates a new instance of auth notifier.
+  ///
+  /// All the parameters must not be null.
   AuthNotifier(
     this._receiveAuthUpdates,
     this._signInUseCase,
+    this._googleSignInUseCase,
     this._signOutUseCase,
   )   : assert(_receiveAuthUpdates != null),
         assert(_signInUseCase != null),
+        assert(_googleSignInUseCase != null),
         assert(_signOutUseCase != null);
 
   /// Determines if a user is authenticated.
   bool get isLoggedIn => _isLoggedIn;
+
+  /// Indicates whether the sign-in process is in progress or not.
+  bool get isLoading => _isLoading;
 
   /// Returns an [AuthErrorMessage], containing an authentication error message.
   String get authErrorMessage => _authErrorMessage?.message;
@@ -57,9 +72,14 @@ class AuthNotifier extends ChangeNotifier {
     });
   }
 
-  /// Signs in user to the app using an [email] and a [password].
+  /// Signs in a user to the app using an [email] and a [password].
+  ///
+  /// Does nothing if the [isLoading] status is `true`.
   Future<void> signInWithEmailAndPassword(String email, String password) async {
+    if (_isLoading) return;
+
     _authErrorMessage = null;
+    _isLoading = true;
     notifyListeners();
 
     try {
@@ -69,6 +89,30 @@ class AuthNotifier extends ChangeNotifier {
       ));
     } on AuthenticationException catch (exception) {
       _authErrorMessage = AuthErrorMessage(exception.code);
+      notifyListeners();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  /// Signs in a user to the app using Google authentication.
+  ///
+  /// Does nothing if the [isLoading] status is `true`.
+  Future<void> signInWithGoogle() async {
+    if (_isLoading) return;
+
+    _authErrorMessage = null;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await _googleSignInUseCase();
+    } on AuthenticationException catch (exception) {
+      _authErrorMessage = AuthErrorMessage(exception.code);
+      notifyListeners();
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }
