@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
+import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_loading_header.dart';
+import 'package:metrics/dashboard/presentation/widgets/metrics_table_title_header.dart';
+import 'package:provider/provider.dart';
 
-/// Widget that displays the header of the metrics table.
+/// A widget that displays the header of the metrics table.
+///
+/// Displays the [MetricsTableLoadingHeader] while metrics are loading,
+/// and [MetricsTableTitleHeader] when metrics are loaded.
 class MetricsTableHeader extends StatelessWidget {
+  /// Creates a new instance of the [MetricsTableHeader].
   const MetricsTableHeader({
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final metricsTableHeaderTheme = MetricsTheme.of(context)
-        .projectMetricsTableTheme
-        .metricsTableHeaderTheme;
-    final textStyle = DefaultTextStyle.of(context)
-        .style
-        .merge(metricsTableHeaderTheme.textStyle);
+    return Selector<ProjectMetricsNotifier, bool>(
+      selector: (_, state) => state.isMetricsLoading,
+      builder: (_, isLoading, __) {
+        if (isLoading) return const MetricsTableLoadingHeader();
 
-    return DefaultTextStyle(
-      textAlign: TextAlign.center,
-      style: textStyle,
-      child: MetricsTableRow(
-        status: Container(),
-        name: Container(),
-        buildResults: const Text(DashboardStrings.lastBuilds),
-        performance: const Text(DashboardStrings.performance),
-        buildNumber: const Text(DashboardStrings.builds),
-        stability: const Text(DashboardStrings.stability),
-        coverage: const Text(DashboardStrings.coverage),
-      ),
+        return const MetricsTableTitleHeader();
+      },
     );
   }
 }

@@ -22,6 +22,17 @@ void main() {
     );
 
     test(
+      "creates an instance with the default metrics table header placeholder theme if the given parameter is null",
+      () {
+        final themeData = ProjectMetricsTableThemeData(
+          metricsTableHeaderPlaceholderTheme: null,
+        );
+
+        expect(themeData.metricsTableHeaderPlaceholderTheme, isNotNull);
+      },
+    );
+
+    test(
       "creates an instance with the default project metrics tile theme if the given parameter is null",
       () {
         final themeData = ProjectMetricsTableThemeData(
@@ -48,6 +59,10 @@ void main() {
         textStyle: TextStyle(color: Colors.red),
       );
 
+      final headerPlaceholderTheme = ShimmerPlaceholderThemeData(
+        backgroundColor: Colors.red,
+      );
+
       final tileTheme = ProjectMetricsTileThemeData(
         textStyle: TextStyle(color: Colors.blue),
         borderColor: Colors.black,
@@ -60,11 +75,16 @@ void main() {
 
       final themeData = ProjectMetricsTableThemeData(
         metricsTableHeaderTheme: headerTheme,
+        metricsTableHeaderPlaceholderTheme: headerPlaceholderTheme,
         projectMetricsTileTheme: tileTheme,
         projectMetricsTilePlaceholderTheme: tilePlaceholderTheme,
       );
 
       expect(themeData.metricsTableHeaderTheme, equals(headerTheme));
+      expect(
+        themeData.metricsTableHeaderPlaceholderTheme,
+        equals(headerPlaceholderTheme),
+      );
       expect(themeData.projectMetricsTileTheme, equals(tileTheme));
       expect(
         themeData.projectMetricsTilePlaceholderTheme,

@@ -3,6 +3,8 @@ name: Metrics Web Application Actions
 on:
   pull_request:
     types: [opened, edited, synchronize]
+  push:
+    branches: master
 
 
 jobs:
