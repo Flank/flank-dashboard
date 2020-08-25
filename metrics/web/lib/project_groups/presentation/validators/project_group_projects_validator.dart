@@ -9,7 +9,7 @@ class ProjectGroupProjectsValidator {
   /// Returns an error message if the given [value]
   /// is not a valid project group project ids.
   /// Otherwise returns `null`.
-  static ProjectGroupProjectsValidationErrorMessage validate(List<String> value) {
+  static String validate(List<String> value) {
     ProjectGroupProjectsValidationErrorMessage errorMessage;
 
     try {
@@ -20,6 +20,6 @@ class ProjectGroupProjectsValidator {
       );
     }
 
-    return errorMessage;
+    return errorMessage?.message;
   }
 }

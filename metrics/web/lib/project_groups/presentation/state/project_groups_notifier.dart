@@ -16,8 +16,6 @@ import 'package:metrics/project_groups/domain/usecases/parameters/update_project
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
-import 'package:metrics/project_groups/presentation/models/project_group_projects_validation_error_message.dart';
-import 'package:metrics/project_groups/presentation/validators/project_group_projects_validator.dart';
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
@@ -48,10 +46,6 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Holds the error message that occurred during updating projects data.
   String _projectsErrorMessage;
-
-  /// Holds the error message that occurred during
-  /// selecting projects on the project group.
-  ProjectGroupProjectsValidationErrorMessage _projectSelectionErrorMessage;
 
   /// Holds the [ProjectGroupPersistentStoreErrorMessage] that occurred
   /// during loading project groups data.
@@ -91,10 +85,6 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Provides an error description that occurred during loading project groups data.
   String get projectGroupsErrorMessage => _projectGroupsErrorMessage?.message;
-
-  /// Provides an error description that occurred during selecting
-  /// projects on the project group.
-  String get projectSelectionErrorMessage => _projectSelectionErrorMessage?.message;
 
   /// Provides an error description that occurred during loading projects data.
   String get projectsErrorMessage => _projectsErrorMessage;
@@ -183,8 +173,6 @@ class ProjectGroupsNotifier extends ChangeNotifier {
 
   /// Initiates the [ProjectGroupDialogViewModel] using the given [projectGroupId].
   void initProjectGroupDialogViewModel([String projectGroupId]) {
-    _projectSelectionErrorMessage = null;
-
     final projectGroup = _projectGroupModels.firstWhere(
       (projectGroup) => projectGroup.id == projectGroupId,
       orElse: () => null,
@@ -238,10 +226,6 @@ class ProjectGroupsNotifier extends ChangeNotifier {
     } else {
       projectIds.add(projectId);
     }
-
-    _projectSelectionErrorMessage = ProjectGroupProjectsValidator.validate(
-      projectIds,
-    );
 
     final projectIndex = _projectCheckboxViewModels
         .indexWhere((project) => project.id == projectId);

@@ -15,7 +15,6 @@ import 'package:metrics/project_groups/domain/usecases/parameters/delete_project
 import 'package:metrics/project_groups/domain/usecases/parameters/update_project_group_param.dart';
 import 'package:metrics/project_groups/domain/usecases/receive_project_group_updates.dart';
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
-import 'package:metrics/project_groups/domain/value_objects/project_group_projects.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_checkbox_view_model.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_card_view_model.dart';
@@ -290,18 +289,6 @@ void main() {
     );
 
     test(
-      ".initProjectGroupDialogViewModel() sets the project selection error message to null",
-      () {
-        projectGroupsNotifier.initProjectGroupDialogViewModel(projectGroup.id);
-
-        expect(
-          projectGroupsNotifier.projectSelectionErrorMessage,
-          isNull,
-        );
-      },
-    );
-
-    test(
       ".projectGroupDialogViewModel can't contain a project id if there is no project with such id",
       () async {
         const invalidGroupId = '1';
@@ -489,56 +476,6 @@ void main() {
           projectGroupsNotifier.projectGroupDialogViewModel.selectedProjectIds,
           isNot(contains(project.id)),
         );
-      },
-    );
-
-    test(
-      ".toggleProjectCheckedStatus() provides the project selection error message if the project ids limit exceeds",
-      () {
-        final projects = List.generate(
-          ProjectGroupProjects.maxNumberOfProjects,
-          (index) => ProjectModel(
-            name: 'name$index',
-            id: 'id$index',
-          ),
-        );
-        final projectGroup = ProjectGroup(
-          name: projectGroupName,
-          id: projectGroupId,
-          projectIds: projects.map((e) => e.id).toList(),
-        );
-
-        setUpProjectGroupsNotifier(
-          projectGroupsStream: Stream.value([projectGroup]),
-          projects: projects..add(project),
-        );
-
-        final listener = expectAsyncUntil0(
-          () {
-            if (projectGroupsNotifier.projectGroupDialogViewModel != null) {
-              return;
-            }
-
-            projectGroupsNotifier.initProjectGroupDialogViewModel(
-              projectGroup.id,
-            );
-            projectGroupsNotifier.toggleProjectCheckedStatus(project.id);
-          },
-          () => projectGroupsNotifier.projectSelectionErrorMessage != null,
-        );
-
-        projectGroupsNotifier.addListener(listener);
-      },
-    );
-
-    test(
-      ".toggleProjectCheckedStatus() sets the project selection error message to null if the project ids limit does not exceed",
-      () {
-        projectGroupsNotifier.initProjectGroupDialogViewModel(projectGroup.id);
-
-        projectGroupsNotifier.toggleProjectCheckedStatus(project.id);
-
-        expect(projectGroupsNotifier.projectSelectionErrorMessage, isNull);
       },
     );
 
