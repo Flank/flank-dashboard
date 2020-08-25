@@ -8,14 +8,14 @@ pull_request_rules:
         strict_method: rebase
         method: squash
   - name: ask to fix metrics actions failure
-  conditions:
-    - status-failure=metrics-actions
-    - -closed
-  actions:
-    comment:
-      message: |
-        Metrics Actions are not passing.
-        Please make sure that all Metrics Actions complete successfully:
-        - `flutter analyze` - static analysis
-        - `flutter test` - all unit and widget tests
-        - `driver tests` - integration tests using Chrome
+    conditions:
+      - status-failure=metrics-actions
+      - -closed
+    actions:
+      comment:
+        message: |
+          Metrics Actions are not passing.
+          Please make sure that all Metrics Actions complete successfully:
+          - `flutter analyze` - static analysis
+          - `flutter test` - all unit and widget tests
+          - `driver tests` - integration tests using Chrome
