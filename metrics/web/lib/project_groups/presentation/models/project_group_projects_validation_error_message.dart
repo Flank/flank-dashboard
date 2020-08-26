@@ -12,9 +12,11 @@ class ProjectGroupProjectsValidationErrorMessage {
   String get message {
     switch (_code) {
       case ProjectGroupProjectsValidationErrorCode.maxProjectsLimitExceeded:
-        return ProjectGroupsStrings.getProjectSelectionError(
+        final errorMessage = ProjectGroupsStrings.getProjectsLimitExceeded(
           ProjectGroupProjects.maxNumberOfProjects,
         );
+
+        return errorMessage;
       default:
         return null;
     }

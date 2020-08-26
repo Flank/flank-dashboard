@@ -130,24 +130,26 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                     ),
                   ),
                 ),
-                ValueFormField(
-                  autovalidate: true,
-                  value: projectGroup.selectedProjectIds,
-                  validator: ProjectGroupProjectsValidator.validate,
-                  builder: (state) {
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: state.hasError
-                          ? Text(
-                              state.errorText,
-                              style: dialogTheme.errorTextStyle,
-                            )
-                          : Text(
-                              _getCounterText(projectGroup),
-                              style: dialogTheme.counterTextStyle,
-                            ),
-                    );
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: ValueFormField(
+                    autovalidate: true,
+                    value: projectGroup.selectedProjectIds,
+                    validator: ProjectGroupProjectsValidator.validate,
+                    builder: (state) {
+                      if (state.hasError) {
+                        return Text(
+                          state.errorText,
+                          style: dialogTheme.errorTextStyle,
+                        );
+                      }
+
+                      return Text(
+                        _getCounterText(projectGroup),
+                        style: dialogTheme.counterTextStyle,
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

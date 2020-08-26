@@ -20,7 +20,7 @@ class ProjectGroupDialogThemeData extends DialogThemeData {
     Color backgroundColor,
     Color closeIconColor,
     TextStyle titleTextStyle,
-    TextStyle errorStyle,
+    TextStyle errorTextStyle,
     this.contentBorderColor = Colors.grey,
     this.uncheckedProjectTextStyle,
     this.checkedProjectTextStyle,
@@ -30,6 +30,6 @@ class ProjectGroupDialogThemeData extends DialogThemeData {
           backgroundColor: backgroundColor,
           closeIconColor: closeIconColor,
           titleTextStyle: titleTextStyle,
-          errorTextStyle: errorStyle,
+          errorTextStyle: errorTextStyle,
         );
 }

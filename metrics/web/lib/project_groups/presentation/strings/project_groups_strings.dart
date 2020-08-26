@@ -25,6 +25,6 @@ class ProjectGroupsStrings {
   static String getProjectGroupNameLimitExceeded(int count) =>
       'The name exceeds $count characters limit';
 
-  static String getProjectSelectionError(int count) =>
+  static String getProjectsLimitExceeded(int count) =>
       'Not more than $count projects can be selected for one project group.';
 }

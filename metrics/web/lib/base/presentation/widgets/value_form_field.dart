@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A widget that used for validating the [value] on UI.
+/// A widget that provides an ability to validate the given [value].
 class ValueFormField<T> extends FormField<T> {
   /// A value to validate.
   final T value;
@@ -17,19 +17,19 @@ class ValueFormField<T> extends FormField<T> {
     FormFieldValidator<T> validator,
     bool autovalidate = false,
     bool enabled = true,
-    @required Widget Function(FormFieldState<T>) builder,
+    @required FormFieldBuilder<T> builder,
     @required this.value,
   })  : assert(builder != null),
         assert(value != null),
         super(
-        key: key,
-        initialValue: value,
-        onSaved: onSaved,
-        validator: validator,
-        autovalidate: autovalidate,
-        enabled: enabled,
-        builder: builder,
-      );
+          key: key,
+          initialValue: value,
+          onSaved: onSaved,
+          validator: validator,
+          autovalidate: autovalidate,
+          enabled: enabled,
+          builder: builder,
+        );
 
   @override
   _ValueFormFieldState<T> createState() => _ValueFormFieldState<T>();

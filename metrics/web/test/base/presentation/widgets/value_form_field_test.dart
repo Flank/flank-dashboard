@@ -7,8 +7,8 @@ void main() {
     const value = 10;
 
     testWidgets(
-      "throws an AssertionError if the builder is null",
-          (WidgetTester tester) async {
+      "throws an AssertionError if the given builder is null",
+      (WidgetTester tester) async {
         await tester.pumpWidget(const _ValueFormFieldTestbed(
           value: 1.0,
           builder: null,
@@ -17,9 +17,10 @@ void main() {
         expect(tester.takeException(), isAssertionError);
       },
     );
+
     testWidgets(
-      "throws an AssertionError if the value is null",
-          (WidgetTester tester) async {
+      "throws an AssertionError if the given value is null",
+      (WidgetTester tester) async {
         await tester.pumpWidget(_ValueFormFieldTestbed(
           builder: (state) => Container(),
           value: null,
@@ -31,14 +32,14 @@ void main() {
 
     testWidgets(
       "applies the given value to the form field initial value",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await tester.pumpWidget(_ValueFormFieldTestbed(
           builder: (state) => Container(),
           value: value,
         ));
 
         final formField = tester.widget<FormField<int>>(find.byWidgetPredicate(
-              (widget) => widget is FormField<int>,
+          (widget) => widget is FormField<int>,
         ));
 
         expect(formField.initialValue, equals(value));
@@ -46,12 +47,12 @@ void main() {
     );
 
     testWidgets(
-      "updates the state value to the given value",
-          (WidgetTester tester) async {
+      "applies the given value to the form field state value",
+      (WidgetTester tester) async {
         final testKey = GlobalKey();
 
         await tester.pumpWidget(_ValueFormFieldTestbed(
-          testKey: testKey,
+          formKey: testKey,
           builder: (state) => Container(),
           value: value,
         ));
@@ -64,34 +65,27 @@ void main() {
   });
 }
 
-/// A testbed class needed to test the [Scorecard] widget.
+/// A testbed class needed to test the [ValueFormField] widget.
 class _ValueFormFieldTestbed<T> extends StatelessWidget {
-  /// The [Key] used in tests.
-  final Key testKey;
+  /// A [Key] used to obtain the [FormFieldState] in tests.
+  final Key formKey;
 
   /// Function that returns the widget representing the [ValueFormField]. It is
   /// passed the form field state as input, containing the current value and
   /// validation state of the [ValueFormField].
-  final Widget Function(FormFieldState<T>) builder;
+  final FormFieldBuilder<T> builder;
 
   /// A value to validate.
   final T value;
 
-  /// If true, the [ValueFormField] will validate and update its error text
-  /// immediately after every change. Otherwise, you must call
-  /// [FormFieldState.validate] to validate. If part of a [Form] that
-  /// auto-validates, this value will be ignored.
+  /// Defines whether the [ValueFormField] should validate
+  /// the value each time it changes.
   final bool autovalidate;
 
-  /// An optional method that validates an input. Returns an error string to
-  /// display if the input is invalid, or null otherwise.
+  /// A [FormFieldValidator] callback used to validate the [value].
   final FormFieldValidator<T> validator;
 
-  /// Whether the form is able to receive user input.
-  ///
-  /// Defaults to true. If [autovalidate] is true, the field will be validated.
-  /// Likewise, if this field is false, the widget will not be validated
-  /// regardless of [autovalidate].
+  /// Defines whether the form is able to receive user input.
   final bool enabled;
 
   /// An optional method to call with the final value when the form is saved via
@@ -110,7 +104,7 @@ class _ValueFormFieldTestbed<T> extends StatelessWidget {
     this.validator,
     this.enabled = true,
     this.onSaved,
-    this.testKey,
+    this.formKey,
   }) : super(key: key);
 
   @override
@@ -118,7 +112,7 @@ class _ValueFormFieldTestbed<T> extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: ValueFormField<T>(
-          key: testKey,
+          key: formKey,
           builder: builder,
           value: value,
           autovalidate: autovalidate,

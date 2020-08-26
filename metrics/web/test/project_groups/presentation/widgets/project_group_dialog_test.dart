@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/base/presentation/widgets/value_form_field.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
@@ -656,7 +657,7 @@ void main() {
         await tester.tap(buttonFinder);
 
         expect(
-          find.text(ProjectGroupsStrings.getProjectSelectionError(
+          find.text(ProjectGroupsStrings.getProjectsLimitExceeded(
             ProjectGroupProjects.maxNumberOfProjects,
           )),
           findsOneWidget,
@@ -665,7 +666,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the project group projects validator to the counter text with the form field widget",
+      "applies the project group projects validator to the counter text with the value form field widget",
       (tester) async {
         final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
           selectedProjectIds: UnmodifiableListView<String>([]),
@@ -683,9 +684,11 @@ void main() {
           ));
         });
 
-        final counterTextFormField = tester.widget<FormField<List<String>>>(
-          find.byWidgetPredicate((widget) => widget is FormField<List<String>>),
+        final formFieldFinder = find.byWidgetPredicate(
+          (widget) => widget is ValueFormField<List<String>>,
         );
+        final counterTextFormField =
+            tester.widget<ValueFormField<List<String>>>(formFieldFinder);
 
         expect(
           counterTextFormField.validator,

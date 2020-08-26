@@ -1,7 +1,7 @@
 import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_projects_validation_error_code.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents a project group project ids validation exception.
+/// A class that represents a project group's projects validation exception.
 class ProjectGroupProjectsValidationException
     extends ValidationException<ProjectGroupProjectsValidationErrorCode> {
   @override

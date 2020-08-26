@@ -15,14 +15,14 @@ void main() {
     );
 
     test("successfully creates with the given error code", () {
-      const errorCode = ProjectGroupProjectsValidationErrorCode
-          .maxProjectsLimitExceeded;
+      const expectedErrorCode =
+          ProjectGroupProjectsValidationErrorCode.maxProjectsLimitExceeded;
 
-      final expectedValidationException = ProjectGroupProjectsValidationException(
-        errorCode,
+      final validationException = ProjectGroupProjectsValidationException(
+        expectedErrorCode,
       );
 
-      expect(expectedValidationException.code, equals(errorCode));
+      expect(validationException.code, equals(expectedErrorCode));
     });
   });
 }

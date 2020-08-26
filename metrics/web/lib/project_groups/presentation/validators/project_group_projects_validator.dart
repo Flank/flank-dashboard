@@ -2,12 +2,12 @@ import 'package:metrics/project_groups/domain/value_objects/exceptions/project_g
 import 'package:metrics/project_groups/domain/value_objects/project_group_projects.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_projects_validation_error_message.dart';
 
-/// A class for validating a project group project ids.
+/// A class for validating a project group's projects.
 class ProjectGroupProjectsValidator {
   /// Validates the given [value] as a project group project ids.
   ///
   /// Returns an error message if the given [value]
-  /// is not a valid project group project ids.
+  /// is not a valid project group's projects.
   /// Otherwise returns `null`.
   static String validate(List<String> value) {
     ProjectGroupProjectsValidationErrorMessage errorMessage;

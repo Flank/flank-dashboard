@@ -27,7 +27,7 @@ void main() {
 
     test(
       ".getProjectGroupNameLimitExceeded() returns a message that contains the given count",
-          () {
+      () {
         expect(
           ProjectGroupsStrings.getProjectGroupNameLimitExceeded(count),
           contains('$count'),
@@ -37,9 +37,9 @@ void main() {
 
     test(
       ".getProjectSelectionError() returns a message that contains the given count",
-          () {
+      () {
         expect(
-          ProjectGroupsStrings.getProjectSelectionError(count),
+          ProjectGroupsStrings.getProjectsLimitExceeded(count),
           contains('$count'),
         );
       },

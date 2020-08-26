@@ -13,16 +13,15 @@ void main() {
     });
 
     test(
-      ".message returns project group project ids size limit exceeded if the given code is ProjectGroupProjectsValidationErrorCode.projectsSelectionLimitExceeded",
+      ".message returns the projects limit exceeded message if the given code is ProjectGroupProjectsValidationErrorCode.maxProjectsLimitExceeded",
       () {
         const errorMessage = ProjectGroupProjectsValidationErrorMessage(
-          ProjectGroupProjectsValidationErrorCode
-              .maxProjectsLimitExceeded,
+          ProjectGroupProjectsValidationErrorCode.maxProjectsLimitExceeded,
         );
 
         expect(
           errorMessage.message,
-          ProjectGroupsStrings.getProjectSelectionError(
+          ProjectGroupsStrings.getProjectsLimitExceeded(
             ProjectGroupProjects.maxNumberOfProjects,
           ),
         );

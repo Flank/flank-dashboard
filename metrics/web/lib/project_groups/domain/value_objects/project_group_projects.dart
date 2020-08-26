@@ -2,7 +2,7 @@ import 'package:metrics/project_groups/domain/value_objects/exceptions/project_g
 import 'package:metrics/project_groups/domain/value_objects/exceptions/project_group_projects_validation_exception.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [ValueObject] for a project group project ids.
+/// A [ValueObject] for a project group projects.
 class ProjectGroupProjects extends ValueObject<List<String>> {
   /// A maximum number of projects in the project group.
   static const maxNumberOfProjects = 20;
@@ -17,8 +17,7 @@ class ProjectGroupProjects extends ValueObject<List<String>> {
   ProjectGroupProjects(this.value) {
     if (value.length > maxNumberOfProjects) {
       throw ProjectGroupProjectsValidationException(
-        ProjectGroupProjectsValidationErrorCode
-            .maxProjectsLimitExceeded,
+        ProjectGroupProjectsValidationErrorCode.maxProjectsLimitExceeded,
       );
     }
   }
