@@ -79,7 +79,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the enabled background color from the theme to the enabled add project group",
+      "applies the positive background color from the theme to the enabled add project group",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -94,7 +94,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the enabled text style from the theme to the enabled add project group text style",
+      "applies the positive text style from the theme to the enabled add project group text style",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -111,7 +111,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the disabled background color from the theme when the add project group card is disabled",
+      "applies the inactive background color from the theme when the add project group card is disabled",
       (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.hasConfiguredProjects).thenReturn(false);
@@ -131,7 +131,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the disabled text style from the theme when the add project group card is disabled",
+      "applies the inactive text style from the theme when the add project group card is disabled",
       (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.hasConfiguredProjects).thenReturn(false);
