@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A class that provides a style configuration for the project build status widget.
+/// A class that provides a style configuration for the add project group card widget.
 @immutable
 class AddProjectGroupCardStyle {
   /// A [Color] of the background.

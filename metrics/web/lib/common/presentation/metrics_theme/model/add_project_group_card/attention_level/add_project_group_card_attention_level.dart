@@ -16,6 +16,10 @@ class AddProjectGroupCardAttentionLevel {
   /// displaying the inactive status.
   final AddProjectGroupCardStyle inactiveStyle;
 
+  /// Creates a new [AddProjectGroupCardAttentionLevel] instance.
+  ///
+  /// If [positiveStyle] or [inactiveStyle] is null,
+  /// an empty [AddProjectGroupCardStyle] is used.
   const AddProjectGroupCardAttentionLevel({
     AddProjectGroupCardStyle positiveStyle,
     AddProjectGroupCardStyle inactiveStyle,
