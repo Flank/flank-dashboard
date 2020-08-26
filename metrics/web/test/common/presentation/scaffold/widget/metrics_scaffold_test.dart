@@ -110,17 +110,6 @@ void main() {
     );
 
     testWidgets(
-      "contains the MetricsAppBar",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _MetricsScaffoldTestbed());
-        });
-
-        expect(find.byType(MetricsAppBar), findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "places the drawer on the right side of the Scaffold",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
@@ -141,6 +130,7 @@ void main() {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsScaffoldTestbed(
             drawer: drawer,
+            appBar: MetricsAppBar(),
           ));
         });
 
@@ -149,6 +139,32 @@ void main() {
         await tester.pump();
 
         expect(find.byWidget(drawer), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "hides the metrics app bar widget if the given app bar is null",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _MetricsScaffoldTestbed(appBar: null),
+          );
+        });
+
+        expect(find.byType(MetricsAppBar), findsNothing);
+      },
+    );
+
+    testWidgets(
+      "displays the given app bar",
+      (WidgetTester tester) async {
+        final appBar = AppBar();
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_MetricsScaffoldTestbed(appBar: appBar));
+        });
+
+        expect(find.byWidget(appBar), findsOneWidget);
       },
     );
   });
@@ -162,6 +178,9 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
   /// A panel that slides in horizontally from the edge of
   /// a Scaffold to show navigation links in an application.
   final Widget drawer;
+
+  /// A metrics application [AppBar] widget.
+  final Widget appBar;
 
   /// A general padding around the [body].
   final EdgeInsets padding;
@@ -177,6 +196,7 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
   const _MetricsScaffoldTestbed({
     Key key,
     this.drawer,
+    this.appBar,
     this.body = const SizedBox(),
     this.padding = EdgeInsets.zero,
     this.bodyTitle = 'title',
@@ -190,6 +210,7 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
         title: bodyTitle,
         padding: padding,
         drawer: drawer,
+        appBar: appBar,
       ),
     );
   }
