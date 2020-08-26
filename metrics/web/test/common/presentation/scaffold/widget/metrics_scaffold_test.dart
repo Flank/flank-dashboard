@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
+import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
+import 'package:metrics/util/toast_util.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 void main() {
@@ -167,11 +170,42 @@ void main() {
         expect(find.byWidget(appBar), findsOneWidget);
       },
     );
+
+    testWidgets(
+      "dismisses shown toasts when it is removed from the widgets tree",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsScaffoldTestbed());
+        });
+
+        final context = _MetricsScaffoldTestbed.childKey.currentContext;
+
+        ToastUtil.showToast(
+          const NegativeToast(message: 'test message'),
+          context,
+        );
+
+        await tester.pumpAndSettle();
+
+        expect(find.byType(NegativeToast), findsOneWidget);
+
+        Navigator.pop(context);
+
+        await tester.pumpAndSettle();
+
+        expect(find.byType(NegativeToast), findsNothing);
+
+        await tester.pumpAndSettle(DurationConstants.toast);
+      },
+    );
   });
 }
 
 /// A testbed widget, used to test the [MetricsScaffold] widget.
 class _MetricsScaffoldTestbed extends StatelessWidget {
+  /// A [GlobalKey] needed to get the current context of the [MetricsScaffold].
+  static final GlobalKey childKey = GlobalKey();
+
   /// A primary content of this scaffold.
   final Widget body;
 
@@ -206,6 +240,7 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MetricsScaffold(
+        key: childKey,
         body: body,
         title: bodyTitle,
         padding: padding,
