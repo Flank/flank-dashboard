@@ -69,6 +69,7 @@ class AddProjectGroupCard extends StatelessWidget {
     );
   }
 
+  /// Selects the proper style from the [attentionLevel] depending on [hasConfiguredProjects].
   AddProjectGroupCardStyle _getStyle({
     AddProjectGroupCardAttentionLevel attentionLevel,
     bool hasConfiguredProjects,
