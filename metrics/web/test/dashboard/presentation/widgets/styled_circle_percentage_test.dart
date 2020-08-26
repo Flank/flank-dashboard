@@ -29,7 +29,7 @@ void main() {
     });
 
     testWidgets(
-      "can't be with null percent value",
+      "can't be created with null percent value",
       (tester) async {
         await tester.pumpWidget(
           const _StyledCirclePercentageTestbed(percent: null),
