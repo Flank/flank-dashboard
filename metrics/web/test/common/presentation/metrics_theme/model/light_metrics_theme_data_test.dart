@@ -11,10 +11,6 @@ void main() {
       () {
         final lightMetricsThemeData = LightMetricsThemeData();
 
-        expect(
-          lightMetricsThemeData.metricCirclePercentageThemeData,
-          isNotNull,
-        );
         expect(lightMetricsThemeData.metricWidgetTheme, isNotNull);
         expect(lightMetricsThemeData.buildResultTheme, isNotNull);
         expect(lightMetricsThemeData.inactiveWidgetTheme, isNotNull);
@@ -34,6 +30,7 @@ void main() {
         expect(lightMetricsThemeData.toggleTheme, isNotNull);
         expect(lightMetricsThemeData.userMenuTheme, isNotNull);
         expect(lightMetricsThemeData.textPlaceholderTheme, isNotNull);
+        expect(lightMetricsThemeData.circlePercentageTheme, isNotNull);
       },
     );
   });

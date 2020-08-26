@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
@@ -25,9 +24,6 @@ import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.da
 class MetricsThemeData {
   static const MetricWidgetThemeData _defaultWidgetThemeData =
       MetricWidgetThemeData();
-
-  /// A theme of the [CirclePercentage]
-  final MetricCirclePercentageThemeData metricCirclePercentageThemeData;
 
   /// A theme of the metrics widgets used to set the default colors
   /// and text styles.
@@ -92,9 +88,11 @@ class MetricsThemeData {
   /// A theme for the input placeholders.
   final ShimmerPlaceholderThemeData inputPlaceholderTheme;
 
+  /// A theme for the circle percentage.
+  final CirclePercentageThemeData circlePercentageTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
-    MetricCirclePercentageThemeData metricCirclePercentageThemeData,
     MetricWidgetThemeData metricWidgetTheme,
     MetricWidgetThemeData inactiveWidgetTheme,
     BuildResultsThemeData buildResultTheme,
@@ -115,9 +113,8 @@ class MetricsThemeData {
     UserMenuThemeData userMenuTheme,
     TextPlaceholderThemeData textPlaceholderTheme,
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
-  })  : metricCirclePercentageThemeData = metricCirclePercentageThemeData ??
-            const MetricCirclePercentageThemeData(),
-        inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
+    CirclePercentageThemeData circlePercentageTheme,
+  })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricWidgetTheme = metricWidgetTheme ?? _defaultWidgetThemeData,
         buildResultTheme = buildResultTheme ??
             const BuildResultsThemeData(
@@ -151,14 +148,15 @@ class MetricsThemeData {
         textPlaceholderTheme =
             textPlaceholderTheme ?? const TextPlaceholderThemeData(),
         inputPlaceholderTheme =
-            inputPlaceholderTheme ?? const ShimmerPlaceholderThemeData();
+            inputPlaceholderTheme ?? const ShimmerPlaceholderThemeData(),
+        circlePercentageTheme =
+            circlePercentageTheme ?? const CirclePercentageThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
   /// If any of the passed parameters are null, or parameter isn't specified,
   /// the value will be copied from the current instance.
   MetricsThemeData copyWith({
-    MetricCirclePercentageThemeData metricCirclePercentageThemeData,
     MetricWidgetThemeData metricWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
@@ -179,10 +177,9 @@ class MetricsThemeData {
     UserMenuThemeData userMenuTheme,
     TextPlaceholderThemeData textPlaceholderTheme,
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
+    CirclePercentageThemeData circlePercentageTheme,
   }) {
     return MetricsThemeData(
-      metricCirclePercentageThemeData: metricCirclePercentageThemeData ??
-          this.metricCirclePercentageThemeData,
       metricWidgetTheme: metricWidgetTheme ?? this.metricWidgetTheme,
       buildResultTheme: buildResultTheme ?? this.buildResultTheme,
       projectGroupDialogTheme:
@@ -211,6 +208,8 @@ class MetricsThemeData {
       textPlaceholderTheme: textPlaceholderTheme ?? this.textPlaceholderTheme,
       inputPlaceholderTheme:
           inputPlaceholderTheme ?? this.inputPlaceholderTheme,
+      circlePercentageTheme:
+          circlePercentageTheme ?? this.circlePercentageTheme,
     );
   }
 }

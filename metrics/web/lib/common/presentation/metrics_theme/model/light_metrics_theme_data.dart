@@ -6,26 +6,29 @@ import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_i
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/attention_level/project_build_status_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
-import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
-import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
+import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+
+import 'circle_percentage/attention_level/circle_percentage_attention_level.dart';
+import 'circle_percentage/style/circle_percentage_style.dart';
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
@@ -57,39 +60,6 @@ class LightMetricsThemeData extends MetricsThemeData {
   /// Creates the light theme with the default widget theme configuration.
   const LightMetricsThemeData()
       : super(
-          metricCirclePercentageThemeData:
-              const MetricCirclePercentageThemeData(
-            lowPercentTheme: MetricWidgetThemeData(
-              primaryColor: ColorConfig.accentColor,
-              accentColor: Colors.transparent,
-              backgroundColor: ColorConfig.accentTranslucentColor,
-              textStyle: TextStyle(
-                fontSize: 24.0,
-                color: ColorConfig.accentColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            mediumPercentTheme: MetricWidgetThemeData(
-              primaryColor: ColorConfig.yellow,
-              accentColor: Colors.transparent,
-              backgroundColor: ColorConfig.yellowTranslucent,
-              textStyle: TextStyle(
-                fontSize: 24.0,
-                color: ColorConfig.yellow,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            highPercentTheme: MetricWidgetThemeData(
-              primaryColor: ColorConfig.primaryColor,
-              accentColor: Colors.transparent,
-              backgroundColor: ColorConfig.primaryTranslucentColor,
-              textStyle: TextStyle(
-                fontSize: 24.0,
-                color: ColorConfig.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           metricWidgetTheme: const MetricWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
             accentColor: ColorConfig.primaryTranslucentColor,
@@ -277,6 +247,50 @@ class LightMetricsThemeData extends MetricsThemeData {
             textStyle: TextStyle(
               color: _textPlaceholderColor,
               fontSize: 14.0,
+            ),
+          ),
+          circlePercentageTheme: const CirclePercentageThemeData(
+            attentionLevel: CirclePercentageAttentionLevel(
+              positive: CirclePercentageStyle(
+                strokeColor: ColorConfig.primaryTranslucentColor,
+                backgroundColor: ColorConfig.primaryTranslucentColor,
+                valueColor: ColorConfig.primaryColor,
+                valueStyle: TextStyle(
+                  color: ColorConfig.primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              negative: CirclePercentageStyle(
+                strokeColor: ColorConfig.accentTranslucentColor,
+                backgroundColor: ColorConfig.accentTranslucentColor,
+                valueColor: ColorConfig.accentColor,
+                valueStyle: TextStyle(
+                  color: ColorConfig.accentColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              neutral: CirclePercentageStyle(
+                strokeColor: ColorConfig.yellowTranslucent,
+                backgroundColor: ColorConfig.yellowTranslucent,
+                valueColor: ColorConfig.yellow,
+                valueStyle: TextStyle(
+                  color: ColorConfig.yellow,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
+              inactive: CirclePercentageStyle(
+                strokeColor: _inactiveBackgroundColor,
+                backgroundColor: _inactiveBackgroundColor,
+                valueColor: _focusedBorderColor,
+                valueStyle: TextStyle(
+                  color: _inactiveColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+              ),
             ),
           ),
         );

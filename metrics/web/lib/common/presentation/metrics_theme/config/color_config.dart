@@ -13,6 +13,6 @@ class ColorConfig {
   static const Color shimmerColor = Color(0xFF878799);
   static const Color secondaryTextColor = Color(0xFF9c9ca6);
   static const Color yellow = Color(0xFFFED100);
-  static const Color yellowTranslucent = Color(0x1DFED100);
+  static const Color yellowTranslucent = Color(0xFF292618);
   static const Color inputSecondaryTextColor = Color(0xFF545459);
 }

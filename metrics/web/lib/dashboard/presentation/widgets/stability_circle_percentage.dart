@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/metrics_value_theme_strategy.dart';
-import 'package:metrics/dashboard/presentation/widgets/themed_circle_percentage.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/metrics_value_style_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/styled_circle_percentage.dart';
 
 /// A [CirclePercentage] widget that displays the stability metric
-/// and applies the [MetricsValueThemeStrategy].
+/// and applies the [MetricsValueStyleStrategy].
 class StabilityCirclePercentage extends StatelessWidget {
   /// A [StabilityViewModel] to display.
   final StabilityViewModel stability;
@@ -19,9 +19,9 @@ class StabilityCirclePercentage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ThemedCirclePercentage(
+    return StyledCirclePercentage(
       percent: stability,
-      themeStrategy: const MetricsValueThemeStrategy(),
+      appearanceStrategy: const MetricsValueStyleStrategy(),
     );
   }
 }

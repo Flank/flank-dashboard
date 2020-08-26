@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/metrics_value_theme_strategy.dart';
-import 'package:metrics/dashboard/presentation/widgets/themed_circle_percentage.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/metrics_value_style_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/styled_circle_percentage.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -27,8 +27,8 @@ void main() {
 
         expect(
           find.byWidgetPredicate((widget) =>
-              widget is ThemedCirclePercentage &&
-              widget.themeStrategy is MetricsValueThemeStrategy),
+              widget is StyledCirclePercentage &&
+              widget.appearanceStrategy is MetricsValueStyleStrategy),
           findsOneWidget,
         );
       },
@@ -44,8 +44,8 @@ void main() {
         ));
 
         final themedCirclePercentageWidget =
-            tester.widget<ThemedCirclePercentage>(
-          find.byType(ThemedCirclePercentage),
+            tester.widget<StyledCirclePercentage>(
+          find.byType(StyledCirclePercentage),
         );
 
         expect(themedCirclePercentageWidget.percent, stability);

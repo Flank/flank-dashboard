@@ -10,7 +10,7 @@ class ProjectBuildStatusStyleStrategy implements BuildStatusStyleStrategy {
   const ProjectBuildStatusStyleStrategy();
 
   @override
-  ProjectBuildStatusStyle getWidgetTheme(
+  ProjectBuildStatusStyle getWidgetAppearance(
       MetricsThemeData themeData, BuildStatus value) {
     final attentionLevelTheme =
         themeData.projectBuildStatusTheme.attentionLevel;
