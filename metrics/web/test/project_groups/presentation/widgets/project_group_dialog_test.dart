@@ -40,6 +40,11 @@ void main() {
       color: Colors.blue,
     );
 
+    final buttonFinder = find.widgetWithText(
+      MetricsPositiveButton,
+      buttonText,
+    );
+
     final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
       id: "id",
       name: "name",
@@ -56,6 +61,7 @@ void main() {
     );
 
     final strategy = ProjectGroupDialogStrategyMock();
+
     ProjectGroupsNotifier projectGroupsNotifier;
 
     setUp(() {
@@ -619,10 +625,6 @@ void main() {
           ));
         });
 
-        final buttonFinder = find.widgetWithText(
-          MetricsPositiveButton,
-          buttonText,
-        );
         await tester.tap(buttonFinder);
 
         verifyNever(strategy.action(any, any, any, any));
@@ -650,10 +652,6 @@ void main() {
           ));
         });
 
-        final buttonFinder = find.widgetWithText(
-          MetricsPositiveButton,
-          buttonText,
-        );
         await tester.tap(buttonFinder);
 
         expect(

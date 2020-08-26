@@ -8,7 +8,7 @@ void main() {
     const List<String> projectIds = ['projectId'];
 
     test(
-      "throws a ProjectGroupProjectsValidationException with projectsSelectionLimitExceeded error code when the value length exceeds the selection limit",
+      "throws a ProjectGroupProjectsValidationException with maxProjectsLimitExceeded error code when the value length exceeds the projects limit",
       () {
         final validationException = ProjectGroupProjectsValidationException(
           ProjectGroupProjectsValidationErrorCode

@@ -36,7 +36,7 @@ void main() {
     );
 
     test(
-      ".getProjectSelectionError() returns a message that contains the given count",
+      ".getProjectsLimitExceeded() returns a message that contains the given count",
       () {
         expect(
           ProjectGroupsStrings.getProjectsLimitExceeded(count),

@@ -5,7 +5,7 @@ import 'package:metrics/project_groups/presentation/strings/project_groups_strin
 /// A class that provides an error description based
 /// on the [ProjectGroupProjectsValidationErrorCode].
 class ProjectGroupProjectsValidationErrorMessage {
-  /// Provides a project group project ids selection error code.
+  /// Provides a project group's projects selection error code.
   final ProjectGroupProjectsValidationErrorCode _code;
 
   /// Provides the error message based on the [ProjectGroupProjectsValidationErrorCode].
