@@ -11,7 +11,6 @@ class ColorConfig {
   static const Color accentTranslucentColor = Color(0xFF2d1f1f);
   static const Color hoverBorderColor = Color(0xFF37373F);
   static const Color shimmerColor = Color(0xFF878799);
-  static const Color focusedBorderColor = Color(0xFF878799);
   static const Color secondaryTextColor = Color(0xFF9c9ca6);
   static const Color yellow = Color(0xFFFED100);
   static const Color yellowTranslucent = Color(0xFF292618);

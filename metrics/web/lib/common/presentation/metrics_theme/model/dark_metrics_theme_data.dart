@@ -321,9 +321,9 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               inactive: CirclePercentageStyle(
-                strokeColor: ColorConfig.inactiveColor,
-                backgroundColor: ColorConfig.inactiveColor,
-                valueColor: ColorConfig.focusedBorderColor,
+                strokeColor: _inactiveBackgroundColor,
+                backgroundColor: _inactiveBackgroundColor,
+                valueColor: _focusedBorderColor,
               ),
             ),
           ),
