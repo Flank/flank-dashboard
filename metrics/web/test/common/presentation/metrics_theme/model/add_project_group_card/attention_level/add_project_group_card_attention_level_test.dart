@@ -3,6 +3,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/add_project_grou
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:test/test.dart';
 
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
 void main() {
   group("AddProjectGroupCardAttentionLevel", () {
     test(
@@ -26,7 +28,10 @@ void main() {
     test(
       "creates an instance with default styles if the given parameters are null",
       () {
-        const attentionLevel = AddProjectGroupCardAttentionLevel();
+        const attentionLevel = AddProjectGroupCardAttentionLevel(
+          positive: null,
+          inactive: null,
+        );
 
         expect(attentionLevel.positive, isNotNull);
         expect(attentionLevel.inactive, isNotNull);
@@ -49,6 +54,7 @@ void main() {
           hoverColor: Colors.grey,
           labelStyle: TextStyle(color: Colors.grey),
         );
+
         const attentionLevel = AddProjectGroupCardAttentionLevel(
           positive: positiveStyle,
           inactive: inactiveStyle,

@@ -274,7 +274,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the add project group text",
+      "displays the create project group text",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(const _AddProjectGroupCardTestbed()),
