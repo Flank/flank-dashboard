@@ -14,6 +14,7 @@ import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_menu.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_metrics_search_input.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:provider/provider.dart';
 
@@ -55,18 +56,13 @@ void main() {
     );
 
     testWidgets(
-      "contains a project search input",
-      (WidgetTester tester) async {
+      "contains the project metrics search input",
+      (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DashboardTestbed());
         });
 
-        final projectSearchInput = find.descendant(
-          of: find.byType(TextField),
-          matching: find.text(CommonStrings.searchForProject),
-        );
-
-        expect(projectSearchInput, findsOneWidget);
+        expect(find.byType(ProjectMetricsSearchInput), findsOneWidget);
       },
     );
 

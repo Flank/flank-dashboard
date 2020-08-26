@@ -282,7 +282,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
             projectMetricsTilePlaceholderTheme: ShimmerPlaceholderThemeData(
               backgroundColor: _tileLoadingBackgroundColor,
-              shimmerColor: ColorConfig.focusedBorderColor,
+              shimmerColor: ColorConfig.shimmerColor,
             ),
           ),
           buildNumberScorecardTheme: const ScorecardThemeData(
@@ -339,6 +339,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
               color: _textPlaceholderColor,
               fontSize: 14.0,
             ),
+          ),
+          inputPlaceholderTheme: const ShimmerPlaceholderThemeData(
+            backgroundColor: inputColor,
+            shimmerColor: ColorConfig.shimmerColor,
           ),
         );
 }

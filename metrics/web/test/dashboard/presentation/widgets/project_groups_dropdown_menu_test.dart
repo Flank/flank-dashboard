@@ -6,6 +6,7 @@ import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/widgets/metrics_input_placeholder.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_body.dart';
@@ -288,6 +289,37 @@ void main() {
           dropdownMenuFinder,
           findsOneWidget,
         );
+      },
+    );
+
+    testWidgets(
+      "displays the metrics input loading placeholder if project group dropdown items are null",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(
+              metricsNotifier: ProjectMetricsNotifierMock(),
+            ),
+          );
+        });
+
+        expect(find.byType(MetricsInputPlaceholder), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the metrics input loading placeholder if project group dropdown items are empty",
+      (tester) async {
+        final metricsNotifier = ProjectMetricsNotifierMock();
+        when(metricsNotifier.projectGroupDropdownItems).thenReturn([]);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _ProjectGroupsDropdownMenuTestbed(metricsNotifier: metricsNotifier),
+          );
+        });
+
+        expect(find.byType(MetricsInputPlaceholder), findsOneWidget);
       },
     );
 

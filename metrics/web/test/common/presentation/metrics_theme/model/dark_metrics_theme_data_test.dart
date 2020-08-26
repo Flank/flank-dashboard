@@ -31,6 +31,7 @@ void main() {
         expect(darkMetricsThemeData.toggleTheme, isNotNull);
         expect(darkMetricsThemeData.userMenuTheme, isNotNull);
         expect(darkMetricsThemeData.textPlaceholderTheme, isNotNull);
+        expect(darkMetricsThemeData.inputPlaceholderTheme, isNotNull);
       },
     );
   });
