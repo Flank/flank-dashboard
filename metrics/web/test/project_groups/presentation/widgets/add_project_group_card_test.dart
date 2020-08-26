@@ -36,13 +36,13 @@ void main() {
     const metricsTheme = MetricsThemeData(
       addProjectGroupCardTheme: AddProjectGroupCardThemeData(
         attentionLevel: AddProjectGroupCardAttentionLevel(
-          positiveStyle: AddProjectGroupCardStyle(
+          positive: AddProjectGroupCardStyle(
             backgroundColor: positiveBackgroundColor,
             iconColor: positiveIconColor,
             hoverColor: positiveHoverColor,
             labelStyle: positiveLabelStyle,
           ),
-          inactiveStyle: AddProjectGroupCardStyle(
+          inactive: AddProjectGroupCardStyle(
             backgroundColor: inactiveBackgroundColor,
             iconColor: inactiveIconColor,
             hoverColor: inactiveHoverColor,
@@ -256,7 +256,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the network image with the disabled add button svg when card is disabled",
+      "displays the disabled add icon svg when the card is disabled",
       (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.hasConfiguredProjects).thenReturn(false);

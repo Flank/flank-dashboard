@@ -99,7 +99,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           addProjectGroupCardTheme: const AddProjectGroupCardThemeData(
             attentionLevel: AddProjectGroupCardAttentionLevel(
-              positiveStyle: AddProjectGroupCardStyle(
+              positive: AddProjectGroupCardStyle(
                 backgroundColor: _addProjectGroupCardBackgroundColor,
                 iconColor: ColorConfig.primaryColor,
                 hoverColor: _addProjectGroupCardHoverColor,
@@ -110,7 +110,7 @@ class LightMetricsThemeData extends MetricsThemeData {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              inactiveStyle: AddProjectGroupCardStyle(
+              inactive: AddProjectGroupCardStyle(
                 backgroundColor: _inactiveBackgroundColor,
                 iconColor: scaffoldColor,
                 labelStyle: TextStyle(

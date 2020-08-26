@@ -5,6 +5,42 @@ import 'package:test/test.dart';
 void main() {
   group("AddProjectGroupCardStyle", () {
     test(
+      "creates an instance with the default background color",
+      () {
+        const style = AddProjectGroupCardStyle();
+
+        expect(style.backgroundColor, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with the default icon color",
+      () {
+        const style = AddProjectGroupCardStyle();
+
+        expect(style.iconColor, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with the default hover color",
+      () {
+        const style = AddProjectGroupCardStyle();
+
+        expect(style.hoverColor, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with the default label style",
+      () {
+        const style = AddProjectGroupCardStyle();
+
+        expect(style.labelStyle, isNotNull);
+      },
+    );
+
+    test(
       "creates an instance with the given values",
       () {
         const backgroundColor = Colors.red;

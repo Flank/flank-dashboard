@@ -6,12 +6,30 @@ import 'package:test/test.dart';
 void main() {
   group("AddProjectGroupCardAttentionLevel", () {
     test(
-      "creates an instance with default styles if styles are not specified",
+      "creates an instance with default positive style",
       () {
         const attentionLevel = AddProjectGroupCardAttentionLevel();
 
-        expect(attentionLevel.positiveStyle, isNotNull);
-        expect(attentionLevel.inactiveStyle, isNotNull);
+        expect(attentionLevel.positive, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with default inactive style",
+      () {
+        const attentionLevel = AddProjectGroupCardAttentionLevel();
+
+        expect(attentionLevel.inactive, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with default styles if the given parameters are null",
+      () {
+        const attentionLevel = AddProjectGroupCardAttentionLevel();
+
+        expect(attentionLevel.positive, isNotNull);
+        expect(attentionLevel.inactive, isNotNull);
       },
     );
 
@@ -32,12 +50,12 @@ void main() {
           labelStyle: TextStyle(color: Colors.grey),
         );
         const attentionLevel = AddProjectGroupCardAttentionLevel(
-          positiveStyle: positiveStyle,
-          inactiveStyle: inactiveStyle,
+          positive: positiveStyle,
+          inactive: inactiveStyle,
         );
 
-        expect(attentionLevel.positiveStyle, equals(positiveStyle));
-        expect(attentionLevel.inactiveStyle, equals(inactiveStyle));
+        expect(attentionLevel.positive, equals(positiveStyle));
+        expect(attentionLevel.inactive, equals(inactiveStyle));
       },
     );
   });

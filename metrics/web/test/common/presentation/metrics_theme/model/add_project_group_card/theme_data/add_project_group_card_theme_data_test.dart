@@ -10,39 +10,29 @@ import 'package:test/test.dart';
 void main() {
   group("AddProjectGroupThemeData", () {
     test(
-      "creates a theme with the default button styles if the parameters are not specified",
+      "creates a theme with the default attention level if it is not specified",
       () {
         const themeData = AddProjectGroupCardThemeData();
 
-        expect(themeData.attentionLevel.positiveStyle, isNotNull);
-        expect(themeData.attentionLevel.inactiveStyle, isNotNull);
+        expect(themeData.attentionLevel, isNotNull);
       },
     );
 
-    test("creates an instance with the given values", () {
-      const positiveStyle = AddProjectGroupCardStyle(
-        backgroundColor: Colors.red,
-        iconColor: Colors.red,
-        hoverColor: Colors.red,
-        labelStyle: TextStyle(color: Colors.red),
+    test("creates an instance with the given attention level", () {
+      const addProjectGroupCardStyle = AddProjectGroupCardStyle(
+        backgroundColor: Colors.green,
       );
 
-      const inactiveStyle = AddProjectGroupCardStyle(
-        backgroundColor: Colors.grey,
-        iconColor: Colors.grey,
-        hoverColor: Colors.grey,
-        labelStyle: TextStyle(color: Colors.grey),
+      const attentionLevel = AddProjectGroupCardAttentionLevel(
+        positive: addProjectGroupCardStyle,
+        inactive: addProjectGroupCardStyle,
       );
 
       final themeData = AddProjectGroupCardThemeData(
-        attentionLevel: AddProjectGroupCardAttentionLevel(
-          positiveStyle: positiveStyle,
-          inactiveStyle: inactiveStyle,
-        ),
+        attentionLevel: attentionLevel,
       );
 
-      expect(themeData.attentionLevel.positiveStyle, equals(positiveStyle));
-      expect(themeData.attentionLevel.inactiveStyle, equals(inactiveStyle));
+      expect(themeData.attentionLevel, equals(attentionLevel));
     });
   });
 }

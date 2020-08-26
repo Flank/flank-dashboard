@@ -9,20 +9,20 @@ class AddProjectGroupCardAttentionLevel {
   static const _defaultAddProjectGroupCardStyle = AddProjectGroupCardStyle();
 
   /// An [AddProjectGroupCardStyle] for add project group card widget
-  /// displaying the positive status.
-  final AddProjectGroupCardStyle positiveStyle;
+  /// with positive visual feedback.
+  final AddProjectGroupCardStyle positive;
 
   /// An [AddProjectGroupCardStyle] for add project group card widget
-  /// displaying the inactive status.
-  final AddProjectGroupCardStyle inactiveStyle;
+  /// with inactive visual feedback.
+  final AddProjectGroupCardStyle inactive;
 
   /// Creates a new [AddProjectGroupCardAttentionLevel] instance.
   ///
-  /// If [positiveStyle] or [inactiveStyle] is null,
+  /// If [positive] or [inactive] is null,
   /// an empty [AddProjectGroupCardStyle] is used.
   const AddProjectGroupCardAttentionLevel({
-    AddProjectGroupCardStyle positiveStyle,
-    AddProjectGroupCardStyle inactiveStyle,
-  })  : positiveStyle = positiveStyle ?? _defaultAddProjectGroupCardStyle,
-        inactiveStyle = inactiveStyle ?? _defaultAddProjectGroupCardStyle;
+    AddProjectGroupCardStyle positive,
+    AddProjectGroupCardStyle inactive,
+  })  : positive = positive ?? _defaultAddProjectGroupCardStyle,
+        inactive = inactive ?? _defaultAddProjectGroupCardStyle;
 }

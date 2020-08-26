@@ -16,10 +16,18 @@ class AddProjectGroupCardStyle {
   final TextStyle labelStyle;
 
   /// Creates an instance of the [AddProjectGroupCardStyle].
+  ///
+  /// [backgroundColor] defaults to `Colors.green`.
+  /// [iconColor] defaults to `Colors.yellow`.
+  /// [hoverColor] defaults to `Colors.transparent`.
+  /// [backgroundColor] defaults to `Colors.green`.
   const AddProjectGroupCardStyle({
-    this.backgroundColor = Colors.green,
-    this.iconColor = Colors.yellow,
-    this.hoverColor = Colors.transparent,
-    this.labelStyle = const TextStyle(),
-  });
+    Color backgroundColor,
+    Color iconColor,
+    Color hoverColor,
+    TextStyle labelStyle,
+  })  : backgroundColor = backgroundColor ?? Colors.green,
+        iconColor = iconColor ?? Colors.yellow,
+        hoverColor = hoverColor ?? Colors.transparent,
+        labelStyle = labelStyle ?? const TextStyle();
 }
