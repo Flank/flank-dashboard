@@ -11,7 +11,7 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value
 /// * if the percent value is greater than [lowPercentBound] and less than [mediumPercentBound], applies the [MetricCirclePercentageThemeData.lowPercentTheme]
 /// * if the percent value is greater than or equal to [mediumPercentBound] and less than [highPercentBound], applies the [MetricCirclePercentageThemeData.mediumPercentTheme]
 /// * if the percent value is greater or equal to [highPercentBound], applies the [MetricCirclePercentageThemeData.highPercentTheme].
-class MetricsValueThemeStrategy
+class MetricsValueStyleStrategy
     implements ValueBasedAppearanceStrategy<CirclePercentageStyle, double> {
   /// Is the lower bound of the [value]
   /// to return the [MetricCirclePercentageThemeData.highPercentTheme].
@@ -25,7 +25,7 @@ class MetricsValueThemeStrategy
   /// to return the [MetricCirclePercentageThemeData.lowPercentTheme].
   static const double lowPercentBound = 0.0;
 
-  const MetricsValueThemeStrategy();
+  const MetricsValueStyleStrategy();
 
   @override
   CirclePercentageStyle getWidgetAppearance(
@@ -33,8 +33,7 @@ class MetricsValueThemeStrategy
     double value,
   ) {
     final circlePercentageTheme = metricsTheme.circlePercentageTheme;
-    final inactiveStyle =
-        metricsTheme.circlePercentageTheme.attentionLevel.inactive;
+    final inactiveStyle = circlePercentageTheme.attentionLevel.inactive;
     final percent = value;
 
     if (percent == null) return inactiveStyle;

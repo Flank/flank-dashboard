@@ -324,6 +324,11 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 strokeColor: _inactiveBackgroundColor,
                 backgroundColor: _inactiveBackgroundColor,
                 valueColor: _focusedBorderColor,
+                valueStyle: TextStyle(
+                  color: _inactiveColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
               ),
             ),
           ),

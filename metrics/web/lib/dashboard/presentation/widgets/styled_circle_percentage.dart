@@ -4,26 +4,27 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value_based_appearance_strategy.dart';
+import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/percent_view_model.dart';
-import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 
 /// A [CirclePercentage] widget that applies the given [ValueBasedAppearanceStrategy].
-class ThemedCirclePercentage extends StatelessWidget {
-  /// A theme strategy applied to the [CirclePercentage] widget.
-  final ValueBasedAppearanceStrategy<CirclePercentageStyle, double> themeStrategy;
+class StyledCirclePercentage extends StatelessWidget {
+  /// An appearance strategy applied to the [CirclePercentage] widget.
+  final ValueBasedAppearanceStrategy<CirclePercentageStyle, double>
+      appearanceStrategy;
 
   /// A [PercentViewModel] to display.
   final PercentViewModel percent;
 
-  /// Creates the [ThemedCirclePercentage]
-  /// with the given [percent] and [themeStrategy].
+  /// Creates the [StyledCirclePercentage]
+  /// with the given [percent] and [appearanceStrategy].
   ///
-  /// The both [percent] and [themeStrategy] must not be `null`.
-  const ThemedCirclePercentage({
+  /// The both [percent] and [appearanceStrategy] must not be `null`.
+  const StyledCirclePercentage({
     Key key,
     @required this.percent,
-    @required this.themeStrategy,
-  })  : assert(themeStrategy != null),
+    @required this.appearanceStrategy,
+  })  : assert(appearanceStrategy != null),
         assert(percent != null),
         super(key: key);
 
@@ -33,7 +34,12 @@ class ThemedCirclePercentage extends StatelessWidget {
 
     return CirclePercentage(
       value: percent?.value,
-      placeholder: const NoDataPlaceholder(),
+      placeholder: Center(
+        child: Text(
+          DashboardStrings.noDataPlaceholder,
+          style: widgetTheme.valueStyle,
+        ),
+      ),
       valueStrokeWidth: 3.0,
       valueColor: widgetTheme?.valueColor,
       strokeColor: widgetTheme?.strokeColor,
@@ -42,10 +48,10 @@ class ThemedCirclePercentage extends StatelessWidget {
     );
   }
 
-  /// Gets the [MetricWidgetThemeData] using the [themeStrategy].
+  /// Gets the [MetricWidgetThemeData] using the [appearanceStrategy].
   CirclePercentageStyle _getWidgetTheme(BuildContext context) {
     final metricsTheme = MetricsTheme.of(context);
 
-    return themeStrategy.getWidgetAppearance(metricsTheme, percent.value);
+    return appearanceStrategy.getWidgetAppearance(metricsTheme, percent.value);
   }
 }
