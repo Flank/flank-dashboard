@@ -6,6 +6,6 @@ class DurationConstants {
   /// Holds the animation [Duration].
   static const Duration animation = Duration(milliseconds: 200);
 
-  /// Holds the toast [Duration].
+  /// Holds the [Duration] of the toast on the screen.
   static const Duration toast = Duration(seconds: 3);
 }

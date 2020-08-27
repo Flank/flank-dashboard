@@ -7,6 +7,9 @@ import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 /// An abstract widget that displays a metrics styled toast
 /// in response to a user action and applies a [MetricsThemeData.toastTheme].
 abstract class Toast extends StatelessWidget {
+  /// A width of this toast.
+  static const double _width = 680.0;
+
   /// A message that displays within this toast.
   final String message;
 
@@ -28,12 +31,12 @@ abstract class Toast extends StatelessWidget {
       fit: BoxFit.cover,
       alignment: Alignment.topCenter,
       child: DecoratedContainer(
+        margin: const EdgeInsets.only(top: 20.0),
         constraints: const BoxConstraints(
-          maxWidth: 680.0,
-          minWidth: 680.0,
+          maxWidth: _width,
+          minWidth: _width,
           minHeight: 56.0,
         ),
-        margin: const EdgeInsets.only(top: 20.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
           color: style.backgroundColor,
@@ -46,7 +49,6 @@ abstract class Toast extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             message,
-            maxLines: null,
             textAlign: TextAlign.center,
             style: style.textStyle,
           ),
