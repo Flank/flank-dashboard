@@ -122,7 +122,7 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
-            errorTextStyle: TextStyle(color: Colors.red),
+            errorTextStyle: TextStyle(color: ColorConfig.accentColor),
           ),
           inactiveWidgetTheme: const MetricWidgetThemeData(
             primaryColor: _inactiveColor,
