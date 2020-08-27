@@ -24,5 +24,25 @@ void main() {
         );
       },
     );
+
+    test(
+      ".getProjectGroupNameLimitExceeded() returns a message that contains the given count",
+      () {
+        expect(
+          ProjectGroupsStrings.getProjectGroupNameLimitExceeded(count),
+          contains('$count'),
+        );
+      },
+    );
+
+    test(
+      ".getProjectsLimitExceeded() returns a message that contains the given count",
+      () {
+        expect(
+          ProjectGroupsStrings.getProjectsLimitExceeded(count),
+          contains('$count'),
+        );
+      },
+    );
   });
 }

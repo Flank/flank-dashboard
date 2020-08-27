@@ -25,6 +25,7 @@ void main() {
         const themeData = DialogThemeData();
 
         expect(themeData.titleTextStyle, isNull);
+        expect(themeData.errorTextStyle, isNull);
       },
     );
 
@@ -37,6 +38,7 @@ void main() {
       const closeIconColor = Colors.black;
 
       const titleTextStyle = defaultTextStyle;
+      const errorTextStyle = defaultTextStyle;
 
       final themeData = DialogThemeData(
         primaryColor: primaryColor,
@@ -44,6 +46,7 @@ void main() {
         backgroundColor: backgroundColor,
         closeIconColor: closeIconColor,
         titleTextStyle: titleTextStyle,
+        errorTextStyle: errorTextStyle,
       );
 
       expect(themeData.primaryColor, equals(primaryColor));
@@ -51,6 +54,7 @@ void main() {
       expect(themeData.backgroundColor, equals(backgroundColor));
       expect(themeData.closeIconColor, equals(closeIconColor));
       expect(themeData.titleTextStyle, equals(titleTextStyle));
+      expect(themeData.errorTextStyle, equals(errorTextStyle));
     });
   });
 }

@@ -4,14 +4,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/base/presentation/widgets/value_form_field.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
+import 'package:metrics/project_groups/domain/value_objects/project_group_projects.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
+import 'package:metrics/project_groups/presentation/validators/project_group_projects_validator.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_checkbox_list.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_dialog.dart';
@@ -37,6 +40,11 @@ void main() {
       color: Colors.blue,
     );
 
+    final buttonFinder = find.widgetWithText(
+      MetricsPositiveButton,
+      buttonText,
+    );
+
     final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
       id: "id",
       name: "name",
@@ -53,6 +61,7 @@ void main() {
     );
 
     final strategy = ProjectGroupDialogStrategyMock();
+
     ProjectGroupsNotifier projectGroupsNotifier;
 
     setUp(() {
@@ -592,6 +601,97 @@ void main() {
         );
 
         expect(find.text(expectedCounterText), findsNothing);
+      },
+    );
+
+    testWidgets(
+      "does not call the action if the project group projects are not valid",
+      (WidgetTester tester) async {
+        final projects = List.generate(
+          ProjectGroupProjects.maxNumberOfProjects + 1,
+          (index) => index.toString(),
+        );
+        final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
+          selectedProjectIds: UnmodifiableListView<String>(projects),
+        );
+
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectGroupDialogViewModel);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+            strategy: strategy,
+          ));
+        });
+
+        await tester.tap(buttonFinder);
+
+        verifyNever(strategy.action(any, any, any, any));
+      },
+    );
+
+    testWidgets(
+      "validates the project group projects on tap on the action button",
+      (WidgetTester tester) async {
+        final projects = List.generate(
+          ProjectGroupProjects.maxNumberOfProjects + 1,
+          (index) => index.toString(),
+        );
+        final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
+          selectedProjectIds: UnmodifiableListView<String>(projects),
+        );
+
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectGroupDialogViewModel);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+            strategy: strategy,
+          ));
+        });
+
+        await tester.tap(buttonFinder);
+
+        expect(
+          find.text(ProjectGroupsStrings.getProjectsLimitExceeded(
+            ProjectGroupProjects.maxNumberOfProjects,
+          )),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      "applies the project group projects validator to the counter text with the value form field widget",
+      (tester) async {
+        final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
+          selectedProjectIds: UnmodifiableListView<String>([]),
+        );
+
+        final projectGroupsNotifier = ProjectGroupsNotifierMock();
+
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectGroupDialogViewModel);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        final formFieldFinder = find.byWidgetPredicate(
+          (widget) => widget is ValueFormField<List<String>>,
+        );
+        final counterTextFormField =
+            tester.widget<ValueFormField<List<String>>>(formFieldFinder);
+
+        expect(
+          counterTextFormField.validator,
+          equals(ProjectGroupProjectsValidator.validate),
+        );
       },
     );
   });
