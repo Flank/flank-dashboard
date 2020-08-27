@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 /// Enum that represents the side of the shape to display the arrow on.
@@ -15,16 +16,19 @@ class BubbleShapeBorder extends ShapeBorder {
   /// An alignment of the arrow.
   final BubbleAlignment alignment;
 
-  /// A size of the arrow.
+  /// A size of the arrow. Absolute value is used.
   final Size arrowSize;
 
-  /// An offset of the arrow.
-  /// Sets the shift horizontally or vertically depending on the [position].
-  /// Can be a negative.
+  /// An offset of the arrow. Can be a negative.
+  ///
+  /// If the [_isHorizontal] is true, then positive offset shifts the arrow
+  /// to the right, the negative offset shifts to the left.
+  /// If the [_isHorizontal] is false, then the positive offset shifts the arrow
+  /// to the bottom, the negative offset shifts to the top.
   final double offset;
 
-  /// A radius of the border of this shape.
-  final double borderRadius;
+  /// A radius of the border of this shape. Absolute value is used.
+  final BorderRadius borderRadius;
 
   /// Creates a new instance of the [BubbleShapeBorder].
   ///
@@ -33,19 +37,26 @@ class BubbleShapeBorder extends ShapeBorder {
   /// The [arrowSize] defaults to the [Size.square] of 10.0.
   /// The [offset] default value is 0.0.
   /// The [borderRadius] default value is 12.0.
+  ///
+  /// The [position], the [arrowSize], the [offset] and the [borderRadius]
+  /// must not be null.
+  /// If the [alignment] is null, the arrow is centered.
   const BubbleShapeBorder({
     this.position = BubblePosition.bottom,
     this.alignment = BubbleAlignment.center,
     this.arrowSize = const Size.square(10.0),
     this.offset = 0.0,
-    this.borderRadius = 12.0,
-  });
+    this.borderRadius = BorderRadius.zero,
+  })  : assert(position != null),
+        assert(arrowSize != null),
+        assert(offset != null),
+        assert(borderRadius != null);
 
   @override
   EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
 
-  /// Indicates whether this arrow on the vertical axis.
-  bool get _isVertical =>
+  /// Indicates whether this arrow on the horizontal axis.
+  bool get _isHorizontal =>
       position == BubblePosition.top || position == BubblePosition.bottom;
 
   @override
@@ -57,69 +68,32 @@ class BubbleShapeBorder extends ShapeBorder {
   Path getOuterPath(Rect rect, {TextDirection textDirection}) {
     final path = Path();
 
-    final topLeftDiameter = max(borderRadius, 0);
-    final topRightDiameter = max(borderRadius, 0);
-    final bottomLeftDiameter = max(borderRadius, 0);
-    final bottomRightDiameter = max(borderRadius, 0);
+    final arrowWidth = min(arrowSize.width.abs(), rect.width);
+    final arrowHeight = min(arrowSize.height.abs(), rect.height);
 
-    final spacingLeft = position == BubblePosition.left ? arrowSize.width : 0.0;
-    final spacingTop = position == BubblePosition.top ? arrowSize.height : 0.0;
-    final spacingRight =
-        position == BubblePosition.right ? arrowSize.width : 0.0;
-    final spacingBottom =
-        position == BubblePosition.bottom ? arrowSize.height : 0.0;
-
-    final double left = spacingLeft + rect.left;
-    final double top = spacingTop + rect.top;
-    final double right = rect.right - spacingRight;
-    final double bottom = rect.bottom - spacingBottom;
-
-    final arrowPositionPercent = _getArrowPositionPercent(rect.size);
-    final double centerX = (rect.left + rect.right) * arrowPositionPercent;
-    final double centerY = (rect.bottom - rect.top) * arrowPositionPercent;
-
-    path.moveTo(left + topLeftDiameter / 2.0, top);
-
-    if (position == BubblePosition.top) {
-      path.lineTo(centerX - arrowSize.width + offset, top);
-      path.lineTo(centerX + offset, rect.top);
-      path.lineTo(centerX + arrowSize.width + offset, top);
-    }
-
-    path.lineTo(right - topRightDiameter / 2.0, top);
-    path.quadraticBezierTo(right, top, right, top + topRightDiameter / 2);
-
-    if (position == BubblePosition.right) {
-      path.lineTo(right, centerY - arrowSize.height + offset);
-      path.lineTo(rect.right, centerY + offset);
-      path.lineTo(right, centerY + arrowSize.height + offset);
-    }
-
-    path.lineTo(right, bottom - bottomRightDiameter / 2);
-    path.quadraticBezierTo(
-      right,
-      bottom,
-      right - bottomRightDiameter / 2,
-      bottom,
+    final bubbleRect = _createBubbleRect(rect, arrowHeight);
+    final limitedBorderRadius = _limitBorderRadius(
+      rect.size,
+      arrowWidth,
+      arrowHeight,
     );
 
-    if (position == BubblePosition.bottom) {
-      path.lineTo(centerX + arrowSize.width + offset, bottom);
-      path.lineTo(centerX + offset, rect.bottom);
-      path.lineTo(centerX - arrowSize.width + offset, bottom);
-    }
+    path.addRRect(
+      limitedBorderRadius.resolve(textDirection).toRRect(bubbleRect),
+    );
 
-    path.lineTo(left + bottomLeftDiameter / 2, bottom);
-    path.quadraticBezierTo(left, bottom, left, bottom - bottomLeftDiameter / 2);
+    final rectSize = _isHorizontal ? rect.width : rect.height;
+    final bubbleRectSideSize = _getRectSide(bubbleRect);
+    final originalRectSideSize = _getRectSide(rect);
 
-    if (position == BubblePosition.left) {
-      path.lineTo(left, centerY - arrowSize.height + offset);
-      path.lineTo(rect.left, centerY + offset);
-      path.lineTo(left, centerY + arrowSize.height + offset);
-    }
+    final arrowPath = _getArrowPath(
+      arrowWidth: arrowWidth,
+      rectSize: rectSize,
+      bubbleRectSideSize: bubbleRectSideSize,
+      originalRectSideSize: originalRectSideSize,
+    );
 
-    path.lineTo(left, top + topLeftDiameter / 2);
-    path.quadraticBezierTo(left, top, left + topLeftDiameter / 2, top);
+    path.addPath(arrowPath, Offset.zero);
     path.close();
 
     return path;
@@ -131,24 +105,172 @@ class BubbleShapeBorder extends ShapeBorder {
   @override
   ShapeBorder scale(double t) => this;
 
-  /// Calculates the relative position of the arrow.
-  double _getArrowPositionPercent(Size size) {
-    final width = size.width;
-    final height = size.height;
+  /// Returns a [Path] of the arrow on the [bubbleRectSideSize].
+  Path _getArrowPath({
+    double arrowWidth,
+    double rectSize,
+    double originalRectSideSize,
+    double bubbleRectSideSize,
+  }) {
+    final path = Path();
 
+    final halfArrowWidth = arrowWidth / 2.0;
+    final arrowPositionPercent = _getArrowPositionPercent(
+      rectSize,
+      halfArrowWidth,
+    );
+    final arrowCenter = rectSize * arrowPositionPercent;
+    final arrowOffset = _limitArrowOffset(
+      arrowCenter,
+      halfArrowWidth,
+      rectSize,
+    );
+    final arrowStartPosition = arrowCenter - halfArrowWidth + arrowOffset;
+    final arrowEndPosition = arrowCenter + halfArrowWidth + arrowOffset;
+
+    if (_isHorizontal) {
+      path.moveTo(arrowStartPosition, bubbleRectSideSize);
+      path.lineTo(arrowStartPosition, bubbleRectSideSize);
+      path.lineTo(arrowCenter + arrowOffset, originalRectSideSize);
+      path.lineTo(arrowEndPosition, bubbleRectSideSize);
+    } else {
+      path.moveTo(bubbleRectSideSize, arrowStartPosition);
+      path.lineTo(bubbleRectSideSize, arrowStartPosition);
+      path.lineTo(originalRectSideSize, arrowCenter + arrowOffset);
+      path.lineTo(bubbleRectSideSize, arrowEndPosition);
+    }
+
+    return path;
+  }
+
+  /// Creates the [Rect] using the [arrowHeight] as [rect] indent, based on
+  /// the [position].
+  Rect _createBubbleRect(Rect rect, double arrowHeight) {
+    final spacingLeft = position == BubblePosition.left ? arrowHeight : 0.0;
+    final spacingTop = position == BubblePosition.top ? arrowHeight : 0.0;
+    final spacingRight = position == BubblePosition.right ? arrowHeight : 0.0;
+    final spacingBottom = position == BubblePosition.bottom ? arrowHeight : 0.0;
+
+    final double left = spacingLeft + rect.left;
+    final double top = spacingTop + rect.top;
+    final double right = rect.right - spacingRight;
+    final double bottom = rect.bottom - spacingBottom;
+
+    return Rect.fromLTRB(left, top, right, bottom);
+  }
+
+  /// Constrains the [borderRadius] based on the [arrowWidth],
+  /// the [arrowHeight], the [rect] size and the [position].
+  BorderRadius _limitBorderRadius(
+    Size rect,
+    double arrowWidth,
+    double arrowHeight,
+  ) {
+    final arrowX = _isHorizontal ? arrowWidth : arrowHeight;
+    final arrowY = _isHorizontal ? arrowHeight : arrowWidth;
+    final maxSideRadiusX = (rect.width - arrowX) / 2.0;
+    final maxSideRadiusY = (rect.height - arrowY) / 2.0;
+    final maxReverseSideRadiusX =
+        _isHorizontal ? rect.width / 2.0 : maxSideRadiusX;
+    final maxReverseSideRadiusY =
+        _isHorizontal ? maxSideRadiusY : rect.height / 2.0;
+
+    final isTopLeft =
+        position == BubblePosition.top || position == BubblePosition.left;
+    final isTopRight =
+        position == BubblePosition.top || position == BubblePosition.right;
+    final isBottomLeft =
+        position == BubblePosition.bottom || position == BubblePosition.left;
+    final isBottomRight =
+        position == BubblePosition.bottom || position == BubblePosition.right;
+
+    final topLeftX = min(
+      borderRadius.topLeft.x.abs(),
+      isTopLeft ? maxSideRadiusX : maxReverseSideRadiusX,
+    );
+    final topLeftY = min(
+      borderRadius.topLeft.y.abs(),
+      isTopLeft ? maxSideRadiusY : maxReverseSideRadiusY,
+    );
+
+    final topRightX = min(
+      borderRadius.topRight.x.abs(),
+      isTopRight ? maxSideRadiusX : maxReverseSideRadiusX,
+    );
+    final topRightY = min(
+      borderRadius.topRight.y.abs(),
+      isTopRight ? maxSideRadiusY : maxReverseSideRadiusY,
+    );
+
+    final bottomLeftX = min(
+      borderRadius.bottomLeft.x.abs(),
+      isBottomLeft ? maxSideRadiusX : maxReverseSideRadiusX,
+    );
+    final bottomLeftY = min(
+      borderRadius.bottomLeft.y.abs(),
+      isBottomLeft ? maxSideRadiusY : maxReverseSideRadiusY,
+    );
+
+    final bottomRightX = min(
+      borderRadius.bottomRight.x.abs(),
+      isBottomRight ? maxSideRadiusX : maxReverseSideRadiusX,
+    );
+    final bottomRightY = min(
+      borderRadius.bottomRight.y.abs(),
+      isBottomRight ? maxSideRadiusY : maxReverseSideRadiusY,
+    );
+
+    return BorderRadius.only(
+      topLeft: Radius.elliptical(topLeftX, topLeftY),
+      topRight: Radius.elliptical(topRightX, topRightY),
+      bottomLeft: Radius.elliptical(bottomLeftX, bottomLeftY),
+      bottomRight: Radius.elliptical(bottomRightX, bottomRightY),
+    );
+  }
+
+  /// Constrains the [offset], based on the [arrowWidth], the [arrowCenter] and
+  /// the current [rectSize].
+  double _limitArrowOffset(
+    double arrowCenter,
+    double arrowWidth,
+    double rectSize,
+  ) {
+    if (arrowCenter + offset + arrowWidth > rectSize) {
+      return rectSize - arrowWidth - arrowCenter;
+    } else if (arrowCenter + offset + arrowWidth < 0.0) {
+      return arrowWidth - arrowCenter;
+    }
+
+    return offset;
+  }
+
+  /// Calculates the relative position of the arrow on the current side.
+  double _getArrowPositionPercent(double rectSideSize, double arrowWidth) {
     switch (alignment) {
       case BubbleAlignment.start:
-        return _isVertical
-            ? arrowSize.width / width
-            : arrowSize.height / height;
+        return arrowWidth / rectSideSize;
       case BubbleAlignment.center:
         return 0.5;
       case BubbleAlignment.end:
-        return _isVertical
-            ? (width - arrowSize.width) / width
-            : (height - arrowSize.height) / height;
+        return (rectSideSize - arrowWidth) / rectSideSize;
       default:
         return 0.5;
+    }
+  }
+
+  /// Returns the rect side according to the [position].
+  double _getRectSide(Rect rect) {
+    switch (position) {
+      case BubblePosition.top:
+        return rect.top;
+      case BubblePosition.bottom:
+        return rect.bottom;
+      case BubblePosition.left:
+        return rect.left;
+      case BubblePosition.right:
+        return rect.right;
+      default:
+        return 0.0;
     }
   }
 }
