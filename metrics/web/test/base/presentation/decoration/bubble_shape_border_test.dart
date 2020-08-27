@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/decoration/bubble_shape_border.dart';
+import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
