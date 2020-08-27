@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
-import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
-import 'package:metrics/util/toast_util.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 void main() {
@@ -113,6 +110,17 @@ void main() {
     );
 
     testWidgets(
+      "contains the MetricsAppBar",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsScaffoldTestbed());
+        });
+
+        expect(find.byType(MetricsAppBar), findsOneWidget);
+      },
+    );
+
+    testWidgets(
       "places the drawer on the right side of the Scaffold",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
@@ -133,7 +141,6 @@ void main() {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsScaffoldTestbed(
             drawer: drawer,
-            appBar: MetricsAppBar(),
           ));
         });
 
@@ -144,77 +151,17 @@ void main() {
         expect(find.byWidget(drawer), findsOneWidget);
       },
     );
-
-    testWidgets(
-      "hides the metrics app bar widget if the given app bar is null",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            const _MetricsScaffoldTestbed(appBar: null),
-          );
-        });
-
-        expect(find.byType(MetricsAppBar), findsNothing);
-      },
-    );
-
-    testWidgets(
-      "displays the given app bar",
-      (WidgetTester tester) async {
-        final appBar = AppBar();
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_MetricsScaffoldTestbed(appBar: appBar));
-        });
-
-        expect(find.byWidget(appBar), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "dismisses shown toasts when it is removed from the widgets tree",
-      (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _MetricsScaffoldTestbed());
-        });
-
-        final context = _MetricsScaffoldTestbed.childKey.currentContext;
-
-        ToastUtil.showToast(
-          const NegativeToast(message: 'test message'),
-          context,
-        );
-
-        await tester.pumpAndSettle();
-
-        expect(find.byType(NegativeToast), findsOneWidget);
-
-        Navigator.pop(context);
-
-        await tester.pumpAndSettle();
-
-        expect(find.byType(NegativeToast), findsNothing);
-
-        await tester.pumpAndSettle(DurationConstants.toast);
-      },
-    );
   });
 }
 
 /// A testbed widget, used to test the [MetricsScaffold] widget.
 class _MetricsScaffoldTestbed extends StatelessWidget {
-  /// A [GlobalKey] needed to get the current context of the [MetricsScaffold].
-  static final GlobalKey childKey = GlobalKey();
-
   /// A primary content of this scaffold.
   final Widget body;
 
   /// A panel that slides in horizontally from the edge of
   /// a Scaffold to show navigation links in an application.
   final Widget drawer;
-
-  /// A metrics application [AppBar] widget.
-  final Widget appBar;
 
   /// A general padding around the [body].
   final EdgeInsets padding;
@@ -230,7 +177,6 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
   const _MetricsScaffoldTestbed({
     Key key,
     this.drawer,
-    this.appBar,
     this.body = const SizedBox(),
     this.padding = EdgeInsets.zero,
     this.bodyTitle = 'title',
@@ -240,12 +186,10 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MetricsScaffold(
-        key: childKey,
         body: body,
         title: bodyTitle,
         padding: padding,
         drawer: drawer,
-        appBar: appBar,
       ),
     );
   }
