@@ -10,9 +10,9 @@ class ToastAttentionLevel {
   /// A [ToastStyle] for [Toast]s that provide negative visual feedback.
   final ToastStyle negative;
 
-  /// Creates a new instance of [ToastAttentionLevel].
+  /// Creates a new instance of the [ToastAttentionLevel].
   ///
-  /// If either [positive] or [negative] is null, an empty [ToastStyle] used.
+  /// If either the [positive] or [negative] is null, an empty [ToastStyle] used.
   const ToastAttentionLevel({
     ToastStyle positive,
     ToastStyle negative,
