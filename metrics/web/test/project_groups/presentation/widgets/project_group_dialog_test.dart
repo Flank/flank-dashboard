@@ -661,6 +661,7 @@ void main() {
         );
         final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
           selectedProjectIds: UnmodifiableListView<String>(projects),
+          name: "some name",
         );
 
         when(projectGroupsNotifier.projectGroupDialogViewModel)
@@ -688,6 +689,7 @@ void main() {
         );
         final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
           selectedProjectIds: UnmodifiableListView<String>(projects),
+          name: "some name",
         );
 
         when(projectGroupsNotifier.projectGroupDialogViewModel)
