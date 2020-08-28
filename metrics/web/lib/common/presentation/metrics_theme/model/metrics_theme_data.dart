@@ -16,10 +16,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_
 import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
-import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
-import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 
 /// Stores the theme data for all metric widgets.

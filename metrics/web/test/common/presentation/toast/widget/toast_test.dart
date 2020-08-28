@@ -73,7 +73,7 @@ void main() {
     );
 
     testWidgets(
-      "does not overflows on a very long message",
+      "does not overflow on a very long message",
       (tester) async {
         await tester.pumpWidget(const _ToastTestbed(
           metricsThemeData: metricsThemeData,
