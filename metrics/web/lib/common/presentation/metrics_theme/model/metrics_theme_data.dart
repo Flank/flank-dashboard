@@ -20,9 +20,6 @@ import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
-import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
-import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 
 /// Stores the theme data for all metric widgets.
