@@ -6,19 +6,6 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/common/presentation/toast/theme/attention_level/toast_attention_level.dart';
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 
-/// Shows the [Toast] on top of the screen
-/// for the duration of [DurationConstants.toast].
-ToastFuture showMetricsToast(BuildContext context, Toast toast) {
-  return showToastWidget(
-    toast,
-    context: context,
-    duration: DurationConstants.toast,
-    position: StyledToastPosition(
-      align: Alignment.topCenter,
-    ),
-  );
-}
-
 /// An abstract widget that displays a metrics styled toast
 /// in response to a user action and applies a [MetricsThemeData.toastTheme].
 abstract class Toast extends StatelessWidget {
@@ -75,4 +62,17 @@ abstract class Toast extends StatelessWidget {
   /// Selects the [ToastStyle] for this toast
   /// from the given [attentionLevel].
   ToastStyle getStyle(ToastAttentionLevel attentionLevel);
+}
+
+/// Shows the [Toast] on top of the screen
+/// for the duration of [DurationConstants.toast].
+ToastFuture showMetricsToast(BuildContext context, Toast toast) {
+  return showToastWidget(
+    toast,
+    context: context,
+    duration: DurationConstants.toast,
+    position: StyledToastPosition(
+      align: Alignment.topCenter,
+    ),
+  );
 }
