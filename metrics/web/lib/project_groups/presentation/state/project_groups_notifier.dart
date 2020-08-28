@@ -106,6 +106,9 @@ class ProjectGroupsNotifier extends ChangeNotifier {
         .toList();
   }
 
+  /// Indicates whether there are configured projects.
+  bool get hasConfiguredProjects => _projects != null && _projects.isNotEmpty;
+
   /// Provides a list of project group card view models.
   List<ProjectGroupCardViewModel> get projectGroupCardViewModels =>
       _projectGroupCardViewModels;

@@ -31,7 +31,7 @@ class ProjectGroupView extends StatelessWidget {
           spacing: 20.0,
           runSpacing: 20.0,
           children: <Widget>[
-            AddProjectGroupCard(),
+            const AddProjectGroupCard(),
             for (final projectGroup in projectGroupCardViewModels)
               ProjectGroupCard(projectGroupCardViewModel: projectGroup),
           ],

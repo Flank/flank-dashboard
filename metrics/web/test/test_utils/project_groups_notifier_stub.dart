@@ -40,6 +40,9 @@ class ProjectGroupsNotifierStub extends ChangeNotifier
   );
 
   @override
+  bool get hasConfiguredProjects => true;
+
+  @override
   List<ProjectCheckboxViewModel> get projectCheckboxViewModels =>
       _projectCheckboxViewModels;
 

@@ -12,7 +12,12 @@ class ProjectGroupPage extends StatelessWidget {
       title: CommonStrings.projectGroups,
       padding: const EdgeInsets.only(top: 40.0),
       body: SingleChildScrollView(
-        child: ProjectGroupView(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ProjectGroupView(),
+          ],
+        ),
       ),
     );
   }

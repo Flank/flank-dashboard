@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/padded_card.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
@@ -9,43 +11,72 @@ import 'package:provider/provider.dart';
 
 /// An [AddProjectGroupCard] widget that displays a button card.
 class AddProjectGroupCard extends StatelessWidget {
+  /// Creates a new [AddProjectGroupCard] instance.
+  const AddProjectGroupCard({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final theme = MetricsTheme.of(context).addProjectGroupCardTheme;
+    return Selector<ProjectGroupsNotifier, bool>(
+      selector: (_, notifier) => notifier.hasConfiguredProjects,
+      builder: (context, hasConfiguredProjects, _) {
+        final attentionLevel =
+            MetricsTheme.of(context).addProjectGroupCardTheme.attentionLevel;
 
-    return Container(
-      width: 270.0,
-      height: 156.0,
-      child: PaddedCard(
-        backgroundColor: theme.backgroundColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
-        ),
-        child: HandCursor(
-          child: InkWell(
-            onTap: () => _showProjectGroupDialog(context),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.network(
-                  'icons/add.svg',
-                  width: 32.0,
-                  height: 32.0,
-                  color: theme.primaryColor,
+        final style = _getStyle(
+          attentionLevel: attentionLevel,
+          hasConfiguredProjects: hasConfiguredProjects,
+        );
+
+        final asset =
+            hasConfiguredProjects ? 'icons/add.svg' : 'icons/disabled-add.svg';
+
+        return Container(
+          width: 270.0,
+          height: 156.0,
+          child: PaddedCard(
+            backgroundColor: style.backgroundColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: HandCursor(
+              child: InkWell(
+                onTap: hasConfiguredProjects
+                    ? () => _showProjectGroupDialog(context)
+                    : null,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.network(
+                      asset,
+                      width: 32.0,
+                      height: 32.0,
+                      color: style.iconColor,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        ProjectGroupsStrings.createGroup,
+                        style: style.labelStyle,
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    ProjectGroupsStrings.addProjectGroup,
-                    style: theme.titleStyle,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
+  }
+
+  /// Selects the proper style from the [attentionLevel] depending on [hasConfiguredProjects].
+  AddProjectGroupCardStyle _getStyle({
+    AddProjectGroupCardAttentionLevel attentionLevel,
+    bool hasConfiguredProjects,
+  }) {
+    return hasConfiguredProjects
+        ? attentionLevel.positive
+        : attentionLevel.inactive;
   }
 
   /// Shows a [AddProjectGroupDialog] with an active project group.
