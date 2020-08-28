@@ -120,26 +120,6 @@ void main() {
     );
 
     testWidgets(
-      "shows an auth error text if the sign in process went wrong",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_AuthFormTestbed(
-            authNotifier: SignInErrorAuthNotifierStub(),
-          ));
-        });
-
-        await tester.enterText(emailInputFinder, testEmail);
-        await tester.enterText(passwordInputFinder, testPassword);
-        await tester.tap(submitButtonFinder);
-        await tester.pumpAndSettle();
-
-        final finder = find.text(SignInErrorAuthNotifierStub.errorMessage);
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "shows a progress indicator if the sign in process is in progress",
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();

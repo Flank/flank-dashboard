@@ -52,28 +52,11 @@ class _AuthFormState extends State<AuthForm> {
                   hint: AuthStrings.password,
                 ),
               ),
-              Builder(
-                builder: (context) {
-                  if (notifier.isLoading) {
-                    return const Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: LinearProgressIndicator(),
-                    );
-                  }
-
-                  if (notifier.authErrorMessage != null) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        notifier.authErrorMessage,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    );
-                  }
-
-                  return Container();
-                },
-              ),
+              if (notifier.isLoading)
+                const Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: LinearProgressIndicator(),
+                ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0, top: 72.0),
                 child: MetricsPositiveButton(
