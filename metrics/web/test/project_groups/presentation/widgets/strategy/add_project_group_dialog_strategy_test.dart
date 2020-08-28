@@ -26,10 +26,10 @@ void main() {
       );
     });
 
-    test(".title equals to the ProjectGroupString.addProjectGroup", () {
+    test(".title equals to the ProjectGroupString.createGroup", () {
       expect(
         strategy.title,
-        equals(ProjectGroupsStrings.addProjectGroup),
+        equals(ProjectGroupsStrings.createGroup),
       );
     });
 

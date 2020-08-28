@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/value_form_field.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_inactive_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -49,6 +50,9 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// A [ChangeNotifier] that holds the project groups state.
   ProjectGroupsNotifier _projectGroupsNotifier;
 
+  /// Indicates whether the group name is empty.
+  final ValueNotifier<bool> _isGroupNameEmpty = ValueNotifier<bool>(true);
+
   /// Indicates whether this widget is in the loading state or not.
   bool _isLoading = false;
 
@@ -65,6 +69,11 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
     _groupNameController.text =
         _projectGroupsNotifier?.projectGroupDialogViewModel?.name;
+
+    if (_groupNameController.text != null &&
+        _groupNameController.text.isNotEmpty) {
+      _isGroupNameEmpty.value = false;
+    }
   }
 
   /// Subscribes to project errors.
@@ -125,6 +134,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                     controller: _groupNameController,
                     hint: ProjectGroupsStrings.nameYourGroup,
                     validator: ProjectGroupNameValidator.validate,
+                    onChanged: _onGroupNameChanged,
                   ),
                 ),
                 Flexible(
@@ -184,10 +194,24 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
           ),
           actions: <Widget>[
             Expanded(
-              child: MetricsPositiveButton(
-                label: buttonText,
-                onPressed:
-                    _isLoading ? null : () => _actionCallback(projectGroup),
+              child: ValueListenableBuilder<bool>(
+                valueListenable: _isGroupNameEmpty,
+                builder: (context, isGroupNameEmpty, _) {
+                  if (isGroupNameEmpty) {
+                    return MetricsInactiveButton(
+                      label: buttonText,
+                      onPressed: _isLoading
+                          ? null
+                          : () => _actionCallback(projectGroup),
+                    );
+                  }
+
+                  return MetricsPositiveButton(
+                    label: buttonText,
+                    onPressed:
+                        _isLoading ? null : () => _actionCallback(projectGroup),
+                  );
+                },
               ),
             ),
           ],
@@ -203,6 +227,15 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     if (selectedProjectIds.isEmpty) return '';
 
     return ProjectGroupsStrings.getSelectedCount(selectedProjectIds.length);
+  }
+
+  /// Changes the [_isGroupNameEmpty] value according to the given [value].
+  void _onGroupNameChanged(String value) {
+    if (value.isEmpty) {
+      _isGroupNameEmpty.value = true;
+    } else {
+      _isGroupNameEmpty.value = false;
+    }
   }
 
   /// A callback for this dialog action button.
@@ -247,6 +280,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     _projectGroupsNotifier.resetFilterName();
     _groupNameController.dispose();
     _projectGroupsNotifier.removeListener(_projectsErrorListener);
+    _isGroupNameEmpty.dispose();
     super.dispose();
   }
 }

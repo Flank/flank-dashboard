@@ -6,6 +6,7 @@ import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/value_form_field.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_inactive_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
@@ -242,6 +243,48 @@ void main() {
           find.widgetWithText(MetricsPositiveButton, text),
           findsOneWidget,
         );
+      },
+    );
+
+    testWidgets(
+      "displays the positive create group button when the group name is not empty",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+          ));
+        });
+
+        final groupNameTextFormFieldFinder = find.ancestor(
+          of: find.text(ProjectGroupsStrings.nameYourGroup),
+          matching: find.byType(TextFormField),
+        );
+
+        await tester.enterText(groupNameTextFormFieldFinder, 'some group name');
+        await tester.pumpAndSettle();
+
+        expect(find.byType(MetricsPositiveButton), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the inactive create group button when the group name is empty",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+          ));
+        });
+
+        final groupNameTextFormFieldFinder = find.ancestor(
+          of: find.text(ProjectGroupsStrings.nameYourGroup),
+          matching: find.byType(TextFormField),
+        );
+
+        await tester.enterText(groupNameTextFormFieldFinder, '');
+        await tester.pumpAndSettle();
+
+        expect(find.byType(MetricsInactiveButton), findsOneWidget);
       },
     );
 
