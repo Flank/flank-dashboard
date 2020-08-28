@@ -66,18 +66,52 @@ The size labels applied by Git App [Pull Request Size](https://github.com/apps/p
 
 PRs designed to be small and PRs of XXL size should be split into multiple logical PRs according to ["The anatomy of a perfect pull request"](https://medium.com/@hugooodias/the-anatomy-of-a-perfect-pull-request-567382bb6067). 
 
-## Draft Pull Requests
+### Draft Pull Requests
 
 Create a [Draft Pull Request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) for PRs that are still a work in progress. Draft PRs signal to reviewers that the pull request is a work in progress.
 
-## Code Reviews
+
+### PR title using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+
+#### Introduction
+The Conventional Commits specification is a lightweight convention on top of commit messages. 
+There are various tools that use it, but at the moment, we plan on generating `Release Notes` only.
+
+#### Rules
+Every PR which is not in draft mode should follow conventional commit convention for PR title. 
+
+#### PR title
+Pull request title should be: `<type>([optional scope]): <description>`
+
+where   
+`<type>` - [one of the following types](#type)
+
+`[optional scope]` - scope of the change (we don't use that at the moment)
+
+`<description>` - description of the PR
+
+#### Type
+
+- `build` - Changes that affect the build system or external dependencies
+- `ci` - Changes to our CI configuration files and scripts (basically directory `.github/workflows`)
+- `docs` - Documentation only changes
+- `feat` - A new feature
+- `fix` - A bug fix
+- `chore` - Changes which does not touch the code (ex. manual update of release notes). It will not generate release notes
+changes
+- `refactor` - A code change that contains refactor
+- `style` - Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc.)
+- `test` - Adding missing tests or correcting existing tests
+- `perf` - A code change that improves performance
+
+### Code Reviews
 
 Pull requests are code reviewed and approved by someone other than the author before merging.
 
 - [Google code review guidelines](https://google.github.io/eng-practices/review/reviewer/)
 - [Code review best practices](https://medium.com/@schrockn/on-code-reviews-b1c7c94d868c)
 
-## Merging Pull Requests
+### Merging Pull Requests
 
 * `Rebase and merge`
   * Pull requests should have passing CI builds and be code reviewed before merging to master. If a pull request consists entirely of logical changes, use the `Rebase and merge` button. 
