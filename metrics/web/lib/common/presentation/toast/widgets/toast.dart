@@ -66,7 +66,7 @@ abstract class Toast extends StatelessWidget {
 
 /// Shows the [Toast] on top of the screen
 /// for the duration of [DurationConstants.toast].
-ToastFuture showMetricsToast(BuildContext context, Toast toast) {
+ToastFuture showToast(BuildContext context, Toast toast) {
   return showToastWidget(
     toast,
     context: context,
