@@ -32,6 +32,7 @@ void main() {
         expect(darkMetricsThemeData.textPlaceholderTheme, isNotNull);
         expect(darkMetricsThemeData.inputPlaceholderTheme, isNotNull);
         expect(darkMetricsThemeData.circlePercentageTheme, isNotNull);
+        expect(darkMetricsThemeData.toastTheme, isNotNull);
       },
     );
   });
