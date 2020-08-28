@@ -4,6 +4,8 @@ import 'package:metrics/common/presentation/button/widgets/metrics_negative_butt
 import 'package:metrics/common/presentation/button/widgets/metrics_neutral_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
+import 'package:metrics/common/presentation/toast/widgets/toast.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
@@ -105,11 +107,22 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
 
     final projectGroupSavingError = notifier.projectGroupSavingError;
 
+    Toast toast;
+
     if (projectGroupSavingError == null) {
       Navigator.pop(context);
+
+      final message = ProjectGroupsStrings.getDeletedProjectGroupMessage(
+        projectGroupDeleteDialogViewModel.name,
+      );
+
+      toast = NegativeToast(message: message);
     } else {
       _setLoading(false);
+      toast = NegativeToast(message: projectGroupSavingError);
     }
+
+    showToast(context, toast);
   }
 
   /// Changes the [_isDeleting] state to the given [value].

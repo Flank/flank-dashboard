@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_neutral_button.dart';
+import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
@@ -19,6 +21,7 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("DeleteProjectGroupDialog", () {
+    ProjectGroupsNotifier projectGroupsNotifier;
     const deleteProjectGroupDialogViewModel = DeleteProjectGroupDialogViewModel(
       id: 'id',
       name: 'name',
@@ -60,6 +63,16 @@ void main() {
       final textSpan = content.text as TextSpan;
       return List<TextSpan>.from(textSpan.children);
     }
+
+    setUp(() {
+      projectGroupsNotifier = ProjectGroupsNotifierMock();
+      when(projectGroupsNotifier.deleteProjectGroupDialogViewModel)
+          .thenReturn(deleteProjectGroupDialogViewModel);
+    });
+
+    tearDown(() {
+      reset(projectGroupsNotifier);
+    });
 
     testWidgets(
       "applies the close icon to the info dialog widget",
@@ -267,6 +280,8 @@ void main() {
         verify(
           notifierMock.deleteProjectGroup(deleteProjectGroupDialogViewModel.id),
         ).called(equals(1));
+
+        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -291,6 +306,8 @@ void main() {
         );
 
         expect(deleteButton.enabled, isFalse);
+
+        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -311,6 +328,8 @@ void main() {
         );
 
         expect(deletingProjectGroupFinder, findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -325,6 +344,8 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(DeleteProjectGroupDialog), findsNothing);
+
+        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -348,6 +369,8 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(DeleteProjectGroupDialog), findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -371,6 +394,51 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(deleteButtonFinder, findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
+      },
+    );
+
+    testWidgets(
+      "displays a negative toast with an error message if an action finished with en error",
+      (tester) async {
+        const message = 'error message';
+        when(projectGroupsNotifier.projectGroupSavingError).thenReturn(message);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.tap(find.text(ProjectGroupsStrings.delete));
+        await tester.pump();
+
+        expect(find.widgetWithText(NegativeToast, message), findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
+      },
+    );
+
+    testWidgets(
+      "displays a negative toast with a delete project group message if an action finished successfully",
+      (tester) async {
+        final message = ProjectGroupsStrings.getDeletedProjectGroupMessage(
+          deleteProjectGroupDialogViewModel.name,
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.tap(find.text(ProjectGroupsStrings.delete));
+        await tester.pump();
+
+        expect(find.widgetWithText(NegativeToast, message), findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
       },
     );
   });

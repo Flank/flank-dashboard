@@ -34,6 +34,18 @@ void main() {
     });
 
     test(
+      ".getSuccessfulActionMessage returns an edited project group message with the given project group name",
+      () {
+        const name = 'project group name';
+        final expectedMessage =
+            ProjectGroupsStrings.getEditedProjectGroupMessage(name);
+        final actualMessage = strategy.getSuccessfulActionMessage(name);
+
+        expect(actualMessage, equals(expectedMessage));
+      },
+    );
+
+    test(
       ".action() delegates updating a project group to the given notifier",
       () {
         const id = 'groupId';

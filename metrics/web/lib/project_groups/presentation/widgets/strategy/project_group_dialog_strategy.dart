@@ -1,6 +1,6 @@
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 
-/// A base class for a [ProjectGroupDialog] strategy that provides the 
+/// A base class for a [ProjectGroupDialog] strategy that provides the
 /// text to display and action to perform on the dialog of
 /// the project group.
 abstract class ProjectGroupDialogStrategy {
@@ -12,6 +12,9 @@ abstract class ProjectGroupDialogStrategy {
 
   /// A text to display on the dialog on loading.
   String get loadingText;
+
+  /// A text to notify a user about an [action] successfuly finished.
+  String getSuccessfulActionMessage(String groupName);
 
   /// Performs a specific method of the given [notifier] on the
   /// project group specified by the given

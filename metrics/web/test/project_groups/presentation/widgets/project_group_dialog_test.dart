@@ -6,9 +6,12 @@ import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/value_form_field.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
+import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
+import 'package:metrics/common/presentation/toast/widgets/positive_toast.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:metrics/project_groups/domain/value_objects/project_group_projects.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -39,6 +42,7 @@ void main() {
     const counterTextStyle = TextStyle(
       color: Colors.blue,
     );
+    const toastMessage = 'toast message';
 
     final buttonFinder = find.widgetWithText(
       MetricsPositiveButton,
@@ -68,6 +72,7 @@ void main() {
       when(strategy.title).thenReturn(title);
       when(strategy.text).thenReturn(buttonText);
       when(strategy.loadingText).thenReturn(loadingText);
+      when(strategy.getSuccessfulActionMessage(any)).thenReturn(toastMessage);
 
       projectGroupsNotifier = ProjectGroupsNotifierMock();
 
@@ -258,6 +263,8 @@ void main() {
         await tester.idle();
 
         expect(find.text(loading), findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -291,6 +298,8 @@ void main() {
 
         verify(strategy.action(any, groupId, groupName, projectIds))
             .called(equals(1));
+
+        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -339,6 +348,8 @@ void main() {
         ));
 
         expect(actionButton.enabled, isFalse);
+
+        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -355,6 +366,8 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(ProjectGroupDialog), findsNothing);
+
+        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -374,6 +387,8 @@ void main() {
         await tester.pump();
 
         expect(find.text(strategy.text), findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -692,6 +707,125 @@ void main() {
           counterTextFormField.validator,
           equals(ProjectGroupProjectsValidator.validate),
         );
+      },
+    );
+
+    testWidgets(
+      "displays the toast with the successful action message from the given strategy",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+          ));
+        });
+
+        await tester.tap(find.text(strategy.text));
+        await tester.pump();
+
+        expect(
+          find.widgetWithText(PositiveToast, toastMessage),
+          findsOneWidget,
+        );
+
+        await tester.pump(DurationConstants.toast);
+      },
+    );
+
+    testWidgets(
+      "shows a negative toast if an action finished with en error",
+      (tester) async {
+        when(projectGroupsNotifier.projectGroupSavingError).thenReturn("error");
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.tap(find.text(strategy.text));
+        await tester.pump();
+
+        expect(find.byType(NegativeToast), findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
+      },
+    );
+
+    testWidgets(
+      "shows a positive toast if an action finished successfully",
+      (tester) async {
+        when(strategy.getSuccessfulActionMessage(any)).thenReturn('message');
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+          ));
+        });
+
+        await tester.tap(find.text(strategy.text));
+        await tester.pump();
+
+        expect(find.byType(PositiveToast), findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
+      },
+    );
+
+    testWidgets(
+      "displays the negative toast with an projects error message if such already exists",
+      (WidgetTester tester) async {
+        const errorMessage = "Something went wrong";
+        when(projectGroupsNotifier.projectsErrorMessage).thenReturn(
+          errorMessage,
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.pump();
+
+        final negativeToastFinder = find.widgetWithText(
+          NegativeToast,
+          errorMessage,
+        );
+
+        expect(negativeToastFinder, findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
+      },
+    );
+
+    testWidgets(
+      "displays the negative toast with an projects error message if an error occurs",
+      (WidgetTester tester) async {
+        const errorMessage = "Something went wrong";
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        when(projectGroupsNotifier.projectsErrorMessage).thenReturn(
+          errorMessage,
+        );
+        projectGroupsNotifier.notifyListeners();
+        await tester.pumpAndSettle();
+
+        final negativeToastFinder = find.widgetWithText(
+          NegativeToast,
+          errorMessage,
+        );
+
+        expect(negativeToastFinder, findsOneWidget);
+
+        await tester.pump(DurationConstants.toast);
       },
     );
   });

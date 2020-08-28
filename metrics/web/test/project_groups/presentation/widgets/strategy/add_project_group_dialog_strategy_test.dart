@@ -34,6 +34,18 @@ void main() {
     });
 
     test(
+      ".getSuccessfulActionMessage returns a created project group message with the given project group name",
+      () {
+        const name = 'project group name';
+        final expectedMessage =
+            ProjectGroupsStrings.getCreatedProjectGroupMessage(name);
+        final actualMessage = strategy.getSuccessfulActionMessage(name);
+
+        expect(actualMessage, equals(expectedMessage));
+      },
+    );
+
+    test(
       ".action() delegates adding a new project group to the given notifier",
       () {
         const id = 'groupId';
