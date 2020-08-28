@@ -7,6 +7,7 @@ import 'package:metrics/common/presentation/metrics_theme/config/text_style_conf
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
+import 'package:metrics/common/presentation/routes/observers/toast_route_observer.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,10 @@ class MetricsApp extends StatefulWidget {
 }
 
 class _MetricsAppState extends State<MetricsApp> {
+  /// A route observer used to dismiss all opened toasts
+  /// when the page route changes.
+  final _toastRouteObserver = ToastRouteObserver();
+
   @override
   Widget build(BuildContext context) {
     return InjectionContainer(
@@ -35,6 +40,7 @@ class _MetricsAppState extends State<MetricsApp> {
               isLoggedIn:
                   Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
+            navigatorObservers: [_toastRouteObserver],
             themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
             theme: ThemeData(
               fontFamily: TextStyleConfig.defaultFontFamily,

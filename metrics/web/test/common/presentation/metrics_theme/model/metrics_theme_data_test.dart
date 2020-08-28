@@ -27,6 +27,9 @@ import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/toast/theme/attention_level/toast_attention_level.dart';
+import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
+import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:test/test.dart';
 
@@ -57,6 +60,7 @@ void main() {
         expect(themeData.toggleTheme, isNotNull);
         expect(themeData.textPlaceholderTheme, isNotNull);
         expect(themeData.inputPlaceholderTheme, isNotNull);
+        expect(themeData.toastTheme, isNotNull);
       },
     );
 
@@ -85,6 +89,7 @@ void main() {
           textPlaceholderTheme: null,
           inputPlaceholderTheme: null,
           circlePercentageTheme: null,
+          toastTheme: null,
         );
 
         expect(themeData.metricWidgetTheme, isNotNull);
@@ -108,6 +113,7 @@ void main() {
         expect(themeData.textPlaceholderTheme, isNotNull);
         expect(themeData.inputPlaceholderTheme, isNotNull);
         expect(themeData.circlePercentageTheme, isNotNull);
+        expect(themeData.toastTheme, isNotNull);
       },
     );
 
@@ -226,6 +232,12 @@ void main() {
           ),
         );
 
+        const toastTheme = ToastThemeData(
+          toastAttentionLevel: ToastAttentionLevel(
+            positive: ToastStyle(backgroundColor: Colors.red),
+          ),
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -250,6 +262,7 @@ void main() {
           textPlaceholderTheme: textPlaceholderTheme,
           inputPlaceholderTheme: inputPlaceholderTheme,
           circlePercentageTheme: circlePercentageTheme,
+          toastTheme: toastTheme,
         );
 
         expect(copiedTheme.metricWidgetTheme, equals(metricWidgetTheme));
@@ -300,6 +313,7 @@ void main() {
           copiedTheme.circlePercentageTheme,
           equals(circlePercentageTheme),
         );
+        expect(copiedTheme.toastTheme, equals(toastTheme));
       },
     );
 
@@ -383,6 +397,7 @@ void main() {
           themeData.circlePercentageTheme,
           equals(copiedTheme.circlePercentageTheme),
         );
+        expect(themeData.toastTheme, equals(copiedTheme.toastTheme));
       },
     );
   });
