@@ -71,7 +71,7 @@ ToastFuture showToast(BuildContext context, Toast toast) {
     toast,
     context: context,
     duration: DurationConstants.toast,
-    position: StyledToastPosition(
+    position: const StyledToastPosition(
       align: Alignment.topCenter,
     ),
   );
