@@ -45,15 +45,10 @@ void main() {
     );
     const toastMessage = 'toast message';
 
-    final buttonFinder = find.widgetWithText(
-      MetricsPositiveButton,
-      buttonText,
-    );
-
     final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
       id: "id",
       name: "name",
-      selectedProjectIds: UnmodifiableListView<String>([]),
+      selectedProjectIds: UnmodifiableListView<String>(["id"]),
     );
 
     const theme = MetricsThemeData(
@@ -232,10 +227,13 @@ void main() {
         const text = "test title";
 
         when(strategy.text).thenReturn(text);
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectGroupDialogViewModel);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
 
@@ -247,7 +245,32 @@ void main() {
     );
 
     testWidgets(
-      "displays the positive create group button when the group name is not empty",
+      "displays the positive create group button when the group name and the number of selected projects in project checkbox list are both valid",
+      (tester) async {
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectGroupDialogViewModel);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        final groupNameTextFormFieldFinder = find.ancestor(
+          of: find.text(ProjectGroupsStrings.nameYourGroup),
+          matching: find.byType(TextFormField),
+        );
+
+        await tester.enterText(groupNameTextFormFieldFinder, 'some group name');
+        await tester.pump();
+
+        expect(find.byType(MetricsPositiveButton), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the inactive create group button when the group name is not valid",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
@@ -260,16 +283,98 @@ void main() {
           matching: find.byType(TextFormField),
         );
 
-        await tester.enterText(groupNameTextFormFieldFinder, 'some group name');
+        await tester.enterText(groupNameTextFormFieldFinder, '');
         await tester.pumpAndSettle();
 
-        expect(find.byType(MetricsPositiveButton), findsOneWidget);
+        expect(find.byType(MetricsInactiveButton), findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the inactive create group button when the group name is empty",
+      "displays the inactive create group button when the number of selected projects is > 20",
       (tester) async {
+        final List<String> selectedIds = [];
+        for (int i = 0; i <= 21; ++i) {
+          selectedIds.add("some value");
+        }
+        final projectDialogViewModel = ProjectGroupDialogViewModel(
+          id: "id",
+          name: "name",
+          selectedProjectIds: UnmodifiableListView<String>(selectedIds),
+        );
+
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectDialogViewModel);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        expect(find.byType(MetricsInactiveButton), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the inactive create group button when there are no selected projects",
+      (tester) async {
+        final projectDialogViewModel = ProjectGroupDialogViewModel(
+          id: "id",
+          name: "name",
+          selectedProjectIds: UnmodifiableListView<String>([]),
+        );
+
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectDialogViewModel);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        expect(find.byType(MetricsInactiveButton), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the inactive create group button when the group name is not valid even if the number of selected projects is valid",
+      (tester) async {
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectGroupDialogViewModel);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+          ));
+        });
+
+        final groupNameTextFormFieldFinder = find.ancestor(
+          of: find.text(ProjectGroupsStrings.nameYourGroup),
+          matching: find.byType(TextFormField),
+        );
+
+        await tester.enterText(groupNameTextFormFieldFinder, '');
+        await tester.pumpAndSettle();
+
+        expect(find.byType(MetricsInactiveButton), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the inactive create group button when the number of selected projects is not valid even if the group name is valid",
+      (tester) async {
+        final projectDialogViewModel = ProjectGroupDialogViewModel(
+          id: "id",
+          name: "name",
+          selectedProjectIds: UnmodifiableListView<String>([]),
+        );
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectDialogViewModel);
+
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             strategy: strategy,
@@ -298,6 +403,7 @@ void main() {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
 
@@ -314,7 +420,7 @@ void main() {
       (WidgetTester tester) async {
         const groupId = "id";
         const groupName = "name";
-        final projectIds = UnmodifiableListView<String>([]);
+        final projectIds = UnmodifiableListView<String>(["id"]);
 
         final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
           id: groupId,
@@ -374,6 +480,7 @@ void main() {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
 
@@ -396,6 +503,7 @@ void main() {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
 
@@ -538,35 +646,6 @@ void main() {
     );
 
     testWidgets(
-      "validates the project group name field on tap on the action button",
-      (tester) async {
-        final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
-          selectedProjectIds: UnmodifiableListView<String>([]),
-        );
-
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-
-        when(projectGroupsNotifier.projectGroupDialogViewModel)
-            .thenReturn(projectGroupDialogViewModel);
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_ProjectGroupDialogTestbed(
-            strategy: strategy,
-            projectGroupsNotifier: projectGroupsNotifier,
-          ));
-        });
-
-        await tester.tap(find.text(strategy.text));
-        await tester.pump();
-
-        expect(
-          find.text(ProjectGroupsStrings.projectGroupNameRequired),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets(
       "displays the search for project text as a hint of the metrics text form field",
       (tester) async {
         await mockNetworkImagesFor(() {
@@ -674,7 +753,7 @@ void main() {
           ));
         });
 
-        await tester.tap(buttonFinder);
+        await tester.tap(find.byType(MetricsInactiveButton));
 
         verifyNever(strategy.action(any, any, any, any));
       },
@@ -701,8 +780,6 @@ void main() {
             strategy: strategy,
           ));
         });
-
-        await tester.tap(buttonFinder);
 
         expect(
           find.text(ProjectGroupsStrings.getProjectsLimitExceeded(
