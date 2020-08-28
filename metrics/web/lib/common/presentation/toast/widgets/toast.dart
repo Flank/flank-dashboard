@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
+import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/toast/theme/attention_level/toast_attention_level.dart';
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
+
+/// Shows the [Toast] on top of the screen
+/// for the duration of [DurationConstants.toast].
+ToastFuture showMetricsToast(BuildContext context, Toast toast) {
+  return showToastWidget(
+    toast,
+    context: context,
+    duration: DurationConstants.toast,
+    position: StyledToastPosition(
+      align: Alignment.topCenter,
+    ),
+  );
+}
 
 /// An abstract widget that displays a metrics styled toast
 /// in response to a user action and applies a [MetricsThemeData.toastTheme].
