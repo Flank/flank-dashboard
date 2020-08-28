@@ -711,7 +711,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the toast with the successful action message from the given strategy",
+      "displays the positive toast with the successful action message if an action finished successfully",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
@@ -732,7 +732,7 @@ void main() {
     );
 
     testWidgets(
-      "shows a negative toast if an action finished with en error",
+      "shows a negative toast with a project group saving error message if an action finished with en error",
       (tester) async {
         when(projectGroupsNotifier.projectGroupSavingError).thenReturn("error");
 
@@ -747,26 +747,6 @@ void main() {
         await tester.pump();
 
         expect(find.byType(NegativeToast), findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
-      },
-    );
-
-    testWidgets(
-      "shows a positive toast if an action finished successfully",
-      (tester) async {
-        when(strategy.getSuccessfulActionMessage(any)).thenReturn('message');
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_ProjectGroupDialogTestbed(
-            strategy: strategy,
-          ));
-        });
-
-        await tester.tap(find.text(strategy.text));
-        await tester.pump();
-
-        expect(find.byType(PositiveToast), findsOneWidget);
 
         await tester.pump(DurationConstants.toast);
       },

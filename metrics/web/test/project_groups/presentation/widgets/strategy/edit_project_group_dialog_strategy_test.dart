@@ -1,7 +1,7 @@
+import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
+import 'package:metrics/project_groups/presentation/widgets/strategy/edit_project_group_dialog_strategy.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
-import 'package:metrics/project_groups/presentation/widgets/strategy/edit_project_group_dialog_strategy.dart';
-import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 
 import '../../../../test_utils/project_groups_notifier_mock.dart';
 
@@ -34,7 +34,7 @@ void main() {
     });
 
     test(
-      ".getSuccessfulActionMessage returns an edited project group message with the given project group name",
+      ".getSuccessfulActionMessage() returns an edited project group message with the given project group name",
       () {
         const name = 'project group name';
         final expectedMessage =

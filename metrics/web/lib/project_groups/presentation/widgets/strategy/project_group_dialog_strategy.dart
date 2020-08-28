@@ -13,7 +13,7 @@ abstract class ProjectGroupDialogStrategy {
   /// A text to display on the dialog on loading.
   String get loadingText;
 
-  /// A text to notify a user about an [action] successfuly finished.
+  /// A text to notify a user about an [action] successfully finished.
   String getSuccessfulActionMessage(String groupName);
 
   /// Performs a specific method of the given [notifier] on the

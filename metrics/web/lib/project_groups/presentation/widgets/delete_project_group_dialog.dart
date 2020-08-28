@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/button/widgets/metrics_neutral_butto
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
+import 'package:metrics/common/presentation/toast/widgets/positive_toast.dart';
 import 'package:metrics/common/presentation/toast/widgets/toast.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
@@ -116,7 +117,7 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
         projectGroupDeleteDialogViewModel.name,
       );
 
-      toast = NegativeToast(message: message);
+      toast = PositiveToast(message: message);
     } else {
       _setLoading(false);
       toast = NegativeToast(message: projectGroupSavingError);
