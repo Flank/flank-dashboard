@@ -230,8 +230,9 @@ class BubbleShapeBorder extends ShapeBorder {
       halfArrowWidth,
       rectSize,
     );
-    final arrowStartPosition = arrowCenter - halfArrowWidth + arrowOffset;
-    final arrowEndPosition = arrowCenter + halfArrowWidth + arrowOffset;
+    final arrowCenterPosition = arrowCenter + arrowOffset;
+    final arrowStartPosition = arrowCenterPosition - halfArrowWidth;
+    final arrowEndPosition = arrowCenterPosition + halfArrowWidth;
 
     if (_isHorizontal) {
       path.moveTo(arrowStartPosition, bubbleRectSideSize);
