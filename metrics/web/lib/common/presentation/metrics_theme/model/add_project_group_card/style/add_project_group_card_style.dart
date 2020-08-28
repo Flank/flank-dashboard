@@ -20,7 +20,7 @@ class AddProjectGroupCardStyle {
   /// [backgroundColor] defaults to `Colors.green`.
   /// [iconColor] defaults to `Colors.yellow`.
   /// [hoverColor] defaults to `Colors.transparent`.
-  /// [backgroundColor] defaults to `Colors.green`.
+  /// [labelStyle] defaults to `TextStyle`.
   const AddProjectGroupCardStyle({
     Color backgroundColor,
     Color iconColor,
