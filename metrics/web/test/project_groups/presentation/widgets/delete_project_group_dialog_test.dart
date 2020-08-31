@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_neutral_button.dart';
-import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -263,8 +263,6 @@ void main() {
         verify(projectGroupsNotifier.deleteProjectGroup(
           deleteProjectGroupDialogViewModel.id,
         )).called(equals(1));
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -289,8 +287,6 @@ void main() {
         );
 
         expect(deleteButton.enabled, isFalse);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -311,8 +307,6 @@ void main() {
         );
 
         expect(deletingProjectGroupFinder, findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -327,8 +321,6 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(DeleteProjectGroupDialog), findsNothing);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -347,8 +339,6 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(DeleteProjectGroupDialog), findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -367,8 +357,6 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(deleteButtonFinder, findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -388,8 +376,6 @@ void main() {
         await tester.pump();
 
         expect(find.widgetWithText(NegativeToast, message), findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -410,15 +396,15 @@ void main() {
         await tester.pump();
 
         expect(find.widgetWithText(PositiveToast, message), findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
   });
 }
 
 /// A testbed class required to test the [DeleteProjectGroupDialog] widget.
-class _DeleteProjectGroupDialogTestbed extends StatelessWidget {
+///
+/// Dismisses all shown [Toast]s on dispose.
+class _DeleteProjectGroupDialogTestbed extends StatefulWidget {
   /// A [ProjectGroupsNotifier] that will be injected and used in tests.
   final ProjectGroupsNotifier projectGroupsNotifier;
 
@@ -441,14 +427,27 @@ class _DeleteProjectGroupDialogTestbed extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  __DeleteProjectGroupDialogTestbedState createState() =>
+      __DeleteProjectGroupDialogTestbedState();
+}
+
+class __DeleteProjectGroupDialogTestbedState
+    extends State<_DeleteProjectGroupDialogTestbed> {
+  @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
-      projectGroupsNotifier: projectGroupsNotifier,
+      projectGroupsNotifier: widget.projectGroupsNotifier,
       child: MetricsThemedTestbed(
-        metricsThemeData: metricsThemeData,
-        themeData: themeData,
+        metricsThemeData: widget.metricsThemeData,
+        themeData: widget.themeData,
         body: DeleteProjectGroupDialog(),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    ToastManager().dismissAll();
+    super.dispose();
   }
 }

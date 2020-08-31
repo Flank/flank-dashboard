@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
@@ -61,7 +61,7 @@ void main() {
 
         expect(negativeToastFinder, findsOneWidget);
 
-        await tester.pump(DurationConstants.toast);
+        ToastManager().dismissAll();
       },
     );
   });

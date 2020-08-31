@@ -85,7 +85,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   void _projectsErrorListener() {
     final errorMessage = _projectGroupsNotifier.projectsErrorMessage;
 
-    if (errorMessage != null && mounted) {
+    if (errorMessage != null) {
       showToast(context, NegativeToast(message: errorMessage));
     }
   }

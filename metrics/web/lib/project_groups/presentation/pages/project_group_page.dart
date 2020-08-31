@@ -56,7 +56,7 @@ class _ProjectGroupPageState extends State<ProjectGroupPage> {
   void _projectGroupsErrorListener() {
     final errorMessage = _projectGroupsNotifier.projectGroupsErrorMessage;
 
-    if (errorMessage != null && mounted) {
+    if (errorMessage != null) {
       showToast(
         context,
         NegativeToast(message: errorMessage),

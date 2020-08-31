@@ -1,12 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/value_form_field.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
-import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -263,8 +263,6 @@ void main() {
         await tester.idle();
 
         expect(find.text(loading), findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -298,8 +296,6 @@ void main() {
 
         verify(strategy.action(any, groupId, groupName, projectIds))
             .called(equals(1));
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -348,8 +344,6 @@ void main() {
         ));
 
         expect(actionButton.enabled, isFalse);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -366,8 +360,6 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(ProjectGroupDialog), findsNothing);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -387,8 +379,6 @@ void main() {
         await tester.pump();
 
         expect(find.text(strategy.text), findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -726,8 +716,6 @@ void main() {
           find.widgetWithText(PositiveToast, toastMessage),
           findsOneWidget,
         );
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
@@ -747,13 +735,11 @@ void main() {
         await tester.pump();
 
         expect(find.byType(NegativeToast), findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
     testWidgets(
-      "displays the negative toast when there is a projects error message",
+      "displays the negative toast with an projects error message if such already exists",
       (WidgetTester tester) async {
         const errorMessage = "Something went wrong";
         when(projectGroupsNotifier.projectsErrorMessage).thenReturn(
@@ -775,13 +761,11 @@ void main() {
         );
 
         expect(negativeToastFinder, findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
 
     testWidgets(
-      "displays the negative toast when a projects error message occurs",
+      "displays the negative toast with an projects error message if an error occurs",
       (WidgetTester tester) async {
         const errorMessage = "Something went wrong";
 
@@ -804,15 +788,15 @@ void main() {
         );
 
         expect(negativeToastFinder, findsOneWidget);
-
-        await tester.pump(DurationConstants.toast);
       },
     );
   });
 }
 
 /// A testbed class required to test the [ProjectGroupDialog] widget.
-class _ProjectGroupDialogTestbed extends StatelessWidget {
+///
+/// Dismisses all shown [Toast]s on dispose.
+class _ProjectGroupDialogTestbed extends StatefulWidget {
   /// A [ProjectGroupsNotifier] that will be injected and used in tests.
   final ProjectGroupsNotifier projectGroupsNotifier;
 
@@ -834,16 +818,29 @@ class _ProjectGroupDialogTestbed extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  __ProjectGroupDialogTestbedState createState() =>
+      __ProjectGroupDialogTestbedState();
+}
+
+class __ProjectGroupDialogTestbedState
+    extends State<_ProjectGroupDialogTestbed> {
+  @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
-      projectGroupsNotifier: projectGroupsNotifier,
+      projectGroupsNotifier: widget.projectGroupsNotifier,
       child: MetricsThemedTestbed(
-        metricsThemeData: theme,
+        metricsThemeData: widget.theme,
         body: ProjectGroupDialog(
-          strategy: strategy,
+          strategy: widget.strategy,
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    ToastManager().dismissAll();
+    super.dispose();
   }
 }
 

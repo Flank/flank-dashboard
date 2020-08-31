@@ -112,11 +112,9 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
 
     if (projectGroupSavingError == null) {
       Navigator.pop(context);
-
       final message = ProjectGroupsStrings.getDeletedProjectGroupMessage(
         projectGroupDeleteDialogViewModel.name,
       );
-
       toast = PositiveToast(message: message);
     } else {
       _setLoading(false);
