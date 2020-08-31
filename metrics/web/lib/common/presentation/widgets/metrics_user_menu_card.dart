@@ -24,103 +24,121 @@ class MetricsUserMenuCard extends StatelessWidget {
     final userMenuTheme = MetricsTheme.of(context).userMenuTheme;
     final userMenuTextStyle = userMenuTheme.contentTextStyle;
 
-    return Container(
-      decoration: const BoxDecoration(boxShadow: [
-        BoxShadow(
-            offset: Offset(0.0, 8.0),
-            blurRadius: 8.0,
-            spreadRadius: 0.0,
-            color: Color.fromRGBO(0, 0, 0, 0.32))
-      ]),
-      child: Card(
-        elevation: 0.0,
-        margin: EdgeInsets.zero,
-        color: userMenuTheme.backgroundColor,
-        shape: BubbleShapeBorder(
-          borderRadius: BorderRadius.circular(0.0),
-          arrowSize: const Size(arrowWidth, arrowHeight),
-          alignment: BubbleAlignment.end,
-          position: BubblePosition.top,
-          offset: -8.0,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: arrowHeight).add(
-            const EdgeInsets.symmetric(vertical: 12.0),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: itemPadding,
-                child: Consumer<ThemeNotifier>(
-                  builder: (context, model, _) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          CommonStrings.lightTheme,
-                          style: userMenuTextStyle,
-                        ),
-                        HandCursor(
-                          child: Toggle(
-                            value: !model.isDark,
-                            onToggle: (_) => model.changeTheme(),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Stack(
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: constraints.maxHeight - arrowHeight,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      offset: const Offset(0.0, 8.0),
+                      blurRadius: 12.0,
+                      spreadRadius: 0.0,
+                      color: Colors.black.withOpacity(0.32),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              elevation: 0.0,
+              margin: EdgeInsets.zero,
+              color: userMenuTheme.backgroundColor,
+              shape: BubbleShapeBorder(
+                borderRadius: BorderRadius.circular(4.0),
+                arrowSize: const Size(arrowWidth, arrowHeight),
+                alignment: BubbleAlignment.end,
+                position: BubblePosition.top,
+                offset: -8.0,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: arrowHeight).add(
+                  const EdgeInsets.symmetric(vertical: 12.0),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: itemPadding.copyWith(
+                        top: 10.0,
+                        bottom: 10.0,
+                      ),
+                      child: Consumer<ThemeNotifier>(
+                        builder: (context, model, _) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                CommonStrings.lightTheme,
+                                style: userMenuTextStyle,
+                              ),
+                              HandCursor(
+                                child: Toggle(
+                                  value: !model.isDark,
+                                  onToggle: (_) => model.changeTheme(),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: itemPadding,
+                      child: HandCursor(
+                        child: GestureDetector(
+                          onTap: () => Navigator.popAndPushNamed(
+                            context,
+                            RouteName.projectGroup,
+                          ),
+                          child: Text(
+                            CommonStrings.projectGroups,
+                            style: userMenuTextStyle,
                           ),
                         ),
-                      ],
-                    );
-                  },
+                      ),
+                    ),
+                    Padding(
+                      padding: itemPadding,
+                      child: HandCursor(
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Text(
+                            CommonStrings.users,
+                            style: userMenuTextStyle,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: userMenuTheme.dividerColor,
+                      thickness: 1.0,
+                      height: 25.0,
+                    ),
+                    Padding(
+                      padding: itemPadding,
+                      child: HandCursor(
+                        child: GestureDetector(
+                          onTap: () => _signOut(context),
+                          child: Text(
+                            CommonStrings.logOut,
+                            style: userMenuTextStyle,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: itemPadding,
-                child: HandCursor(
-                  child: GestureDetector(
-                    onTap: () => Navigator.popAndPushNamed(
-                      context,
-                      RouteName.projectGroup,
-                    ),
-                    child: Text(
-                      CommonStrings.projectGroups,
-                      style: userMenuTextStyle,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: itemPadding,
-                child: HandCursor(
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      CommonStrings.users,
-                      style: userMenuTextStyle,
-                    ),
-                  ),
-                ),
-              ),
-              Divider(
-                color: userMenuTheme.dividerColor,
-                thickness: 1.0,
-                height: 25.0,
-              ),
-              Padding(
-                padding: itemPadding,
-                child: HandCursor(
-                  child: GestureDetector(
-                    onTap: () => _signOut(context),
-                    child: Text(
-                      CommonStrings.logOut,
-                      style: userMenuTextStyle,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -8,6 +8,9 @@ class UserMenuThemeData {
   /// A divider [Color] of the user menu.
   final Color dividerColor;
 
+  /// A shadow [Color] of the user menu.
+  final Color shadowColor;
+
   /// The [TextStyle] of the text in the user menu.
   final TextStyle contentTextStyle;
 
@@ -15,6 +18,7 @@ class UserMenuThemeData {
   const UserMenuThemeData({
     this.backgroundColor,
     this.dividerColor,
+    this.shadowColor,
     this.contentTextStyle,
   });
 }
