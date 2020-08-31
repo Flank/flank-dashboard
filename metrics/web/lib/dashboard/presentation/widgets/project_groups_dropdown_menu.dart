@@ -93,6 +93,8 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
                           child: Text(
                             selectedItem?.name ?? '',
                             style: theme.textStyle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ),
