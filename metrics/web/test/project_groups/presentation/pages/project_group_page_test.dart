@@ -41,7 +41,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the negative toast with a project group error message if such exists",
+      "displays the negative toast when there is a project groups error message",
       (WidgetTester tester) async {
         const error = "Something went wrong";
         final projectGroupsNotifier = ProjectGroupsNotifierMock();

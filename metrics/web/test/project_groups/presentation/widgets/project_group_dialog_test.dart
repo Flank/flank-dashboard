@@ -753,7 +753,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the negative toast with an projects error message if such already exists",
+      "displays the negative toast when there is a projects error message",
       (WidgetTester tester) async {
         const errorMessage = "Something went wrong";
         when(projectGroupsNotifier.projectsErrorMessage).thenReturn(
@@ -781,7 +781,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the negative toast with an projects error message if an error occurs",
+      "displays the negative toast when a projects error message occurs",
       (WidgetTester tester) async {
         const errorMessage = "Something went wrong";
 
