@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
   void _loggedInErrorListener() {
     final errorMessage = _authNotifier.authErrorMessage;
 
-    if (errorMessage != null && mounted) {
+    if (errorMessage != null) {
       showToast(context, NegativeToast(message: errorMessage));
     }
   }

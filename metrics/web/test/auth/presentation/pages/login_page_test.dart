@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
-import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
@@ -75,7 +75,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the negative toast with an auth error message when the error occurs",
+      "displays the negative toast when there is an auth error message",
       (WidgetTester tester) async {
         const error = "Something went wrong";
 
@@ -94,7 +94,7 @@ void main() {
 
         expect(find.widgetWithText(NegativeToast, error), findsOneWidget);
 
-        await tester.pump(DurationConstants.toast);
+        ToastManager().dismissAll();
       },
     );
 
