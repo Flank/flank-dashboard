@@ -34,21 +34,6 @@ class _DashboardPageState extends State<DashboardPage> {
     _projectMetricsNotifier.addListener(_projectsErrorListener);
   }
 
-  /// Shows the [NegativeToast] with an error message
-  /// if projects error is not null.
-  void _projectsErrorListener() {
-    final errorMessage = _projectMetricsNotifier.projectsErrorMessage;
-
-    if (errorMessage != null && mounted) {
-      showToast(
-        context,
-        NegativeToast(
-          message: errorMessage,
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MetricsScaffold(
@@ -74,6 +59,21 @@ class _DashboardPageState extends State<DashboardPage> {
         ],
       ),
     );
+  }
+
+  /// Shows the [NegativeToast] with an error message
+  /// if projects error is not null.
+  void _projectsErrorListener() {
+    final errorMessage = _projectMetricsNotifier.projectsErrorMessage;
+
+    if (errorMessage != null) {
+      showToast(
+        context,
+        NegativeToast(
+          message: errorMessage,
+        ),
+      );
+    }
   }
 
   @override
