@@ -69,7 +69,10 @@ void main() {
           theme: testTheme,
         ));
 
-        final container = tester.widget<Container>(find.byType(Container));
+        final container = tester.widget<Container>(find.ancestor(
+          of: find.byType(Card),
+          matching: find.byType(Container),
+        ));
         final decoration = container.decoration as BoxDecoration;
         final boxShadow = decoration.boxShadow.first;
 
@@ -140,9 +143,7 @@ void main() {
     testWidgets(
       "applies a hand cursor to the project group text widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
-          theme: testTheme,
-        ));
+        await tester.pumpWidget(const _MetricsUserMenuCardTestbed());
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.projectGroups),
@@ -156,9 +157,7 @@ void main() {
     testWidgets(
       "applies a hand cursor to the the users text widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
-          theme: testTheme,
-        ));
+        await tester.pumpWidget(const _MetricsUserMenuCardTestbed());
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.users),
@@ -172,9 +171,7 @@ void main() {
     testWidgets(
       "applies a hand cursor to the logOut text widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
-          theme: testTheme,
-        ));
+        await tester.pumpWidget(const _MetricsUserMenuCardTestbed());
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.logOut),
@@ -188,9 +185,7 @@ void main() {
     testWidgets(
       "applies a hand cursor to the toggle widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
-          theme: testTheme,
-        ));
+        await tester.pumpWidget(const _MetricsUserMenuCardTestbed());
 
         final finder = find.ancestor(
           of: find.byType(Toggle),
@@ -208,10 +203,9 @@ void main() {
 
         when(themeNotifier.isDark).thenReturn(false);
 
-        await tester.pumpWidget(_MetricsUserMenuCardTestbed(
-          theme: testTheme,
-          themeNotifier: themeNotifier,
-        ));
+        await tester.pumpWidget(
+          _MetricsUserMenuCardTestbed(themeNotifier: themeNotifier),
+        );
 
         await tester.tap(find.byType(Toggle));
         await tester.pumpAndSettle();

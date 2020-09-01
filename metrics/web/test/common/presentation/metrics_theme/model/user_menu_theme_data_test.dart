@@ -25,5 +25,11 @@ void main() {
       expect(themeData.shadowColor, equals(shadowColor));
       expect(themeData.contentTextStyle, equals(contentTextStyle));
     });
+
+    test("creates an instance with the default shadow color", () {
+      final themeData = UserMenuThemeData();
+
+      expect(themeData.shadowColor, isNotNull);
+    });
   });
 }
