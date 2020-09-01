@@ -341,7 +341,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the inactive create group button when the group name is not valid even if the number of selected projects is valid",
+      "displays the inactive create group button when the group name is not valid and the number of selected projects is valid",
       (tester) async {
         when(projectGroupsNotifier.projectGroupDialogViewModel)
             .thenReturn(projectGroupDialogViewModel);
@@ -365,7 +365,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the inactive create group button when the number of selected projects is not valid even if the group name is valid",
+      "displays the inactive create group button when the number of selected projects is not valid and the group name is valid",
       (tester) async {
         final projectDialogViewModel = ProjectGroupDialogViewModel(
           id: "id",

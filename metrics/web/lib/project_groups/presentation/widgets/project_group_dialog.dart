@@ -10,6 +10,7 @@ import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/common/presentation/toast/widgets/positive_toast.dart';
 import 'package:metrics/common/presentation/toast/widgets/toast.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
+import 'package:metrics/project_groups/domain/value_objects/project_group_projects.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
@@ -70,10 +71,10 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     _groupNameController.text =
         _projectGroupsNotifier?.projectGroupDialogViewModel?.name;
 
-    _handleProjectGroupChanges();
+    _updateActionButtonState();
 
-    _projectGroupsNotifier.addListener(_handleProjectGroupChanges);
-    _groupNameController.addListener(_handleProjectGroupChanges);
+    _projectGroupsNotifier.addListener(_updateActionButtonState);
+    _groupNameController.addListener(_updateActionButtonState);
   }
 
   /// Subscribes to project errors.
@@ -230,33 +231,23 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// A callback that is called when the group name or any of the projects
   /// in project checkbox list was (un)checked.
   /// If the group name and the number of selected projects are both valid,
-  /// the [_isActionButtonActive] is set to `true`, otherwise, to `false`.
-  void _handleProjectGroupChanges() {
+  /// the [_isActionButtonActive.value] is set to `true`, otherwise, to `false`.
+  void _updateActionButtonState() {
     final groupName = _groupNameController?.text ?? '';
-    if (_validateNumberOfSelectedProjects() && _validateGroupName(groupName)) {
+    final numberOfSelectedProjects = _projectGroupsNotifier
+            ?.projectGroupDialogViewModel?.selectedProjectIds?.length ??
+        0;
+
+    final isGroupNameValid =
+        ProjectGroupNameValidator.validate(groupName) == null;
+    final isNumberOfSelectedProjectsValid = numberOfSelectedProjects > 0 &&
+        numberOfSelectedProjects <= ProjectGroupProjects.maxNumberOfProjects;
+
+    if (isGroupNameValid && isNumberOfSelectedProjectsValid) {
       _isActionButtonActive.value = true;
     } else {
       _isActionButtonActive.value = false;
     }
-  }
-
-  /// Validates the number of selected projects in the project checkbox list.
-  /// The number of selected projects must be <= 20 and > 0 -> ( n ∈ (0; 20] ).
-  bool _validateNumberOfSelectedProjects() {
-    final numberOfSelectedProjects = _projectGroupsNotifier
-        ?.projectGroupDialogViewModel?.selectedProjectIds?.length;
-    if (numberOfSelectedProjects != null &&
-        numberOfSelectedProjects > 0 &&
-        numberOfSelectedProjects <= 20) {
-      return true;
-    }
-    return false;
-  }
-
-  /// Validates the group name field value.
-  /// The name must not be empty.
-  bool _validateGroupName(String groupName) {
-    return groupName.isNotEmpty;
   }
 
   /// A callback for this dialog action button.
@@ -299,8 +290,8 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   @override
   void dispose() {
     _projectGroupsNotifier.resetFilterName();
-    _projectGroupsNotifier.removeListener(_handleProjectGroupChanges);
-    _groupNameController.removeListener(_handleProjectGroupChanges);
+    _projectGroupsNotifier.removeListener(_updateActionButtonState);
+    _groupNameController.removeListener(_updateActionButtonState);
     _groupNameController.dispose();
     _projectGroupsNotifier.removeListener(_projectsErrorListener);
     _isGroupNameEmpty.dispose();
