@@ -225,11 +225,9 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
     if (projectGroupSavingError == null) {
       Navigator.pop(context);
-
       final message = widget.strategy.getSuccessfulActionMessage(
         _groupNameController.text,
       );
-
       toast = PositiveToast(message: message);
     } else {
       _setLoading(false);
