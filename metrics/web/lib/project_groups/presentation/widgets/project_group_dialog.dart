@@ -238,7 +238,6 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     final groupName = _groupNameController.value.text;
     final List<String> selectedProjectIds =
         _projectGroupsNotifier.projectGroupDialogViewModel.selectedProjectIds;
-
     final numberOfSelectedProjects = selectedProjectIds.length;
 
     if (numberOfSelectedProjects > 0) {
