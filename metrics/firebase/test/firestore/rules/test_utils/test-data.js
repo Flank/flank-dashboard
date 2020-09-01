@@ -1,6 +1,7 @@
 const firestore = require("firebase").firestore;
-const cloneDeep = require('clone-deep');
+const cloneDeep = require("clone-deep");
 
+/** A test project */
 exports.project = {
   name: "test_project",
 };
@@ -15,6 +16,7 @@ exports.projects = {
   },
 };
 
+/** A list of test project groups */
 const projectGroups = {
   "project_groups/1": {
     name: "project_group_1",
@@ -50,11 +52,20 @@ const builds = {
   },
 };
 
+/** A list of test allowed email domains */
+const allowedEmailDomains = {
+  "allowed_email_domains/gmail.com": {},
+};
+
 exports.projectGroups = projectGroups;
 exports.builds = builds;
+exports.allowedEmailDomains = allowedEmailDomains;
 
 /** A firebase user needed for tests */
-exports.user = { uid: "uid" };
+exports.user = { uid: "uid", email: 'test@gmail.com' };
+
+/** A firebase user with an invalid email needed for tests */
+exports.invalidUser = { uid: "uid", email: 'test@invalid.com' };
 
 /** Get a test project group */
 exports.getProjectGroup = function () {

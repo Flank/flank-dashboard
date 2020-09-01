@@ -1,33 +1,53 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-  
+
     match /project_groups/{projectGroupId} {
-      allow read, delete: if isLoggedIn();
-      allow create, update: if isLoggedIn() && isProjectGroupValid();
+      allow read, delete: if isLoggedIn(database);
+      allow create, update: if isLoggedIn(database) && isProjectGroupValid();
     }
 
     match /projects/{projectId} {
-      allow read: if isLoggedIn();
-      allow create, update: if isLoggedIn() && isProjectValid();
+      allow read: if isLoggedIn(database);
+      allow create, update: if isLoggedIn(database) && isProjectValid();
       allow delete: if false;
     }
 
     match /build/{buildId} {
-      allow read: if isLoggedIn();
-      allow create, update: if isLoggedIn() && isBuildValid(database);
+      allow read: if isLoggedIn(database);
+      allow create, update: if isLoggedIn(database) && isBuildValid(database);
       allow delete: if false;
+    }
+
+    match /allowed_email_domains/{domain} {
+      allow read, write: if false;
     }
   }
 
+  /// Checks if the request is from a user with a valid email.
+  function isEmailValid(database) {
+    return request.auth.token.email != null && isEmailDomainAllowed(database);
+  }
+
+  /// Checks whether a request's email domain is in the allowed domains list
+  /// or the auth method is a password.
+  function isEmailDomainAllowed(database) {
+    let authMethod = request.auth.token.firebase.sign_in_provider;
+    let userEmail = request.auth.token.email;
+    let emailDomain = userEmail.split('@')[1];
+    let isEmailDomainExists = exists(/databases/$(database)/documents/allowed_email_domains/$(emailDomain));
+
+    return authMethod == 'password' || isEmailDomainExists;
+  }
+
   /// Checks if a request is from a logged-in user.
-  function isLoggedIn() {
-    return request.auth.uid != null
+  function isLoggedIn(database) {
+    return request.auth.uid != null && isEmailValid(database)
   }
 
   /// Checks whether project group data from the request is valid.
   function isProjectGroupValid() {
-    return isProjectGroupDataValid() 
+    return isProjectGroupDataValid()
       && isString("name")
       && isList("projectIds")
       && isProjectGroupNameValid()
@@ -85,7 +105,6 @@ service cloud.firestore {
 
   /// Checks whether the request contains the valid build data.
   function isBuildValid(database) {
-    
     let validBuildStatuses = [
       "BuildStatus.successful",
       "BuildStatus.cancelled",
@@ -98,7 +117,7 @@ service cloud.firestore {
           && isInteger("buildNumber")
           && isTimestamp("startedAt", false)
           && isEnum("buildStatus", validBuildStatuses)
-          && isInteger("duration") 
+          && isInteger("duration")
           && isStringOrNull("workflowName")
           && isString("url")
           && isFloatOrNull("coverage", 0.0, 1.0);
@@ -159,7 +178,7 @@ service cloud.firestore {
   function isTimestamp(field, canBeInFuture) {
     let requestData = request.resource.data;
 
-    return field in requestData 
+    return field in requestData
           && requestData[field] is timestamp
           &&  (canBeInFuture || isDateInPast(requestData.startedAt));
   }

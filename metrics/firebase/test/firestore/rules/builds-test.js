@@ -4,16 +4,23 @@ const {
   tearDown,
 } = require("./test_utils/test-app-utils");
 const { assertFails, assertSucceeds } = require("@firebase/testing");
-const { user, builds, getBuild } = require("./test_utils/test-data");
+const {
+  user,
+  invalidUser,
+  builds,
+  getBuild,
+  allowedEmailDomains,
+} = require("./test_utils/test-data");
 const firestore = require("firebase").firestore;
 
 describe("Build collection rules", async () => {
   const authenticatedApp = await getApplicationWith(user);
+  const invalidAuthenticatedApp = await getApplicationWith(invalidUser);
   const unauthenticatedApp = await getApplicationWith(null);
   const buildsCollectionName = "build";
 
   before(async () => {
-    await setupTestDatabaseWith(builds);
+    await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains));
   });
 
   /**
@@ -213,15 +220,36 @@ describe("Build collection rules", async () => {
     );
   });
 
+  it("does not allow to create a build by an authenticated user with an invalid email domain", async () => {
+    await assertFails(
+      invalidAuthenticatedApp.collection(buildsCollectionName).add(getBuild())
+    );
+  });
+
   it("allows reading builds by an authenticated user", async () => {
     await assertSucceeds(
       authenticatedApp.collection(buildsCollectionName).get()
     );
   });
 
+  it("does not allow to read builds by an authenticated user with an invalid email domain", async () => {
+    await assertFails(
+      invalidAuthenticatedApp.collection(buildsCollectionName).get()
+    );
+  });
+
   it("allows updating a build by an authenticated user", async () => {
     await assertSucceeds(
       authenticatedApp
+        .collection(buildsCollectionName)
+        .doc("1")
+        .update({ url: "updated" })
+    );
+  });
+
+  it("does not allow to update a build by an authenticated user with an invalid email", async () => {
+    await assertFails(
+      invalidAuthenticatedApp
         .collection(buildsCollectionName)
         .doc("1")
         .update({ url: "updated" })

@@ -4,15 +4,24 @@ const {
   tearDown,
 } = require("./test_utils/test-app-utils");
 const { assertFails, assertSucceeds } = require("@firebase/testing");
-const { project, projects, user } = require("./test_utils/test-data");
+const {
+  project,
+  projects,
+  user,
+  invalidUser,
+  allowedEmailDomains,
+} = require("./test_utils/test-data");
 
 describe("Projects collection rules", async function () {
   const authenticatedApp = await getApplicationWith(user);
+  const invalidAuthenticatedApp = await getApplicationWith(invalidUser);
   const unauthenticatedApp = await getApplicationWith(null);
   const projectsCollectionName = "projects";
 
   before(async () => {
-    await setupTestDatabaseWith(projects);
+    await setupTestDatabaseWith(
+      Object.assign({}, projects, allowedEmailDomains)
+    );
   });
 
   /**
@@ -42,15 +51,42 @@ describe("Projects collection rules", async function () {
     );
   });
 
+  it("does not allow to create a project by an authenticated user with an invalid email domain", async () => {
+    await assertFails(
+      invalidAuthenticatedApp.collection(projectsCollectionName).add(project)
+    );
+  });
+
   it("allows reading projects by an authenticated user", async () => {
     await assertSucceeds(
       authenticatedApp.collection(projectsCollectionName).get()
     );
   });
 
+  it("does not allow to read projects by an authenticated user with an invalid email domain", async () => {
+    await assertFails(
+      invalidAuthenticatedApp.collection(projectsCollectionName).get()
+    );
+  });
+
+  it("does not allow to read projects by an authenticated user with an invalid email domain", async () => {
+    await assertFails(
+      invalidAuthenticatedApp.collection(projectsCollectionName).get()
+    );
+  });
+
   it("allows updating a project by an authenticated user", async () => {
     await assertSucceeds(
       authenticatedApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .update(project)
+    );
+  });
+
+  it("does not allow to update a project by an authenticated user with invalid email", async () => {
+    await assertFails(
+      invalidAuthenticatedApp
         .collection(projectsCollectionName)
         .doc("1")
         .update(project)
