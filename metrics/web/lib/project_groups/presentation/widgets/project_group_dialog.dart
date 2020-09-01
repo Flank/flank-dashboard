@@ -246,6 +246,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
           ProjectGroupNameValidator.validate(groupName);
       final selectedProjectIdsErrorMessage =
           ProjectGroupProjectsValidator.validate(selectedProjectIds);
+
       _isActionButtonActive.value = groupNameErrorMessage == null &&
           selectedProjectIdsErrorMessage == null;
     } else {
