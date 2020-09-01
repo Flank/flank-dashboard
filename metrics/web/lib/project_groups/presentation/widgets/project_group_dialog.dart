@@ -232,10 +232,8 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     return ProjectGroupsStrings.getSelectedCount(selectedProjectIds.length);
   }
 
-  /// A callback that is called when the group name or any of the projects
-  /// in project checkbox list was (un)checked.
-  /// If the group name and the number of selected projects are both valid,
-  /// the [_isActionButtonActive.value] is set to `true`, otherwise, to `false`.
+  /// Updates the state of the action button depending on the
+  /// project group dialog values selected by user.
   void _updateActionButtonState() {
     final groupName = _groupNameController.value.text;
     final List<String> selectedProjectIds =
@@ -248,11 +246,8 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
           ProjectGroupNameValidator.validate(groupName);
       final selectedProjectIdsErrorMessage =
           ProjectGroupProjectsValidator.validate(selectedProjectIds);
-
-      final isButtonActive = groupNameErrorMessage == null &&
+      _isActionButtonActive.value = groupNameErrorMessage == null &&
           selectedProjectIdsErrorMessage == null;
-
-      _isActionButtonActive.value = isButtonActive;
     } else {
       _isActionButtonActive.value = false;
     }
