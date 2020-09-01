@@ -508,6 +508,26 @@ void main() {
         expect(find.text(firstDropdownItem.name), findsOneWidget);
       },
     );
+
+    testWidgets(
+      "displays the name of the project group in one line",
+      (tester) async {
+        when(metricsNotifier.selectedProjectGroup)
+            .thenReturn(firstDropdownItem);
+
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(_ProjectGroupsDropdownMenuTestbed(
+            metricsNotifier: metricsNotifier,
+          )),
+        );
+
+        final groupNameText = tester.widget<Text>(
+          find.text(firstDropdownItem.name),
+        );
+
+        expect(groupNameText.maxLines, equals(1));
+      },
+    );
   });
 }
 
