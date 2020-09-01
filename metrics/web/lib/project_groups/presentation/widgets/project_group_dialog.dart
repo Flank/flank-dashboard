@@ -10,7 +10,6 @@ import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/common/presentation/toast/widgets/positive_toast.dart';
 import 'package:metrics/common/presentation/toast/widgets/toast.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
-import 'package:metrics/project_groups/domain/value_objects/project_group_projects.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/validators/project_group_name_validator.dart';
@@ -71,6 +70,11 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     _groupNameController.text =
         _projectGroupsNotifier?.projectGroupDialogViewModel?.name;
 
+    _subscribeToProjectGroupDialogChanges();
+  }
+
+  /// Subscribes to project group dialog changes.
+  void _subscribeToProjectGroupDialogChanges() {
     _updateActionButtonState();
 
     _projectGroupsNotifier.addListener(_updateActionButtonState);
@@ -233,18 +237,20 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// If the group name and the number of selected projects are both valid,
   /// the [_isActionButtonActive.value] is set to `true`, otherwise, to `false`.
   void _updateActionButtonState() {
-    final groupName = _groupNameController?.text ?? '';
-    final numberOfSelectedProjects = _projectGroupsNotifier
-            ?.projectGroupDialogViewModel?.selectedProjectIds?.length ??
-        0;
+    final groupName = _groupNameController.value.text;
+    final List<String> selectedProjectIds =
+        _projectGroupsNotifier.projectGroupDialogViewModel.selectedProjectIds;
 
-    final isGroupNameValid =
-        ProjectGroupNameValidator.validate(groupName) == null;
-    final isNumberOfSelectedProjectsValid = numberOfSelectedProjects > 0 &&
-        numberOfSelectedProjects <= ProjectGroupProjects.maxNumberOfProjects;
+    final numberOfSelectedProjects = selectedProjectIds.length;
 
-    if (isGroupNameValid && isNumberOfSelectedProjectsValid) {
-      _isActionButtonActive.value = true;
+    if (numberOfSelectedProjects > 0) {
+      final isGroupNameValid =
+          ProjectGroupNameValidator.validate(groupName) == null;
+      final areSelectedProjectIdsValid =
+          ProjectGroupProjectsValidator.validate(selectedProjectIds) == null;
+
+      _isActionButtonActive.value =
+          isGroupNameValid && areSelectedProjectIdsValid;
     } else {
       _isActionButtonActive.value = false;
     }
