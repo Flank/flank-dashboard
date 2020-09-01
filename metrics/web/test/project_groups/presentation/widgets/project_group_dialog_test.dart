@@ -825,9 +825,13 @@ void main() {
     testWidgets(
       "displays the positive toast with the successful action message if an action finished successfully",
       (tester) async {
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(projectGroupDialogViewModel);
+
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
             strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
 
