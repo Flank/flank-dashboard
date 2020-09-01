@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 /// A class that stores the theme data for the metrics user menu.
 class UserMenuThemeData {
+  /// A shadow [Color] of the user menu.
+  final Color shadowColor;
+
   /// A background [Color] of the user menu.
   final Color backgroundColor;
 
@@ -12,7 +15,10 @@ class UserMenuThemeData {
   final TextStyle contentTextStyle;
 
   /// Creates a new instance of the [UserMenuThemeData].
+  ///
+  /// The [shadowColor] default value is [Colors.black].
   const UserMenuThemeData({
+    this.shadowColor = Colors.black,
     this.backgroundColor,
     this.dividerColor,
     this.contentTextStyle,

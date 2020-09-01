@@ -10,17 +10,26 @@ void main() {
     test("creates an instance with the given values", () {
       const backgroundColor = Colors.blue;
       const dividerColor = Colors.black;
+      const shadowColor = Colors.red;
       const contentTextStyle = TextStyle();
 
       final themeData = UserMenuThemeData(
         backgroundColor: backgroundColor,
         dividerColor: dividerColor,
+        shadowColor: shadowColor,
         contentTextStyle: contentTextStyle,
       );
 
       expect(themeData.backgroundColor, equals(backgroundColor));
       expect(themeData.dividerColor, equals(dividerColor));
+      expect(themeData.shadowColor, equals(shadowColor));
       expect(themeData.contentTextStyle, equals(contentTextStyle));
+    });
+
+    test("creates an instance with the default shadow color", () {
+      final themeData = UserMenuThemeData();
+
+      expect(themeData.shadowColor, isNotNull);
     });
   });
 }

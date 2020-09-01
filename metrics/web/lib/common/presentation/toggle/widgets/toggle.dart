@@ -42,7 +42,7 @@ class _ToggleState extends State<Toggle> {
       child: FlutterSwitch(
         width: 35.0,
         height: 20.0,
-        toggleSize: 15.0,
+        toggleSize: 16.0,
         padding: 2.0,
         onToggle: widget.onToggle,
         value: widget.value,

@@ -31,10 +31,10 @@ import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
-import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/attention_level/toast_attention_level.dart';
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
+import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
@@ -67,6 +67,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveToggleHoverColor = Color(0xFF262626);
   static const Color _textPlaceholderColor = Color(0xFF51585c);
   static const Color _addProjectGroupCardHoverColor = Color(0xff07372f);
+  static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = TextStyle(
@@ -364,6 +365,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.black,
             dividerColor: scaffoldColor,
+            shadowColor: _userMenuShadowColor,
             contentTextStyle: TextStyle(
               color: Colors.white,
               fontSize: 16.0,

@@ -53,6 +53,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _textPlaceholderColor = Color(0xFF51585c);
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
+  static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
 
   /// A [TextStyle] of the dialog title.
   static const TextStyle _dialogTitleTextStyle = TextStyle(
@@ -257,6 +258,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.white,
             dividerColor: scaffoldColor,
+            shadowColor: _userMenuShadowColor,
             contentTextStyle: TextStyle(
               color: Colors.black,
               fontSize: 16.0,
