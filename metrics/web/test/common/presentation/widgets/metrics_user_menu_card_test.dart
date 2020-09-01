@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
@@ -9,6 +8,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/common/presentation/widgets/metrics_user_menu_card.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 import 'package:mockito/mockito.dart';
@@ -25,12 +25,14 @@ void main() {
     const testBackgroundColor = Colors.white;
     const testDividerColor = Colors.black;
     const testTextStyle = TextStyle(color: Colors.grey);
+    const shadowColor = Colors.black;
 
     const testTheme = MetricsThemeData(
       userMenuTheme: UserMenuThemeData(
         backgroundColor: testBackgroundColor,
         dividerColor: testDividerColor,
         contentTextStyle: testTextStyle,
+        shadowColor: shadowColor,
       ),
     );
 
@@ -57,6 +59,21 @@ void main() {
         final divider = tester.widget<Divider>(find.byType(Divider));
 
         expect(divider.color, equals(testDividerColor));
+      },
+    );
+
+    testWidgets(
+      "applies the shadow color from the user menu theme to the container's box shadow",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
+          theme: testTheme,
+        ));
+
+        final container = tester.widget<Container>(find.byType(Container));
+        final decoration = container.decoration as BoxDecoration;
+        final boxShadow = decoration.boxShadow.first;
+
+        expect(boxShadow.color, equals(shadowColor));
       },
     );
 
@@ -137,6 +154,22 @@ void main() {
     );
 
     testWidgets(
+      "applies a hand cursor to the the users text widget",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
+          theme: testTheme,
+        ));
+
+        final finder = find.ancestor(
+          of: find.text(CommonStrings.users),
+          matching: find.byType(HandCursor),
+        );
+
+        expect(finder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
       "applies a hand cursor to the logOut text widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
@@ -153,14 +186,14 @@ void main() {
     );
 
     testWidgets(
-      "applies a hand cursor to the flutter switch widget",
+      "applies a hand cursor to the toggle widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
           theme: testTheme,
         ));
 
         final finder = find.ancestor(
-          of: find.byType(FlutterSwitch),
+          of: find.byType(Toggle),
           matching: find.byType(HandCursor),
         );
 
@@ -169,7 +202,7 @@ void main() {
     );
 
     testWidgets(
-      "calls the ThemeNotifier.changeTheme() if the switch widget is tapped",
+      "calls the ThemeNotifier.changeTheme() if the toggle widget is tapped",
       (WidgetTester tester) async {
         final themeNotifier = ThemeNotifierMock();
 
@@ -180,7 +213,7 @@ void main() {
           themeNotifier: themeNotifier,
         ));
 
-        await tester.tap(find.byType(FlutterSwitch));
+        await tester.tap(find.byType(Toggle));
         await tester.pumpAndSettle();
 
         verify(themeNotifier.changeTheme()).called(equals(1));
