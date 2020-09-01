@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
-import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
@@ -26,6 +26,16 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("DashboardPage", () {
+    ProjectMetricsNotifier projectMetricsNotifier;
+
+    setUp(() {
+      projectMetricsNotifier = ProjectMetricsNotifierMock();
+    });
+
+    tearDown(() {
+      reset(projectMetricsNotifier);
+    });
+
     testWidgets(
       "contains the MetricsAppBar widget",
       (WidgetTester tester) async {
@@ -90,29 +100,29 @@ void main() {
     );
 
     testWidgets(
-      "displays the negative toast if an error occurs",
+      "displays the negative toast if there is a projects error message",
       (WidgetTester tester) async {
-        final _projectMetricsNotifier = ProjectMetricsNotifierMock();
-
         const errorMessage = "some error message";
-        when(_projectMetricsNotifier.projectsErrorMessage)
-            .thenReturn(errorMessage);
-        when(_projectMetricsNotifier.isMetricsLoading).thenReturn(false);
+
+        when(projectMetricsNotifier.isMetricsLoading).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DashboardTestbed(
-            metricsNotifier: _projectMetricsNotifier,
+            metricsNotifier: projectMetricsNotifier,
           ));
         });
 
-        _projectMetricsNotifier.notifyListeners();
+        when(projectMetricsNotifier.projectsErrorMessage)
+            .thenReturn(errorMessage);
+
+        projectMetricsNotifier.notifyListeners();
 
         await tester.pump();
 
         expect(
             find.widgetWithText(NegativeToast, errorMessage), findsOneWidget);
 
-        await tester.pump(DurationConstants.toast);
+        ToastManager().dismissAll();
       },
     );
 

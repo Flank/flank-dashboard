@@ -23,8 +23,14 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
+    _subscribeToProjectsErrors();
+  }
+
+  /// Subscribes to projects errors.
+  void _subscribeToProjectsErrors() {
     _projectMetricsNotifier =
         Provider.of<ProjectMetricsNotifier>(context, listen: false);
+
     _projectMetricsNotifier.addListener(_projectsErrorListener);
   }
 
@@ -32,6 +38,7 @@ class _DashboardPageState extends State<DashboardPage> {
   /// if projects error is not null.
   void _projectsErrorListener() {
     final errorMessage = _projectMetricsNotifier.projectsErrorMessage;
+
     if (errorMessage != null && mounted) {
       showToast(
         context,
