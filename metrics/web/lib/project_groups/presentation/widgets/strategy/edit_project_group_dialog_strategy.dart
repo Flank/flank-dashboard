@@ -16,6 +16,10 @@ class EditProjectGroupDialogStrategy implements ProjectGroupDialogStrategy {
   final String loadingText = ProjectGroupsStrings.savingProjectGroup;
 
   @override
+  String getSuccessfulActionMessage(String groupName) =>
+      ProjectGroupsStrings.getEditedProjectGroupMessage(groupName);
+
+  @override
   Future<void> action(
     ProjectGroupsNotifier notifier,
     String groupId,

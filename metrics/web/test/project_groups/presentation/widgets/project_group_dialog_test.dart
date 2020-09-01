@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
@@ -9,6 +10,8 @@ import 'package:metrics/common/presentation/button/widgets/metrics_positive_butt
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
+import 'package:metrics/common/presentation/toast/widgets/positive_toast.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:metrics/project_groups/domain/value_objects/project_group_projects.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -39,6 +42,7 @@ void main() {
     const counterTextStyle = TextStyle(
       color: Colors.blue,
     );
+    const toastMessage = 'toast message';
 
     final buttonFinder = find.widgetWithText(
       MetricsPositiveButton,
@@ -68,6 +72,7 @@ void main() {
       when(strategy.title).thenReturn(title);
       when(strategy.text).thenReturn(buttonText);
       when(strategy.loadingText).thenReturn(loadingText);
+      when(strategy.getSuccessfulActionMessage(any)).thenReturn(toastMessage);
 
       projectGroupsNotifier = ProjectGroupsNotifierMock();
 
@@ -694,11 +699,104 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      "displays the positive toast with the successful action message if an action finished successfully",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+          ));
+        });
+
+        await tester.tap(find.text(strategy.text));
+        await tester.pump();
+
+        expect(
+          find.widgetWithText(PositiveToast, toastMessage),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      "shows a negative toast with a project group saving error message if an action finished with en error",
+      (tester) async {
+        when(projectGroupsNotifier.projectGroupSavingError).thenReturn("error");
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.tap(find.text(strategy.text));
+        await tester.pump();
+
+        expect(find.byType(NegativeToast), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the negative toast when there is a projects error message",
+      (WidgetTester tester) async {
+        const errorMessage = "Something went wrong";
+        when(projectGroupsNotifier.projectsErrorMessage).thenReturn(
+          errorMessage,
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.pump();
+
+        final negativeToastFinder = find.widgetWithText(
+          NegativeToast,
+          errorMessage,
+        );
+
+        expect(negativeToastFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the negative toast with an projects error message if an error occurs",
+      (WidgetTester tester) async {
+        const errorMessage = "Something went wrong";
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        when(projectGroupsNotifier.projectsErrorMessage).thenReturn(
+          errorMessage,
+        );
+        projectGroupsNotifier.notifyListeners();
+        await tester.pumpAndSettle();
+
+        final negativeToastFinder = find.widgetWithText(
+          NegativeToast,
+          errorMessage,
+        );
+
+        expect(negativeToastFinder, findsOneWidget);
+      },
+    );
   });
 }
 
 /// A testbed class required to test the [ProjectGroupDialog] widget.
-class _ProjectGroupDialogTestbed extends StatelessWidget {
+///
+/// Dismisses all shown [Toast]s on dispose.
+class _ProjectGroupDialogTestbed extends StatefulWidget {
   /// A [ProjectGroupsNotifier] that will be injected and used in tests.
   final ProjectGroupsNotifier projectGroupsNotifier;
 
@@ -720,16 +818,29 @@ class _ProjectGroupDialogTestbed extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  __ProjectGroupDialogTestbedState createState() =>
+      __ProjectGroupDialogTestbedState();
+}
+
+class __ProjectGroupDialogTestbedState
+    extends State<_ProjectGroupDialogTestbed> {
+  @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
-      projectGroupsNotifier: projectGroupsNotifier,
+      projectGroupsNotifier: widget.projectGroupsNotifier,
       child: MetricsThemedTestbed(
-        metricsThemeData: theme,
+        metricsThemeData: widget.theme,
         body: ProjectGroupDialog(
-          strategy: strategy,
+          strategy: widget.strategy,
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    ToastManager().dismissAll();
+    super.dispose();
   }
 }
 

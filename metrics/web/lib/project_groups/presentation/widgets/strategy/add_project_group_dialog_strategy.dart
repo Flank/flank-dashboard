@@ -16,6 +16,10 @@ class AddProjectGroupDialogStrategy implements ProjectGroupDialogStrategy {
   final String loadingText = ProjectGroupsStrings.creatingProjectGroup;
 
   @override
+  String getSuccessfulActionMessage(String groupName) =>
+      ProjectGroupsStrings.getCreatedProjectGroupMessage(groupName);
+
+  @override
   Future<void> action(
     ProjectGroupsNotifier notifier,
     String groupId,

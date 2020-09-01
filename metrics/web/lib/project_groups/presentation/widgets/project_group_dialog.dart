@@ -5,6 +5,9 @@ import 'package:metrics/base/presentation/widgets/value_form_field.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
+import 'package:metrics/common/presentation/toast/widgets/positive_toast.dart';
+import 'package:metrics/common/presentation/toast/widgets/toast.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
@@ -58,8 +61,33 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
       listen: false,
     );
 
+    _subscribeToProjectErrors();
+
     _groupNameController.text =
         _projectGroupsNotifier?.projectGroupDialogViewModel?.name;
+  }
+
+  /// Subscribes to project errors.
+  void _subscribeToProjectErrors() {
+    final errorMessage = _projectGroupsNotifier.projectsErrorMessage;
+
+    if (errorMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showToast(context, NegativeToast(message: errorMessage));
+      });
+    }
+
+    _projectGroupsNotifier.addListener(_projectsErrorListener);
+  }
+
+  /// Shows the [NegativeToast] with an error message
+  /// if the projects error message is not null.
+  void _projectsErrorListener() {
+    final errorMessage = _projectGroupsNotifier.projectsErrorMessage;
+
+    if (errorMessage != null) {
+      showToast(context, NegativeToast(message: errorMessage));
+    }
   }
 
   @override
@@ -193,11 +221,20 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     final projectGroupSavingError =
         _projectGroupsNotifier.projectGroupSavingError;
 
+    Toast toast;
+
     if (projectGroupSavingError == null) {
       Navigator.pop(context);
+      final message = widget.strategy.getSuccessfulActionMessage(
+        _groupNameController.text,
+      );
+      toast = PositiveToast(message: message);
     } else {
       _setLoading(false);
+      toast = NegativeToast(message: projectGroupSavingError);
     }
+
+    showToast(context, toast);
   }
 
   /// Changes the [_isLoading] state to the given [value].
@@ -209,6 +246,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   void dispose() {
     _projectGroupsNotifier.resetFilterName();
     _groupNameController.dispose();
+    _projectGroupsNotifier.removeListener(_projectsErrorListener);
     super.dispose();
   }
 }

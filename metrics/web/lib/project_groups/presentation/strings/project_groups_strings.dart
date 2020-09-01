@@ -27,4 +27,13 @@ class ProjectGroupsStrings {
 
   static String getProjectsLimitExceeded(int count) =>
       'Not more than $count projects can be selected for one project group.';
+
+  static String getCreatedProjectGroupMessage(String name) =>
+      '"$name" project group was created';
+
+  static String getEditedProjectGroupMessage(String name) =>
+      '"$name" project group was edited';
+
+  static String getDeletedProjectGroupMessage(String name) =>
+      '"$name" project group was deleted';
 }

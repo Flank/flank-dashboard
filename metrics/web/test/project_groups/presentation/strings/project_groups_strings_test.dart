@@ -4,6 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group("ProjectGroupsStrings", () {
     const count = 2;
+    const projectGroupName = 'project group name';
 
     test(
       ".getProjectsCount() returns a message that contains the given count",
@@ -41,6 +42,36 @@ void main() {
         expect(
           ProjectGroupsStrings.getProjectsLimitExceeded(count),
           contains('$count'),
+        );
+      },
+    );
+
+    test(
+      ".getCreatedProjectGroupMessage() returns a message that contains the given project group name",
+      () {
+        expect(
+          ProjectGroupsStrings.getCreatedProjectGroupMessage(projectGroupName),
+          contains('$projectGroupName'),
+        );
+      },
+    );
+
+    test(
+      ".getEditedProjectGroupMessage() returns a message that contains the given project group name",
+      () {
+        expect(
+          ProjectGroupsStrings.getEditedProjectGroupMessage(projectGroupName),
+          contains('$projectGroupName'),
+        );
+      },
+    );
+
+    test(
+      ".getDeletedProjectGroupMessage() returns a message that contains the given project group name",
+      () {
+        expect(
+          ProjectGroupsStrings.getDeletedProjectGroupMessage(projectGroupName),
+          contains('$projectGroupName'),
         );
       },
     );

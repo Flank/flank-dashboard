@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_neutral_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
+import 'package:metrics/common/presentation/toast/widgets/positive_toast.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
@@ -19,6 +22,7 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("DeleteProjectGroupDialog", () {
+    ProjectGroupsNotifier projectGroupsNotifier;
     const deleteProjectGroupDialogViewModel = DeleteProjectGroupDialogViewModel(
       id: 'id',
       name: 'name',
@@ -60,6 +64,16 @@ void main() {
       final textSpan = content.text as TextSpan;
       return List<TextSpan>.from(textSpan.children);
     }
+
+    setUp(() {
+      projectGroupsNotifier = ProjectGroupsNotifierMock();
+      when(projectGroupsNotifier.deleteProjectGroupDialogViewModel)
+          .thenReturn(deleteProjectGroupDialogViewModel);
+    });
+
+    tearDown(() {
+      reset(projectGroupsNotifier);
+    });
 
     testWidgets(
       "applies the close icon to the info dialog widget",
@@ -179,15 +193,9 @@ void main() {
     testWidgets(
       "displays the name of the project group to delete",
       (tester) async {
-        final notifierMock = ProjectGroupsNotifierMock();
-
-        when(notifierMock.deleteProjectGroupDialogViewModel).thenReturn(
-          deleteProjectGroupDialogViewModel,
-        );
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
-            projectGroupsNotifier: notifierMock,
+            projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
 
@@ -204,16 +212,10 @@ void main() {
     testWidgets(
       "applies the text style from theme to the project group name to delete",
       (tester) async {
-        final notifierMock = ProjectGroupsNotifierMock();
-
-        when(notifierMock.deleteProjectGroupDialogViewModel).thenReturn(
-          deleteProjectGroupDialogViewModel,
-        );
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
             metricsThemeData: metricsThemeData,
-            projectGroupsNotifier: notifierMock,
+            projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
 
@@ -249,24 +251,18 @@ void main() {
     testWidgets(
       "deletes the project group on tap on the delete button",
       (tester) async {
-        final notifierMock = ProjectGroupsNotifierMock();
-
-        when(notifierMock.deleteProjectGroupDialogViewModel).thenReturn(
-          deleteProjectGroupDialogViewModel,
-        );
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
-            projectGroupsNotifier: notifierMock,
+            projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
 
         await tester.tap(deleteButtonFinder);
         await tester.pump();
 
-        verify(
-          notifierMock.deleteProjectGroup(deleteProjectGroupDialogViewModel.id),
-        ).called(equals(1));
+        verify(projectGroupsNotifier.deleteProjectGroup(
+          deleteProjectGroupDialogViewModel.id,
+        )).called(equals(1));
       },
     );
 
@@ -331,16 +327,11 @@ void main() {
     testWidgets(
       "does not close the dialog if the deleting is finished with an error",
       (tester) async {
-        final notifierMock = ProjectGroupsNotifierMock();
-
-        when(notifierMock.deleteProjectGroupDialogViewModel).thenReturn(
-          deleteProjectGroupDialogViewModel,
-        );
-        when(notifierMock.projectGroupSavingError).thenReturn('error');
+        when(projectGroupsNotifier.projectGroupSavingError).thenReturn('error');
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
-            projectGroupsNotifier: notifierMock,
+            projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
 
@@ -354,16 +345,11 @@ void main() {
     testWidgets(
       "displays the delete project group button text if the deleting is finished with an error",
       (tester) async {
-        final notifierMock = ProjectGroupsNotifierMock();
-
-        when(notifierMock.deleteProjectGroupDialogViewModel).thenReturn(
-          deleteProjectGroupDialogViewModel,
-        );
-        when(notifierMock.projectGroupSavingError).thenReturn('error');
+        when(projectGroupsNotifier.projectGroupSavingError).thenReturn('error');
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
-            projectGroupsNotifier: notifierMock,
+            projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
 
@@ -373,11 +359,52 @@ void main() {
         expect(deleteButtonFinder, findsOneWidget);
       },
     );
+
+    testWidgets(
+      "displays a negative toast with an error message if an action finished with en error",
+      (tester) async {
+        const message = 'error message';
+        when(projectGroupsNotifier.projectGroupSavingError).thenReturn(message);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.tap(find.text(ProjectGroupsStrings.delete));
+        await tester.pump();
+
+        expect(find.widgetWithText(NegativeToast, message), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays a positive toast with a delete project group message if an action finished successfully",
+      (tester) async {
+        final message = ProjectGroupsStrings.getDeletedProjectGroupMessage(
+          deleteProjectGroupDialogViewModel.name,
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.tap(find.text(ProjectGroupsStrings.delete));
+        await tester.pump();
+
+        expect(find.widgetWithText(PositiveToast, message), findsOneWidget);
+      },
+    );
   });
 }
 
 /// A testbed class required to test the [DeleteProjectGroupDialog] widget.
-class _DeleteProjectGroupDialogTestbed extends StatelessWidget {
+///
+/// Dismisses all shown [Toast]s on dispose.
+class _DeleteProjectGroupDialogTestbed extends StatefulWidget {
   /// A [ProjectGroupsNotifier] that will be injected and used in tests.
   final ProjectGroupsNotifier projectGroupsNotifier;
 
@@ -400,14 +427,27 @@ class _DeleteProjectGroupDialogTestbed extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  __DeleteProjectGroupDialogTestbedState createState() =>
+      __DeleteProjectGroupDialogTestbedState();
+}
+
+class __DeleteProjectGroupDialogTestbedState
+    extends State<_DeleteProjectGroupDialogTestbed> {
+  @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
-      projectGroupsNotifier: projectGroupsNotifier,
+      projectGroupsNotifier: widget.projectGroupsNotifier,
       child: MetricsThemedTestbed(
-        metricsThemeData: metricsThemeData,
-        themeData: themeData,
+        metricsThemeData: widget.metricsThemeData,
+        themeData: widget.themeData,
         body: DeleteProjectGroupDialog(),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    ToastManager().dismissAll();
+    super.dispose();
   }
 }
