@@ -297,7 +297,6 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     _groupNameController.removeListener(_updateActionButtonState);
     _groupNameController.dispose();
     _projectGroupsNotifier.removeListener(_projectsErrorListener);
-    _isGroupNameEmpty.dispose();
     _isActionButtonActive.dispose();
     super.dispose();
   }
