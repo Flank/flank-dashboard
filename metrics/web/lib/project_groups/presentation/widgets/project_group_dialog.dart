@@ -244,13 +244,15 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     final numberOfSelectedProjects = selectedProjectIds.length;
 
     if (numberOfSelectedProjects > 0) {
-      final isGroupNameValid =
-          ProjectGroupNameValidator.validate(groupName) == null;
-      final areSelectedProjectIdsValid =
-          ProjectGroupProjectsValidator.validate(selectedProjectIds) == null;
+      final groupNameErrorMessage =
+          ProjectGroupNameValidator.validate(groupName);
+      final selectedProjectIdsErrorMessage =
+          ProjectGroupProjectsValidator.validate(selectedProjectIds);
 
-      _isActionButtonActive.value =
-          isGroupNameValid && areSelectedProjectIdsValid;
+      final isButtonActive = groupNameErrorMessage == null &&
+          selectedProjectIdsErrorMessage == null;
+
+      _isActionButtonActive.value = isButtonActive;
     } else {
       _isActionButtonActive.value = false;
     }
