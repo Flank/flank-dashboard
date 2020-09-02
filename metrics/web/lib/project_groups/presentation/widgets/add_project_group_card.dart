@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
@@ -30,40 +31,38 @@ class AddProjectGroupCard extends StatelessWidget {
         final asset =
             hasConfiguredProjects ? 'icons/add.svg' : 'icons/disabled-add.svg';
 
-        return Container(
+        return DecoratedContainer(
           width: 270.0,
           height: 156.0,
+          decoration: BoxDecoration(
+            color: style.backgroundColor,
+            borderRadius: BorderRadius.circular(4.0),
+          ),
           child: HandCursor(
-            child: Material(
-              color: style.backgroundColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              child: InkWell(
-                hoverColor: style.hoverColor,
-                onTap: hasConfiguredProjects
-                    ? () => _showProjectGroupDialog(context)
-                    : null,
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.network(
-                        asset,
-                        width: 32.0,
-                        height: 32.0,
-                        color: style.iconColor,
+            child: InkWell(
+              hoverColor: style.hoverColor,
+              onTap: hasConfiguredProjects
+                  ? () => _showProjectGroupDialog(context)
+                  : null,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.network(
+                      asset,
+                      width: 32.0,
+                      height: 32.0,
+                      color: style.iconColor,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        ProjectGroupsStrings.createGroup,
+                        style: style.labelStyle,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          ProjectGroupsStrings.createGroup,
-                          style: style.labelStyle,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
