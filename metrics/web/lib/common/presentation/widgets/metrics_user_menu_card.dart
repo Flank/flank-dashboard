@@ -83,7 +83,7 @@ class MetricsUserMenuCard extends StatelessWidget {
                 padding: itemPadding,
                 child: HandCursor(
                   child: GestureDetector(
-                    onTap: () => Navigator.popAndPushNamed(
+                    onTap: () => Navigator.pushNamed(
                       context,
                       RouteName.projectGroup,
                     ),
