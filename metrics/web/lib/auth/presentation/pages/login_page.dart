@@ -4,6 +4,8 @@ import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
+import 'package:metrics/common/presentation/toast/widgets/toast.dart';
 import 'package:provider/provider.dart';
 
 /// Shows the authentication form to sign in.
@@ -22,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
     _authNotifier.addListener(_loggedInListener);
+    _authNotifier.addListener(_loggedInErrorListener);
 
     super.initState();
   }
@@ -36,6 +39,16 @@ class _LoginPageState extends State<LoginPage> {
         RouteName.dashboard,
         (Route<dynamic> route) => false,
       );
+    }
+  }
+
+  /// Shows the [NegativeToast] with an error message
+  /// if the auth error message is not null.
+  void _loggedInErrorListener() {
+    final errorMessage = _authNotifier.authErrorMessage;
+
+    if (errorMessage != null) {
+      showToast(context, NegativeToast(message: errorMessage));
     }
   }
 
@@ -79,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void dispose() {
     _authNotifier.removeListener(_loggedInListener);
+    _authNotifier.removeListener(_loggedInErrorListener);
     super.dispose();
   }
 }

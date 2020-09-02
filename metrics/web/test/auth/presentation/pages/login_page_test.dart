@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
@@ -8,11 +9,14 @@ import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:provider/provider.dart';
 
+import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/auth_notifier_stub.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -67,6 +71,30 @@ void main() {
         });
 
         expect(find.byType(AuthForm), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the negative toast when there is an auth error message",
+      (WidgetTester tester) async {
+        const error = "Something went wrong";
+
+        final authNotifier = AuthNotifierMock();
+        when(authNotifier.isLoading).thenReturn(false);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_LoginPageTestbed(
+            authNotifier: authNotifier,
+          ));
+        });
+
+        when(authNotifier.authErrorMessage).thenReturn(error);
+        authNotifier.notifyListeners();
+        await tester.pumpAndSettle();
+
+        expect(find.widgetWithText(NegativeToast, error), findsOneWidget);
+
+        ToastManager().dismissAll();
       },
     );
 
