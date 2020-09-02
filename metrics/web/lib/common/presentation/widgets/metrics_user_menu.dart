@@ -54,7 +54,7 @@ class MetricsUserMenu extends StatelessWidget {
           ),
         );
       },
-      popup: const MouseRegion(child: MetricsUserMenuCard()),
+      popup: const MetricsUserMenuCard(),
       routeObserver: overlayEntryRouteObserver,
     );
   }

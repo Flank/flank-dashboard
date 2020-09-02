@@ -263,7 +263,7 @@ void main() {
 
         await tester.tap(find.text(CommonStrings.projectGroups));
         await mockNetworkImagesFor(() {
-          return tester.pump();
+          return tester.pumpAndSettle();
         });
 
         expect(find.byType(ProjectGroupPage), findsOneWidget);

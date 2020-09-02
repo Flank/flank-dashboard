@@ -4,12 +4,13 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
-import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
+import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
+import 'package:metrics/common/presentation/widgets/metrics_user_menu_card.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
@@ -81,7 +82,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the MetricsDrawer on tap on the menu button",
+      "displays the metrics user menu card on tap on the icon by the tooltip",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _DashboardTestbed());
@@ -89,13 +90,10 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        await tester.tap(find.descendant(
-          of: find.byType(MetricsAppBar),
-          matching: find.byType(InkWell),
-        ));
+        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
         await tester.pumpAndSettle();
 
-        expect(find.byType(MetricsDrawer), findsOneWidget);
+        expect(find.byType(MetricsUserMenuCard), findsOneWidget);
       },
     );
 
@@ -127,7 +125,7 @@ void main() {
     );
 
     testWidgets(
-      "changes the widget theme on switching theme in the drawer",
+      "changes the widget theme on switching theme in the metrics user menu card",
       (WidgetTester tester) async {
         final themeNotifier = ThemeNotifier();
 
@@ -145,8 +143,8 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byType(CheckboxListTile));
-        await tester.pump();
+        await tester.tap(find.byType(Toggle));
+        await tester.pumpAndSettle();
 
         final lightBuildNumberMetricColor = _getBuildNumberMetricColor(tester);
 

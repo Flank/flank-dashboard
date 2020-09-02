@@ -30,11 +30,15 @@ class BasePopup extends StatefulWidget {
   /// A widget to display when the trigger widget is triggered.
   final Widget popup;
 
+  /// Defines if the popup should be closed when the user taps on an empty area
+  /// inside the popup.
+  final bool closePopupOnEmptySpaceTap;
+
   /// Creates a new instance of the base popup.
   ///
-  /// The [barrierDismissible] defaults to `true`.
   /// If the [popupConstraints] is null, an empty instance of
   /// the [BoxConstraints] is used.
+  /// The [closePopupOnEmptySpaceTap] defaults to `false`.
   ///
   /// All the required parameters must not be null.
   const BasePopup({
@@ -43,6 +47,7 @@ class BasePopup extends StatefulWidget {
     @required this.offsetBuilder,
     @required this.triggerBuilder,
     @required this.popup,
+    this.closePopupOnEmptySpaceTap = false,
     this.routeObserver,
   })  : popupConstraints = popupConstraints ?? const BoxConstraints(),
         assert(offsetBuilder != null),
@@ -96,9 +101,14 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
             child: CompositedTransformFollower(
               link: _layerLink,
               offset: offset,
-              child: ConstrainedBox(
-                constraints: widget.popupConstraints,
-                child: widget.popup,
+              child: GestureDetector(
+                onTap: _onPopupEmptySpaceTap,
+                child: MouseRegion(
+                  child: ConstrainedBox(
+                    constraints: widget.popupConstraints,
+                    child: widget.popup,
+                  ),
+                ),
               ),
             ),
           ),
@@ -128,6 +138,11 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
       _overlayEntry.remove();
       _overlayEntry = null;
     }
+  }
+
+  /// Closes a [BasePopup.popup], when taps on the empty space.
+  void _onPopupEmptySpaceTap() {
+    if (widget.closePopupOnEmptySpaceTap) _closePopup();
   }
 
   @override

@@ -64,9 +64,11 @@ class MetricsUserMenuCard extends StatelessWidget {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          CommonStrings.lightTheme,
-                          style: userMenuTextStyle,
+                        Flexible(
+                          child: Text(
+                            CommonStrings.lightTheme,
+                            style: userMenuTextStyle,
+                          ),
                         ),
                         HandCursor(
                           child: Toggle(

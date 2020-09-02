@@ -5,7 +5,10 @@ import 'package:metrics/common/presentation/metrics_theme/config/dimensions_conf
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
+import 'package:metrics/common/presentation/widgets/metrics_user_menu_card.dart';
 import 'package:network_image_mock/network_image_mock.dart';
+
+import '../../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("MetricsScaffold", () {
@@ -136,19 +139,16 @@ void main() {
     );
 
     testWidgets(
-      "opens the given drawer on tap on the icon by the tooltip",
+      "opens the metrics user menu on tap on the icon by the tooltip",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _MetricsScaffoldTestbed(
-            drawer: drawer,
-          ));
+          return tester.pumpWidget(const _MetricsScaffoldTestbed());
         });
 
         await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
+        await tester.pumpAndSettle();
 
-        await tester.pump();
-
-        expect(find.byWidget(drawer), findsOneWidget);
+        expect(find.byType(MetricsUserMenuCard), findsOneWidget);
       },
     );
   });
@@ -184,12 +184,14 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MetricsScaffold(
-        body: body,
-        title: bodyTitle,
-        padding: padding,
-        drawer: drawer,
+    return TestInjectionContainer(
+      child: MaterialApp(
+        home: MetricsScaffold(
+          body: body,
+          title: bodyTitle,
+          padding: padding,
+          drawer: drawer,
+        ),
       ),
     );
   }
