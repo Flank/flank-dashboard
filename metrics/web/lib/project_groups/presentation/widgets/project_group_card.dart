@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
-import 'package:metrics/base/presentation/widgets/padded_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -44,17 +44,16 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     return MouseRegion(
       onEnter: (_) => _changeHover(true),
       onExit: (_) => _changeHover(false),
-      child: Container(
+      child: DecoratedContainer(
         width: 270.0,
         height: 156.0,
-        child: PaddedCard(
+        decoration: BoxDecoration(
+          border: Border.all(color: theme.borderColor),
+          borderRadius: BorderRadius.circular(4.0),
+          color: _isHovered ? theme.hoverColor : theme.backgroundColor,
+        ),
+        child: Padding(
           padding: const EdgeInsets.all(24.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-            side: BorderSide(color: theme.borderColor),
-          ),
-          backgroundColor:
-              _isHovered ? theme.hoverColor : theme.backgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
