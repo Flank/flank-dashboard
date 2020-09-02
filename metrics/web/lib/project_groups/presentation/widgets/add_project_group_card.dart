@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
@@ -31,19 +31,19 @@ class AddProjectGroupCard extends StatelessWidget {
         final asset =
             hasConfiguredProjects ? 'icons/add.svg' : 'icons/disabled-add.svg';
 
-        return DecoratedContainer(
-          width: 270.0,
-          height: 156.0,
-          decoration: BoxDecoration(
-            color: style.backgroundColor,
-            borderRadius: BorderRadius.circular(4.0),
-          ),
-          child: HandCursor(
-            child: InkWell(
-              hoverColor: style.hoverColor,
-              onTap: hasConfiguredProjects
-                  ? () => _showProjectGroupDialog(context)
-                  : null,
+        return TappableArea(
+          onTap: hasConfiguredProjects
+              ? () => _showProjectGroupDialog(context)
+              : null,
+          cursor: "pointer",
+          builder: (bool isHovered) {
+            return DecoratedContainer(
+              width: 270.0,
+              height: 156.0,
+              decoration: BoxDecoration(
+                color: isHovered ? style.hoverColor : style.backgroundColor,
+                borderRadius: BorderRadius.circular(4.0),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
@@ -65,8 +65,8 @@ class AddProjectGroupCard extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
