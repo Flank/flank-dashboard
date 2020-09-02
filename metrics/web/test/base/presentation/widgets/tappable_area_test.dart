@@ -7,8 +7,8 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import '../../../test_utils/finder_util.dart';
 
 void main() {
-  final hoveredColor = Colors.yellow;
-  final defaultColor = Colors.red;
+  const hoveredColor = Colors.yellow;
+  const defaultColor = Colors.red;
 
   Widget _builder(bool isHovered) {
     return DecoratedContainer(
