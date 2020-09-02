@@ -86,25 +86,23 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
     final offset = widget.offsetBuilder(childSize);
 
     final _widget = GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: _closePopup,
-      child: Container(
-        color: Colors.transparent,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              left: offset.dx,
-              top: offset.dy,
-              child: CompositedTransformFollower(
-                link: _layerLink,
-                offset: offset,
-                child: ConstrainedBox(
-                  constraints: widget.popupConstraints,
-                  child: widget.popup,
-                ),
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            left: offset.dx,
+            top: offset.dy,
+            child: CompositedTransformFollower(
+              link: _layerLink,
+              offset: offset,
+              child: ConstrainedBox(
+                constraints: widget.popupConstraints,
+                child: widget.popup,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
 
