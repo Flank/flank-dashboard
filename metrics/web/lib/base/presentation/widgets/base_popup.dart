@@ -9,6 +9,7 @@ typedef TriggerBuilder = Widget Function(
   BuildContext context,
   VoidCallback openPopup,
   VoidCallback closePopup,
+  bool isPopupOpened,
 );
 
 /// A widget that displays the trigger widget built by the [triggerBuilder]
@@ -66,6 +67,9 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
   /// The [LayerLink] that allows a [BasePopup.popup] to follow the trigger.
   final _layerLink = LayerLink();
 
+  /// Indicates whether the [widget.popup] is opened.
+  bool get _isPopupOpened => _overlayEntry != null;
+
   @override
   void didChangeDependencies() {
     widget.routeObserver?.subscribe(this, ModalRoute.of(context));
@@ -80,6 +84,7 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
         context,
         _openPopup,
         _closePopup,
+        _isPopupOpened,
       ),
     );
   }
@@ -116,14 +121,11 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
       ),
     );
 
-    _overlayEntry = OverlayEntry(builder: (context) => _widget);
-    Overlay.of(context).insert(_overlayEntry);
-  }
+    setState(() {
+      _overlayEntry = OverlayEntry(builder: (context) => _widget);
+    });
 
-  @override
-  void didPop() {
-    _closePopup();
-    super.didPop();
+    Overlay.of(context).insert(_overlayEntry);
   }
 
   @override
@@ -136,7 +138,10 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
   void _closePopup() {
     if (_overlayEntry != null) {
       _overlayEntry.remove();
-      _overlayEntry = null;
+
+      setState(() {
+        _overlayEntry = null;
+      });
     }
   }
 
@@ -148,7 +153,8 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
   @override
   void dispose() {
     widget.routeObserver?.unsubscribe(this);
-    _closePopup();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
     super.dispose();
   }
 }

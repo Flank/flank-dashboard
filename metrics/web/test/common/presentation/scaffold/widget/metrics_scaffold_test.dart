@@ -5,7 +5,7 @@ import 'package:metrics/common/presentation/metrics_theme/config/dimensions_conf
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
-import 'package:metrics/common/presentation/widgets/metrics_user_menu_card.dart';
+import 'package:metrics/common/presentation/widgets/metrics_user_menu.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../../test_utils/test_injection_container.dart';
@@ -148,7 +148,7 @@ void main() {
         await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
         await tester.pumpAndSettle();
 
-        expect(find.byType(MetricsUserMenuCard), findsOneWidget);
+        expect(find.byType(MetricsUserMenu), findsOneWidget);
       },
     );
   });

@@ -13,6 +13,7 @@ void main() {
       BuildContext context,
       VoidCallback openPopup,
       VoidCallback closePopup,
+      bool isPopupOpened,
     ) {
       return GestureDetector(
         onTap: openPopup,

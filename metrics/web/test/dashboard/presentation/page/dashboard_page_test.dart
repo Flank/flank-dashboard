@@ -13,8 +13,6 @@ import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/common/presentation/widgets/metrics_user_menu_card.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
-import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_menu.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_search_input.dart';
@@ -82,24 +80,8 @@ void main() {
     );
 
     testWidgets(
-      "displays the metrics user menu card on tap on the icon by the tooltip",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _DashboardTestbed());
-        });
-
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(MetricsUserMenuCard), findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "displays the negative toast if there is a projects error message",
-      (WidgetTester tester) async {
+          (WidgetTester tester) async {
         const errorMessage = "some error message";
 
         when(projectMetricsNotifier.isMetricsLoading).thenReturn(false);
@@ -123,49 +105,7 @@ void main() {
         ToastManager().dismissAll();
       },
     );
-
-    testWidgets(
-      "changes the widget theme on switching theme in the metrics user menu card",
-      (WidgetTester tester) async {
-        final themeNotifier = ThemeNotifier();
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_DashboardTestbed(
-            themeNotifier: themeNotifier,
-          ));
-        });
-
-        await tester.pumpAndSettle();
-
-        final darkBuildNumberMetricColor = _getBuildNumberMetricColor(tester);
-
-        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
-
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.byType(Toggle));
-        await tester.pumpAndSettle();
-
-        final lightBuildNumberMetricColor = _getBuildNumberMetricColor(tester);
-
-        expect(
-          darkBuildNumberMetricColor,
-          isNot(lightBuildNumberMetricColor),
-        );
-      },
-    );
   });
-}
-
-Color _getBuildNumberMetricColor(WidgetTester tester) {
-  final buildNumberTextWidget = tester.widget<Text>(
-    find.descendant(
-      of: find.byType(BuildNumberScorecard),
-      matching: find.text(DashboardStrings.noDataPlaceholder),
-    ),
-  );
-
-  return buildNumberTextWidget.style.color;
 }
 
 /// A testbed widget, used to test the [DashboardPage] widget.
