@@ -21,13 +21,14 @@ class TappableArea extends StatefulWidget {
   ///
   /// The [builder] must not be null.
   ///
-  /// The [mouseCursor] value defaults to `default`.
+  /// The [mouseCursor] value defaults to `MouseCursor.basic`.
   const TappableArea({
     Key key,
     @required this.builder,
     this.onTap,
-    this.mouseCursor = MouseCursor.basic,
+    MouseCursor mouseCursor,
   })  : assert(builder != null),
+        mouseCursor = mouseCursor ?? MouseCursor.basic,
         super(key: key);
 
   @override

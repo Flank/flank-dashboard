@@ -10,7 +10,7 @@ import '../../../test_utils/finder_util.dart';
 void main() {
   const hoveredColor = Colors.yellow;
   const defaultColor = Colors.red;
-
+  const defaultCursor = MouseCursor.basic;
   Widget _builder(bool isHovered) {
     return DecoratedContainer(
       decoration: BoxDecoration(
@@ -32,6 +32,20 @@ void main() {
         );
 
         expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "uses default mouse cursor if the mouse cursor is not specified",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          TappableAreaTestbed(builder: _builder),
+        );
+
+        final tappableArea =
+            tester.widget<TappableArea>(find.byType(TappableArea));
+
+        expect(tappableArea.mouseCursor, equals(defaultCursor));
       },
     );
 
