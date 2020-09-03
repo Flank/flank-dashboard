@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
 import 'package:universal_html/html.dart' as html;
 
 /// A widget that rebuilds its child using the given builder function
@@ -9,7 +11,7 @@ class TappableArea extends StatefulWidget {
   final VoidCallback onTap;
 
   /// A cursor that is used when the area is hovered.
-  final String cursor;
+  final MouseCursor mouseCursor;
 
   /// A widget builder that builds the given widget differently depending on
   /// if the this area is hovered.
@@ -19,14 +21,13 @@ class TappableArea extends StatefulWidget {
   ///
   /// The [builder] must not be null.
   ///
-  /// The [cursor] value defaults to `default`.
+  /// The [mouseCursor] value defaults to `default`.
   const TappableArea({
     Key key,
     @required this.builder,
     this.onTap,
-    String cursor,
+    this.mouseCursor = MouseCursor.basic,
   })  : assert(builder != null),
-        cursor = cursor ?? 'default',
         super(key: key);
 
   @override
@@ -63,6 +64,7 @@ class _TappableAreaState extends State<TappableArea> {
 
     if (appContainer == null) return;
 
-    appContainer.style.cursor = _isHovered ? widget.cursor : 'default';
+    appContainer.style.cursor =
+        _isHovered ? widget.mouseCursor.cursor : MouseCursor.basic.cursor;
   }
 }

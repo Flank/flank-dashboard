@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
@@ -50,18 +51,18 @@ void main() {
     testWidgets(
       "creates an instance with the given cursor value",
       (WidgetTester tester) async {
-        const cursor = 'cursor';
+        const cursor = MouseCursor.forbidden;
 
         await tester.pumpWidget(
           TappableAreaTestbed(
             builder: _builder,
-            cursor: cursor,
+            mouseCursor: cursor,
           ),
         );
 
         final tappableArea = tester.widget<TappableArea>(tappableAreaFinder);
 
-        expect(tappableArea.cursor, equals(cursor));
+        expect(tappableArea.mouseCursor, equals(cursor));
       },
     );
 
@@ -138,7 +139,7 @@ class TappableAreaTestbed extends StatelessWidget {
   final VoidCallback onTap;
 
   /// A cursor that is used when the area is hovered.
-  final String cursor;
+  final MouseCursor mouseCursor;
 
   /// A widget builder that builds the given widget differently depending on
   /// if the this area is hovered.
@@ -148,7 +149,7 @@ class TappableAreaTestbed extends StatelessWidget {
   const TappableAreaTestbed({
     Key key,
     this.onTap,
-    this.cursor,
+    this.mouseCursor,
     this.builder,
   }) : super(key: key);
   @override
@@ -158,7 +159,7 @@ class TappableAreaTestbed extends StatelessWidget {
         body: TappableArea(
           onTap: onTap,
           builder: builder,
-          cursor: cursor,
+          mouseCursor: mouseCursor,
         ),
       ),
     );
