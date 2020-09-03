@@ -69,9 +69,7 @@ class _DashboardPageState extends State<DashboardPage> {
     if (errorMessage != null) {
       showToast(
         context,
-        NegativeToast(
-          message: errorMessage,
-        ),
+        NegativeToast(message: errorMessage),
       );
     }
   }
