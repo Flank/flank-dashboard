@@ -58,7 +58,10 @@ class _LoadingPageState extends State<LoadingPage>
       vsync: this,
       duration: _animationDuration,
     );
-    _animationController.repeat(reverse: true);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _animationController.repeat(reverse: true);
+    });
   }
 
   /// Subscribes to authentication updates.
