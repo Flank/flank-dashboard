@@ -5,8 +5,10 @@ const {
 } = require("./test_utils/test-app-utils");
 const { assertFails, assertSucceeds } = require("@firebase/testing");
 const {
-  user,
-  invalidUser,
+  passwordSignInProviderId,
+  googleSignInProviderId,
+  getAllowedEmailDomainUser,
+  getNotAllowedDomainUser,
   builds,
   getBuild,
   allowedEmailDomains,
@@ -14,8 +16,19 @@ const {
 const firestore = require("firebase").firestore;
 
 describe("Build collection rules", async () => {
-  const authenticatedApp = await getApplicationWith(user);
-  const invalidAuthenticatedApp = await getApplicationWith(invalidUser);
+  const allowedDomainPasswordApp = await getApplicationWith(
+    getAllowedEmailDomainUser(passwordSignInProviderId)
+  );
+  const notAllowedDomainPasswordApp = await getApplicationWith(
+    getNotAllowedDomainUser(passwordSignInProviderId)
+  );
+  const allowedDomainGoogleApp = await getApplicationWith(
+    getAllowedEmailDomainUser(googleSignInProviderId)
+  );
+  const notAllowedDomainGoogleApp = await getApplicationWith(
+    getNotAllowedDomainUser(googleSignInProviderId)
+  );
+
   const unauthenticatedApp = await getApplicationWith(null);
   const buildsCollectionName = "build";
 
@@ -32,7 +45,7 @@ describe("Build collection rules", async () => {
     build.test = "test";
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -41,7 +54,7 @@ describe("Build collection rules", async () => {
     build.projectId = "non-existing-id";
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -50,7 +63,7 @@ describe("Build collection rules", async () => {
     build.projectId = null;
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -59,7 +72,7 @@ describe("Build collection rules", async () => {
     build.projectId = 2;
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -68,7 +81,7 @@ describe("Build collection rules", async () => {
     build.startedAt = null;
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -77,7 +90,7 @@ describe("Build collection rules", async () => {
     build.startedAt = Date();
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -89,7 +102,7 @@ describe("Build collection rules", async () => {
     build.startedAt = firestore.Timestamp.fromDate(date);
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -98,7 +111,7 @@ describe("Build collection rules", async () => {
     build.duration = null;
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -107,7 +120,7 @@ describe("Build collection rules", async () => {
     build.duration = "123";
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -116,7 +129,7 @@ describe("Build collection rules", async () => {
     build.url = null;
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -125,7 +138,7 @@ describe("Build collection rules", async () => {
     build.url = 2;
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -134,7 +147,7 @@ describe("Build collection rules", async () => {
     build.buildNumber = "2";
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -143,7 +156,7 @@ describe("Build collection rules", async () => {
     build.buildNumber = null;
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -152,7 +165,7 @@ describe("Build collection rules", async () => {
     build.buildStatus = "test";
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -161,7 +174,7 @@ describe("Build collection rules", async () => {
     build.buildStatus = null;
 
     await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -170,7 +183,7 @@ describe("Build collection rules", async () => {
     build.workflowName = 2;
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -179,7 +192,7 @@ describe("Build collection rules", async () => {
     build.workflowName = null;
 
     await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -188,7 +201,7 @@ describe("Build collection rules", async () => {
     build.coverage = 1.1;
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -197,7 +210,7 @@ describe("Build collection rules", async () => {
     build.coverage = -1.0;
 
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
@@ -206,59 +219,134 @@ describe("Build collection rules", async () => {
     build.coverage = null;
 
     await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).add(build)
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(build)
     );
   });
 
   /**
-   * The authenticated user specific tests
+   * The password auth provider user specific tests
    */
 
-  it("allows creating a build by an authenticated user", async () => {
+  it("allows to create a build by an authenticated password user with an allowed email domain", async () => {
     await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).add(getBuild())
+      allowedDomainPasswordApp.collection(buildsCollectionName).add(getBuild())
     );
   });
 
-  it("does not allow to create a build by an authenticated user with not allowed email domain", async () => {
-    await assertFails(
-      invalidAuthenticatedApp.collection(buildsCollectionName).add(getBuild())
-    );
-  });
-
-  it("allows reading builds by an authenticated user", async () => {
+  it("allows to read builds by an authenticated password user with an allowed email domain", async () => {
     await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).get()
+      allowedDomainPasswordApp.collection(buildsCollectionName).get()
     );
   });
 
-  it("does not allow to read builds by an authenticated user with not allowed email domain", async () => {
-    await assertFails(
-      invalidAuthenticatedApp.collection(buildsCollectionName).get()
-    );
-  });
-
-  it("allows updating a build by an authenticated user", async () => {
+  it("allows to update a build by an authenticated password user with an allowed email domain", async () => {
     await assertSucceeds(
-      authenticatedApp
+      allowedDomainPasswordApp
         .collection(buildsCollectionName)
         .doc("1")
         .update({ url: "updated" })
     );
   });
 
-  it("does not allow to update a build by an authenticated user with not allowed email", async () => {
+  it("does not allow to delete a build by an authenticated password user with an allowed email domain", async () => {
     await assertFails(
-      invalidAuthenticatedApp
+      allowedDomainPasswordApp
+        .collection(buildsCollectionName)
+        .doc("1")
+        .delete()
+    );
+  });
+
+  it("allows to create a build by an authenticated password user with not allowed email domain", async () => {
+    await assertSucceeds(
+      notAllowedDomainPasswordApp
+        .collection(buildsCollectionName)
+        .add(getBuild())
+    );
+  });
+
+  it("allows to read builds by an authenticated password user with not allowed email domain", async () => {
+    await assertSucceeds(
+      notAllowedDomainPasswordApp.collection(buildsCollectionName).get()
+    );
+  });
+
+  it("allows to update a build by an authenticated password user with not allowed email domain", async () => {
+    await assertSucceeds(
+      notAllowedDomainPasswordApp
         .collection(buildsCollectionName)
         .doc("1")
         .update({ url: "updated" })
     );
   });
 
-  it("does not allow to delete a build by an authenticated user", async () => {
+  it("does not allow to delete a by an authenticated password user build with not allowed email domain", async () => {
     await assertFails(
-      authenticatedApp.collection(buildsCollectionName).doc("1").delete()
+      notAllowedDomainPasswordApp
+        .collection(buildsCollectionName)
+        .doc("1")
+        .delete()
+    );
+  });
+
+  /**
+   * The google auth provider user specific tests
+   */
+
+  it("allows to create a build by an authenticated google user with an allowed email domain", async () => {
+    await assertSucceeds(
+      allowedDomainGoogleApp.collection(buildsCollectionName).add(getBuild())
+    );
+  });
+
+  it("allows to read builds by an authenticated google user with an allowed email domain", async () => {
+    await assertSucceeds(
+      allowedDomainGoogleApp.collection(buildsCollectionName).get()
+    );
+  });
+
+  it("allows to update a build by an authenticated google user with an allowed email domain", async () => {
+    await assertSucceeds(
+      allowedDomainGoogleApp
+        .collection(buildsCollectionName)
+        .doc("1")
+        .update({ url: "updated" })
+    );
+  });
+
+  it("does not allow to delete a build by an authenticated google user with an allowed email domain", async () => {
+    await assertFails(
+      allowedDomainGoogleApp.collection(buildsCollectionName).doc("1").delete()
+    );
+  });
+
+  it("does not allowed to create a build by an authenticated google user with not allowed email domain", async () => {
+    await assertFails(
+      notAllowedDomainGoogleApp.collection(buildsCollectionName).add(getBuild())
+    );
+  });
+
+  it("does not allowed to read builds by an authenticated google user with not allowed email domain", async () => {
+    await assertFails(
+      notAllowedDomainGoogleApp.collection(buildsCollectionName).get()
+    );
+  });
+
+  it("does not allowed to update a build by an authenticated google user with not allowed email domain", async () => {
+    await assertFails(
+      notAllowedDomainGoogleApp
+        .collection(buildsCollectionName)
+        .doc("1")
+        .update({ url: "updated" })
+    );
+  });
+
+  it("does not allowed to delete a build by an authenticated google user with not allowed email domain", async () => {
+    await assertFails(
+      notAllowedDomainGoogleApp
+        .collection(buildsCollectionName)
+        .doc("1")
+        .delete()
     );
   });
 

@@ -1,21 +1,6 @@
 const firestore = require("firebase").firestore;
 const cloneDeep = require("clone-deep");
 
-/** A test project */
-exports.project = {
-  name: "test_project",
-};
-
-/** A list of test projects */
-exports.projects = {
-  "projects/1": {
-    name: "project_1",
-  },
-  "projects/2": {
-    name: "project_2",
-  },
-};
-
 /** A list of test project groups */
 const projectGroups = {
   "project_groups/1": {
@@ -57,15 +42,54 @@ const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
 };
 
+const allowedDomainEmail = "test@gmail.com";
+const notAllowedDomainEmail = "test@invalid.com";
+
+/** Creates a firebase user with the given `email` and `signInProviderId` */
+function getUser(email, signInProviderId) {
+  return {
+    uid: "uid",
+    email: email,
+    firebase: {
+      sign_in_provider: signInProviderId,
+    },
+  };
+}
+
+/** A test project */
+exports.project = {
+  name: "test_project",
+};
+
+/** A list of test projects */
+exports.projects = {
+  "projects/1": {
+    name: "project_1",
+  },
+  "projects/2": {
+    name: "project_2",
+  },
+};
+
 exports.projectGroups = projectGroups;
 exports.builds = builds;
 exports.allowedEmailDomains = allowedEmailDomains;
 
-/** A firebase user needed for tests */
-exports.user = { uid: "uid", email: 'test@gmail.com' };
+/** An email and password sign in provider identifier */
+exports.passwordSignInProviderId = "password";
 
-/** A firebase user with an invalid email needed for tests */
-exports.invalidUser = { uid: "uid", email: 'test@invalid.com' };
+/** An google sign in provider identifier */
+exports.gleSignInProviderId = "google.com";
+
+/** Provides a firebase user with allowed email domain and given sign in provider identifier */
+exports.getAllowedEmailDomainUser = function (signInProviderId) {
+  return getUser(allowedDomainEmail, signInProviderId);
+};
+
+/** Provides a firebase user with not allowed email domain and given sign in provider identifier */
+exports.getNotAllowedDomainUser = function (signInProviderId) {
+  return getUser(notAllowedDomainEmail, signInProviderId);
+};
 
 /** Get a test project group */
 exports.getProjectGroup = function () {

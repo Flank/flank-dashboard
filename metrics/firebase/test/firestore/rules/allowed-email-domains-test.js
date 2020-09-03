@@ -4,10 +4,14 @@ const {
   getApplicationWith,
   tearDown,
 } = require("./test_utils/test-app-utils");
-const { user, allowedEmailDomains } = require("./test_utils/test-data");
+const {
+  allowedEmailDomains, getAllowedEmailDomainUser, passwordSignInProviderId
+} = require("./test_utils/test-data");
 
 describe("Allowed email domains collection rules", async () => {
-  const authenticatedApp = await getApplicationWith(user);
+  const authenticatedApp = await getApplicationWith(
+    getAllowedEmailDomainUser(passwordSignInProviderId)
+  );
   const unauthenticatedApp = await getApplicationWith(null);
   const collectionName = "allowed_email_domains";
   const domain = { "test.com": {} };
@@ -26,7 +30,7 @@ describe("Allowed email domains collection rules", async () => {
     );
   });
 
-  it("does not allow to read allowed email domains by an authenticated user", async () => {
+  it("does not allow to read allowed email domain by an authenticated user", async () => {
     await assertFails(
       authenticatedApp.collection(collectionName).get()
     );

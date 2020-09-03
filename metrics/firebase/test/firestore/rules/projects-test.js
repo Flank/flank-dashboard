@@ -7,14 +7,26 @@ const { assertFails, assertSucceeds } = require("@firebase/testing");
 const {
   project,
   projects,
-  user,
-  invalidUser,
+  getAllowedEmailDomainUser,
+  getNotAllowedDomainUser,
+  passwordSignInProviderId,
+  googleSignInProviderId,
   allowedEmailDomains,
 } = require("./test_utils/test-data");
 
 describe("Projects collection rules", async function () {
-  const authenticatedApp = await getApplicationWith(user);
-  const invalidAuthenticatedApp = await getApplicationWith(invalidUser);
+  const allowedDomainPasswordApp = await getApplicationWith(
+    getAllowedEmailDomainUser(passwordSignInProviderId)
+  );
+  const notAllowedDomainPasswordApp = await getApplicationWith(
+    getNotAllowedDomainUser(passwordSignInProviderId)
+  );
+  const allowedDomainGoogleApp = await getApplicationWith(
+    getAllowedEmailDomainUser(googleSignInProviderId)
+  );
+  const notAllowedDomainGoogleApp = await getApplicationWith(
+    getNotAllowedDomainUser(googleSignInProviderId)
+  );
   const unauthenticatedApp = await getApplicationWith(null);
   const projectsCollectionName = "projects";
 
@@ -38,58 +50,118 @@ describe("Projects collection rules", async function () {
   });
 
   it("does not allow to create a project without a name", async () => {
-    await assertFails(authenticatedApp.collection("projects").add({}));
+    await assertFails(allowedDomainPasswordApp.collection("projects").add({}));
   });
 
   /**
-   * The authenticated user specific tests
+   * The google auth provider user specific tests
    */
 
-  it("allows creating a project by an authenticated user", async () => {
-    await assertSucceeds(
-      authenticatedApp.collection(projectsCollectionName).add(project)
-    );
-  });
-
-  it("does not allow to create a project by an authenticated user with not allowed email domain", async () => {
+  it("does not allow to create a project by an authenticated google user with not allowed email domain", async () => {
     await assertFails(
-      invalidAuthenticatedApp.collection(projectsCollectionName).add(project)
+      notAllowedDomainGoogleApp.collection(projectsCollectionName).add(project)
     );
   });
 
-  it("allows reading projects by an authenticated user", async () => {
+  it("allows creating a project by an authenticated google user with allowed email domain", async () => {
     await assertSucceeds(
-      authenticatedApp.collection(projectsCollectionName).get()
+      allowedDomainGoogleApp.collection(projectsCollectionName).add(project)
     );
   });
 
-  it("does not allow to read projects by an authenticated user with not allowed email domain", async () => {
+  it("does not allow to read projects by an authenticated google user with not allowed email domain", async () => {
     await assertFails(
-      invalidAuthenticatedApp.collection(projectsCollectionName).get()
+      notAllowedDomainGoogleApp.collection(projectsCollectionName).get()
     );
   });
 
-  it("allows updating a project by an authenticated user", async () => {
+  it("allows reading projects by an authenticated google user with allowed email domain", async () => {
     await assertSucceeds(
-      authenticatedApp
+      allowedDomainGoogleApp.collection(projectsCollectionName).get()
+    );
+  });
+
+  it("does not allow to update a project by an authenticated google user with not allowed email domain", async () => {
+    await assertFails(
+      notAllowedDomainGoogleApp
         .collection(projectsCollectionName)
         .doc("1")
         .update(project)
     );
   });
 
-  it("does not allow to update a project by an authenticated user with not allowed email domain", async () => {
-    await assertFails(
-      invalidAuthenticatedApp
+  it("allows updating a project by an authenticated google user with allowed email domain", async () => {
+    await assertSucceeds(
+      allowedDomainGoogleApp
         .collection(projectsCollectionName)
         .doc("1")
         .update(project)
     );
   });
 
-  it("does not allow to delete a project by authenticated user", async () => {
+  /**
+   * The password auth provider user specific tests
+   */
+
+  it("allows creating a project by an authenticated password user with allowed email domain", async () => {
+    await assertSucceeds(
+      allowedDomainPasswordApp.collection(projectsCollectionName).add(project)
+    );
+  });
+
+  it("allows creating a project by an authenticated password user with not allowed email domain", async () => {
+    await assertSucceeds(
+      notAllowedDomainPasswordApp
+        .collection(projectsCollectionName)
+        .add(project)
+    );
+  });
+
+  it("allows reading projects by an authenticated password user with allowed email domain", async () => {
+    await assertSucceeds(
+      allowedDomainPasswordApp.collection(projectsCollectionName).get()
+    );
+  });
+
+  it("allows reading projects by an authenticated password user with not allowed email domain", async () => {
+    await assertSucceeds(
+      notAllowedDomainPasswordApp.collection(projectsCollectionName).get()
+    );
+  });
+
+  it("allows updating a project by an authenticated password user with allowed email domain", async () => {
+    await assertSucceeds(
+      allowedDomainPasswordApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .update(project)
+    );
+  });
+
+  it("allows updating a project by an authenticated password user with not allowed email domain", async () => {
+    await assertSucceeds(
+      notAllowedDomainPasswordApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .update(project)
+    );
+  });
+
+  it("does not allow to delete a project an authenticated password user with allowed email domain", async () => {
     await assertFails(
-      authenticatedApp.collection(projectsCollectionName).doc("1").delete()
+      allowedDomainPasswordApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .delete()
+    );
+  });
+
+  it("does not allow to delete a project an authenticated password user with not allowed email domain", async () => {
+    await assertFails(
+      notAllowedDomainPasswordApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .delete()
     );
   });
 

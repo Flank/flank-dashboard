@@ -65,10 +65,10 @@ Before you start, you should have the following installed:
 3. On the next page, select whether you want to use Firebase Analytics or not and click the `Continue`/`Create project` to proceed.
 4. If you choose to use Firebase Analytics in the previous step select a Firebase Analytics account and tap the `Create project`.
 
-After a couple of seconds, your project will be ready, and you'll be redirected to the project console.  
-Your next step will be to create a Firestore database: 
+After a couple of seconds, your project will be ready, and you'll be redirected to the project console.
+Your next step will be to create a Firestore database:
 
-1. Go to the `Database` tab on the left bar and click the `Create database` button under the `Cloud Firestore`. 
+1. Go to the `Database` tab on the left bar and click the `Create database` button under the `Cloud Firestore`.
 2. Select `Start in test mode` to create a database with no security rules for now and tap `Next`. We will add security rules in the [Configuring Firestore database](#Configuring-firestore-database) section.
 3. Select your database location and click `Done`.
 
@@ -77,7 +77,7 @@ After a while, your database will be created, and you will see the database cons
 ## Firebase configuration
 
 When your Firestore database is up, you need to add a Web application to your Firebase project,
-to be able to connect your web application with the Firestore database: 
+to be able to connect your web application with the Firestore database:
 
 1. In the [Firebase Console](https://console.firebase.google.com/), open your project and tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
 2. Scroll down and find `There are no apps in your project` text,
@@ -89,16 +89,16 @@ to be able to connect your web application with the Firestore database:
 7. Skip the `Deploy to Firebase Hosting` and tap on the `Continue to console` to finish configuring your Firebase Web application.
  The deployment process described more detailed in
   [Building and deploying the application to the Firebase Hosting](#Building-and-deploying-the-application-to-the-Firebase-Hosting) section.
- 
+
 Finally, your Firebase project configured and it's time to configure the Firebase SDK in your Flutter for the Web application.
 
 ## Firebase SDK configuration
 
-To configure the Flutter for Web application to use recently created Firestore Database follow the next steps: 
+To configure the Flutter for Web application to use recently created Firestore Database follow the next steps:
 
-1. Open the [Firebase console](https://console.firebase.google.com/), choose your project 
+1. Open the [Firebase console](https://console.firebase.google.com/), choose your project
 and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
-2. Scroll down and find your Firebase Web Application. 
+2. Scroll down and find your Firebase Web Application.
 3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
 4. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 3:
     ```
@@ -116,12 +116,12 @@ and go to the project setting (tap on the setting gear icon near the `Project Ov
 
 Finally, you have a configured Flutter application that works with your Firebase instance.
 It's time to deploy your Flutter application to the Firebase Hosting!
- 
+
 ## Firebase Google Sign-In configuration
 
 To allow users sign-in using Google, please follow the next steps:
 
-1. Open the [Firebase console](https://console.firebase.google.com/), choose your project 
+1. Open the [Firebase console](https://console.firebase.google.com/), choose your project
 2. Navigate to `Authentication` -> `Sign-in method`.
 3. Enable `Google`.
 4. Expand `Web SDK Configuration` and copy `Web client ID`, then press `Save`.
@@ -129,15 +129,15 @@ To allow users sign-in using Google, please follow the next steps:
 
 ## Building and deploying the application to the Firebase Hosting
 
-### Preparing your environment 
+### Preparing your environment
 Before deploying metrics application, make sure you have the correct Flutter version installed,
- by running the `flutter --version` command. You should have `v1.15.3` installed. 
+ by running the `flutter --version` command. You should have `v1.15.3` installed.
 If the version is different you should run the `flutter version 1.15.3` command.
 
 Also, you should enable flutter web support by running the `flutter config --enable-web` command.
 
 ### Building and deploying Flutter application
- 
+
 1. Open the terminal and navigate to the metrics project folder.
 2. Run `firebase login` command and follow the instructions to log in to the Firebase CLI with your Google account.
  Use the same account that you used to create your Firebase project (or the one that has access to it).
@@ -151,18 +151,18 @@ After the deployment process finished, your application will be accessible using
 
 ## Configuring Firestore database
 
-Once you've deployed the metrics application to Firebase Hosting, you should finish configuring your Firestore database. 
-The `metrics/firebase` folder contains Firestore security rules, Firestore indexes, and a `seedData` Cloud function needed to create a test data for our application. To deploy all of these components, follow the next steps: 
+Once you've deployed the metrics application to Firebase Hosting, you should finish configuring your Firestore database.
+The `metrics/firebase` folder contains Firestore security rules, Firestore indexes, and a `seedData` Cloud function needed to create a test data for our application. To deploy all of these components, follow the next steps:
 
 1. Activate the `seedData` function: go to the `metrics/firebase/functions/index.js` file and change the `const inactive = true;` to `const inactive = false;`.
 2. 0pen the terminal, navigate to `metrics/firebase` folder and ensure all dependencies are installed by running: `npm install`.
 3. Run the `firebase deploy` command to deploy all components.
 4. Once command execution finished, you'll find the `seedData` function URL, that can be used to trigger function execution in the console. Save this URL somewhere - you will need it a bit later.
 
-Now you can create test projects in your Firestore database: 
+Now you can create test projects in your Firestore database:
 
 1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
-2. Go to the database section on the left panel and tap on the `Start collection` button.
+2. Go to the `Cloud Firestore` section on the left panel and tap on the `Start collection` button.
 3. Add collection with `projects` identifier and tap `Next`.
 4. In the document creation window tap on the `Auto-ID` button or enter the project identifier you want.
 5. Add a field named `name` with the `String` type and the name for your project as a value.
@@ -179,6 +179,15 @@ Once you've finished creating test data, you should deactivate the `seedData` cl
 1. Go to the `metrics/firebase/functions/index.js` file and change the `inactive` constant back to `true`.
 2. Redeploy this function, using the `firebase deploy --only functions` command.
 
+Also, to be able to sign in with google you should configure the allowed user email domains in the Firestore database following the next steps:
+
+1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
+2. Open the `Cloud Firestore` section on the left panel.
+3. Tap on the `Start collection` button, enter the `allowed_email_domains` collection ID, and tap `Next` button.
+4. After you tapped the `Next` button, you'll be asked to add a first document to your collection. This is the point where we start adding the allowed user email domains for our application. For example, we want to allow the `gmail.com` domain, so we should create the document with the `google.com` document ID.
+
+To add more allowed email domains you should add a new document for each email domain with the domain itself as a document ID.
+
 ## Creating a new Firebase User
 
 Once you've finished deploying the Metrics application and created the test data, you probably want to open the application and ensure it works well, so you need to create a Firebase User to log-in to the application:
@@ -188,7 +197,7 @@ Once you've finished deploying the Metrics application and created the test data
 3. Provide an email and a password to create a new user and type on the `Add user` button again.
 4. You should see your email with additional data appear in the list of the users' table.
 
-With that in place, you can use your credentials, that you've used to create the user, to fill an authentication form of the web application. 
+With that in place, you can use your credentials, that you've used to create the user, to fill an authentication form of the web application.
 
 After logging in, you should see a dashboard page with a list of test projects and their metrics if you've created them in the previous steps or no data. The app should provide an ability to switch between light/dark themes.
 
