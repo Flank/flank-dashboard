@@ -80,7 +80,7 @@ describe("Project groups collection rules", async function () {
     );
   });
 
-  it("does not allow to create a project group by an authenticated user with an invalid email", async () => {
+  it("does not allow to create a project group by an authenticated user with not allowed email domain", async () => {
     await assertFails(
       invalidAuthenticatedApp.collection(collectionName).add(getProjectGroup())
     );
@@ -90,7 +90,7 @@ describe("Project groups collection rules", async function () {
     await assertSucceeds(authenticatedApp.collection(collectionName).get());
   });
 
-  it("does not allow to read project groups by an authenticated user with an invalid email", async () => {
+  it("does not allow to read project groups by an authenticated user with not allowed email domain", async () => {
     await assertFails(invalidAuthenticatedApp.collection(collectionName).get());
   });
 
@@ -103,7 +103,7 @@ describe("Project groups collection rules", async function () {
     );
   });
 
-  it("does not allow to update a project group by an authenticated user with an invalid email", async () => {
+  it("does not allow to update a project group by an authenticated user with not allowed email domain", async () => {
     await assertFails(
       invalidAuthenticatedApp
         .collection(collectionName)
@@ -118,7 +118,7 @@ describe("Project groups collection rules", async function () {
     );
   });
 
-  it("does not allow to delete a project group by an authenticated user with an invalid email", async () => {
+  it("does not allow to delete a project group by an authenticated user with not allowed email domain", async () => {
     await assertFails(
       invalidAuthenticatedApp.collection(collectionName).doc("1").delete()
     );

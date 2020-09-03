@@ -220,7 +220,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build by an authenticated user with an invalid email domain", async () => {
+  it("does not allow to create a build by an authenticated user with not allowed email domain", async () => {
     await assertFails(
       invalidAuthenticatedApp.collection(buildsCollectionName).add(getBuild())
     );
@@ -232,7 +232,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to read builds by an authenticated user with an invalid email domain", async () => {
+  it("does not allow to read builds by an authenticated user with not allowed email domain", async () => {
     await assertFails(
       invalidAuthenticatedApp.collection(buildsCollectionName).get()
     );
@@ -247,7 +247,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to update a build by an authenticated user with an invalid email", async () => {
+  it("does not allow to update a build by an authenticated user with not allowed email", async () => {
     await assertFails(
       invalidAuthenticatedApp
         .collection(buildsCollectionName)

@@ -51,7 +51,7 @@ describe("Projects collection rules", async function () {
     );
   });
 
-  it("does not allow to create a project by an authenticated user with an invalid email domain", async () => {
+  it("does not allow to create a project by an authenticated user with not allowed email domain", async () => {
     await assertFails(
       invalidAuthenticatedApp.collection(projectsCollectionName).add(project)
     );
@@ -63,13 +63,7 @@ describe("Projects collection rules", async function () {
     );
   });
 
-  it("does not allow to read projects by an authenticated user with an invalid email domain", async () => {
-    await assertFails(
-      invalidAuthenticatedApp.collection(projectsCollectionName).get()
-    );
-  });
-
-  it("does not allow to read projects by an authenticated user with an invalid email domain", async () => {
+  it("does not allow to read projects by an authenticated user with not allowed email domain", async () => {
     await assertFails(
       invalidAuthenticatedApp.collection(projectsCollectionName).get()
     );
@@ -84,7 +78,7 @@ describe("Projects collection rules", async function () {
     );
   });
 
-  it("does not allow to update a project by an authenticated user with invalid email", async () => {
+  it("does not allow to update a project by an authenticated user with not allowed email domain", async () => {
     await assertFails(
       invalidAuthenticatedApp
         .collection(projectsCollectionName)

@@ -3,19 +3,19 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /project_groups/{projectGroupId} {
-      allow read, delete: if isLoggedIn(database);
-      allow create, update: if isLoggedIn(database) && isProjectGroupValid();
+      allow read, delete: if isAccessAuthorized(database);
+      allow create, update: if isAccessAuthorized(database) && isProjectGroupValid();
     }
 
     match /projects/{projectId} {
-      allow read: if isLoggedIn(database);
-      allow create, update: if isLoggedIn(database) && isProjectValid();
+      allow read: if isAccessAuthorized(database);
+      allow create, update: if isAccessAuthorized(database) && isProjectValid();
       allow delete: if false;
     }
 
     match /build/{buildId} {
-      allow read: if isLoggedIn(database);
-      allow create, update: if isLoggedIn(database) && isBuildValid(database);
+      allow read: if isAccessAuthorized(database);
+      allow create, update: if isAccessAuthorized(database) && isBuildValid(database);
       allow delete: if false;
     }
 
@@ -29,19 +29,17 @@ service cloud.firestore {
     return request.auth.token.email != null && isEmailDomainAllowed(database);
   }
 
-  /// Checks whether a request's email domain is in the allowed domains list
-  /// or the auth method is a password.
+  /// Checks whether a request's email domain is in the allowed domains list.
   function isEmailDomainAllowed(database) {
-    let authMethod = request.auth.token.firebase.sign_in_provider;
     let userEmail = request.auth.token.email;
     let emailDomain = userEmail.split('@')[1];
     let isEmailDomainExists = exists(/databases/$(database)/documents/allowed_email_domains/$(emailDomain));
 
-    return authMethod == 'password' || isEmailDomainExists;
+    return isEmailDomainExists;
   }
 
   /// Checks if a request is from a logged-in user.
-  function isLoggedIn(database) {
+  function isAccessAuthorized(database) {
     return request.auth.uid != null && isEmailValid(database)
   }
 
