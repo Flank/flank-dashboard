@@ -78,7 +78,7 @@ exports.allowedEmailDomains = allowedEmailDomains;
 /** An email and password sign in provider identifier */
 exports.passwordSignInProviderId = "password";
 
-/** An google sign in provider identifier */
+/** A google sign in provider identifier */
 exports.gleSignInProviderId = "google.com";
 
 /** Provides a firebase user with allowed email domain and given sign in provider identifier */

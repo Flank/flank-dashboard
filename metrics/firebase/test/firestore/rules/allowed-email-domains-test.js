@@ -30,7 +30,7 @@ describe("Allowed email domains collection rules", async () => {
     );
   });
 
-  it("does not allow to read allowed email domain by an authenticated user", async () => {
+  it("does not allow to read an allowed email domain by an authenticated user", async () => {
     await assertFails(
       authenticatedApp.collection(collectionName).get()
     );
