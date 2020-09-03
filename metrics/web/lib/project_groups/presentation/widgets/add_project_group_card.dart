@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/widgets/metrics_card.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_dialog.dart';
@@ -37,33 +37,28 @@ class AddProjectGroupCard extends StatelessWidget {
               : null,
           cursor: "pointer",
           builder: (bool isHovered) {
-            return DecoratedContainer(
-              width: 270.0,
-              height: 156.0,
+            return MetricsCard(
               decoration: BoxDecoration(
                 color: isHovered ? style.hoverColor : style.backgroundColor,
                 borderRadius: BorderRadius.circular(4.0),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.network(
-                      asset,
-                      width: 32.0,
-                      height: 32.0,
-                      color: style.iconColor,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.network(
+                    asset,
+                    width: 32.0,
+                    height: 32.0,
+                    color: style.iconColor,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      ProjectGroupsStrings.createGroup,
+                      style: style.labelStyle,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        ProjectGroupsStrings.createGroup,
-                        style: style.labelStyle,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           },

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:universal_html/html.dart' as html;
 
+/// A widget that rebuilds its child using the given builder function
+/// and applies the given cursor when this widget is hovered,
+/// applies the given callback when this widget is tapped.
 class TappableArea extends StatefulWidget {
   /// A callback that is called when the area is tapped.
   final VoidCallback onTap;
