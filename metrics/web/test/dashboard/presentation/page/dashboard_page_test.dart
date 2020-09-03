@@ -7,10 +7,7 @@ import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart'
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
-import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
-import 'package:metrics/common/presentation/widgets/metrics_user_menu_card.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
@@ -81,7 +78,7 @@ void main() {
 
     testWidgets(
       "displays the negative toast if there is a projects error message",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         const errorMessage = "some error message";
 
         when(projectMetricsNotifier.isMetricsLoading).thenReturn(false);
@@ -100,7 +97,9 @@ void main() {
         await tester.pump();
 
         expect(
-            find.widgetWithText(NegativeToast, errorMessage), findsOneWidget);
+          find.widgetWithText(NegativeToast, errorMessage),
+          findsOneWidget,
+        );
 
         ToastManager().dismissAll();
       },
