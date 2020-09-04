@@ -86,7 +86,7 @@ exports.seedData = functions.https.onRequest(async (req, resp) => {
  * @return {Object} containing such fields: 
  * - `isValid` - indicates whether the email from request has a valid domain or not.
  */
-exports.validateEmailDomain = functions.https.onCall(async (data, context) => {
+exports.validateEmail = functions.https.onCall(async (data, context) => {
     let requestData = data || {};
 
     let userEmail = requestData.email || '';
