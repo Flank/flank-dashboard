@@ -15,16 +15,16 @@ const {
 } = require("./test_utils/test-data");
 
 describe("Projects collection rules", async function () {
-  const allowedDomainPasswordApp = await getApplicationWith(
+  const passwordProviderAllowedDomainApp = await getApplicationWith(
     getAllowedEmailDomainUser(passwordSignInProviderId)
   );
-  const notAllowedDomainPasswordApp = await getApplicationWith(
+  const passwordProviderNotAllowedDomainApp = await getApplicationWith(
     getNotAllowedDomainUser(passwordSignInProviderId)
   );
-  const allowedDomainGoogleApp = await getApplicationWith(
+  const googleProviderAllowedDomainApp = await getApplicationWith(
     getAllowedEmailDomainUser(googleSignInProviderId)
   );
-  const notAllowedDomainGoogleApp = await getApplicationWith(
+  const googleProviderNotAllowedDomainApp = await getApplicationWith(
     getNotAllowedDomainUser(googleSignInProviderId)
   );
   const unauthenticatedApp = await getApplicationWith(null);
@@ -50,7 +50,7 @@ describe("Projects collection rules", async function () {
   });
 
   it("does not allow to create a project without a name", async () => {
-    await assertFails(allowedDomainPasswordApp.collection("projects").add({}));
+    await assertFails(passwordProviderAllowedDomainApp.collection("projects").add({}));
   });
 
   /**
@@ -59,31 +59,31 @@ describe("Projects collection rules", async function () {
 
   it("does not allow to create a project by an authenticated google user with not allowed email domain", async () => {
     await assertFails(
-      notAllowedDomainGoogleApp.collection(projectsCollectionName).add(project)
+      googleProviderNotAllowedDomainApp.collection(projectsCollectionName).add(project)
     );
   });
 
   it("allows creating a project by an authenticated google user with allowed email domain", async () => {
     await assertSucceeds(
-      allowedDomainGoogleApp.collection(projectsCollectionName).add(project)
+      googleProviderAllowedDomainApp.collection(projectsCollectionName).add(project)
     );
   });
 
   it("does not allow to read projects by an authenticated google user with not allowed email domain", async () => {
     await assertFails(
-      notAllowedDomainGoogleApp.collection(projectsCollectionName).get()
+      googleProviderNotAllowedDomainApp.collection(projectsCollectionName).get()
     );
   });
 
   it("allows reading projects by an authenticated google user with allowed email domain", async () => {
     await assertSucceeds(
-      allowedDomainGoogleApp.collection(projectsCollectionName).get()
+      googleProviderAllowedDomainApp.collection(projectsCollectionName).get()
     );
   });
 
   it("does not allow to update a project by an authenticated google user with not allowed email domain", async () => {
     await assertFails(
-      notAllowedDomainGoogleApp
+      googleProviderNotAllowedDomainApp
         .collection(projectsCollectionName)
         .doc("1")
         .update(project)
@@ -92,7 +92,7 @@ describe("Projects collection rules", async function () {
 
   it("allows updating a project by an authenticated google user with allowed email domain", async () => {
     await assertSucceeds(
-      allowedDomainGoogleApp
+      googleProviderAllowedDomainApp
         .collection(projectsCollectionName)
         .doc("1")
         .update(project)
@@ -105,13 +105,13 @@ describe("Projects collection rules", async function () {
 
   it("allows creating a project by an authenticated password user with allowed email domain", async () => {
     await assertSucceeds(
-      allowedDomainPasswordApp.collection(projectsCollectionName).add(project)
+      passwordProviderAllowedDomainApp.collection(projectsCollectionName).add(project)
     );
   });
 
   it("allows creating a project by an authenticated password user with not allowed email domain", async () => {
     await assertSucceeds(
-      notAllowedDomainPasswordApp
+      passwordProviderNotAllowedDomainApp
         .collection(projectsCollectionName)
         .add(project)
     );
@@ -119,19 +119,19 @@ describe("Projects collection rules", async function () {
 
   it("allows reading projects by an authenticated password user with allowed email domain", async () => {
     await assertSucceeds(
-      allowedDomainPasswordApp.collection(projectsCollectionName).get()
+      passwordProviderAllowedDomainApp.collection(projectsCollectionName).get()
     );
   });
 
   it("allows reading projects by an authenticated password user with not allowed email domain", async () => {
     await assertSucceeds(
-      notAllowedDomainPasswordApp.collection(projectsCollectionName).get()
+      passwordProviderNotAllowedDomainApp.collection(projectsCollectionName).get()
     );
   });
 
   it("allows updating a project by an authenticated password user with allowed email domain", async () => {
     await assertSucceeds(
-      allowedDomainPasswordApp
+      passwordProviderAllowedDomainApp
         .collection(projectsCollectionName)
         .doc("1")
         .update(project)
@@ -140,7 +140,7 @@ describe("Projects collection rules", async function () {
 
   it("allows updating a project by an authenticated password user with not allowed email domain", async () => {
     await assertSucceeds(
-      notAllowedDomainPasswordApp
+      passwordProviderNotAllowedDomainApp
         .collection(projectsCollectionName)
         .doc("1")
         .update(project)
@@ -149,7 +149,7 @@ describe("Projects collection rules", async function () {
 
   it("does not allow to delete a project an authenticated password user with allowed email domain", async () => {
     await assertFails(
-      allowedDomainPasswordApp
+      passwordProviderAllowedDomainApp
         .collection(projectsCollectionName)
         .doc("1")
         .delete()
@@ -158,7 +158,7 @@ describe("Projects collection rules", async function () {
 
   it("does not allow to delete a project an authenticated password user with not allowed email domain", async () => {
     await assertFails(
-      notAllowedDomainPasswordApp
+      passwordProviderNotAllowedDomainApp
         .collection(projectsCollectionName)
         .doc("1")
         .delete()

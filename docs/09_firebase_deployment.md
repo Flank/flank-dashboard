@@ -69,7 +69,7 @@ After a couple of seconds, your project will be ready, and you'll be redirected 
 Your next step will be to create a Firestore database:
 
 1. Go to the `Database` tab on the left bar and click the `Create database` button under the `Cloud Firestore`.
-2. Select `Start in test mode` to create a database with no security rules for now and tap `Next`. We will add security rules in the [Configuring Firestore database](#Configuring-firestore-database) section.
+2. Select `Start in test mode` to create a database with no security rules for now and tap `Next`. We will add security rules in the [Configuring Firestore database](#Configuring-Firestore-database) section.
 3. Select your database location and click `Done`.
 
 After a while, your database will be created, and you will see the database console page.
@@ -184,7 +184,7 @@ Also, to be able to sign in with google you should configure the allowed user em
 1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
 2. Open the `Cloud Firestore` section on the left panel.
 3. Tap on the `Start collection` button, enter the `allowed_email_domains` collection ID, and tap `Next` button.
-4. After you tapped the `Next` button, you'll be asked to add a first document to your collection. This is the point where we start adding the allowed user email domains for our application. For example, we want to allow the `gmail.com` domain, so we should create the document with the `google.com` document ID.
+4. After you tapped the `Next` button, you'll be asked to add a first document to your collection. This is the point where we start adding the allowed user email domains for our application. For example, we want to allow the `gmail.com` domain, so we should create an empty document with the `gmail.com` document ID.
 
 To add more allowed email domains you should add a new document for each email domain with the domain itself as a document ID.
 

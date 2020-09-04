@@ -79,7 +79,7 @@ exports.allowedEmailDomains = allowedEmailDomains;
 exports.passwordSignInProviderId = "password";
 
 /** A google sign in provider identifier */
-exports.gleSignInProviderId = "google.com";
+exports.googleSignInProviderId = "google.com";
 
 /** Provides a firebase user with allowed email domain and given sign in provider identifier */
 exports.getAllowedEmailDomainUser = function (signInProviderId) {
