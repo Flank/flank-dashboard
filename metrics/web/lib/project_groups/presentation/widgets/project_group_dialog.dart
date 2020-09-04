@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/value_form_field.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_inactive_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -49,6 +50,9 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// A [ChangeNotifier] that holds the project groups state.
   ProjectGroupsNotifier _projectGroupsNotifier;
 
+  /// Indicates whether the action button is active.
+  final ValueNotifier<bool> _isActionButtonActive = ValueNotifier<bool>(false);
+
   /// Indicates whether this widget is in the loading state or not.
   bool _isLoading = false;
 
@@ -65,6 +69,16 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
     _groupNameController.text =
         _projectGroupsNotifier?.projectGroupDialogViewModel?.name;
+
+    _subscribeToProjectGroupDialogChanges();
+  }
+
+  /// Subscribes to project group dialog changes.
+  void _subscribeToProjectGroupDialogChanges() {
+    _updateActionButtonState();
+
+    _projectGroupsNotifier.addListener(_updateActionButtonState);
+    _groupNameController.addListener(_updateActionButtonState);
   }
 
   /// Subscribes to project errors.
@@ -184,10 +198,23 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
           ),
           actions: <Widget>[
             Expanded(
-              child: MetricsPositiveButton(
-                label: buttonText,
-                onPressed:
-                    _isLoading ? null : () => _actionCallback(projectGroup),
+              child: ValueListenableBuilder<bool>(
+                valueListenable: _isActionButtonActive,
+                builder: (context, isActionButtonActive, _) {
+                  if (isActionButtonActive) {
+                    return MetricsPositiveButton(
+                      label: buttonText,
+                      onPressed: _isLoading
+                          ? null
+                          : () => _actionCallback(projectGroup),
+                    );
+                  }
+
+                  return MetricsInactiveButton(
+                    label: buttonText,
+                    onPressed: null,
+                  );
+                },
               ),
             ),
           ],
@@ -203,6 +230,27 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     if (selectedProjectIds.isEmpty) return '';
 
     return ProjectGroupsStrings.getSelectedCount(selectedProjectIds.length);
+  }
+
+  /// Updates the state of the action button depending on the
+  /// project group dialog values selected by user.
+  void _updateActionButtonState() {
+    final groupName = _groupNameController.value.text;
+    final List<String> selectedProjectIds =
+        _projectGroupsNotifier.projectGroupDialogViewModel.selectedProjectIds;
+    final numberOfSelectedProjects = selectedProjectIds.length;
+
+    if (numberOfSelectedProjects > 0) {
+      final groupNameErrorMessage =
+          ProjectGroupNameValidator.validate(groupName);
+      final selectedProjectIdsErrorMessage =
+          ProjectGroupProjectsValidator.validate(selectedProjectIds);
+
+      _isActionButtonActive.value = groupNameErrorMessage == null &&
+          selectedProjectIdsErrorMessage == null;
+    } else {
+      _isActionButtonActive.value = false;
+    }
   }
 
   /// A callback for this dialog action button.
@@ -245,8 +293,11 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   @override
   void dispose() {
     _projectGroupsNotifier.resetFilterName();
+    _projectGroupsNotifier.removeListener(_updateActionButtonState);
+    _groupNameController.removeListener(_updateActionButtonState);
     _groupNameController.dispose();
     _projectGroupsNotifier.removeListener(_projectsErrorListener);
+    _isActionButtonActive.dispose();
     super.dispose();
   }
 }

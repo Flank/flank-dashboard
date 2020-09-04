@@ -1,9 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
-import 'package:metrics/base/presentation/widgets/padded_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
@@ -53,28 +52,13 @@ void main() {
     );
 
     testWidgets(
-      "displays the padded card",
+      "displays the decorated container",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(const _AddProjectGroupCardTestbed()),
         );
 
-        expect(find.byType(PaddedCard), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the card",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _AddProjectGroupCardTestbed());
-        });
-
-        final finder = find.byWidgetPredicate(
-          (widget) => widget is PaddedCard && widget.child is HandCursor,
-        );
-
-        expect(finder, findsOneWidget);
+        expect(find.byType(DecoratedContainer), findsOneWidget);
       },
     );
 
@@ -87,9 +71,9 @@ void main() {
           ),
         );
 
-        final cardWidget = tester.widget<PaddedCard>(find.byType(PaddedCard));
+        final decoration = FinderUtil.findBoxDecoration(tester);
 
-        expect(cardWidget.backgroundColor, equals(positiveBackgroundColor));
+        expect(decoration.color, equals(positiveBackgroundColor));
       },
     );
 
@@ -124,9 +108,10 @@ void main() {
             ),
           ),
         );
-        final cardWidget = tester.widget<PaddedCard>(find.byType(PaddedCard));
 
-        expect(cardWidget.backgroundColor, equals(inactiveBackgroundColor));
+        final decoration = FinderUtil.findBoxDecoration(tester);
+
+        expect(decoration.color, equals(inactiveBackgroundColor));
       },
     );
 

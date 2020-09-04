@@ -61,7 +61,9 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
               children: [
                 TextSpan(
                   text: ' ${deleteViewModel.name} ',
-                  style: contentTextStyle.copyWith(fontWeight: FontWeight.bold),
+                  style: contentTextStyle.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const TextSpan(
                   text: ProjectGroupsStrings.deleteConfirmationQuestion,

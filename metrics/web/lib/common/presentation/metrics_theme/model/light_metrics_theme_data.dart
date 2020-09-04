@@ -113,6 +113,7 @@ class LightMetricsThemeData extends MetricsThemeData {
               ),
               inactive: AddProjectGroupCardStyle(
                 backgroundColor: _inactiveBackgroundColor,
+                hoverColor: _inactiveBackgroundColor,
                 iconColor: scaffoldColor,
                 labelStyle: TextStyle(
                   color: scaffoldColor,

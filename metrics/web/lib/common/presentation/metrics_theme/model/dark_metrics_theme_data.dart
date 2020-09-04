@@ -133,6 +133,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               ),
               inactive: AddProjectGroupCardStyle(
                 backgroundColor: _inactiveBackgroundColor,
+                hoverColor: _inactiveBackgroundColor,
                 iconColor: scaffoldColor,
                 labelStyle: TextStyle(
                   color: scaffoldColor,
@@ -151,6 +152,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
               fontSize: 16.0,
               color: Colors.white,
               height: 1.5,
+              fontWeight: FontWeight.w300,
+              letterSpacing: 0.14,
             ),
           ),
           projectGroupDialogTheme: const ProjectGroupDialogThemeData(

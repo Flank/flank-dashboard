@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
-import 'package:metrics/base/presentation/widgets/padded_card.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -19,6 +19,7 @@ import 'package:metrics/project_groups/presentation/widgets/project_group_card.d
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -91,12 +92,9 @@ void main() {
 
         await tester.pump();
 
-        final paddedCard = tester.widget<PaddedCard>(find.descendant(
-          of: find.byType(ProjectGroupCard),
-          matching: find.byType(PaddedCard),
-        ));
+        final decoration = FinderUtil.findBoxDecoration(tester);
 
-        expect(paddedCard.backgroundColor, equals(testBackgroundColor));
+        expect(decoration.color, equals(testBackgroundColor));
       },
     );
 
@@ -112,27 +110,27 @@ void main() {
           await _hoverProjectGroupCard(tester);
         });
 
-        final paddedCard = tester.widget<PaddedCard>(find.descendant(
-          of: find.byType(ProjectGroupCard),
-          matching: find.byType(PaddedCard),
-        ));
+        final decoration = FinderUtil.findBoxDecoration(tester);
 
-        expect(paddedCard.backgroundColor, equals(testHoverColor));
+        expect(decoration.color, equals(testHoverColor));
       },
     );
 
     testWidgets(
-      "applies the border color from the metrics theme to the padded card",
+      "applies the border color from the metrics theme to the decorated container",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ProjectGroupCardTestbed(
           theme: testTheme,
           projectGroupCardViewModel: projectGroupCardViewModel,
         ));
 
-        final paddedCard = tester.widget<PaddedCard>(find.byType(PaddedCard));
-        final borderShape = paddedCard.shape as RoundedRectangleBorder;
+        final decoration = FinderUtil.findBoxDecoration(tester);
+        final border = decoration.border as Border;
 
-        expect(borderShape.side.color, equals(testBorderColor));
+        expect(border.top.color, equals(testBorderColor));
+        expect(border.bottom.color, equals(testBorderColor));
+        expect(border.left.color, equals(testBorderColor));
+        expect(border.right.color, equals(testBorderColor));
       },
     );
 
@@ -289,7 +287,8 @@ void main() {
         ));
 
         expect(
-          find.widgetWithText(PaddedCard, projectGroupCardViewModel.name),
+          find.widgetWithText(
+              DecoratedContainer, projectGroupCardViewModel.name),
           findsOneWidget,
         );
       },
@@ -307,27 +306,7 @@ void main() {
         ));
 
         expect(
-          find.widgetWithText(PaddedCard, projectsCountText),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets(
-      "displays the no projects text if the projects count equals to 0",
-      (WidgetTester tester) async {
-        const projectGroupCardViewModel = ProjectGroupCardViewModel(
-          id: 'id',
-          name: 'name',
-          projectsCount: 0,
-        );
-
-        await tester.pumpWidget(const _ProjectGroupCardTestbed(
-          projectGroupCardViewModel: projectGroupCardViewModel,
-        ));
-
-        expect(
-          find.widgetWithText(PaddedCard, ProjectGroupsStrings.noProjects),
+          find.widgetWithText(DecoratedContainer, projectsCountText),
           findsOneWidget,
         );
       },

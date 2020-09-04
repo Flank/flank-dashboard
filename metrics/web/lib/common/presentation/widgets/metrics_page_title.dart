@@ -31,8 +31,8 @@ class MetricsPageTitle extends StatelessWidget {
                 onTap: () => _navigateBack(context),
                 child: Image.network(
                   'icons/arrow-back.svg',
-                  width: 33.0,
-                  height: 22.0,
+                  width: 32.0,
+                  height: 32.0,
                   fit: BoxFit.contain,
                 ),
               ),
