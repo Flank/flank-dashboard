@@ -25,29 +25,33 @@ class ProjectCheckboxListTile extends StatelessWidget {
     final theme = MetricsTheme.of(context).projectGroupDialogTheme;
 
     return HandCursor(
-      child: InkWell(
-        onTap: () => _toggleProjectCheckedStatus(context),
-        child: Container(
-          height: 48.0,
-          padding: const EdgeInsets.all(14.0),
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: MetricsCheckbox(
-                  value: projectCheckboxViewModel.isChecked,
-                  onChanged: (_) {
-                    _toggleProjectCheckedStatus(context);
-                  },
+      child: Material(
+        elevation: 0.0,
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => _toggleProjectCheckedStatus(context),
+          child: Container(
+            height: 48.0,
+            padding: const EdgeInsets.all(14.0),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: MetricsCheckbox(
+                    value: projectCheckboxViewModel.isChecked,
+                    onChanged: (_) {
+                      _toggleProjectCheckedStatus(context);
+                    },
+                  ),
                 ),
-              ),
-              Text(
-                projectCheckboxViewModel.name,
-                style: projectCheckboxViewModel.isChecked
-                    ? theme.checkedProjectTextStyle
-                    : theme.uncheckedProjectTextStyle,
-              ),
-            ],
+                Text(
+                  projectCheckboxViewModel.name,
+                  style: projectCheckboxViewModel.isChecked
+                      ? theme.checkedProjectTextStyle
+                      : theme.uncheckedProjectTextStyle,
+                ),
+              ],
+            ),
           ),
         ),
       ),
