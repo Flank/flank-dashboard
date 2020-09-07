@@ -5,7 +5,7 @@ admin.initializeApp(functions.config().firebase);
 const settings = { timestampsInSnapshots: true };
 admin.firestore().settings(settings);
 
-/** 
+/**
  * A list of available build statuses.
  */
 const buildStatuses = ['BuildStatus.successful', 'BuildStatus.cancelled', 'BuildStatus.failed'];
@@ -15,7 +15,7 @@ const buildStatuses = ['BuildStatus.successful', 'BuildStatus.cancelled', 'Build
 
 /**
  * Creates seed builds for metrics projects.
- * 
+ *
  * This HTTP function takes such query params:
  * buildsCount (required) - number of builds to be generated.
  * projectId (required) - the project identifier for which builds will be generated.
@@ -79,12 +79,12 @@ exports.seedData = functions.https.onRequest(async (req, resp) => {
 
 /**
  * Checks whether the email domain is in the allowed domains list.
- * 
- * @param {Object} data - a request object that accepts such fields: 
+ *
+ * @param {Object} data - a request object that accepts such fields:
  * - `email` - the email to validate the domain.
- * 
- * @return {Object} containing such fields: 
- * - `isValid` - indicates whether the email from request has a valid domain or not.
+ *
+ * @return {Object} containing such fields:
+ * - `isValid` - indicates whether the email from the request has a valid domain or not.
  */
 exports.validateEmail = functions.https.onCall(async (data, context) => {
     let requestData = data || {};
@@ -100,14 +100,14 @@ exports.validateEmail = functions.https.onCall(async (data, context) => {
     }
 });
 
-/** 
+/**
  * Creates random Date in the range from start to end.
  */
 function randomDate(start, end) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
 
-/** 
+/**
  * Creates random integer in the range from start to end.
  */
 function randomInt(from, to) {
