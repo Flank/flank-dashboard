@@ -105,13 +105,13 @@ void main() {
     );
 
     testWidgets(
-      "displays the metrics user menu on the user menu image tap",
+      "displays the metrics user menu on the user menu button tap",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_MetricsUserMenuButtonTestbed());
         });
 
-        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
+        await tester.tap(find.byType(MetricsUserMenuButton));
         await tester.pumpAndSettle();
 
         expect(find.byType(MetricsUserMenu), findsOneWidget);
