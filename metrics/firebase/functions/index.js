@@ -97,6 +97,7 @@ exports.validateEmail = functions.https.onCall(async (data, context) => {
 
     return {
         "isValid": allowedEmailDomains.includes(emailDomain),
+        "email": userEmail,
     }
 });
 
