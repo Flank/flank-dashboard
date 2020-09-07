@@ -63,23 +63,9 @@ describe("Projects collection rules", async function () {
     );
   });
 
-  it("allows creating a project by an authenticated password user with not allowed email domain", async () => {
-    await assertSucceeds(
-      passwordProviderNotAllowedDomainApp
-        .collection(projectsCollectionName)
-        .add(project)
-    );
-  });
-
   it("allows reading projects by an authenticated password user with allowed email domain", async () => {
     await assertSucceeds(
       passwordProviderAllowedDomainApp.collection(projectsCollectionName).get()
-    );
-  });
-
-  it("allows reading projects by an authenticated password user with not allowed email domain", async () => {
-    await assertSucceeds(
-      passwordProviderNotAllowedDomainApp.collection(projectsCollectionName).get()
     );
   });
 
@@ -92,21 +78,35 @@ describe("Projects collection rules", async function () {
     );
   });
 
-  it("allows updating a project by an authenticated password user with not allowed email domain", async () => {
-    await assertSucceeds(
-      passwordProviderNotAllowedDomainApp
-        .collection(projectsCollectionName)
-        .doc("1")
-        .update(project)
-    );
-  });
-
   it("does not allow to delete a project an authenticated password user with allowed email domain", async () => {
     await assertFails(
       passwordProviderAllowedDomainApp
         .collection(projectsCollectionName)
         .doc("1")
         .delete()
+    );
+  });
+
+  it("allows creating a project by an authenticated password user with not allowed email domain", async () => {
+    await assertSucceeds(
+      passwordProviderNotAllowedDomainApp
+        .collection(projectsCollectionName)
+        .add(project)
+    );
+  });
+
+  it("allows reading projects by an authenticated password user with not allowed email domain", async () => {
+    await assertSucceeds(
+      passwordProviderNotAllowedDomainApp.collection(projectsCollectionName).get()
+    );
+  });
+
+  it("allows updating a project by an authenticated password user with not allowed email domain", async () => {
+    await assertSucceeds(
+      passwordProviderNotAllowedDomainApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .update(project)
     );
   });
 
@@ -123,27 +123,45 @@ describe("Projects collection rules", async function () {
    * The google auth provider user specific tests
    */
 
-  it("does not allow to create a project by an authenticated google user with not allowed email domain", async () => {
-    await assertFails(
-      googleProviderNotAllowedDomainApp.collection(projectsCollectionName).add(project)
-    );
-  });
-
   it("allows creating a project by an authenticated google user with allowed email domain", async () => {
     await assertSucceeds(
       googleProviderAllowedDomainApp.collection(projectsCollectionName).add(project)
     );
   });
 
-  it("does not allow to read projects by an authenticated google user with not allowed email domain", async () => {
-    await assertFails(
-      googleProviderNotAllowedDomainApp.collection(projectsCollectionName).get()
-    );
-  });
-
   it("allows reading projects by an authenticated google user with allowed email domain", async () => {
     await assertSucceeds(
       googleProviderAllowedDomainApp.collection(projectsCollectionName).get()
+    );
+  });
+
+  it("allows updating a project by an authenticated google user with allowed email domain", async () => {
+    await assertSucceeds(
+      googleProviderAllowedDomainApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .update(project)
+    );
+  });
+
+  it("does not allow to delete a project an authenticated google user with allowed email domain", async () => {
+    await assertFails(
+      googleProviderAllowedDomainApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .delete()
+    );
+  });
+
+  it("does not allow to create a project by an authenticated google user with not allowed email domain", async () => {
+    await assertFails(
+      googleProviderNotAllowedDomainApp.collection(projectsCollectionName).add(project)
+    );
+  });
+
+  it("does not allow to read projects by an authenticated google user with not allowed email domain", async () => {
+    await assertFails(
+      googleProviderNotAllowedDomainApp.collection(projectsCollectionName).get()
     );
   });
 
@@ -156,12 +174,12 @@ describe("Projects collection rules", async function () {
     );
   });
 
-  it("allows updating a project by an authenticated google user with allowed email domain", async () => {
-    await assertSucceeds(
-      googleProviderAllowedDomainApp
+  it("does not allow to delete a project an authenticated google user with not allowed email domain", async () => {
+    await assertFails(
+      googleProviderNotAllowedDomainApp
         .collection(projectsCollectionName)
         .doc("1")
-        .update(project)
+        .delete()
     );
   });
 
