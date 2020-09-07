@@ -13,6 +13,7 @@ void main() {
       BuildContext context,
       VoidCallback openPopup,
       VoidCallback closePopup,
+      bool isPopupOpened,
     ) {
       return GestureDetector(
         onTap: openPopup,
@@ -133,6 +134,46 @@ void main() {
     );
 
     testWidgets(
+      "closes a popup, when tap on the popup's empty space if the closePopupOnEmptySpaceTap is true",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          _BasePopupTestbed(
+            popup: testPopupWidget,
+            triggerBuilder: _defaultTriggerBuilder,
+            closePopupOnEmptySpaceTap: true,
+          ),
+        );
+
+        await tester.tap(triggerWidgetFinder);
+        await tester.pumpAndSettle();
+        await tester.tap(popupWidgetFinder);
+        await tester.pumpAndSettle();
+
+        expect(popupWidgetFinder, findsNothing);
+      },
+    );
+
+    testWidgets(
+      "does not close a popup, when tap on the popup's empty space if the closePopupOnEmptySpaceTap is false",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          _BasePopupTestbed(
+            popup: testPopupWidget,
+            triggerBuilder: _defaultTriggerBuilder,
+            closePopupOnEmptySpaceTap: false,
+          ),
+        );
+
+        await tester.tap(triggerWidgetFinder);
+        await tester.pumpAndSettle();
+        await tester.tap(popupWidgetFinder);
+        await tester.pumpAndSettle();
+
+        expect(popupWidgetFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
       "applies the default box constraints to the popup widget if the given popup constraints is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
@@ -208,7 +249,7 @@ void main() {
                 builder: (context) => GestureDetector(onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (contetx) => _BasePopupTestbed(
+                      builder: (context) => _BasePopupTestbed(
                         navigatorKey: _key,
                         popup: testPopupWidget,
                         triggerBuilder: _defaultTriggerBuilder,
@@ -258,11 +299,16 @@ class _BasePopupTestbed extends StatelessWidget {
   /// A callback that is called to build the trigger widget.
   final TriggerBuilder triggerBuilder;
 
+  /// Defines if the popup should be closed when the user taps on an empty area
+  /// inside the popup.
+  final bool closePopupOnEmptySpaceTap;
+
   /// Creates the a new base popup testbed.
   ///
   /// The [popup] defaults to the [SizedBox] with the empty constructor.
   /// The [popupConstraints] defaults to an empty [BoxConstraints] instance.
   /// The [offsetBuilder] defaults to the [_defaultOffsetBuilder].
+  /// The [closePopupOnEmptySpaceTap] defaults to the `false`.
   /// If the given [navigatorKey], the default [GlobalKey] instance is used.
   /// If the given [routeObserver], the default [RouteObserver] instance is used.
   _BasePopupTestbed({
@@ -272,6 +318,7 @@ class _BasePopupTestbed extends StatelessWidget {
     this.popup = const SizedBox(),
     this.popupConstraints = const BoxConstraints(),
     this.offsetBuilder = _defaultOffsetBuilder,
+    this.closePopupOnEmptySpaceTap = false,
     this.triggerBuilder,
   })  : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>(),
         routeObserver = routeObserver ?? RouteObserver(),
@@ -288,6 +335,7 @@ class _BasePopupTestbed extends StatelessWidget {
           triggerBuilder: triggerBuilder,
           popupConstraints: popupConstraints,
           offsetBuilder: offsetBuilder,
+          closePopupOnEmptySpaceTap: closePopupOnEmptySpaceTap,
           popup: popup,
         ),
       ),

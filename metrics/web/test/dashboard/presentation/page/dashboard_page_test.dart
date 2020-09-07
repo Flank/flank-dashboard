@@ -4,16 +4,12 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
-import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
-import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_menu.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_search_input.dart';
@@ -81,25 +77,6 @@ void main() {
     );
 
     testWidgets(
-      "displays the MetricsDrawer on tap on the menu button",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _DashboardTestbed());
-        });
-
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.descendant(
-          of: find.byType(MetricsAppBar),
-          matching: find.byType(InkWell),
-        ));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(MetricsDrawer), findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "displays the negative toast if there is a projects error message",
       (WidgetTester tester) async {
         const errorMessage = "some error message";
@@ -120,54 +97,14 @@ void main() {
         await tester.pump();
 
         expect(
-            find.widgetWithText(NegativeToast, errorMessage), findsOneWidget);
+          find.widgetWithText(NegativeToast, errorMessage),
+          findsOneWidget,
+        );
 
         ToastManager().dismissAll();
       },
     );
-
-    testWidgets(
-      "changes the widget theme on switching theme in the drawer",
-      (WidgetTester tester) async {
-        final themeNotifier = ThemeNotifier();
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_DashboardTestbed(
-            themeNotifier: themeNotifier,
-          ));
-        });
-
-        await tester.pumpAndSettle();
-
-        final darkBuildNumberMetricColor = _getBuildNumberMetricColor(tester);
-
-        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
-
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.byType(CheckboxListTile));
-        await tester.pump();
-
-        final lightBuildNumberMetricColor = _getBuildNumberMetricColor(tester);
-
-        expect(
-          darkBuildNumberMetricColor,
-          isNot(lightBuildNumberMetricColor),
-        );
-      },
-    );
   });
-}
-
-Color _getBuildNumberMetricColor(WidgetTester tester) {
-  final buildNumberTextWidget = tester.widget<Text>(
-    find.descendant(
-      of: find.byType(BuildNumberScorecard),
-      matching: find.text(DashboardStrings.noDataPlaceholder),
-    ),
-  );
-
-  return buildNumberTextWidget.style.color;
 }
 
 /// A testbed widget, used to test the [DashboardPage] widget.

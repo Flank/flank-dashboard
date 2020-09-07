@@ -9,7 +9,7 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
-import 'package:metrics/common/presentation/widgets/metrics_user_menu_card.dart';
+import 'package:metrics/common/presentation/widgets/metrics_user_menu.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -21,7 +21,7 @@ import '../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
-  group('MetricsUserMenuCard', () {
+  group('MetricsUserMenu', () {
     const testBackgroundColor = Colors.white;
     const testDividerColor = Colors.black;
     const testTextStyle = TextStyle(color: Colors.grey);
@@ -39,7 +39,7 @@ void main() {
     testWidgets(
       "applies the background color from the user menu theme to the card",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
+        await tester.pumpWidget(const _MetricsUserMenuTestbed(
           theme: testTheme,
         ));
 
@@ -52,7 +52,7 @@ void main() {
     testWidgets(
       "applies the divider color from the user menu theme to the divider",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
+        await tester.pumpWidget(const _MetricsUserMenuTestbed(
           theme: testTheme,
         ));
 
@@ -65,7 +65,7 @@ void main() {
     testWidgets(
       "applies the shadow color from the user menu theme to the container's box shadow",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
+        await tester.pumpWidget(const _MetricsUserMenuTestbed(
           theme: testTheme,
         ));
 
@@ -83,7 +83,7 @@ void main() {
     testWidgets(
       "applies the textStyle from the user menu theme to the switch theme text widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
+        await tester.pumpWidget(const _MetricsUserMenuTestbed(
           theme: testTheme,
         ));
 
@@ -98,7 +98,7 @@ void main() {
     testWidgets(
       "applies the textStyle from the user menu theme to the project groups Text widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
+        await tester.pumpWidget(const _MetricsUserMenuTestbed(
           theme: testTheme,
         ));
 
@@ -113,7 +113,7 @@ void main() {
     testWidgets(
       "applies the textStyle from the user menu theme to the users Text widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
+        await tester.pumpWidget(const _MetricsUserMenuTestbed(
           theme: testTheme,
         ));
 
@@ -128,7 +128,7 @@ void main() {
     testWidgets(
       "applies the textStyle from the user menu theme to the logOut Text widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed(
+        await tester.pumpWidget(const _MetricsUserMenuTestbed(
           theme: testTheme,
         ));
 
@@ -143,7 +143,7 @@ void main() {
     testWidgets(
       "applies a hand cursor to the project group text widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed());
+        await tester.pumpWidget(const _MetricsUserMenuTestbed());
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.projectGroups),
@@ -157,7 +157,7 @@ void main() {
     testWidgets(
       "applies a hand cursor to the the users text widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed());
+        await tester.pumpWidget(const _MetricsUserMenuTestbed());
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.users),
@@ -171,7 +171,7 @@ void main() {
     testWidgets(
       "applies a hand cursor to the logOut text widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed());
+        await tester.pumpWidget(const _MetricsUserMenuTestbed());
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.logOut),
@@ -185,7 +185,7 @@ void main() {
     testWidgets(
       "applies a hand cursor to the toggle widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuCardTestbed());
+        await tester.pumpWidget(const _MetricsUserMenuTestbed());
 
         final finder = find.ancestor(
           of: find.byType(Toggle),
@@ -204,7 +204,7 @@ void main() {
         when(themeNotifier.isDark).thenReturn(false);
 
         await tester.pumpWidget(
-          _MetricsUserMenuCardTestbed(themeNotifier: themeNotifier),
+          _MetricsUserMenuTestbed(themeNotifier: themeNotifier),
         );
 
         await tester.tap(find.byType(Toggle));
@@ -221,7 +221,7 @@ void main() {
 
         when(authNotifier.isLoggedIn).thenReturn(true);
 
-        await tester.pumpWidget(_MetricsUserMenuCardTestbed(
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
           authNotifier: authNotifier,
         ));
 
@@ -237,7 +237,7 @@ void main() {
     testWidgets(
       "after a user taps on 'Log out' - application navigates back to the login screen",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_MetricsUserMenuCardTestbed(
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
           authNotifier: SignedInAuthNotifierStub(),
         ));
 
@@ -257,13 +257,13 @@ void main() {
 
         when(authNotifier.isLoggedIn).thenReturn(true);
 
-        await tester.pumpWidget(_MetricsUserMenuCardTestbed(
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
           authNotifier: authNotifier,
         ));
 
         await tester.tap(find.text(CommonStrings.projectGroups));
         await mockNetworkImagesFor(() {
-          return tester.pump();
+          return tester.pumpAndSettle();
         });
 
         expect(find.byType(ProjectGroupPage), findsOneWidget);
@@ -272,8 +272,8 @@ void main() {
   });
 }
 
-/// A testbed widget, used to test the [MetricsUserMenuCard] widget.
-class _MetricsUserMenuCardTestbed extends StatelessWidget {
+/// A testbed widget, used to test the [MetricsUserMenu] widget.
+class _MetricsUserMenuTestbed extends StatelessWidget {
   /// The [MetricsThemeData] used in testbed.
   final MetricsThemeData theme;
 
@@ -283,8 +283,8 @@ class _MetricsUserMenuCardTestbed extends StatelessWidget {
   /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
 
-  /// Creates the [_MetricsUserMenuCardTestbed] with the given [theme].
-  const _MetricsUserMenuCardTestbed({
+  /// Creates the [_MetricsUserMenuTestbed] with the given [theme].
+  const _MetricsUserMenuTestbed({
     Key key,
     this.theme = const MetricsThemeData(),
     this.themeNotifier,
@@ -300,7 +300,7 @@ class _MetricsUserMenuCardTestbed extends StatelessWidget {
         builder: (context) {
           return MetricsThemedTestbed(
             metricsThemeData: theme,
-            body: const MetricsUserMenuCard(),
+            body: const MetricsUserMenu(),
             onGenerateRoute: (settings) => RouteGenerator.generateRoute(
               settings: settings,
               isLoggedIn:

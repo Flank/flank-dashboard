@@ -8,6 +8,7 @@ class CommonStrings {
   static const String projectGroups = 'Project groups';
   static const String navigateBack = 'Back';
   static const String openUserMenu = 'Open user menu';
+  static const String closeUserMenu = 'Close user menu';
   static const String metrics = 'metrics';
   static const String welcomeMetrics = 'Welcome to Metrics';
   static const String logOut = 'Logout';

@@ -10,9 +10,9 @@ import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:provider/provider.dart';
 
 /// A widget that displays a metrics user menu with specific shape.
-class MetricsUserMenuCard extends StatelessWidget {
-  /// Creates the [MetricsUserMenuCard].
-  const MetricsUserMenuCard({
+class MetricsUserMenu extends StatelessWidget {
+  /// Creates the [MetricsUserMenu].
+  const MetricsUserMenu({
     Key key,
   }) : super(key: key);
 
@@ -64,9 +64,11 @@ class MetricsUserMenuCard extends StatelessWidget {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          CommonStrings.lightTheme,
-                          style: userMenuTextStyle,
+                        Flexible(
+                          child: Text(
+                            CommonStrings.lightTheme,
+                            style: userMenuTextStyle,
+                          ),
                         ),
                         HandCursor(
                           child: Toggle(
@@ -83,7 +85,7 @@ class MetricsUserMenuCard extends StatelessWidget {
                 padding: itemPadding,
                 child: HandCursor(
                   child: GestureDetector(
-                    onTap: () => Navigator.popAndPushNamed(
+                    onTap: () => Navigator.pushNamed(
                       context,
                       RouteName.projectGroup,
                     ),
@@ -98,7 +100,9 @@ class MetricsUserMenuCard extends StatelessWidget {
                 padding: itemPadding,
                 child: HandCursor(
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                     child: Text(
                       CommonStrings.users,
                       style: userMenuTextStyle,
