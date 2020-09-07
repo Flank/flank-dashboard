@@ -3,14 +3,17 @@ import 'package:universal_html/html.dart' as html;
 /// A class that setups favicon of the application.
 class Favicon {
   /// A favicon for light mode.
-  final lightModeIcon = html.document?.querySelector('link#light-mode-icon');
+  final html.Element lightModeIcon =
+      html.document?.querySelector('link#light-mode-icon');
 
   /// A favicon for dark mode.
-  final darkModeIcon = html.document?.querySelector('link#dark-mode-icon');
+  final html.Element darkModeIcon =
+      html.document?.querySelector('link#dark-mode-icon');
 
   /// A [MediaQueryList] object representing the results of the
   /// media query string passed to matchMedia.
-  final matcher = html.window?.matchMedia('(prefers-color-scheme:light)');
+  final html.MediaQueryList matcher =
+      html.window?.matchMedia('(prefers-color-scheme:light)');
 
   /// Adds a listener to the [MediaQueryListener] that will
   /// run a onUpdate function in response to the color scheme changing.
