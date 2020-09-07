@@ -23,7 +23,9 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
+
     _subscribeToProjectsErrors();
+    _projectMetricsNotifier.resetProjectNameFilter();
   }
 
   /// Subscribes to projects errors.
@@ -31,7 +33,6 @@ class _DashboardPageState extends State<DashboardPage> {
     _projectMetricsNotifier =
         Provider.of<ProjectMetricsNotifier>(context, listen: false);
 
-    _projectMetricsNotifier.resetProjectNameFilter();
     _projectMetricsNotifier.addListener(_projectsErrorListener);
   }
 
