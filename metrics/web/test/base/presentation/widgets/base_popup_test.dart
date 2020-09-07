@@ -154,7 +154,7 @@ void main() {
     );
 
     testWidgets(
-      "do not close a popup, when tap on the popup's empty space if the closePopupOnEmptySpaceTap is false",
+      "does not close a popup, when tap on the popup's empty space if the closePopupOnEmptySpaceTap is false",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(

@@ -60,7 +60,7 @@ void main() {
     );
 
     testWidgets(
-      "displays an avatar.svg image, when popup is closed",
+      "displays an avatar image, when the popup is closed",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() async {
           await tester.pumpWidget(_MetricsUserMenuButtonTestbed());
@@ -73,7 +73,7 @@ void main() {
     );
 
     testWidgets(
-      "displays an avatar_hover.svg, when popup is opened",
+      "displays an avatar active image, when the popup is opened",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() async {
           await tester.pumpWidget(_MetricsUserMenuButtonTestbed());
@@ -84,7 +84,7 @@ void main() {
 
         final image = FinderUtil.findNetworkImageWidget(tester);
 
-        expect(image.url, equals("icons/avatar_hover.svg"));
+        expect(image.url, equals("icons/avatar_active.svg"));
       },
     );
 

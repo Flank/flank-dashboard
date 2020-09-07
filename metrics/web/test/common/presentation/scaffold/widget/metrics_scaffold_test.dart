@@ -3,9 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
-import 'package:metrics/common/presentation/widgets/metrics_user_menu.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../../test_utils/test_injection_container.dart';
@@ -135,20 +133,6 @@ void main() {
         final scaffoldWidget = tester.widget<Scaffold>(find.byType(Scaffold));
 
         expect(scaffoldWidget.endDrawer, drawer);
-      },
-    );
-
-    testWidgets(
-      "opens the metrics user menu on tap on the icon by the tooltip",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _MetricsScaffoldTestbed());
-        });
-
-        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(MetricsUserMenu), findsOneWidget);
       },
     );
   });

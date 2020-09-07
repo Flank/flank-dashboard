@@ -42,7 +42,7 @@ class MetricsUserMenuButton extends StatelessWidget {
             ? CommonStrings.closeUserMenu
             : CommonStrings.openUserMenu;
         final menuImage =
-            isPopupOpened ? 'icons/avatar_hover.svg' : 'icons/avatar.svg';
+            isPopupOpened ? 'icons/avatar_active.svg' : 'icons/avatar.svg';
 
         return Tooltip(
           message: tooltipMessage,
