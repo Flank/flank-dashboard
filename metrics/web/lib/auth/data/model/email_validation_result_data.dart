@@ -1,7 +1,7 @@
 import 'package:metrics/auth/domain/entities/email_validation_result.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [DataModel] that represents the email validation result.
+/// A [DataModel] that represents an email validation result.
 class EmailValidationResultData extends EmailValidationResult
     implements DataModel {
   /// Creates an [EmailValidationResultData] with the given [email]

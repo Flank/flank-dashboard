@@ -23,7 +23,7 @@ abstract class UserRepository {
   /// during receiving the [AuthCredentials].
   Future<AuthCredentials> getGoogleSignInCredentials();
 
-  /// Provides an ability to validate the given user [email].
+  /// Provides an ability to validate the given user's [email].
   ///
   /// Throws an [AuthenticationException] if there are any
   /// errors occurred during validation process.
