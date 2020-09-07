@@ -334,6 +334,25 @@ void main() {
     );
 
     test(
+      ".resetProjectNameFilter() resets the project name filter",
+      () async {
+        const projectNameFilter = 'filter name';
+
+        final listener = expectAsyncUntil0(
+          () {
+            if (projectMetricsNotifier.projectNameFilter != null) {
+              projectMetricsNotifier.resetProjectNameFilter();
+            }
+          },
+          () => projectMetricsNotifier.projectNameFilter == null,
+        );
+
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.filterByProjectName(projectNameFilter);
+      },
+    );
+
+    test(
       ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
       () async {
         final expectedProjectMetrics =
