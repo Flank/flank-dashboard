@@ -3,6 +3,7 @@ import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/metrics_user_menu_button.dart';
 
 /// A common for the metrics application [AppBar] widget.
 class MetricsAppBar extends StatelessWidget {
@@ -33,30 +34,10 @@ class MetricsAppBar extends StatelessWidget {
               ),
             ),
           ),
-          Tooltip(
-            message: CommonStrings.openUserMenu,
-            child: HandCursor(
-              child: InkWell(
-                onTap: () => _openDrawer(context),
-                customBorder: const CircleBorder(),
-                child: Image.network(
-                  'icons/avatar.svg',
-                  width: 32.0,
-                  height: 32.0,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
+          const MetricsUserMenuButton(),
         ],
       ),
     );
-  }
-
-  /// Opens a drawer of the [Scaffold] in the given [context].
-  void _openDrawer(BuildContext context) {
-    final scaffold = Scaffold.of(context);
-    return scaffold.openEndDrawer();
   }
 
   void _navigateHome(BuildContext context) {
