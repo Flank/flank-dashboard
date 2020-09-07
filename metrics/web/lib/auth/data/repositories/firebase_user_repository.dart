@@ -1,9 +1,14 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:metrics/auth/data/adapter/firebase_user_adapter.dart';
 import 'package:metrics/auth/data/converter/firebase_auth_error_code_converter.dart';
+import 'package:metrics/auth/data/model/email_validation_request_data.dart';
+import 'package:metrics/auth/data/model/email_validation_result_data.dart';
+import 'package:metrics/auth/domain/entities/auth_credentials.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
+import 'package:metrics/auth/domain/entities/email_validation_result.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
 import 'package:metrics/auth/domain/repositories/user_repository.dart';
 
@@ -11,6 +16,7 @@ import 'package:metrics/auth/domain/repositories/user_repository.dart';
 class FirebaseUserRepository implements UserRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.standard(scopes: ['email']);
+  final _cloudFunctions = CloudFunctions.instance;
 
   @override
   Stream<User> authenticationStream() {
@@ -34,27 +40,60 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<void> signInWithGoogle() async {
+  Future<AuthCredentials> getGoogleSignInCredentials() async {
     Object googleSignInError;
     try {
       final account = await _googleSignIn.signIn().catchError((error) {
         googleSignInError = error;
       });
-
       final authentication = await account.authentication;
 
-      final credential = GoogleAuthProvider.getCredential(
+      return AuthCredentials(
+        email: account.email,
         accessToken: authentication.accessToken,
         idToken: authentication.idToken,
       );
-      await _firebaseAuth.signInWithCredential(credential);
     } catch (error) {
       if (googleSignInError != null) {
         throw const AuthenticationException(
           code: AuthErrorCode.googleSignInError,
         );
       }
+      final errorCode = error.code as String;
+      final authErrorCode = FirebaseAuthErrorCodeConverter.convert(errorCode);
 
+      throw AuthenticationException(code: authErrorCode);
+    }
+  }
+
+  @override
+  Future<EmailValidationResult> validateEmail(String email) async {
+    final requestData = EmailValidationRequestData(email: email);
+
+    final validateEmail = _cloudFunctions.getHttpsCallable(
+      functionName: 'validateEmail',
+    );
+
+    try {
+      final response = await validateEmail.call(requestData.toJson());
+      final responseData = response.data as Map<String, dynamic>;
+
+      return EmailValidationResultData.fromJson(responseData);
+    } catch (error) {
+      throw const AuthenticationException(code: AuthErrorCode.unknown);
+    }
+  }
+
+  @override
+  Future<void> signInWithGoogle(AuthCredentials credentials) async {
+    try {
+      final credential = GoogleAuthProvider.getCredential(
+        accessToken: credentials.accessToken,
+        idToken: credentials.idToken,
+      );
+
+      await _firebaseAuth.signInWithCredential(credential);
+    } catch (error) {
       final errorCode = error.code as String;
       final authErrorCode = FirebaseAuthErrorCodeConverter.convert(errorCode);
 

@@ -18,6 +18,9 @@ enum AuthErrorCode {
   /// Indicates that an error has occurred while signing in with Google.
   googleSignInError,
 
+  /// Indicates that the given email has not allowed domain.
+  notAllowedEmailDomain,
+
   /// Indicates that an unknown error occurred.
   unknown,
 }
