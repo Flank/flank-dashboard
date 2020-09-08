@@ -36,10 +36,10 @@ class FirebaseUserRepository implements UserRepository {
 
   @override
   Future<void> signInWithGoogle() async {
-    bool isCancelled = false;
+    Object googleSignInError;
     try {
       final account = await _googleSignIn.signIn().catchError((error) {
-        isCancelled = true;
+        googleSignInError = error;
       });
 
       final authentication = await account.authentication;
@@ -50,9 +50,9 @@ class FirebaseUserRepository implements UserRepository {
       );
       await _firebaseAuth.signInWithCredential(credential);
     } catch (error) {
-      if (isCancelled) {
+      if (googleSignInError != null) {
         throw const AuthenticationException(
-          code: AuthErrorCode.googleSignInCancelled,
+          code: AuthErrorCode.googleSignInError,
         );
       }
 

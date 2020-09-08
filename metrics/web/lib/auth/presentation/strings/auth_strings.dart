@@ -18,8 +18,8 @@ class AuthStrings {
       'The user was disabled, please contact support';
   static const String tooManyRequestsErrorMessage =
       'Too many requests. Please wait and try your request again later';
-  static const String googleSignInHasBeenCancelled =
-      'Google sign in has been cancelled';
+  static const String googleSignInErrorOccurred =
+      'An error occurred while signing in with Google';
 
   static String getPasswordMinLengthErrorMessage(int minLength) =>
       "Password should be at least $minLength characters long";
