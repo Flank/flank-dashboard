@@ -10,7 +10,7 @@ void main() {
     test(
       "creates an instance with default positive style",
       () {
-        const attentionLevel = AddProjectGroupCardAttentionLevel();
+        final attentionLevel = AddProjectGroupCardAttentionLevel();
 
         expect(attentionLevel.positive, isNotNull);
       },
@@ -19,7 +19,7 @@ void main() {
     test(
       "creates an instance with default inactive style",
       () {
-        const attentionLevel = AddProjectGroupCardAttentionLevel();
+        final attentionLevel = AddProjectGroupCardAttentionLevel();
 
         expect(attentionLevel.inactive, isNotNull);
       },
@@ -28,7 +28,7 @@ void main() {
     test(
       "creates an instance with default styles if the given parameters are null",
       () {
-        const attentionLevel = AddProjectGroupCardAttentionLevel(
+        final attentionLevel = AddProjectGroupCardAttentionLevel(
           positive: null,
           inactive: null,
         );
@@ -41,21 +41,21 @@ void main() {
     test(
       "creates an instance with the given styles",
       () {
-        const positiveStyle = AddProjectGroupCardStyle(
+        final positiveStyle = AddProjectGroupCardStyle(
           backgroundColor: Colors.red,
           iconColor: Colors.red,
           hoverColor: Colors.red,
           labelStyle: TextStyle(color: Colors.red),
         );
 
-        const inactiveStyle = AddProjectGroupCardStyle(
+        final inactiveStyle = AddProjectGroupCardStyle(
           backgroundColor: Colors.grey,
           iconColor: Colors.grey,
           hoverColor: Colors.grey,
           labelStyle: TextStyle(color: Colors.grey),
         );
 
-        const attentionLevel = AddProjectGroupCardAttentionLevel(
+        final attentionLevel = AddProjectGroupCardAttentionLevel(
           positive: positiveStyle,
           inactive: inactiveStyle,
         );

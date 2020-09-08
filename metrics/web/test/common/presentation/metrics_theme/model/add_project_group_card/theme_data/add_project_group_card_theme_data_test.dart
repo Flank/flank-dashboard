@@ -11,18 +11,18 @@ void main() {
     test(
       "creates a theme with the default attention level if it is not specified",
       () {
-        const themeData = AddProjectGroupCardThemeData();
+        final themeData = AddProjectGroupCardThemeData();
 
         expect(themeData.attentionLevel, isNotNull);
       },
     );
 
     test("creates an instance with the given attention level", () {
-      const addProjectGroupCardStyle = AddProjectGroupCardStyle(
+      final addProjectGroupCardStyle = AddProjectGroupCardStyle(
         backgroundColor: Colors.green,
       );
 
-      const attentionLevel = AddProjectGroupCardAttentionLevel(
+      final attentionLevel = AddProjectGroupCardAttentionLevel(
         positive: addProjectGroupCardStyle,
         inactive: addProjectGroupCardStyle,
       );
