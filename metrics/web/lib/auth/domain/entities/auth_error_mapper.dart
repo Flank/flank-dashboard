@@ -1,27 +1,27 @@
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
-import 'package:metrics/auth/presentation/strings/auth_error_code_strings.dart';
+import 'package:metrics/auth/presentation/strings/firebase_auth_error_codes.dart';
 
 /// A class that is used to handle the errors that occur at the time
 /// of the authentication.
-class AuthErrorHandler {
+class AuthErrorMapper {
   /// Returns an [AuthErrorCode] that corresponds to the given error code string.
   /// If the corresponding [AuthErrorCode] is not found,
-  /// the [AuthErrorCode.unknown] is returned.
-  static AuthErrorCode handleError({String errorCode}) {
+  /// returns the [AuthErrorCode.unknown].
+  static AuthErrorCode mapErrorStringToErrorCode({String errorCode}) {
     switch (errorCode) {
-      case AuthErrorCodeStrings.userNotFound:
+      case FirebaseAuthErrorCodes.userNotFound:
         return AuthErrorCode.userNotFound;
 
-      case AuthErrorCodeStrings.wrongPassword:
+      case FirebaseAuthErrorCodes.wrongPassword:
         return AuthErrorCode.wrongPassword;
 
-      case AuthErrorCodeStrings.invalidEmail:
+      case FirebaseAuthErrorCodes.invalidEmail:
         return AuthErrorCode.invalidEmail;
 
-      case AuthErrorCodeStrings.tooManyRequests:
+      case FirebaseAuthErrorCodes.tooManyRequests:
         return AuthErrorCode.tooManyRequests;
 
-      case AuthErrorCodeStrings.userDisabled:
+      case FirebaseAuthErrorCodes.userDisabled:
         return AuthErrorCode.userDisabled;
 
       default:

@@ -1,5 +1,5 @@
 /// A class that holds the authentication error code strings.
-class AuthErrorCodeStrings {
+class FirebaseAuthErrorCodes {
   static const String userNotFound = "auth/user-not-found";
   static const String wrongPassword = "auth/wrong-password";
   static const String invalidEmail = "auth/invalid-email";
