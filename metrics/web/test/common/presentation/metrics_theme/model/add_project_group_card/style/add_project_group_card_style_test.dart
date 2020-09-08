@@ -4,12 +4,13 @@ import 'package:test/test.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
+
 void main() {
   group("AddProjectGroupCardStyle", () {
     test(
       "creates an instance with the default background color",
       () {
-        const style = AddProjectGroupCardStyle();
+        final style = AddProjectGroupCardStyle();
 
         expect(style.backgroundColor, isNotNull);
       },
@@ -18,7 +19,7 @@ void main() {
     test(
       "creates an instance with the default icon color",
       () {
-        const style = AddProjectGroupCardStyle();
+        final style = AddProjectGroupCardStyle();
 
         expect(style.iconColor, isNotNull);
       },
@@ -27,7 +28,7 @@ void main() {
     test(
       "creates an instance with the default hover color",
       () {
-        const style = AddProjectGroupCardStyle();
+        final style = AddProjectGroupCardStyle();
 
         expect(style.hoverColor, isNotNull);
       },
@@ -46,11 +47,11 @@ void main() {
       "creates an instance with the given values",
       () {
         const backgroundColor = Colors.red;
-        const labelStyle = TextStyle(color: Colors.red);
         const iconColor = Colors.red;
         const hoverColor = Colors.red;
+        final labelStyle = TextStyle(color: Colors.red);
 
-        const style = AddProjectGroupCardStyle(
+        final style = AddProjectGroupCardStyle(
           backgroundColor: backgroundColor,
           iconColor: iconColor,
           hoverColor: hoverColor,
