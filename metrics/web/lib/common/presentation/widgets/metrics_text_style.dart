@@ -41,7 +41,8 @@ class MetricsTextStyle extends TextStyle {
     String fontFamily,
     List<String> fontFamilyFallback,
     String package,
-  }) : super(
+  }) : assert(fontSize == null || lineHeightInPixels == null || height == null),
+        super(
           inherit: inherit,
           color: color,
           backgroundColor: backgroundColor,

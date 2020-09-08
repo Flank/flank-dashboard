@@ -35,6 +35,7 @@ import 'package:metrics/common/presentation/toast/theme/attention_level/toast_at
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
@@ -105,15 +106,15 @@ class DarkMetricsThemeData extends MetricsThemeData {
             backgroundColor: scaffoldColor,
             accentColor: ColorConfig.accentColor,
             primaryColor: ColorConfig.primaryColor,
-            titleStyle: TextStyle(
+            titleStyle: MetricsTextStyle(
               color: Colors.white,
-              height: 1.09,
+              lineHeightInPixels: 24.0,
               fontSize: 22.0,
               fontWeight: FontWeight.w500,
             ),
-            subtitleStyle: TextStyle(
+            subtitleStyle: MetricsTextStyle(
               color: ColorConfig.secondaryTextColor,
-              height: 1.23,
+              lineHeightInPixels: 16.0,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
             ),
@@ -124,9 +125,9 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 backgroundColor: ColorConfig.primaryTranslucentColor,
                 iconColor: ColorConfig.primaryColor,
                 hoverColor: _addProjectGroupCardHoverColor,
-                labelStyle: TextStyle(
+                labelStyle: MetricsTextStyle(
                   color: ColorConfig.primaryColor,
-                  height: 1.5,
+                  lineHeightInPixels: 24.0,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
@@ -135,9 +136,9 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 backgroundColor: _inactiveBackgroundColor,
                 hoverColor: _inactiveBackgroundColor,
                 iconColor: scaffoldColor,
-                labelStyle: TextStyle(
+                labelStyle: MetricsTextStyle(
                   color: scaffoldColor,
-                  height: 1.5,
+                  lineHeightInPixels: 24.0,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
@@ -148,10 +149,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
             backgroundColor: scaffoldColor,
             closeIconColor: Colors.white,
             titleTextStyle: _dialogTitleTextStyle,
-            contentTextStyle: TextStyle(
+            contentTextStyle: MetricsTextStyle(
               fontSize: 16.0,
               color: Colors.white,
-              height: 1.5,
+              lineHeightInPixels: 24.0,
               fontWeight: FontWeight.w300,
               letterSpacing: 0.14,
             ),
