@@ -4,6 +4,7 @@ import 'package:test/test.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
+
 void main() {
   group("AddProjectGroupCardStyle", () {
     test(
@@ -45,10 +46,10 @@ void main() {
     test(
       "creates an instance with the given values",
       () {
-        final backgroundColor = Colors.red;
+        const backgroundColor = Colors.red;
+        const iconColor = Colors.red;
+        const hoverColor = Colors.red;
         final labelStyle = TextStyle(color: Colors.red);
-        final iconColor = Colors.red;
-        final hoverColor = Colors.red;
 
         final style = AddProjectGroupCardStyle(
           backgroundColor: backgroundColor,
