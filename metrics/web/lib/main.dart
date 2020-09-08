@@ -10,6 +10,7 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_
 import 'package:metrics/common/presentation/routes/observers/toast_route_observer.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/util/favicon.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MetricsApp());
@@ -26,6 +27,7 @@ class _MetricsAppState extends State<MetricsApp> {
 
   @override
   Widget build(BuildContext context) {
+    Favicon().setupFavicon();
     return InjectionContainer(
       child: MetricsThemeBuilder(
         builder: (context, themeNotifier) {
