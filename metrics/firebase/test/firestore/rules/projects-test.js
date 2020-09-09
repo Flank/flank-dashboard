@@ -7,8 +7,8 @@ const { assertFails, assertSucceeds } = require("@firebase/testing");
 const {
   project,
   projects,
-  getAllowedEmailDomainUser,
-  getNotAllowedDomainUser,
+  getAllowedEmailUser,
+  getDeniedEmailUser,
   passwordSignInProviderId,
   googleSignInProviderId,
   allowedEmailDomains,
@@ -16,16 +16,16 @@ const {
 
 describe("Projects collection rules", async function () {
   const passwordProviderAllowedDomainApp = await getApplicationWith(
-    getAllowedEmailDomainUser(passwordSignInProviderId)
+    getAllowedEmailUser(passwordSignInProviderId)
   );
   const passwordProviderNotAllowedDomainApp = await getApplicationWith(
-    getNotAllowedDomainUser(passwordSignInProviderId)
+    getDeniedEmailUser(passwordSignInProviderId)
   );
   const googleProviderAllowedDomainApp = await getApplicationWith(
-    getAllowedEmailDomainUser(googleSignInProviderId)
+    getAllowedEmailUser(googleSignInProviderId)
   );
   const googleProviderNotAllowedDomainApp = await getApplicationWith(
-    getNotAllowedDomainUser(googleSignInProviderId)
+    getDeniedEmailUser(googleSignInProviderId)
   );
   const unauthenticatedApp = await getApplicationWith(null);
   const projectsCollectionName = "projects";
