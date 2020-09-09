@@ -82,5 +82,15 @@ void main() {
         expect(authErrorCode, equals(AuthErrorCode.unknown));
       },
     );
+
+    test(
+      ".toAuthErrorCode() returns the unknown error code if the given Firebase auth error code string is null",
+      () {
+        final firebaseAuthErrorCode = FirebaseAuthErrorCode(null);
+        final authErrorCode = firebaseAuthErrorCode.toAuthErrorCode();
+
+        expect(authErrorCode, equals(AuthErrorCode.unknown));
+      },
+    );
   });
 }
