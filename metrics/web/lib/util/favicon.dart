@@ -35,8 +35,7 @@ class Favicon {
   /// Calls the appropriate method
   /// depending on the mode to display the favicon.
   void onUpdate(MediaQueryList matcher) {
-    print(matcher.runtimeType);
-    if (matcher.matches == true) {
+    if (matcher.matches) {
       setLightModeIcon();
     } else {
       setDarkModeIcon();
