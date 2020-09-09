@@ -1,5 +1,3 @@
-// https://github.com/software-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
@@ -17,6 +15,10 @@ import 'package:provider/provider.dart';
 import '../../../../test_utils/auth_notifier_mock.dart';
 import '../../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../../test_utils/test_injection_container.dart';
+import '../../../../test_utils/theme_notifier_mock.dart';
+
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
 
 void main() {
   group("MetricsDrawer", () {
@@ -177,7 +179,3 @@ class MetricsDrawerTestbed extends StatelessWidget {
     );
   }
 }
-
-class ThemeNotifierMock extends Mock
-    with ChangeNotifier
-    implements ThemeNotifier {}
