@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:metrics/auth/data/adapter/firebase_user_adapter.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
-import 'package:metrics/auth/domain/entities/auth_error_mapper.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
+import 'package:metrics/auth/domain/entities/firebase_auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
 import 'package:metrics/auth/domain/repositories/user_repository.dart';
 
@@ -27,10 +27,10 @@ class FirebaseUserRepository implements UserRepository {
       );
     } catch (error) {
       final errorCode = error.code as String;
-      final code =
-          AuthErrorMapper.mapErrorStringToErrorCode(errorCode: errorCode);
+      final firebaseAuthErrorCode = FirebaseAuthErrorCode(errorCode);
+      final authErrorCode = firebaseAuthErrorCode.toAuthErrorCode();
 
-      throw AuthenticationException(code: code);
+      throw AuthenticationException(code: authErrorCode);
     }
   }
 
@@ -57,10 +57,10 @@ class FirebaseUserRepository implements UserRepository {
       }
 
       final errorCode = error.code as String;
-      final code =
-          AuthErrorMapper.mapErrorStringToErrorCode(errorCode: errorCode);
+      final firebaseAuthErrorCode = FirebaseAuthErrorCode(errorCode);
+      final authErrorCode = firebaseAuthErrorCode.toAuthErrorCode();
 
-      throw AuthenticationException(code: code);
+      throw AuthenticationException(code: authErrorCode);
     }
   }
 
