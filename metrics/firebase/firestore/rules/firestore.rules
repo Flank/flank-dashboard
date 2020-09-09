@@ -31,18 +31,24 @@ service cloud.firestore {
 
   /// Checks if the request is from a user with a valid email.
   function isEmailValid(database) {
-    return request.auth.token.email != null && isEmailDomainAllowed(database);
+    return request.auth.token.email != null && (isSignInProviderPassword() || isEmailDomainAllowed(database));
   }
 
-  /// Checks whether a request's email domain is in the allowed domains list
-  /// or the sign in provider is a password.
+  /// Checks whether a request's email domain is in the allowed domains list.
   function isEmailDomainAllowed(database) {
     let authToken = request.auth.token;
     let userEmail = authToken.email;
     let emailDomain = userEmail.split('@')[1];
     let isEmailDomainExists = exists(/databases/$(database)/documents/allowed_email_domains/$(emailDomain));
 
-    return authToken.firebase.sign_in_provider == 'password' || isEmailDomainExists;
+    return isEmailDomainExists;
+  }
+
+  /// Checks if the sign in provider from the request is a password.
+  function isSignInProviderPassword() {
+    let authToken = request.auth.token;
+
+    return authToken.firebase.sign_in_provider == 'password';
   }
 
   /// Checks whether project group data from the request is valid.
