@@ -15,13 +15,13 @@ class TappableArea extends StatefulWidget {
 
   /// A widget builder that builds the given widget differently depending on
   /// if the this area is hovered.
-  final Widget Function(bool) builder;
+  final Widget Function(BuildContext, bool) builder;
 
   /// Creates a new [TappableArea] instance.
   ///
   /// The [builder] must not be null.
   ///
-  /// The [mouseCursor] value defaults to `MouseCursor.basic`.
+  /// The [mouseCursor] value defaults to [MouseCursor.basic].
   const TappableArea({
     Key key,
     @required this.builder,
@@ -46,16 +46,14 @@ class _TappableAreaState extends State<TappableArea> {
       onExit: (_) => _changeHover(false),
       child: GestureDetector(
         onTap: widget.onTap,
-        child: widget.builder(_isHovered),
+        child: widget.builder(context, _isHovered),
       ),
     );
   }
 
   /// Changes [_isHovered] value to the given [value].
   void _changeHover(bool value) {
-    setState(() {
-      _isHovered = value;
-    });
+    setState(() => _isHovered = value);
     _changeCursor();
   }
 

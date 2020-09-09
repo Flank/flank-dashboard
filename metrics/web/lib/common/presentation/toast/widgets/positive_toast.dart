@@ -3,13 +3,11 @@ import 'package:metrics/common/presentation/toast/theme/attention_level/toast_at
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/widgets/toast.dart';
 
-/// A [Toast] widget displaying the positive visual feedback.
+/// A [Toast] widget providing a positive visual feedback.
 ///
 /// Applies the [ToastAttentionLevel.positive] toast style.
 class PositiveToast extends Toast {
   /// Creates a new instance of the [PositiveToast].
-  ///
-  /// The [message] must not be null.
   const PositiveToast({
     Key key,
     @required String message,
