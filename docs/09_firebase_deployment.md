@@ -179,11 +179,11 @@ Once you've finished creating test data, you should deactivate the `seedData` cl
 1. Go to the `metrics/firebase/functions/index.js` file and change the `inactive` constant back to `true`.
 2. Redeploy this function, using the `firebase deploy --only functions` command.
 
-Also, to be able to sign in with google you should configure the allowed user email domains in the Firestore database following the next steps:
+Also, to allow users to sign in with Google, you should configure the allowed user email domains within `Cloud Firestore`. Consider the following steps:
 
 1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
 2. Open the `Cloud Firestore` section on the left panel.
-3. Tap on the `Start collection` button, enter the `allowed_email_domains` collection ID, and tap `Next` button.
+3. Tap on the `Start collection` button, enter the `allowed_email_domains` as a collection ID, and tap the `Next` button.
 4. After you tapped the `Next` button, you'll be asked to add a first document to your collection. This is the point where we start adding the allowed user email domains for our application. For example, we want to allow the `gmail.com` domain, so we should create an empty document with the `gmail.com` document ID.
 
 To add more allowed email domains you should add a new document for each email domain with the domain itself as a document ID.

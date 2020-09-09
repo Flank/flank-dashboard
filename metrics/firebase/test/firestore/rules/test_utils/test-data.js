@@ -42,8 +42,8 @@ const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
 };
 
-const allowedDomainEmail = "test@gmail.com";
-const notAllowedDomainEmail = "test@invalid.com";
+const allowedEmail = "test@gmail.com";
+const deniedEmail = "test@invalid.com";
 
 /** Creates a firebase user with the given `email` and `signInProviderId` */
 function getUser(email, signInProviderId) {
@@ -82,13 +82,13 @@ exports.passwordSignInProviderId = "password";
 exports.googleSignInProviderId = "google.com";
 
 /** Provides a firebase user with allowed email domain and given sign in provider identifier */
-exports.getAllowedEmailDomainUser = function (signInProviderId) {
-  return getUser(allowedDomainEmail, signInProviderId);
+exports.getAllowedEmailUser = function (signInProviderId) {
+  return getUser(allowedEmail, signInProviderId);
 };
 
 /** Provides a firebase user with not allowed email domain and given sign in provider identifier */
-exports.getNotAllowedDomainUser = function (signInProviderId) {
-  return getUser(notAllowedDomainEmail, signInProviderId);
+exports.getDeniedEmailUser = function (signInProviderId) {
+  return getUser(deniedEmail, signInProviderId);
 };
 
 /** Get a test project group */

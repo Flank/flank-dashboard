@@ -5,12 +5,12 @@ const {
   tearDown,
 } = require("./test_utils/test-app-utils");
 const {
-  allowedEmailDomains, getAllowedEmailDomainUser, passwordSignInProviderId
+  allowedEmailDomains, getAllowedEmailUser, passwordSignInProviderId
 } = require("./test_utils/test-data");
 
 describe("Allowed email domains collection rules", async () => {
   const authenticatedApp = await getApplicationWith(
-    getAllowedEmailDomainUser(passwordSignInProviderId)
+    getAllowedEmailUser(passwordSignInProviderId)
   );
   const unauthenticatedApp = await getApplicationWith(null);
   const collectionName = "allowed_email_domains";
@@ -24,19 +24,19 @@ describe("Allowed email domains collection rules", async () => {
    * The authenticated user specific tests
    */
 
-  it("does not allow to create an allowed email domain by an authenticated user", async () => {
+  it("does not allow creating an allowed email domain by an authenticated user", async () => {
     await assertFails(
       authenticatedApp.collection(collectionName).add(domain)
     );
   });
 
-  it("does not allow to read an allowed email domain by an authenticated user", async () => {
+  it("does not allow reading an allowed email domain by an authenticated user", async () => {
     await assertFails(
       authenticatedApp.collection(collectionName).get()
     );
   });
 
-  it("does not allow to update an allowed email domain by an authenticated user", async () => {
+  it("does not allow updating an allowed email domain by an authenticated user", async () => {
     await assertFails(
       authenticatedApp
         .collection(collectionName)
@@ -45,7 +45,7 @@ describe("Allowed email domains collection rules", async () => {
     );
   });
 
-  it("does not allow to delete an allowed email domain by an authenticated user", async () => {
+  it("does not allow deleting an allowed email domain by an authenticated user", async () => {
     await assertFails(
       authenticatedApp.collection(collectionName).doc("gmail.com").delete()
     );
@@ -55,19 +55,19 @@ describe("Allowed email domains collection rules", async () => {
    * The unauthenticated user specific tests
    */
 
-  it("does not allow to create an allowed email domain by an unauthenticated user", async () => {
+  it("does not allow creating an allowed email domain by an unauthenticated user", async () => {
     await assertFails(
       unauthenticatedApp.collection(collectionName).add(domain)
     );
   });
 
-  it("does not allow to read allowed email domains by an unauthenticated user", async () => {
+  it("does not allow reading allowed email domains by an unauthenticated user", async () => {
     await assertFails(
       unauthenticatedApp.collection(collectionName).get()
     );
   });
 
-  it("does not allow to update an allowed email domain by an unauthenticated user", async () => {
+  it("does not allow updating an allowed email domain by an unauthenticated user", async () => {
     await assertFails(
       unauthenticatedApp
         .collection(collectionName)
@@ -76,7 +76,7 @@ describe("Allowed email domains collection rules", async () => {
     );
   });
 
-  it("does not allow to delete an allowed email domain by an unauthenticated user", async () => {
+  it("does not allow deleting an allowed email domain by an unauthenticated user", async () => {
     await assertFails(
       unauthenticatedApp.collection(collectionName).doc("gmail.com").delete()
     );

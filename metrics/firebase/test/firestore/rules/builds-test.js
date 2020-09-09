@@ -7,8 +7,8 @@ const { assertFails, assertSucceeds } = require("@firebase/testing");
 const {
   passwordSignInProviderId,
   googleSignInProviderId,
-  getAllowedEmailDomainUser,
-  getNotAllowedDomainUser,
+  getAllowedEmailUser,
+  getDeniedEmailUser,
   builds,
   getBuild,
   allowedEmailDomains,
@@ -17,16 +17,16 @@ const firestore = require("firebase").firestore;
 
 describe("Build collection rules", async () => {
   const passwordProviderAllowedDomainApp = await getApplicationWith(
-    getAllowedEmailDomainUser(passwordSignInProviderId)
+    getAllowedEmailUser(passwordSignInProviderId)
   );
   const passwordProviderNotAllowedDomainApp = await getApplicationWith(
-    getNotAllowedDomainUser(passwordSignInProviderId)
+    getDeniedEmailUser(passwordSignInProviderId)
   );
   const googleProviderAllowedDomainApp = await getApplicationWith(
-    getAllowedEmailDomainUser(googleSignInProviderId)
+    getAllowedEmailUser(googleSignInProviderId)
   );
   const googleProviderNotAllowedDomainApp = await getApplicationWith(
-    getNotAllowedDomainUser(googleSignInProviderId)
+    getDeniedEmailUser(googleSignInProviderId)
   );
 
   const unauthenticatedApp = await getApplicationWith(null);
@@ -40,7 +40,7 @@ describe("Build collection rules", async () => {
    * Common tests
    */
 
-  it("does not allow to create a build with not allowed fields", async () => {
+  it("does not allow creating a build with not allowed fields", async () => {
     let build = getBuild();
     build.test = "test";
 
@@ -49,7 +49,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build with not existing project id", async () => {
+  it("does not allow creating a build with not existing project id", async () => {
     let build = getBuild();
     build.projectId = "non-existing-id";
 
@@ -58,7 +58,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build with null projectId", async () => {
+  it("does not allow creating a build with null projectId", async () => {
     let build = getBuild();
     build.projectId = null;
 
@@ -67,7 +67,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build when projectId is not a string", async () => {
+  it("does not allow creating a build when projectId is not a string", async () => {
     let build = getBuild();
     build.projectId = 2;
 
@@ -76,7 +76,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build if the startedAt is null", async () => {
+  it("does not allow creating a build if the startedAt is null", async () => {
     let build = getBuild();
     build.startedAt = null;
 
@@ -85,7 +85,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build if the startedAt is not a timestamp", async () => {
+  it("does not allow creating a build if the startedAt is not a timestamp", async () => {
     const build = getBuild();
     build.startedAt = Date();
 
@@ -94,7 +94,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create builds if the startedAt value is after the current timestamp", async () => {
+  it("does not allow creating builds if the startedAt value is after the current timestamp", async () => {
     let date = new Date();
     date.setDate(date.getDate() + 1);
 
@@ -106,7 +106,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create builds if the duration is null", async () => {
+  it("does not allow creating builds if the duration is null", async () => {
     let build = getBuild();
     build.duration = null;
 
@@ -115,7 +115,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build if the duration is not an integer", async () => {
+  it("does not allow creating a build if the duration is not an integer", async () => {
     let build = getBuild();
     build.duration = "123";
 
@@ -124,7 +124,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build if the url is null", async () => {
+  it("does not allow creating a build if the url is null", async () => {
     let build = getBuild();
     build.url = null;
 
@@ -133,7 +133,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build if the url is not a string", async () => {
+  it("does not allow creating a build if the url is not a string", async () => {
     let build = getBuild();
     build.url = 2;
 
@@ -142,7 +142,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build if the build number is not an int", async () => {
+  it("does not allow creating a build if the build number is not an int", async () => {
     let build = getBuild();
     build.buildNumber = "2";
 
@@ -151,7 +151,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build if the build number is null", async () => {
+  it("does not allow creating a build if the build number is null", async () => {
     let build = getBuild();
     build.buildNumber = null;
 
@@ -160,7 +160,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build with not valid build status value", async () => {
+  it("does not allow creating a build with not valid build status value", async () => {
     let build = getBuild();
     build.buildStatus = "test";
 
@@ -178,7 +178,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build when workflow name is not a string", async () => {
+  it("does not allow creating a build when workflow name is not a string", async () => {
     let build = getBuild();
     build.workflowName = 2;
 
@@ -196,7 +196,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build when the coverage is grater then 1.0", async () => {
+  it("does not allow creating a build when the coverage is grater then 1.0", async () => {
     let build = getBuild();
     build.coverage = 1.1;
 
@@ -205,7 +205,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to create a build when the coverage is less then 0.0", async () => {
+  it("does not allow creating a build when the coverage is less then 0.0", async () => {
     let build = getBuild();
     build.coverage = -1.0;
 
@@ -227,19 +227,19 @@ describe("Build collection rules", async () => {
    * The password auth provider user specific tests
    */
 
-  it("allows to create a build by an authenticated password user with an allowed email domain", async () => {
+  it("allows to create a build by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderAllowedDomainApp.collection(buildsCollectionName).add(getBuild())
     );
   });
 
-  it("allows to read builds by an authenticated password user with an allowed email domain", async () => {
+  it("allows reading builds by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderAllowedDomainApp.collection(buildsCollectionName).get()
     );
   });
 
-  it("allows to update a build by an authenticated password user with an allowed email domain", async () => {
+  it("allows updating a build by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderAllowedDomainApp
         .collection(buildsCollectionName)
@@ -248,7 +248,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to delete a build by an authenticated password user with an allowed email domain", async () => {
+  it("does not allow deleting a build by an authenticated with a password and allowed email domain user", async () => {
     await assertFails(
       passwordProviderAllowedDomainApp
         .collection(buildsCollectionName)
@@ -257,7 +257,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("allows to create a build by an authenticated password user with not allowed email domain", async () => {
+  it("allows to create a build by an authenticated with a password and not allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderNotAllowedDomainApp
         .collection(buildsCollectionName)
@@ -265,13 +265,13 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("allows to read builds by an authenticated password user with not allowed email domain", async () => {
+  it("allows reading builds by an authenticated with a password and not allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderNotAllowedDomainApp.collection(buildsCollectionName).get()
     );
   });
 
-  it("allows to update a build by an authenticated password user with not allowed email domain", async () => {
+  it("allows to update a build by an authenticated with a password and not allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderNotAllowedDomainApp
         .collection(buildsCollectionName)
@@ -280,7 +280,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to delete a by an authenticated password user build with not allowed email domain", async () => {
+  it("does not allow deleting a build by an authenticated with a password and not allowed email domain user", async () => {
     await assertFails(
       passwordProviderNotAllowedDomainApp
         .collection(buildsCollectionName)
@@ -293,19 +293,19 @@ describe("Build collection rules", async () => {
    * The google auth provider user specific tests
    */
 
-  it("allows to create a build by an authenticated google user with an allowed email domain", async () => {
+  it("allows to create a build by an authenticated with google and an allowed email domain user", async () => {
     await assertSucceeds(
       googleProviderAllowedDomainApp.collection(buildsCollectionName).add(getBuild())
     );
   });
 
-  it("allows to read builds by an authenticated google user with an allowed email domain", async () => {
+  it("allows reading builds by an authenticated with google and an allowed email domain user", async () => {
     await assertSucceeds(
       googleProviderAllowedDomainApp.collection(buildsCollectionName).get()
     );
   });
 
-  it("allows to update a build by an authenticated google user with an allowed email domain", async () => {
+  it("allows to update a build by an authenticated with google and an allowed email domain user", async () => {
     await assertSucceeds(
       googleProviderAllowedDomainApp
         .collection(buildsCollectionName)
@@ -314,25 +314,25 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to delete a build by an authenticated google user with an allowed email domain", async () => {
+  it("does not allow deleting a build by an authenticated with google and an allowed email domain user", async () => {
     await assertFails(
       googleProviderAllowedDomainApp.collection(buildsCollectionName).doc("1").delete()
     );
   });
 
-  it("does not allow to create a build by an authenticated google user with not allowed email domain", async () => {
+  it("does not allow creating a build by an authenticated with google and not allowed email domain user", async () => {
     await assertFails(
       googleProviderNotAllowedDomainApp.collection(buildsCollectionName).add(getBuild())
     );
   });
 
-  it("does not allow to read builds by an authenticated google user with not allowed email domain", async () => {
+  it("does not allow reading builds by an authenticated with google and not allowed email domain user", async () => {
     await assertFails(
       googleProviderNotAllowedDomainApp.collection(buildsCollectionName).get()
     );
   });
 
-  it("does not allow to update a build by an authenticated google user with not allowed email domain", async () => {
+  it("does not allow updating a build by an authenticated with google and with not allowed email domain user", async () => {
     await assertFails(
       googleProviderNotAllowedDomainApp
         .collection(buildsCollectionName)
@@ -341,7 +341,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to delete a build by an authenticated google user with not allowed email domain", async () => {
+  it("does not allow deleting a build by an authenticated with google and not allowed email domain user", async () => {
     await assertFails(
       googleProviderNotAllowedDomainApp
         .collection(buildsCollectionName)
@@ -354,19 +354,19 @@ describe("Build collection rules", async () => {
    * The unauthenticated user specific tests
    */
 
-  it("does not allow to create a build by an unauthenticated user", async () => {
+  it("does not allow creating a build by an unauthenticated user", async () => {
     await assertFails(
       unauthenticatedApp.collection(buildsCollectionName).add(getBuild())
     );
   });
 
-  it("does not allow to read builds by an unauthenticated user", async () => {
+  it("does not allow reading builds by an unauthenticated user", async () => {
     await assertFails(
       unauthenticatedApp.collection(buildsCollectionName).get()
     );
   });
 
-  it("does not allow to update a build by an unauthenticated user", async () => {
+  it("does not allow updating a build by an unauthenticated user", async () => {
     await assertFails(
       unauthenticatedApp
         .collection(buildsCollectionName)
@@ -375,7 +375,7 @@ describe("Build collection rules", async () => {
     );
   });
 
-  it("does not allow to delete a build by an unauthenticated user", async () => {
+  it("does not allow deleting a build by an unauthenticated user", async () => {
     await assertFails(
       unauthenticatedApp.collection(buildsCollectionName).doc("1").delete()
     );
