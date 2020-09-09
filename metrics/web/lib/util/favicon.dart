@@ -1,40 +1,42 @@
 import 'package:universal_html/html.dart';
 
-/// A class that setups favicon of the application.
+/// A class that sets the favicon of the application depending on the OS theme.
 class Favicon {
   /// A favicon for light mode.
-  final Element lightModeIcon = document?.querySelector('link#light-mode-icon');
+  final Element _lightModeIcon =
+      document?.querySelector('link#light-mode-icon');
 
   /// A favicon for dark mode.
-  final Element darkModeIcon = document?.querySelector('link#dark-mode-icon');
+  final Element _darkModeIcon = document?.querySelector('link#dark-mode-icon');
 
   /// A [MediaQueryList] object representing the results of the
   /// media query string passed to matchMedia.
-  final MediaQueryList matcher =
+  final MediaQueryList _colorSchemeMedia =
       window?.matchMedia('(prefers-color-scheme:light)');
 
   /// Adds a listener to the [MediaQueryListener] that will
   /// run a onUpdate function in response to the color scheme changing.
-  void setupFavicon() {
-    matcher.addListener((_) => onUpdate(matcher));
-    onUpdate(matcher);
+  void setup() {
+    _colorSchemeMedia
+        .addListener((_) => _onColorSchemeUpdate(_colorSchemeMedia));
+    _onColorSchemeUpdate(_colorSchemeMedia);
   }
 
-  /// Sets favicon for light mode
+  /// Sets favicon for light mode.
   void setLightModeIcon() {
-    darkModeIcon?.remove();
-    document?.head?.append(lightModeIcon);
+    _darkModeIcon?.remove();
+    document?.head?.append(_lightModeIcon);
   }
 
-  /// Sets favicon for dark mode
+  /// Sets favicon for dark mode.
   void setDarkModeIcon() {
-    lightModeIcon?.remove();
-    document?.head?.append(darkModeIcon);
+    _lightModeIcon?.remove();
+    document?.head?.append(_darkModeIcon);
   }
 
   /// Calls the appropriate method
   /// depending on the mode to display the favicon.
-  void onUpdate(MediaQueryList matcher) {
+  void _onColorSchemeUpdate(MediaQueryList matcher) {
     if (matcher.matches) {
       setLightModeIcon();
     } else {

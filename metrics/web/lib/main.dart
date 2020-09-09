@@ -27,7 +27,7 @@ class _MetricsAppState extends State<MetricsApp> {
 
   @override
   Widget build(BuildContext context) {
-    Favicon().setupFavicon();
+    Favicon().setup();
     return InjectionContainer(
       child: MetricsThemeBuilder(
         builder: (context, themeNotifier) {
