@@ -15,16 +15,16 @@ const {
 } = require("./test_utils/test-data");
 
 describe("Project groups collection rules", async function () {
-  const passwordProviderAllowedDomainApp = await getApplicationWith(
+  const passwordProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(passwordSignInProviderId)
   );
-  const passwordProviderNotAllowedDomainApp = await getApplicationWith(
+  const passwordProviderNotAllowedEmailApp = await getApplicationWith(
     getDeniedEmailUser(passwordSignInProviderId)
   );
-  const googleProviderAllowedDomainApp = await getApplicationWith(
+  const googleProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(googleSignInProviderId)
   );
-  const googleProviderNotAllowedDomainApp = await getApplicationWith(
+  const googleProviderNotAllowedEmailApp = await getApplicationWith(
     getDeniedEmailUser(googleSignInProviderId)
   );
   const unauthenticatedApp = await getApplicationWith(null);
@@ -42,7 +42,7 @@ describe("Project groups collection rules", async function () {
 
   it("does not allow creating a project group with not allowed fields", async () => {
     await assertFails(
-      passwordProviderAllowedDomainApp.collection(collectionName).add({
+      passwordProviderAllowedEmailApp.collection(collectionName).add({
         name: "name",
         projectIds: [],
         notAllowedField: "test",
@@ -52,7 +52,7 @@ describe("Project groups collection rules", async function () {
 
   it("does not allow creating a project group without a name", async () => {
     await assertFails(
-      passwordProviderAllowedDomainApp.collection(collectionName).add({
+      passwordProviderAllowedEmailApp.collection(collectionName).add({
         projectIds: [],
       })
     );
@@ -63,7 +63,7 @@ describe("Project groups collection rules", async function () {
 
     names.forEach(async (name) => {
       await assertFails(
-        passwordProviderAllowedDomainApp
+        passwordProviderAllowedEmailApp
           .collection(collectionName)
           .add({ name, projectIds: [] })
       );
@@ -75,7 +75,7 @@ describe("Project groups collection rules", async function () {
 
     projectIdsValues.forEach(async (projectIds) => {
       await assertFails(
-        passwordProviderAllowedDomainApp
+        passwordProviderAllowedEmailApp
           .collection(collectionName)
           .add({ name: "test", projectIds })
       );
@@ -86,7 +86,7 @@ describe("Project groups collection rules", async function () {
     const testName = "testName";
 
     await assertSucceeds(
-      passwordProviderAllowedDomainApp.collection(collectionName).doc("2").update({
+      passwordProviderAllowedEmailApp.collection(collectionName).doc("2").update({
         name: testName,
         projectIds: [],
       })
@@ -97,7 +97,7 @@ describe("Project groups collection rules", async function () {
     const testProjectIds = ["1", "2"];
 
     await assertSucceeds(
-      passwordProviderAllowedDomainApp.collection(collectionName).doc("2").update({
+      passwordProviderAllowedEmailApp.collection(collectionName).doc("2").update({
         name: "name",
         projectIds: testProjectIds,
       })
@@ -108,7 +108,7 @@ describe("Project groups collection rules", async function () {
     const testName = "testName";
 
     await assertSucceeds(
-      passwordProviderAllowedDomainApp.collection(collectionName).add({
+      passwordProviderAllowedEmailApp.collection(collectionName).add({
         name: testName,
         projectIds: [],
       })
@@ -119,7 +119,7 @@ describe("Project groups collection rules", async function () {
     const testProjectIds = ["1", "2"];
 
     await assertSucceeds(
-      passwordProviderAllowedDomainApp.collection(collectionName).add({
+      passwordProviderAllowedEmailApp.collection(collectionName).add({
         name: "name",
         projectIds: testProjectIds,
       })
@@ -130,7 +130,7 @@ describe("Project groups collection rules", async function () {
     const testName = "a".repeat(256);
 
     await assertFails(
-      passwordProviderAllowedDomainApp.collection(collectionName).doc("2").update({
+      passwordProviderAllowedEmailApp.collection(collectionName).doc("2").update({
         name: testName,
         projectIds: [],
       })
@@ -141,7 +141,7 @@ describe("Project groups collection rules", async function () {
     const testProjectIds = [...Array(21)].map((_, i) => `${i}`);
 
     await assertFails(
-      passwordProviderAllowedDomainApp.collection(collectionName).doc("2").update({
+      passwordProviderAllowedEmailApp.collection(collectionName).doc("2").update({
         name: "name",
         projectIds: testProjectIds,
       })
@@ -152,7 +152,7 @@ describe("Project groups collection rules", async function () {
     const testName = "a".repeat(256);
 
     await assertFails(
-      passwordProviderAllowedDomainApp.collection(collectionName).add({
+      passwordProviderAllowedEmailApp.collection(collectionName).add({
         name: testName,
         projectIds: [],
       })
@@ -163,7 +163,7 @@ describe("Project groups collection rules", async function () {
     const testProjectIds = [...Array(21)].map((_, i) => `${i}`);
 
     await assertFails(
-      passwordProviderAllowedDomainApp.collection(collectionName).add({
+      passwordProviderAllowedEmailApp.collection(collectionName).add({
         name: "name",
         projectIds: testProjectIds,
       })
@@ -176,19 +176,19 @@ describe("Project groups collection rules", async function () {
 
   it("allows to create a project group by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
-      passwordProviderAllowedDomainApp.collection(collectionName).add(getProjectGroup())
+      passwordProviderAllowedEmailApp.collection(collectionName).add(getProjectGroup())
     );
   });
 
   it("allows reading project groups by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
-      passwordProviderAllowedDomainApp.collection(collectionName).get()
+      passwordProviderAllowedEmailApp.collection(collectionName).get()
     );
   });
 
   it("allows to update a project group by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
-      passwordProviderAllowedDomainApp
+      passwordProviderAllowedEmailApp
         .collection(collectionName)
         .doc("2")
         .update(getProjectGroup())
@@ -197,13 +197,13 @@ describe("Project groups collection rules", async function () {
 
   it("allows to delete a project group by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
-      passwordProviderAllowedDomainApp.collection(collectionName).doc("1").delete()
+      passwordProviderAllowedEmailApp.collection(collectionName).doc("1").delete()
     );
   });
 
   it("allows to create a project group by an authenticated with a password and not allowed email domain user", async () => {
     await assertSucceeds(
-      passwordProviderNotAllowedDomainApp
+      passwordProviderNotAllowedEmailApp
         .collection(collectionName)
         .add(getProjectGroup())
     );
@@ -211,13 +211,13 @@ describe("Project groups collection rules", async function () {
 
   it("allows reading project groups by an authenticated with a password and not allowed email domain user", async () => {
     await assertSucceeds(
-      passwordProviderNotAllowedDomainApp.collection(collectionName).get()
+      passwordProviderNotAllowedEmailApp.collection(collectionName).get()
     );
   });
 
   it("allows to update a project group by an authenticated with a password and not allowed email domain user", async () => {
     await assertSucceeds(
-      passwordProviderNotAllowedDomainApp
+      passwordProviderNotAllowedEmailApp
         .collection(collectionName)
         .doc("2")
         .update(getProjectGroup())
@@ -226,7 +226,7 @@ describe("Project groups collection rules", async function () {
 
   it("allows to delete a project group by an authenticated with a password and not allowed email domain user", async () => {
     await assertSucceeds(
-      passwordProviderNotAllowedDomainApp.collection(collectionName).doc("1").delete()
+      passwordProviderNotAllowedEmailApp.collection(collectionName).doc("1").delete()
     );
   });
 
@@ -236,19 +236,19 @@ describe("Project groups collection rules", async function () {
 
   it("allows to create a project group by an authenticated with google and allowed email domain user", async () => {
     await assertSucceeds(
-      googleProviderAllowedDomainApp.collection(collectionName).add(getProjectGroup())
+      googleProviderAllowedEmailApp.collection(collectionName).add(getProjectGroup())
     );
   });
 
   it("allows reading a project group by an authenticated with google and allowed email domain user", async () => {
     await assertSucceeds(
-      googleProviderAllowedDomainApp.collection(collectionName).get()
+      googleProviderAllowedEmailApp.collection(collectionName).get()
     );
   });
 
   it("allows to update a project group by an authenticated with google and allowed email domain user", async () => {
     await assertSucceeds(
-      googleProviderAllowedDomainApp
+      googleProviderAllowedEmailApp
         .collection(collectionName)
         .doc("2")
         .update(getProjectGroup())
@@ -257,13 +257,13 @@ describe("Project groups collection rules", async function () {
 
   it("allows to delete a project group by an authenticated with google and allowed email domain user", async () => {
     await assertSucceeds(
-      googleProviderAllowedDomainApp.collection(collectionName).doc("1").delete()
+      googleProviderAllowedEmailApp.collection(collectionName).doc("1").delete()
     );
   });
 
   it("does not allow creating a project group by an authenticated with google and not allowed email domain user", async () => {
     await assertFails(
-      googleProviderNotAllowedDomainApp
+      googleProviderNotAllowedEmailApp
         .collection(collectionName)
         .add(getProjectGroup())
     );
@@ -271,13 +271,13 @@ describe("Project groups collection rules", async function () {
 
   it("does not allow reading project groups by an authenticated with google and not allowed email domain user", async () => {
     await assertFails(
-      googleProviderNotAllowedDomainApp.collection(collectionName).get()
+      googleProviderNotAllowedEmailApp.collection(collectionName).get()
     );
   });
 
   it("does not allow updating a project group by an authenticated with google and not allowed email domain user", async () => {
     await assertFails(
-      googleProviderNotAllowedDomainApp
+      googleProviderNotAllowedEmailApp
         .collection(collectionName)
         .doc("2")
         .update(getProjectGroup())
@@ -286,7 +286,7 @@ describe("Project groups collection rules", async function () {
 
   it("does not allow deleting a project group by an authenticated with google and not allowed email domain user", async () => {
     await assertFails(
-      googleProviderNotAllowedDomainApp.collection(collectionName).doc("1").delete()
+      googleProviderNotAllowedEmailApp.collection(collectionName).doc("1").delete()
     );
   });
 

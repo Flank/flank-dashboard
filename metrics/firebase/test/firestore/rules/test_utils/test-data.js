@@ -81,12 +81,12 @@ exports.passwordSignInProviderId = "password";
 /** A google sign in provider identifier */
 exports.googleSignInProviderId = "google.com";
 
-/** Provides a firebase user with allowed email domain and given sign in provider identifier */
+/** Provides a firebase user with allowed email and given sign in provider identifier */
 exports.getAllowedEmailUser = function (signInProviderId) {
   return getUser(allowedEmail, signInProviderId);
 };
 
-/** Provides a firebase user with not allowed email domain and given sign in provider identifier */
+/** Provides a firebase user with not allowed email and given sign in provider identifier */
 exports.getDeniedEmailUser = function (signInProviderId) {
   return getUser(deniedEmail, signInProviderId);
 };
