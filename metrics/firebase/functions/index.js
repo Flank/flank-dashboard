@@ -81,24 +81,22 @@ exports.seedData = functions.https.onRequest(async (req, resp) => {
  * Checks whether the email domain is in the allowed domains list.
  *
  * @param {Object} data - a request object that accepts such fields:
- * - `email` - the email to validate the domain.
+ * - `emailDomain` - the email domain to validate.
  *
  * @return {Object} containing such fields:
- * - `isValid` - indicates whether the email from the request has a valid domain or not.
- * - `email` - the given email.
+ * - `isValid` - indicates whether the email domain from the request is a valid or not.
+ * - `emailDomain` - the given email domain.
  */
-exports.validateEmail = functions.https.onCall(async (data, context) => {
+exports.validateEmailDomain = functions.https.onCall(async (data, context) => {
     let requestData = data || {};
 
-    let userEmail = requestData.email || '';
-    let emailDomain = userEmail.substring(userEmail.lastIndexOf("@") + 1);
-
+    let userEmailDomain = requestData.emailDomain || '';
     let allowedDomainsSnapshot = await admin.firestore().collection('allowed_email_domains').get();
     let allowedEmailDomains = allowedDomainsSnapshot.docs.map(document => document.id);
 
     return {
-        "isValid": allowedEmailDomains.includes(emailDomain),
-        "email": userEmail,
+        "isValid": allowedEmailDomains.includes(userEmailDomain),
+        "emailDomain": userEmailDomain,
     }
 });
 
