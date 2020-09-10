@@ -9,15 +9,15 @@ import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 /// An abstract widget that displays a metrics styled toast
 /// in response to a user action and applies a [MetricsThemeData.toastTheme].
 abstract class Toast extends StatelessWidget {
-  /// A width of this toast.
+  /// The default width of the toast.
   static const double _width = 680.0;
 
-  /// A message that displays within this toast.
+  /// A message that is displayed within this toast.
   final String message;
 
   /// Creates a new instance of the [Toast].
   ///
-  /// The [message] must not be null.
+  /// The given [message] must not be null.
   const Toast({
     Key key,
     @required this.message,
@@ -59,13 +59,12 @@ abstract class Toast extends StatelessWidget {
     );
   }
 
-  /// Selects the [ToastStyle] for this toast
-  /// from the given [attentionLevel].
+  /// Selects the [ToastStyle] for this toast from the given [attentionLevel].
   ToastStyle getStyle(ToastAttentionLevel attentionLevel);
 }
 
-/// Shows the [Toast] on top of the screen
-/// for the duration of [DurationConstants.toast].
+/// Shows the [Toast] on top of the screen for the duration
+/// of [DurationConstants.toast].
 ToastFuture showToast(BuildContext context, Toast toast) {
   return showToastWidget(
     toast,

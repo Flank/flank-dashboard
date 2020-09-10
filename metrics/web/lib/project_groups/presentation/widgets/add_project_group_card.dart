@@ -37,7 +37,7 @@ class AddProjectGroupCard extends StatelessWidget {
               ? () => _showProjectGroupDialog(context)
               : null,
           mouseCursor: MouseCursor.click,
-          builder: (bool isHovered) {
+          builder: (context, isHovered) {
             return MetricsCard(
               decoration: BoxDecoration(
                 color: isHovered ? style.hoverColor : style.backgroundColor,

@@ -35,8 +35,8 @@ class BubbleShapeBorder extends ShapeBorder {
   /// The [position] defaults to the [BubblePosition.bottom].
   /// The [alignment] defaults to the [BubbleAlignment.center].
   /// The [arrowSize] defaults to the [Size.square] of `10.0`.
-  /// The [offset] default value is `0.0`.
-  /// The [borderRadius] default value is `12.0`.
+  /// The [offset] defaults to the `0.0`.
+  /// The [borderRadius] defaults to the [BorderRadius.zero].
   ///
   /// The [position], the [arrowSize], the [offset] and the [borderRadius]
   /// must not be null.

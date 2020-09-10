@@ -40,7 +40,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     final theme = MetricsTheme.of(context).projectGroupCardTheme;
 
     return TappableArea(
-      builder: (bool isHovered) {
+      builder: (context, isHovered) {
         return MetricsCard(
           decoration: BoxDecoration(
             border: Border.all(color: theme.borderColor),

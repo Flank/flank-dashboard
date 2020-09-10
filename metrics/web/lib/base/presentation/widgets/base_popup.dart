@@ -9,6 +9,7 @@ typedef TriggerBuilder = Widget Function(
   BuildContext context,
   VoidCallback openPopup,
   VoidCallback closePopup,
+  bool isPopupOpened,
 );
 
 /// A widget that displays the trigger widget built by the [triggerBuilder]
@@ -30,11 +31,15 @@ class BasePopup extends StatefulWidget {
   /// A widget to display when the trigger widget is triggered.
   final Widget popup;
 
+  /// Defines if the popup should be closed when the user taps on an empty area
+  /// inside the popup.
+  final bool closePopupOnEmptySpaceTap;
+
   /// Creates a new instance of the base popup.
   ///
-  /// The [barrierDismissible] defaults to `true`.
   /// If the [popupConstraints] is null, an empty instance of
   /// the [BoxConstraints] is used.
+  /// The [closePopupOnEmptySpaceTap] defaults to `false`.
   ///
   /// All the required parameters must not be null.
   const BasePopup({
@@ -43,6 +48,7 @@ class BasePopup extends StatefulWidget {
     @required this.offsetBuilder,
     @required this.triggerBuilder,
     @required this.popup,
+    this.closePopupOnEmptySpaceTap = false,
     this.routeObserver,
   })  : popupConstraints = popupConstraints ?? const BoxConstraints(),
         assert(offsetBuilder != null),
@@ -61,6 +67,9 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
   /// The [LayerLink] that allows a [BasePopup.popup] to follow the trigger.
   final _layerLink = LayerLink();
 
+  /// Indicates whether the [widget.popup] is opened.
+  bool get _isPopupOpened => _overlayEntry != null;
+
   @override
   void didChangeDependencies() {
     widget.routeObserver?.subscribe(this, ModalRoute.of(context));
@@ -75,6 +84,7 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
         context,
         _openPopup,
         _closePopup,
+        _isPopupOpened,
       ),
     );
   }
@@ -86,36 +96,36 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
     final offset = widget.offsetBuilder(childSize);
 
     final _widget = GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: _closePopup,
-      child: Container(
-        color: Colors.transparent,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              left: offset.dx,
-              top: offset.dy,
-              child: CompositedTransformFollower(
-                link: _layerLink,
-                offset: offset,
-                child: ConstrainedBox(
-                  constraints: widget.popupConstraints,
-                  child: widget.popup,
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            left: offset.dx,
+            top: offset.dy,
+            child: CompositedTransformFollower(
+              link: _layerLink,
+              offset: offset,
+              child: GestureDetector(
+                onTap: _onPopupEmptySpaceTap,
+                child: MouseRegion(
+                  child: ConstrainedBox(
+                    constraints: widget.popupConstraints,
+                    child: widget.popup,
+                  ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
 
-    _overlayEntry = OverlayEntry(builder: (context) => _widget);
-    Overlay.of(context).insert(_overlayEntry);
-  }
+    setState(() {
+      _overlayEntry = OverlayEntry(builder: (context) => _widget);
+    });
 
-  @override
-  void didPop() {
-    _closePopup();
-    super.didPop();
+    Overlay.of(context).insert(_overlayEntry);
   }
 
   @override
@@ -128,14 +138,23 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
   void _closePopup() {
     if (_overlayEntry != null) {
       _overlayEntry.remove();
-      _overlayEntry = null;
+
+      setState(() {
+        _overlayEntry = null;
+      });
     }
+  }
+
+  /// Closes a [BasePopup.popup], when taps on the empty space.
+  void _onPopupEmptySpaceTap() {
+    if (widget.closePopupOnEmptySpaceTap) _closePopup();
   }
 
   @override
   void dispose() {
     widget.routeObserver?.unsubscribe(this);
-    _closePopup();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
     super.dispose();
   }
 }

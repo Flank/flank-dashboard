@@ -23,7 +23,9 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
+
     _subscribeToProjectsErrors();
+    _projectMetricsNotifier.resetProjectNameFilter();
   }
 
   /// Subscribes to projects errors.
