@@ -27,9 +27,7 @@ class FirebaseUserRepository implements UserRepository {
       );
     } catch (error) {
       final errorCode = error.code as String;
-      final authErrorCode =
-          FirebaseAuthErrorCodeConverter.convertErrorStringToErrorCode(
-              errorCode);
+      final authErrorCode = FirebaseAuthErrorCodeConverter.convert(errorCode);
 
       throw AuthenticationException(code: authErrorCode);
     }
@@ -58,9 +56,7 @@ class FirebaseUserRepository implements UserRepository {
       }
 
       final errorCode = error.code as String;
-      final authErrorCode =
-          FirebaseAuthErrorCodeConverter.convertErrorStringToErrorCode(
-              errorCode);
+      final authErrorCode = FirebaseAuthErrorCodeConverter.convert(errorCode);
 
       throw AuthenticationException(code: authErrorCode);
     }

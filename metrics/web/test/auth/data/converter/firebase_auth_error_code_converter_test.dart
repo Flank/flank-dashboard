@@ -8,11 +8,10 @@ import 'package:test/test.dart';
 
 void main() {
   group("FirebaseAuthErrorCodeConverter", () {
-    final converter =
-        FirebaseAuthErrorCodeConverter.convertErrorStringToErrorCode;
+    const converter = FirebaseAuthErrorCodeConverter.convert;
 
     test(
-      ".convertErrorStringToErrorCode() returns the user not found auth error code to the given error string is the user not found Firebase auth error code string",
+      ".convert() returns the user not found auth error code to the given error string is the user not found Firebase auth error code string",
       () {
         final authErrorCode = converter(FirebaseAuthErrorCode.userNotFound);
 
@@ -21,7 +20,7 @@ void main() {
     );
 
     test(
-      ".convertErrorStringToErrorCode() returns the wrong password auth error code to the given error string is the wrong password Firebase auth error code string",
+      ".convert() returns the wrong password auth error code to the given error string is the wrong password Firebase auth error code string",
       () {
         final authErrorCode = converter(FirebaseAuthErrorCode.wrongPassword);
 
@@ -30,7 +29,7 @@ void main() {
     );
 
     test(
-      ".convertErrorStringToErrorCode() returns the invalid email auth error code to the given error string is the invalid email Firebase auth error code string",
+      ".convert() returns the invalid email auth error code to the given error string is the invalid email Firebase auth error code string",
       () {
         final authErrorCode = converter(FirebaseAuthErrorCode.invalidEmail);
 
@@ -39,7 +38,7 @@ void main() {
     );
 
     test(
-      ".convertErrorStringToErrorCode() returns the user disabled auth error code to the given error string is the user disabled Firebase auth error code string",
+      ".convert() returns the user disabled auth error code to the given error string is the user disabled Firebase auth error code string",
       () {
         final authErrorCode = converter(FirebaseAuthErrorCode.userDisabled);
 
@@ -48,7 +47,7 @@ void main() {
     );
 
     test(
-      ".convertErrorStringToErrorCode() returns the too many requests error code to the given error string is the too man requests Firebase auth error code string",
+      ".convert() returns the too many requests error code to the given error string is the too man requests Firebase auth error code string",
       () {
         final authErrorCode = converter(FirebaseAuthErrorCode.tooManyRequests);
 
@@ -57,7 +56,7 @@ void main() {
     );
 
     test(
-      ".convertErrorStringToErrorCode() returns the unknown error code if there is no corresponding authentication error code for the given Firebase auth error code string",
+      ".convert() returns the unknown error code if there is no corresponding authentication error code for the given Firebase auth error code string",
       () {
         final authErrorCode = converter("unknown error");
 
@@ -66,7 +65,7 @@ void main() {
     );
 
     test(
-      ".convertErrorStringToErrorCode() returns the unknown error code if the given Firebase auth error code string is null",
+      ".convert() returns the unknown error code if the given Firebase auth error code string is null",
       () {
         final authErrorCode = converter(null);
 
