@@ -4,7 +4,7 @@ import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 /// A class that converts the the Firebase Authentication error code
 /// to the corresponding [AuthErrorCode].
 class FirebaseAuthErrorCodeConverter {
-  /// Returns the corresponding [AuthErrorCode] to the given Firebase error code.
+  /// Returns the corresponding [AuthErrorCode] to the given Firebase [errorCode].
   /// If the corresponding [AuthErrorCode] is not found,
   /// returns [AuthErrorCode.unknown].
   static AuthErrorCode convert(String errorCode) {
