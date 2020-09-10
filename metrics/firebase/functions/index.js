@@ -17,11 +17,11 @@ const buildStatuses = ['BuildStatus.successful', 'BuildStatus.cancelled', 'Build
  * Creates seed builds for metrics projects.
  *
  * This HTTP function takes such query params:
- * buildsCount (required) - number of builds to be generated.
- * projectId (required) - the project identifier for which builds will be generated.
- * startDate (optional) - builds will be generated with startedAt property
+ * @param {number} buildsCount required - number of builds to be generated.
+ * @param {number} projectId (required) - the project identifier for which builds will be generated.
+ * @param {number} startDate (optional) - builds will be generated with startedAt property
  * in range from startDate to startDate - 7 days. Defaults to current date.
- * delay (optional) - is the delay in milliseconds between adding builds to project
+ * @param {number} delay (optional) - is the delay in milliseconds between adding builds to project
  */
 exports.seedData = functions.https.onRequest(async (req, resp) => {
     /// Change to enable this function.
