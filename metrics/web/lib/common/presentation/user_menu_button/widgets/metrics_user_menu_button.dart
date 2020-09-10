@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/routes/observers/overlay_entry_route_observer.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_user_menu.dart';
@@ -21,6 +22,7 @@ class MetricsUserMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final menuButtonTheme = MetricsTheme.of(context).userMenuButtonTheme;
     final observers = Navigator.of(context).widget.observers;
     final overlayEntryRouteObserver = observers.firstWhere(
       (element) => element is OverlayEntryRouteObserver,
@@ -41,21 +43,22 @@ class MetricsUserMenuButton extends StatelessWidget {
         final tooltipMessage = isPopupOpened
             ? CommonStrings.closeUserMenu
             : CommonStrings.openUserMenu;
-        final menuImage =
-            isPopupOpened ? 'icons/avatar_active.svg' : 'icons/avatar.svg';
+
+        final buttonColor = isPopupOpened
+            ? menuButtonTheme.activeColor
+            : menuButtonTheme.inactiveColor;
 
         return Tooltip(
           message: tooltipMessage,
-          child: HandCursor(
-            child: InkWell(
-              onTap: openPopup,
-              customBorder: const CircleBorder(),
-              child: Image.network(
-                menuImage,
-                width: 32.0,
-                height: 32.0,
-                fit: BoxFit.contain,
-              ),
+          child: InkWell(
+            onTap: openPopup,
+            customBorder: const CircleBorder(),
+            child: Image.network(
+              'icons/avatar.svg',
+              width: 32.0,
+              height: 32.0,
+              fit: BoxFit.contain,
+              color: buttonColor,
             ),
           ),
         );

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/value_form_field.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_inactive_button.dart';
@@ -95,7 +94,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a hand cursor to the project group dialog action button",
+      "applies a mouse region to the project group dialog action button",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectGroupDialogTestbed(
@@ -106,7 +105,7 @@ void main() {
 
         final finder = find.ancestor(
           of: find.text(buttonText),
-          matching: find.byType(HandCursor),
+          matching: find.byType(MouseRegion),
         );
 
         expect(finder, findsOneWidget);

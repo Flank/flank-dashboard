@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/widgets/metrics_checkbox.dart';
@@ -109,24 +108,6 @@ void main() {
             projectCheckboxViewModel.id,
           ),
         ).called(equals(1));
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the list tile",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _ProjectCheckboxListTileTestbed(
-            projectCheckboxViewModel: projectCheckboxViewModel,
-          ));
-        });
-
-        final finder = find.ancestor(
-          of: find.byType(Row),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
       },
     );
 

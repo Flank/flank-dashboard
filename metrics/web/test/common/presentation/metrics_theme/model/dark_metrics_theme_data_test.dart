@@ -28,6 +28,7 @@ void main() {
         expect(darkMetricsThemeData.performanceSparklineTheme, isNotNull);
         expect(darkMetricsThemeData.projectBuildStatusTheme, isNotNull);
         expect(darkMetricsThemeData.toggleTheme, isNotNull);
+        expect(darkMetricsThemeData.userMenuButtonTheme, isNotNull);
         expect(darkMetricsThemeData.userMenuTheme, isNotNull);
         expect(darkMetricsThemeData.textPlaceholderTheme, isNotNull);
         expect(darkMetricsThemeData.inputPlaceholderTheme, isNotNull);

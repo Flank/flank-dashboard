@@ -241,7 +241,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the disabled add icon svg when the card is disabled",
+      "applies the inactive icon color form the metrics theme to the network image when the add project group card is disabled",
       (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.hasConfiguredProjects).thenReturn(false);
@@ -249,12 +249,32 @@ void main() {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(_AddProjectGroupCardTestbed(
             projectGroupsNotifier: notifierMock,
+            theme: metricsTheme,
           )),
         );
 
-        final networkImage = FinderUtil.findNetworkImageWidget(tester);
+        final image = tester.widget<Image>(find.byType(Image));
 
-        expect(networkImage.url, equals('icons/disabled-add.svg'));
+        expect(image.color, equals(inactiveIconColor));
+      },
+    );
+
+    testWidgets(
+      "applies the positive icon color form the metrics theme to the network image when the add project group card is enabled",
+          (WidgetTester tester) async {
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.hasConfiguredProjects).thenReturn(true);
+
+        await mockNetworkImagesFor(
+              () => tester.pumpWidget(_AddProjectGroupCardTestbed(
+            projectGroupsNotifier: notifierMock,
+            theme: metricsTheme,
+          )),
+        );
+
+        final image = tester.widget<Image>(find.byType(Image));
+
+        expect(image.color, equals(positiveIconColor));
       },
     );
 

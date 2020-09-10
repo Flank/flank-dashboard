@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
+import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
@@ -7,7 +7,7 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 /// items that can be selected.
 ///
 /// Changes it's background color on hover from [backgroundColor] to [hoverColor].
-class DropdownItem extends StatefulWidget {
+class DropdownItem extends StatelessWidget {
   /// A builder function used to build the child widget depending on the hover
   /// status of this widget.
   final HoverWidgetBuilder builder;
@@ -44,24 +44,19 @@ class DropdownItem extends StatefulWidget {
     this.hoverColor,
   })  : assert(builder != null),
         super(key: key);
-
-  @override
-  _DropdownItemState createState() => _DropdownItemState();
-}
-
-class _DropdownItemState extends State<DropdownItem> {
   @override
   Widget build(BuildContext context) {
     return TappableArea(
-      mouseCursor: MouseCursor.click,
+      mouseCursor: SystemMouseCursors.click,
       builder: (context, isHovered) {
+        final color = isHovered ? hoverColor : backgroundColor;
         return Container(
-          width: widget.width,
-          height: widget.height,
-          color: isHovered ? widget.hoverColor : widget.backgroundColor,
-          padding: widget.padding,
-          alignment: widget.alignment,
-          child: widget.builder(context, isHovered),
+          width: width,
+          height: height,
+          color: color,
+          padding: padding,
+          alignment: alignment,
+          child: builder(context, isHovered),
         );
       },
     );

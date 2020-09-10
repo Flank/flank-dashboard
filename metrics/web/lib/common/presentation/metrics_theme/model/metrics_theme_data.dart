@@ -20,6 +20,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 
 /// Stores the theme data for all metrics widgets.
@@ -81,6 +82,9 @@ class MetricsThemeData {
   /// A theme for the toggle widgets.
   final ToggleThemeData toggleTheme;
 
+  /// A theme for the user menu button.
+  final UserMenuButtonThemeData userMenuButtonTheme;
+
   /// A theme for the user menu popup.
   final UserMenuThemeData userMenuTheme;
 
@@ -115,6 +119,7 @@ class MetricsThemeData {
     SparklineThemeData performanceSparklineTheme,
     ProjectBuildStatusThemeData projectBuildStatusTheme,
     ToggleThemeData toggleTheme,
+    UserMenuButtonThemeData userMenuButtonTheme,
     UserMenuThemeData userMenuTheme,
     TextPlaceholderThemeData textPlaceholderTheme,
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
@@ -150,6 +155,8 @@ class MetricsThemeData {
         projectBuildStatusTheme =
             projectBuildStatusTheme ?? const ProjectBuildStatusThemeData(),
         toggleTheme = toggleTheme ?? const ToggleThemeData(),
+        userMenuButtonTheme =
+            userMenuButtonTheme ?? const UserMenuButtonThemeData(),
         userMenuTheme = userMenuTheme ?? const UserMenuThemeData(),
         textPlaceholderTheme =
             textPlaceholderTheme ?? const TextPlaceholderThemeData(),
@@ -181,6 +188,7 @@ class MetricsThemeData {
     SparklineThemeData performanceSparklineTheme,
     ProjectBuildStatusThemeData projectBuildStatusTheme,
     ToggleThemeData toggleTheme,
+    UserMenuButtonThemeData userMenuButtonTheme,
     UserMenuThemeData userMenuTheme,
     TextPlaceholderThemeData textPlaceholderTheme,
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
@@ -212,6 +220,7 @@ class MetricsThemeData {
       projectBuildStatusTheme:
           projectBuildStatusTheme ?? this.projectBuildStatusTheme,
       toggleTheme: toggleTheme ?? this.toggleTheme,
+      userMenuButtonTheme: userMenuButtonTheme ?? this.userMenuButtonTheme,
       userMenuTheme: userMenuTheme ?? this.userMenuTheme,
       textPlaceholderTheme: textPlaceholderTheme ?? this.textPlaceholderTheme,
       inputPlaceholderTheme:

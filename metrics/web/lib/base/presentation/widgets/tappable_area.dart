@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
-import 'package:universal_html/html.dart' as html;
 
 /// A callback used for widget builder functions that depend on the hover status.
 typedef HoverWidgetBuilder = Widget Function(BuildContext, bool);
@@ -31,7 +29,7 @@ class TappableArea extends StatefulWidget {
     this.onTap,
     MouseCursor mouseCursor,
   })  : assert(builder != null),
-        mouseCursor = mouseCursor ?? MouseCursor.basic,
+        mouseCursor = mouseCursor ?? SystemMouseCursors.basic,
         super(key: key);
 
   @override
@@ -45,6 +43,7 @@ class _TappableAreaState extends State<TappableArea> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
+      cursor: widget.mouseCursor,
       onEnter: (_) => _changeHover(true),
       onExit: (_) => _changeHover(false),
       child: GestureDetector(
@@ -57,16 +56,5 @@ class _TappableAreaState extends State<TappableArea> {
   /// Changes [_isHovered] value to the given [value].
   void _changeHover(bool value) {
     setState(() => _isHovered = value);
-    _changeCursor();
-  }
-
-  /// Changes the cursor depending on [_isHovered] value.
-  void _changeCursor() {
-    final appContainer = html.window?.document?.getElementById('app-container');
-
-    if (appContainer == null) return;
-
-    appContainer.style.cursor =
-        _isHovered ? widget.mouseCursor.cursor : MouseCursor.basic.cursor;
   }
 }

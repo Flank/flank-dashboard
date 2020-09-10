@@ -27,8 +27,8 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'dev'
-          flutter-version: '1.15.3'
+          channel: 'beta'
+          flutter-version: '1.21.0-9.2.pre'
 
       - uses: cedx/setup-dart@v2
 

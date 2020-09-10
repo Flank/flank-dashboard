@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
+import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
@@ -29,14 +29,11 @@ class AddProjectGroupCard extends StatelessWidget {
           hasConfiguredProjects: hasConfiguredProjects,
         );
 
-        final asset =
-            hasConfiguredProjects ? 'icons/add.svg' : 'icons/disabled-add.svg';
-
         return TappableArea(
           onTap: hasConfiguredProjects
               ? () => _showProjectGroupDialog(context)
               : null,
-          mouseCursor: MouseCursor.click,
+          mouseCursor: SystemMouseCursors.click,
           builder: (context, isHovered) {
             return MetricsCard(
               decoration: BoxDecoration(
@@ -47,7 +44,7 @@ class AddProjectGroupCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Image.network(
-                    asset,
+                    'icons/add.svg',
                     width: 32.0,
                     height: 32.0,
                     color: style.iconColor,

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
@@ -11,7 +11,7 @@ void main() {
   group("TappableArea", () {
     const hoveredColor = Colors.yellow;
     const defaultColor = Colors.red;
-    const defaultCursor = MouseCursor.basic;
+    const defaultCursor = SystemMouseCursors.basic;
 
     final tappableAreaFinder = find.byType(TappableArea);
 
@@ -66,7 +66,7 @@ void main() {
     testWidgets(
       "creates an instance with the given cursor value",
       (WidgetTester tester) async {
-        const cursor = MouseCursor.forbidden;
+        const cursor = SystemMouseCursors.forbidden;
 
         await tester.pumpWidget(
           TappableAreaTestbed(

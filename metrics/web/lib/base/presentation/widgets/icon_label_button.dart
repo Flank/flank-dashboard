@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 
 /// A widget that displays the button with given [icon] and [label] text.
 class IconLabelButton extends StatelessWidget {
@@ -47,25 +46,23 @@ class IconLabelButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HandCursor(
-      child: InkWell(
-        borderRadius: borderRadius,
-        onTap: onPressed,
-        child: Padding(
-          padding: contentPadding,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Padding(
-                padding: iconPadding,
-                child: icon,
-              ),
-              Text(
-                label,
-                style: labelStyle,
-              ),
-            ],
-          ),
+    return InkWell(
+      borderRadius: borderRadius,
+      onTap: onPressed,
+      child: Padding(
+        padding: contentPadding,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: iconPadding,
+              child: icon,
+            ),
+            Text(
+              label,
+              style: labelStyle,
+            ),
+          ],
         ),
       ),
     );

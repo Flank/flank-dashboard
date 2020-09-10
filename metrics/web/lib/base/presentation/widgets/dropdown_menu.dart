@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:flutter/rendering.dart';
 import 'package:selection_menu/components_configurations.dart';
 import 'package:selection_menu/selection_menu.dart';
 
@@ -130,7 +130,8 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
           builder: (data) {
             return GestureDetector(
               onTap: data.triggerMenu,
-              child: HandCursor(
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
                 child: widget.buttonBuilder(context, data.selectedItem as T),
               ),
             );

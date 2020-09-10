@@ -127,7 +127,6 @@ void main() {
       "applies the given background color if is not hovered",
       (tester) async {
         const backgroundColor = Colors.red;
-        const expectedDecoration = BoxDecoration(color: backgroundColor);
 
         await tester.pumpWidget(_DropdownItemTestbed(
           builder: _builder,
@@ -136,7 +135,7 @@ void main() {
 
         final container = tester.widget<Container>(containerFinder);
 
-        expect(container.decoration, equals(expectedDecoration));
+        expect(container.color, equals(backgroundColor));
       },
     );
 
@@ -144,14 +143,17 @@ void main() {
       "applies the given hover color if is hovered",
       (tester) async {
         const hoverColor = Colors.red;
-        const expectedDecoration = BoxDecoration(color: hoverColor);
-
         await tester.pumpWidget(_DropdownItemTestbed(
           builder: _builder,
           hoverColor: hoverColor,
         ));
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+        final mouseRegion = tester.widget<MouseRegion>(
+          find.descendant(
+            of: find.byType(TappableArea),
+            matching: find.byType(MouseRegion),
+          ),
+        );
         const pointerEnterEvent = PointerEnterEvent();
         mouseRegion.onEnter(pointerEnterEvent);
 
@@ -159,7 +161,7 @@ void main() {
 
         final container = tester.widget<Container>(containerFinder);
 
-        expect(container.decoration, equals(expectedDecoration));
+        expect(container.color, equals(hoverColor));
       },
     );
   });

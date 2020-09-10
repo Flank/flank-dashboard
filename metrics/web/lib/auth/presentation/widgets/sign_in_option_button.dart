@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_strategy.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -25,36 +25,34 @@ class SignInOptionButton extends StatelessWidget {
     final loginTheme = MetricsTheme.of(context).loginTheme;
     final loginOptionStyle = loginTheme.loginOptionButtonStyle;
 
-    return HandCursor(
-      child: RaisedButton(
-        color: loginOptionStyle.color,
-        hoverColor: loginOptionStyle.hoverColor,
-        elevation: loginOptionStyle.elevation,
-        hoverElevation: loginOptionStyle.elevation,
-        focusElevation: loginOptionStyle.elevation,
-        highlightElevation: loginOptionStyle.elevation,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
-        ),
-        onPressed: () => _signIn(context),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Image.network(
-                strategy.asset,
-                height: 20.0,
-                width: 20.0,
-                fit: BoxFit.contain,
-              ),
+    return RaisedButton(
+      color: loginOptionStyle.color,
+      hoverColor: loginOptionStyle.hoverColor,
+      elevation: loginOptionStyle.elevation,
+      hoverElevation: loginOptionStyle.elevation,
+      focusElevation: loginOptionStyle.elevation,
+      highlightElevation: loginOptionStyle.elevation,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      onPressed: () => _signIn(context),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Image.network(
+              strategy.asset,
+              height: 20.0,
+              width: 20.0,
+              fit: BoxFit.contain,
             ),
-            Text(
-              strategy.label,
-              style: loginOptionStyle.labelStyle,
-            ),
-          ],
-        ),
+          ),
+          Text(
+            strategy.label,
+            style: loginOptionStyle.labelStyle,
+          ),
+        ],
       ),
     );
   }

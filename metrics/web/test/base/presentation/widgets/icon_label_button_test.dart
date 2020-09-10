@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
@@ -231,20 +230,6 @@ void main() {
         final actualCallback = inkWellWidget.onTap;
 
         expect(actualCallback, equals(testCallback));
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the icon label button",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(_IconLabelButtonTestbed());
-
-        final finder = find.ancestor(
-          of: find.byType(InkWell),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
       },
     );
   });

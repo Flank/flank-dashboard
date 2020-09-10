@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
@@ -79,21 +78,6 @@ void main() {
         final button = tester.widget<RaisedButton>(buttonFinder);
 
         expect(button.onPressed, equals(defaultOnPressed));
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the button",
-      (tester) async {
-        await tester.pumpWidget(
-          const _MetricsButtonTestbed(label: label),
-        );
-
-        final finder = find.byWidgetPredicate(
-          (widget) => widget is HandCursor && widget.child is RaisedButton,
-        );
-
-        expect(finder, findsOneWidget);
       },
     );
 

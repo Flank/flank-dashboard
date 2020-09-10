@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
@@ -31,8 +30,8 @@ abstract class MetricsButton extends StatelessWidget {
     final inactiveStyle = attentionLevel.inactive;
     final style = selectStyle(attentionLevel);
 
-    return HandCursor(
-      child: RaisedButton(
+    return
+     RaisedButton(
         color: style.color,
         hoverColor: style.hoverColor,
         disabledColor: inactiveStyle.color,
@@ -50,8 +49,7 @@ abstract class MetricsButton extends StatelessWidget {
           style:
               onPressed == null ? inactiveStyle.labelStyle : style.labelStyle,
         ),
-      ),
-    );
+      );
   }
 
   /// Selects a [MetricsButtonStyle] for this button from

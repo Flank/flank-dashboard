@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:flutter/rendering.dart';
 
 /// The widget that displays a specific version of the [Dialog].
 class InfoDialog extends StatelessWidget {
@@ -119,7 +119,8 @@ class InfoDialog extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.topRight,
-              child: HandCursor(
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   child: Padding(

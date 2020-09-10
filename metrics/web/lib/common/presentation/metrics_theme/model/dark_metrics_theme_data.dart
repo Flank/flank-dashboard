@@ -36,6 +36,7 @@ import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
+import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
@@ -379,6 +380,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
             activeHoverColor: ColorConfig.primaryHoverColor,
             inactiveColor: _inactiveToggleColor,
             inactiveHoverColor: _inactiveToggleHoverColor,
+          ),
+          userMenuButtonTheme: const UserMenuButtonThemeData(
+            activeColor: ColorConfig.shimmerColor,
+            inactiveColor: Colors.white,
           ),
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.black,

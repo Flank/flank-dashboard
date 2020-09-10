@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
@@ -70,7 +70,8 @@ class MetricsUserMenu extends StatelessWidget {
                             style: userMenuTextStyle,
                           ),
                         ),
-                        HandCursor(
+                        MouseRegion(
+                          cursor: SystemMouseCursors.click,
                           child: Toggle(
                             value: !model.isDark,
                             onToggle: (_) => model.changeTheme(),
@@ -83,7 +84,8 @@ class MetricsUserMenu extends StatelessWidget {
               ),
               Padding(
                 padding: itemPadding,
-                child: HandCursor(
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
                   child: GestureDetector(
                     onTap: () => Navigator.pushNamed(
                       context,
@@ -103,7 +105,8 @@ class MetricsUserMenu extends StatelessWidget {
               ),
               Padding(
                 padding: itemPadding,
-                child: HandCursor(
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
                   child: GestureDetector(
                     onTap: () => _signOut(context),
                     child: Text(
@@ -128,7 +131,7 @@ class MetricsUserMenu extends StatelessWidget {
     await Navigator.pushNamedAndRemoveUntil(
       context,
       RouteName.login,
-      (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
     );
   }
 }

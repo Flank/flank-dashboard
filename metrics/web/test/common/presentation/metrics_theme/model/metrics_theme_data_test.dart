@@ -31,6 +31,7 @@ import 'package:metrics/common/presentation/toast/theme/attention_level/toast_at
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -56,6 +57,7 @@ void main() {
         expect(themeData.buildNumberScorecardTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
+        expect(themeData.userMenuButtonTheme, isNotNull);
         expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.toggleTheme, isNotNull);
         expect(themeData.textPlaceholderTheme, isNotNull);
@@ -85,6 +87,7 @@ void main() {
           performanceSparklineTheme: null,
           projectBuildStatusTheme: null,
           toggleTheme: null,
+          userMenuButtonTheme: null,
           userMenuTheme: null,
           textPlaceholderTheme: null,
           inputPlaceholderTheme: null,
@@ -109,6 +112,7 @@ void main() {
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
         expect(themeData.toggleTheme, isNotNull);
+        expect(themeData.userMenuButtonTheme, isNotNull);
         expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.textPlaceholderTheme, isNotNull);
         expect(themeData.inputPlaceholderTheme, isNotNull);
@@ -208,6 +212,10 @@ void main() {
 
         const projectBuildStatusTheme = ProjectBuildStatusThemeData();
 
+        const userMenuButtonTheme = UserMenuButtonThemeData(
+          activeColor: Colors.white,
+        );
+
         const userMenuTheme = UserMenuThemeData(
           backgroundColor: Colors.white,
         );
@@ -258,6 +266,7 @@ void main() {
           performanceSparklineTheme: performanceSparklineTheme,
           projectBuildStatusTheme: projectBuildStatusTheme,
           toggleTheme: toggleTheme,
+          userMenuButtonTheme: userMenuButtonTheme,
           userMenuTheme: userMenuTheme,
           textPlaceholderTheme: textPlaceholderTheme,
           inputPlaceholderTheme: inputPlaceholderTheme,
@@ -303,6 +312,7 @@ void main() {
           equals(projectBuildStatusTheme),
         );
         expect(copiedTheme.toggleTheme, equals(toggleTheme));
+        expect(copiedTheme.userMenuButtonTheme, equals(userMenuButtonTheme));
         expect(copiedTheme.userMenuTheme, equals(userMenuTheme));
         expect(copiedTheme.textPlaceholderTheme, equals(textPlaceholderTheme));
         expect(
@@ -384,6 +394,10 @@ void main() {
           equals(copiedTheme.buildNumberScorecardTheme),
         );
         expect(themeData.toggleTheme, equals(copiedTheme.toggleTheme));
+        expect(
+          themeData.userMenuButtonTheme,
+          equals(copiedTheme.userMenuButtonTheme),
+        );
         expect(themeData.userMenuTheme, equals(copiedTheme.userMenuTheme));
         expect(
           themeData.textPlaceholderTheme,

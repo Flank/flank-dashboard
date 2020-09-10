@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -58,7 +57,7 @@ void main() {
 
         final finder = find.ancestor(
           of: find.byType(PlaceholderBar),
-          matching: find.byType(HandCursor),
+          matching: find.byType(MouseRegion),
         );
 
         expect(finder, findsNothing);
@@ -66,7 +65,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a hand cursor to the ColoredBar",
+      "applies a mouse region to the ColoredBar",
       (WidgetTester tester) async {
         const buildResult = BuildResultViewModel(
           value: 20,
@@ -79,7 +78,7 @@ void main() {
 
         final finder = find.ancestor(
           of: find.byType(ColoredBar),
-          matching: find.byType(HandCursor),
+          matching: find.byType(MouseRegion),
         );
 
         expect(finder, findsOneWidget);
