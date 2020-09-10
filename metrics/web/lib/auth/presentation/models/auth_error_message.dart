@@ -25,6 +25,8 @@ class AuthErrorMessage {
         return AuthStrings.tooManyRequestsErrorMessage;
       case AuthErrorCode.unknown:
         return AuthStrings.unknownErrorMessage;
+      case AuthErrorCode.googleSignInError:
+        return AuthStrings.googleSignInErrorOccurred;
       default:
         return null;
     }

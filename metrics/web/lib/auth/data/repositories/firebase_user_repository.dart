@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:metrics/auth/data/adapter/firebase_user_adapter.dart';
+import 'package:metrics/auth/data/converter/firebase_auth_error_code_converter.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
@@ -25,14 +26,21 @@ class FirebaseUserRepository implements UserRepository {
         password: password,
       );
     } catch (error) {
-      throw const AuthenticationException(code: AuthErrorCode.unknown);
+      final errorCode = error.code as String;
+      final authErrorCode = FirebaseAuthErrorCodeConverter.convert(errorCode);
+
+      throw AuthenticationException(code: authErrorCode);
     }
   }
 
   @override
   Future<void> signInWithGoogle() async {
+    Object googleSignInError;
     try {
-      final account = await _googleSignIn.signIn();
+      final account = await _googleSignIn.signIn().catchError((error) {
+        googleSignInError = error;
+      });
+
       final authentication = await account.authentication;
 
       final credential = GoogleAuthProvider.getCredential(
@@ -41,7 +49,16 @@ class FirebaseUserRepository implements UserRepository {
       );
       await _firebaseAuth.signInWithCredential(credential);
     } catch (error) {
-      throw const AuthenticationException(code: AuthErrorCode.unknown);
+      if (googleSignInError != null) {
+        throw const AuthenticationException(
+          code: AuthErrorCode.googleSignInError,
+        );
+      }
+
+      final errorCode = error.code as String;
+      final authErrorCode = FirebaseAuthErrorCodeConverter.convert(errorCode);
+
+      throw AuthenticationException(code: authErrorCode);
     }
   }
 
