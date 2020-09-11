@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
 import 'package:universal_html/html.dart' as html;
 
+/// A callback used for widget builder functions that depend on the hover status.
 typedef HoverWidgetBuilder = Widget Function(BuildContext, bool);
 
 /// A widget that rebuilds its child using the given builder function
