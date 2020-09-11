@@ -158,7 +158,7 @@ class TappableAreaTestbed extends StatelessWidget {
 
   /// A widget builder that builds the given widget differently depending on
   /// if the this area is hovered.
-  final Widget Function(BuildContext, bool) builder;
+  final HoverWidgetBuilder builder;
 
   /// Creates a new instance of the [TappableAreaTestbed].
   const TappableAreaTestbed({

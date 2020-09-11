@@ -3,6 +3,9 @@ import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
 import 'package:universal_html/html.dart' as html;
 
+/// A callback used for widget builder functions that depend on the hover status.
+typedef HoverWidgetBuilder = Widget Function(BuildContext, bool);
+
 /// A widget that rebuilds its child using the given builder function
 /// and applies the given cursor when this widget is hovered,
 /// applies the given callback when this widget is tapped.
@@ -15,7 +18,7 @@ class TappableArea extends StatefulWidget {
 
   /// A widget builder that builds the given widget differently depending on
   /// if the this area is hovered.
-  final Widget Function(BuildContext, bool) builder;
+  final HoverWidgetBuilder builder;
 
   /// Creates a new [TappableArea] instance.
   ///

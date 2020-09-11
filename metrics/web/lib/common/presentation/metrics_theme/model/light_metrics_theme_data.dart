@@ -40,7 +40,7 @@ class LightMetricsThemeData extends MetricsThemeData {
     borderSide: BorderSide(color: _focusedBorderColor),
   );
 
-  static const Color _dropdownHoverColor = Color(0xFF1d1d20);
+  static const Color _dropdownHoverColor = Color(0xFF878799);
   static const Color _focusedBorderColor = Colors.blue;
   static const Color _inactiveBackgroundColor = Color(0xFFEEEEEE);
   static const Color _inactiveColor = Color(0xFFBDBDBD);
@@ -54,6 +54,15 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
   static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color _hoverBorderColor = Color(0xffb6b6ba);
+  static const Color _activeBorderColor = Color(0xff6d6d75);
+  static const Color _inputColor = Color(0xfff5f8fa);
+  static const Color _inactiveTextColor = Color(0xff040d14);
+  static const Color _openedButtonInactiveColor = Color(0xfffafbfc);
+  static const TextStyle _defaultDropdownTextStyle = TextStyle(
+    fontSize: 16.0,
+    color: _inactiveTextColor,
+  );
 
   /// A [TextStyle] of the dialog title.
   static const TextStyle _dialogTitleTextStyle = TextStyle(
@@ -201,11 +210,21 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontSize: 16.0,
             ),
           ),
-          dropdownTheme: const DropdownThemeData(),
+          dropdownTheme: const DropdownThemeData(
+            backgroundColor: Colors.white,
+            openedButtonBackgroundColor: _openedButtonInactiveColor,
+            hoverBackgroundColor: _openedButtonInactiveColor,
+            hoverBorderColor: _hoverBorderColor,
+            openedButtonBorderColor: _activeBorderColor,
+            closedButtonBackgroundColor: _inputColor,
+            closedButtonBorderColor: _inputColor,
+            textStyle: _defaultDropdownTextStyle,
+          ),
           dropdownItemTheme: const DropdownItemThemeData(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.white,
             hoverColor: _dropdownHoverColor,
-            textStyle: TextStyle(fontSize: 16.0),
+            textStyle: _defaultDropdownTextStyle,
+            hoverTextStyle: TextStyle(fontSize: 16.0, color: Colors.white),
           ),
           loginTheme: const LoginThemeData(
             titleTextStyle: TextStyle(

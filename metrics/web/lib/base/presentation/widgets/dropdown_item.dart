@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 /// A widget that used with a [DropdownMenu] to display the dropdown
 /// items that can be selected.
 ///
 /// Changes it's background color on hover from [backgroundColor] to [hoverColor].
 class DropdownItem extends StatefulWidget {
-  /// A child widget to display.
-  final Widget child;
+  /// A builder function used to build the child widget depending on the hover
+  /// status of this widget.
+  final HoverWidgetBuilder builder;
 
   /// A width of this widget.
   final double width;
@@ -30,17 +32,17 @@ class DropdownItem extends StatefulWidget {
 
   /// Creates a widget that displays a dropdown item of the [DropdownMenu].
   ///
-  /// The [child] must not be `null`.
+  /// The [builder] must not be `null`.
   const DropdownItem({
     Key key,
-    @required this.child,
+    @required this.builder,
     this.width,
     this.height,
     this.alignment,
     this.padding,
     this.backgroundColor,
     this.hoverColor,
-  })  : assert(child != null),
+  })  : assert(builder != null),
         super(key: key);
 
   @override
@@ -48,31 +50,20 @@ class DropdownItem extends StatefulWidget {
 }
 
 class _DropdownItemState extends State<DropdownItem> {
-  /// Indicates whether this widget is hovered or not.
-  bool _isHovered = false;
-
   @override
   Widget build(BuildContext context) {
-    final color = _isHovered ? widget.hoverColor : widget.backgroundColor;
-
-    return HandCursor(
-      child: MouseRegion(
-        onEnter: (_) => _changeHover(true),
-        onExit: (_) => _changeHover(false),
-        child: Container(
+    return TappableArea(
+      mouseCursor: MouseCursor.click,
+      builder: (context, bool isHovered) {
+        return Container(
           width: widget.width,
           height: widget.height,
-          color: color,
+          color: isHovered ? widget.hoverColor : widget.backgroundColor,
           padding: widget.padding,
           alignment: widget.alignment,
-          child: widget.child,
-        ),
-      ),
+          child: widget.builder(context, isHovered),
+        );
+      },
     );
-  }
-
-  /// Changes [_isHovered] value to the given [value].
-  void _changeHover(bool value) {
-    setState(() => _isHovered = value);
   }
 }
