@@ -71,9 +71,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
 
   /// The default [TextStyle] for dropdown within the application.
-  static const _defaultDropdownTextStyle = TextStyle(
+  static const _defaultDropdownTextStyle = MetricsTextStyle(
     color: Colors.white,
     fontSize: 16.0,
+    lineHeightInPixels: 20.0,
   );
 
   /// A [TextStyle] of the dialog title.
@@ -108,14 +109,14 @@ class DarkMetricsThemeData extends MetricsThemeData {
             primaryColor: ColorConfig.primaryColor,
             titleStyle: MetricsTextStyle(
               color: Colors.white,
-              lineHeightInPixels: 24.0,
               fontSize: 22.0,
+              lineHeightInPixels: 26.0,
               fontWeight: FontWeight.w500,
             ),
             subtitleStyle: MetricsTextStyle(
               color: ColorConfig.secondaryTextColor,
-              lineHeightInPixels: 16.0,
               fontSize: 13.0,
+              lineHeightInPixels: 16.0,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -127,8 +128,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 hoverColor: _addProjectGroupCardHoverColor,
                 labelStyle: MetricsTextStyle(
                   color: ColorConfig.primaryColor,
-                  lineHeightInPixels: 24.0,
                   fontSize: 16.0,
+                  lineHeightInPixels: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -138,8 +139,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 iconColor: scaffoldColor,
                 labelStyle: MetricsTextStyle(
                   color: scaffoldColor,
-                  lineHeightInPixels: 24.0,
                   fontSize: 16.0,
+                  lineHeightInPixels: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -151,8 +152,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             titleTextStyle: _dialogTitleTextStyle,
             contentTextStyle: MetricsTextStyle(
               fontSize: 16.0,
-              color: Colors.white,
               lineHeightInPixels: 24.0,
+              color: Colors.white,
               fontWeight: FontWeight.w300,
               letterSpacing: 0.14,
             ),
@@ -163,13 +164,15 @@ class DarkMetricsThemeData extends MetricsThemeData {
             closeIconColor: Colors.white,
             contentBorderColor: _borderColor,
             titleTextStyle: _dialogTitleTextStyle,
-            uncheckedProjectTextStyle: TextStyle(
+            uncheckedProjectTextStyle: MetricsTextStyle(
               color: Colors.white,
               fontSize: 14.0,
+              lineHeightInPixels: 20.0,
             ),
-            checkedProjectTextStyle: TextStyle(
+            checkedProjectTextStyle: MetricsTextStyle(
               color: Colors.white,
               fontSize: 14.0,
+              lineHeightInPixels: 20.0,
               fontWeight: FontWeight.w500,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
@@ -225,9 +228,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
           textFieldTheme: const TextFieldThemeData(
             focusColor: Colors.black,
             hoverBorderColor: ColorConfig.hoverBorderColor,
-            textStyle: TextStyle(
+            textStyle: MetricsTextStyle(
               color: Colors.white,
               fontSize: 16.0,
+              lineHeightInPixels: 20.0,
             ),
           ),
           dropdownTheme: const DropdownThemeData(
@@ -276,7 +280,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
             projectMetricsTileTheme: ProjectMetricsTileThemeData(
               backgroundColor: scaffoldColor,
               borderColor: _tileBorderColor,
-              textStyle: TextStyle(fontSize: 24.0),
+              textStyle: MetricsTextStyle(
+                fontSize: 24.0,
+                lineHeightInPixels: 28.0,
+              ),
             ),
             projectMetricsTilePlaceholderTheme: ShimmerPlaceholderThemeData(
               backgroundColor: _tileLoadingBackgroundColor,
@@ -296,10 +303,11 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
           ),
           performanceSparklineTheme: const SparklineThemeData(
-            textStyle: TextStyle(
+            textStyle: MetricsTextStyle(
               color: _sparklineTextColor,
               fontWeight: FontWeight.bold,
               fontSize: 22.0,
+              lineHeightInPixels: 26.0,
             ),
             strokeColor: _sparklineStrokeColor,
             fillColor: _sparklineFillColor,

@@ -92,12 +92,7 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
     _isHovered = false;
     _isFocused = false;
     _defaultDecoration = InputDecoration(
-      prefixIcon: widget.prefixIcon != null
-          ? Padding(
-              padding: const EdgeInsets.only(right: 2.0),
-              child: widget.prefixIcon,
-            )
-          : widget.prefixIcon,
+      prefixIcon: widget.prefixIcon,
       suffixIcon: widget.suffixIcon,
       hintText: widget.hint,
     );
