@@ -19,6 +19,7 @@ import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../test_utils/test_injection_container.dart';
+import '../../../test_utils/theme_notifier_mock.dart';
 
 void main() {
   group('MetricsUserMenu', () {
@@ -312,7 +313,3 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
     );
   }
 }
-
-class ThemeNotifierMock extends Mock
-    with ChangeNotifier
-    implements ThemeNotifier {}
