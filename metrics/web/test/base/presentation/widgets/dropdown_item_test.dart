@@ -40,6 +40,9 @@ void main() {
       "displays the proper widget when the dropdown item is hovered",
       (tester) async {
         await tester.pumpWidget(_DropdownItemTestbed(builder: _builder));
+        final mouseRegionFinder = find.byWidgetPredicate(
+              (widget) => widget is MouseRegion && widget.child is GestureDetector,
+        );
 
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
         const pointerEnterEvent = PointerEnterEvent();
