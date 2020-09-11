@@ -24,7 +24,7 @@ service cloud.firestore {
     }
   }
 
-  /// Checks if a request is from a logged-in user.
+  /// Checks if a user request is authorized.
   function isAccessAuthorized(database) {
     return request.auth.uid != null && isEmailValid(database)
   }
