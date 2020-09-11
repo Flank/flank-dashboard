@@ -16,7 +16,7 @@ class MetricsThemeImage extends StatelessWidget {
   /// A height of the displayed asset.
   final double height;
 
-  /// A parameter that controls hot to inscribe an asset into the space
+  /// A parameter that controls how to inscribe an asset into the space
   /// allocated during layout.
   final BoxFit fit;
 
