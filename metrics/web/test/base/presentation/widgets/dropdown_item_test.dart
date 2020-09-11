@@ -32,7 +32,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the proper text when the widget is not hovered",
+      "displays the proper widget when the dropdown item is not hovered",
       (tester) async {
         await tester.pumpWidget(_DropdownItemTestbed(builder: _builder));
 
@@ -41,7 +41,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the proper text when the widget is hovered",
+      "displays the proper widget when the dropdown item is hovered",
       (tester) async {
         await tester.pumpWidget(_DropdownItemTestbed(builder: _builder));
 
