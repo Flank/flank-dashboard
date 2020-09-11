@@ -5,25 +5,30 @@ admin.initializeApp(functions.config().firebase);
 const settings = { timestampsInSnapshots: true };
 admin.firestore().settings(settings);
 
-/// List of available build statuses.
+/**
+ * A list of available build statuses.
+ */
 const buildStatuses = ['BuildStatus.successful', 'BuildStatus.cancelled', 'BuildStatus.failed'];
 
 /* eslint-disable no-await-in-loop */
 
-/// Creates seed builds for metrics projects.
-///
-/// This HTTP function takes such query params: 
-/// buildsCount (required) - number of builds to be generated.
-/// projectId (required) - the project identifier for which builds will be generated.
-/// startDate (optional) - builds will be generated with startedAt property
-/// in range from startDate to startDate - 7 days. Defaults to current date.
-/// delay (optional) - is the delay in milliseconds between adding builds to project
+
+/**
+ * Creates seed builds for metrics projects.
+ *
+ * This HTTP function takes such query params:
+ * @param {number} buildsCount required - number of builds to be generated.
+ * @param {number} projectId (required) - the project identifier for which builds will be generated.
+ * @param {number} startDate (optional) - builds will be generated with startedAt property
+ * in range from startDate to startDate - 7 days. Defaults to current date.
+ * @param {number} delay (optional) - is the delay in milliseconds between adding builds to project
+ */
 exports.seedData = functions.https.onRequest(async (req, resp) => {
     /// Change to enable this function.
     const inactive = true;
 
-    if (inactive){
-     return resp.status(200).send('done');
+    if (inactive) {
+        return resp.status(200).send('done');
     }
 
     const buildsCount = req.query['buildsCount'];
@@ -72,12 +77,44 @@ exports.seedData = functions.https.onRequest(async (req, resp) => {
 }
 );
 
-/// Creates random Date in the range from start to end.
+/**
+ * Checks whether the email domain is in the allowed domains list.
+ *
+ * @param {Object} data - a request object that accepts such fields:
+ * - `emailDomain` - the email domain to validate.
+ *
+ * @return {Object} containing such fields:
+ * - `isValid` - indicates whether the email domain from the request is a valid or not.
+ */
+exports.validateEmailDomain = functions.https.onCall(async (data, context) => {
+    let requestData = data || {};
+    let userEmailDomain = requestData.emailDomain || '';
+    let isValid = false;
+
+    if (userEmailDomain) {
+        let allowedDomainSnapshot = await admin.firestore()
+            .collection('allowed_email_domains')
+            .doc(userEmailDomain)
+            .get();
+
+        isValid = allowedDomainSnapshot.exists;
+    }
+
+    return {
+        "isValid": isValid,
+    }
+});
+
+/**
+ * Creates random Date in the range from start to end.
+ */
 function randomDate(start, end) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
 
-/// Creates random integer in the range from start to end.
+/**
+ * Creates random integer in the range from start to end.
+ */
 function randomInt(from, to) {
     return Math.floor(from + Math.random() * (to - from));
 }
