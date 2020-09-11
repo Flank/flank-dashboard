@@ -88,13 +88,20 @@ exports.seedData = functions.https.onRequest(async (req, resp) => {
  */
 exports.validateEmailDomain = functions.https.onCall(async (data, context) => {
     let requestData = data || {};
-
     let userEmailDomain = requestData.emailDomain || '';
-    let allowedDomainsSnapshot = await admin.firestore().collection('allowed_email_domains').get();
-    let allowedEmailDomains = allowedDomainsSnapshot.docs.map(document => document.id);
+    let isValid = false;
+
+    if (userEmailDomain) {
+        let allowedDomainSnapshot = await admin.firestore()
+            .collection('allowed_email_domains')
+            .doc(userEmailDomain)
+            .get();
+
+        isValid = allowedDomainSnapshot.exists;
+    }
 
     return {
-        "isValid": allowedEmailDomains.includes(userEmailDomain),
+        "isValid": isValid,
     }
 });
 
