@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// A view model that represents the data of the performance metric to display.
+/// A view model that represents the data of the performance metrics to display.
 class PerformanceSparklineViewModel extends Equatable {
   /// A list of points representing the performance of the project builds.
   final UnmodifiableListView<Point<int>> performance;

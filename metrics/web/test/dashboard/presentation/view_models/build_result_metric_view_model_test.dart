@@ -1,15 +1,15 @@
 import 'package:collection/collection.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metrics_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
 void main() {
-  group("BuildResultMetricViewModel", () {
+  group("BuildResultMetricsViewModel", () {
     test("throws an AssertionError if the given buildResults is null", () {
       expect(
-        () => BuildResultMetricViewModel(
+        () => BuildResultMetricsViewModel(
           buildResults: null,
         ),
         MatcherUtil.throwsAssertionError,
@@ -20,7 +20,7 @@ void main() {
       "throws an AssertionError if the given numberOfBuildsToDisplay is null",
       () {
         expect(
-          () => BuildResultMetricViewModel(
+          () => BuildResultMetricsViewModel(
             buildResults: UnmodifiableListView([]),
             numberOfBuildsToDisplay: null,
           ),
@@ -30,29 +30,29 @@ void main() {
     );
 
     test(".buildResults is an UnmodifiableListView", () {
-      final buildResultMetric = BuildResultMetricViewModel(
+      final buildResultMetrics = BuildResultMetricsViewModel(
         buildResults: UnmodifiableListView([]),
       );
 
-      expect(buildResultMetric.buildResults, isA<UnmodifiableListView>());
+      expect(buildResultMetrics.buildResults, isA<UnmodifiableListView>());
     });
 
     test(
-      "equals to another BuildResultMetricViewModel with the same parameters",
+      "equals to another BuildResultMetricsViewModel with the same parameters",
       () {
         const buildResults = <BuildResultViewModel>[];
         const numberOfBuildsToDisplay = 10;
-        final expected = BuildResultMetricViewModel(
+        final expected = BuildResultMetricsViewModel(
           buildResults: UnmodifiableListView(buildResults),
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
         );
 
-        final buildResultMetric = BuildResultMetricViewModel(
+        final buildResultMetrics = BuildResultMetricsViewModel(
           buildResults: UnmodifiableListView(buildResults),
           numberOfBuildsToDisplay: numberOfBuildsToDisplay,
         );
 
-        expect(buildResultMetric, equals(expected));
+        expect(buildResultMetrics, equals(expected));
       },
     );
   });

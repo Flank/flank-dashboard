@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metrics_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
@@ -21,7 +21,7 @@ void main() {
     final performance = PerformanceSparklineViewModel(
       performance: UnmodifiableListView([]),
     );
-    final buildResult = BuildResultMetricViewModel(
+    final buildResult = BuildResultMetricsViewModel(
       buildResults: UnmodifiableListView([]),
     );
     final buildStatus = ProjectBuildStatusViewModel(
@@ -76,7 +76,7 @@ void main() {
           projectName: projectName,
           coverage: coverage,
           stability: stability,
-          buildNumberMetric: buildNumber,
+          buildNumberMetrics: buildNumber,
           buildResultMetrics: buildResult,
           performanceSparkline: performance,
           buildStatus: buildStatus,
@@ -87,7 +87,7 @@ void main() {
           projectName: projectName,
           coverage: coverage,
           stability: stability,
-          buildNumberMetric: buildNumber,
+          buildNumberMetrics: buildNumber,
           buildResultMetrics: buildResult,
           performanceSparkline: performance,
           buildStatus: buildStatus,
@@ -105,7 +105,7 @@ void main() {
           projectName: projectName,
           coverage: coverage,
           stability: stability,
-          buildNumberMetric: buildNumber,
+          buildNumberMetrics: buildNumber,
           buildResultMetrics: buildResult,
           performanceSparkline: performance,
           buildStatus: buildStatus,
@@ -132,8 +132,8 @@ void main() {
             value: Duration(minutes: 30),
             performance: UnmodifiableListView([]),
           ),
-          buildNumberMetric: BuildNumberScorecardViewModel(numberOfBuilds: 1),
-          buildResultMetrics: BuildResultMetricViewModel(
+          buildNumberMetrics: BuildNumberScorecardViewModel(numberOfBuilds: 1),
+          buildResultMetrics: BuildResultMetricsViewModel(
             buildResults: UnmodifiableListView([]),
             numberOfBuildsToDisplay: 1,
           ),
@@ -146,7 +146,7 @@ void main() {
           stability: stability,
           coverage: coverage,
           performanceSparkline: performance,
-          buildNumberMetric: buildNumber,
+          buildNumberMetrics: buildNumber,
           buildResultMetrics: buildResult,
           buildStatus: buildStatus,
         );
@@ -168,7 +168,7 @@ void main() {
           equals(stability),
         );
         expect(
-          copiedMetricsTileViewModel.buildNumberMetric,
+          copiedMetricsTileViewModel.buildNumberMetrics,
           equals(buildNumber),
         );
         expect(

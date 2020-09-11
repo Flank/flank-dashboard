@@ -4,7 +4,7 @@ import 'package:metrics/dashboard/presentation/view_models/stability_view_model.
 import 'package:metrics/dashboard/presentation/widgets/strategy/metrics_value_style_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/styled_circle_percentage.dart';
 
-/// A [CirclePercentage] widget that displays the stability metric
+/// A [CirclePercentage] widget that displays the stability metrics
 /// and applies the [MetricsValueStyleStrategy].
 class StabilityCirclePercentage extends StatelessWidget {
   /// A [StabilityViewModel] to display.

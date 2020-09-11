@@ -1,31 +1,31 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metrics.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("ProjectBuildStatusMetric", () {
+  group("ProjectBuildStatusMetrics", () {
     test("successfuly creates an instance with the given build status", () {
       const expectedStatus = BuildStatus.failed;
 
-      const buildStatus = ProjectBuildStatusMetric(status: expectedStatus);
+      const buildStatus = ProjectBuildStatusMetrics(status: expectedStatus);
 
       expect(buildStatus.status, equals(expectedStatus));
     });
 
     test(
-      "equals to another project build status metric with the same status",
+      "equals to another project build status metrics with the same status",
       () {
         const status = BuildStatus.successful;
-        const expectedStatusMetric = ProjectBuildStatusMetric(
+        const expectedStatusMetrics = ProjectBuildStatusMetrics(
           status: status,
         );
 
-        const actualStatusMetric = ProjectBuildStatusMetric(
+        const actualStatusMetrics = ProjectBuildStatusMetrics(
           status: status,
         );
 
-        expect(actualStatusMetric, equals(expectedStatusMetric));
+        expect(actualStatusMetrics, equals(expectedStatusMetrics));
       },
     );
   });

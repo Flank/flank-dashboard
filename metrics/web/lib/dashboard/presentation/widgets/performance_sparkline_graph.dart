@@ -5,7 +5,7 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 
-/// A [SparklineGraph] that displays the performance metric.
+/// A [SparklineGraph] that displays the performance metrics.
 class PerformanceSparklineGraph extends StatelessWidget {
   /// A [PerformanceSparklineViewModel] with data to display.
   final PerformanceSparklineViewModel performanceSparkline;

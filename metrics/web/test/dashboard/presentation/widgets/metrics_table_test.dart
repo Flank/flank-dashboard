@@ -154,7 +154,7 @@ void main() {
         });
         await tester.pumpAndSettle();
 
-        final performanceMetricWidgetCenter = tester.getCenter(
+        final performanceMetricsWidgetCenter = tester.getCenter(
           find.byType(PerformanceSparklineGraph),
         );
 
@@ -163,7 +163,7 @@ void main() {
         );
 
         expect(
-          performanceMetricWidgetCenter.dx,
+          performanceMetricsWidgetCenter.dx,
           equals(performanceTitleCenter.dx),
         );
       },
@@ -177,7 +177,7 @@ void main() {
         });
         await tester.pumpAndSettle();
 
-        final buildNumberMetricWidgetCenter = tester.getCenter(
+        final buildNumberMetricsWidgetCenter = tester.getCenter(
           find.byType(BuildNumberScorecard),
         );
 
@@ -186,7 +186,7 @@ void main() {
         );
 
         expect(
-          buildNumberMetricWidgetCenter.dx,
+          buildNumberMetricsWidgetCenter.dx,
           equals(buildNumberTitleCenter.dx),
         );
       },
@@ -200,7 +200,7 @@ void main() {
         });
         await tester.pumpAndSettle();
 
-        final stabilityMetricWidgetCenter = tester.getCenter(
+        final stabilityMetricsWidgetCenter = tester.getCenter(
           find.byType(StabilityCirclePercentage),
         );
 
@@ -209,7 +209,7 @@ void main() {
         );
 
         expect(
-          stabilityMetricWidgetCenter.dx,
+          stabilityMetricsWidgetCenter.dx,
           equals(stabilityTitleCenter.dx),
         );
       },
@@ -223,7 +223,7 @@ void main() {
         });
         await tester.pumpAndSettle();
 
-        final coverageMetricWidgetCenter = tester.getCenter(
+        final coverageMetricsWidgetCenter = tester.getCenter(
           find.byType(CoverageCirclePercentage),
         );
 
@@ -232,7 +232,7 @@ void main() {
         );
 
         expect(
-          coverageMetricWidgetCenter.dx,
+          coverageMetricsWidgetCenter.dx,
           equals(coverageTitleCenter.dx),
         );
       },

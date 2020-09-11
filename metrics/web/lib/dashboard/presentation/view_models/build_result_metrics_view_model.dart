@@ -4,8 +4,8 @@ import 'package:meta/meta.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 
-/// A view model that represents the build result metric.
-class BuildResultMetricViewModel extends Equatable {
+/// A view model that represents the build result metrics.
+class BuildResultMetricsViewModel extends Equatable {
   /// A list of [BuildResultViewModel]s.
   final UnmodifiableListView<BuildResultViewModel> buildResults;
 
@@ -15,14 +15,14 @@ class BuildResultMetricViewModel extends Equatable {
   @override
   List<Object> get props => [buildResults];
 
-  /// Creates the [BuildResultMetricViewModel] with the given [buildResults].
+  /// Creates the [BuildResultMetricsViewModel] with the given [buildResults].
   ///
   /// The [numberOfBuildsToDisplay] default value is
   /// [ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics].
   ///
   /// The [buildResults] must not be `null`.
   /// The [numberOfBuildsToDisplay] must not be `null`.
-  const BuildResultMetricViewModel({
+  const BuildResultMetricsViewModel({
     @required this.buildResults,
     this.numberOfBuildsToDisplay =
         ReceiveProjectMetricsUpdates.buildsToLoadForChartMetrics,

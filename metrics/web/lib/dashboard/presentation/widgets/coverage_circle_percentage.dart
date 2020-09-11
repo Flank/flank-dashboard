@@ -4,7 +4,7 @@ import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.d
 import 'package:metrics/dashboard/presentation/widgets/strategy/metrics_value_style_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/styled_circle_percentage.dart';
 
-/// A [CirclePercentage] widget that displays the coverage metric
+/// A [CirclePercentage] widget that displays the coverage metrics
 /// and applies the [MetricsValueStyleStrategy].
 class CoverageCirclePercentage extends StatelessWidget {
   /// A [CoverageViewModel] to display.

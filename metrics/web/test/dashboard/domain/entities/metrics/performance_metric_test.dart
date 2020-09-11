@@ -2,11 +2,11 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/performance_metrics.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("PerformanceMetric", () {
+  group("PerformanceMetrics", () {
     const averageBuildDuration = Duration(seconds: 2);
     final buildsPerformance = DateTimeSet.from(
       [
@@ -20,36 +20,36 @@ void main() {
     test(
       "creates an instance with the given data",
       () {
-        final performanceMetric = PerformanceMetric(
+        final performanceMetrics = PerformanceMetrics(
           averageBuildDuration: averageBuildDuration,
           buildsPerformance: buildsPerformance,
         );
 
         expect(
-          performanceMetric.averageBuildDuration,
+          performanceMetrics.averageBuildDuration,
           equals(averageBuildDuration),
         );
-        expect(performanceMetric.buildsPerformance, equals(buildsPerformance));
+        expect(performanceMetrics.buildsPerformance, equals(buildsPerformance));
       },
     );
 
     test("has an averageBuildDuration of 0 if no duration is provided", () {
-      expect(PerformanceMetric().averageBuildDuration, equals(Duration.zero));
+      expect(PerformanceMetrics().averageBuildDuration, equals(Duration.zero));
     });
 
     test(
       "two instances with equal fields are identical",
       () {
-        final firstPerformanceMetric = PerformanceMetric(
+        final firstPerformanceMetrics = PerformanceMetrics(
           averageBuildDuration: averageBuildDuration,
           buildsPerformance: buildsPerformance,
         );
-        final secondPerformanceMetric = PerformanceMetric(
+        final secondPerformanceMetrics = PerformanceMetrics(
           averageBuildDuration: averageBuildDuration,
           buildsPerformance: buildsPerformance,
         );
 
-        expect(firstPerformanceMetric, equals(secondPerformanceMetric));
+        expect(firstPerformanceMetrics, equals(secondPerformanceMetrics));
       },
     );
   });

@@ -4,17 +4,17 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_number_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_result_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/performance_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metrics.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metrics_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
@@ -51,7 +51,7 @@ void main() {
 
       void initializationListener() {
         if (projectMetricsNotifier.projectsMetricsTileViewModels.every(
-                (projectMetric) => projectMetric.buildNumberMetric != null) &&
+                (projectMetric) => projectMetric.buildNumberMetrics != null) &&
             !_completer.isCompleted) {
           _completer.complete();
         }
@@ -71,7 +71,7 @@ void main() {
     });
 
     test(
-      "throws an AssertionError if receive project metric updates use case is null",
+      "throws an AssertionError if receive project metrics updates use case is null",
       () {
         expect(
           () => ProjectMetricsNotifier(null),
@@ -88,7 +88,7 @@ void main() {
         );
         const projects = [ProjectModel(id: 'id', name: 'name')];
 
-        final emptyBuildResultMetric = BuildResultMetricViewModel(
+        final emptyBuildResultMetrics = BuildResultMetricsViewModel(
           buildResults: UnmodifiableListView([]),
         );
 
@@ -107,7 +107,7 @@ void main() {
           final performanceMetrics = projectMetric.performanceSparkline;
           final stabilityMetric = projectMetric.stability;
 
-          hasNullMetrics = buildResultMetrics == emptyBuildResultMetric &&
+          hasNullMetrics = buildResultMetrics == emptyBuildResultMetrics &&
               performanceMetrics != null &&
               performanceMetrics.performance.isEmpty &&
               stabilityMetric != null;
@@ -154,7 +154,7 @@ void main() {
 
     test("loads the build status data", () async {
       final expectedProjectBuildStatus =
-          expectedProjectMetrics.projectBuildStatusMetric;
+          expectedProjectMetrics.projectBuildStatusMetrics;
 
       final projectMetrics =
           projectMetricsNotifier.projectsMetricsTileViewModels.first;
@@ -194,7 +194,7 @@ void main() {
           projectMetricsNotifier.projectsMetricsTileViewModels.first;
 
       expect(
-        firstProjectMetrics.buildNumberMetric.numberOfBuilds,
+        firstProjectMetrics.buildNumberMetrics.numberOfBuilds,
         expectedBuildNumberMetrics.numberOfBuilds,
       );
     });
@@ -678,7 +678,7 @@ class _ReceiveProjectMetricsUpdatesStub
   /// A test [DashboardProjectMetrics] used in tests.
   static final _projectMetrics = DashboardProjectMetrics(
     projectId: 'id',
-    performanceMetrics: PerformanceMetric(
+    performanceMetrics: PerformanceMetrics(
       buildsPerformance: DateTimeSet.from([
         BuildPerformance(
           date: DateTime.now(),
@@ -687,10 +687,10 @@ class _ReceiveProjectMetricsUpdatesStub
       ]),
       averageBuildDuration: const Duration(minutes: 3),
     ),
-    buildNumberMetrics: const BuildNumberMetric(
+    buildNumberMetrics: const BuildNumberMetrics(
       numberOfBuilds: 1,
     ),
-    buildResultMetrics: BuildResultMetric(
+    buildResultMetrics: BuildResultMetrics(
       buildResults: [
         BuildResult(
           date: DateTime.now(),
@@ -701,7 +701,7 @@ class _ReceiveProjectMetricsUpdatesStub
     ),
     coverage: Percent(0.2),
     stability: Percent(0.5),
-    projectBuildStatusMetric: const ProjectBuildStatusMetric(
+    projectBuildStatusMetrics: const ProjectBuildStatusMetrics(
       status: BuildStatus.successful,
     ),
   );

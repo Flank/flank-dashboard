@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
@@ -51,7 +51,7 @@ void main() {
       (WidgetTester tester) async {
         final materialAppKey = GlobalKey();
         const metricsThemeData = MetricsThemeData(
-          metricWidgetTheme: MetricWidgetThemeData(
+          metricsWidgetTheme: MetricsWidgetThemeData(
             primaryColor: Colors.grey,
           ),
         );

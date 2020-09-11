@@ -6,31 +6,31 @@ import 'package:metrics/dashboard/presentation/view_models/build_number_scorecar
 import 'package:metrics/dashboard/presentation/widgets/no_data_placeholder.dart';
 import 'package:metrics/base/presentation/widgets/scorecard.dart';
 
-/// Widget that displays the [Scorecard] with the build number metric.
+/// Widget that displays the [Scorecard] with the build number metrics.
 ///
-/// Applies the text styles from the [MetricsThemeData.metricWidgetTheme].
-/// If the [buildNumberMetric] is either `null` or equal to 0, displays the [NoDataPlaceholder].
+/// Applies the text styles from the [MetricsThemeData.metricsWidgetTheme].
+/// If the [buildNumberMetrics] is either `null` or equal to 0, displays the [NoDataPlaceholder].
 class BuildNumberScorecard extends StatelessWidget {
-  /// The [BuildNumberMetricViewModel] with data to display.
-  final BuildNumberScorecardViewModel buildNumberMetric;
+  /// The [BuildNumberMetricsViewModel] with data to display.
+  final BuildNumberScorecardViewModel buildNumberMetrics;
 
-  /// Creates the [BuildNumberScorecard] with the given [buildNumberMetric].
+  /// Creates the [BuildNumberScorecard] with the given [buildNumberMetrics].
   const BuildNumberScorecard({
     Key key,
-    this.buildNumberMetric,
+    this.buildNumberMetrics,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final widgetTheme = MetricsTheme.of(context).buildNumberScorecardTheme;
 
-    if (buildNumberMetric?.numberOfBuilds == null ||
-        buildNumberMetric?.numberOfBuilds == 0) {
+    if (buildNumberMetrics?.numberOfBuilds == null ||
+        buildNumberMetrics?.numberOfBuilds == 0) {
       return const NoDataPlaceholder();
     }
 
     return Scorecard(
-      value: '${buildNumberMetric.numberOfBuilds}',
+      value: '${buildNumberMetrics.numberOfBuilds}',
       valueStyle: widgetTheme.valueTextStyle,
       description: DashboardStrings.perWeek,
       descriptionStyle: widgetTheme.descriptionTextStyle,
