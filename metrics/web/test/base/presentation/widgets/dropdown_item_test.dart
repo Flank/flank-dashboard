@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_item.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 void main() {
   group("DropdownItem", () {
@@ -14,32 +15,43 @@ void main() {
       matching: find.byType(Container),
     );
 
+    const hoveredChild = Text("hovered");
+    const child = Text("hovered");
+
+    Widget _builder(BuildContext context, bool isHovered) {
+      return isHovered ? hoveredChild : child;
+    }
+
     testWidgets(
-      "throws an AssertionError if the given child widget is null",
+      "throws an AssertionError if the given builder is null",
       (tester) async {
-        await tester.pumpWidget(const _DropdownItemTestbed(child: null));
+        await tester.pumpWidget(const _DropdownItemTestbed(builder: null));
 
         expect(tester.takeException(), isAssertionError);
       },
     );
 
     testWidgets(
-      "throws an AssertionError if the given hover child widget is null",
+      "displays the proper child when the widget is not hovered",
       (tester) async {
-        await tester.pumpWidget(const _DropdownItemTestbed(hoverChild: null));
-
-        expect(tester.takeException(), isAssertionError);
-      },
-    );
-
-    testWidgets(
-      "displays the given child widget",
-      (tester) async {
-        const child = Text('test');
-
-        await tester.pumpWidget(const _DropdownItemTestbed(child: child));
+        await tester.pumpWidget(_DropdownItemTestbed(builder: _builder));
 
         expect(find.byWidget(child), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "rebuilds and displays the proper child when the widget is hovered",
+      (tester) async {
+        await tester.pumpWidget(_DropdownItemTestbed(builder: _builder));
+
+        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+        const pointerEnterEvent = PointerEnterEvent();
+        mouseRegion.onEnter(pointerEnterEvent);
+
+        await tester.pump();
+
+        expect(find.byWidget(hoveredChild), findsOneWidget);
       },
     );
 
@@ -50,7 +62,7 @@ void main() {
         const expectedConstraints = BoxConstraints.tightFor(width: width);
 
         await tester.pumpWidget(
-          const _DropdownItemTestbed(width: width),
+          _DropdownItemTestbed(builder: _builder, width: width),
         );
 
         final container = tester.widget<Container>(containerFinder);
@@ -66,7 +78,7 @@ void main() {
         const expectedConstraints = BoxConstraints.tightFor(height: height);
 
         await tester.pumpWidget(
-          const _DropdownItemTestbed(height: height),
+          _DropdownItemTestbed(builder: _builder, height: height),
         );
 
         final container = tester.widget<Container>(containerFinder);
@@ -81,7 +93,8 @@ void main() {
         const expectedAlignment = Alignment.bottomRight;
 
         await tester.pumpWidget(
-          const _DropdownItemTestbed(
+          _DropdownItemTestbed(
+            builder: _builder,
             alignment: expectedAlignment,
           ),
         );
@@ -98,7 +111,8 @@ void main() {
         const expectedPadding = EdgeInsets.all(10.0);
 
         await tester.pumpWidget(
-          const _DropdownItemTestbed(
+          _DropdownItemTestbed(
+            builder: _builder,
             padding: expectedPadding,
           ),
         );
@@ -115,7 +129,8 @@ void main() {
         const backgroundColor = Colors.red;
         const expectedDecoration = BoxDecoration(color: backgroundColor);
 
-        await tester.pumpWidget(const _DropdownItemTestbed(
+        await tester.pumpWidget(_DropdownItemTestbed(
+          builder: _builder,
           backgroundColor: backgroundColor,
         ));
 
@@ -131,7 +146,8 @@ void main() {
         const hoverColor = Colors.red;
         const expectedDecoration = BoxDecoration(color: hoverColor);
 
-        await tester.pumpWidget(const _DropdownItemTestbed(
+        await tester.pumpWidget(_DropdownItemTestbed(
+          builder: _builder,
           hoverColor: hoverColor,
         ));
 
@@ -146,37 +162,13 @@ void main() {
         expect(container.decoration, equals(expectedDecoration));
       },
     );
-
-    testWidgets(
-      "applies the given hover child if is hovered",
-      (tester) async {
-        const expectedHoverChild = Text("test hover child");
-
-        await tester.pumpWidget(const _DropdownItemTestbed(
-          hoverChild: expectedHoverChild,
-        ));
-
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        const pointerEnterEvent = PointerEnterEvent();
-        mouseRegion.onEnter(pointerEnterEvent);
-
-        await tester.pump();
-
-        final container = tester.widget<Container>(containerFinder);
-
-        expect(container.child, equals(expectedHoverChild));
-      },
-    );
   });
 }
 
 /// A testbed class required to test the [DropdownItem] widget.
 class _DropdownItemTestbed extends StatelessWidget {
-  /// The child widget to display.
-  final Widget child;
-
-  /// A child widget to display when this [DropdownItem] is hovered.
-  final Widget hoverChild;
+  /// A builder that displays the child differently when the [DropdownItem] is hovered.
+  final HoverWidgetBuilder builder;
 
   /// A [Color] of the [DropdownItem] if it is not hovered.
   final Color backgroundColor;
@@ -197,12 +189,9 @@ class _DropdownItemTestbed extends StatelessWidget {
   final Alignment alignment;
 
   /// Creates an instance of this testbed.
-  ///
-  /// The [child] defaults to [SizedBox].
   const _DropdownItemTestbed({
     Key key,
-    this.child = const SizedBox(),
-    this.hoverChild = const SizedBox(),
+    this.builder,
     this.backgroundColor,
     this.hoverColor,
     this.width,
@@ -222,8 +211,7 @@ class _DropdownItemTestbed extends StatelessWidget {
           height: height,
           padding: padding,
           alignment: alignment,
-          hoverChild: hoverChild,
-          child: child,
+          builder: builder,
         ),
       ),
     );

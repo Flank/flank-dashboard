@@ -8,11 +8,8 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 ///
 /// Changes it's background color on hover from [backgroundColor] to [hoverColor].
 class DropdownItem extends StatefulWidget {
-  /// A child widget to display.
-  final Widget child;
-
-  /// A child widget to display when this [DropdownItem] is hovered.
-  final Widget hoverChild;
+  /// A builder that displays the child differently when the [DropdownItem] is hovered.
+  final HoverWidgetBuilder builder;
 
   /// A width of this widget.
   final double width;
@@ -34,19 +31,17 @@ class DropdownItem extends StatefulWidget {
 
   /// Creates a widget that displays a dropdown item of the [DropdownMenu].
   ///
-  /// The [child] must not be `null`.
+  /// The [builder] must not be `null`.
   const DropdownItem({
     Key key,
-    @required this.child,
-    @required this.hoverChild,
+    @required this.builder,
     this.width,
     this.height,
     this.alignment,
     this.padding,
     this.backgroundColor,
     this.hoverColor,
-  })  : assert(child != null),
-        assert(hoverChild != null),
+  })  : assert(builder != null),
         super(key: key);
 
   @override
@@ -65,7 +60,7 @@ class _DropdownItemState extends State<DropdownItem> {
           color: isHovered ? widget.hoverColor : widget.backgroundColor,
           padding: widget.padding,
           alignment: widget.alignment,
-          child: isHovered ? widget.hoverChild : widget.child,
+          child: widget.builder(context, isHovered),
         );
       },
     );
