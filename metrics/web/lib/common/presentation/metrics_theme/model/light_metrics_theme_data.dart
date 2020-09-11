@@ -58,6 +58,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _activeBorderColor = Color(0xff6d6d75);
   static const Color _inputColor = Color(0xfff5f8fa);
   static const Color _inactiveTextColor = Color(0xff040d14);
+  static const Color _openedButtonInactiveColor = Color(0xfffafbfc);
   static const TextStyle _defaultDropdownTextStyle = TextStyle(
     fontSize: 16.0,
     color: _inactiveTextColor,
@@ -211,8 +212,8 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           dropdownTheme: const DropdownThemeData(
             backgroundColor: Colors.white,
-            openedButtonBackgroundColor: Colors.white,
-            hoverBackgroundColor: Colors.white,
+            openedButtonBackgroundColor: _openedButtonInactiveColor,
+            hoverBackgroundColor: _openedButtonInactiveColor,
             hoverBorderColor: _hoverBorderColor,
             openedButtonBorderColor: _activeBorderColor,
             closedButtonBackgroundColor: _inputColor,
