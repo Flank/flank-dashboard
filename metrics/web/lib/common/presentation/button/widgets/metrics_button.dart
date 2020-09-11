@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
 /// An abstract widget that displays a metrics styled button and
@@ -30,26 +30,24 @@ abstract class MetricsButton extends StatelessWidget {
     final inactiveStyle = attentionLevel.inactive;
     final style = selectStyle(attentionLevel);
 
-    return
-     RaisedButton(
-        color: style.color,
-        hoverColor: style.hoverColor,
-        disabledColor: inactiveStyle.color,
-        elevation: style.elevation,
-        hoverElevation: style.elevation,
-        focusElevation: style.elevation,
-        highlightElevation: style.elevation,
-        disabledElevation: inactiveStyle.elevation,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
-        ),
-        onPressed: onPressed,
-        child: Text(
-          label,
-          style:
-              onPressed == null ? inactiveStyle.labelStyle : style.labelStyle,
-        ),
-      );
+    return RaisedButton(
+      color: style.color,
+      hoverColor: style.hoverColor,
+      disabledColor: inactiveStyle.color,
+      elevation: style.elevation,
+      hoverElevation: style.elevation,
+      focusElevation: style.elevation,
+      highlightElevation: style.elevation,
+      disabledElevation: inactiveStyle.elevation,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      onPressed: onPressed,
+      child: Text(
+        label,
+        style: onPressed == null ? inactiveStyle.labelStyle : style.labelStyle,
+      ),
+    );
   }
 
   /// Selects a [MetricsButtonStyle] for this button from

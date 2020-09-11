@@ -6,10 +6,6 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 void main() {
   group("DropdownItem", () {
-    final mouseRegionFinder = find.byWidgetPredicate(
-      (widget) => widget is MouseRegion && widget.child is GestureDetector,
-    );
-
     final containerFinder = find.descendant(
       of: find.byType(DropdownItem),
       matching: find.byType(Container),

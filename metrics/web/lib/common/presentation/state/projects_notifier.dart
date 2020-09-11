@@ -19,7 +19,7 @@ class ProjectsNotifier extends ChangeNotifier {
   /// Holds a list of project models.
   List<ProjectModel> _projectModels;
 
-  /// Holds the [PersistentStoreErrorMessage] that occurred during loading 
+  /// Holds the [PersistentStoreErrorMessage] that occurred during loading
   /// projects data.
   PersistentStoreErrorMessage _projectsErrorMessage;
 
