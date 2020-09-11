@@ -6,7 +6,7 @@ import 'package:metrics/base/presentation/widgets/dropdown_item.dart';
 void main() {
   group("DropdownItem", () {
     final mouseRegionFinder = find.byWidgetPredicate(
-      (widget) => widget is MouseRegion && widget.child is Container,
+      (widget) => widget is MouseRegion && widget.child is GestureDetector,
     );
 
     final containerFinder = find.descendant(
@@ -18,6 +18,15 @@ void main() {
       "throws an AssertionError if the given child widget is null",
       (tester) async {
         await tester.pumpWidget(const _DropdownItemTestbed(child: null));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given hover child widget is null",
+      (tester) async {
+        await tester.pumpWidget(const _DropdownItemTestbed(hoverChild: null));
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -137,6 +146,27 @@ void main() {
         expect(container.decoration, equals(expectedDecoration));
       },
     );
+
+    testWidgets(
+      "applies the given hover child if is hovered",
+      (tester) async {
+        const expectedHoverChild = Text("test hover child");
+
+        await tester.pumpWidget(const _DropdownItemTestbed(
+          hoverChild: expectedHoverChild,
+        ));
+
+        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+        const pointerEnterEvent = PointerEnterEvent();
+        mouseRegion.onEnter(pointerEnterEvent);
+
+        await tester.pump();
+
+        final container = tester.widget<Container>(containerFinder);
+
+        expect(container.child, equals(expectedHoverChild));
+      },
+    );
   });
 }
 
@@ -144,6 +174,9 @@ void main() {
 class _DropdownItemTestbed extends StatelessWidget {
   /// The child widget to display.
   final Widget child;
+
+  /// A child widget to display when this [DropdownItem] is hovered.
+  final Widget hoverChild;
 
   /// A [Color] of the [DropdownItem] if it is not hovered.
   final Color backgroundColor;
@@ -169,6 +202,7 @@ class _DropdownItemTestbed extends StatelessWidget {
   const _DropdownItemTestbed({
     Key key,
     this.child = const SizedBox(),
+    this.hoverChild = const SizedBox(),
     this.backgroundColor,
     this.hoverColor,
     this.width,
@@ -188,6 +222,7 @@ class _DropdownItemTestbed extends StatelessWidget {
           height: height,
           padding: padding,
           alignment: alignment,
+          hoverChild: hoverChild,
           child: child,
         ),
       ),

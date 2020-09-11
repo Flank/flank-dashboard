@@ -243,6 +243,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             backgroundColor: Colors.transparent,
             hoverColor: _dropdownHoverColor,
             textStyle: _defaultDropdownTextStyle,
+            hoverTextStyle: _defaultDropdownTextStyle,
           ),
           loginTheme: const LoginThemeData(
             titleTextStyle: TextStyle(
