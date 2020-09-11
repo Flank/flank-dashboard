@@ -8,7 +8,8 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 ///
 /// Changes it's background color on hover from [backgroundColor] to [hoverColor].
 class DropdownItem extends StatefulWidget {
-  /// A builder that displays the child differently when the [DropdownItem] is hovered.
+  /// A builder function used to build the child widget depending on the hover
+  /// status of this widget.
   final HoverWidgetBuilder builder;
 
   /// A width of this widget.

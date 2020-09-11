@@ -15,11 +15,11 @@ void main() {
       matching: find.byType(Container),
     );
 
-    const hoveredChild = Text("hovered");
-    const child = Text("hovered");
+    const hoveredText = "hovered text";
+    const text = "text";
 
     Widget _builder(BuildContext context, bool isHovered) {
-      return isHovered ? hoveredChild : child;
+      return Text(isHovered ? hoveredText : text);
     }
 
     testWidgets(
@@ -32,16 +32,16 @@ void main() {
     );
 
     testWidgets(
-      "displays the proper child when the widget is not hovered",
+      "displays the proper text when the widget is not hovered",
       (tester) async {
         await tester.pumpWidget(_DropdownItemTestbed(builder: _builder));
 
-        expect(find.byWidget(child), findsOneWidget);
+        expect(find.text(text), findsOneWidget);
       },
     );
 
     testWidgets(
-      "rebuilds and displays the proper child when the widget is hovered",
+      "displays the proper text when the widget is hovered",
       (tester) async {
         await tester.pumpWidget(_DropdownItemTestbed(builder: _builder));
 
@@ -51,7 +51,7 @@ void main() {
 
         await tester.pump();
 
-        expect(find.byWidget(hoveredChild), findsOneWidget);
+        expect(find.text(hoveredText), findsOneWidget);
       },
     );
 
@@ -167,7 +167,8 @@ void main() {
 
 /// A testbed class required to test the [DropdownItem] widget.
 class _DropdownItemTestbed extends StatelessWidget {
-  /// A builder that displays the child differently when the [DropdownItem] is hovered.
+  /// A builder function used to build the child widget depending on the hover
+  /// status of this widget.
   final HoverWidgetBuilder builder;
 
   /// A [Color] of the [DropdownItem] if it is not hovered.

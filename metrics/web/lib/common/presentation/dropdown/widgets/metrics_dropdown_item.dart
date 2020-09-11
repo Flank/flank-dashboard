@@ -21,15 +21,16 @@ class MetricsDropdownItem extends StatelessWidget {
     final theme = MetricsTheme.of(context).dropdownItemTheme;
 
     return DropdownItem(
-      height: 40.0,
-      width: 210.0,
-      alignment: Alignment.centerLeft,
-      backgroundColor: theme.backgroundColor,
-      hoverColor: theme.hoverColor,
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 11.0),
-      builder: (context, isHovered) => isHovered
-          ? Text(title, style: theme.hoverTextStyle)
-          : Text(title, style: theme.textStyle),
-    );
+        height: 40.0,
+        width: 210.0,
+        alignment: Alignment.centerLeft,
+        backgroundColor: theme.backgroundColor,
+        hoverColor: theme.hoverColor,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 11.0),
+        builder: (context, isHovered) {
+          return isHovered
+              ? Text(title, style: theme.hoverTextStyle)
+              : Text(title, style: theme.textStyle);
+        });
   }
 }
