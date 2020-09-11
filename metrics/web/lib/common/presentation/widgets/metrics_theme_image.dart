@@ -3,7 +3,7 @@ import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.d
 import 'package:provider/provider.dart';
 
 /// A class that displays appropriate asset depending on the current theme mode.
-class MetricsThemeModeImage extends StatelessWidget {
+class MetricsThemeImage extends StatelessWidget {
   /// An asset to display when the current theme mode is dark.
   final String darkAsset;
 
@@ -20,10 +20,10 @@ class MetricsThemeModeImage extends StatelessWidget {
   /// allocated during layout.
   final BoxFit fit;
 
-  /// Creates a new instance of the [MetricsThemeModeImage].
+  /// Creates a new instance of the [MetricsThemeImage].
   ///
   /// Both [darkAsset] and [lightAsset] must not be `null`.
-  const MetricsThemeModeImage({
+  const MetricsThemeImage({
     Key key,
     @required this.darkAsset,
     @required this.lightAsset,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/widgets/metrics_theme_mode_image.dart';
+import 'package:metrics/common/presentation/widgets/metrics_theme_image.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -10,14 +10,14 @@ import '../../../test_utils/test_injection_container.dart';
 import '../../../test_utils/theme_notifier_mock.dart';
 
 void main() {
-  group("MetricsThemeModeImage", () {
+  group("MetricsThemeImage", () {
     const darkAsset = 'dark-asset.svg';
     const lightAsset = 'light-asset.svg';
 
     testWidgets(
       "throws AssertionError if the given dark asset is null",
       (tester) async {
-        await tester.pumpWidget(const _MetricsThemeModeImageTestbed(
+        await tester.pumpWidget(const _MetricsThemeImageTestbed(
           darkAsset: null,
           lightAsset: lightAsset,
         ));
@@ -29,7 +29,7 @@ void main() {
     testWidgets(
       "throws AssertionError if the given light asset is null",
       (tester) async {
-        await tester.pumpWidget(const _MetricsThemeModeImageTestbed(
+        await tester.pumpWidget(const _MetricsThemeImageTestbed(
           darkAsset: darkAsset,
           lightAsset: null,
         ));
@@ -42,7 +42,7 @@ void main() {
       const expectedWidth = 20.0;
 
       await mockNetworkImagesFor(() {
-        return tester.pumpWidget(const _MetricsThemeModeImageTestbed(
+        return tester.pumpWidget(const _MetricsThemeImageTestbed(
           darkAsset: darkAsset,
           lightAsset: lightAsset,
           width: expectedWidth,
@@ -58,7 +58,7 @@ void main() {
       const expectedHeight = 20.0;
 
       await mockNetworkImagesFor(() {
-        return tester.pumpWidget(const _MetricsThemeModeImageTestbed(
+        return tester.pumpWidget(const _MetricsThemeImageTestbed(
           darkAsset: darkAsset,
           lightAsset: lightAsset,
           height: expectedHeight,
@@ -74,7 +74,7 @@ void main() {
       const expectedFit = BoxFit.contain;
 
       await mockNetworkImagesFor(() {
-        return tester.pumpWidget(const _MetricsThemeModeImageTestbed(
+        return tester.pumpWidget(const _MetricsThemeImageTestbed(
           darkAsset: darkAsset,
           lightAsset: lightAsset,
           fit: expectedFit,
@@ -94,7 +94,7 @@ void main() {
         when(notifierMock.isDark).thenReturn(true);
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_MetricsThemeModeImageTestbed(
+          return tester.pumpWidget(_MetricsThemeImageTestbed(
             themeNotifier: notifierMock,
             darkAsset: darkAsset,
             lightAsset: lightAsset,
@@ -116,7 +116,7 @@ void main() {
         when(notifierMock.isDark).thenReturn(false);
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_MetricsThemeModeImageTestbed(
+          return tester.pumpWidget(_MetricsThemeImageTestbed(
             themeNotifier: notifierMock,
             darkAsset: darkAsset,
             lightAsset: lightAsset,
@@ -132,8 +132,8 @@ void main() {
   });
 }
 
-/// A testbed class used to test the [MetricsThemeModeImage].
-class _MetricsThemeModeImageTestbed extends StatelessWidget {
+/// A testbed class used to test the [MetricsThemeImage].
+class _MetricsThemeImageTestbed extends StatelessWidget {
   /// A [ThemeNotifier] to use in tests.
   final ThemeNotifier themeNotifier;
 
@@ -154,7 +154,7 @@ class _MetricsThemeModeImageTestbed extends StatelessWidget {
   final BoxFit fit;
 
   /// Creates a new instance of the metrics theme mode image testbed.
-  const _MetricsThemeModeImageTestbed({
+  const _MetricsThemeImageTestbed({
     Key key,
     this.themeNotifier,
     this.darkAsset,
@@ -168,7 +168,7 @@ class _MetricsThemeModeImageTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return TestInjectionContainer(
       themeNotifier: themeNotifier,
-      child: MetricsThemeModeImage(
+      child: MetricsThemeImage(
         darkAsset: darkAsset,
         lightAsset: lightAsset,
         width: width,
