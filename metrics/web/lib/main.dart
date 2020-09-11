@@ -60,8 +60,8 @@ class _MetricsAppState extends State<MetricsApp> {
               scaffoldBackgroundColor: LightMetricsThemeData.scaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
                 filled: true,
-                fillColor: Colors.white,
-                hoverColor: Colors.black,
+                fillColor: LightMetricsThemeData.inputColor,
+                hoverColor: LightMetricsThemeData.inputHoverColor,
                 border: TextFieldConfig.border,
                 focusedBorder: LightMetricsThemeData.inputFocusedBorder,
                 errorStyle: TextFieldConfig.errorStyle,

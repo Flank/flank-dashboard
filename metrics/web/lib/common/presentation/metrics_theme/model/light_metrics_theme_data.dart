@@ -26,44 +26,60 @@ import 'package:metrics/common/presentation/metrics_theme/model/project_build_st
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_data/scorecard_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
+import 'package:metrics/common/presentation/toast/theme/attention_level/toast_attention_level.dart';
+import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
+import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
-  static const Color scaffoldColor = Color(0xFFFAFAFA);
+  static const Color scaffoldColor = Colors.white;
+  static const Color inputColor = Color(0xFFF5F8FA);
+  static const Color inputHoverColor = Color(0xfffafbfc);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
-    borderSide: BorderSide(color: _focusedBorderColor),
+    borderSide: BorderSide(color: _inputFocusedBorderColor),
   );
 
-  static const Color _dropdownHoverColor = Color(0xFF878799);
+  static const Color _dropdownHoverColor = Color(0xff878799);
   static const Color _focusedBorderColor = Colors.blue;
   static const Color _inactiveBackgroundColor = Color(0xFFEEEEEE);
   static const Color _inactiveColor = Color(0xFFBDBDBD);
+  static const Color _inactiveButtonColor = Color(0xFFf0f0f5);
+  static const Color _inactiveButtonHoverColor = Color(0xFFcccccc);
+  static const Color _inactiveTextColor = Color(0xff040d14);
   static const Color _cardHoverColor = Color(0xFF212124);
   static const Color _borderColor = Color(0xFF2d2d33);
+  static const Color _borderHoverColor = Color(0xFF37373F);
   static const Color _tileBorderColor = Color(0xFFE0E0E0);
   static const Color _tableHeaderColor = Color(0xFF79858b);
-  static const Color _inactiveToggleColor = Color(0xFF88889B);
-  static const Color _inactiveToggleHoverColor = Color(0xFF5D5D6A);
-  static const Color _textPlaceholderColor = Color(0xFF51585c);
+  static const Color _inactiveToggleColor = Color(0xFF88889b);
+  static const Color _inactiveToggleHoverColor = Color(0xFF5d5d6a);
+  static const Color _textPlaceholderColor = Color(0xFFdcdce3);
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
   static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
   static const Color _hoverBorderColor = Color(0xffb6b6ba);
   static const Color _activeBorderColor = Color(0xff6d6d75);
   static const Color _inputColor = Color(0xfff5f8fa);
-  static const Color _inactiveTextColor = Color(0xff040d14);
   static const Color _openedButtonInactiveColor = Color(0xfffafbfc);
   static const TextStyle _defaultDropdownTextStyle = TextStyle(
     fontSize: 16.0,
     color: _inactiveTextColor,
   );
+
+  static const Color _positiveToastBackgroundColor = Color(0xffe1faf4);
+  static const Color _positiveToastTextColor = Color(0xCC20CE9A);
+  static const Color _negativeToastBackgroundColor = Color(0xffffede5);
+  static const Color _negativeToastTextColor = Color(0xCCF45531);
+
+  static const Color _inputFocusedBorderColor = Color(0xff6d6d75);
 
   /// A [TextStyle] of the dialog title.
   static const TextStyle _dialogTitleTextStyle = TextStyle(
@@ -177,6 +193,8 @@ class LightMetricsThemeData extends MetricsThemeData {
             buttonAttentionLevel: MetricsButtonAttentionLevel(
               positive: MetricsButtonStyle(
                 color: ColorConfig.primaryColor,
+                hoverColor: ColorConfig.primaryButtonHoverColor,
+                elevation: 0.0,
                 labelStyle: TextStyle(
                   color: Colors.black,
                   fontSize: 16.0,
@@ -184,16 +202,19 @@ class LightMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               neutral: MetricsButtonStyle(
-                color: ColorConfig.inactiveColor,
+                color: _inactiveButtonColor,
+                hoverColor: _inactiveButtonHoverColor,
                 elevation: 0.0,
                 labelStyle: TextStyle(
-                  color: Colors.white,
+                  color: _inactiveTextColor,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               negative: MetricsButtonStyle(
                 color: ColorConfig.accentColor,
+                hoverColor: ColorConfig.accentButtonHoverColor,
+                elevation: 0.0,
                 labelStyle: TextStyle(
                   color: Colors.black,
                   fontSize: 16.0,
@@ -201,9 +222,10 @@ class LightMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               inactive: MetricsButtonStyle(
-                color: ColorConfig.inactiveColor,
+                color: _inactiveButtonColor,
+                elevation: 0.0,
                 labelStyle: TextStyle(
-                  color: ColorConfig.inactiveTextColor,
+                  color: _inactiveButtonHoverColor,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
@@ -211,10 +233,10 @@ class LightMetricsThemeData extends MetricsThemeData {
             ),
           ),
           textFieldTheme: const TextFieldThemeData(
-            focusColor: Colors.grey,
-            hoverBorderColor: ColorConfig.hoverBorderColor,
+            focusColor: inputHoverColor,
+            hoverBorderColor: _borderHoverColor,
             textStyle: TextStyle(
-              color: Colors.black,
+              color: _inactiveTextColor,
               fontSize: 16.0,
             ),
           ),
@@ -231,8 +253,10 @@ class LightMetricsThemeData extends MetricsThemeData {
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.white,
             hoverColor: _dropdownHoverColor,
-            textStyle: _defaultDropdownTextStyle,
-            hoverTextStyle: TextStyle(fontSize: 16.0, color: Colors.white),
+            textStyle: TextStyle(
+              fontSize: 16.0,
+              color: _inactiveTextColor,
+            ),
           ),
           loginTheme: const LoginThemeData(
             titleTextStyle: TextStyle(
@@ -283,12 +307,34 @@ class LightMetricsThemeData extends MetricsThemeData {
             inactiveColor: _inactiveToggleColor,
             inactiveHoverColor: _inactiveToggleHoverColor,
           ),
+          toastTheme: const ToastThemeData(
+            toastAttentionLevel: ToastAttentionLevel(
+              positive: ToastStyle(
+                backgroundColor: _positiveToastBackgroundColor,
+                textStyle: TextStyle(
+                  color: _positiveToastTextColor,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  height: 1.5,
+                ),
+              ),
+              negative: ToastStyle(
+                backgroundColor: _negativeToastBackgroundColor,
+                textStyle: TextStyle(
+                  color: _negativeToastTextColor,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  height: 1.5,
+                ),
+              ),
+            ),
+          ),
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.white,
             dividerColor: scaffoldColor,
             shadowColor: _userMenuShadowColor,
             contentTextStyle: TextStyle(
-              color: Colors.black,
+              color: _inactiveTextColor,
               fontSize: 16.0,
               height: 1.0,
             ),
@@ -298,6 +344,10 @@ class LightMetricsThemeData extends MetricsThemeData {
               color: _textPlaceholderColor,
               fontSize: 14.0,
             ),
+          ),
+          inputPlaceholderTheme: const ShimmerPlaceholderThemeData(
+            backgroundColor: inputColor,
+            shimmerColor: ColorConfig.shimmerColor,
           ),
           circlePercentageTheme: const CirclePercentageThemeData(
             attentionLevel: CirclePercentageAttentionLevel(
