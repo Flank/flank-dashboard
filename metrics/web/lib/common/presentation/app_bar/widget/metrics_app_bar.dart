@@ -27,7 +27,7 @@ class MetricsAppBar extends StatelessWidget {
               child: GestureDetector(
                 onTap: () => _navigateHome(context),
                 child: Image.network(
-                  'icons/logo-metrics.svg',
+                  'icons/logo-metrics-appbar.svg',
                   width: 116.0,
                   height: 32.0,
                 ),
