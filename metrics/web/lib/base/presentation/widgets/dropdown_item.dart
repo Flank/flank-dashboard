@@ -54,7 +54,7 @@ class _DropdownItemState extends State<DropdownItem> {
   Widget build(BuildContext context) {
     return TappableArea(
       mouseCursor: MouseCursor.click,
-      builder: (context, bool isHovered) {
+      builder: (context, isHovered) {
         return Container(
           width: widget.width,
           height: widget.height,
