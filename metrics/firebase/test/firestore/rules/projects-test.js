@@ -21,11 +21,17 @@ describe("Projects collection rules", async function () {
   const passwordProviderNotAllowedEmailApp = await getApplicationWith(
     getDeniedEmailUser(passwordSignInProviderId)
   );
+  const passwordProviderNotVerifiedEmailApp = await getApplicationWith(
+    getAllowedEmailUser(passwordSignInProviderId, false)
+  );
   const googleProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(googleSignInProviderId)
   );
   const googleProviderNotAllowedEmailApp = await getApplicationWith(
     getDeniedEmailUser(googleSignInProviderId)
+  );
+  const googleProviderNotVerifiedEmailApp = await getApplicationWith(
+    getAllowedEmailUser(googleSignInProviderId, false)
   );
   const unauthenticatedApp = await getApplicationWith(null);
   const projectsCollectionName = "projects";
@@ -63,15 +69,36 @@ describe("Projects collection rules", async function () {
     );
   });
 
+  it("allows to create a project by an authenticated with a password and allowed email domain user with not verified email", async () => {
+    await assertSucceeds(
+      passwordProviderNotVerifiedEmailApp.collection(projectsCollectionName).add(project)
+    );
+  });
+
   it("allows reading projects by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderAllowedEmailApp.collection(projectsCollectionName).get()
     );
   });
 
+  it("allows reading projects by an authenticated with a password and allowed email domain user with not verified email", async () => {
+    await assertSucceeds(
+      passwordProviderNotVerifiedEmailApp.collection(projectsCollectionName).get()
+    );
+  });
+
   it("allows to update a project by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderAllowedEmailApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .update(project)
+    );
+  });
+
+  it("allows to update a project by an authenticated with a password and allowed email domain user with not verified email", async () => {
+    await assertSucceeds(
+      passwordProviderNotVerifiedEmailApp
         .collection(projectsCollectionName)
         .doc("1")
         .update(project)
@@ -129,15 +156,36 @@ describe("Projects collection rules", async function () {
     );
   });
 
+  it("does not allow creating a project by an authenticated with google and allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp.collection(projectsCollectionName).add(project)
+    );
+  });
+
   it("allows reading projects by an authenticated with google and allowed email domain user", async () => {
     await assertSucceeds(
       googleProviderAllowedEmailApp.collection(projectsCollectionName).get()
     );
   });
 
+  it("does not allow reading projects by an authenticated with google and allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp.collection(projectsCollectionName).get()
+    );
+  });
+
   it("allows updating a project by an authenticated with google and allowed email domain user", async () => {
     await assertSucceeds(
       googleProviderAllowedEmailApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .update(project)
+    );
+  });
+
+  it("does not allow updating a project by an authenticated with google and allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp
         .collection(projectsCollectionName)
         .doc("1")
         .update(project)
@@ -153,11 +201,21 @@ describe("Projects collection rules", async function () {
     );
   });
 
+  it("does not allow deleting a project an authenticated with google and allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp
+        .collection(projectsCollectionName)
+        .doc("1")
+        .delete()
+    );
+  });
+
   it("does not allow creating a project by an authenticated with google and not allowed email domain user", async () => {
     await assertFails(
       googleProviderNotAllowedEmailApp.collection(projectsCollectionName).add(project)
     );
   });
+
 
   it("does not allow reading projects by an authenticated with google and not allowed email domain user", async () => {
     await assertFails(

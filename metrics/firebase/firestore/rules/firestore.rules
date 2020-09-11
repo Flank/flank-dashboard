@@ -31,7 +31,10 @@ service cloud.firestore {
 
   /// Checks if the request is from a user with a valid email.
   function isEmailValid(database) {
-    return request.auth.token.email != null && (isSignInProviderPassword() || isEmailDomainAllowed(database));
+    let isEmailPresent = request.auth.token.email != null;
+    let isEmailVerified = request.auth.token.email_verified;
+
+    return isEmailPresent && (isSignInProviderPassword() || (isEmailDomainAllowed(database) && isEmailVerified));
   }
 
   /// Checks whether a request's email domain is in the allowed domains list.

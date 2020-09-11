@@ -21,11 +21,17 @@ describe("Project groups collection rules", async function () {
   const passwordProviderNotAllowedEmailApp = await getApplicationWith(
     getDeniedEmailUser(passwordSignInProviderId)
   );
+  const passwordProviderNotVerifiedEmailApp = await getApplicationWith(
+    getAllowedEmailUser(passwordSignInProviderId, false)
+  );
   const googleProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(googleSignInProviderId)
   );
   const googleProviderNotAllowedEmailApp = await getApplicationWith(
     getDeniedEmailUser(googleSignInProviderId)
+  );
+  const googleProviderNotVerifiedEmailApp = await getApplicationWith(
+    getAllowedEmailUser(googleSignInProviderId, false)
   );
   const unauthenticatedApp = await getApplicationWith(null);
   const collectionName = "project_groups";
@@ -180,9 +186,21 @@ describe("Project groups collection rules", async function () {
     );
   });
 
+  it("allows to create a project group by an authenticated with a password and allowed email domain user with not verified email", async () => {
+    await assertSucceeds(
+      passwordProviderNotVerifiedEmailApp.collection(collectionName).add(getProjectGroup())
+    );
+  });
+
   it("allows reading project groups by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderAllowedEmailApp.collection(collectionName).get()
+    );
+  });
+
+  it("allows reading project groups by an authenticated with a password and allowed email domain user with not verified email", async () => {
+    await assertSucceeds(
+      passwordProviderNotVerifiedEmailApp.collection(collectionName).get()
     );
   });
 
@@ -195,9 +213,24 @@ describe("Project groups collection rules", async function () {
     );
   });
 
+  it("allows to update a project group by an authenticated with a password and allowed email domain user with not verified email", async () => {
+    await assertSucceeds(
+      passwordProviderNotVerifiedEmailApp
+        .collection(collectionName)
+        .doc("2")
+        .update(getProjectGroup())
+    );
+  });
+
   it("allows to delete a project group by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderAllowedEmailApp.collection(collectionName).doc("1").delete()
+    );
+  });
+
+  it("allows to delete a project group by an authenticated with a password and allowed email domain user with not verified email", async () => {
+    await assertSucceeds(
+      passwordProviderNotVerifiedEmailApp.collection(collectionName).doc("1").delete()
     );
   });
 
@@ -240,9 +273,21 @@ describe("Project groups collection rules", async function () {
     );
   });
 
+  it("does not allow creating a project group by an authenticated with google and allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp.collection(collectionName).add(getProjectGroup())
+    );
+  });
+
   it("allows reading a project group by an authenticated with google and allowed email domain user", async () => {
     await assertSucceeds(
       googleProviderAllowedEmailApp.collection(collectionName).get()
+    );
+  });
+
+  it("does not allow reading a project group by an authenticated with google and allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp.collection(collectionName).get()
     );
   });
 
@@ -255,9 +300,24 @@ describe("Project groups collection rules", async function () {
     );
   });
 
+  it("does not allow updating a project group by an authenticated with google and allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp
+        .collection(collectionName)
+        .doc("2")
+        .update(getProjectGroup())
+    );
+  });
+
   it("allows to delete a project group by an authenticated with google and allowed email domain user", async () => {
     await assertSucceeds(
       googleProviderAllowedEmailApp.collection(collectionName).doc("1").delete()
+    );
+  });
+
+  it("does not allow deleting a project group by an authenticated with google and allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp.collection(collectionName).doc("1").delete()
     );
   });
 

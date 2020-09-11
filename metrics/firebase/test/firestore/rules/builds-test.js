@@ -22,11 +22,17 @@ describe("Build collection rules", async () => {
   const passwordProviderNotAllowedEmailApp = await getApplicationWith(
     getDeniedEmailUser(passwordSignInProviderId)
   );
+  const passwordProviderNotVerifiedEmailApp = await getApplicationWith(
+    getDeniedEmailUser(passwordSignInProviderId, false)
+  );
   const googleProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(googleSignInProviderId)
   );
   const googleProviderNotAllowedEmailApp = await getApplicationWith(
     getDeniedEmailUser(googleSignInProviderId)
+  );
+  const googleProviderNotVerifiedEmailApp = await getApplicationWith(
+    getAllowedEmailUser(googleSignInProviderId, false)
   );
 
   const unauthenticatedApp = await getApplicationWith(null);
@@ -233,15 +239,36 @@ describe("Build collection rules", async () => {
     );
   });
 
+  it("allows to create a build by an authenticated with a password and allowed email domain user with not verified email", async () => {
+    await assertSucceeds(
+      passwordProviderNotVerifiedEmailApp.collection(buildsCollectionName).add(getBuild())
+    );
+  });
+
   it("allows reading builds by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderAllowedEmailApp.collection(buildsCollectionName).get()
     );
   });
 
+  it("allows reading builds by an authenticated with a password and allowed email domain user with not verified email", async () => {
+    await assertSucceeds(
+      passwordProviderNotVerifiedEmailApp.collection(buildsCollectionName).get()
+    );
+  });
+
   it("allows updating a build by an authenticated with a password and allowed email domain user", async () => {
     await assertSucceeds(
       passwordProviderAllowedEmailApp
+        .collection(buildsCollectionName)
+        .doc("1")
+        .update({ url: "updated" })
+    );
+  });
+
+  it("allows updating a build by an authenticated with a password and allowed email domain user with not verified email", async () => {
+    await assertSucceeds(
+      passwordProviderNotVerifiedEmailApp
         .collection(buildsCollectionName)
         .doc("1")
         .update({ url: "updated" })
@@ -299,9 +326,21 @@ describe("Build collection rules", async () => {
     );
   });
 
+  it("does not allow creating a build by an authenticated with google and an allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp.collection(buildsCollectionName).add(getBuild())
+    );
+  });
+
   it("allows reading builds by an authenticated with google and an allowed email domain user", async () => {
     await assertSucceeds(
       googleProviderAllowedEmailApp.collection(buildsCollectionName).get()
+    );
+  });
+
+  it("does not allow reading builds by an authenticated with google and an allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp.collection(buildsCollectionName).get()
     );
   });
 
@@ -314,9 +353,24 @@ describe("Build collection rules", async () => {
     );
   });
 
+  it("does not allow updating a build by an authenticated with google and an allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp
+        .collection(buildsCollectionName)
+        .doc("1")
+        .update({ url: "updated" })
+    );
+  });
+
   it("does not allow deleting a build by an authenticated with google and an allowed email domain user", async () => {
     await assertFails(
       googleProviderAllowedEmailApp.collection(buildsCollectionName).doc("1").delete()
+    );
+  });
+
+  it("does not allow deleting a build by an authenticated with google and an allowed email domain user with not verified email", async () => {
+    await assertFails(
+      googleProviderNotVerifiedEmailApp.collection(buildsCollectionName).doc("1").delete()
     );
   });
 
