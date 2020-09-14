@@ -56,22 +56,16 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Container(
-                      constraints: const BoxConstraints(minHeight: 24.0),
-                      child: Text(
-                        widget.projectGroupCardViewModel.name,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: theme.titleStyle,
-                      ),
+                    child: Text(
+                      widget.projectGroupCardViewModel.name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: theme.titleStyle,
                     ),
                   ),
-                  Container(
-                    constraints: const BoxConstraints(minHeight: 16.0),
-                    child: Text(
-                      _projectGroupsCount,
-                      style: theme.subtitleStyle,
-                    ),
+                  Text(
+                    _projectGroupsCount,
+                    style: theme.subtitleStyle,
                   ),
                 ],
               ),

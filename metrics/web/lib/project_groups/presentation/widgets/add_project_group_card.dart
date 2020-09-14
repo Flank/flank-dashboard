@@ -53,7 +53,7 @@ class AddProjectGroupCard extends StatelessWidget {
                     color: style.iconColor,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
                       ProjectGroupsStrings.createGroup,
                       style: style.labelStyle,
