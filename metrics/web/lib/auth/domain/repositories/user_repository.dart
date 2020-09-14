@@ -1,6 +1,6 @@
 import 'package:metrics/auth/domain/entities/auth_credentials.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
-import 'package:metrics/auth/domain/entities/email_validation_result.dart';
+import 'package:metrics/auth/domain/entities/email_domain_validation_result.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
 
 /// A base class for all user repositories.
@@ -23,11 +23,11 @@ abstract class UserRepository {
   /// during receiving the [AuthCredentials].
   Future<AuthCredentials> getGoogleSignInCredentials();
 
-  /// Provides an ability to validate the given user's [email].
+  /// Provides an ability to validate the given user's [email] domain.
   ///
   /// Throws an [AuthenticationException] if there are any
   /// errors occurred during validation process.
-  Future<EmailValidationResult> validateEmail(String email);
+  Future<EmailDomainValidationResult> validateEmailDomain(String email);
 
   /// Provides an ability to sign in a user to the app
   /// using Google authentication.

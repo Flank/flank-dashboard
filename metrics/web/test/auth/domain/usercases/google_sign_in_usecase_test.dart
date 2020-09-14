@@ -1,6 +1,6 @@
 import 'package:metrics/auth/domain/entities/auth_credentials.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
-import 'package:metrics/auth/domain/entities/email_validation_result.dart';
+import 'package:metrics/auth/domain/entities/email_domain_validation_result.dart';
 import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -24,10 +24,8 @@ void main() {
         ),
       );
 
-      when(repository.validateEmail(any)).thenAnswer(
-        (_) => Future.value(
-          EmailValidationResult(email: email, isValid: true),
-        ),
+      when(repository.validateEmailDomain(any)).thenAnswer(
+        (_) => Future.value(EmailDomainValidationResult(isValid: true)),
       );
     });
 
@@ -60,17 +58,15 @@ void main() {
 
         await signInUseCase();
 
-        verify(repository.validateEmail(any)).called(equals(1));
+        verify(repository.validateEmailDomain(any)).called(equals(1));
       },
     );
 
     test(
       "throws if UserRepository.validateEmail's result is not a valid email",
       () async {
-        when(repository.validateEmail(any)).thenAnswer(
-          (_) => Future.value(
-            EmailValidationResult(email: email, isValid: false),
-          ),
+        when(repository.validateEmailDomain(any)).thenAnswer(
+          (_) => Future.value(EmailDomainValidationResult(isValid: false)),
         );
 
         final signInUseCase = GoogleSignInUseCase(repository);
@@ -85,10 +81,8 @@ void main() {
     test(
       "calls the UserRepository.signOut if the UserRepository.validateEmail's result is not a valid email",
       () async {
-        when(repository.validateEmail(any)).thenAnswer(
-          (_) => Future.value(
-            EmailValidationResult(email: email, isValid: false),
-          ),
+        when(repository.validateEmailDomain(any)).thenAnswer(
+          (_) => Future.value(EmailDomainValidationResult(isValid: false)),
         );
 
         try {
