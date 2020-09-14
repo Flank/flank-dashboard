@@ -193,9 +193,10 @@ class LightMetricsThemeData extends MetricsThemeData {
                 color: ColorConfig.primaryColor,
                 hoverColor: ColorConfig.primaryButtonHoverColor,
                 elevation: 0.0,
-                labelStyle: TextStyle(
+                labelStyle: MetricsTextStyle(
                   color: Colors.black,
                   fontSize: 16.0,
+                  lineHeightInPixels: 20,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -213,17 +214,19 @@ class LightMetricsThemeData extends MetricsThemeData {
                 color: ColorConfig.accentColor,
                 hoverColor: ColorConfig.accentButtonHoverColor,
                 elevation: 0.0,
-                labelStyle: TextStyle(
+                labelStyle: MetricsTextStyle(
                   color: Colors.black,
                   fontSize: 16.0,
+                  lineHeightInPixels: 20,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               inactive: MetricsButtonStyle(
                 color: _inactiveButtonColor,
                 elevation: 0.0,
-                labelStyle: TextStyle(
+                labelStyle: MetricsTextStyle(
                   color: _inactiveButtonHoverColor,
+                  lineHeightInPixels: 20,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
@@ -233,9 +236,10 @@ class LightMetricsThemeData extends MetricsThemeData {
           textFieldTheme: const TextFieldThemeData(
             focusColor: inputHoverColor,
             hoverBorderColor: hoverBorderColor,
-            textStyle: TextStyle(
+            textStyle: MetricsTextStyle(
               color: _inactiveTextColor,
               fontSize: 16.0,
+              lineHeightInPixels: 20,
             ),
           ),
           dropdownTheme: const DropdownThemeData(
@@ -251,13 +255,15 @@ class LightMetricsThemeData extends MetricsThemeData {
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.white,
             hoverColor: _dropdownHoverColor,
-            textStyle: TextStyle(
+            textStyle: MetricsTextStyle(
               fontSize: 16.0,
               color: _inactiveTextColor,
+              lineHeightInPixels: 20,
             ),
-            hoverTextStyle: TextStyle(
+            hoverTextStyle: MetricsTextStyle(
               fontSize: 16.0,
               color: Colors.white,
+              lineHeightInPixels: 20,
             ),
           ),
           loginTheme: const LoginThemeData(
@@ -313,20 +319,20 @@ class LightMetricsThemeData extends MetricsThemeData {
             toastAttentionLevel: ToastAttentionLevel(
               positive: ToastStyle(
                 backgroundColor: _positiveToastBackgroundColor,
-                textStyle: TextStyle(
+                textStyle: MetricsTextStyle(
                   color: _positiveToastTextColor,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
-                  height: 1.5,
+                  lineHeightInPixels: 20,
                 ),
               ),
               negative: ToastStyle(
                 backgroundColor: _negativeToastBackgroundColor,
-                textStyle: TextStyle(
+                textStyle: MetricsTextStyle(
                   color: _negativeToastTextColor,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
-                  height: 1.5,
+                  lineHeightInPixels: 20,
                 ),
               ),
             ),
@@ -342,9 +348,10 @@ class LightMetricsThemeData extends MetricsThemeData {
             ),
           ),
           textPlaceholderTheme: const TextPlaceholderThemeData(
-            textStyle: TextStyle(
+            textStyle: MetricsTextStyle(
               color: _textPlaceholderColor,
               fontSize: 14.0,
+              lineHeightInPixels: 18,
             ),
           ),
           inputPlaceholderTheme: const ShimmerPlaceholderThemeData(
