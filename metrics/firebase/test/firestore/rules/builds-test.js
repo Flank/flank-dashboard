@@ -18,14 +18,14 @@ const firestore = require("firebase").firestore;
 
 describe("", async () => {
   const passwordProviderAllowedEmailApp = await getApplicationWith(
-    getAllowedEmailUser(passwordSignInProviderId)
+    getAllowedEmailUser(passwordSignInProviderId, true)
   );
   const unauthenticatedApp = await getApplicationWith(null);
   const collection = "build";
 
   const users = [
     {
-      'describe': 'Authenticated with a password and allowed email domain user',
+      'describe': 'Authenticated with a password and allowed email domain user with a verified email',
       'app': passwordProviderAllowedEmailApp,
       'can': {
         'create': true,
@@ -35,9 +35,9 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a password and not allowed email domain user',
+      'describe': 'Authenticated with a password and not allowed email domain user with a verified email',
       'app': await getApplicationWith(
-        getDeniedEmailUser(passwordSignInProviderId)
+        getDeniedEmailUser(passwordSignInProviderId, true)
       ),
       'can': {
         'create': true,
@@ -59,9 +59,9 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with google and allowed email domain user',
+      'describe': 'Authenticated with a password and not allowed email domain user with not verified email',
       'app': await getApplicationWith(
-        getAllowedEmailUser(googleSignInProviderId)
+        getDeniedEmailUser(passwordSignInProviderId, false)
       ),
       'can': {
         'create': true,
@@ -71,9 +71,21 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with google and not allowed email domain user',
+      'describe': 'Authenticated with google and allowed email domain user with a verified email',
       'app': await getApplicationWith(
-        getDeniedEmailUser(googleSignInProviderId)
+        getAllowedEmailUser(googleSignInProviderId, true)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and not allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, true)
       ),
       'can': {
         'create': false,
@@ -86,6 +98,18 @@ describe("", async () => {
       'describe': 'Authenticated with google and allowed email domain user with not verified email',
       'app': await getApplicationWith(
         getAllowedEmailUser(googleSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and not allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, false)
       ),
       'can': {
         'create': false,

@@ -46,7 +46,7 @@ const allowedEmail = "test@gmail.com";
 const deniedEmail = "test@invalid.com";
 
 /** Creates a firebase user with the given `email`, `signInProviderId` and `emailVerified` */
-function getUser(email, signInProviderId, emailVerified = true) {
+function getUser(email, signInProviderId, emailVerified) {
   return {
     uid: "uid",
     email: email,
