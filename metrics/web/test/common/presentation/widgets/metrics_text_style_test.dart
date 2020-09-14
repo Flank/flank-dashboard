@@ -10,17 +10,18 @@ void main() {
     const height = 2.0;
 
     test(
-        "throws an AssertionError if the line height in pixels, font size and height are provided",
-        () {
-      expect(
-        () => MetricsTextStyle(
-          lineHeightInPixels: lineHeightInPixels,
-          fontSize: fontSize,
-          height: height,
-        ),
-        MatcherUtil.throwsAssertionError,
-      );
-    });
+      "throws an AssertionError if the line height in pixels, font size and height are provided simultaneously",
+      () {
+        expect(
+          () => MetricsTextStyle(
+            lineHeightInPixels: lineHeightInPixels,
+            fontSize: fontSize,
+            height: height,
+          ),
+          MatcherUtil.throwsAssertionError,
+        );
+      },
+    );
 
     test("applies the default inherit if it's not specified", () {
       const textStyle = MetricsTextStyle();
@@ -29,7 +30,7 @@ void main() {
     });
 
     test(
-      "The height equals to the line height in pixels divided by the font size if they are not null",
+      "sets height equals to the line height in pixels divided by the font size if they are not null",
       () {
         const textStyle = MetricsTextStyle(
           lineHeightInPixels: lineHeightInPixels,
@@ -41,7 +42,7 @@ void main() {
     );
 
     test(
-      "apply the given height when the given lineHeightInPixels is not null and fontSize is null",
+      "applies the given height when the given lineHeightInPixels is not null and the fontSize is null",
       () {
         const textStyle = MetricsTextStyle(
           lineHeightInPixels: lineHeightInPixels,
@@ -54,7 +55,7 @@ void main() {
     );
 
     test(
-      "apply the given height when the given lineHeightInPixels is null and fontSize is not null",
+      "applies the given height when the given lineHeightInPixels is null and the fontSize is not null",
       () {
         const textStyle = MetricsTextStyle(
           lineHeightInPixels: null,

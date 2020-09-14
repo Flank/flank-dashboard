@@ -13,7 +13,7 @@ class MetricsTextStyle extends TextStyle {
   /// If the [fontSize] and [lineHeightInPixels] are not null,
   /// then the [TextStyle.height] equal to the [lineHeightInPixels]
   /// divided by the [fontSize].
-  /// Otherwise the [TextStyle.height] equal to the [height].
+  /// Otherwise, the [TextStyle.height] equal to the given [height].
   ///
   /// The [inherit] defaults to `true`.
   const MetricsTextStyle({
