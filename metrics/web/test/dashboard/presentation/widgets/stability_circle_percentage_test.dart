@@ -21,7 +21,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the ThemedCirclePercentage with MetricsValueThemeStrategy",
+      "displays the StyledCirclePercentage with MetricsValueStyleStrategy",
       (tester) async {
         await tester.pumpWidget(const _StabilityCirclePercentageTestbed());
 
@@ -35,7 +35,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates the percent value to the ThemedCirclePercentage widget",
+      "delegates the percent value to the StyledCirclePercentage widget",
       (tester) async {
         const stability = StabilityViewModel(value: 0.2);
 
