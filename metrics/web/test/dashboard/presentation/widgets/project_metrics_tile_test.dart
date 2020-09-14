@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/base/presentation/widgets/scorecard.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
@@ -216,7 +216,7 @@ void main() {
     );
 
     testWidgets(
-      "contains TextMetrics with build number metric",
+      "contains Scorecard with build number metric",
       (WidgetTester tester) async {
         final numberOfBuilds =
             testProjectMetrics.buildNumberMetric.numberOfBuilds;
