@@ -22,7 +22,13 @@ void main() {
         find.widgetWithText(MetricsTextFormField, AuthStrings.password);
     final submitButtonFinder =
         find.widgetWithText(MetricsPositiveButton, AuthStrings.signIn);
-
+    final suffixImageFinder = find.descendant(
+      of: find.byType(MetricsTextFormField),
+      matching: find.descendant(
+        of: find.byType(GestureDetector),
+        matching: find.byType(Image),
+      ),
+    );
     const testEmail = 'test@email.com';
     const testPassword = 'testPassword';
 
@@ -182,6 +188,41 @@ void main() {
 
         expect(googleSignInButton, isNotNull);
         expect(googleSignInButton.strategy, isA<GoogleSignInOptionStrategy>());
+      },
+    );
+
+    testWidgets(
+      "applies an eye_on.svg, if the password is obscure",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(
+            const _AuthFormTestbed(),
+          ),
+        );
+
+        final imageWidget = tester.widget<Image>(suffixImageFinder);
+        final networkImage = imageWidget.image as NetworkImage;
+
+        expect(networkImage.url, 'icons/eye_on.svg');
+      },
+    );
+
+    testWidgets(
+      "applies an eye_off.svg, if the password is not obscure",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(
+            const _AuthFormTestbed(),
+          ),
+        );
+
+        await tester.tap(suffixImageFinder);
+        await tester.pump();
+
+        final imageWidget = tester.widget<Image>(suffixImageFinder);
+        final networkImage = imageWidget.image as NetworkImage;
+
+        expect(networkImage.url, 'icons/eye_off.svg');
       },
     );
   });

@@ -25,8 +25,14 @@ class _AuthFormState extends State<AuthForm> {
   /// Controls the password text being edited.
   final TextEditingController _passwordController = TextEditingController();
 
+  /// Indicates whether to hide or show the password.
+  bool _isPasswordObscure = true;
+
   @override
   Widget build(BuildContext context) {
+    final passwordIcon =
+        _isPasswordObscure ? 'icons/eye_on.svg' : 'icons/eye_off.svg';
+
     return Consumer<AuthNotifier>(
       builder: (_, notifier, __) {
         return Form(
@@ -48,8 +54,12 @@ class _AuthFormState extends State<AuthForm> {
                   key: const Key(AuthStrings.password),
                   controller: _passwordController,
                   validator: PasswordValidator.validate,
-                  obscureText: true,
+                  obscureText: _isPasswordObscure,
                   hint: AuthStrings.password,
+                  suffixIcon: GestureDetector(
+                    onTap: _changePassowrdObscure,
+                    child: Image.network(passwordIcon),
+                  ),
                 ),
               ),
               if (notifier.isLoading)
@@ -84,6 +94,11 @@ class _AuthFormState extends State<AuthForm> {
         _passwordController.text,
       );
     }
+  }
+
+  /// Shows or hides the password with changing [_isPasswordObscure].
+  void _changePassowrdObscure() {
+    setState(() => _isPasswordObscure = !_isPasswordObscure);
   }
 
   @override
