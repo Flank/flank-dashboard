@@ -8,7 +8,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_metrics_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
@@ -37,12 +37,11 @@ void main() {
       projectName: 'Test project name',
       coverage: const CoverageViewModel(value: 0.3),
       stability: const StabilityViewModel(value: 0.4),
-      buildNumberMetrics:
-          const BuildNumberScorecardViewModel(numberOfBuilds: 3),
+      buildNumberMetric: const BuildNumberScorecardViewModel(numberOfBuilds: 3),
       performanceSparkline: PerformanceSparklineViewModel(
         performance: UnmodifiableListView([]),
       ),
-      buildResultMetrics: BuildResultMetricsViewModel(
+      buildResultMetrics: BuildResultMetricViewModel(
         buildResults: UnmodifiableListView([]),
       ),
     );
@@ -217,10 +216,10 @@ void main() {
     );
 
     testWidgets(
-      "contains TextMetrics with build number metrics",
+      "contains TextMetrics with build number metric",
       (WidgetTester tester) async {
         final numberOfBuilds =
-            testProjectMetrics.buildNumberMetrics.numberOfBuilds;
+            testProjectMetrics.buildNumberMetric.numberOfBuilds;
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectMetricsTileTestbed(
@@ -236,7 +235,7 @@ void main() {
     );
 
     testWidgets(
-      "contains SparklineGraph widgets with performance metrics",
+      "contains SparklineGraph widgets with performance metric",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectMetricsTileTestbed(

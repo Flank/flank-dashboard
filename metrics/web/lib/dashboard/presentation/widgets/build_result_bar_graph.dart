@@ -2,32 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_metrics_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 
-/// A [BarGraph] that displays the build result metrics.
+/// A [BarGraph] that displays the build result metric.
 ///
 /// Applies the color theme from the [MetricsThemeData.buildResultTheme].
 class BuildResultBarGraph extends StatefulWidget {
-  /// A [BuildResultMetricsViewModel] with data to display.
-  final BuildResultMetricsViewModel buildResultMetrics;
+  /// A [BuildResultMetricViewModel] with data to display.
+  final BuildResultMetricViewModel buildResultMetric;
 
-  /// Creates the [BuildResultBarGraph] based on the given [buildResultMetrics].
+  /// Creates the [BuildResultBarGraph] based on the given [buildResultMetric].
   ///
-  /// The [buildResultMetrics] must not be null.
-  /// If the [BuildResultMetricsViewModel.buildResults] length is greater
-  /// than [BuildResultMetricsViewModel.numberOfBuildsToDisplay],
-  /// the last [BuildResultMetricsViewModel.numberOfBuildsToDisplay] of the
-  /// [BuildResultMetricsViewModel.buildResults] is displayed.
-  /// If there are not enough [BuildResultMetricsViewModel.buildResults]
-  /// to display [BuildResultMetricsViewModel.numberOfBuildsToDisplay] bars,
+  /// The [buildResultMetric] must not be null.
+  /// If the [BuildResultMetricViewModel.buildResults] length is greater
+  /// than [BuildResultMetricViewModel.numberOfBuildsToDisplay],
+  /// the last [BuildResultMetricViewModel.numberOfBuildsToDisplay] of the
+  /// [BuildResultMetricViewModel.buildResults] is displayed.
+  /// If there are not enough [BuildResultMetricViewModel.buildResults]
+  /// to display [BuildResultMetricViewModel.numberOfBuildsToDisplay] bars,
   /// the [PlaceholderBar]s are added to match the requested
-  /// [BuildResultMetricsViewModel.numberOfBuildsToDisplay].
+  /// [BuildResultMetricViewModel.numberOfBuildsToDisplay].
   const BuildResultBarGraph({
     Key key,
-    @required this.buildResultMetrics,
-  })  : assert(buildResultMetrics != null),
+    @required this.buildResultMetric,
+  })  : assert(buildResultMetric != null),
         super(key: key);
 
   @override
@@ -46,9 +46,9 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
 
   @override
   void didUpdateWidget(BuildResultBarGraph oldWidget) {
-    if (oldWidget.buildResultMetrics.numberOfBuildsToDisplay !=
-            widget.buildResultMetrics.numberOfBuildsToDisplay ||
-        oldWidget.buildResultMetrics != widget.buildResultMetrics) {
+    if (oldWidget.buildResultMetric.numberOfBuildsToDisplay !=
+            widget.buildResultMetric.numberOfBuildsToDisplay ||
+        oldWidget.buildResultMetric != widget.buildResultMetric) {
       _calculateBarData();
     }
 
@@ -89,10 +89,10 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
   }
 
   /// Calculates [_missingBarsCount] and trims the data to match
-  /// the given [BuildResultMetricsViewModel.numberOfBuildsToDisplay].
+  /// the given [BuildResultMetricViewModel.numberOfBuildsToDisplay].
   void _calculateBarData() {
-    final numberOfBars = widget.buildResultMetrics.numberOfBuildsToDisplay;
-    _barsData = widget.buildResultMetrics.buildResults;
+    final numberOfBars = widget.buildResultMetric.numberOfBuildsToDisplay;
+    _barsData = widget.buildResultMetric.buildResults;
 
     if (numberOfBars == null) return;
 

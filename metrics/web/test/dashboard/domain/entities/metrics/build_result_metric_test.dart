@@ -1,12 +1,12 @@
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_result_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("BuildResultMetrics", () {
+  group("BuildResultMetric", () {
     final buildResult = BuildResult(
       date: DateTime.utc(2020, 4, 10),
       duration: const Duration(minutes: 14),
@@ -16,22 +16,22 @@ void main() {
     test(
       'creates an instance with the given BuildResult',
       () {
-        final buildResultMetrics =
-            BuildResultMetrics(buildResults: [buildResult]);
+        final buildResultMetric =
+            BuildResultMetric(buildResults: [buildResult]);
 
-        expect(buildResultMetrics.buildResults, equals([buildResult]));
+        expect(buildResultMetric.buildResults, equals([buildResult]));
       },
     );
 
     test(
       'two instances with the equal build results are equal',
       () {
-        final firstBuildResultMetrics =
-            BuildResultMetrics(buildResults: [buildResult]);
-        final secondBuildResultMetrics =
-            BuildResultMetrics(buildResults: [buildResult]);
+        final firstBuildResultMetric =
+            BuildResultMetric(buildResults: [buildResult]);
+        final secondBuildResultMetric =
+            BuildResultMetric(buildResults: [buildResult]);
 
-        expect(firstBuildResultMetrics, equals(secondBuildResultMetrics));
+        expect(firstBuildResultMetric, equals(secondBuildResultMetric));
       },
     );
   });

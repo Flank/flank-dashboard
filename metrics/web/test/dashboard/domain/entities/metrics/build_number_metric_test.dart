@@ -1,42 +1,42 @@
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
-import 'package:metrics/dashboard/domain/entities/metrics/build_number_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("BuildNumberMetrics", () {
+  group("BuildNumberMetric", () {
     const buildNumber = 1;
 
     test(
       "can be created with the given build number",
       () {
-        final buildNumberMetrics =
-            BuildNumberMetrics(numberOfBuilds: buildNumber);
+        final buildNumberMetric =
+            BuildNumberMetric(numberOfBuilds: buildNumber);
 
-        expect(buildNumberMetrics.numberOfBuilds, equals(buildNumber));
+        expect(buildNumberMetric.numberOfBuilds, equals(buildNumber));
       },
     );
 
     test(
       "two instances with the equal number of builds are equal",
       () {
-        final firstBuildNumberMetrics = BuildNumberMetrics(
+        final firstBuildNumberMetric = BuildNumberMetric(
           numberOfBuilds: buildNumber,
         );
-        final secondBuildNumberMetrics = BuildNumberMetrics(
+        final secondBuildNumberMetric = BuildNumberMetric(
           numberOfBuilds: buildNumber,
         );
 
-        expect(firstBuildNumberMetrics, equals(secondBuildNumberMetrics));
+        expect(firstBuildNumberMetric, equals(secondBuildNumberMetric));
       },
     );
 
     test(
       "creates a new instance with 0 number of builds if nothing is passed",
       () {
-        final buildNumberMetrics = BuildNumberMetrics();
+        final buildNumberMetric = BuildNumberMetric();
 
-        expect(buildNumberMetrics.numberOfBuilds, equals(0));
+        expect(buildNumberMetric.numberOfBuilds, equals(0));
       },
     );
   });

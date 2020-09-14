@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-/// A view model class with the build number metrics data.
+/// A view model class with the build number metric data.
 @immutable
 class BuildNumberScorecardViewModel {
   /// A number of builds to display.

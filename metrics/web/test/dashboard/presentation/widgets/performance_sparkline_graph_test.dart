@@ -15,10 +15,10 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("PerformanceSparklineGraph", () {
-    const performanceMetricsValue = Duration(minutes: 1);
-    final performanceMetrics = PerformanceSparklineViewModel(
+    const performanceMetricValue = Duration(minutes: 1);
+    final performanceMetric = PerformanceSparklineViewModel(
       performance: UnmodifiableListView([const Point(1, 2), const Point(3, 4)]),
-      value: performanceMetricsValue,
+      value: performanceMetricValue,
     );
 
     const fillColor = Colors.blue;
@@ -48,11 +48,11 @@ void main() {
       "displays the value text",
       (tester) async {
         await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
-          performanceSparkline: performanceMetrics,
+          performanceSparkline: performanceMetric,
         ));
 
         expect(
-          find.text(CommonStrings.duration(performanceMetricsValue)),
+          find.text(CommonStrings.duration(performanceMetricValue)),
           findsOneWidget,
         );
       },
@@ -79,7 +79,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the no data placeholder if the given performance s is empty",
+      "displays the no data placeholder if the given performance metric is empty",
       (tester) async {
         final performanceMetric = PerformanceSparklineViewModel(
           performance: UnmodifiableListView([]),
@@ -100,12 +100,12 @@ void main() {
       "applies the text style from the metrics theme to the value text",
       (tester) async {
         await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
-          performanceSparkline: performanceMetrics,
+          performanceSparkline: performanceMetric,
           metricsTheme: metricsTheme,
         ));
 
         final valueText = tester.widget<Text>(
-            find.text(CommonStrings.duration(performanceMetricsValue)));
+            find.text(CommonStrings.duration(performanceMetricValue)));
 
         expect(valueText.style, equals(textStyle));
       },
@@ -115,7 +115,7 @@ void main() {
       "applies the stroke color from the metrics theme to the sparkline graph's stroke color",
       (tester) async {
         await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
-          performanceSparkline: performanceMetrics,
+          performanceSparkline: performanceMetric,
           metricsTheme: metricsTheme,
         ));
 
@@ -131,7 +131,7 @@ void main() {
       "applies the fill color metrics theme to the sparkline graph's fill color",
       (tester) async {
         await tester.pumpWidget(_PerformanceSparklineGraphTestbed(
-          performanceSparkline: performanceMetrics,
+          performanceSparkline: performanceMetric,
           metricsTheme: metricsTheme,
         ));
 
@@ -206,7 +206,7 @@ void main() {
 
 /// A testbed class needed to test the [PerformanceSparklineGraph] widget.
 class _PerformanceSparklineGraphTestbed extends StatelessWidget {
-  /// A [PerformanceMetricsViewModel] to display.
+  /// A [PerformanceMetricViewModel] to display.
   final PerformanceSparklineViewModel performanceSparkline;
 
   /// A [MetricsThemeData] used in tests.

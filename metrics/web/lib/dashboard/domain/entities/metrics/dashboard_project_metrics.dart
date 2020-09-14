@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_number_metrics.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_result_metrics.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/performance_metrics.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// Represent the main project metrics available for users
@@ -12,16 +12,16 @@ class DashboardProjectMetrics extends Equatable {
   final String projectId;
 
   /// A status of the build of the project these metrics belong to.
-  final ProjectBuildStatusMetrics projectBuildStatusMetrics;
+  final ProjectBuildStatusMetric projectBuildStatusMetric;
 
-  /// A [BuildNumberMetrics] of project with [projectId].
-  final BuildNumberMetrics buildNumberMetrics;
+  /// A [BuildNumberMetric] of project with [projectId].
+  final BuildNumberMetric buildNumberMetrics;
 
-  /// A [PerformanceMetrics] of project with [projectId].
-  final PerformanceMetrics performanceMetrics;
+  /// A [PerformanceMetric] of project with [projectId].
+  final PerformanceMetric performanceMetrics;
 
-  /// A [BuildResultMetrics] of project with [projectId].
-  final BuildResultMetrics buildResultMetrics;
+  /// A [BuildResultMetric] of project with [projectId].
+  final BuildResultMetric buildResultMetrics;
 
   /// A test coverage percent of the project with [projectId].
   final Percent coverage;
@@ -32,7 +32,7 @@ class DashboardProjectMetrics extends Equatable {
   @override
   List<Object> get props => [
         projectId,
-        projectBuildStatusMetrics,
+        projectBuildStatusMetric,
         buildNumberMetrics,
         performanceMetrics,
         buildResultMetrics,
@@ -43,7 +43,7 @@ class DashboardProjectMetrics extends Equatable {
   /// Creates the [DashboardProjectMetrics].
   const DashboardProjectMetrics({
     this.projectId,
-    this.projectBuildStatusMetrics,
+    this.projectBuildStatusMetric,
     this.buildNumberMetrics,
     this.performanceMetrics,
     this.buildResultMetrics,

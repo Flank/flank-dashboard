@@ -76,7 +76,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
               isLoading: projectMetrics.buildResultMetrics == null,
               loadingPlaceholder: const LoadingPlaceholder(),
               builder: (_) => BuildResultBarGraph(
-                buildResultMetrics: projectMetrics.buildResultMetrics,
+                buildResultMetric: projectMetrics.buildResultMetrics,
               ),
             ),
           ),
@@ -93,12 +93,12 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
           buildNumber: Container(
             height: 80.0,
             child: LoadingBuilder(
-              isLoading: projectMetrics.buildNumberMetrics == null,
+              isLoading: projectMetrics.buildNumberMetric == null,
               builder: (_) {
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: BuildNumberScorecard(
-                    buildNumberMetrics: projectMetrics.buildNumberMetrics,
+                    buildNumberMetric: projectMetrics.buildNumberMetric,
                   ),
                 );
               },

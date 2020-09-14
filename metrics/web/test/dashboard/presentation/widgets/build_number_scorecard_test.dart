@@ -18,7 +18,7 @@ void main() {
     );
 
     testWidgets(
-      'displays the `no data placeholder` if the given build number metrics is null',
+      'displays the `no data placeholder` if the given build number metric is null',
       (tester) async {
         await tester.pumpWidget(const _BuildNumberScorecardTestbed(
           buildNumberViewModel: null,
@@ -85,10 +85,10 @@ void main() {
           metricsThemeData: theme,
         ));
 
-        final buildNumberMetricsText =
+        final buildNumberMetricText =
             tester.widget<Text>(find.text('$numberOfBuilds'));
 
-        expect(buildNumberMetricsText.style, equals(textStyle));
+        expect(buildNumberMetricText.style, equals(textStyle));
       },
     );
 
@@ -107,10 +107,10 @@ void main() {
           metricsThemeData: theme,
         ));
 
-        final buildNumberMetricsText =
+        final buildNumberMetricText =
             tester.widget<Text>(find.text(DashboardStrings.perWeek));
 
-        expect(buildNumberMetricsText.style, equals(textStyle));
+        expect(buildNumberMetricText.style, equals(textStyle));
       },
     );
   });
@@ -141,7 +141,7 @@ class _BuildNumberScorecardTestbed extends StatelessWidget {
     return MetricsThemedTestbed(
       metricsThemeData: metricsThemeData,
       body: BuildNumberScorecard(
-        buildNumberMetrics: buildNumberViewModel,
+        buildNumberMetric: buildNumberViewModel,
       ),
     );
   }

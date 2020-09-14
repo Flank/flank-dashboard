@@ -227,16 +227,16 @@ class _MetricsTableRowTestbed extends StatelessWidget {
   /// A [Widget] that displays an information about build results.
   final Widget buildResults;
 
-  /// A [Widget] that displays an information about a performance metrics.
+  /// A [Widget] that displays an information about a performance metric.
   final Widget performance;
 
   /// A [Widget] that displays an information about a builds count.
   final Widget buildNumber;
 
-  /// A [Widget] that displays an information about a stability metrics.
+  /// A [Widget] that displays an information about a stability metric.
   final Widget stability;
 
-  /// A [Widget] that displays an information about a coverage metrics.
+  /// A [Widget] that displays an information about a coverage metric.
   final Widget coverage;
 
   /// Creates the instance of this testbed.

@@ -4,7 +4,7 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A base class for a theme strategy based on the [BuildStatus] value.
 ///
-/// Represents the strategy of applying the [ProjectBuildStatusStyle] to the metrics widgets.
+/// Represents the strategy of applying the [ProjectBuildStatusStyle] to the metric widgets.
 abstract class BuildStatusStyleStrategy
     implements
         ValueBasedAppearanceStrategy<ProjectBuildStatusStyle, BuildStatus> {

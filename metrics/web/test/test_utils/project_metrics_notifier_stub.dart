@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_metrics_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
@@ -21,11 +21,11 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
     projectName: 'project',
     coverage: const CoverageViewModel(value: 0.1),
     stability: const StabilityViewModel(value: 0.2),
-    buildNumberMetrics: const BuildNumberScorecardViewModel(numberOfBuilds: 0),
+    buildNumberMetric: const BuildNumberScorecardViewModel(numberOfBuilds: 0),
     performanceSparkline: PerformanceSparklineViewModel(
       performance: UnmodifiableListView([]),
     ),
-    buildResultMetrics: BuildResultMetricsViewModel(
+    buildResultMetrics: BuildResultMetricViewModel(
       buildResults: UnmodifiableListView([]),
     ),
   );

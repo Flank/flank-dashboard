@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_metrics_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
@@ -23,14 +23,14 @@ class ProjectMetricsTileViewModel extends Equatable {
   /// A stability circle percentage view model.
   final StabilityViewModel stability;
 
-  /// A build number scorecard metrics view model.
-  final BuildNumberScorecardViewModel buildNumberMetrics;
+  /// A build number scorecard metric view model.
+  final BuildNumberScorecardViewModel buildNumberMetric;
 
   /// A performance sparkline graph view model.
   final PerformanceSparklineViewModel performanceSparkline;
 
   /// A build result bar graph view model.
-  final BuildResultMetricsViewModel buildResultMetrics;
+  final BuildResultMetricViewModel buildResultMetrics;
 
   @override
   List<Object> get props => [
@@ -38,7 +38,7 @@ class ProjectMetricsTileViewModel extends Equatable {
         projectName,
         coverage,
         stability,
-        buildNumberMetrics,
+        buildNumberMetric,
         performanceSparkline,
         buildResultMetrics,
       ];
@@ -54,7 +54,7 @@ class ProjectMetricsTileViewModel extends Equatable {
     this.buildStatus = const ProjectBuildStatusViewModel(),
     this.coverage = const CoverageViewModel(),
     this.stability = const StabilityViewModel(),
-    this.buildNumberMetrics,
+    this.buildNumberMetric,
     this.performanceSparkline,
     this.buildResultMetrics,
   });
@@ -66,9 +66,9 @@ class ProjectMetricsTileViewModel extends Equatable {
     String projectName,
     CoverageViewModel coverage,
     StabilityViewModel stability,
-    BuildNumberScorecardViewModel buildNumberMetrics,
+    BuildNumberScorecardViewModel buildNumberMetric,
     PerformanceSparklineViewModel performanceSparkline,
-    BuildResultMetricsViewModel buildResultMetrics,
+    BuildResultMetricViewModel buildResultMetrics,
     ProjectBuildStatusViewModel buildStatus,
   }) {
     return ProjectMetricsTileViewModel(
@@ -76,7 +76,7 @@ class ProjectMetricsTileViewModel extends Equatable {
       projectName: projectName ?? this.projectName,
       coverage: coverage ?? this.coverage,
       stability: stability ?? this.stability,
-      buildNumberMetrics: buildNumberMetrics ?? this.buildNumberMetrics,
+      buildNumberMetric: buildNumberMetric ?? this.buildNumberMetric,
       performanceSparkline: performanceSparkline ?? this.performanceSparkline,
       buildResultMetrics: buildResultMetrics ?? this.buildResultMetrics,
       buildStatus: buildStatus ?? this.buildStatus,

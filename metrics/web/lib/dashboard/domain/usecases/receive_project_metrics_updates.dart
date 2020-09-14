@@ -2,13 +2,13 @@ import 'dart:collection';
 
 import 'package:metrics/base/domain/usecases/usecase.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_number_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_number_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_result_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/performance_metrics.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/project_build_status_metric.dart';
 import 'package:metrics/dashboard/domain/repositories/metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/util/date.dart';
@@ -99,7 +99,7 @@ class ReceiveProjectMetricsUpdates
       commonBuildsLoadingPeriod,
     );
 
-    final projectBuildStatusMetrics = ProjectBuildStatusMetrics(
+    final projectBuildStatusMetric = ProjectBuildStatusMetric(
       status: builds.last.buildStatus,
     );
     final buildNumberMetrics = _getBuildNumberMetrics(lastBuildsInPeriod);
@@ -110,7 +110,7 @@ class ReceiveProjectMetricsUpdates
 
     return DashboardProjectMetrics(
       projectId: projectId,
-      projectBuildStatusMetrics: projectBuildStatusMetrics,
+      projectBuildStatusMetric: projectBuildStatusMetric,
       buildNumberMetrics: buildNumberMetrics,
       performanceMetrics: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
@@ -154,15 +154,15 @@ class ReceiveProjectMetricsUpdates
     return lastSuccessfulBuild.coverage;
   }
 
-  /// Creates the [PerformanceMetrics] from [builds].
-  PerformanceMetrics _getPerformanceMetrics(
+  /// Creates the [PerformanceMetric] from [builds].
+  PerformanceMetric _getPerformanceMetrics(
     List<Build> builds,
   ) {
     final averageBuildDuration = _getAverageBuildDuration(builds);
     final buildPerformanceSet = DateTimeSet<BuildPerformance>();
 
     if (builds.isEmpty) {
-      return PerformanceMetrics(
+      return PerformanceMetric(
         buildsPerformance: buildPerformanceSet,
       );
     }
@@ -174,7 +174,7 @@ class ReceiveProjectMetricsUpdates
       ));
     }
 
-    return PerformanceMetrics(
+    return PerformanceMetric(
       buildsPerformance: buildPerformanceSet,
       averageBuildDuration: averageBuildDuration,
     );
@@ -189,16 +189,16 @@ class ReceiveProjectMetricsUpdates
         builds.length;
   }
 
-  /// Calculates the [BuildNumberMetrics] from [builds].
-  BuildNumberMetrics _getBuildNumberMetrics(List<Build> builds) {
-    return BuildNumberMetrics(
+  /// Calculates the [BuildNumberMetric] from [builds].
+  BuildNumberMetric _getBuildNumberMetrics(List<Build> builds) {
+    return BuildNumberMetric(
       numberOfBuilds: builds.length,
     );
   }
 
-  /// Creates the [BuildResultMetrics] from the list of [builds].
-  BuildResultMetrics _getBuildResultMetrics(List<Build> builds) {
-    if (builds.isEmpty) return const BuildResultMetrics();
+  /// Creates the [BuildResultMetric] from the list of [builds].
+  BuildResultMetric _getBuildResultMetrics(List<Build> builds) {
+    if (builds.isEmpty) return const BuildResultMetric();
 
     final buildResults = builds.map((build) {
       return BuildResult(
@@ -209,10 +209,10 @@ class ReceiveProjectMetricsUpdates
       );
     }).toList();
 
-    return BuildResultMetrics(buildResults: buildResults);
+    return BuildResultMetric(buildResults: buildResults);
   }
 
-  /// Calculates the stability metrics from list of [builds].
+  /// Calculates the stability metric from list of [builds].
   Percent _getStability(List<Build> builds) {
     if (builds.isEmpty) return null;
 

@@ -65,7 +65,7 @@ void main() {
         );
 
         test(
-          "loads and displays coverage metrics",
+          "loads and displays coverage metric",
           () async {
             await driver.waitFor(find.text(DashboardStrings.coverage));
             await driver.waitFor(find.byType('CirclePercentage'));
@@ -73,7 +73,7 @@ void main() {
         );
 
         test(
-          "loads and displays the performance metrics ",
+          "loads and displays the performance metric",
           () async {
             await driver.waitFor(find.text(DashboardStrings.performance));
 
@@ -82,7 +82,7 @@ void main() {
         );
 
         test(
-          "loads and shows the build number metrics",
+          "loads and shows the build number metric",
           () async {
             await driver.waitFor(find.text(DashboardStrings.builds));
 

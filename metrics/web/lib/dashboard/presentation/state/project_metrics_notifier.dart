@@ -7,13 +7,13 @@ import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/build_result_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
-import 'package:metrics/dashboard/domain/entities/metrics/performance_metrics.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
 import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_metrics_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
@@ -80,7 +80,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     return projectMetrics.any((projectMetric) {
       return projectMetric.buildResultMetrics == null ||
           projectMetric.performanceSparkline == null ||
-          projectMetric.buildNumberMetrics == null ||
+          projectMetric.buildNumberMetric == null ||
           projectMetric.coverage == null ||
           projectMetric.stability == null;
     });
@@ -303,7 +303,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final numberOfBuilds = dashboardMetrics.buildNumberMetrics?.numberOfBuilds;
 
     final buildStatus = ProjectBuildStatusViewModel(
-      value: dashboardMetrics.projectBuildStatusMetrics?.status,
+      value: dashboardMetrics.projectBuildStatusMetric?.status,
     );
 
     final buildNumber = BuildNumberScorecardViewModel(
@@ -314,7 +314,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       performanceSparkline: performanceMetrics,
       buildResultMetrics: buildResultMetrics,
       buildStatus: buildStatus,
-      buildNumberMetrics: buildNumber,
+      buildNumberMetric: buildNumber,
       coverage: CoverageViewModel(value: dashboardMetrics.coverage?.value),
       stability: StabilityViewModel(value: dashboardMetrics.stability?.value),
     );
@@ -323,10 +323,10 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates the project performance metrics from [PerformanceMetrics].
+  /// Creates the project performance metrics from [PerformanceMetric].
   PerformanceSparklineViewModel _getPerformanceMetrics(
-      PerformanceMetrics metrics) {
-    final performanceMetrics = metrics?.buildsPerformance ?? DateTimeSet();
+      PerformanceMetric metric) {
+    final performanceMetrics = metric?.buildsPerformance ?? DateTimeSet();
 
     if (performanceMetrics.isEmpty) {
       return PerformanceSparklineViewModel(
@@ -343,17 +343,16 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
     return PerformanceSparklineViewModel(
       performance: UnmodifiableListView(performance),
-      value: metrics.averageBuildDuration,
+      value: metric.averageBuildDuration,
     );
   }
 
-  /// Creates the project build result metrics from [BuildResultMetrics].
-  BuildResultMetricsViewModel _getBuildResultMetrics(
-      BuildResultMetrics metrics) {
+  /// Creates the project build result metrics from [BuildResultMetric].
+  BuildResultMetricViewModel _getBuildResultMetrics(BuildResultMetric metrics) {
     final buildResults = metrics?.buildResults ?? [];
 
     if (buildResults.isEmpty) {
-      return BuildResultMetricsViewModel(
+      return BuildResultMetricViewModel(
         buildResults: UnmodifiableListView([]),
       );
     }
@@ -366,7 +365,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       );
     }).toList();
 
-    return BuildResultMetricsViewModel(
+    return BuildResultMetricViewModel(
       buildResults: UnmodifiableListView(buildResultViewModels),
     );
   }
