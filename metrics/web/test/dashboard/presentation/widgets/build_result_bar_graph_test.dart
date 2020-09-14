@@ -130,8 +130,6 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
 
   /// Creates the [_BuildResultBarGraphTestbed] with the given [buildResultMetric].
   ///
-  /// If the [buildResultMetric] is not specified, the
-  /// [buildResultMetricsTestData] used.
   /// If the [theme] is not specified, an empty [MetricsThemeData] used.
   const _BuildResultBarGraphTestbed({
     Key key,
