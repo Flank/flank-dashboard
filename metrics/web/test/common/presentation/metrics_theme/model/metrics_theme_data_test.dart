@@ -13,7 +13,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
@@ -36,11 +36,11 @@ import 'package:test/test.dart';
 void main() {
   group("MetricsThemeData", () {
     test(
-      "creates a theme with the default theme data for metric widgets if the parameters is not specified",
+      "creates a theme with the default theme data for metrics widgets if the parameters is not specified",
       () {
         const themeData = MetricsThemeData();
 
-        expect(themeData.metricWidgetTheme, isNotNull);
+        expect(themeData.metricsWidgetTheme, isNotNull);
         expect(themeData.inactiveWidgetTheme, isNotNull);
         expect(themeData.buildResultTheme, isNotNull);
         expect(themeData.deleteDialogTheme, isNotNull);
@@ -65,10 +65,10 @@ void main() {
     );
 
     test(
-      "creates a theme with the default metric widgets theme data if nulls are passed",
+      "creates a theme with the default metrics widgets theme data if nulls are passed",
       () {
         const themeData = MetricsThemeData(
-          metricWidgetTheme: null,
+          metricsWidgetTheme: null,
           inactiveWidgetTheme: null,
           buildResultTheme: null,
           projectGroupCardTheme: null,
@@ -92,7 +92,7 @@ void main() {
           toastTheme: null,
         );
 
-        expect(themeData.metricWidgetTheme, isNotNull);
+        expect(themeData.metricsWidgetTheme, isNotNull);
         expect(themeData.inactiveWidgetTheme, isNotNull);
         expect(themeData.buildResultTheme, isNotNull);
         expect(themeData.projectGroupCardTheme, isNotNull);
@@ -124,7 +124,7 @@ void main() {
         const accentColor = Colors.orange;
         const backgroundColor = Colors.black;
 
-        const metricWidgetTheme = MetricWidgetThemeData(
+        const metricsWidgetTheme = MetricsWidgetThemeData(
           primaryColor: primaryColor,
           accentColor: accentColor,
           backgroundColor: backgroundColor,
@@ -165,7 +165,7 @@ void main() {
           backgroundColor: Colors.black,
         );
 
-        const inactiveTheme = MetricWidgetThemeData(
+        const inactiveTheme = MetricsWidgetThemeData(
           primaryColor: primaryColor,
         );
 
@@ -241,7 +241,7 @@ void main() {
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
-          metricWidgetTheme: metricWidgetTheme,
+          metricsWidgetTheme: metricsWidgetTheme,
           buildResultTheme: buildResultsTheme,
           projectGroupCardTheme: projectGroupCardTheme,
           addProjectGroupCardTheme: addProjectGroupTheme,
@@ -265,7 +265,7 @@ void main() {
           toastTheme: toastTheme,
         );
 
-        expect(copiedTheme.metricWidgetTheme, equals(metricWidgetTheme));
+        expect(copiedTheme.metricsWidgetTheme, equals(metricsWidgetTheme));
         expect(copiedTheme.inactiveWidgetTheme, equals(inactiveTheme));
         expect(copiedTheme.buildResultTheme, equals(buildResultsTheme));
         expect(
@@ -325,8 +325,8 @@ void main() {
 
         expect(themeData, isNot(copiedTheme));
         expect(
-          themeData.metricWidgetTheme,
-          equals(copiedTheme.metricWidgetTheme),
+          themeData.metricsWidgetTheme,
+          equals(copiedTheme.metricsWidgetTheme),
         );
         expect(
           themeData.buildResultTheme,

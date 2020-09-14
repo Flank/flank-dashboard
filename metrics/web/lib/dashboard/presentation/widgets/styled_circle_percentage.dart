@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value_based_appearance_strategy.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
@@ -48,7 +48,7 @@ class StyledCirclePercentage extends StatelessWidget {
     );
   }
 
-  /// Gets the [MetricWidgetThemeData] using the [appearanceStrategy].
+  /// Gets the [MetricsWidgetThemeData] using the [appearanceStrategy].
   CirclePercentageStyle _getWidgetTheme(BuildContext context) {
     final metricsTheme = MetricsTheme.of(context);
 

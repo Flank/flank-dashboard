@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-/// The widget that represents the metric percent in a circular graph.
+/// The widget that represents the percent in a circular graph.
 ///
 /// If no constraints are given by the parent widget, it will be as big as possible.
 /// Otherwise, it will match its parent's size.
 class CirclePercentage extends StatefulWidget {
-  /// The percent value of the metric.
+  /// The percent value.
   final double value;
 
   /// The padding of the [value] text inside the circle graph.
