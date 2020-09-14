@@ -29,7 +29,7 @@ class MetricsAppBar extends StatelessWidget {
                 onTap: () => _navigateHome(context),
                 child: const MetricsThemeImage(
                   darkAsset: 'icons/logo-metrics-appbar.svg',
-                  lightAsset: 'icons/logo-metrics-appbar-dark.svg',
+                  lightAsset: 'icons/logo-metrics-appbar-light.svg',
                   width: 116.0,
                   height: 32.0,
                 ),
