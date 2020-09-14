@@ -253,7 +253,7 @@ void main() {
         await tester.pump();
 
         final textField = FinderUtil.findTextField(tester);
-        final borderColor = textField.decoration.border.borderSide.color;
+        final borderColor = textField.decoration.enabledBorder.borderSide.color;
 
         expect(borderColor, equals(themeHoverBorderColor));
       },

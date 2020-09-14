@@ -56,7 +56,6 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveTextColor = Color(0xff040d14);
   static const Color _cardHoverColor = Color(0xFF212124);
   static const Color _borderColor = Color(0xFF2d2d33);
-  static const Color _borderHoverColor = Color(0xFF37373F);
   static const Color _tileBorderColor = Color(0xFFE0E0E0);
   static const Color _tableHeaderColor = Color(0xFF79858b);
   static const Color _inactiveToggleColor = Color(0xFF88889b);
@@ -65,8 +64,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
   static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
-  static const Color _hoverBorderColor = Color(0xffb6b6ba);
-  static const Color _activeBorderColor = Color(0xff6d6d75);
+  static const Color hoverBorderColor = Color(0xffb6b6ba);
   static const Color _inputColor = Color(0xfff5f8fa);
   static const Color _openedButtonInactiveColor = Color(0xfffafbfc);
   static const TextStyle _defaultDropdownTextStyle = TextStyle(
@@ -234,7 +232,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           textFieldTheme: const TextFieldThemeData(
             focusColor: inputHoverColor,
-            hoverBorderColor: _borderHoverColor,
+            hoverBorderColor: hoverBorderColor,
             textStyle: TextStyle(
               color: _inactiveTextColor,
               fontSize: 16.0,
@@ -244,8 +242,8 @@ class LightMetricsThemeData extends MetricsThemeData {
             backgroundColor: Colors.white,
             openedButtonBackgroundColor: _openedButtonInactiveColor,
             hoverBackgroundColor: _openedButtonInactiveColor,
-            hoverBorderColor: _hoverBorderColor,
-            openedButtonBorderColor: _activeBorderColor,
+            hoverBorderColor: hoverBorderColor,
+            openedButtonBorderColor: _inputFocusedBorderColor,
             closedButtonBackgroundColor: _inputColor,
             closedButtonBorderColor: _inputColor,
             textStyle: _defaultDropdownTextStyle,
@@ -256,6 +254,10 @@ class LightMetricsThemeData extends MetricsThemeData {
             textStyle: TextStyle(
               fontSize: 16.0,
               color: _inactiveTextColor,
+            ),
+            hoverTextStyle: TextStyle(
+              fontSize: 16.0,
+              color: Colors.white,
             ),
           ),
           loginTheme: const LoginThemeData(

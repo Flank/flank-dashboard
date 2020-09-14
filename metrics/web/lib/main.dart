@@ -28,7 +28,7 @@ class _MetricsAppState extends State<MetricsApp> {
 
   /// A route observer used to close all opened overlay entries
   /// when the page route changes.
-  final  _userMenuRouteObserver = OverlayEntryRouteObserver();
+  final _userMenuRouteObserver = OverlayEntryRouteObserver();
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +63,7 @@ class _MetricsAppState extends State<MetricsApp> {
                 fillColor: LightMetricsThemeData.inputColor,
                 hoverColor: LightMetricsThemeData.inputHoverColor,
                 border: TextFieldConfig.border,
+                enabledBorder: TextFieldConfig.border,
                 focusedBorder: LightMetricsThemeData.inputFocusedBorder,
                 errorStyle: TextFieldConfig.errorStyle,
                 errorBorder: TextFieldConfig.errorBorder,
@@ -85,6 +86,7 @@ class _MetricsAppState extends State<MetricsApp> {
                 fillColor: DarkMetricsThemeData.inputColor,
                 hoverColor: Colors.black,
                 border: TextFieldConfig.border,
+                enabledBorder: TextFieldConfig.border,
                 focusedBorder: DarkMetricsThemeData.inputFocusedBorder,
                 errorStyle: TextFieldConfig.errorStyle,
                 errorBorder: TextFieldConfig.errorBorder,

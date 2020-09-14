@@ -109,13 +109,14 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
 
     final border = decorationTheme.border ?? InputBorder.none;
     _hoverDecoration = _defaultDecoration.copyWith(
-      border: border.copyWith(
+      enabledBorder: border.copyWith(
         borderSide: BorderSide(color: textFieldTheme.hoverBorderColor),
       ),
     );
 
     _focusDecoration = _defaultDecoration.copyWith(
       fillColor: textFieldTheme.focusColor,
+      focusedBorder: decorationTheme.focusedBorder,
     );
 
     super.didChangeDependencies();
