@@ -29,7 +29,7 @@ class MetricsCard extends StatelessWidget {
       height: 156.0,
       decoration: decoration,
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(20.0),
         child: child,
       ),
     );

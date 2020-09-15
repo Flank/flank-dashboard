@@ -15,7 +15,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
@@ -31,6 +31,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
@@ -40,7 +41,7 @@ class LightMetricsThemeData extends MetricsThemeData {
     borderSide: BorderSide(color: _focusedBorderColor),
   );
 
-  static const Color _dropdownHoverColor = Color(0xFF1d1d20);
+  static const Color _dropdownHoverColor = Color(0xFF878799);
   static const Color _focusedBorderColor = Colors.blue;
   static const Color _inactiveBackgroundColor = Color(0xFFEEEEEE);
   static const Color _inactiveColor = Color(0xFFBDBDBD);
@@ -54,6 +55,15 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
   static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color _hoverBorderColor = Color(0xffb6b6ba);
+  static const Color _activeBorderColor = Color(0xff6d6d75);
+  static const Color _inputColor = Color(0xfff5f8fa);
+  static const Color _inactiveTextColor = Color(0xff040d14);
+  static const Color _openedButtonInactiveColor = Color(0xfffafbfc);
+  static const TextStyle _defaultDropdownTextStyle = TextStyle(
+    fontSize: 16.0,
+    color: _inactiveTextColor,
+  );
 
   /// A [TextStyle] of the dialog title.
   static const TextStyle _dialogTitleTextStyle = TextStyle(
@@ -65,7 +75,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   /// Creates the light theme with the default widget theme configuration.
   const LightMetricsThemeData()
       : super(
-          metricWidgetTheme: const MetricWidgetThemeData(
+          metricsWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
             accentColor: ColorConfig.primaryTranslucentColor,
             backgroundColor: Colors.white,
@@ -85,15 +95,15 @@ class LightMetricsThemeData extends MetricsThemeData {
             backgroundColor: scaffoldColor,
             accentColor: ColorConfig.accentColor,
             primaryColor: ColorConfig.primaryColor,
-            titleStyle: TextStyle(
+            titleStyle: MetricsTextStyle(
               color: Colors.black,
-              height: 1.09,
+              lineHeightInPixels: 26.0,
               fontSize: 22.0,
               fontWeight: FontWeight.w500,
             ),
-            subtitleStyle: TextStyle(
+            subtitleStyle: MetricsTextStyle(
               color: ColorConfig.secondaryTextColor,
-              height: 1.23,
+              lineHeightInPixels: 16.0,
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
             ),
@@ -104,9 +114,9 @@ class LightMetricsThemeData extends MetricsThemeData {
                 backgroundColor: _addProjectGroupCardBackgroundColor,
                 iconColor: ColorConfig.primaryColor,
                 hoverColor: _addProjectGroupCardHoverColor,
-                labelStyle: TextStyle(
+                labelStyle: MetricsTextStyle(
                   color: ColorConfig.primaryColor,
-                  height: 1.5,
+                  lineHeightInPixels: 20.0,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
@@ -115,9 +125,9 @@ class LightMetricsThemeData extends MetricsThemeData {
                 backgroundColor: _inactiveBackgroundColor,
                 hoverColor: _inactiveBackgroundColor,
                 iconColor: scaffoldColor,
-                labelStyle: TextStyle(
+                labelStyle: MetricsTextStyle(
                   color: scaffoldColor,
-                  height: 1.5,
+                  lineHeightInPixels: 20.0,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
@@ -128,6 +138,13 @@ class LightMetricsThemeData extends MetricsThemeData {
             backgroundColor: scaffoldColor,
             closeIconColor: Colors.black,
             titleTextStyle: _dialogTitleTextStyle,
+            contentTextStyle: MetricsTextStyle(
+              fontSize: 16.0,
+              color: Colors.black,
+              lineHeightInPixels: 24.0,
+              fontWeight: FontWeight.w300,
+              letterSpacing: 0.14,
+            ),
           ),
           projectGroupDialogTheme: const ProjectGroupDialogThemeData(
             primaryColor: ColorConfig.primaryColor,
@@ -146,7 +163,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             counterTextStyle: TextStyleConfig.captionTextStyle,
             errorTextStyle: TextStyle(color: ColorConfig.accentColor),
           ),
-          inactiveWidgetTheme: const MetricWidgetThemeData(
+          inactiveWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: _inactiveColor,
             accentColor: Colors.transparent,
             backgroundColor: _inactiveBackgroundColor,
@@ -201,11 +218,21 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontSize: 16.0,
             ),
           ),
-          dropdownTheme: const DropdownThemeData(),
+          dropdownTheme: const DropdownThemeData(
+            backgroundColor: Colors.white,
+            openedButtonBackgroundColor: _openedButtonInactiveColor,
+            hoverBackgroundColor: _openedButtonInactiveColor,
+            hoverBorderColor: _hoverBorderColor,
+            openedButtonBorderColor: _activeBorderColor,
+            closedButtonBackgroundColor: _inputColor,
+            closedButtonBorderColor: _inputColor,
+            textStyle: _defaultDropdownTextStyle,
+          ),
           dropdownItemTheme: const DropdownItemThemeData(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.white,
             hoverColor: _dropdownHoverColor,
-            textStyle: TextStyle(fontSize: 16.0),
+            textStyle: _defaultDropdownTextStyle,
+            hoverTextStyle: TextStyle(fontSize: 16.0, color: Colors.white),
           ),
           loginTheme: const LoginThemeData(
             titleTextStyle: TextStyle(

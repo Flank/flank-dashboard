@@ -8,22 +8,23 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import '../../../test_utils/finder_util.dart';
 
 void main() {
-  const hoveredColor = Colors.yellow;
-  const defaultColor = Colors.red;
-  const defaultCursor = MouseCursor.basic;
-  Widget _builder(bool isHovered) {
-    return DecoratedContainer(
-      decoration: BoxDecoration(
-        color: isHovered ? hoveredColor : defaultColor,
-      ),
-    );
-  }
-
-  void onTap() {}
-
-  final tappableAreaFinder = find.byType(TappableArea);
-
   group("TappableArea", () {
+    const hoveredColor = Colors.yellow;
+    const defaultColor = Colors.red;
+    const defaultCursor = MouseCursor.basic;
+
+    final tappableAreaFinder = find.byType(TappableArea);
+
+    Widget _builder(BuildContext context, bool isHovered) {
+      return DecoratedContainer(
+        decoration: BoxDecoration(
+          color: isHovered ? hoveredColor : defaultColor,
+        ),
+      );
+    }
+
+    void _defaultOnTap() {}
+
     testWidgets(
       "throws an assertion error if the given builder is null",
       (WidgetTester tester) async {
@@ -84,12 +85,12 @@ void main() {
       "creates an instance with the given onTap value",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          TappableAreaTestbed(builder: _builder, onTap: onTap),
+          TappableAreaTestbed(builder: _builder, onTap: _defaultOnTap),
         );
 
         final tappableArea = tester.widget<TappableArea>(tappableAreaFinder);
 
-        expect(tappableArea.onTap, equals(onTap));
+        expect(tappableArea.onTap, equals(_defaultOnTap));
       },
     );
 
@@ -97,13 +98,13 @@ void main() {
       "applies the given on tap callback",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          TappableAreaTestbed(builder: _builder, onTap: onTap),
+          TappableAreaTestbed(builder: _builder, onTap: _defaultOnTap),
         );
 
         final gestureDetector =
             tester.widget<GestureDetector>(find.byType(GestureDetector));
 
-        expect(gestureDetector.onTap, equals(onTap));
+        expect(gestureDetector.onTap, equals(_defaultOnTap));
       },
     );
 
@@ -157,15 +158,16 @@ class TappableAreaTestbed extends StatelessWidget {
 
   /// A widget builder that builds the given widget differently depending on
   /// if the this area is hovered.
-  final Widget Function(bool) builder;
+  final HoverWidgetBuilder builder;
 
-  /// Creates a new [TappableAreaTestbed] instance.
+  /// Creates a new instance of the [TappableAreaTestbed].
   const TappableAreaTestbed({
     Key key,
     this.onTap,
     this.mouseCursor,
     this.builder,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

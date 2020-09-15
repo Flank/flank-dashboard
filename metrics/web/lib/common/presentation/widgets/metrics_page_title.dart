@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 
 /// A widget that displays the metrics page title with the navigate back arrow.
 class MetricsPageTitle extends StatelessWidget {
@@ -41,9 +42,10 @@ class MetricsPageTitle extends StatelessWidget {
         ),
         Text(
           title,
-          style: const TextStyle(
+          style: const MetricsTextStyle(
             fontSize: 36.0,
             fontWeight: FontWeight.w500,
+            lineHeightInPixels: 42.0,
           ),
         ),
       ],

@@ -11,16 +11,19 @@ void main() {
       const backgroundColor = Colors.red;
       const textStyle = TextStyle(fontSize: 13.0);
       const hoverColor = Colors.orange;
+      const hoverTextStyle = TextStyle(color: Colors.yellow);
 
       final themeData = DropdownItemThemeData(
         backgroundColor: backgroundColor,
         textStyle: textStyle,
         hoverColor: hoverColor,
+        hoverTextStyle: hoverTextStyle,
       );
 
       expect(themeData.backgroundColor, equals(backgroundColor));
       expect(themeData.textStyle, equals(textStyle));
       expect(themeData.hoverColor, equals(hoverColor));
+      expect(themeData.hoverTextStyle, equals(hoverTextStyle));
     });
   });
 }

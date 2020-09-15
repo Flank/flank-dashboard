@@ -6,7 +6,8 @@ import 'package:metrics_core/metrics_core.dart';
 ///
 /// Represents the strategy of applying the [ProjectBuildStatusStyle] to the metric widgets.
 abstract class BuildStatusStyleStrategy
-    implements ValueBasedAppearanceStrategy<ProjectBuildStatusStyle, BuildStatus> {
+    implements
+        ValueBasedAppearanceStrategy<ProjectBuildStatusStyle, BuildStatus> {
   /// Returns the icon image, based on the [BuildStatus] value.
   String getIconImage(BuildStatus value);
 }

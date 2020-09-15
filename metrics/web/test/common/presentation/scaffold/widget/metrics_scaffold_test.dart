@@ -3,14 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../../test_utils/test_injection_container.dart';
+
 void main() {
   group("MetricsScaffold", () {
-    const drawer = Drawer();
-
     testWidgets(
       "throws an AssertionError if trying to create without a body",
       (WidgetTester tester) async {
@@ -119,38 +118,6 @@ void main() {
         expect(find.byType(MetricsAppBar), findsOneWidget);
       },
     );
-
-    testWidgets(
-      "places the drawer on the right side of the Scaffold",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            const _MetricsScaffoldTestbed(drawer: drawer),
-          );
-        });
-
-        final scaffoldWidget = tester.widget<Scaffold>(find.byType(Scaffold));
-
-        expect(scaffoldWidget.endDrawer, drawer);
-      },
-    );
-
-    testWidgets(
-      "opens the given drawer on tap on the icon by the tooltip",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _MetricsScaffoldTestbed(
-            drawer: drawer,
-          ));
-        });
-
-        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
-
-        await tester.pump();
-
-        expect(find.byWidget(drawer), findsOneWidget);
-      },
-    );
   });
 }
 
@@ -184,12 +151,14 @@ class _MetricsScaffoldTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MetricsScaffold(
-        body: body,
-        title: bodyTitle,
-        padding: padding,
-        drawer: drawer,
+    return TestInjectionContainer(
+      child: MaterialApp(
+        home: MetricsScaffold(
+          body: body,
+          title: bodyTitle,
+          padding: padding,
+          drawer: drawer,
+        ),
       ),
     );
   }

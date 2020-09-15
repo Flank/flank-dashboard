@@ -15,7 +15,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
@@ -35,6 +35,7 @@ import 'package:metrics/common/presentation/toast/theme/attention_level/toast_at
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
@@ -70,9 +71,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
 
   /// The default [TextStyle] for dropdown within the application.
-  static const _defaultDropdownTextStyle = TextStyle(
+  static const _defaultDropdownTextStyle = MetricsTextStyle(
     color: Colors.white,
     fontSize: 16.0,
+    lineHeightInPixels: 20.0,
   );
 
   /// A [TextStyle] of the dialog title.
@@ -85,7 +87,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   /// Creates the dark theme with the default widget theme configuration.
   const DarkMetricsThemeData()
       : super(
-          metricWidgetTheme: const MetricWidgetThemeData(
+          metricsWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
             accentColor: ColorConfig.primaryTranslucentColor,
             backgroundColor: scaffoldColor,
@@ -105,16 +107,16 @@ class DarkMetricsThemeData extends MetricsThemeData {
             backgroundColor: scaffoldColor,
             accentColor: ColorConfig.accentColor,
             primaryColor: ColorConfig.primaryColor,
-            titleStyle: TextStyle(
+            titleStyle: MetricsTextStyle(
               color: Colors.white,
-              height: 1.09,
               fontSize: 22.0,
+              lineHeightInPixels: 26.0,
               fontWeight: FontWeight.w500,
             ),
-            subtitleStyle: TextStyle(
+            subtitleStyle: MetricsTextStyle(
               color: ColorConfig.secondaryTextColor,
-              height: 1.23,
               fontSize: 13.0,
+              lineHeightInPixels: 16.0,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -124,10 +126,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 backgroundColor: ColorConfig.primaryTranslucentColor,
                 iconColor: ColorConfig.primaryColor,
                 hoverColor: _addProjectGroupCardHoverColor,
-                labelStyle: TextStyle(
+                labelStyle: MetricsTextStyle(
                   color: ColorConfig.primaryColor,
-                  height: 1.5,
                   fontSize: 16.0,
+                  lineHeightInPixels: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -135,10 +137,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 backgroundColor: _inactiveBackgroundColor,
                 hoverColor: _inactiveBackgroundColor,
                 iconColor: scaffoldColor,
-                labelStyle: TextStyle(
+                labelStyle: MetricsTextStyle(
                   color: scaffoldColor,
-                  height: 1.5,
                   fontSize: 16.0,
+                  lineHeightInPixels: 20.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -148,10 +150,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
             backgroundColor: scaffoldColor,
             closeIconColor: Colors.white,
             titleTextStyle: _dialogTitleTextStyle,
-            contentTextStyle: TextStyle(
+            contentTextStyle: MetricsTextStyle(
               fontSize: 16.0,
+              lineHeightInPixels: 24.0,
               color: Colors.white,
-              height: 1.5,
               fontWeight: FontWeight.w300,
               letterSpacing: 0.14,
             ),
@@ -162,19 +164,21 @@ class DarkMetricsThemeData extends MetricsThemeData {
             closeIconColor: Colors.white,
             contentBorderColor: _borderColor,
             titleTextStyle: _dialogTitleTextStyle,
-            uncheckedProjectTextStyle: TextStyle(
+            uncheckedProjectTextStyle: MetricsTextStyle(
               color: Colors.white,
               fontSize: 14.0,
+              lineHeightInPixels: 20.0,
             ),
-            checkedProjectTextStyle: TextStyle(
+            checkedProjectTextStyle: MetricsTextStyle(
               color: Colors.white,
               fontSize: 14.0,
+              lineHeightInPixels: 20.0,
               fontWeight: FontWeight.w500,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
             errorTextStyle: TextStyle(color: ColorConfig.accentColor),
           ),
-          inactiveWidgetTheme: const MetricWidgetThemeData(
+          inactiveWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: _inactiveColor,
             accentColor: Colors.transparent,
             backgroundColor: _inactiveBackgroundColor,
@@ -224,9 +228,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
           textFieldTheme: const TextFieldThemeData(
             focusColor: Colors.black,
             hoverBorderColor: ColorConfig.hoverBorderColor,
-            textStyle: TextStyle(
+            textStyle: MetricsTextStyle(
               color: Colors.white,
               fontSize: 16.0,
+              lineHeightInPixels: 20.0,
             ),
           ),
           dropdownTheme: const DropdownThemeData(
@@ -243,6 +248,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             backgroundColor: Colors.transparent,
             hoverColor: _dropdownHoverColor,
             textStyle: _defaultDropdownTextStyle,
+            hoverTextStyle: _defaultDropdownTextStyle,
           ),
           loginTheme: const LoginThemeData(
             titleTextStyle: TextStyle(
@@ -274,7 +280,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
             projectMetricsTileTheme: ProjectMetricsTileThemeData(
               backgroundColor: scaffoldColor,
               borderColor: _tileBorderColor,
-              textStyle: TextStyle(fontSize: 24.0),
+              textStyle: MetricsTextStyle(
+                fontSize: 24.0,
+                lineHeightInPixels: 28.0,
+              ),
             ),
             projectMetricsTilePlaceholderTheme: ShimmerPlaceholderThemeData(
               backgroundColor: _tileLoadingBackgroundColor,
@@ -294,10 +303,11 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
           ),
           performanceSparklineTheme: const SparklineThemeData(
-            textStyle: TextStyle(
+            textStyle: MetricsTextStyle(
               color: _sparklineTextColor,
               fontWeight: FontWeight.bold,
               fontSize: 22.0,
+              lineHeightInPixels: 26.0,
             ),
             strokeColor: _sparklineStrokeColor,
             fillColor: _sparklineFillColor,

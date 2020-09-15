@@ -11,7 +11,7 @@ void main() {
       () {
         final darkMetricsThemeData = DarkMetricsThemeData();
 
-        expect(darkMetricsThemeData.metricWidgetTheme, isNotNull);
+        expect(darkMetricsThemeData.metricsWidgetTheme, isNotNull);
         expect(darkMetricsThemeData.buildResultTheme, isNotNull);
         expect(darkMetricsThemeData.inactiveWidgetTheme, isNotNull);
         expect(darkMetricsThemeData.projectGroupCardTheme, isNotNull);

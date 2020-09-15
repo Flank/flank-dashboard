@@ -15,6 +15,9 @@ enum AuthErrorCode {
   /// Indicates that there are was too many attempts to sign in as this user.
   tooManyRequests,
 
+  /// Indicates that an error has occurred while signing in with Google.
+  googleSignInError,
+
   /// Indicates that an unknown error occurred.
   unknown,
 }
