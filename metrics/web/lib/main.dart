@@ -68,7 +68,7 @@ class _MetricsAppState extends State<MetricsApp> {
                 errorStyle: TextFieldConfig.errorStyle,
                 errorBorder: TextFieldConfig.errorBorder,
                 focusedErrorBorder: TextFieldConfig.errorBorder,
-                hintStyle: TextFieldConfig.hintStyle,
+                hintStyle: TextFieldConfig.lightHintStyle,
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
               ),
             ),

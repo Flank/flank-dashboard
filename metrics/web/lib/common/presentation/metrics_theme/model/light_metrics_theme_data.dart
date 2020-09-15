@@ -15,11 +15,11 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/attention_level/project_build_status_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
@@ -42,6 +42,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color scaffoldColor = Colors.white;
   static const Color inputColor = Color(0xFFF5F8FA);
   static const Color inputHoverColor = Color(0xfffafbfc);
+  static const Color inputHintTextColor = Color(0xFF868691);
   static const Color _inputFocusedBorderColor = Color(0xFF6D6D75);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
