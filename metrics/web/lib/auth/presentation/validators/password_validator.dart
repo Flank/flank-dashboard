@@ -3,7 +3,6 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class for validating a password.
 class PasswordValidator {
-
   /// Validates the given [value] as a password.
   ///
   /// Returns an error message if the [value] is not a valid password,

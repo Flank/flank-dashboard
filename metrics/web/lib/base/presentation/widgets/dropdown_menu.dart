@@ -128,10 +128,10 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
         ),
         triggerComponent: TriggerComponent(
           builder: (data) {
-            return GestureDetector(
-              onTap: data.triggerMenu,
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
+            return MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: data.triggerMenu,
                 child: widget.buttonBuilder(context, data.selectedItem as T),
               ),
             );

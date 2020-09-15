@@ -8,7 +8,7 @@ class CirclePercentageThemeData
   ///
   /// If the [attentionLevel] is null, an empty [CirclePercentageAttentionLevel]
   /// instance is used.
-  const CirclePercentageThemeData(
-      {CirclePercentageAttentionLevel attentionLevel})
-      : super(attentionLevel ?? const CirclePercentageAttentionLevel());
+  const CirclePercentageThemeData({
+    CirclePercentageAttentionLevel attentionLevel,
+  }) : super(attentionLevel ?? const CirclePercentageAttentionLevel());
 }

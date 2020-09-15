@@ -5,7 +5,7 @@ class UserMenuButtonThemeData {
   /// A [Color] to use when the [MetricsUserMenu] is open.
   final Color activeColor;
 
-  /// A [Color] to use when the [MetricsUserMenu] is closed.
+  /// A [Color] to use when the [MetricsUserMenu] is close.
   final Color inactiveColor;
 
   /// Creates the [UserMenuButtonThemeData].

@@ -3,7 +3,6 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A class for validating an email.
 class EmailValidator {
-
   /// Validates the given [value] as an email.
   ///
   /// Returns an error message if the [value] is not a valid email,
