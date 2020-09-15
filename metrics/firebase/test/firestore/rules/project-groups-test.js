@@ -25,7 +25,9 @@ describe("", async function () {
   const users = [
     {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
-      'app': passwordProviderAllowedEmailApp,
+      'app': await getApplicationWith(
+          getAllowedEmailUser(passwordSignInProviderId, true)
+      ),
       'can': {
         'create': true,
         'read': true,
