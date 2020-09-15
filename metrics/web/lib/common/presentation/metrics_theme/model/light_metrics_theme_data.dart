@@ -42,7 +42,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color scaffoldColor = Colors.white;
   static const Color inputColor = Color(0xFFF5F8FA);
   static const Color inputHoverColor = Color(0xfffafbfc);
-  static const Color inputHintTextColor = Color(0xFF868691);
+  static const Color _inputHintTextColor = Color(0xFF868691);
   static const Color _inputFocusedBorderColor = Color(0xFF6D6D75);
   static const Color _inactiveBackgroundColor = Color(0xFFEEEEEE);
   static const Color _inactiveColor = Color(0xFFBDBDBD);
@@ -73,7 +73,7 @@ class LightMetricsThemeData extends MetricsThemeData {
     color: _inactiveTextColor,
   );
   static const TextStyle hintStyle = MetricsTextStyle(
-    color: LightMetricsThemeData.inputHintTextColor,
+    color: LightMetricsThemeData._inputHintTextColor,
     fontSize: 16.0,
     lineHeightInPixels: 20,
   );
