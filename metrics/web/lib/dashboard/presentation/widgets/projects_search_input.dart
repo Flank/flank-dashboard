@@ -20,6 +20,11 @@ class ProjectSearchInput extends StatelessWidget {
     return MetricsTextFormField(
       onChanged: onChanged,
       prefixIcon: Image.network("icons/search.svg"),
+      focusPrefixIcon: Image.network(
+        'icons/search-focused.svg',
+        width: 20.0,
+        height: 20.0,
+      ),
       hint: CommonStrings.searchForProject,
     );
   }

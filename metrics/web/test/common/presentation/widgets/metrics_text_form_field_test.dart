@@ -404,6 +404,8 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   /// A prefix icon for the text field under tests.
   final Widget prefixIcon;
 
+  /// A prefix icon for the text field under tests that appears
+  /// once it's focused.
   final Widget focusPrefixIcon;
 
   /// A suffix icon for the text field under tests.
