@@ -24,6 +24,10 @@ class MetricsTextFormField extends StatefulWidget {
   /// within the decoration's container.
   final Widget prefixIcon;
 
+  /// An active icon that appears before the editable part of this text field
+  /// once it's active, within the decoration's container.
+  final Widget activePrefixIcon;
+
   /// An icon that appears after the editable part of this text field,
   /// within the decoration's container.
   final Widget suffixIcon;
@@ -45,6 +49,7 @@ class MetricsTextFormField extends StatefulWidget {
     this.onChanged,
     this.keyboardType,
     this.prefixIcon,
+    this.activePrefixIcon,
     this.suffixIcon,
     this.hint,
     this.label,
@@ -116,6 +121,7 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
 
     _focusDecoration = _defaultDecoration.copyWith(
       fillColor: textFieldTheme.focusColor,
+      prefixIcon: widget.activePrefixIcon,
     );
 
     super.didChangeDependencies();
