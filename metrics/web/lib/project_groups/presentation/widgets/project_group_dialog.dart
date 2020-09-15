@@ -162,6 +162,11 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                               width: 20.0,
                               height: 20.0,
                             ),
+                            focusPrefixIcon: Image.network(
+                              'icons/search-focused.svg',
+                              width: 20.0,
+                              height: 20.0,
+                            ),
                             hint: CommonStrings.searchForProject,
                           ),
                         ),
