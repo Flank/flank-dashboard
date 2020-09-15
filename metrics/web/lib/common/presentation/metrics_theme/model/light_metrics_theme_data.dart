@@ -68,6 +68,12 @@ class LightMetricsThemeData extends MetricsThemeData {
     fontSize: 16.0,
     color: _inactiveTextColor,
   );
+  static const TextStyle hintStyle = MetricsTextStyle(
+    color: LightMetricsThemeData.inputHintTextColor,
+    fontSize: 16.0,
+    lineHeightInPixels: 20,
+  );
+
   static const Color _positiveToastColor = Color(0xFFE1FAF4);
   static const Color _negativeToastColor = Color(0xFFFFEDE5);
 
@@ -83,7 +89,7 @@ class LightMetricsThemeData extends MetricsThemeData {
       : super(
           metricsWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
-            accentColor: ColorConfig.primaryTranslucentColor,
+            accentColor: ColorConfig.primaryBackgroundColor,
             backgroundColor: Colors.white,
             textStyle: TextStyle(
               color: ColorConfig.primaryColor,
@@ -291,10 +297,10 @@ class LightMetricsThemeData extends MetricsThemeData {
           projectBuildStatusTheme: const ProjectBuildStatusThemeData(
             attentionLevel: ProjectBuildStatusAttentionLevel(
               positive: ProjectBuildStatusStyle(
-                backgroundColor: ColorConfig.primaryTranslucentColor,
+                backgroundColor: ColorConfig.primaryBackgroundColor,
               ),
               negative: ProjectBuildStatusStyle(
-                backgroundColor: ColorConfig.accentTranslucentColor,
+                backgroundColor: ColorConfig.accentBackgroundColor,
               ),
               unknown: ProjectBuildStatusStyle(
                 backgroundColor: ColorConfig.inactiveColor,
@@ -312,7 +318,7 @@ class LightMetricsThemeData extends MetricsThemeData {
               positive: ToastStyle(
                 backgroundColor: _positiveToastColor,
                 textStyle: MetricsTextStyle(
-                  color: ColorConfig.primaryColor,
+                  color: ColorConfig.primaryTranslucentColor,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   lineHeightInPixels: 20,
@@ -321,7 +327,7 @@ class LightMetricsThemeData extends MetricsThemeData {
               negative: ToastStyle(
                 backgroundColor: _negativeToastColor,
                 textStyle: MetricsTextStyle(
-                  color: ColorConfig.accentOpaqueColor,
+                  color: ColorConfig.accentTranslucentColor,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   lineHeightInPixels: 20,
@@ -353,8 +359,8 @@ class LightMetricsThemeData extends MetricsThemeData {
           circlePercentageTheme: const CirclePercentageThemeData(
             attentionLevel: CirclePercentageAttentionLevel(
               positive: CirclePercentageStyle(
-                strokeColor: ColorConfig.primaryTranslucentColor,
-                backgroundColor: ColorConfig.primaryTranslucentColor,
+                strokeColor: ColorConfig.primaryBackgroundColor,
+                backgroundColor: ColorConfig.primaryBackgroundColor,
                 valueColor: ColorConfig.primaryColor,
                 valueStyle: TextStyle(
                   color: ColorConfig.primaryColor,
@@ -363,8 +369,8 @@ class LightMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               negative: CirclePercentageStyle(
-                strokeColor: ColorConfig.accentTranslucentColor,
-                backgroundColor: ColorConfig.accentTranslucentColor,
+                strokeColor: ColorConfig.accentBackgroundColor,
+                backgroundColor: ColorConfig.accentBackgroundColor,
                 valueColor: ColorConfig.accentColor,
                 valueStyle: TextStyle(
                   color: ColorConfig.accentColor,
