@@ -96,20 +96,6 @@ class MetricsUserMenu extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: itemPadding,
-                child: HandCursor(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      CommonStrings.users,
-                      style: userMenuTextStyle,
-                    ),
-                  ),
-                ),
-              ),
               Divider(
                 color: userMenuTheme.dividerColor,
                 thickness: 1.0,
