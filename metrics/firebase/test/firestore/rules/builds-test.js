@@ -1,268 +1,380 @@
+const async = require('async');
 const {
   setupTestDatabaseWith,
   getApplicationWith,
   tearDown,
 } = require("./test_utils/test-app-utils");
 const { assertFails, assertSucceeds } = require("@firebase/testing");
-const { user, builds, getBuild } = require("./test_utils/test-data");
+const {
+  passwordSignInProviderId,
+  googleSignInProviderId,
+  getAllowedEmailUser,
+  getDeniedEmailUser,
+  builds,
+  getBuild,
+  allowedEmailDomains,
+} = require("./test_utils/test-data");
 const firestore = require("firebase").firestore;
 
-describe("Build collection rules", async () => {
-  const authenticatedApp = await getApplicationWith(user);
+describe("", async () => {
+  const passwordProviderAllowedEmailApp = await getApplicationWith(
+    getAllowedEmailUser(passwordSignInProviderId, true)
+  );
   const unauthenticatedApp = await getApplicationWith(null);
-  const buildsCollectionName = "build";
+  const collection = "build";
+
+  const users = [
+    {
+      'describe': 'Authenticated with a password and allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+          getAllowedEmailUser(passwordSignInProviderId, true)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, true)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(passwordSignInProviderId, false)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, false)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, true)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and not allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, true)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and not allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Unauthenticated user',
+      'app': unauthenticatedApp,
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+  ];
 
   before(async () => {
-    await setupTestDatabaseWith(builds);
+    await setupTestDatabaseWith(Object.assign({}, builds, allowedEmailDomains));
   });
 
-  /**
-   * Common tests
-   */
+  describe("Build collection rules", () => {
+    it("does not allow creating a build with not allowed fields", async () => {
+      let build = getBuild();
+      build.test = "test";
 
-  it("does not allow to create a build with not allowed fields", async () => {
-    let build = getBuild();
-    build.test = "test";
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build with not existing project id", async () => {
+      let build = getBuild();
+      build.projectId = "non-existing-id";
 
-  it("does not allow to create a build with not existing project id", async () => {
-    let build = getBuild();
-    build.projectId = "non-existing-id";
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build with null projectId", async () => {
+      let build = getBuild();
+      build.projectId = null;
 
-  it("does not allow to create a build with null projectId", async () => {
-    let build = getBuild();
-    build.projectId = null;
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build when projectId is not a string", async () => {
+      let build = getBuild();
+      build.projectId = 2;
 
-  it("does not allow to create a build when projectId is not a string", async () => {
-    let build = getBuild();
-    build.projectId = 2;
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build if the startedAt is null", async () => {
+      let build = getBuild();
+      build.startedAt = null;
 
-  it("does not allow to create a build if the startedAt is null", async () => {
-    let build = getBuild();
-    build.startedAt = null;
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build if the startedAt is not a timestamp", async () => {
+      const build = getBuild();
+      build.startedAt = Date();
 
-  it("does not allow to create a build if the startedAt is not a timestamp", async () => {
-    const build = getBuild();
-    build.startedAt = Date();
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating builds if the startedAt value is after the current timestamp", async () => {
+      let date = new Date();
+      date.setDate(date.getDate() + 1);
 
-  it("does not allow to create builds if the startedAt value is after the current timestamp", async () => {
-    let date = new Date();
-    date.setDate(date.getDate() + 1);
+      let build = getBuild();
+      build.startedAt = firestore.Timestamp.fromDate(date);
 
-    let build = getBuild();
-    build.startedAt = firestore.Timestamp.fromDate(date);
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating builds if the duration is null", async () => {
+      let build = getBuild();
+      build.duration = null;
 
-  it("does not allow to create builds if the duration is null", async () => {
-    let build = getBuild();
-    build.duration = null;
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build if the duration is not an integer", async () => {
+      let build = getBuild();
+      build.duration = "123";
 
-  it("does not allow to create a build if the duration is not an integer", async () => {
-    let build = getBuild();
-    build.duration = "123";
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build if the url is null", async () => {
+      let build = getBuild();
+      build.url = null;
 
-  it("does not allow to create a build if the url is null", async () => {
-    let build = getBuild();
-    build.url = null;
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build if the url is not a string", async () => {
+      let build = getBuild();
+      build.url = 2;
 
-  it("does not allow to create a build if the url is not a string", async () => {
-    let build = getBuild();
-    build.url = 2;
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build if the build number is not an int", async () => {
+      let build = getBuild();
+      build.buildNumber = "2";
 
-  it("does not allow to create a build if the build number is not an int", async () => {
-    let build = getBuild();
-    build.buildNumber = "2";
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build if the build number is null", async () => {
+      let build = getBuild();
+      build.buildNumber = null;
 
-  it("does not allow to create a build if the build number is null", async () => {
-    let build = getBuild();
-    build.buildNumber = null;
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build with not valid build status value", async () => {
+      let build = getBuild();
+      build.buildStatus = "test";
 
-  it("does not allow to create a build with not valid build status value", async () => {
-    let build = getBuild();
-    build.buildStatus = "test";
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("allows to create a build with null build status", async () => {
+      let build = getBuild();
+      build.buildStatus = null;
 
-  it("allows to create a build with null build status", async () => {
-    let build = getBuild();
-    build.buildStatus = null;
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build when workflow name is not a string", async () => {
+      let build = getBuild();
+      build.workflowName = 2;
 
-  it("does not allow to create a build when workflow name is not a string", async () => {
-    let build = getBuild();
-    build.workflowName = 2;
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("allows to create a build when workflow name is null", async () => {
+      let build = getBuild();
+      build.workflowName = null;
 
-  it("allows to create a build when workflow name is null", async () => {
-    let build = getBuild();
-    build.workflowName = null;
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build when the coverage is grater then 1.0", async () => {
+      let build = getBuild();
+      build.coverage = 1.1;
 
-  it("does not allow to create a build when the coverage is grater then 1.0", async () => {
-    let build = getBuild();
-    build.coverage = 1.1;
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("does not allow creating a build when the coverage is less then 0.0", async () => {
+      let build = getBuild();
+      build.coverage = -1.0;
 
-  it("does not allow to create a build when the coverage is less then 0.0", async () => {
-    let build = getBuild();
-    build.coverage = -1.0;
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    it("allows to create a build when the coverage is null", async () => {
+      let build = getBuild();
+      build.coverage = null;
 
-  it("allows to create a build when the coverage is null", async () => {
-    let build = getBuild();
-    build.coverage = null;
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add(build)
+      );
+    });
 
-    await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).add(build)
-    );
-  });
+    async.forEach(users, (user, callback) => {
+      describe(user.describe, () => {
+        let canCreateDescription = user.can.create ?
+          "allows to create a build" : "does not allow creating a build";
+        let canReadDescription = user.can.read ?
+          "allows reading builds" : "does not allow reading builds";
+        let canUpdateDescription = user.can.update ?
+          "allows to update a build" : "does not allow updating a build";
+        let canDeleteDescription = user.can.delete ?
+          "allows to delete a build" : "does not allow deleting a build";
 
-  /**
-   * The authenticated user specific tests
-   */
+        it(canCreateDescription, async () => {
+          const createPromise = user.app.collection(collection).add(getBuild());
 
-  it("allows creating a build by an authenticated user", async () => {
-    await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).add(getBuild())
-    );
-  });
+          if (user.can.create) {
+            await assertSucceeds(createPromise)
+          } else {
+            await assertFails(createPromise)
+          }
+        });
 
-  it("allows reading builds by an authenticated user", async () => {
-    await assertSucceeds(
-      authenticatedApp.collection(buildsCollectionName).get()
-    );
-  });
+        it(canReadDescription, async () => {
+          const readPromise = user.app.collection(collection).get();
 
-  it("allows updating a build by an authenticated user", async () => {
-    await assertSucceeds(
-      authenticatedApp
-        .collection(buildsCollectionName)
-        .doc("1")
-        .update({ url: "updated" })
-    );
-  });
+          if (user.can.read) {
+            await assertSucceeds(readPromise)
+          } else {
+            await assertFails(readPromise)
+          }
+        });
 
-  it("does not allow to delete a build by an authenticated user", async () => {
-    await assertFails(
-      authenticatedApp.collection(buildsCollectionName).doc("1").delete()
-    );
-  });
+        it(canUpdateDescription, async () => {
+          const updatePromise =
+            user.app.collection(collection).doc("1").update({ url: "updated" });
 
-  /**
-   * The unauthenticated user specific tests
-   */
+          if (user.can.update) {
+            await assertSucceeds(updatePromise)
+          } else {
+            await assertFails(updatePromise)
+          }
+        });
 
-  it("does not allow to create a build by an unauthenticated user", async () => {
-    await assertFails(
-      unauthenticatedApp.collection(buildsCollectionName).add(getBuild())
-    );
-  });
+        it(canDeleteDescription, async () => {
+          const deletePromise =
+            user.app.collection(collection).doc("1").delete();
 
-  it("does not allow to read builds by an unauthenticated user", async () => {
-    await assertFails(
-      unauthenticatedApp.collection(buildsCollectionName).get()
-    );
-  });
-
-  it("does not allow to update a build by an unauthenticated user", async () => {
-    await assertFails(
-      unauthenticatedApp
-        .collection(buildsCollectionName)
-        .doc("1")
-        .update({ url: "updated" })
-    );
-  });
-
-  it("does not allow to delete a build by an unauthenticated user", async () => {
-    await assertFails(
-      unauthenticatedApp.collection(buildsCollectionName).doc("1").delete()
-    );
+          if (user.can.delete) {
+            await assertSucceeds(deletePromise)
+          } else {
+            await assertFails(deletePromise)
+          }
+        });
+      });
+      callback();
+    });
   });
 
   after(async () => {
