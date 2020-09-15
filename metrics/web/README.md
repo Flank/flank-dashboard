@@ -21,7 +21,7 @@ Please use the [official documentation](https://flutter.dev/docs/get-started/ins
 
 After the above steps are complete, use the following commands to ensure proper Flutter version installed and web is enabled:
 ```shell script
-flutter version 1.20.3
+flutter version 1.20.2
 flutter upgrade
 flutter config --enable-web
 ```
