@@ -971,7 +971,7 @@ void main() {
     test(
       ".setProjects() saves the projects error message if it is not null",
       () {
-        final expectedMessage = CommonStrings.unknownErrorMessage;
+        const expectedMessage = CommonStrings.unknownErrorMessage;
 
         projectGroupsNotifier.setProjects(projects, expectedMessage);
 

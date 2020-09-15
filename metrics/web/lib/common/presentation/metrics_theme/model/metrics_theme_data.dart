@@ -7,7 +7,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
@@ -22,18 +22,18 @@ import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_d
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 
-/// Stores the theme data for all metric widgets.
+/// Stores the theme data for all metrics widgets.
 class MetricsThemeData {
-  static const MetricWidgetThemeData _defaultWidgetThemeData =
-      MetricWidgetThemeData();
+  static const MetricsWidgetThemeData _defaultWidgetThemeData =
+      MetricsWidgetThemeData();
 
   /// A theme of the metrics widgets used to set the default colors
   /// and text styles.
-  final MetricWidgetThemeData metricWidgetTheme;
+  final MetricsWidgetThemeData metricsWidgetTheme;
 
-  /// A theme of the inactive metric widgets used when there are no data
-  /// for metric.
-  final MetricWidgetThemeData inactiveWidgetTheme;
+  /// A theme of the inactive metrics widgets used when there are no data
+  /// for metrics.
+  final MetricsWidgetThemeData inactiveWidgetTheme;
 
   /// A theme for the [BuildResultBarGraph] used to set the colors
   /// of the graph bars.
@@ -98,8 +98,8 @@ class MetricsThemeData {
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
-    MetricWidgetThemeData metricWidgetTheme,
-    MetricWidgetThemeData inactiveWidgetTheme,
+    MetricsWidgetThemeData metricsWidgetTheme,
+    MetricsWidgetThemeData inactiveWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     DeleteDialogThemeData deleteDialogTheme,
@@ -121,7 +121,7 @@ class MetricsThemeData {
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
-        metricWidgetTheme = metricWidgetTheme ?? _defaultWidgetThemeData,
+        metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
         buildResultTheme = buildResultTheme ??
             const BuildResultsThemeData(
               canceledColor: Colors.grey,
@@ -164,13 +164,13 @@ class MetricsThemeData {
   /// If any of the passed parameters are null, or parameter isn't specified,
   /// the value will be copied from the current instance.
   MetricsThemeData copyWith({
-    MetricWidgetThemeData metricWidgetTheme,
+    MetricsWidgetThemeData metricsWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     DeleteDialogThemeData deleteDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
     AddProjectGroupCardThemeData addProjectGroupCardTheme,
-    MetricWidgetThemeData inactiveWidgetTheme,
+    MetricsWidgetThemeData inactiveWidgetTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
     DropdownThemeData dropdownTheme,
@@ -188,7 +188,7 @@ class MetricsThemeData {
     ToastThemeData toastTheme,
   }) {
     return MetricsThemeData(
-      metricWidgetTheme: metricWidgetTheme ?? this.metricWidgetTheme,
+      metricsWidgetTheme: metricsWidgetTheme ?? this.metricsWidgetTheme,
       buildResultTheme: buildResultTheme ?? this.buildResultTheme,
       projectGroupDialogTheme:
           projectGroupDialogTheme ?? this.projectGroupDialogTheme,

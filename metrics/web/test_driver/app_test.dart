@@ -73,7 +73,7 @@ void main() {
         );
 
         test(
-          "loads and displays the performance metric ",
+          "loads and displays the performance metric",
           () async {
             await driver.waitFor(find.text(DashboardStrings.performance));
 

@@ -1,20 +1,7 @@
 const firestore = require("firebase").firestore;
-const cloneDeep = require('clone-deep');
+const cloneDeep = require("clone-deep");
 
-exports.project = {
-  name: "test_project",
-};
-
-/** A list of test projects */
-exports.projects = {
-  "projects/1": {
-    name: "project_1",
-  },
-  "projects/2": {
-    name: "project_2",
-  },
-};
-
+/** A list of test project groups */
 const projectGroups = {
   "project_groups/1": {
     name: "project_group_1",
@@ -50,11 +37,60 @@ const builds = {
   },
 };
 
+/** A list of test allowed email domains */
+const allowedEmailDomains = {
+  "allowed_email_domains/gmail.com": {},
+};
+
+const allowedEmail = "test@gmail.com";
+const deniedEmail = "test@invalid.com";
+
+/** Creates a firebase user with the given `email`, `signInProviderId` and `emailVerified` */
+function getUser(email, signInProviderId, emailVerified) {
+  return {
+    uid: "uid",
+    email: email,
+    email_verified: emailVerified,
+    firebase: {
+      sign_in_provider: signInProviderId,
+    },
+  };
+}
+
+/** A test project */
+exports.project = {
+  name: "test_project",
+};
+
+/** A list of test projects */
+exports.projects = {
+  "projects/1": {
+    name: "project_1",
+  },
+  "projects/2": {
+    name: "project_2",
+  },
+};
+
 exports.projectGroups = projectGroups;
 exports.builds = builds;
+exports.allowedEmailDomains = allowedEmailDomains;
 
-/** A firebase user needed for tests */
-exports.user = { uid: "uid" };
+/** An email and password sign in provider identifier */
+exports.passwordSignInProviderId = "password";
+
+/** A google sign in provider identifier */
+exports.googleSignInProviderId = "google.com";
+
+/** Provides a firebase user with allowed email and given sign in provider identifier */
+exports.getAllowedEmailUser = function (signInProviderId, emailVerified) {
+  return getUser(allowedEmail, signInProviderId, emailVerified);
+};
+
+/** Provides a firebase user with not allowed email and given sign in provider identifier */
+exports.getDeniedEmailUser = function (signInProviderId, emailVerified) {
+  return getUser(deniedEmail, signInProviderId, emailVerified);
+};
 
 /** Get a test project group */
 exports.getProjectGroup = function () {

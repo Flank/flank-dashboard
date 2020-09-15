@@ -112,21 +112,6 @@ void main() {
     );
 
     testWidgets(
-      "applies the textStyle from the user menu theme to the users Text widget",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuTestbed(
-          theme: testTheme,
-        ));
-
-        final textWidget = tester.widget<Text>(
-          find.text(CommonStrings.users),
-        );
-
-        expect(textWidget.style, equals(testTextStyle));
-      },
-    );
-
-    testWidgets(
       "applies the textStyle from the user menu theme to the logOut Text widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsUserMenuTestbed(
@@ -148,20 +133,6 @@ void main() {
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.projectGroups),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the the users text widget",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuTestbed());
-
-        final finder = find.ancestor(
-          of: find.text(CommonStrings.users),
           matching: find.byType(HandCursor),
         );
 

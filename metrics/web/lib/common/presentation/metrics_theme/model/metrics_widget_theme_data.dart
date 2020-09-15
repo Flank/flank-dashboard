@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Theme data of the metric widget.
-class MetricWidgetThemeData {
+/// Theme data of the metrics widget.
+class MetricsWidgetThemeData {
   static const Color _defaultPrimaryColor = Colors.blue;
   static const Color _defaultAccentColor = Colors.grey;
 
@@ -10,7 +10,7 @@ class MetricWidgetThemeData {
   final Color backgroundColor;
   final TextStyle textStyle;
 
-  /// Creates the [MetricWidgetThemeData].
+  /// Creates the [MetricsWidgetThemeData].
   ///
   /// [primaryColor] is the main color of the widget.
   /// Used to paint the main elements of the widget, like strokes of the graphs, etc.
@@ -22,10 +22,10 @@ class MetricWidgetThemeData {
   /// If nothing is specified, or the null is passed,
   /// the [_defaultAccentColor] will be used.
   ///
-  /// [backgroundColor] is the color of the background of the metric widget.
+  /// [backgroundColor] is the color of the background of the metrics widget.
   ///
   /// [textStyle] is the [TextStyle] applied to all text in metrics widget.
-  const MetricWidgetThemeData({
+  const MetricsWidgetThemeData({
     Color primaryColor,
     Color accentColor,
     this.backgroundColor,

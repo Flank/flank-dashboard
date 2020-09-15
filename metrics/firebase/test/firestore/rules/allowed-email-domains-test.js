@@ -1,35 +1,29 @@
 const async = require('async');
+const { assertFails } = require("@firebase/testing");
 const {
   setupTestDatabaseWith,
   getApplicationWith,
   tearDown,
 } = require("./test_utils/test-app-utils");
-const { assertFails, assertSucceeds } = require("@firebase/testing");
 const {
-  project,
-  projects,
-  getAllowedEmailUser,
-  getDeniedEmailUser,
-  passwordSignInProviderId,
-  googleSignInProviderId,
-  allowedEmailDomains,
+  allowedEmailDomains, getAllowedEmailUser, passwordSignInProviderId,
+  getDeniedEmailUser, googleSignInProviderId
 } = require("./test_utils/test-data");
 
-describe("", async function () {
-  const unauthenticatedApp = await getApplicationWith(null);
-  const passwordProviderAllowedEmailApp = await getApplicationWith(
-    getAllowedEmailUser(passwordSignInProviderId, true)
-  );
-  const collection = "projects";
+describe("", async () => {
+  const collection = "allowed_email_domains";
+  const domain = { "test.com": {} };
 
   const users = [
     {
       'describe': 'Authenticated with a password and allowed email domain user with a verified email',
-      'app': passwordProviderAllowedEmailApp,
+      'app': await getApplicationWith(
+        getAllowedEmailUser(passwordSignInProviderId, true)
+      ),
       'can': {
-        'create': true,
-        'read': true,
-        'update': true,
+        'create': false,
+        'read': false,
+        'update': false,
         'delete': false,
       }
     },
@@ -39,9 +33,9 @@ describe("", async function () {
         getDeniedEmailUser(passwordSignInProviderId, true)
       ),
       'can': {
-        'create': true,
-        'read': true,
-        'update': true,
+        'create': false,
+        'read': false,
+        'update': false,
         'delete': false,
       }
     },
@@ -51,9 +45,9 @@ describe("", async function () {
         getAllowedEmailUser(passwordSignInProviderId, false)
       ),
       'can': {
-        'create': true,
-        'read': true,
-        'update': true,
+        'create': false,
+        'read': false,
+        'update': false,
         'delete': false,
       }
     },
@@ -63,9 +57,9 @@ describe("", async function () {
         getDeniedEmailUser(passwordSignInProviderId, false)
       ),
       'can': {
-        'create': true,
-        'read': true,
-        'update': true,
+        'create': false,
+        'read': false,
+        'update': false,
         'delete': false,
       }
     },
@@ -75,9 +69,9 @@ describe("", async function () {
         getAllowedEmailUser(googleSignInProviderId, true)
       ),
       'can': {
-        'create': true,
-        'read': true,
-        'update': true,
+        'create': false,
+        'read': false,
+        'update': false,
         'delete': false,
       }
     },
@@ -119,7 +113,7 @@ describe("", async function () {
     },
     {
       'describe': 'Unauthenticated user',
-      'app': unauthenticatedApp,
+      'app': await getApplicationWith(null),
       'can': {
         'create': false,
         'read': false,
@@ -130,38 +124,27 @@ describe("", async function () {
   ];
 
   before(async () => {
-    await setupTestDatabaseWith(
-      Object.assign({}, projects, allowedEmailDomains)
-    );
+    await setupTestDatabaseWith(allowedEmailDomains);
   });
 
-  describe("Projects collection rules", () => {
-    it("does not allow creating a project with not allowed fields", async () => {
-      await assertFails(
-        unauthenticatedApp.collection(collection).add({
-          name: "name",
-          test: "test",
-        })
-      );
-    });
-
-    it("does not allow creating a project without a name", async () => {
-      await assertFails(passwordProviderAllowedEmailApp.collection(collection).add({}));
-    });
-
+  describe("Allowed email domains collection rules", () => {
     async.forEach(users, (user, callback) => {
-      describe(user.describe, () => {
+      describe(user.describe, function () {
         let canCreateDescription = user.can.create ?
-          "allows to create a project" : "does not allow creating a project";
+          "allows to create an allowed email domain" :
+          "does not allow creating an allowed email domain";
         let canReadDescription = user.can.read ?
-          "allows reading projects" : "does not allow reading projects";
+          "allows reading allowed email domains" :
+          "does not allow reading an allowed email domains";
         let canUpdateDescription = user.can.update ?
-          "allows to update a project" : "does not allow updating a project";
+          "allows to update an allowed email domain" :
+          "does not allow updating an allowed email domain";
         let canDeleteDescription = user.can.delete ?
-          "allows to delete a project" : "does not allow deleting a project";
+          "allows to delete an allowed email domain" :
+          "does not allow deleting an allowed email domain";
 
         it(canCreateDescription, async () => {
-          const createPromise = user.app.collection(collection).add(project);
+          const createPromise = user.app.collection(collection).add(domain);
 
           if (user.can.create) {
             await assertSucceeds(createPromise)
@@ -181,7 +164,10 @@ describe("", async function () {
         });
 
         it(canUpdateDescription, async () => {
-          const updatePromise = user.app.collection(collection).doc("1").update(project);
+          const updatePromise = user.app
+            .collection(collection)
+            .doc("gmail.com")
+            .update({ test: "updated" });
 
           if (user.can.update) {
             await assertSucceeds(updatePromise)
@@ -191,7 +177,8 @@ describe("", async function () {
         });
 
         it(canDeleteDescription, async () => {
-          const deletePromise = user.app.collection(collection).doc("1").delete();
+          const deletePromise =
+            user.app.collection(collection).doc("gmail.com").delete();
 
           if (user.can.delete) {
             await assertSucceeds(deletePromise)

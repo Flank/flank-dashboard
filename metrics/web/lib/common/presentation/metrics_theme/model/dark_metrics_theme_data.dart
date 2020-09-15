@@ -15,11 +15,11 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/attention_level/project_build_status_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
@@ -44,6 +44,12 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _focusedBorderColor),
+  );
+
+  static const TextStyle hintStyle = MetricsTextStyle(
+    color: ColorConfig.inputSecondaryTextColor,
+    fontSize: 16.0,
+    lineHeightInPixels: 20,
   );
 
   static const Color _dropdownBorderColor = Color(0xFF878799);
@@ -87,9 +93,9 @@ class DarkMetricsThemeData extends MetricsThemeData {
   /// Creates the dark theme with the default widget theme configuration.
   const DarkMetricsThemeData()
       : super(
-          metricWidgetTheme: const MetricWidgetThemeData(
+          metricsWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
-            accentColor: ColorConfig.primaryTranslucentColor,
+            accentColor: ColorConfig.primaryBackgroundColor,
             backgroundColor: scaffoldColor,
             textStyle: TextStyle(
               color: ColorConfig.primaryColor,
@@ -123,7 +129,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           addProjectGroupCardTheme: const AddProjectGroupCardThemeData(
             attentionLevel: AddProjectGroupCardAttentionLevel(
               positive: AddProjectGroupCardStyle(
-                backgroundColor: ColorConfig.primaryTranslucentColor,
+                backgroundColor: ColorConfig.primaryBackgroundColor,
                 iconColor: ColorConfig.primaryColor,
                 hoverColor: _addProjectGroupCardHoverColor,
                 labelStyle: MetricsTextStyle(
@@ -178,7 +184,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             counterTextStyle: TextStyleConfig.captionTextStyle,
             errorTextStyle: TextStyle(color: ColorConfig.accentColor),
           ),
-          inactiveWidgetTheme: const MetricWidgetThemeData(
+          inactiveWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: _inactiveColor,
             accentColor: Colors.transparent,
             backgroundColor: _inactiveBackgroundColor,
@@ -227,7 +233,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           ),
           textFieldTheme: const TextFieldThemeData(
             focusColor: Colors.black,
-            hoverBorderColor: ColorConfig.hoverBorderColor,
+            hoverBorderColor: _dropdownHoverBorderColor,
             textStyle: MetricsTextStyle(
               color: Colors.white,
               fontSize: 16.0,
@@ -315,10 +321,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
           projectBuildStatusTheme: const ProjectBuildStatusThemeData(
             attentionLevel: ProjectBuildStatusAttentionLevel(
               positive: ProjectBuildStatusStyle(
-                backgroundColor: ColorConfig.primaryTranslucentColor,
+                backgroundColor: ColorConfig.primaryBackgroundColor,
               ),
               negative: ProjectBuildStatusStyle(
-                backgroundColor: ColorConfig.accentTranslucentColor,
+                backgroundColor: ColorConfig.accentBackgroundColor,
               ),
               unknown: ProjectBuildStatusStyle(
                 backgroundColor: ColorConfig.inactiveColor,
@@ -328,8 +334,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
           circlePercentageTheme: const CirclePercentageThemeData(
             attentionLevel: CirclePercentageAttentionLevel(
               positive: CirclePercentageStyle(
-                strokeColor: ColorConfig.primaryTranslucentColor,
-                backgroundColor: ColorConfig.primaryTranslucentColor,
+                strokeColor: ColorConfig.primaryBackgroundColor,
+                backgroundColor: ColorConfig.primaryBackgroundColor,
                 valueColor: ColorConfig.primaryColor,
                 valueStyle: TextStyle(
                   color: ColorConfig.primaryColor,
@@ -338,8 +344,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               negative: CirclePercentageStyle(
-                strokeColor: ColorConfig.accentTranslucentColor,
-                backgroundColor: ColorConfig.accentTranslucentColor,
+                strokeColor: ColorConfig.accentBackgroundColor,
+                backgroundColor: ColorConfig.accentBackgroundColor,
                 valueColor: ColorConfig.accentColor,
                 valueStyle: TextStyle(
                   color: ColorConfig.accentColor,
@@ -398,14 +404,14 @@ class DarkMetricsThemeData extends MetricsThemeData {
           toastTheme: const ToastThemeData(
             toastAttentionLevel: ToastAttentionLevel(
               positive: ToastStyle(
-                backgroundColor: ColorConfig.primaryTranslucentColor,
+                backgroundColor: ColorConfig.primaryBackgroundColor,
                 textStyle: TextStyle(
                   color: ColorConfig.primaryColor,
                   fontSize: 16.0,
                 ),
               ),
               negative: ToastStyle(
-                backgroundColor: ColorConfig.accentTranslucentColor,
+                backgroundColor: ColorConfig.accentBackgroundColor,
                 textStyle: TextStyle(
                   color: ColorConfig.accentColor,
                   fontSize: 16.0,

@@ -10,8 +10,6 @@ import '../../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("MetricsScaffold", () {
-    const drawer = Drawer();
-
     testWidgets(
       "throws an AssertionError if trying to create without a body",
       (WidgetTester tester) async {
@@ -118,21 +116,6 @@ void main() {
         });
 
         expect(find.byType(MetricsAppBar), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "places the drawer on the right side of the Scaffold",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            const _MetricsScaffoldTestbed(drawer: drawer),
-          );
-        });
-
-        final scaffoldWidget = tester.widget<Scaffold>(find.byType(Scaffold));
-
-        expect(scaffoldWidget.endDrawer, drawer);
       },
     );
   });
