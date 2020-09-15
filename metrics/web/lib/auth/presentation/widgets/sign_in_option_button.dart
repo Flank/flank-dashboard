@@ -44,8 +44,8 @@ class SignInOptionButton extends StatelessWidget {
               padding: const EdgeInsets.only(right: 16.0),
               child: Image.network(
                 strategy.asset,
-                height: 18.0,
-                width: 18.0,
+                height: 20.0,
+                width: 20.0,
                 fit: BoxFit.contain,
               ),
             ),
