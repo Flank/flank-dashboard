@@ -22,7 +22,6 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownBody(
       state: data.menuState,
-      animationCurve: Curves.linear,
       animationDuration: DurationConstants.animation,
       maxHeight: data.constraints.maxHeight,
       onOpenStateChanged: _onOpenStateChanges,

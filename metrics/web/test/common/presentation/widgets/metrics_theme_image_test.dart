@@ -9,6 +9,8 @@ import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/test_injection_container.dart';
 import '../../../test_utils/theme_notifier_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsThemeImage", () {
     const darkAsset = 'dark-asset.svg';

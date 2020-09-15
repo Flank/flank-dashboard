@@ -55,7 +55,7 @@ Deployment to other platforms is out of scope.
 
 Before you start, you should have the following installed:
 
-1. [Flutter](https://flutter.dev/docs/get-started/install) v1.21.0-9.2.pre.
+1. [Flutter](https://flutter.dev/docs/get-started/install) v1.20.3.
 2. [npm](https://www.npmjs.com/get-npm).
 
 ## Creating a new Firebase project.

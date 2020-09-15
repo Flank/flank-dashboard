@@ -22,6 +22,8 @@ import 'package:network_image_mock/network_image_mock.dart';
 import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ProjectMetricsTile", () {
     setUpAll(() {

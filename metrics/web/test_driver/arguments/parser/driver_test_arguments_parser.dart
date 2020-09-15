@@ -85,7 +85,7 @@ class DriverTestArgumentsParser {
       _workingDirOptionName,
       help:
           "The directory to save the selenium server and browser drivers files.",
-      defaultsTo: '${DriverTestsConfig.defaultWorkingDirectory}',
+      defaultsTo: DriverTestsConfig.defaultWorkingDirectory,
     );
 
     _parser.addOption(

@@ -30,7 +30,6 @@ class MetricsUserMenu extends StatelessWidget {
           BoxShadow(
             offset: const Offset(0.0, 8.0),
             blurRadius: 12.0,
-            spreadRadius: 0.0,
             color: userMenuTheme.shadowColor,
           ),
         ],

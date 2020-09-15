@@ -34,6 +34,8 @@ import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 import 'package:test/test.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsThemeData", () {
     test(
@@ -179,7 +181,7 @@ void main() {
           ),
         );
 
-        const textFieldTheme = TextFieldThemeData(focusColor: Colors.black);
+        const textFieldTheme = TextFieldThemeData(focusColor: Colors.grey);
 
         const dropdownTheme = DropdownThemeData(
           backgroundColor: backgroundColor,

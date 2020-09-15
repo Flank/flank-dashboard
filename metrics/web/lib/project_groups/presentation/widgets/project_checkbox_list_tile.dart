@@ -24,7 +24,6 @@ class ProjectCheckboxListTile extends StatelessWidget {
     final theme = MetricsTheme.of(context).projectGroupDialogTheme;
 
     return Material(
-      elevation: 0.0,
       color: Colors.transparent,
       child: InkWell(
         onTap: () => _toggleProjectCheckedStatus(context),

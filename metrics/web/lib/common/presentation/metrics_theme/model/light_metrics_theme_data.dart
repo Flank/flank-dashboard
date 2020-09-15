@@ -66,7 +66,6 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _loginOptionTextColor = Color(0xFF757575);
 
   static const inputFocusedBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _inputFocusedBorderColor),
   );
   static const TextStyle _defaultDropdownTextStyle = TextStyle(

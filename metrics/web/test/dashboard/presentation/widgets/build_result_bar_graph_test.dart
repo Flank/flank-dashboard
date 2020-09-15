@@ -12,6 +12,8 @@ import 'package:metrics_core/metrics_core.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("BuildResultBarGraph", () {
     const buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
@@ -20,7 +22,8 @@ void main() {
       "throws an AssertionError if the given build result metric is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-            const _BuildResultBarGraphTestbed(buildResultMetric: null));
+          const _BuildResultBarGraphTestbed(buildResultMetric: null),
+        );
 
         expect(tester.takeException(), isAssertionError);
       },

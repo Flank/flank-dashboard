@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/widgets/metrics_checkbox.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsCheckbox", () {
     testWidgets(

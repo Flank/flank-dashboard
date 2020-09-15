@@ -29,6 +29,8 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ProjectGroupDialog", () {
     const title = 'title';

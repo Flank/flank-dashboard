@@ -8,6 +8,8 @@ import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart
 import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsTextFormField", () {
     const metricsThemeData = MetricsThemeData(

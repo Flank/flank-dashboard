@@ -37,7 +37,7 @@ void main() {
       const primaryColor = Colors.blue;
       const backgroundColor = Colors.white;
       const closeIconColor = Colors.black;
-      const contentBorderColor = Colors.grey;
+      const contentBorderColor = Colors.black;
 
       const titleTextStyle = defaultTextStyle;
       const uncheckedProjectTextStyle = defaultTextStyle;

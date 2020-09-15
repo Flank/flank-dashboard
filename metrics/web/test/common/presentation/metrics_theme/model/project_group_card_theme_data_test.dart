@@ -31,11 +31,11 @@ void main() {
     );
 
     test("creates an instance with the given values", () {
-      const accentColor = Colors.red;
-      const backgroundColor = Colors.grey;
-      const borderColor = Colors.black;
-      const hoverColor = Colors.black26;
-      const primaryColor = Colors.green;
+      const accentColor = Colors.grey;
+      const backgroundColor = Colors.red;
+      const borderColor = Colors.white;
+      const hoverColor = Colors.yellow;
+      const primaryColor = Colors.pink;
       const textStyle = TextStyle();
 
       final themeData = ProjectGroupCardThemeData(

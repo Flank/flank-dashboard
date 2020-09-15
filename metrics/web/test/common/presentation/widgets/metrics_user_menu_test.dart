@@ -25,7 +25,7 @@ void main() {
     const testBackgroundColor = Colors.white;
     const testDividerColor = Colors.black;
     const testTextStyle = TextStyle(color: Colors.grey);
-    const shadowColor = Colors.black;
+    const shadowColor = Colors.yellow;
 
     const testTheme = MetricsThemeData(
       userMenuTheme: UserMenuThemeData(

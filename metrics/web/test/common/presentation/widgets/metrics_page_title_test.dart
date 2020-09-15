@@ -53,7 +53,7 @@ void main() {
     );
 
     testWidgets("displays the given title", (WidgetTester tester) async {
-      const title = 'title';
+      const title = 'test';
 
       await mockNetworkImagesFor(() {
         return tester.pumpWidget(

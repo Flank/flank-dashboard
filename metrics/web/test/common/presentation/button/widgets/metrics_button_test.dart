@@ -8,6 +8,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsButton", () {
     const label = 'Label';
@@ -15,7 +17,7 @@ void main() {
       metricsButtonTheme: MetricsButtonThemeData(
         buttonAttentionLevel: MetricsButtonAttentionLevel(
           neutral: MetricsButtonStyle(
-            color: Colors.blue,
+            color: Colors.yellow,
             elevation: 1.0,
             labelStyle: TextStyle(
               color: Colors.white,

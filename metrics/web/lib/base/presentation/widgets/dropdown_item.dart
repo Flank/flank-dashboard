@@ -50,6 +50,7 @@ class DropdownItem extends StatelessWidget {
       mouseCursor: SystemMouseCursors.click,
       builder: (context, isHovered) {
         final color = isHovered ? hoverColor : backgroundColor;
+
         return Container(
           width: width,
           height: height,

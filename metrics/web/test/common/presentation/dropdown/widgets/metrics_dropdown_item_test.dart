@@ -7,6 +7,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsDropdownItem", () {
     const title = 'Test title';

@@ -7,6 +7,8 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 import '../../../test_utils/finder_util.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("TappableArea", () {
     const hoveredColor = Colors.yellow;

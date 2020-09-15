@@ -261,12 +261,12 @@ void main() {
 
     testWidgets(
       "applies the positive icon color form the metrics theme to the network image when the add project group card is enabled",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.hasConfiguredProjects).thenReturn(true);
 
         await mockNetworkImagesFor(
-              () => tester.pumpWidget(_AddProjectGroupCardTestbed(
+          () => tester.pumpWidget(_AddProjectGroupCardTestbed(
             projectGroupsNotifier: notifierMock,
             theme: metricsTheme,
           )),

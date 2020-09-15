@@ -217,7 +217,6 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
                   return MetricsInactiveButton(
                     label: buttonText,
-                    onPressed: null,
                   );
                 },
               ),

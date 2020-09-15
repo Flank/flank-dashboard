@@ -24,6 +24,8 @@ import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ProjectGroupsNotifier", () {
     const projectGroupId = 'projectGroupId';

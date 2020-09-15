@@ -28,7 +28,7 @@ void main() {
 
     test("creates an instance with the given values", () {
       const focusColor = Colors.black87;
-      const hoverBorderColor = Colors.grey;
+      const hoverBorderColor = Colors.black;
       const textStyle = TextStyle();
 
       final themeData = TextFieldThemeData(

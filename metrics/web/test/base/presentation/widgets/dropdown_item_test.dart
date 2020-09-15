@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_item.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("DropdownItem", () {
     final containerFinder = find.descendant(
@@ -41,7 +43,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(_DropdownItemTestbed(builder: _builder));
         final mouseRegionFinder = find.byWidgetPredicate(
-              (widget) => widget is MouseRegion && widget.child is GestureDetector,
+          (widget) => widget is MouseRegion && widget.child is GestureDetector,
         );
 
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);

@@ -43,7 +43,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color scaffoldColor = Color(0xFF1b1b1d);
   static const Color inputColor = Color(0xFF0d0d0d);
   static const inputFocusedBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _focusedBorderColor),
   );
 
@@ -232,7 +231,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
           ),
           textFieldTheme: const TextFieldThemeData(
-            focusColor: Colors.black,
             hoverBorderColor: _dropdownHoverBorderColor,
             textStyle: MetricsTextStyle(
               color: Colors.white,

@@ -6,6 +6,8 @@ import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_body.dart';
 import 'package:selection_menu/components_configurations.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ProjectGroupsDropdownBody", () {
     testWidgets(

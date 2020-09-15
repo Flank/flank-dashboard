@@ -10,12 +10,10 @@ class TextFieldConfig {
   );
 
   static const border = OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide.none,
   );
 
   static const errorBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: ColorConfig.accentColor),
   );
 }

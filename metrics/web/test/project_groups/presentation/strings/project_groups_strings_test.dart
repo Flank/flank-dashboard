@@ -51,7 +51,7 @@ void main() {
       () {
         expect(
           ProjectGroupsStrings.getCreatedProjectGroupMessage(projectGroupName),
-          contains('$projectGroupName'),
+          contains(projectGroupName),
         );
       },
     );
@@ -61,7 +61,7 @@ void main() {
       () {
         expect(
           ProjectGroupsStrings.getEditedProjectGroupMessage(projectGroupName),
-          contains('$projectGroupName'),
+          contains(projectGroupName),
         );
       },
     );
@@ -71,7 +71,7 @@ void main() {
       () {
         expect(
           ProjectGroupsStrings.getDeletedProjectGroupMessage(projectGroupName),
-          contains('$projectGroupName'),
+          contains(projectGroupName),
         );
       },
     );
