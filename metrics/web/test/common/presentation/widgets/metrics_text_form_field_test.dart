@@ -354,6 +354,27 @@ void main() {
         expect(fillColor, equals(themeFillColor));
       },
     );
+
+    testWidgets(
+      "applies the focus prefix icon to the focused text form field",
+      (tester) async {
+        final focusPrefixIcon = Icon(Icons.ac_unit);
+
+        await tester.pumpWidget(_MetricsTextFormFieldTestbed(
+          themeData: themeData,
+          metricsThemeData: metricsThemeData,
+          focusPrefixIcon: focusPrefixIcon,
+        ));
+
+        await tester.tap(find.byType(TextField));
+        await tester.pump();
+
+        final textField = FinderUtil.findTextField(tester);
+        final prefixIcon = textField.decoration.prefixIcon;
+
+        expect(prefixIcon, equals(focusPrefixIcon));
+      },
+    );
   });
 }
 
@@ -383,6 +404,8 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   /// A prefix icon for the text field under tests.
   final Widget prefixIcon;
 
+  final Widget focusPrefixIcon;
+
   /// A suffix icon for the text field under tests.
   final Widget suffixIcon;
 
@@ -406,6 +429,7 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.prefixIcon,
+    this.focusPrefixIcon,
     this.suffixIcon,
     this.hint,
     this.label,
@@ -423,6 +447,7 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
         obscureText: obscureText,
         keyboardType: keyboardType,
         prefixIcon: prefixIcon,
+        focusPrefixIcon: focusPrefixIcon,
         suffixIcon: suffixIcon,
         hint: hint,
         label: label,
