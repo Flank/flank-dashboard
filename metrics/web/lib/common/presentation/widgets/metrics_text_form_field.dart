@@ -24,8 +24,8 @@ class MetricsTextFormField extends StatefulWidget {
   /// within the decoration's container.
   final Widget prefixIcon;
 
-  /// An active icon that appears before the editable part of this text field
-  /// once it's active, within the decoration's container.
+  /// An icon that appears before the editable part of this text field
+  /// once it's focused, within the decoration's container.
   final Widget focusPrefixIcon;
 
   /// An icon that appears after the editable part of this text field,
