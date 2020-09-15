@@ -42,12 +42,8 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color scaffoldColor = Colors.white;
   static const Color inputColor = Color(0xFFF5F8FA);
   static const Color inputHoverColor = Color(0xfffafbfc);
-  static const Color inputHintTextColor = Color(0xFF868691);
+  static const Color _inputHintTextColor = Color(0xFF868691);
   static const Color _inputFocusedBorderColor = Color(0xFF6D6D75);
-  static const inputFocusedBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(4.0)),
-    borderSide: BorderSide(color: _inputFocusedBorderColor),
-  );
   static const Color _inactiveBackgroundColor = Color(0xFFEEEEEE);
   static const Color _inactiveColor = Color(0xFFBDBDBD);
   static const Color _inactiveButtonColor = Color(0xFFf0f0f5);
@@ -64,18 +60,23 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
   static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
   static const Color hoverBorderColor = Color(0xffb6b6ba);
+  static const Color _positiveToastColor = Color(0xFFE1FAF4);
+  static const Color _negativeToastColor = Color(0xFFFFEDE5);
+  static const Color _loginOptionTextColor = Color(0xFF757575);
+
+  static const inputFocusedBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+    borderSide: BorderSide(color: _inputFocusedBorderColor),
+  );
   static const TextStyle _defaultDropdownTextStyle = TextStyle(
     fontSize: 16.0,
     color: _inactiveTextColor,
   );
   static const TextStyle hintStyle = MetricsTextStyle(
-    color: LightMetricsThemeData.inputHintTextColor,
+    color: LightMetricsThemeData._inputHintTextColor,
     fontSize: 16.0,
     lineHeightInPixels: 20,
   );
-
-  static const Color _positiveToastColor = Color(0xFFE1FAF4);
-  static const Color _negativeToastColor = Color(0xFFFFEDE5);
 
   /// A [TextStyle] of the dialog title.
   static const TextStyle _dialogTitleTextStyle = TextStyle(
@@ -271,12 +272,14 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.bold,
             ),
             loginOptionButtonStyle: MetricsButtonStyle(
-              color: Colors.grey,
-              hoverColor: Colors.black26,
-              labelStyle: TextStyle(
-                color: Colors.black,
+              color: inputColor,
+              hoverColor: _inactiveButtonHoverColor,
+              elevation: 0.0,
+              labelStyle: MetricsTextStyle(
+                color: _loginOptionTextColor,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w500,
+                lineHeightInPixels: 20.0,
               ),
             ),
           ),

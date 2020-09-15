@@ -6,6 +6,7 @@ import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/common/presentation/toast/widgets/toast.dart';
+import 'package:metrics/common/presentation/widgets/metrics_theme_image.dart';
 import 'package:provider/provider.dart';
 
 /// Shows the authentication form to sign in.
@@ -67,8 +68,9 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 padding: const EdgeInsets.only(bottom: 104.0),
                 alignment: Alignment.center,
-                child: Image.network(
-                  'icons/logo-metrics.svg',
+                child: const MetricsThemeImage(
+                  darkAsset: 'icons/logo-metrics.svg',
+                  lightAsset: 'icons/logo-metrics-light.svg',
                   width: 180.0,
                   height: 44.0,
                   fit: BoxFit.contain,
