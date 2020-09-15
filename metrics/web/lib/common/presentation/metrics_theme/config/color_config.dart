@@ -6,6 +6,7 @@ class ColorConfig {
   static const Color primaryHoverColor = Color(0xFF00B383);
   static const Color primaryButtonHoverColor = Color(0xff1eb284);
   static const Color accentColor = Color(0xFFF45531);
+  static const Color accentOpaqueColor = Color(0xCCF45531);
   static const Color accentButtonHoverColor = Color(0xffe2431f);
   static const Color inactiveColor = Color(0xFF242729);
   static const Color inactiveTextColor = Color(0xFF1b1b1b);

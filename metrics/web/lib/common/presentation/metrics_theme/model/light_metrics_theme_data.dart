@@ -42,13 +42,11 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color scaffoldColor = Colors.white;
   static const Color inputColor = Color(0xFFF5F8FA);
   static const Color inputHoverColor = Color(0xfffafbfc);
+  static const Color _inputFocusedBorderColor = Color(0xFF6D6D75);
   static const inputFocusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _inputFocusedBorderColor),
   );
-
-  static const Color _dropdownHoverColor = Color(0xff878799);
-  static const Color _focusedBorderColor = Colors.blue;
   static const Color _inactiveBackgroundColor = Color(0xFFEEEEEE);
   static const Color _inactiveColor = Color(0xFFBDBDBD);
   static const Color _inactiveButtonColor = Color(0xFFf0f0f5);
@@ -65,19 +63,12 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
   static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
   static const Color hoverBorderColor = Color(0xffb6b6ba);
-  static const Color _inputColor = Color(0xfff5f8fa);
-  static const Color _openedButtonInactiveColor = Color(0xfffafbfc);
   static const TextStyle _defaultDropdownTextStyle = TextStyle(
     fontSize: 16.0,
     color: _inactiveTextColor,
   );
-
-  static const Color _positiveToastBackgroundColor = Color(0xffe1faf4);
-  static const Color _positiveToastTextColor = Color(0xCC20CE9A);
-  static const Color _negativeToastBackgroundColor = Color(0xffffede5);
-  static const Color _negativeToastTextColor = Color(0xCCF45531);
-
-  static const Color _inputFocusedBorderColor = Color(0xff6d6d75);
+  static const Color _positiveToastColor = Color(0xFFE1FAF4);
+  static const Color _negativeToastColor = Color(0xFFFFEDE5);
 
   /// A [TextStyle] of the dialog title.
   static const TextStyle _dialogTitleTextStyle = TextStyle(
@@ -244,17 +235,17 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           dropdownTheme: const DropdownThemeData(
             backgroundColor: Colors.white,
-            openedButtonBackgroundColor: _openedButtonInactiveColor,
-            hoverBackgroundColor: _openedButtonInactiveColor,
+            openedButtonBackgroundColor: inputHoverColor,
+            hoverBackgroundColor: inputHoverColor,
             hoverBorderColor: hoverBorderColor,
             openedButtonBorderColor: _inputFocusedBorderColor,
-            closedButtonBackgroundColor: _inputColor,
-            closedButtonBorderColor: _inputColor,
+            closedButtonBackgroundColor: inputColor,
+            closedButtonBorderColor: inputColor,
             textStyle: _defaultDropdownTextStyle,
           ),
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.white,
-            hoverColor: _dropdownHoverColor,
+            hoverColor: ColorConfig.shimmerColor,
             textStyle: MetricsTextStyle(
               fontSize: 16.0,
               color: _inactiveTextColor,
@@ -318,18 +309,18 @@ class LightMetricsThemeData extends MetricsThemeData {
           toastTheme: const ToastThemeData(
             toastAttentionLevel: ToastAttentionLevel(
               positive: ToastStyle(
-                backgroundColor: _positiveToastBackgroundColor,
+                backgroundColor: _positiveToastColor,
                 textStyle: MetricsTextStyle(
-                  color: _positiveToastTextColor,
+                  color: ColorConfig.primaryColor,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   lineHeightInPixels: 20,
                 ),
               ),
               negative: ToastStyle(
-                backgroundColor: _negativeToastBackgroundColor,
+                backgroundColor: _negativeToastColor,
                 textStyle: MetricsTextStyle(
-                  color: _negativeToastTextColor,
+                  color: ColorConfig.accentOpaqueColor,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   lineHeightInPixels: 20,
@@ -393,7 +384,7 @@ class LightMetricsThemeData extends MetricsThemeData {
               inactive: CirclePercentageStyle(
                 strokeColor: _inactiveBackgroundColor,
                 backgroundColor: _inactiveBackgroundColor,
-                valueColor: _focusedBorderColor,
+                valueColor: Colors.blue,
                 valueStyle: TextStyle(
                   color: _inactiveColor,
                   fontWeight: FontWeight.bold,

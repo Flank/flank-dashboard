@@ -116,7 +116,6 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
 
     _focusDecoration = _defaultDecoration.copyWith(
       fillColor: textFieldTheme.focusColor,
-      focusedBorder: decorationTheme.focusedBorder,
     );
 
     super.didChangeDependencies();
