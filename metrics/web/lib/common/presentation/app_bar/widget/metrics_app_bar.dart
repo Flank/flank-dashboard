@@ -4,7 +4,6 @@ import 'package:metrics/common/presentation/metrics_theme/config/dimensions_conf
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_theme_image.dart';
-import 'package:metrics/common/presentation/widgets/metrics_user_menu_button.dart';
 import 'package:metrics/common/presentation/user_menu_button/widgets/metrics_user_menu_button.dart';
 
 /// A common for the metrics application [AppBar] widget.
