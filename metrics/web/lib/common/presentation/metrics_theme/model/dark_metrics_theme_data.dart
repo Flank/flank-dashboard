@@ -179,7 +179,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
               color: Colors.white,
               fontSize: 14.0,
               lineHeightInPixels: 20.0,
-              fontWeight: FontWeight.w500,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
             errorTextStyle: TextStyle(color: ColorConfig.accentColor),
