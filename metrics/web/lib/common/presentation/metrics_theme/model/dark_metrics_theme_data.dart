@@ -74,7 +74,9 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveToggleHoverColor = Color(0xFF262626);
   static const Color _textPlaceholderColor = Color(0xFF51585c);
   static const Color _addProjectGroupCardHoverColor = Color(0xff07372f);
-  static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color _positiveStatusColor = Color(0xFF182b27);
+  static const Color _negativeStatusColor = Color(0xFF2d1f1f);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = MetricsTextStyle(
@@ -95,7 +97,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
       : super(
           metricsWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
-            accentColor: ColorConfig.primaryBackgroundColor,
+            accentColor: _positiveStatusColor,
             backgroundColor: scaffoldColor,
             textStyle: TextStyle(
               color: ColorConfig.primaryColor,
@@ -129,7 +131,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           addProjectGroupCardTheme: const AddProjectGroupCardThemeData(
             attentionLevel: AddProjectGroupCardAttentionLevel(
               positive: AddProjectGroupCardStyle(
-                backgroundColor: ColorConfig.primaryBackgroundColor,
+                backgroundColor: _positiveStatusColor,
                 iconColor: ColorConfig.primaryColor,
                 hoverColor: _addProjectGroupCardHoverColor,
                 labelStyle: MetricsTextStyle(
@@ -248,6 +250,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             closedButtonBackgroundColor: inputColor,
             closedButtonBorderColor: inputColor,
             textStyle: _defaultDropdownTextStyle,
+            shadowColor: _shadowColor,
+            iconColor: Colors.white,
           ),
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.transparent,
@@ -320,10 +324,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
           projectBuildStatusTheme: const ProjectBuildStatusThemeData(
             attentionLevel: ProjectBuildStatusAttentionLevel(
               positive: ProjectBuildStatusStyle(
-                backgroundColor: ColorConfig.primaryBackgroundColor,
+                backgroundColor: _positiveStatusColor,
               ),
               negative: ProjectBuildStatusStyle(
-                backgroundColor: ColorConfig.accentBackgroundColor,
+                backgroundColor: _negativeStatusColor,
               ),
               unknown: ProjectBuildStatusStyle(
                 backgroundColor: ColorConfig.inactiveColor,
@@ -333,8 +337,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
           circlePercentageTheme: const CirclePercentageThemeData(
             attentionLevel: CirclePercentageAttentionLevel(
               positive: CirclePercentageStyle(
-                strokeColor: ColorConfig.primaryBackgroundColor,
-                backgroundColor: ColorConfig.primaryBackgroundColor,
+                strokeColor: _positiveStatusColor,
+                backgroundColor: _positiveStatusColor,
                 valueColor: ColorConfig.primaryColor,
                 valueStyle: TextStyle(
                   color: ColorConfig.primaryColor,
@@ -343,8 +347,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               negative: CirclePercentageStyle(
-                strokeColor: ColorConfig.accentBackgroundColor,
-                backgroundColor: ColorConfig.accentBackgroundColor,
+                strokeColor: _negativeStatusColor,
+                backgroundColor: _negativeStatusColor,
                 valueColor: ColorConfig.accentColor,
                 valueStyle: TextStyle(
                   color: ColorConfig.accentColor,
@@ -383,7 +387,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.black,
             dividerColor: scaffoldColor,
-            shadowColor: _userMenuShadowColor,
+            shadowColor: _shadowColor,
             contentTextStyle: TextStyle(
               color: Colors.white,
               fontSize: 16.0,
@@ -403,14 +407,14 @@ class DarkMetricsThemeData extends MetricsThemeData {
           toastTheme: const ToastThemeData(
             toastAttentionLevel: ToastAttentionLevel(
               positive: ToastStyle(
-                backgroundColor: ColorConfig.primaryBackgroundColor,
+                backgroundColor: _positiveStatusColor,
                 textStyle: TextStyle(
                   color: ColorConfig.primaryColor,
                   fontSize: 16.0,
                 ),
               ),
               negative: ToastStyle(
-                backgroundColor: ColorConfig.accentBackgroundColor,
+                backgroundColor: _negativeStatusColor,
                 textStyle: TextStyle(
                   color: ColorConfig.accentColor,
                   fontSize: 16.0,
