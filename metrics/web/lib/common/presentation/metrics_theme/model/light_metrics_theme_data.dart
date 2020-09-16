@@ -171,7 +171,6 @@ class LightMetricsThemeData extends MetricsThemeData {
             checkedProjectTextStyle: TextStyle(
               color: Colors.black,
               fontSize: 14.0,
-              fontWeight: FontWeight.w500,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
             errorTextStyle: TextStyle(color: ColorConfig.accentColor),
