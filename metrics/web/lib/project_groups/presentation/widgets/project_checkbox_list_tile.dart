@@ -26,6 +26,8 @@ class ProjectCheckboxListTile extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         onTap: () => _toggleProjectCheckedStatus(context),
         child: Container(
           height: 48.0,
