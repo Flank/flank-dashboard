@@ -31,10 +31,14 @@ class DropdownThemeData {
   /// The background [Color] of the dropdown button when hovered.
   final Color hoverBackgroundColor;
 
+  /// The shadow [Color] of the dropdown body.
+  final Color shadowColor;
+
   /// Creates the [DropdownThemeData].
   ///
   /// If [openedButtonBorderColor] or [closedButtonBorderColor]
-  /// or [hoverBorderColor] is null, the [Colors.transparent] used.
+  /// or [hoverBorderColor] or [shadowColor] is null,
+  /// the [Colors.transparent] used.
   const DropdownThemeData({
     this.backgroundColor,
     this.textStyle,
@@ -44,9 +48,11 @@ class DropdownThemeData {
     this.closedButtonBackgroundColor,
     Color hoverBorderColor,
     this.hoverBackgroundColor,
+    Color shadowColor,
   })  : hoverBorderColor = hoverBorderColor ?? _defaultBorderColor,
         openedButtonBorderColor =
             openedButtonBorderColor ?? _defaultBorderColor,
         closedButtonBorderColor =
-            closedButtonBorderColor ?? _defaultBorderColor;
+            closedButtonBorderColor ?? _defaultBorderColor,
+        shadowColor = shadowColor ?? _defaultBorderColor;
 }

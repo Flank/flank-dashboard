@@ -74,7 +74,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveToggleHoverColor = Color(0xFF262626);
   static const Color _textPlaceholderColor = Color(0xFF51585c);
   static const Color _addProjectGroupCardHoverColor = Color(0xff07372f);
-  static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.32);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = MetricsTextStyle(
@@ -248,6 +248,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             closedButtonBackgroundColor: inputColor,
             closedButtonBorderColor: inputColor,
             textStyle: _defaultDropdownTextStyle,
+            shadowColor: _shadowColor,
           ),
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.transparent,
@@ -383,7 +384,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.black,
             dividerColor: scaffoldColor,
-            shadowColor: _userMenuShadowColor,
+            shadowColor: _shadowColor,
             contentTextStyle: TextStyle(
               color: Colors.white,
               fontSize: 16.0,

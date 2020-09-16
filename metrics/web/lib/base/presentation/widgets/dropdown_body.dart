@@ -16,8 +16,14 @@ class DropdownBody extends StatefulWidget {
   /// A [Duration] to use in the animation.
   final Duration animationDuration;
 
-  /// A max height of this this dropdown body.
+  /// A max height of this dropdown body.
   final double maxHeight;
+
+  /// A max width of this dropdown body.
+  final double maxWidth;
+
+  /// A decoration of this dropdown body.
+  final BoxDecoration decoration;
 
   /// A [ValueChanged] callback used to notify about opened state changes.
   final ValueChanged<bool> onOpenStateChanged;
@@ -38,10 +44,13 @@ class DropdownBody extends StatefulWidget {
     @required this.state,
     this.animationCurve = Curves.linear,
     this.animationDuration = const Duration(),
+    this.decoration = const BoxDecoration(),
     double maxHeight,
+    double maxWidth,
     this.onOpenStateChanged,
     this.child,
   })  : maxHeight = maxHeight ?? double.infinity,
+        maxWidth = maxWidth ?? double.infinity,
         assert(state != null),
         assert(animationCurve != null),
         assert(animationDuration != null),
@@ -89,7 +98,9 @@ class _DropdownBodyState extends State<DropdownBody>
     return Container(
       constraints: BoxConstraints(
         maxHeight: widget.maxHeight,
+        maxWidth: widget.maxWidth,
       ),
+      decoration: widget.decoration,
       child: SizeTransition(
         sizeFactor: _animation,
         child: widget.child,

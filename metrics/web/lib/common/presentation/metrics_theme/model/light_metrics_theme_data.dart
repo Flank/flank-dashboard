@@ -57,7 +57,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _textPlaceholderColor = Color(0xFFdcdce3);
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
-  static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.32);
   static const Color hoverBorderColor = Color(0xffb6b6ba);
   static const Color _positiveToastColor = Color(0xFFE1FAF4);
   static const Color _negativeToastColor = Color(0xFFFFEDE5);
@@ -72,9 +72,10 @@ class LightMetricsThemeData extends MetricsThemeData {
     borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _inputFocusedBorderColor),
   );
-  static const TextStyle _defaultDropdownTextStyle = TextStyle(
+  static const TextStyle _defaultDropdownTextStyle = MetricsTextStyle(
     fontSize: 16.0,
     color: _inactiveTextColor,
+    lineHeightInPixels: 20.0,
   );
   static const TextStyle hintStyle = MetricsTextStyle(
     color: LightMetricsThemeData._inputHintTextColor,
@@ -253,6 +254,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             closedButtonBackgroundColor: inputColor,
             closedButtonBorderColor: inputColor,
             textStyle: _defaultDropdownTextStyle,
+            shadowColor: _shadowColor,
           ),
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.white,
@@ -364,7 +366,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.white,
             dividerColor: scaffoldColor,
-            shadowColor: _userMenuShadowColor,
+            shadowColor: _shadowColor,
             contentTextStyle: TextStyle(
               color: _inactiveTextColor,
               fontSize: 16.0,
