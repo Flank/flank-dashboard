@@ -102,17 +102,15 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
   void didChangeDependencies() {
     final textFieldTheme = MetricsTheme.of(context).textFieldTheme;
     final decorationTheme = Theme.of(context).inputDecorationTheme;
-
     final border = decorationTheme.border ?? InputBorder.none;
+
     _hoverDecoration = InputDecoration(
       enabledBorder: border.copyWith(
         borderSide: BorderSide(color: textFieldTheme.hoverBorderColor),
       ),
     );
-
     _focusDecoration = InputDecoration(
       fillColor: textFieldTheme.focusColor,
-      prefixIcon: widget.focusPrefixIcon,
     );
 
     super.didChangeDependencies();
@@ -122,6 +120,7 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
   Widget build(BuildContext context) {
     final textFieldTheme = MetricsTheme.of(context).textFieldTheme;
     final decorationTheme = Theme.of(context).inputDecorationTheme;
+    final prefixIcon = _isFocused ? widget.focusPrefixIcon : widget.prefixIcon;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +146,7 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
             keyboardType: widget.keyboardType,
             style: textFieldTheme.textStyle,
             decoration: _decoration.copyWith(
-              prefixIcon: widget.prefixIcon,
+              prefixIcon: prefixIcon,
               suffixIcon: widget.suffixIcon,
               hintText: widget.hint,
             ),
