@@ -41,7 +41,7 @@ void main() {
     });
 
     test(
-      "delegates call to the UserRepository.getGoogleSignInCredentials",
+      "gets the google sign-in credentials from the repository",
       () async {
         final signInUseCase = GoogleSignInUseCase(repository);
 
@@ -51,16 +51,13 @@ void main() {
       },
     );
 
-    test(
-      "delegates call to the UserRepository.validateEmail",
-      () async {
-        final signInUseCase = GoogleSignInUseCase(repository);
+    test("validates the email domain", () async {
+      final signInUseCase = GoogleSignInUseCase(repository);
 
-        await signInUseCase();
+      await signInUseCase();
 
-        verify(repository.validateEmailDomain(any)).called(equals(1));
-      },
-    );
+      verify(repository.validateEmailDomain(any)).called(equals(1));
+    });
 
     test(
       "throws if UserRepository.validateEmail's result is not a valid email",
@@ -95,7 +92,7 @@ void main() {
     );
 
     test(
-      "delegates call to the UserRepository.signInWithGoogle",
+      "signs in a user using the Google authentication",
       () async {
         final signInUseCase = GoogleSignInUseCase(repository);
 
