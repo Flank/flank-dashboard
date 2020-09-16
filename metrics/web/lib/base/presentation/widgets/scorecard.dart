@@ -33,7 +33,6 @@ class Scorecard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Flexible(
           child: Padding(

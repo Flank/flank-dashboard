@@ -4,6 +4,8 @@ import 'package:metrics/common/presentation/dropdown/widgets/metrics_dropdown_it
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_item.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ProjectGroupsDropdownItem", () {
     testWidgets(

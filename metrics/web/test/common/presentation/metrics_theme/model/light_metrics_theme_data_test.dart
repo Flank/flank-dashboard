@@ -28,6 +28,7 @@ void main() {
         expect(lightMetricsThemeData.performanceSparklineTheme, isNotNull);
         expect(lightMetricsThemeData.projectBuildStatusTheme, isNotNull);
         expect(lightMetricsThemeData.toggleTheme, isNotNull);
+        expect(lightMetricsThemeData.userMenuButtonTheme, isNotNull);
         expect(lightMetricsThemeData.userMenuTheme, isNotNull);
         expect(lightMetricsThemeData.textPlaceholderTheme, isNotNull);
         expect(lightMetricsThemeData.circlePercentageTheme, isNotNull);

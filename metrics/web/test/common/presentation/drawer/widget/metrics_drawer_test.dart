@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
@@ -37,66 +36,6 @@ void main() {
         await tester.pump();
 
         verify(themeNotifier.changeTheme()).called(equals(1));
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the theme checkbox",
-      (WidgetTester tester) async {
-        final themeNotifier = ThemeNotifierMock();
-
-        when(themeNotifier.isDark).thenReturn(false);
-
-        await tester.pumpWidget(MetricsDrawerTestbed(
-          themeNotifier: themeNotifier,
-        ));
-
-        final finder = find.ancestor(
-          of: find.text(CommonStrings.darkTheme),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the 'Project groups' tile",
-      (WidgetTester tester) async {
-        final themeNotifier = ThemeNotifierMock();
-
-        when(themeNotifier.isDark).thenReturn(false);
-
-        await tester.pumpWidget(MetricsDrawerTestbed(
-          themeNotifier: themeNotifier,
-        ));
-
-        final finder = find.ancestor(
-          of: find.text(CommonStrings.projectGroups),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the 'Log out' tile",
-      (WidgetTester tester) async {
-        final themeNotifier = ThemeNotifierMock();
-
-        when(themeNotifier.isDark).thenReturn(false);
-
-        await tester.pumpWidget(MetricsDrawerTestbed(
-          themeNotifier: themeNotifier,
-        ));
-
-        final finder = find.ancestor(
-          of: find.text(CommonStrings.logOut),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
       },
     );
 

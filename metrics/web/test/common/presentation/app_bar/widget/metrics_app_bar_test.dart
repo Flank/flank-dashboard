@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/widgets/metrics_user_menu_button.dart';
+import 'package:metrics/common/presentation/user_menu_button/widgets/metrics_user_menu_button.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -26,7 +26,7 @@ void main() {
     });
 
     testWidgets(
-      "applies a hand cursor to the app logo",
+      "applies a tappable area to the app logo",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());
@@ -34,7 +34,7 @@ void main() {
 
         final finder = find.descendant(
           of: find.byTooltip(CommonStrings.home),
-          matching: find.byType(HandCursor),
+          matching: find.byType(TappableArea),
         );
 
         expect(finder, findsOneWidget);

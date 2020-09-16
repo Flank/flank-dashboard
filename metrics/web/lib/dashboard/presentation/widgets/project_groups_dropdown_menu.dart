@@ -47,7 +47,6 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
           return DropdownMenu<ProjectGroupDropdownItemViewModel>(
             itemHeight: 40.0,
             initiallySelectedItemIndex: 0,
-            maxVisibleItems: 5,
             items: items,
             onItemSelected: (item) {
               Provider.of<ProjectMetricsNotifier>(context, listen: false)

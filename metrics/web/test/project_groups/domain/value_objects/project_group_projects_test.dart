@@ -11,8 +11,7 @@ void main() {
       "throws a ProjectGroupProjectsValidationException with maxProjectsLimitExceeded error code when the value length exceeds the projects limit",
       () {
         final validationException = ProjectGroupProjectsValidationException(
-          ProjectGroupProjectsValidationErrorCode
-              .maxProjectsLimitExceeded,
+          ProjectGroupProjectsValidationErrorCode.maxProjectsLimitExceeded,
         );
 
         final projectIds = List.generate(

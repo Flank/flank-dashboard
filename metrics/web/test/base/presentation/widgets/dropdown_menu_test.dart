@@ -5,6 +5,8 @@ import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 import 'package:selection_menu/selection_menu.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("DropdownMenu", () {
     const items = ['1', '2', '3'];
@@ -294,7 +296,7 @@ void main() {
 
         await tester.pumpWidget(const _DropdownMenuTestbed(
           itemHeight: itemHeight,
-          maxVisibleItems: 5,
+          maxVisibleItems: 4,
           items: items,
         ));
 

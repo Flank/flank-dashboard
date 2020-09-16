@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
-import 'package:universal_html/html.dart' as html;
 
 /// A callback used for widget builder functions that depend on the hover status.
-typedef HoverWidgetBuilder = Widget Function(BuildContext, bool);
+typedef HoverWidgetBuilder = Widget Function(
+  BuildContext context,
+  bool isHovered,
+  Widget child,
+);
 
 /// A widget that rebuilds its child using the given builder function
 /// and applies the given cursor when this widget is hovered,
@@ -20,18 +22,23 @@ class TappableArea extends StatefulWidget {
   /// if the this area is hovered.
   final HoverWidgetBuilder builder;
 
+  /// A widget that does not depend on hover updates.
+  /// The [builder] is called with the given child parameter.
+  final Widget child;
+
   /// Creates a new [TappableArea] instance.
   ///
   /// The [builder] must not be null.
   ///
-  /// The [mouseCursor] value defaults to [MouseCursor.basic].
+  /// The [mouseCursor] value defaults to [SystemMouseCursors.click].
   const TappableArea({
     Key key,
     @required this.builder,
     this.onTap,
+    this.child,
     MouseCursor mouseCursor,
   })  : assert(builder != null),
-        mouseCursor = mouseCursor ?? MouseCursor.basic,
+        mouseCursor = mouseCursor ?? SystemMouseCursors.click,
         super(key: key);
 
   @override
@@ -45,11 +52,12 @@ class _TappableAreaState extends State<TappableArea> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
+      cursor: widget.mouseCursor,
       onEnter: (_) => _changeHover(true),
       onExit: (_) => _changeHover(false),
       child: GestureDetector(
         onTap: widget.onTap,
-        child: widget.builder(context, _isHovered),
+        child: widget.builder(context, _isHovered, widget.child),
       ),
     );
   }
@@ -57,16 +65,5 @@ class _TappableAreaState extends State<TappableArea> {
   /// Changes [_isHovered] value to the given [value].
   void _changeHover(bool value) {
     setState(() => _isHovered = value);
-    _changeCursor();
-  }
-
-  /// Changes the cursor depending on [_isHovered] value.
-  void _changeCursor() {
-    final appContainer = html.window?.document?.getElementById('app-container');
-
-    if (appContainer == null) return;
-
-    appContainer.style.cursor =
-        _isHovered ? widget.mouseCursor.cursor : MouseCursor.basic.cursor;
   }
 }

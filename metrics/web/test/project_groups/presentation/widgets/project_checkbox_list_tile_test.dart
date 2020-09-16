@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/widgets/metrics_checkbox.dart';
@@ -13,6 +12,8 @@ import 'package:network_image_mock/network_image_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
+
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("ProjectCheckboxListTile", () {
@@ -109,24 +110,6 @@ void main() {
             projectCheckboxViewModel.id,
           ),
         ).called(equals(1));
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the list tile",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _ProjectCheckboxListTileTestbed(
-            projectCheckboxViewModel: projectCheckboxViewModel,
-          ));
-        });
-
-        final finder = find.ancestor(
-          of: find.byType(Row),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
       },
     );
 

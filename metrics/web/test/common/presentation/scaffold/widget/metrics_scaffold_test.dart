@@ -55,7 +55,9 @@ void main() {
     );
 
     testWidgets("applies the given padding", (WidgetTester tester) async {
-      const body = SizedBox();
+      const body = SizedBox(
+        height: 20.0,
+      );
       const padding = EdgeInsets.all(4.0);
 
       await mockNetworkImagesFor(() {

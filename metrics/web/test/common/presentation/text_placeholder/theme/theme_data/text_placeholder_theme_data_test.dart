@@ -10,9 +10,7 @@ void main() {
     test("creates an instance with the given values", () {
       const textStyle = TextStyle();
 
-      final themeData = TextPlaceholderThemeData(
-        textStyle: textStyle
-      );
+      final themeData = TextPlaceholderThemeData(textStyle: textStyle);
 
       expect(themeData.textStyle, equals(textStyle));
     });

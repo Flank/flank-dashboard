@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/add_project_grou
 import 'package:test/test.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("AddProjectGroupCardAttentionLevel", () {

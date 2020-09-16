@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_body.dart';
 import 'package:selection_menu/components_configurations.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("DropdownBody", () {
     testWidgets(
@@ -214,7 +216,6 @@ void main() {
 
         await tester.pumpWidget(
           _DropdownBodyTestbed(
-            state: MenuState.OpeningStart,
             onOpenStateChanged: (value) => isOpened = value,
           ),
         );

@@ -5,6 +5,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("CirclePercentage", () {
     final circlePercentageTypeFinder = find.byType(CirclePercentage);
@@ -41,7 +43,6 @@ void main() {
     testWidgets("can be created with null stroke color", (tester) async {
       await tester.pumpWidget(
         const _CirclePercentageTestbed(
-          value: 0.5,
           strokeColor: null,
         ),
       );
@@ -52,7 +53,6 @@ void main() {
     testWidgets("can be created with null value color", (tester) async {
       await tester.pumpWidget(
         const _CirclePercentageTestbed(
-          value: 0.5,
           valueColor: null,
         ),
       );
@@ -125,7 +125,6 @@ void main() {
         await tester.pumpWidget(
           const _CirclePercentageTestbed(
             valueStyle: valueStyle,
-            value: 0.3,
           ),
         );
 

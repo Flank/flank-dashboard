@@ -3,6 +3,8 @@ import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsTextStyle", () {
     const lineHeightInPixels = 26.0;

@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_strategy.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -14,6 +13,8 @@ import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
+
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("SignInOptionButton", () {
@@ -80,24 +81,6 @@ void main() {
         });
 
         final finder = find.text(label);
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the option button",
-      (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _LoginOptionButtonTestbed(
-            strategy: strategyStub,
-          ));
-        });
-
-        final finder = find.ancestor(
-          of: buttonFinder,
-          matching: find.byType(HandCursor),
-        );
 
         expect(finder, findsOneWidget);
       },

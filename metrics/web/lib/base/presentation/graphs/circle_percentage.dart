@@ -93,8 +93,7 @@ class _CirclePercentageState extends State<CirclePercentage>
       builder: (context, constraints) {
         final initialPadding = _getChildPadding(constraints);
 
-        return Align(
-          alignment: Alignment.center,
+        return Center(
           child: AspectRatio(
             aspectRatio: 1,
             child: AnimatedBuilder(

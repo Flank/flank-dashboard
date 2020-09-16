@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -35,26 +34,8 @@ void main() {
       expect(finder, findsOneWidget);
     });
 
-    testWidgets(
-      "applies a hand cursor to the arrow back icon",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            const _MetricsPageTitleTestbed(),
-          );
-        });
-
-        final finder = find.descendant(
-          of: find.byTooltip(CommonStrings.navigateBack),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
     testWidgets("displays the given title", (WidgetTester tester) async {
-      const title = 'title';
+      const title = 'test';
 
       await mockNetworkImagesFor(() {
         return tester.pumpWidget(

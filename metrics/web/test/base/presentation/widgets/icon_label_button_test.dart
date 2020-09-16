@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
@@ -10,6 +9,7 @@ void main() {
   group("IconLabelButton", () {
     const defaultPadding = EdgeInsets.zero;
     const defaultBorderRadius = BorderRadius.zero;
+    const defaultIcon = Icon(Icons.cake);
 
     testWidgets(
       "throws an AssertionError if the given label is null",
@@ -50,12 +50,11 @@ void main() {
     testWidgets(
       "applies the default icon padding if it's not specified",
       (WidgetTester tester) async {
-        const icon = Icon(Icons.add);
-        await tester.pumpWidget(_IconLabelButtonTestbed(icon: icon));
+        await tester.pumpWidget(_IconLabelButtonTestbed(icon: defaultIcon));
 
         final iconPadding = tester.widget<Padding>(
           find.ancestor(
-            of: find.byWidget(icon),
+            of: find.byWidget(defaultIcon),
             matching: find.byType(Padding).last,
           ),
         );
@@ -143,11 +142,9 @@ void main() {
     testWidgets(
       "displays the given icon",
       (WidgetTester tester) async {
-        const icon = Icon(Icons.add);
+        await tester.pumpWidget(_IconLabelButtonTestbed(icon: defaultIcon));
 
-        await tester.pumpWidget(_IconLabelButtonTestbed(icon: icon));
-
-        expect(find.byWidget(icon), findsOneWidget);
+        expect(find.byWidget(defaultIcon), findsOneWidget);
       },
     );
 
@@ -231,20 +228,6 @@ void main() {
         final actualCallback = inkWellWidget.onTap;
 
         expect(actualCallback, equals(testCallback));
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the icon label button",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(_IconLabelButtonTestbed());
-
-        final finder = find.ancestor(
-          of: find.byType(InkWell),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
       },
     );
   });

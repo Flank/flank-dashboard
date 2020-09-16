@@ -71,7 +71,7 @@ void main() {
         await tester.pump();
 
         final loadingErrorMessage =
-            CommonStrings.getLoadingErrorMessage('$errorMessage');
+            CommonStrings.getLoadingErrorMessage(errorMessage);
 
         expect(
           find.text(loadingErrorMessage),

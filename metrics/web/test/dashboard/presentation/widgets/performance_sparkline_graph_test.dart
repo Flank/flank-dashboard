@@ -13,6 +13,8 @@ import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_gra
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("PerformanceSparklineGraph", () {
     const performanceMetricValue = Duration(minutes: 1);

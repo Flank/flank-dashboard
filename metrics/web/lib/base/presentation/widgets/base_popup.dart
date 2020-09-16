@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 /// Signature for the function that builds an offset using the [childSize].
 typedef OffsetBuilder = Offset Function(Size childSize);
@@ -106,13 +108,13 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
             child: CompositedTransformFollower(
               link: _layerLink,
               offset: offset,
-              child: GestureDetector(
+              child: TappableArea(
+                mouseCursor: SystemMouseCursors.basic,
                 onTap: _onPopupEmptySpaceTap,
-                child: MouseRegion(
-                  child: ConstrainedBox(
-                    constraints: widget.popupConstraints,
-                    child: widget.popup,
-                  ),
+                builder: (context, isHovered, child) => child,
+                child: ConstrainedBox(
+                  constraints: widget.popupConstraints,
+                  child: widget.popup,
                 ),
               ),
             ),

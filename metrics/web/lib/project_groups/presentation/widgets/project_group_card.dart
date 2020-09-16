@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
@@ -39,78 +40,82 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     final _buttonBorderRadius = BorderRadius.circular(4.0);
     final theme = MetricsTheme.of(context).projectGroupCardTheme;
 
-    return TappableArea(
-      builder: (context, isHovered) {
-        return MetricsCard(
-          decoration: BoxDecoration(
-            border: Border.all(color: theme.borderColor),
-            borderRadius: BorderRadius.circular(4.0),
-            color: isHovered ? theme.hoverColor : theme.backgroundColor,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                      widget.projectGroupCardViewModel.name,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: theme.titleStyle,
-                    ),
+    return Material(
+      child: TappableArea(
+        mouseCursor: SystemMouseCursors.basic,
+        builder: (context, isHovered, child) {
+          return MetricsCard(
+            decoration: BoxDecoration(
+              border: Border.all(color: theme.borderColor),
+              borderRadius: BorderRadius.circular(4.0),
+              color: isHovered ? theme.hoverColor : theme.backgroundColor,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                child,
+                if (isHovered)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      IconLabelButton(
+                        onPressed: () => _showProjectGroupDialog(context),
+                        borderRadius: _buttonBorderRadius,
+                        iconPadding: _buttonIconPadding,
+                        icon: Image.network(
+                          'icons/edit.svg',
+                          width: _iconBoxSide,
+                          height: _iconBoxSide,
+                          fit: BoxFit.contain,
+                          color: theme.primaryColor,
+                        ),
+                        label: CommonStrings.edit,
+                        labelStyle: TextStyle(
+                          color: theme.primaryColor,
+                        ),
+                      ),
+                      IconLabelButton(
+                        onPressed: () => _showProjectGroupDeleteDialog(context),
+                        borderRadius: _buttonBorderRadius,
+                        iconPadding: _buttonIconPadding,
+                        icon: Image.network(
+                          'icons/delete.svg',
+                          width: _iconBoxSide,
+                          height: _iconBoxSide,
+                          fit: BoxFit.contain,
+                          color: theme.accentColor,
+                        ),
+                        label: CommonStrings.delete,
+                        labelStyle: TextStyle(
+                          color: theme.accentColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    _projectGroupsCount,
-                    style: theme.subtitleStyle,
-                  ),
-                ],
+              ],
+            ),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                widget.projectGroupCardViewModel.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: theme.titleStyle,
               ),
-              if (isHovered)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconLabelButton(
-                      onPressed: () => _showProjectGroupDialog(context),
-                      borderRadius: _buttonBorderRadius,
-                      iconPadding: _buttonIconPadding,
-                      icon: Image.network(
-                        'icons/edit.svg',
-                        width: _iconBoxSide,
-                        height: _iconBoxSide,
-                        fit: BoxFit.contain,
-                        color: theme.primaryColor,
-                      ),
-                      label: CommonStrings.edit,
-                      labelStyle: TextStyle(
-                        color: theme.primaryColor,
-                      ),
-                    ),
-                    IconLabelButton(
-                      onPressed: () => _showProjectGroupDeleteDialog(context),
-                      borderRadius: _buttonBorderRadius,
-                      iconPadding: _buttonIconPadding,
-                      icon: Image.network(
-                        'icons/delete.svg',
-                        width: _iconBoxSide,
-                        height: _iconBoxSide,
-                        fit: BoxFit.contain,
-                        color: theme.accentColor,
-                      ),
-                      label: CommonStrings.delete,
-                      labelStyle: TextStyle(
-                        color: theme.accentColor,
-                      ),
-                    ),
-                  ],
-                ),
-            ],
-          ),
-        );
-      },
+            ),
+            Text(
+              _projectGroupsCount,
+              style: theme.subtitleStyle,
+            ),
+          ],
+        ),
+      ),
     );
   }
 

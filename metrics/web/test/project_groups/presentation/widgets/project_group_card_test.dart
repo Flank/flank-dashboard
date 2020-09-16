@@ -24,6 +24,8 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ProjectGroupCard", () {
     const projectGroupCardViewModel = ProjectGroupCardViewModel(
@@ -57,10 +59,18 @@ void main() {
       matching: find.byType(MouseRegion),
     );
 
-    Future<void> _hoverProjectGroupCard(WidgetTester tester) async {
+    Future<void> _enterProjectGroupCard(WidgetTester tester) async {
       final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
       const pointerEnterEvent = PointerEnterEvent();
       mouseRegion.onEnter(pointerEnterEvent);
+
+      await tester.pump();
+    }
+
+    Future<void> _exitProjectGroupCard(WidgetTester tester) async {
+      final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+      const pointerExitEvent = PointerExitEvent();
+      mouseRegion.onExit(pointerExitEvent);
 
       await tester.pump();
     }
@@ -86,11 +96,7 @@ void main() {
           ),
         );
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        const pointerExitEvent = PointerExitEvent();
-        mouseRegion.onExit(pointerExitEvent);
-
-        await tester.pump();
+        await _exitProjectGroupCard(tester);
 
         final decoration = FinderUtil.findBoxDecoration(tester);
 
@@ -107,7 +113,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         final decoration = FinderUtil.findBoxDecoration(tester);
@@ -179,7 +185,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         final buttonWidget = tester.widget<IconLabelButton>(
@@ -199,7 +205,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         final buttonWidget = tester.widget<IconLabelButton>(
@@ -219,11 +225,7 @@ void main() {
           ),
         );
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        const pointerExitEvent = PointerExitEvent();
-        mouseRegion.onExit(pointerExitEvent);
-
-        await tester.pump();
+        await _exitProjectGroupCard(tester);
 
         expect(find.text(CommonStrings.edit), findsNothing);
       },
@@ -238,7 +240,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         expect(find.text(CommonStrings.edit), findsOneWidget);
@@ -253,11 +255,7 @@ void main() {
           projectGroupCardViewModel: projectGroupCardViewModel,
         ));
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        const pointerExitEvent = PointerExitEvent();
-        mouseRegion.onExit(pointerExitEvent);
-
-        await tester.pump();
+        await _exitProjectGroupCard(tester);
 
         expect(find.text(CommonStrings.delete), findsNothing);
       },
@@ -272,7 +270,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         expect(find.text(CommonStrings.delete), findsOneWidget);
@@ -329,7 +327,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         await tester.tap(
@@ -364,7 +362,7 @@ void main() {
         );
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         await tester.tap(
@@ -398,7 +396,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         await tester.tap(
@@ -430,7 +428,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         await tester.tap(
@@ -463,7 +461,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         await tester.tap(
@@ -493,7 +491,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         await tester.tap(
@@ -522,7 +520,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         await tester.tap(
@@ -552,7 +550,7 @@ void main() {
         ));
 
         await mockNetworkImagesFor(() async {
-          await _hoverProjectGroupCard(tester);
+          await _enterProjectGroupCard(tester);
         });
 
         await tester.tap(

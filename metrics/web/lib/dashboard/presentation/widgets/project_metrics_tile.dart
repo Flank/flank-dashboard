@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/loading_builder.dart';
-import 'package:metrics/base/presentation/widgets/loading_placeholder.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
@@ -74,7 +73,6 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
             height: 80.0,
             child: LoadingBuilder(
               isLoading: projectMetrics.buildResultMetrics == null,
-              loadingPlaceholder: const LoadingPlaceholder(),
               builder: (_) => BuildResultBarGraph(
                 buildResultMetric: projectMetrics.buildResultMetrics,
               ),
@@ -84,7 +82,6 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
             height: 81.0,
             child: LoadingBuilder(
               isLoading: projectMetrics.performanceSparkline == null,
-              loadingPlaceholder: const LoadingPlaceholder(),
               builder: (_) => PerformanceSparklineGraph(
                 performanceSparkline: projectMetrics.performanceSparkline,
               ),
@@ -108,7 +105,6 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
             height: 72.0,
             child: LoadingBuilder(
               isLoading: projectMetrics == null,
-              loadingPlaceholder: const LoadingPlaceholder(),
               builder: (_) => StabilityCirclePercentage(
                 stability: projectMetrics.stability,
               ),
@@ -118,7 +114,6 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
             height: 72.0,
             child: LoadingBuilder(
               isLoading: projectMetrics == null,
-              loadingPlaceholder: const LoadingPlaceholder(),
               builder: (_) => CoverageCirclePercentage(
                 coverage: projectMetrics.coverage,
               ),

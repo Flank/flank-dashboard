@@ -36,13 +36,13 @@ import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
+import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {
   static const Color scaffoldColor = Color(0xFF1b1b1d);
   static const Color inputColor = Color(0xFF0d0d0d);
   static const inputFocusedBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(4.0)),
     borderSide: BorderSide(color: _focusedBorderColor),
   );
 
@@ -383,6 +383,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
             activeHoverColor: ColorConfig.primaryHoverColor,
             inactiveColor: _inactiveToggleColor,
             inactiveHoverColor: _inactiveToggleHoverColor,
+          ),
+          userMenuButtonTheme: const UserMenuButtonThemeData(
+            activeColor: ColorConfig.shimmerColor,
+            inactiveColor: Colors.white,
           ),
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.black,

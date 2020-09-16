@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("ShimmerPlaceholderThemeData", () {

@@ -28,7 +28,7 @@ void main() {
 
     test("creates an instance with the given values", () {
       const titleTextStyle = TextStyle();
-      const loginOptionButtonStyle = MetricsButtonStyle();
+      const loginOptionButtonStyle = MetricsButtonStyle(color: Colors.white);
 
       final themeData = LoginThemeData(
         titleTextStyle: titleTextStyle,

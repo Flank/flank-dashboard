@@ -53,8 +53,14 @@ void main() {
     testWidgets(
       "creates the chart line from the given data",
       (WidgetTester tester) async {
+        const sparklineGraphTestData = [
+          Point(1, 5),
+          Point(2, 7),
+          Point(3, 1),
+        ];
+
         await tester.pumpWidget(const _SparklineGraphTestbed(
-          data: _SparklineGraphTestbed.sparklineGraphTestData,
+          data: sparklineGraphTestData,
         ));
 
         final lineChart = tester.widget<LineChart>(find.byType(LineChart));
@@ -62,7 +68,7 @@ void main() {
 
         expect(
           chartLine.data,
-          equals(_SparklineGraphTestbed.sparklineGraphTestData),
+          equals(sparklineGraphTestData),
         );
       },
     );

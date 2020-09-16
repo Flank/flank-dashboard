@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
@@ -9,6 +8,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsButton", () {
     const label = 'Label';
@@ -16,7 +17,7 @@ void main() {
       metricsButtonTheme: MetricsButtonThemeData(
         buttonAttentionLevel: MetricsButtonAttentionLevel(
           neutral: MetricsButtonStyle(
-            color: Colors.blue,
+            color: Colors.yellow,
             elevation: 1.0,
             labelStyle: TextStyle(
               color: Colors.white,
@@ -79,21 +80,6 @@ void main() {
         final button = tester.widget<RaisedButton>(buttonFinder);
 
         expect(button.onPressed, equals(defaultOnPressed));
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the button",
-      (tester) async {
-        await tester.pumpWidget(
-          const _MetricsButtonTestbed(label: label),
-        );
-
-        final finder = find.byWidgetPredicate(
-          (widget) => widget is HandCursor && widget.child is RaisedButton,
-        );
-
-        expect(finder, findsOneWidget);
       },
     );
 

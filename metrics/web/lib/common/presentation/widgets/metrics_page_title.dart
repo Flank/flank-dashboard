@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 
@@ -20,22 +19,19 @@ class MetricsPageTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 16.0),
           child: Tooltip(
             message: CommonStrings.navigateBack,
-            child: HandCursor(
-              child: InkWell(
-                customBorder: const CircleBorder(),
-                onTap: () => _navigateBack(context),
-                child: Image.network(
-                  'icons/arrow-back.svg',
-                  width: 32.0,
-                  height: 32.0,
-                  fit: BoxFit.contain,
-                ),
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: () => _navigateBack(context),
+              child: Image.network(
+                'icons/arrow-back.svg',
+                width: 32.0,
+                height: 32.0,
+                fit: BoxFit.contain,
               ),
             ),
           ),

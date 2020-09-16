@@ -27,7 +27,7 @@ class ChromeDriver {
 
       FileUtils.extractFromArchive(chromeDriverArchive, workingDir);
 
-      await Process.run('chmod', ['a+x', '$chromeDriver']);
+      await Process.run('chmod', ['a+x', chromeDriver]);
     }
   }
 }

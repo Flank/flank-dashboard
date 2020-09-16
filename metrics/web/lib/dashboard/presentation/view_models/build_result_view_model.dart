@@ -5,8 +5,8 @@ import 'package:metrics_core/metrics_core.dart';
 /// A view model that represents the data of the bar to display in [BarGraph].
 class BuildResultViewModel extends Equatable {
   /// The abstract value of the build.
-  /// 
-  /// Usually stands for the duration of the build this view model belongs to. 
+  ///
+  /// Usually stands for the duration of the build this view model belongs to.
   /// But can be any other integer parameter of the build.
   final int value;
 

@@ -13,7 +13,7 @@ class TextFieldThemeData {
 
   /// Creates a new instance of the [TextFieldThemeData].
   const TextFieldThemeData({
-    this.focusColor = Colors.black,
+    this.focusColor = Colors.blue,
     this.hoverBorderColor = Colors.grey,
     this.textStyle,
   });

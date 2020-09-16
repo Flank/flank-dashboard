@@ -8,6 +8,8 @@ import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart
 import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsTextFormField", () {
     const metricsThemeData = MetricsThemeData(
@@ -358,7 +360,7 @@ void main() {
     testWidgets(
       "applies the focus prefix icon to the focused text form field",
       (tester) async {
-        final focusPrefixIcon = Icon(Icons.ac_unit);
+        const focusPrefixIcon = Icon(Icons.ac_unit);
 
         await tester.pumpWidget(_MetricsTextFormFieldTestbed(
           themeData: themeData,

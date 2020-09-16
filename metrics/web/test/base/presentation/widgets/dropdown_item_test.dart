@@ -4,12 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_item.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("DropdownItem", () {
-    final mouseRegionFinder = find.byWidgetPredicate(
-      (widget) => widget is MouseRegion && widget.child is GestureDetector,
-    );
-
     final containerFinder = find.descendant(
       of: find.byType(DropdownItem),
       matching: find.byType(Container),
@@ -44,6 +42,9 @@ void main() {
       "displays the proper widget when the dropdown item is hovered",
       (tester) async {
         await tester.pumpWidget(_DropdownItemTestbed(builder: _builder));
+        final mouseRegionFinder = find.byWidgetPredicate(
+          (widget) => widget is MouseRegion && widget.child is GestureDetector,
+        );
 
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
         const pointerEnterEvent = PointerEnterEvent();
@@ -127,7 +128,6 @@ void main() {
       "applies the given background color if is not hovered",
       (tester) async {
         const backgroundColor = Colors.red;
-        const expectedDecoration = BoxDecoration(color: backgroundColor);
 
         await tester.pumpWidget(_DropdownItemTestbed(
           builder: _builder,
@@ -136,7 +136,7 @@ void main() {
 
         final container = tester.widget<Container>(containerFinder);
 
-        expect(container.decoration, equals(expectedDecoration));
+        expect(container.color, equals(backgroundColor));
       },
     );
 
@@ -144,14 +144,17 @@ void main() {
       "applies the given hover color if is hovered",
       (tester) async {
         const hoverColor = Colors.red;
-        const expectedDecoration = BoxDecoration(color: hoverColor);
-
         await tester.pumpWidget(_DropdownItemTestbed(
           builder: _builder,
           hoverColor: hoverColor,
         ));
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+        final mouseRegion = tester.widget<MouseRegion>(
+          find.descendant(
+            of: find.byType(TappableArea),
+            matching: find.byType(MouseRegion),
+          ),
+        );
         const pointerEnterEvent = PointerEnterEvent();
         mouseRegion.onEnter(pointerEnterEvent);
 
@@ -159,7 +162,7 @@ void main() {
 
         final container = tester.widget<Container>(containerFinder);
 
-        expect(container.decoration, equals(expectedDecoration));
+        expect(container.color, equals(hoverColor));
       },
     );
   });
@@ -169,7 +172,7 @@ void main() {
 class _DropdownItemTestbed extends StatelessWidget {
   /// A builder function used to build the child widget depending on the hover
   /// status of this widget.
-  final HoverWidgetBuilder builder;
+  final Widget Function(BuildContext, bool) builder;
 
   /// A [Color] of the [DropdownItem] if it is not hovered.
   final Color backgroundColor;

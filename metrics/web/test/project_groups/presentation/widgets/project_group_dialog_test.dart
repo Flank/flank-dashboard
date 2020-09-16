@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/value_form_field.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_inactive_button.dart';
@@ -29,6 +28,8 @@ import 'package:network_image_mock/network_image_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
+
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("ProjectGroupDialog", () {
@@ -91,25 +92,6 @@ void main() {
         });
 
         expect(tester.takeException(), isAssertionError);
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the project group dialog action button",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_ProjectGroupDialogTestbed(
-            projectGroupsNotifier: projectGroupsNotifier,
-            strategy: strategy,
-          ));
-        });
-
-        final finder = find.ancestor(
-          of: find.text(buttonText),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
       },
     );
 

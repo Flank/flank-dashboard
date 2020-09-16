@@ -29,7 +29,7 @@ class FirefoxDriver {
 
       FileUtils.extractFromArchive(geckoArchive, workingDir);
 
-      await Process.run('chmod', ['a+x', '$geckoDriver']);
+      await Process.run('chmod', ['a+x', geckoDriver]);
     }
   }
 }
