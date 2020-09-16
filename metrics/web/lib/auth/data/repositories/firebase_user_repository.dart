@@ -41,11 +41,8 @@ class FirebaseUserRepository implements UserRepository {
 
   @override
   Future<AuthCredentials> getGoogleSignInCredentials() async {
-    Object googleSignInError;
     try {
-      final account = await _googleSignIn.signIn().catchError((error) {
-        googleSignInError = error;
-      });
+      final account = await _googleSignIn.signIn();
       final authentication = await account.authentication;
 
       return AuthCredentials(
@@ -54,15 +51,9 @@ class FirebaseUserRepository implements UserRepository {
         idToken: authentication.idToken,
       );
     } catch (error) {
-      if (googleSignInError != null) {
-        throw const AuthenticationException(
-          code: AuthErrorCode.googleSignInError,
-        );
-      }
-      final errorCode = error.code as String;
-      final authErrorCode = FirebaseAuthErrorCodeConverter.convert(errorCode);
-
-      throw AuthenticationException(code: authErrorCode);
+      throw const AuthenticationException(
+        code: AuthErrorCode.googleSignInError,
+      );
     }
   }
 
