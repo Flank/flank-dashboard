@@ -16,12 +16,13 @@ void main() {
       const contentTextStyle = TextStyle();
 
       final themeData = UserMenuThemeData(
-          backgroundColor: backgroundColor,
-          dividerColor: dividerColor,
-          shadowColor: shadowColor,
-          contentTextStyle: contentTextStyle,
-          iconColor: iconColor,
-          activeIconColor: activeIconColor);
+        backgroundColor: backgroundColor,
+        dividerColor: dividerColor,
+        shadowColor: shadowColor,
+        contentTextStyle: contentTextStyle,
+        iconColor: iconColor,
+        activeIconColor: activeIconColor,
+      );
 
       expect(themeData.backgroundColor, equals(backgroundColor));
       expect(themeData.dividerColor, equals(dividerColor));
