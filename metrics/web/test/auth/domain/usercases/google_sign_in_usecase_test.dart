@@ -40,6 +40,32 @@ void main() {
       );
     });
 
+    test("throws if the repository.getGoogleSignInCredentials throws", () {
+      when(repository.getGoogleSignInCredentials()).thenThrow(
+        const AuthenticationException(),
+      );
+
+      final signInUseCase = GoogleSignInUseCase(repository);
+
+      expect(
+        () => signInUseCase(),
+        MatcherUtil.throwsAuthenticationException,
+      );
+    });
+
+    test("throws if the repository.validateEmailDomain throws", () {
+      when(repository.validateEmailDomain(any)).thenThrow(
+        const AuthenticationException(),
+      );
+
+      final signInUseCase = GoogleSignInUseCase(repository);
+
+      expect(
+        () => signInUseCase(),
+        MatcherUtil.throwsAuthenticationException,
+      );
+    });
+
     test(
       "gets the google sign-in credentials from the repository",
       () async {
@@ -60,7 +86,7 @@ void main() {
     });
 
     test(
-      "throws if UserRepository.validateEmail's result is not a valid email",
+      "throws if the UserRepository.validateEmailDomain result is not a valid email",
       () async {
         when(repository.validateEmailDomain(any)).thenAnswer(
           (_) => Future.value(EmailDomainValidationResult(isValid: false)),
@@ -76,7 +102,24 @@ void main() {
     );
 
     test(
-      "calls the UserRepository.signOut if the UserRepository.validateEmail's result is not a valid email",
+      "does not call the UserRepository.signInWithGoogle if the email domain is not valid",
+      () async {
+        when(repository.validateEmailDomain(any)).thenAnswer(
+          (_) => Future.value(EmailDomainValidationResult(isValid: false)),
+        );
+
+        final signInUseCase = GoogleSignInUseCase(repository);
+        await expectLater(
+          signInUseCase(),
+          MatcherUtil.throwsAuthenticationException,
+        );
+
+        verifyNever(repository.signInWithGoogle(any));
+      },
+    );
+
+    test(
+      "calls the UserRepository.signOut if the UserRepository.validateEmailDomain result is not a valid email",
       () async {
         when(repository.validateEmailDomain(any)).thenAnswer(
           (_) => Future.value(EmailDomainValidationResult(isValid: false)),
