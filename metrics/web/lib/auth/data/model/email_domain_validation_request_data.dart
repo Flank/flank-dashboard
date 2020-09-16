@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// A [DataModel] that represents an email domain validation request.
@@ -10,7 +11,7 @@ class EmailDomainValidationRequestData implements DataModel {
   ///
   /// Throws an [ArgumentError] if the [emailDomain] is `null`.
   EmailDomainValidationRequestData({
-    this.emailDomain,
+    @required this.emailDomain,
   }) {
     ArgumentError.checkNotNull(emailDomain, 'emailDomain');
   }

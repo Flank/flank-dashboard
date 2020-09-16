@@ -11,7 +11,7 @@ class EmailDomainValidationResult {
   ///
   /// Throws an [ArgumentError] if the [isValid] is `null`.
   EmailDomainValidationResult({
-    this.isValid,
+    @required this.isValid,
   }) {
     ArgumentError.checkNotNull(isValid, 'isValid');
   }

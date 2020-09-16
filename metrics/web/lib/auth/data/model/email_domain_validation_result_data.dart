@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:metrics/auth/domain/entities/email_domain_validation_result.dart';
 import 'package:metrics_core/metrics_core.dart';
 
@@ -7,7 +8,7 @@ class EmailDomainValidationResultData extends EmailDomainValidationResult
   /// Creates an [EmailDomainValidationResultData]
   /// with the given [isValid] status.
   EmailDomainValidationResultData({
-    bool isValid,
+    @required bool isValid,
   }) : super(isValid: isValid);
 
   /// Creates an instance of the [EmailDomainValidationResultData]
