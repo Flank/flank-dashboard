@@ -5,6 +5,7 @@ import 'package:metrics/auth/presentation/validators/email_validator.dart';
 import 'package:metrics/auth/presentation/validators/password_validator.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_strategy.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class _AuthFormState extends State<AuthForm> {
   /// Controls the password text being edited.
   final TextEditingController _passwordController = TextEditingController();
 
-  /// Indicates whether to hide or show the password.
+  /// Indicates whether to hide the password or not.
   bool _isPasswordObscure = true;
 
   @override
@@ -56,9 +57,11 @@ class _AuthFormState extends State<AuthForm> {
                   validator: PasswordValidator.validate,
                   obscureText: _isPasswordObscure,
                   hint: AuthStrings.password,
-                  suffixIcon: GestureDetector(
-                    onTap: _changePassowrdObscure,
-                    child: Image.network(passwordIcon),
+                  suffixIcon: HandCursor(
+                    child: GestureDetector(
+                      onTap: _changePasswordObscure,
+                      child: Image.network(passwordIcon),
+                    ),
                   ),
                 ),
               ),
@@ -96,8 +99,8 @@ class _AuthFormState extends State<AuthForm> {
     }
   }
 
-  /// Shows or hides the password with changing [_isPasswordObscure].
-  void _changePassowrdObscure() {
+  /// Changes the [_isPasswordObscure] value to the opposite one.
+  void _changePasswordObscure() {
     setState(() => _isPasswordObscure = !_isPasswordObscure);
   }
 

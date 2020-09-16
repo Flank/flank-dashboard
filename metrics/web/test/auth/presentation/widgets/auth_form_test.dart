@@ -22,13 +22,7 @@ void main() {
         find.widgetWithText(MetricsTextFormField, AuthStrings.password);
     final submitButtonFinder =
         find.widgetWithText(MetricsPositiveButton, AuthStrings.signIn);
-    final suffixImageFinder = find.descendant(
-      of: find.byType(MetricsTextFormField),
-      matching: find.descendant(
-        of: find.byType(GestureDetector),
-        matching: find.byType(Image),
-      ),
-    );
+
     const testEmail = 'test@email.com';
     const testPassword = 'testPassword';
 
@@ -38,6 +32,14 @@ void main() {
     final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
 
     AuthNotifier authNotifier;
+
+    Widget _getPasswordFieldSuffixIcon(WidgetTester tester) {
+      final passwordField = tester.widget<MetricsTextFormField>(
+        passwordInputFinder,
+      );
+
+      return passwordField.suffixIcon;
+    }
 
     setUp(() {
       authNotifier = AuthNotifier(
@@ -192,7 +194,7 @@ void main() {
     );
 
     testWidgets(
-      "applies an eye_on.svg, if the password is obscure",
+      "applies the enabled eye icon to the password input field if the password is obscured",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -200,7 +202,11 @@ void main() {
           ),
         );
 
-        final imageWidget = tester.widget<Image>(suffixImageFinder);
+        final suffixIcon = _getPasswordFieldSuffixIcon(tester);
+        final imageWidget = tester.widget<Image>(find.descendant(
+          of: find.byWidget(suffixIcon),
+          matching: find.byType(Image),
+        ));
         final networkImage = imageWidget.image as NetworkImage;
 
         expect(networkImage.url, 'icons/eye_on.svg');
@@ -208,7 +214,7 @@ void main() {
     );
 
     testWidgets(
-      "applies an eye_off.svg, if the password is not obscure",
+      "applies the disabled eye icon to the password input field if the password is not obscured",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -216,10 +222,16 @@ void main() {
           ),
         );
 
-        await tester.tap(suffixImageFinder);
+        final suffixIcon = _getPasswordFieldSuffixIcon(tester);
+
+        await tester.tap(find.byWidget(suffixIcon));
         await tester.pump();
 
-        final imageWidget = tester.widget<Image>(suffixImageFinder);
+        final suffixIconAfterTap = _getPasswordFieldSuffixIcon(tester);
+        final imageWidget = tester.widget<Image>(find.descendant(
+          of: find.byWidget(suffixIconAfterTap),
+          matching: find.byType(Image),
+        ));
         final networkImage = imageWidget.image as NetworkImage;
 
         expect(networkImage.url, 'icons/eye_off.svg');
