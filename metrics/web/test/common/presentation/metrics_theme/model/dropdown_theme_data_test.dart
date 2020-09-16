@@ -40,6 +40,17 @@ void main() {
       },
     );
 
+    test(
+      "creates an instance with the default shadow color if the given one is null",
+      () {
+        final themeData = DropdownThemeData(
+          shadowColor: null,
+        );
+
+        expect(themeData.shadowColor, isNotNull);
+      },
+    );
+
     test("creates an instance with the given values", () {
       const backgroundColor = Colors.red;
       const textStyle = TextStyle(fontSize: 13.0);
@@ -47,6 +58,8 @@ void main() {
       const closedButtonBackgroundColor = Colors.yellow;
       const openedButtonBorderColor = Colors.white;
       const closedButtonBorderColor = Colors.blue;
+      const shadowColor = Colors.black;
+      const iconColor = Colors.yellow;
 
       final themeData = DropdownThemeData(
         backgroundColor: backgroundColor,
@@ -55,6 +68,8 @@ void main() {
         closedButtonBackgroundColor: closedButtonBackgroundColor,
         openedButtonBorderColor: openedButtonBorderColor,
         closedButtonBorderColor: closedButtonBorderColor,
+        shadowColor: shadowColor,
+        iconColor: iconColor,
       );
 
       expect(themeData.backgroundColor, equals(backgroundColor));
@@ -74,6 +89,14 @@ void main() {
       expect(
         themeData.closedButtonBorderColor,
         equals(closedButtonBorderColor),
+      );
+      expect(
+        themeData.shadowColor,
+        equals(shadowColor),
+      );
+      expect(
+        themeData.iconColor,
+        equals(iconColor),
       );
     });
   });

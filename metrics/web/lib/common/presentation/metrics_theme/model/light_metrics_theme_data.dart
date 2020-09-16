@@ -46,31 +46,36 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _inputHintTextColor = Color(0xFF868691);
   static const Color _inputFocusedBorderColor = Color(0xFF6D6D75);
   static const Color _inactiveBackgroundColor = Color(0xFFEEEEEE);
-  static const Color _inactiveColor = Color(0xFFBDBDBD);
   static const Color _inactiveButtonColor = Color(0xFFf0f0f5);
   static const Color _inactiveButtonHoverColor = Color(0xFFcccccc);
   static const Color _inactiveTextColor = Color(0xff040d14);
   static const Color _cardHoverColor = Color(0xFF212124);
   static const Color _borderColor = Color(0xFF2d2d33);
-  static const Color _tileBorderColor = Color(0xFFE0E0E0);
+  static const Color _tileBorderColor = Color(0xFFE3E9ED);
   static const Color _tableHeaderColor = Color(0xFF79858b);
   static const Color _inactiveToggleColor = Color(0xFF88889b);
   static const Color _inactiveToggleHoverColor = Color(0xFF5d5d6a);
   static const Color _textPlaceholderColor = Color(0xFFdcdce3);
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
-  static const Color _userMenuShadowColor = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.32);
   static const Color hoverBorderColor = Color(0xffb6b6ba);
   static const Color _positiveToastColor = Color(0xFFE1FAF4);
   static const Color _negativeToastColor = Color(0xFFFFEDE5);
   static const Color _loginOptionTextColor = Color(0xFF757575);
 
+  static const Color _positiveStatusColor = Color(0xFFE6F9F3);
+  static const Color _negativeStatusColor = Color(0xFFFFF5F3);
+  static const Color _neutralStatusColor = Color(0xFFFAF6E6);
+  static const Color _inactiveStatusColor = Color(0xFF43494D);
+
   static const inputFocusedBorder = OutlineInputBorder(
     borderSide: BorderSide(color: _inputFocusedBorderColor),
   );
-  static const TextStyle _defaultDropdownTextStyle = TextStyle(
+  static const TextStyle _defaultDropdownTextStyle = MetricsTextStyle(
     fontSize: 16.0,
     color: _inactiveTextColor,
+    lineHeightInPixels: 20.0,
   );
   static const TextStyle hintStyle = MetricsTextStyle(
     color: LightMetricsThemeData._inputHintTextColor,
@@ -90,7 +95,7 @@ class LightMetricsThemeData extends MetricsThemeData {
       : super(
           metricsWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
-            accentColor: ColorConfig.primaryBackgroundColor,
+            accentColor: ColorConfig.accentColor,
             backgroundColor: Colors.white,
             textStyle: TextStyle(
               color: ColorConfig.primaryColor,
@@ -176,7 +181,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             errorTextStyle: TextStyle(color: ColorConfig.accentColor),
           ),
           inactiveWidgetTheme: const MetricsWidgetThemeData(
-            primaryColor: _inactiveColor,
+            primaryColor: inputColor,
             accentColor: Colors.transparent,
             backgroundColor: _inactiveBackgroundColor,
             textStyle: TextStyle(
@@ -249,6 +254,8 @@ class LightMetricsThemeData extends MetricsThemeData {
             closedButtonBackgroundColor: inputColor,
             closedButtonBorderColor: inputColor,
             textStyle: _defaultDropdownTextStyle,
+            shadowColor: _shadowColor,
+            iconColor: _borderColor,
           ),
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.white,
@@ -286,7 +293,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             metricsTableHeaderTheme: MetricsTableHeaderThemeData(
               textStyle: TextStyle(
                 color: _tableHeaderColor,
-                fontWeight: FontWeight.w200,
+                fontWeight: FontWeight.w400,
               ),
             ),
             projectMetricsTileTheme: ProjectMetricsTileThemeData(
@@ -294,19 +301,39 @@ class LightMetricsThemeData extends MetricsThemeData {
               textStyle: TextStyle(fontSize: 22.0),
             ),
           ),
-          buildNumberScorecardTheme: const ScorecardThemeData(),
-          performanceSparklineTheme: const SparklineThemeData(),
+          buildNumberScorecardTheme: const ScorecardThemeData(
+            valueTextStyle: MetricsTextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.w700,
+              color: ColorConfig.primaryColor,
+              lineHeightInPixels: 24.0,
+            ),
+            descriptionTextStyle: MetricsTextStyle(
+              fontSize: 14.0,
+              color: ColorConfig.primaryColor,
+              fontWeight: FontWeight.w700,
+              lineHeightInPixels: 14.0,
+            ),
+          ),
+          performanceSparklineTheme: const SparklineThemeData(
+            strokeColor: ColorConfig.primaryColor,
+            fillColor: _positiveStatusColor,
+            textStyle: MetricsTextStyle(
+              fontSize: 22.0,
+              fontWeight: FontWeight.w700,
+              color: ColorConfig.primaryColor,
+              lineHeightInPixels: 26.0,
+            ),
+          ),
           projectBuildStatusTheme: const ProjectBuildStatusThemeData(
             attentionLevel: ProjectBuildStatusAttentionLevel(
               positive: ProjectBuildStatusStyle(
-                backgroundColor: ColorConfig.primaryBackgroundColor,
+                backgroundColor: _positiveStatusColor,
               ),
               negative: ProjectBuildStatusStyle(
-                backgroundColor: ColorConfig.accentBackgroundColor,
+                backgroundColor: _negativeStatusColor,
               ),
-              unknown: ProjectBuildStatusStyle(
-                backgroundColor: ColorConfig.inactiveColor,
-              ),
+              unknown: ProjectBuildStatusStyle(backgroundColor: inputColor),
             ),
           ),
           toggleTheme: const ToggleThemeData(
@@ -344,7 +371,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.white,
             dividerColor: scaffoldColor,
-            shadowColor: _userMenuShadowColor,
+            shadowColor: _shadowColor,
             contentTextStyle: TextStyle(
               color: _inactiveTextColor,
               fontSize: 16.0,
@@ -365,8 +392,8 @@ class LightMetricsThemeData extends MetricsThemeData {
           circlePercentageTheme: const CirclePercentageThemeData(
             attentionLevel: CirclePercentageAttentionLevel(
               positive: CirclePercentageStyle(
-                strokeColor: ColorConfig.primaryBackgroundColor,
-                backgroundColor: ColorConfig.primaryBackgroundColor,
+                strokeColor: _positiveStatusColor,
+                backgroundColor: _positiveStatusColor,
                 valueColor: ColorConfig.primaryColor,
                 valueStyle: TextStyle(
                   color: ColorConfig.primaryColor,
@@ -375,8 +402,8 @@ class LightMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               negative: CirclePercentageStyle(
-                strokeColor: ColorConfig.accentBackgroundColor,
-                backgroundColor: ColorConfig.accentBackgroundColor,
+                strokeColor: _negativeStatusColor,
+                backgroundColor: _negativeStatusColor,
                 valueColor: ColorConfig.accentColor,
                 valueStyle: TextStyle(
                   color: ColorConfig.accentColor,
@@ -385,8 +412,8 @@ class LightMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               neutral: CirclePercentageStyle(
-                strokeColor: ColorConfig.yellowTranslucent,
-                backgroundColor: ColorConfig.yellowTranslucent,
+                strokeColor: _neutralStatusColor,
+                backgroundColor: _neutralStatusColor,
                 valueColor: ColorConfig.yellow,
                 valueStyle: TextStyle(
                   color: ColorConfig.yellow,
@@ -395,11 +422,11 @@ class LightMetricsThemeData extends MetricsThemeData {
                 ),
               ),
               inactive: CirclePercentageStyle(
-                strokeColor: _inactiveBackgroundColor,
-                backgroundColor: _inactiveBackgroundColor,
-                valueColor: Colors.blue,
+                strokeColor: inputColor,
+                backgroundColor: inputColor,
+                valueColor: _inactiveStatusColor,
                 valueStyle: TextStyle(
-                  color: _inactiveColor,
+                  color: _inactiveStatusColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),

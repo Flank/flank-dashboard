@@ -106,6 +106,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
                           "icons/dropdown.svg",
                           height: 20.0,
                           width: 20.0,
+                          color: theme.iconColor,
                         ),
                       ),
                     ],
@@ -126,18 +127,18 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
 
   /// Selects the border color from the theme corresponding to a current state.
   Color _getBorderColor(DropdownThemeData theme) {
-    if (_isHovered) return theme.hoverBorderColor;
-
     if (_isOpened) return theme.openedButtonBorderColor;
+
+    if (_isHovered) return theme.hoverBorderColor;
 
     return theme.closedButtonBorderColor;
   }
 
   /// Selects the background color from the theme corresponding to a current state.
   Color _getBackgroundColor(DropdownThemeData theme) {
-    if (_isHovered) return theme.hoverBackgroundColor;
-
     if (_isOpened) return theme.openedButtonBackgroundColor;
+
+    if (_isHovered) return theme.hoverBackgroundColor;
 
     return theme.closedButtonBackgroundColor;
   }
