@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';

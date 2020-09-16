@@ -33,7 +33,6 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
           BoxShadow(
             offset: const Offset(0.0, 8.0),
             blurRadius: 16.0,
-            spreadRadius: 0.0,
             color: theme.shadowColor,
           ),
         ],

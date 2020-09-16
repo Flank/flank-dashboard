@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 /// The widget that displays a specific version of the [Dialog].
