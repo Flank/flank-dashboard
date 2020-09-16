@@ -360,7 +360,7 @@ void main() {
     testWidgets(
       "applies the focus prefix icon to the focused text form field",
       (tester) async {
-        final focusPrefixIcon = Icon(Icons.ac_unit);
+        const focusPrefixIcon = Icon(Icons.ac_unit);
 
         await tester.pumpWidget(_MetricsTextFormFieldTestbed(
           themeData: themeData,
