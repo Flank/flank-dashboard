@@ -41,7 +41,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the default shadow color if given color is null",
+      "creates an instance with the default shadow color if the given one is null",
       () {
         final themeData = DropdownThemeData(
           shadowColor: null,

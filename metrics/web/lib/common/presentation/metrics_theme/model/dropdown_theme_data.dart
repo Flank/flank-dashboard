@@ -31,10 +31,10 @@ class DropdownThemeData {
   /// The background [Color] of the dropdown button when hovered.
   final Color hoverBackgroundColor;
 
-  /// The shadow [Color] of the dropdown body.
+  /// The [Color] of the dropdown body's shadow.
   final Color shadowColor;
 
-  /// The [Color] of Dropdown icon.
+  /// The [Color] of the dropdown icon.
   final Color iconColor;
 
   /// Creates the [DropdownThemeData].
