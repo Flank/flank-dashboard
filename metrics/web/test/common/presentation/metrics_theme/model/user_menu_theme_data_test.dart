@@ -11,8 +11,6 @@ void main() {
       const backgroundColor = Colors.blue;
       const dividerColor = Colors.black;
       const shadowColor = Colors.red;
-      const iconColor = Colors.red;
-      const activeIconColor = Colors.yellow;
       const contentTextStyle = TextStyle();
 
       final themeData = UserMenuThemeData(
@@ -20,16 +18,12 @@ void main() {
         dividerColor: dividerColor,
         shadowColor: shadowColor,
         contentTextStyle: contentTextStyle,
-        iconColor: iconColor,
-        activeIconColor: activeIconColor,
       );
 
       expect(themeData.backgroundColor, equals(backgroundColor));
       expect(themeData.dividerColor, equals(dividerColor));
       expect(themeData.shadowColor, equals(shadowColor));
       expect(themeData.contentTextStyle, equals(contentTextStyle));
-      expect(themeData.iconColor, equals(iconColor));
-      expect(themeData.activeIconColor, equals(activeIconColor));
     });
 
     test("creates an instance with the default shadow color", () {
