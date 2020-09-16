@@ -23,11 +23,11 @@ abstract class UserRepository {
   /// during receiving the [AuthCredentials].
   Future<AuthCredentials> getGoogleSignInCredentials();
 
-  /// Provides an ability to validate the given user's [email] domain.
+  /// Provides an ability to validate the given user's [emailDomain].
   ///
   /// Throws an [AuthenticationException] if there are any
   /// errors occurred during validation process.
-  Future<EmailDomainValidationResult> validateEmailDomain(String email);
+  Future<EmailDomainValidationResult> validateEmailDomain(String emailDomain);
 
   /// Provides an ability to sign in a user to the app
   /// using Google authentication.

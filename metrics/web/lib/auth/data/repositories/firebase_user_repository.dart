@@ -67,9 +67,9 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<EmailDomainValidationResult> validateEmailDomain(String email) async {
-    final emailDomain = email.substring(email.indexOf('@') + 1);
-
+  Future<EmailDomainValidationResult> validateEmailDomain(
+    String emailDomain,
+  ) async {
     final requestData = EmailDomainValidationRequestData(
       emailDomain: emailDomain,
     );

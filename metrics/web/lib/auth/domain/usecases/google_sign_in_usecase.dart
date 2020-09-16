@@ -14,9 +14,9 @@ class GoogleSignInUseCase implements UseCase<Future<void>, void> {
   @override
   Future<void> call([_]) async {
     final credentials = await _repository.getGoogleSignInCredentials();
-    final validationResult = await _repository.validateEmailDomain(
-      credentials.email,
-    );
+    final email = credentials.email;
+    final emailDomain = email.substring(email.indexOf('@') + 1);
+    final validationResult = await _repository.validateEmailDomain(emailDomain);
 
     if (!validationResult.isValid) {
       await _repository.signOut();
