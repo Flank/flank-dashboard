@@ -33,6 +33,14 @@ void main() {
 
     AuthNotifier authNotifier;
 
+    Widget _getPasswordFieldSuffixIcon(WidgetTester tester) {
+      final passwordField = tester.widget<MetricsTextFormField>(
+        passwordInputFinder,
+      );
+
+      return passwordField.suffixIcon;
+    }
+
     setUp(() {
       authNotifier = AuthNotifier(
         receiveAuthUpdates,
@@ -182,6 +190,51 @@ void main() {
 
         expect(googleSignInButton, isNotNull);
         expect(googleSignInButton.strategy, isA<GoogleSignInOptionStrategy>());
+      },
+    );
+
+    testWidgets(
+      "applies the enabled eye icon to the password input field if the password is obscured",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(
+            const _AuthFormTestbed(),
+          ),
+        );
+
+        final suffixIcon = _getPasswordFieldSuffixIcon(tester);
+        final imageWidget = tester.widget<Image>(find.descendant(
+          of: find.byWidget(suffixIcon),
+          matching: find.byType(Image),
+        ));
+        final networkImage = imageWidget.image as NetworkImage;
+
+        expect(networkImage.url, 'icons/eye_on.svg');
+      },
+    );
+
+    testWidgets(
+      "applies the disabled eye icon to the password input field if the password is not obscured",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(
+            const _AuthFormTestbed(),
+          ),
+        );
+
+        final suffixIcon = _getPasswordFieldSuffixIcon(tester);
+
+        await tester.tap(find.byWidget(suffixIcon));
+        await tester.pump();
+
+        final suffixIconAfterTap = _getPasswordFieldSuffixIcon(tester);
+        final imageWidget = tester.widget<Image>(find.descendant(
+          of: find.byWidget(suffixIconAfterTap),
+          matching: find.byType(Image),
+        ));
+        final networkImage = imageWidget.image as NetworkImage;
+
+        expect(networkImage.url, 'icons/eye_off.svg');
       },
     );
   });

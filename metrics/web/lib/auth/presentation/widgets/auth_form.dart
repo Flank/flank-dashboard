@@ -5,6 +5,7 @@ import 'package:metrics/auth/presentation/validators/email_validator.dart';
 import 'package:metrics/auth/presentation/validators/password_validator.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_strategy.dart';
+import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:provider/provider.dart';
@@ -25,8 +26,14 @@ class _AuthFormState extends State<AuthForm> {
   /// Controls the password text being edited.
   final TextEditingController _passwordController = TextEditingController();
 
+  /// Indicates whether to hide the password or not.
+  bool _isPasswordObscure = true;
+
   @override
   Widget build(BuildContext context) {
+    final passwordIcon =
+        _isPasswordObscure ? 'icons/eye_on.svg' : 'icons/eye_off.svg';
+
     return Consumer<AuthNotifier>(
       builder: (_, notifier, __) {
         return Form(
@@ -48,8 +55,14 @@ class _AuthFormState extends State<AuthForm> {
                   key: const Key(AuthStrings.password),
                   controller: _passwordController,
                   validator: PasswordValidator.validate,
-                  obscureText: true,
+                  obscureText: _isPasswordObscure,
                   hint: AuthStrings.password,
+                  suffixIcon: HandCursor(
+                    child: GestureDetector(
+                      onTap: _changePasswordObscure,
+                      child: Image.network(passwordIcon),
+                    ),
+                  ),
                 ),
               ),
               if (notifier.isLoading)
@@ -84,6 +97,11 @@ class _AuthFormState extends State<AuthForm> {
         _passwordController.text,
       );
     }
+  }
+
+  /// Changes the [_isPasswordObscure] value to the opposite one.
+  void _changePasswordObscure() {
+    setState(() => _isPasswordObscure = !_isPasswordObscure);
   }
 
   @override
