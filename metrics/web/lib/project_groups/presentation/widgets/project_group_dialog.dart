@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
@@ -56,6 +58,12 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// Indicates whether this widget is in the loading state or not.
   bool _isLoading = false;
 
+  /// The initial group name of this dialog.
+  String _initialGroupName;
+
+  /// Initial selected project ids.
+  List<String> _initialSelectedProjectIds;
+
   @override
   void initState() {
     super.initState();
@@ -69,6 +77,12 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
     _groupNameController.text =
         _projectGroupsNotifier?.projectGroupDialogViewModel?.name;
+
+    _initialGroupName = _groupNameController.text;
+
+    _initialSelectedProjectIds = _projectGroupsNotifier
+        .projectGroupDialogViewModel.selectedProjectIds
+        .toList();
 
     _subscribeToProjectGroupDialogChanges();
   }
@@ -244,7 +258,8 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
         _projectGroupsNotifier.projectGroupDialogViewModel.selectedProjectIds;
     final numberOfSelectedProjects = selectedProjectIds.length;
 
-    if (numberOfSelectedProjects > 0) {
+    if (numberOfSelectedProjects > 0 &&
+        _dataHasBeenChanged(groupName, selectedProjectIds)) {
       final groupNameErrorMessage =
           ProjectGroupNameValidator.validate(groupName);
       final selectedProjectIdsErrorMessage =
@@ -287,6 +302,16 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     }
 
     showToast(context, toast);
+  }
+
+  /// Returns `true` if the data of this dialog has been changed,
+  /// otherwise, returns `false`.
+  bool _dataHasBeenChanged(String groupName, List<String> selectedProjectIds) {
+    final groupNameHasBeenChanged = groupName != _initialGroupName;
+    final selectedProjectIdsHaveBeenChanged =
+        !const DeepCollectionEquality.unordered()
+            .equals(_initialSelectedProjectIds, selectedProjectIds);
+    return groupNameHasBeenChanged || selectedProjectIdsHaveBeenChanged;
   }
 
   /// Changes the [_isLoading] state to the given [value].
