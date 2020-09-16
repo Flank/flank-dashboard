@@ -249,6 +249,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             closedButtonBorderColor: inputColor,
             textStyle: _defaultDropdownTextStyle,
             shadowColor: _shadowColor,
+            iconColor: Colors.white,
           ),
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.transparent,

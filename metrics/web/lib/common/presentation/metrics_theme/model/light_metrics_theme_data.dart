@@ -255,6 +255,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             closedButtonBorderColor: inputColor,
             textStyle: _defaultDropdownTextStyle,
             shadowColor: _shadowColor,
+            iconColor: _borderColor,
           ),
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.white,

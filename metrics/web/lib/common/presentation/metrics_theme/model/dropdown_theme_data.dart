@@ -34,6 +34,9 @@ class DropdownThemeData {
   /// The shadow [Color] of the dropdown body.
   final Color shadowColor;
 
+  /// The [Color] of Dropdown icon.
+  final Color iconColor;
+
   /// Creates the [DropdownThemeData].
   ///
   /// If [openedButtonBorderColor] or [closedButtonBorderColor]
@@ -49,6 +52,7 @@ class DropdownThemeData {
     Color hoverBorderColor,
     this.hoverBackgroundColor,
     Color shadowColor,
+    this.iconColor,
   })  : hoverBorderColor = hoverBorderColor ?? _defaultBorderColor,
         openedButtonBorderColor =
             openedButtonBorderColor ?? _defaultBorderColor,

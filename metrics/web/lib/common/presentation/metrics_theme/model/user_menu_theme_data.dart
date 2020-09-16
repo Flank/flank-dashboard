@@ -11,6 +11,12 @@ class UserMenuThemeData {
   /// A divider [Color] of the user menu.
   final Color dividerColor;
 
+  /// A [Color] of avatar icon.
+  final Color iconColor;
+
+  /// A [Color] of avatar icon when the user menu is active.
+  final Color activeIconColor;
+
   /// The [TextStyle] of the text in the user menu.
   final TextStyle contentTextStyle;
 
@@ -20,6 +26,8 @@ class UserMenuThemeData {
   const UserMenuThemeData({
     this.shadowColor = Colors.black,
     this.backgroundColor,
+    this.iconColor,
+    this.activeIconColor,
     this.dividerColor,
     this.contentTextStyle,
   });

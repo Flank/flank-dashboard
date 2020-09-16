@@ -107,6 +107,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
                           "icons/dropdown.svg",
                           height: 20.0,
                           width: 20.0,
+                          color: theme.iconColor,
                         ),
                       ),
                     ],

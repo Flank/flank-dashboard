@@ -48,6 +48,7 @@ void main() {
       const openedButtonBorderColor = Colors.white;
       const closedButtonBorderColor = Colors.blue;
       const shadowColor = Colors.black;
+      const iconColor = Colors.yellow;
 
       final themeData = DropdownThemeData(
         backgroundColor: backgroundColor,
@@ -57,6 +58,7 @@ void main() {
         openedButtonBorderColor: openedButtonBorderColor,
         closedButtonBorderColor: closedButtonBorderColor,
         shadowColor: shadowColor,
+        iconColor: iconColor,
       );
 
       expect(themeData.backgroundColor, equals(backgroundColor));
@@ -77,7 +79,14 @@ void main() {
         themeData.closedButtonBorderColor,
         equals(closedButtonBorderColor),
       );
-      expect(themeData.shadowColor, equals(shadowColor));
+      expect(
+        themeData.shadowColor,
+        equals(shadowColor),
+      );
+      expect(
+        themeData.iconColor,
+        equals(iconColor),
+      );
     });
   });
 }
