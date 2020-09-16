@@ -82,12 +82,12 @@ void main() {
           (_) => Future.value(EmailDomainValidationResult(isValid: false)),
         );
 
-        try {
-          final signInUseCase = GoogleSignInUseCase(repository);
-          await signInUseCase();
-        } catch (error) {
-          verify(repository.signOut()).called(equals(1));
-        }
+        final signInUseCase = GoogleSignInUseCase(repository);
+        await expectLater(
+          signInUseCase(),
+          MatcherUtil.throwsAuthenticationException,
+        );
+        verify(repository.signOut()).called(equals(1));
       },
     );
 
