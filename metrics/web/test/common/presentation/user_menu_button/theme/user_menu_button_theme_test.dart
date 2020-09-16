@@ -7,8 +7,18 @@ import 'package:test/test.dart';
 
 void main() {
   group("UserMenuButtonThemeData", () {
+    test(
+      "creates a theme with the default colors for the user menu button if the parameters are not specified",
+      () {
+        final themeData = UserMenuButtonThemeData();
+
+        expect(themeData.activeColor, isNotNull);
+        expect(themeData.inactiveColor, isNotNull);
+      },
+    );
+
     test("creates an instance with the given values", () {
-      const activeColor = Colors.blue;
+      const activeColor = Colors.yellow;
       const inactiveColor = Colors.red;
 
       final themeData = UserMenuButtonThemeData(

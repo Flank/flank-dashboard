@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
@@ -126,13 +127,13 @@ void main() {
     );
 
     testWidgets(
-      "applies a mouse region to the project group text widget",
+      "applies a tappable area to the project group text widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsUserMenuTestbed());
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.projectGroups),
-          matching: find.byType(MouseRegion),
+          matching: find.byType(TappableArea),
         );
 
         expect(finder, findsOneWidget);
@@ -140,41 +141,13 @@ void main() {
     );
 
     testWidgets(
-      "applies a mouse region to the the users text widget",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuTestbed());
-
-        final finder = find.ancestor(
-          of: find.text(CommonStrings.users),
-          matching: find.byType(MouseRegion),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies a mouse region to the logOut text widget",
+      "applies a tappable area to the logOut text widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsUserMenuTestbed());
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.logOut),
-          matching: find.byType(MouseRegion),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies a mouse region to the toggle widget",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(const _MetricsUserMenuTestbed());
-
-        final finder = find.ancestor(
-          of: find.byType(Toggle),
-          matching: find.byType(MouseRegion),
+          matching: find.byType(TappableArea),
         );
 
         expect(finder, findsOneWidget);

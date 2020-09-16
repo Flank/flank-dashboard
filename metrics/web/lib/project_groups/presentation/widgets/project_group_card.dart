@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
@@ -41,7 +42,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
 
     return Material(
       child: TappableArea(
-        builder: (context, isHovered) {
+        mouseCursor: SystemMouseCursors.basic,
+        builder: (context, isHovered, child) {
           return MetricsCard(
             decoration: BoxDecoration(
               border: Border.all(color: theme.borderColor),

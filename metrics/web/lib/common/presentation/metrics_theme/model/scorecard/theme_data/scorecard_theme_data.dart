@@ -9,5 +9,8 @@ class ScorecardThemeData {
   final TextStyle valueTextStyle;
 
   /// Creates the [ScorecardThemeData].
-  const ScorecardThemeData({this.descriptionTextStyle, this.valueTextStyle});
+  const ScorecardThemeData({
+    this.descriptionTextStyle,
+    this.valueTextStyle,
+  });
 }

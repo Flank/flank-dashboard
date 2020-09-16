@@ -16,7 +16,7 @@ void main() {
     const hoveredText = "hovered text";
     const text = "text";
 
-    Widget _builder(BuildContext context, bool isHovered) {
+    Widget _builder(BuildContext context, bool isHovered, Widget child) {
       return Text(isHovered ? hoveredText : text);
     }
 

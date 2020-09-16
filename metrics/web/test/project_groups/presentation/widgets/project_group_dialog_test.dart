@@ -96,25 +96,6 @@ void main() {
     );
 
     testWidgets(
-      "applies a mouse region to the project group dialog action button",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_ProjectGroupDialogTestbed(
-            projectGroupsNotifier: projectGroupsNotifier,
-            strategy: strategy,
-          ));
-        });
-
-        final finder = find.ancestor(
-          of: find.text(buttonText),
-          matching: find.byType(MouseRegion),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "applies the background color from the metrics theme",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {

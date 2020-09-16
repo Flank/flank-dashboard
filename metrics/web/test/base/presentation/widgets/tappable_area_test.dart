@@ -13,11 +13,11 @@ void main() {
   group("TappableArea", () {
     const hoveredColor = Colors.yellow;
     const defaultColor = Colors.red;
-    const defaultCursor = SystemMouseCursors.basic;
+    const defaultCursor = SystemMouseCursors.click;
 
     final tappableAreaFinder = find.byType(TappableArea);
 
-    Widget _builder(BuildContext context, bool isHovered) {
+    Widget _builder(BuildContext context, bool isHovered, Widget child) {
       return DecoratedContainer(
         decoration: BoxDecoration(
           color: isHovered ? hoveredColor : defaultColor,

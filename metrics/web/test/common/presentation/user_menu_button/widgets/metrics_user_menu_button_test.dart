@@ -117,22 +117,6 @@ void main() {
     );
 
     testWidgets(
-      "applies a mouse region to the user menu image",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_MetricsUserMenuButtonTestbed());
-        });
-
-        final finder = find.ancestor(
-          of: find.byType(Image),
-          matching: find.byType(MouseRegion),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "displays the metrics user menu on the user menu button tap",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_strategy.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';

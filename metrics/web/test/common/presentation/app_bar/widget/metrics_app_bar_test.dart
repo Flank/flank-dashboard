@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -25,7 +26,7 @@ void main() {
     });
 
     testWidgets(
-      "applies a mouse region to the app logo",
+      "applies a tappable area to the app logo",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsAppBarTestbed());
@@ -33,7 +34,7 @@ void main() {
 
         final finder = find.descendant(
           of: find.byTooltip(CommonStrings.home),
-          matching: find.byType(MouseRegion),
+          matching: find.byType(TappableArea),
         );
 
         expect(finder, findsOneWidget);

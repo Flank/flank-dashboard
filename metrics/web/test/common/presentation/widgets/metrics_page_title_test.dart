@@ -34,24 +34,6 @@ void main() {
       expect(finder, findsOneWidget);
     });
 
-    testWidgets(
-      "applies a mouse region to the arrow back icon",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            const _MetricsPageTitleTestbed(),
-          );
-        });
-
-        final finder = find.descendant(
-          of: find.byTooltip(CommonStrings.navigateBack),
-          matching: find.byType(MouseRegion),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
     testWidgets("displays the given title", (WidgetTester tester) async {
       const title = 'test';
 

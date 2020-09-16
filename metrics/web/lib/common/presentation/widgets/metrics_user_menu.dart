@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
@@ -69,12 +70,9 @@ class MetricsUserMenu extends StatelessWidget {
                             style: userMenuTextStyle,
                           ),
                         ),
-                        MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: Toggle(
-                            value: !model.isDark,
-                            onToggle: (_) => model.changeTheme(),
-                          ),
+                        Toggle(
+                          value: !model.isDark,
+                          onToggle: (_) => model.changeTheme(),
                         ),
                       ],
                     );
@@ -83,17 +81,15 @@ class MetricsUserMenu extends StatelessWidget {
               ),
               Padding(
                 padding: itemPadding,
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      RouteName.projectGroup,
-                    ),
-                    child: Text(
-                      CommonStrings.projectGroups,
-                      style: userMenuTextStyle,
-                    ),
+                child: TappableArea(
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    RouteName.projectGroup,
+                  ),
+                  builder: (context, isHovered, child) => child,
+                  child: Text(
+                    CommonStrings.projectGroups,
+                    style: userMenuTextStyle,
                   ),
                 ),
               ),
@@ -104,14 +100,12 @@ class MetricsUserMenu extends StatelessWidget {
               ),
               Padding(
                 padding: itemPadding,
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () => _signOut(context),
-                    child: Text(
-                      CommonStrings.logOut,
-                      style: userMenuTextStyle,
-                    ),
+                child: TappableArea(
+                  onTap: () => _signOut(context),
+                  builder: (context, isHovered, child) => child,
+                  child: Text(
+                    CommonStrings.logOut,
+                    style: userMenuTextStyle,
                   ),
                 ),
               ),

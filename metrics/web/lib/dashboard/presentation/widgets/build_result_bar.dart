@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -43,20 +44,18 @@ class BuildResultBar extends StatelessWidget {
       );
     }
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: _onBarTap,
-        child: ColoredBar(
-          width: _barWidth,
-          borderRadius: const BorderRadius.only(
-            topLeft: _borderRadius,
-            topRight: _borderRadius,
-          ),
-          color: _getBuildResultColor(
-            buildResult.buildStatus,
-            widgetThemeData,
-          ),
+    return TappableArea(
+      onTap: _onBarTap,
+      builder: (context, isHovered, child) => child,
+      child: ColoredBar(
+        width: _barWidth,
+        borderRadius: const BorderRadius.only(
+          topLeft: _borderRadius,
+          topRight: _borderRadius,
+        ),
+        color: _getBuildResultColor(
+          buildResult.buildStatus,
+          widgetThemeData,
         ),
       ),
     );

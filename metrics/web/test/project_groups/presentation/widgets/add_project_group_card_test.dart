@@ -241,7 +241,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the inactive icon color form the metrics theme to the network image when the add project group card is disabled",
+      "applies the inactive icon color form the metrics theme to the add icon when the add project group card is disabled",
       (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.hasConfiguredProjects).thenReturn(false);
@@ -260,7 +260,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the positive icon color form the metrics theme to the network image when the add project group card is enabled",
+      "applies the positive icon color form the metrics theme to the add icon when the add project group card is enabled",
       (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.hasConfiguredProjects).thenReturn(true);

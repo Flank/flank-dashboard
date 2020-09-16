@@ -44,11 +44,11 @@ class DropdownItem extends StatelessWidget {
     this.hoverColor,
   })  : assert(builder != null),
         super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return TappableArea(
-      mouseCursor: SystemMouseCursors.click,
-      builder: (context, isHovered) {
+      builder: (context, isHovered, child) {
         final color = isHovered ? hoverColor : backgroundColor;
 
         return Container(
@@ -57,7 +57,7 @@ class DropdownItem extends StatelessWidget {
           color: color,
           padding: padding,
           alignment: alignment,
-          child: builder(context, isHovered),
+          child: builder(context, isHovered, child),
         );
       },
     );

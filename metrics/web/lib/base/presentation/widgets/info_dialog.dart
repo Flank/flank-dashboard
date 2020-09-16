@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 /// The widget that displays a specific version of the [Dialog].
 class InfoDialog extends StatelessWidget {
@@ -119,14 +120,12 @@ class InfoDialog extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.topRight,
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Padding(
-                    padding: closeIconPadding,
-                    child: closeIcon,
-                  ),
+              child: TappableArea(
+                onTap: () => Navigator.of(context).pop(),
+                builder: (context, isHovered, child) => child,
+                child: Padding(
+                  padding: closeIconPadding,
+                  child: closeIcon,
                 ),
               ),
             ),

@@ -5,7 +5,7 @@ import 'package:metrics/auth/presentation/validators/email_validator.dart';
 import 'package:metrics/auth/presentation/validators/password_validator.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_strategy.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:provider/provider.dart';
@@ -57,11 +57,10 @@ class _AuthFormState extends State<AuthForm> {
                   validator: PasswordValidator.validate,
                   obscureText: _isPasswordObscure,
                   hint: AuthStrings.password,
-                  suffixIcon: HandCursor(
-                    child: GestureDetector(
-                      onTap: _changePasswordObscure,
-                      child: Image.network(passwordIcon),
-                    ),
+                  suffixIcon: TappableArea(
+                    onTap: _changePasswordObscure,
+                    builder: (context, isHovered, child) => child,
+                    child: Image.network(passwordIcon),
                   ),
                 ),
               ),
