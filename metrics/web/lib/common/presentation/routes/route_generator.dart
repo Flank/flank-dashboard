@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/pages/loading_page.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
+import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
@@ -48,7 +49,7 @@ class RouteGenerator {
     );
   }
 
-  /// Creates [MaterialPageRoute] with the given [name] and the [widget].
+  /// Creates [MetricsPageRoute] with the given [name] and the [widget].
   ///
   /// Throws an [AssertionError] if the [widget] is null.
   static MaterialPageRoute _createMaterialPageRoute({
@@ -56,7 +57,7 @@ class RouteGenerator {
     @required Widget widget,
   }) {
     assert(widget != null);
-    return MaterialPageRoute(
+    return MetricsPageRoute(
       builder: (_) => widget,
       settings: RouteSettings(name: name),
     );
