@@ -9,7 +9,7 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 class DropdownItem extends StatelessWidget {
   /// A builder function used to build the child widget depending on the hover
   /// status of this widget.
-  final HoverWidgetBuilder builder;
+  final Widget Function(BuildContext, bool) builder;
 
   /// A width of this widget.
   final double width;
@@ -47,7 +47,7 @@ class DropdownItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TappableArea(
-      builder: (context, isHovered, child) {
+      builder: (context, isHovered, _) {
         final color = isHovered ? hoverColor : backgroundColor;
 
         return Container(
@@ -56,7 +56,7 @@ class DropdownItem extends StatelessWidget {
           color: color,
           padding: padding,
           alignment: alignment,
-          child: builder(context, isHovered, child),
+          child: builder(context, isHovered),
         );
       },
     );

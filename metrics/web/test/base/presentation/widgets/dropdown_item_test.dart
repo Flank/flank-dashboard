@@ -16,7 +16,7 @@ void main() {
     const hoveredText = "hovered text";
     const text = "text";
 
-    Widget _builder(BuildContext context, bool isHovered, Widget child) {
+    Widget _builder(BuildContext context, bool isHovered) {
       return Text(isHovered ? hoveredText : text);
     }
 
@@ -172,7 +172,7 @@ void main() {
 class _DropdownItemTestbed extends StatelessWidget {
   /// A builder function used to build the child widget depending on the hover
   /// status of this widget.
-  final HoverWidgetBuilder builder;
+  final Widget Function(BuildContext, bool) builder;
 
   /// A [Color] of the [DropdownItem] if it is not hovered.
   final Color backgroundColor;

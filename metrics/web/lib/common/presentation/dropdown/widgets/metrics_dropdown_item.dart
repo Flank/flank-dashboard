@@ -27,7 +27,7 @@ class MetricsDropdownItem extends StatelessWidget {
       backgroundColor: theme.backgroundColor,
       hoverColor: theme.hoverColor,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-      builder: (context, isHovered, child) {
+      builder: (context, isHovered) {
         return isHovered
             ? Text(title, style: theme.hoverTextStyle)
             : Text(title, style: theme.textStyle);

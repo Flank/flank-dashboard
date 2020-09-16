@@ -54,25 +54,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child:  Text(
-                          widget.projectGroupCardViewModel.name,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: theme.titleStyle,
-                        ),
-                      ),
-                     Text(
-                        _projectGroupsCount,
-                        style: theme.subtitleStyle,
-
-                    ),
-                  ],
-                ),
+                child,
                 if (isHovered)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,6 +97,24 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
             ),
           );
         },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                widget.projectGroupCardViewModel.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: theme.titleStyle,
+              ),
+            ),
+            Text(
+              _projectGroupsCount,
+              style: theme.subtitleStyle,
+            ),
+          ],
+        ),
       ),
     );
   }

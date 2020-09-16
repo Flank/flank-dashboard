@@ -123,7 +123,7 @@ class MetricsUserMenu extends StatelessWidget {
     await Navigator.pushNamedAndRemoveUntil(
       context,
       RouteName.login,
-          (Route<dynamic> route) => false,
+      (Route<dynamic> route) => false,
     );
   }
 }
