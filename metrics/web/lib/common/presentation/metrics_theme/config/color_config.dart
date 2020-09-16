@@ -11,8 +11,6 @@ class ColorConfig {
   static const Color accentButtonHoverColor = Color(0xffe2431f);
   static const Color inactiveColor = Color(0xFF242729);
   static const Color inactiveTextColor = Color(0xFF1b1b1b);
-  static const Color primaryBackgroundColor = Color(0xFF182b27);
-  static const Color accentBackgroundColor = Color(0xFF2d1f1f);
   static const Color shimmerColor = Color(0xFF878799);
   static const Color secondaryTextColor = Color(0xFF9c9ca6);
   static const Color yellow = Color(0xFFFED100);

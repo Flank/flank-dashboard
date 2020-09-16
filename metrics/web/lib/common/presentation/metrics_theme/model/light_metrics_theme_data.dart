@@ -95,7 +95,7 @@ class LightMetricsThemeData extends MetricsThemeData {
       : super(
           metricsWidgetTheme: const MetricsWidgetThemeData(
             primaryColor: ColorConfig.primaryColor,
-            accentColor: ColorConfig.primaryBackgroundColor,
+            accentColor: ColorConfig.accentColor,
             backgroundColor: Colors.white,
             textStyle: TextStyle(
               color: ColorConfig.primaryColor,
