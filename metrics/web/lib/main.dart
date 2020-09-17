@@ -71,6 +71,7 @@ class _MetricsAppState extends State<MetricsApp> {
                 hintStyle: LightMetricsThemeData.hintStyle,
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
               ),
+              splashColor: Colors.transparent,
             ),
             darkTheme: ThemeData(
               fontFamily: TextStyleConfig.defaultFontFamily,
@@ -94,6 +95,7 @@ class _MetricsAppState extends State<MetricsApp> {
                 hintStyle: DarkMetricsThemeData.hintStyle,
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
               ),
+              splashColor: Colors.transparent,
             ),
           );
         },
