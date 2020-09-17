@@ -308,9 +308,9 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// otherwise, returns `false`.
   bool _dataHasBeenChanged(String groupName, List<String> selectedProjectIds) {
     final groupNameHasBeenChanged = groupName != _initialGroupName;
+    const equality = DeepCollectionEquality.unordered();
     final selectedProjectIdsHaveBeenChanged =
-        !const DeepCollectionEquality.unordered()
-            .equals(_initialSelectedProjectIds, selectedProjectIds);
+        !equality.equals(_initialSelectedProjectIds, selectedProjectIds);
     return groupNameHasBeenChanged || selectedProjectIdsHaveBeenChanged;
   }
 
