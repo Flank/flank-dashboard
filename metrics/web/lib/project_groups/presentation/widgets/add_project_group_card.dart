@@ -16,12 +16,12 @@ class AddProjectGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final attentionLevel =
+        MetricsTheme.of(context).addProjectGroupCardTheme.attentionLevel;
+
     return Selector<ProjectGroupsNotifier, bool>(
       selector: (_, notifier) => notifier.hasConfiguredProjects,
       builder: (context, hasConfiguredProjects, _) {
-        final attentionLevel =
-            MetricsTheme.of(context).addProjectGroupCardTheme.attentionLevel;
-
         final style = _getStyle(
           attentionLevel: attentionLevel,
           hasConfiguredProjects: hasConfiguredProjects,
