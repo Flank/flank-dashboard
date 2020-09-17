@@ -91,7 +91,7 @@ void main() {
       verify(repository.validateEmailDomain(any)).called(equals(1));
     });
 
-    test("throws if an email domain is not valid after validating", () async {
+    test("throws if an email domain is not valid", () async {
       when(repository.validateEmailDomain(any)).thenAnswer(
         (_) => Future.value(EmailDomainValidationResult(isValid: false)),
       );
@@ -121,21 +121,18 @@ void main() {
       },
     );
 
-    test(
-      "calls the sign out if the validating email domain result is not a valid email",
-      () async {
-        when(repository.validateEmailDomain(any)).thenAnswer(
-          (_) => Future.value(EmailDomainValidationResult(isValid: false)),
-        );
+    test("signs out if the user email is not valid ", () async {
+      when(repository.validateEmailDomain(any)).thenAnswer(
+        (_) => Future.value(EmailDomainValidationResult(isValid: false)),
+      );
 
-        final signInUseCase = GoogleSignInUseCase(repository);
-        await expectLater(
-          signInUseCase(),
-          MatcherUtil.throwsAuthenticationException,
-        );
-        verify(repository.signOut()).called(equals(1));
-      },
-    );
+      final signInUseCase = GoogleSignInUseCase(repository);
+      await expectLater(
+        signInUseCase(),
+        MatcherUtil.throwsAuthenticationException,
+      );
+      verify(repository.signOut()).called(equals(1));
+    });
 
     test(
       "signs in a user using the Google authentication",
