@@ -129,6 +129,9 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
 
   /// Shows a [DeleteProjectGroupDialog] with an active project group.
   Future<void> _showProjectGroupDeleteDialog(BuildContext context) async {
+    final barrierColor =
+        MetricsTheme.of(context).projectGroupDialogTheme.barrierColor;
+
     final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
       context,
       listen: false,
@@ -141,6 +144,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     if (projectGroupsNotifier.deleteProjectGroupDialogViewModel == null) return;
 
     await showDialog(
+      barrierColor: barrierColor,
       context: context,
       builder: (_) => DeleteProjectGroupDialog(),
     );
@@ -150,6 +154,9 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
 
   /// Shows a [EditProjectGroupDialog] with an active project group.
   Future<void> _showProjectGroupDialog(BuildContext context) async {
+    final barrierColor =
+        MetricsTheme.of(context).projectGroupDialogTheme.barrierColor;
+
     final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
       context,
       listen: false,
@@ -162,6 +169,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     if (projectGroupsNotifier.projectGroupDialogViewModel == null) return;
 
     await showDialog(
+      barrierColor: barrierColor,
       context: context,
       builder: (_) => EditProjectGroupDialog(),
     );
