@@ -1,6 +1,6 @@
 import 'enum.dart';
 
-/// A enum representing the device id of the device the application will be ran.
+/// An enum representing device ids that Flutter can run applications on.
 ///
 /// The following devices are currently supported: chrome, web-server (default)
 class Device extends Enum<String> {
