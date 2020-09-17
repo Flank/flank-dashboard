@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
@@ -8,7 +9,6 @@ import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 void main() {
   group("IconLabelButton", () {
     const defaultPadding = EdgeInsets.zero;
-    const defaultBorderRadius = BorderRadius.zero;
     const defaultIcon = Icon(Icons.cake);
 
     testWidgets(
@@ -76,22 +76,6 @@ void main() {
         );
 
         expect(contentPadding.padding, equals(defaultPadding));
-      },
-    );
-
-    testWidgets(
-      "applies the default border radius if it's not specified",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(_IconLabelButtonTestbed());
-
-        final inkWell = tester.widget<InkWell>(
-          find.descendant(
-            of: find.byType(IconLabelButton),
-            matching: find.byType(InkWell),
-          ),
-        );
-
-        expect(inkWell.borderRadius, equals(defaultBorderRadius));
       },
     );
 
@@ -190,27 +174,6 @@ void main() {
     );
 
     testWidgets(
-      "applies the given border radius",
-      (WidgetTester tester) async {
-        final expectedBorderRadius = BorderRadius.circular(4.0);
-
-        await tester.pumpWidget(_IconLabelButtonTestbed(
-          borderRadius: expectedBorderRadius,
-        ));
-
-        final inkWellWidget = tester.widget<InkWell>(
-          find.descendant(
-            of: find.byType(IconLabelButton),
-            matching: find.byType(InkWell),
-          ),
-        );
-        final actualBorderRadius = inkWellWidget.borderRadius;
-
-        expect(actualBorderRadius, equals(expectedBorderRadius));
-      },
-    );
-
-    testWidgets(
       "applies the given onPressed callback",
       (WidgetTester tester) async {
         void testCallback() {}
@@ -219,13 +182,10 @@ void main() {
           onPressed: testCallback,
         ));
 
-        final inkWellWidget = tester.widget<InkWell>(
-          find.descendant(
-            of: find.byType(IconLabelButton),
-            matching: find.byType(InkWell),
-          ),
+        final tappableArea = tester.widget<TappableArea>(
+          find.byType(TappableArea)
         );
-        final actualCallback = inkWellWidget.onTap;
+        final actualCallback = tappableArea.onTap;
 
         expect(actualCallback, equals(testCallback));
       },
@@ -247,10 +207,6 @@ class _IconLabelButtonTestbed extends StatelessWidget {
   /// The padding around the [icon].
   final EdgeInsets iconPadding;
 
-  /// The clipping radius of the containing rect
-  /// of the [IconLabelButton] under test.
-  final BorderRadius borderRadius;
-
   /// The label of the [IconLabelButton] under test.
   final String label;
 
@@ -260,7 +216,6 @@ class _IconLabelButtonTestbed extends StatelessWidget {
   /// Creates the instance of this testbed.
   ///
   /// Both [iconPadding] and [contentPadding] defaults to [EdgeInsets.zero].
-  /// The [borderRadius] defaults to [BorderRadius.zero].
   /// The [label] defaults to `label`.
   /// The [icon] defaults to [Icons.add].
   const _IconLabelButtonTestbed({
@@ -268,7 +223,6 @@ class _IconLabelButtonTestbed extends StatelessWidget {
     this.icon = const Icon(Icons.add),
     this.iconPadding = EdgeInsets.zero,
     this.contentPadding = EdgeInsets.zero,
-    this.borderRadius = BorderRadius.zero,
     this.onPressed,
     this.labelStyle,
   });
@@ -282,7 +236,6 @@ class _IconLabelButtonTestbed extends StatelessWidget {
           icon: icon,
           iconPadding: iconPadding,
           contentPadding: contentPadding,
-          borderRadius: borderRadius,
           onPressed: onPressed,
           labelStyle: labelStyle,
         ),

@@ -26,6 +26,9 @@ class TappableArea extends StatefulWidget {
   /// The [builder] is called with the given child parameter.
   final Widget child;
 
+  /// How the [TappableArea] should behave during hit testing.
+  final HitTestBehavior hitTestBehavior;
+
   /// Creates a new [TappableArea] instance.
   ///
   /// The [builder] must not be null.
@@ -36,6 +39,7 @@ class TappableArea extends StatefulWidget {
     @required this.builder,
     this.onTap,
     this.child,
+    this.hitTestBehavior,
     MouseCursor mouseCursor,
   })  : assert(builder != null),
         mouseCursor = mouseCursor ?? SystemMouseCursors.click,
@@ -56,6 +60,7 @@ class _TappableAreaState extends State<TappableArea> {
       onEnter: (_) => _changeHover(true),
       onExit: (_) => _changeHover(false),
       child: GestureDetector(
+        behavior: widget.hitTestBehavior,
         onTap: widget.onTap,
         child: widget.builder(context, _isHovered, widget.child),
       ),
