@@ -23,6 +23,8 @@ class MetricsCheckbox extends StatelessWidget {
     final state = value ? CrossFadeState.showFirst : CrossFadeState.showSecond;
 
     return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       customBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
       ),

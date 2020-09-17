@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 
@@ -24,9 +25,9 @@ class MetricsPageTitle extends StatelessWidget {
           padding: const EdgeInsets.only(right: 16.0),
           child: Tooltip(
             message: CommonStrings.navigateBack,
-            child: InkWell(
-              customBorder: const CircleBorder(),
+            child: TappableArea(
               onTap: () => _navigateBack(context),
+              builder: (context, isHovered, child) => child,
               child: Image.network(
                 'icons/arrow-back.svg',
                 width: 32.0,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 /// A widget that displays the button with given [icon] and [label] text.
 class IconLabelButton extends StatelessWidget {
@@ -46,9 +47,9 @@ class IconLabelButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: borderRadius,
+    return TappableArea(
       onTap: onPressed,
+      builder: (context, isHovered, child) => child,
       child: Padding(
         padding: contentPadding,
         child: Row(
