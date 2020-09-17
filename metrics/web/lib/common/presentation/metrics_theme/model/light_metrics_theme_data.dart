@@ -195,9 +195,10 @@ class LightMetricsThemeData extends MetricsThemeData {
             primaryColor: inputColor,
             accentColor: Colors.transparent,
             backgroundColor: _inactiveBackgroundColor,
-            textStyle: TextStyle(
-              color: Colors.grey,
+            textStyle: MetricsTextStyle(
+              color: _inactiveTextColor,
               fontSize: 32.0,
+              lineHeightInPixels: 38.0,
               fontWeight: FontWeight.bold,
             ),
           ),
