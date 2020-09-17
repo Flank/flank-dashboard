@@ -35,8 +35,8 @@ import 'package:metrics/common/presentation/toast/theme/attention_level/toast_at
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
+import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
@@ -63,6 +63,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _positiveToastColor = Color(0xFFE1FAF4);
   static const Color _negativeToastColor = Color(0xFFFFEDE5);
   static const Color _loginOptionTextColor = Color(0xFF757575);
+  static const Color _userMenuButtonColor = Color(0xFF272727);
 
   static const Color _positiveStatusColor = Color(0xFFE6F9F3);
   static const Color _negativeStatusColor = Color(0xFFFFF5F3);
@@ -343,8 +344,8 @@ class LightMetricsThemeData extends MetricsThemeData {
             inactiveHoverColor: _inactiveToggleHoverColor,
           ),
           userMenuButtonTheme: const UserMenuButtonThemeData(
-            activeColor: ColorConfig.shimmerColor,
-            inactiveColor: Colors.white,
+            activeColor: _userMenuButtonColor,
+            inactiveColor: _userMenuButtonColor,
           ),
           toastTheme: const ToastThemeData(
             toastAttentionLevel: ToastAttentionLevel(
