@@ -114,7 +114,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             borderColor: _borderColor,
             hoverColor: _cardHoverColor,
             backgroundColor: scaffoldColor,
-            accentColor: ColorConfig.accentColor,
+            accentColor: ColorConfig.accentButtonColor,
+            accentHoverColor: ColorConfig.accentButtonHoverColor,
             primaryColor: ColorConfig.primaryColor,
             primaryHoverColor: ColorConfig.primaryButtonHoverColor,
             titleStyle: MetricsTextStyle(

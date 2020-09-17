@@ -82,21 +82,31 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                           );
                         },
                       ),
-                      IconLabelButton(
-                        onPressed: _showDeleteProjectGroupDialog,
-                        iconPadding: _buttonIconPadding,
-                        icon: Image.network(
-                          'icons/delete.svg',
-                          width: _iconBoxSide,
-                          height: _iconBoxSide,
-                          fit: BoxFit.contain,
-                          color: theme.accentColor,
-                        ),
-                        label: CommonStrings.delete,
-                        labelStyle: TextStyle(
-                          color: theme.accentColor,
-                        ),
-                      ),
+                      TappableArea(
+                        builder: (context, isHovered, _) {
+                          return IconLabelButton(
+                            onPressed: () =>
+                                _showProjectGroupDeleteDialog(context),
+                            borderRadius: _buttonBorderRadius,
+                            iconPadding: _buttonIconPadding,
+                            icon: Image.network(
+                              'icons/delete.svg',
+                              width: _iconBoxSide,
+                              height: _iconBoxSide,
+                              fit: BoxFit.contain,
+                              color: isHovered
+                                  ? theme.accentHoverColor
+                                  : theme.accentColor,
+                            ),
+                            label: CommonStrings.delete,
+                            labelStyle: TextStyle(
+                              color: isHovered
+                                  ? theme.accentHoverColor
+                                  : theme.accentColor,
+                            ),
+                          );
+                        },
+                      )
                     ],
                   ),
               ],

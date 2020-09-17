@@ -20,6 +20,9 @@ class ProjectGroupCardThemeData {
   /// The secondary [Color] for elements of the project group card.
   final Color accentColor;
 
+  /// The secondary hover [Color] for elements of the project group card.
+  final Color accentHoverColor;
+
   /// The [TextStyle] for the title text of the project group card.
   final TextStyle titleStyle;
 
@@ -34,6 +37,7 @@ class ProjectGroupCardThemeData {
     this.primaryColor = Colors.green,
     this.primaryHoverColor = Colors.greenAccent,
     this.accentColor = Colors.red,
+    this.accentHoverColor = Colors.orange,
     this.titleStyle,
     this.subtitleStyle,
   });

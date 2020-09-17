@@ -13,6 +13,7 @@ void main() {
         const themeData = ProjectGroupCardThemeData();
 
         expect(themeData.accentColor, isNotNull);
+        expect(themeData.accentHoverColor, isNotNull);
         expect(themeData.primaryColor, isNotNull);
         expect(themeData.primaryHoverColor, isNotNull);
         expect(themeData.backgroundColor, isNotNull);
@@ -33,6 +34,7 @@ void main() {
 
     test("creates an instance with the given values", () {
       const accentColor = Colors.grey;
+      const accentHoverColor = Colors.orange;
       const backgroundColor = Colors.red;
       const borderColor = Colors.white;
       const hoverColor = Colors.yellow;
@@ -42,6 +44,7 @@ void main() {
 
       final themeData = ProjectGroupCardThemeData(
         accentColor: accentColor,
+        accentHoverColor: accentHoverColor,
         backgroundColor: backgroundColor,
         borderColor: borderColor,
         hoverColor: hoverColor,
@@ -52,6 +55,7 @@ void main() {
       );
 
       expect(themeData.accentColor, equals(accentColor));
+      expect(themeData.accentHoverColor, equals(accentHoverColor));
       expect(themeData.backgroundColor, equals(backgroundColor));
       expect(themeData.borderColor, equals(borderColor));
       expect(themeData.hoverColor, equals(hoverColor));
