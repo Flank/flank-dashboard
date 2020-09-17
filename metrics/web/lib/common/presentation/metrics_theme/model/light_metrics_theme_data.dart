@@ -309,7 +309,13 @@ class LightMetricsThemeData extends MetricsThemeData {
               hoverBackgroundColor: _metricsTileHoverColor,
               borderColor: _borderColor,
               hoverBorderColor: _borderColor,
-              textStyle: TextStyle(fontSize: 22.0),
+              textStyle: MetricsTextStyle(
+                fontSize: 24.0,
+                color: _inactiveTextColor,
+                fontWeight: FontWeight.w500,
+                lineHeightInPixels: 28.0,
+                letterSpacing: 0.0,
+              ),
             ),
           ),
           buildNumberScorecardTheme: const ScorecardThemeData(
