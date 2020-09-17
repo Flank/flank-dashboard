@@ -34,7 +34,7 @@ void main() {
 
     test("creates an instance with the given values", () {
       const accentColor = Colors.grey;
-      const accentHoverColor = Colors.orange;
+      const accentHoverColor = Colors.blue;
       const backgroundColor = Colors.red;
       const borderColor = Colors.white;
       const hoverColor = Colors.yellow;
