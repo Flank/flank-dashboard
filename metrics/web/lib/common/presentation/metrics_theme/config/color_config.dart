@@ -16,4 +16,5 @@ class ColorConfig {
   static const Color yellow = Color(0xFFFED100);
   static const Color yellowTranslucent = Color(0xFF292618);
   static const Color inputSecondaryTextColor = Color(0xFF545459);
+  static const Color transparentColor = Colors.transparent;
 }
