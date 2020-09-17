@@ -27,14 +27,17 @@ class ProjectGroupView extends StatelessWidget {
           return const LoadingPlaceholder();
         }
 
-        return Wrap(
-          spacing: 20.0,
-          runSpacing: 20.0,
-          children: <Widget>[
-            const AddProjectGroupCard(),
-            for (final projectGroup in projectGroupCardViewModels)
-              ProjectGroupCard(projectGroupCardViewModel: projectGroup),
-          ],
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 80.0),
+          child: Wrap(
+            spacing: 20.0,
+            runSpacing: 20.0,
+            children: <Widget>[
+              const AddProjectGroupCard(),
+              for (final projectGroup in projectGroupCardViewModels)
+                ProjectGroupCard(projectGroupCardViewModel: projectGroup),
+            ],
+          ),
         );
       },
     );
