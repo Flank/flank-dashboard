@@ -58,20 +58,29 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      IconLabelButton(
-                        onPressed: _showEditProjectGroupDialog,
-                        iconPadding: _buttonIconPadding,
-                        icon: Image.network(
-                          'icons/edit.svg',
-                          width: _iconBoxSide,
-                          height: _iconBoxSide,
-                          fit: BoxFit.contain,
-                          color: theme.primaryColor,
-                        ),
-                        label: CommonStrings.edit,
-                        labelStyle: TextStyle(
-                          color: theme.primaryColor,
-                        ),
+                      TappableArea(
+                        builder: (context, isHovered, _) {
+                          return IconLabelButton(
+                            onPressed: () => _showProjectGroupDialog(context),
+                            borderRadius: _buttonBorderRadius,
+                            iconPadding: _buttonIconPadding,
+                            icon: Image.network(
+                              'icons/edit.svg',
+                              width: _iconBoxSide,
+                              height: _iconBoxSide,
+                              fit: BoxFit.contain,
+                              color: isHovered
+                                  ? theme.primaryHoverColor
+                                  : theme.primaryColor,
+                            ),
+                            label: CommonStrings.edit,
+                            labelStyle: TextStyle(
+                              color: isHovered
+                                  ? theme.primaryHoverColor
+                                  : theme.primaryColor,
+                            ),
+                          );
+                        },
                       ),
                       IconLabelButton(
                         onPressed: _showDeleteProjectGroupDialog,

@@ -115,6 +115,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             backgroundColor: scaffoldColor,
             accentColor: ColorConfig.accentColor,
             primaryColor: ColorConfig.primaryColor,
+            primaryHoverColor: ColorConfig.primaryButtonHoverColor,
             titleStyle: MetricsTextStyle(
               color: Colors.black,
               lineHeightInPixels: 26.0,

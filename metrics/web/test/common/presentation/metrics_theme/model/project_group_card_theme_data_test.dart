@@ -14,6 +14,7 @@ void main() {
 
         expect(themeData.accentColor, isNotNull);
         expect(themeData.primaryColor, isNotNull);
+        expect(themeData.primaryHoverColor, isNotNull);
         expect(themeData.backgroundColor, isNotNull);
         expect(themeData.borderColor, isNotNull);
         expect(themeData.hoverColor, isNotNull);
@@ -36,6 +37,7 @@ void main() {
       const borderColor = Colors.white;
       const hoverColor = Colors.yellow;
       const primaryColor = Colors.pink;
+      const primaryHoverColor = Colors.grey;
       const textStyle = TextStyle();
 
       final themeData = ProjectGroupCardThemeData(
@@ -44,6 +46,7 @@ void main() {
         borderColor: borderColor,
         hoverColor: hoverColor,
         primaryColor: primaryColor,
+        primaryHoverColor: primaryHoverColor,
         subtitleStyle: textStyle,
         titleStyle: textStyle,
       );
@@ -53,6 +56,7 @@ void main() {
       expect(themeData.borderColor, equals(borderColor));
       expect(themeData.hoverColor, equals(hoverColor));
       expect(themeData.primaryColor, equals(primaryColor));
+      expect(themeData.primaryHoverColor, equals(primaryHoverColor));
       expect(themeData.subtitleStyle, equals(textStyle));
       expect(themeData.titleStyle, equals(textStyle));
     });
