@@ -30,6 +30,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placehol
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
+import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/attention_level/toast_attention_level.dart';
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
@@ -58,7 +59,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
   static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.32);
-  static const Color hoverBorderColor = Color(0xffb6b6ba);
+  static const Color _hoverBorderColor = Color(0xffb6b6ba);
   static const Color _positiveToastColor = Color(0xFFE1FAF4);
   static const Color _negativeToastColor = Color(0xFFFFEDE5);
   static const Color _loginOptionTextColor = Color(0xFF757575);
@@ -81,14 +82,14 @@ class LightMetricsThemeData extends MetricsThemeData {
     lineHeightInPixels: 20.0,
   );
   static const TextStyle hintStyle = MetricsTextStyle(
-    color: LightMetricsThemeData._inputHintTextColor,
+    color: _inputHintTextColor,
     fontSize: 16.0,
     lineHeightInPixels: 20,
   );
 
   /// A [TextStyle] of the dialog title.
   static const TextStyle _dialogTitleTextStyle = TextStyle(
-    color: Colors.black,
+    color: _inactiveTextColor,
     fontSize: 26.0,
     fontWeight: FontWeight.w500,
   );
@@ -123,7 +124,7 @@ class LightMetricsThemeData extends MetricsThemeData {
               hoverColor: ColorConfig.accentButtonHoverColor,
             ),
             titleStyle: MetricsTextStyle(
-              color: Colors.black,
+              color: _inactiveTextColor,
               lineHeightInPixels: 26.0,
               fontSize: 22.0,
               fontWeight: FontWeight.w500,
@@ -167,7 +168,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             titleTextStyle: _dialogTitleTextStyle,
             contentTextStyle: MetricsTextStyle(
               fontSize: 16.0,
-              color: Colors.black,
+              color: _inactiveTextColor,
               lineHeightInPixels: 24.0,
               fontWeight: FontWeight.w300,
               letterSpacing: 0.14,
@@ -177,14 +178,16 @@ class LightMetricsThemeData extends MetricsThemeData {
             primaryColor: ColorConfig.primaryColor,
             barrierColor: _barrierColor,
             closeIconColor: _closeIconColor,
+            prefixIconColor: _inputHintTextColor,
+            focusPrefixIconColor: _inactiveTextColor,
             contentBorderColor: _borderColor,
             titleTextStyle: _dialogTitleTextStyle,
             uncheckedProjectTextStyle: TextStyle(
-              color: Colors.black,
+              color: _inactiveTextColor,
               fontSize: 14.0,
             ),
             checkedProjectTextStyle: TextStyle(
-              color: Colors.black,
+              color: _inactiveTextColor,
               fontSize: 14.0,
             ),
             counterTextStyle: TextStyleConfig.captionTextStyle,
@@ -244,7 +247,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           textFieldTheme: const TextFieldThemeData(
             focusColor: inputHoverColor,
-            hoverBorderColor: hoverBorderColor,
+            hoverBorderColor: _hoverBorderColor,
             textStyle: MetricsTextStyle(
               color: _inactiveTextColor,
               fontSize: 16.0,
@@ -255,7 +258,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             backgroundColor: Colors.white,
             openedButtonBackgroundColor: inputHoverColor,
             hoverBackgroundColor: inputHoverColor,
-            hoverBorderColor: hoverBorderColor,
+            hoverBorderColor: _hoverBorderColor,
             openedButtonBorderColor: _inputFocusedBorderColor,
             closedButtonBackgroundColor: inputColor,
             closedButtonBorderColor: inputColor,
@@ -439,6 +442,15 @@ class LightMetricsThemeData extends MetricsThemeData {
                   fontSize: 24.0,
                 ),
               ),
+            ),
+          ),
+          pageTitleTheme: const PageTitleThemeData(
+            iconColor: _inactiveTextColor,
+            textStyle: MetricsTextStyle(
+              fontSize: 36.0,
+              fontWeight: FontWeight.w500,
+              lineHeightInPixels: 42.0,
+              color: _inactiveTextColor,
             ),
           ),
         );

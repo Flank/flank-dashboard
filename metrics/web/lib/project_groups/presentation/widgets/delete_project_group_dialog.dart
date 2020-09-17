@@ -39,7 +39,7 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
             : ProjectGroupsStrings.delete;
 
         return InfoDialog(
-          maxHeight: 262.0,
+          maxHeight: 286.0,
           closeIconPadding: const EdgeInsets.only(top: 16.0, right: 16.0),
           closeIcon: Image.network(
             'icons/close.svg',
@@ -53,8 +53,8 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
             ProjectGroupsStrings.deleteProjectGroup,
             style: dialogTheme.titleTextStyle,
           ),
-          titlePadding: const EdgeInsets.only(bottom: 16.0),
-          contentPadding: const EdgeInsets.only(bottom: 16.0),
+          titlePadding: const EdgeInsets.only(bottom: 40.0),
+          contentPadding: const EdgeInsets.only(bottom: 40.0),
           content: RichText(
             text: TextSpan(
               text: ProjectGroupsStrings.deleteConfirmation,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
 
 /// A widget that displays the metrics page title with the navigate back arrow.
 class MetricsPageTitle extends StatelessWidget {
@@ -19,6 +19,8 @@ class MetricsPageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = MetricsTheme.of(context).pageTitleTheme;
+
     return Row(
       children: [
         Padding(
@@ -33,17 +35,14 @@ class MetricsPageTitle extends StatelessWidget {
                 width: 32.0,
                 height: 32.0,
                 fit: BoxFit.contain,
+                color: theme.iconColor,
               ),
             ),
           ),
         ),
         Text(
           title,
-          style: const MetricsTextStyle(
-            fontSize: 36.0,
-            fontWeight: FontWeight.w500,
-            lineHeightInPixels: 42.0,
-          ),
+          style: theme.textStyle,
         ),
       ],
     );

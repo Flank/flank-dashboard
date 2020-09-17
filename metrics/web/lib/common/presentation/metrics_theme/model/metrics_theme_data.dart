@@ -17,6 +17,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placehol
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
+import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
@@ -100,6 +101,9 @@ class MetricsThemeData {
   /// A theme for the toasts.
   final ToastThemeData toastTheme;
 
+  /// A theme for the page title.
+  final PageTitleThemeData pageTitleTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricsWidgetThemeData metricsWidgetTheme,
@@ -125,6 +129,7 @@ class MetricsThemeData {
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
+    PageTitleThemeData pageTitleTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
         buildResultTheme = buildResultTheme ??
@@ -164,7 +169,8 @@ class MetricsThemeData {
             inputPlaceholderTheme ?? const ShimmerPlaceholderThemeData(),
         circlePercentageTheme =
             circlePercentageTheme ?? const CirclePercentageThemeData(),
-        toastTheme = toastTheme ?? const ToastThemeData();
+        toastTheme = toastTheme ?? const ToastThemeData(),
+        pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -194,6 +200,7 @@ class MetricsThemeData {
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
+    PageTitleThemeData pageTitleTheme,
   }) {
     return MetricsThemeData(
       metricsWidgetTheme: metricsWidgetTheme ?? this.metricsWidgetTheme,
@@ -228,6 +235,7 @@ class MetricsThemeData {
       circlePercentageTheme:
           circlePercentageTheme ?? this.circlePercentageTheme,
       toastTheme: toastTheme ?? this.toastTheme,
+      pageTitleTheme: pageTitleTheme ?? this.pageTitleTheme,
     );
   }
 }

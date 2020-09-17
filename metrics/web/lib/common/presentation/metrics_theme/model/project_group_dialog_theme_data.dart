@@ -5,6 +5,12 @@ class ProjectGroupDialogThemeData extends DialogThemeData {
   /// A border [Color] of the project group dialog content.
   final Color contentBorderColor;
 
+  /// A prefix icon [Color] of the project group dialog.
+  final Color prefixIconColor;
+
+  /// A focus prefix icon [Color] of the project group dialog.
+  final Color focusPrefixIconColor;
+
   /// A [TextStyle] of the unchecked project within the project group dialog.
   final TextStyle uncheckedProjectTextStyle;
 
@@ -23,6 +29,8 @@ class ProjectGroupDialogThemeData extends DialogThemeData {
     TextStyle titleTextStyle,
     TextStyle errorTextStyle,
     this.contentBorderColor = Colors.grey,
+    this.prefixIconColor = Colors.grey,
+    this.focusPrefixIconColor = Colors.black,
     this.uncheckedProjectTextStyle,
     this.checkedProjectTextStyle,
     this.counterTextStyle,
