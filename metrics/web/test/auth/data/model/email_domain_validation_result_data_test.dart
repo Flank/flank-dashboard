@@ -20,12 +20,15 @@ void main() {
     });
 
     test(
-      ".fromJson() successfully creates an instance from the json encodable map",
+      ".fromJson() creates an instance with the same isValid parameter as in the given json",
       () {
-        expect(
-          () => EmailDomainValidationResultData.fromJson(json),
-          returnsNormally,
+        final expectedResult = EmailDomainValidationResultData(
+          isValid: isValid,
         );
+
+        final actualResult = EmailDomainValidationResultData.fromJson(json);
+
+        expect(actualResult.isValid, equals(expectedResult.isValid));
       },
     );
 

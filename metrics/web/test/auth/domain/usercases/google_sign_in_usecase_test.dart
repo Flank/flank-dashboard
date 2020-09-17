@@ -40,34 +40,40 @@ void main() {
       );
     });
 
-    test("throws if the repository.getGoogleSignInCredentials throws", () {
-      when(repository.getGoogleSignInCredentials()).thenThrow(
-        const AuthenticationException(),
-      );
+    test(
+      "throws if the UserRepository throws during getting the google sign-in credentials",
+      () {
+        when(repository.getGoogleSignInCredentials()).thenThrow(
+          const AuthenticationException(),
+        );
 
-      final signInUseCase = GoogleSignInUseCase(repository);
+        final signInUseCase = GoogleSignInUseCase(repository);
 
-      expect(
-        () => signInUseCase(),
-        MatcherUtil.throwsAuthenticationException,
-      );
-    });
-
-    test("throws if the repository.validateEmailDomain throws", () {
-      when(repository.validateEmailDomain(any)).thenThrow(
-        const AuthenticationException(),
-      );
-
-      final signInUseCase = GoogleSignInUseCase(repository);
-
-      expect(
-        () => signInUseCase(),
-        MatcherUtil.throwsAuthenticationException,
-      );
-    });
+        expect(
+          () => signInUseCase(),
+          MatcherUtil.throwsAuthenticationException,
+        );
+      },
+    );
 
     test(
-      "gets the google sign-in credentials from the repository",
+      "throws if the UserRepository throws during validating an email domain",
+      () {
+        when(repository.validateEmailDomain(any)).thenThrow(
+          const AuthenticationException(),
+        );
+
+        final signInUseCase = GoogleSignInUseCase(repository);
+
+        expect(
+          () => signInUseCase(),
+          MatcherUtil.throwsAuthenticationException,
+        );
+      },
+    );
+
+    test(
+      "gets the google sign-in credentials from the UserRepository",
       () async {
         final signInUseCase = GoogleSignInUseCase(repository);
 
@@ -85,24 +91,21 @@ void main() {
       verify(repository.validateEmailDomain(any)).called(equals(1));
     });
 
-    test(
-      "throws if the UserRepository.validateEmailDomain result is not a valid email",
-      () async {
-        when(repository.validateEmailDomain(any)).thenAnswer(
-          (_) => Future.value(EmailDomainValidationResult(isValid: false)),
-        );
+    test("throws if an email domain is not valid after validating", () async {
+      when(repository.validateEmailDomain(any)).thenAnswer(
+        (_) => Future.value(EmailDomainValidationResult(isValid: false)),
+      );
 
-        final signInUseCase = GoogleSignInUseCase(repository);
+      final signInUseCase = GoogleSignInUseCase(repository);
 
-        expect(
-          () => signInUseCase(),
-          MatcherUtil.throwsAuthenticationException,
-        );
-      },
-    );
+      expect(
+        () => signInUseCase(),
+        MatcherUtil.throwsAuthenticationException,
+      );
+    });
 
     test(
-      "does not call the UserRepository.signInWithGoogle if the email domain is not valid",
+      "does not call the sign-in with Google if the email domain is not valid",
       () async {
         when(repository.validateEmailDomain(any)).thenAnswer(
           (_) => Future.value(EmailDomainValidationResult(isValid: false)),
@@ -119,7 +122,7 @@ void main() {
     );
 
     test(
-      "calls the UserRepository.signOut if the UserRepository.validateEmailDomain result is not a valid email",
+      "calls the sign out if the validating email domain result is not a valid email",
       () async {
         when(repository.validateEmailDomain(any)).thenAnswer(
           (_) => Future.value(EmailDomainValidationResult(isValid: false)),
@@ -146,7 +149,7 @@ void main() {
     );
 
     test(
-      "throws if UserRepository throws during sign in process",
+      "throws if UserRepository throws during sign-in process",
       () {
         final signInUseCase = GoogleSignInUseCase(repository);
 
