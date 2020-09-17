@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
@@ -53,6 +54,8 @@ class _MetricsAppState extends State<MetricsApp> {
               fontFamily: TextStyleConfig.defaultFontFamily,
               brightness: Brightness.light,
               primarySwatch: Colors.teal,
+              splashColor: ColorConfig.inkResponseColor,
+              highlightColor: ColorConfig.inkResponseColor,
               primaryColorBrightness: Brightness.light,
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
@@ -76,6 +79,8 @@ class _MetricsAppState extends State<MetricsApp> {
               fontFamily: TextStyleConfig.defaultFontFamily,
               brightness: Brightness.dark,
               primarySwatch: Colors.teal,
+              splashColor: ColorConfig.inkResponseColor,
+              highlightColor: ColorConfig.inkResponseColor,
               primaryColorBrightness: Brightness.dark,
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
