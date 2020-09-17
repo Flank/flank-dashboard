@@ -49,18 +49,19 @@ class MetricsUserMenuButton extends StatelessWidget {
             : menuButtonTheme.inactiveColor;
 
         return Tooltip(
-            message: tooltipMessage,
-            child: TappableArea(
-              onTap: openPopup,
-              builder: (context, isHovered, child) => child,
-              child: Image.network(
-                'icons/avatar.svg',
-                width: 32.0,
-                height: 32.0,
-                fit: BoxFit.contain,
-                color: buttonColor,
-              ),
-            ));
+          message: tooltipMessage,
+          child: TappableArea(
+            onTap: openPopup,
+            builder: (context, isHovered, child) => child,
+            child: Image.network(
+              'icons/avatar.svg',
+              width: 32.0,
+              height: 32.0,
+              fit: BoxFit.contain,
+              color: buttonColor,
+            ),
+          ),
+        );
       },
       popup: const MetricsUserMenu(),
       routeObserver: overlayEntryRouteObserver,
