@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 
-import '../../../common/config/driver_tests_config.dart';
-import '../../../util/file_utils.dart';
+import '../../common/config/driver_tests_config.dart';
+import '../../util/file_utils.dart';
 
 /// Represents the chrome driver.
 class ChromeDriver {
