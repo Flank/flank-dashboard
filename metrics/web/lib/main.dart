@@ -54,8 +54,8 @@ class _MetricsAppState extends State<MetricsApp> {
               fontFamily: TextStyleConfig.defaultFontFamily,
               brightness: Brightness.light,
               primarySwatch: Colors.teal,
-              splashColor: ColorConfig.transparentColor,
-              highlightColor: ColorConfig.transparentColor,
+              splashColor: ColorConfig.inkResponseColor,
+              highlightColor: ColorConfig.inkResponseColor,
               primaryColorBrightness: Brightness.light,
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
@@ -79,8 +79,8 @@ class _MetricsAppState extends State<MetricsApp> {
               fontFamily: TextStyleConfig.defaultFontFamily,
               brightness: Brightness.dark,
               primarySwatch: Colors.teal,
-              splashColor: ColorConfig.transparentColor,
-              highlightColor: ColorConfig.transparentColor,
+              splashColor: ColorConfig.inkResponseColor,
+              highlightColor: ColorConfig.inkResponseColor,
               primaryColorBrightness: Brightness.dark,
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
