@@ -121,7 +121,7 @@ void main() {
       },
     );
 
-    test("signs out if the user email is not valid ", () async {
+    test("signs out if the user email is not valid", () async {
       when(repository.validateEmailDomain(any)).thenAnswer(
         (_) => Future.value(EmailDomainValidationResult(isValid: false)),
       );
