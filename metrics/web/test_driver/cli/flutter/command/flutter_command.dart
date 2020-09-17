@@ -1,4 +1,4 @@
-import '../../../common/config/device.dart';
+import '../../../common/model/device.dart';
 import '../../common/command/command_builder.dart';
 
 /// Base class for wrappers of the flutter command.
@@ -15,7 +15,7 @@ abstract class FlutterCommand extends CommandBuilder {
   ///  --device-id
   ///
   ///  Target device id or name (prefixes allowed).
-  void device(Device device) => add('--device-id=${device.deviceId}');
+  void device(Device device) => add('--device-id=${device.value}');
 
   /// --machine
   ///

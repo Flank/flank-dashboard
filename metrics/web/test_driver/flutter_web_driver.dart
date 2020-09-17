@@ -7,8 +7,8 @@ import 'cli/common/process/process_wrapper.dart';
 import 'cli/flutter/model/flutter_drive_environment.dart';
 import 'cli/flutter/runner/flutter_drive_process_runner.dart';
 import 'cli/flutter/runner/flutter_run_process_runner.dart';
-import 'cli/selenium/runner/selenium_process_runner.dart';
-import 'cli/selenium/selenium.dart';
+import 'cli/web_driver/chrome_driver.dart';
+import 'cli/web_driver/runner/chrome_driver_runner.dart';
 import 'common/config/logs_file_config.dart';
 import 'common/logger/logger.dart';
 import 'process_manager/process_manager.dart';
@@ -37,17 +37,17 @@ class FlutterWebDriver {
 
     _prepareWorkingDir();
 
-    await _prepareSelenium();
+    await _prepareWebDriver();
 
     _setupDispose();
 
-    Logger.log('Running selenium...');
+    Logger.log('Running web driver...');
     await _processManager.run(
-      SeleniumProcessRunner(),
+      ChromeDriverRunner(),
       workingDir: _args.workingDir,
     );
 
-    Logger.log("Selenium server is up, running flutter application...");
+    Logger.log("Driver is up, running flutter application...");
     final flutterAppProcess = await _runFlutterApp(port, verbose);
 
     Logger.log("Application is up, running tests...");
@@ -84,9 +84,9 @@ class FlutterWebDriver {
     if (!workingDir.existsSync()) workingDir.createSync();
   }
 
-  /// Prepares the selenium server for driver tests.
-  Future<void> _prepareSelenium() async {
-    await Selenium.prepare(_args.workingDir);
+  /// Prepares the web driver for the driver tests.
+  Future<void> _prepareWebDriver() async {
+    await ChromeDriver.prepare(_args.workingDir);
   }
 
   /// Runs the flutter web app on specified [port].
