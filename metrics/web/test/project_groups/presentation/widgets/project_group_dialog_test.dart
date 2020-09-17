@@ -38,7 +38,7 @@ void main() {
     const loadingText = 'loading...';
     const backgroundColor = Colors.red;
     const contentBorderColor = Colors.yellow;
-    const someTextToActivateDialog = "test";
+    const testText = "test";
 
     final searchFieldFinder = find.byWidgetPredicate(
       (widget) {
@@ -385,7 +385,7 @@ void main() {
           ));
         });
 
-        await tester.enterText(groupNameFieldFinder, someTextToActivateDialog);
+        await tester.enterText(groupNameFieldFinder, testText);
         await tester.pump();
 
         await tester.tap(find.text(strategy.text));
@@ -421,14 +421,13 @@ void main() {
           ));
         });
 
-        await tester.enterText(groupNameFieldFinder, someTextToActivateDialog);
+        await tester.enterText(groupNameFieldFinder, testText);
         await tester.pump();
 
         await tester.tap(find.text(strategy.text));
         await tester.pump();
 
-        verify(strategy.action(
-                any, groupId, someTextToActivateDialog, projectIds))
+        verify(strategy.action(any, groupId, testText, projectIds))
             .called(equals(1));
       },
     );
@@ -469,7 +468,7 @@ void main() {
           ));
         });
 
-        await tester.enterText(groupNameFieldFinder, someTextToActivateDialog);
+        await tester.enterText(groupNameFieldFinder, testText);
         await tester.pump();
 
         await tester.tap(find.text(strategy.text));
@@ -495,7 +494,7 @@ void main() {
           ));
         });
 
-        await tester.enterText(groupNameFieldFinder, someTextToActivateDialog);
+        await tester.enterText(groupNameFieldFinder, testText);
         await tester.pump();
 
         await tester.tap(find.text(strategy.text));
@@ -820,7 +819,7 @@ void main() {
           ));
         });
 
-        await tester.enterText(groupNameFieldFinder, someTextToActivateDialog);
+        await tester.enterText(groupNameFieldFinder, testText);
         await tester.pump();
 
         await tester.tap(find.text(strategy.text));
@@ -845,7 +844,7 @@ void main() {
           ));
         });
 
-        await tester.enterText(groupNameFieldFinder, someTextToActivateDialog);
+        await tester.enterText(groupNameFieldFinder, testText);
         await tester.pump();
 
         await tester.tap(find.text(strategy.text));

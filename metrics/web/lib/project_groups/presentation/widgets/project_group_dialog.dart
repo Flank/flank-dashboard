@@ -61,7 +61,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   ProjectGroupDialogViewModel _initialViewModel;
 
   /// A [DeepCollectionEquality] instance used to check the equality of two lists.
-  final equality = const DeepCollectionEquality.unordered();
+  final _equality = const DeepCollectionEquality.unordered();
 
   @override
   void initState() {
@@ -306,7 +306,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
     final groupNameChanged = groupName != initialGroupName;
     final selectedProjectIdsChanged =
-        !equality.equals(initialProjectIds, selectedProjectIds);
+        !_equality.equals(initialProjectIds, selectedProjectIds);
 
     return groupNameChanged || selectedProjectIdsChanged;
   }
