@@ -58,11 +58,11 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// Indicates whether this widget is in the loading state or not.
   bool _isLoading = false;
 
-  /// The initial group name of this dialog.
-  String _initialGroupName;
+  /// The initial [ProjectGroupDialogViewModel] instance.
+  ProjectGroupDialogViewModel _initialViewModel;
 
-  /// Initial selected project ids.
-  List<String> _initialSelectedProjectIds;
+  /// A [DeepCollectionEquality] instance used to check the equality of two lists.
+  final equality = const DeepCollectionEquality.unordered();
 
   @override
   void initState() {
@@ -78,11 +78,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     _groupNameController.text =
         _projectGroupsNotifier?.projectGroupDialogViewModel?.name;
 
-    _initialGroupName = _groupNameController.text;
-
-    _initialSelectedProjectIds = _projectGroupsNotifier
-        .projectGroupDialogViewModel.selectedProjectIds
-        .toList();
+    _initialViewModel = _projectGroupsNotifier.projectGroupDialogViewModel;
 
     _subscribeToProjectGroupDialogChanges();
   }
@@ -256,10 +252,9 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     final groupName = _groupNameController.value.text;
     final List<String> selectedProjectIds =
         _projectGroupsNotifier.projectGroupDialogViewModel.selectedProjectIds;
-    final numberOfSelectedProjects = selectedProjectIds.length;
 
-    if (numberOfSelectedProjects > 0 &&
-        _dataHasBeenChanged(groupName, selectedProjectIds)) {
+    if (selectedProjectIds.isNotEmpty &&
+        _dataIsChanged(groupName, selectedProjectIds)) {
       final groupNameErrorMessage =
           ProjectGroupNameValidator.validate(groupName);
       final selectedProjectIdsErrorMessage =
@@ -304,14 +299,17 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     showToast(context, toast);
   }
 
-  /// Returns `true` if the data of this dialog has been changed,
+  /// Returns `true` if the data of this dialog is changed,
   /// otherwise, returns `false`.
-  bool _dataHasBeenChanged(String groupName, List<String> selectedProjectIds) {
-    final groupNameHasBeenChanged = groupName != _initialGroupName;
-    const equality = DeepCollectionEquality.unordered();
-    final selectedProjectIdsHaveBeenChanged =
-        !equality.equals(_initialSelectedProjectIds, selectedProjectIds);
-    return groupNameHasBeenChanged || selectedProjectIdsHaveBeenChanged;
+  bool _dataIsChanged(String groupName, List<String> selectedProjectIds) {
+    final initialGroupName = _initialViewModel.name;
+    final initialProjectIds = _initialViewModel.selectedProjectIds;
+
+    final groupNameChanged = groupName != initialGroupName;
+    final selectedProjectIdsChanged =
+        !equality.equals(initialProjectIds, selectedProjectIds);
+
+    return groupNameChanged || selectedProjectIdsChanged;
   }
 
   /// Changes the [_isLoading] state to the given [value].

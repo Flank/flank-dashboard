@@ -38,17 +38,20 @@ void main() {
     const loadingText = 'loading...';
     const backgroundColor = Colors.red;
     const contentBorderColor = Colors.yellow;
-    const someTextToActivateDialog = "some text";
+    const someTextToActivateDialog = "test";
 
     final searchFieldFinder = find.byWidgetPredicate(
-      (widget) =>
-          widget is MetricsTextFormField &&
-          widget.hint == CommonStrings.searchForProject,
+      (widget) {
+        return widget is MetricsTextFormField &&
+            widget.hint == CommonStrings.searchForProject;
+      },
     );
+
     final groupNameFieldFinder = find.byWidgetPredicate(
-      (widget) =>
-          widget is MetricsTextFormField &&
-          widget.hint == ProjectGroupsStrings.nameYourGroup,
+      (widget) {
+        return widget is MetricsTextFormField &&
+            widget.hint == ProjectGroupsStrings.nameYourGroup;
+      },
     );
 
     const titleTextStyle = TextStyle(
