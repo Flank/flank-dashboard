@@ -21,6 +21,7 @@ class SignInOptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final commonTheme = Theme.of(context);
     final loginTheme = MetricsTheme.of(context).loginTheme;
     final loginOptionStyle = loginTheme.loginOptionButtonStyle;
 
@@ -31,6 +32,8 @@ class SignInOptionButton extends StatelessWidget {
       hoverElevation: loginOptionStyle.elevation,
       focusElevation: loginOptionStyle.elevation,
       highlightElevation: loginOptionStyle.elevation,
+      splashColor: commonTheme.splashColor,
+      highlightColor: commonTheme.highlightColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
       ),
