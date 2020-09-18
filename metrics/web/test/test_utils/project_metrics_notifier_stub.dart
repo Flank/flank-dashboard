@@ -64,6 +64,9 @@ class ProjectMetricsNotifierStub extends ChangeNotifier
   void resetProjectNameFilter() {}
 
   @override
+  void resetSelectedProjectGroup() {}
+
+  @override
   Future<void> setProjects(
       List<ProjectModel> newProjectModels, String projectErrorMessage) async {
     return;

@@ -353,6 +353,39 @@ void main() {
     );
 
     test(
+      ".resetSelectedProjectGroup() resets the selected project group",
+      () async {
+        const projectGroupId = 'id';
+        final projectGroups = [
+          ProjectGroupModel(
+            id: projectGroupId,
+            name: 'name',
+            projectIds: UnmodifiableListView([]),
+          ),
+          ProjectGroupModel(
+            id: 'id2',
+            name: 'name1',
+            projectIds: UnmodifiableListView([]),
+          ),
+        ];
+
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        final listener = expectAsyncUntil0(
+          () {
+            if (projectMetricsNotifier.selectedProjectGroup != null) {
+              projectMetricsNotifier.resetSelectedProjectGroup();
+            }
+          },
+          () => projectMetricsNotifier.selectedProjectGroup == null,
+        );
+
+        projectMetricsNotifier.addListener(listener);
+        projectMetricsNotifier.selectProjectGroup(projectGroupId);
+      },
+    );
+
+    test(
       ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
       () async {
         final expectedProjectMetrics =
