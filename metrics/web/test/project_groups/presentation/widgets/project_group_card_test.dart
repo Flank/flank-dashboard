@@ -316,7 +316,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the barrier color from the metrics theme to the backdrop color of the edit project group dialog",
+      "applies the barrier color from the metrics theme to the edit project group dialog",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
         when(projectGroupsNotifier.projectCheckboxViewModels).thenReturn([]);
@@ -515,7 +515,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the barrier color from the metrics theme to the backdrop color of the delete project group dialog",
+      "applies the barrier color from the metrics theme to the delete project group dialog",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
 

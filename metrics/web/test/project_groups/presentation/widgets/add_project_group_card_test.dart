@@ -144,7 +144,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the barrier color from the metrics theme to the backdrop color of the add project group dialog",
+      "applies the barrier color from the metrics theme to the add project group dialog",
       (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.hasConfiguredProjects).thenReturn(true);
