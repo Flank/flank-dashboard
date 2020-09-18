@@ -42,6 +42,12 @@ class _MetricsAppState extends State<MetricsApp> {
           return MaterialApp(
             title: CommonStrings.metrics,
             debugShowCheckedModeBanner: false,
+            builder: (context, child) {
+              return ScrollConfiguration(
+                behavior: _ScrollBehaviour(),
+                child: child,
+              );
+            },
             initialRoute: '/',
             onGenerateRoute: (settings) => RouteGenerator.generateRoute(
               settings: settings,
@@ -110,5 +116,13 @@ class _MetricsAppState extends State<MetricsApp> {
         },
       ),
     );
+  }
+}
+
+/// A [ScrollBehavior] that disable the stretching effect.
+class _ScrollBehaviour extends ScrollBehavior {
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const ClampingScrollPhysics();
   }
 }
