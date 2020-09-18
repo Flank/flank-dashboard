@@ -1,9 +1,9 @@
 import 'package:meta/meta.dart';
 
-/// An entity representing the credentials used to authenticate the user.
+/// An entity representing the credentials used to authenticate a user.
 @immutable
 class AuthCredentials {
-  /// An email address of the user.
+  /// An email address of a user.
   final String email;
 
   /// An OAuth access token.

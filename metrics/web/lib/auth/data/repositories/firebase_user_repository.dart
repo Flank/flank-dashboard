@@ -16,7 +16,7 @@ import 'package:metrics/auth/domain/repositories/user_repository.dart';
 class FirebaseUserRepository implements UserRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.standard(scopes: ['email']);
-  final _cloudFunctions = CloudFunctions.instance;
+  final CloudFunctions _cloudFunctions = CloudFunctions.instance;
 
   @override
   Stream<User> authenticationStream() {
