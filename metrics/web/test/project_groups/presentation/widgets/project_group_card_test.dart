@@ -200,11 +200,11 @@ void main() {
           await _enterProjectGroupCard(tester);
         });
 
-        final buttonWidget = tester.widget<IconLabelButton>(
-          find.widgetWithText(IconLabelButton, CommonStrings.edit),
+        final label = tester.widget<Text>(
+          find.text(CommonStrings.edit),
         );
 
-        expect(buttonWidget.labelStyle.color, equals(testPrimaryColor));
+        expect(label.style.color, equals(testPrimaryColor));
       },
     );
 
@@ -220,11 +220,11 @@ void main() {
           await _enterProjectGroupCard(tester);
         });
 
-        final buttonWidget = tester.widget<IconLabelButton>(
-          find.widgetWithText(IconLabelButton, CommonStrings.delete),
+        final label = tester.widget<Text>(
+          find.text(CommonStrings.delete),
         );
 
-        expect(buttonWidget.labelStyle.color, equals(testAccentColor));
+        expect(label.style.color, equals(testAccentColor));
       },
     );
 

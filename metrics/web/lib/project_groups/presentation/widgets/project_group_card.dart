@@ -58,23 +58,24 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      TappableArea(
-                        builder: (context, isHovered, _) {
-                          return IconLabelButton(
-                            onPressed: () => _showProjectGroupDialog(context),
-                            borderRadius: _buttonBorderRadius,
-                            iconPadding: _buttonIconPadding,
-                            icon: Image.network(
-                              'icons/edit.svg',
-                              width: _iconBoxSide,
-                              height: _iconBoxSide,
-                              fit: BoxFit.contain,
-                              color: isHovered
-                                  ? theme.primaryButtonStyle.hoverColor
-                                  : theme.primaryButtonStyle.color,
-                            ),
-                            label: CommonStrings.edit,
-                            labelStyle: TextStyle(
+                      IconLabelButton(
+                        onPressed: () => _showProjectGroupDialog(context),
+                        iconPadding: _buttonIconPadding,
+                        icon: (context, isHovered, _) {
+                          return Image.network(
+                            'icons/edit.svg',
+                            width: _iconBoxSide,
+                            height: _iconBoxSide,
+                            fit: BoxFit.contain,
+                            color: isHovered
+                                ? theme.primaryButtonStyle.hoverColor
+                                : theme.primaryButtonStyle.color,
+                          );
+                        },
+                        label: (context, isHovered, _) {
+                          return Text(
+                            CommonStrings.edit,
+                            style: TextStyle(
                               color: isHovered
                                   ? theme.primaryButtonStyle.hoverColor
                                   : theme.primaryButtonStyle.color,
@@ -82,31 +83,31 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                           );
                         },
                       ),
-                      TappableArea(
-                        builder: (context, isHovered, _) {
-                          return IconLabelButton(
-                            onPressed: () =>
-                                _showProjectGroupDeleteDialog(context),
-                            borderRadius: _buttonBorderRadius,
-                            iconPadding: _buttonIconPadding,
-                            icon: Image.network(
-                              'icons/delete.svg',
-                              width: _iconBoxSide,
-                              height: _iconBoxSide,
-                              fit: BoxFit.contain,
-                              color: isHovered
-                                  ? theme.accentButtonStyle.hoverColor
-                                  : theme.accentButtonStyle.color,
-                            ),
-                            label: CommonStrings.delete,
-                            labelStyle: TextStyle(
+                      IconLabelButton(
+                        onPressed: () => _showProjectGroupDeleteDialog(context),
+                        iconPadding: _buttonIconPadding,
+                        icon: (context, isHovered, _) {
+                          return Image.network(
+                            'icons/delete.svg',
+                            width: _iconBoxSide,
+                            height: _iconBoxSide,
+                            fit: BoxFit.contain,
+                            color: isHovered
+                                ? theme.accentButtonStyle.hoverColor
+                                : theme.accentButtonStyle.color,
+                          );
+                        },
+                        label: (context, isHovered, _) {
+                          return Text(
+                            CommonStrings.delete,
+                            style: TextStyle(
                               color: isHovered
                                   ? theme.accentButtonStyle.hoverColor
                                   : theme.accentButtonStyle.color,
                             ),
                           );
                         },
-                      )
+                      ),
                     ],
                   ),
               ],
