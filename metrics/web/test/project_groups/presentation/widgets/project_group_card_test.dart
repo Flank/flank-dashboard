@@ -224,7 +224,7 @@ void main() {
           find.text(CommonStrings.delete),
         );
 
-        expect(label.style.color, equals(testPrimaryColor));
+        expect(label.style.color, equals(testAccentColor));
       },
     );
 
