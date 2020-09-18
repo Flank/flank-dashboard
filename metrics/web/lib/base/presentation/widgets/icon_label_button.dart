@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
-/// A widget that displays the button with given [iconBuilder] and [labelBuilder] widgets.
+/// A widget that displays the button with given icon and label.
 class IconLabelButton extends StatelessWidget {
   /// The callback that is called when the button is tapped.
   final VoidCallback onPressed;
@@ -9,10 +9,10 @@ class IconLabelButton extends StatelessWidget {
   /// The padding around this button.
   final EdgeInsets contentPadding;
 
-  /// The builder of this button's icon.
+  /// A builder of this button's icon.
   final HoverWidgetBuilder iconBuilder;
 
-  /// The builder of this button's label.
+  /// A builder of this button's label.
   final HoverWidgetBuilder labelBuilder;
 
   /// The padding around the [iconBuilder].

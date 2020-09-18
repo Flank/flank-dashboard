@@ -36,18 +36,18 @@ void main() {
       projectsCount: 1,
     );
 
-    const testPrimaryColor = Colors.blue;
-    const testAccentColor = Colors.amberAccent;
+    const primaryButtonColor = Colors.blue;
+    const accentButtonColor = Colors.amberAccent;
     const testBorderColor = Colors.red;
     const testBackgroundColor = Colors.white;
     const testHoverColor = Colors.black;
     const testTitleStyle = TextStyle(color: Colors.grey);
     const testSubtitleStyle = TextStyle(color: Colors.black);
     const primaryButtonStyle = MetricsButtonStyle(
-      color: testPrimaryColor,
+      color: primaryButtonColor,
     );
     const accentButtonStyle = MetricsButtonStyle(
-      color: testAccentColor,
+      color: accentButtonColor,
     );
     const testBarrierColor = Colors.red;
 
@@ -204,7 +204,7 @@ void main() {
           find.text(CommonStrings.edit),
         );
 
-        expect(label.style.color, equals(testPrimaryColor));
+        expect(label.style.color, equals(primaryButtonColor));
       },
     );
 
@@ -224,7 +224,7 @@ void main() {
           find.text(CommonStrings.delete),
         );
 
-        expect(label.style.color, equals(testAccentColor));
+        expect(label.style.color, equals(accentButtonColor));
       },
     );
 

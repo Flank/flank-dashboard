@@ -8,12 +8,26 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
+  final tappableAreaFinder = find.byType(TappableArea);
+  final mouseRegionFinder = find.byType(MouseRegion);
+
+  Future<void> _enterIconLabelButton(WidgetTester tester) async {
+    final mouseRegion = tester.widget<MouseRegion>(
+      find.descendant(of: tappableAreaFinder, matching: mouseRegionFinder),
+    );
+
+    const pointerEnterEvent = PointerEnterEvent();
+    mouseRegion.onEnter(pointerEnterEvent);
+
+    await tester.pump();
+  }
+
   group("IconLabelButton", () {
     const defaultPadding = EdgeInsets.zero;
     const defaultIcon = Icon(Icons.cake);
     const hoverIcon = Icon(Icons.add);
     const defaultLabel = 'label';
-    const hoverLabel = 'label';
+    const hoverLabel = 'hover';
 
     Widget _iconBuilder(BuildContext context, bool isHovered) {
       return isHovered ? hoverIcon : defaultIcon;
@@ -28,7 +42,6 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
           labelBuilder: null,
-          iconBuilder: _iconBuilder,
         ));
 
         expect(tester.takeException(), isAssertionError);
@@ -40,7 +53,6 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
           iconBuilder: null,
-          labelBuilder: _labelBuilder,
         ));
 
         expect(tester.takeException(), isAssertionError);
@@ -51,8 +63,6 @@ void main() {
       "throws an AssertionError if the given icon padding is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          labelBuilder: _labelBuilder,
-          iconBuilder: _iconBuilder,
           iconPadding: null,
         ));
 
@@ -64,8 +74,6 @@ void main() {
       "throws an AssertionError if the given content padding is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          labelBuilder: _labelBuilder,
-          iconBuilder: _iconBuilder,
           contentPadding: null,
         ));
 
@@ -77,7 +85,6 @@ void main() {
       "applies the default icon padding if it's not specified",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          labelBuilder: _labelBuilder,
           iconBuilder: _iconBuilder,
         ));
 
@@ -95,10 +102,7 @@ void main() {
     testWidgets(
       "applies the default content padding if it's not specified",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_IconLabelButtonTestbed(
-          labelBuilder: _labelBuilder,
-          iconBuilder: _iconBuilder,
-        ));
+        await tester.pumpWidget(_IconLabelButtonTestbed());
 
         final contentPadding = tester.widget<Padding>(
           find.descendant(
@@ -116,7 +120,6 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
           labelBuilder: _labelBuilder,
-          iconBuilder: _iconBuilder,
         ));
 
         expect(find.text(defaultLabel), findsOneWidget);
@@ -128,18 +131,9 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
           labelBuilder: _labelBuilder,
-          iconBuilder: _iconBuilder,
         ));
 
-        final mouseRegion = tester.firstWidget<MouseRegion>(
-          find.ancestor(
-            of: find.byType(GestureDetector),
-            matching: find.byType(MouseRegion),
-          ),
-        );
-
-        const pointerEnterEvent = PointerEnterEvent();
-        mouseRegion.onEnter(pointerEnterEvent);
+        await _enterIconLabelButton(tester);
 
         await tester.pump();
 
@@ -151,7 +145,6 @@ void main() {
       "displays the corresponding icon when the button is not hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          labelBuilder: _labelBuilder,
           iconBuilder: _iconBuilder,
         ));
 
@@ -163,19 +156,10 @@ void main() {
       "displays the corresponding icon when the button is hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          labelBuilder: _labelBuilder,
           iconBuilder: _iconBuilder,
         ));
 
-        final mouseRegion = tester.firstWidget<MouseRegion>(
-          find.ancestor(
-            of: find.byType(GestureDetector),
-            matching: find.byType(MouseRegion),
-          ),
-        );
-
-        const pointerEnterEvent = PointerEnterEvent();
-        mouseRegion.onEnter(pointerEnterEvent);
+        await _enterIconLabelButton(tester);
 
         await tester.pump();
 
@@ -188,7 +172,6 @@ void main() {
 
       await tester.pumpWidget(_IconLabelButtonTestbed(
         iconPadding: expectedIconPadding,
-        labelBuilder: _labelBuilder,
         iconBuilder: _iconBuilder,
       ));
 
@@ -210,8 +193,6 @@ void main() {
 
         await tester.pumpWidget(_IconLabelButtonTestbed(
           contentPadding: expectedContentPadding,
-          labelBuilder: _labelBuilder,
-          iconBuilder: _iconBuilder,
         ));
 
         final contentPadding = tester.widget<Padding>(
@@ -233,18 +214,23 @@ void main() {
 
         await tester.pumpWidget(_IconLabelButtonTestbed(
           onPressed: testCallback,
-          labelBuilder: _labelBuilder,
-          iconBuilder: _iconBuilder,
         ));
 
-        final tappableArea =
-            tester.widget<TappableArea>(find.byType(TappableArea));
+        final tappableArea = tester.widget<TappableArea>(tappableAreaFinder);
         final actualCallback = tappableArea.onTap;
 
         expect(actualCallback, equals(testCallback));
       },
     );
   });
+}
+
+Widget _iconBuilder(BuildContext context, bool isHovered) {
+  return isHovered ? Icon(Icons.plus_one) : Icon(Icons.add);
+}
+
+Widget _labelBuilder(BuildContext context, bool isHovered) {
+  return Text(isHovered ? "hover" : "label");
 }
 
 /// A testbed class required for testing the [IconLabelButton].
@@ -268,8 +254,8 @@ class _IconLabelButtonTestbed extends StatelessWidget {
   ///
   /// Both [iconPadding] and [contentPadding] defaults to [EdgeInsets.zero].
   const _IconLabelButtonTestbed({
-    this.labelBuilder,
-    this.iconBuilder,
+    this.labelBuilder = _labelBuilder,
+    this.iconBuilder = _iconBuilder,
     this.iconPadding = EdgeInsets.zero,
     this.contentPadding = EdgeInsets.zero,
     this.onPressed,

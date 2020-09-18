@@ -12,8 +12,10 @@ class ProjectGroupCardThemeData {
   /// The border [Color] of the project group card.
   final Color borderColor;
 
+  /// A primary [MetricsButtonStyle] applied to the edit icon label button.
   final MetricsButtonStyle primaryButtonStyle;
 
+  /// An accent [MetricsButtonStyle] applied to the delete icon label button.
   final MetricsButtonStyle accentButtonStyle;
 
   /// The [TextStyle] for the title text of the project group card.
@@ -23,13 +25,23 @@ class ProjectGroupCardThemeData {
   final TextStyle subtitleStyle;
 
   /// Creates the [ProjectGroupCardThemeData].
+  ///
+  /// [backgroundColor] defaults to [Colors.grey]
+  /// [hoverColor] defaults to [Colors.black26]
+  /// [borderColor] defaults to [Colors.black]
+  /// [primaryButtonStyle] defaults to an empty [MetricsButtonStyle].
+  /// [accentButtonStyle] defaults to an empty [MetricsButtonStyle].
   const ProjectGroupCardThemeData({
-    this.backgroundColor = Colors.grey,
-    this.hoverColor = Colors.black26,
-    this.borderColor = Colors.black,
-    this.primaryButtonStyle = const MetricsButtonStyle(),
-    this.accentButtonStyle = const MetricsButtonStyle(),
+    Color backgroundColor,
+    Color hoverColor,
+    Color borderColor,
+    MetricsButtonStyle primaryButtonStyle,
+    MetricsButtonStyle accentButtonStyle,
     this.titleStyle,
     this.subtitleStyle,
-  });
+  })  : backgroundColor = backgroundColor ?? Colors.grey,
+        hoverColor = hoverColor ?? Colors.black26,
+        borderColor = borderColor ?? Colors.black,
+        primaryButtonStyle = primaryButtonStyle ?? const MetricsButtonStyle(),
+        accentButtonStyle = accentButtonStyle ?? const MetricsButtonStyle();
 }

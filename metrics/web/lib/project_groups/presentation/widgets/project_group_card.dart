@@ -38,6 +38,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
   Widget build(BuildContext context) {
     const _buttonIconPadding = EdgeInsets.only(right: 8.0);
     final theme = MetricsTheme.of(context).projectGroupCardTheme;
+    final primaryButtonStyle = theme.primaryButtonStyle;
+    final accentButtonStyle = theme.accentButtonStyle;
 
     return Material(
       child: TappableArea(
@@ -59,7 +61,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       IconLabelButton(
-                        onPressed: () => _showEditProjectGroupDialog(),
+                        onPressed: _showEditProjectGroupDialog,
                         iconPadding: _buttonIconPadding,
                         iconBuilder: (context, isHovered) {
                           return Image.network(
@@ -68,8 +70,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                             height: _iconBoxSide,
                             fit: BoxFit.contain,
                             color: isHovered
-                                ? theme.primaryButtonStyle.hoverColor
-                                : theme.primaryButtonStyle.color,
+                                ? primaryButtonStyle.hoverColor
+                                : primaryButtonStyle.color,
                           );
                         },
                         labelBuilder: (context, isHovered) {
@@ -77,14 +79,14 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                             CommonStrings.edit,
                             style: TextStyle(
                               color: isHovered
-                                  ? theme.primaryButtonStyle.hoverColor
-                                  : theme.primaryButtonStyle.color,
+                                  ? primaryButtonStyle.hoverColor
+                                  : primaryButtonStyle.color,
                             ),
                           );
                         },
                       ),
                       IconLabelButton(
-                        onPressed: () => _showDeleteProjectGroupDialog(),
+                        onPressed: _showDeleteProjectGroupDialog,
                         iconPadding: _buttonIconPadding,
                         iconBuilder: (context, isHovered) {
                           return Image.network(
@@ -93,8 +95,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                             height: _iconBoxSide,
                             fit: BoxFit.contain,
                             color: isHovered
-                                ? theme.accentButtonStyle.hoverColor
-                                : theme.accentButtonStyle.color,
+                                ? accentButtonStyle.hoverColor
+                                : accentButtonStyle.color,
                           );
                         },
                         labelBuilder: (context, isHovered) {
@@ -102,8 +104,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                             CommonStrings.delete,
                             style: TextStyle(
                               color: isHovered
-                                  ? theme.accentButtonStyle.hoverColor
-                                  : theme.accentButtonStyle.color,
+                                  ? accentButtonStyle.hoverColor
+                                  : accentButtonStyle.color,
                             ),
                           );
                         },
