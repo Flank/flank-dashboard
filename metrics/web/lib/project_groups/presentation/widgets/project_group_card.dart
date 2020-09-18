@@ -59,7 +59,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       IconLabelButton(
-                        onPressed: () => _showEditProjectGroupDialog(context),
+                        onPressed: () => _showEditProjectGroupDialog(),
                         iconPadding: _buttonIconPadding,
                         icon: Image.network(
                           'icons/edit.svg',
@@ -74,7 +74,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                         ),
                       ),
                       IconLabelButton(
-                        onPressed: () => _showDeleteProjectGroupDialog(context),
+                        onPressed: () => _showDeleteProjectGroupDialog(),
                         iconPadding: _buttonIconPadding,
                         icon: Image.network(
                           'icons/delete.svg',
@@ -128,7 +128,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
   }
 
   /// Shows a [DeleteProjectGroupDialog] with an active project group.
-  Future<void> _showDeleteProjectGroupDialog(BuildContext context) async {
+  Future<void> _showDeleteProjectGroupDialog() async {
     final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
       context,
       listen: false,
@@ -145,8 +145,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     projectGroupsNotifier.resetDeleteProjectGroupDialogViewModel();
   }
 
-  /// Shows a [EditProjectGroupDialog] with an active project group.
-  Future<void> _showEditProjectGroupDialog(BuildContext context) async {
+  /// Shows an [EditProjectGroupDialog] with an active project group.
+  Future<void> _showEditProjectGroupDialog() async {
     final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
       context,
       listen: false,
@@ -163,16 +163,15 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     projectGroupsNotifier.resetProjectGroupDialogViewModel();
   }
 
-  /// Shows a project group dialog
-  /// and applies a barrier color from the metrics theme.
-  Future<void> _showProjectGroupDialog(Widget widget) async {
+  /// Shows the given [dialog] with the barrier color from the metrics theme.
+  Future<void> _showProjectGroupDialog(Widget dialog) async {
     final barrierColor =
         MetricsTheme.of(context).projectGroupDialogTheme.barrierColor;
 
     await showDialog(
       barrierColor: barrierColor,
       context: context,
-      builder: (_) => widget,
+      builder: (_) => dialog,
     );
   }
 }
