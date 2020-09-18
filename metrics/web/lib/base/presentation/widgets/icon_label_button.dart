@@ -49,9 +49,9 @@ class IconLabelButton extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: iconPadding,
-                child: icon(context, isHovered, _),
+                child: icon(context, isHovered),
               ),
-              label(context, isHovered, _),
+              label(context, isHovered),
             ],
           ),
         );

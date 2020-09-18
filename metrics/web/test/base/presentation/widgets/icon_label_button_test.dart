@@ -15,11 +15,11 @@ void main() {
     const defaultLabel = 'label';
     const hoverLabel = 'label';
 
-    Widget _iconBuilder(BuildContext context, bool isHovered, Widget child) {
+    Widget _iconBuilder(BuildContext context, bool isHovered) {
       return isHovered ? hoverIcon : defaultIcon;
     }
 
-    Widget _labelBuilder(BuildContext context, bool isHovered, Widget child) {
+    Widget _labelBuilder(BuildContext context, bool isHovered) {
       return Text(isHovered ? hoverLabel : defaultLabel);
     }
 

@@ -179,7 +179,7 @@ class TappableAreaTestbed extends StatelessWidget {
 
   /// A widget builder that builds the given widget differently depending on
   /// if the this area is hovered.
-  final HoverWidgetBuilder builder;
+  final HoverWidgetChildBuilder builder;
 
   /// How the [TappableArea] should behave during hit testing.
   final HitTestBehavior hitTestBehavior;
