@@ -76,6 +76,7 @@ class _MetricsAppState extends State<MetricsApp> {
                 hintStyle: LightMetricsThemeData.hintStyle,
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
               ),
+              dialogTheme: const DialogTheme(elevation: 0.0),
             ),
             darkTheme: ThemeData(
               fontFamily: TextStyleConfig.defaultFontFamily,
@@ -103,6 +104,7 @@ class _MetricsAppState extends State<MetricsApp> {
                 hintStyle: DarkMetricsThemeData.hintStyle,
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
               ),
+              dialogTheme: const DialogTheme(elevation: 0.0),
             ),
           );
         },
