@@ -343,11 +343,10 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        final modalBarrier = tester.widget<ModalBarrier>(
-          find.byType(ModalBarrier).last,
+        final barrierFinder = find.byWidgetPredicate(
+          (widget) => widget is ModalBarrier && widget.color == testBarrierColor,
         );
-
-        expect(modalBarrier.color, testBarrierColor);
+        expect(barrierFinder, findsOneWidget);
       },
     );
 
@@ -544,11 +543,10 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        final modalBarrier = tester.widget<ModalBarrier>(
-          find.byType(ModalBarrier).last,
+        final barrierFinder = find.byWidgetPredicate(
+          (widget) => widget is ModalBarrier && widget.color == testBarrierColor,
         );
-
-        expect(modalBarrier.color, testBarrierColor);
+        expect(barrierFinder, findsOneWidget);
       },
     );
 

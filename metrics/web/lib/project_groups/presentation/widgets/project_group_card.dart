@@ -140,10 +140,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
 
     if (projectGroupsNotifier.deleteProjectGroupDialogViewModel == null) return;
 
-    await _showProjectGroupDialog(
-      context: context,
-      builder: (_) => DeleteProjectGroupDialog(),
-    );
+    await _showProjectGroupDialog(DeleteProjectGroupDialog());
 
     projectGroupsNotifier.resetDeleteProjectGroupDialogViewModel();
   }
@@ -161,27 +158,21 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
 
     if (projectGroupsNotifier.projectGroupDialogViewModel == null) return;
 
-    await _showProjectGroupDialog(
-      context: context,
-      builder: (_) => EditProjectGroupDialog(),
-    );
+    await _showProjectGroupDialog(EditProjectGroupDialog());
 
     projectGroupsNotifier.resetProjectGroupDialogViewModel();
   }
 
   /// Shows a project group dialog
   /// and applies a barrier color from the metrics theme.
-  Future<void> _showProjectGroupDialog({
-    BuildContext context,
-    WidgetBuilder builder,
-  }) async {
+  Future<void> _showProjectGroupDialog(Widget widget) async {
     final barrierColor =
         MetricsTheme.of(context).projectGroupDialogTheme.barrierColor;
 
     await showDialog(
       barrierColor: barrierColor,
       context: context,
-      builder: builder,
+      builder: (_) => widget,
     );
   }
 }

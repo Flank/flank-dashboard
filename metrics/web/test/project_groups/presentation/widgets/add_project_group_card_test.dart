@@ -165,11 +165,10 @@ void main() {
         await tester.tap(find.byType(AddProjectGroupCard));
         await tester.pumpAndSettle();
 
-        final modalBarrier = tester.widget<ModalBarrier>(
-          find.byType(ModalBarrier).last,
+        final barrierFinder = find.byWidgetPredicate(
+          (widget) => widget is ModalBarrier && widget.color == barrierColor,
         );
-
-        expect(modalBarrier.color, barrierColor);
+        expect(barrierFinder, findsOneWidget);
       },
     );
 
