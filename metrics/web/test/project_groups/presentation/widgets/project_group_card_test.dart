@@ -7,6 +7,7 @@ import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
@@ -41,6 +42,7 @@ void main() {
     const testHoverColor = Colors.black;
     const testTitleStyle = TextStyle(color: Colors.grey);
     const testSubtitleStyle = TextStyle(color: Colors.black);
+    const testBarrierColor = Colors.red;
 
     const testTheme = MetricsThemeData(
       projectGroupCardTheme: ProjectGroupCardThemeData(
@@ -51,6 +53,9 @@ void main() {
         borderColor: testBorderColor,
         titleStyle: testTitleStyle,
         subtitleStyle: testSubtitleStyle,
+      ),
+      projectGroupDialogTheme: ProjectGroupDialogThemeData(
+        barrierColor: testBarrierColor,
       ),
     );
 
@@ -311,6 +316,42 @@ void main() {
     );
 
     testWidgets(
+      "applies the barrier color from the metrics theme to the backdrop color of the edit project group dialog",
+      (WidgetTester tester) async {
+        final projectGroupsNotifier = ProjectGroupsNotifierMock();
+        when(projectGroupsNotifier.projectCheckboxViewModels).thenReturn([]);
+
+        when(projectGroupsNotifier.projectGroupDialogViewModel).thenReturn(
+          ProjectGroupDialogViewModel(
+            selectedProjectIds: UnmodifiableListView([]),
+          ),
+        );
+
+        await tester.pumpWidget(_ProjectGroupCardTestbed(
+          projectGroupsNotifier: projectGroupsNotifier,
+          projectGroupCardViewModel: projectGroupCardViewModel,
+          theme: testTheme,
+        ));
+
+        await mockNetworkImagesFor(() async {
+          await _enterProjectGroupCard(tester);
+        });
+
+        await tester.tap(
+          find.widgetWithText(IconLabelButton, CommonStrings.edit),
+        );
+
+        await tester.pumpAndSettle();
+
+        final modalBarrier = tester.widget<ModalBarrier>(
+          find.byType(ModalBarrier).last,
+        );
+
+        expect(modalBarrier.color, testBarrierColor);
+      },
+    );
+
+    testWidgets(
       "shows the update project group dialog on tap on the edit button",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
@@ -471,6 +512,43 @@ void main() {
         await tester.pump();
 
         expect(find.byType(DeleteProjectGroupDialog), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies the barrier color from the metrics theme to the backdrop color of the delete project group dialog",
+      (WidgetTester tester) async {
+        final projectGroupsNotifier = ProjectGroupsNotifierMock();
+
+        when(projectGroupsNotifier.deleteProjectGroupDialogViewModel)
+            .thenReturn(
+          const DeleteProjectGroupDialogViewModel(
+            id: "id",
+            name: "name",
+          ),
+        );
+
+        await tester.pumpWidget(_ProjectGroupCardTestbed(
+          projectGroupsNotifier: projectGroupsNotifier,
+          projectGroupCardViewModel: projectGroupCardViewModel,
+          theme: testTheme,
+        ));
+
+        await mockNetworkImagesFor(() async {
+          await _enterProjectGroupCard(tester);
+        });
+
+        await tester.tap(
+          find.widgetWithText(IconLabelButton, CommonStrings.delete),
+        );
+
+        await tester.pumpAndSettle();
+
+        final modalBarrier = tester.widget<ModalBarrier>(
+          find.byType(ModalBarrier).last,
+        );
+
+        expect(modalBarrier.color, testBarrierColor);
       },
     );
 
