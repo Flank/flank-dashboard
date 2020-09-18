@@ -64,6 +64,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _negativeToastColor = Color(0xFFFFEDE5);
   static const Color _loginOptionTextColor = Color(0xFF757575);
   static const Color _userMenuButtonColor = Color(0xFF272727);
+  static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.3);
 
   static const Color _positiveStatusColor = Color(0xFFE6F9F3);
   static const Color _negativeStatusColor = Color(0xFFFFF5F3);
@@ -167,6 +168,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           projectGroupDialogTheme: const ProjectGroupDialogThemeData(
             primaryColor: ColorConfig.primaryColor,
+            barrierColor: _barrierColor,
             closeIconColor: Colors.black,
             contentBorderColor: _borderColor,
             titleTextStyle: _dialogTitleTextStyle,

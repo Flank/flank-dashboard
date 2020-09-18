@@ -18,6 +18,7 @@ class ProjectGroupDialogThemeData extends DialogThemeData {
   const ProjectGroupDialogThemeData({
     Color primaryColor,
     Color backgroundColor,
+    Color barrierColor,
     Color closeIconColor,
     TextStyle titleTextStyle,
     TextStyle errorTextStyle,
@@ -28,6 +29,7 @@ class ProjectGroupDialogThemeData extends DialogThemeData {
   }) : super(
           primaryColor: primaryColor,
           backgroundColor: backgroundColor,
+          barrierColor: barrierColor,
           closeIconColor: closeIconColor,
           titleTextStyle: titleTextStyle,
           errorTextStyle: errorTextStyle,

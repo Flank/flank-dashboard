@@ -11,6 +11,9 @@ class DialogThemeData {
   /// A background [Color] of the dialog.
   final Color backgroundColor;
 
+  /// A [Color] of the backdrop that darkens everything outside the dialog.
+  final Color barrierColor;
+
   /// A [Color] of the close icon of the dialog.
   final Color closeIconColor;
 
@@ -24,11 +27,13 @@ class DialogThemeData {
     Color primaryColor,
     Color accentColor,
     Color backgroundColor,
+    Color barrierColor,
     Color closeIconColor,
     this.errorTextStyle,
     this.titleTextStyle,
   })  : primaryColor = primaryColor ?? Colors.blue,
         accentColor = accentColor ?? Colors.red,
         backgroundColor = backgroundColor ?? Colors.white,
+        barrierColor = barrierColor ?? Colors.black45,
         closeIconColor = closeIconColor ?? Colors.black;
 }
