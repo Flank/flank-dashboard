@@ -7,9 +7,9 @@ import 'package:test/test.dart';
 import '../../../test_utils/matcher_util.dart';
 
 void main() {
-  group('RouteGenerator', () {
+  group("RouteGenerator", () {
     test(
-      '.generateRoute() throws the AssertionError if the settings is null',
+      ".generateRoute() throws the AssertionError if the settings is null",
       () {
         expect(
           () => RouteGenerator.generateRoute(settings: null),
@@ -18,7 +18,7 @@ void main() {
       },
     );
     test(
-      '.generateRoute() generates a route to the login page if a user is not logged in',
+      ".generateRoute() generates a route to the login page if a user is not logged in",
       () {
         final MetricsPageRoute route = RouteGenerator.generateRoute(
           settings: const RouteSettings(name: RouteName.login),
@@ -30,7 +30,7 @@ void main() {
     );
 
     test(
-      '.generateRoute() generates a route to the dashboard page if a user is logged in',
+      ".generateRoute() generates a route to the dashboard page if a user is logged in",
       () {
         final MetricsPageRoute route = RouteGenerator.generateRoute(
           settings: const RouteSettings(name: RouteName.login),
@@ -42,7 +42,7 @@ void main() {
     );
 
     test(
-      '.generateRoute() generates a route to the dashboard page if an unknown route is passed',
+      ".generateRoute() generates a route to the dashboard page if an unknown route is passed",
       () {
         final MetricsPageRoute route = RouteGenerator.generateRoute(
           settings: const RouteSettings(name: '/wrongRoute'),
@@ -54,7 +54,7 @@ void main() {
     );
 
     test(
-      '.generateRoute() generates a route to the project groups page if a route name is projectGroups',
+      ".generateRoute() generates a route to the project groups page if a route name is projectGroups",
       () {
         final MetricsPageRoute route = RouteGenerator.generateRoute(
           settings: const RouteSettings(name: RouteName.projectGroup),

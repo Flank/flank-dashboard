@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 /// A class that is responsible for replacing the entire screen
 /// without transition animation.
 class MetricsPageRoute<T> extends MaterialPageRoute<T> {
+  /// Creates the [MetricsPageRoute] whose contents are defined by [builder].
+  ///
+  /// The [maintainState] default value is [true].
+  /// The [fullscreenDialog] default value is [false].
+  ///
+  /// The values of [builder], [maintainState], and [fullScreenDialog] must not
+  /// be null.
   MetricsPageRoute({
     @required WidgetBuilder builder,
-    @required RouteSettings settings,
+    RouteSettings settings,
     bool maintainState = true,
     bool fullscreenDialog = false,
   })  : assert(builder != null),
-        assert(settings != null),
         assert(maintainState != null),
         assert(fullscreenDialog != null),
         super(
