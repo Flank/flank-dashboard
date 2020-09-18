@@ -14,6 +14,8 @@ void main() {
 
         expect(themeData.focusColor, isNotNull);
         expect(themeData.hoverBorderColor, isNotNull);
+        expect(themeData.prefixColor, isNotNull);
+        expect(themeData.focusPrefixColor, isNotNull);
       },
     );
 
@@ -29,16 +31,22 @@ void main() {
     test("creates an instance with the given values", () {
       const focusColor = Colors.black87;
       const hoverBorderColor = Colors.black;
+      const prefixColor = Colors.white;
+      const focusPrefixColor = Colors.green;
       const textStyle = TextStyle();
 
       final themeData = TextFieldThemeData(
         focusColor: focusColor,
         hoverBorderColor: hoverBorderColor,
+        prefixColor: prefixColor,
+        focusPrefixColor: focusPrefixColor,
         textStyle: textStyle,
       );
 
       expect(themeData.focusColor, equals(focusColor));
       expect(themeData.hoverBorderColor, equals(hoverBorderColor));
+      expect(themeData.prefixColor, equals(prefixColor));
+      expect(themeData.focusPrefixColor, equals(focusPrefixColor));
       expect(themeData.textStyle, equals(textStyle));
     });
   });

@@ -167,18 +167,14 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                           child: MetricsTextFormField(
                             onChanged:
                                 _projectGroupsNotifier.filterByProjectName,
-                            prefixIcon: Image.network(
-                              'icons/search.svg',
-                              width: 20.0,
-                              height: 20.0,
-                              color: dialogTheme.prefixIconColor,
-                            ),
-                            focusPrefixIcon: Image.network(
-                              'icons/search.svg',
-                              width: 20.0,
-                              height: 20.0,
-                              color: dialogTheme.focusPrefixIconColor,
-                            ),
+                            prefixIconBuilder: (context, color) {
+                              return Image.network(
+                                'icons/search.svg',
+                                width: 20.0,
+                                height: 20.0,
+                                color: color,
+                              );
+                            },
                             hint: CommonStrings.searchForProject,
                           ),
                         ),

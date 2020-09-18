@@ -533,8 +533,8 @@ void main() {
         });
 
         final finder = find.byWidgetPredicate((widget) {
-          if (widget is MetricsTextFormField) {
-            final image = widget.prefixIcon as Image;
+          if (widget is TextField) {
+            final image = widget.decoration.prefixIcon as Image;
             final networkImage = image?.image as NetworkImage;
 
             return networkImage?.url == 'icons/search.svg';

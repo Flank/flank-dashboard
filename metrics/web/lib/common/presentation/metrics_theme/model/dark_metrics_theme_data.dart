@@ -79,7 +79,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _positiveStatusColor = Color(0xFF182b27);
   static const Color _negativeStatusColor = Color(0xFF2d1f1f);
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
-  static const Color _prefixIconColor = Color(0xFF545459);
   static const Color _pageTitleIconColor = Color(0xFF4f4f56);
 
   /// The default [TextStyle] for dropdown within the application.
@@ -181,8 +180,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
             backgroundColor: scaffoldColor,
             barrierColor: _barrierColor,
             closeIconColor: Colors.white,
-            prefixIconColor: _prefixIconColor,
-            focusPrefixIconColor: Colors.white,
             contentBorderColor: _borderColor,
             titleTextStyle: _dialogTitleTextStyle,
             uncheckedProjectTextStyle: MetricsTextStyle(
@@ -247,6 +244,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
           textFieldTheme: const TextFieldThemeData(
             focusColor: Colors.black,
             hoverBorderColor: _dropdownHoverBorderColor,
+            prefixColor: _inactiveColor,
+            focusPrefixColor: Colors.white,
             textStyle: MetricsTextStyle(
               color: Colors.white,
               fontSize: 16.0,

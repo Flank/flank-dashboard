@@ -26,6 +26,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placehol
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
+import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/attention_level/toast_attention_level.dart';
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
@@ -65,6 +66,7 @@ void main() {
         expect(themeData.textPlaceholderTheme, isNotNull);
         expect(themeData.inputPlaceholderTheme, isNotNull);
         expect(themeData.toastTheme, isNotNull);
+        expect(themeData.pageTitleTheme, isNotNull);
       },
     );
 
@@ -95,6 +97,7 @@ void main() {
           inputPlaceholderTheme: null,
           circlePercentageTheme: null,
           toastTheme: null,
+          pageTitleTheme: null,
         );
 
         expect(themeData.metricsWidgetTheme, isNotNull);
@@ -120,6 +123,7 @@ void main() {
         expect(themeData.inputPlaceholderTheme, isNotNull);
         expect(themeData.circlePercentageTheme, isNotNull);
         expect(themeData.toastTheme, isNotNull);
+        expect(themeData.pageTitleTheme, isNotNull);
       },
     );
 
@@ -250,6 +254,10 @@ void main() {
           ),
         );
 
+        const pageTitleTheme = PageTitleThemeData(
+          iconColor: Colors.blue,
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -276,6 +284,7 @@ void main() {
           inputPlaceholderTheme: inputPlaceholderTheme,
           circlePercentageTheme: circlePercentageTheme,
           toastTheme: toastTheme,
+          pageTitleTheme: pageTitleTheme,
         );
 
         expect(copiedTheme.metricsWidgetTheme, equals(metricsWidgetTheme));
@@ -328,6 +337,7 @@ void main() {
           equals(circlePercentageTheme),
         );
         expect(copiedTheme.toastTheme, equals(toastTheme));
+        expect(copiedTheme.pageTitleTheme, equals(pageTitleTheme));
       },
     );
 
@@ -416,6 +426,7 @@ void main() {
           equals(copiedTheme.circlePercentageTheme),
         );
         expect(themeData.toastTheme, equals(copiedTheme.toastTheme));
+        expect(themeData.pageTitleTheme, equals(copiedTheme.pageTitleTheme));
       },
     );
   });

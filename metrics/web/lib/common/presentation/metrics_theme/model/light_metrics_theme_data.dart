@@ -178,8 +178,6 @@ class LightMetricsThemeData extends MetricsThemeData {
             primaryColor: ColorConfig.primaryColor,
             barrierColor: _barrierColor,
             closeIconColor: _closeIconColor,
-            prefixIconColor: _inputHintTextColor,
-            focusPrefixIconColor: _inactiveTextColor,
             contentBorderColor: _borderColor,
             titleTextStyle: _dialogTitleTextStyle,
             uncheckedProjectTextStyle: TextStyle(
@@ -248,6 +246,8 @@ class LightMetricsThemeData extends MetricsThemeData {
           textFieldTheme: const TextFieldThemeData(
             focusColor: inputHoverColor,
             hoverBorderColor: _hoverBorderColor,
+            prefixColor: _inputHintTextColor,
+            focusPrefixColor: _inactiveTextColor,
             textStyle: MetricsTextStyle(
               color: _inactiveTextColor,
               fontSize: 16.0,
