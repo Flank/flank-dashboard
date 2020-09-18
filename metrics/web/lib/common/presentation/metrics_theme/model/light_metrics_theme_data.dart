@@ -66,6 +66,8 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _userMenuInactiveColor = Color(0xFF272727);
   static const Color _userMenuActiveColor = Color(0xFF4F4F56);
   static const Color _closeIconColor = Color(0xFF00080C);
+  static const Color _userMenuButtonColor = Color(0xFF272727);
+  static const Color _metricsTableHeaderLoadingColor = Color(0xFFdcdee0);
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.3);
   static const Color _metricsTileHoverColor = Color(0xFFf6f8f9);
   static const Color _positiveStatusColor = Color(0xFFE6F9F3);
@@ -317,6 +319,14 @@ class LightMetricsThemeData extends MetricsThemeData {
                 lineHeightInPixels: 28.0,
                 letterSpacing: 0.0,
               ),
+            ),
+            projectMetricsTilePlaceholderTheme: ShimmerPlaceholderThemeData(
+              backgroundColor: inputColor,
+              shimmerColor: ColorConfig.shimmerColor,
+            ),
+            metricsTableHeaderPlaceholderTheme: ShimmerPlaceholderThemeData(
+              backgroundColor: _metricsTableHeaderLoadingColor,
+              shimmerColor: ColorConfig.shimmerColor,
             ),
           ),
           buildNumberScorecardTheme: const ScorecardThemeData(
