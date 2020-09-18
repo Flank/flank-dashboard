@@ -224,7 +224,7 @@ void main() {
           find.text(CommonStrings.delete),
         );
 
-        expect(label.style.color, equals(testAccentColor));
+        expect(label.style.color, equals(testPrimaryColor));
       },
     );
 
@@ -351,7 +351,8 @@ void main() {
         await tester.pumpAndSettle();
 
         final barrierFinder = find.byWidgetPredicate(
-          (widget) => widget is ModalBarrier && widget.color == testBarrierColor,
+          (widget) =>
+              widget is ModalBarrier && widget.color == testBarrierColor,
         );
         expect(barrierFinder, findsOneWidget);
       },
@@ -551,7 +552,8 @@ void main() {
         await tester.pumpAndSettle();
 
         final barrierFinder = find.byWidgetPredicate(
-          (widget) => widget is ModalBarrier && widget.color == testBarrierColor,
+          (widget) =>
+              widget is ModalBarrier && widget.color == testBarrierColor,
         );
         expect(barrierFinder, findsOneWidget);
       },

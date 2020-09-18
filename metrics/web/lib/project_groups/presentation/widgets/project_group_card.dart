@@ -59,7 +59,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       IconLabelButton(
-                        onPressed: () => _showProjectGroupDialog(context),
+                        onPressed: () => _showEditProjectGroupDialog(),
                         iconPadding: _buttonIconPadding,
                         iconBuilder: (context, isHovered) {
                           return Image.network(
@@ -84,7 +84,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                         },
                       ),
                       IconLabelButton(
-                        onPressed: () => _showProjectGroupDeleteDialog(context),
+                        onPressed: () => _showDeleteProjectGroupDialog(),
                         iconPadding: _buttonIconPadding,
                         iconBuilder: (context, isHovered) {
                           return Image.network(
