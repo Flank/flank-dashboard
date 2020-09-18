@@ -59,6 +59,8 @@ class _MetricsAppState extends State<MetricsApp> {
               primaryColorBrightness: Brightness.light,
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
+                splashColor: ColorConfig.inkResponseColor,
+                highlightColor: ColorConfig.inkResponseColor,
               ),
               scaffoldBackgroundColor: LightMetricsThemeData.scaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
@@ -84,6 +86,8 @@ class _MetricsAppState extends State<MetricsApp> {
               primaryColorBrightness: Brightness.dark,
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
+                splashColor: ColorConfig.inkResponseColor,
+                highlightColor: ColorConfig.inkResponseColor,
               ),
               scaffoldBackgroundColor: DarkMetricsThemeData.scaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(

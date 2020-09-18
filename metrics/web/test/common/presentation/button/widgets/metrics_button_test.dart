@@ -13,8 +13,6 @@ import '../../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("MetricsButton", () {
     const label = 'Label';
-    const splashColor = Colors.pink;
-    const highlightColor = Colors.green;
     const metricsThemeData = MetricsThemeData(
       metricsButtonTheme: MetricsButtonThemeData(
         buttonAttentionLevel: MetricsButtonAttentionLevel(
@@ -36,11 +34,6 @@ void main() {
           ),
         ),
       ),
-    );
-
-    final themeData = ThemeData(
-      splashColor: splashColor,
-      highlightColor: highlightColor,
     );
 
     final buttonFinder = find.ancestor(
@@ -219,40 +212,11 @@ void main() {
         expect(button.highlightElevation, equals(expectedElevation));
       },
     );
-
-    testWidgets(
-      "applies a splash color to the button from the theme",
-      (tester) async {
-        await tester.pumpWidget(_MetricsButtonTestbed(
-          themeData: themeData,
-          label: label,
-        ));
-        final button = tester.widget<RaisedButton>(buttonFinder);
-
-        expect(button.splashColor, equals(splashColor));
-      },
-    );
-
-    testWidgets(
-      "applies a highlight color to the button from the theme",
-      (tester) async {
-        await tester.pumpWidget(_MetricsButtonTestbed(
-          themeData: themeData,
-          label: label,
-        ));
-        final button = tester.widget<RaisedButton>(buttonFinder);
-
-        expect(button.highlightColor, equals(highlightColor));
-      },
-    );
   });
 }
 
 /// A testbed widget, used to test the [MetricsButton] widget.
 class _MetricsButtonTestbed extends StatelessWidget {
-  /// A [ThemeData] used in tests.
-  final ThemeData themeData;
-
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData metricsThemeData;
 
@@ -268,7 +232,6 @@ class _MetricsButtonTestbed extends StatelessWidget {
   const _MetricsButtonTestbed({
     Key key,
     this.metricsThemeData = const MetricsThemeData(),
-    this.themeData,
     this.label,
     this.onPressed,
   }) : super(key: key);
@@ -276,7 +239,6 @@ class _MetricsButtonTestbed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
-      themeData: themeData,
       metricsThemeData: metricsThemeData,
       body: _MetricsButtonStub(
         label: label,

@@ -20,8 +20,6 @@ void main() {
   group("SignInOptionButton", () {
     const label = 'Label';
     const asset = 'icons/icon.svg';
-    const splashColor = Colors.pink;
-    const highlightColor = Colors.green;
     const metricsThemeData = MetricsThemeData(
       loginTheme: LoginThemeData(
         loginOptionButtonStyle: MetricsButtonStyle(
@@ -39,11 +37,6 @@ void main() {
     const strategyStub = _SignInOptionStrategyStub(
       asset: asset,
       label: label,
-    );
-
-    final themeData = ThemeData(
-      splashColor: splashColor,
-      highlightColor: highlightColor,
     );
 
     final buttonFinder = find.ancestor(
@@ -197,36 +190,6 @@ void main() {
         verify(strategyMock.signIn(authNotifierMock)).called(equals(1));
       },
     );
-
-    testWidgets(
-      "applies a splash color to the button from the theme",
-      (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_LoginOptionButtonTestbed(
-            themeData: themeData,
-            strategy: strategyStub,
-          ));
-        });
-        final button = tester.widget<RaisedButton>(buttonFinder);
-
-        expect(button.splashColor, equals(splashColor));
-      },
-    );
-
-    testWidgets(
-      "applies a highlight color to the button from the theme",
-      (tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_LoginOptionButtonTestbed(
-            themeData: themeData,
-            strategy: strategyStub,
-          ));
-        });
-        final button = tester.widget<RaisedButton>(buttonFinder);
-
-        expect(button.highlightColor, equals(highlightColor));
-      },
-    );
   });
 }
 
@@ -258,9 +221,6 @@ class _LoginOptionButtonTestbed extends StatelessWidget {
   /// An [AuthNotifier] to use in tests.
   final AuthNotifier authNotifier;
 
-  /// A [ThemeData] used in tests.
-  final ThemeData themeData;
-
   /// A [MetricsThemeData] to use in tests.
   final MetricsThemeData metricsThemeData;
 
@@ -273,7 +233,6 @@ class _LoginOptionButtonTestbed extends StatelessWidget {
   const _LoginOptionButtonTestbed({
     Key key,
     this.metricsThemeData = const MetricsThemeData(),
-    this.themeData,
     this.authNotifier,
     this.strategy,
   }) : super(key: key);
@@ -283,7 +242,6 @@ class _LoginOptionButtonTestbed extends StatelessWidget {
     return TestInjectionContainer(
       authNotifier: authNotifier,
       child: MetricsThemedTestbed(
-        themeData: themeData,
         metricsThemeData: metricsThemeData,
         body: SignInOptionButton(
           strategy: strategy,

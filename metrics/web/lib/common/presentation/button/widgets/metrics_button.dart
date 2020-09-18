@@ -25,7 +25,6 @@ abstract class MetricsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final commonTheme = Theme.of(context);
     final buttonTheme = MetricsTheme.of(context).metricsButtonTheme;
     final attentionLevel = buttonTheme.attentionLevel;
     final inactiveStyle = attentionLevel.inactive;
@@ -40,8 +39,6 @@ abstract class MetricsButton extends StatelessWidget {
       focusElevation: style.elevation,
       highlightElevation: style.elevation,
       disabledElevation: inactiveStyle.elevation,
-      splashColor: commonTheme.splashColor,
-      highlightColor: commonTheme.highlightColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
       ),
