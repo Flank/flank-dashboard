@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/pages/loading_page.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
+import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
@@ -11,52 +12,52 @@ class RouteGenerator {
   /// based on the [isLoggedIn] authentication status.
   ///
   /// Throws an [AssertionError] if [settings] is null.
-  static MaterialPageRoute generateRoute({
+  static MetricsPageRoute generateRoute({
     @required RouteSettings settings,
     bool isLoggedIn,
   }) {
     assert(settings != null);
 
     if (isLoggedIn == null) {
-      return _createMaterialPageRoute(widget: LoadingPage());
+      return _createMetricsPageRoute(widget: LoadingPage());
     }
 
     if (!isLoggedIn) {
-      return _createMaterialPageRoute(
+      return _createMetricsPageRoute(
         name: RouteName.login,
         widget: LoginPage(),
       );
     }
 
     if (settings.name == RouteName.dashboard) {
-      return _createMaterialPageRoute(
+      return _createMetricsPageRoute(
         name: RouteName.dashboard,
         widget: DashboardPage(),
       );
     }
 
     if (settings.name == RouteName.projectGroup) {
-      return _createMaterialPageRoute(
+      return _createMetricsPageRoute(
         name: RouteName.projectGroup,
         widget: ProjectGroupPage(),
       );
     }
 
-    return _createMaterialPageRoute(
+    return _createMetricsPageRoute(
       name: RouteName.dashboard,
       widget: DashboardPage(),
     );
   }
 
-  /// Creates [MaterialPageRoute] with the given [name] and the [widget].
+  /// Creates [MetricsPageRoute] with the given [name] and the [widget].
   ///
   /// Throws an [AssertionError] if the [widget] is null.
-  static MaterialPageRoute _createMaterialPageRoute({
+  static MetricsPageRoute _createMetricsPageRoute({
     String name,
     @required Widget widget,
   }) {
     assert(widget != null);
-    return MaterialPageRoute(
+    return MetricsPageRoute(
       builder: (_) => widget,
       settings: RouteSettings(name: name),
     );
