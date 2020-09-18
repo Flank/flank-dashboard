@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
@@ -42,12 +43,18 @@ void main() {
     const testHoverColor = Colors.black;
     const testTitleStyle = TextStyle(color: Colors.grey);
     const testSubtitleStyle = TextStyle(color: Colors.black);
+    const primaryButtonStyle = MetricsButtonStyle(
+      color: testPrimaryColor,
+    );
+    const accentButtonStyle = MetricsButtonStyle(
+      color: testAccentColor,
+    );
     const testBarrierColor = Colors.red;
 
     const testTheme = MetricsThemeData(
       projectGroupCardTheme: ProjectGroupCardThemeData(
-        primaryColor: testPrimaryColor,
-        accentColor: testAccentColor,
+        primaryButtonStyle: primaryButtonStyle,
+        accentButtonStyle: accentButtonStyle,
         backgroundColor: testBackgroundColor,
         hoverColor: testHoverColor,
         borderColor: testBorderColor,

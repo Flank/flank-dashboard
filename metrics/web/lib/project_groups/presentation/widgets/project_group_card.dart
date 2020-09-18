@@ -70,14 +70,14 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                               height: _iconBoxSide,
                               fit: BoxFit.contain,
                               color: isHovered
-                                  ? theme.primaryHoverColor
-                                  : theme.primaryColor,
+                                  ? theme.primaryButtonStyle.hoverColor
+                                  : theme.primaryButtonStyle.color,
                             ),
                             label: CommonStrings.edit,
                             labelStyle: TextStyle(
                               color: isHovered
-                                  ? theme.primaryHoverColor
-                                  : theme.primaryColor,
+                                  ? theme.primaryButtonStyle.hoverColor
+                                  : theme.primaryButtonStyle.color,
                             ),
                           );
                         },
@@ -95,14 +95,14 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                               height: _iconBoxSide,
                               fit: BoxFit.contain,
                               color: isHovered
-                                  ? theme.accentHoverColor
-                                  : theme.accentColor,
+                                  ? theme.accentButtonStyle.hoverColor
+                                  : theme.accentButtonStyle.color,
                             ),
                             label: CommonStrings.delete,
                             labelStyle: TextStyle(
                               color: isHovered
-                                  ? theme.accentHoverColor
-                                  : theme.accentColor,
+                                  ? theme.accentButtonStyle.hoverColor
+                                  : theme.accentButtonStyle.color,
                             ),
                           );
                         },

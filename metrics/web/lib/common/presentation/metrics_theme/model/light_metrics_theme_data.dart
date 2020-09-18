@@ -113,10 +113,14 @@ class LightMetricsThemeData extends MetricsThemeData {
             borderColor: _borderColor,
             hoverColor: _cardHoverColor,
             backgroundColor: scaffoldColor,
-            accentColor: ColorConfig.accentButtonColor,
-            accentHoverColor: ColorConfig.accentButtonHoverColor,
-            primaryColor: ColorConfig.primaryColor,
-            primaryHoverColor: ColorConfig.primaryButtonHoverColor,
+            primaryButtonStyle: MetricsButtonStyle(
+              color: ColorConfig.primaryColor,
+              hoverColor: ColorConfig.primaryButtonHoverColor,
+            ),
+            accentButtonStyle: MetricsButtonStyle(
+              color: ColorConfig.accentButtonColor,
+              hoverColor: ColorConfig.accentButtonHoverColor,
+            ),
             titleStyle: MetricsTextStyle(
               color: Colors.black,
               lineHeightInPixels: 26.0,

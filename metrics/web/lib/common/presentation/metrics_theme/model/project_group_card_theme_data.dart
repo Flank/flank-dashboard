@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 
 /// The class that stores the theme data for the project group card.
 class ProjectGroupCardThemeData {
@@ -11,17 +12,9 @@ class ProjectGroupCardThemeData {
   /// The border [Color] of the project group card.
   final Color borderColor;
 
-  /// The primary [Color] for main elements of the project group card.
-  final Color primaryColor;
+  final MetricsButtonStyle primaryButtonStyle;
 
-  /// The primary hover [Color] for main elements of the project group card.
-  final Color primaryHoverColor;
-
-  /// The secondary [Color] for elements of the project group card.
-  final Color accentColor;
-
-  /// The secondary hover [Color] for elements of the project group card.
-  final Color accentHoverColor;
+  final MetricsButtonStyle accentButtonStyle;
 
   /// The [TextStyle] for the title text of the project group card.
   final TextStyle titleStyle;
@@ -34,10 +27,8 @@ class ProjectGroupCardThemeData {
     this.backgroundColor = Colors.grey,
     this.hoverColor = Colors.black26,
     this.borderColor = Colors.black,
-    this.primaryColor = Colors.green,
-    this.primaryHoverColor = Colors.greenAccent,
-    this.accentColor = Colors.red,
-    this.accentHoverColor = Colors.orange,
+    this.primaryButtonStyle = const MetricsButtonStyle(),
+    this.accentButtonStyle = const MetricsButtonStyle(),
     this.titleStyle,
     this.subtitleStyle,
   });
