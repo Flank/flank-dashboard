@@ -9,7 +9,7 @@ import '../../../test_utils/matcher_util.dart';
 void main() {
   group("RouteGenerator", () {
     test(
-      ".generateRoute() throws the AssertionError if the settings is null",
+      ".generateRoute() throws an AssertionError if the settings is null",
       () {
         expect(
           () => RouteGenerator.generateRoute(settings: null),

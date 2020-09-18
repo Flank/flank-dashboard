@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class MetricsPageRoute<T> extends MaterialPageRoute<T> {
   /// Creates the [MetricsPageRoute] whose contents are defined by [builder].
   ///
-  /// The [maintainState] default value is [true].
-  /// The [fullscreenDialog] default value is [false].
+  /// The [maintainState] default value is `true`.
+  /// The [fullscreenDialog] default value is `false`.
   ///
   /// The values of [builder], [maintainState], and [fullScreenDialog] must not
   /// be null.

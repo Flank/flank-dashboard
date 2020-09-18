@@ -8,7 +8,7 @@ import '../../../test_utils/matcher_util.dart';
 void main() {
   group("MetricsPageRoute", () {
     test(
-      "throws the AssertionError if the builder is null",
+      "throws an AssertionError if the builder is null",
       () {
         expect(
           () => MetricsPageRoute(
@@ -21,7 +21,7 @@ void main() {
     );
 
     test(
-      "throws the AssertionError if the maintainState is null",
+      "throws an AssertionError if the maintainState is null",
       () {
         expect(
           () => MetricsPageRoute(
@@ -35,7 +35,7 @@ void main() {
     );
 
     test(
-      "throws the AssertionError if the fullscreenDialog is null",
+      "throws an AssertionError if the fullscreenDialog is null",
       () {
         expect(
           () => MetricsPageRoute(
@@ -48,16 +48,15 @@ void main() {
       },
     );
 
-    const text = Text("Child");
-    final buildTransition = MetricsPageRoute(
-      builder: (_) => text,
-    ).buildTransitions;
-
     test(
       ".buildTransitions() returns given child widget",
       () {
-        final child = buildTransition(null, null, null, text);
-        expect(child, equals(text));
+        const expectedChild = Text("Child");
+        final route = MetricsPageRoute(
+          builder: (_) => expectedChild,
+        );
+        final child = route.buildTransitions(null, null, null, expectedChild);
+        expect(child, equals(expectedChild));
       },
     );
   });
