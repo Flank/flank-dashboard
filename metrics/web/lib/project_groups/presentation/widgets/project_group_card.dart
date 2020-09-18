@@ -37,7 +37,6 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
   @override
   Widget build(BuildContext context) {
     const _buttonIconPadding = EdgeInsets.only(right: 8.0);
-    final _buttonBorderRadius = BorderRadius.circular(4.0);
     final theme = MetricsTheme.of(context).projectGroupCardTheme;
 
     return Material(
@@ -61,7 +60,6 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                     children: <Widget>[
                       IconLabelButton(
                         onPressed: () => _showProjectGroupDialog(context),
-                        borderRadius: _buttonBorderRadius,
                         iconPadding: _buttonIconPadding,
                         icon: Image.network(
                           'icons/edit.svg',
@@ -77,7 +75,6 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                       ),
                       IconLabelButton(
                         onPressed: () => _showProjectGroupDeleteDialog(context),
-                        borderRadius: _buttonBorderRadius,
                         iconPadding: _buttonIconPadding,
                         icon: Image.network(
                           'icons/delete.svg',

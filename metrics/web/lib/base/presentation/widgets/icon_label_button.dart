@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 /// A widget that displays the button with given [icon] and [label] text.
 class IconLabelButton extends StatelessWidget {
@@ -7,9 +8,6 @@ class IconLabelButton extends StatelessWidget {
 
   /// The padding around this button.
   final EdgeInsets contentPadding;
-
-  /// The clipping radius of the containing rect.
-  final BorderRadius borderRadius;
 
   /// The icon this button is to display.
   final Widget icon;
@@ -26,7 +24,6 @@ class IconLabelButton extends StatelessWidget {
   /// Creates a new instance of the [IconLabelButton].
   ///
   /// Both [iconPadding] and [contentPadding] defaults to [EdgeInsets.zero].
-  /// The [borderRadius] defaults to [BorderRadius.zero].
   ///
   /// The [label] and [icon] must not be null.
   const IconLabelButton({
@@ -35,7 +32,6 @@ class IconLabelButton extends StatelessWidget {
     @required this.icon,
     this.iconPadding = EdgeInsets.zero,
     this.contentPadding = EdgeInsets.zero,
-    this.borderRadius = BorderRadius.zero,
     this.onPressed,
     this.labelStyle,
   })  : assert(label != null),
@@ -46,9 +42,10 @@ class IconLabelButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: borderRadius,
+    return TappableArea(
       onTap: onPressed,
+      hitTestBehavior: HitTestBehavior.opaque,
+      builder: (context, isHovered, child) => child,
       child: Padding(
         padding: contentPadding,
         child: Row(

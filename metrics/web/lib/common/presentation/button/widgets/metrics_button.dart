@@ -25,8 +25,8 @@ abstract class MetricsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = MetricsTheme.of(context).metricsButtonTheme;
-    final attentionLevel = theme.attentionLevel;
+    final buttonTheme = MetricsTheme.of(context).metricsButtonTheme;
+    final attentionLevel = buttonTheme.attentionLevel;
     final inactiveStyle = attentionLevel.inactive;
     final style = selectStyle(attentionLevel);
 

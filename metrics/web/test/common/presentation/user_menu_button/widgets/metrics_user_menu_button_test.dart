@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/routes/observers/overlay_entry_route_observer.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -127,6 +128,36 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(MetricsUserMenu), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the metrics user menu on the user menu button tap",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_MetricsUserMenuButtonTestbed());
+        });
+
+        await tester.tap(find.byType(MetricsUserMenuButton));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(MetricsUserMenu), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies a tappable area to the avatar image",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_MetricsUserMenuButtonTestbed());
+        });
+
+        final finder = find.descendant(
+          of: find.byTooltip(CommonStrings.openUserMenu),
+          matching: find.byType(TappableArea),
+        );
+
+        expect(finder, findsOneWidget);
       },
     );
   });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/routes/observers/overlay_entry_route_observer.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -49,9 +50,9 @@ class MetricsUserMenuButton extends StatelessWidget {
 
         return Tooltip(
           message: tooltipMessage,
-          child: InkWell(
+          child: TappableArea(
             onTap: openPopup,
-            customBorder: const CircleBorder(),
+            builder: (context, isHovered, child) => child,
             child: Image.network(
               'icons/avatar.svg',
               width: 32.0,

@@ -111,6 +111,25 @@ void main() {
     );
 
     testWidgets(
+      "applies the given hit test behavior",
+      (WidgetTester tester) async {
+        const hitTestBehavior = HitTestBehavior.opaque;
+
+        await tester.pumpWidget(
+          TappableAreaTestbed(
+            builder: _builder,
+            hitTestBehavior: hitTestBehavior,
+          ),
+        );
+
+        final gestureDetector =
+            tester.widget<GestureDetector>(find.byType(GestureDetector));
+
+        expect(gestureDetector.behavior, hitTestBehavior);
+      },
+    );
+
+    testWidgets(
       "builds the given widget according to the given builder",
       (WidgetTester tester) async {
         await tester.pumpWidget(
@@ -162,12 +181,16 @@ class TappableAreaTestbed extends StatelessWidget {
   /// if the this area is hovered.
   final HoverWidgetBuilder builder;
 
+  /// How the [TappableArea] should behave during hit testing.
+  final HitTestBehavior hitTestBehavior;
+
   /// Creates a new instance of the [TappableAreaTestbed].
   const TappableAreaTestbed({
     Key key,
     this.onTap,
     this.mouseCursor,
     this.builder,
+    this.hitTestBehavior,
   }) : super(key: key);
 
   @override
@@ -178,6 +201,7 @@ class TappableAreaTestbed extends StatelessWidget {
           onTap: onTap,
           builder: builder,
           mouseCursor: mouseCursor,
+          hitTestBehavior: hitTestBehavior,
         ),
       ),
     );
