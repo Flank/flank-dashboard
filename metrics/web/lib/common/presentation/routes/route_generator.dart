@@ -12,38 +12,38 @@ class RouteGenerator {
   /// based on the [isLoggedIn] authentication status.
   ///
   /// Throws an [AssertionError] if [settings] is null.
-  static MaterialPageRoute generateRoute({
+  static MetricsPageRoute generateRoute({
     @required RouteSettings settings,
     bool isLoggedIn,
   }) {
     assert(settings != null);
 
     if (isLoggedIn == null) {
-      return _createMaterialPageRoute(widget: LoadingPage());
+      return _createMetricsPageRoute(widget: LoadingPage());
     }
 
     if (!isLoggedIn) {
-      return _createMaterialPageRoute(
+      return _createMetricsPageRoute(
         name: RouteName.login,
         widget: LoginPage(),
       );
     }
 
     if (settings.name == RouteName.dashboard) {
-      return _createMaterialPageRoute(
+      return _createMetricsPageRoute(
         name: RouteName.dashboard,
         widget: DashboardPage(),
       );
     }
 
     if (settings.name == RouteName.projectGroup) {
-      return _createMaterialPageRoute(
+      return _createMetricsPageRoute(
         name: RouteName.projectGroup,
         widget: ProjectGroupPage(),
       );
     }
 
-    return _createMaterialPageRoute(
+    return _createMetricsPageRoute(
       name: RouteName.dashboard,
       widget: DashboardPage(),
     );
@@ -52,7 +52,7 @@ class RouteGenerator {
   /// Creates [MetricsPageRoute] with the given [name] and the [widget].
   ///
   /// Throws an [AssertionError] if the [widget] is null.
-  static MaterialPageRoute _createMaterialPageRoute({
+  static MetricsPageRoute _createMetricsPageRoute({
     String name,
     @required Widget widget,
   }) {

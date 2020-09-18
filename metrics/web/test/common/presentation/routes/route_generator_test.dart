@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:test/test.dart';
@@ -19,7 +20,7 @@ void main() {
     test(
       '.generateRoute() generates a route to the login page if a user is not logged in',
       () {
-        final MaterialPageRoute route = RouteGenerator.generateRoute(
+        final MetricsPageRoute route = RouteGenerator.generateRoute(
           settings: const RouteSettings(name: RouteName.login),
           isLoggedIn: false,
         );
@@ -31,7 +32,7 @@ void main() {
     test(
       '.generateRoute() generates a route to the dashboard page if a user is logged in',
       () {
-        final MaterialPageRoute route = RouteGenerator.generateRoute(
+        final MetricsPageRoute route = RouteGenerator.generateRoute(
           settings: const RouteSettings(name: RouteName.login),
           isLoggedIn: true,
         );
@@ -43,7 +44,7 @@ void main() {
     test(
       '.generateRoute() generates a route to the dashboard page if an unknown route is passed',
       () {
-        final MaterialPageRoute route = RouteGenerator.generateRoute(
+        final MetricsPageRoute route = RouteGenerator.generateRoute(
           settings: const RouteSettings(name: '/wrongRoute'),
           isLoggedIn: true,
         );
@@ -55,7 +56,7 @@ void main() {
     test(
       '.generateRoute() generates a route to the project groups page if a route name is projectGroups',
       () {
-        final MaterialPageRoute route = RouteGenerator.generateRoute(
+        final MetricsPageRoute route = RouteGenerator.generateRoute(
           settings: const RouteSettings(name: RouteName.projectGroup),
           isLoggedIn: true,
         );
