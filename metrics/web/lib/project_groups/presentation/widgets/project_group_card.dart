@@ -61,7 +61,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                       IconLabelButton(
                         onPressed: () => _showProjectGroupDialog(context),
                         iconPadding: _buttonIconPadding,
-                        icon: (context, isHovered) {
+                        iconBuilder: (context, isHovered) {
                           return Image.network(
                             'icons/edit.svg',
                             width: _iconBoxSide,
@@ -72,7 +72,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                                 : theme.primaryButtonStyle.color,
                           );
                         },
-                        label: (context, isHovered) {
+                        labelBuilder: (context, isHovered) {
                           return Text(
                             CommonStrings.edit,
                             style: TextStyle(
@@ -86,7 +86,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                       IconLabelButton(
                         onPressed: () => _showProjectGroupDeleteDialog(context),
                         iconPadding: _buttonIconPadding,
-                        icon: (context, isHovered) {
+                        iconBuilder: (context, isHovered) {
                           return Image.network(
                             'icons/delete.svg',
                             width: _iconBoxSide,
@@ -97,7 +97,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                                 : theme.accentButtonStyle.color,
                           );
                         },
-                        label: (context, isHovered) {
+                        labelBuilder: (context, isHovered) {
                           return Text(
                             CommonStrings.delete,
                             style: TextStyle(

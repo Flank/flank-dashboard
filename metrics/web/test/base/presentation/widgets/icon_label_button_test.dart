@@ -280,8 +280,8 @@ class _IconLabelButtonTestbed extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: IconLabelButton(
-          label: label,
-          icon: icon,
+          labelBuilder: label,
+          iconBuilder: icon,
           iconPadding: iconPadding,
           contentPadding: contentPadding,
           onPressed: onPressed,
