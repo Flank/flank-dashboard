@@ -27,8 +27,8 @@ void main() {
       "throws an AssertionError if the given label builder is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          label: null,
-          icon: _iconBuilder,
+          labelBuilder: null,
+          iconBuilder: _iconBuilder,
         ));
 
         expect(tester.takeException(), isAssertionError);
@@ -39,8 +39,8 @@ void main() {
       "throws an AssertionError if the given icon builder is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          icon: null,
-          label: _labelBuilder,
+          iconBuilder: null,
+          labelBuilder: _labelBuilder,
         ));
 
         expect(tester.takeException(), isAssertionError);
@@ -51,8 +51,8 @@ void main() {
       "throws an AssertionError if the given icon padding is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          label: _labelBuilder,
-          icon: _iconBuilder,
+          labelBuilder: _labelBuilder,
+          iconBuilder: _iconBuilder,
           iconPadding: null,
         ));
 
@@ -64,8 +64,8 @@ void main() {
       "throws an AssertionError if the given content padding is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          label: _labelBuilder,
-          icon: _iconBuilder,
+          labelBuilder: _labelBuilder,
+          iconBuilder: _iconBuilder,
           contentPadding: null,
         ));
 
@@ -77,8 +77,8 @@ void main() {
       "applies the default icon padding if it's not specified",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          label: _labelBuilder,
-          icon: _iconBuilder,
+          labelBuilder: _labelBuilder,
+          iconBuilder: _iconBuilder,
         ));
 
         final iconPadding = tester.widget<Padding>(
@@ -96,8 +96,8 @@ void main() {
       "applies the default content padding if it's not specified",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          label: _labelBuilder,
-          icon: _iconBuilder,
+          labelBuilder: _labelBuilder,
+          iconBuilder: _iconBuilder,
         ));
 
         final contentPadding = tester.widget<Padding>(
@@ -115,8 +115,8 @@ void main() {
       "displays the corresponding label when the button is not hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          label: _labelBuilder,
-          icon: _iconBuilder,
+          labelBuilder: _labelBuilder,
+          iconBuilder: _iconBuilder,
         ));
 
         expect(find.text(defaultLabel), findsOneWidget);
@@ -127,8 +127,8 @@ void main() {
       "displays the corresponding label when the button is hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          label: _labelBuilder,
-          icon: _iconBuilder,
+          labelBuilder: _labelBuilder,
+          iconBuilder: _iconBuilder,
         ));
 
         final mouseRegion = tester.firstWidget<MouseRegion>(
@@ -151,8 +151,8 @@ void main() {
       "displays the corresponding icon when the button is not hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          label: _labelBuilder,
-          icon: _iconBuilder,
+          labelBuilder: _labelBuilder,
+          iconBuilder: _iconBuilder,
         ));
 
         expect(find.byWidget(defaultIcon), findsOneWidget);
@@ -163,8 +163,8 @@ void main() {
       "displays the corresponding icon when the button is hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed(
-          label: _labelBuilder,
-          icon: _iconBuilder,
+          labelBuilder: _labelBuilder,
+          iconBuilder: _iconBuilder,
         ));
 
         final mouseRegion = tester.firstWidget<MouseRegion>(
@@ -188,8 +188,8 @@ void main() {
 
       await tester.pumpWidget(_IconLabelButtonTestbed(
         iconPadding: expectedIconPadding,
-        label: _labelBuilder,
-        icon: _iconBuilder,
+        labelBuilder: _labelBuilder,
+        iconBuilder: _iconBuilder,
       ));
 
       final iconPadding = tester.widget<Padding>(
@@ -210,8 +210,8 @@ void main() {
 
         await tester.pumpWidget(_IconLabelButtonTestbed(
           contentPadding: expectedContentPadding,
-          label: _labelBuilder,
-          icon: _iconBuilder,
+          labelBuilder: _labelBuilder,
+          iconBuilder: _iconBuilder,
         ));
 
         final contentPadding = tester.widget<Padding>(
@@ -233,8 +233,8 @@ void main() {
 
         await tester.pumpWidget(_IconLabelButtonTestbed(
           onPressed: testCallback,
-          label: _labelBuilder,
-          icon: _iconBuilder,
+          labelBuilder: _labelBuilder,
+          iconBuilder: _iconBuilder,
         ));
 
         final tappableArea =
@@ -255,21 +255,21 @@ class _IconLabelButtonTestbed extends StatelessWidget {
   /// The padding around the [IconLabelButton] under test.
   final EdgeInsets contentPadding;
 
-  /// The padding around the [icon].
+  /// The padding around the icon.
   final EdgeInsets iconPadding;
 
-  /// The builder of this button's icon.
-  final HoverWidgetBuilder icon;
+  /// The builder of an icon of the button under tests.
+  final HoverWidgetBuilder iconBuilder;
 
-  /// The builder of this button's label.
-  final HoverWidgetBuilder label;
+  /// The builder of a label of the button under tests.
+  final HoverWidgetBuilder labelBuilder;
 
   /// Creates the instance of this testbed.
   ///
   /// Both [iconPadding] and [contentPadding] defaults to [EdgeInsets.zero].
   const _IconLabelButtonTestbed({
-    this.label,
-    this.icon,
+    this.labelBuilder,
+    this.iconBuilder,
     this.iconPadding = EdgeInsets.zero,
     this.contentPadding = EdgeInsets.zero,
     this.onPressed,
@@ -280,8 +280,8 @@ class _IconLabelButtonTestbed extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: IconLabelButton(
-          labelBuilder: label,
-          iconBuilder: icon,
+          labelBuilder: labelBuilder,
+          iconBuilder: iconBuilder,
           iconPadding: iconPadding,
           contentPadding: contentPadding,
           onPressed: onPressed,
