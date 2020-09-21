@@ -131,8 +131,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     );
   }
 
-  /// Returns the proper color from the given [MetricsButtonStyle] depending
-  /// on the given [isHovered] value.
+  /// Returns the proper button color from the given [MetricsButtonStyle]
+  /// depending on the given [isHovered] value.
   Color _getButtonColor(MetricsButtonStyle buttonStyle, bool isHovered) {
     final hoverColor = buttonStyle.hoverColor;
     final color = buttonStyle.color;
