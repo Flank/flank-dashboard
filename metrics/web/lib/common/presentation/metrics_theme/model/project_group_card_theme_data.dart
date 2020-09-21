@@ -12,10 +12,12 @@ class ProjectGroupCardThemeData {
   /// The border [Color] of the project group card.
   final Color borderColor;
 
-  /// A primary [MetricsButtonStyle] applied to the edit icon label button.
+  /// A primary [MetricsButtonStyle] of the icon label button of the
+  /// project group card.
   final MetricsButtonStyle primaryButtonStyle;
 
-  /// An accent [MetricsButtonStyle] applied to the delete icon label button.
+  /// An accent [MetricsButtonStyle] of the icon label button of the
+  /// project group card.
   final MetricsButtonStyle accentButtonStyle;
 
   /// The [TextStyle] for the title text of the project group card.

@@ -38,8 +38,10 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
   Widget build(BuildContext context) {
     const _buttonIconPadding = EdgeInsets.only(right: 8.0);
     final theme = MetricsTheme.of(context).projectGroupCardTheme;
-    final primaryButtonStyle = theme.primaryButtonStyle;
-    final accentButtonStyle = theme.accentButtonStyle;
+    final primaryButtonColor = theme.primaryButtonStyle.color;
+    final primaryButtonHoverColor = theme.primaryButtonStyle.color;
+    final accentButtonColor = theme.accentButtonStyle.color;
+    final accentButtonHoverColor = theme.accentButtonStyle.color;
 
     return Material(
       child: TappableArea(
@@ -70,8 +72,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                             height: _iconBoxSide,
                             fit: BoxFit.contain,
                             color: isHovered
-                                ? primaryButtonStyle.hoverColor
-                                : primaryButtonStyle.color,
+                                ? primaryButtonHoverColor
+                                : primaryButtonColor,
                           );
                         },
                         labelBuilder: (context, isHovered) {
@@ -79,8 +81,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                             CommonStrings.edit,
                             style: TextStyle(
                               color: isHovered
-                                  ? primaryButtonStyle.hoverColor
-                                  : primaryButtonStyle.color,
+                                  ? primaryButtonHoverColor
+                                  : primaryButtonColor,
                             ),
                           );
                         },
@@ -95,8 +97,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                             height: _iconBoxSide,
                             fit: BoxFit.contain,
                             color: isHovered
-                                ? accentButtonStyle.hoverColor
-                                : accentButtonStyle.color,
+                                ? accentButtonHoverColor
+                                : accentButtonColor,
                           );
                         },
                         labelBuilder: (context, isHovered) {
@@ -104,8 +106,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                             CommonStrings.delete,
                             style: TextStyle(
                               color: isHovered
-                                  ? accentButtonStyle.hoverColor
-                                  : accentButtonStyle.color,
+                                  ? accentButtonHoverColor
+                                  : accentButtonColor,
                             ),
                           );
                         },

@@ -8,26 +8,26 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
-  final tappableAreaFinder = find.byType(TappableArea);
-  final mouseRegionFinder = find.byType(MouseRegion);
-
-  Future<void> _enterIconLabelButton(WidgetTester tester) async {
-    final mouseRegion = tester.widget<MouseRegion>(
-      find.descendant(of: tappableAreaFinder, matching: mouseRegionFinder),
-    );
-
-    const pointerEnterEvent = PointerEnterEvent();
-    mouseRegion.onEnter(pointerEnterEvent);
-
-    await tester.pump();
-  }
-
   group("IconLabelButton", () {
     const defaultPadding = EdgeInsets.zero;
     const defaultIcon = Icon(Icons.cake);
     const hoverIcon = Icon(Icons.add);
     const defaultLabel = 'label';
     const hoverLabel = 'hover';
+
+    final tappableAreaFinder = find.byType(TappableArea);
+    final mouseRegionFinder = find.byType(MouseRegion);
+
+    Future<void> _hoverIconLabelButton(WidgetTester tester) async {
+      final mouseRegion = tester.widget<MouseRegion>(
+        find.descendant(of: tappableAreaFinder, matching: mouseRegionFinder),
+      );
+
+      const pointerEnterEvent = PointerEnterEvent();
+      mouseRegion.onEnter(pointerEnterEvent);
+
+      await tester.pump();
+    }
 
     Widget _iconBuilder(BuildContext context, bool isHovered) {
       return isHovered ? hoverIcon : defaultIcon;
@@ -133,7 +133,7 @@ void main() {
           labelBuilder: _labelBuilder,
         ));
 
-        await _enterIconLabelButton(tester);
+        await _hoverIconLabelButton(tester);
 
         await tester.pump();
 
@@ -159,7 +159,7 @@ void main() {
           iconBuilder: _iconBuilder,
         ));
 
-        await _enterIconLabelButton(tester);
+        await _hoverIconLabelButton(tester);
 
         await tester.pump();
 
@@ -225,14 +225,6 @@ void main() {
   });
 }
 
-Widget _iconBuilder(BuildContext context, bool isHovered) {
-  return isHovered ? Icon(Icons.plus_one) : Icon(Icons.add);
-}
-
-Widget _labelBuilder(BuildContext context, bool isHovered) {
-  return Text(isHovered ? "hover" : "label");
-}
-
 /// A testbed class required for testing the [IconLabelButton].
 class _IconLabelButtonTestbed extends StatelessWidget {
   /// The callback for the [IconLabelButton] under test.
@@ -254,8 +246,8 @@ class _IconLabelButtonTestbed extends StatelessWidget {
   ///
   /// Both [iconPadding] and [contentPadding] defaults to [EdgeInsets.zero].
   const _IconLabelButtonTestbed({
-    this.labelBuilder = _labelBuilder,
-    this.iconBuilder = _iconBuilder,
+    this.labelBuilder = _defaultLabelBuilder,
+    this.iconBuilder = _defaultIconBuilder,
     this.iconPadding = EdgeInsets.zero,
     this.contentPadding = EdgeInsets.zero,
     this.onPressed,
@@ -274,5 +266,15 @@ class _IconLabelButtonTestbed extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// A default icon builder for this testbed.
+  static Widget _defaultIconBuilder(BuildContext context, bool isHovered) {
+    return Icon(Icons.add);
+  }
+
+  /// A default label builder for this testbed.
+  static Widget _defaultLabelBuilder(BuildContext context, bool isHovered) {
+    return Text("hover");
   }
 }

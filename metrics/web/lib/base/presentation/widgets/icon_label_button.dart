@@ -15,7 +15,7 @@ class IconLabelButton extends StatelessWidget {
   /// A builder of this button's label.
   final HoverWidgetBuilder labelBuilder;
 
-  /// The padding around the [iconBuilder].
+  /// The padding around the icon.
   final EdgeInsets iconPadding;
 
   /// Creates a new instance of the [IconLabelButton].
