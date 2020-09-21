@@ -353,39 +353,6 @@ void main() {
     );
 
     test(
-      ".resetSelectedProjectGroup() resets the selected project group",
-      () async {
-        const projectGroupId = 'id';
-        final projectGroups = [
-          ProjectGroupModel(
-            id: projectGroupId,
-            name: 'name',
-            projectIds: UnmodifiableListView([]),
-          ),
-          ProjectGroupModel(
-            id: 'id2',
-            name: 'name1',
-            projectIds: UnmodifiableListView([]),
-          ),
-        ];
-
-        projectMetricsNotifier.setProjectGroups(projectGroups);
-
-        final listener = expectAsyncUntil0(
-          () {
-            if (projectMetricsNotifier.selectedProjectGroup != null) {
-              projectMetricsNotifier.resetSelectedProjectGroup();
-            }
-          },
-          () => projectMetricsNotifier.selectedProjectGroup == null,
-        );
-
-        projectMetricsNotifier.addListener(listener);
-        projectMetricsNotifier.selectProjectGroup(projectGroupId);
-      },
-    );
-
-    test(
       ".filterByProjectName() doesn't apply filters to the list of the project metrics if the given value is null",
       () async {
         final expectedProjectMetrics =
@@ -700,6 +667,34 @@ void main() {
           projectMetricsNotifier.selectedProjectGroup,
           equals(initialSelectedProjectGroup),
         );
+      },
+    );
+
+    test(
+      ".selectProjectGroup() resets project group dropdown items and selected project group to null if project groups are null",
+          () {
+        final projectGroups = [
+          ProjectGroupModel(
+            id: "id",
+            name: "name",
+            projectIds: UnmodifiableListView([]),
+          ),
+          ProjectGroupModel(
+            id: "id2",
+            name: "name1",
+            projectIds: UnmodifiableListView([]),
+          ),
+        ];
+
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        expect(projectMetricsNotifier.selectedProjectGroup, isNotNull);
+        expect(projectMetricsNotifier.projectGroupDropdownItems, isNotNull);
+
+        projectMetricsNotifier.setProjectGroups(null);
+
+        expect(projectMetricsNotifier.selectedProjectGroup, isNull);
+        expect(projectMetricsNotifier.projectGroupDropdownItems, isNull);
       },
     );
   });

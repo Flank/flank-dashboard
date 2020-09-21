@@ -167,11 +167,6 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     _projectNameFilter = null;
   }
 
-  /// Resets the selected project group.
-  void resetSelectedProjectGroup() {
-    _selectedProjectGroup = null;
-  }
-
   /// Sets the [selectedProjectGroup] to project group with the given [id].
   void selectProjectGroup(String id) {
     final projectGroup = _projectGroupDropdownItems.firstWhere(
@@ -207,7 +202,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Refreshes the project group dropdown item view models
   /// according to current project group models.
   void _refreshProjectGroupDropdownItemViewModels() {
-    if (_projectGroupModels == null) return;
+    if (_projectGroupModels == null) {
+      _projectGroupDropdownItems = null;
+      _selectedProjectGroup = null;
+
+      return;
+    }
 
     _projectGroupDropdownItems = [
       _allProjectsGroupDropdownItemViewModel,

@@ -26,7 +26,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
     _subscribeToProjectsErrors();
     _projectMetricsNotifier.resetProjectNameFilter();
-    _projectMetricsNotifier.resetSelectedProjectGroup();
   }
 
   /// Subscribes to projects errors.
