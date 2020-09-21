@@ -33,7 +33,7 @@ void main() {
     );
 
     test(
-      "maps the 'too many requests' error code to 'too many requests' error message",
+      "maps the 'too many requests' error code to the 'too many requests' error message",
       () {
         const errorMessage = AuthErrorMessage(AuthErrorCode.tooManyRequests);
 
@@ -42,7 +42,7 @@ void main() {
     );
 
     test(
-      "maps the 'user disabled' error code to 'user disabled' error message",
+      "maps the 'user disabled' error code to the 'user disabled' error message",
       () {
         const errorMessage = AuthErrorMessage(AuthErrorCode.userDisabled);
 
@@ -51,11 +51,34 @@ void main() {
     );
 
     test(
-      "maps the 'user not found' error code to 'user not found' error message",
+      "maps the 'user not found' error code to the 'user not found' error message",
       () {
         const errorMessage = AuthErrorMessage(AuthErrorCode.userNotFound);
 
         expect(errorMessage.message, AuthStrings.userNotFoundErrorMessage);
+      },
+    );
+
+    test(
+      "maps the 'google sign in error' error code to the 'google sign in error occurred' error message",
+      () {
+        const errorMessage = AuthErrorMessage(AuthErrorCode.googleSignInError);
+
+        expect(errorMessage.message, AuthStrings.googleSignInErrorOccurred);
+      },
+    );
+
+    test(
+      "maps the 'not allowed email domain' error code to the 'not allowed email domain' error message",
+      () {
+        const errorMessage = AuthErrorMessage(
+          AuthErrorCode.notAllowedEmailDomain,
+        );
+
+        expect(
+          errorMessage.message,
+          AuthStrings.notAllowedEmailDomainErrorMessage,
+        );
       },
     );
   });
