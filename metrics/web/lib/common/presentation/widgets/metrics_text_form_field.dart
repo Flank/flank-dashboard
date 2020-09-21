@@ -156,7 +156,7 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
                       child: prefixIcon,
                     )
                   : null,
-              prefixIconConstraints: const BoxConstraints(maxWidth: 50),
+              prefixIconConstraints: const BoxConstraints(maxWidth: 50.0),
               suffixIcon: widget.suffixIcon,
               hintText: widget.hint,
             ),
