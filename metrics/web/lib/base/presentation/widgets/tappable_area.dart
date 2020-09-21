@@ -5,6 +5,13 @@ import 'package:flutter/rendering.dart';
 typedef HoverWidgetBuilder = Widget Function(
   BuildContext context,
   bool isHovered,
+);
+
+/// A callback that is used for widget builder functions that depend on the hover
+/// status and may have immutable subtree independent of hover status updates.
+typedef HoverWidgetChildBuilder = Widget Function(
+  BuildContext context,
+  bool isHovered,
   Widget child,
 );
 
@@ -20,7 +27,7 @@ class TappableArea extends StatefulWidget {
 
   /// A widget builder that builds the given widget differently depending on
   /// if the this area is hovered.
-  final HoverWidgetBuilder builder;
+  final HoverWidgetChildBuilder builder;
 
   /// A widget that does not depend on hover updates.
   /// The [builder] is called with the given child parameter.
