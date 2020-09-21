@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_card.dart';
@@ -38,6 +39,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
   Widget build(BuildContext context) {
     const _buttonIconPadding = EdgeInsets.only(right: 8.0);
     final theme = MetricsTheme.of(context).projectGroupCardTheme;
+    final primaryStyle = theme.primaryButtonStyle;
+    final accentStyle = theme.accentButtonStyle;
 
     return Material(
       child: TappableArea(
@@ -61,32 +64,44 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                       IconLabelButton(
                         onPressed: _showEditProjectGroupDialog,
                         iconPadding: _buttonIconPadding,
-                        icon: Image.network(
-                          'icons/edit.svg',
-                          width: _iconBoxSide,
-                          height: _iconBoxSide,
-                          fit: BoxFit.contain,
-                          color: theme.primaryColor,
-                        ),
-                        label: CommonStrings.edit,
-                        labelStyle: TextStyle(
-                          color: theme.primaryColor,
-                        ),
+                        iconBuilder: (context, isHovered) {
+                          return Image.network(
+                            'icons/edit.svg',
+                            width: _iconBoxSide,
+                            height: _iconBoxSide,
+                            fit: BoxFit.contain,
+                            color: _getButtonColor(primaryStyle, isHovered),
+                          );
+                        },
+                        labelBuilder: (context, isHovered) {
+                          return Text(
+                            CommonStrings.edit,
+                            style: TextStyle(
+                              color: _getButtonColor(primaryStyle, isHovered),
+                            ),
+                          );
+                        },
                       ),
                       IconLabelButton(
                         onPressed: _showDeleteProjectGroupDialog,
                         iconPadding: _buttonIconPadding,
-                        icon: Image.network(
-                          'icons/delete.svg',
-                          width: _iconBoxSide,
-                          height: _iconBoxSide,
-                          fit: BoxFit.contain,
-                          color: theme.accentColor,
-                        ),
-                        label: CommonStrings.delete,
-                        labelStyle: TextStyle(
-                          color: theme.accentColor,
-                        ),
+                        iconBuilder: (context, isHovered) {
+                          return Image.network(
+                            'icons/delete.svg',
+                            width: _iconBoxSide,
+                            height: _iconBoxSide,
+                            fit: BoxFit.contain,
+                            color: _getButtonColor(accentStyle, isHovered),
+                          );
+                        },
+                        labelBuilder: (context, isHovered) {
+                          return Text(
+                            CommonStrings.delete,
+                            style: TextStyle(
+                              color: _getButtonColor(accentStyle, isHovered),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -114,6 +129,14 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
         ),
       ),
     );
+  }
+
+  /// Returns the proper button color from the given [buttonStyle] depending
+  /// on the given [isHovered] value.
+  Color _getButtonColor(MetricsButtonStyle buttonStyle, bool isHovered) {
+    final hoverColor = buttonStyle.hoverColor;
+    final color = buttonStyle.color;
+    return isHovered ? hoverColor : color;
   }
 
   /// Provides a project groups count for the given [projectGroupViewModel].

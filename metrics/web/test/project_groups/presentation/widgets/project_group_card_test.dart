@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
@@ -35,19 +36,25 @@ void main() {
       projectsCount: 1,
     );
 
-    const testPrimaryColor = Colors.blue;
-    const testAccentColor = Colors.amberAccent;
+    const primaryButtonColor = Colors.blue;
+    const accentButtonColor = Colors.amberAccent;
     const testBorderColor = Colors.red;
     const testBackgroundColor = Colors.white;
     const testHoverColor = Colors.black;
     const testTitleStyle = TextStyle(color: Colors.grey);
     const testSubtitleStyle = TextStyle(color: Colors.black);
+    const primaryButtonStyle = MetricsButtonStyle(
+      color: primaryButtonColor,
+    );
+    const accentButtonStyle = MetricsButtonStyle(
+      color: accentButtonColor,
+    );
     const testBarrierColor = Colors.red;
 
     const testTheme = MetricsThemeData(
       projectGroupCardTheme: ProjectGroupCardThemeData(
-        primaryColor: testPrimaryColor,
-        accentColor: testAccentColor,
+        primaryButtonStyle: primaryButtonStyle,
+        accentButtonStyle: accentButtonStyle,
         backgroundColor: testBackgroundColor,
         hoverColor: testHoverColor,
         borderColor: testBorderColor,
@@ -193,11 +200,11 @@ void main() {
           await _enterProjectGroupCard(tester);
         });
 
-        final buttonWidget = tester.widget<IconLabelButton>(
-          find.widgetWithText(IconLabelButton, CommonStrings.edit),
+        final label = tester.widget<Text>(
+          find.text(CommonStrings.edit),
         );
 
-        expect(buttonWidget.labelStyle.color, equals(testPrimaryColor));
+        expect(label.style.color, equals(primaryButtonColor));
       },
     );
 
@@ -213,11 +220,11 @@ void main() {
           await _enterProjectGroupCard(tester);
         });
 
-        final buttonWidget = tester.widget<IconLabelButton>(
-          find.widgetWithText(IconLabelButton, CommonStrings.delete),
+        final label = tester.widget<Text>(
+          find.text(CommonStrings.delete),
         );
 
-        expect(buttonWidget.labelStyle.color, equals(testAccentColor));
+        expect(label.style.color, equals(accentButtonColor));
       },
     );
 
@@ -344,7 +351,8 @@ void main() {
         await tester.pumpAndSettle();
 
         final barrierFinder = find.byWidgetPredicate(
-          (widget) => widget is ModalBarrier && widget.color == testBarrierColor,
+          (widget) =>
+              widget is ModalBarrier && widget.color == testBarrierColor,
         );
         expect(barrierFinder, findsOneWidget);
       },
@@ -544,7 +552,8 @@ void main() {
         await tester.pumpAndSettle();
 
         final barrierFinder = find.byWidgetPredicate(
-          (widget) => widget is ModalBarrier && widget.color == testBarrierColor,
+          (widget) =>
+              widget is ModalBarrier && widget.color == testBarrierColor,
         );
         expect(barrierFinder, findsOneWidget);
       },
