@@ -27,6 +27,8 @@ class AuthErrorMessage {
         return AuthStrings.unknownErrorMessage;
       case AuthErrorCode.googleSignInError:
         return AuthStrings.googleSignInErrorOccurred;
+      case AuthErrorCode.notAllowedEmailDomain:
+        return AuthStrings.notAllowedEmailDomainErrorMessage;
       default:
         return null;
     }
