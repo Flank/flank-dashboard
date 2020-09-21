@@ -131,10 +131,12 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     );
   }
 
-  /// Returns the proper color from the given button style depending on  the
-  /// given hover state.
+  /// Returns the proper color from the given [MetricsButtonStyle] depending
+  /// on the given [isHovered] value.
   Color _getButtonColor(MetricsButtonStyle buttonStyle, bool isHovered) {
-    return isHovered ? buttonStyle.hoverColor : buttonStyle.color;
+    final hoverColor = buttonStyle.hoverColor;
+    final color = buttonStyle.color;
+    return isHovered ? hoverColor : color;
   }
 
   /// Provides a project groups count for the given [projectGroupViewModel].
