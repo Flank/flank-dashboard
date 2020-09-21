@@ -81,5 +81,14 @@ void main() {
         );
       },
     );
+
+    test(
+      "returns null if the given error code is null",
+      () {
+        const errorMessage = AuthErrorMessage(null);
+
+        expect(errorMessage.message, isNull);
+      },
+    );
   });
 }
