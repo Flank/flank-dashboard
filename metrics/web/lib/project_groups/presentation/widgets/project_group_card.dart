@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_card.dart';
@@ -38,10 +39,8 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
   Widget build(BuildContext context) {
     const _buttonIconPadding = EdgeInsets.only(right: 8.0);
     final theme = MetricsTheme.of(context).projectGroupCardTheme;
-    final primaryButtonColor = theme.primaryButtonStyle.color;
-    final primaryButtonHoverColor = theme.primaryButtonStyle.color;
-    final accentButtonColor = theme.accentButtonStyle.color;
-    final accentButtonHoverColor = theme.accentButtonStyle.color;
+    final primaryStyle = theme.primaryButtonStyle;
+    final accentStyle = theme.accentButtonStyle;
 
     return Material(
       child: TappableArea(
@@ -71,18 +70,14 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                             width: _iconBoxSide,
                             height: _iconBoxSide,
                             fit: BoxFit.contain,
-                            color: isHovered
-                                ? primaryButtonHoverColor
-                                : primaryButtonColor,
+                            color: _getButtonColor(primaryStyle, isHovered),
                           );
                         },
                         labelBuilder: (context, isHovered) {
                           return Text(
                             CommonStrings.edit,
                             style: TextStyle(
-                              color: isHovered
-                                  ? primaryButtonHoverColor
-                                  : primaryButtonColor,
+                              color: _getButtonColor(primaryStyle, isHovered),
                             ),
                           );
                         },
@@ -96,18 +91,14 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                             width: _iconBoxSide,
                             height: _iconBoxSide,
                             fit: BoxFit.contain,
-                            color: isHovered
-                                ? accentButtonHoverColor
-                                : accentButtonColor,
+                            color: _getButtonColor(accentStyle, isHovered),
                           );
                         },
                         labelBuilder: (context, isHovered) {
                           return Text(
                             CommonStrings.delete,
                             style: TextStyle(
-                              color: isHovered
-                                  ? accentButtonHoverColor
-                                  : accentButtonColor,
+                              color: _getButtonColor(accentStyle, isHovered),
                             ),
                           );
                         },
@@ -138,6 +129,12 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
         ),
       ),
     );
+  }
+
+  /// Returns the proper color from the given button style depending on  the
+  /// given hover state.
+  Color _getButtonColor(MetricsButtonStyle buttonStyle, bool isHovered) {
+    return isHovered ? buttonStyle.hoverColor : buttonStyle.color;
   }
 
   /// Provides a project groups count for the given [projectGroupViewModel].
