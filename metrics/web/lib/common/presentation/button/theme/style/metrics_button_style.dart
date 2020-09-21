@@ -18,7 +18,7 @@ class MetricsButtonStyle {
   const MetricsButtonStyle({
     this.color = Colors.blue,
     this.hoverColor = Colors.black12,
+    this.elevation = 0.0,
     this.labelStyle,
-    this.elevation,
   });
 }

@@ -8,22 +8,22 @@ import 'package:test/test.dart';
 void main() {
   group("MetricsButtonStyle", () {
     test(
-      "creates an instance with the default colors for buttons if the parameters are not specified",
+      "creates an instance with the default colors and elevation for buttons if the parameters are not specified",
       () {
         const style = MetricsButtonStyle();
 
         expect(style.color, isNotNull);
         expect(style.hoverColor, isNotNull);
+        expect(style.elevation, isNotNull);
       },
     );
 
     test(
-      "creates an instance with null text styles and elevation for buttons if the text styles are not specified",
+      "creates an instance with null text style for buttons if the text style is not specified",
       () {
         const style = MetricsButtonStyle();
 
         expect(style.labelStyle, isNull);
-        expect(style.elevation, isNull);
       },
     );
 

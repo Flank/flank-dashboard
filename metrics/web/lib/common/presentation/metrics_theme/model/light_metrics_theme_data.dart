@@ -198,7 +198,6 @@ class LightMetricsThemeData extends MetricsThemeData {
               positive: MetricsButtonStyle(
                 color: ColorConfig.primaryColor,
                 hoverColor: ColorConfig.primaryButtonHoverColor,
-                elevation: 0.0,
                 labelStyle: MetricsTextStyle(
                   color: Colors.black,
                   fontSize: 16.0,
@@ -209,7 +208,6 @@ class LightMetricsThemeData extends MetricsThemeData {
               neutral: MetricsButtonStyle(
                 color: _inactiveButtonColor,
                 hoverColor: _inactiveButtonHoverColor,
-                elevation: 0.0,
                 labelStyle: TextStyle(
                   color: _inactiveTextColor,
                   fontSize: 16.0,
@@ -219,7 +217,6 @@ class LightMetricsThemeData extends MetricsThemeData {
               negative: MetricsButtonStyle(
                 color: ColorConfig.accentColor,
                 hoverColor: ColorConfig.accentButtonHoverColor,
-                elevation: 0.0,
                 labelStyle: MetricsTextStyle(
                   color: Colors.black,
                   fontSize: 16.0,
@@ -229,7 +226,6 @@ class LightMetricsThemeData extends MetricsThemeData {
               ),
               inactive: MetricsButtonStyle(
                 color: _inactiveButtonColor,
-                elevation: 0.0,
                 labelStyle: MetricsTextStyle(
                   color: _inactiveButtonHoverColor,
                   lineHeightInPixels: 20,
@@ -283,7 +279,6 @@ class LightMetricsThemeData extends MetricsThemeData {
             loginOptionButtonStyle: MetricsButtonStyle(
               color: inputColor,
               hoverColor: _inactiveButtonHoverColor,
-              elevation: 0.0,
               labelStyle: MetricsTextStyle(
                 color: _loginOptionTextColor,
                 fontSize: 16.0,

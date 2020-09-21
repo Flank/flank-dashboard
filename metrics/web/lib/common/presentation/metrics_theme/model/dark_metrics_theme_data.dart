@@ -201,7 +201,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
             buttonAttentionLevel: MetricsButtonAttentionLevel(
               positive: MetricsButtonStyle(
                 color: ColorConfig.primaryColor,
-                elevation: 0.0,
                 labelStyle: TextStyle(
                   color: Colors.black,
                   fontSize: 16.0,
@@ -210,7 +209,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
               ),
               neutral: MetricsButtonStyle(
                 color: ColorConfig.inactiveColor,
-                elevation: 0.0,
                 labelStyle: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -219,7 +217,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
               ),
               negative: MetricsButtonStyle(
                 color: ColorConfig.accentColor,
-                elevation: 0.0,
                 labelStyle: TextStyle(
                   color: Colors.black,
                   fontSize: 16.0,
@@ -228,7 +225,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
               ),
               inactive: MetricsButtonStyle(
                 color: ColorConfig.inactiveColor,
-                elevation: 0.0,
                 labelStyle: TextStyle(
                   color: ColorConfig.inactiveTextColor,
                   fontSize: 16.0,
@@ -272,7 +268,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
             loginOptionButtonStyle: MetricsButtonStyle(
               color: Colors.white,
-              elevation: 0.0,
               hoverColor: _loginOptionHoverColor,
               labelStyle: TextStyle(
                 color: _loginOptionTextColor,
