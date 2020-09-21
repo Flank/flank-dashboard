@@ -122,11 +122,6 @@ class _MetricsAppState extends State<MetricsApp> {
 /// A [ScrollBehavior] that disable the stretching effect.
 class _ScrollBehaviour extends ScrollBehavior {
   @override
-  ScrollPhysics getScrollPhysics(BuildContext context) {
-    return const ClampingScrollPhysics();
-  }
-
-  @override
   Widget buildViewportChrome(
     BuildContext context,
     Widget child,
