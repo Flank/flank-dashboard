@@ -202,7 +202,12 @@ class ProjectMetricsNotifier extends ChangeNotifier {
   /// Refreshes the project group dropdown item view models
   /// according to current project group models.
   void _refreshProjectGroupDropdownItemViewModels() {
-    if (_projectGroupModels == null) return;
+    if (_projectGroupModels == null) {
+      _projectGroupDropdownItems = null;
+      _selectedProjectGroup = null;
+
+      return;
+    }
 
     _projectGroupDropdownItems = [
       _allProjectsGroupDropdownItemViewModel,
