@@ -222,6 +222,20 @@ void main() {
         expect(actualCallback, equals(testCallback));
       },
     );
+
+    testWidgets(
+      'applies tappable area to the row of the label and icon',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_IconLabelButtonTestbed());
+
+        final iconFinder = find.ancestor(
+          of: find.byType(Row),
+          matching: find.byType(TappableArea),
+        );
+
+        expect(iconFinder, findsOneWidget);
+      },
+    );
   });
 }
 
