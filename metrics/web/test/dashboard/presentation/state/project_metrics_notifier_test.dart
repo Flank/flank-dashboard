@@ -669,6 +669,34 @@ void main() {
         );
       },
     );
+
+    test(
+      ".setProjectGroups() resets project group dropdown items and selected project group to null if project groups are null",
+          () {
+        final projectGroups = [
+          ProjectGroupModel(
+            id: "id",
+            name: "name",
+            projectIds: UnmodifiableListView([]),
+          ),
+          ProjectGroupModel(
+            id: "id2",
+            name: "name1",
+            projectIds: UnmodifiableListView([]),
+          ),
+        ];
+
+        projectMetricsNotifier.setProjectGroups(projectGroups);
+
+        expect(projectMetricsNotifier.selectedProjectGroup, isNotNull);
+        expect(projectMetricsNotifier.projectGroupDropdownItems, isNotNull);
+
+        projectMetricsNotifier.setProjectGroups(null);
+
+        expect(projectMetricsNotifier.selectedProjectGroup, isNull);
+        expect(projectMetricsNotifier.projectGroupDropdownItems, isNull);
+      },
+    );
   });
 }
 
