@@ -101,7 +101,7 @@ void main() {
           );
         });
 
-        final finder = find.widgetWithText(Row, projectCheckboxViewModel.name);
+        final finder = find.text(projectCheckboxViewModel.name);
         await tester.tap(finder);
         await tester.pump();
 
