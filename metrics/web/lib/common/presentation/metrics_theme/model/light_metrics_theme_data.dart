@@ -65,7 +65,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _loginOptionTextColor = Color(0xFF757575);
   static const Color _userMenuButtonColor = Color(0xFF272727);
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.3);
-
+  static const Color _metricsTileHoverColor = Color(0xFFf6f8f9);
   static const Color _positiveStatusColor = Color(0xFFE6F9F3);
   static const Color _negativeStatusColor = Color(0xFFFFF5F3);
   static const Color _neutralStatusColor = Color(0xFFFAF6E6);
@@ -301,7 +301,10 @@ class LightMetricsThemeData extends MetricsThemeData {
               ),
             ),
             projectMetricsTileTheme: ProjectMetricsTileThemeData(
+              backgroundColor: Colors.white,
+              hoverBackgroundColor: _metricsTileHoverColor,
               borderColor: _tileBorderColor,
+              hoverBorderColor: _tileBorderColor,
               textStyle: TextStyle(fontSize: 22.0),
             ),
           ),

@@ -295,7 +295,9 @@ class DarkMetricsThemeData extends MetricsThemeData {
             ),
             projectMetricsTileTheme: ProjectMetricsTileThemeData(
               backgroundColor: scaffoldColor,
+              hoverBackgroundColor: _cardHoverColor,
               borderColor: _tileBorderColor,
+              hoverBorderColor: _borderColor,
               textStyle: MetricsTextStyle(
                 fontSize: 24.0,
                 lineHeightInPixels: 28.0,
