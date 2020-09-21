@@ -671,7 +671,7 @@ void main() {
     );
 
     test(
-      ".selectProjectGroup() resets project group dropdown items and selected project group to null if project groups are null",
+      ".setProjectGroups() resets project group dropdown items and selected project group to null if project groups are null",
           () {
         final projectGroups = [
           ProjectGroupModel(
