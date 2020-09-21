@@ -14,8 +14,8 @@ void main() {
 
         expect(themeData.focusColor, isNotNull);
         expect(themeData.hoverBorderColor, isNotNull);
-        expect(themeData.prefixColor, isNotNull);
-        expect(themeData.focusPrefixColor, isNotNull);
+        expect(themeData.prefixIconColor, isNotNull);
+        expect(themeData.focusedPrefixIconColor, isNotNull);
       },
     );
 
@@ -38,15 +38,15 @@ void main() {
       final themeData = TextFieldThemeData(
         focusColor: focusColor,
         hoverBorderColor: hoverBorderColor,
-        prefixColor: prefixColor,
-        focusPrefixColor: focusPrefixColor,
+        prefixIconColor: prefixColor,
+        focusedPrefixIconColor: focusPrefixColor,
         textStyle: textStyle,
       );
 
       expect(themeData.focusColor, equals(focusColor));
       expect(themeData.hoverBorderColor, equals(hoverBorderColor));
-      expect(themeData.prefixColor, equals(prefixColor));
-      expect(themeData.focusPrefixColor, equals(focusPrefixColor));
+      expect(themeData.prefixIconColor, equals(prefixColor));
+      expect(themeData.focusedPrefixIconColor, equals(focusPrefixColor));
       expect(themeData.textStyle, equals(textStyle));
     });
   });

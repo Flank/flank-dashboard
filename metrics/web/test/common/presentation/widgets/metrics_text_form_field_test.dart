@@ -12,14 +12,14 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("MetricsTextFormField", () {
-    const prefixColor = Colors.red;
-    const focusPrefixColor = Colors.green;
+    const prefixIconColor = Colors.red;
+    const focusedPrefixIconColor = Colors.green;
     const metricsThemeData = MetricsThemeData(
       textFieldTheme: TextFieldThemeData(
         focusColor: Colors.grey,
         hoverBorderColor: Colors.lightBlue,
-        prefixColor: prefixColor,
-        focusPrefixColor: focusPrefixColor,
+        prefixIconColor: prefixIconColor,
+        focusedPrefixIconColor: focusedPrefixIconColor,
         textStyle: TextStyle(
           color: Colors.black,
           fontSize: 14.0,
@@ -207,7 +207,7 @@ void main() {
         final textField = FinderUtil.findTextField(tester);
         final prefixIcon = textField.decoration.prefixIcon as Icon;
 
-        expect(prefixIcon.color, equals(prefixColor));
+        expect(prefixIcon.color, equals(prefixIconColor));
       },
     );
 
@@ -230,7 +230,7 @@ void main() {
         final textField = FinderUtil.findTextField(tester);
         final prefixIcon = textField.decoration.prefixIcon as Icon;
 
-        expect(prefixIcon.color, equals(focusPrefixColor));
+        expect(prefixIcon.color, equals(focusedPrefixIconColor));
       },
     );
 
@@ -436,7 +436,8 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   /// A type of keyboard to use for editing the text.
   final TextInputType keyboardType;
 
-  /// A [PrefixBuilder] needed to build a prefix icon.
+  /// A [PrefixBuilder] that builds a prefix icon for this text field
+  /// depending on the passed parameters.
   final PrefixBuilder prefixIconBuilder;
 
   /// A prefix icon for the text field under tests that appears

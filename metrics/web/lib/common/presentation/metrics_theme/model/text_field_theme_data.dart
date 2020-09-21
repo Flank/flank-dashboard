@@ -8,11 +8,11 @@ class TextFieldThemeData {
   /// A [Color] of the text field border when the field is hovered.
   final Color hoverBorderColor;
 
-  /// A prefix [Color].
-  final Color prefixColor;
+  /// A [Color] of a prefix icon of the text field.
+  final Color prefixIconColor;
 
-  /// A prefix [Color] when the field is focused.
-  final Color focusPrefixColor;
+  /// A [Color] of a focused prefix icon of the text field.
+  final Color focusedPrefixIconColor;
 
   /// A [TextStyle] to use for the text being edited.
   final TextStyle textStyle;
@@ -21,8 +21,8 @@ class TextFieldThemeData {
   const TextFieldThemeData({
     this.focusColor = Colors.blue,
     this.hoverBorderColor = Colors.grey,
-    this.prefixColor = Colors.red,
-    this.focusPrefixColor = Colors.yellow,
+    this.prefixIconColor = Colors.red,
+    this.focusedPrefixIconColor = Colors.yellow,
     this.textStyle,
   });
 }

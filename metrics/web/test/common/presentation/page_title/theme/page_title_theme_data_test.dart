@@ -4,6 +4,15 @@ import 'package:metrics/common/presentation/page_title/theme/page_title_theme_da
 
 void main() {
   group("PageTitleThemeData", () {
+    test(
+      "creates an instance with the default icon color if the parameter is not specified",
+      () {
+        const themeData = PageTitleThemeData();
+
+        expect(themeData.iconColor, isNotNull);
+      },
+    );
+
     test("creates an instance with the given values", () {
       const iconColor = Colors.red;
       const textStyle = TextStyle(fontSize: 6.0);

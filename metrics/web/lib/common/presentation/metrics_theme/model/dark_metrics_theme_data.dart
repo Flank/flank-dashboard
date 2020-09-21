@@ -244,8 +244,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
           textFieldTheme: const TextFieldThemeData(
             focusColor: Colors.black,
             hoverBorderColor: _dropdownHoverBorderColor,
-            prefixColor: _inactiveColor,
-            focusPrefixColor: Colors.white,
+            prefixIconColor: _inactiveColor,
+            focusedPrefixIconColor: Colors.white,
             textStyle: MetricsTextStyle(
               color: Colors.white,
               fontSize: 16.0,

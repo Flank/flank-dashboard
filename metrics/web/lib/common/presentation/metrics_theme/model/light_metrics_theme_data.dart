@@ -246,8 +246,8 @@ class LightMetricsThemeData extends MetricsThemeData {
           textFieldTheme: const TextFieldThemeData(
             focusColor: inputHoverColor,
             hoverBorderColor: _hoverBorderColor,
-            prefixColor: _inputHintTextColor,
-            focusPrefixColor: _inactiveTextColor,
+            prefixIconColor: _inputHintTextColor,
+            focusedPrefixIconColor: _inactiveTextColor,
             textStyle: MetricsTextStyle(
               color: _inactiveTextColor,
               fontSize: 16.0,

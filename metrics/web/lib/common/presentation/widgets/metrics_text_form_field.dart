@@ -26,7 +26,8 @@ class MetricsTextFormField extends StatefulWidget {
   /// A type of keyboard to use for editing the text.
   final TextInputType keyboardType;
 
-  /// A [PrefixBuilder] needed to build a prefix icon.
+  /// A [PrefixBuilder] that builds a prefix icon for this text field
+  /// depending on the passed parameters.
   final PrefixBuilder prefixIconBuilder;
 
   /// An icon that appears after the editable part of this text field,
@@ -122,7 +123,7 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
     final decorationTheme = Theme.of(context).inputDecorationTheme;
     final prefixIcon = widget.prefixIconBuilder?.call(
       context,
-      _isFocused ? textFieldTheme.focusPrefixColor : textFieldTheme.prefixColor,
+      _isFocused ? textFieldTheme.focusedPrefixIconColor : textFieldTheme.prefixIconColor,
     );
 
     return Column(
