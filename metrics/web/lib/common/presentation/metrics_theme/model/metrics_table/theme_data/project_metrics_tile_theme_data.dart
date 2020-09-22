@@ -5,18 +5,28 @@ class ProjectMetricsTileThemeData {
   /// A background [Color] of the tile displaying project metrics.
   final Color backgroundColor;
 
+  /// A background [Color] when the tile is hovered.
+  final Color hoverBackgroundColor;
+
   /// A [TextStyle] of the metrics tile text.
   final TextStyle textStyle;
 
   /// A [Color] of the border.
   final Color borderColor;
 
+  /// A [Color] of the border when the tile is hovered.
+  final Color hoverBorderColor;
+
   /// Creates an instance of the [ProjectMetricsTileThemeData].
   ///
-  /// If the given [borderColor] is null, the [Colors.grey] used.
+  /// If the given [borderColor] or [hoverBorderColor] is null,
+  /// the [Colors.grey] used.
   const ProjectMetricsTileThemeData({
     this.backgroundColor,
+    this.hoverBackgroundColor,
     this.textStyle,
     Color borderColor,
-  }) : borderColor = borderColor ?? Colors.grey;
+    Color hoverBorderColor,
+  })  : borderColor = borderColor ?? Colors.grey,
+        hoverBorderColor = hoverBorderColor ?? Colors.grey;
 }
