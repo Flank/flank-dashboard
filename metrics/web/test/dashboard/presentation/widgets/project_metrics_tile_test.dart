@@ -77,7 +77,6 @@ void main() {
       );
 
       const pointerEvent = PointerEnterEvent();
-
       mouseRegion.onEnter(pointerEvent);
 
       await tester.pump();
@@ -95,7 +94,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the proper background color from the metrics theme when the tile is not hovered",
+      "applies the background color from the metrics theme when the tile is not hovered",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectMetricsTileTestbed(
@@ -119,7 +118,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the proper background color from the metrics theme when the tile is hovered",
+      "applies the hover background color from the metrics theme when the tile is hovered",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectMetricsTileTestbed(
@@ -145,7 +144,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the proper border color from the metrics theme when the tile is not hovered",
+      "applies the border color from the metrics theme when the tile is not hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricsTileTestbed(
           themeData: themeData,
@@ -171,7 +170,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the proper border color from the metrics theme when the tile is hovered",
+      "applies the hover border color from the metrics theme when the tile is hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricsTileTestbed(
           themeData: themeData,

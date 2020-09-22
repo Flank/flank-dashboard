@@ -16,6 +16,14 @@ void main() {
           themeData.borderColor,
           isNotNull,
         );
+      },
+    );
+
+    test(
+      "creates a theme data with the default hover border color if the given one is null",
+      () {
+        final themeData = ProjectMetricsTileThemeData(hoverBorderColor: null);
+
         expect(
           themeData.hoverBorderColor,
           isNotNull,
