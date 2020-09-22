@@ -97,13 +97,16 @@ void main() {
           ),
         );
 
-        final paddingWidget = tester.widget<Padding>(
-          find.byWidgetPredicate(
-            (widget) => widget is Padding && widget.child == closeIcon,
-          ),
+        final stackFinder = find.ancestor(
+          of: find.byWidget(closeIcon),
+          matching: find.byType(Stack),
         );
 
-        expect(paddingWidget.padding, equals(padding));
+        final containerWidget = tester.widget<Container>(
+          find.descendant(of: stackFinder, matching: find.byType(Container)),
+        );
+
+        expect(containerWidget.padding, equals(padding));
       },
     );
 
