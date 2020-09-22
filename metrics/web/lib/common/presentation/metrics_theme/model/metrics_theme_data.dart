@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
@@ -104,6 +105,9 @@ class MetricsThemeData {
   /// A theme for the page title.
   final PageTitleThemeData pageTitleTheme;
 
+  /// A theme for the bar graph popup.
+  final BarGraphPopupThemeData barGraphPopupThemeData;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricsWidgetThemeData metricsWidgetTheme,
@@ -129,6 +133,7 @@ class MetricsThemeData {
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
+    BarGraphPopupThemeData barGraphPopupThemeData,
     PageTitleThemeData pageTitleTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
@@ -170,6 +175,8 @@ class MetricsThemeData {
         circlePercentageTheme =
             circlePercentageTheme ?? const CirclePercentageThemeData(),
         toastTheme = toastTheme ?? const ToastThemeData(),
+        barGraphPopupThemeData =
+            barGraphPopupThemeData ?? const BarGraphPopupThemeData(),
         pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
@@ -200,6 +207,7 @@ class MetricsThemeData {
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
+    BarGraphPopupThemeData barGraphPopupThemeData,
     PageTitleThemeData pageTitleTheme,
   }) {
     return MetricsThemeData(
@@ -236,6 +244,8 @@ class MetricsThemeData {
           circlePercentageTheme ?? this.circlePercentageTheme,
       toastTheme: toastTheme ?? this.toastTheme,
       pageTitleTheme: pageTitleTheme ?? this.pageTitleTheme,
+      barGraphPopupThemeData:
+          barGraphPopupThemeData ?? this.barGraphPopupThemeData,
     );
   }
 }

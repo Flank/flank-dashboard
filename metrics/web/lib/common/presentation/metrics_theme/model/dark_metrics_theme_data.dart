@@ -8,6 +8,7 @@ import 'package:metrics/common/presentation/metrics_theme/config/text_style_conf
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
@@ -111,6 +112,22 @@ class DarkMetricsThemeData extends MetricsThemeData {
             canceledColor: ColorConfig.accentColor,
             successfulColor: ColorConfig.primaryColor,
             failedColor: ColorConfig.accentColor,
+          ),
+          barGraphPopupThemeData: const BarGraphPopupThemeData(
+            color: Colors.white,
+            shadowColor: _shadowColor,
+            titleTextStyle: MetricsTextStyle(
+              fontSize: 13.0,
+              lineHeightInPixels: 16.0,
+              color: ColorConfig.secondaryPopupTextColor,
+              fontWeight: FontWeight.normal,
+            ),
+            subtitleTextStyle: MetricsTextStyle(
+              fontSize: 13.0,
+              lineHeightInPixels: 16.0,
+              color: ColorConfig.popupTextColor,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,

@@ -14,6 +14,8 @@ class ColorConfig {
   static const Color inactiveTextColor = Color(0xFF1b1b1b);
   static const Color shimmerColor = Color(0xFF878799);
   static const Color secondaryTextColor = Color(0xFF9c9ca6);
+  static const Color secondaryPopupTextColor = Color(0xFF8e8e99);
+  static const Color popupTextColor = Color(0xFF1b1b1d);
   static const Color yellow = Color(0xFFFED100);
   static const Color yellowTranslucent = Color(0xFF292618);
   static const Color inputSecondaryTextColor = Color(0xFF545459);

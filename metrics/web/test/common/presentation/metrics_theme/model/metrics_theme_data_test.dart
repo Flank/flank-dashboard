@@ -6,6 +6,7 @@ import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_i
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
@@ -66,6 +67,7 @@ void main() {
         expect(themeData.textPlaceholderTheme, isNotNull);
         expect(themeData.inputPlaceholderTheme, isNotNull);
         expect(themeData.toastTheme, isNotNull);
+        expect(themeData.barGraphPopupThemeData, isNotNull);
         expect(themeData.pageTitleTheme, isNotNull);
       },
     );
@@ -97,6 +99,7 @@ void main() {
           inputPlaceholderTheme: null,
           circlePercentageTheme: null,
           toastTheme: null,
+          barGraphPopupThemeData: null,
           pageTitleTheme: null,
         );
 
@@ -123,6 +126,7 @@ void main() {
         expect(themeData.inputPlaceholderTheme, isNotNull);
         expect(themeData.circlePercentageTheme, isNotNull);
         expect(themeData.toastTheme, isNotNull);
+        expect(themeData.barGraphPopupThemeData, isNotNull);
         expect(themeData.pageTitleTheme, isNotNull);
       },
     );
@@ -258,6 +262,10 @@ void main() {
           iconColor: Colors.blue,
         );
 
+        const barGraphPopupTheme = BarGraphPopupThemeData(
+          color: Colors.green,
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
@@ -284,6 +292,7 @@ void main() {
           inputPlaceholderTheme: inputPlaceholderTheme,
           circlePercentageTheme: circlePercentageTheme,
           toastTheme: toastTheme,
+          barGraphPopupThemeData: barGraphPopupTheme,
           pageTitleTheme: pageTitleTheme,
         );
 
@@ -337,6 +346,7 @@ void main() {
           equals(circlePercentageTheme),
         );
         expect(copiedTheme.toastTheme, equals(toastTheme));
+        expect(copiedTheme.barGraphPopupThemeData, equals(barGraphPopupTheme));
         expect(copiedTheme.pageTitleTheme, equals(pageTitleTheme));
       },
     );
@@ -426,6 +436,10 @@ void main() {
           equals(copiedTheme.circlePercentageTheme),
         );
         expect(themeData.toastTheme, equals(copiedTheme.toastTheme));
+        expect(
+          themeData.barGraphPopupThemeData,
+          equals(copiedTheme.barGraphPopupThemeData),
+        );
         expect(themeData.pageTitleTheme, equals(copiedTheme.pageTitleTheme));
       },
     );
