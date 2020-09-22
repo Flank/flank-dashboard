@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/loading_builder.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
@@ -46,81 +48,90 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
         .projectMetricsTableTheme
         .projectMetricsTileTheme;
 
-    return DecoratedContainer(
-      height: _tileHeight,
-      margin: const EdgeInsets.only(bottom: 4.0),
-      decoration: BoxDecoration(
-        color: theme.backgroundColor,
-        borderRadius: BorderRadius.circular(2.0),
-        border: Border.all(color: theme.borderColor),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: MetricsTableRow(
-          status: ProjectBuildStatus(
-            buildStatus: projectMetrics.buildStatus,
-            buildStatusStyleStrategy: const ProjectBuildStatusStyleStrategy(),
-          ),
-          name: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Text(
-              projectMetrics.projectName ?? '',
-              style: theme.textStyle,
-              overflow: TextOverflow.ellipsis,
+    return TappableArea(
+      mouseCursor: SystemMouseCursors.basic,
+      builder: (context, isHovered, _) {
+        return DecoratedContainer(
+          height: _tileHeight,
+          margin: const EdgeInsets.only(bottom: 4.0),
+          decoration: BoxDecoration(
+            color:
+                isHovered ? theme.hoverBackgroundColor : theme.backgroundColor,
+            borderRadius: BorderRadius.circular(2.0),
+            border: Border.all(
+              color: isHovered ? theme.hoverBorderColor : theme.borderColor,
             ),
           ),
-          buildResults: Container(
-            height: 80.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics.buildResultMetrics == null,
-              builder: (_) => BuildResultBarGraph(
-                buildResultMetric: projectMetrics.buildResultMetrics,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: MetricsTableRow(
+              status: ProjectBuildStatus(
+                buildStatus: projectMetrics.buildStatus,
+                buildStatusStyleStrategy:
+                    const ProjectBuildStatusStyleStrategy(),
               ),
-            ),
-          ),
-          performance: Container(
-            height: 81.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics.performanceSparkline == null,
-              builder: (_) => PerformanceSparklineGraph(
-                performanceSparkline: projectMetrics.performanceSparkline,
+              name: Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Text(
+                  projectMetrics.projectName ?? '',
+                  style: theme.textStyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
-          ),
-          buildNumber: Container(
-            height: 80.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics.buildNumberMetric == null,
-              builder: (_) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: BuildNumberScorecard(
-                    buildNumberMetric: projectMetrics.buildNumberMetric,
+              buildResults: Container(
+                height: 80.0,
+                child: LoadingBuilder(
+                  isLoading: projectMetrics.buildResultMetrics == null,
+                  builder: (_) => BuildResultBarGraph(
+                    buildResultMetric: projectMetrics.buildResultMetrics,
                   ),
-                );
-              },
-            ),
-          ),
-          stability: Container(
-            height: 72.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics == null,
-              builder: (_) => StabilityCirclePercentage(
-                stability: projectMetrics.stability,
+                ),
+              ),
+              performance: Container(
+                height: 81.0,
+                child: LoadingBuilder(
+                  isLoading: projectMetrics.performanceSparkline == null,
+                  builder: (_) => PerformanceSparklineGraph(
+                    performanceSparkline: projectMetrics.performanceSparkline,
+                  ),
+                ),
+              ),
+              buildNumber: Container(
+                height: 80.0,
+                child: LoadingBuilder(
+                  isLoading: projectMetrics.buildNumberMetric == null,
+                  builder: (_) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: BuildNumberScorecard(
+                        buildNumberMetric: projectMetrics.buildNumberMetric,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              stability: Container(
+                height: 72.0,
+                child: LoadingBuilder(
+                  isLoading: projectMetrics == null,
+                  builder: (_) => StabilityCirclePercentage(
+                    stability: projectMetrics.stability,
+                  ),
+                ),
+              ),
+              coverage: Container(
+                height: 72.0,
+                child: LoadingBuilder(
+                  isLoading: projectMetrics == null,
+                  builder: (_) => CoverageCirclePercentage(
+                    coverage: projectMetrics.coverage,
+                  ),
+                ),
               ),
             ),
           ),
-          coverage: Container(
-            height: 72.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics == null,
-              builder: (_) => CoverageCirclePercentage(
-                coverage: projectMetrics.coverage,
-              ),
-            ),
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
