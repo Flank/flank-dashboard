@@ -73,7 +73,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the animated cross fade with image for the checkbox",
+      "displays the animated crossfade with the image for the checkbox",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -91,7 +91,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the animated cross fade with image for the hovered checkbox if the widget is hovered",
+      "displays the animated crossfade with the image for the hovered checkbox if the widget is hovered",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -112,7 +112,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the animated cross fade with image for the blank checkbox",
+      "displays the animated crossfade with the image for the blank checkbox",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -130,7 +130,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the animated cross fade with image for the hovered blank checkbox if the with is hovered",
+      "displays the animated crossfade with the image for the hovered blank checkbox if the widget is hovered",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
