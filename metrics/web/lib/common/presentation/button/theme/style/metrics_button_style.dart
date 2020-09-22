@@ -15,10 +15,14 @@ class MetricsButtonStyle {
   final double elevation;
 
   /// Creates a new instance of the [MetricsButtonStyle].
+  ///
+  /// The [color] default value is [Colors.blue].
+  /// The [hoverColor] default value is [Colors.black12].
+  /// The [elevation] default value is `0.0`.
   const MetricsButtonStyle({
     this.color = Colors.blue,
     this.hoverColor = Colors.black12,
+    this.elevation = 0.0,
     this.labelStyle,
-    this.elevation,
   });
 }
