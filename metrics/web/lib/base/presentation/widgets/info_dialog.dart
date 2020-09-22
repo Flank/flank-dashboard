@@ -117,15 +117,13 @@ class InfoDialog extends StatelessWidget {
                 ],
               ),
             ),
-            Align(
+            Container(
               alignment: Alignment.topRight,
-              child: Padding(
-                padding: closeIconPadding,
-                child: TappableArea(
-                  onTap: () => Navigator.of(context).pop(),
-                  builder: (context, isHovered, child) => child,
-                  child: closeIcon,
-                ),
+              padding: closeIconPadding,
+              child: TappableArea(
+                onTap: () => Navigator.of(context).pop(),
+                builder: (context, isHovered, child) => child,
+                child: closeIcon,
               ),
             ),
           ],

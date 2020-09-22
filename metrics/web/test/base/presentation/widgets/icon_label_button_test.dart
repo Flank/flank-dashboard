@@ -224,7 +224,7 @@ void main() {
     );
 
     testWidgets(
-      'applies tappable area to the row of the label and icon',
+      "applies tappable area to the row of the label and icon",
       (WidgetTester tester) async {
         await tester.pumpWidget(_IconLabelButtonTestbed());
 

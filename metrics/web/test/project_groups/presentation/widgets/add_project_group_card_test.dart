@@ -363,7 +363,7 @@ void main() {
     );
 
     testWidgets(
-      'applies tappable area to the metrics card',
+      "applies tappable area to the metrics card",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(const _AddProjectGroupCardTestbed()),

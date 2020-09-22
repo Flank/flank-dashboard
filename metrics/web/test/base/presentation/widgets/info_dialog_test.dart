@@ -97,16 +97,16 @@ void main() {
           ),
         );
 
-        final finderAlign = find.ancestor(
+        final stackFinder = find.ancestor(
           of: find.byWidget(closeIcon),
-          matching: find.byType(Align),
+          matching: find.byType(Stack),
         );
 
-        final paddingWidget = tester.widget<Padding>(
-          find.descendant(of: finderAlign, matching: find.byType(Padding)),
+        final containerWidget = tester.widget<Container>(
+          find.descendant(of: stackFinder, matching: find.byType(Container)),
         );
 
-        expect(paddingWidget.padding, equals(padding));
+        expect(containerWidget.padding, equals(padding));
       },
     );
 
