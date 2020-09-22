@@ -410,11 +410,6 @@ void main() {
 
 /// A testbed widget used to test the [MetricsTextFormField] widget.
 class _MetricsTextFormFieldTestbed extends StatelessWidget {
-  /// A default builder used if the [prefixIconBuilder] is not specified.
-  static Widget _defaultBuilder(BuildContext context, Color color) {
-    return const Icon(Icons.wifi_tethering);
-  }
-
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData metricsThemeData;
 
@@ -457,7 +452,6 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   ///
   /// The [metricsThemeData] defaults to the default [MetricsThemeData] instance.
   /// The [obscureText] defaults to `false`.
-  /// The [prefixIconBuilder] defaults to [_defaultBuilder].
   const _MetricsTextFormFieldTestbed({
     Key key,
     this.metricsThemeData = const MetricsThemeData(),
@@ -467,7 +461,7 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
     this.controller,
     this.validator,
     this.onChanged,
-    this.prefixIconBuilder = _defaultBuilder,
+    this.prefixIconBuilder,
     this.focusPrefixIcon,
     this.suffixIcon,
     this.hint,
