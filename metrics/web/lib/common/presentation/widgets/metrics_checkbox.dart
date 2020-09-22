@@ -8,38 +8,42 @@ class MetricsCheckbox extends StatelessWidget {
   /// The callback that is called when the checkbox has tapped.
   final ValueChanged<bool> onChanged;
 
+  /// Indicates whether checkbox is hovered or not.
+  final bool isHovered;
+
   /// Creates a new metrics checkbox instance.
   ///
-  /// The [value] must not be null.
+  /// [isHovered] defaults to `false`.
+  ///
+  /// The [value] and [isHovered] must not be null.
   const MetricsCheckbox({
     Key key,
     @required this.value,
-    @required this.onChanged,
+    this.onChanged,
+    this.isHovered = false,
   })  : assert(value != null),
+        assert(isHovered != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final state = value ? CrossFadeState.showFirst : CrossFadeState.showSecond;
 
-    return InkWell(
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      customBorder: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-      onTap: () => onChanged(!value),
+    return GestureDetector(
+      onTap: () => onChanged?.call(!value),
       child: AnimatedCrossFade(
         crossFadeState: state,
         duration: const Duration(milliseconds: 100),
         firstChild: Image.network(
-          'icons/check-box.svg',
+          isHovered ? 'icons/check-box-hovered.svg' : 'icons/check-box.svg',
           width: 20.0,
           height: 20.0,
           fit: BoxFit.contain,
         ),
         secondChild: Image.network(
-          'icons/check-box-blank.svg',
+          isHovered
+              ? 'icons/check-box-blank-hovered.svg'
+              : 'icons/check-box-blank.svg',
           width: 20.0,
           height: 20.0,
           fit: BoxFit.contain,
