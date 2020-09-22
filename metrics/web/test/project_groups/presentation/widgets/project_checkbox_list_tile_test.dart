@@ -49,7 +49,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the name of the project checkbox view model in the checkbox list tile",
+      "displays the name of the given project checkbox view model",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -59,8 +59,7 @@ void main() {
           );
         });
 
-        final checkboxListTileFinder = find.widgetWithText(
-          Row,
+        final checkboxListTileFinder = find.text(
           projectCheckboxViewModel.name,
         );
 
