@@ -221,7 +221,7 @@ void main() {
         const projectBuildStatusTheme = ProjectBuildStatusThemeData();
 
         const userMenuButtonTheme = UserMenuButtonThemeData(
-          activeColor: Colors.white,
+          hoverColor: Colors.white,
         );
 
         const userMenuTheme = UserMenuThemeData(

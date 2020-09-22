@@ -44,22 +44,21 @@ class MetricsUserMenuButton extends StatelessWidget {
             ? CommonStrings.closeUserMenu
             : CommonStrings.openUserMenu;
 
-        final buttonColor = isPopupOpened
-            ? menuButtonTheme.activeColor
-            : menuButtonTheme.inactiveColor;
-
         return Tooltip(
           message: tooltipMessage,
           child: TappableArea(
             onTap: openPopup,
-            builder: (context, isHovered, child) => child,
-            child: Image.network(
-              'icons/avatar.svg',
-              width: 32.0,
-              height: 32.0,
-              fit: BoxFit.contain,
-              color: buttonColor,
-            ),
+            builder: (context, isHovered, _) {
+              return Image.network(
+                'icons/avatar.svg',
+                width: 32.0,
+                height: 32.0,
+                fit: BoxFit.contain,
+                color: isHovered
+                    ? menuButtonTheme.hoverColor
+                    : menuButtonTheme.color,
+              );
+            },
           ),
         );
       },

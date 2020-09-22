@@ -185,7 +185,13 @@ void main() {
         ));
 
         final textField = FinderUtil.findTextField(tester);
-        final prefixIcon = textField.decoration.prefixIcon;
+
+        final prefixIconFinder = find.descendant(
+          of: find.byWidget(textField),
+          matching: find.byType(Icon),
+        );
+
+        final prefixIcon = tester.widget<Icon>(prefixIconFinder);
 
         expect(prefixIcon, equals(searchIcon));
       },
@@ -205,7 +211,13 @@ void main() {
         ));
 
         final textField = FinderUtil.findTextField(tester);
-        final prefixIcon = textField.decoration.prefixIcon as Icon;
+
+        final prefixIconFinder = find.descendant(
+          of: find.byWidget(textField),
+          matching: find.byType(Icon),
+        );
+
+        final prefixIcon = tester.widget<Icon>(prefixIconFinder);
 
         expect(prefixIcon.color, equals(prefixIconColor));
       },
@@ -228,7 +240,13 @@ void main() {
         await tester.pump();
 
         final textField = FinderUtil.findTextField(tester);
-        final prefixIcon = textField.decoration.prefixIcon as Icon;
+
+        final prefixIconFinder = find.descendant(
+          of: find.byWidget(textField),
+          matching: find.byType(Icon),
+        );
+
+        final prefixIcon = tester.widget<Icon>(prefixIconFinder);
 
         expect(prefixIcon.color, equals(focusedPrefixIconColor));
       },

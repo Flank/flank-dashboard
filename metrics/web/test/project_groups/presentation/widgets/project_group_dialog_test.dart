@@ -533,11 +533,18 @@ void main() {
         });
 
         final finder = find.byWidgetPredicate((widget) {
-          if (widget is TextField) {
-            final image = widget.decoration.prefixIcon as Image;
-            final networkImage = image?.image as NetworkImage;
+          if (widget is TextField && widget.decoration?.prefixIcon != null) {
+            final iconFinder = find.descendant(
+              of: find.byWidget(widget.decoration.prefixIcon),
+              matching: find.byType(Image),
+            );
 
-            return networkImage?.url == 'icons/search.svg';
+            final image = tester.widget<Image>(iconFinder);
+
+            final networkImage = image?.image as NetworkImage;
+            final imageUrl = networkImage?.url;
+
+            return imageUrl == 'icons/search.svg';
           }
 
           return false;

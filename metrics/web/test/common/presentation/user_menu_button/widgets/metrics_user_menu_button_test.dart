@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
@@ -16,12 +17,12 @@ import '../../../../test_utils/test_injection_container.dart';
 
 void main() {
   group('MetricsUserMenuButton', () {
-    const activeColor = Colors.red;
-    const inactiveColor = Colors.blue;
+    const hoverColor = Colors.red;
+    const color = Colors.blue;
     const themeData = MetricsThemeData(
       userMenuButtonTheme: UserMenuButtonThemeData(
-        activeColor: activeColor,
-        inactiveColor: inactiveColor,
+        hoverColor: hoverColor,
+        color: color,
       ),
     );
 
@@ -85,7 +86,7 @@ void main() {
     );
 
     testWidgets(
-      "applies an active color from the metrics theme to the image, when the popup is opened",
+      "applies a hover color from the metrics theme to the image when the button is hovered",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() async {
           await tester.pumpWidget(_MetricsUserMenuButtonTestbed(
@@ -93,17 +94,29 @@ void main() {
           ));
         });
 
-        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
-        await tester.pumpAndSettle();
+        final mouseRegionFinder = find.byType(MouseRegion);
+        final userMenuButtonFinder = find.byType(MetricsUserMenuButton);
+
+        final mouseRegion = tester.firstWidget<MouseRegion>(
+          find.descendant(
+            of: userMenuButtonFinder,
+            matching: mouseRegionFinder,
+          ),
+        );
+
+        const pointerEvent = PointerEnterEvent();
+        mouseRegion.onEnter(pointerEvent);
+
+        await tester.pump();
 
         final image = tester.widget<Image>(find.byType(Image));
 
-        expect(image.color, equals(activeColor));
+        expect(image.color, equals(hoverColor));
       },
     );
 
     testWidgets(
-      "applies an inactive color from the metrics theme to the image, when the popup is closed",
+      "applies an color from the metrics theme to the image",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() async {
           await tester.pumpWidget(_MetricsUserMenuButtonTestbed(
@@ -113,7 +126,7 @@ void main() {
 
         final image = tester.widget<Image>(find.byType(Image));
 
-        expect(image.color, equals(inactiveColor));
+        expect(image.color, equals(color));
       },
     );
 
