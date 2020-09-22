@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
+/// A [Function] used to build a prefix icon using the [prefixColor].
+typedef PrefixBuilder = Widget Function(
+  BuildContext context,
+  Color prefixColor,
+);
+
 /// A widget that displays a metrics styled text field and
 /// applies the [MetricsThemeData.textFieldTheme].
 class MetricsTextFormField extends StatefulWidget {
@@ -20,13 +26,9 @@ class MetricsTextFormField extends StatefulWidget {
   /// A type of keyboard to use for editing the text.
   final TextInputType keyboardType;
 
-  /// An icon that appears before the editable part of this text field,
-  /// within the decoration's container.
-  final Widget prefixIcon;
-
-  /// An icon that appears before the editable part of this text field
-  /// once it's focused, within the decoration's container.
-  final Widget focusPrefixIcon;
+  /// A [PrefixBuilder] that builds a prefix icon for this text field
+  /// depending on the passed parameters.
+  final PrefixBuilder prefixIconBuilder;
 
   /// An icon that appears after the editable part of this text field,
   /// within the decoration's container.
@@ -44,12 +46,11 @@ class MetricsTextFormField extends StatefulWidget {
   const MetricsTextFormField({
     Key key,
     this.obscureText = false,
+    this.prefixIconBuilder,
     this.controller,
     this.validator,
     this.onChanged,
     this.keyboardType,
-    this.prefixIcon,
-    this.focusPrefixIcon,
     this.suffixIcon,
     this.hint,
     this.label,
@@ -120,7 +121,10 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
   Widget build(BuildContext context) {
     final textFieldTheme = MetricsTheme.of(context).textFieldTheme;
     final decorationTheme = Theme.of(context).inputDecorationTheme;
-    final prefixIcon = _isFocused ? widget.focusPrefixIcon : widget.prefixIcon;
+    final prefixIcon = widget.prefixIconBuilder?.call(
+      context,
+      _isFocused ? textFieldTheme.focusedPrefixIconColor : textFieldTheme.prefixIconColor,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

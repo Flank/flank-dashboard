@@ -43,16 +43,19 @@ class ProjectCheckboxList extends StatelessWidget {
           );
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 24.0),
-          itemCount: projectCheckboxViewModels.length,
-          itemBuilder: (context, index) {
-            final projectCheckboxViewModel = projectCheckboxViewModels[index];
+        return Material(
+          type: MaterialType.transparency,
+          child: ListView.builder(
+            padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 24.0),
+            itemCount: projectCheckboxViewModels.length,
+            itemBuilder: (context, index) {
+              final projectCheckboxViewModel = projectCheckboxViewModels[index];
 
-            return ProjectCheckboxListTile(
-              projectCheckboxViewModel: projectCheckboxViewModel,
-            );
-          },
+              return ProjectCheckboxListTile(
+                projectCheckboxViewModel: projectCheckboxViewModel,
+              );
+            },
+          ),
         );
       },
     );

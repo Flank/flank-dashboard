@@ -31,7 +31,10 @@ void main() {
         expect(lightMetricsThemeData.userMenuButtonTheme, isNotNull);
         expect(lightMetricsThemeData.userMenuTheme, isNotNull);
         expect(lightMetricsThemeData.textPlaceholderTheme, isNotNull);
+        expect(lightMetricsThemeData.inputPlaceholderTheme, isNotNull);
         expect(lightMetricsThemeData.circlePercentageTheme, isNotNull);
+        expect(lightMetricsThemeData.toastTheme, isNotNull);
+        expect(lightMetricsThemeData.pageTitleTheme, isNotNull);
       },
     );
   });

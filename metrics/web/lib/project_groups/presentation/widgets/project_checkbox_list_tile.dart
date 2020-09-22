@@ -24,37 +24,34 @@ class ProjectCheckboxListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = MetricsTheme.of(context).projectGroupDialogTheme;
 
-    return Material(
-      color: Colors.transparent,
-      child: TappableArea(
-          onTap: () => _toggleProjectCheckedStatus(context),
-          builder: (_, isHovered, __) {
-            return Container(
-              height: 48.0,
-              padding: const EdgeInsets.all(14.0),
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: MetricsCheckbox(
-                      isHovered: isHovered,
-                      value: projectCheckboxViewModel.isChecked,
-                      onChanged: (_) {
-                        _toggleProjectCheckedStatus(context);
-                      },
-                    ),
+    return TappableArea(
+        onTap: () => _toggleProjectCheckedStatus(context),
+        builder: (_, isHovered, __) {
+          return Container(
+            height: 48.0,
+            padding: const EdgeInsets.all(14.0),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: MetricsCheckbox(
+                    isHovered: isHovered,
+                    value: projectCheckboxViewModel.isChecked,
+                    onChanged: (_) {
+                      _toggleProjectCheckedStatus(context);
+                    },
                   ),
-                  Text(
-                    projectCheckboxViewModel.name,
-                    style: projectCheckboxViewModel.isChecked
-                        ? theme.checkedProjectTextStyle
-                        : theme.uncheckedProjectTextStyle,
-                  ),
-                ],
-              ),
-            );
-          }),
-    );
+                ),
+                Text(
+                  projectCheckboxViewModel.name,
+                  style: projectCheckboxViewModel.isChecked
+                      ? theme.checkedProjectTextStyle
+                      : theme.uncheckedProjectTextStyle,
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   /// Changes checked status for the [ProjectCheckboxViewModel].

@@ -127,6 +127,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
           closeIconPadding: const EdgeInsets.only(top: 16.0, right: 16.0),
           closeIcon: Image.network(
             'icons/close.svg',
+            color: dialogTheme.closeIconColor,
             height: 24.0,
             width: 24.0,
           ),
@@ -166,16 +167,14 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                           child: MetricsTextFormField(
                             onChanged:
                                 _projectGroupsNotifier.filterByProjectName,
-                            prefixIcon: Image.network(
-                              'icons/search.svg',
-                              width: 20.0,
-                              height: 20.0,
-                            ),
-                            focusPrefixIcon: Image.network(
-                              'icons/search-focused.svg',
-                              width: 20.0,
-                              height: 20.0,
-                            ),
+                            prefixIconBuilder: (context, color) {
+                              return Image.network(
+                                'icons/search.svg',
+                                width: 20.0,
+                                height: 20.0,
+                                color: color,
+                              );
+                            },
                             hint: CommonStrings.searchForProject,
                           ),
                         ),

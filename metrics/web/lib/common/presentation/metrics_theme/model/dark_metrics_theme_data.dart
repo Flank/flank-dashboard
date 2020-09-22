@@ -30,6 +30,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placehol
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
+import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/attention_level/toast_attention_level.dart';
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
@@ -78,6 +79,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _positiveStatusColor = Color(0xFF182b27);
   static const Color _negativeStatusColor = Color(0xFF2d1f1f);
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
+  static const Color _pageTitleIconColor = Color(0xFF4f4f56);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = MetricsTextStyle(
@@ -242,6 +244,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
           textFieldTheme: const TextFieldThemeData(
             focusColor: Colors.black,
             hoverBorderColor: _dropdownHoverBorderColor,
+            prefixIconColor: _inactiveColor,
+            focusedPrefixIconColor: Colors.white,
             textStyle: MetricsTextStyle(
               color: Colors.white,
               fontSize: 16.0,
@@ -433,6 +437,15 @@ class DarkMetricsThemeData extends MetricsThemeData {
                   fontSize: 16.0,
                 ),
               ),
+            ),
+          ),
+          pageTitleTheme: const PageTitleThemeData(
+            iconColor: _pageTitleIconColor,
+            textStyle: MetricsTextStyle(
+              fontSize: 36.0,
+              fontWeight: FontWeight.w500,
+              lineHeightInPixels: 42.0,
+              color: Colors.white,
             ),
           ),
         );
