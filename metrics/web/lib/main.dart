@@ -12,6 +12,7 @@ import 'package:metrics/common/presentation/routes/observers/overlay_entry_route
 import 'package:metrics/common/presentation/routes/observers/toast_route_observer.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart';
 import 'package:metrics/util/favicon.dart';
 import 'package:provider/provider.dart';
 
@@ -44,7 +45,7 @@ class _MetricsAppState extends State<MetricsApp> {
             debugShowCheckedModeBanner: false,
             builder: (context, child) {
               return ScrollConfiguration(
-                behavior: _ScrollBehaviour(),
+                behavior: MetricsScrollBehavior(),
                 child: child,
               );
             },
@@ -116,17 +117,5 @@ class _MetricsAppState extends State<MetricsApp> {
         },
       ),
     );
-  }
-}
-
-/// A [ScrollBehavior] that disable the stretching effect.
-class _ScrollBehaviour extends ScrollBehavior {
-  @override
-  Widget buildViewportChrome(
-    BuildContext context,
-    Widget child,
-    AxisDirection axisDirection,
-  ) {
-    return child;
   }
 }
