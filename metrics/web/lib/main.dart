@@ -12,6 +12,7 @@ import 'package:metrics/common/presentation/routes/observers/overlay_entry_route
 import 'package:metrics/common/presentation/routes/observers/toast_route_observer.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart';
 import 'package:metrics/util/favicon.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +43,12 @@ class _MetricsAppState extends State<MetricsApp> {
           return MaterialApp(
             title: CommonStrings.metrics,
             debugShowCheckedModeBanner: false,
+            builder: (context, child) {
+              return ScrollConfiguration(
+                behavior: MetricsScrollBehavior(),
+                child: child,
+              );
+            },
             initialRoute: '/',
             onGenerateRoute: (settings) => RouteGenerator.generateRoute(
               settings: settings,
