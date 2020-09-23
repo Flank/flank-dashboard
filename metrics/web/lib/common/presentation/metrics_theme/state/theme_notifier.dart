@@ -8,7 +8,7 @@ class ThemeNotifier extends ChangeNotifier {
 
   /// Creates a new [ThemeNotifier] instance.
   ///
-  /// [_isDark] defaults to `true.
+  /// [_isDark] defaults to `true`.
   ThemeNotifier({
     bool isDark,
   }) : _isDark = isDark ?? true;

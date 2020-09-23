@@ -43,7 +43,8 @@ void main() {
       themeNotifier.changeTheme();
     });
 
-    test(".setTheme() changes the theme according to the given is dark value",
+    test(
+        ".setTheme() changes the theme according to the given is dark value and notifies listeners",
         () {
       final themeNotifier = ThemeNotifier(isDark: true);
 

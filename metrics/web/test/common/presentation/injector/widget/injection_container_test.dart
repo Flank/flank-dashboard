@@ -39,7 +39,7 @@ void main() {
     );
 
     testWidgets(
-      "initializes a ThemeNotifier with the theme that corresponds the operating system's theme",
+      "initializes and injects a ThemeNotifier with the theme that corresponds the operating system's theme",
       (tester) async {
         await tester.pumpWidget(InjectionContainerTestbed());
 
