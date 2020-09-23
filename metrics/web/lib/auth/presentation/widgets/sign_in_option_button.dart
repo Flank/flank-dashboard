@@ -22,8 +22,8 @@ class SignInOptionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final metricsTheme = MetricsTheme.of(context);
-    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-    final isLoading = authNotifier.isLoading;
+    final isLoading =
+        Provider.of<AuthNotifier>(context, listen: false).isLoading;
     final loginOptionStyle = strategy.getWidgetAppearance(
       metricsTheme,
       isLoading,
