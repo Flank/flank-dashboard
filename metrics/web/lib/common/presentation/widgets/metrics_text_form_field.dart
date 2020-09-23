@@ -150,7 +150,13 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
             keyboardType: widget.keyboardType,
             style: textFieldTheme.textStyle,
             decoration: _decoration.copyWith(
-              prefixIcon: prefixIcon,
+              prefixIcon: prefixIcon != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 14.0, right: 16.0),
+                      child: prefixIcon,
+                    )
+                  : null,
+              prefixIconConstraints: const BoxConstraints(maxWidth: 50.0),
               suffixIcon: widget.suffixIcon,
               hintText: widget.hint,
             ),

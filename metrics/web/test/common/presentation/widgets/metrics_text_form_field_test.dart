@@ -37,6 +37,20 @@ void main() {
 
     String defaultValidator(String value) => null;
 
+    Icon _findPrefixIcon(WidgetTester tester) {
+      final textField = FinderUtil.findTextField(tester);
+      final prefixIcon = textField.decoration.prefixIcon;
+
+      final prefixIconFinder = find.descendant(
+        of: find.byWidget(prefixIcon),
+        matching: find.byType(Icon),
+      );
+
+      final icon = tester.widget<Icon>(prefixIconFinder);
+
+      return icon;
+    }
+
     testWidgets(
       "throws an AssertionError if the given obscure text is null",
       (tester) async {
@@ -184,10 +198,9 @@ void main() {
           },
         ));
 
-        final textField = FinderUtil.findTextField(tester);
-        final prefixIcon = textField.decoration.prefixIcon;
+        final icon = _findPrefixIcon(tester);
 
-        expect(prefixIcon, equals(searchIcon));
+        expect(icon, equals(searchIcon));
       },
     );
 
@@ -204,10 +217,9 @@ void main() {
           },
         ));
 
-        final textField = FinderUtil.findTextField(tester);
-        final prefixIcon = textField.decoration.prefixIcon as Icon;
+        final icon = _findPrefixIcon(tester);
 
-        expect(prefixIcon.color, equals(prefixIconColor));
+        expect(icon.color, equals(prefixIconColor));
       },
     );
 
@@ -227,10 +239,9 @@ void main() {
         await tester.tap(find.byType(TextField));
         await tester.pump();
 
-        final textField = FinderUtil.findTextField(tester);
-        final prefixIcon = textField.decoration.prefixIcon as Icon;
+        final icon = _findPrefixIcon(tester);
 
-        expect(prefixIcon.color, equals(focusedPrefixIconColor));
+        expect(icon.color, equals(focusedPrefixIconColor));
       },
     );
 

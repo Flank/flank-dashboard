@@ -66,12 +66,14 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _userMenuInactiveColor = Color(0xFF272727);
   static const Color _userMenuActiveColor = Color(0xFF4F4F56);
   static const Color _closeIconColor = Color(0xFF00080C);
+  static const Color _metricsTableHeaderLoadingColor = Color(0xFFdcdee0);
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.3);
   static const Color _metricsTileHoverColor = Color(0xFFf6f8f9);
   static const Color _positiveStatusColor = Color(0xFFE6F9F3);
   static const Color _negativeStatusColor = Color(0xFFFFF5F3);
   static const Color _neutralStatusColor = Color(0xFFFAF6E6);
   static const Color _inactiveStatusColor = Color(0xFF43494D);
+  static const Color _dropdownMenuIconColor = Color(0xFF2d2d33);
 
   static const inputFocusedBorder = OutlineInputBorder(
     borderSide: BorderSide(color: _inputFocusedBorderColor),
@@ -195,9 +197,10 @@ class LightMetricsThemeData extends MetricsThemeData {
             primaryColor: inputColor,
             accentColor: Colors.transparent,
             backgroundColor: _inactiveBackgroundColor,
-            textStyle: TextStyle(
-              color: Colors.grey,
+            textStyle: MetricsTextStyle(
+              color: _inactiveTextColor,
               fontSize: 32.0,
+              lineHeightInPixels: 38.0,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -264,7 +267,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             closedButtonBorderColor: inputColor,
             textStyle: _defaultDropdownTextStyle,
             shadowColor: _shadowColor,
-            iconColor: _borderColor,
+            iconColor: _dropdownMenuIconColor,
           ),
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.white,
@@ -309,7 +312,21 @@ class LightMetricsThemeData extends MetricsThemeData {
               hoverBackgroundColor: _metricsTileHoverColor,
               borderColor: _borderColor,
               hoverBorderColor: _borderColor,
-              textStyle: TextStyle(fontSize: 22.0),
+              textStyle: MetricsTextStyle(
+                fontSize: 24.0,
+                color: _inactiveTextColor,
+                fontWeight: FontWeight.w500,
+                lineHeightInPixels: 28.0,
+                letterSpacing: 0.0,
+              ),
+            ),
+            projectMetricsTilePlaceholderTheme: ShimmerPlaceholderThemeData(
+              backgroundColor: inputColor,
+              shimmerColor: ColorConfig.shimmerColor,
+            ),
+            metricsTableHeaderPlaceholderTheme: ShimmerPlaceholderThemeData(
+              backgroundColor: _metricsTableHeaderLoadingColor,
+              shimmerColor: ColorConfig.shimmerColor,
             ),
           ),
           buildNumberScorecardTheme: const ScorecardThemeData(
@@ -344,7 +361,9 @@ class LightMetricsThemeData extends MetricsThemeData {
               negative: ProjectBuildStatusStyle(
                 backgroundColor: _negativeStatusColor,
               ),
-              unknown: ProjectBuildStatusStyle(backgroundColor: inputColor),
+              unknown: ProjectBuildStatusStyle(
+                backgroundColor: inputColor,
+              ),
             ),
           ),
           toggleTheme: const ToggleThemeData(
@@ -354,8 +373,8 @@ class LightMetricsThemeData extends MetricsThemeData {
             inactiveHoverColor: _inactiveToggleHoverColor,
           ),
           userMenuButtonTheme: const UserMenuButtonThemeData(
-            activeColor: _userMenuActiveColor,
-            inactiveColor: _userMenuInactiveColor,
+            hoverColor: _userMenuActiveColor,
+            color: _userMenuInactiveColor,
           ),
           toastTheme: const ToastThemeData(
             toastAttentionLevel: ToastAttentionLevel(

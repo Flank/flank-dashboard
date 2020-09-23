@@ -398,8 +398,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             inactiveHoverColor: _inactiveToggleHoverColor,
           ),
           userMenuButtonTheme: const UserMenuButtonThemeData(
-            activeColor: ColorConfig.shimmerColor,
-            inactiveColor: Colors.white,
+            hoverColor: ColorConfig.shimmerColor,
+            color: Colors.white,
           ),
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.black,

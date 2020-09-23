@@ -12,22 +12,22 @@ void main() {
       () {
         final themeData = UserMenuButtonThemeData();
 
-        expect(themeData.activeColor, isNotNull);
-        expect(themeData.inactiveColor, isNotNull);
+        expect(themeData.hoverColor, isNotNull);
+        expect(themeData.color, isNotNull);
       },
     );
 
     test("creates an instance with the given values", () {
-      const activeColor = Colors.yellow;
-      const inactiveColor = Colors.red;
+      const hoverColor = Colors.yellow;
+      const color = Colors.red;
 
       final themeData = UserMenuButtonThemeData(
-        activeColor: activeColor,
-        inactiveColor: inactiveColor,
+        hoverColor: hoverColor,
+        color: color,
       );
 
-      expect(themeData.activeColor, equals(activeColor));
-      expect(themeData.inactiveColor, equals(inactiveColor));
+      expect(themeData.hoverColor, equals(hoverColor));
+      expect(themeData.color, equals(color));
     });
   });
 }
