@@ -25,7 +25,7 @@ class RouteGenerator {
     if (!isLoggedIn) {
       return _createMetricsPageRoute(
         name: RouteName.login,
-        widget: LoginPage(),
+        widget: const LoginPage(),
       );
     }
 
