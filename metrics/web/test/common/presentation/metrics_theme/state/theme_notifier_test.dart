@@ -3,8 +3,31 @@ import 'package:test/test.dart';
 
 void main() {
   group("ThemeNotifier", () {
-    test(".changeTheme() changes the theme", () {
+    test(
+        "creates an instance with the default is dark value if the is dark parameter is not specified",
+        () {
       final themeNotifier = ThemeNotifier();
+
+      expect(themeNotifier.isDark, isNotNull);
+    });
+
+    test(
+        "creates an instance with the default is dark value if the given is dark parameter is null",
+        () {
+      final themeNotifier = ThemeNotifier(isDark: null);
+
+      expect(themeNotifier.isDark, isNotNull);
+    });
+
+    test("creates an instance with the given is dark parameter", () {
+      const isDark = false;
+      final themeNotifier = ThemeNotifier(isDark: isDark);
+
+      expect(themeNotifier.isDark, equals(isDark));
+    });
+
+    test(".changeTheme() changes the theme", () {
+      final themeNotifier = ThemeNotifier(isDark: true);
       final initialTheme = themeNotifier.isDark;
 
       themeNotifier.changeTheme();
@@ -13,11 +36,27 @@ void main() {
     });
 
     test(".changeTheme() notifies listeners about theme change", () {
-      final themeNotifier = ThemeNotifier();
+      final themeNotifier = ThemeNotifier(isDark: true);
 
       themeNotifier.addListener(expectAsync0(() {}));
 
       themeNotifier.changeTheme();
+    });
+
+    test(".setTheme() changes the theme according to the given is dark value",
+        () {
+      final themeNotifier = ThemeNotifier(isDark: true);
+
+      const expectedIsDark = false;
+
+      themeNotifier.addListener(
+        expectAsyncUntil0(
+          () {},
+          () => themeNotifier.isDark == expectedIsDark,
+        ),
+      );
+
+      themeNotifier.setTheme(isDark: false);
     });
   });
 }

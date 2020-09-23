@@ -39,6 +39,26 @@ void main() {
     );
 
     testWidgets(
+      "initializes a ThemeNotifier with the theme that corresponds the operating system's theme",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final platformBrightness = tester.binding.window.platformBrightness;
+        final isDark = platformBrightness == Brightness.dark;
+
+        final themeNotifier =
+            Provider.of<ThemeNotifier>(context, listen: false);
+
+        expect(
+          themeNotifier.isDark,
+          equals(isDark),
+        );
+      },
+    );
+
+    testWidgets(
       "injects a ProjectsNotifier",
       (tester) async {
         await tester.pumpWidget(InjectionContainerTestbed());

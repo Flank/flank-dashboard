@@ -110,7 +110,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
           ),
         ),
         ChangeNotifierProvider<ThemeNotifier>(
-          create: (_) => ThemeNotifier(),
+          create: (_) => ThemeNotifier(isDark: _isPlatformBrightnessDark()),
         ),
         ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
           lazy: false,
@@ -166,6 +166,14 @@ class _InjectionContainerState extends State<InjectionContainer> {
       ],
       child: widget.child,
     );
+  }
+
+  /// Returns `true` if the the operating system uses dark theme, otherwise
+  /// returns `false`.
+  bool _isPlatformBrightnessDark() {
+    final platformBrightness =
+        WidgetsBinding.instance.window.platformBrightness;
+    return platformBrightness == Brightness.dark;
   }
 
   /// Updates projects subscription based on user logged in status.

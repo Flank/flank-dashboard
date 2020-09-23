@@ -64,6 +64,11 @@ void main() {
     );
 
     testWidgets(
+      "applies the theme brightness that corresponds the operating system's brightness",
+      (WidgetTester tester) async {},
+    );
+
+    testWidgets(
       "displays the authentication form",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {

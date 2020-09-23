@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
+import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -16,10 +17,14 @@ class LoginPage extends StatefulWidget {
 }
 
 /// The logic and internal state for the [LoginPage] widget.
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   /// An [AuthNotifier] needed to be able to remove the listener
   /// in the [dispose] method.
   AuthNotifier _authNotifier;
+
+  /// A [ThemeNotifier] needed to change the theme according to the operating
+  /// system's theme.
+  ThemeNotifier _themeNotifier;
 
   @override
   void initState() {
@@ -27,7 +32,30 @@ class _LoginPageState extends State<LoginPage> {
     _authNotifier.addListener(_loggedInListener);
     _authNotifier.addListener(_loggedInErrorListener);
 
+    _themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
+
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _changeThemeAccordingOperatingSystemTheme();
+    });
+
     super.initState();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    _changeThemeAccordingOperatingSystemTheme();
+    super.didChangePlatformBrightness();
+  }
+
+  /// Changes the current theme according to the operating system's theme.
+  void _changeThemeAccordingOperatingSystemTheme() {
+    final platformBrightness =
+        WidgetsBinding.instance.window.platformBrightness;
+
+    final isDark = platformBrightness == Brightness.dark;
+
+    _themeNotifier.setTheme(isDark: isDark);
   }
 
   /// Navigates to the dashboard screen once the user becomes logged in.
@@ -95,6 +123,9 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _authNotifier.removeListener(_loggedInListener);
     _authNotifier.removeListener(_loggedInErrorListener);
+
+    WidgetsBinding.instance.removeObserver(this);
+
     super.dispose();
   }
 }
