@@ -7,16 +7,26 @@ import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_strategy.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
+import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
 import '../state/auth_notifier_test.dart';
 
 void main() {
   group("AuthForm", () {
+    const passwordVisibilityIconColor = Colors.red;
+    const metricsThemeData = MetricsThemeData(
+      loginTheme: LoginThemeData(
+        passwordVisibilityIconColor: passwordVisibilityIconColor,
+      ),
+    );
+
     final emailInputFinder =
         find.widgetWithText(MetricsTextFormField, AuthStrings.email);
     final passwordInputFinder =
@@ -240,6 +250,27 @@ void main() {
     );
 
     testWidgets(
+      "applies the password visibility icon color from the metrics theme",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(
+            const _AuthFormTestbed(
+              metricsThemeData: metricsThemeData,
+            ),
+          ),
+        );
+
+        final suffixIcon = _getPasswordFieldSuffixIcon(tester);
+        final image = tester.widget<Image>(find.descendant(
+          of: find.byWidget(suffixIcon),
+          matching: find.byType(Image),
+        ));
+
+        expect(image.color, equals(passwordVisibilityIconColor));
+      },
+    );
+
+    testWidgets(
       "applies a tappable area to the suffix icon of the password field",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
@@ -269,8 +300,12 @@ class _AuthFormTestbed extends StatelessWidget {
   /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
 
+  /// A [MetricsThemeData] to use in tests.
+  final MetricsThemeData metricsThemeData;
+
   /// Creates the [_AuthFormTestbed] with the given [authNotifier].
   const _AuthFormTestbed({
+    this.metricsThemeData = const MetricsThemeData(),
     this.authNotifier,
   });
 
@@ -278,10 +313,9 @@ class _AuthFormTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return TestInjectionContainer(
       authNotifier: authNotifier,
-      child: MaterialApp(
-        home: Scaffold(
-          body: AuthForm(),
-        ),
+      child: MetricsThemedTestbed(
+        metricsThemeData: metricsThemeData,
+        body: AuthForm(),
       ),
     );
   }

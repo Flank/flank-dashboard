@@ -14,6 +14,7 @@ void main() {
         const themeData = LoginThemeData();
 
         expect(themeData.loginOptionButtonStyle, isNotNull);
+        expect(themeData.passwordVisibilityIconColor, isNotNull);
       },
     );
 
@@ -29,14 +30,18 @@ void main() {
     test("creates an instance with the given values", () {
       const titleTextStyle = TextStyle();
       const loginOptionButtonStyle = MetricsButtonStyle(color: Colors.white);
+      const passwordVisibilityIconColor = Colors.green;
 
       final themeData = LoginThemeData(
         titleTextStyle: titleTextStyle,
         loginOptionButtonStyle: loginOptionButtonStyle,
+        passwordVisibilityIconColor: passwordVisibilityIconColor,
       );
 
       expect(themeData.titleTextStyle, equals(titleTextStyle));
       expect(themeData.loginOptionButtonStyle, equals(loginOptionButtonStyle));
+      expect(themeData.passwordVisibilityIconColor,
+          equals(passwordVisibilityIconColor));
     });
   });
 }

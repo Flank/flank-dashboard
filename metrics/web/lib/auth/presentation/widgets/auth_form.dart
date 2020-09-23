@@ -7,6 +7,7 @@ import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_strategy.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,8 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor =
+        MetricsTheme.of(context).loginTheme.passwordVisibilityIconColor;
     final passwordIcon =
         _isPasswordObscure ? 'icons/eye_on.svg' : 'icons/eye_off.svg';
 
@@ -60,7 +63,10 @@ class _AuthFormState extends State<AuthForm> {
                   suffixIcon: TappableArea(
                     onTap: _changePasswordObscure,
                     builder: (context, isHovered, child) => child,
-                    child: Image.network(passwordIcon),
+                    child: Image.network(
+                      passwordIcon,
+                      color: iconColor,
+                    ),
                   ),
                 ),
               ),
