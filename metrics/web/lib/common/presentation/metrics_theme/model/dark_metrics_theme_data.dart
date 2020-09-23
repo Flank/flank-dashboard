@@ -279,7 +279,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             loginOptionButtonStyle: MetricsButtonStyle(
               color: Colors.white,
               hoverColor: _loginOptionHoverColor,
-              labelStyle: TextStyle(
+              labelStyle: MetricsTextStyle(
+                lineHeightInPixels: 20.0,
                 color: _loginOptionTextColor,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w500,
@@ -289,7 +290,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             inactiveLoginOptionButtonStyle: MetricsButtonStyle(
               color: ColorConfig.inactiveColor,
               hoverColor: ColorConfig.inactiveColor,
-              labelStyle: TextStyle(
+              labelStyle: MetricsTextStyle(
+                lineHeightInPixels: 20.0,
                 color: ColorConfig.inactiveTextColor,
                 fontSize: 16.0,
                 fontWeight: FontWeight.w500,

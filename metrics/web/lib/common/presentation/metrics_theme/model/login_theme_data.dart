@@ -17,8 +17,10 @@ class LoginThemeData {
 
   /// Creates a new instance of the [LoginThemeData].
   ///
-  /// The [loginOptionButtonStyle] defaults to an empty
-  /// [MetricsButtonStyle] instance.
+  /// If the [loginOptionButtonStyle] is `null`, an empty
+  /// [MetricsButtonStyle] instance is used.
+  /// If the [inactiveLoginOptionButtonStyle] is `null`, an empty
+  /// [MetricsButtonStyle] instance is used.
   /// If the [passwordVisibilityIconColor] is `null`, the
   /// [Colors.grey] is used.
   const LoginThemeData({

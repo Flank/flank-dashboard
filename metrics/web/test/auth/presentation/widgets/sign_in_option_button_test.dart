@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
-import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_strategy.dart';
+import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_appearance_strategy.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:mockito/mockito.dart';
@@ -271,7 +271,7 @@ class _SignInOptionAppearanceStrategyStub
   ///
   /// The [asset] defaults to the `asset`.
   /// The [label] defaults to the `label`.
-  /// The [_style] defaults to an empty [MetricsButtonStyle].
+  /// The [style] defaults to an empty [MetricsButtonStyle].
   const _SignInOptionAppearanceStrategyStub({
     this.asset = 'asset',
     this.label = 'label',

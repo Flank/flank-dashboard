@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_strategy.dart';
+import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_appearance_strategy.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -22,43 +22,47 @@ class SignInOptionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final metricsTheme = MetricsTheme.of(context);
-    final isLoading =
-        Provider.of<AuthNotifier>(context, listen: false).isLoading;
-    final loginOptionStyle = strategy.getWidgetAppearance(
-      metricsTheme,
-      isLoading,
-    );
 
-    return RaisedButton(
-      color: loginOptionStyle.color,
-      disabledColor: loginOptionStyle.color,
-      hoverColor: loginOptionStyle.hoverColor,
-      elevation: loginOptionStyle.elevation,
-      hoverElevation: loginOptionStyle.elevation,
-      focusElevation: loginOptionStyle.elevation,
-      highlightElevation: loginOptionStyle.elevation,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-      onPressed: isLoading ? null : () => _signIn(context),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Image.network(
-              strategy.asset,
-              height: 20.0,
-              width: 20.0,
-              fit: BoxFit.contain,
-            ),
+    return Selector<AuthNotifier, bool>(
+      selector: (_, notifier) => notifier.isLoading,
+      builder: (_, isLoading, __) {
+        final loginOptionStyle = strategy.getWidgetAppearance(
+          metricsTheme,
+          isLoading,
+        );
+
+        return RaisedButton(
+          color: loginOptionStyle.color,
+          disabledColor: loginOptionStyle.color,
+          hoverColor: loginOptionStyle.hoverColor,
+          elevation: loginOptionStyle.elevation,
+          hoverElevation: loginOptionStyle.elevation,
+          focusElevation: loginOptionStyle.elevation,
+          highlightElevation: loginOptionStyle.elevation,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
           ),
-          Text(
-            strategy.label,
-            style: loginOptionStyle.labelStyle,
+          onPressed: isLoading ? null : () => _signIn(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Image.network(
+                  strategy.asset,
+                  height: 20.0,
+                  width: 20.0,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              Text(
+                strategy.label,
+                style: loginOptionStyle.labelStyle,
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value_based_appearance_strategy.dart';
 
 /// An abstract [ValueBasedAppearanceStrategy] that provides configurations
@@ -14,4 +15,16 @@ abstract class SignInOptionAppearanceStrategy
 
   /// Starts a sign in process using the given [notifier].
   void signIn(AuthNotifier notifier);
+
+  @override
+  MetricsButtonStyle getWidgetAppearance(
+    MetricsThemeData themeData,
+    bool isLoading,
+  ) {
+    final loginTheme = themeData.loginTheme;
+
+    if (isLoading) return loginTheme.inactiveLoginOptionButtonStyle;
+
+    return loginTheme.loginOptionButtonStyle;
+  }
 }
