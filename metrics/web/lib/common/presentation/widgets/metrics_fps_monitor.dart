@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keyboard_shortcuts/keyboard_shortcuts.dart';
@@ -23,7 +24,7 @@ class MetricsFPSMonitor extends StatefulWidget {
 
 class _MetricsFPSMonitorState extends State<MetricsFPSMonitor> {
   /// Combination of keyboard keys to press 
-  /// that toggles enable status of the [FPSMonitor].
+  /// that toggles an enable status of the [FPSMonitor].
   final _keysToPress = {
     LogicalKeyboardKey.keyF,
     LogicalKeyboardKey.keyP,

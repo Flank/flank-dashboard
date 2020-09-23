@@ -6,11 +6,6 @@ import 'package:metrics/base/presentation/widgets/fps_monitor.dart';
 
 void main() {
   group("FPSMonitor", () {
-    final containerFinder = find.descendant(
-      of: find.byType(FPSMonitor),
-      matching: find.byType(Container).first,
-    );
-
     testWidgets(
       "throws an AssertionError if the given child is null",
       (tester) async {
@@ -80,11 +75,13 @@ class _FPSMonitorTestbed extends StatelessWidget {
   /// Creates a new instance of the fps monitor testbed.
   ///
   /// The [child] defaults to the [_defaultChild].
+  /// The [width] defaults to the `130.0`.
+  /// The [height] defaults to the `40.0`.
   /// The [isEnabled] defaults to `false`.
   const _FPSMonitorTestbed({
     Key key,
-    this.width = 130,
-    this.height = 40,
+    this.width = 130.0,
+    this.height = 40.0,
     this.child = _defaultChild,
     this.isEnabled = false,
   }) : super(key: key);
