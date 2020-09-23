@@ -7,6 +7,7 @@ import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
@@ -65,7 +66,24 @@ void main() {
 
     testWidgets(
       "applies the theme brightness that corresponds the operating system's brightness",
-      (WidgetTester tester) async {},
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _LoginPageTestbed());
+        });
+
+        final context = _LoginPageTestbed.childKey.currentContext;
+
+        final platformBrightness = tester.binding.window.platformBrightness;
+        final isDark = platformBrightness == Brightness.dark;
+
+        final themeNotifier =
+            Provider.of<ThemeNotifier>(context, listen: false);
+
+        expect(
+          themeNotifier.isDark,
+          equals(isDark),
+        );
+      },
     );
 
     testWidgets(
@@ -134,6 +152,9 @@ void main() {
 
 /// A testbed widget, used to test the [LoginPage] widget.
 class _LoginPageTestbed extends StatelessWidget {
+  /// A [GlobalKey] needed to get the current context of the [LoginPage].
+  static final GlobalKey childKey = GlobalKey();
+
   /// A [MetricsThemeData] to use in tests.
   final MetricsThemeData metricsThemeData;
 
@@ -166,7 +187,7 @@ class _LoginPageTestbed extends StatelessWidget {
               isLoggedIn:
                   Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
-            body: LoginPage(),
+            body: LoginPage(key: childKey),
           );
         },
       ),
