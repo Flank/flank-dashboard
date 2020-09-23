@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// A class that stores the theme data for the user menu button.
 class UserMenuButtonThemeData {
-  /// A [Color] of the user menu button when it is hovered.
+  /// A [Color] of the hovered user menu button.
   final Color hoverColor;
 
   /// A [Color] of the user menu button.

@@ -94,13 +94,10 @@ void main() {
           ));
         });
 
-        final mouseRegionFinder = find.byType(MouseRegion);
-        final userMenuButtonFinder = find.byType(MetricsUserMenuButton);
-
         final mouseRegion = tester.firstWidget<MouseRegion>(
           find.descendant(
-            of: userMenuButtonFinder,
-            matching: mouseRegionFinder,
+            of: find.byType(MouseRegion),
+            matching: find.byType(MetricsUserMenuButton),
           ),
         );
 

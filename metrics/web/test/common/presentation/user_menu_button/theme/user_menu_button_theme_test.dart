@@ -18,16 +18,16 @@ void main() {
     );
 
     test("creates an instance with the given values", () {
-      const activeColor = Colors.yellow;
-      const inactiveColor = Colors.red;
+      const hoverColor = Colors.yellow;
+      const color = Colors.red;
 
       final themeData = UserMenuButtonThemeData(
-        hoverColor: activeColor,
-        color: inactiveColor,
+        hoverColor: hoverColor,
+        color: color,
       );
 
-      expect(themeData.hoverColor, equals(activeColor));
-      expect(themeData.color, equals(inactiveColor));
+      expect(themeData.hoverColor, equals(hoverColor));
+      expect(themeData.color, equals(color));
     });
   });
 }
