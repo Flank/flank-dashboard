@@ -19,6 +19,7 @@ void main() {
   group('MetricsUserMenuButton', () {
     const hoverColor = Colors.red;
     const color = Colors.blue;
+
     const themeData = MetricsThemeData(
       userMenuButtonTheme: UserMenuButtonThemeData(
         hoverColor: hoverColor,
@@ -96,8 +97,8 @@ void main() {
 
         final mouseRegion = tester.firstWidget<MouseRegion>(
           find.descendant(
-            of: find.byType(MouseRegion),
-            matching: find.byType(MetricsUserMenuButton),
+            of: find.byType(MetricsUserMenuButton),
+            matching: find.byType(MouseRegion),
           ),
         );
 
