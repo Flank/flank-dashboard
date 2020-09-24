@@ -48,6 +48,7 @@ class _MetricsFPSMonitorState extends State<MetricsFPSMonitor> {
           ),
         },
         child: StatsFl(
+          maxFps: 90,
           isEnabled: _isEnabled,
           child: widget.child,
         ),
