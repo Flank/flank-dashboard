@@ -35,7 +35,7 @@ class _MetricsFPSMonitorState extends State<MetricsFPSMonitor> {
   /// Provides an enable status of the [StatsFl].
   ///
   /// This feature should work only in the release mode.
-  bool get isEnabled => _isEnabled;
+  bool get isEnabled => kReleaseMode && _isEnabled;
 
   @override
   Widget build(BuildContext context) {
