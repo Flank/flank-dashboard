@@ -68,6 +68,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// A use case needed to be able to delete a project group.
   DeleteProjectGroupUseCase _deleteProjectGroupUseCase;
 
+  /// Returns the current system's theme brightness.
+  Brightness get platformBrightness {
+    return WidgetsBinding.instance.window.platformBrightness;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -110,7 +115,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
           ),
         ),
         ChangeNotifierProvider<ThemeNotifier>(
-          create: (_) => ThemeNotifier(brightness: _getPlatformBrightness()),
+          create: (_) => ThemeNotifier(brightness: platformBrightness),
         ),
         ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
           lazy: false,
@@ -166,11 +171,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
       ],
       child: widget.child,
     );
-  }
-
-  /// Returns the current system's theme brightness.
-  Brightness _getPlatformBrightness() {
-    return WidgetsBinding.instance.window.platformBrightness;
   }
 
   /// Updates projects subscription based on user logged in status.

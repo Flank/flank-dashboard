@@ -21,14 +21,13 @@ class ThemeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Sets the [_isDark] value according to the given system's
-  /// theme [Brightness].
+  /// Sets the theme mode value according to the given [brightness].
   void setTheme(Brightness brightness) {
     _isDark = _isBrightnessDark(brightness);
     notifyListeners();
   }
 
-  /// Returns `true` if the given [brightness] equals to `Brightness.dark`,
+  /// Returns `true` if the given [brightness] is [Brightness.dark],
   /// otherwise, returns `false`.
   static bool _isBrightnessDark(Brightness brightness) {
     return brightness == Brightness.dark;
