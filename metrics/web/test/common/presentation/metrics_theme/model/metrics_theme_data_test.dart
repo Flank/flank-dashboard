@@ -67,7 +67,7 @@ void main() {
         expect(themeData.textPlaceholderTheme, isNotNull);
         expect(themeData.inputPlaceholderTheme, isNotNull);
         expect(themeData.toastTheme, isNotNull);
-        expect(themeData.barGraphPopupThemeData, isNotNull);
+        expect(themeData.barGraphPopupTheme, isNotNull);
         expect(themeData.pageTitleTheme, isNotNull);
       },
     );
@@ -99,7 +99,7 @@ void main() {
           inputPlaceholderTheme: null,
           circlePercentageTheme: null,
           toastTheme: null,
-          barGraphPopupThemeData: null,
+          barGraphPopupTheme: null,
           pageTitleTheme: null,
         );
 
@@ -126,7 +126,7 @@ void main() {
         expect(themeData.inputPlaceholderTheme, isNotNull);
         expect(themeData.circlePercentageTheme, isNotNull);
         expect(themeData.toastTheme, isNotNull);
-        expect(themeData.barGraphPopupThemeData, isNotNull);
+        expect(themeData.barGraphPopupTheme, isNotNull);
         expect(themeData.pageTitleTheme, isNotNull);
       },
     );
@@ -292,7 +292,7 @@ void main() {
           inputPlaceholderTheme: inputPlaceholderTheme,
           circlePercentageTheme: circlePercentageTheme,
           toastTheme: toastTheme,
-          barGraphPopupThemeData: barGraphPopupTheme,
+          barGraphPopupTheme: barGraphPopupTheme,
           pageTitleTheme: pageTitleTheme,
         );
 
@@ -346,7 +346,7 @@ void main() {
           equals(circlePercentageTheme),
         );
         expect(copiedTheme.toastTheme, equals(toastTheme));
-        expect(copiedTheme.barGraphPopupThemeData, equals(barGraphPopupTheme));
+        expect(copiedTheme.barGraphPopupTheme, equals(barGraphPopupTheme));
         expect(copiedTheme.pageTitleTheme, equals(pageTitleTheme));
       },
     );
@@ -437,8 +437,8 @@ void main() {
         );
         expect(themeData.toastTheme, equals(copiedTheme.toastTheme));
         expect(
-          themeData.barGraphPopupThemeData,
-          equals(copiedTheme.barGraphPopupThemeData),
+          themeData.barGraphPopupTheme,
+          equals(copiedTheme.barGraphPopupTheme),
         );
         expect(themeData.pageTitleTheme, equals(copiedTheme.pageTitleTheme));
       },

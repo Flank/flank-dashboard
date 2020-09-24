@@ -81,6 +81,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _negativeStatusColor = Color(0xFF2d1f1f);
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
   static const Color _pageTitleIconColor = Color(0xFF4f4f56);
+  static const Color _popupColor = Color(0xFFf5f5ff);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = MetricsTextStyle(
@@ -113,21 +114,11 @@ class DarkMetricsThemeData extends MetricsThemeData {
             successfulColor: ColorConfig.primaryColor,
             failedColor: ColorConfig.accentColor,
           ),
-          barGraphPopupThemeData: const BarGraphPopupThemeData(
-            color: Colors.white,
+          barGraphPopupTheme: const BarGraphPopupThemeData(
+            color: _popupColor,
             shadowColor: _shadowColor,
-            titleTextStyle: MetricsTextStyle(
-              fontSize: 13.0,
-              lineHeightInPixels: 16.0,
-              color: ColorConfig.secondaryPopupTextColor,
-              fontWeight: FontWeight.normal,
-            ),
-            subtitleTextStyle: MetricsTextStyle(
-              fontSize: 13.0,
-              lineHeightInPixels: 16.0,
-              color: ColorConfig.popupTextColor,
-              fontWeight: FontWeight.w500,
-            ),
+            titleTextStyle: TextStyleConfig.popupTitleStyle,
+            subtitleTextStyle: TextStyleConfig.popupSubtitleStyle,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,

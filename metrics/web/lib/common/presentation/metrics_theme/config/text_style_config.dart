@@ -17,4 +17,18 @@ class TextStyleConfig {
     fontSize: 16.0,
     fontWeight: FontWeight.w500,
   );
+
+  static const TextStyle popupTitleStyle = MetricsTextStyle(
+    fontSize: 13.0,
+    lineHeightInPixels: 16.0,
+    color: ColorConfig.secondaryPopupTextColor,
+    fontWeight: FontWeight.normal,
+  );
+
+  static const TextStyle popupSubtitleStyle = MetricsTextStyle(
+    fontSize: 13.0,
+    lineHeightInPixels: 16.0,
+    color: ColorConfig.popupTextColor,
+    fontWeight: FontWeight.w500,
+  );
 }

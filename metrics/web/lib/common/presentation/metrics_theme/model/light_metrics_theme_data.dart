@@ -114,21 +114,11 @@ class LightMetricsThemeData extends MetricsThemeData {
             successfulColor: ColorConfig.primaryColor,
             failedColor: ColorConfig.accentColor,
           ),
-          barGraphPopupThemeData: const BarGraphPopupThemeData(
+          barGraphPopupTheme: const BarGraphPopupThemeData(
             color: Colors.white,
             shadowColor: _shadowColor,
-            titleTextStyle: MetricsTextStyle(
-              fontSize: 13.0,
-              lineHeightInPixels: 16.0,
-              color: ColorConfig.secondaryPopupTextColor,
-              fontWeight: FontWeight.normal,
-            ),
-            subtitleTextStyle: MetricsTextStyle(
-              fontSize: 13.0,
-              lineHeightInPixels: 16.0,
-              color: ColorConfig.popupTextColor,
-              fontWeight: FontWeight.w500,
-            ),
+            titleTextStyle: TextStyleConfig.popupTitleStyle,
+            subtitleTextStyle: TextStyleConfig.popupSubtitleStyle,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,

@@ -106,7 +106,7 @@ class MetricsThemeData {
   final PageTitleThemeData pageTitleTheme;
 
   /// A theme for the bar graph popup.
-  final BarGraphPopupThemeData barGraphPopupThemeData;
+  final BarGraphPopupThemeData barGraphPopupTheme;
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
@@ -133,7 +133,7 @@ class MetricsThemeData {
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
-    BarGraphPopupThemeData barGraphPopupThemeData,
+    BarGraphPopupThemeData barGraphPopupTheme,
     PageTitleThemeData pageTitleTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
@@ -175,8 +175,8 @@ class MetricsThemeData {
         circlePercentageTheme =
             circlePercentageTheme ?? const CirclePercentageThemeData(),
         toastTheme = toastTheme ?? const ToastThemeData(),
-        barGraphPopupThemeData =
-            barGraphPopupThemeData ?? const BarGraphPopupThemeData(),
+        barGraphPopupTheme =
+            barGraphPopupTheme ?? const BarGraphPopupThemeData(),
         pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
@@ -207,7 +207,7 @@ class MetricsThemeData {
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
-    BarGraphPopupThemeData barGraphPopupThemeData,
+    BarGraphPopupThemeData barGraphPopupTheme,
     PageTitleThemeData pageTitleTheme,
   }) {
     return MetricsThemeData(
@@ -244,8 +244,7 @@ class MetricsThemeData {
           circlePercentageTheme ?? this.circlePercentageTheme,
       toastTheme: toastTheme ?? this.toastTheme,
       pageTitleTheme: pageTitleTheme ?? this.pageTitleTheme,
-      barGraphPopupThemeData:
-          barGraphPopupThemeData ?? this.barGraphPopupThemeData,
+      barGraphPopupTheme: barGraphPopupTheme ?? this.barGraphPopupTheme,
     );
   }
 }
