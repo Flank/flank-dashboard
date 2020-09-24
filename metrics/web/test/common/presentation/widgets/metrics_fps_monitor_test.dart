@@ -7,8 +7,6 @@ import 'package:statsfl/statsfl.dart';
 
 void main() {
   group("MetricsFPSMonitor", () {
-    const child = Text('child');
-
     testWidgets(
       "throws an AssertionError if the given child is null",
       (tester) async {
@@ -21,6 +19,8 @@ void main() {
     );
 
     testWidgets("displays the given child", (tester) async {
+      const child = Text('child');
+
       await tester.pumpWidget(
         const _MetricsFPSMonitorTestbed(child: child),
       );
@@ -29,11 +29,9 @@ void main() {
     });
 
     testWidgets(
-      "enable status of the statsfl widget is false initially",
+      "displays the disabled FPS monitor by default",
       (tester) async {
-        await tester.pumpWidget(
-          const _MetricsFPSMonitorTestbed(child: child),
-        );
+        await tester.pumpWidget(const _MetricsFPSMonitorTestbed());
 
         final statsFlWidget = tester.widget<StatsFl>(find.byType(StatsFl));
 
@@ -45,13 +43,18 @@ void main() {
 
 /// A testbed class needed to test the [MetricsFPSMonitor] widget.
 class _MetricsFPSMonitorTestbed extends StatelessWidget {
+  /// A default child widget used in tests.
+  static const Widget _defaultChild = Text('default text');
+
   /// A widget to display.
   final Widget child;
 
-  /// Created a new [_MetricsFPSMonitorTestbed] instance.
+  /// Creates a new instance of the metrics FPS monitor testbed.
+  ///
+  /// The [child] defaults to [_defaultChild].
   const _MetricsFPSMonitorTestbed({
     Key key,
-    this.child,
+    this.child = _defaultChild,
   }) : super(key: key);
 
   @override
