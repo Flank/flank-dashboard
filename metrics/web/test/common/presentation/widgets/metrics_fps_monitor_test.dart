@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
+import 'package:statsfl/statsfl.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("MetricsFPSMonitor", () {
+    const child = Text('child');
+
     testWidgets(
       "throws an AssertionError if the given child is null",
-      (WidgetTester tester) async {
+      (tester) async {
         await tester.pumpWidget(
           const _MetricsFPSMonitorTestbed(child: null),
         );
@@ -17,9 +20,25 @@ void main() {
       },
     );
 
+    testWidgets("displays the given child", (tester) async {
+      await tester.pumpWidget(
+        const _MetricsFPSMonitorTestbed(child: child),
+      );
+
+      expect(find.byWidget(child), findsOneWidget);
+    });
+
     testWidgets(
-      "displays the given child",
-      (WidgetTester tester) async {},
+      "enable status of the statsfl widget is false initially",
+      (tester) async {
+        await tester.pumpWidget(
+          const _MetricsFPSMonitorTestbed(child: child),
+        );
+
+        final statsFlWidget = tester.widget<StatsFl>(find.byType(StatsFl));
+
+        expect(statsFlWidget.isEnabled, isFalse);
+      },
     );
   });
 }

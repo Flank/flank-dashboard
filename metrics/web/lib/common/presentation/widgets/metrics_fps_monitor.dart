@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:keyboard_shortcuts/keyboard_shortcuts.dart';
-import 'package:metrics/base/presentation/widgets/fps_monitor.dart';
+import 'package:statsfl/statsfl.dart';
 
 /// A class that displays the metrics performance.
 class MetricsFPSMonitor extends StatefulWidget {
@@ -23,28 +22,38 @@ class MetricsFPSMonitor extends StatefulWidget {
 }
 
 class _MetricsFPSMonitorState extends State<MetricsFPSMonitor> {
-  /// Combination of keyboard keys to press 
-  /// that toggles an enable status of the [FPSMonitor].
-  final _keysToPress = {
+  /// Combination of keyboard keys to press
+  /// that toggles an enable status of the [StatsFl].
+  final _keysToPress = LogicalKeySet(
+    LogicalKeyboardKey.alt,
     LogicalKeyboardKey.keyF,
-    LogicalKeyboardKey.keyP,
-    LogicalKeyboardKey.keyS,
-  };
+  );
 
-  /// Indicates whether the [FPSMonitor] is enabled or not.
+  /// Indicates whether the [StatsFl] is enabled or not.
   bool _isEnabled = false;
+
+  /// Provides an enable status of the [StatsFl].
+  ///
+  /// This feature should work only in the release mode.
+  bool get isEnabled => _isEnabled;
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: KeyBoardShortcuts(
-        keysToPress: _keysToPress,
-        onKeysPressed: () {
-          setState(() => _isEnabled = !_isEnabled);
+    return Shortcuts(
+      shortcuts: {
+        _keysToPress: const ActivateIntent(),
+      },
+      child: Actions(
+        actions: {
+          ActivateIntent: CallbackAction(
+            onInvoke: (_) {
+              setState(() => _isEnabled = !_isEnabled);
+              return null;
+            },
+          ),
         },
-        child: FPSMonitor(
-          isEnabled: _isEnabled,
+        child: StatsFl(
+          isEnabled: isEnabled,
           child: widget.child,
         ),
       ),
