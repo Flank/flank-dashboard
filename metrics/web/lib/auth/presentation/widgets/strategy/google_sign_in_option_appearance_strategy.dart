@@ -1,9 +1,10 @@
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
-import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_strategy.dart';
+import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_appearance_strategy.dart';
 
-/// A [SignInOptionStrategy] implementation for the Google Sign In option.
-class GoogleSignInOptionStrategy implements SignInOptionStrategy {
+/// A [SignInOptionAppearanceStrategy] implementation for the Google Sign In option.
+class GoogleSignInOptionAppearanceStrategy
+    extends SignInOptionAppearanceStrategy {
   @override
   final String asset = 'icons/logo-google.svg';
 

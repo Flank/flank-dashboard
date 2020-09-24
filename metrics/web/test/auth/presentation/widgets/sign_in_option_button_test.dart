@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
-import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_strategy.dart';
+import 'package:metrics/auth/presentation/widgets/strategy/sign_in_option_appearance_strategy.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -20,23 +19,20 @@ void main() {
   group("SignInOptionButton", () {
     const label = 'Label';
     const asset = 'icons/icon.svg';
-    const metricsThemeData = MetricsThemeData(
-      loginTheme: LoginThemeData(
-        loginOptionButtonStyle: MetricsButtonStyle(
-          color: Colors.green,
-          hoverColor: Colors.lightGreen,
-          labelStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 12.0,
-          ),
-          elevation: 4.0,
-        ),
+    const buttonStyle = MetricsButtonStyle(
+      color: Colors.green,
+      hoverColor: Colors.lightGreen,
+      labelStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 12.0,
       ),
+      elevation: 4.0,
     );
 
-    const strategyStub = _SignInOptionStrategyStub(
+    const strategyStub = _SignInOptionAppearanceStrategyStub(
       asset: asset,
       label: label,
+      style: buttonStyle,
     );
 
     final buttonFinder = find.ancestor(
@@ -87,14 +83,12 @@ void main() {
     );
 
     testWidgets(
-      "applies a label text style from the theme to the option button label",
+      "applies a label text style from the style given by the strategy",
       (tester) async {
-        final expectedStyle =
-            metricsThemeData.loginTheme.loginOptionButtonStyle.labelStyle;
+        final expectedStyle = strategyStub.getWidgetAppearance().labelStyle;
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _LoginOptionButtonTestbed(
-            metricsThemeData: metricsThemeData,
             strategy: strategyStub,
           ));
         });
@@ -107,14 +101,12 @@ void main() {
     );
 
     testWidgets(
-      "applies a color from the theme to the option button",
+      "applies a color from the style given by the strategy",
       (tester) async {
-        final expectedColor =
-            metricsThemeData.loginTheme.loginOptionButtonStyle.color;
+        final expectedColor = strategyStub.getWidgetAppearance().color;
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _LoginOptionButtonTestbed(
-            metricsThemeData: metricsThemeData,
             strategy: strategyStub,
           ));
         });
@@ -127,14 +119,30 @@ void main() {
     );
 
     testWidgets(
-      "applies a hover color from the theme to the option button",
+      "applies a disabled color from the style given by the strategy",
       (tester) async {
-        final expectedColor =
-            metricsThemeData.loginTheme.loginOptionButtonStyle.hoverColor;
+        final expectedColor = strategyStub.getWidgetAppearance().color;
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _LoginOptionButtonTestbed(
-            metricsThemeData: metricsThemeData,
+            strategy: strategyStub,
+          ));
+        });
+
+        final button = tester.widget<RaisedButton>(buttonFinder);
+        final disabledColor = button.disabledColor;
+
+        expect(disabledColor, equals(expectedColor));
+      },
+    );
+
+    testWidgets(
+      "applies a hover color from the style given by the strategy",
+      (tester) async {
+        final expectedColor = strategyStub.getWidgetAppearance().hoverColor;
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _LoginOptionButtonTestbed(
             strategy: strategyStub,
           ));
         });
@@ -147,14 +155,12 @@ void main() {
     );
 
     testWidgets(
-      "applies an elevation from the theme to the option button",
+      "applies an elevation from the style given by the strategy",
       (tester) async {
-        final expectedElevation =
-            metricsThemeData.loginTheme.loginOptionButtonStyle.elevation;
+        final expectedElevation = strategyStub.getWidgetAppearance().elevation;
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _LoginOptionButtonTestbed(
-            metricsThemeData: metricsThemeData,
             strategy: strategyStub,
           ));
         });
@@ -172,14 +178,17 @@ void main() {
       "calls the sign in method from the given strategy when the option button is pressed",
       (tester) async {
         final authNotifierMock = AuthNotifierMock();
-        final strategyMock = _SignInOptionStrategyMock();
+        final strategyMock = _SignInOptionAppearanceStrategyMock();
 
+        when(authNotifierMock.isLoading).thenReturn(false);
         when(strategyMock.asset).thenReturn(asset);
         when(strategyMock.label).thenReturn(label);
+        when(strategyMock.getWidgetAppearance(any, any)).thenReturn(
+          const MetricsButtonStyle(),
+        );
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_LoginOptionButtonTestbed(
-            metricsThemeData: metricsThemeData,
             authNotifier: authNotifierMock,
             strategy: strategyMock,
           ));
@@ -190,30 +199,27 @@ void main() {
         verify(strategyMock.signIn(authNotifierMock)).called(equals(1));
       },
     );
+
+    testWidgets(
+      "disabled when the login process is in progress",
+      (tester) async {
+        final authNotifierMock = AuthNotifierMock();
+
+        when(authNotifierMock.isLoading).thenReturn(true);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_LoginOptionButtonTestbed(
+            authNotifier: authNotifierMock,
+            strategy: strategyStub,
+          ));
+        });
+
+        final buttonWidget = tester.widget<RaisedButton>(buttonFinder);
+
+        expect(buttonWidget.enabled, isFalse);
+      },
+    );
   });
-}
-
-class _SignInOptionStrategyMock extends Mock implements SignInOptionStrategy {}
-
-/// A stub implementation of the [SignInOptionStrategy] to use in tests.
-class _SignInOptionStrategyStub implements SignInOptionStrategy {
-  @override
-  final String asset;
-
-  @override
-  final String label;
-
-  /// Creates a new instance of the sign in option stub.
-  ///
-  /// The [asset] defaults to the `asset`.
-  /// The [label] defaults to the `label`.
-  const _SignInOptionStrategyStub({
-    this.asset = 'asset',
-    this.label = 'label',
-  });
-
-  @override
-  void signIn(AuthNotifier notifier) {}
 }
 
 /// A testbed widget, used to test the [SignInOptionButton] widget.
@@ -221,18 +227,14 @@ class _LoginOptionButtonTestbed extends StatelessWidget {
   /// An [AuthNotifier] to use in tests.
   final AuthNotifier authNotifier;
 
-  /// A [MetricsThemeData] to use in tests.
-  final MetricsThemeData metricsThemeData;
-
-  /// A [SignInOptionStrategy] to apply for the button under tests.
-  final SignInOptionStrategy strategy;
+  /// A [SignInOptionAppearanceStrategy] to apply for the button under tests.
+  final SignInOptionAppearanceStrategy strategy;
 
   /// Creates a new instance of the [_LoginOptionButtonTestbed].
   ///
   /// The [metricsThemeData] defaults to an empty [MetricsThemeData] instance.
   const _LoginOptionButtonTestbed({
     Key key,
-    this.metricsThemeData = const MetricsThemeData(),
     this.authNotifier,
     this.strategy,
   }) : super(key: key);
@@ -242,11 +244,48 @@ class _LoginOptionButtonTestbed extends StatelessWidget {
     return TestInjectionContainer(
       authNotifier: authNotifier,
       child: MetricsThemedTestbed(
-        metricsThemeData: metricsThemeData,
         body: SignInOptionButton(
           strategy: strategy,
         ),
       ),
     );
+  }
+}
+
+class _SignInOptionAppearanceStrategyMock extends Mock
+    implements SignInOptionAppearanceStrategy {}
+
+/// A stub implementation of the [SignInOptionAppearanceStrategy] to use in tests.
+class _SignInOptionAppearanceStrategyStub
+    implements SignInOptionAppearanceStrategy {
+  @override
+  final String asset;
+
+  @override
+  final String label;
+
+  /// A [MetricsButtonStyle] used in tests.
+  final MetricsButtonStyle _style;
+
+  /// Creates a new instance of the sign in option stub.
+  ///
+  /// The [asset] defaults to the `asset`.
+  /// The [label] defaults to the `label`.
+  /// The [style] defaults to an empty [MetricsButtonStyle].
+  const _SignInOptionAppearanceStrategyStub({
+    this.asset = 'asset',
+    this.label = 'label',
+    MetricsButtonStyle style = const MetricsButtonStyle(),
+  }) : _style = style;
+
+  @override
+  void signIn(AuthNotifier notifier) {}
+
+  @override
+  MetricsButtonStyle getWidgetAppearance([
+    MetricsThemeData themeData,
+    bool value,
+  ]) {
+    return _style;
   }
 }

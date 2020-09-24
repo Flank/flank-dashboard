@@ -4,7 +4,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
-import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_strategy.dart';
+import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_appearance_strategy.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
@@ -200,7 +200,8 @@ void main() {
         );
 
         expect(googleSignInButton, isNotNull);
-        expect(googleSignInButton.strategy, isA<GoogleSignInOptionStrategy>());
+        expect(googleSignInButton.strategy,
+            isA<GoogleSignInOptionAppearanceStrategy>());
       },
     );
 

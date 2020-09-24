@@ -1,13 +1,13 @@
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
-import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_strategy.dart';
+import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_appearance_strategy.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/auth_notifier_mock.dart';
 
 void main() {
-  group("GoogleSignInOptionStrategy", () {
-    final strategy = GoogleSignInOptionStrategy();
+  group("GoogleSignInOptionAppearanceStrategy", () {
+    final strategy = GoogleSignInOptionAppearanceStrategy();
 
     test(".asset equals to the google logo asset", () {
       const expectedAsset = 'icons/logo-google.svg';

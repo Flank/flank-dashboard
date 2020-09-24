@@ -9,9 +9,9 @@ import 'package:test/test.dart';
 void main() {
   group("LoginThemeData", () {
     test(
-      "creates a theme with the default styles for login page if the parameters are not specified",
+      "creates a theme with the default login option button style if the given one is null",
       () {
-        const themeData = LoginThemeData();
+        const themeData = LoginThemeData(loginOptionButtonStyle: null);
 
         expect(themeData.loginOptionButtonStyle, isNotNull);
       },
@@ -27,9 +27,18 @@ void main() {
     );
 
     test(
-      "creates a theme with null text styles for login page if the text styles are not specified",
+      "creates a theme with the default inactive login option button style if the given one is null",
       () {
-        const themeData = LoginThemeData();
+        const themeData = LoginThemeData(inactiveLoginOptionButtonStyle: null);
+
+        expect(themeData.inactiveLoginOptionButtonStyle, isNotNull);
+      },
+    );
+
+    test(
+      "creates a theme with null text styles for login page if the given one is null",
+      () {
+        const themeData = LoginThemeData(titleTextStyle: null);
 
         expect(themeData.titleTextStyle, isNull);
       },
