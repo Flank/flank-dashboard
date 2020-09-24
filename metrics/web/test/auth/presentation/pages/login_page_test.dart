@@ -89,10 +89,7 @@ void main() {
 
         final isDark = expectedPlatformBrightness == Brightness.dark;
 
-        expect(
-          themeNotifier.isDark,
-          equals(isDark),
-        );
+        expect(themeNotifier.isDark, equals(isDark));
       },
     );
 
@@ -121,10 +118,7 @@ void main() {
 
         final isDark = expectedPlatformBrightness == Brightness.dark;
 
-        expect(
-          themeNotifier.isDark,
-          equals(isDark),
-        );
+        expect(themeNotifier.isDark, equals(isDark));
       },
     );
 
