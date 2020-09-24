@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/keyboard_shortcuts.dart';
 import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
 import 'package:statsfl/statsfl.dart';
 
@@ -36,6 +38,24 @@ void main() {
         final statsFlWidget = tester.widget<StatsFl>(find.byType(StatsFl));
 
         expect(statsFlWidget.isEnabled, isFalse);
+      },
+    );
+
+    testWidgets(
+      "applies the given keysToPress",
+      (WidgetTester tester) async {
+        final keysToPress = LogicalKeySet(
+          LogicalKeyboardKey.alt,
+          LogicalKeyboardKey.keyF,
+        );
+        await tester.pumpWidget(
+          const _MetricsFPSMonitorTestbed(),
+        );
+
+        final keyboardShortcutsWidget =
+            tester.widget<KeyboardShortcuts>(find.byType(KeyboardShortcuts));
+
+        expect(keysToPress, equals(keyboardShortcutsWidget.keysToPress));
       },
     );
   });
