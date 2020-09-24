@@ -250,7 +250,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the password visibility icon color from the metrics theme",
+      "applies the color from the metrics theme to the password visibility icon",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(

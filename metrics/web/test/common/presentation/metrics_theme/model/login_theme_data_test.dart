@@ -14,6 +14,14 @@ void main() {
         const themeData = LoginThemeData();
 
         expect(themeData.loginOptionButtonStyle, isNotNull);
+      },
+    );
+
+    test(
+      "creates a theme with the default visibility icon color if the given value is null",
+      () {
+        const themeData = LoginThemeData(passwordVisibilityIconColor: null);
+
         expect(themeData.passwordVisibilityIconColor, isNotNull);
       },
     );
