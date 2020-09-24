@@ -73,7 +73,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _negativeStatusColor = Color(0xFFFFF5F3);
   static const Color _neutralStatusColor = Color(0xFFFAF6E6);
   static const Color _inactiveStatusColor = Color(0xFF43494D);
-  static const Color _dropdownMenuIconColor = Color(0xFF2d2d33);
+  static const Color _iconColor = Color(0xFF2d2d33);
 
   static const inputFocusedBorder = OutlineInputBorder(
     borderSide: BorderSide(color: _inputFocusedBorderColor),
@@ -267,7 +267,7 @@ class LightMetricsThemeData extends MetricsThemeData {
             closedButtonBorderColor: inputColor,
             textStyle: _defaultDropdownTextStyle,
             shadowColor: _shadowColor,
-            iconColor: _dropdownMenuIconColor,
+            iconColor: _iconColor,
           ),
           dropdownItemTheme: const DropdownItemThemeData(
             backgroundColor: Colors.white,
@@ -299,6 +299,7 @@ class LightMetricsThemeData extends MetricsThemeData {
                 lineHeightInPixels: 20.0,
               ),
             ),
+            passwordVisibilityIconColor: _iconColor,
           ),
           projectMetricsTableTheme: const ProjectMetricsTableThemeData(
             metricsTableHeaderTheme: MetricsTableHeaderThemeData(

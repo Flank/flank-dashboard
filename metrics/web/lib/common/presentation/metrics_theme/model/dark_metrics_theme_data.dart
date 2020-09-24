@@ -285,6 +285,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            passwordVisibilityIconColor: Colors.white,
           ),
           projectMetricsTableTheme: const ProjectMetricsTableThemeData(
             metricsTableHeaderTheme: MetricsTableHeaderThemeData(
