@@ -23,7 +23,7 @@ void main() {
     final strategy = _SignInOptionAppearanceStrategyFake();
 
     test(
-      ".getWidgetAppearance() returns the login option button theme if not in the loading state",
+      ".getWidgetAppearance() returns the login option button style of the given theme if not in the loading state",
       () {
         final expectedStyle = loginThemeData.loginOptionButtonStyle;
 
@@ -34,7 +34,7 @@ void main() {
     );
 
     test(
-      ".getWidgetAppearance() returns the inactive login option button theme if in the loading state",
+      ".getWidgetAppearance() returns the inactive login option button style of the given theme if in the loading state",
       () {
         final expectedStyle = loginThemeData.inactiveLoginOptionButtonStyle;
 
