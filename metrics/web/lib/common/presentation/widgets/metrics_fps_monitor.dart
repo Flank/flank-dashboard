@@ -32,11 +32,6 @@ class _MetricsFPSMonitorState extends State<MetricsFPSMonitor> {
   /// Indicates whether the [StatsFl] is enabled or not.
   bool _isEnabled = false;
 
-  /// Provides an enable status of the [StatsFl].
-  ///
-  /// This feature should work only in the release mode.
-  bool get isEnabled => kReleaseMode && _isEnabled;
-
   @override
   Widget build(BuildContext context) {
     return Shortcuts(
@@ -53,7 +48,7 @@ class _MetricsFPSMonitorState extends State<MetricsFPSMonitor> {
           ),
         },
         child: StatsFl(
-          isEnabled: isEnabled,
+          isEnabled: _isEnabled,
           child: widget.child,
         ),
       ),
