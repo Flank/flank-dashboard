@@ -65,7 +65,22 @@ jobs:
         run: flutter clean && flutter build web --release
         working-directory: metrics/web/
 
-      - name: Deploy to Firebase
+      - name: Setup Firebase hosting targets
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: firebase deploy --only hosting
+        run: firebase target:apply hosting metrics-d9c67 metrics-d9c67 && firebase target:apply hosting metrics-html metrics-html && firebase target:apply hosting metrics-skia metrics-skia
+        working-directory: metrics/web/
+
+      - name: Deploy HTML versions to Firebase
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: firebase deploy --only hosting:metrics-d9c67 && firebase deploy --only hosting:metrics-html
+        working-directory: metrics/web/
+
+      - name: Build release app using SKIA
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_USE_SKIA=true
+        working-directory: metrics/web/
+
+      - name: Deploy SKIA version to Firebase
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: firebase deploy --only hosting:metrics-skia
         working-directory: metrics/web/
