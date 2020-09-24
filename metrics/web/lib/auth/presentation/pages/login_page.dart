@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _changeThemeAccordingOperatingSystemTheme();
+      _handlePlatformBrightness();
     });
 
     super.initState();
@@ -49,12 +49,12 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
   @override
   void didChangePlatformBrightness() {
-    _changeThemeAccordingOperatingSystemTheme();
+    _handlePlatformBrightness();
     super.didChangePlatformBrightness();
   }
 
   /// Changes the current theme according to the operating system's theme.
-  void _changeThemeAccordingOperatingSystemTheme() {
+  void _handlePlatformBrightness() {
     final platformBrightness =
         WidgetsBinding.instance.window.platformBrightness;
 

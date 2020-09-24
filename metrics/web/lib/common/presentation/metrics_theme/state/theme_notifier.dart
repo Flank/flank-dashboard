@@ -4,11 +4,11 @@ import 'package:flutter/foundation.dart';
 ///
 /// Stores and provides currently selected theme type.
 class ThemeNotifier extends ChangeNotifier {
-  bool _isDark;
+  bool _isDark = true;
 
   /// Creates a new [ThemeNotifier] instance.
   ///
-  /// [_isDark] defaults to `true`.
+  /// If the given [isDark] is `null`, the `true` is used.
   ThemeNotifier({
     bool isDark,
   }) : _isDark = isDark ?? true;
@@ -23,8 +23,10 @@ class ThemeNotifier extends ChangeNotifier {
   }
 
   /// Sets the [_isDark] value according to the given [isDark] value.
+  ///
+  /// If the given [isDark] is `null`, the `true` is used.
   void setTheme({bool isDark}) {
-    _isDark = isDark;
+    _isDark = isDark ?? true;
     notifyListeners();
   }
 }

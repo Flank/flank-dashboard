@@ -7,60 +7,91 @@ import 'package:test/test.dart';
 void main() {
   group("ThemeNotifier", () {
     test(
-        "creates an instance with the default is dark value if the is dark parameter is not specified",
-        () {
-      final themeNotifier = ThemeNotifier();
+      "creates an instance with the default is dark value if the is dark parameter is not specified",
+      () {
+        final themeNotifier = ThemeNotifier();
 
-      expect(themeNotifier.isDark, isNotNull);
-    });
-
-    test(
-        "creates an instance with the default is dark value if the given is dark parameter is null",
-        () {
-      final themeNotifier = ThemeNotifier(isDark: null);
-
-      expect(themeNotifier.isDark, isNotNull);
-    });
-
-    test("creates an instance with the given is dark parameter", () {
-      const isDark = false;
-      final themeNotifier = ThemeNotifier(isDark: isDark);
-
-      expect(themeNotifier.isDark, equals(isDark));
-    });
-
-    test(".changeTheme() changes the theme", () {
-      final themeNotifier = ThemeNotifier(isDark: true);
-      final initialTheme = themeNotifier.isDark;
-
-      themeNotifier.changeTheme();
-
-      expect(themeNotifier.isDark, isNot(initialTheme));
-    });
-
-    test(".changeTheme() notifies listeners about theme change", () {
-      final themeNotifier = ThemeNotifier(isDark: true);
-
-      themeNotifier.addListener(expectAsync0(() {}));
-
-      themeNotifier.changeTheme();
-    });
+        expect(themeNotifier.isDark, isNotNull);
+      },
+    );
 
     test(
-        ".setTheme() changes the theme according to the given is dark value and notifies listeners",
-        () {
-      final themeNotifier = ThemeNotifier(isDark: true);
+      "creates an instance with the default is dark value if the given is dark parameter is null",
+      () {
+        final themeNotifier = ThemeNotifier(isDark: null);
 
-      const expectedIsDark = false;
+        expect(themeNotifier.isDark, isNotNull);
+      },
+    );
 
-      themeNotifier.addListener(
-        expectAsyncUntil0(
-          () {},
-          () => themeNotifier.isDark == expectedIsDark,
-        ),
-      );
+    test(
+      "creates an instance with the given is dark parameter",
+      () {
+        const isDark = false;
+        final themeNotifier = ThemeNotifier(isDark: isDark);
 
-      themeNotifier.setTheme(isDark: false);
-    });
+        expect(themeNotifier.isDark, equals(isDark));
+      },
+    );
+
+    test(
+      ".changeTheme() changes the theme",
+      () {
+        final themeNotifier = ThemeNotifier(isDark: true);
+        final initialTheme = themeNotifier.isDark;
+
+        themeNotifier.changeTheme();
+
+        expect(themeNotifier.isDark, isNot(initialTheme));
+      },
+    );
+
+    test(
+      ".changeTheme() notifies listeners about theme change",
+      () {
+        final themeNotifier = ThemeNotifier(isDark: true);
+
+        themeNotifier.addListener(expectAsync0(() {}));
+
+        themeNotifier.changeTheme();
+      },
+    );
+
+    test(
+      ".setTheme() notifies listeners about theme change",
+      () {
+        final themeNotifier = ThemeNotifier(isDark: true);
+
+        themeNotifier.addListener(
+          expectAsync0(() {}),
+        );
+
+        themeNotifier.setTheme(isDark: false);
+      },
+    );
+
+    test(
+      ".setTheme() changes the theme",
+      () {
+        final themeNotifier = ThemeNotifier(isDark: true);
+
+        const expectedIsDark = false;
+        themeNotifier.setTheme(isDark: expectedIsDark);
+
+        expect(themeNotifier.isDark, equals(expectedIsDark));
+      },
+    );
+
+    test(
+      ".setTheme() does not throw the exception when the given is dark parameter is null",
+      () {
+        final themeNotifier = ThemeNotifier(isDark: true);
+
+        expect(
+          () => themeNotifier.setTheme(isDark: null),
+          returnsNormally,
+        );
+      },
+    );
   });
 }

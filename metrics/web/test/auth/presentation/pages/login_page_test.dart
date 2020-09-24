@@ -24,6 +24,11 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("LoginPage", () {
+    void _setPlatformBrightness(WidgetTester tester, Brightness brightness) {
+      final TestWidgetsFlutterBinding testBinding = tester.binding;
+      testBinding.window.platformBrightnessTestValue = brightness;
+    }
+
     const metricsThemeData = MetricsThemeData(
       loginTheme: LoginThemeData(
         titleTextStyle: TextStyle(
@@ -67,17 +72,54 @@ void main() {
     testWidgets(
       "applies the theme brightness that corresponds the operating system's brightness",
       (WidgetTester tester) async {
+        const expectedPlatformBrightness = Brightness.light;
+        _setPlatformBrightness(tester, expectedPlatformBrightness);
+
+        final loginKey = GlobalKey();
+
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _LoginPageTestbed());
+          return tester.pumpWidget(_LoginPageTestbed(
+            loginKey: loginKey,
+          ));
         });
 
-        final context = _LoginPageTestbed.childKey.currentContext;
-
-        final platformBrightness = tester.binding.window.platformBrightness;
-        final isDark = platformBrightness == Brightness.dark;
-
+        final context = loginKey.currentContext;
         final themeNotifier =
             Provider.of<ThemeNotifier>(context, listen: false);
+
+        final isDark = expectedPlatformBrightness == Brightness.dark;
+
+        expect(
+          themeNotifier.isDark,
+          equals(isDark),
+        );
+      },
+    );
+
+    testWidgets(
+      "listens for the changes of the platform theme brightness",
+      (WidgetTester tester) async {
+        const initialPlatformBrightness = Brightness.light;
+        _setPlatformBrightness(tester, initialPlatformBrightness);
+
+        final loginKey = GlobalKey();
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_LoginPageTestbed(
+            loginKey: loginKey,
+          ));
+        });
+
+        const expectedPlatformBrightness = Brightness.dark;
+        _setPlatformBrightness(tester, expectedPlatformBrightness);
+
+        await tester.pump();
+
+        final context = loginKey.currentContext;
+        final themeNotifier =
+            Provider.of<ThemeNotifier>(context, listen: false);
+
+        final isDark = expectedPlatformBrightness == Brightness.dark;
 
         expect(
           themeNotifier.isDark,
@@ -152,8 +194,8 @@ void main() {
 
 /// A testbed widget, used to test the [LoginPage] widget.
 class _LoginPageTestbed extends StatelessWidget {
-  /// A [GlobalKey] needed to get the current context of the [LoginPage].
-  static final GlobalKey childKey = GlobalKey();
+  /// A [GlobalKey] for the [LoginPage] to use in tests.
+  final GlobalKey loginKey;
 
   /// A [MetricsThemeData] to use in tests.
   final MetricsThemeData metricsThemeData;
@@ -171,6 +213,7 @@ class _LoginPageTestbed extends StatelessWidget {
     this.metricsThemeData = const MetricsThemeData(),
     this.authNotifier,
     this.metricsNotifier,
+    this.loginKey,
   });
 
   @override
@@ -187,7 +230,7 @@ class _LoginPageTestbed extends StatelessWidget {
               isLoggedIn:
                   Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
-            body: LoginPage(key: childKey),
+            body: LoginPage(key: loginKey),
           );
         },
       ),
