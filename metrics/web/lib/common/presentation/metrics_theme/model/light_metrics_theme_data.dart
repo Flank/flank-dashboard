@@ -300,6 +300,16 @@ class LightMetricsThemeData extends MetricsThemeData {
               ),
             ),
             passwordVisibilityIconColor: _iconColor,
+            inactiveLoginOptionButtonStyle: MetricsButtonStyle(
+              color: _inactiveButtonColor,
+              hoverColor: _inactiveButtonColor,
+              labelStyle: MetricsTextStyle(
+                color: _inactiveButtonHoverColor,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
+                lineHeightInPixels: 20.0,
+              ),
+            ),
           ),
           projectMetricsTableTheme: const ProjectMetricsTableThemeData(
             metricsTableHeaderTheme: MetricsTableHeaderThemeData(

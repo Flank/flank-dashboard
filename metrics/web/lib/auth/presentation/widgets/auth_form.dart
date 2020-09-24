@@ -84,7 +84,7 @@ class _AuthFormState extends State<AuthForm> {
                 ),
               ),
               SignInOptionButton(
-                strategy: GoogleSignInOptionStrategy(),
+                strategy: GoogleSignInOptionAppearanceStrategy(),
               ),
             ],
           ),

@@ -286,6 +286,15 @@ class DarkMetricsThemeData extends MetricsThemeData {
               ),
             ),
             passwordVisibilityIconColor: Colors.white,
+            inactiveLoginOptionButtonStyle: MetricsButtonStyle(
+              color: ColorConfig.inactiveColor,
+              hoverColor: ColorConfig.inactiveColor,
+              labelStyle: TextStyle(
+                color: ColorConfig.inactiveTextColor,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
           projectMetricsTableTheme: const ProjectMetricsTableThemeData(
             metricsTableHeaderTheme: MetricsTableHeaderThemeData(

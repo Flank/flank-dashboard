@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 /// A widget that displays a button for a sign in option.
 class SignInOptionButton extends StatelessWidget {
   /// A strategy for a sign in option this button stands for.
-  final SignInOptionStrategy strategy;
+  final SignInOptionAppearanceStrategy strategy;
 
   /// Creates a new instance of the login option button
   /// with the given [strategy].
@@ -21,11 +21,17 @@ class SignInOptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginTheme = MetricsTheme.of(context).loginTheme;
-    final loginOptionStyle = loginTheme.loginOptionButtonStyle;
+    final metricsTheme = MetricsTheme.of(context);
+    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    final isLoading = authNotifier.isLoading;
+    final loginOptionStyle = strategy.getWidgetAppearance(
+      metricsTheme,
+      isLoading,
+    );
 
     return RaisedButton(
       color: loginOptionStyle.color,
+      disabledColor: loginOptionStyle.color,
       hoverColor: loginOptionStyle.hoverColor,
       elevation: loginOptionStyle.elevation,
       hoverElevation: loginOptionStyle.elevation,
@@ -34,7 +40,7 @@ class SignInOptionButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
       ),
-      onPressed: () => _signIn(context),
+      onPressed: isLoading ? null : () => _signIn(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

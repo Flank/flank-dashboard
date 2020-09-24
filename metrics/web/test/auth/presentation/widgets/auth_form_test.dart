@@ -200,7 +200,8 @@ void main() {
         );
 
         expect(googleSignInButton, isNotNull);
-        expect(googleSignInButton.strategy, isA<GoogleSignInOptionStrategy>());
+        expect(googleSignInButton.strategy,
+            isA<GoogleSignInOptionAppearanceStrategy>());
       },
     );
 
