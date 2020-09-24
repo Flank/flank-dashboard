@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 /// Shows the authentication form to sign in.
 class LoginPage extends StatefulWidget {
-  /// Creates a new instance of [LoginPage].
+  /// Creates a new instance of the [LoginPage].
   const LoginPage({
     Key key,
   }) : super(key: key);
