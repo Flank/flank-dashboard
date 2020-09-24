@@ -110,7 +110,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
           ),
         ),
         ChangeNotifierProvider<ThemeNotifier>(
-          create: (_) => ThemeNotifier(isDark: _isOperatingSystemThemeDark()),
+          create: (_) => ThemeNotifier(brightness: _getPlatformBrightness()),
         ),
         ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
           lazy: false,
@@ -168,12 +168,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
     );
   }
 
-  /// Returns `true` if the the operating system uses dark theme, otherwise
-  /// returns `false`.
-  bool _isOperatingSystemThemeDark() {
-    final platformBrightness =
-        WidgetsBinding.instance.window.platformBrightness;
-    return platformBrightness == Brightness.dark;
+  /// Returns the current system's theme brightness.
+  Brightness _getPlatformBrightness() {
+    return WidgetsBinding.instance.window.platformBrightness;
   }
 
   /// Updates projects subscription based on user logged in status.

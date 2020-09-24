@@ -58,9 +58,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     final platformBrightness =
         WidgetsBinding.instance.window.platformBrightness;
 
-    final isDark = platformBrightness == Brightness.dark;
-
-    _themeNotifier.setTheme(isDark: isDark);
+    _themeNotifier.setTheme(platformBrightness);
   }
 
   /// Navigates to the dashboard screen once the user becomes logged in.

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:test/test.dart';
 
@@ -7,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group("ThemeNotifier", () {
     test(
-      "creates an instance with the default is dark value if the is dark parameter is not specified",
+      "creates an instance with the default is dark value if the brightness is not specified",
       () {
         final themeNotifier = ThemeNotifier();
 
@@ -16,28 +17,36 @@ void main() {
     );
 
     test(
-      "creates an instance with the default is dark value if the given is dark parameter is null",
+      "creates an instance with the default is dark value if the given brightness is null",
       () {
-        final themeNotifier = ThemeNotifier(isDark: null);
+        final themeNotifier = ThemeNotifier(brightness: null);
 
         expect(themeNotifier.isDark, isNotNull);
       },
     );
 
     test(
-      "creates an instance with the given is dark parameter",
+      "creates an instance with the is dark value that corresponds to the given system's theme dark brightness",
       () {
-        const isDark = false;
-        final themeNotifier = ThemeNotifier(isDark: isDark);
+        final themeNotifier = ThemeNotifier(brightness: Brightness.dark);
 
-        expect(themeNotifier.isDark, equals(isDark));
+        expect(themeNotifier.isDark, isTrue);
+      },
+    );
+
+    test(
+      "creates an instance with the light theme mode that corresponds to the given light brightness",
+      () {
+        final themeNotifier = ThemeNotifier(brightness: Brightness.light);
+
+        expect(themeNotifier.isDark, isFalse);
       },
     );
 
     test(
       ".changeTheme() changes the theme",
       () {
-        final themeNotifier = ThemeNotifier(isDark: true);
+        final themeNotifier = ThemeNotifier();
         final initialTheme = themeNotifier.isDark;
 
         themeNotifier.changeTheme();
@@ -49,7 +58,7 @@ void main() {
     test(
       ".changeTheme() notifies listeners about theme change",
       () {
-        final themeNotifier = ThemeNotifier(isDark: true);
+        final themeNotifier = ThemeNotifier();
 
         themeNotifier.addListener(expectAsync0(() {}));
 
@@ -60,37 +69,45 @@ void main() {
     test(
       ".setTheme() notifies listeners about theme change",
       () {
-        final themeNotifier = ThemeNotifier(isDark: true);
+        final themeNotifier = ThemeNotifier();
 
-        themeNotifier.addListener(
-          expectAsync0(() {}),
-        );
+        themeNotifier.addListener(expectAsync0(() {}));
 
-        themeNotifier.setTheme(isDark: false);
+        const newBrightness = Brightness.light;
+        themeNotifier.setTheme(newBrightness);
       },
     );
 
     test(
-      ".setTheme() changes the theme",
+      ".setTheme() sets the light theme mode if the given brightness is light",
       () {
-        final themeNotifier = ThemeNotifier(isDark: true);
+        final themeNotifier = ThemeNotifier();
 
-        const expectedIsDark = false;
-        themeNotifier.setTheme(isDark: expectedIsDark);
+        themeNotifier.setTheme(Brightness.light);
 
-        expect(themeNotifier.isDark, equals(expectedIsDark));
+        expect(themeNotifier.isDark, isFalse);
       },
     );
 
     test(
-      ".setTheme() does not throw the exception when the given is dark parameter is null",
+      ".setTheme() sets the light theme mode if the given brightness is null",
       () {
-        final themeNotifier = ThemeNotifier(isDark: true);
+        final themeNotifier = ThemeNotifier();
 
-        expect(
-          () => themeNotifier.setTheme(isDark: null),
-          returnsNormally,
-        );
+        themeNotifier.setTheme(null);
+
+        expect(themeNotifier.isDark, isFalse);
+      },
+    );
+
+    test(
+      ".setTheme() sets the dark theme mode if the given brightness is dark",
+      () {
+        final themeNotifier = ThemeNotifier();
+
+        themeNotifier.setTheme(Brightness.dark);
+
+        expect(themeNotifier.isDark, isTrue);
       },
     );
   });

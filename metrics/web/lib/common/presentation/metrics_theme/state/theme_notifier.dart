@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 /// The [ChangeNotifier] of the theme type.
 ///
@@ -7,26 +8,29 @@ class ThemeNotifier extends ChangeNotifier {
   bool _isDark = true;
 
   /// Creates a new [ThemeNotifier] instance.
-  ///
-  /// If the given [isDark] is `null`, the `true` is used.
   ThemeNotifier({
-    bool isDark,
-  }) : _isDark = isDark ?? true;
+    Brightness brightness,
+  }) : _isDark = _isBrightnessDark(brightness);
 
   /// Determines if a dark theme is currently active.
   bool get isDark => _isDark;
 
-  /// Enable and disable a dark theme of the application.
+  /// Changes the current theme mode to the opposite.
   void changeTheme() {
     _isDark = !_isDark;
     notifyListeners();
   }
 
-  /// Sets the [_isDark] value according to the given [isDark] value.
-  ///
-  /// If the given [isDark] is `null`, the `true` is used.
-  void setTheme({bool isDark}) {
-    _isDark = isDark ?? true;
+  /// Sets the [_isDark] value according to the given system's
+  /// theme [Brightness].
+  void setTheme(Brightness brightness) {
+    _isDark = _isBrightnessDark(brightness);
     notifyListeners();
+  }
+
+  /// Returns `true` if the given [brightness] equals to `Brightness.dark`,
+  /// otherwise, returns `false`.
+  static bool _isBrightnessDark(Brightness brightness) {
+    return brightness == Brightness.dark;
   }
 }
