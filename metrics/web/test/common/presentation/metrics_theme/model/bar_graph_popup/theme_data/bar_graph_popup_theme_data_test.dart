@@ -3,16 +3,42 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("BarGraphPopupThemeData", () {
     test(
-      "creates an instance with the default colors if the parameters are not specified",
+      "creates an instance with the default color if the color is not specified",
       () {
         final themeData = BarGraphPopupThemeData();
 
         expect(themeData.color, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with the default color if the given color is null",
+      () {
+        final themeData = BarGraphPopupThemeData(color: null);
+
+        expect(themeData.color, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with the default shadow color if the shadow color is not specified",
+      () {
+        final themeData = BarGraphPopupThemeData();
+
+        expect(themeData.shadowColor, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with the default shadow color if the given shadow color is null",
+      () {
+        final themeData = BarGraphPopupThemeData(shadowColor: null);
+
         expect(themeData.shadowColor, isNotNull);
       },
     );

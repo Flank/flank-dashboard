@@ -14,7 +14,7 @@ class BarGraphPopupThemeData {
   /// A shadow [Color] of the bar graph popup.
   final Color shadowColor;
 
-  /// Creates a new instance of [BarGraphPopupThemeData].
+  /// Creates a new instance of the [BarGraphPopupThemeData].
   ///
   /// If the given [color] is null, the [Colors.grey] is used.
   /// If the given [shadowColor] is null, the [Colors.black26] is used.
