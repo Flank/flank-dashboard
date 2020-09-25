@@ -67,7 +67,7 @@ jobs:
 
       - name: Deploy HTML version to Firebase
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: firebase deploy --only hosting:metrics-d9c67 && firebase deploy --only hosting:metrics-html
+        run: firebase deploy --only hosting:metrics-d9c67
         working-directory: metrics/web/
 
       - name: Build release app using SKIA
