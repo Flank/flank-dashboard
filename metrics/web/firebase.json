@@ -10,15 +10,6 @@
       ]
     },
     {
-      "target": "metrics-html",
-      "public": "build/web",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
-    },
-    {
       "target": "metrics-skia",
       "public": "build/web",
       "ignore": [
