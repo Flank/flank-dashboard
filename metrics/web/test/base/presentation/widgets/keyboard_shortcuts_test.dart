@@ -7,7 +7,7 @@ import 'package:metrics/base/presentation/widgets/keyboard_shortcuts.dart';
 
 void main() {
   group("KeyboardShortcuts", () {
-    const keyboardKey = LogicalKeyboardKey.keyF;
+    const keyboardKey = LogicalKeyboardKey.shift;
     final keysToPress = LogicalKeySet(keyboardKey);
 
     testWidgets(
@@ -44,10 +44,7 @@ void main() {
       "applies the given keyboard keys to the shortcut widget",
       (tester) async {
         await tester.pumpWidget(
-          _KeyboardShortcutsTestbed(
-            keysToPress: keysToPress,
-            onKeysPressed: (_) => null,
-          ),
+          _KeyboardShortcutsTestbed(keysToPress: keysToPress),
         );
 
         final shortcutWidget = tester.widget<Shortcuts>(
@@ -58,6 +55,26 @@ void main() {
         );
 
         expect(shortcutWidget.shortcuts.containsKey(keysToPress), isTrue);
+      },
+    );
+
+    testWidgets(
+      "invokes the given callback in response to press the given keyboard keys",
+      (tester) async {
+        bool invoked = false;
+
+        await tester.pumpWidget(
+          _KeyboardShortcutsTestbed(
+            keysToPress: keysToPress,
+            onKeysPressed: (_) => invoked = true,
+          ),
+        );
+
+        await tester.pump();
+
+        await tester.sendKeyDownEvent(keyboardKey);
+
+        expect(invoked, isTrue);
       },
     );
   });
@@ -81,11 +98,12 @@ class _KeyboardShortcutsTestbed extends StatelessWidget {
   /// Creates a new instance of the keyboard shortcuts testbed.
   ///
   /// The [child] defaults to [_defaultChild].
+  /// The [onKeysPressed] defaults to [_defaultOnKeyPressed].
   const _KeyboardShortcutsTestbed({
     Key key,
     this.child = _defaultChild,
     this.keysToPress,
-    this.onKeysPressed,
+    this.onKeysPressed = _defaultOnKeyPressed,
   }) : super(key: key);
 
   @override
@@ -95,9 +113,15 @@ class _KeyboardShortcutsTestbed extends StatelessWidget {
         body: KeyboardShortcuts(
           onKeysPressed: onKeysPressed,
           keysToPress: keysToPress,
-          child: child,
+          child: Focus(
+            autofocus: true,
+            child: child,
+          ),
         ),
       ),
     );
   }
+
+  /// A default callback used in tests.
+  static bool _defaultOnKeyPressed(Intent intent) => true;
 }

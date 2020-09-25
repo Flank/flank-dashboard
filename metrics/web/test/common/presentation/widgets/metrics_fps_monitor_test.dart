@@ -42,12 +42,13 @@ void main() {
     );
 
     testWidgets(
-      "applies the given keysToPress",
+      "applies the given keys to press",
       (WidgetTester tester) async {
         final keysToPress = LogicalKeySet(
           LogicalKeyboardKey.alt,
           LogicalKeyboardKey.keyF,
         );
+
         await tester.pumpWidget(
           const _MetricsFPSMonitorTestbed(),
         );
@@ -55,7 +56,7 @@ void main() {
         final keyboardShortcutsWidget =
             tester.widget<KeyboardShortcuts>(find.byType(KeyboardShortcuts));
 
-        expect(keysToPress, equals(keyboardShortcutsWidget.keysToPress));
+        expect(keyboardShortcutsWidget.keysToPress, equals(keysToPress));
       },
     );
   });

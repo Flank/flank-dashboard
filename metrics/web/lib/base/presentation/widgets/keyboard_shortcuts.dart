@@ -15,7 +15,7 @@ class KeyboardShortcuts extends StatelessWidget {
 
   /// Creates a new instance of the [KeyboardShortcuts].
   ///
-  /// The [child] must not be `null`.
+  /// The [child] and [onKeysPressed] must not be `null`.
   const KeyboardShortcuts({
     Key key,
     @required this.child,
