@@ -38,7 +38,7 @@ class _MetricsFPSMonitorState extends State<MetricsFPSMonitor> {
   Widget build(BuildContext context) {
     return KeyboardShortcuts(
       keysToPress: _keysToPress,
-      onKeysPressed: (_) => setState(() => _isEnabled = !_isEnabled),
+      onKeysPressed: () => setState(() => _isEnabled = !_isEnabled),
       child: StatsFl(
         maxFps: 90,
         isEnabled: _isEnabled,

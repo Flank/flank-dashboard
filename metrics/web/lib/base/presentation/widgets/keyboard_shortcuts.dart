@@ -8,21 +8,22 @@ class KeyboardShortcuts extends StatelessWidget {
   final LogicalKeySet keysToPress;
 
   /// A callback that triggers after the [keysToPress] is pressed.
-  final OnInvokeCallback onKeysPressed;
+  final VoidCallback onKeysPressed;
 
   /// A widget below this keyboard shortcuts in the tree.
   final Widget child;
 
   /// Creates a new instance of the [KeyboardShortcuts].
   ///
-  /// The [child] and [onKeysPressed] must not be `null`.
+  /// The [child], [onKeysPressed] and [keysToPress] must not be `null`.
   const KeyboardShortcuts({
     Key key,
     @required this.child,
     @required this.onKeysPressed,
-    this.keysToPress,
+    @required this.keysToPress,
   })  : assert(child != null),
         assert(onKeysPressed != null),
+        assert(keysToPress != null),
         super(key: key);
 
   @override
@@ -34,7 +35,7 @@ class KeyboardShortcuts extends StatelessWidget {
       child: Actions(
         actions: {
           ActivateIntent: CallbackAction(
-            onInvoke: onKeysPressed,
+            onInvoke: (_) => onKeysPressed(),
           ),
         },
         child: child,

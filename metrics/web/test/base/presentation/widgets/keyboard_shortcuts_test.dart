@@ -30,11 +30,22 @@ void main() {
       },
     );
 
+    testWidgets(
+      "throws an AssertionError if the given keys to press is null",
+      (tester) async {
+        await tester.pumpWidget(
+          const _KeyboardShortcutsTestbed(keysToPress: null),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
     testWidgets("displays the given child", (tester) async {
       const child = Text('child');
 
       await tester.pumpWidget(
-        const _KeyboardShortcutsTestbed(child: child),
+        _KeyboardShortcutsTestbed(keysToPress: keysToPress, child: child),
       );
 
       expect(find.byWidget(child), findsOneWidget);
@@ -66,7 +77,7 @@ void main() {
         await tester.pumpWidget(
           _KeyboardShortcutsTestbed(
             keysToPress: keysToPress,
-            onKeysPressed: (_) => invoked = true,
+            onKeysPressed: () => invoked = true,
           ),
         );
 
@@ -93,7 +104,7 @@ class _KeyboardShortcutsTestbed extends StatelessWidget {
   final LogicalKeySet keysToPress;
 
   /// A callback that triggers after the [keysToPress] is pressed.
-  final OnInvokeCallback onKeysPressed;
+  final VoidCallback onKeysPressed;
 
   /// Creates a new instance of the keyboard shortcuts testbed.
   ///
@@ -123,5 +134,5 @@ class _KeyboardShortcutsTestbed extends StatelessWidget {
   }
 
   /// A default callback used in tests.
-  static bool _defaultOnKeyPressed(Intent intent) => true;
+  static bool _defaultOnKeyPressed() => true;
 }
