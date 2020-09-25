@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/keyboard_shortcuts.dart';
 import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
 import 'package:statsfl/statsfl.dart';
 
@@ -42,21 +41,18 @@ void main() {
     );
 
     testWidgets(
-      "applies the given keys to press",
-      (WidgetTester tester) async {
-        final keysToPress = LogicalKeySet(
-          LogicalKeyboardKey.alt,
-          LogicalKeyboardKey.keyF,
-        );
+      "displays the enabled FPS monitor after press a combination of keyboard keys",
+      (tester) async {
+        await tester.pumpWidget(const _MetricsFPSMonitorTestbed());
 
-        await tester.pumpWidget(
-          const _MetricsFPSMonitorTestbed(),
-        );
+        await tester.sendKeyDownEvent(LogicalKeyboardKey.alt);
+        await tester.sendKeyDownEvent(LogicalKeyboardKey.keyF);
 
-        final keyboardShortcutsWidget =
-            tester.widget<KeyboardShortcuts>(find.byType(KeyboardShortcuts));
+        await tester.pump();
 
-        expect(keyboardShortcutsWidget.keysToPress, equals(keysToPress));
+        final statsFlWidget = tester.widget<StatsFl>(find.byType(StatsFl));
+
+        expect(statsFlWidget.isEnabled, isTrue);
       },
     );
   });
@@ -83,7 +79,10 @@ class _MetricsFPSMonitorTestbed extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: MetricsFPSMonitor(
-          child: child,
+          child: Focus(
+            autofocus: true,
+            child: child,
+          ),
         ),
       ),
     );
