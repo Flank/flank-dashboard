@@ -30,6 +30,15 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
           opacity: animation,
           child: Container(
             width: 212.0,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(0.0, 8.0),
+                  blurRadius: 16.0,
+                  color: theme.shadowColor,
+                ),
+              ],
+            ),
             child: Card(
               margin: const EdgeInsets.only(top: 4.0),
               color: theme.backgroundColor,
@@ -52,15 +61,6 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
       animationDuration: DurationConstants.animation,
       maxHeight: data.constraints.maxHeight,
       maxWidth: 212.0,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            offset: const Offset(0.0, 8.0),
-            blurRadius: 16.0,
-            color: theme.shadowColor,
-          ),
-        ],
-      ),
       onOpenStateChanged: _onOpenStateChanges,
     );
   }
