@@ -25,6 +25,30 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
 
     return DropdownBody(
       state: data.menuState,
+      childBuilder: (context, animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: Container(
+            width: 212.0,
+            child: Card(
+              margin: const EdgeInsets.only(top: 4.0),
+              color: theme.backgroundColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              elevation: 0.0,
+              child: Padding(
+                key: UniqueKey(),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4.0,
+                  horizontal: 1.0,
+                ),
+                child: data.child,
+              ),
+            ),
+          ),
+        );
+      },
       animationDuration: DurationConstants.animation,
       maxHeight: data.constraints.maxHeight,
       maxWidth: 212.0,
@@ -38,25 +62,6 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
         ],
       ),
       onOpenStateChanged: _onOpenStateChanges,
-      child: SizedBox(
-        width: 212.0,
-        child: Card(
-          margin: const EdgeInsets.only(top: 4.0),
-          color: theme.backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-          ),
-          elevation: 0.0,
-          child: Padding(
-            key: UniqueKey(),
-            padding: const EdgeInsets.symmetric(
-              vertical: 4.0,
-              horizontal: 1.0,
-            ),
-            child: data.child,
-          ),
-        ),
-      ),
     );
   }
 

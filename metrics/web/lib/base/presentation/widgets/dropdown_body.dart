@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 
+/// A builder that builds its child differently depending on the
+/// given [animation.value] state;
+typedef AnimationChildBuilder = Widget Function(
+    BuildContext context, CurvedAnimation animation);
+
 /// A widget that used with [DropdownMenu] to display open dropdown body.
 ///
-/// Animates the [child] using the given [animationCurve] and [animationDuration]
-/// depending on the [menuState].
+/// Animates the child using the given [childBuilder], [animationCurve] and
+/// [animationDuration] depending on the [menuState].
 class DropdownBody extends StatefulWidget {
   /// A current state of the [DropdownMenu].
   final MenuState state;
@@ -28,27 +33,28 @@ class DropdownBody extends StatefulWidget {
   /// A [ValueChanged] callback used to notify about opened state changes.
   final ValueChanged<bool> onOpenStateChanged;
 
-  /// A child widget of this dropdown body.
-  final Widget child;
+  /// An animated builder of the child of this dropdown body.
+  final AnimationChildBuilder childBuilder;
 
   /// Creates a widget that displays an open [DropdownMenu] body.
   ///
   /// The [animationCurve] defaults to `Curves.linear`.
   /// The [animationDuration] defaults to a zero duration.
   ///
+  /// The [childBuilder] must not be `null`.
   /// The [state] must not be `null`.
   /// The [animationCurve] must not be `null`.
   /// The [animationDuration] must not be `null`.
   const DropdownBody({
     Key key,
     @required this.state,
+    @required this.childBuilder,
     this.animationCurve = Curves.linear,
     this.animationDuration = const Duration(),
     this.decoration = const BoxDecoration(),
     double maxHeight,
     double maxWidth,
     this.onOpenStateChanged,
-    this.child,
   })  : maxHeight = maxHeight ?? double.infinity,
         maxWidth = maxWidth ?? double.infinity,
         assert(state != null),
@@ -101,10 +107,7 @@ class _DropdownBodyState extends State<DropdownBody>
         maxWidth: widget.maxWidth,
       ),
       decoration: widget.decoration,
-      child: SizeTransition(
-        sizeFactor: _animation,
-        child: widget.child,
-      ),
+      child: widget.childBuilder(context, _animation),
     );
   }
 
