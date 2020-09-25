@@ -8,6 +8,7 @@ import 'package:metrics/common/presentation/metrics_theme/config/text_style_conf
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
@@ -80,6 +81,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _negativeStatusColor = Color(0xFF2d1f1f);
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
   static const Color _pageTitleIconColor = Color(0xFF4f4f56);
+  static const Color _popupColor = Color(0xFFf5f5ff);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = MetricsTextStyle(
@@ -111,6 +113,12 @@ class DarkMetricsThemeData extends MetricsThemeData {
             canceledColor: ColorConfig.accentColor,
             successfulColor: ColorConfig.primaryColor,
             failedColor: ColorConfig.accentColor,
+          ),
+          barGraphPopupTheme: const BarGraphPopupThemeData(
+            color: _popupColor,
+            shadowColor: _shadowColor,
+            titleTextStyle: TextStyleConfig.popupTitleStyle,
+            subtitleTextStyle: TextStyleConfig.popupSubtitleStyle,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,
