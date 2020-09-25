@@ -1,5 +1,20 @@
 {
   "projects": {
     "default": "metrics-d9c67"
+  },
+  "targets": {
+    "metrics-d9c67": {
+      "hosting": {
+        "metrics-d9c67": [
+          "metrics-d9c67"
+        ],
+        "metrics-html": [
+          "metrics-html"
+        ],
+        "metrics-skia": [
+          "metrics-skia"
+        ]
+      }
+    }
   }
 }

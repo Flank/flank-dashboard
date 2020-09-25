@@ -60,11 +60,6 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: curl -sL https://firebase.tools | bash
 
-      - name: Setup Firebase hosting targets
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: firebase target:apply hosting metrics-d9c67 metrics-d9c67 && firebase target:apply hosting metrics-html metrics-html && firebase target:apply hosting metrics-skia metrics-skia
-        working-directory: metrics/web/
-
       - name: Build release app
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: flutter clean && flutter build web --release
