@@ -65,7 +65,7 @@ jobs:
         run: flutter clean && flutter build web --release
         working-directory: metrics/web/
 
-      - name: Deploy HTML versions to Firebase
+      - name: Deploy HTML version to Firebase
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: firebase deploy --only hosting:metrics-d9c67 && firebase deploy --only hosting:metrics-html
         working-directory: metrics/web/
