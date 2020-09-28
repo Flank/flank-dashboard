@@ -60,6 +60,7 @@ class MetricsTable extends StatelessWidget {
 
                   return ListView.builder(
                     itemCount: projects.length,
+                    padding: const EdgeInsets.only(bottom: 60.0),
                     itemBuilder: (context, index) {
                       final project = projects[index];
 
