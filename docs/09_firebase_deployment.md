@@ -55,7 +55,7 @@ Deployment to other platforms is out of scope.
 
 Before you start, you should have the following installed:
 
-1. [Flutter](https://flutter.dev/docs/get-started/install) v1.20.2.
+1. [Flutter](https://flutter.dev/docs/get-started/install) v1.22.0-12.1.pre.
 2. [npm](https://www.npmjs.com/get-npm).
 
 ## Creating a new Firebase project.
@@ -131,8 +131,8 @@ To allow users sign-in using Google, please follow the next steps:
 
 ### Preparing your environment
 Before deploying metrics application, make sure you have the correct Flutter version installed,
- by running the `flutter --version` command. You should have `v1.20.2` installed.
-If the version is different you should run the `flutter version 1.20.2` command.
+ by running the `flutter --version` command. You should have `v1.22.0-12.1.pre` installed.
+If the version is different you should run the `flutter version 1.22.0-12.1.pre` command.
 
 Also, you should enable flutter web support by running the `flutter config --enable-web` command.
 

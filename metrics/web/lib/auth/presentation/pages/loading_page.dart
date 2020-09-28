@@ -55,8 +55,8 @@ class _LoadingPageState extends State<LoadingPage>
   /// Starts the repeated 'metrics' text animation.
   void _initAnimation() {
     _animationController = AnimationController(
-      vsync: this,
       duration: _animationDuration,
+      vsync: this,
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
