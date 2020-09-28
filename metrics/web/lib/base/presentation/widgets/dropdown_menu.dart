@@ -145,11 +145,10 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
     final numberOfItems = widget.items.length;
     final itemHeight = widget.itemHeight;
     final maxVisibleItems = widget.maxVisibleItems;
-
     if (numberOfItems > maxVisibleItems) {
-      return maxVisibleItems * itemHeight + itemHeight / 2;
+      return (maxVisibleItems + 0.5) * itemHeight + itemHeight / 4;
     }
 
-    return numberOfItems * itemHeight;
+    return numberOfItems * itemHeight + itemHeight / 4;
   }
 }
