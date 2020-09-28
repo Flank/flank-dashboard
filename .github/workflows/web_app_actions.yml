@@ -31,6 +31,10 @@ jobs:
           flutter-version: '1.22.0-12.1.pre'
 
       - uses: cedx/setup-dart@v2
+        with:
+          release-channel: beta
+          version: 2.10.0-110.5.beta
+
 
       - name: Configure Flutter
         run: flutter config --enable-web && flutter doctor
