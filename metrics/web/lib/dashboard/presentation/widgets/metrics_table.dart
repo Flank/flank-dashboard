@@ -60,14 +60,11 @@ class MetricsTable extends StatelessWidget {
 
                   return ListView.builder(
                     itemCount: projects.length,
+                    padding: const EdgeInsets.only(bottom: 60.0),
                     itemBuilder: (context, index) {
                       final project = projects[index];
-
-                      return Padding(
-                        padding: _getBottomPadding(index, projects.length),
-                        child: ProjectMetricsTile(
-                            projectMetricsViewModel: project),
-                      );
+                      return ProjectMetricsTile(
+                          projectMetricsViewModel: project);
                     },
                   );
                 },
@@ -84,13 +81,6 @@ class MetricsTable extends StatelessWidget {
     return _DashboardTablePlaceholder(
       text: CommonStrings.getLoadingErrorMessage(errorMessage),
     );
-  }
-
-  /// Returns the bottom padding based on project's index.
-  EdgeInsets _getBottomPadding(int index, int length) {
-    return index == length - 1
-        ? const EdgeInsets.only(bottom: 60.0)
-        : const EdgeInsets.all(0.0);
   }
 }
 
