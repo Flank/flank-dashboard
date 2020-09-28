@@ -37,6 +37,17 @@ void main() {
     );
 
     testWidgets(
+      "throws an AssertionError if the given builder is null",
+      (tester) async {
+        await tester.pumpWidget(
+          const _DropdownBodyTestbed(animationCurve: null),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
       "throws an AssertionError if the given animation duration is null",
       (tester) async {
         await tester.pumpWidget(
@@ -63,23 +74,6 @@ void main() {
         );
 
         expect(container.constraints.maxHeight, equals(maxHeight));
-      },
-    );
-
-    testWidgets(
-      "applies the given child builder",
-      (tester) async {
-        await tester.pumpWidget(
-          _DropdownBodyTestbed(
-            childBuilder: _defaultChildBuilder,
-          ),
-        );
-
-        final dropdownBody = tester.widget<DropdownBody>(
-          find.byType(DropdownBody),
-        );
-
-        expect(dropdownBody.childBuilder, equals(_defaultChildBuilder));
       },
     );
 
@@ -129,7 +123,7 @@ void main() {
         await tester.pumpWidget(
           _DropdownBodyTestbed(
             animationCurve: animationCurve,
-            childBuilder: _defaultChildBuilder,
+            builder: _defaultChildBuilder,
           ),
         );
 
@@ -154,7 +148,7 @@ void main() {
         await tester.pumpWidget(
           _DropdownBodyTestbed(
             animationDuration: animationDuration,
-            childBuilder: _defaultChildBuilder,
+            builder: _defaultChildBuilder,
           ),
         );
 
@@ -210,13 +204,13 @@ void main() {
     );
 
     testWidgets(
-      "displays the given child",
+      "builds the child with the given builder",
       (tester) async {
         const child = Text('test');
 
         await tester.pumpWidget(
           _DropdownBodyTestbed(
-            childBuilder: (context, animation) {
+            builder: (context, animation) {
               return child;
             },
           ),
@@ -268,8 +262,8 @@ void main() {
 class _DropdownBodyTestbed extends StatefulWidget {
   static final Key closeButtonKey = UniqueKey();
 
-  /// A default child builder for this testbed.
-  static Widget defaultChildBuilder(
+  /// A default builder for this testbed.
+  static Widget _defaultBuilder(
     BuildContext context,
     CurvedAnimation animation,
   ) {
@@ -298,7 +292,7 @@ class _DropdownBodyTestbed extends StatefulWidget {
   final MenuState state;
 
   /// An animated builder of the child of this dropdown body.
-  final AnimationChildBuilder childBuilder;
+  final AnimationWidgetBuilder builder;
 
   /// Creates an instance of this testbed.
   const _DropdownBodyTestbed({
@@ -310,7 +304,7 @@ class _DropdownBodyTestbed extends StatefulWidget {
     this.maxHeight,
     this.maxWidth,
     this.onOpenStateChanged,
-    this.childBuilder,
+    this.builder = _defaultBuilder,
   }) : super(key: key);
 
   @override
@@ -340,8 +334,7 @@ class __DropdownBodyTestbedState extends State<_DropdownBodyTestbed> {
               decoration: widget.decoration,
               onOpenStateChanged: widget.onOpenStateChanged,
               state: state,
-              childBuilder: widget.childBuilder ??
-                  _DropdownBodyTestbed.defaultChildBuilder,
+              builder: widget.builder,
             ),
             RaisedButton(
               key: _DropdownBodyTestbed.closeButtonKey,

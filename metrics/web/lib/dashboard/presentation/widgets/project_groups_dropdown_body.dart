@@ -25,7 +25,7 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
 
     return DropdownBody(
       state: data.menuState,
-      childBuilder: (context, animation) {
+      builder: (context, animation) {
         return FadeTransition(
           opacity: animation,
           child: Container(
