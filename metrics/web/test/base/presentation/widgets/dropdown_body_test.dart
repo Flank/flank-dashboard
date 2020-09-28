@@ -292,7 +292,7 @@ class _DropdownBodyTestbed extends StatefulWidget {
   final MenuState state;
 
   /// An animated builder of the child of this dropdown body.
-  final AnimationWidgetBuilder builder;
+  final AnimatedWidgetBuilder builder;
 
   /// Creates an instance of this testbed.
   const _DropdownBodyTestbed({

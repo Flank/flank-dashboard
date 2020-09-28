@@ -4,7 +4,7 @@ import 'package:selection_menu/components_configurations.dart';
 
 /// A builder that builds its child differently depending on the
 /// given [animation] state.
-typedef AnimationWidgetBuilder = Widget Function(
+typedef AnimatedWidgetBuilder = Widget Function(
   BuildContext context,
   CurvedAnimation animation,
 );
@@ -36,7 +36,7 @@ class DropdownBody extends StatefulWidget {
   final ValueChanged<bool> onOpenStateChanged;
 
   /// An animated builder of the child of this dropdown body.
-  final AnimationWidgetBuilder builder;
+  final AnimatedWidgetBuilder builder;
 
   /// Creates a widget that displays an open [DropdownMenu] body.
   ///
