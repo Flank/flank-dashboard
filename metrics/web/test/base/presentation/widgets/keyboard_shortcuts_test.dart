@@ -31,7 +31,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given keys to press is null",
+      "throws an AssertionError if the given keys to press are null",
       (tester) async {
         await tester.pumpWidget(
           const _KeyboardShortcutsTestbed(keysToPress: null),
