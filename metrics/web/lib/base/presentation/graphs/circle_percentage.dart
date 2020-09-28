@@ -71,8 +71,8 @@ class _CirclePercentageState extends State<CirclePercentage>
   @override
   void initState() {
     _controller = AnimationController(
-      vsync: this,
       duration: const Duration(milliseconds: 2400),
+      vsync: this,
     );
 
     _animate();
