@@ -81,8 +81,6 @@ void main() {
           ),
         );
 
-        await tester.pump();
-
         await tester.sendKeyDownEvent(keyboardKey);
 
         expect(invoked, isTrue);
