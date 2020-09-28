@@ -19,6 +19,13 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /profiles/{profileId} {
+      allow read: if isAccessAuthorized(database) && isSelfProfile(profileId);
+      allow update: if isAccessAuthorized(database) && isSelfProfile(profileId) && isProfileValid(database);
+      allow create: if isAccessAuthorized(database) && isProfileValid(database);
+      allow delete: if false;
+    }
+
     match /allowed_email_domains/{domain} {
       allow read, write: if false;
     }
@@ -202,5 +209,26 @@ service cloud.firestore {
     let requestData = request.resource.data;
 
     return field in requestData && requestData[field] is int;
+  }
+
+  /// Checks whether a user is the owner of the requested profile.
+  function isSelfProfile(profileId) {
+    return request.auth.uid == profileId;
+  }
+
+  /// Checks whether the request contains the valid profile data.
+  function isProfileValid(database) {
+    let validThemes = ["ThemeType.dark", "ThemeType.light"];
+
+    return isProfileDataValid() && isEnum("theme", validThemes);
+  }
+
+  /// Check whether the request data contains only allowed for a profile document fields.
+  function isProfileDataValid() {
+    let requestData = request.resource.data;
+
+    return requestData.keys().hasOnly([
+      "theme",
+    ]);
   }
 }

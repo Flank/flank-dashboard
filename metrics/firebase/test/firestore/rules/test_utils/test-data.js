@@ -37,6 +37,16 @@ const builds = {
   },
 };
 
+/** A list of test profiles */
+const profiles = {
+  "profiles/1": {
+    theme: "ThemeType.dark",
+  },
+  "profiles/2": {
+    theme: "ThemeType.light",
+  },
+};
+
 /** A list of test allowed email domains */
 const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
@@ -45,10 +55,10 @@ const allowedEmailDomains = {
 const allowedEmail = "test@gmail.com";
 const deniedEmail = "test@invalid.com";
 
-/** Creates a firebase user with the given `email`, `signInProviderId` and `emailVerified` */
-function getUser(email, signInProviderId, emailVerified) {
+/** Creates a firebase user with the given `email`, `signInProviderId`, `emailVerified` and `uid` */
+function getUser(email, signInProviderId, emailVerified, uid) {
   return {
-    uid: "uid",
+    uid: uid,
     email: email,
     email_verified: emailVerified,
     firebase: {
@@ -74,6 +84,7 @@ exports.projects = {
 
 exports.projectGroups = projectGroups;
 exports.builds = builds;
+exports.profiles = profiles;
 exports.allowedEmailDomains = allowedEmailDomains;
 
 /** An email and password sign in provider identifier */
@@ -82,14 +93,14 @@ exports.passwordSignInProviderId = "password";
 /** A google sign in provider identifier */
 exports.googleSignInProviderId = "google.com";
 
-/** Provides a firebase user with allowed email and given sign in provider identifier */
-exports.getAllowedEmailUser = function (signInProviderId, emailVerified) {
-  return getUser(allowedEmail, signInProviderId, emailVerified);
+/** Provides a firebase user with allowed email, a sign in provider identifier and a uid */
+exports.getAllowedEmailUser = function (signInProviderId, emailVerified, uid = "uid") {
+  return getUser(allowedEmail, signInProviderId, emailVerified, uid);
 };
 
-/** Provides a firebase user with not allowed email and given sign in provider identifier */
-exports.getDeniedEmailUser = function (signInProviderId, emailVerified) {
-  return getUser(deniedEmail, signInProviderId, emailVerified);
+/** Provides a firebase user with not allowed email, a sign in provider identifier and a uid */
+exports.getDeniedEmailUser = function (signInProviderId, emailVerified, uid = "uid") {
+  return getUser(deniedEmail, signInProviderId, emailVerified, uid);
 };
 
 /** Get a test project group */
@@ -100,4 +111,9 @@ exports.getProjectGroup = function () {
 /** Get a test build */
 exports.getBuild = function () {
   return cloneDeep(builds["build/1"]);
+};
+
+/** Get a test profile */
+exports.getProfile = function () {
+  return cloneDeep(profiles["profiles/1"]);
 };
