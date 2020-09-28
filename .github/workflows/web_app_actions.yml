@@ -35,7 +35,6 @@ jobs:
           release-channel: beta
           version: 2.10.0-110.5.beta
 
-
       - name: Configure Flutter
         run: flutter config --enable-web && flutter doctor
         working-directory: metrics/web/
