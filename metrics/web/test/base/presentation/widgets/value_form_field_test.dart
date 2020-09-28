@@ -78,8 +78,7 @@ class _ValueFormFieldTestbed<T> extends StatelessWidget {
   /// A value to validate.
   final T value;
 
-  /// Defines whether the [ValueFormField] should validate
-  /// the value each time it changes.
+  /// An auto validation mode of the value form field.
   final AutovalidateMode autovalidateMode;
 
   /// A [FormFieldValidator] callback used to validate the [value].
@@ -95,7 +94,7 @@ class _ValueFormFieldTestbed<T> extends StatelessWidget {
   /// Creates a new instance of the testbed [_ValueFormFieldTestbed].
   ///
   /// The [enabled] default value is `true`.
-  /// The [autovalidate] default value is `false`.
+  /// The [autovalidateMode] default value is [AutovalidateMode.disabled].
   const _ValueFormFieldTestbed({
     Key key,
     this.builder,

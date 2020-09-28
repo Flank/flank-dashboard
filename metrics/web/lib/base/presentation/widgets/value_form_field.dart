@@ -7,7 +7,7 @@ class ValueFormField<T> extends FormField<T> {
 
   /// Creates a new instance of [ValueFormField].
   ///
-  /// The [autovalidate] default value is `false`.
+  /// The [autovalidateMode] default value is [AutovalidateMode.disabled].
   /// The [enabled] default value is `true`.
   ///
   /// The [builder] and [value] must not be null.
