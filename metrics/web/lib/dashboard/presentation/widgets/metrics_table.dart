@@ -63,6 +63,7 @@ class MetricsTable extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 60.0),
                     itemBuilder: (context, index) {
                       final project = projects[index];
+
                       return ProjectMetricsTile(
                           projectMetricsViewModel: project);
                     },
