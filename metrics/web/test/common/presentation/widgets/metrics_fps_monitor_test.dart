@@ -41,7 +41,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the enabled FPS monitor after press a combination of keyboard keys",
+      "displays the enabled FPS monitor after pressing a combination of keyboard keys",
       (tester) async {
         await tester.pumpWidget(const _MetricsFPSMonitorTestbed());
 
