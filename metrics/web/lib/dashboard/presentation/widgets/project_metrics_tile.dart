@@ -78,7 +78,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              buildResults: Container(
+              buildResults: SizedBox(
                 height: 80.0,
                 child: LoadingBuilder(
                   isLoading: projectMetrics.buildResultMetrics == null,
@@ -87,7 +87,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   ),
                 ),
               ),
-              performance: Container(
+              performance: SizedBox(
                 height: 81.0,
                 child: LoadingBuilder(
                   isLoading: projectMetrics.performanceSparkline == null,
@@ -96,7 +96,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   ),
                 ),
               ),
-              buildNumber: Container(
+              buildNumber: SizedBox(
                 height: 80.0,
                 child: LoadingBuilder(
                   isLoading: projectMetrics.buildNumberMetric == null,
@@ -110,7 +110,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   },
                 ),
               ),
-              stability: Container(
+              stability: SizedBox(
                 height: 72.0,
                 child: LoadingBuilder(
                   isLoading: projectMetrics == null,
@@ -119,7 +119,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
                   ),
                 ),
               ),
-              coverage: Container(
+              coverage: SizedBox(
                 height: 72.0,
                 child: LoadingBuilder(
                   isLoading: projectMetrics == null,

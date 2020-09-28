@@ -54,33 +54,33 @@ class MetricsTableRow extends StatelessWidget {
         children: <Widget>[
           status,
           Flexible(
-            child: Container(
+            child: SizedBox(
               width: 326.0,
               child: name,
             ),
           ),
-          Container(
+          SizedBox(
             width: 750.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
+                SizedBox(
                   width: 276.0,
                   child: buildResults,
                 ),
-                Container(
+                SizedBox(
                   width: 144.0,
                   child: performance,
                 ),
-                Container(
+                SizedBox(
                   width: 74.0,
                   child: buildNumber,
                 ),
-                Container(
+                SizedBox(
                   width: 72.0,
                   child: stability,
                 ),
-                Container(
+                SizedBox(
                   width: 72.0,
                   child: coverage,
                 ),

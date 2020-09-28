@@ -354,7 +354,7 @@ class _CirclePercentageTestbed extends StatelessWidget {
       metricsThemeData: theme,
       body: Align(
         alignment: alignment,
-        child: Container(
+        child: SizedBox(
           height: height,
           width: width,
           child: CirclePercentage(

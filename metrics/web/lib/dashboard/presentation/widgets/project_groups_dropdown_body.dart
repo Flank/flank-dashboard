@@ -38,7 +38,7 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
         ],
       ),
       onOpenStateChanged: _onOpenStateChanges,
-      child: Container(
+      child: SizedBox(
         width: 212.0,
         child: Card(
           margin: const EdgeInsets.only(top: 4.0),

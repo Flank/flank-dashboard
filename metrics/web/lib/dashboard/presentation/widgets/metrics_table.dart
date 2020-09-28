@@ -15,7 +15,7 @@ class MetricsTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Container(
+      child: SizedBox(
         width: DimensionsConfig.contentWidth,
         child: Column(
           children: <Widget>[

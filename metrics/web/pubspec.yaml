@@ -44,6 +44,10 @@ dependencies:
       ref: master
   metrics_core:
     path: ../core
+  statsfl:
+    git:
+      url: https://github.com/platform-platform/flutter-stats-fl
+      ref: master
 
 dev_dependencies:
   flutter_test:
