@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
 import 'package:selection_menu/components_configurations.dart';
 
+/// A builder that builds its child differently depending on the
+/// given [animation] state.
+typedef AnimatedWidgetBuilder = Widget Function(
+  BuildContext context,
+  CurvedAnimation animation,
+);
+
 /// A widget that used with [DropdownMenu] to display open dropdown body.
 ///
-/// Animates the [child] using the given [animationCurve] and [animationDuration]
-/// depending on the [menuState].
+/// Animates the child using the given [builder], [animationCurve] and
+/// [animationDuration] depending on the [menuState].
 class DropdownBody extends StatefulWidget {
   /// A current state of the [DropdownMenu].
   final MenuState state;
@@ -28,30 +35,32 @@ class DropdownBody extends StatefulWidget {
   /// A [ValueChanged] callback used to notify about opened state changes.
   final ValueChanged<bool> onOpenStateChanged;
 
-  /// A child widget of this dropdown body.
-  final Widget child;
+  /// An animated builder of the child of this dropdown body.
+  final AnimatedWidgetBuilder builder;
 
   /// Creates a widget that displays an open [DropdownMenu] body.
   ///
   /// The [animationCurve] defaults to `Curves.linear`.
   /// The [animationDuration] defaults to a zero duration.
   ///
+  /// The [builder] must not be `null`.
   /// The [state] must not be `null`.
   /// The [animationCurve] must not be `null`.
   /// The [animationDuration] must not be `null`.
   const DropdownBody({
     Key key,
     @required this.state,
+    @required this.builder,
     this.animationCurve = Curves.linear,
     this.animationDuration = const Duration(),
     this.decoration = const BoxDecoration(),
     double maxHeight,
     double maxWidth,
     this.onOpenStateChanged,
-    this.child,
   })  : maxHeight = maxHeight ?? double.infinity,
         maxWidth = maxWidth ?? double.infinity,
         assert(state != null),
+        assert(builder != null),
         assert(animationCurve != null),
         assert(animationDuration != null),
         super(key: key);
@@ -84,27 +93,27 @@ class _DropdownBodyState extends State<DropdownBody>
 
     _animation.addStatusListener(_animationStatusListener);
 
+    _handleMenuState();
+
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (widget.state == MenuState.OpeningStart) {
-      _controller.forward();
-    } else if (widget.state == MenuState.ClosingStart) {
-      _controller.reverse();
-    }
+  void didUpdateWidget(covariant DropdownBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
+    _handleMenuState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
         maxHeight: widget.maxHeight,
         maxWidth: widget.maxWidth,
       ),
       decoration: widget.decoration,
-      child: SizeTransition(
-        sizeFactor: _animation,
-        child: widget.child,
-      ),
+      child: widget.builder(context, _animation),
     );
   }
 
@@ -114,6 +123,15 @@ class _DropdownBodyState extends State<DropdownBody>
       widget.onOpenStateChanged?.call(true);
     } else if (status == AnimationStatus.dismissed) {
       widget.onOpenStateChanged?.call(false);
+    }
+  }
+
+  /// Starts or reverts the animation depending on the current menu state.
+  void _handleMenuState() {
+    if (widget.state == MenuState.OpeningStart) {
+      _controller.forward();
+    } else if (widget.state == MenuState.ClosingStart) {
+      _controller.reverse();
     }
   }
 

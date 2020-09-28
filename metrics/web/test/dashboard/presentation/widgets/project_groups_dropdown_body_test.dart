@@ -32,10 +32,32 @@ void main() {
           ),
         );
 
-        expect(
-          find.byWidget(animationComponentData.child),
-          findsOneWidget,
+        expect(find.byWidget(animationComponentData.child), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "animates the given child with fade transition",
+      (tester) async {
+        final animationComponentData = _AnimationComponentDataStub();
+
+        await tester.pumpWidget(
+          _ProjectGroupsDropdownBodyTestbed(
+            data: animationComponentData,
+          ),
         );
+
+        final dropdownBodyFinder = find.byType(DropdownBody);
+
+        final fadeTransitionFinder = find.ancestor(
+          of: find.byWidget(animationComponentData.child),
+          matching: find.descendant(
+            of: dropdownBodyFinder,
+            matching: find.byType(FadeTransition),
+          ),
+        );
+
+        expect(fadeTransitionFinder, findsOneWidget);
       },
     );
 

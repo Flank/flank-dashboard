@@ -6,6 +6,13 @@ import 'package:selection_menu/components_configurations.dart';
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
+  Widget _defaultChildBuilder(BuildContext context, CurvedAnimation animation) {
+    return FadeTransition(
+      opacity: animation,
+      child: const Text("child"),
+    );
+  }
+
   group("DropdownBody", () {
     testWidgets(
       "throws an AssertionError if the given state is null",
@@ -20,6 +27,17 @@ void main() {
 
     testWidgets(
       "throws an AssertionError if the given animation curve is null",
+      (tester) async {
+        await tester.pumpWidget(
+          const _DropdownBodyTestbed(animationCurve: null),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given builder is null",
       (tester) async {
         await tester.pumpWidget(
           const _DropdownBodyTestbed(animationCurve: null),
@@ -103,17 +121,20 @@ void main() {
       (tester) async {
         const animationCurve = Curves.linear;
         await tester.pumpWidget(
-          const _DropdownBodyTestbed(animationCurve: animationCurve),
-        );
-
-        final container = tester.widget<SizeTransition>(
-          find.descendant(
-            of: find.byType(DropdownBody),
-            matching: find.byType(SizeTransition),
+          _DropdownBodyTestbed(
+            animationCurve: animationCurve,
+            builder: _defaultChildBuilder,
           ),
         );
 
-        final animation = container.sizeFactor as CurvedAnimation;
+        final container = tester.widget<FadeTransition>(
+          find.descendant(
+            of: find.byType(DropdownBody),
+            matching: find.byType(FadeTransition),
+          ),
+        );
+
+        final animation = container.opacity as CurvedAnimation;
 
         expect(animation.curve, equals(animationCurve));
         expect(animation.reverseCurve, equals(animationCurve));
@@ -125,17 +146,20 @@ void main() {
       (tester) async {
         const animationDuration = Duration(milliseconds: 200);
         await tester.pumpWidget(
-          const _DropdownBodyTestbed(animationDuration: animationDuration),
-        );
-
-        final container = tester.widget<SizeTransition>(
-          find.descendant(
-            of: find.byType(DropdownBody),
-            matching: find.byType(SizeTransition),
+          _DropdownBodyTestbed(
+            animationDuration: animationDuration,
+            builder: _defaultChildBuilder,
           ),
         );
 
-        final animation = container.sizeFactor as CurvedAnimation;
+        final container = tester.widget<FadeTransition>(
+          find.descendant(
+            of: find.byType(DropdownBody),
+            matching: find.byType(FadeTransition),
+          ),
+        );
+
+        final animation = container.opacity as CurvedAnimation;
         final animationController = animation.parent as AnimationController;
 
         expect(animationController.duration, equals(animationDuration));
@@ -180,12 +204,16 @@ void main() {
     );
 
     testWidgets(
-      "displays the given child",
+      "builds the child with the given builder",
       (tester) async {
         const child = Text('test');
 
         await tester.pumpWidget(
-          const _DropdownBodyTestbed(child: child),
+          _DropdownBodyTestbed(
+            builder: (context, animation) {
+              return child;
+            },
+          ),
         );
 
         expect(find.byWidget(child), findsOneWidget);
@@ -234,6 +262,14 @@ void main() {
 class _DropdownBodyTestbed extends StatefulWidget {
   static final Key closeButtonKey = UniqueKey();
 
+  /// A default builder for this testbed.
+  static Widget _defaultBuilder(
+    BuildContext context,
+    CurvedAnimation animation,
+  ) {
+    return const Text("child");
+  }
+
   /// A [Curve] to use in the animation.
   final Curve animationCurve;
 
@@ -255,8 +291,8 @@ class _DropdownBodyTestbed extends StatefulWidget {
   /// A current state of the dropdown body.
   final MenuState state;
 
-  /// A child widget of this dropdown body.
-  final Widget child;
+  /// An animated builder of the child of this dropdown body.
+  final AnimatedWidgetBuilder builder;
 
   /// Creates an instance of this testbed.
   const _DropdownBodyTestbed({
@@ -268,7 +304,7 @@ class _DropdownBodyTestbed extends StatefulWidget {
     this.maxHeight,
     this.maxWidth,
     this.onOpenStateChanged,
-    this.child,
+    this.builder = _defaultBuilder,
   }) : super(key: key);
 
   @override
@@ -298,7 +334,7 @@ class __DropdownBodyTestbedState extends State<_DropdownBodyTestbed> {
               decoration: widget.decoration,
               onOpenStateChanged: widget.onOpenStateChanged,
               state: state,
-              child: widget.child,
+              builder: widget.builder,
             ),
             RaisedButton(
               key: _DropdownBodyTestbed.closeButtonKey,
