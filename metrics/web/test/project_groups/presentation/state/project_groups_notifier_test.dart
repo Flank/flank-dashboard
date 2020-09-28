@@ -24,6 +24,8 @@ import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ProjectGroupsNotifier", () {
     const projectGroupId = 'projectGroupId';
@@ -971,7 +973,7 @@ void main() {
     test(
       ".setProjects() saves the projects error message if it is not null",
       () {
-        final expectedMessage = CommonStrings.unknownErrorMessage;
+        const expectedMessage = CommonStrings.unknownErrorMessage;
 
         projectGroupsNotifier.setProjects(projects, expectedMessage);
 

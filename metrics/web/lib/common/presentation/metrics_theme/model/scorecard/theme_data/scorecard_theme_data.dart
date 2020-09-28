@@ -11,6 +11,6 @@ class ScorecardThemeData {
   /// Creates the [ScorecardThemeData].
   const ScorecardThemeData({
     this.descriptionTextStyle,
-    this.valueTextStyle
+    this.valueTextStyle,
   });
 }

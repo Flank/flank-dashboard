@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
@@ -56,6 +57,12 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// Indicates whether this widget is in the loading state or not.
   bool _isLoading = false;
 
+  /// The initial [ProjectGroupDialogViewModel] instance.
+  ProjectGroupDialogViewModel _initialViewModel;
+
+  /// A [DeepCollectionEquality] instance used to check the equality of two lists.
+  final _equality = const DeepCollectionEquality.unordered();
+
   @override
   void initState() {
     super.initState();
@@ -69,6 +76,8 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
     _groupNameController.text =
         _projectGroupsNotifier?.projectGroupDialogViewModel?.name;
+
+    _initialViewModel = _projectGroupsNotifier.projectGroupDialogViewModel;
 
     _subscribeToProjectGroupDialogChanges();
   }
@@ -118,6 +127,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
           closeIconPadding: const EdgeInsets.only(top: 16.0, right: 16.0),
           closeIcon: Image.network(
             'icons/close.svg',
+            color: dialogTheme.closeIconColor,
             height: 24.0,
             width: 24.0,
           ),
@@ -157,11 +167,14 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                           child: MetricsTextFormField(
                             onChanged:
                                 _projectGroupsNotifier.filterByProjectName,
-                            prefixIcon: Image.network(
-                              'icons/search.svg',
-                              width: 20.0,
-                              height: 20.0,
-                            ),
+                            prefixIconBuilder: (context, color) {
+                              return Image.network(
+                                'icons/search.svg',
+                                width: 20.0,
+                                height: 20.0,
+                                color: color,
+                              );
+                            },
                             hint: CommonStrings.searchForProject,
                           ),
                         ),
@@ -212,7 +225,6 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
 
                   return MetricsInactiveButton(
                     label: buttonText,
-                    onPressed: null,
                   );
                 },
               ),
@@ -238,9 +250,9 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     final groupName = _groupNameController.value.text;
     final List<String> selectedProjectIds =
         _projectGroupsNotifier.projectGroupDialogViewModel.selectedProjectIds;
-    final numberOfSelectedProjects = selectedProjectIds.length;
 
-    if (numberOfSelectedProjects > 0) {
+    if (selectedProjectIds.isNotEmpty &&
+        _dataIsChanged(groupName, selectedProjectIds)) {
       final groupNameErrorMessage =
           ProjectGroupNameValidator.validate(groupName);
       final selectedProjectIdsErrorMessage =
@@ -283,6 +295,19 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     }
 
     showToast(context, toast);
+  }
+
+  /// Returns `true` if the data of this dialog is changed,
+  /// otherwise, returns `false`.
+  bool _dataIsChanged(String groupName, List<String> selectedProjectIds) {
+    final initialGroupName = _initialViewModel.name;
+    final initialProjectIds = _initialViewModel.selectedProjectIds;
+
+    final groupNameChanged = groupName != initialGroupName;
+    final selectedProjectIdsChanged =
+        !_equality.equals(initialProjectIds, selectedProjectIds);
+
+    return groupNameChanged || selectedProjectIdsChanged;
   }
 
   /// Changes the [_isLoading] state to the given [value].

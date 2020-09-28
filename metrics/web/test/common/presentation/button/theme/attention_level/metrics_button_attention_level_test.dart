@@ -22,7 +22,7 @@ void main() {
 
     test("creates an instance with the given styles", () {
       const normal = MetricsButtonStyle(color: Colors.green);
-      const secondary = MetricsButtonStyle(color: Colors.blue);
+      const secondary = MetricsButtonStyle(color: Colors.yellow);
       const negative = MetricsButtonStyle(color: Colors.red);
       const inactive = MetricsButtonStyle(color: Colors.grey);
 

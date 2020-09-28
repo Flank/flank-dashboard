@@ -14,6 +14,7 @@ void main() {
 
         expect(themeData.primaryColor, isNotNull);
         expect(themeData.backgroundColor, isNotNull);
+        expect(themeData.barrierColor, isNotNull);
         expect(themeData.closeIconColor, isNotNull);
         expect(themeData.contentBorderColor, isNotNull);
       },
@@ -36,8 +37,9 @@ void main() {
 
       const primaryColor = Colors.blue;
       const backgroundColor = Colors.white;
+      const barrierColor = Colors.yellow;
       const closeIconColor = Colors.black;
-      const contentBorderColor = Colors.grey;
+      const contentBorderColor = Colors.black;
 
       const titleTextStyle = defaultTextStyle;
       const uncheckedProjectTextStyle = defaultTextStyle;
@@ -47,6 +49,7 @@ void main() {
       final themeData = ProjectGroupDialogThemeData(
         primaryColor: primaryColor,
         backgroundColor: backgroundColor,
+        barrierColor: barrierColor,
         closeIconColor: closeIconColor,
         contentBorderColor: contentBorderColor,
         titleTextStyle: titleTextStyle,
@@ -57,6 +60,7 @@ void main() {
 
       expect(themeData.primaryColor, equals(primaryColor));
       expect(themeData.backgroundColor, equals(backgroundColor));
+      expect(themeData.barrierColor, equals(barrierColor));
       expect(themeData.closeIconColor, equals(closeIconColor));
       expect(themeData.contentBorderColor, equals(contentBorderColor));
       expect(themeData.titleTextStyle, equals(titleTextStyle));

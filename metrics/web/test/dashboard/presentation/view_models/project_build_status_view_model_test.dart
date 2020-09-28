@@ -2,7 +2,7 @@ import 'package:metrics/dashboard/presentation/view_models/project_build_status_
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("ProjectBuildStatusViewModel", () {

@@ -15,7 +15,7 @@ void main() {
         final button = MetricsNegativeButton(label: 'Label');
         const metricsButtonAttentionLevel = MetricsButtonAttentionLevel(
           positive: MetricsButtonStyle(color: Colors.green),
-          neutral: MetricsButtonStyle(color: Colors.blue),
+          neutral: MetricsButtonStyle(color: Colors.yellow),
           negative: MetricsButtonStyle(color: Colors.red),
           inactive: MetricsButtonStyle(color: Colors.grey),
         );

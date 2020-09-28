@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/constants/mouse_cursor.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
@@ -18,26 +16,22 @@ class AddProjectGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final attentionLevel =
+        MetricsTheme.of(context).addProjectGroupCardTheme.attentionLevel;
+
     return Selector<ProjectGroupsNotifier, bool>(
       selector: (_, notifier) => notifier.hasConfiguredProjects,
       builder: (context, hasConfiguredProjects, _) {
-        final attentionLevel =
-            MetricsTheme.of(context).addProjectGroupCardTheme.attentionLevel;
-
         final style = _getStyle(
           attentionLevel: attentionLevel,
           hasConfiguredProjects: hasConfiguredProjects,
         );
 
-        final asset =
-            hasConfiguredProjects ? 'icons/add.svg' : 'icons/disabled-add.svg';
-
         return TappableArea(
           onTap: hasConfiguredProjects
               ? () => _showProjectGroupDialog(context)
               : null,
-          mouseCursor: MouseCursor.click,
-          builder: (context, isHovered) {
+          builder: (context, isHovered, child) {
             return MetricsCard(
               decoration: BoxDecoration(
                 color: isHovered ? style.hoverColor : style.backgroundColor,
@@ -47,13 +41,13 @@ class AddProjectGroupCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Image.network(
-                    asset,
+                    'icons/add.svg',
                     width: 32.0,
                     height: 32.0,
                     color: style.iconColor,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
                       ProjectGroupsStrings.createGroup,
                       style: style.labelStyle,
@@ -80,6 +74,8 @@ class AddProjectGroupCard extends StatelessWidget {
 
   /// Shows a [AddProjectGroupDialog] with an active project group.
   Future<void> _showProjectGroupDialog(BuildContext context) async {
+    final barrierColor =
+        MetricsTheme.of(context).projectGroupDialogTheme.barrierColor;
     final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
       context,
       listen: false,
@@ -90,6 +86,7 @@ class AddProjectGroupCard extends StatelessWidget {
     if (projectGroupsNotifier.projectGroupDialogViewModel == null) return;
 
     await showDialog(
+      barrierColor: barrierColor,
       context: context,
       child: AddProjectGroupDialog(),
     );

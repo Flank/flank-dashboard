@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_body.dart';
 import 'package:selection_menu/components_configurations.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("DropdownBody", () {
     testWidgets(
@@ -54,6 +56,45 @@ void main() {
         );
 
         expect(container.constraints.maxHeight, equals(maxHeight));
+      },
+    );
+
+    testWidgets(
+      "applies the given max width",
+      (tester) async {
+        const maxWidth = 11.0;
+        await tester.pumpWidget(
+          const _DropdownBodyTestbed(maxWidth: maxWidth),
+        );
+
+        final container = tester.widget<Container>(
+          find.descendant(
+            of: find.byType(DropdownBody),
+            matching: find.byType(Container),
+          ),
+        );
+
+        expect(container.constraints.maxWidth, equals(maxWidth));
+      },
+    );
+
+    testWidgets(
+      "applies the given decoration",
+      (tester) async {
+        const decoration = BoxDecoration(color: Colors.red);
+
+        await tester.pumpWidget(
+          const _DropdownBodyTestbed(decoration: decoration),
+        );
+
+        final container = tester.widget<Container>(
+          find.descendant(
+            of: find.byType(DropdownBody),
+            matching: find.byType(Container),
+          ),
+        );
+
+        expect(container.decoration, equals(decoration));
       },
     );
 
@@ -121,6 +162,24 @@ void main() {
     );
 
     testWidgets(
+      "applies the double.infinity if the given max width is null",
+      (tester) async {
+        await tester.pumpWidget(
+          const _DropdownBodyTestbed(maxWidth: null),
+        );
+
+        final container = tester.widget<Container>(
+          find.descendant(
+            of: find.byType(DropdownBody),
+            matching: find.byType(Container),
+          ),
+        );
+
+        expect(container.constraints.maxWidth, equals(double.infinity));
+      },
+    );
+
+    testWidgets(
       "displays the given child",
       (tester) async {
         const child = Text('test');
@@ -157,7 +216,6 @@ void main() {
 
         await tester.pumpWidget(
           _DropdownBodyTestbed(
-            state: MenuState.OpeningStart,
             onOpenStateChanged: (value) => isOpened = value,
           ),
         );
@@ -185,6 +243,12 @@ class _DropdownBodyTestbed extends StatefulWidget {
   /// A max height of this the dropdown body.
   final double maxHeight;
 
+  /// A max width of this the dropdown body.
+  final double maxWidth;
+
+  /// A decoration of this dropdown body.
+  final BoxDecoration decoration;
+
   /// A [ValueChanged] callback used to notify about opened state changes.
   final ValueChanged<bool> onOpenStateChanged;
 
@@ -200,7 +264,9 @@ class _DropdownBodyTestbed extends StatefulWidget {
     this.state = MenuState.OpeningStart,
     this.animationCurve = Curves.ease,
     this.animationDuration = const Duration(milliseconds: 100),
+    this.decoration,
     this.maxHeight,
+    this.maxWidth,
     this.onOpenStateChanged,
     this.child,
   }) : super(key: key);
@@ -228,6 +294,8 @@ class __DropdownBodyTestbedState extends State<_DropdownBodyTestbed> {
               animationCurve: widget.animationCurve,
               animationDuration: widget.animationDuration,
               maxHeight: widget.maxHeight,
+              maxWidth: widget.maxWidth,
+              decoration: widget.decoration,
               onOpenStateChanged: widget.onOpenStateChanged,
               state: state,
               child: widget.child,

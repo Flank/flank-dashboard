@@ -11,7 +11,7 @@ void main() {
       () {
         final lightMetricsThemeData = LightMetricsThemeData();
 
-        expect(lightMetricsThemeData.metricWidgetTheme, isNotNull);
+        expect(lightMetricsThemeData.metricsWidgetTheme, isNotNull);
         expect(lightMetricsThemeData.buildResultTheme, isNotNull);
         expect(lightMetricsThemeData.inactiveWidgetTheme, isNotNull);
         expect(lightMetricsThemeData.projectGroupCardTheme, isNotNull);
@@ -28,9 +28,13 @@ void main() {
         expect(lightMetricsThemeData.performanceSparklineTheme, isNotNull);
         expect(lightMetricsThemeData.projectBuildStatusTheme, isNotNull);
         expect(lightMetricsThemeData.toggleTheme, isNotNull);
+        expect(lightMetricsThemeData.userMenuButtonTheme, isNotNull);
         expect(lightMetricsThemeData.userMenuTheme, isNotNull);
         expect(lightMetricsThemeData.textPlaceholderTheme, isNotNull);
+        expect(lightMetricsThemeData.inputPlaceholderTheme, isNotNull);
         expect(lightMetricsThemeData.circlePercentageTheme, isNotNull);
+        expect(lightMetricsThemeData.toastTheme, isNotNull);
+        expect(lightMetricsThemeData.pageTitleTheme, isNotNull);
       },
     );
   });

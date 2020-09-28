@@ -214,11 +214,11 @@ void main() {
           .where((element) => element.startedAt.isAfter(periodStartDate))
           .toList();
 
-      final expectedBuildNumberMetrics = BuildNumberMetric(
+      final expectedBuildNumberMetric = BuildNumberMetric(
         numberOfBuilds: buildsInPeriod.length,
       );
 
-      expect(actualBuildNumberMetrics, equals(expectedBuildNumberMetrics));
+      expect(actualBuildNumberMetrics, equals(expectedBuildNumberMetric));
     });
 
     test("loads the performance metric for common builds loading period", () {
@@ -241,19 +241,19 @@ void main() {
               const Duration(), (value, element) => value + element.duration) ~/
           buildsInPeriod.length;
 
-      final expectedBuildNumberMetrics = PerformanceMetric(
+      final expectedBuildNumberMetric = PerformanceMetric(
         buildsPerformance: DateTimeSet.from(buildsPerformance),
         averageBuildDuration: averageDuration,
       );
 
       expect(
         actualPerformanceMetric.buildsPerformance.length,
-        equals(expectedBuildNumberMetrics.buildsPerformance.length),
+        equals(expectedBuildNumberMetric.buildsPerformance.length),
       );
 
       expect(
         actualPerformanceMetric.averageBuildDuration,
-        equals(expectedBuildNumberMetrics.averageBuildDuration),
+        equals(expectedBuildNumberMetric.averageBuildDuration),
       );
     });
 

@@ -1,4 +1,4 @@
-import '../../../common/config/device.dart';
+import '../../../common/model/device.dart';
 import '../../common/runner/process_runner.dart';
 import '../command/flutter_command.dart';
 import '../command/run_command.dart';
@@ -8,7 +8,7 @@ import '../process/flutter_process.dart';
 class FlutterRunProcessRunner implements ProcessRunner {
   final RunCommand _arguments = RunCommand()
     ..device(Device.webServer)
-    ..target('lib/app.dart');
+    ..target('test_driver/app.dart');
 
   FlutterProcess _process;
   Future _isAppStarted;

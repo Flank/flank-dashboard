@@ -1,7 +1,7 @@
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("StabilityViewModel", () {

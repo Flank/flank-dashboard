@@ -1,237 +1,331 @@
+const async = require('async');
 const {
-    setupTestDatabaseWith,
-    getApplicationWith,
-    tearDown,
+  setupTestDatabaseWith,
+  getApplicationWith,
+  tearDown,
 } = require("./test_utils/test-app-utils");
-const {assertFails, assertSucceeds} = require("@firebase/testing");
+const { assertFails, assertSucceeds } = require("@firebase/testing");
 const {
-    projectGroups,
-    user,
-    getProjectGroup,
+  projectGroups,
+  getAllowedEmailUser,
+  getDeniedEmailUser,
+  googleSignInProviderId,
+  passwordSignInProviderId,
+  allowedEmailDomains,
+  getProjectGroup,
 } = require("./test_utils/test-data");
 
-describe("Project groups collection rules", async function () {
-    const authenticatedApp = await getApplicationWith(user);
-    const unauthenticatedApp = await getApplicationWith(null);
-    const collectionName = "project_groups";
+describe("", async function () {
+  const passwordProviderAllowedEmailApp = await getApplicationWith(
+    getAllowedEmailUser(passwordSignInProviderId, true)
+  );
+  const unauthenticatedApp = await getApplicationWith(null);
+  const collection = "project_groups";
 
-    before(async () => {
-        await setupTestDatabaseWith(projectGroups);
+  const users = [
+    {
+      'describe': 'Authenticated with a password and allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+          getAllowedEmailUser(passwordSignInProviderId, true)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': true,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, true)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': true,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(passwordSignInProviderId, false)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': true,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, false)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': true,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, true)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': true,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and not allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, true)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and not allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Unauthenticated user',
+      'app': unauthenticatedApp,
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+  ];
+
+  before(async () => {
+    await setupTestDatabaseWith(
+      Object.assign({}, projectGroups, allowedEmailDomains)
+    );
+  });
+
+  describe("Project groups collection rules", () => {
+    it("does not allow creating a project group with not allowed fields", async () => {
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          name: "name",
+          projectIds: [],
+          notAllowedField: "test",
+        })
+      );
     });
 
-    /**
-     * Common tests
-     */
+    it("does not allow creating a project group without a name", async () => {
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          projectIds: [],
+        })
+      );
+    });
 
-    it("does not allow to create a project group with not allowed fields", async () => {
+    it("does not allow creating a project group with a name having other than a string value", async () => {
+      let names = [false, 123, []];
+
+      names.forEach(async (name) => {
         await assertFails(
-            authenticatedApp.collection(collectionName).add({
-                name: "name",
-                projectIds: [],
-                notAllowedField: "test",
-            })
+          passwordProviderAllowedEmailApp
+            .collection(collection)
+            .add({ name, projectIds: [] })
         );
+      });
     });
 
-    it("does not allow to create a project group without a name", async () => {
+    it("does not allow creating a project group with a projectIds having other than a list value", () => {
+      let projectIdsValues = [123, false, "test"];
+
+      projectIdsValues.forEach(async (projectIds) => {
         await assertFails(
-            authenticatedApp.collection(collectionName).add({
-                projectIds: [],
-            })
+          passwordProviderAllowedEmailApp
+            .collection(collection)
+            .add({ name: "test", projectIds })
         );
+      });
     });
 
-    it("does not allow to create a project group with a name having other than a string value", async () => {
-        let names = [false, 123, []];
+    it("allows to update a project group with name size less or equal than 255", async () => {
+      const testName = "testName";
 
-        names.forEach(async (name) => {
-            await assertFails(
-                authenticatedApp
-                    .collection(collectionName)
-                    .add({name, projectIds: []})
-            );
-        });
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
+          name: testName,
+          projectIds: [],
+        })
+      );
     });
 
-    it("does not allow to create a project group with a projectIds having other than a list value", () => {
-        let projectIdsValues = [123, false, "test"];
+    it("allows to update a project group with project ids length less or equal than 20", async () => {
+      const testProjectIds = ["1", "2"];
 
-        projectIdsValues.forEach(async (projectIds) => {
-            await assertFails(
-                authenticatedApp
-                    .collection(collectionName)
-                    .add({name: "test", projectIds})
-            );
-        });
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
+          name: "name",
+          projectIds: testProjectIds,
+        })
+      );
     });
 
-    /**
-     * The authenticated user specific tests
-     */
+    it("allows to create a project group with name size less or equal than 255", async () => {
+      const testName = "testName";
 
-    it("allows creating a project group by an authenticated user", async () => {
-        await assertSucceeds(
-            authenticatedApp.collection(collectionName).add(getProjectGroup())
-        );
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          name: testName,
+          projectIds: [],
+        })
+      );
     });
 
-    it("allows reading project groups by an authenticated user", async () => {
-        await assertSucceeds(authenticatedApp.collection(collectionName).get());
-    });
+    it("allows to create a project group with project ids length less or equal than 20", async () => {
+      const testProjectIds = ["1", "2"];
 
-    it("allows updating a project group by an authenticated user", async () => {
-        await assertSucceeds(
-            authenticatedApp
-                .collection(collectionName)
-                .doc("2")
-                .update(getProjectGroup())
-        );
-    });
-
-    it("allows deleting a project group by an authenticated user", async () => {
-        await assertSucceeds(
-            authenticatedApp.collection(collectionName).doc("1").delete()
-        );
-    });
-
-    /**
-     * The unauthenticated user specific tests
-     */
-
-    it("does not allow to create a project group by an unauthenticated user", async () => {
-        await assertFails(
-            unauthenticatedApp.collection(collectionName).add(getProjectGroup())
-        );
-    });
-
-    it("does not allow to read project groups by an unauthenticated user", async () => {
-        await assertFails(unauthenticatedApp.collection(collectionName).get());
-    });
-
-    it("does not allow to update a project group by an unauthenticated user", async () => {
-        await assertFails(
-            unauthenticatedApp
-                .collection(collectionName)
-                .doc("2")
-                .update(getProjectGroup())
-        );
-    });
-
-    it("does not allow to delete a project group by an unauthenticated user", async () => {
-        await assertFails(
-            unauthenticatedApp.collection(collectionName).doc("1").delete()
-        );
-    });
-
-    it("allows updating a project group with name size less or equal than 255", async () => {
-        const testName = "testName";
-
-        await assertSucceeds(
-            authenticatedApp
-                .collection(collectionName)
-                .doc("2")
-                .update({
-                    name: testName,
-                    projectIds: [],
-                })
-        );
-    });
-
-    it("allows updating a project group with project ids length less or equal than 20", async () => {
-        const testProjectIds = ["1", "2"];
-
-        await assertSucceeds(
-            authenticatedApp
-                .collection(collectionName)
-                .doc("2")
-                .update({
-                    name: "name",
-                    projectIds: testProjectIds,
-                })
-        );
-    });
-
-    it("allows creating a project group with name size less or equal than 255", async () => {
-        const testName = "testName";
-
-        await assertSucceeds(
-            authenticatedApp
-                .collection(collectionName)
-                .add({
-                    name: testName,
-                    projectIds: [],
-                })
-        );
-    });
-
-    it("allows creating a project group with project ids length less or equal than 20", async () => {
-        const testProjectIds = ["1", "2"];
-
-        await assertSucceeds(
-            authenticatedApp
-                .collection(collectionName)
-                .add({
-                    name: "name",
-                    projectIds: testProjectIds,
-                })
-        );
+      await assertSucceeds(
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          name: "name",
+          projectIds: testProjectIds,
+        })
+      );
     });
 
     it("does not allow updating a project group with name size greater than 255", async () => {
-        const testName = 'a'.repeat(256);
+      const testName = "a".repeat(256);
 
-        await assertFails(
-            authenticatedApp
-                .collection(collectionName)
-                .doc("2")
-                .update({
-                    name: testName,
-                    projectIds: [],
-                })
-        );
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
+          name: testName,
+          projectIds: [],
+        })
+      );
     });
 
     it("does not allow updating a project group with project ids length greater than 20", async () => {
-        const testProjectIds = [...Array(21)].map((_, i) => `${i}`);
+      const testProjectIds = [...Array(21)].map((_, i) => `${i}`);
 
-        await assertFails(
-            authenticatedApp
-                .collection(collectionName)
-                .doc("2")
-                .update({
-                    name: "name",
-                    projectIds: testProjectIds,
-                })
-        );
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).doc("2").update({
+          name: "name",
+          projectIds: testProjectIds,
+        })
+      );
     });
 
     it("does not allow creating a project group with name size greater than 255", async () => {
-        const testName = 'a'.repeat(256);
+      const testName = "a".repeat(256);
 
-        await assertFails(
-            authenticatedApp
-                .collection(collectionName)
-                .add({
-                    name: testName,
-                    projectIds: [],
-                })
-        );
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          name: testName,
+          projectIds: [],
+        })
+      );
     });
 
     it("does not allow creating a project group with project ids length greater than 20", async () => {
-        const testProjectIds = [...Array(21)].map((_, i) => `${i}`);
+      const testProjectIds = [...Array(21)].map((_, i) => `${i}`);
 
-        await assertFails(
-            authenticatedApp
-                .collection(collectionName)
-                .add({
-                    name: "name",
-                    projectIds: testProjectIds,
-                })
-        );
+      await assertFails(
+        passwordProviderAllowedEmailApp.collection(collection).add({
+          name: "name",
+          projectIds: testProjectIds,
+        })
+      );
     });
 
-    after(async () => {
-        await tearDown();
+    async.forEach(users, (user, callback) => {
+      describe(user.describe, () => {
+        let canCreateDescription = user.can.create ?
+          "allows to create a project group" : "does not allow creating a project group";
+        let canReadDescription = user.can.read ?
+          "allows reading project groups" : "does not allow reading project groups";
+        let canUpdateDescription = user.can.update ?
+          "allows to update a project group" : "does not allow updating a project group";
+        let canDeleteDescription = user.can.delete ?
+          "allows to delete a project group" : "does not allow deleting a project group";
+
+        it(canCreateDescription, async () => {
+          const createPromise = user.app.collection(collection).add(getProjectGroup());
+
+          if (user.can.create) {
+            await assertSucceeds(createPromise)
+          } else {
+            await assertFails(createPromise)
+          }
+        });
+
+        it(canReadDescription, async () => {
+          const readPromise = user.app.collection(collection).get();
+
+          if (user.can.read) {
+            await assertSucceeds(readPromise)
+          } else {
+            await assertFails(readPromise)
+          }
+        });
+
+        it(canUpdateDescription, async () => {
+          const updatePromise = user.app.collection(collection)
+            .doc("2")
+            .update(getProjectGroup());
+
+          if (user.can.update) {
+            await assertSucceeds(updatePromise)
+          } else {
+            await assertFails(updatePromise)
+          }
+        });
+
+        it(canDeleteDescription, async () => {
+          const deletePromise = user.app.collection(collection).doc("1").delete();
+
+          if (user.can.delete) {
+            await assertSucceeds(deletePromise)
+          } else {
+            await assertFails(deletePromise)
+          }
+        });
+      });
+      callback();
     });
+  });
+
+  after(async () => {
+    await tearDown();
+  });
 });

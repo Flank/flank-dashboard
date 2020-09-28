@@ -21,7 +21,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the ThemedCirclePercentage with MetricValueThemeStrategy",
+      "displays the ThemedCirclePercentage with MetricsValueThemeStrategy",
       (tester) async {
         await tester.pumpWidget(const _CoverageCirclePercentageTestbed());
 

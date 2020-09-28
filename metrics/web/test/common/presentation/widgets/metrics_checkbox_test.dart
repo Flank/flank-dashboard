@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/widgets/metrics_checkbox.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsCheckbox", () {
     testWidgets(
@@ -11,6 +13,19 @@ void main() {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             const _MetricsCheckboxTestbed(value: null),
+          );
+        });
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "throws an AssertionError if the given is hovered is null",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _MetricsCheckboxTestbed(isHovered: null),
           );
         });
 
@@ -40,7 +55,25 @@ void main() {
     );
 
     testWidgets(
-      "displays the animated cross fade with image for the checkbox",
+      "does not throw on tap if the given on changes callback is null",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _MetricsCheckboxTestbed(
+              value: false,
+              onChanged: null,
+            ),
+          );
+        });
+
+        await tester.tap(find.byType(MetricsCheckbox));
+
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
+      "displays the animated crossfade with the image for the checkbox",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -58,7 +91,28 @@ void main() {
     );
 
     testWidgets(
-      "displays the animated cross fade with image for the blank checkbox",
+      "displays the animated crossfade with the image for the hovered checkbox if the widget is hovered",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _MetricsCheckboxTestbed(
+              value: false,
+              isHovered: true,
+            ),
+          );
+        });
+
+        final finder = find.byType(AnimatedCrossFade);
+        final crossFade = tester.widget<AnimatedCrossFade>(finder);
+        final firstChild = crossFade.firstChild as Image;
+        final imageProvider = firstChild.image as NetworkImage;
+
+        expect(imageProvider.url, equals('icons/check-box-hovered.svg'));
+      },
+    );
+
+    testWidgets(
+      "displays the animated crossfade with the image for the blank checkbox",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -72,6 +126,27 @@ void main() {
         final imageProvider = secondChild.image as NetworkImage;
 
         expect(imageProvider.url, equals('icons/check-box-blank.svg'));
+      },
+    );
+
+    testWidgets(
+      "displays the animated crossfade with the image for the hovered blank checkbox if the widget is hovered",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _MetricsCheckboxTestbed(
+              value: false,
+              isHovered: true,
+            ),
+          );
+        });
+
+        final finder = find.byType(AnimatedCrossFade);
+        final crossFade = tester.widget<AnimatedCrossFade>(finder);
+        final secondChild = crossFade.secondChild as Image;
+        final imageProvider = secondChild.image as NetworkImage;
+
+        expect(imageProvider.url, equals('icons/check-box-blank-hovered.svg'));
       },
     );
 
@@ -117,11 +192,17 @@ class _MetricsCheckboxTestbed extends StatelessWidget {
   /// The callback that is called when the checkbox has tapped.
   final ValueChanged<bool> onChanged;
 
+  /// Indicates whether [MetricsCheckbox] is hovered.
+  final bool isHovered;
+
   /// Creates a new instance of the metrics checkbox testbed.
+  ///
+  /// [isHovered] defaults to `false`.
   const _MetricsCheckboxTestbed({
     Key key,
     this.value,
     this.onChanged,
+    this.isHovered = false,
   }) : super(key: key);
 
   @override
@@ -131,6 +212,7 @@ class _MetricsCheckboxTestbed extends StatelessWidget {
         body: MetricsCheckbox(
           value: value,
           onChanged: onChanged,
+          isHovered: isHovered,
         ),
       ),
     );

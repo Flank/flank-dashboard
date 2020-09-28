@@ -20,7 +20,9 @@ class AuthStrings {
       'Too many requests. Please wait and try your request again later';
   static const String googleSignInErrorOccurred =
       'An error occurred while signing in with Google';
+  static const String notAllowedEmailDomainErrorMessage =
+      'Your email domain is not allowed. Please contact the Site Administrator if you need to have access.';
 
   static String getPasswordMinLengthErrorMessage(int minLength) =>
-      "Password should be at least $minLength characters long";
+      'Password should be at least $minLength characters long';
 }

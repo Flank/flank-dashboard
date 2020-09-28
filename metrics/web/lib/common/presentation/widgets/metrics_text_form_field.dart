@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
+/// A [Function] used to build a prefix icon using the [prefixColor].
+typedef PrefixBuilder = Widget Function(
+  BuildContext context,
+  Color prefixColor,
+);
+
 /// A widget that displays a metrics styled text field and
 /// applies the [MetricsThemeData.textFieldTheme].
 class MetricsTextFormField extends StatefulWidget {
@@ -20,9 +26,9 @@ class MetricsTextFormField extends StatefulWidget {
   /// A type of keyboard to use for editing the text.
   final TextInputType keyboardType;
 
-  /// An icon that appears before the editable part of this text field,
-  /// within the decoration's container.
-  final Widget prefixIcon;
+  /// A [PrefixBuilder] that builds a prefix icon for this text field
+  /// depending on the passed parameters.
+  final PrefixBuilder prefixIconBuilder;
 
   /// An icon that appears after the editable part of this text field,
   /// within the decoration's container.
@@ -40,11 +46,11 @@ class MetricsTextFormField extends StatefulWidget {
   const MetricsTextFormField({
     Key key,
     this.obscureText = false,
+    this.prefixIconBuilder,
     this.controller,
     this.validator,
     this.onChanged,
     this.keyboardType,
-    this.prefixIcon,
     this.suffixIcon,
     this.hint,
     this.label,
@@ -58,9 +64,6 @@ class MetricsTextFormField extends StatefulWidget {
 class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
   /// Defines the focus for this text field.
   final _focusNode = FocusNode();
-
-  /// The default decoration for this text field.
-  InputDecoration _defaultDecoration;
 
   /// The decoration for this text field when it is hovered.
   InputDecoration _hoverDecoration;
@@ -78,30 +81,19 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
   ///
   /// Returns [_focusDecoration], if field [_isFocused].
   /// Returns [_hoverDecoration], if field [_isHovered].
-  /// Otherwise, returns [_defaultDecoration].
+  /// Otherwise, returns an empty instance of the [InputDecoration].
   InputDecoration get _decoration {
     if (_isFocused) return _focusDecoration;
 
     if (_isHovered) return _hoverDecoration;
 
-    return _defaultDecoration;
+    return const InputDecoration();
   }
 
   @override
   void initState() {
     _isHovered = false;
     _isFocused = false;
-    _defaultDecoration = InputDecoration(
-      prefixIcon: widget.prefixIcon != null
-          ? Padding(
-              padding: const EdgeInsets.only(right: 2.0),
-              child: widget.prefixIcon,
-            )
-          : widget.prefixIcon,
-      suffixIcon: widget.suffixIcon,
-      hintText: widget.hint,
-    );
-
     _focusNode.addListener(_changeFocused);
 
     super.initState();
@@ -111,15 +103,14 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
   void didChangeDependencies() {
     final textFieldTheme = MetricsTheme.of(context).textFieldTheme;
     final decorationTheme = Theme.of(context).inputDecorationTheme;
-
     final border = decorationTheme.border ?? InputBorder.none;
-    _hoverDecoration = _defaultDecoration.copyWith(
-      border: border.copyWith(
+
+    _hoverDecoration = InputDecoration(
+      enabledBorder: border.copyWith(
         borderSide: BorderSide(color: textFieldTheme.hoverBorderColor),
       ),
     );
-
-    _focusDecoration = _defaultDecoration.copyWith(
+    _focusDecoration = InputDecoration(
       fillColor: textFieldTheme.focusColor,
     );
 
@@ -130,6 +121,10 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
   Widget build(BuildContext context) {
     final textFieldTheme = MetricsTheme.of(context).textFieldTheme;
     final decorationTheme = Theme.of(context).inputDecorationTheme;
+    final prefixIcon = widget.prefixIconBuilder?.call(
+      context,
+      _isFocused ? textFieldTheme.focusedPrefixIconColor : textFieldTheme.prefixIconColor,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +149,17 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
             obscureText: widget.obscureText,
             keyboardType: widget.keyboardType,
             style: textFieldTheme.textStyle,
-            decoration: _decoration,
+            decoration: _decoration.copyWith(
+              prefixIcon: prefixIcon != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 14.0, right: 16.0),
+                      child: prefixIcon,
+                    )
+                  : null,
+              prefixIconConstraints: const BoxConstraints(maxWidth: 50.0),
+              suffixIcon: widget.suffixIcon,
+              hintText: widget.hint,
+            ),
           ),
         ),
       ],

@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
+import 'package:metrics/common/presentation/widgets/metrics_card.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/view_models/project_group_dialog_view_model.dart';
@@ -32,6 +35,8 @@ void main() {
     const inactiveIconColor = Colors.grey;
     const inactiveHoverColor = Colors.grey;
 
+    const barrierColor = Colors.red;
+
     const metricsTheme = MetricsThemeData(
       addProjectGroupCardTheme: AddProjectGroupCardThemeData(
         attentionLevel: AddProjectGroupCardAttentionLevel(
@@ -48,6 +53,9 @@ void main() {
             labelStyle: inactiveLabelStyle,
           ),
         ),
+      ),
+      projectGroupDialogTheme: ProjectGroupDialogThemeData(
+        barrierColor: barrierColor,
       ),
     );
 
@@ -134,6 +142,35 @@ void main() {
         );
 
         expect(textWidget.style, equals(inactiveLabelStyle));
+      },
+    );
+
+    testWidgets(
+      "applies the barrier color from the metrics theme to the add project group dialog",
+      (WidgetTester tester) async {
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.hasConfiguredProjects).thenReturn(true);
+        when(notifierMock.projectCheckboxViewModels).thenReturn([]);
+        when(notifierMock.projectGroupDialogViewModel).thenReturn(
+          ProjectGroupDialogViewModel(
+            selectedProjectIds: UnmodifiableListView([]),
+          ),
+        );
+
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(_AddProjectGroupCardTestbed(
+            projectGroupsNotifier: notifierMock,
+            theme: metricsTheme,
+          )),
+        );
+
+        await tester.tap(find.byType(AddProjectGroupCard));
+        await tester.pumpAndSettle();
+
+        final barrierFinder = find.byWidgetPredicate(
+          (widget) => widget is ModalBarrier && widget.color == barrierColor,
+        );
+        expect(barrierFinder, findsOneWidget);
       },
     );
 
@@ -241,7 +278,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the disabled add icon svg when the card is disabled",
+      "applies the inactive icon color from the metrics theme to the add icon when the add project group card is disabled",
       (WidgetTester tester) async {
         final notifierMock = ProjectGroupsNotifierMock();
         when(notifierMock.hasConfiguredProjects).thenReturn(false);
@@ -249,12 +286,32 @@ void main() {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(_AddProjectGroupCardTestbed(
             projectGroupsNotifier: notifierMock,
+            theme: metricsTheme,
           )),
         );
 
-        final networkImage = FinderUtil.findNetworkImageWidget(tester);
+        final image = tester.widget<Image>(find.byType(Image));
 
-        expect(networkImage.url, equals('icons/disabled-add.svg'));
+        expect(image.color, equals(inactiveIconColor));
+      },
+    );
+
+    testWidgets(
+      "applies the positive icon color from the metrics theme to the add icon when the add project group card is enabled",
+      (WidgetTester tester) async {
+        final notifierMock = ProjectGroupsNotifierMock();
+        when(notifierMock.hasConfiguredProjects).thenReturn(true);
+
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(_AddProjectGroupCardTestbed(
+            projectGroupsNotifier: notifierMock,
+            theme: metricsTheme,
+          )),
+        );
+
+        final image = tester.widget<Image>(find.byType(Image));
+
+        expect(image.color, equals(positiveIconColor));
       },
     );
 
@@ -302,6 +359,22 @@ void main() {
 
         verify(notifierMock.resetProjectGroupDialogViewModel())
             .called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "applies tappable area to the metrics card",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(const _AddProjectGroupCardTestbed()),
+        );
+
+        final finder = find.ancestor(
+          of: find.byType(MetricsCard),
+          matching: find.byType(TappableArea),
+        );
+
+        expect(finder, findsOneWidget);
       },
     );
   });

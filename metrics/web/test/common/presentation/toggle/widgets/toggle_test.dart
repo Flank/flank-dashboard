@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
@@ -137,6 +138,20 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(value, isNot(initialValue));
+      },
+    );
+
+    testWidgets(
+      "applies a tappable area to the FlutterSwitch",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _ToggleTestbed());
+
+        final finder = find.ancestor(
+          of: find.byType(FlutterSwitch),
+          matching: find.byType(TappableArea),
+        );
+
+        expect(finder, findsOneWidget);
       },
     );
   });

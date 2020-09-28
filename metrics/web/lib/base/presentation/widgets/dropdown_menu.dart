@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:selection_menu/components_configurations.dart';
 import 'package:selection_menu/selection_menu.dart';
 
@@ -128,11 +128,10 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
         ),
         triggerComponent: TriggerComponent(
           builder: (data) {
-            return GestureDetector(
+            return TappableArea(
               onTap: data.triggerMenu,
-              child: HandCursor(
-                child: widget.buttonBuilder(context, data.selectedItem as T),
-              ),
+              builder: (context, isHovered, child) => child,
+              child: widget.buttonBuilder(context, data.selectedItem as T),
             );
           },
         ),

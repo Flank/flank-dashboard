@@ -12,7 +12,7 @@ class CommonStrings {
   static const String metrics = 'metrics';
   static const String welcomeMetrics = 'Welcome to Metrics';
   static const String logOut = 'Logout';
-  static const String searchForProject = 'Search for project…';
+  static const String searchForProject = 'Search for project...';
   static const String edit = 'Edit';
   static const String delete = 'Delete';
   static const String cancel = 'Cancel';

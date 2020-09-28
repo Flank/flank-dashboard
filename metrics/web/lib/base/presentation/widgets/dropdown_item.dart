@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 /// A widget that used with a [DropdownMenu] to display the dropdown
 /// items that can be selected.
 ///
 /// Changes it's background color on hover from [backgroundColor] to [hoverColor].
-class DropdownItem extends StatefulWidget {
-  /// A child widget to display.
-  final Widget child;
+class DropdownItem extends StatelessWidget {
+  /// A builder function used to build the child widget depending on the hover
+  /// status of this widget.
+  final Widget Function(BuildContext, bool) builder;
 
   /// A width of this widget.
   final double width;
@@ -30,49 +31,34 @@ class DropdownItem extends StatefulWidget {
 
   /// Creates a widget that displays a dropdown item of the [DropdownMenu].
   ///
-  /// The [child] must not be `null`.
+  /// The [builder] must not be `null`.
   const DropdownItem({
     Key key,
-    @required this.child,
+    @required this.builder,
     this.width,
     this.height,
     this.alignment,
     this.padding,
     this.backgroundColor,
     this.hoverColor,
-  })  : assert(child != null),
+  })  : assert(builder != null),
         super(key: key);
 
   @override
-  _DropdownItemState createState() => _DropdownItemState();
-}
-
-class _DropdownItemState extends State<DropdownItem> {
-  /// Indicates whether this widget is hovered or not.
-  bool _isHovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    final color = _isHovered ? widget.hoverColor : widget.backgroundColor;
+    return TappableArea(
+      builder: (context, isHovered, _) {
+        final color = isHovered ? hoverColor : backgroundColor;
 
-    return HandCursor(
-      child: MouseRegion(
-        onEnter: (_) => _changeHover(true),
-        onExit: (_) => _changeHover(false),
-        child: Container(
-          width: widget.width,
-          height: widget.height,
+        return Container(
+          width: width,
+          height: height,
           color: color,
-          padding: widget.padding,
-          alignment: widget.alignment,
-          child: widget.child,
-        ),
-      ),
+          padding: padding,
+          alignment: alignment,
+          child: builder(context, isHovered),
+        );
+      },
     );
-  }
-
-  /// Changes [_isHovered] value to the given [value].
-  void _changeHover(bool value) {
-    setState(() => _isHovered = value);
   }
 }

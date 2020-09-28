@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data
 import 'package:test/test.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("LoginThemeData", () {
@@ -14,6 +14,15 @@ void main() {
         const themeData = LoginThemeData();
 
         expect(themeData.loginOptionButtonStyle, isNotNull);
+      },
+    );
+
+    test(
+      "creates a theme with the default visibility icon color if the given value is null",
+      () {
+        const themeData = LoginThemeData(passwordVisibilityIconColor: null);
+
+        expect(themeData.passwordVisibilityIconColor, isNotNull);
       },
     );
 
@@ -28,15 +37,19 @@ void main() {
 
     test("creates an instance with the given values", () {
       const titleTextStyle = TextStyle();
-      const loginOptionButtonStyle = MetricsButtonStyle();
+      const loginOptionButtonStyle = MetricsButtonStyle(color: Colors.white);
+      const passwordVisibilityIconColor = Colors.green;
 
       final themeData = LoginThemeData(
         titleTextStyle: titleTextStyle,
         loginOptionButtonStyle: loginOptionButtonStyle,
+        passwordVisibilityIconColor: passwordVisibilityIconColor,
       );
 
       expect(themeData.titleTextStyle, equals(titleTextStyle));
       expect(themeData.loginOptionButtonStyle, equals(loginOptionButtonStyle));
+      expect(themeData.passwordVisibilityIconColor,
+          equals(passwordVisibilityIconColor));
     });
   });
 }

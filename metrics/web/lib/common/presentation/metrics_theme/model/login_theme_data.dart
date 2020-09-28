@@ -9,12 +9,18 @@ class LoginThemeData {
   /// A [MetricsButtonStyle] for buttons with login options.
   final MetricsButtonStyle loginOptionButtonStyle;
 
+  /// A [Color] of the password visibility icon.
+  final Color passwordVisibilityIconColor;
+
   /// Creates a new instance of the [LoginThemeData].
   ///
   /// The [loginOptionButtonStyle] defaults to an empty
   /// [MetricsButtonStyle] instance.
+  /// If the [passwordVisibilityIconColor] is `null`, the
+  /// [Colors.grey] is used.
   const LoginThemeData({
     this.loginOptionButtonStyle = const MetricsButtonStyle(),
     this.titleTextStyle,
-  });
+    Color passwordVisibilityIconColor,
+  }) : passwordVisibilityIconColor = passwordVisibilityIconColor ?? Colors.grey;
 }

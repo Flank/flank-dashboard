@@ -1,12 +1,14 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/base/presentation/widgets/scorecard.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
@@ -21,6 +23,8 @@ import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
+
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("ProjectMetricsTile", () {
@@ -47,18 +51,36 @@ void main() {
     );
 
     const backgroundColor = Colors.black;
+    const hoverBackgroundColor = Colors.grey;
     const borderColor = Colors.black;
+    const hoverBorderColor = Colors.yellow;
     const textStyle = TextStyle(color: Colors.red);
 
     const themeData = MetricsThemeData(
       projectMetricsTableTheme: ProjectMetricsTableThemeData(
         projectMetricsTileTheme: ProjectMetricsTileThemeData(
           backgroundColor: backgroundColor,
+          hoverBackgroundColor: hoverBackgroundColor,
           borderColor: borderColor,
+          hoverBorderColor: hoverBorderColor,
           textStyle: textStyle,
         ),
       ),
     );
+
+    Future<void> _hoverMetricsTile(WidgetTester tester) async {
+      final tappableAreaFinder = find.byType(TappableArea);
+      final mouseRegionFinder = find.byType(MouseRegion);
+
+      final mouseRegion = tester.widget<MouseRegion>(
+        find.descendant(of: tappableAreaFinder, matching: mouseRegionFinder),
+      );
+
+      const pointerEvent = PointerEnterEvent();
+      mouseRegion.onEnter(pointerEvent);
+
+      await tester.pump();
+    }
 
     testWidgets(
       "throws an AssertionError if a projectMetrics parameter is null",
@@ -72,7 +94,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the background color from the metrics theme",
+      "applies the background color from the metrics theme when the tile is not hovered",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_ProjectMetricsTileTestbed(
@@ -96,7 +118,33 @@ void main() {
     );
 
     testWidgets(
-      "applies the border color from the metrics theme",
+      "applies the hover background color from the metrics theme when the tile is hovered",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            themeData: themeData,
+            projectMetrics: testProjectMetrics,
+          ));
+        });
+
+        await _hoverMetricsTile(tester);
+
+        final projectMetricsTileContainer = tester.widget<DecoratedBox>(
+          find.ancestor(
+            of: find.byType(MetricsTableRow),
+            matching: find.byType(DecoratedBox),
+          ),
+        );
+
+        final decoration =
+            projectMetricsTileContainer.decoration as BoxDecoration;
+
+        expect(decoration.color, equals(hoverBackgroundColor));
+      },
+    );
+
+    testWidgets(
+      "applies the border color from the metrics theme when the tile is not hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(_ProjectMetricsTileTestbed(
           themeData: themeData,
@@ -118,6 +166,34 @@ void main() {
         expect(border.bottom.color, equals(borderColor));
         expect(border.left.color, equals(borderColor));
         expect(border.right.color, equals(borderColor));
+      },
+    );
+
+    testWidgets(
+      "applies the hover border color from the metrics theme when the tile is hovered",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_ProjectMetricsTileTestbed(
+          themeData: themeData,
+          projectMetrics: testProjectMetrics,
+        ));
+
+        await _hoverMetricsTile(tester);
+
+        final projectMetricsTileContainer = tester.widget<DecoratedBox>(
+          find.ancestor(
+            of: find.byType(MetricsTableRow),
+            matching: find.byType(DecoratedBox),
+          ),
+        );
+
+        final decoration =
+            projectMetricsTileContainer.decoration as BoxDecoration;
+        final border = decoration.border as Border;
+
+        expect(border.top.color, equals(hoverBorderColor));
+        expect(border.bottom.color, equals(hoverBorderColor));
+        expect(border.left.color, equals(hoverBorderColor));
+        expect(border.right.color, equals(hoverBorderColor));
       },
     );
 
@@ -216,7 +292,7 @@ void main() {
     );
 
     testWidgets(
-      "contains TextMetric with build number metric",
+      "contains Scorecard with build number metric",
       (WidgetTester tester) async {
         final numberOfBuilds =
             testProjectMetrics.buildNumberMetric.numberOfBuilds;

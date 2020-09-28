@@ -23,7 +23,7 @@ class ProjectMetricsTileViewModel extends Equatable {
   /// A stability circle percentage view model.
   final StabilityViewModel stability;
 
-  /// A build number scorecard metrics view model.
+  /// A build number scorecard metric view model.
   final BuildNumberScorecardViewModel buildNumberMetric;
 
   /// A performance sparkline graph view model.

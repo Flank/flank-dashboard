@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 
 /// The class that stores the theme data for the project group card.
 class ProjectGroupCardThemeData {
@@ -11,11 +12,13 @@ class ProjectGroupCardThemeData {
   /// The border [Color] of the project group card.
   final Color borderColor;
 
-  /// The primary [Color] for main elements of the project group card.
-  final Color primaryColor;
+  /// A primary [MetricsButtonStyle] of the icon label button of the
+  /// project group card.
+  final MetricsButtonStyle primaryButtonStyle;
 
-  /// The secondary [Color] for elements of the project group card.
-  final Color accentColor;
+  /// An accent [MetricsButtonStyle] of the icon label button of the
+  /// project group card.
+  final MetricsButtonStyle accentButtonStyle;
 
   /// The [TextStyle] for the title text of the project group card.
   final TextStyle titleStyle;
@@ -24,13 +27,23 @@ class ProjectGroupCardThemeData {
   final TextStyle subtitleStyle;
 
   /// Creates the [ProjectGroupCardThemeData].
+  ///
+  /// [backgroundColor] defaults to [Colors.grey]
+  /// [hoverColor] defaults to [Colors.black26]
+  /// [borderColor] defaults to [Colors.black]
+  /// [primaryButtonStyle] defaults to an empty [MetricsButtonStyle].
+  /// [accentButtonStyle] defaults to an empty [MetricsButtonStyle].
   const ProjectGroupCardThemeData({
-    this.backgroundColor = Colors.grey,
-    this.hoverColor = Colors.black26,
-    this.borderColor = Colors.black,
-    this.primaryColor = Colors.green,
-    this.accentColor = Colors.red,
+    Color backgroundColor,
+    Color hoverColor,
+    Color borderColor,
+    MetricsButtonStyle primaryButtonStyle,
+    MetricsButtonStyle accentButtonStyle,
     this.titleStyle,
     this.subtitleStyle,
-  });
+  })  : backgroundColor = backgroundColor ?? Colors.grey,
+        hoverColor = hoverColor ?? Colors.black26,
+        borderColor = borderColor ?? Colors.black,
+        primaryButtonStyle = primaryButtonStyle ?? const MetricsButtonStyle(),
+        accentButtonStyle = accentButtonStyle ?? const MetricsButtonStyle();
 }

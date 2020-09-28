@@ -7,7 +7,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
@@ -17,23 +17,25 @@ import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placehol
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
+import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 
-/// Stores the theme data for all metric widgets.
+/// Stores the theme data for all metrics widgets.
 class MetricsThemeData {
-  static const MetricWidgetThemeData _defaultWidgetThemeData =
-      MetricWidgetThemeData();
+  static const MetricsWidgetThemeData _defaultWidgetThemeData =
+      MetricsWidgetThemeData();
 
   /// A theme of the metrics widgets used to set the default colors
   /// and text styles.
-  final MetricWidgetThemeData metricWidgetTheme;
+  final MetricsWidgetThemeData metricsWidgetTheme;
 
-  /// A theme of the inactive metric widgets used when there are no data
-  /// for metric.
-  final MetricWidgetThemeData inactiveWidgetTheme;
+  /// A theme of the inactive metrics widgets used when there are no data
+  /// for metrics.
+  final MetricsWidgetThemeData inactiveWidgetTheme;
 
   /// A theme for the [BuildResultBarGraph] used to set the colors
   /// of the graph bars.
@@ -81,6 +83,9 @@ class MetricsThemeData {
   /// A theme for the toggle widgets.
   final ToggleThemeData toggleTheme;
 
+  /// A theme for the user menu button.
+  final UserMenuButtonThemeData userMenuButtonTheme;
+
   /// A theme for the user menu popup.
   final UserMenuThemeData userMenuTheme;
 
@@ -96,10 +101,13 @@ class MetricsThemeData {
   /// A theme for the toasts.
   final ToastThemeData toastTheme;
 
+  /// A theme for the page title.
+  final PageTitleThemeData pageTitleTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
-    MetricWidgetThemeData metricWidgetTheme,
-    MetricWidgetThemeData inactiveWidgetTheme,
+    MetricsWidgetThemeData metricsWidgetTheme,
+    MetricsWidgetThemeData inactiveWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     DeleteDialogThemeData deleteDialogTheme,
@@ -115,13 +123,15 @@ class MetricsThemeData {
     SparklineThemeData performanceSparklineTheme,
     ProjectBuildStatusThemeData projectBuildStatusTheme,
     ToggleThemeData toggleTheme,
+    UserMenuButtonThemeData userMenuButtonTheme,
     UserMenuThemeData userMenuTheme,
     TextPlaceholderThemeData textPlaceholderTheme,
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
+    PageTitleThemeData pageTitleTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
-        metricWidgetTheme = metricWidgetTheme ?? _defaultWidgetThemeData,
+        metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
         buildResultTheme = buildResultTheme ??
             const BuildResultsThemeData(
               canceledColor: Colors.grey,
@@ -150,6 +160,8 @@ class MetricsThemeData {
         projectBuildStatusTheme =
             projectBuildStatusTheme ?? const ProjectBuildStatusThemeData(),
         toggleTheme = toggleTheme ?? const ToggleThemeData(),
+        userMenuButtonTheme =
+            userMenuButtonTheme ?? const UserMenuButtonThemeData(),
         userMenuTheme = userMenuTheme ?? const UserMenuThemeData(),
         textPlaceholderTheme =
             textPlaceholderTheme ?? const TextPlaceholderThemeData(),
@@ -157,20 +169,21 @@ class MetricsThemeData {
             inputPlaceholderTheme ?? const ShimmerPlaceholderThemeData(),
         circlePercentageTheme =
             circlePercentageTheme ?? const CirclePercentageThemeData(),
-        toastTheme = toastTheme ?? const ToastThemeData();
+        toastTheme = toastTheme ?? const ToastThemeData(),
+        pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
   /// If any of the passed parameters are null, or parameter isn't specified,
   /// the value will be copied from the current instance.
   MetricsThemeData copyWith({
-    MetricWidgetThemeData metricWidgetTheme,
+    MetricsWidgetThemeData metricsWidgetTheme,
     BuildResultsThemeData buildResultTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     DeleteDialogThemeData deleteDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
     AddProjectGroupCardThemeData addProjectGroupCardTheme,
-    MetricWidgetThemeData inactiveWidgetTheme,
+    MetricsWidgetThemeData inactiveWidgetTheme,
     MetricsButtonThemeData metricsButtonTheme,
     TextFieldThemeData textFieldTheme,
     DropdownThemeData dropdownTheme,
@@ -181,14 +194,16 @@ class MetricsThemeData {
     SparklineThemeData performanceSparklineTheme,
     ProjectBuildStatusThemeData projectBuildStatusTheme,
     ToggleThemeData toggleTheme,
+    UserMenuButtonThemeData userMenuButtonTheme,
     UserMenuThemeData userMenuTheme,
     TextPlaceholderThemeData textPlaceholderTheme,
     ShimmerPlaceholderThemeData inputPlaceholderTheme,
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
+    PageTitleThemeData pageTitleTheme,
   }) {
     return MetricsThemeData(
-      metricWidgetTheme: metricWidgetTheme ?? this.metricWidgetTheme,
+      metricsWidgetTheme: metricsWidgetTheme ?? this.metricsWidgetTheme,
       buildResultTheme: buildResultTheme ?? this.buildResultTheme,
       projectGroupDialogTheme:
           projectGroupDialogTheme ?? this.projectGroupDialogTheme,
@@ -212,6 +227,7 @@ class MetricsThemeData {
       projectBuildStatusTheme:
           projectBuildStatusTheme ?? this.projectBuildStatusTheme,
       toggleTheme: toggleTheme ?? this.toggleTheme,
+      userMenuButtonTheme: userMenuButtonTheme ?? this.userMenuButtonTheme,
       userMenuTheme: userMenuTheme ?? this.userMenuTheme,
       textPlaceholderTheme: textPlaceholderTheme ?? this.textPlaceholderTheme,
       inputPlaceholderTheme:
@@ -219,6 +235,7 @@ class MetricsThemeData {
       circlePercentageTheme:
           circlePercentageTheme ?? this.circlePercentageTheme,
       toastTheme: toastTheme ?? this.toastTheme,
+      pageTitleTheme: pageTitleTheme ?? this.pageTitleTheme,
     );
   }
 }

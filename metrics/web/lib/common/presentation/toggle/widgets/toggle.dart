@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
-/// A widget that used to toggle the on/off state of a single setting.
-class Toggle extends StatefulWidget {
+class Toggle extends StatelessWidget {
   /// Indicates whether this toggle is enabled or not.
   final bool value;
 
@@ -21,39 +21,28 @@ class Toggle extends StatefulWidget {
         super(key: key);
 
   @override
-  _ToggleState createState() => _ToggleState();
-}
-
-class _ToggleState extends State<Toggle> {
-  /// Indicates whether this toggle is hovered.
-  bool _isHovered = false;
-
-  @override
   Widget build(BuildContext context) {
     final toggleTheme = MetricsTheme.of(context).toggleTheme;
-    final inactiveColor =
-        _isHovered ? toggleTheme.inactiveHoverColor : toggleTheme.inactiveColor;
-    final activeColor =
-        _isHovered ? toggleTheme.activeHoverColor : toggleTheme.activeColor;
 
-    return MouseRegion(
-      onEnter: (_) => _setHovered(true),
-      onExit: (_) => _setHovered(false),
-      child: FlutterSwitch(
-        width: 35.0,
-        height: 20.0,
-        toggleSize: 16.0,
-        padding: 2.0,
-        onToggle: widget.onToggle,
-        value: widget.value,
-        inactiveColor: inactiveColor,
-        activeColor: activeColor,
-      ),
+    return TappableArea(
+      builder: (context, isHovered, child) {
+        final inactiveColor = isHovered
+            ? toggleTheme.inactiveHoverColor
+            : toggleTheme.inactiveColor;
+        final activeColor =
+            isHovered ? toggleTheme.activeHoverColor : toggleTheme.activeColor;
+
+        return FlutterSwitch(
+          width: 35.0,
+          height: 20.0,
+          toggleSize: 16.0,
+          padding: 2.0,
+          onToggle: onToggle,
+          value: value,
+          inactiveColor: inactiveColor,
+          activeColor: activeColor,
+        );
+      },
     );
-  }
-
-  /// Changes the [_isHovered] state to the given [isHovered] value.
-  void _setHovered(bool isHovered) {
-    setState(() => _isHovered = isHovered);
   }
 }

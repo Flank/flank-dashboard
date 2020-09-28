@@ -1,5 +1,5 @@
 import '../../../common/config/browser_name.dart';
-import '../../../common/config/device.dart';
+import '../../../common/model/device.dart';
 import '../../common/runner/process_runner.dart';
 import '../command/drive_command.dart';
 import '../command/flutter_command.dart';
@@ -11,7 +11,7 @@ class FlutterDriveProcessRunner implements ProcessRunner {
   final FlutterDriveEnvironment environment;
 
   final _driveCommand = DriveCommand()
-    ..target('lib/app.dart')
+    ..target('test_driver/app.dart')
     ..driver('test_driver/app_test.dart')
     ..device(Device.chrome)
     ..noKeepAppRunning();

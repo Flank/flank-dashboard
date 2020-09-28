@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/widgets/metrics_page_title.dart';
+import 'package:metrics/common/presentation/page_title/widgets/metrics_page_title.dart';
 
 /// A common [Scaffold] widget for metrics pages.
 class MetricsScaffold extends StatelessWidget {
@@ -39,7 +39,6 @@ class MetricsScaffold extends StatelessWidget {
     const _pageElementsPadding = EdgeInsets.only(bottom: 40.0);
 
     return Scaffold(
-      endDrawer: drawer,
       body: Center(
         child: Container(
           constraints: BoxConstraints.tight(

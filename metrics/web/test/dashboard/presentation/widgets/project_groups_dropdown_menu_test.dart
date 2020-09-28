@@ -130,8 +130,8 @@ void main() {
         });
 
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        const pointerExitEvent = PointerEnterEvent();
-        mouseRegion.onEnter(pointerExitEvent);
+        const pointerEnterEvent = PointerEnterEvent();
+        mouseRegion.onEnter(pointerEnterEvent);
 
         await tester.pump();
 
@@ -225,8 +225,8 @@ void main() {
         });
 
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        const pointerExitEvent = PointerEnterEvent();
-        mouseRegion.onEnter(pointerExitEvent);
+        const pointerEnterEvent = PointerEnterEvent();
+        mouseRegion.onEnter(pointerEnterEvent);
 
         await tester.pump();
 

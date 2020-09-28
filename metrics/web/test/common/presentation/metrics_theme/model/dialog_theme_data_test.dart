@@ -15,6 +15,7 @@ void main() {
         expect(themeData.primaryColor, isNotNull);
         expect(themeData.accentColor, isNotNull);
         expect(themeData.backgroundColor, isNotNull);
+        expect(themeData.barrierColor, isNotNull);
         expect(themeData.closeIconColor, isNotNull);
       },
     );
@@ -35,6 +36,7 @@ void main() {
       const primaryColor = Colors.blue;
       const accentColor = Colors.red;
       const backgroundColor = Colors.white;
+      const barrierColor = Colors.yellow;
       const closeIconColor = Colors.black;
 
       const titleTextStyle = defaultTextStyle;
@@ -44,6 +46,7 @@ void main() {
         primaryColor: primaryColor,
         accentColor: accentColor,
         backgroundColor: backgroundColor,
+        barrierColor: barrierColor,
         closeIconColor: closeIconColor,
         titleTextStyle: titleTextStyle,
         errorTextStyle: errorTextStyle,
@@ -52,6 +55,7 @@ void main() {
       expect(themeData.primaryColor, equals(primaryColor));
       expect(themeData.accentColor, equals(accentColor));
       expect(themeData.backgroundColor, equals(backgroundColor));
+      expect(themeData.barrierColor, equals(barrierColor));
       expect(themeData.closeIconColor, equals(closeIconColor));
       expect(themeData.titleTextStyle, equals(titleTextStyle));
       expect(themeData.errorTextStyle, equals(errorTextStyle));

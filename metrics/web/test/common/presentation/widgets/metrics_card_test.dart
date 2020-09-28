@@ -4,6 +4,8 @@ import 'package:metrics/common/presentation/widgets/metrics_card.dart';
 
 import '../../../test_utils/finder_util.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsCard", () {
     const child = Text("child");

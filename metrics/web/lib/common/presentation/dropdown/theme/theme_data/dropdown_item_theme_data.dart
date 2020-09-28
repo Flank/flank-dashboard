@@ -11,10 +11,14 @@ class DropdownItemThemeData {
   /// A [TextStyle] of the dropdown item text.
   final TextStyle textStyle;
 
+  /// A [TextStyle] of the dropdown item text when this item is hovered.
+  final TextStyle hoverTextStyle;
+
   /// Creates the [DropdownItemThemeData].
   const DropdownItemThemeData({
     this.backgroundColor,
     this.hoverColor,
     this.textStyle,
+    this.hoverTextStyle,
   });
 }

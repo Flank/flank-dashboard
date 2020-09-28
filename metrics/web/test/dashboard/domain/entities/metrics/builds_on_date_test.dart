@@ -3,6 +3,8 @@ import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   test(
     "Can't create the BuildsOnDate with the date that contains non-zero time",

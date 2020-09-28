@@ -1,10 +1,7 @@
-// https://github.com/software-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
@@ -17,6 +14,10 @@ import 'package:provider/provider.dart';
 import '../../../../test_utils/auth_notifier_mock.dart';
 import '../../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../../test_utils/test_injection_container.dart';
+import '../../../../test_utils/theme_notifier_mock.dart';
+
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
 
 void main() {
   group("MetricsDrawer", () {
@@ -35,66 +36,6 @@ void main() {
         await tester.pump();
 
         verify(themeNotifier.changeTheme()).called(equals(1));
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the theme checkbox",
-      (WidgetTester tester) async {
-        final themeNotifier = ThemeNotifierMock();
-
-        when(themeNotifier.isDark).thenReturn(false);
-
-        await tester.pumpWidget(MetricsDrawerTestbed(
-          themeNotifier: themeNotifier,
-        ));
-
-        final finder = find.ancestor(
-          of: find.text(CommonStrings.darkTheme),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the 'Project groups' tile",
-      (WidgetTester tester) async {
-        final themeNotifier = ThemeNotifierMock();
-
-        when(themeNotifier.isDark).thenReturn(false);
-
-        await tester.pumpWidget(MetricsDrawerTestbed(
-          themeNotifier: themeNotifier,
-        ));
-
-        final finder = find.ancestor(
-          of: find.text(CommonStrings.projectGroups),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the 'Log out' tile",
-      (WidgetTester tester) async {
-        final themeNotifier = ThemeNotifierMock();
-
-        when(themeNotifier.isDark).thenReturn(false);
-
-        await tester.pumpWidget(MetricsDrawerTestbed(
-          themeNotifier: themeNotifier,
-        ));
-
-        final finder = find.ancestor(
-          of: find.text(CommonStrings.logOut),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
       },
     );
 
@@ -177,7 +118,3 @@ class MetricsDrawerTestbed extends StatelessWidget {
     );
   }
 }
-
-class ThemeNotifierMock extends Mock
-    with ChangeNotifier
-    implements ThemeNotifier {}

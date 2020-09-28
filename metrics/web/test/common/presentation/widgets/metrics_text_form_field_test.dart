@@ -8,12 +8,18 @@ import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart
 import '../../../test_utils/finder_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("MetricsTextFormField", () {
+    const prefixIconColor = Colors.red;
+    const focusedPrefixIconColor = Colors.green;
     const metricsThemeData = MetricsThemeData(
       textFieldTheme: TextFieldThemeData(
         focusColor: Colors.grey,
         hoverBorderColor: Colors.lightBlue,
+        prefixIconColor: prefixIconColor,
+        focusedPrefixIconColor: focusedPrefixIconColor,
         textStyle: TextStyle(
           color: Colors.black,
           fontSize: 14.0,
@@ -30,6 +36,20 @@ void main() {
     );
 
     String defaultValidator(String value) => null;
+
+    Icon _findPrefixIcon(WidgetTester tester) {
+      final textField = FinderUtil.findTextField(tester);
+      final prefixIcon = textField.decoration.prefixIcon;
+
+      final prefixIconFinder = find.descendant(
+        of: find.byWidget(prefixIcon),
+        matching: find.byType(Icon),
+      );
+
+      final icon = tester.widget<Icon>(prefixIconFinder);
+
+      return icon;
+    }
 
     testWidgets(
       "throws an AssertionError if the given obscure text is null",
@@ -168,25 +188,60 @@ void main() {
     );
 
     testWidgets(
-      "applies the given prefix icon as the text form field prefix icon",
+      "builds the given widget according to the given builder as prefix icon in the metrics text form field",
       (tester) async {
         const searchIcon = Icon(Icons.search);
 
-        await tester.pumpWidget(const _MetricsTextFormFieldTestbed(
-          prefixIcon: searchIcon,
+        await tester.pumpWidget(_MetricsTextFormFieldTestbed(
+          prefixIconBuilder: (context, color) {
+            return searchIcon;
+          },
         ));
 
-        final textField = FinderUtil.findTextField(tester);
-        final prefixIconWidget = textField.decoration.prefixIcon;
+        final icon = _findPrefixIcon(tester);
 
-        final prefixIcon = tester.widget<Icon>(
-          find.descendant(
-            of: find.byWidget(prefixIconWidget),
-            matching: find.byType(Icon),
-          ),
-        );
+        expect(icon, equals(searchIcon));
+      },
+    );
 
-        expect(prefixIcon, equals(searchIcon));
+    testWidgets(
+      "builds the given prefix icon widget with prefix color from the metrics theme according to the given builder when the metrics text field is not focused",
+      (tester) async {
+        await tester.pumpWidget(_MetricsTextFormFieldTestbed(
+          metricsThemeData: metricsThemeData,
+          prefixIconBuilder: (context, color) {
+            return Icon(
+              Icons.search,
+              color: color,
+            );
+          },
+        ));
+
+        final icon = _findPrefixIcon(tester);
+
+        expect(icon.color, equals(prefixIconColor));
+      },
+    );
+
+    testWidgets(
+      "builds the given prefix icon widget with prefix focus color from the metrics theme according to the given builder when the metrics text field is focused",
+      (tester) async {
+        await tester.pumpWidget(_MetricsTextFormFieldTestbed(
+          metricsThemeData: metricsThemeData,
+          prefixIconBuilder: (context, color) {
+            return Icon(
+              Icons.search,
+              color: color,
+            );
+          },
+        ));
+
+        await tester.tap(find.byType(TextField));
+        await tester.pump();
+
+        final icon = _findPrefixIcon(tester);
+
+        expect(icon.color, equals(focusedPrefixIconColor));
       },
     );
 
@@ -260,7 +315,7 @@ void main() {
         await tester.pump();
 
         final textField = FinderUtil.findTextField(tester);
-        final borderColor = textField.decoration.border.borderSide.color;
+        final borderColor = textField.decoration.enabledBorder.borderSide.color;
 
         expect(borderColor, equals(themeHoverBorderColor));
       },
@@ -387,8 +442,13 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   /// A type of keyboard to use for editing the text.
   final TextInputType keyboardType;
 
-  /// A prefix icon for the text field under tests.
-  final Widget prefixIcon;
+  /// A [PrefixBuilder] that builds a prefix icon for this text field
+  /// depending on the passed parameters.
+  final PrefixBuilder prefixIconBuilder;
+
+  /// A prefix icon for the text field under tests that appears
+  /// once it's focused.
+  final Widget focusPrefixIcon;
 
   /// A suffix icon for the text field under tests.
   final Widget suffixIcon;
@@ -412,7 +472,8 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
     this.controller,
     this.validator,
     this.onChanged,
-    this.prefixIcon,
+    this.prefixIconBuilder,
+    this.focusPrefixIcon,
     this.suffixIcon,
     this.hint,
     this.label,
@@ -429,7 +490,7 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
         onChanged: onChanged,
         obscureText: obscureText,
         keyboardType: keyboardType,
-        prefixIcon: prefixIcon,
+        prefixIconBuilder: prefixIconBuilder,
         suffixIcon: suffixIcon,
         hint: hint,
         label: label,

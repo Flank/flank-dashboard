@@ -1,10 +1,11 @@
-// https://github.com/software-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
+
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("PlaceholderBar", () {
@@ -131,11 +132,11 @@ class _PlaceholderBarTestbed extends StatelessWidget {
 
   /// Creates the [_PlaceholderBarTestbed] with the given width.
   ///
-  /// If the [width] is not specified, the `2.0` used.
-  /// If the [height] is not specified, the `2.0` used.
+  /// If the [width] is not specified, the `1.0` used.
+  /// If the [height] is not specified, the `1.0` used.
   const _PlaceholderBarTestbed({
-    this.width = 2.0,
-    this.height = 2.0,
+    this.width = 1.0,
+    this.height = 1.0,
     this.color,
   });
 

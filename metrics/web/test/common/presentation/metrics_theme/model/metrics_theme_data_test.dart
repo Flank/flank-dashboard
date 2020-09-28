@@ -13,11 +13,11 @@ import 'package:metrics/common/presentation/metrics_theme/model/circle_percentag
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metric_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_table_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/project_metrics_tile_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/theme_data/project_build_status_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
@@ -26,21 +26,25 @@ import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placehol
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
+import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/attention_level/toast_attention_level.dart';
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 import 'package:test/test.dart';
+
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("MetricsThemeData", () {
     test(
-      "creates a theme with the default theme data for metric widgets if the parameters is not specified",
+      "creates a theme with the default theme data for metrics widgets if the parameters is not specified",
       () {
         const themeData = MetricsThemeData();
 
-        expect(themeData.metricWidgetTheme, isNotNull);
+        expect(themeData.metricsWidgetTheme, isNotNull);
         expect(themeData.inactiveWidgetTheme, isNotNull);
         expect(themeData.buildResultTheme, isNotNull);
         expect(themeData.deleteDialogTheme, isNotNull);
@@ -56,19 +60,21 @@ void main() {
         expect(themeData.buildNumberScorecardTheme, isNotNull);
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
+        expect(themeData.userMenuButtonTheme, isNotNull);
         expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.toggleTheme, isNotNull);
         expect(themeData.textPlaceholderTheme, isNotNull);
         expect(themeData.inputPlaceholderTheme, isNotNull);
         expect(themeData.toastTheme, isNotNull);
+        expect(themeData.pageTitleTheme, isNotNull);
       },
     );
 
     test(
-      "creates a theme with the default metric widgets theme data if nulls are passed",
+      "creates a theme with the default metrics widgets theme data if nulls are passed",
       () {
         const themeData = MetricsThemeData(
-          metricWidgetTheme: null,
+          metricsWidgetTheme: null,
           inactiveWidgetTheme: null,
           buildResultTheme: null,
           projectGroupCardTheme: null,
@@ -85,14 +91,16 @@ void main() {
           performanceSparklineTheme: null,
           projectBuildStatusTheme: null,
           toggleTheme: null,
+          userMenuButtonTheme: null,
           userMenuTheme: null,
           textPlaceholderTheme: null,
           inputPlaceholderTheme: null,
           circlePercentageTheme: null,
           toastTheme: null,
+          pageTitleTheme: null,
         );
 
-        expect(themeData.metricWidgetTheme, isNotNull);
+        expect(themeData.metricsWidgetTheme, isNotNull);
         expect(themeData.inactiveWidgetTheme, isNotNull);
         expect(themeData.buildResultTheme, isNotNull);
         expect(themeData.projectGroupCardTheme, isNotNull);
@@ -109,11 +117,13 @@ void main() {
         expect(themeData.performanceSparklineTheme, isNotNull);
         expect(themeData.projectBuildStatusTheme, isNotNull);
         expect(themeData.toggleTheme, isNotNull);
+        expect(themeData.userMenuButtonTheme, isNotNull);
         expect(themeData.userMenuTheme, isNotNull);
         expect(themeData.textPlaceholderTheme, isNotNull);
         expect(themeData.inputPlaceholderTheme, isNotNull);
         expect(themeData.circlePercentageTheme, isNotNull);
         expect(themeData.toastTheme, isNotNull);
+        expect(themeData.pageTitleTheme, isNotNull);
       },
     );
 
@@ -124,7 +134,7 @@ void main() {
         const accentColor = Colors.orange;
         const backgroundColor = Colors.black;
 
-        const metricWidgetTheme = MetricWidgetThemeData(
+        const metricsWidgetTheme = MetricsWidgetThemeData(
           primaryColor: primaryColor,
           accentColor: accentColor,
           backgroundColor: backgroundColor,
@@ -137,7 +147,9 @@ void main() {
         );
 
         const projectGroupCardTheme = ProjectGroupCardThemeData(
-          primaryColor: primaryColor,
+          accentButtonStyle: MetricsButtonStyle(
+            color: primaryColor,
+          ),
         );
 
         const addProjectGroupTheme = AddProjectGroupCardThemeData(
@@ -165,7 +177,7 @@ void main() {
           backgroundColor: Colors.black,
         );
 
-        const inactiveTheme = MetricWidgetThemeData(
+        const inactiveTheme = MetricsWidgetThemeData(
           primaryColor: primaryColor,
         );
 
@@ -175,7 +187,7 @@ void main() {
           ),
         );
 
-        const textFieldTheme = TextFieldThemeData(focusColor: Colors.black);
+        const textFieldTheme = TextFieldThemeData(focusColor: Colors.grey);
 
         const dropdownTheme = DropdownThemeData(
           backgroundColor: backgroundColor,
@@ -208,6 +220,10 @@ void main() {
 
         const projectBuildStatusTheme = ProjectBuildStatusThemeData();
 
+        const userMenuButtonTheme = UserMenuButtonThemeData(
+          hoverColor: Colors.white,
+        );
+
         const userMenuTheme = UserMenuThemeData(
           backgroundColor: Colors.white,
         );
@@ -238,10 +254,14 @@ void main() {
           ),
         );
 
+        const pageTitleTheme = PageTitleThemeData(
+          iconColor: Colors.blue,
+        );
+
         const themeData = MetricsThemeData();
 
         final copiedTheme = themeData.copyWith(
-          metricWidgetTheme: metricWidgetTheme,
+          metricsWidgetTheme: metricsWidgetTheme,
           buildResultTheme: buildResultsTheme,
           projectGroupCardTheme: projectGroupCardTheme,
           addProjectGroupCardTheme: addProjectGroupTheme,
@@ -258,14 +278,16 @@ void main() {
           performanceSparklineTheme: performanceSparklineTheme,
           projectBuildStatusTheme: projectBuildStatusTheme,
           toggleTheme: toggleTheme,
+          userMenuButtonTheme: userMenuButtonTheme,
           userMenuTheme: userMenuTheme,
           textPlaceholderTheme: textPlaceholderTheme,
           inputPlaceholderTheme: inputPlaceholderTheme,
           circlePercentageTheme: circlePercentageTheme,
           toastTheme: toastTheme,
+          pageTitleTheme: pageTitleTheme,
         );
 
-        expect(copiedTheme.metricWidgetTheme, equals(metricWidgetTheme));
+        expect(copiedTheme.metricsWidgetTheme, equals(metricsWidgetTheme));
         expect(copiedTheme.inactiveWidgetTheme, equals(inactiveTheme));
         expect(copiedTheme.buildResultTheme, equals(buildResultsTheme));
         expect(
@@ -303,6 +325,7 @@ void main() {
           equals(projectBuildStatusTheme),
         );
         expect(copiedTheme.toggleTheme, equals(toggleTheme));
+        expect(copiedTheme.userMenuButtonTheme, equals(userMenuButtonTheme));
         expect(copiedTheme.userMenuTheme, equals(userMenuTheme));
         expect(copiedTheme.textPlaceholderTheme, equals(textPlaceholderTheme));
         expect(
@@ -314,6 +337,7 @@ void main() {
           equals(circlePercentageTheme),
         );
         expect(copiedTheme.toastTheme, equals(toastTheme));
+        expect(copiedTheme.pageTitleTheme, equals(pageTitleTheme));
       },
     );
 
@@ -325,8 +349,8 @@ void main() {
 
         expect(themeData, isNot(copiedTheme));
         expect(
-          themeData.metricWidgetTheme,
-          equals(copiedTheme.metricWidgetTheme),
+          themeData.metricsWidgetTheme,
+          equals(copiedTheme.metricsWidgetTheme),
         );
         expect(
           themeData.buildResultTheme,
@@ -384,6 +408,10 @@ void main() {
           equals(copiedTheme.buildNumberScorecardTheme),
         );
         expect(themeData.toggleTheme, equals(copiedTheme.toggleTheme));
+        expect(
+          themeData.userMenuButtonTheme,
+          equals(copiedTheme.userMenuButtonTheme),
+        );
         expect(themeData.userMenuTheme, equals(copiedTheme.userMenuTheme));
         expect(
           themeData.textPlaceholderTheme,
@@ -398,6 +426,7 @@ void main() {
           equals(copiedTheme.circlePercentageTheme),
         );
         expect(themeData.toastTheme, equals(copiedTheme.toastTheme));
+        expect(themeData.pageTitleTheme, equals(copiedTheme.pageTitleTheme));
       },
     );
   });

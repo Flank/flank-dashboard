@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
@@ -11,6 +12,7 @@ import 'package:metrics/common/presentation/routes/observers/overlay_entry_route
 import 'package:metrics/common/presentation/routes/observers/toast_route_observer.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart';
 import 'package:metrics/util/favicon.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +30,7 @@ class _MetricsAppState extends State<MetricsApp> {
 
   /// A route observer used to close all opened overlay entries
   /// when the page route changes.
-  final  _userMenuRouteObserver = OverlayEntryRouteObserver();
+  final _userMenuRouteObserver = OverlayEntryRouteObserver();
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,12 @@ class _MetricsAppState extends State<MetricsApp> {
           return MaterialApp(
             title: CommonStrings.metrics,
             debugShowCheckedModeBanner: false,
+            builder: (context, child) {
+              return ScrollConfiguration(
+                behavior: MetricsScrollBehavior(),
+                child: child,
+              );
+            },
             initialRoute: '/',
             onGenerateRoute: (settings) => RouteGenerator.generateRoute(
               settings: settings,
@@ -53,31 +61,41 @@ class _MetricsAppState extends State<MetricsApp> {
               fontFamily: TextStyleConfig.defaultFontFamily,
               brightness: Brightness.light,
               primarySwatch: Colors.teal,
+              splashColor: ColorConfig.inkResponseColor,
+              highlightColor: ColorConfig.inkResponseColor,
               primaryColorBrightness: Brightness.light,
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
+                splashColor: ColorConfig.inkResponseColor,
+                highlightColor: ColorConfig.inkResponseColor,
               ),
               scaffoldBackgroundColor: LightMetricsThemeData.scaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
                 filled: true,
-                fillColor: Colors.white,
-                hoverColor: Colors.black,
+                fillColor: LightMetricsThemeData.inputColor,
+                hoverColor: LightMetricsThemeData.inputHoverColor,
                 border: TextFieldConfig.border,
+                enabledBorder: TextFieldConfig.border,
                 focusedBorder: LightMetricsThemeData.inputFocusedBorder,
                 errorStyle: TextFieldConfig.errorStyle,
                 errorBorder: TextFieldConfig.errorBorder,
                 focusedErrorBorder: TextFieldConfig.errorBorder,
-                hintStyle: TextFieldConfig.hintStyle,
+                hintStyle: LightMetricsThemeData.hintStyle,
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
               ),
+              dialogTheme: const DialogTheme(elevation: 0.0),
             ),
             darkTheme: ThemeData(
               fontFamily: TextStyleConfig.defaultFontFamily,
               brightness: Brightness.dark,
               primarySwatch: Colors.teal,
+              splashColor: ColorConfig.inkResponseColor,
+              highlightColor: ColorConfig.inkResponseColor,
               primaryColorBrightness: Brightness.dark,
               buttonTheme: const ButtonThemeData(
                 height: DimensionsConfig.buttonHeight,
+                splashColor: ColorConfig.inkResponseColor,
+                highlightColor: ColorConfig.inkResponseColor,
               ),
               scaffoldBackgroundColor: DarkMetricsThemeData.scaffoldColor,
               inputDecorationTheme: const InputDecorationTheme(
@@ -85,13 +103,15 @@ class _MetricsAppState extends State<MetricsApp> {
                 fillColor: DarkMetricsThemeData.inputColor,
                 hoverColor: Colors.black,
                 border: TextFieldConfig.border,
+                enabledBorder: TextFieldConfig.border,
                 focusedBorder: DarkMetricsThemeData.inputFocusedBorder,
                 errorStyle: TextFieldConfig.errorStyle,
                 errorBorder: TextFieldConfig.errorBorder,
                 focusedErrorBorder: TextFieldConfig.errorBorder,
-                hintStyle: TextFieldConfig.hintStyle,
+                hintStyle: DarkMetricsThemeData.hintStyle,
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
               ),
+              dialogTheme: const DialogTheme(elevation: 0.0),
             ),
           );
         },

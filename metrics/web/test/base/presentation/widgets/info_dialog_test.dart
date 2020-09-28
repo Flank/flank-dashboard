@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 void main() {
   group("InfoDialog", () {
@@ -97,13 +97,16 @@ void main() {
           ),
         );
 
-        final paddingWidget = tester.widget<Padding>(
-          find.byWidgetPredicate(
-            (widget) => widget is Padding && widget.child == closeIcon,
-          ),
+        final stackFinder = find.ancestor(
+          of: find.byWidget(closeIcon),
+          matching: find.byType(Stack),
         );
 
-        expect(paddingWidget.padding, equals(padding));
+        final containerWidget = tester.widget<Container>(
+          find.descendant(of: stackFinder, matching: find.byType(Container)),
+        );
+
+        expect(containerWidget.padding, equals(padding));
       },
     );
 
@@ -288,7 +291,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a hand cursor to the close icon button",
+      "applies a tappable area to the close icon button",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _InfoDialogTestbed(
@@ -299,7 +302,7 @@ void main() {
 
         final finder = find.ancestor(
           of: find.byIcon(Icons.close),
-          matching: find.byType(HandCursor),
+          matching: find.byType(TappableArea),
         );
 
         expect(finder, findsOneWidget);

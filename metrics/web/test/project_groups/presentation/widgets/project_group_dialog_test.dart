@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
-import 'package:metrics/base/presentation/widgets/hand_cursor.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/base/presentation/widgets/value_form_field.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_inactive_button.dart';
@@ -30,6 +29,8 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("ProjectGroupDialog", () {
     const title = 'title';
@@ -37,6 +38,22 @@ void main() {
     const loadingText = 'loading...';
     const backgroundColor = Colors.red;
     const contentBorderColor = Colors.yellow;
+    const testText = "test";
+
+    final searchFieldFinder = find.byWidgetPredicate(
+      (widget) {
+        return widget is MetricsTextFormField &&
+            widget.hint == CommonStrings.searchForProject;
+      },
+    );
+
+    final groupNameFieldFinder = find.byWidgetPredicate(
+      (widget) {
+        return widget is MetricsTextFormField &&
+            widget.hint == ProjectGroupsStrings.nameYourGroup;
+      },
+    );
+
     const titleTextStyle = TextStyle(
       color: Colors.grey,
     );
@@ -91,25 +108,6 @@ void main() {
         });
 
         expect(tester.takeException(), isAssertionError);
-      },
-    );
-
-    testWidgets(
-      "applies a hand cursor to the project group dialog action button",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_ProjectGroupDialogTestbed(
-            projectGroupsNotifier: projectGroupsNotifier,
-            strategy: strategy,
-          ));
-        });
-
-        final finder = find.ancestor(
-          of: find.text(buttonText),
-          matching: find.byType(HandCursor),
-        );
-
-        expect(finder, findsOneWidget);
       },
     );
 
@@ -238,7 +236,7 @@ void main() {
         });
 
         expect(
-          find.widgetWithText(MetricsPositiveButton, text),
+          find.widgetWithText(MetricsInactiveButton, text),
           findsOneWidget,
         );
       },
@@ -257,12 +255,7 @@ void main() {
           ));
         });
 
-        final groupNameTextFormFieldFinder = find.ancestor(
-          of: find.text(ProjectGroupsStrings.nameYourGroup),
-          matching: find.byType(TextFormField),
-        );
-
-        await tester.enterText(groupNameTextFormFieldFinder, 'some group name');
+        await tester.enterText(groupNameFieldFinder, 'some group name');
         await tester.pump();
 
         expect(find.byType(MetricsPositiveButton), findsOneWidget);
@@ -278,12 +271,7 @@ void main() {
           ));
         });
 
-        final groupNameTextFormFieldFinder = find.ancestor(
-          of: find.text(ProjectGroupsStrings.nameYourGroup),
-          matching: find.byType(TextFormField),
-        );
-
-        await tester.enterText(groupNameTextFormFieldFinder, '');
+        await tester.enterText(groupNameFieldFinder, '');
         await tester.pumpAndSettle();
 
         expect(find.byType(MetricsInactiveButton), findsOneWidget);
@@ -352,12 +340,7 @@ void main() {
           ));
         });
 
-        final groupNameTextFormFieldFinder = find.ancestor(
-          of: find.text(ProjectGroupsStrings.nameYourGroup),
-          matching: find.byType(TextFormField),
-        );
-
-        await tester.enterText(groupNameTextFormFieldFinder, '');
+        await tester.enterText(groupNameFieldFinder, '');
         await tester.pumpAndSettle();
 
         expect(find.byType(MetricsInactiveButton), findsOneWidget);
@@ -381,12 +364,7 @@ void main() {
           ));
         });
 
-        final groupNameTextFormFieldFinder = find.ancestor(
-          of: find.text(ProjectGroupsStrings.nameYourGroup),
-          matching: find.byType(TextFormField),
-        );
-
-        await tester.enterText(groupNameTextFormFieldFinder, '');
+        await tester.enterText(groupNameFieldFinder, '');
         await tester.pumpAndSettle();
 
         expect(find.byType(MetricsInactiveButton), findsOneWidget);
@@ -406,6 +384,9 @@ void main() {
             projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
+
+        await tester.enterText(groupNameFieldFinder, testText);
+        await tester.pump();
 
         await tester.tap(find.text(strategy.text));
         await tester.pump();
@@ -440,10 +421,13 @@ void main() {
           ));
         });
 
+        await tester.enterText(groupNameFieldFinder, testText);
+        await tester.pump();
+
         await tester.tap(find.text(strategy.text));
         await tester.pump();
 
-        verify(strategy.action(any, groupId, groupName, projectIds))
+        verify(strategy.action(any, groupId, testText, projectIds))
             .called(equals(1));
       },
     );
@@ -484,6 +468,9 @@ void main() {
           ));
         });
 
+        await tester.enterText(groupNameFieldFinder, testText);
+        await tester.pump();
+
         await tester.tap(find.text(strategy.text));
         await tester.pump();
         await tester.idle();
@@ -506,6 +493,9 @@ void main() {
             projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
+
+        await tester.enterText(groupNameFieldFinder, testText);
+        await tester.pump();
 
         await tester.tap(find.text(strategy.text));
         await tester.pumpAndSettle();
@@ -543,11 +533,18 @@ void main() {
         });
 
         final finder = find.byWidgetPredicate((widget) {
-          if (widget is MetricsTextFormField) {
-            final image = widget.prefixIcon as Image;
-            final networkImage = image?.image as NetworkImage;
+          if (widget is TextField && widget.decoration?.prefixIcon != null) {
+            final iconFinder = find.descendant(
+              of: find.byWidget(widget.decoration.prefixIcon),
+              matching: find.byType(Image),
+            );
 
-            return networkImage?.url == 'icons/search.svg';
+            final image = tester.widget<Image>(iconFinder);
+
+            final networkImage = image?.image as NetworkImage;
+            final imageUrl = networkImage?.url;
+
+            return imageUrl == 'icons/search.svg';
           }
 
           return false;
@@ -568,12 +565,6 @@ void main() {
             projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
-
-        final searchFieldFinder = find.byWidgetPredicate(
-          (widget) =>
-              widget is MetricsTextFormField &&
-              widget.hint == CommonStrings.searchForProject,
-        );
 
         await tester.enterText(searchFieldFinder, searchText);
 
@@ -835,6 +826,9 @@ void main() {
           ));
         });
 
+        await tester.enterText(groupNameFieldFinder, testText);
+        await tester.pump();
+
         await tester.tap(find.text(strategy.text));
         await tester.pump();
 
@@ -856,6 +850,9 @@ void main() {
             projectGroupsNotifier: projectGroupsNotifier,
           ));
         });
+
+        await tester.enterText(groupNameFieldFinder, testText);
+        await tester.pump();
 
         await tester.tap(find.text(strategy.text));
         await tester.pump();

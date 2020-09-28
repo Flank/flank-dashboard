@@ -22,7 +22,7 @@ void main() {
     testWidgets(
       "displays the given text",
       (WidgetTester tester) async {
-        const text = 'text';
+        const text = 'test';
 
         await tester.pumpWidget(
           const _TextPlaceholderTestbed(text: text),
