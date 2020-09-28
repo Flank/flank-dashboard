@@ -35,7 +35,6 @@ jobs:
           release-channel: beta
           version: 2.10.0-110.5.beta
 
-
       - name: Configure Flutter
         run: flutter config --enable-web && flutter doctor
         working-directory: metrics/web/
@@ -65,7 +64,22 @@ jobs:
         run: flutter clean && flutter build web --release
         working-directory: metrics/web/
 
-      - name: Deploy to Firebase
+      - name: Deploy HTML version to Firebase
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: firebase deploy --only hosting
+        run: firebase deploy --only hosting:metrics-d9c67
+        working-directory: metrics/web/
+
+      - name: Switch to Flutter latest master version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: flutter channel master && flutter upgrade
+        working-directory: metrics/web/
+
+      - name: Build release app using SKIA
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_USE_SKIA=true
+        working-directory: metrics/web/
+
+      - name: Deploy SKIA version to Firebase
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: firebase deploy --only hosting:metrics-skia
         working-directory: metrics/web/
