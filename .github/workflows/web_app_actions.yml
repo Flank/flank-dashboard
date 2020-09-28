@@ -70,9 +70,9 @@ jobs:
         working-directory: metrics/web/
 
       - name: Switch to Flutter latest master version
-          if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-          run: flutter channel master && flutter upgrade
-          working-directory: metrics/web/
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: flutter channel master && flutter upgrade
+        working-directory: metrics/web/
 
       - name: Build release app using SKIA
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
