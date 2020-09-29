@@ -1,7 +1,10 @@
 import 'package:metrics/auth/domain/entities/auth_credentials.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/entities/email_domain_validation_result.dart';
+import 'package:metrics/auth/domain/entities/theme_type.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
+import 'package:metrics/auth/domain/entities/user_profile.dart';
+import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 
 /// A base class for all user repositories.
 ///
@@ -37,4 +40,19 @@ abstract class UserRepository {
 
   /// Provides an ability to sign out a user.
   Future<void> signOut();
+
+  /// Provides an ability to create a user profile.
+  ///
+  /// Throws a [PersistentStoreException] if creating failed.
+  Future<void> createUserProfile(String id, ThemeType selectedTheme);
+
+  /// Provider an ability to receive the [UserProfile] updates.
+  ///
+  /// Emits a [PersistentStoreException] if loading updates failed.
+  Stream<UserProfile> userProfileStream(String id);
+
+  /// Provides an ability to update the user profile.
+  ///
+  /// Throws a [PersistentStoreException] if updating failed.
+  Future<void> updateUserProfile(String id, ThemeType selectedTheme);
 }

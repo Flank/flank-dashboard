@@ -9,7 +9,9 @@ import 'package:metrics/auth/domain/entities/auth_credentials.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/entities/email_domain_validation_result.dart';
+import 'package:metrics/auth/domain/entities/theme_type.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
+import 'package:metrics/auth/domain/entities/user_profile.dart';
 import 'package:metrics/auth/domain/repositories/user_repository.dart';
 
 /// Provides methods for interaction with the [FirebaseAuth].
@@ -103,4 +105,13 @@ class FirebaseUserRepository implements UserRepository {
     }
     return _firebaseAuth.signOut();
   }
+
+  @override
+  Future<void> createUserProfile(String id, ThemeType selectedTheme) async {}
+
+  @override
+  Future<void> updateUserProfile(String id, ThemeType selectedTheme) async {}
+
+  @override
+  Stream<UserProfile> userProfileStream(String id) => null;
 }
