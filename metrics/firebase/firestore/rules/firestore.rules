@@ -19,9 +19,9 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /profiles/{profileId} {
-      allow read: if isAccessAuthorized(database) && isSelfProfile(profileId);
-      allow update: if isAccessAuthorized(database) && isSelfProfile(profileId) && isProfileValid(database);
+    match /user_profiles/{userProfileId} {
+      allow read: if isAccessAuthorized(database) && isSelfProfile(userProfileId);
+      allow update: if isAccessAuthorized(database) && isSelfProfile(userProfileId) && isProfileValid(database);
       allow create: if isAccessAuthorized(database) && isProfileValid(database);
       allow delete: if false;
     }
@@ -211,9 +211,9 @@ service cloud.firestore {
     return field in requestData && requestData[field] is int;
   }
 
-  /// Checks whether a user is the owner of the requested profile.
-  function isSelfProfile(profileId) {
-    return request.auth.uid == profileId;
+  /// Checks whether a user is the owner of the requested user profile.
+  function isSelfProfile(userProfileId) {
+    return request.auth.uid == userProfileId;
   }
 
   /// Checks whether the request contains the valid profile data.
@@ -228,7 +228,7 @@ service cloud.firestore {
     let requestData = request.resource.data;
 
     return requestData.keys().hasOnly([
-      "theme",
+      "selectedTheme",
     ]);
   }
 }
