@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 /// Signature for the function that builds an offset using the [childSize].
 typedef OffsetBuilder = Offset Function(Size childSize);
@@ -8,11 +7,11 @@ typedef OffsetBuilder = Offset Function(Size childSize);
 /// Signature for the function that builds a trigger widget
 /// using the [openPopup] and the [closePopup] callbacks.
 typedef TriggerBuilder = Widget Function(
-  BuildContext context,
-  VoidCallback openPopup,
-  VoidCallback closePopup,
-  bool isPopupOpened,
-);
+    BuildContext context,
+    VoidCallback openPopup,
+    VoidCallback closePopup,
+    bool isPopupOpened,
+    );
 
 /// A widget that displays the trigger widget built by the [triggerBuilder]
 /// that opens the given [popup] when the trigger widget is activated.
@@ -33,15 +32,16 @@ class BasePopup extends StatefulWidget {
   /// A widget to display when the trigger widget is triggered.
   final Widget popup;
 
-  /// Defines if the popup should be closed when the user taps on an empty area
-  /// inside the popup.
-  final bool closePopupOnEmptySpaceTap;
+  final bool popupOpaque;
+
+  final SystemMouseCursor popupMouseCursor;
+
+  final bool closePopupWhenTapOutside;
 
   /// Creates a new instance of the base popup.
   ///
   /// If the [popupConstraints] is null, an empty instance of
   /// the [BoxConstraints] is used.
-  /// The [closePopupOnEmptySpaceTap] defaults to `false`.
   ///
   /// All the required parameters must not be null.
   const BasePopup({
@@ -50,7 +50,9 @@ class BasePopup extends StatefulWidget {
     @required this.offsetBuilder,
     @required this.triggerBuilder,
     @required this.popup,
-    this.closePopupOnEmptySpaceTap = false,
+    this.popupOpaque = true,
+    this.closePopupWhenTapOutside = true,
+    this.popupMouseCursor = SystemMouseCursors.basic,
     this.routeObserver,
   })  : popupConstraints = popupConstraints ?? const BoxConstraints(),
         assert(offsetBuilder != null),
@@ -80,6 +82,10 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    if (_layerLink.leader == null) {
+      _closePopup();
+    }
+
     return CompositedTransformTarget(
       link: _layerLink,
       child: widget.triggerBuilder(
@@ -97,35 +103,28 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
     final childSize = childBox.size;
     final offset = widget.offsetBuilder(childSize);
 
-    final _widget = GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: _closePopup,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            left: offset.dx,
-            top: offset.dy,
-            child: CompositedTransformFollower(
-              link: _layerLink,
-              offset: offset,
-              child: TappableArea(
-                mouseCursor: SystemMouseCursors.basic,
-                onTap: _onPopupEmptySpaceTap,
-                builder: (context, isHovered, child) => child,
-                child: ConstrainedBox(
-                  constraints: widget.popupConstraints,
-                  child: widget.popup,
-                ),
-              ),
+    final _widget = Stack(
+      children: <Widget>[
+        if (widget.closePopupWhenTapOutside)
+          GestureDetector(
+            onTap: _closePopup,
+          ),
+        CompositedTransformFollower(
+          showWhenUnlinked: false,
+          link: _layerLink,
+          offset: offset,
+          child: MouseRegion(
+            opaque: widget.popupOpaque,
+            child: ConstrainedBox(
+                constraints: widget.popupConstraints,
+                child: widget.popup
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
 
-    setState(() {
-      _overlayEntry = OverlayEntry(builder: (context) => _widget);
-    });
+    _overlayEntry = OverlayEntry(builder: (context) => _widget);
 
     Overlay.of(context).insert(_overlayEntry);
   }
@@ -145,11 +144,6 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
         _overlayEntry = null;
       });
     }
-  }
-
-  /// Closes a [BasePopup.popup], when taps on the empty space.
-  void _onPopupEmptySpaceTap() {
-    if (widget.closePopupOnEmptySpaceTap) _closePopup();
   }
 
   @override

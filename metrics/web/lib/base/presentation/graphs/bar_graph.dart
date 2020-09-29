@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A widget builder function for building the bar graph.
-typedef BarBuilder = Widget Function(int index);
+typedef BarBuilder = Widget Function(int index, double barHeight);
 
 /// Displays the bar graph with bars
 /// built using the [barBuilder] function from [data].
@@ -54,7 +54,7 @@ class BarGraph<T extends num> extends StatelessWidget {
     if (data == null || data.isEmpty) return 0.0;
 
     final maxBarValue =
-        data.reduce((value, element) => value <= element ? element : value);
+    data.reduce((value, element) => value <= element ? element : value);
 
     return constraints.maxHeight / maxBarValue;
   }
@@ -72,13 +72,7 @@ class BarGraph<T extends num> extends StatelessWidget {
 
       bars.add(
         Flexible(
-          child: Container(
-            constraints: BoxConstraints(
-              minHeight: barHeight,
-              maxHeight: barHeight,
-            ),
-            child: barBuilder(index),
-          ),
+          child: barBuilder(index, barHeight),
         ),
       );
     }
