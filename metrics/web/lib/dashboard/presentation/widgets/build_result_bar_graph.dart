@@ -47,7 +47,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
   @override
   void didUpdateWidget(BuildResultBarGraph oldWidget) {
     if (oldWidget.buildResultMetric.numberOfBuildsToDisplay !=
-        widget.buildResultMetric.numberOfBuildsToDisplay ||
+            widget.buildResultMetric.numberOfBuildsToDisplay ||
         oldWidget.buildResultMetric != widget.buildResultMetric) {
       _calculateBarData();
     }
@@ -66,14 +66,16 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(
               _missingBarsCount,
-                  (index) => const BuildResultBar(),
+              (index) => const BuildResultBar(),
             ),
           ),
         ),
         Expanded(
           flex: _barsData.length,
           child: BarGraph(
-            data: _barsData.map((data) => data.buildResultPopupViewModel.value).toList(),
+            data: _barsData
+                .map((data) => data.dashboardPopupCardViewModel.value)
+                .toList(),
             graphPadding: EdgeInsets.zero,
             barBuilder: (int index, double barHeight) {
               final data = _barsData[index];

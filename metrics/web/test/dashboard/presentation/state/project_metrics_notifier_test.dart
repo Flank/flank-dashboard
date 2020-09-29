@@ -249,7 +249,7 @@ void main() {
       final firstBuildResultMetric = buildResultMetrics.buildResults.first;
 
       expect(
-        firstBuildResultMetric.value,
+        firstBuildResultMetric.dashboardPopupCardViewModel.value,
         expectedBuildResult.duration.inMilliseconds,
       );
       expect(

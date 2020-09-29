@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
+import 'package:metrics/base/presentation/widgets/circle_graph_indicator.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
@@ -18,15 +19,10 @@ import 'package:visibility_detector/visibility_detector.dart';
 /// Displays the [PlaceholderBar] if either [buildResult] or
 /// [BuildResultViewModel.buildStatus] is `null`.
 class BuildResultBar extends StatefulWidget {
-  /// A width of this bar.
-  static const double _barWidth = 10.0;
-
-  /// A border radius of this bar.
-  static const _borderRadius = Radius.circular(1.0);
-
   /// A [BuildResultViewModel] to display.
   final BuildResultViewModel buildResult;
 
+  /// A height of this bar.
   final double barHeight;
 
   /// Creates the [BuildResultBar] with the given [buildResult].
@@ -38,25 +34,37 @@ class BuildResultBar extends StatefulWidget {
 }
 
 class _BuildResultBarState extends State<BuildResultBar> {
+  /// A border radius of this bar.
+  static const _borderRadius = Radius.circular(1.0);
+
+  /// A width of this bar.
+  static const _barWidth = 10.0;
+
+  /// A width of the [BasePopup.popup].
+  static const _popupWidth = 146.0;
+
+  /// A top padding of the [BasePopup.popup] from the [CircleGraphIndicator].
+  static const _topPadding = 4.0;
+
+  /// An outer diameter of the [CircleGraphIndicator].
+  static const _circleOuterDiameter = 10.0;
+
+  /// A [UniqueKey] for the [VisibilityDetector].
   final _uniqueKey = UniqueKey();
-  bool _showPopupCorrect = false;
 
-  @override
-  void initState() {
-    super.initState();
-
-    VisibilityDetectorController.instance.updateInterval = Duration.zero;
-  }
+  /// Indicates whether the [CircleGraphIndicator] is visible.
+  bool _isCircleIndicatorVisible = true;
 
   @override
   Widget build(BuildContext context) {
+    const circleOuterRadius = _circleOuterDiameter / 2.0;
     final metricsTheme = MetricsTheme.of(context);
     final widgetThemeData = metricsTheme.buildResultTheme;
 
     if (widget.buildResult == null || widget.buildResult.buildStatus == null) {
       final inactiveTheme = metricsTheme.inactiveWidgetTheme;
       return PlaceholderBar(
-        width: BuildResultBar._barWidth,
+        width: _barWidth,
         height: 4.0,
         color: inactiveTheme.primaryColor,
       );
@@ -68,18 +76,20 @@ class _BuildResultBarState extends State<BuildResultBar> {
     );
 
     return BasePopup(
-      popupOpaque: false,
+      isPopupOpaque: false,
       closePopupWhenTapOutside: false,
       popupConstraints: const BoxConstraints(
-        minWidth: 146.0,
-        maxWidth: 146.0,
+        minWidth: _popupWidth,
+        maxWidth: _popupWidth,
       ),
-      popupMouseCursor: SystemMouseCursors.click,
       offsetBuilder: (Size childSize) {
-        final dx = childSize.width / 2 - 146.0 / 2;
-        final dy = _showPopupCorrect
-            ? childSize.height
-            : childSize.height - widget.barHeight + 9.0;
+        final dx = childSize.width / 2.0 - _popupWidth / 2.0;
+        final dy = _isCircleIndicatorVisible
+            ? childSize.height -
+                widget.barHeight +
+                _topPadding +
+                circleOuterRadius
+            : childSize.height;
 
         return Offset(dx, dy);
       },
@@ -91,39 +101,35 @@ class _BuildResultBarState extends State<BuildResultBar> {
             onTap: _onBarTap,
             builder: (context, isHovered, _) {
               final hoverColor =
-              isHovered ? barColor.withOpacity(0.25) : Colors.transparent;
+                  isHovered ? barColor.withOpacity(0.25) : Colors.transparent;
 
               return Stack(
                 clipBehavior: Clip.none,
                 children: [
                   Container(
-                    width: BuildResultBar._barWidth,
+                    width: _barWidth,
                     color: hoverColor,
                     alignment: Alignment.bottomCenter,
                     child: SizedBox(
                       height: widget.barHeight,
                       child: ColoredBar(
-                        width: BuildResultBar._barWidth,
+                        width: _barWidth,
                         borderRadius: const BorderRadius.only(
-                          topLeft: BuildResultBar._borderRadius,
-                          topRight: BuildResultBar._borderRadius,
+                          topLeft: _borderRadius,
+                          topRight: _borderRadius,
                         ),
-                        color: _getBuildResultColor(
-                          widget.buildResult.buildStatus,
-                          widgetThemeData,
-                        ),
+                        color: barColor,
                       ),
                     ),
                   ),
                   Positioned(
-                    bottom: widget.barHeight - 5.0,
+                    bottom: widget.barHeight - circleOuterRadius,
                     child: VisibilityDetector(
                       key: _uniqueKey,
                       onVisibilityChanged: (VisibilityInfo info) {
-                        _showPopupCorrect = info.visibleFraction == 0.0;
+                        _isCircleIndicatorVisible = info.visibleFraction != 0.0;
 
-                        if(isHovered) {
-                          print(_showPopupCorrect);
+                        if (isHovered) {
                           closePopup();
                           openPopup();
                         }
@@ -131,10 +137,10 @@ class _BuildResultBarState extends State<BuildResultBar> {
                       child: Opacity(
                         opacity: isHovered ? 1.0 : 0.0,
                         child: CircleGraphIndicator(
-                          color: _getBuildResultColor(
-                            widget.buildResult.buildStatus,
-                            widgetThemeData,
-                          ),
+                          outerDiameter: _circleOuterDiameter,
+                          innerDiameter: 4.0,
+                          outerColor: Colors.white,
+                          innerColor: barColor,
                         ),
                       ),
                     ),
@@ -145,20 +151,18 @@ class _BuildResultBarState extends State<BuildResultBar> {
           ),
         );
       },
-      popup: GestureDetector(
-        onTap: _onBarTap,
-        child: MetricsResultBarPopupCard(
-          buildResultPopupViewModel: widget.buildResult.buildResultPopupViewModel,
-        ),
+      popup: MetricsResultBarPopupCard(
+        buildResultPopupViewModel:
+            widget.buildResult.dashboardPopupCardViewModel,
       ),
     );
   }
 
   /// Selects the color from the [widgetTheme] based on [buildStatus].
   Color _getBuildResultColor(
-      BuildStatus buildStatus,
-      BuildResultsThemeData widgetTheme,
-      ) {
+    BuildStatus buildStatus,
+    BuildResultsThemeData widgetTheme,
+  ) {
     switch (buildStatus) {
       case BuildStatus.successful:
         return widgetTheme.successfulColor;
@@ -181,38 +185,5 @@ class _BuildResultBarState extends State<BuildResultBar> {
     if (canLaunchUrl) {
       await launch(url);
     }
-  }
-
-  @override
-  void dispose() {
-    print('DISPOSE');
-    super.dispose();
-  }
-}
-
-class CircleGraphIndicator extends StatelessWidget {
-  final Color color;
-
-  const CircleGraphIndicator({Key key, this.color}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      height: 10.0,
-      width: 10.0,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white,
-      ),
-      child: Container(
-        height: 4.0,
-        width: 4.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
-        ),
-      ),
-    );
   }
 }

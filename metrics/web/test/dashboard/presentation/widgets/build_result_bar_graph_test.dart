@@ -6,9 +6,11 @@ import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/dashboard_popup_card_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -16,6 +18,8 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("BuildResultBarGraph", () {
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+
     const buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
 
     testWidgets(
@@ -91,7 +95,7 @@ void main() {
 
         final trimmedData = buildResults
             .sublist(buildResults.length - numberOfBars)
-            .map((barData) => barData.value);
+            .map((barData) => barData.dashboardPopupCardViewModel.value);
 
         final barGraphWidget = tester.widget<BarGraph>(find.byWidgetPredicate(
           (widget) => widget is BarGraph,
@@ -113,15 +117,15 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
   static const buildResultBarTestData = [
     BuildResultViewModel(
       buildStatus: BuildStatus.successful,
-      value: 5,
+      dashboardPopupCardViewModel: DashboardPopupCardViewModel(value: 5),
     ),
     BuildResultViewModel(
       buildStatus: BuildStatus.failed,
-      value: 2,
+      dashboardPopupCardViewModel: DashboardPopupCardViewModel(value: 2),
     ),
     BuildResultViewModel(
       buildStatus: BuildStatus.cancelled,
-      value: 8,
+      dashboardPopupCardViewModel: DashboardPopupCardViewModel(value: 8),
     ),
   ];
 

@@ -74,49 +74,6 @@ void main() {
         }
       },
     );
-
-    testWidgets(
-      "builds the graph bars with the height ratio equal to data value ratio",
-      (WidgetTester tester) async {
-        const barGraphData = [
-          1,
-          3,
-          7,
-        ];
-
-        await tester.pumpWidget(const _BarGraphTestbed(
-          data: barGraphData,
-        ));
-
-        final barsRow = tester.widget<Row>(find.byType(Row));
-
-        final barExpandedContainers = barsRow.children;
-
-        final List<double> barHeights = [];
-
-        for (final bar in barExpandedContainers) {
-          final barContainer = tester.firstWidget<Container>(find.descendant(
-            of: find.byWidget(bar),
-            matching: find.byType(Container),
-          ));
-
-          barHeights.add(barContainer.constraints.minHeight);
-        }
-
-        expect(
-          barHeights[0] / barHeights[1],
-          barGraphData[0] / barGraphData[1],
-        );
-        expect(
-          barHeights[0] / barHeights[2],
-          barGraphData[0] / barGraphData[2],
-        );
-        expect(
-          barHeights[1] / barHeights[2],
-          barGraphData[1] / barGraphData[2],
-        );
-      },
-    );
   });
 }
 
@@ -165,8 +122,9 @@ class _BarGraphTestbed extends StatelessWidget {
       body: BarGraph(
         data: data,
         graphPadding: graphPadding,
-        barBuilder:
-            barBuilder == null ? null : (index) => barBuilder(data, index),
+        barBuilder: barBuilder == null
+            ? null
+            : (index, barHeight) => barBuilder(data, index),
       ),
     );
   }

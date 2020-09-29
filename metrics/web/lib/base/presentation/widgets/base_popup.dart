@@ -7,11 +7,11 @@ typedef OffsetBuilder = Offset Function(Size childSize);
 /// Signature for the function that builds a trigger widget
 /// using the [openPopup] and the [closePopup] callbacks.
 typedef TriggerBuilder = Widget Function(
-    BuildContext context,
-    VoidCallback openPopup,
-    VoidCallback closePopup,
-    bool isPopupOpened,
-    );
+  BuildContext context,
+  VoidCallback openPopup,
+  VoidCallback closePopup,
+  bool isPopupOpened,
+);
 
 /// A widget that displays the trigger widget built by the [triggerBuilder]
 /// that opens the given [popup] when the trigger widget is activated.
@@ -32,16 +32,21 @@ class BasePopup extends StatefulWidget {
   /// A widget to display when the trigger widget is triggered.
   final Widget popup;
 
-  final bool popupOpaque;
+  /// Defines if the [popup] should close itself when user taps on space
+  /// outside the visible container of the [popup].
+  final bool isPopupOpaque;
 
-  final SystemMouseCursor popupMouseCursor;
-
+  /// Defines if this Widget should close [popup] when user taps on space
+  /// outside the visible container of the [popup].
   final bool closePopupWhenTapOutside;
 
   /// Creates a new instance of the base popup.
   ///
   /// If the [popupConstraints] is null, an empty instance of
   /// the [BoxConstraints] is used.
+  ///
+  /// The [isPopupOpaque] defaults value is `true`.
+  /// The [closePopupWhenTapOutside] defaults value is `true`.
   ///
   /// All the required parameters must not be null.
   const BasePopup({
@@ -50,9 +55,8 @@ class BasePopup extends StatefulWidget {
     @required this.offsetBuilder,
     @required this.triggerBuilder,
     @required this.popup,
-    this.popupOpaque = true,
+    this.isPopupOpaque = true,
     this.closePopupWhenTapOutside = true,
-    this.popupMouseCursor = SystemMouseCursors.basic,
     this.routeObserver,
   })  : popupConstraints = popupConstraints ?? const BoxConstraints(),
         assert(offsetBuilder != null),
@@ -114,17 +118,19 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
           link: _layerLink,
           offset: offset,
           child: MouseRegion(
-            opaque: widget.popupOpaque,
+            opaque: widget.isPopupOpaque,
             child: ConstrainedBox(
-                constraints: widget.popupConstraints,
-                child: widget.popup
+              constraints: widget.popupConstraints,
+              child: widget.popup,
             ),
           ),
         ),
       ],
     );
 
-    _overlayEntry = OverlayEntry(builder: (context) => _widget);
+    setState(() {
+      _overlayEntry = OverlayEntry(builder: (context) => _widget);
+    });
 
     Overlay.of(context).insert(_overlayEntry);
   }

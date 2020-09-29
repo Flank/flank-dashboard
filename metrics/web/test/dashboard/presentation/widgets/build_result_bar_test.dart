@@ -6,13 +6,16 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/dashboard_popup_card_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("BuildResultBar", () {
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
     const successfulColor = Colors.green;
     const failedColor = Colors.red;
     const canceledColor = Colors.grey;
@@ -24,6 +27,8 @@ void main() {
         canceledColor: canceledColor,
       ),
     );
+
+    const dashboardPopupCardViewModel = DashboardPopupCardViewModel(value: 20);
 
     testWidgets(
       "display the PlaceholderBar if the given buildResult is null",
@@ -37,7 +42,9 @@ void main() {
     testWidgets(
       "shows the PlaceholderBar if the build result status is null",
       (WidgetTester tester) async {
-        const buildResult = BuildResultViewModel(value: 20);
+        const buildResult = BuildResultViewModel(
+          dashboardPopupCardViewModel: dashboardPopupCardViewModel,
+        );
 
         await tester.pumpWidget(const _BuildResultBarTestbed(
           buildResult: buildResult,
@@ -50,7 +57,9 @@ void main() {
     testWidgets(
       "does not change the cursor style for the PlaceholderBar",
       (WidgetTester tester) async {
-        const buildResult = BuildResultViewModel(value: 20);
+        const buildResult = BuildResultViewModel(
+          dashboardPopupCardViewModel: dashboardPopupCardViewModel,
+        );
 
         await tester.pumpWidget(const _BuildResultBarTestbed(
           buildResult: buildResult,
@@ -69,7 +78,7 @@ void main() {
       "applies a tappable area to the ColoredBar",
       (WidgetTester tester) async {
         const buildResult = BuildResultViewModel(
-          value: 20,
+          dashboardPopupCardViewModel: dashboardPopupCardViewModel,
           buildStatus: BuildStatus.successful,
         );
 
@@ -90,7 +99,7 @@ void main() {
       "applies the successful color from the theme to the ColoredBar if the build status equals to successful",
       (tester) async {
         const buildResult = BuildResultViewModel(
-          value: 20,
+          dashboardPopupCardViewModel: dashboardPopupCardViewModel,
           buildStatus: BuildStatus.successful,
         );
 
@@ -109,7 +118,7 @@ void main() {
       "applies the failed color from the theme to the ColoredBar if the build status equals to failed",
       (tester) async {
         const buildResult = BuildResultViewModel(
-          value: 20,
+          dashboardPopupCardViewModel: dashboardPopupCardViewModel,
           buildStatus: BuildStatus.failed,
         );
 
@@ -128,7 +137,7 @@ void main() {
       "applies the cancelled color from the theme to the ColoredBar if the build status equals to cancelled",
       (tester) async {
         const buildResult = BuildResultViewModel(
-          value: 20,
+          dashboardPopupCardViewModel: dashboardPopupCardViewModel,
           buildStatus: BuildStatus.cancelled,
         );
 
@@ -153,13 +162,18 @@ class _BuildResultBarTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData themeData;
 
+  /// A height of the [BuildResultBar].
+  final double barHeight;
+
   /// Creates an instance of this testbed.
   ///
   /// If the [themeData] is not specified, an empty [MetricsThemeData] used.
+  /// The [barHeight] default value is `20.0`.
   const _BuildResultBarTestbed({
     Key key,
-    this.buildResult,
     this.themeData = const MetricsThemeData(),
+    this.barHeight = 20.0,
+    this.buildResult,
   }) : super(key: key);
 
   @override
@@ -168,6 +182,7 @@ class _BuildResultBarTestbed extends StatelessWidget {
       metricsThemeData: themeData,
       body: BuildResultBar(
         buildResult: buildResult,
+        barHeight: barHeight,
       ),
     );
   }

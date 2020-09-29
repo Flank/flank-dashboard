@@ -136,19 +136,22 @@ void main() {
     );
 
     testWidgets(
-      "closes a popup, when tap on the popup's empty space if the closePopupOnEmptySpaceTap is true",
+      "closes a popup, when tap outside of popup if the closePopupWhenTapOutside is true",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(
             popup: testPopupWidget,
             triggerBuilder: _defaultTriggerBuilder,
-            closePopupOnEmptySpaceTap: true,
+            closePopupWhenTapOutside: true,
+            offsetBuilder: (Size childSize) {
+              return Offset(childSize.width, childSize.height);
+            },
           ),
         );
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
-        await tester.tap(popupWidgetFinder);
+        await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
 
         expect(popupWidgetFinder, findsNothing);
@@ -156,20 +159,20 @@ void main() {
     );
 
     testWidgets(
-      "does not close a popup, when tap on the popup's empty space if the closePopupOnEmptySpaceTap is false",
+      "does not close a popup, when tap outside of popup if the closePopupWhenTapOutside is false",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(
             popup: testPopupWidget,
             triggerBuilder: _defaultTriggerBuilder,
-            closePopupOnEmptySpaceTap: false,
+            closePopupWhenTapOutside: false,
           ),
         );
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
-        await tester.tap(popupWidgetFinder);
-        await tester.pumpAndSettle();
+        await tester.tapAt(Offset.infinite);
+        await tester.pump();
 
         expect(popupWidgetFinder, findsOneWidget);
       },
@@ -301,16 +304,21 @@ class _BasePopupTestbed extends StatelessWidget {
   /// A callback that is called to build the trigger widget.
   final TriggerBuilder triggerBuilder;
 
-  /// Defines if the popup should be closed when the user taps on an empty area
-  /// inside the popup.
-  final bool closePopupOnEmptySpaceTap;
+  /// Defines if the [popup] should close itself when user taps on space
+  /// outside the visible container of the [popup].
+  final bool closePopupWhenTapOutside;
+
+  /// Indicates whether the [popup] should prevent other [MouseRegion]s
+  /// visually behind it from detecting the pointer.
+  final bool isPopupOpaque;
 
   /// Creates the a new base popup testbed.
   ///
   /// The [popup] defaults to the [SizedBox] with the empty constructor.
   /// The [popupConstraints] defaults to an empty [BoxConstraints] instance.
   /// The [offsetBuilder] defaults to the [_defaultOffsetBuilder].
-  /// The [closePopupOnEmptySpaceTap] defaults to the `false`.
+  /// The [closePopupWhenTapOutside] defaults to the `true`.
+  /// The [isPopupOpaque] defaults to the `true`.
   /// If the given [navigatorKey], the default [GlobalKey] instance is used.
   /// If the given [routeObserver], the default [RouteObserver] instance is used.
   _BasePopupTestbed({
@@ -320,7 +328,8 @@ class _BasePopupTestbed extends StatelessWidget {
     this.popup = const SizedBox(),
     this.popupConstraints = const BoxConstraints(),
     this.offsetBuilder = _defaultOffsetBuilder,
-    this.closePopupOnEmptySpaceTap = false,
+    this.closePopupWhenTapOutside = true,
+    this.isPopupOpaque = true,
     this.triggerBuilder,
   })  : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>(),
         routeObserver = routeObserver ?? RouteObserver(),
@@ -333,11 +342,12 @@ class _BasePopupTestbed extends StatelessWidget {
       navigatorObservers: [routeObserver],
       home: Scaffold(
         body: BasePopup(
+          isPopupOpaque: isPopupOpaque,
           routeObserver: routeObserver,
           triggerBuilder: triggerBuilder,
           popupConstraints: popupConstraints,
           offsetBuilder: offsetBuilder,
-          closePopupOnEmptySpaceTap: closePopupOnEmptySpaceTap,
+          closePopupWhenTapOutside: closePopupWhenTapOutside,
           popup: popup,
         ),
       ),

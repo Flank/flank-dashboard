@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
+import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/dashboard/presentation/view_models/dashboard_popup_card_view_model.dart';
 
 /// A widget that displays a metrics result bar popup with specific shape.
 class MetricsResultBarPopupCard extends StatelessWidget {
-  final BuildResultPopupViewModel buildResultPopupViewModel;
+  /// A [DashboardPopupCardViewModel] to display.
+  final DashboardPopupCardViewModel buildResultPopupViewModel;
 
   /// Creates the [MetricsResultBarPopupCard] with the given [buildResult].
+  ///
+  /// The [buildResultPopupViewModel] must not be null.
   const MetricsResultBarPopupCard({
     Key key,
     @required this.buildResultPopupViewModel,
@@ -17,6 +21,7 @@ class MetricsResultBarPopupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = MetricsTheme.of(context).barGraphPopupTheme;
     const arrowWidth = 10.0;
     const arrowHeight = 5.0;
     final dateFormat = DateFormat('EEEE, MMM d').format(
@@ -25,19 +30,19 @@ class MetricsResultBarPopupCard extends StatelessWidget {
     final duration = Duration(milliseconds: buildResultPopupViewModel.value);
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            offset: Offset(0.0, 8.0),
+            offset: const Offset(0.0, 8.0),
             blurRadius: 12.0,
-            color: Color.fromRGBO(0, 0, 0, 0.32),
+            color: theme.shadowColor,
           ),
         ],
       ),
       child: Card(
         elevation: 0.0,
         margin: EdgeInsets.zero,
-        color: const Color(0xfff5f5ff),
+        color: theme.color,
         shape: BubbleShapeBorder(
           borderRadius: BorderRadius.circular(1.0),
           arrowSize: const Size(arrowWidth, arrowHeight),
@@ -58,32 +63,17 @@ class MetricsResultBarPopupCard extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 2.0),
                 child: Text(
                   dateFormat,
-                  style: const MetricsTextStyle(
-                    color: Color(0xff8e8e99),
-                    lineHeightInPixels: 16.0,
-                    fontSize: 13.0,
-                  ),
+                  style: theme.titleTextStyle,
                 ),
               ),
               Text(
-                _formatDuration(duration),
-                style: const MetricsTextStyle(
-                  color: Color(0xff1b1b1d),
-                  lineHeightInPixels: 16.0,
-                  fontSize: 13.0,
-                ),
+                CommonStrings.duration(duration),
+                style: theme.subtitleTextStyle,
               ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  String _formatDuration(Duration duration) {
-    final twoDigitMinutes = duration.inMinutes.remainder(60);
-    final twoDigitSeconds = duration.inSeconds.remainder(60);
-
-    return "$twoDigitMinutes m $twoDigitSeconds s";
   }
 }
