@@ -14,122 +14,143 @@ describe("", async () => {
   const collection = "allowed_email_domains";
   const domain = { "test.com": {} };
 
-  const users = [
+  const signInProviders = [
     {
-      'describe': 'Authenticated with a password and allowed email domain user with a verified email',
-      'app': await getApplicationWith(
-        getAllowedEmailUser(passwordSignInProviderId, true)
-      ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
-      }
+      'title': 'password',
+      'description': 'Authenticated with a password and ',
+      'users': [
+        {
+          'description': 'allowed email domain user with a verified email',
+          'app': await getApplicationWith(
+            getAllowedEmailUser(passwordSignInProviderId, true)
+          ),
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        {
+          'description': 'not allowed email domain user with a verified email',
+          'app': await getApplicationWith(
+            getDeniedEmailUser(passwordSignInProviderId, true)
+          ),
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        {
+          'description': 'allowed email domain user with not verified email',
+          'app': await getApplicationWith(
+            getAllowedEmailUser(passwordSignInProviderId, false)
+          ),
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        {
+          'description': 'not allowed email domain user with not verified email',
+          'app': await getApplicationWith(
+            getDeniedEmailUser(passwordSignInProviderId, false)
+          ),
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+      ],
     },
     {
-      'describe': 'Authenticated with a password and not allowed email domain user with a verified email',
-      'app': await getApplicationWith(
-        getDeniedEmailUser(passwordSignInProviderId, true)
-      ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
-      }
+      'title': 'google',
+      'description': 'Authenticated with a google and ',
+      'users': [
+        {
+          'description': 'allowed email domain user with a verified email',
+          'app': await getApplicationWith(
+            getAllowedEmailUser(googleSignInProviderId, true)
+          ),
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        {
+          'description': 'not allowed email domain user with a verified email',
+          'app': await getApplicationWith(
+            getDeniedEmailUser(googleSignInProviderId, true)
+          ),
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        {
+          'description': 'allowed email domain user with not verified email',
+          'app': await getApplicationWith(
+            getAllowedEmailUser(googleSignInProviderId, false)
+          ),
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+        {
+          'description': 'not allowed email domain user with not verified email',
+          'app': await getApplicationWith(
+            getDeniedEmailUser(googleSignInProviderId, false)
+          ),
+          'can': {
+            'create': false,
+            'read': false,
+            'update': false,
+            'delete': false,
+          }
+        },
+      ]
     },
     {
-      'describe': 'Authenticated with a password and allowed email domain user with not verified email',
-      'app': await getApplicationWith(
-        getAllowedEmailUser(passwordSignInProviderId, false)
-      ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
-      }
-    },
-    {
-      'describe': 'Authenticated with a password and not allowed email domain user with not verified email',
-      'app': await getApplicationWith(
-        getDeniedEmailUser(passwordSignInProviderId, false)
-      ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
-      }
-    },
-    {
-      'describe': 'Authenticated with google and allowed email domain user with a verified email',
-      'app': await getApplicationWith(
-        getAllowedEmailUser(googleSignInProviderId, true)
-      ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
-      }
-    },
-    {
-      'describe': 'Authenticated with google and not allowed email domain user with a verified email',
-      'app': await getApplicationWith(
-        getDeniedEmailUser(googleSignInProviderId, true)
-      ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
-      }
-    },
-    {
-      'describe': 'Authenticated with google and allowed email domain user with not verified email',
-      'app': await getApplicationWith(
-        getAllowedEmailUser(googleSignInProviderId, false)
-      ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
-      }
-    },
-    {
-      'describe': 'Authenticated with google and not allowed email domain user with not verified email',
-      'app': await getApplicationWith(
-        getDeniedEmailUser(googleSignInProviderId, false)
-      ),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
-      }
-    },
-    {
-      'describe': 'Unauthenticated user',
-      'app': await getApplicationWith(null),
-      'can': {
-        'create': false,
-        'read': false,
-        'update': false,
-        'delete': false,
-      }
-    },
+      'title': '',
+      'description': 'Unauthenticated ',
+      'users': [
+        {
+          'description': 'user',
+          'app': await getApplicationWith(null),
+          'can': {
+            'create': false,
+            'read': false,
+            'readSingle': false,
+            'update': false,
+            'delete': false,
+          }
+        }
+      ]
+    }
   ];
 
   before(async () => {
     await setupTestDatabaseWith(allowedEmailDomains);
   });
 
-  describe("Allowed email domains collection rules", () => {
-    async.forEach(users, (user, callback) => {
-      describe(user.describe, function () {
+  async.forEach(signInProviders, (provider, callback) => {
+    provider.users.forEach(user => {
+      let description = provider.description + user.description;
+
+      describe(description, function () {
         let canCreateDescription = user.can.create ?
           "allows to create an allowed email domain" :
           "does not allow creating an allowed email domain";
@@ -187,8 +208,9 @@ describe("", async () => {
           }
         });
       });
-      callback();
     });
+
+    callback();
   });
 
   after(async () => {
