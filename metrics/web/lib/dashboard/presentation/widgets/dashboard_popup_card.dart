@@ -8,26 +8,28 @@ import 'package:metrics/dashboard/presentation/view_models/dashboard_popup_card_
 /// A widget that displays a metrics result bar popup with specific shape.
 class MetricsResultBarPopupCard extends StatelessWidget {
   /// A [DashboardPopupCardViewModel] to display.
-  final DashboardPopupCardViewModel buildResultPopupViewModel;
+  final DashboardPopupCardViewModel dashboardPopupCardViewModel;
 
-  /// Creates the [MetricsResultBarPopupCard] with the given [buildResult].
+  /// Creates a new instance of the [MetricsResultBarPopupCard].
   ///
-  /// The [buildResultPopupViewModel] must not be null.
+  /// The [dashboardPopupCardViewModel] must not be null.
   const MetricsResultBarPopupCard({
     Key key,
-    @required this.buildResultPopupViewModel,
-  })  : assert(buildResultPopupViewModel != null),
+    @required this.dashboardPopupCardViewModel,
+  })  : assert(dashboardPopupCardViewModel != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final theme = MetricsTheme.of(context).barGraphPopupTheme;
     const arrowWidth = 10.0;
     const arrowHeight = 5.0;
-    final dateFormat = DateFormat('EEEE, MMM d').format(
-      buildResultPopupViewModel.startDate,
+    final theme = MetricsTheme.of(context).barGraphPopupTheme;
+    final title = DateFormat('EEEE, MMM d').format(
+      dashboardPopupCardViewModel.startDate,
     );
-    final duration = Duration(milliseconds: buildResultPopupViewModel.value);
+    final subtitle = CommonStrings.duration(
+      Duration(milliseconds: dashboardPopupCardViewModel.value),
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -61,15 +63,9 @@ class MetricsResultBarPopupCard extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 2.0),
-                child: Text(
-                  dateFormat,
-                  style: theme.titleTextStyle,
-                ),
+                child: Text(title, style: theme.titleTextStyle),
               ),
-              Text(
-                CommonStrings.duration(duration),
-                style: theme.subtitleTextStyle,
-              ),
+              Text(subtitle, style: theme.subtitleTextStyle),
             ],
           ),
         ),

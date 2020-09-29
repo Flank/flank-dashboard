@@ -20,7 +20,7 @@ void main() {
   group("BuildResultBarGraph", () {
     VisibilityDetectorController.instance.updateInterval = Duration.zero;
 
-    const buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
+    final buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
 
     testWidgets(
       "throws an AssertionError if the given build result metric is null",
@@ -114,18 +114,27 @@ void main() {
 /// A testbed class required to test the [BuildResultBarGraph].
 class _BuildResultBarGraphTestbed extends StatelessWidget {
   /// A list of [BuildResultViewModel] test data to test the [BuildResultBarGraph].
-  static const buildResultBarTestData = [
+  static final buildResultBarTestData = [
     BuildResultViewModel(
       buildStatus: BuildStatus.successful,
-      dashboardPopupCardViewModel: DashboardPopupCardViewModel(value: 5),
+      dashboardPopupCardViewModel: DashboardPopupCardViewModel(
+        value: 5,
+        startDate: DateTime.now(),
+      ),
     ),
     BuildResultViewModel(
       buildStatus: BuildStatus.failed,
-      dashboardPopupCardViewModel: DashboardPopupCardViewModel(value: 2),
+      dashboardPopupCardViewModel: DashboardPopupCardViewModel(
+        value: 2,
+        startDate: DateTime.now(),
+      ),
     ),
     BuildResultViewModel(
       buildStatus: BuildStatus.cancelled,
-      dashboardPopupCardViewModel: DashboardPopupCardViewModel(value: 8),
+      dashboardPopupCardViewModel: DashboardPopupCardViewModel(
+        value: 8,
+        startDate: DateTime.now(),
+      ),
     ),
   ];
 

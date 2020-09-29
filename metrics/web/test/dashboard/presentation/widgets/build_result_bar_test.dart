@@ -16,6 +16,7 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("BuildResultBar", () {
     VisibilityDetectorController.instance.updateInterval = Duration.zero;
+
     const successfulColor = Colors.green;
     const failedColor = Colors.red;
     const canceledColor = Colors.grey;
@@ -28,7 +29,10 @@ void main() {
       ),
     );
 
-    const dashboardPopupCardViewModel = DashboardPopupCardViewModel(value: 20);
+    final dashboardPopupCardViewModel = DashboardPopupCardViewModel(
+      value: 20,
+      startDate: DateTime.now(),
+    );
 
     testWidgets(
       "display the PlaceholderBar if the given buildResult is null",
@@ -42,11 +46,11 @@ void main() {
     testWidgets(
       "shows the PlaceholderBar if the build result status is null",
       (WidgetTester tester) async {
-        const buildResult = BuildResultViewModel(
+        final buildResult = BuildResultViewModel(
           dashboardPopupCardViewModel: dashboardPopupCardViewModel,
         );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
         ));
 
@@ -57,11 +61,11 @@ void main() {
     testWidgets(
       "does not change the cursor style for the PlaceholderBar",
       (WidgetTester tester) async {
-        const buildResult = BuildResultViewModel(
+        final buildResult = BuildResultViewModel(
           dashboardPopupCardViewModel: dashboardPopupCardViewModel,
         );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
         ));
 
@@ -77,12 +81,12 @@ void main() {
     testWidgets(
       "applies a tappable area to the ColoredBar",
       (WidgetTester tester) async {
-        const buildResult = BuildResultViewModel(
+        final buildResult = BuildResultViewModel(
           dashboardPopupCardViewModel: dashboardPopupCardViewModel,
           buildStatus: BuildStatus.successful,
         );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
         ));
 
@@ -98,12 +102,12 @@ void main() {
     testWidgets(
       "applies the successful color from the theme to the ColoredBar if the build status equals to successful",
       (tester) async {
-        const buildResult = BuildResultViewModel(
+        final buildResult = BuildResultViewModel(
           dashboardPopupCardViewModel: dashboardPopupCardViewModel,
           buildStatus: BuildStatus.successful,
         );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
           themeData: themeData,
         ));
@@ -117,12 +121,12 @@ void main() {
     testWidgets(
       "applies the failed color from the theme to the ColoredBar if the build status equals to failed",
       (tester) async {
-        const buildResult = BuildResultViewModel(
+        final buildResult = BuildResultViewModel(
           dashboardPopupCardViewModel: dashboardPopupCardViewModel,
           buildStatus: BuildStatus.failed,
         );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
           themeData: themeData,
         ));
@@ -136,12 +140,12 @@ void main() {
     testWidgets(
       "applies the cancelled color from the theme to the ColoredBar if the build status equals to cancelled",
       (tester) async {
-        const buildResult = BuildResultViewModel(
+        final buildResult = BuildResultViewModel(
           dashboardPopupCardViewModel: dashboardPopupCardViewModel,
           buildStatus: BuildStatus.cancelled,
         );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
           themeData: themeData,
         ));

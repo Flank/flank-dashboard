@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-/// A view model that represents the data of the build to display in [DashboardPopupCard].
+/// A view model that represents the data of the build
+/// to display in the [DashboardPopupCard].
 class DashboardPopupCardViewModel extends Equatable {
   /// The abstract value of the build.
   ///
@@ -18,8 +19,10 @@ class DashboardPopupCardViewModel extends Equatable {
   /// Creates a new instance of the [DashboardPopupCardViewModel].
   ///
   /// The [value] must not be null.
+  /// The [startDate] must not be null.
   const DashboardPopupCardViewModel({
     @required this.value,
-    this.startDate,
-  }) : assert(value != null);
+    @required this.startDate,
+  })  : assert(value != null),
+        assert(startDate != null);
 }

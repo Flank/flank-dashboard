@@ -20,18 +20,19 @@ void main() {
     test(
       "equals to another BuildResultViewModel with the same parameters",
       () {
-        const dashboardPopupCardViewModel = DashboardPopupCardViewModel(
-          value: 10,
-        );
         const buildStatus = BuildStatus.cancelled;
         const url = 'url';
-        const expected = BuildResultViewModel(
+        final dashboardPopupCardViewModel = DashboardPopupCardViewModel(
+          value: 10,
+          startDate: DateTime.now(),
+        );
+        final expected = BuildResultViewModel(
           dashboardPopupCardViewModel: dashboardPopupCardViewModel,
           buildStatus: buildStatus,
           url: url,
         );
 
-        const buildResult = BuildResultViewModel(
+        final buildResult = BuildResultViewModel(
           dashboardPopupCardViewModel: dashboardPopupCardViewModel,
           buildStatus: buildStatus,
           url: url,

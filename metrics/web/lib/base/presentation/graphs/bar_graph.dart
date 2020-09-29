@@ -54,7 +54,7 @@ class BarGraph<T extends num> extends StatelessWidget {
     if (data == null || data.isEmpty) return 0.0;
 
     final maxBarValue =
-    data.reduce((value, element) => value <= element ? element : value);
+        data.reduce((value, element) => value <= element ? element : value);
 
     return constraints.maxHeight / maxBarValue;
   }

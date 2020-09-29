@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 /// Signature for the function that builds an offset using the [childSize].
 typedef OffsetBuilder = Offset Function(Size childSize);
@@ -32,11 +31,11 @@ class BasePopup extends StatefulWidget {
   /// A widget to display when the trigger widget is triggered.
   final Widget popup;
 
-  /// Defines if the [popup] should close itself when user taps on space
-  /// outside the visible container of the [popup].
+  /// Indicates whether the [popup] should prevent other [MouseRegion]s
+  /// visually behind it from detecting the pointer.
   final bool isPopupOpaque;
 
-  /// Defines if this Widget should close [popup] when user taps on space
+  /// Defines if the [popup] should close itself when user taps on space
   /// outside the visible container of the [popup].
   final bool closePopupWhenTapOutside;
 
@@ -86,10 +85,6 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    if (_layerLink.leader == null) {
-      _closePopup();
-    }
-
     return CompositedTransformTarget(
       link: _layerLink,
       child: widget.triggerBuilder(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
@@ -83,13 +82,11 @@ class _BuildResultBarState extends State<BuildResultBar> {
         maxWidth: _popupWidth,
       ),
       offsetBuilder: (Size childSize) {
+        final height = childSize.height;
         final dx = childSize.width / 2.0 - _popupWidth / 2.0;
         final dy = _isCircleIndicatorVisible
-            ? childSize.height -
-                widget.barHeight +
-                _topPadding +
-                circleOuterRadius
-            : childSize.height;
+            ? height - widget.barHeight + _topPadding + circleOuterRadius
+            : height;
 
         return Offset(dx, dy);
       },
@@ -152,7 +149,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
         );
       },
       popup: MetricsResultBarPopupCard(
-        buildResultPopupViewModel:
+        dashboardPopupCardViewModel:
             widget.buildResult.dashboardPopupCardViewModel,
       ),
     );
