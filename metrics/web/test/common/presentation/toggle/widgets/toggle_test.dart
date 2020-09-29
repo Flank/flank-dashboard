@@ -9,6 +9,9 @@ import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
 
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+
 void main() {
   group("Toggle", () {
     const inactiveColor = Colors.red;
@@ -27,6 +30,28 @@ void main() {
     final mouseRegionFinder = find.ancestor(
       of: flutterSwitchFinder,
       matching: find.byType(MouseRegion),
+    );
+
+    void _hoverToggle(WidgetTester tester) {
+      final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+      const pointerEnterEvent = PointerEnterEvent();
+      mouseRegion.onEnter(pointerEnterEvent);
+    }
+
+    AlignmentGeometry _getToggleAlignment(WidgetTester tester) {
+      final alignFinder = find.descendant(
+        of: find.byType(FlutterSwitch),
+        matching: find.byWidgetPredicate(
+          (widget) => widget is Align && widget.child is Container,
+        ),
+      );
+      final align = tester.widget<Align>(alignFinder);
+      return align.alignment;
+    }
+
+    final tappableAreaFinder = find.ancestor(
+      of: find.byType(FlutterSwitch),
+      matching: find.byType(TappableArea),
     );
 
     testWidgets(
@@ -90,10 +115,7 @@ void main() {
           metricsThemeData: metricsTheme,
         ));
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        const pointerEnterEvent = PointerEnterEvent();
-        mouseRegion.onEnter(pointerEnterEvent);
-
+        _hoverToggle(tester);
         await tester.pump();
 
         final switchWidget = tester.widget<FlutterSwitch>(flutterSwitchFinder);
@@ -109,10 +131,7 @@ void main() {
           metricsThemeData: metricsTheme,
         ));
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        const pointerEnterEvent = PointerEnterEvent();
-        mouseRegion.onEnter(pointerEnterEvent);
-
+        _hoverToggle(tester);
         await tester.pump();
 
         final switchWidget = tester.widget<FlutterSwitch>(flutterSwitchFinder);
@@ -146,12 +165,43 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ToggleTestbed());
 
-        final finder = find.ancestor(
-          of: find.byType(FlutterSwitch),
-          matching: find.byType(TappableArea),
-        );
+        expect(tappableAreaFinder, findsOneWidget);
+      },
+    );
 
-        expect(finder, findsOneWidget);
+    testWidgets(
+      "does not switch when hovered and the value is true",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _ToggleTestbed(
+          value: true,
+        ));
+
+        final initialAlignment = _getToggleAlignment(tester);
+
+        _hoverToggle(tester);
+        await tester.pumpAndSettle();
+
+        final alignment = _getToggleAlignment(tester);
+
+        expect(alignment, equals(initialAlignment));
+      },
+    );
+
+    testWidgets(
+      "does not switch when hovered and the value is false",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _ToggleTestbed(
+          value: false,
+        ));
+
+        final initialAlignment = _getToggleAlignment(tester);
+
+        _hoverToggle(tester);
+        await tester.pumpAndSettle();
+
+        final alignment = _getToggleAlignment(tester);
+
+        expect(alignment, equals(initialAlignment));
       },
     );
   });
