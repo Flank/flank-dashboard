@@ -10,7 +10,8 @@ environment:
 #  path: ^1.7.0
 dependencies:
   process_run: ^0.10.12+3
+  safe_config: ^2.0.2
 
 dev_dependencies:
-  pedantic: ^1.9.0
+  lint: ^1.0.0
   test: ^1.14.4
