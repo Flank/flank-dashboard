@@ -20,9 +20,9 @@ service cloud.firestore {
     }
 
     match /user_profiles/{userProfileId} {
-      allow read: if isAccessAuthorized(database) && isSelfProfile(userProfileId);
-      allow update: if isAccessAuthorized(database) && isSelfProfile(userProfileId) && isProfileValid(database);
-      allow create: if isAccessAuthorized(database) && isProfileValid(database);
+      allow read: if isAccessAuthorized(database) && isSelfUserProfile(userProfileId);
+      allow update: if isAccessAuthorized(database) && isSelfUserProfile(userProfileId) && isUserProfileValid(database);
+      allow create: if isAccessAuthorized(database) && isUserProfileValid(database);
       allow delete: if false;
     }
 
@@ -132,7 +132,7 @@ service cloud.firestore {
           && projectExists(database)
           && isInteger("buildNumber")
           && isTimestamp("startedAt", false)
-          && isEnum("buildStatus", validBuildStatuses)
+          && isEnumOrNull("buildStatus", validBuildStatuses)
           && isInteger("duration")
           && isStringOrNull("workflowName")
           && isString("url")
@@ -156,11 +156,16 @@ service cloud.firestore {
   }
 
 
-  /// Checks if a field of the request data is a valid enum value or null.
+  /// Checks if a field of the request data is a valid enum value.
   function isEnum(field, validEnumValues) {
     let requestData = request.resource.data;
 
-    return isNotInRequestOrNull(field) || requestData[field] in validEnumValues;
+    return requestData[field] in validEnumValues;
+  }
+
+  /// Checks if a field of the request data is a valid enum value or null.
+  function isEnumOrNull(field, validEnumValues) {
+    return isNotInRequestOrNull(field) || isEnum(field, validEnumValues);
   }
 
   /// Checks if a field of the request data is a string or null.
@@ -212,19 +217,19 @@ service cloud.firestore {
   }
 
   /// Checks whether a user is the owner of the requested user profile.
-  function isSelfProfile(userProfileId) {
+  function isSelfUserProfile(userProfileId) {
     return request.auth.uid == userProfileId;
   }
 
-  /// Checks whether the request contains the valid profile data.
-  function isProfileValid(database) {
+  /// Checks whether the request contains the valid user profile data.
+  function isUserProfileValid(database) {
     let validThemes = ["ThemeType.dark", "ThemeType.light"];
 
-    return isProfileDataValid() && isEnum("theme", validThemes);
+    return isUserProfileDataValid() && isEnum("selectedTheme", validThemes);
   }
 
-  /// Check whether the request data contains only allowed for a profile document fields.
-  function isProfileDataValid() {
+  /// Check whether the request data contains only allowed for a user profile document fields.
+  function isUserProfileDataValid() {
     let requestData = request.resource.data;
 
     return requestData.keys().hasOnly([

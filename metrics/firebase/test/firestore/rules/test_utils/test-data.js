@@ -37,13 +37,13 @@ const builds = {
   },
 };
 
-/** A list of test profiles */
-const profiles = {
-  "profiles/1": {
-    theme: "ThemeType.dark",
+/** A list of test user profiles */
+const userProfiles = {
+  "user_profiles/1": {
+    selectedTheme: "ThemeType.dark",
   },
-  "profiles/2": {
-    theme: "ThemeType.light",
+  "user_profiles/2": {
+    selectedTheme: "ThemeType.light",
   },
 };
 
@@ -84,7 +84,7 @@ exports.projects = {
 
 exports.projectGroups = projectGroups;
 exports.builds = builds;
-exports.profiles = profiles;
+exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
 
 /** An email and password sign in provider identifier */
@@ -113,7 +113,7 @@ exports.getBuild = function () {
   return cloneDeep(builds["build/1"]);
 };
 
-/** Get a test profile */
-exports.getProfile = function () {
-  return cloneDeep(profiles["profiles/1"]);
+/** Get a test user profile */
+exports.getUserProfile = function () {
+  return cloneDeep(userProfiles["user_profiles/1"]);
 };

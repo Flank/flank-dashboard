@@ -10,13 +10,13 @@ const {
   googleSignInProviderId,
   getAllowedEmailUser,
   getDeniedEmailUser,
-  profiles,
-  getProfile,
+  userProfiles,
+  getUserProfile,
   allowedEmailDomains,
 } = require("./test_utils/test-data");
 
 describe("", async () => {
-  const collection = "profiles";
+  const collection = "user_profiles";
   const superUserApp = await getApplicationWith(
     getAllowedEmailUser(passwordSignInProviderId, true, '1')
   )
@@ -27,105 +27,105 @@ describe("", async () => {
       'description': 'Authenticated with a password and ',
       'users': [
         {
-          'description': 'allowed email domain user who is not an owner of the profile with not a verified email',
+          'description': 'allowed email domain user who is not an owner of the user profile with not a verified email',
           'app': await getApplicationWith(
             getAllowedEmailUser(passwordSignInProviderId, false)
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
         },
         {
-          'description': 'allowed email domain user who is an owner of the profile with not a verified email',
+          'description': 'allowed email domain user who is an owner of the user profile with not a verified email',
           'app': await getApplicationWith(
             getAllowedEmailUser(passwordSignInProviderId, false, '1')
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSingle': true,
+            'readSelf': true,
             'update': true,
             'delete': false,
           }
         },
         {
-          'description': 'allowed email domain user who is not an owner of the profile with a verified email',
+          'description': 'allowed email domain user who is not an owner of the user profile with a verified email',
           'app': await getApplicationWith(
             getAllowedEmailUser(passwordSignInProviderId, true)
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
         },
         {
-          'description': 'not allowed email domain user who is an owner of the profile with not verified email',
+          'description': 'not allowed email domain user who is an owner of the user profile with not verified email',
           'app': await getApplicationWith(
             getDeniedEmailUser(passwordSignInProviderId, false, '1')
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSingle': true,
+            'readSelf': true,
             'update': true,
             'delete': false,
           }
         },
         {
-          'description': 'not allowed email domain user who is not an owner of the profile with a verified email',
+          'description': 'not allowed email domain user who is not an owner of the user profile with a verified email',
           'app': await getApplicationWith(
             getDeniedEmailUser(passwordSignInProviderId, true)
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
         },
         {
-          'description': 'not allowed email domain user who is not an owner of the profile with not a verified email',
+          'description': 'not allowed email domain user who is not an owner of the user profile with not a verified email',
           'app': await getApplicationWith(
             getDeniedEmailUser(passwordSignInProviderId, false)
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
         },
         {
-          'description': 'allowed email domain user who is an owner of the profile with a verified email',
+          'description': 'allowed email domain user who is an owner of the user profile with a verified email',
           'app': await getApplicationWith(
             getAllowedEmailUser(passwordSignInProviderId, true, '1')
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSingle': true,
+            'readSelf': true,
             'update': true,
             'delete': false,
           }
         },
         {
-          'description': 'not allowed email domain user who is an owner of the profile with a verified email',
+          'description': 'not allowed email domain user who is an owner of the user profile with a verified email',
           'app': await getApplicationWith(
             getDeniedEmailUser(passwordSignInProviderId, true, '1')
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSingle': true,
+            'readSelf': true,
             'update': true,
             'delete': false,
           }
@@ -144,7 +144,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
@@ -157,7 +157,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
@@ -170,7 +170,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
@@ -183,7 +183,7 @@ describe("", async () => {
           'can': {
             'create': true,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
@@ -196,7 +196,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
@@ -209,7 +209,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
@@ -222,7 +222,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
@@ -235,7 +235,7 @@ describe("", async () => {
           'can': {
             'create': true,
             'read': false,
-            'readSingle': true,
+            'readSelf': true,
             'update': true,
             'delete': false,
           }
@@ -248,7 +248,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
@@ -265,7 +265,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSingle': false,
+            'readSelf': false,
             'update': false,
             'delete': false,
           }
@@ -275,34 +275,34 @@ describe("", async () => {
   ];
 
   before(async () => {
-    await setupTestDatabaseWith(Object.assign({}, profiles, allowedEmailDomains));
+    await setupTestDatabaseWith(Object.assign({}, userProfiles, allowedEmailDomains));
   });
 
   describe("Profile collection rules", () => {
-    it("does not allow creating a profile with not allowed fields", async () => {
-      let profile = getProfile();
-      profile.test = "test";
+    it("does not allow creating a user profile with not allowed fields", async () => {
+      let userProfile = getUserProfile();
+      userProfile.test = "test";
 
       await assertFails(
-        superUserApp.collection(collection).add(profile)
+        superUserApp.collection(collection).add(userProfile)
       );
     });
 
-    it("does not allow creating a profile with not valid theme value", async () => {
-      let profile = getProfile();
-      profile.theme = "test";
+    it("does not allow creating a user profile with not valid selected theme value", async () => {
+      let userProfile = getUserProfile();
+      userProfile.selectedTheme = "test";
 
       await assertFails(
-        superUserApp.collection(collection).add(profile)
+        superUserApp.collection(collection).add(userProfile)
       );
     });
 
-    it("allows to create a profile with null theme value", async () => {
-      let profile = getProfile();
-      profile.theme = null;
+    it("does not allow to create a user profile with null selected theme value", async () => {
+      let userProfile = getUserProfile();
+      userProfile.selectedTheme = null;
 
-      await assertSucceeds(
-        superUserApp.collection(collection).add(profile)
+      await assertFails(
+        superUserApp.collection(collection).add(userProfile)
       );
     });
   });
@@ -314,18 +314,18 @@ describe("", async () => {
 
       describe(description, () => {
         let canCreateDescription = user.can.create ?
-          "allows to create a profile" : "does not allow creating a profile";
+          "allows to create a user profile" : "does not allow creating a user profile";
         let canReadDescription = user.can.read ?
-          "allows reading profiles" : "does not allow reading profiles";
-        let canReadSingleDescription = user.can.readSingle ?
-          "allows reading own profile" : "does not allow reading own profile";
+          "allows reading user profiles" : "does not allow reading user profiles";
+        let canReadSelfDescription = user.can.readSelf ?
+          "allows reading own user profile" : "does not allow reading own user profile";
         let canUpdateDescription = user.can.update ?
-          "allows to update a profile" : "does not allow updating a profile";
+          "allows to update a user profile" : "does not allow updating a user profile";
         let canDeleteDescription = user.can.delete ?
-          "allows to delete a profile" : "does not allow deleting a profile";
+          "allows to delete a user profile" : "does not allow deleting a user profile";
 
         it(canCreateDescription, async () => {
-          const createPromise = user.app.collection(collection).add(getProfile());
+          const createPromise = user.app.collection(collection).add(getUserProfile());
 
           if (user.can.create) {
             await assertSucceeds(createPromise)
@@ -344,19 +344,19 @@ describe("", async () => {
           }
         });
 
-        it(canReadSingleDescription, async () => {
-          const readSinglePromise = user.app.collection(collection).doc("1").get();
+        it(canReadSelfDescription, async () => {
+          const readSelfPromise = user.app.collection(collection).doc("1").get();
 
-          if (user.can.readSingle) {
-            await assertSucceeds(readSinglePromise)
+          if (user.can.readSelf) {
+            await assertSucceeds(readSelfPromise)
           } else {
-            await assertFails(readSinglePromise)
+            await assertFails(readSelfPromise)
           }
         });
 
         it(canUpdateDescription, async () => {
           const updatePromise =
-            user.app.collection(collection).doc("1").update({ theme: "ThemeType.light" });
+            user.app.collection(collection).doc("1").update({ selectedTheme: "ThemeType.light" });
 
           if (user.can.update) {
             await assertSucceeds(updatePromise)
