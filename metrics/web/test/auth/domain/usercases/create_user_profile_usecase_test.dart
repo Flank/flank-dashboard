@@ -38,12 +38,14 @@ void main() {
     test("throws if the given repository throws during creating profile", () {
       const errorMessage = 'error message';
 
-      when(repository.createUserProfile(any, any)).thenThrow(errorMessage);
+      when(repository.createUserProfile(any, any)).thenAnswer(
+        (_) => Future.error(errorMessage),
+      );
 
       final createProfile = CreateUserProfileUseCase(repository);
 
       expect(
-        () => createProfile(userProfileParam),
+        createProfile(userProfileParam),
         throwsA(equals(errorMessage)),
       );
     });
