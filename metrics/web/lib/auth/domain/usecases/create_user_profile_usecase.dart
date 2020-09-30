@@ -7,7 +7,8 @@ import 'package:metrics/base/domain/usecases/usecase.dart';
 @immutable
 class CreateUserProfileUseCase
     implements UseCase<Future<void>, UserProfileParam> {
-  /// A [UserRepository] needed to interact with the persistent store.
+  /// A [UserRepository] that provides an ability to interact
+  /// with the persistent store.
   final UserRepository _repository;
 
   /// Creates a new instance of the [CreateUserProfileUseCase].

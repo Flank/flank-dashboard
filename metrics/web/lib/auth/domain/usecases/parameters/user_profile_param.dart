@@ -4,10 +4,10 @@ import 'package:metrics/auth/domain/entities/theme_type.dart';
 /// A class that represents the user profile parameter.
 @immutable
 class UserProfileParam {
-  /// An unique identifier of this user.
+  /// A unique identifier of the user profile.
   final String id;
 
-  /// A selected [ThemeType] of this user.
+  /// A selected [ThemeType] for the user profile.
   final ThemeType selectedTheme;
 
   /// Create a new instance of the [UserProfileParam].

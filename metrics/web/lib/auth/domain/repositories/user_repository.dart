@@ -43,16 +43,16 @@ abstract class UserRepository {
 
   /// Provides an ability to create a user profile.
   ///
-  /// Throws a [PersistentStoreException] if creating failed.
+  /// Throws a [PersistentStoreException] if creating is failed.
   Future<void> createUserProfile(String id, ThemeType selectedTheme);
 
-  /// Provider an ability to receive the [UserProfile] updates.
+  /// Provides an ability to receive the [UserProfile] updates.
   ///
-  /// Emits a [PersistentStoreException] if loading updates failed.
+  /// Emits a [PersistentStoreException] if loading updates is failed.
   Stream<UserProfile> userProfileStream(String id);
 
   /// Provides an ability to update the user profile.
   ///
-  /// Throws a [PersistentStoreException] if updating failed.
+  /// Throws a [PersistentStoreException] if updating is failed.
   Future<void> updateUserProfile(String id, ThemeType selectedTheme);
 }

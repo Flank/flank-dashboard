@@ -4,10 +4,10 @@ import 'package:metrics/auth/domain/entities/theme_type.dart';
 
 /// An entity representing the user profile.
 class UserProfile extends Equatable {
-  /// An unique identifier of this user.
+  /// A unique identifier of this user.
   final String id;
 
-  /// A selected [ThemeType] of this user.
+  /// A selected [ThemeType] for the user profile.
   final ThemeType selectedTheme;
 
   @override

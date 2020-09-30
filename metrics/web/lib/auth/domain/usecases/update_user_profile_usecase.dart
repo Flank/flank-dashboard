@@ -7,13 +7,13 @@ import 'package:metrics/base/domain/usecases/usecase.dart';
 @immutable
 class UpdateUserProfileUseCase
     implements UseCase<Future<void>, UserProfileParam> {
-  /// A [UserRepository] provides an ability to interact
+  /// A [UserRepository] that provides an ability to interact
   /// with the persistent store.
   final UserRepository _repository;
 
   /// Creates a new instance of the [UpdateUserProfileUseCase].
   ///
-  /// The given [UserRepository] should not be `null`.
+  /// The given [UserRepository] must not be `null`.
   UpdateUserProfileUseCase(this._repository) {
     ArgumentError.checkNotNull(_repository, '_repository');
   }
