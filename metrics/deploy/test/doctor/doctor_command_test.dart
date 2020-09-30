@@ -1,0 +1,50 @@
+import 'package:args/command_runner.dart';
+import 'package:deploy/doctor/command.dart';
+import 'package:test/test.dart';
+
+const _defaultUsage = '''
+Usage: metrics <command> [arguments]
+
+Global options:
+-h, --help    Print this usage information.
+
+Available commands:
+  help   Display help information for metrics.
+
+Run "metrics help <command>" for more information about a command.''';
+
+void main() {
+  var runner;
+  group("DoctorCommand", () {
+    setUpAll(() {
+      runner = CommandRunner('metrics', 'Metrics installer.');
+    });
+    test(
+      ".invocation has a sane default",
+      () {
+        expect(runner.invocation, equals('metrics <command> [arguments]'));
+      },
+    );
+    test('returns the usage string', () {
+      expect(runner.usage, equals('''
+Metrics installer.
+
+$_defaultUsage'''));
+    });
+    test('contains custom commands', () {
+      runner.addCommand(DoctorCommand());
+      expect(runner.usage, equals('''
+Metrics installer.
+
+Usage: metrics <command> [arguments]
+
+Global options:
+-h, --help    Print this usage information.
+
+Available commands:
+  doctor   Check dependencies.
+
+Run "metrics help <command>" for more information about a command.'''));
+    });
+  });
+}
