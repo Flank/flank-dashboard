@@ -10,7 +10,7 @@ class CreateUserProfileUseCase
   /// A [UserRepository] needed to interact with the persistent store.
   final UserRepository _repository;
 
-  /// Create a new instance of the [CreateUserProfileUseCase].
+  /// Creates a new instance of the [CreateUserProfileUseCase].
   ///
   /// The given [UserRepository] must not be `null`.
   CreateUserProfileUseCase(this._repository) {

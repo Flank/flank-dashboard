@@ -53,8 +53,9 @@ void main() {
 
       profileController.addError(errorMessage);
 
-      when(repository.userProfileStream(any))
-          .thenAnswer((_) => profileController.stream);
+      when(repository.userProfileStream(any)).thenAnswer(
+        (_) => profileController.stream,
+      );
 
       final receiveProfileUpdates = ReceiveUserProfileUpdates(repository);
       final profileUpdates = receiveProfileUpdates(userIdParam);
