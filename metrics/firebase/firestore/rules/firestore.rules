@@ -20,9 +20,8 @@ service cloud.firestore {
     }
 
     match /user_profiles/{userProfileId} {
-      allow create: if isAccessAuthorized(database) && isUserProfileValid(database);
-      allow read: if isAccessAuthorized(database) && isSelfUserProfile(userProfileId);
-      allow update: if isAccessAuthorized(database) && isSelfUserProfile(userProfileId) && isUserProfileValid(database);
+      allow read: if isAccessAuthorized(database) && isDocumentOwner(userProfileId);
+      allow write: if isAccessAuthorized(database) && isDocumentOwner(userProfileId) && isUserProfileValid(database);
       allow delete: if false;
     }
 
@@ -216,9 +215,9 @@ service cloud.firestore {
     return field in requestData && requestData[field] is int;
   }
 
-  /// Checks whether a user is the owner of the requested user profile.
-  function isSelfUserProfile(userProfileId) {
-    return request.auth.uid == userProfileId;
+  /// Checks whether a user is the owner of the requested document.
+  function isDocumentOwner(documentId) {
+    return request.auth.uid == documentId;
   }
 
   /// Checks whether the request contains the valid user profile data.

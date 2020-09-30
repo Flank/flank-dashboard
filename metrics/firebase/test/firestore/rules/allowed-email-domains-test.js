@@ -133,7 +133,6 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSingle': false,
             'update': false,
             'delete': false,
           }

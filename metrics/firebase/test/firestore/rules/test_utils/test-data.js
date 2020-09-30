@@ -93,12 +93,12 @@ exports.passwordSignInProviderId = "password";
 /** A google sign in provider identifier */
 exports.googleSignInProviderId = "google.com";
 
-/** Provides a firebase user with allowed email, a sign in provider identifier and a uid */
+/** Provides a firebase user with allowed email, sign-in provider identifier, and uid */
 exports.getAllowedEmailUser = function (signInProviderId, emailVerified, uid = "uid") {
   return getUser(allowedEmail, signInProviderId, emailVerified, uid);
 };
 
-/** Provides a firebase user with not allowed email, a sign in provider identifier and a uid */
+/** Provides a firebase user with not allowed email, sign-in provider identifier, and uid*/
 exports.getDeniedEmailUser = function (signInProviderId, emailVerified, uid = "uid") {
   return getUser(deniedEmail, signInProviderId, emailVerified, uid);
 };

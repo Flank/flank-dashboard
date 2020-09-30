@@ -16,9 +16,10 @@ const {
 } = require("./test_utils/test-data");
 
 describe("", async () => {
+  const uid = "1";
   const collection = "user_profiles";
   const superUserApp = await getApplicationWith(
-    getAllowedEmailUser(passwordSignInProviderId, true, '1')
+    getAllowedEmailUser(passwordSignInProviderId, true, uid)
   )
 
   const signInProviders = [
@@ -32,9 +33,9 @@ describe("", async () => {
             getAllowedEmailUser(passwordSignInProviderId, false)
           ),
           'can': {
-            'create': true,
+            'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -42,12 +43,12 @@ describe("", async () => {
         {
           'description': 'allowed email domain user who is an owner of the user profile with not a verified email',
           'app': await getApplicationWith(
-            getAllowedEmailUser(passwordSignInProviderId, false, '1')
+            getAllowedEmailUser(passwordSignInProviderId, false, uid)
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSelf': true,
+            'readOwn': true,
             'update': true,
             'delete': false,
           }
@@ -58,9 +59,9 @@ describe("", async () => {
             getAllowedEmailUser(passwordSignInProviderId, true)
           ),
           'can': {
-            'create': true,
+            'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -68,12 +69,12 @@ describe("", async () => {
         {
           'description': 'not allowed email domain user who is an owner of the user profile with not verified email',
           'app': await getApplicationWith(
-            getDeniedEmailUser(passwordSignInProviderId, false, '1')
+            getDeniedEmailUser(passwordSignInProviderId, false, uid)
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSelf': true,
+            'readOwn': true,
             'update': true,
             'delete': false,
           }
@@ -84,9 +85,9 @@ describe("", async () => {
             getDeniedEmailUser(passwordSignInProviderId, true)
           ),
           'can': {
-            'create': true,
+            'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -97,9 +98,9 @@ describe("", async () => {
             getDeniedEmailUser(passwordSignInProviderId, false)
           ),
           'can': {
-            'create': true,
+            'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -107,12 +108,12 @@ describe("", async () => {
         {
           'description': 'allowed email domain user who is an owner of the user profile with a verified email',
           'app': await getApplicationWith(
-            getAllowedEmailUser(passwordSignInProviderId, true, '1')
+            getAllowedEmailUser(passwordSignInProviderId, true, uid)
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSelf': true,
+            'readOwn': true,
             'update': true,
             'delete': false,
           }
@@ -120,12 +121,12 @@ describe("", async () => {
         {
           'description': 'not allowed email domain user who is an owner of the user profile with a verified email',
           'app': await getApplicationWith(
-            getDeniedEmailUser(passwordSignInProviderId, true, '1')
+            getDeniedEmailUser(passwordSignInProviderId, true, uid)
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSelf': true,
+            'readOwn': true,
             'update': true,
             'delete': false,
           }
@@ -144,7 +145,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -157,7 +158,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -165,12 +166,12 @@ describe("", async () => {
         {
           'description': 'allowed email domain user who is an owner of the profile with not a verified email',
           'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, false, '1')
+            getAllowedEmailUser(googleSignInProviderId, false, uid)
           ),
           'can': {
             'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -181,9 +182,9 @@ describe("", async () => {
             getAllowedEmailUser(googleSignInProviderId, true)
           ),
           'can': {
-            'create': true,
+            'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -191,12 +192,12 @@ describe("", async () => {
         {
           'description': 'not allowed email domain user who is an owner of the profile with not verified email',
           'app': await getApplicationWith(
-            getDeniedEmailUser(googleSignInProviderId, false, '1')
+            getDeniedEmailUser(googleSignInProviderId, false, uid)
           ),
           'can': {
             'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -209,7 +210,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -222,7 +223,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -230,12 +231,12 @@ describe("", async () => {
         {
           'description': 'allowed email domain user who is an owner of the profile with a verified email',
           'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, true, '1')
+            getAllowedEmailUser(googleSignInProviderId, true, uid)
           ),
           'can': {
             'create': true,
             'read': false,
-            'readSelf': true,
+            'readOwn': true,
             'update': true,
             'delete': false,
           }
@@ -243,12 +244,12 @@ describe("", async () => {
         {
           'description': 'not allowed email domain user who is an owner of the profile with a verified email',
           'app': await getApplicationWith(
-            getDeniedEmailUser(googleSignInProviderId, true, '1')
+            getDeniedEmailUser(googleSignInProviderId, true, uid)
           ),
           'can': {
             'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -265,7 +266,7 @@ describe("", async () => {
           'can': {
             'create': false,
             'read': false,
-            'readSelf': false,
+            'readOwn': false,
             'update': false,
             'delete': false,
           }
@@ -317,7 +318,7 @@ describe("", async () => {
           "allows to create a user profile" : "does not allow creating a user profile";
         let canReadDescription = user.can.read ?
           "allows reading user profiles" : "does not allow reading user profiles";
-        let canReadSelfDescription = user.can.readSelf ?
+        let canReadOwnDescription = user.can.readOwn ?
           "allows reading own user profile" : "does not allow reading own user profile";
         let canUpdateDescription = user.can.update ?
           "allows to update a user profile" : "does not allow updating a user profile";
@@ -325,7 +326,7 @@ describe("", async () => {
           "allows to delete a user profile" : "does not allow deleting a user profile";
 
         it(canCreateDescription, async () => {
-          const createPromise = user.app.collection(collection).add(getUserProfile());
+          const createPromise = user.app.collection(collection).doc(uid).set(getUserProfile());
 
           if (user.can.create) {
             await assertSucceeds(createPromise)
@@ -344,19 +345,19 @@ describe("", async () => {
           }
         });
 
-        it(canReadSelfDescription, async () => {
-          const readSelfPromise = user.app.collection(collection).doc("1").get();
+        it(canReadOwnDescription, async () => {
+          const readOwnPromise = user.app.collection(collection).doc(uid).get();
 
-          if (user.can.readSelf) {
-            await assertSucceeds(readSelfPromise)
+          if (user.can.readOwn) {
+            await assertSucceeds(readOwnPromise)
           } else {
-            await assertFails(readSelfPromise)
+            await assertFails(readOwnPromise)
           }
         });
 
         it(canUpdateDescription, async () => {
           const updatePromise =
-            user.app.collection(collection).doc("1").update({ selectedTheme: "ThemeType.light" });
+            user.app.collection(collection).doc(uid).update({ selectedTheme: "ThemeType.light" });
 
           if (user.can.update) {
             await assertSucceeds(updatePromise)
@@ -367,7 +368,7 @@ describe("", async () => {
 
         it(canDeleteDescription, async () => {
           const deletePromise =
-            user.app.collection(collection).doc("1").delete();
+            user.app.collection(collection).doc(uid).delete();
 
           if (user.can.delete) {
             await assertSucceeds(deletePromise)
