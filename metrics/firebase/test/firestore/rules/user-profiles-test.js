@@ -30,8 +30,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -43,8 +43,8 @@ describe("", async () => {
       ),
       'can': {
         'create': true,
-        'read': false,
-        'readOwn': true,
+        'list': false,
+        'get': true,
         'update': true,
         'delete': false,
       }
@@ -56,8 +56,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -69,8 +69,8 @@ describe("", async () => {
       ),
       'can': {
         'create': true,
-        'read': false,
-        'readOwn': true,
+        'list': false,
+        'get': true,
         'update': true,
         'delete': false,
       }
@@ -82,8 +82,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -95,8 +95,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -108,8 +108,8 @@ describe("", async () => {
       ),
       'can': {
         'create': true,
-        'read': false,
-        'readOwn': true,
+        'list': false,
+        'get': true,
         'update': true,
         'delete': false,
       }
@@ -121,8 +121,8 @@ describe("", async () => {
       ),
       'can': {
         'create': true,
-        'read': false,
-        'readOwn': true,
+        'list': false,
+        'get': true,
         'update': true,
         'delete': false,
       }
@@ -134,8 +134,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -147,8 +147,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -160,8 +160,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -173,8 +173,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -186,8 +186,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -199,8 +199,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -212,8 +212,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -225,8 +225,8 @@ describe("", async () => {
       ),
       'can': {
         'create': true,
-        'read': false,
-        'readOwn': true,
+        'list': false,
+        'get': true,
         'update': true,
         'delete': false,
       }
@@ -238,8 +238,8 @@ describe("", async () => {
       ),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -249,8 +249,8 @@ describe("", async () => {
       'app': await getApplicationWith(null),
       'can': {
         'create': false,
-        'read': false,
-        'readOwn': false,
+        'list': false,
+        'get': false,
         'update': false,
         'delete': false,
       }
@@ -294,9 +294,9 @@ describe("", async () => {
     describe(user.describe, () => {
       let canCreateDescription = user.can.create ?
         "allows to create a user profile" : "does not allow creating a user profile";
-      let canReadDescription = user.can.read ?
+      let canListDescription = user.can.list ?
         "allows reading user profiles" : "does not allow reading user profiles";
-      let canReadOwnDescription = user.can.readOwn ?
+      let canGetDescription = user.can.get ?
         "allows reading own user profile" : "does not allow reading own user profile";
       let canUpdateDescription = user.can.update ?
         "allows to update a user profile" : "does not allow updating a user profile";
@@ -313,20 +313,20 @@ describe("", async () => {
         }
       });
 
-      it(canReadDescription, async () => {
+      it(canListDescription, async () => {
         const readPromise = user.app.collection(collection).get();
 
-        if (user.can.read) {
+        if (user.can.list) {
           await assertSucceeds(readPromise)
         } else {
           await assertFails(readPromise)
         }
       });
 
-      it(canReadOwnDescription, async () => {
+      it(canGetDescription, async () => {
         const readOwnPromise = user.app.collection(collection).doc(uid).get();
 
-        if (user.can.readOwn) {
+        if (user.can.get) {
           await assertSucceeds(readOwnPromise)
         } else {
           await assertFails(readOwnPromise)
