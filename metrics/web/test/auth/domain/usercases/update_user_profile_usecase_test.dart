@@ -38,7 +38,7 @@ void main() {
     test("throws if the given repository throws during updating profile", () {
       const errorMessage = 'error message';
 
-      when(repository.createUserProfile(any, any)).thenThrow(errorMessage);
+      when(repository.updateUserProfile(any, any)).thenThrow(errorMessage);
 
       final createProfile = UpdateUserProfileUseCase(repository);
 
