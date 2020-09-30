@@ -216,7 +216,7 @@ service cloud.firestore {
     return field in requestData && requestData[field] is int;
   }
 
-  /// Checks whether a user is the owner of the requested document.
+  /// Checks whether a user is the owner of the document with the given document id.
   function isDocumentOwner(documentId) {
     return request.auth.uid == documentId;
   }

@@ -18,13 +18,13 @@ const {
 describe("", async () => {
   const uid = "1";
   const collection = "user_profiles";
-  const superUserApp = await getApplicationWith(
+  const passwordProviderAllowedEmailApp = await getApplicationWith(
     getAllowedEmailUser(passwordSignInProviderId, true, uid)
   )
 
   const users = [
     {
-      'describe': 'Authenticated with a password and allowed email domain user who is not an owner of the user profile with not a verified email',
+      'describe': 'Authenticated with a password, allowed email domain, and not a verified email user who is not an owner of the user profile',
       'app': await getApplicationWith(
         getAllowedEmailUser(passwordSignInProviderId, false)
       ),
@@ -37,7 +37,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a password and allowed email domain user who is an owner of the user profile with not a verified email',
+      'describe': 'Authenticated with a password, allowed email domain, and not a verified email user who is an owner of the user profile',
       'app': await getApplicationWith(
         getAllowedEmailUser(passwordSignInProviderId, false, uid)
       ),
@@ -50,7 +50,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a password and allowed email domain user who is not an owner of the user profile with a verified email',
+      'describe': 'Authenticated with a password, allowed email domain, and a verified email user who is not an owner of the user profile',
       'app': await getApplicationWith(
         getAllowedEmailUser(passwordSignInProviderId, true)
       ),
@@ -63,7 +63,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a password and not allowed email domain user who is an owner of the user profile with not verified email',
+      'describe': 'Authenticated with a password, not allowed email domain, and not verified email user who is an owner of the user profile',
       'app': await getApplicationWith(
         getDeniedEmailUser(passwordSignInProviderId, false, uid)
       ),
@@ -76,7 +76,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a password and not allowed email domain user who is not an owner of the user profile with a verified email',
+      'describe': 'Authenticated with a password, not allowed email domain, and a verified email user who is not an owner of the user profile',
       'app': await getApplicationWith(
         getDeniedEmailUser(passwordSignInProviderId, true)
       ),
@@ -89,7 +89,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a password and not allowed email domain user who is not an owner of the user profile with not a verified email',
+      'describe': 'Authenticated with a password, not allowed email domain, and not a verified email user who is not an owner of the user profile',
       'app': await getApplicationWith(
         getDeniedEmailUser(passwordSignInProviderId, false)
       ),
@@ -102,7 +102,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a password and allowed email domain user who is an owner of the user profile with a verified email',
+      'describe': 'Authenticated with a password, allowed email domain, and a verified email user who is an owner of the user profile',
       'app': await getApplicationWith(
         getAllowedEmailUser(passwordSignInProviderId, true, uid)
       ),
@@ -115,7 +115,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a password and not allowed email domain user who is an owner of the user profile with a verified email',
+      'describe': 'Authenticated with a password, not allowed email domain, and a verified email user who is an owner of the user profile',
       'app': await getApplicationWith(
         getDeniedEmailUser(passwordSignInProviderId, true, uid)
       ),
@@ -128,7 +128,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a google and not allowed email domain user who is an owner of the profile with a verified email',
+      'describe': 'Authenticated with a google, allowed email domain, and not a verified email user who is not an owner of the profile',
       'app': await getApplicationWith(
         getAllowedEmailUser(googleSignInProviderId, false)
       ),
@@ -141,20 +141,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a google and allowed email domain user who is not an owner of the profile with not a verified email',
-      'app': await getApplicationWith(
-        getAllowedEmailUser(googleSignInProviderId, false)
-      ),
-      'can': {
-        'create': false,
-        'list': false,
-        'get': false,
-        'update': false,
-        'delete': false,
-      }
-    },
-    {
-      'describe': 'Authenticated with a google and allowed email domain user who is an owner of the profile with not a verified email',
+      'describe': 'Authenticated with a google, allowed email domain, and not a verified email user who is an owner of the profile',
       'app': await getApplicationWith(
         getAllowedEmailUser(googleSignInProviderId, false, uid)
       ),
@@ -167,7 +154,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a google and allowed email domain user who is not an owner of the profile with a verified email',
+      'describe': 'Authenticated with a google, allowed email domain, and a verified email user who is not an owner of the profile',
       'app': await getApplicationWith(
         getAllowedEmailUser(googleSignInProviderId, true)
       ),
@@ -180,7 +167,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a google and not allowed email domain user who is an owner of the profile with not verified email',
+      'describe': 'Authenticated with a google, not allowed email domain, and not verified email user who is an owner of the profile',
       'app': await getApplicationWith(
         getDeniedEmailUser(googleSignInProviderId, false, uid)
       ),
@@ -193,7 +180,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a google and not allowed email domain user who is not an owner of the profile with a verified email',
+      'describe': 'Authenticated with a google, not allowed email domain, and a verified email user who is not an owner of the profile',
       'app': await getApplicationWith(
         getDeniedEmailUser(googleSignInProviderId, true)
       ),
@@ -206,7 +193,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a google and not allowed email domain user who is not an owner of the profile with not a verified email',
+      'describe': 'Authenticated with a google, not allowed email domain, and not a verified email user who is not an owner of the profile',
       'app': await getApplicationWith(
         getDeniedEmailUser(googleSignInProviderId, false)
       ),
@@ -219,7 +206,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a google and allowed email domain user who is an owner of the profile with a verified email',
+      'describe': 'Authenticated with a google, allowed email domain, and a verified email user who is an owner of the profile',
       'app': await getApplicationWith(
         getAllowedEmailUser(googleSignInProviderId, true, uid)
       ),
@@ -232,7 +219,7 @@ describe("", async () => {
       }
     },
     {
-      'describe': 'Authenticated with a google and not allowed email domain user who is an owner of the profile with a verified email',
+      'describe': 'Authenticated with a google, not allowed email domain, and a verified email user who is an owner of the profile',
       'app': await getApplicationWith(
         getDeniedEmailUser(googleSignInProviderId, true, uid)
       ),
@@ -267,7 +254,7 @@ describe("", async () => {
       userProfile.test = "test";
 
       await assertFails(
-        superUserApp.collection(collection).add(userProfile)
+        passwordProviderAllowedEmailApp.collection(collection).add(userProfile)
       );
     });
 
@@ -276,7 +263,7 @@ describe("", async () => {
       userProfile.selectedTheme = "test";
 
       await assertFails(
-        superUserApp.collection(collection).add(userProfile)
+        passwordProviderAllowedEmailApp.collection(collection).add(userProfile)
       );
     });
 
@@ -285,7 +272,7 @@ describe("", async () => {
       userProfile.selectedTheme = null;
 
       await assertFails(
-        superUserApp.collection(collection).add(userProfile)
+        passwordProviderAllowedEmailApp.collection(collection).add(userProfile)
       );
     });
   });
