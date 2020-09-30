@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/auth/domain/entities/auth_error_code.dart';
+import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
@@ -36,6 +38,7 @@ void main() {
 
     const testEmail = 'test@email.com';
     const testPassword = 'testPassword';
+    const errorMessage = 'Error Message';
 
     final signInUseCase = SignInUseCaseMock();
     final googleSignInUseCase = GoogleSignInUseCaseMock();
@@ -43,6 +46,10 @@ void main() {
     final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
 
     AuthNotifier authNotifier;
+
+    const passwordAuthException = AuthenticationException(
+      code: AuthErrorCode.wrongPassword,
+    );
 
     Widget _getPasswordFieldSuffixIcon(WidgetTester tester) {
       final passwordField = tester.widget<MetricsTextFormField>(
@@ -59,6 +66,13 @@ void main() {
         googleSignInUseCase,
         signOutUseCase,
       );
+    });
+
+    tearDown(() {
+      reset(signInUseCase);
+      reset(googleSignInUseCase);
+      reset(signOutUseCase);
+      reset(receiveAuthUpdates);
     });
 
     testWidgets(
@@ -293,6 +307,64 @@ void main() {
         expect(tappableAreaFinder, findsOneWidget);
       },
     );
+
+    testWidgets(
+      "displays the email auth error message",
+      (tester) async {
+        final authNotifier = AuthNotifierMock();
+        when(authNotifier.isLoading).thenReturn(false);
+        when(authNotifier.emailErrorMessage).thenReturn(errorMessage);
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+        expect(find.text(errorMessage), findsOneWidget);
+      },
+    );
+    testWidgets(
+      "displays the password auth error message",
+      (tester) async {
+        final authNotifier = AuthNotifierMock();
+        when(authNotifier.isLoading).thenReturn(false);
+        when(authNotifier.passwordErrorMessage).thenReturn(errorMessage);
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+        expect(find.text(errorMessage), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "removes the password auth error message when password validation error appears",
+      (tester) async {
+        when(signInUseCase.call(any)).thenThrow(passwordAuthException);
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+
+        await tester.enterText(emailInputFinder, 'test@test.com');
+        await tester.enterText(passwordInputFinder, 'password');
+
+        await tester.tap(submitButtonFinder);
+        await tester.pump();
+
+        expect(
+            find.text(AuthStrings.wrongPasswordErrorMessage), findsOneWidget);
+
+        await tester.enterText(passwordInputFinder, '');
+        await tester.tap(submitButtonFinder);
+        await tester.pump();
+
+        expect(find.text(AuthStrings.wrongPasswordErrorMessage), findsNothing);
+        expect(find.text(AuthStrings.passwordRequiredErrorMessage),
+            findsOneWidget);
+      },
+    );
   });
 }
 
@@ -337,6 +409,12 @@ class SignInErrorAuthNotifierStub extends ChangeNotifier
   @override
   String get authErrorMessage => _authExceptionDescription;
 
+  @override
+  String get emailErrorMessage => null;
+
+  @override
+  String get passwordErrorMessage => null;
+
   /// Contains text description of any authentication exception that may occur.
   String _authExceptionDescription;
 
@@ -357,4 +435,7 @@ class SignInErrorAuthNotifierStub extends ChangeNotifier
 
   @override
   Future<void> signOut() async {}
+
+  @override
+  void clearErrorMessages() {}
 }

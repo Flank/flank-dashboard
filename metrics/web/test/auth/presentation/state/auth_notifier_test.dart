@@ -25,9 +25,22 @@ void main() {
     const authException = AuthenticationException(
       code: AuthErrorCode.unknown,
     );
+    const emailAuthException = AuthenticationException(
+      code: AuthErrorCode.userNotFound,
+    );
+    const passwordAuthException = AuthenticationException(
+      code: AuthErrorCode.wrongPassword,
+    );
 
     const email = 'test@email.com';
     const password = 'password';
+
+    const invalidEmail = 'email@mail.mail';
+    const invalidPassword = 'password';
+    final invalidCredentials = UserCredentialsParam(
+      email: Email(invalidEmail),
+      password: Password(invalidPassword),
+    );
 
     final authNotifier = AuthNotifier(
       receiveAuthUpdates,
@@ -243,6 +256,27 @@ void main() {
       expect(authNotifier.authErrorMessage, isNotNull);
     });
 
+    test(
+      ".emailErrorMessage is populated when SignInUseCase throws an email exception",
+      () {
+        when(signInUseCase.call(any)).thenThrow(emailAuthException);
+        authNotifier.signInWithEmailAndPassword(email, password);
+
+        expect(authNotifier.emailErrorMessage, isNotNull);
+      },
+    );
+
+    test(
+      ".passwordErrorMessage is populated when SignInUseCase throws a password exception",
+      () {
+        when(signInUseCase.call(any)).thenThrow(passwordAuthException);
+
+        authNotifier.signInWithEmailAndPassword(email, password);
+
+        expect(authNotifier.passwordErrorMessage, isNotNull);
+      },
+    );
+
     test(".authErrorMessage is populated when GoogleSignInUseCase throws", () {
       when(googleSignInUseCase.call()).thenThrow(authException);
 
@@ -254,13 +288,6 @@ void main() {
     test(
       ".signInWithEmailAndPassword() clears the authentication error message on a successful sign in",
       () {
-        const invalidEmail = 'email@mail.mail';
-        const invalidPassword = 'password';
-        final invalidCredentials = UserCredentialsParam(
-          email: Email(invalidEmail),
-          password: Password(invalidPassword),
-        );
-
         when(signInUseCase.call(invalidCredentials)).thenThrow(authException);
 
         authNotifier.signInWithEmailAndPassword(invalidEmail, invalidPassword);
@@ -271,6 +298,40 @@ void main() {
             'valid_email@mail.mail', 'valid_password');
 
         expect(authNotifier.authErrorMessage, isNull);
+      },
+    );
+
+    test(
+      ".signInWithEmailAndPassword() clears the authentication email error message on a successful sign in",
+      () {
+        when(signInUseCase.call(invalidCredentials))
+            .thenThrow(emailAuthException);
+
+        authNotifier.signInWithEmailAndPassword(invalidEmail, invalidPassword);
+
+        expect(authNotifier.emailErrorMessage, isNotNull);
+
+        authNotifier.signInWithEmailAndPassword(
+            'valid_email@mail.mail', 'valid_password');
+
+        expect(authNotifier.emailErrorMessage, isNull);
+      },
+    );
+
+    test(
+      ".signInWithEmailAndPassword() clears the authentication password error message on a successful sign in",
+      () {
+        when(signInUseCase.call(invalidCredentials))
+            .thenThrow(passwordAuthException);
+
+        authNotifier.signInWithEmailAndPassword(invalidEmail, invalidPassword);
+
+        expect(authNotifier.passwordErrorMessage, isNotNull);
+
+        authNotifier.signInWithEmailAndPassword(
+            'valid_email@mail.mail', 'valid_password');
+
+        expect(authNotifier.passwordErrorMessage, isNull);
       },
     );
 

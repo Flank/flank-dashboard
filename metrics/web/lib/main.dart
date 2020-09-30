@@ -17,7 +17,10 @@ import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart
 import 'package:metrics/util/favicon.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MetricsApp());
+void main() {
+  Favicon().setup();
+  runApp(MetricsApp());
+}
 
 class MetricsApp extends StatefulWidget {
   @override
@@ -35,8 +38,6 @@ class _MetricsAppState extends State<MetricsApp> {
 
   @override
   Widget build(BuildContext context) {
-    Favicon().setup();
-
     return MetricsFPSMonitor(
       child: InjectionContainer(
         child: MetricsThemeBuilder(

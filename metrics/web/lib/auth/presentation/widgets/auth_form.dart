@@ -8,6 +8,7 @@ import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:provider/provider.dart';
 
@@ -52,6 +53,15 @@ class _AuthFormState extends State<AuthForm> {
                 hint: AuthStrings.email,
                 keyboardType: TextInputType.emailAddress,
               ),
+              Builder(builder: (_) {
+                final emailErrorMessage = notifier.emailErrorMessage;
+
+                if (emailErrorMessage != null) {
+                  return _buildFormFieldErrorMessage(emailErrorMessage);
+                }
+
+                return Container();
+              }),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: MetricsTextFormField(
@@ -70,11 +80,22 @@ class _AuthFormState extends State<AuthForm> {
                   ),
                 ),
               ),
-              if (notifier.isLoading)
-                const Padding(
-                  padding: EdgeInsets.only(top: 10.0),
-                  child: LinearProgressIndicator(),
-                ),
+              Builder(builder: (_) {
+                if (notifier.isLoading) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: LinearProgressIndicator(),
+                  );
+                }
+
+                final passwordErrorMessage = notifier.passwordErrorMessage;
+
+                if (passwordErrorMessage != null) {
+                  return _buildFormFieldErrorMessage(passwordErrorMessage);
+                }
+
+                return Container();
+              }),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0, top: 72.0),
                 child: MetricsPositiveButton(
@@ -93,14 +114,27 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
+  /// Builds the authentication error message.
+  Widget _buildFormFieldErrorMessage(String authErrorMessage) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5.0, left: 16.0),
+      child: Text(
+        authErrorMessage,
+        style: TextFieldConfig.errorStyle,
+      ),
+    );
+  }
+
   /// Starts sign in process.
   void _submit() {
+    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
     if (_formKey.currentState.validate()) {
-      Provider.of<AuthNotifier>(context, listen: false)
-          .signInWithEmailAndPassword(
+      authNotifier.signInWithEmailAndPassword(
         _emailController.text,
         _passwordController.text,
       );
+    } else {
+      authNotifier.clearErrorMessages();
     }
   }
 
