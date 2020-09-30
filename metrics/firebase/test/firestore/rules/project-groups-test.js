@@ -22,131 +22,113 @@ describe("", async function () {
   const unauthenticatedApp = await getApplicationWith(null);
   const collection = "project_groups";
 
-  const signInProviders = [
+  const users = [
     {
-      'title': 'password',
-      'description': 'Authenticated with a password and ',
-      'users': [
-        {
-          'description': 'allowed email domain user with a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(passwordSignInProviderId, true)
-          ),
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-        {
-          'description': 'not allowed email domain user with a verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(passwordSignInProviderId, true)
-          ),
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-        {
-          'description': 'allowed email domain user with not verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(passwordSignInProviderId, false)
-          ),
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-        {
-          'description': 'not allowed email domain user with not verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(passwordSignInProviderId, false)
-          ),
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-      ],
+      'describe': 'Authenticated with a password and allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+          getAllowedEmailUser(passwordSignInProviderId, true)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': true,
+      }
     },
     {
-      'title': 'google',
-      'description': 'Authenticated with a google and ',
-      'users': [
-        {
-          'describe': 'allowed email domain user with a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, true)
-          ),
-          'can': {
-            'create': true,
-            'read': true,
-            'update': true,
-            'delete': true,
-          }
-        },
-        {
-          'describe': 'not allowed email domain user with a verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(googleSignInProviderId, true)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'describe': 'allowed email domain user with not verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, false)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'describe': 'not allowed email domain user with not verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, false)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-      ]
+      'describe': 'Authenticated with a password and not allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, true)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': true,
+      }
     },
     {
-      'title': '',
-      'description': 'Unauthenticated ',
-      'users': [
-        {
-          'description': 'user',
-          'app': unauthenticatedApp,
-          'can': {
-            'create': false,
-            'read': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-      ]
-    }
+      'describe': 'Authenticated with a password and allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(passwordSignInProviderId, false)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': true,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, false)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': true,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, true)
+      ),
+      'can': {
+        'create': true,
+        'read': true,
+        'update': true,
+        'delete': true,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and not allowed email domain user with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, true)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with google and not allowed email domain user with not verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Unauthenticated user',
+      'app': unauthenticatedApp,
+      'can': {
+        'create': false,
+        'read': false,
+        'update': false,
+        'delete': false,
+      }
+    },
   ];
 
   before(async () => {
@@ -286,64 +268,59 @@ describe("", async function () {
       );
     });
 
-    async.forEach(signInProviders, (provider, callback) => {
-      provider.users.forEach(user => {
-        let description = provider.description + user.description;
+    async.forEach(users, (user, callback) => {
+      describe(user.describe, () => {
+        let canCreateDescription = user.can.create ?
+          "allows to create a project group" : "does not allow creating a project group";
+        let canReadDescription = user.can.read ?
+          "allows reading project groups" : "does not allow reading project groups";
+        let canUpdateDescription = user.can.update ?
+          "allows to update a project group" : "does not allow updating a project group";
+        let canDeleteDescription = user.can.delete ?
+          "allows to delete a project group" : "does not allow deleting a project group";
 
-        describe(description, () => {
-          let canCreateDescription = user.can.create ?
-            "allows to create a project group" : "does not allow creating a project group";
-          let canReadDescription = user.can.read ?
-            "allows reading project groups" : "does not allow reading project groups";
-          let canUpdateDescription = user.can.update ?
-            "allows to update a project group" : "does not allow updating a project group";
-          let canDeleteDescription = user.can.delete ?
-            "allows to delete a project group" : "does not allow deleting a project group";
+        it(canCreateDescription, async () => {
+          const createPromise = user.app.collection(collection).add(getProjectGroup());
 
-          it(canCreateDescription, async () => {
-            const createPromise = user.app.collection(collection).add(getProjectGroup());
+          if (user.can.create) {
+            await assertSucceeds(createPromise)
+          } else {
+            await assertFails(createPromise)
+          }
+        });
 
-            if (user.can.create) {
-              await assertSucceeds(createPromise)
-            } else {
-              await assertFails(createPromise)
-            }
-          });
+        it(canReadDescription, async () => {
+          const readPromise = user.app.collection(collection).get();
 
-          it(canReadDescription, async () => {
-            const readPromise = user.app.collection(collection).get();
+          if (user.can.read) {
+            await assertSucceeds(readPromise)
+          } else {
+            await assertFails(readPromise)
+          }
+        });
 
-            if (user.can.read) {
-              await assertSucceeds(readPromise)
-            } else {
-              await assertFails(readPromise)
-            }
-          });
+        it(canUpdateDescription, async () => {
+          const updatePromise = user.app.collection(collection)
+            .doc("2")
+            .update(getProjectGroup());
 
-          it(canUpdateDescription, async () => {
-            const updatePromise = user.app.collection(collection)
-              .doc("2")
-              .update(getProjectGroup());
+          if (user.can.update) {
+            await assertSucceeds(updatePromise)
+          } else {
+            await assertFails(updatePromise)
+          }
+        });
 
-            if (user.can.update) {
-              await assertSucceeds(updatePromise)
-            } else {
-              await assertFails(updatePromise)
-            }
-          });
+        it(canDeleteDescription, async () => {
+          const deletePromise = user.app.collection(collection).doc("1").delete();
 
-          it(canDeleteDescription, async () => {
-            const deletePromise = user.app.collection(collection).doc("1").delete();
-
-            if (user.can.delete) {
-              await assertSucceeds(deletePromise)
-            } else {
-              await assertFails(deletePromise)
-            }
-          });
+          if (user.can.delete) {
+            await assertSucceeds(deletePromise)
+          } else {
+            await assertFails(deletePromise)
+          }
         });
       });
-
       callback();
     });
   });

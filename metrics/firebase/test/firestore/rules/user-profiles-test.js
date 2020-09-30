@@ -22,256 +22,238 @@ describe("", async () => {
     getAllowedEmailUser(passwordSignInProviderId, true, uid)
   )
 
-  const signInProviders = [
+  const users = [
     {
-      'title': 'password',
-      'description': 'Authenticated with a password and ',
-      'users': [
-        {
-          'description': 'allowed email domain user who is not an owner of the user profile with not a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(passwordSignInProviderId, false)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'allowed email domain user who is an owner of the user profile with not a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(passwordSignInProviderId, false, uid)
-          ),
-          'can': {
-            'create': true,
-            'read': false,
-            'readOwn': true,
-            'update': true,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'allowed email domain user who is not an owner of the user profile with a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(passwordSignInProviderId, true)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'not allowed email domain user who is an owner of the user profile with not verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(passwordSignInProviderId, false, uid)
-          ),
-          'can': {
-            'create': true,
-            'read': false,
-            'readOwn': true,
-            'update': true,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'not allowed email domain user who is not an owner of the user profile with a verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(passwordSignInProviderId, true)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'not allowed email domain user who is not an owner of the user profile with not a verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(passwordSignInProviderId, false)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'allowed email domain user who is an owner of the user profile with a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(passwordSignInProviderId, true, uid)
-          ),
-          'can': {
-            'create': true,
-            'read': false,
-            'readOwn': true,
-            'update': true,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'not allowed email domain user who is an owner of the user profile with a verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(passwordSignInProviderId, true, uid)
-          ),
-          'can': {
-            'create': true,
-            'read': false,
-            'readOwn': true,
-            'update': true,
-            'delete': false,
-          }
-        },
-      ]
+      'describe': 'Authenticated with a password and allowed email domain user who is not an owner of the user profile with not a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(passwordSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
     },
     {
-      'title': 'google',
-      'description': 'Authenticated with a google and ',
-      'users': [
-        {
-          'description': 'not allowed email domain user who is an owner of the profile with a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, false)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'allowed email domain user who is not an owner of the profile with not a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, false)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'allowed email domain user who is an owner of the profile with not a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, false, uid)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'allowed email domain user who is not an owner of the profile with a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, true)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'not allowed email domain user who is an owner of the profile with not verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(googleSignInProviderId, false, uid)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'not allowed email domain user who is not an owner of the profile with a verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(googleSignInProviderId, true)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'not allowed email domain user who is not an owner of the profile with not a verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(googleSignInProviderId, false)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'allowed email domain user who is an owner of the profile with a verified email',
-          'app': await getApplicationWith(
-            getAllowedEmailUser(googleSignInProviderId, true, uid)
-          ),
-          'can': {
-            'create': true,
-            'read': false,
-            'readOwn': true,
-            'update': true,
-            'delete': false,
-          }
-        },
-        {
-          'description': 'not allowed email domain user who is an owner of the profile with a verified email',
-          'app': await getApplicationWith(
-            getDeniedEmailUser(googleSignInProviderId, true, uid)
-          ),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        },
-      ]
+      'describe': 'Authenticated with a password and allowed email domain user who is an owner of the user profile with not a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(passwordSignInProviderId, false, uid)
+      ),
+      'can': {
+        'create': true,
+        'read': false,
+        'readOwn': true,
+        'update': true,
+        'delete': false,
+      }
     },
     {
-      'title': '',
-      'description': 'Unauthenticated ',
-      'users': [
-        {
-          'description': 'user',
-          'app': await getApplicationWith(null),
-          'can': {
-            'create': false,
-            'read': false,
-            'readOwn': false,
-            'update': false,
-            'delete': false,
-          }
-        }
-      ]
+      'describe': 'Authenticated with a password and allowed email domain user who is not an owner of the user profile with a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(passwordSignInProviderId, true)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user who is an owner of the user profile with not verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, false, uid)
+      ),
+      'can': {
+        'create': true,
+        'read': false,
+        'readOwn': true,
+        'update': true,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user who is not an owner of the user profile with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, true)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user who is not an owner of the user profile with not a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and allowed email domain user who is an owner of the user profile with a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(passwordSignInProviderId, true, uid)
+      ),
+      'can': {
+        'create': true,
+        'read': false,
+        'readOwn': true,
+        'update': true,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a password and not allowed email domain user who is an owner of the user profile with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(passwordSignInProviderId, true, uid)
+      ),
+      'can': {
+        'create': true,
+        'read': false,
+        'readOwn': true,
+        'update': true,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a google and not allowed email domain user who is an owner of the profile with a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a google and allowed email domain user who is not an owner of the profile with not a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a google and allowed email domain user who is an owner of the profile with not a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, false, uid)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a google and allowed email domain user who is not an owner of the profile with a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, true)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a google and not allowed email domain user who is an owner of the profile with not verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, false, uid)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a google and not allowed email domain user who is not an owner of the profile with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, true)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a google and not allowed email domain user who is not an owner of the profile with not a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, false)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a google and allowed email domain user who is an owner of the profile with a verified email',
+      'app': await getApplicationWith(
+        getAllowedEmailUser(googleSignInProviderId, true, uid)
+      ),
+      'can': {
+        'create': true,
+        'read': false,
+        'readOwn': true,
+        'update': true,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Authenticated with a google and not allowed email domain user who is an owner of the profile with a verified email',
+      'app': await getApplicationWith(
+        getDeniedEmailUser(googleSignInProviderId, true, uid)
+      ),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
+    },
+    {
+      'describe': 'Unauthenticated user',
+      'app': await getApplicationWith(null),
+      'can': {
+        'create': false,
+        'read': false,
+        'readOwn': false,
+        'update': false,
+        'delete': false,
+      }
     }
   ];
 
@@ -308,77 +290,71 @@ describe("", async () => {
     });
   });
 
-  async.forEach(signInProviders, (provider, callback) => {
+  async.forEach(users, (user, callback) => {
+    describe(user.describe, () => {
+      let canCreateDescription = user.can.create ?
+        "allows to create a user profile" : "does not allow creating a user profile";
+      let canReadDescription = user.can.read ?
+        "allows reading user profiles" : "does not allow reading user profiles";
+      let canReadOwnDescription = user.can.readOwn ?
+        "allows reading own user profile" : "does not allow reading own user profile";
+      let canUpdateDescription = user.can.update ?
+        "allows to update a user profile" : "does not allow updating a user profile";
+      let canDeleteDescription = user.can.delete ?
+        "allows to delete a user profile" : "does not allow deleting a user profile";
 
-    provider.users.forEach(user => {
-      let description = provider.description + user.description;
+      it(canCreateDescription, async () => {
+        const createPromise = user.app.collection(collection).doc(uid).set(getUserProfile());
 
-      describe(description, () => {
-        let canCreateDescription = user.can.create ?
-          "allows to create a user profile" : "does not allow creating a user profile";
-        let canReadDescription = user.can.read ?
-          "allows reading user profiles" : "does not allow reading user profiles";
-        let canReadOwnDescription = user.can.readOwn ?
-          "allows reading own user profile" : "does not allow reading own user profile";
-        let canUpdateDescription = user.can.update ?
-          "allows to update a user profile" : "does not allow updating a user profile";
-        let canDeleteDescription = user.can.delete ?
-          "allows to delete a user profile" : "does not allow deleting a user profile";
+        if (user.can.create) {
+          await assertSucceeds(createPromise)
+        } else {
+          await assertFails(createPromise)
+        }
+      });
 
-        it(canCreateDescription, async () => {
-          const createPromise = user.app.collection(collection).doc(uid).set(getUserProfile());
+      it(canReadDescription, async () => {
+        const readPromise = user.app.collection(collection).get();
 
-          if (user.can.create) {
-            await assertSucceeds(createPromise)
-          } else {
-            await assertFails(createPromise)
-          }
-        });
+        if (user.can.read) {
+          await assertSucceeds(readPromise)
+        } else {
+          await assertFails(readPromise)
+        }
+      });
 
-        it(canReadDescription, async () => {
-          const readPromise = user.app.collection(collection).get();
+      it(canReadOwnDescription, async () => {
+        const readOwnPromise = user.app.collection(collection).doc(uid).get();
 
-          if (user.can.read) {
-            await assertSucceeds(readPromise)
-          } else {
-            await assertFails(readPromise)
-          }
-        });
+        if (user.can.readOwn) {
+          await assertSucceeds(readOwnPromise)
+        } else {
+          await assertFails(readOwnPromise)
+        }
+      });
 
-        it(canReadOwnDescription, async () => {
-          const readOwnPromise = user.app.collection(collection).doc(uid).get();
+      it(canUpdateDescription, async () => {
+        const updatePromise =
+          user.app.collection(collection).doc(uid).update({ selectedTheme: "ThemeType.light" });
 
-          if (user.can.readOwn) {
-            await assertSucceeds(readOwnPromise)
-          } else {
-            await assertFails(readOwnPromise)
-          }
-        });
+        if (user.can.update) {
+          await assertSucceeds(updatePromise)
+        } else {
+          await assertFails(updatePromise)
+        }
+      });
 
-        it(canUpdateDescription, async () => {
-          const updatePromise =
-            user.app.collection(collection).doc(uid).update({ selectedTheme: "ThemeType.light" });
+      it(canDeleteDescription, async () => {
+        const deletePromise =
+          user.app.collection(collection).doc(uid).delete();
 
-          if (user.can.update) {
-            await assertSucceeds(updatePromise)
-          } else {
-            await assertFails(updatePromise)
-          }
-        });
-
-        it(canDeleteDescription, async () => {
-          const deletePromise =
-            user.app.collection(collection).doc(uid).delete();
-
-          if (user.can.delete) {
-            await assertSucceeds(deletePromise)
-          } else {
-            await assertFails(deletePromise)
-          }
-        });
+        if (user.can.delete) {
+          await assertSucceeds(deletePromise)
+        } else {
+          await assertFails(deletePromise)
+        }
       });
     });
-
     callback();
   });
 
