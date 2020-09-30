@@ -40,7 +40,7 @@ void main() {
 
     AlignmentGeometry _getToggleAlignment(WidgetTester tester) {
       final alignFinder = find.descendant(
-        of: find.byType(FlutterSwitch),
+        of: flutterSwitchFinder,
         matching: find.byWidgetPredicate(
           (widget) => widget is Align && widget.child is Container,
         ),
@@ -50,7 +50,7 @@ void main() {
     }
 
     final tappableAreaFinder = find.ancestor(
-      of: find.byType(FlutterSwitch),
+      of: flutterSwitchFinder,
       matching: find.byType(TappableArea),
     );
 
