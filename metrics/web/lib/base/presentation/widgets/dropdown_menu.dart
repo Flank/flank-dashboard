@@ -51,18 +51,18 @@ class DropdownMenu<T> extends StatefulWidget {
   /// call the [AnimationComponentData.opened] and [AnimationComponentData.closed]
   /// callbacks on menu open state changes.
   ///
-  /// If the [maxVisibleItems] is not specified, the default value of `5` used.
   /// If [items] are null, an empty list used.
   /// If the [itemHeight] is null the [kMinInteractiveDimension] used.
   /// If the [menuPadding] is null the [EdgeInsets.zero] used.
   ///
-  /// [itemBuilder], [buttonBuilder] and [menuBuilder] must not be `null`.
+  /// [itemBuilder], [buttonBuilder], [menuBuilder] 
+  /// and [maxVisibleItems] must not be `null`.
   const DropdownMenu({
     Key key,
     @required this.menuBuilder,
     @required this.itemBuilder,
     @required this.buttonBuilder,
-    this.maxVisibleItems = 5,
+    @required this.maxVisibleItems,
     this.onItemSelected,
     this.initiallySelectedItemIndex,
     List<T> items,
@@ -75,6 +75,7 @@ class DropdownMenu<T> extends StatefulWidget {
         assert(menuBuilder != null),
         assert(itemBuilder != null),
         assert(buttonBuilder != null),
+        assert(maxVisibleItems != null),
         super(key: key);
 
   @override
@@ -145,10 +146,11 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
     final numberOfItems = widget.items.length;
     final itemHeight = widget.itemHeight;
     final maxVisibleItems = widget.maxVisibleItems;
+
     if (numberOfItems > maxVisibleItems) {
-      return (maxVisibleItems + 0.5) * itemHeight + itemHeight / 4;
+      return maxVisibleItems * itemHeight + itemHeight / 2;
     }
 
-    return numberOfItems * itemHeight + itemHeight / 4;
+    return numberOfItems * itemHeight;
   }
 }

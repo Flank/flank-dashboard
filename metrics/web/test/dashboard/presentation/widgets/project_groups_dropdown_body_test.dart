@@ -90,6 +90,7 @@ void main() {
       "applies the max height from the given data to the dropdown body",
       (tester) async {
         const maxHeight = 30.0;
+        const additionalPadding = 8.0;
         final animationComponentData = _AnimationComponentDataStub(
           constraints: const BoxConstraints(
             maxHeight: maxHeight,
@@ -108,8 +109,62 @@ void main() {
 
         expect(
           dropdownBodyWidget.maxHeight,
-          equals(maxHeight),
+          equals(maxHeight + additionalPadding),
         );
+      },
+    );
+
+    testWidgets(
+      "adds the bottom padding if the is bottom padding parameter is true",
+      (tester) async {
+        final animationComponentData = _AnimationComponentDataStub();
+        const expectedPadding = EdgeInsets.fromLTRB(1.0, 4.0, 1.0, 4.0);
+
+        await tester.pumpWidget(
+          _ProjectGroupsDropdownBodyTestbed(
+            data: animationComponentData,
+            isBottomPadding: true,
+          ),
+        );
+
+        final paddingWidget = tester.widget<Padding>(
+          find.descendant(
+            of: find.byType(DropdownBody),
+            matching: find.descendant(
+              of: find.byType(Card),
+              matching: find.byType(Padding).last,
+            ),
+          ),
+        );
+
+        expect(paddingWidget.padding, equals(expectedPadding));
+      },
+    );
+
+    testWidgets(
+      "removes the bottom padding if the is bottom padding parameter is false",
+      (tester) async {
+        final animationComponentData = _AnimationComponentDataStub();
+        const expectedPadding = EdgeInsets.fromLTRB(1.0, 4.0, 1.0, 0.0);
+
+        await tester.pumpWidget(
+          _ProjectGroupsDropdownBodyTestbed(
+            data: animationComponentData,
+            isBottomPadding: false,
+          ),
+        );
+
+        final paddingWidget = tester.widget<Padding>(
+          find.descendant(
+            of: find.byType(DropdownBody),
+            matching: find.descendant(
+              of: find.byType(Card),
+              matching: find.byType(Padding).last,
+            ),
+          ),
+        );
+
+        expect(expectedPadding, equals(paddingWidget.padding));
       },
     );
 
@@ -198,17 +253,24 @@ class _ProjectGroupsDropdownBodyTestbed extends StatelessWidget {
   /// An [AnimationComponentData] that provides an information about menu animation.
   final AnimationComponentData data;
 
+  /// Whether to add or remove the bottom padding of the dropdown body.
+  final bool isBottomPadding;
+
   /// Creates the testbed with the given [data].
   const _ProjectGroupsDropdownBodyTestbed({
     Key key,
     this.data,
+    this.isBottomPadding = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: ProjectGroupsDropdownBody(data: data),
+        body: ProjectGroupsDropdownBody(
+          data: data,
+          isBottomPadding: isBottomPadding,
+        ),
       ),
     );
   }
