@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-// import 'package:metrics/auth/domain/entities/auth_error_code.dart';
-// import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
@@ -40,13 +38,6 @@ void main() {
     const errorMessage = 'Error Message';
 
     AuthNotifier authNotifier;
-
-    // const emailAuthException = AuthenticationException(
-    //   code: AuthErrorCode.invalidEmail,
-    // );
-    // const passwordAuthException = AuthenticationException(
-    //   code: AuthErrorCode.wrongPassword,
-    // );
 
     Widget _getPasswordFieldSuffixIcon(WidgetTester tester) {
       final passwordField = tester.widget<MetricsTextFormField>(
@@ -329,74 +320,6 @@ void main() {
         expect(find.text(errorMessage), findsOneWidget);
       },
     );
-
-    // testWidgets(
-    //   "removes the email auth error message when the email validation error appears",
-    //   (tester) async {
-    //     when(signInUseCase.call(any)).thenThrow(emailAuthException);
-
-    //     await mockNetworkImagesFor(() {
-    //       return tester.pumpWidget(
-    //         _AuthFormTestbed(authNotifier: authNotifier),
-    //       );
-    //     });
-
-    //     await tester.enterText(emailInputFinder, 'test@test.com');
-    //     await tester.enterText(passwordInputFinder, 'password');
-
-    //     await tester.tap(submitButtonFinder);
-    //     await tester.pump();
-
-    //     expect(
-    //       find.text(AuthStrings.invalidEmailErrorMessage),
-    //       findsOneWidget,
-    //     );
-
-    //     await tester.enterText(emailInputFinder, '');
-    //     await tester.tap(submitButtonFinder);
-    //     await tester.pump();
-
-    //     expect(find.text(AuthStrings.invalidEmailErrorMessage), findsNothing);
-    //     expect(
-    //       find.text(AuthStrings.emailRequiredErrorMessage),
-    //       findsOneWidget,
-    //     );
-    //   },
-    // );
-
-    // testWidgets(
-    //   "removes the password auth error message when the password validation error appears",
-    //   (tester) async {
-    //     when(signInUseCase.call(any)).thenThrow(passwordAuthException);
-
-    //     await mockNetworkImagesFor(() {
-    //       return tester.pumpWidget(
-    //         _AuthFormTestbed(authNotifier: authNotifier),
-    //       );
-    //     });
-
-    //     await tester.enterText(emailInputFinder, 'test@test.com');
-    //     await tester.enterText(passwordInputFinder, 'password');
-
-    //     await tester.tap(submitButtonFinder);
-    //     await tester.pump();
-
-    //     expect(
-    //       find.text(AuthStrings.wrongPasswordErrorMessage),
-    //       findsOneWidget,
-    //     );
-
-    //     await tester.enterText(passwordInputFinder, '');
-    //     await tester.tap(submitButtonFinder);
-    //     await tester.pump();
-
-    //     expect(find.text(AuthStrings.wrongPasswordErrorMessage), findsNothing);
-    //     expect(
-    //       find.text(AuthStrings.passwordRequiredErrorMessage),
-    //       findsOneWidget,
-    //     );
-    //   },
-    // );
   });
 }
 
