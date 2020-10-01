@@ -112,10 +112,10 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Stream<UserProfile> userProfileStream(String userId) {
+  Stream<UserProfile> userProfileStream(String id) {
     return _firestore
         .collection('user_profiles')
-        .document(userId)
+        .document(id)
         .snapshots()
         .map(
           (snapshot) =>
