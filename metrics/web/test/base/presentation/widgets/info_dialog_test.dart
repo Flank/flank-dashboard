@@ -102,11 +102,17 @@ void main() {
           matching: find.byType(Stack),
         );
 
-        final containerWidget = tester.widget<Container>(
-          find.descendant(of: stackFinder, matching: find.byType(Container)),
+        final paddingWidget = tester.widget<Padding>(
+          find.ancestor(
+            of: find.byWidget(closeIcon),
+            matching: find.descendant(
+              of: stackFinder,
+              matching: find.byType(Padding),
+            ),
+          ),
         );
 
-        expect(containerWidget.padding, equals(padding));
+        expect(paddingWidget.padding, equals(padding));
       },
     );
 
@@ -182,14 +188,14 @@ void main() {
           const _InfoDialogTestbed(constraints: constraints),
         );
 
-        final containerWidget = tester.widget<Container>(
+        final container = tester.widget<Container>(
           find.descendant(
             of: find.byType(Dialog),
             matching: find.byType(Container).first,
           ),
         );
 
-        expect(containerWidget.constraints, equals(constraints));
+        expect(container.constraints, equals(constraints));
       },
     );
 
@@ -347,7 +353,7 @@ class _InfoDialogTestbed extends StatelessWidget {
   /// A horizontal alignment of the [actions].
   final MainAxisAlignment actionsAlignment;
 
-  /// A [BoxConstraints] to apply for the [InfoDialog].
+  /// A [BoxConstraints] to apply to the [InfoDialog].
   final BoxConstraints constraints;
 
   /// Creates an instance of this testbed with the given parameters.

@@ -39,7 +39,7 @@ class InfoDialog extends StatelessWidget {
   /// A horizontal alignment of the [actions].
   final MainAxisAlignment actionsAlignment;
 
-  /// A [BoxConstraints] to apply for this dialog.
+  /// A [BoxConstraints] to apply to this dialog.
   final BoxConstraints constraints;
 
   /// Creates an [InfoDialog].
@@ -49,8 +49,6 @@ class InfoDialog extends StatelessWidget {
   /// default value is [EdgeInsets.zero].
   ///
   /// The [actionsAlignment] default value is [MainAxisAlignment.start].
-  /// The [maxWidth] default value is 480.0.
-  /// The [maxHeight] default value is 726.0.
   /// If the [closeIcon] is null, the [Icon] with [Icons.close] is used.
   /// The [shape] default value is a [RoundedRectangleBorder] default instance.
   ///
@@ -110,9 +108,10 @@ class InfoDialog extends StatelessWidget {
                 ],
               ),
             ),
-            IntrinsicHeight(
-              child: Container(
-                alignment: Alignment.topRight,
+            Positioned(
+              right: 0.0,
+              top: 0.0,
+              child: Padding(
                 padding: closeIconPadding,
                 child: TappableArea(
                   onTap: () => Navigator.of(context).pop(),
