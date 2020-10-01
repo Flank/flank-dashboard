@@ -288,9 +288,6 @@ void main() {
     testWidgets(
       "displays the email auth error message",
       (tester) async {
-        final authNotifier = AuthNotifierMock();
-
-        when(authNotifier.isLoading).thenReturn(false);
         when(authNotifier.emailErrorMessage).thenReturn(errorMessage);
 
         await mockNetworkImagesFor(() {
@@ -306,9 +303,6 @@ void main() {
     testWidgets(
       "displays the password auth error message",
       (tester) async {
-        final authNotifier = AuthNotifierMock();
-
-        when(authNotifier.isLoading).thenReturn(false);
         when(authNotifier.passwordErrorMessage).thenReturn(errorMessage);
 
         await mockNetworkImagesFor(() {
