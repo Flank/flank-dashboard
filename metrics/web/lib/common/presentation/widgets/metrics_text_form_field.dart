@@ -40,6 +40,9 @@ class MetricsTextFormField extends StatefulWidget {
   /// Text that describes this input field.
   final String label;
 
+  /// Text of the authentication error message.
+  final String errorMessage;
+
   /// Creates a new instance of the Metrics text form field.
   ///
   /// The [obscureText] defaults to `false` and must not be `null`.
@@ -54,6 +57,7 @@ class MetricsTextFormField extends StatefulWidget {
     this.suffixIcon,
     this.hint,
     this.label,
+    this.errorMessage,
   })  : assert(obscureText != null),
         super(key: key);
 
@@ -123,7 +127,9 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
     final decorationTheme = Theme.of(context).inputDecorationTheme;
     final prefixIcon = widget.prefixIconBuilder?.call(
       context,
-      _isFocused ? textFieldTheme.focusedPrefixIconColor : textFieldTheme.prefixIconColor,
+      _isFocused
+          ? textFieldTheme.focusedPrefixIconColor
+          : textFieldTheme.prefixIconColor,
     );
 
     return Column(

@@ -16,20 +16,15 @@ import 'package:metrics_core/metrics_core.dart';
 /// Provides the ability to sign in and sign out user from the app,
 /// track the [isLoggedIn] status and authentication error message if any.
 class AuthNotifier extends ChangeNotifier {
-  /// A [List] of [AuthErrorCode]s that help
-  /// to provide an authentication error message in toasts.
-  final List<AuthErrorCode> _toastErrorCodes = [
-    AuthErrorCode.googleSignInError,
-    AuthErrorCode.tooManyRequests,
-    AuthErrorCode.userDisabled,
-    AuthErrorCode.unknown,
-  ];
-
-  /// A [List] of [AuthErrorCode]s that help
-  /// to provide an authentication error message near the email field.
-  final List<AuthErrorCode> _emailErrorCodes = [
+  /// A [List] of [AuthErrorCode]s that defines which errors are related to the email address.
+  static const List<AuthErrorCode> _emailErrorCodes = [
     AuthErrorCode.invalidEmail,
     AuthErrorCode.userNotFound,
+  ];
+
+  /// A [List] of [AuthErrorCode]s that defines which errors are related to the password.
+  static const List<AuthErrorCode> _passwordErrorCodes = [
+    AuthErrorCode.wrongPassword,
   ];
 
   /// Used to receive authentication updates.
@@ -91,19 +86,6 @@ class AuthNotifier extends ChangeNotifier {
   /// Returns an [AuthErrorMessage], containing a password authentication error message.
   String get passwordErrorMessage => _passwordErrorMessage?.message;
 
-  /// Provides an authentication error message based on the [errorCode].
-  void _addAuthErrorMessage(AuthErrorCode errorCode) {
-    final _errorMessage = AuthErrorMessage(errorCode);
-
-    if (_toastErrorCodes.contains(errorCode)) {
-      _authErrorMessage = _errorMessage;
-    } else if (_emailErrorCodes.contains(errorCode)) {
-      _emailErrorMessage = _errorMessage;
-    } else {
-      _passwordErrorMessage = _errorMessage;
-    }
-  }
-
   /// Subscribes to a user authentication updates
   /// to get notified when the user got signed in or signed out.
   void subscribeToAuthenticationUpdates() {
@@ -129,8 +111,7 @@ class AuthNotifier extends ChangeNotifier {
         password: Password(password),
       ));
     } on AuthenticationException catch (exception) {
-      _addAuthErrorMessage(exception.code);
-      notifyListeners();
+      _handleAuthErrorMessage(exception.code);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -149,8 +130,7 @@ class AuthNotifier extends ChangeNotifier {
     try {
       await _googleSignInUseCase();
     } on AuthenticationException catch (exception) {
-      _addAuthErrorMessage(exception.code);
-      notifyListeners();
+      _handleAuthErrorMessage(exception.code);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -168,6 +148,19 @@ class AuthNotifier extends ChangeNotifier {
   /// Signs out the user from the app.
   Future<void> signOut() async {
     await _signOutUseCase();
+  }
+
+  /// Handles an authentication error message based on the [errorCode].
+  void _handleAuthErrorMessage(AuthErrorCode errorCode) {
+    final _errorMessage = AuthErrorMessage(errorCode);
+
+    if (_emailErrorCodes.contains(errorCode)) {
+      _emailErrorMessage = _errorMessage;
+    } else if (_passwordErrorCodes.contains(errorCode)) {
+      _passwordErrorMessage = _errorMessage;
+    } else {
+      _authErrorMessage = _errorMessage;
+    }
   }
 
   @override

@@ -40,6 +40,7 @@ class _AuthFormState extends State<AuthForm> {
 
     return Consumer<AuthNotifier>(
       builder: (_, notifier, __) {
+        final emailErrorMessage = notifier.emailErrorMessage;
         return Form(
           key: _formKey,
           child: Column(
@@ -52,16 +53,10 @@ class _AuthFormState extends State<AuthForm> {
                 validator: EmailValidator.validate,
                 hint: AuthStrings.email,
                 keyboardType: TextInputType.emailAddress,
+                errorMessage: emailErrorMessage,
               ),
-              Builder(builder: (_) {
-                final emailErrorMessage = notifier.emailErrorMessage;
 
-                if (emailErrorMessage != null) {
-                  return _buildFormFieldErrorMessage(emailErrorMessage);
-                }
-
-                return Container();
-              }),
+              // _buildFormFieldErrorMessage(emailErrorMessage),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: MetricsTextFormField(
