@@ -18,12 +18,6 @@ class InfoDialog extends StatelessWidget {
   /// An empty space that surrounds the [closeIcon].
   final EdgeInsetsGeometry closeIconPadding;
 
-  /// A max width of this dialog.
-  final double maxWidth;
-
-  /// A max height of this dialog.
-  final double maxHeight;
-
   /// A text title of this dialog.
   final Widget title;
 
@@ -44,6 +38,9 @@ class InfoDialog extends StatelessWidget {
 
   /// A horizontal alignment of the [actions].
   final MainAxisAlignment actionsAlignment;
+
+  /// A [BoxConstraints] to apply for this dialog.
+  final BoxConstraints constraints;
 
   /// Creates an [InfoDialog].
   ///
@@ -72,8 +69,7 @@ class InfoDialog extends StatelessWidget {
     this.actionsPadding = EdgeInsets.zero,
     this.closeIconPadding = EdgeInsets.zero,
     this.actionsAlignment = MainAxisAlignment.start,
-    this.maxWidth = 480.0,
-    this.maxHeight = 726.0,
+    this.constraints,
   })  : assert(title != null),
         assert(actions != null),
         closeIcon = closeIcon ?? const Icon(Icons.close),
@@ -85,10 +81,7 @@ class InfoDialog extends StatelessWidget {
       shape: shape,
       backgroundColor: backgroundColor,
       child: Container(
-        constraints: BoxConstraints(
-          maxWidth: maxWidth,
-          maxHeight: maxHeight,
-        ),
+        constraints: constraints,
         child: Stack(
           children: <Widget>[
             Padding(
@@ -101,7 +94,7 @@ class InfoDialog extends StatelessWidget {
                     padding: titlePadding,
                     child: title,
                   ),
-                  Expanded(
+                  Flexible(
                     child: Padding(
                       padding: contentPadding,
                       child: content,
@@ -117,13 +110,15 @@ class InfoDialog extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              alignment: Alignment.topRight,
-              padding: closeIconPadding,
-              child: TappableArea(
-                onTap: () => Navigator.of(context).pop(),
-                builder: (context, isHovered, child) => child,
-                child: closeIcon,
+            IntrinsicHeight(
+              child: Container(
+                alignment: Alignment.topRight,
+                padding: closeIconPadding,
+                child: TappableArea(
+                  onTap: () => Navigator.of(context).pop(),
+                  builder: (context, isHovered, child) => child,
+                  child: closeIcon,
+                ),
               ),
             ),
           ],

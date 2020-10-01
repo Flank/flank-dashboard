@@ -124,6 +124,10 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
         final buttonText = _isLoading ? strategy.loadingText : strategy.text;
 
         return InfoDialog(
+          constraints: const BoxConstraints(
+            maxWidth: 480.0,
+            maxHeight: 726.0,
+          ),
           closeIconPadding: const EdgeInsets.only(top: 16.0, right: 16.0),
           closeIcon: Image.network(
             'icons/close.svg',

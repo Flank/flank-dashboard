@@ -174,12 +174,12 @@ void main() {
     );
 
     testWidgets(
-      "applies the given max width value to the dialog content",
+      "applies the given box constraints to the dialog",
       (WidgetTester tester) async {
-        const expectedMaxWidth = 200.0;
+        const constraints = BoxConstraints(minWidth: 200.0);
 
         await tester.pumpWidget(
-          const _InfoDialogTestbed(maxWidth: expectedMaxWidth),
+          const _InfoDialogTestbed(constraints: constraints),
         );
 
         final containerWidget = tester.widget<Container>(
@@ -189,26 +189,7 @@ void main() {
           ),
         );
 
-        expect(containerWidget.constraints.maxWidth, equals(expectedMaxWidth));
-      },
-    );
-
-    testWidgets(
-      "applies the given max height value to the dialog content",
-      (WidgetTester tester) async {
-        const expectedMaxHeight = 200.0;
-
-        await tester.pumpWidget(
-          const _InfoDialogTestbed(maxHeight: expectedMaxHeight),
-        );
-
-        final containerWidget = tester.widget<Container>(find.descendant(
-          of: find.byType(Dialog),
-          matching: find.byType(Container).first,
-        ));
-        final constraints = containerWidget.constraints;
-
-        expect(constraints.maxHeight, equals(expectedMaxHeight));
+        expect(containerWidget.constraints, equals(constraints));
       },
     );
 
@@ -345,12 +326,6 @@ class _InfoDialogTestbed extends StatelessWidget {
   /// An empty space that surrounds the close button.
   final EdgeInsetsGeometry closeButtonPadding;
 
-  /// A max height of this dialog.
-  final double maxHeight;
-
-  /// A max width of this dialog.
-  final double maxWidth;
-
   /// A text title of this dialog.
   final Widget title;
 
@@ -371,6 +346,9 @@ class _InfoDialogTestbed extends StatelessWidget {
 
   /// A horizontal alignment of the [actions].
   final MainAxisAlignment actionsAlignment;
+
+  /// A [BoxConstraints] to apply for the [InfoDialog].
+  final BoxConstraints constraints;
 
   /// Creates an instance of this testbed with the given parameters.
   ///
@@ -398,8 +376,7 @@ class _InfoDialogTestbed extends StatelessWidget {
     this.actionsPadding = EdgeInsets.zero,
     this.closeButtonPadding = EdgeInsets.zero,
     this.actionsAlignment = MainAxisAlignment.start,
-    this.maxHeight = 726.0,
-    this.maxWidth = 480.0,
+    this.constraints,
   }) : super(key: key);
 
   @override
@@ -418,9 +395,8 @@ class _InfoDialogTestbed extends StatelessWidget {
           titlePadding: titlePadding,
           contentPadding: contentPadding,
           actionsPadding: actionsPadding,
-          maxHeight: maxHeight,
-          maxWidth: maxWidth,
           actionsAlignment: actionsAlignment,
+          constraints: constraints,
         ),
       ),
     );
