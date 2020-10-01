@@ -8,7 +8,6 @@ import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/metrics_theme/config/text_field_config.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +40,8 @@ class _AuthFormState extends State<AuthForm> {
     return Consumer<AuthNotifier>(
       builder: (_, notifier, __) {
         final emailErrorMessage = notifier.emailErrorMessage;
+        final passwordErrorMessage = notifier.passwordErrorMessage;
+
         return Form(
           key: _formKey,
           child: Column(
@@ -51,18 +52,17 @@ class _AuthFormState extends State<AuthForm> {
                 key: const Key(AuthStrings.email),
                 controller: _emailController,
                 validator: EmailValidator.validate,
+                errorText: emailErrorMessage,
                 hint: AuthStrings.email,
                 keyboardType: TextInputType.emailAddress,
-                errorMessage: emailErrorMessage,
               ),
-
-              // _buildFormFieldErrorMessage(emailErrorMessage),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: MetricsTextFormField(
                   key: const Key(AuthStrings.password),
                   controller: _passwordController,
                   validator: PasswordValidator.validate,
+                  errorText: passwordErrorMessage,
                   obscureText: _isPasswordObscure,
                   hint: AuthStrings.password,
                   suffixIcon: TappableArea(
@@ -75,22 +75,11 @@ class _AuthFormState extends State<AuthForm> {
                   ),
                 ),
               ),
-              Builder(builder: (_) {
-                if (notifier.isLoading) {
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                    child: LinearProgressIndicator(),
-                  );
-                }
-
-                final passwordErrorMessage = notifier.passwordErrorMessage;
-
-                if (passwordErrorMessage != null) {
-                  return _buildFormFieldErrorMessage(passwordErrorMessage);
-                }
-
-                return Container();
-              }),
+              if (notifier.isLoading)
+                const Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: LinearProgressIndicator(),
+                ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0, top: 72.0),
                 child: MetricsPositiveButton(
@@ -109,27 +98,14 @@ class _AuthFormState extends State<AuthForm> {
     );
   }
 
-  /// Builds the authentication error message.
-  Widget _buildFormFieldErrorMessage(String authErrorMessage) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 5.0, left: 16.0),
-      child: Text(
-        authErrorMessage,
-        style: TextFieldConfig.errorStyle,
-      ),
-    );
-  }
-
   /// Starts sign in process.
   void _submit() {
-    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
     if (_formKey.currentState.validate()) {
-      authNotifier.signInWithEmailAndPassword(
+      Provider.of<AuthNotifier>(context, listen: false)
+          .signInWithEmailAndPassword(
         _emailController.text,
         _passwordController.text,
       );
-    } else {
-      authNotifier.clearErrorMessages();
     }
   }
 

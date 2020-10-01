@@ -40,8 +40,8 @@ class MetricsTextFormField extends StatefulWidget {
   /// Text that describes this input field.
   final String label;
 
-  /// Text of the authentication error message.
-  final String errorMessage;
+  /// An error text that appears below this input field.
+  final String errorText;
 
   /// Creates a new instance of the Metrics text form field.
   ///
@@ -57,7 +57,7 @@ class MetricsTextFormField extends StatefulWidget {
     this.suffixIcon,
     this.hint,
     this.label,
-    this.errorMessage,
+    this.errorText,
   })  : assert(obscureText != null),
         super(key: key);
 
@@ -165,6 +165,7 @@ class _MetricsTextFormFieldState extends State<MetricsTextFormField> {
               prefixIconConstraints: const BoxConstraints(maxWidth: 50.0),
               suffixIcon: widget.suffixIcon,
               hintText: widget.hint,
+              errorText: widget.errorText,
             ),
           ),
         ),
