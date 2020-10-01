@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
+import 'package:metrics/common/presentation/circle_graph_indicator/attention_level/metrics_circle_graph_indicator_attention_level.dart';
+import 'package:metrics/common/presentation/circle_graph_indicator/style/metrics_circle_graph_indicator_style.dart';
+import 'package:metrics/common/presentation/circle_graph_indicator/theme/metrics_circle_graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
@@ -110,9 +113,12 @@ class LightMetricsThemeData extends MetricsThemeData {
             ),
           ),
           buildResultTheme: const BuildResultsThemeData(
-            canceledColor: ColorConfig.accentColor,
             successfulColor: ColorConfig.primaryColor,
+            successfulBackgroundColor: ColorConfig.primaryTransparentColor,
+            canceledColor: ColorConfig.accentColor,
+            canceledBackgroundColor: ColorConfig.accentTransparentColor,
             failedColor: ColorConfig.accentColor,
+            failedBackgroundColor: ColorConfig.accentTransparentColor,
           ),
           barGraphPopupTheme: const BarGraphPopupThemeData(
             color: Colors.white,
@@ -488,6 +494,23 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.w500,
               lineHeightInPixels: 42.0,
               color: _inactiveTextColor,
+            ),
+          ),
+          metricsCircleGraphIndicatorTheme:
+              const MetricsCircleGraphIndicatorThemeData(
+            attentionLevel: MetricsCircleGraphIndicatorAttentionLevel(
+              successful: MetricsCircleGraphIndicatorStyle(
+                innerColor: ColorConfig.primaryColor,
+                outerColor: Colors.white,
+              ),
+              failed: MetricsCircleGraphIndicatorStyle(
+                innerColor: ColorConfig.accentColor,
+                outerColor: Colors.white,
+              ),
+              cancelled: MetricsCircleGraphIndicatorStyle(
+                innerColor: ColorConfig.accentColor,
+                outerColor: Colors.white,
+              ),
             ),
           ),
         );

@@ -26,7 +26,8 @@ class CircleGraphIndicator extends StatelessWidget {
     this.innerColor = Colors.white,
     this.outerDiameter = 5.0,
     this.innerDiameter = 2.0,
-  }) : super(key: key);
+  })  : assert(outerDiameter > innerDiameter),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

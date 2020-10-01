@@ -124,7 +124,7 @@ class _BarGraphTestbed extends StatelessWidget {
         graphPadding: graphPadding,
         barBuilder: barBuilder == null
             ? null
-            : (index, barHeight) => barBuilder(data, index),
+            : (index) => barBuilder(data, index),
       ),
     );
   }

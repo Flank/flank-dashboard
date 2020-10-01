@@ -77,12 +77,11 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
                 .map((data) => data.dashboardPopupCardViewModel.value)
                 .toList(),
             graphPadding: EdgeInsets.zero,
-            barBuilder: (int index, double barHeight) {
+            barBuilder: (int index) {
               final data = _barsData[index];
 
               return BuildResultBar(
                 buildResult: data,
-                barHeight: barHeight,
               );
             },
           ),

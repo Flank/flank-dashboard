@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
+import 'package:metrics/common/presentation/circle_graph_indicator/theme/metrics_circle_graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
@@ -108,6 +109,8 @@ class MetricsThemeData {
   /// A theme for the bar graph popup.
   final BarGraphPopupThemeData barGraphPopupTheme;
 
+  final MetricsCircleGraphIndicatorThemeData metricsCircleGraphIndicatorTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricsWidgetThemeData metricsWidgetTheme,
@@ -135,6 +138,7 @@ class MetricsThemeData {
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
     PageTitleThemeData pageTitleTheme,
+    MetricsCircleGraphIndicatorThemeData metricsCircleGraphIndicatorTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
         buildResultTheme = buildResultTheme ??
@@ -177,7 +181,9 @@ class MetricsThemeData {
         toastTheme = toastTheme ?? const ToastThemeData(),
         barGraphPopupTheme =
             barGraphPopupTheme ?? const BarGraphPopupThemeData(),
-        pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData();
+        pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData(),
+        metricsCircleGraphIndicatorTheme = metricsCircleGraphIndicatorTheme ??
+            const MetricsCircleGraphIndicatorThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -209,6 +215,7 @@ class MetricsThemeData {
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
     PageTitleThemeData pageTitleTheme,
+    MetricsCircleGraphIndicatorThemeData metricsCircleGraphIndicatorTheme,
   }) {
     return MetricsThemeData(
       metricsWidgetTheme: metricsWidgetTheme ?? this.metricsWidgetTheme,
@@ -245,6 +252,8 @@ class MetricsThemeData {
       toastTheme: toastTheme ?? this.toastTheme,
       pageTitleTheme: pageTitleTheme ?? this.pageTitleTheme,
       barGraphPopupTheme: barGraphPopupTheme ?? this.barGraphPopupTheme,
+      metricsCircleGraphIndicatorTheme: metricsCircleGraphIndicatorTheme ??
+          this.metricsCircleGraphIndicatorTheme,
     );
   }
 }

@@ -4,6 +4,10 @@ import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
 import 'package:metrics/base/presentation/widgets/circle_graph_indicator.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
+import 'package:metrics/common/presentation/circle_graph_indicator/widgets/metrics_cancelled_circle_graph_indicator.dart';
+import 'package:metrics/common/presentation/circle_graph_indicator/widgets/metrics_failed_circle_graph_indicator.dart';
+import 'package:metrics/common/presentation/circle_graph_indicator/widgets/metrics_successful_circle_graph_indicator.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
@@ -21,12 +25,8 @@ class BuildResultBar extends StatefulWidget {
   /// A [BuildResultViewModel] to display.
   final BuildResultViewModel buildResult;
 
-  /// A height of this bar.
-  final double barHeight;
-
   /// Creates the [BuildResultBar] with the given [buildResult].
-  const BuildResultBar({Key key, this.buildResult, this.barHeight})
-      : super(key: key);
+  const BuildResultBar({Key key, this.buildResult}) : super(key: key);
 
   @override
   _BuildResultBarState createState() => _BuildResultBarState();
@@ -45,9 +45,6 @@ class _BuildResultBarState extends State<BuildResultBar> {
   /// A top padding of the [BasePopup.popup] from the [CircleGraphIndicator].
   static const _topPadding = 4.0;
 
-  /// An outer diameter of the [CircleGraphIndicator].
-  static const _circleOuterDiameter = 10.0;
-
   /// A [UniqueKey] for the [VisibilityDetector].
   final _uniqueKey = UniqueKey();
 
@@ -56,7 +53,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
 
   @override
   Widget build(BuildContext context) {
-    const circleOuterRadius = _circleOuterDiameter / 2.0;
+    const radius = DimensionsConfig.circleGraphIndicatorOuterDiameter / 2.0;
     final metricsTheme = MetricsTheme.of(context);
     final widgetThemeData = metricsTheme.buildResultTheme;
 
@@ -73,89 +70,99 @@ class _BuildResultBarState extends State<BuildResultBar> {
       widget.buildResult.buildStatus,
       widgetThemeData,
     );
-
-    return BasePopup(
-      isPopupOpaque: false,
-      closePopupWhenTapOutside: false,
-      popupConstraints: const BoxConstraints(
-        minWidth: _popupWidth,
-        maxWidth: _popupWidth,
-      ),
-      offsetBuilder: (Size childSize) {
-        final height = childSize.height;
-        final dx = childSize.width / 2.0 - _popupWidth / 2.0;
-        final dy = _isCircleIndicatorVisible
-            ? height - widget.barHeight + _topPadding + circleOuterRadius
-            : height;
-
-        return Offset(dx, dy);
-      },
-      triggerBuilder: (context, openPopup, closePopup, _) {
-        return MouseRegion(
-          onEnter: (_) => openPopup(),
-          onExit: (_) => closePopup(),
-          child: TappableArea(
-            onTap: _onBarTap,
-            builder: (context, isHovered, _) {
-              final hoverColor =
-                  isHovered ? barColor.withOpacity(0.25) : Colors.transparent;
-
-              return Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    width: _barWidth,
-                    color: hoverColor,
-                    alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: widget.barHeight,
-                      child: ColoredBar(
-                        width: _barWidth,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: _borderRadius,
-                          topRight: _borderRadius,
-                        ),
-                        color: barColor,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: widget.barHeight - circleOuterRadius,
-                    child: VisibilityDetector(
-                      key: _uniqueKey,
-                      onVisibilityChanged: (VisibilityInfo info) {
-                        _isCircleIndicatorVisible = info.visibleFraction != 0.0;
-
-                        if (isHovered) {
-                          closePopup();
-                          openPopup();
-                        }
-                      },
-                      child: Opacity(
-                        opacity: isHovered ? 1.0 : 0.0,
-                        child: CircleGraphIndicator(
-                          outerDiameter: _circleOuterDiameter,
-                          innerDiameter: 4.0,
-                          outerColor: Colors.white,
-                          innerColor: barColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-      },
-      popup: MetricsResultBarPopupCard(
-        dashboardPopupCardViewModel:
-            widget.buildResult.dashboardPopupCardViewModel,
-      ),
+    final barBackgroundColor = _getBuildResultBackgroundColor(
+      widget.buildResult.buildStatus,
+      widgetThemeData,
     );
+    final circleGraphIndicator = _getCircleGraphIndicator(
+      widget.buildResult.buildStatus,
+    );
+
+    return LayoutBuilder(builder: (
+      BuildContext context,
+      BoxConstraints constraints,
+    ) {
+      final barHeight = constraints.minHeight;
+
+      return BasePopup(
+        isPopupOpaque: false,
+        closePopupWhenTapOutside: false,
+        popupConstraints: const BoxConstraints(
+          minWidth: _popupWidth,
+          maxWidth: _popupWidth,
+        ),
+        offsetBuilder: (Size childSize) {
+          final height = childSize.height;
+          final dx = childSize.width / 2.0 - _popupWidth / 2.0;
+          final dy = _isCircleIndicatorVisible
+              ? height - barHeight + _topPadding + radius
+              : height;
+
+          return Offset(dx, dy);
+        },
+        triggerBuilder: (context, openPopup, closePopup, _) {
+          return MouseRegion(
+            onEnter: (_) => openPopup(),
+            onExit: (_) => closePopup(),
+            child: TappableArea(
+              onTap: _onBarTap,
+              builder: (context, isHovered, _) {
+                final hoverColor = isHovered ? barBackgroundColor : null;
+
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: _barWidth,
+                      color: hoverColor,
+                      alignment: Alignment.bottomCenter,
+                      child: SizedBox(
+                        height: barHeight,
+                        child: ColoredBar(
+                          width: _barWidth,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: _borderRadius,
+                            topRight: _borderRadius,
+                          ),
+                          color: barColor,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: barHeight - radius,
+                      child: VisibilityDetector(
+                        key: _uniqueKey,
+                        onVisibilityChanged: (VisibilityInfo info) {
+                          _isCircleIndicatorVisible =
+                              info.visibleFraction != 0.0;
+
+                          if (isHovered) {
+                            closePopup();
+                            openPopup();
+                          }
+                        },
+                        child: Opacity(
+                          opacity: isHovered ? 1.0 : 0.0,
+                          child: circleGraphIndicator,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        },
+        popup: MetricsResultBarPopupCard(
+          dashboardPopupCardViewModel:
+              widget.buildResult.dashboardPopupCardViewModel,
+        ),
+      );
+    });
   }
 
-  /// Selects the color from the [widgetTheme] based on [buildStatus].
+  /// Selects the color for the bar from the [widgetTheme]
+  /// based on [buildStatus].
   Color _getBuildResultColor(
     BuildStatus buildStatus,
     BuildResultsThemeData widgetTheme,
@@ -167,6 +174,39 @@ class _BuildResultBarState extends State<BuildResultBar> {
         return widgetTheme.canceledColor;
       case BuildStatus.failed:
         return widgetTheme.failedColor;
+      default:
+        return null;
+    }
+  }
+
+  /// Selects the color for the bar background from the [widgetTheme]
+  /// based on [buildStatus].
+  Color _getBuildResultBackgroundColor(
+    BuildStatus buildStatus,
+    BuildResultsThemeData widgetTheme,
+  ) {
+    switch (buildStatus) {
+      case BuildStatus.successful:
+        return widgetTheme.successfulBackgroundColor;
+      case BuildStatus.cancelled:
+        return widgetTheme.canceledBackgroundColor;
+      case BuildStatus.failed:
+        return widgetTheme.failedBackgroundColor;
+      default:
+        return null;
+    }
+  }
+
+  /// Select the [MetricsCircleGraphIndicator] widget to use
+  /// based on [buildStatus].
+  Widget _getCircleGraphIndicator(BuildStatus buildStatus) {
+    switch (buildStatus) {
+      case BuildStatus.successful:
+        return const MetricsSuccessfulCircleGraphIndicator();
+      case BuildStatus.cancelled:
+        return const MetricsCancelledCircleGraphIndicator();
+      case BuildStatus.failed:
+        return const MetricsFailedCircleGraphIndicator();
       default:
         return null;
     }

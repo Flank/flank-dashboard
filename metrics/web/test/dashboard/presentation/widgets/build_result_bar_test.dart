@@ -186,7 +186,6 @@ class _BuildResultBarTestbed extends StatelessWidget {
       metricsThemeData: themeData,
       body: BuildResultBar(
         buildResult: buildResult,
-        barHeight: barHeight,
       ),
     );
   }
