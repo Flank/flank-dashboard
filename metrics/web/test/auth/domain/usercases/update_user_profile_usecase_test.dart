@@ -38,12 +38,14 @@ void main() {
     test("throws if the given repository throws during updating profile", () {
       const errorMessage = 'error message';
 
-      when(repository.updateUserProfile(any, any)).thenThrow(errorMessage);
+      when(repository.updateUserProfile(any, any)).thenAnswer(
+        (_) => Future.error(errorMessage),
+      );
 
-      final createProfile = UpdateUserProfileUseCase(repository);
+      final updateProfile = UpdateUserProfileUseCase(repository);
 
       expect(
-        () => createProfile(userProfileParam),
+        updateProfile(userProfileParam),
         throwsA(equals(errorMessage)),
       );
     });
