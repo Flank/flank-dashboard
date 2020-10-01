@@ -113,15 +113,14 @@ class FirebaseUserRepository implements UserRepository {
 
   @override
   Stream<UserProfile> userProfileStream(String id) {
-    return _firestore
-        .collection('user_profiles')
-        .document(id)
-        .snapshots()
-        .map(
-          (snapshot) =>
-              UserProfileData.fromJson(snapshot.data, snapshot.documentID),
-        )
-        .handleError((_) {
+    return _firestore.collection('user_profiles').document(id).snapshots().map(
+      (snapshot) {
+        return UserProfileData.fromJson(
+          snapshot.data,
+          snapshot.documentID,
+        );
+      },
+    ).handleError((_) {
       throw const PersistentStoreException(
         code: PersistentStoreErrorCode.unknown,
       );
