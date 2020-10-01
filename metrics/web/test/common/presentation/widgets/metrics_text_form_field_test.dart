@@ -188,6 +188,22 @@ void main() {
     );
 
     testWidgets(
+      "applies the given error text as the text form field error text",
+      (tester) async {
+        const expectedErrorText = 'error';
+
+        await tester.pumpWidget(const _MetricsTextFormFieldTestbed(
+          errorText: expectedErrorText,
+        ));
+
+        final textField = FinderUtil.findTextField(tester);
+        final actualErrorText = textField.decoration.errorText;
+
+        expect(actualErrorText, equals(expectedErrorText));
+      },
+    );
+
+    testWidgets(
       "builds the given widget according to the given builder as prefix icon in the metrics text form field",
       (tester) async {
         const searchIcon = Icon(Icons.search);
@@ -459,6 +475,9 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   /// A text to apply to the text field as a label.
   final String label;
 
+  /// An error text that appears below this input field.
+  final String errorText;
+
   /// Creates a new instance of the Metrics text form field testbed.
   ///
   /// The [metricsThemeData] defaults to the default [MetricsThemeData] instance.
@@ -477,6 +496,7 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
     this.suffixIcon,
     this.hint,
     this.label,
+    this.errorText,
   }) : super(key: key);
 
   @override
@@ -494,6 +514,7 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
         suffixIcon: suffixIcon,
         hint: hint,
         label: label,
+        errorText: errorText,
       ),
     );
   }
