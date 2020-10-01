@@ -268,7 +268,7 @@ void main() {
     );
 
     test(
-      ".passwordErrorMessage is populated when SignInUseCase throws a password exception",
+      ".passwordErrorMessage is populated when the password-related error occurred during the sign-in process",
       () async {
         when(signInUseCase.call(any)).thenThrow(passwordAuthException);
 
