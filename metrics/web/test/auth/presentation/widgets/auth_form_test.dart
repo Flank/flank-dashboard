@@ -47,6 +47,9 @@ void main() {
 
     AuthNotifier authNotifier;
 
+    const emailAuthException = AuthenticationException(
+      code: AuthErrorCode.invalidEmail,
+    );
     const passwordAuthException = AuthenticationException(
       code: AuthErrorCode.wrongPassword,
     );
@@ -312,35 +315,43 @@ void main() {
       "displays the email auth error message",
       (tester) async {
         final authNotifier = AuthNotifierMock();
+
         when(authNotifier.isLoading).thenReturn(false);
         when(authNotifier.emailErrorMessage).thenReturn(errorMessage);
+
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _AuthFormTestbed(authNotifier: authNotifier),
           );
         });
-        expect(find.text(errorMessage), findsOneWidget);
-      },
-    );
-    testWidgets(
-      "displays the password auth error message",
-      (tester) async {
-        final authNotifier = AuthNotifierMock();
-        when(authNotifier.isLoading).thenReturn(false);
-        when(authNotifier.passwordErrorMessage).thenReturn(errorMessage);
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _AuthFormTestbed(authNotifier: authNotifier),
-          );
-        });
+
         expect(find.text(errorMessage), findsOneWidget);
       },
     );
 
     testWidgets(
-      "removes the password auth error message when password validation error appears",
+      "displays the password auth error message",
       (tester) async {
-        when(signInUseCase.call(any)).thenThrow(passwordAuthException);
+        final authNotifier = AuthNotifierMock();
+
+        when(authNotifier.isLoading).thenReturn(false);
+        when(authNotifier.passwordErrorMessage).thenReturn(errorMessage);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+
+        expect(find.text(errorMessage), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "removes the email auth error message when the email validation error appears",
+      (tester) async {
+        when(signInUseCase.call(any)).thenThrow(emailAuthException);
+
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _AuthFormTestbed(authNotifier: authNotifier),
@@ -354,15 +365,53 @@ void main() {
         await tester.pump();
 
         expect(
-            find.text(AuthStrings.wrongPasswordErrorMessage), findsOneWidget);
+          find.text(AuthStrings.invalidEmailErrorMessage),
+          findsOneWidget,
+        );
+
+        await tester.enterText(emailInputFinder, '');
+        await tester.tap(submitButtonFinder);
+        await tester.pump();
+
+        expect(find.text(AuthStrings.invalidEmailErrorMessage), findsNothing);
+        expect(
+          find.text(AuthStrings.emailRequiredErrorMessage),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      "removes the password auth error message when the password validation error appears",
+      (tester) async {
+        when(signInUseCase.call(any)).thenThrow(passwordAuthException);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+
+        await tester.enterText(emailInputFinder, 'test@test.com');
+        await tester.enterText(passwordInputFinder, 'password');
+
+        await tester.tap(submitButtonFinder);
+        await tester.pump();
+
+        expect(
+          find.text(AuthStrings.wrongPasswordErrorMessage),
+          findsOneWidget,
+        );
 
         await tester.enterText(passwordInputFinder, '');
         await tester.tap(submitButtonFinder);
         await tester.pump();
 
         expect(find.text(AuthStrings.wrongPasswordErrorMessage), findsNothing);
-        expect(find.text(AuthStrings.passwordRequiredErrorMessage),
-            findsOneWidget);
+        expect(
+          find.text(AuthStrings.passwordRequiredErrorMessage),
+          findsOneWidget,
+        );
       },
     );
   });

@@ -16,7 +16,8 @@ import 'package:metrics_core/metrics_core.dart';
 /// Provides the ability to sign in and sign out user from the app,
 /// track the [isLoggedIn] status and authentication error message if any.
 class AuthNotifier extends ChangeNotifier {
-  /// A [List] of [AuthErrorCode]s to display in toast.
+  /// A [List] of [AuthErrorCode]s that help
+  /// to provide an authentication error message in toasts.
   final List<AuthErrorCode> _toastErrorCodes = [
     AuthErrorCode.googleSignInError,
     AuthErrorCode.tooManyRequests,
@@ -24,7 +25,8 @@ class AuthNotifier extends ChangeNotifier {
     AuthErrorCode.unknown,
   ];
 
-  /// A [List] of [AuthErrorCode]s to display near the email field.
+  /// A [List] of [AuthErrorCode]s that help
+  /// to provide an authentication error message near the email field.
   final List<AuthErrorCode> _emailErrorCodes = [
     AuthErrorCode.invalidEmail,
     AuthErrorCode.userNotFound,
