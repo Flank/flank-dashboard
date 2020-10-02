@@ -27,19 +27,19 @@
 
     Bob -> UI : Change theme appearance
     activate UI 
-    UI -> ThemeNotifier : changeTheme()
+    UI -> ThemeNotifier : changeTheme(themeType)
     activate ThemeNotifier
 
     ThemeNotifier -> UI : Notify about theme changes
     UI -> Bob : Show UI in selected theme
     deactivate UI
 
-    ThemeNotifier -> AuthNotifier : updateUserProfile()
+    ThemeNotifier -> AuthNotifier : updateUserProfile(userProfile)
     deactivate ThemeNotifier
 
     activate AuthNotifier
     alt currentUser != updatedUser
-        AuthNotifier -> UpdateUserProfileUseCase : call()
+        AuthNotifier -> UpdateUserProfileUseCase : call(UserProfileParam)
         activate UpdateUserProfileUseCase
     else currentUser == updatedUser
     AuthNotifier -> AuthNotifier : do nothing
@@ -47,7 +47,7 @@
     deactivate AuthNotifier
 
 
-    UpdateUserProfileUseCase -> UserRepository : updateUserProfile()
+    UpdateUserProfileUseCase -> UserRepository : updateUserProfile(id, selectedTheme)
     deactivate UpdateUserProfileUseCase
 
     activate UserRepository
@@ -70,7 +70,7 @@
     ReceiveUserProfileUpdates -> AuthNotifier : Notifies about profile update
     deactivate ReceiveUserProfileUpdates
     activate AuthNotifier
-    AuthNotifier -> ThemeNotifier : changeTheme()
+    AuthNotifier -> ThemeNotifier : changeTheme(themeType)
     deactivate AuthNotifier
     activate ThemeNotifier
     ThemeNotifier -> UI : Notify about theme changes
