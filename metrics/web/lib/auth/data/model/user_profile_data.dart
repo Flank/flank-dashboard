@@ -20,16 +20,22 @@ class UserProfileData extends UserProfile implements DataModel {
   ) {
     if (json == null) return null;
 
+    final selectedThemeValue = json['selectedTheme'] as String;
+    final selectedTheme = ThemeType.values.firstWhere(
+      (element) => '$element' == selectedThemeValue,
+      orElse: () => null,
+    );
+
     return UserProfileData(
       id: documentId,
-      selectedTheme: json['selectedTheme'] as ThemeType,
+      selectedTheme: selectedTheme,
     );
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      'selectedTheme': selectedTheme,
+      'selectedTheme': selectedTheme.toString(),
     };
   }
 }
