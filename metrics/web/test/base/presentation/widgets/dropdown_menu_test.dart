@@ -143,7 +143,7 @@ void main() {
     );
 
     testWidgets(
-      "uses a zero padding as a default if the list padding parameter is null",
+      "applies a zero list padding if the given list padding is null",
       (tester) async {
         await tester.pumpWidget(const _DropdownMenuTestbed(listPadding: null));
 
