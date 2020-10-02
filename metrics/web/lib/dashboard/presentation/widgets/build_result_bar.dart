@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
 import 'package:metrics/base/presentation/widgets/circle_graph_indicator.dart';
@@ -8,10 +7,11 @@ import 'package:metrics/common/presentation/circle_graph_indicator/widgets/metri
 import 'package:metrics/common/presentation/circle_graph_indicator/widgets/metrics_failed_circle_graph_indicator.dart';
 import 'package:metrics/common/presentation/circle_graph_indicator/widgets/metrics_successful_circle_graph_indicator.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'file:///E:/Projects/monorepo_dashboard/metrics/web/lib/common/presentation/widgets/metrics_colored_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_result_bar_popup_card.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -33,12 +33,6 @@ class BuildResultBar extends StatefulWidget {
 }
 
 class _BuildResultBarState extends State<BuildResultBar> {
-  /// A border radius of this bar.
-  static const _borderRadius = Radius.circular(1.0);
-
-  /// A width of this bar.
-  static const _barWidth = 10.0;
-
   /// A width of the [BasePopup.popup].
   static const _popupWidth = 146.0;
 
@@ -55,25 +49,16 @@ class _BuildResultBarState extends State<BuildResultBar> {
   Widget build(BuildContext context) {
     const radius = DimensionsConfig.circleGraphIndicatorOuterDiameter / 2.0;
     final metricsTheme = MetricsTheme.of(context);
-    final widgetThemeData = metricsTheme.buildResultTheme;
 
     if (widget.buildResult == null || widget.buildResult.buildStatus == null) {
       final inactiveTheme = metricsTheme.inactiveWidgetTheme;
       return PlaceholderBar(
-        width: _barWidth,
+        width: 10.0,
         height: 4.0,
         color: inactiveTheme.primaryColor,
       );
     }
 
-    final barColor = _getBuildResultColor(
-      widget.buildResult.buildStatus,
-      widgetThemeData,
-    );
-    final barBackgroundColor = _getBuildResultBackgroundColor(
-      widget.buildResult.buildStatus,
-      widgetThemeData,
-    );
     final circleGraphIndicator = _getCircleGraphIndicator(
       widget.buildResult.buildStatus,
     );
@@ -107,26 +92,16 @@ class _BuildResultBarState extends State<BuildResultBar> {
             child: TappableArea(
               onTap: _onBarTap,
               builder: (context, isHovered, _) {
-                final hoverColor = isHovered ? barBackgroundColor : null;
+                const strategy = BuildResultBarStyleStrategy();
 
                 return Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Container(
-                      width: _barWidth,
-                      color: hoverColor,
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        height: barHeight,
-                        child: ColoredBar(
-                          width: _barWidth,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: _borderRadius,
-                            topRight: _borderRadius,
-                          ),
-                          color: barColor,
-                        ),
-                      ),
+                    MetricsColoredBar(
+                      isHovered: isHovered,
+                      height: barHeight,
+                      barStrategy: strategy,
+                      status: widget.buildResult.buildStatus,
                     ),
                     Positioned(
                       bottom: barHeight - radius,
@@ -159,42 +134,6 @@ class _BuildResultBarState extends State<BuildResultBar> {
         ),
       );
     });
-  }
-
-  /// Selects the color for the bar from the [widgetTheme]
-  /// based on [buildStatus].
-  Color _getBuildResultColor(
-    BuildStatus buildStatus,
-    BuildResultsThemeData widgetTheme,
-  ) {
-    switch (buildStatus) {
-      case BuildStatus.successful:
-        return widgetTheme.successfulColor;
-      case BuildStatus.cancelled:
-        return widgetTheme.canceledColor;
-      case BuildStatus.failed:
-        return widgetTheme.failedColor;
-      default:
-        return null;
-    }
-  }
-
-  /// Selects the color for the bar background from the [widgetTheme]
-  /// based on [buildStatus].
-  Color _getBuildResultBackgroundColor(
-    BuildStatus buildStatus,
-    BuildResultsThemeData widgetTheme,
-  ) {
-    switch (buildStatus) {
-      case BuildStatus.successful:
-        return widgetTheme.successfulBackgroundColor;
-      case BuildStatus.cancelled:
-        return widgetTheme.canceledBackgroundColor;
-      case BuildStatus.failed:
-        return widgetTheme.failedBackgroundColor;
-      default:
-        return null;
-    }
   }
 
   /// Select the [MetricsCircleGraphIndicator] widget to use

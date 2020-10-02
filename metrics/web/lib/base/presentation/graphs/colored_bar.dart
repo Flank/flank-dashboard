@@ -18,6 +18,8 @@ class ColoredBar extends StatelessWidget {
   /// The width of this bar.
   final double width;
 
+  final double height;
+
   /// Creates the [ColoredBar].
   ///
   /// The [padding] defaults to the [EdgeInsets.zero].
@@ -28,6 +30,7 @@ class ColoredBar extends StatelessWidget {
     this.borderRadius,
     this.border,
     this.width = 0.0,
+    this.height,
   })  : assert(width != null && width >= 0.0),
         super(key: key);
 
@@ -37,6 +40,7 @@ class ColoredBar extends StatelessWidget {
       padding: padding,
       child: DecoratedContainer(
         width: width,
+        height: height,
         decoration: BoxDecoration(
           color: color,
           borderRadius: borderRadius,

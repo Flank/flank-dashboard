@@ -12,7 +12,9 @@ import 'package:metrics/common/presentation/metrics_theme/model/add_project_grou
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/attention_level/build_result_bar_attention_level.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/style/build_result_bar_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/theme_data/build_result_bar_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
@@ -112,13 +114,21 @@ class LightMetricsThemeData extends MetricsThemeData {
               fontWeight: FontWeight.bold,
             ),
           ),
-          buildResultTheme: const BuildResultsThemeData(
-            successfulColor: ColorConfig.primaryColor,
-            successfulBackgroundColor: ColorConfig.primaryTransparentColor,
-            canceledColor: ColorConfig.accentColor,
-            canceledBackgroundColor: ColorConfig.accentTransparentColor,
-            failedColor: ColorConfig.accentColor,
-            failedBackgroundColor: ColorConfig.accentTransparentColor,
+          buildResultBarTheme: const BuildResultBarThemeData(
+            attentionLevel: BuildResultBarAttentionLevel(
+              successful: BuildResultBarStyle(
+                color: ColorConfig.primaryColor,
+                backgroundColor: ColorConfig.primaryTransparentColor,
+              ),
+              failed: BuildResultBarStyle(
+                color: ColorConfig.accentColor,
+                backgroundColor: ColorConfig.accentTransparentColor,
+              ),
+              cancelled: BuildResultBarStyle(
+                color: ColorConfig.accentColor,
+                backgroundColor: ColorConfig.accentTransparentColor,
+              ),
+            ),
           ),
           barGraphPopupTheme: const BarGraphPopupThemeData(
             color: Colors.white,

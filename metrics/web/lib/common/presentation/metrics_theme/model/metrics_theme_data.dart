@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
 import 'package:metrics/common/presentation/circle_graph_indicator/theme/metrics_circle_graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/theme_data/build_result_bar_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
@@ -41,7 +40,7 @@ class MetricsThemeData {
 
   /// A theme for the [BuildResultBarGraph] used to set the colors
   /// of the graph bars.
-  final BuildResultsThemeData buildResultTheme;
+  final BuildResultBarThemeData buildResultBarTheme;
 
   /// A theme for dialogs.
   final ProjectGroupDialogThemeData projectGroupDialogTheme;
@@ -115,7 +114,7 @@ class MetricsThemeData {
   const MetricsThemeData({
     MetricsWidgetThemeData metricsWidgetTheme,
     MetricsWidgetThemeData inactiveWidgetTheme,
-    BuildResultsThemeData buildResultTheme,
+    BuildResultBarThemeData buildResultBarTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     DeleteDialogThemeData deleteDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
@@ -141,12 +140,8 @@ class MetricsThemeData {
     MetricsCircleGraphIndicatorThemeData metricsCircleGraphIndicatorTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
-        buildResultTheme = buildResultTheme ??
-            const BuildResultsThemeData(
-              canceledColor: Colors.grey,
-              successfulColor: Colors.teal,
-              failedColor: Colors.redAccent,
-            ),
+        buildResultBarTheme =
+            buildResultBarTheme ?? const BuildResultBarThemeData(),
         projectGroupDialogTheme =
             projectGroupDialogTheme ?? const ProjectGroupDialogThemeData(),
         deleteDialogTheme = deleteDialogTheme ?? const DeleteDialogThemeData(),
@@ -191,7 +186,7 @@ class MetricsThemeData {
   /// the value will be copied from the current instance.
   MetricsThemeData copyWith({
     MetricsWidgetThemeData metricsWidgetTheme,
-    BuildResultsThemeData buildResultTheme,
+    BuildResultBarThemeData buildResultBarTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     DeleteDialogThemeData deleteDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
@@ -219,7 +214,7 @@ class MetricsThemeData {
   }) {
     return MetricsThemeData(
       metricsWidgetTheme: metricsWidgetTheme ?? this.metricsWidgetTheme,
-      buildResultTheme: buildResultTheme ?? this.buildResultTheme,
+      buildResultBarTheme: buildResultBarTheme ?? this.buildResultBarTheme,
       projectGroupDialogTheme:
           projectGroupDialogTheme ?? this.projectGroupDialogTheme,
       deleteDialogTheme: deleteDialogTheme ?? this.deleteDialogTheme,
