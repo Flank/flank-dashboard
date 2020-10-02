@@ -6,15 +6,9 @@ import 'package:selection_menu/components_configurations.dart';
 
 /// A widget that displays a project groups dropdown body.
 class ProjectGroupsDropdownBody extends StatelessWidget {
-  /// An [EdgeInsets] of the dropdown body.
-  static const double _baseDropdownPadding = 4.0;
-
   /// An [AnimationComponentData] that provides an information
   /// about dropdown body animation.
   final AnimationComponentData data;
-
-  /// Whether to add or remove the bottom padding of the dropdown body.
-  final bool isBottomPadding;
 
   /// Creates the [ProjectGroupsDropdownBody] with the given [data].
   ///
@@ -22,18 +16,12 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
   const ProjectGroupsDropdownBody({
     Key key,
     @required this.data,
-    this.isBottomPadding = true,
   })  : assert(data != null),
-        assert(isBottomPadding != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = MetricsTheme.of(context).dropdownTheme;
-    final dropdownBottomPadding = isBottomPadding ? _baseDropdownPadding : 0.0;
-    final dropdownHeight = data.constraints.maxHeight +
-        _baseDropdownPadding +
-        dropdownBottomPadding;
 
     return DropdownBody(
       state: data.menuState,
@@ -52,28 +40,20 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
               ],
             ),
             child: Card(
+              key: UniqueKey(),
               margin: const EdgeInsets.only(top: 4.0),
               color: theme.backgroundColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0),
               ),
               elevation: 0.0,
-              child: Padding(
-                key: UniqueKey(),
-                padding: EdgeInsets.fromLTRB(
-                  1.0,
-                  4.0,
-                  1.0,
-                  dropdownBottomPadding,
-                ),
-                child: data.child,
-              ),
+              child: data.child,
             ),
           ),
         );
       },
       animationDuration: DurationConstants.animation,
-      maxHeight: dropdownHeight,
+      maxHeight: data.constraints.maxHeight,
       maxWidth: 212.0,
       onOpenStateChanged: _onOpenStateChanges,
     );

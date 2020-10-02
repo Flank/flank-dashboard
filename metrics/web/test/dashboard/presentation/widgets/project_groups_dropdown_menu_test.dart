@@ -44,8 +44,6 @@ void main() {
       (widget) => widget is DropdownMenu,
     );
 
-    final dropdownBodyFinder = find.byType(ProjectGroupsDropdownBody);
-
     DecoratedContainer _getDecoratedContainer(WidgetTester tester) {
       return tester.widget<DecoratedContainer>(find.descendant(
         of: find.byType(ProjectGroupsDropdownMenu),
@@ -374,7 +372,7 @@ void main() {
 
         await openDropdownMenu(tester);
 
-        expect(dropdownBodyFinder, findsOneWidget);
+        expect(find.byType(ProjectGroupsDropdownBody), findsOneWidget);
       },
     );
 
@@ -528,51 +526,6 @@ void main() {
         );
 
         expect(groupNameText.maxLines, equals(1));
-      },
-    );
-
-    testWidgets(
-      "applies true to is bottom padding of the project groups dropdown body when an items count is less than max visible items",
-      (tester) async {
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(_ProjectGroupsDropdownMenuTestbed(
-            metricsNotifier: metricsNotifier,
-          )),
-        );
-
-        await openDropdownMenu(tester);
-
-        final dropdownBody =
-            tester.widget<ProjectGroupsDropdownBody>(dropdownBodyFinder);
-
-        expect(dropdownBody.isBottomPadding, isTrue);
-      },
-    );
-
-    testWidgets(
-      "applies false to is bottom padding of the project groups dropdown body when an items count is more than max visible items",
-      (tester) async {
-        final dropdownItems = List<ProjectGroupDropdownItemViewModel>.generate(
-          6,
-          (index) => ProjectGroupDropdownItemViewModel(
-            id: "${index + 1}",
-            name: "name",
-          ),
-        );
-        when(metricsNotifier.projectGroupDropdownItems)
-            .thenReturn(dropdownItems);
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(_ProjectGroupsDropdownMenuTestbed(
-            metricsNotifier: metricsNotifier,
-          )),
-        );
-
-        await openDropdownMenu(tester);
-
-        final dropdownBody =
-            tester.widget<ProjectGroupsDropdownBody>(dropdownBodyFinder);
-
-        expect(dropdownBody.isBottomPadding, isFalse);
       },
     );
   });

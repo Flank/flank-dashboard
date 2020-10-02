@@ -22,9 +22,6 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
   /// A height of the dropdown menu button.
   static const double _menuButtonHeight = 48.0;
 
-  /// A number of maximum visible items when the menu is open.
-  static const int _maxVisibleItems = 5;
-
   /// Indicates whether the project groups dropdown is opened or not.
   bool _isOpened = false;
 
@@ -50,7 +47,6 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
           return DropdownMenu<ProjectGroupDropdownItemViewModel>(
             itemHeight: 40.0,
             initiallySelectedItemIndex: 0,
-            maxVisibleItems: _maxVisibleItems,
             items: items,
             onItemSelected: (item) {
               Provider.of<ProjectMetricsNotifier>(context, listen: false)
@@ -59,6 +55,10 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
             menuPadding: const EdgeInsets.only(
               top: _menuButtonHeight,
             ),
+            listPadding: const EdgeInsets.symmetric(
+              vertical: 4.0,
+              horizontal: 1.0,
+            ),
             menuBuilder: (data) {
               if (data.menuState == MenuState.OpeningStart) {
                 _isOpened = true;
@@ -66,12 +66,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
                 _isOpened = false;
               }
 
-              final isBottomPadding = items.length <= _maxVisibleItems;
-
-              return ProjectGroupsDropdownBody(
-                data: data,
-                isBottomPadding: isBottomPadding,
-              );
+              return ProjectGroupsDropdownBody(data: data);
             },
             itemBuilder: (_, item) {
               return ProjectGroupsDropdownItem(

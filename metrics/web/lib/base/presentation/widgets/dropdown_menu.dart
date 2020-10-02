@@ -45,37 +45,42 @@ class DropdownMenu<T> extends StatefulWidget {
   /// An [EdgeInsets] representing an empty space around the dropdown menu.
   final EdgeInsets menuPadding;
 
+  /// An [EdgeInsets] representing an empty space around the dropdown menu list.
+  final EdgeInsets listPadding;
+
   /// Creates a dropdown menu widget.
   ///
   /// Builds the opened menu using the [menuBuilder]. The [menuBuilder] should
   /// call the [AnimationComponentData.opened] and [AnimationComponentData.closed]
   /// callbacks on menu open state changes.
   ///
+  /// If the [maxVisibleItems] is not specified, the default value of `5` used.
   /// If [items] are null, an empty list used.
   /// If the [itemHeight] is null the [kMinInteractiveDimension] used.
   /// If the [menuPadding] is null the [EdgeInsets.zero] used.
+  /// If the [listPadding] is null the [EdgeInsets.zero] used.
   ///
-  /// [itemBuilder], [buttonBuilder], [menuBuilder] 
-  /// and [maxVisibleItems] must not be `null`.
+  /// [itemBuilder], [buttonBuilder] and [menuBuilder] must not be `null`.
   const DropdownMenu({
     Key key,
     @required this.menuBuilder,
     @required this.itemBuilder,
     @required this.buttonBuilder,
-    @required this.maxVisibleItems,
+    this.maxVisibleItems = 5,
     this.onItemSelected,
     this.initiallySelectedItemIndex,
     List<T> items,
     double itemHeight,
     EdgeInsets menuPadding,
+    EdgeInsets listPadding,
   })  : items = items ?? const [],
         itemHeight = itemHeight ?? kMinInteractiveDimension,
         menuPadding = menuPadding ?? EdgeInsets.zero,
+        listPadding = listPadding ?? EdgeInsets.zero,
         assert(maxVisibleItems != null && maxVisibleItems > 0),
         assert(menuBuilder != null),
         assert(itemBuilder != null),
         assert(buttonBuilder != null),
-        assert(maxVisibleItems != null),
         super(key: key);
 
   @override
@@ -121,7 +126,7 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
         listViewComponent: ListViewComponent(
           builder: (data) {
             return ListView.builder(
-              padding: EdgeInsets.zero,
+              padding: widget.listPadding,
               itemCount: data.itemCount,
               itemBuilder: data.itemBuilder,
             );
@@ -146,11 +151,12 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
     final numberOfItems = widget.items.length;
     final itemHeight = widget.itemHeight;
     final maxVisibleItems = widget.maxVisibleItems;
+    const additionalPadding = 8;
 
     if (numberOfItems > maxVisibleItems) {
-      return maxVisibleItems * itemHeight + itemHeight / 2;
+      return maxVisibleItems * itemHeight + itemHeight / 2 + additionalPadding;
     }
 
-    return numberOfItems * itemHeight;
+    return numberOfItems * itemHeight + additionalPadding;
   }
 }
