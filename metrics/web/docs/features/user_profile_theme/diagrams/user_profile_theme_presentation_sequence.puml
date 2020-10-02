@@ -1,0 +1,81 @@
+@startuml web_layers_sequence_diagram
+    skinparam ParticipantPadding 20
+    skinparam BoxPadding 10
+
+    actor Bob
+
+    box "presentation"
+        participant UI << (C,#ADD1B2) >>
+        participant ThemeNotifier << (C,#ADD1B2) >>
+        participant AuthNotifier << (C,#ADD1B2) >>
+    end box
+
+    box "domain"
+        participant UpdateUserProfileUseCase << (C,#ADD1B2) >>
+        participant ReceiveUserProfileUpdates << (C,#ADD1B2) >>
+    end box
+
+    box "data"
+        participant UserRepository << (C,#ADD1B2) >>
+        participant UserProfileModel << (C,#ADD1B2) >>
+    end box
+
+    database "Persistent Store" as PS
+
+
+    ' User changes theme using the UI.  
+
+    Bob -> UI : Change theme appearance
+    activate UI 
+    UI -> ThemeNotifier : changeTheme()
+    activate ThemeNotifier
+
+    ThemeNotifier -> UI : Notify about theme changes
+    UI -> Bob : Show UI in selected theme
+    deactivate UI
+
+    ThemeNotifier -> AuthNotifier : updateUserProfile()
+    deactivate ThemeNotifier
+
+    activate AuthNotifier
+    alt currentUser != updatedUser
+        AuthNotifier -> UpdateUserProfileUseCase : call()
+        activate UpdateUserProfileUseCase
+    else currentUser == updatedUser
+    AuthNotifier -> AuthNotifier : do nothing
+    end
+    deactivate AuthNotifier
+
+
+    UpdateUserProfileUseCase -> UserRepository : updateUserProfile()
+    deactivate UpdateUserProfileUseCase
+
+    activate UserRepository
+    UserRepository -> UserProfileModel : toJson()
+    activate UserProfileModel
+    return userProfileJson
+    UserRepository --> PS : save user profile request
+    deactivate UserRepository
+
+    ' Theme update comes from the persistent store
+
+    PS -> UserRepository : Notifies about profile update
+    activate UserRepository
+    UserRepository -> UserProfileModel : fromJson(json)
+    activate UserProfileModel
+    return UserProfileModel
+    UserRepository -> ReceiveUserProfileUpdates : Notifies about profile update
+    deactivate UserRepository
+    activate ReceiveUserProfileUpdates
+    ReceiveUserProfileUpdates -> AuthNotifier : Notifies about profile update
+    deactivate ReceiveUserProfileUpdates
+    activate AuthNotifier
+    AuthNotifier -> ThemeNotifier : changeTheme()
+    deactivate AuthNotifier
+    activate ThemeNotifier
+    ThemeNotifier -> UI : Notify about theme changes
+    deactivate ThemeNotifier
+    activate UI 
+    UI -> Bob : Show UI in selected theme
+    deactivate UI
+@enduml

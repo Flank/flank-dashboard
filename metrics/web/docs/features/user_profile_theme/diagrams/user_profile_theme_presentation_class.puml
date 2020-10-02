@@ -1,0 +1,34 @@
+@startuml user_profile_domain_class
+
+package auth.presentation.state {
+    class AuthNotifier {
+        userProfile : UserProfileModel
+        userProfileSavingErrorMessage : PersistentStoreErrorMessage
+        void updateUserProfile()
+    }
+}
+
+package common.presentation {
+
+    package models {
+        class UserProfileModel {
+            id : String
+            selectedTheme : ThemeType
+            UserProfileModel copyWith()
+            UserProfileModel merge()
+        }
+    }
+
+    package metrics_theme.state {
+        class ThemeNotifier {
+            void changeTheme()
+        }
+    }
+}
+
+AuthNotifier --> UserProfileModel : provides
+ThemeNotifier --> UserProfileModel : uses
+ThemeNotifier --> AuthNotifier : uses
+
+
+@enduml
