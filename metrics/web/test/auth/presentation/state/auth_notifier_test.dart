@@ -195,7 +195,10 @@ void main() {
           email: Email(email),
           password: Password(password),
         );
-        when(signInUseCase(userCredentials)).thenThrow(authException);
+
+        when(signInUseCase(userCredentials))
+            .thenAnswer((_) => Future.error(authException));
+
         await authNotifier.signInWithEmailAndPassword(email, password);
 
         expect(authNotifier.isLoading, isFalse);
@@ -205,7 +208,9 @@ void main() {
     test(
       ".isLoading status is false if .signInWithGoogle() is finished with an error",
       () async {
-        when(googleSignInUseCase()).thenThrow(authException);
+        when(googleSignInUseCase())
+            .thenAnswer((_) => Future.error(authException));
+
         await authNotifier.signInWithGoogle();
 
         expect(authNotifier.isLoading, isFalse);
@@ -248,8 +253,11 @@ void main() {
       verifyNever(googleSignInUseCase());
     });
 
-    test(".authErrorMessage is populated when SignInUseCase throws", () async {
-      when(signInUseCase.call(any)).thenThrow(authException);
+    test(
+        ".authErrorMessage is populated when the auth error occurred during the sign-in process",
+        () async {
+      when(signInUseCase.call(any))
+          .thenAnswer((_) => Future.error(authException));
 
       await authNotifier.signInWithEmailAndPassword(email, password);
 
@@ -259,7 +267,8 @@ void main() {
     test(
       ".emailErrorMessage is populated when the email-related error occurred during the sign-in process",
       () async {
-        when(signInUseCase.call(any)).thenThrow(emailAuthException);
+        when(signInUseCase.call(any))
+            .thenAnswer((_) => Future.error(emailAuthException));
 
         await authNotifier.signInWithEmailAndPassword(email, password);
 
@@ -270,7 +279,8 @@ void main() {
     test(
       ".passwordErrorMessage is populated when the password-related error occurred during the sign-in process",
       () async {
-        when(signInUseCase.call(any)).thenThrow(passwordAuthException);
+        when(signInUseCase.call(any))
+            .thenAnswer((_) => Future.error(passwordAuthException));
 
         await authNotifier.signInWithEmailAndPassword(email, password);
 
@@ -281,7 +291,8 @@ void main() {
     test(
       ".authErrorMessage is populated when GoogleSignInUseCase throws",
       () async {
-        when(googleSignInUseCase.call()).thenThrow(authException);
+        when(googleSignInUseCase.call())
+            .thenAnswer((_) => Future.error(authException));
 
         await authNotifier.signInWithGoogle();
 
@@ -292,7 +303,8 @@ void main() {
     test(
       ".signInWithEmailAndPassword() clears the authentication error message on a successful sign in",
       () async {
-        when(signInUseCase.call(invalidCredentials)).thenThrow(authException);
+        when(signInUseCase.call(invalidCredentials))
+            .thenAnswer((_) => Future.error(authException));
 
         await authNotifier.signInWithEmailAndPassword(
           invalidEmail,
@@ -311,10 +323,12 @@ void main() {
       ".signInWithEmailAndPassword() clears the authentication email error message on a successful sign in",
       () async {
         when(signInUseCase.call(invalidCredentials))
-            .thenThrow(emailAuthException);
+            .thenAnswer((_) => Future.error(emailAuthException));
 
         await authNotifier.signInWithEmailAndPassword(
-            invalidEmail, invalidPassword);
+          invalidEmail,
+          invalidPassword,
+        );
 
         expect(authNotifier.emailErrorMessage, isNotNull);
 
@@ -328,10 +342,12 @@ void main() {
       ".signInWithEmailAndPassword() clears the authentication password error message on a successful sign in",
       () async {
         when(signInUseCase.call(invalidCredentials))
-            .thenThrow(passwordAuthException);
+            .thenAnswer((_) => Future.error(passwordAuthException));
 
         await authNotifier.signInWithEmailAndPassword(
-            invalidEmail, invalidPassword);
+          invalidEmail,
+          invalidPassword,
+        );
 
         expect(authNotifier.passwordErrorMessage, isNotNull);
 
@@ -344,6 +360,15 @@ void main() {
     test(
       ".signInWithGoogle() clears the authentication error message on a successful sign in",
       () async {
+        when(googleSignInUseCase.call())
+            .thenAnswer((_) => Future.error(authException));
+
+        await authNotifier.signInWithGoogle();
+
+        expect(authNotifier.authErrorMessage, isNotNull);
+
+        when(googleSignInUseCase.call()).thenAnswer((_) => null);
+
         await authNotifier.signInWithGoogle();
 
         expect(authNotifier.authErrorMessage, isNull);

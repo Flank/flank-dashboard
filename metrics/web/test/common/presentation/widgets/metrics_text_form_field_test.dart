@@ -172,7 +172,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given hint text as the text form field hint",
+      "applies the given hint text to the text form field hint",
       (tester) async {
         const hint = 'Hint';
 
@@ -188,7 +188,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given error text as the text form field error text",
+      "applies the given error text to the text form field error text",
       (tester) async {
         const expectedErrorText = 'error';
 
@@ -475,7 +475,7 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   /// A text to apply to the text field as a label.
   final String label;
 
-  /// An error text that appears below this input field.
+  /// An error text that appears below the [MetricsTextFormField].
   final String errorText;
 
   /// Creates a new instance of the Metrics text form field testbed.

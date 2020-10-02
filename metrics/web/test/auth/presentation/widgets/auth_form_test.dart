@@ -111,9 +111,6 @@ void main() {
     testWidgets(
       "uses the AuthNotifier to sign in a user with login and password",
       (WidgetTester tester) async {
-        final authNotifier = AuthNotifierMock();
-
-        when(authNotifier.isLoading).thenReturn(false);
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _AuthFormTestbed(authNotifier: authNotifier),
@@ -132,8 +129,6 @@ void main() {
     testWidgets(
       "shows a progress indicator if the sign in process is in progress",
       (WidgetTester tester) async {
-        final authNotifier = AuthNotifierMock();
-
         when(authNotifier.authErrorMessage).thenReturn(null);
         when(authNotifier.isLoading).thenReturn(true);
 
@@ -152,8 +147,6 @@ void main() {
     testWidgets(
       "disables the submit button if the sign in process is in progress",
       (WidgetTester tester) async {
-        final authNotifier = AuthNotifierMock();
-
         when(authNotifier.authErrorMessage).thenReturn(null);
         when(authNotifier.isLoading).thenReturn(true);
 
@@ -177,10 +170,6 @@ void main() {
     testWidgets(
       "displays the google sign in option button with google sign in strategy",
       (WidgetTester tester) async {
-        final authNotifier = AuthNotifierMock();
-
-        when(authNotifier.isLoading).thenReturn(false);
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _AuthFormTestbed(authNotifier: authNotifier),
