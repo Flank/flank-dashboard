@@ -254,15 +254,16 @@ void main() {
     });
 
     test(
-        ".authErrorMessage is populated when the auth error occurred during the sign-in process",
-        () async {
-      when(signInUseCase.call(any))
-          .thenAnswer((_) => Future.error(authException));
+      ".authErrorMessage is populated when the auth error occurred during the sign-in process",
+      () async {
+        when(signInUseCase.call(any))
+            .thenAnswer((_) => Future.error(authException));
 
-      await authNotifier.signInWithEmailAndPassword(email, password);
+        await authNotifier.signInWithEmailAndPassword(email, password);
 
-      expect(authNotifier.authErrorMessage, isNotNull);
-    });
+        expect(authNotifier.authErrorMessage, isNotNull);
+      },
+    );
 
     test(
       ".emailErrorMessage is populated when the email-related error occurred during the sign-in process",
@@ -289,7 +290,7 @@ void main() {
     );
 
     test(
-      ".authErrorMessage is populated when GoogleSignInUseCase throws",
+      ".authErrorMessage is populated when the auth error occurred during the google sign-in process",
       () async {
         when(googleSignInUseCase.call())
             .thenAnswer((_) => Future.error(authException));
