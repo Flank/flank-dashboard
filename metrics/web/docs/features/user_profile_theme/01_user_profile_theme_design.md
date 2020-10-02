@@ -36,7 +36,7 @@ Once we have a new collection, we have to add security rules for this collection
 
 ### Domain layer
 
-In the application domain layer, we should add an ability to create, update, and read the user profile. For this purpose we should: 
+In the application domain layer, we should add an ability to create, update, and read the user profile. For this purpose, we should: 
 
 1. Create an `UserProfile` entity.
 2. Add the `createUserProfile`, `userProfileStream`, and `updateUserProfile` methods to the `UserRepository`.
@@ -58,7 +58,7 @@ The following class diagram represents the classes of the data layer required fo
 
 ### Presentation layer
 
-Once we've created a `domain` and `data` layers, it's time to create a `presentation` layer. This layer contains the `AuthNotifier` - the class that manages the authentication state and will load/save the changes in the user profile. Also, the `presentation` layer contains the `ThemeNotifier` responsible for managing the theme state and will provide information about the currently selected theme type. To introduce this feature we should follow the next steps: 
+Once we've created a `domain` and `data` layers, it's time to create a `presentation` layer. This layer contains the `AuthNotifier` - the class that manages the authentication state and will load/save the changes in the user profile. Also, the `presentation` layer contains the `ThemeNotifier` responsible for managing the theme state and will provide information about the currently selected theme type. To introduce this feature, we should follow the next steps: 
 
 1. Create a method in the `AuthNotifier` to be able to update the user profile.
 2. Create a `userProfileSavingErrorMessage` getter that will return the error message that occurred during saving the user profile.
@@ -75,17 +75,17 @@ Also, we should create a user profile record once we receive a new user. The fol
 
 ![User creation diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/user_profile_design/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_creation_sequence.puml)
 
-So, the `isLoggedIn` value of the `AuthNotifier` should depend on the `UserProfile` now, but not on the `FirebaseUser`. In other words, we are saying that the user is logged in only when we have the not null `UserProfile` in the `AuthNotifier`. 
+So, the `isLoggedIn` value of the `AuthNotifier` should depend on the `UserProfile` now, but not on the `FirebaseUser`. In other words, we can say that the user is logged in only when the `UserProfile` is nut null in the `AuthNotifier`.
 
 Let's consider the mechanism of changing the selected theme. To change the selected theme, the UI should trigger the `changeTheme` method from the `ThemeNotifier` once the user toggles the `dark`/`light` theme. Also, the `AuthNotifier` should call the `changeTheme` method once the user selected theme changed in the database. The `ThemeNotifier`, in its turn, should call the `updateUserProfile` method from the `AuthNotifier` to update the selected theme in the database.
 
-Let's consider the sequence diagram showing the process of changing the application theme: 
+The following sequence diagram shows the process of changing the application theme: 
 
 ![Theme change diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/user_profile_design/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_presentation_sequence.puml)
 
-As we can see in the sequence diagram above, the `ThemeNotifier` should, in some way, communicate with the `AuthNotifier` and vise versa. Let's consider the way of communication between two provides. 
+As we can see in the sequence diagram above, the `ThemeNotifier` should, in some way, communicate with the `AuthNotifier` and vise versa. Let's consider the way of communication between these two provides. 
 
-Since we are using the [Provider](https://pub.dev/packages/provider) package as a state management we have a [ProxyProvider](https://pub.dev/documentation/provider/latest/provider/ProxyProvider-class.html) class that allows us to make one `ChangeNotifier` depend on other. So, we should create a `ProxyProvider<ThemeNotifier, AuthNotifier, void>` to make the `AuthNotifier` change once the `ThemeNotifier` changes and vise versa. Let's consider the code sample of the provides communication: 
+Since we are using the [Provider](https://pub.dev/packages/provider) package as state management, we have a [ProxyProvider](https://pub.dev/documentation/provider/latest/provider/ProxyProvider-class.html) class that allows us to make one `ChangeNotifier` depend on the other one. So, we should create a `ProxyProvider<ThemeNotifier, AuthNotifier, void>` to make the `AuthNotifier` change once the `ThemeNotifier` changes and vise versa. Let's consider the code sample of the provides communication: 
 
 
 ```dart
@@ -97,6 +97,6 @@ Since we are using the [Provider](https://pub.dev/packages/provider) package as 
 ```
 
 
-The `update` method of the `ProxyProvider2` class is the place where the `Notifier1` and the `Notifier2` communicates. THis method will be called each time when the `Notifier1` or the `Notifier2` calls `notifyListeners` method.
+The `update` method of the `ProxyProvider2` class is the place where the `Notifier1` and the `Notifier2` communicates. This method will be called each time when the `Notifier1` or the `Notifier2` calls the `notifyListeners` method, so we can easily trigger one notifier once another one changes.
 
 

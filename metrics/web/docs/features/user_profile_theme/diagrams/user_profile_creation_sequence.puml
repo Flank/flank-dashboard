@@ -23,10 +23,10 @@
     Bob -> AuthNotifier : Loggs in to the app
     activate AuthNotifier
 
-    AuthNotifier -> ReceiveUserProfileUpdates : call()
+    AuthNotifier -> ReceiveUserProfileUpdates : call(userIdParam)
     activate ReceiveUserProfileUpdates
 
-    ReceiveUserProfileUpdates -> UserRepository : userProfileStream()
+    ReceiveUserProfileUpdates -> UserRepository : userProfileStream(userId)
     activate UserRepository
 
     UserRepository -> PS : Subscribe to user updates
@@ -42,10 +42,10 @@
 
     alt userProfile == null
 
-        AuthNotifier -> CreateUserProfileUseCase : call(userProfileParams)
+        AuthNotifier -> CreateUserProfileUseCase : call(userProfileParam)
 
         activate CreateUserProfileUseCase
-        CreateUserProfileUseCase -> UserRepository : createUserProfile(userId, selectedTheme)
+        CreateUserProfileUseCase -> UserRepository : createUserProfile(userId, seelectedTheme)
         activate UserRepository
         UserRepository -> UserRepository : create UserProfileModel
         UserRepository -> UserProfileModel : toJson()

@@ -28,7 +28,8 @@ package common.presentation {
 
 AuthNotifier --> UserProfileModel : provides
 ThemeNotifier --> UserProfileModel : uses
-ThemeNotifier --> AuthNotifier : uses
+ThemeNotifier --> AuthNotifier : notifies
+AuthNotifier --> ThemeNotifier : notifies
 
 
 @enduml
