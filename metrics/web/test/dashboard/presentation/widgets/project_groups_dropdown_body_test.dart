@@ -106,7 +106,10 @@ void main() {
           find.byType(DropdownBody),
         );
 
-        expect(dropdownBodyWidget.maxHeight, equals(maxHeight));
+        expect(
+          dropdownBodyWidget.maxHeight,
+          equals(maxHeight),
+        );
       },
     );
 
