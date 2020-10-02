@@ -142,6 +142,23 @@ void main() {
     );
 
     testWidgets(
+      "uses a zero padding as a default if the list padding parameter is null",
+      (tester) async {
+        await tester.pumpWidget(const _DropdownMenuTestbed(listPadding: null));
+
+        await tester.tap(
+          find.byWidgetPredicate((widget) => widget is DropdownMenu),
+        );
+
+        await tester.pumpAndSettle();
+
+        final listViewWidget = tester.widget<ListView>(find.byType(ListView));
+
+        expect(listViewWidget.padding, equals(EdgeInsets.zero));
+      },
+    );
+
+    testWidgets(
       "delegates the given items to the SelectionMenu widget",
       (tester) async {
         await tester.pumpWidget(const _DropdownMenuTestbed(items: items));
@@ -277,6 +294,27 @@ void main() {
     );
 
     testWidgets(
+      "applies the given list padding to the list view",
+      (tester) async {
+        const expectedPadding = EdgeInsets.all(8.0);
+
+        await tester.pumpWidget(
+          const _DropdownMenuTestbed(listPadding: expectedPadding),
+        );
+
+        await tester.tap(
+          find.byWidgetPredicate((widget) => widget is DropdownMenu),
+        );
+
+        await tester.pumpAndSettle();
+
+        final listViewWidget = tester.widget<ListView>(find.byType(ListView));
+
+        expect(listViewWidget.padding, equals(expectedPadding));
+      },
+    );
+
+    testWidgets(
       "builds a dropdown button using the buttonBuilder function",
       (tester) async {
         const buttonWidget = Text("Select item");
@@ -292,7 +330,8 @@ void main() {
     testWidgets(
       "height equals to the height of all items if their number is less than the given maxVisibleItems",
       (tester) async {
-        final expectedMaxHeight = itemHeight * items.length;
+        const additionalPadding = 8;
+        final expectedMaxHeight = itemHeight * items.length + additionalPadding;
 
         await tester.pumpWidget(const _DropdownMenuTestbed(
           itemHeight: itemHeight,
@@ -319,7 +358,9 @@ void main() {
       "height equals to the sum of max visible items and a half if items more than max visible items",
       (tester) async {
         const maxVisibleItems = 2;
-        const expectedMaxHeight = itemHeight * maxVisibleItems + itemHeight / 2;
+        const additionalPadding = 8;
+        const expectedMaxHeight =
+            itemHeight * maxVisibleItems + itemHeight / 2 + additionalPadding;
 
         await tester.pumpWidget(const _DropdownMenuTestbed(
           itemHeight: itemHeight,
@@ -417,6 +458,9 @@ class _DropdownMenuTestbed extends StatelessWidget {
   /// An [EdgeInsets] describing empty space around the menu popup.
   final EdgeInsets menuPadding;
 
+  /// An [EdgeInsets] representing an empty space around the dropdown menu list.
+  final EdgeInsets listPadding;
+
   /// Creates an instance of this testbed.
   ///
   /// If the [itemBuilder] is not specified, the default item builder used.
@@ -434,6 +478,7 @@ class _DropdownMenuTestbed extends StatelessWidget {
     this.items,
     this.itemHeight,
     this.menuPadding,
+    this.listPadding,
   }) : super(key: key);
 
   @override
@@ -450,6 +495,7 @@ class _DropdownMenuTestbed extends StatelessWidget {
           initiallySelectedItemIndex: initiallySelectedItemIndex,
           onItemSelected: onItemSelected,
           menuPadding: menuPadding,
+          listPadding: listPadding,
         ),
       ),
     );
