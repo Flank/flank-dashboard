@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -5,6 +6,7 @@ import 'package:metrics/auth/data/adapter/firebase_user_adapter.dart';
 import 'package:metrics/auth/data/converter/firebase_auth_error_code_converter.dart';
 import 'package:metrics/auth/data/model/email_domain_validation_request_data.dart';
 import 'package:metrics/auth/data/model/email_domain_validation_result_data.dart';
+import 'package:metrics/auth/data/model/user_profile_data.dart';
 import 'package:metrics/auth/domain/entities/auth_credentials.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
@@ -13,9 +15,12 @@ import 'package:metrics/auth/domain/entities/theme_type.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
 import 'package:metrics/auth/domain/entities/user_profile.dart';
 import 'package:metrics/auth/domain/repositories/user_repository.dart';
+import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
+import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 
 /// Provides methods for interaction with the [FirebaseAuth].
 class FirebaseUserRepository implements UserRepository {
+  final Firestore _firestore = Firestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.standard(scopes: ['email']);
   final CloudFunctions _cloudFunctions = CloudFunctions.instance;
@@ -107,11 +112,50 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<void> createUserProfile(String id, ThemeType selectedTheme) async {}
+  Stream<UserProfile> userProfileStream(String id) {
+    return _firestore.collection('user_profiles').document(id).snapshots().map(
+      (snapshot) {
+        return UserProfileData.fromJson(
+          snapshot.data,
+          snapshot.documentID,
+        );
+      },
+    ).handleError((_) {
+      throw const PersistentStoreException(
+        code: PersistentStoreErrorCode.unknown,
+      );
+    });
+  }
 
   @override
-  Future<void> updateUserProfile(String id, ThemeType selectedTheme) async {}
+  Future<void> createUserProfile(String id, ThemeType selectedTheme) async {
+    final userProfile = UserProfileData(id: id, selectedTheme: selectedTheme);
+
+    try {
+      await _firestore
+          .collection('user_profiles')
+          .document(id)
+          .setData(userProfile.toJson());
+    } catch (_) {
+      throw const PersistentStoreException(
+        code: PersistentStoreErrorCode.unknown,
+      );
+    }
+  }
 
   @override
-  Stream<UserProfile> userProfileStream(String id) => null;
+  Future<void> updateUserProfile(String id, ThemeType selectedTheme) async {
+    final userProfile = UserProfileData(id: id, selectedTheme: selectedTheme);
+
+    try {
+      await _firestore
+          .collection('user_profiles')
+          .document(id)
+          .updateData(userProfile.toJson());
+    } catch (_) {
+      throw const PersistentStoreException(
+        code: PersistentStoreErrorCode.unknown,
+      );
+    }
+  }
 }
