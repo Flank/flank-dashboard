@@ -6,7 +6,7 @@ void main() {
   group("UserProfileData", () {
     const id = 'id';
     const selectedTheme = ThemeType.dark;
-    const json = {'selectedTheme': selectedTheme};
+    final json = {'selectedTheme': selectedTheme.toString()};
 
     test(".fromJson() returns null if the given json is null", () {
       final userProfile = UserProfileData.fromJson(null, id);
