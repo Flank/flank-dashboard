@@ -172,7 +172,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given hint text as the text form field hint",
+      "applies the given hint text to the text form field hint",
       (tester) async {
         const hint = 'Hint';
 
@@ -184,6 +184,22 @@ void main() {
         final hintText = textField.decoration.hintText;
 
         expect(hintText, equals(hint));
+      },
+    );
+
+    testWidgets(
+      "applies the given error text to the text form field error text",
+      (tester) async {
+        const expectedErrorText = 'error';
+
+        await tester.pumpWidget(const _MetricsTextFormFieldTestbed(
+          errorText: expectedErrorText,
+        ));
+
+        final textField = FinderUtil.findTextField(tester);
+        final actualErrorText = textField.decoration.errorText;
+
+        expect(actualErrorText, equals(expectedErrorText));
       },
     );
 
@@ -459,6 +475,9 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
   /// A text to apply to the text field as a label.
   final String label;
 
+  /// An error text that appears below the [MetricsTextFormField].
+  final String errorText;
+
   /// Creates a new instance of the Metrics text form field testbed.
   ///
   /// The [metricsThemeData] defaults to the default [MetricsThemeData] instance.
@@ -477,6 +496,7 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
     this.suffixIcon,
     this.hint,
     this.label,
+    this.errorText,
   }) : super(key: key);
 
   @override
@@ -494,6 +514,7 @@ class _MetricsTextFormFieldTestbed extends StatelessWidget {
         suffixIcon: suffixIcon,
         hint: hint,
         label: label,
+        errorText: errorText,
       ),
     );
   }

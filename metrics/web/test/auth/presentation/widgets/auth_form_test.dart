@@ -16,7 +16,6 @@ import 'package:network_image_mock/network_image_mock.dart';
 import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
-import '../state/auth_notifier_test.dart';
 
 void main() {
   group("AuthForm", () {
@@ -36,11 +35,7 @@ void main() {
 
     const testEmail = 'test@email.com';
     const testPassword = 'testPassword';
-
-    final signInUseCase = SignInUseCaseMock();
-    final googleSignInUseCase = GoogleSignInUseCaseMock();
-    final signOutUseCase = SignOutUseCaseMock();
-    final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
+    const errorMessage = 'Error Message';
 
     AuthNotifier authNotifier;
 
@@ -53,12 +48,8 @@ void main() {
     }
 
     setUp(() {
-      authNotifier = AuthNotifier(
-        receiveAuthUpdates,
-        signInUseCase,
-        googleSignInUseCase,
-        signOutUseCase,
-      );
+      authNotifier = AuthNotifierMock();
+      when(authNotifier.isLoading).thenReturn(false);
     });
 
     testWidgets(
@@ -120,9 +111,6 @@ void main() {
     testWidgets(
       "uses the AuthNotifier to sign in a user with login and password",
       (WidgetTester tester) async {
-        final authNotifier = AuthNotifierMock();
-
-        when(authNotifier.isLoading).thenReturn(false);
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _AuthFormTestbed(authNotifier: authNotifier),
@@ -141,8 +129,6 @@ void main() {
     testWidgets(
       "shows a progress indicator if the sign in process is in progress",
       (WidgetTester tester) async {
-        final authNotifier = AuthNotifierMock();
-
         when(authNotifier.authErrorMessage).thenReturn(null);
         when(authNotifier.isLoading).thenReturn(true);
 
@@ -161,8 +147,6 @@ void main() {
     testWidgets(
       "disables the submit button if the sign in process is in progress",
       (WidgetTester tester) async {
-        final authNotifier = AuthNotifierMock();
-
         when(authNotifier.authErrorMessage).thenReturn(null);
         when(authNotifier.isLoading).thenReturn(true);
 
@@ -186,10 +170,6 @@ void main() {
     testWidgets(
       "displays the google sign in option button with google sign in strategy",
       (WidgetTester tester) async {
-        final authNotifier = AuthNotifierMock();
-
-        when(authNotifier.isLoading).thenReturn(false);
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _AuthFormTestbed(authNotifier: authNotifier),
@@ -293,6 +273,44 @@ void main() {
         expect(tappableAreaFinder, findsOneWidget);
       },
     );
+
+    testWidgets(
+      "applies the email error message to the email field",
+      (tester) async {
+        when(authNotifier.emailErrorMessage).thenReturn(errorMessage);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+
+        final emailField = tester.widget<MetricsTextFormField>(
+          emailInputFinder,
+        );
+
+        expect(emailField.errorText, equals(errorMessage));
+      },
+    );
+
+    testWidgets(
+      "applies the password error message to the password field",
+      (tester) async {
+        when(authNotifier.passwordErrorMessage).thenReturn(errorMessage);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _AuthFormTestbed(authNotifier: authNotifier),
+          );
+        });
+
+        final passwordField = tester.widget<MetricsTextFormField>(
+          passwordInputFinder,
+        );
+
+        expect(passwordField.errorText, equals(errorMessage));
+      },
+    );
   });
 }
 
@@ -320,41 +338,4 @@ class _AuthFormTestbed extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Stub of the [AuthNotifier] that emulates presence of auth message error.
-class SignInErrorAuthNotifierStub extends ChangeNotifier
-    implements AuthNotifier {
-  /// An error message, thrown during the login process.
-  static const errorMessage = "Unknown error message";
-
-  @override
-  bool get isLoggedIn => false;
-
-  @override
-  bool get isLoading => false;
-
-  @override
-  String get authErrorMessage => _authExceptionDescription;
-
-  /// Contains text description of any authentication exception that may occur.
-  String _authExceptionDescription;
-
-  @override
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
-    _authExceptionDescription = errorMessage;
-    notifyListeners();
-  }
-
-  @override
-  Future<void> signInWithGoogle() async {
-    _authExceptionDescription = errorMessage;
-    notifyListeners();
-  }
-
-  @override
-  void subscribeToAuthenticationUpdates() {}
-
-  @override
-  Future<void> signOut() async {}
 }

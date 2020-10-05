@@ -8,6 +8,12 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   @override
   String get authErrorMessage => null;
 
+  @override
+  String get emailErrorMessage => null;
+
+  @override
+  String get passwordErrorMessage => null;
+
   /// Contains a user's authentication status.
   bool _isLoggedIn;
 
@@ -31,6 +37,9 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
     _isLoggedIn = true;
     notifyListeners();
   }
+
+  @override
+  void clearErrorMessages() {}
 
   @override
   Future<void> signOut() async {}

@@ -25,9 +25,22 @@ void main() {
     const authException = AuthenticationException(
       code: AuthErrorCode.unknown,
     );
+    const emailAuthException = AuthenticationException(
+      code: AuthErrorCode.userNotFound,
+    );
+    const passwordAuthException = AuthenticationException(
+      code: AuthErrorCode.wrongPassword,
+    );
 
     const email = 'test@email.com';
     const password = 'password';
+
+    const invalidEmail = 'email@mail.mail';
+    const invalidPassword = 'password';
+    final invalidCredentials = UserCredentialsParam(
+      email: Email(invalidEmail),
+      password: Password(invalidPassword),
+    );
 
     final authNotifier = AuthNotifier(
       receiveAuthUpdates,
@@ -182,7 +195,10 @@ void main() {
           email: Email(email),
           password: Password(password),
         );
-        when(signInUseCase(userCredentials)).thenThrow(authException);
+
+        when(signInUseCase(userCredentials))
+            .thenAnswer((_) => Future.error(authException));
+
         await authNotifier.signInWithEmailAndPassword(email, password);
 
         expect(authNotifier.isLoading, isFalse);
@@ -192,15 +208,17 @@ void main() {
     test(
       ".isLoading status is false if .signInWithGoogle() is finished with an error",
       () async {
-        when(googleSignInUseCase()).thenThrow(authException);
+        when(googleSignInUseCase())
+            .thenAnswer((_) => Future.error(authException));
+
         await authNotifier.signInWithGoogle();
 
         expect(authNotifier.isLoading, isFalse);
       },
     );
 
-    test(".signInWithEmailAndPassword() delegates to signInUseCase", () {
-      authNotifier.signInWithEmailAndPassword(email, password);
+    test(".signInWithEmailAndPassword() delegates to signInUseCase", () async {
+      await authNotifier.signInWithEmailAndPassword(email, password);
 
       final userCredentials = UserCredentialsParam(
         email: Email(email),
@@ -222,8 +240,8 @@ void main() {
       verifyNever(signInUseCase(userCredentials));
     });
 
-    test(".signInWithGoogle() delegates to googleSignInUseCase", () {
-      authNotifier.signInWithGoogle();
+    test(".signInWithGoogle() delegates to googleSignInUseCase", () async {
+      await authNotifier.signInWithGoogle();
 
       verify(googleSignInUseCase()).called(equals(1));
     });
@@ -235,56 +253,131 @@ void main() {
       verifyNever(googleSignInUseCase());
     });
 
-    test(".authErrorMessage is populated when SignInUseCase throws", () {
-      when(signInUseCase.call(any)).thenThrow(authException);
+    test(
+      ".authErrorMessage is populated when the auth error occurred during the sign-in process",
+      () async {
+        when(signInUseCase.call(any))
+            .thenAnswer((_) => Future.error(authException));
 
-      authNotifier.signInWithEmailAndPassword(email, password);
+        await authNotifier.signInWithEmailAndPassword(email, password);
 
-      expect(authNotifier.authErrorMessage, isNotNull);
-    });
+        expect(authNotifier.authErrorMessage, isNotNull);
+      },
+    );
 
-    test(".authErrorMessage is populated when GoogleSignInUseCase throws", () {
-      when(googleSignInUseCase.call()).thenThrow(authException);
+    test(
+      ".emailErrorMessage is populated when the email-related error occurred during the sign-in process",
+      () async {
+        when(signInUseCase.call(any))
+            .thenAnswer((_) => Future.error(emailAuthException));
 
-      authNotifier.signInWithGoogle();
+        await authNotifier.signInWithEmailAndPassword(email, password);
 
-      expect(authNotifier.authErrorMessage, isNotNull);
-    });
+        expect(authNotifier.emailErrorMessage, isNotNull);
+      },
+    );
+
+    test(
+      ".passwordErrorMessage is populated when the password-related error occurred during the sign-in process",
+      () async {
+        when(signInUseCase.call(any))
+            .thenAnswer((_) => Future.error(passwordAuthException));
+
+        await authNotifier.signInWithEmailAndPassword(email, password);
+
+        expect(authNotifier.passwordErrorMessage, isNotNull);
+      },
+    );
+
+    test(
+      ".authErrorMessage is populated when the auth error occurred during the google sign-in process",
+      () async {
+        when(googleSignInUseCase.call())
+            .thenAnswer((_) => Future.error(authException));
+
+        await authNotifier.signInWithGoogle();
+
+        expect(authNotifier.authErrorMessage, isNotNull);
+      },
+    );
 
     test(
       ".signInWithEmailAndPassword() clears the authentication error message on a successful sign in",
-      () {
-        const invalidEmail = 'email@mail.mail';
-        const invalidPassword = 'password';
-        final invalidCredentials = UserCredentialsParam(
-          email: Email(invalidEmail),
-          password: Password(invalidPassword),
+      () async {
+        when(signInUseCase.call(invalidCredentials))
+            .thenAnswer((_) => Future.error(authException));
+
+        await authNotifier.signInWithEmailAndPassword(
+          invalidEmail,
+          invalidPassword,
         );
-
-        when(signInUseCase.call(invalidCredentials)).thenThrow(authException);
-
-        authNotifier.signInWithEmailAndPassword(invalidEmail, invalidPassword);
 
         expect(authNotifier.authErrorMessage, isNotNull);
 
-        authNotifier.signInWithEmailAndPassword(
-            'valid_email@mail.mail', 'valid_password');
+        await authNotifier.signInWithEmailAndPassword(email, password);
 
         expect(authNotifier.authErrorMessage, isNull);
+      },
+    );
+
+    test(
+      ".signInWithEmailAndPassword() clears the authentication email error message on a successful sign in",
+      () async {
+        when(signInUseCase.call(invalidCredentials))
+            .thenAnswer((_) => Future.error(emailAuthException));
+
+        await authNotifier.signInWithEmailAndPassword(
+          invalidEmail,
+          invalidPassword,
+        );
+
+        expect(authNotifier.emailErrorMessage, isNotNull);
+
+        await authNotifier.signInWithEmailAndPassword(email, password);
+
+        expect(authNotifier.emailErrorMessage, isNull);
+      },
+    );
+
+    test(
+      ".signInWithEmailAndPassword() clears the authentication password error message on a successful sign in",
+      () async {
+        when(signInUseCase.call(invalidCredentials))
+            .thenAnswer((_) => Future.error(passwordAuthException));
+
+        await authNotifier.signInWithEmailAndPassword(
+          invalidEmail,
+          invalidPassword,
+        );
+
+        expect(authNotifier.passwordErrorMessage, isNotNull);
+
+        await authNotifier.signInWithEmailAndPassword(email, password);
+
+        expect(authNotifier.passwordErrorMessage, isNull);
       },
     );
 
     test(
       ".signInWithGoogle() clears the authentication error message on a successful sign in",
-      () {
-        authNotifier.signInWithGoogle();
+      () async {
+        when(googleSignInUseCase.call())
+            .thenAnswer((_) => Future.error(authException));
+
+        await authNotifier.signInWithGoogle();
+
+        expect(authNotifier.authErrorMessage, isNotNull);
+
+        when(googleSignInUseCase.call()).thenAnswer((_) => null);
+
+        await authNotifier.signInWithGoogle();
 
         expect(authNotifier.authErrorMessage, isNull);
       },
     );
 
-    test(".signOut() delegates to the SignOutUseCase", () {
-      authNotifier.signOut();
+    test(".signOut() delegates to the SignOutUseCase", () async {
+      await authNotifier.signOut();
 
       verify(signOutUseCase()).called(equals(1));
     });

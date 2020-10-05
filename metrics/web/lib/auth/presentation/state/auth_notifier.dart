@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
@@ -15,6 +16,17 @@ import 'package:metrics_core/metrics_core.dart';
 /// Provides the ability to sign in and sign out user from the app,
 /// track the [isLoggedIn] status and authentication error message if any.
 class AuthNotifier extends ChangeNotifier {
+  /// A [List] of [AuthErrorCode]s that defines which errors are related to the email address.
+  static const List<AuthErrorCode> _emailErrorCodes = [
+    AuthErrorCode.invalidEmail,
+    AuthErrorCode.userNotFound,
+  ];
+
+  /// A [List] of [AuthErrorCode]s that defines which errors are related to the password.
+  static const List<AuthErrorCode> _passwordErrorCodes = [
+    AuthErrorCode.wrongPassword,
+  ];
+
   /// Used to receive authentication updates.
   final ReceiveAuthenticationUpdates _receiveAuthUpdates;
 
@@ -40,6 +52,12 @@ class AuthNotifier extends ChangeNotifier {
   /// Contains a text description of any authentication exception that may occur.
   AuthErrorMessage _authErrorMessage;
 
+  /// Contains a text description of an email authentication exception that may occur.
+  AuthErrorMessage _emailErrorMessage;
+
+  /// Contains a text description of a password authentication exception that may occur.
+  AuthErrorMessage _passwordErrorMessage;
+
   /// Creates a new instance of auth notifier.
   ///
   /// All the parameters must not be null.
@@ -62,6 +80,12 @@ class AuthNotifier extends ChangeNotifier {
   /// Returns an [AuthErrorMessage], containing an authentication error message.
   String get authErrorMessage => _authErrorMessage?.message;
 
+  /// Returns an [AuthErrorMessage], containing an email authentication error message.
+  String get emailErrorMessage => _emailErrorMessage?.message;
+
+  /// Returns an [AuthErrorMessage], containing a password authentication error message.
+  String get passwordErrorMessage => _passwordErrorMessage?.message;
+
   /// Subscribes to a user authentication updates
   /// to get notified when the user got signed in or signed out.
   void subscribeToAuthenticationUpdates() {
@@ -78,9 +102,8 @@ class AuthNotifier extends ChangeNotifier {
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     if (_isLoading) return;
 
-    _authErrorMessage = null;
     _isLoading = true;
-    notifyListeners();
+    clearErrorMessages();
 
     try {
       await _signInUseCase(UserCredentialsParam(
@@ -88,8 +111,7 @@ class AuthNotifier extends ChangeNotifier {
         password: Password(password),
       ));
     } on AuthenticationException catch (exception) {
-      _authErrorMessage = AuthErrorMessage(exception.code);
-      notifyListeners();
+      _handleAuthErrorMessage(exception.code);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -102,24 +124,43 @@ class AuthNotifier extends ChangeNotifier {
   Future<void> signInWithGoogle() async {
     if (_isLoading) return;
 
-    _authErrorMessage = null;
     _isLoading = true;
-    notifyListeners();
+    clearErrorMessages();
 
     try {
       await _googleSignInUseCase();
     } on AuthenticationException catch (exception) {
-      _authErrorMessage = AuthErrorMessage(exception.code);
-      notifyListeners();
+      _handleAuthErrorMessage(exception.code);
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
+  /// Clears all authentication error messages.
+  void clearErrorMessages() {
+    _authErrorMessage = null;
+    _emailErrorMessage = null;
+    _passwordErrorMessage = null;
+    notifyListeners();
+  }
+
   /// Signs out the user from the app.
   Future<void> signOut() async {
     await _signOutUseCase();
+  }
+
+  /// Handles an authentication error message based on the [errorCode].
+  void _handleAuthErrorMessage(AuthErrorCode errorCode) {
+    final _errorMessage = AuthErrorMessage(errorCode);
+
+    if (_emailErrorCodes.contains(errorCode)) {
+      _emailErrorMessage = _errorMessage;
+    } else if (_passwordErrorCodes.contains(errorCode)) {
+      _passwordErrorMessage = _errorMessage;
+    } else {
+      _authErrorMessage = _errorMessage;
+    }
   }
 
   @override

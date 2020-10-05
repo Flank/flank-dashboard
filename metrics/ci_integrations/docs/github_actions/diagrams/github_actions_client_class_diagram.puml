@@ -1,0 +1,96 @@
+@startuml
+
+package github_actions <<Folder>> {
+
+    package models <<Folder>> {
+
+        class WorkflowRun {
+            +id: int
+            +number: int
+            +url: String
+            +status: RunStatus
+            +conclusion: RunConclusion
+            +timestamp: DateTime
+
+            +factory fromJson(Map<String, dynamic> json): WorkflowRun
+            +toJson(): Map<String, dynamic>
+            +listFromJson(List<dynamic> list): List<WorkflowRun>
+        }
+
+        class WorkflowRunArtifact {
+            +id: int
+            +name: String
+            +runId: int
+            +downloadUrl: String
+
+           +factory fromJson(Map<String, dynamic> json): WorkflowRunArtifact
+           +toJson(): Map<String, dynamic>
+           +listFromJson(List<dynamic> list): List<WorkflowRunArtifact>
+        }
+
+        class WorkflowRunDuration {
+            +runId: int
+            +duration: Duration
+
+            +factory fromJson(Map<String, dynamic> json): WorkflowRunDuration
+            +toJson(): Map<String, dynamic>
+        }
+
+
+        enum RunStatus {
+            queued
+            inProgress
+            completed
+        }
+
+        enum RunConclusion {
+            success
+            failure
+            neutral
+            cancelled
+            skipped
+            timedOut
+            actionRequired
+        }
+
+    }
+
+    package mappers <<Folder>> {
+        class RunConclusionMapper {
+            #map(String conclusion): RunConclusion
+            #unmap(RunConclusion conclusion): String
+        }
+
+        class RunStatusMapper {
+            #map(String status): RunStatus
+            #unmap(RunStatus status): String
+        }
+
+    }
+
+
+    class GithubActionsClient {
+        +repositoryOwner: String
+        +repositoryName: String
+        +githubApiUrl: String
+        +authorization: AuthorizationBase
+
+        +getHeaders() : Map<String, String>
+        +fetchWorkflowRuns(String workflowFileName, RunStatus status, int perPage, int page): Future<InteractionResult<List<WorkflowRun>>>
+        +fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<List<WorkflowRunArtifact>>>
+        +downloadRunArtifact(String url): Future<InteractionResult<UInt8List>>
+        +fetchRunDuration(int runId): Future<InteractionResult<WorkflowRunDuration>>
+        +close(): void
+    }
+}
+
+
+WorkflowRun <-- GithubActionsClient : uses
+WorkflowRunDuration <-- GithubActionsClient : uses
+WorkflowRunArtifact <-- GithubActionsClient : uses
+RunStatusMapper <-- GithubActionsClient : uses
+RunConclusionMapper <-- GithubActionsClient : uses
+RunConclusion <-- WorkflowRun : uses
+RunStatus <-- WorkflowRun : uses
+
+@enduml
