@@ -1,18 +1,21 @@
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/style/build_result_bar_style.dart';
+import 'package:metrics/common/presentation/colored_bar/strategy/metrics_colored_bar_appearance_strategy.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value_based_appearance_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents the the strategy of applying the [MetricsThemeData]
-/// to the [some widget] based on the [BuildStatus] value.
-class BuildResultBarStyleStrategy
-    implements ValueBasedAppearanceStrategy<BuildResultBarStyle, BuildStatus> {
-  /// Creates a new instance of the [BuildResultBarStyleStrategy].
-  const BuildResultBarStyleStrategy();
+/// A class that represents the strategy of applying the [MetricsThemeData]
+/// to the [BuildResultBar] based on the [BuildStatus] value.
+class BuildResultBarAppearanceStrategy
+    implements MetricsColoredBarAppearanceStrategy<BuildStatus> {
+  /// Creates a new instance of the [BuildResultBarAppearanceStrategy].
+  const BuildResultBarAppearanceStrategy();
 
   @override
-  BuildResultBarStyle getWidgetAppearance(
-      MetricsThemeData themeData, BuildStatus status) {
+  MetricsColoredBarStyle getWidgetAppearance(
+    MetricsThemeData themeData,
+    BuildStatus status,
+  ) {
     final buildResultTheme = themeData.buildResultBarTheme;
     final attentionLevel = buildResultTheme.attentionLevel;
 

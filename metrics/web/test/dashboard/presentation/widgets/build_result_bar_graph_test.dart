@@ -6,7 +6,7 @@ import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/dashboard_popup_card_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -95,7 +95,9 @@ void main() {
 
         final trimmedData = buildResults
             .sublist(buildResults.length - numberOfBars)
-            .map((barData) => barData.dashboardPopupCardViewModel.value);
+            .map((barData) {
+          return barData.buildResultPopupViewModel.duration.inMilliseconds;
+        });
 
         final barGraphWidget = tester.widget<BarGraph>(find.byWidgetPredicate(
           (widget) => widget is BarGraph,
@@ -117,23 +119,23 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
   static final buildResultBarTestData = [
     BuildResultViewModel(
       buildStatus: BuildStatus.successful,
-      dashboardPopupCardViewModel: DashboardPopupCardViewModel(
-        value: 5,
-        startDate: DateTime.now(),
+      buildResultPopupViewModel: BuildResultPopupViewModel(
+        duration: const Duration(seconds: 5),
+        date: DateTime.now(),
       ),
     ),
     BuildResultViewModel(
       buildStatus: BuildStatus.failed,
-      dashboardPopupCardViewModel: DashboardPopupCardViewModel(
-        value: 2,
-        startDate: DateTime.now(),
+      buildResultPopupViewModel: BuildResultPopupViewModel(
+        duration: const Duration(seconds: 2),
+        date: DateTime.now(),
       ),
     ),
     BuildResultViewModel(
       buildStatus: BuildStatus.cancelled,
-      dashboardPopupCardViewModel: DashboardPopupCardViewModel(
-        value: 8,
-        startDate: DateTime.now(),
+      buildResultPopupViewModel: BuildResultPopupViewModel(
+        duration: const Duration(seconds: 8),
+        date: DateTime.now(),
       ),
     ),
   ];

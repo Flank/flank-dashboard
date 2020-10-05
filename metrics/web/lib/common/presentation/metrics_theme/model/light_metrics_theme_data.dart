@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
-import 'package:metrics/common/presentation/graph_indicator/attention_level/graph_indicator_attention_level.dart';
-import 'package:metrics/common/presentation/graph_indicator/style/graph_indicator_style.dart';
-import 'package:metrics/common/presentation/graph_indicator/theme/graph_indicator_theme_data.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
+import 'package:metrics/common/presentation/graph_indicator/theme/attention_level/graph_indicator_attention_level.dart';
+import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
+import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
@@ -13,7 +14,6 @@ import 'package:metrics/common/presentation/metrics_theme/model/add_project_grou
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/attention_level/build_result_bar_attention_level.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/style/build_result_bar_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/theme_data/build_result_bar_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
@@ -116,17 +116,17 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           buildResultBarTheme: const BuildResultBarThemeData(
             attentionLevel: BuildResultBarAttentionLevel(
-              successful: BuildResultBarStyle(
+              successful: MetricsColoredBarStyle(
                 color: ColorConfig.primaryColor,
-                backgroundColor: ColorConfig.primaryTransparentColor,
+                backgroundColor: _positiveStatusColor,
               ),
-              failed: BuildResultBarStyle(
+              failed: MetricsColoredBarStyle(
                 color: ColorConfig.accentColor,
-                backgroundColor: ColorConfig.accentTransparentColor,
+                backgroundColor: _negativeStatusColor,
               ),
-              cancelled: BuildResultBarStyle(
+              cancelled: MetricsColoredBarStyle(
                 color: ColorConfig.accentColor,
-                backgroundColor: ColorConfig.accentTransparentColor,
+                backgroundColor: _negativeStatusColor,
               ),
             ),
           ),
@@ -506,7 +506,7 @@ class LightMetricsThemeData extends MetricsThemeData {
               color: _inactiveTextColor,
             ),
           ),
-          metricsCircleGraphIndicatorTheme: const GraphIndicatorThemeData(
+          graphIndicatorTheme: const GraphIndicatorThemeData(
             attentionLevel: GraphIndicatorAttentionLevel(
               successful: GraphIndicatorStyle(
                 innerColor: ColorConfig.primaryColor,

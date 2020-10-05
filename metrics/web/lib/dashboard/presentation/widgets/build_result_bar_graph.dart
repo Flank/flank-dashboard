@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
 
 /// A [BarGraph] that displays the build result metric.
 ///
@@ -73,15 +74,21 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
         Expanded(
           flex: _barsData.length,
           child: BarGraph(
-            data: _barsData
-                .map((data) => data.dashboardPopupCardViewModel.value)
-                .toList(),
+            data: _barsData.map((data) {
+              return data.buildResultPopupViewModel.duration.inMilliseconds;
+            }).toList(),
             graphPadding: EdgeInsets.zero,
-            barBuilder: (int index) {
+            barBuilder: (index, height) {
               final data = _barsData[index];
 
-              return BuildResultBar(
-                buildResult: data,
+              return Container(
+                constraints: BoxConstraints(
+                  minHeight: height,
+                ),
+                child: BuildResultBar(
+                  buildResult: data,
+                  strategy: const BuildResultBarAppearanceStrategy(),
+                ),
               );
             },
           ),

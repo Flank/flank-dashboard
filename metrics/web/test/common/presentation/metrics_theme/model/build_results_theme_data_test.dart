@@ -1,6 +1,6 @@
+import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/attention_level/build_result_bar_attention_level.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/style/build_result_bar_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/theme_data/build_result_bar_theme_data.dart';
 import 'package:test/test.dart';
 
@@ -14,15 +14,15 @@ void main() {
       () {
         final buildResultsThemeData = BuildResultBarThemeData(
           attentionLevel: BuildResultBarAttentionLevel(
-            successful: BuildResultBarStyle(
+            successful: MetricsColoredBarStyle(
               color: ColorConfig.primaryColor,
               backgroundColor: ColorConfig.primaryColor,
             ),
-            cancelled: BuildResultBarStyle(
+            cancelled: MetricsColoredBarStyle(
               color: ColorConfig.inactiveColor,
               backgroundColor: ColorConfig.inactiveColor,
             ),
-            failed: BuildResultBarStyle(
+            failed: MetricsColoredBarStyle(
               color: ColorConfig.accentColor,
               backgroundColor: ColorConfig.accentColor,
             ),

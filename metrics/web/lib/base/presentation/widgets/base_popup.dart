@@ -33,19 +33,19 @@ class BasePopup extends StatefulWidget {
 
   /// Indicates whether the [popup] should prevent other [MouseRegion]s
   /// visually behind it from detecting the pointer.
-  final bool isPopupOpaque;
+  final bool popupOpaque;
 
   /// Defines if the [popup] should close itself when user taps on space
   /// outside the visible container of the [popup].
-  final bool closePopupWhenTapOutside;
+  final bool closeOnTapOutside;
 
   /// Creates a new instance of the base popup.
   ///
   /// If the [popupConstraints] is null, an empty instance of
   /// the [BoxConstraints] is used.
   ///
-  /// The [isPopupOpaque] defaults value is `true`.
-  /// The [closePopupWhenTapOutside] defaults value is `true`.
+  /// The [popupOpaque] defaults value is `true`.
+  /// The [closeOnTapOutside] defaults value is `true`.
   ///
   /// All the required parameters must not be null.
   const BasePopup({
@@ -54,8 +54,8 @@ class BasePopup extends StatefulWidget {
     @required this.offsetBuilder,
     @required this.triggerBuilder,
     @required this.popup,
-    this.isPopupOpaque = true,
-    this.closePopupWhenTapOutside = true,
+    this.popupOpaque = true,
+    this.closeOnTapOutside = true,
     this.routeObserver,
   })  : popupConstraints = popupConstraints ?? const BoxConstraints(),
         assert(offsetBuilder != null),
@@ -104,16 +104,16 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
 
     final _widget = Stack(
       children: <Widget>[
-        if (widget.closePopupWhenTapOutside)
+        if (widget.closeOnTapOutside)
           GestureDetector(
             onTap: _closePopup,
           ),
         CompositedTransformFollower(
-          showWhenUnlinked: false,
           link: _layerLink,
+          showWhenUnlinked: false,
           offset: offset,
           child: MouseRegion(
-            opaque: widget.isPopupOpaque,
+            opaque: widget.popupOpaque,
             child: ConstrainedBox(
               constraints: widget.popupConstraints,
               child: widget.popup,

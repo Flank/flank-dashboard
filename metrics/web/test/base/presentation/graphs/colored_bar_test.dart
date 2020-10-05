@@ -8,82 +8,94 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("ColoredBar", () {
-    testWidgets(
-      "applies the color of the bar",
-      (WidgetTester tester) async {
-        const color = Colors.red;
+    testWidgets("throws if the given width is null", (tester) async {
+      await tester.pumpWidget(const _ColoredBarTestbed(width: null));
 
-        await tester.pumpWidget(const _ColoredBarTestbed(color: color));
+      expect(tester.takeException(), isAssertionError);
+    });
 
-        final barContainerDecoration = FinderUtil.findBoxDecoration(tester);
+    testWidgets("throws if the given width is negative", (tester) async {
+      await tester.pumpWidget(const _ColoredBarTestbed(width: -1.0));
 
-        expect(barContainerDecoration.color, color);
-      },
-    );
+      expect(tester.takeException(), isAssertionError);
+    });
 
-    testWidgets(
-      "applies the padding to the bar",
-      (WidgetTester tester) async {
-        const padding = EdgeInsets.all(32.0);
+    testWidgets("applies the color to the bar", (tester) async {
+      const color = Colors.red;
 
-        await tester.pumpWidget(const _ColoredBarTestbed(padding: padding));
+      await tester.pumpWidget(const _ColoredBarTestbed(color: color));
 
-        final barPadding = tester.widget<Padding>(find.descendant(
-          of: find.byType(ColoredBar),
-          matching: find.byType(Padding),
-        ));
+      final barContainerDecoration = FinderUtil.findBoxDecoration(tester);
 
-        expect(barPadding.padding, padding);
-      },
-    );
+      expect(barContainerDecoration.color, equals(color));
+    });
 
-    testWidgets(
-      "applies the border to the bar",
-      (WidgetTester tester) async {
-        final border = Border.all(color: Colors.red);
+    testWidgets("applies the padding to the bar", (tester) async {
+      const padding = EdgeInsets.all(32.0);
 
-        await tester.pumpWidget(_ColoredBarTestbed(
-          border: border,
-        ));
+      await tester.pumpWidget(const _ColoredBarTestbed(padding: padding));
 
-        final barContainerDecoration = FinderUtil.findBoxDecoration(tester);
+      final barPadding = tester.widget<Padding>(find.descendant(
+        of: find.byType(ColoredBar),
+        matching: find.byType(Padding),
+      ));
 
-        expect(barContainerDecoration.border, border);
-      },
-    );
+      expect(barPadding.padding, equals(padding));
+    });
 
-    testWidgets(
-      "applies the border radius to the bar",
-      (WidgetTester tester) async {
-        final borderRadius = BorderRadius.circular(32.0);
+    testWidgets("applies the border to the bar", (tester) async {
+      final border = Border.all(color: Colors.red);
 
-        await tester.pumpWidget(_ColoredBarTestbed(
-          borderRadius: borderRadius,
-        ));
+      await tester.pumpWidget(_ColoredBarTestbed(
+        border: border,
+      ));
 
-        final barContainerDecoration = FinderUtil.findBoxDecoration(tester);
+      final barContainerDecoration = FinderUtil.findBoxDecoration(tester);
 
-        expect(barContainerDecoration.borderRadius, borderRadius);
-      },
-    );
+      expect(barContainerDecoration.border, equals(border));
+    });
 
-    testWidgets(
-      "applies the width of the bar",
-      (WidgetTester tester) async {
-        const width = 4.0;
+    testWidgets("applies the border radius to the bar", (tester) async {
+      final borderRadius = BorderRadius.circular(32.0);
 
-        await tester.pumpWidget(const _ColoredBarTestbed(
-          width: width,
-        ));
+      await tester.pumpWidget(_ColoredBarTestbed(
+        borderRadius: borderRadius,
+      ));
 
-        final barContainer = tester.widget<DecoratedContainer>(find.descendant(
-          of: find.byType(ColoredBar),
-          matching: find.byType(DecoratedContainer),
-        ));
+      final barContainerDecoration = FinderUtil.findBoxDecoration(tester);
 
-        expect(barContainer.width, width);
-      },
-    );
+      expect(barContainerDecoration.borderRadius, equals(borderRadius));
+    });
+
+    testWidgets("applies the width to the bar", (tester) async {
+      const width = 4.0;
+
+      await tester.pumpWidget(const _ColoredBarTestbed(
+        width: width,
+      ));
+
+      final barContainer = tester.widget<DecoratedContainer>(find.descendant(
+        of: find.byType(ColoredBar),
+        matching: find.byType(DecoratedContainer),
+      ));
+
+      expect(barContainer.width, equals(width));
+    });
+
+    testWidgets("applies the height to the bar", (tester) async {
+      const height = 4.0;
+
+      await tester.pumpWidget(const _ColoredBarTestbed(
+        height: height,
+      ));
+
+      final barContainer = tester.widget<DecoratedContainer>(find.descendant(
+        of: find.byType(ColoredBar),
+        matching: find.byType(DecoratedContainer),
+      ));
+
+      expect(barContainer.height, equals(height));
+    });
   });
 }
 
@@ -104,9 +116,13 @@ class _ColoredBarTestbed extends StatelessWidget {
   /// The width of the [ColoredBar].
   final double width;
 
+  /// The height of the [ColoredBar].
+  final double height;
+
   /// Creates the instance of this testbed.
   ///
   /// The [padding] defaults to [EdgeInsets.all] with parameter `4.0`.
+  /// The [width] defaults to the `1.0`.
   const _ColoredBarTestbed({
     Key key,
     this.color,
@@ -114,6 +130,7 @@ class _ColoredBarTestbed extends StatelessWidget {
     this.border,
     this.padding = const EdgeInsets.all(4.0),
     this.width = 1.0,
+    this.height,
   }) : super(key: key);
 
   @override
@@ -126,6 +143,7 @@ class _ColoredBarTestbed extends StatelessWidget {
           border: border,
           borderRadius: borderRadius,
           width: width,
+          height: height,
         ),
       ),
     );

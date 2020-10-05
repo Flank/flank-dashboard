@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A class that stores style data for circle graph indicators.
+/// A class that stores style data for graph indicators.
 class GraphIndicatorStyle {
   /// An inner circle [Color].
   final Color innerColor;
@@ -9,8 +9,11 @@ class GraphIndicatorStyle {
   final Color outerColor;
 
   /// Creates a new instance of the [GraphIndicatorStyle].
+  ///
+  /// The [innerColor] defaults to the [Colors.white].
+  /// The [outerColor] defaults to the [Colors.black].
   const GraphIndicatorStyle({
-    this.innerColor,
-    this.outerColor,
+    this.innerColor = Colors.white,
+    this.outerColor = Colors.black,
   });
 }

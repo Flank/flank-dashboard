@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// A widget that displays circle indicator for the graphs.
+/// A widget that displays a circle as an indicator for the graphs
+/// or graph elements.
 class CircleGraphIndicator extends StatelessWidget {
   /// A [Color] of the outer circle.
   final Color outerColor;
@@ -20,6 +21,7 @@ class CircleGraphIndicator extends StatelessWidget {
   /// The [innerColor] default value is [Colors.white].
   /// The [outerDiameter] default value is `5.0`.
   /// The [innerDiameter] default value is `2.0`.
+  /// The given [outerDiameter] must be greater than the given [innerDiameter].
   const CircleGraphIndicator({
     Key key,
     this.outerColor = Colors.black,

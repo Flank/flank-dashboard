@@ -24,6 +24,7 @@ class ColoredBar extends StatelessWidget {
   /// Creates the [ColoredBar].
   ///
   /// The [padding] defaults to the [EdgeInsets.zero].
+  /// The [width] defaults to the `0.0`.
   const ColoredBar({
     Key key,
     this.padding = EdgeInsets.zero,

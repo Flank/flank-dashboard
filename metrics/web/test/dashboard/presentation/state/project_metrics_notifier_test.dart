@@ -249,8 +249,8 @@ void main() {
       final firstBuildResultMetric = buildResultMetrics.buildResults.first;
 
       expect(
-        firstBuildResultMetric.dashboardPopupCardViewModel.value,
-        expectedBuildResult.duration.inMilliseconds,
+        firstBuildResultMetric.buildResultPopupViewModel.duration,
+        expectedBuildResult.duration,
       );
       expect(
         firstBuildResultMetric.buildStatus,

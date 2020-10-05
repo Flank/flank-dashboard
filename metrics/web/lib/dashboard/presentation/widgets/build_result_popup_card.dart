@@ -3,20 +3,20 @@ import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/dashboard/presentation/view_models/dashboard_popup_card_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 
 /// A widget that displays a metrics result bar popup with specific shape.
-class MetricsResultBarPopupCard extends StatelessWidget {
-  /// A [DashboardPopupCardViewModel] to display.
-  final DashboardPopupCardViewModel dashboardPopupCardViewModel;
+class BuildResultPopupCard extends StatelessWidget {
+  /// A [BuildResultPopupViewModel] with data to display.
+  final BuildResultPopupViewModel buildResultPopupViewModel;
 
-  /// Creates a new instance of the [MetricsResultBarPopupCard].
+  /// Creates a new instance of the [BuildResultPopupCard].
   ///
-  /// The [dashboardPopupCardViewModel] must not be null.
-  const MetricsResultBarPopupCard({
+  /// The [buildResultPopupViewModel] must not be `null`.
+  const BuildResultPopupCard({
     Key key,
-    @required this.dashboardPopupCardViewModel,
-  })  : assert(dashboardPopupCardViewModel != null),
+    @required this.buildResultPopupViewModel,
+  })  : assert(buildResultPopupViewModel != null),
         super(key: key);
 
   @override
@@ -25,11 +25,9 @@ class MetricsResultBarPopupCard extends StatelessWidget {
     const arrowHeight = 5.0;
     final theme = MetricsTheme.of(context).barGraphPopupTheme;
     final title = DateFormat('EEEE, MMM d').format(
-      dashboardPopupCardViewModel.startDate,
+      buildResultPopupViewModel.date,
     );
-    final subtitle = CommonStrings.duration(
-      Duration(milliseconds: dashboardPopupCardViewModel.value),
-    );
+    final subtitle = CommonStrings.duration(buildResultPopupViewModel.duration);
 
     return Container(
       decoration: BoxDecoration(
@@ -51,21 +49,25 @@ class MetricsResultBarPopupCard extends StatelessWidget {
           position: BubblePosition.top,
         ),
         child: Padding(
-          padding: const EdgeInsets.only(top: arrowHeight).add(
-            const EdgeInsets.symmetric(
-              vertical: 14.0,
-              horizontal: 16.0,
-            ),
-          ),
+          padding: const EdgeInsets.symmetric(
+            vertical: 14.0,
+            horizontal: 16.0,
+          ).copyWith(top: 14.0 + arrowHeight),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 2.0),
-                child: Text(title, style: theme.titleTextStyle),
+                child: Text(
+                  title,
+                  style: theme.titleTextStyle,
+                ),
               ),
-              Text(subtitle, style: theme.subtitleTextStyle),
+              Text(
+                subtitle,
+                style: theme.subtitleTextStyle,
+              ),
             ],
           ),
         ),
