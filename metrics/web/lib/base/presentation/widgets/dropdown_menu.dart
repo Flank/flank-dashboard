@@ -154,7 +154,9 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
     final padding = widget.listPadding.bottom + widget.listPadding.top;
 
     if (numberOfItems > maxVisibleItems) {
-      return maxVisibleItems * itemHeight + itemHeight / 2 + padding;
+      return maxVisibleItems * itemHeight +
+          itemHeight / 2 +
+          widget.listPadding.top;
     }
 
     return numberOfItems * itemHeight + padding;

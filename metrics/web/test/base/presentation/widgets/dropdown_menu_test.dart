@@ -11,7 +11,7 @@ void main() {
   group("DropdownMenu", () {
     const items = ['1', '2', '3'];
     const itemHeight = 15.0;
-    const additionalPadding = 8;
+    const listPadding = EdgeInsets.symmetric(horizontal: 2.0, vertical: 1.0);
 
     final selectionMenuFinder = find.byWidgetPredicate(
       (widget) => widget is SelectionMenu,
@@ -329,14 +329,16 @@ void main() {
     );
 
     testWidgets(
-      "height equals to the height of all items if their number is less than the given maxVisibleItems",
+      "height equals to the height of all items if their number is less than the given max visible items",
       (tester) async {
-        final expectedMaxHeight = itemHeight * items.length + additionalPadding;
+        final expectedMaxHeight =
+            itemHeight * items.length + listPadding.top + listPadding.bottom;
 
         await tester.pumpWidget(const _DropdownMenuTestbed(
           itemHeight: itemHeight,
           maxVisibleItems: 4,
           items: items,
+          listPadding: listPadding,
         ));
 
         final selectionMenuWidget = tester.widget<SelectionMenu>(
@@ -358,13 +360,14 @@ void main() {
       "height equals to the sum of max visible items and a half if items more than max visible items",
       (tester) async {
         const maxVisibleItems = 2;
-        const expectedMaxHeight =
-            itemHeight * maxVisibleItems + itemHeight / 2 + additionalPadding;
+        final expectedMaxHeight =
+            itemHeight * maxVisibleItems + itemHeight / 2 + listPadding.top;
 
         await tester.pumpWidget(const _DropdownMenuTestbed(
           itemHeight: itemHeight,
           items: items,
           maxVisibleItems: maxVisibleItems,
+          listPadding: listPadding,
         ));
 
         final selectionMenuWidget = tester.widget<SelectionMenu>(
