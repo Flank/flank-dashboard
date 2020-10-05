@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:process_run/process_run.dart' as cmd;
 
+// class providing doctor command to verify dependencies.
 class DoctorCommand extends Command {
   @override
   final name = "doctor";

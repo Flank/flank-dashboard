@@ -10,6 +10,7 @@ Random _rnd = Random();
 String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
     length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
+// class extending [Command] to facilitate  building GCloud project,build and deploy metrics app.
 class DeployCommand extends Command {
   @override
   final name = "deploy";
@@ -19,27 +20,23 @@ class DeployCommand extends Command {
   DeployCommand();
 
   @override
-  // ignore: avoid_void_async
-  void run() async {
-    // await deploy.start();
-    // Login to GCloud and Firebase and get firebase CI token
+  Future<void> run() async {
     final firebaseToken = await login();
-// Add project or use existing project
+
     final projectID = await addProject();
-//Add Firebase capabilities to project.
+
     await addFirebase(projectID, firebaseToken);
-// Select region
+
     final region = await selectRegion();
-// Add project app needed to create firestore database.
+
     await addProjectApp(region, projectID);
-// Create database
+
     await createDatabase(region, projectID);
-// # Create web app
+
     final appID = await createWebApp(projectID, firebaseToken);
     const repoURL = 'git@github.com:platform-platform/monorepo.git';
     const srcPath = 'src';
     //final firebaseSrc = srcPath + '/metrics/firebase';
-// BUILD AND DEPLOY APP
     await buildAndDeploy(appID, projectID, firebaseToken, repoURL, srcPath);
     // Cleanup
     await cleanup(srcPath);
@@ -47,6 +44,7 @@ class DeployCommand extends Command {
     await promptTerminate();
   }
 
+  // Login to GCloud and Firebase and get firebase CI token
   Future<String> login() async {
     // GCloud login
     print('GCloud Login.');
@@ -58,6 +56,7 @@ class DeployCommand extends Command {
     return prompt('Copy Firebase Token from above');
   }
 
+  // Add project or use existing project
   Future<String> addProject() async {
     var projectID = '';
     if (await promptConfirm('Create new project ?')) {
@@ -75,6 +74,7 @@ class DeployCommand extends Command {
     return projectID;
   }
 
+  //Add Firebase capabilities to project.
   Future<void> addFirebase(String projectID, String firebaseToken) async {
     if (await promptConfirm('Add firebase capabilities to project ?')) {
       print('Adding Firebase capabilities.');
@@ -86,6 +86,7 @@ class DeployCommand extends Command {
     }
   }
 
+  // Select GCP region
   Future<String> selectRegion() async {
     // TODO: Listing regions won't work on new projects as compute API not enabled yet.
     //await run('gcloud',['compute','regions','list'],verbose:true);
@@ -93,6 +94,7 @@ class DeployCommand extends Command {
     return prompt('region');
   }
 
+  // Add project app needed to create firestore database.
   Future<void> addProjectApp(String region, String projectID) async {
     if (await promptConfirm('Add project app ?')) {
       print('Adding project app.');
@@ -104,6 +106,7 @@ class DeployCommand extends Command {
     }
   }
 
+  // Create firestore database.
   Future<void> createDatabase(String region, String projectID) async {
     // gcloud alpha firestore databases create --region=europe-west --project $projectID --quiet
     if (await promptConfirm('Add project database ?')) {
@@ -127,6 +130,7 @@ class DeployCommand extends Command {
     }
   }
 
+  // Create Firebase web app.
   Future<String> createWebApp(String projectID, String firebaseToken) async {
     //firebase apps:create --project $projectID
     if (await promptConfirm('Add web app?')) {
@@ -153,6 +157,7 @@ class DeployCommand extends Command {
     return prompt('appID');
   }
 
+  // Downloads and writes web app SDK config to firebase-config.js file.
   Future<void> downloadSDKConfig(String appID, String configPath,
       String projectID, String firebaseToken) async {
     // Get config
@@ -175,6 +180,7 @@ class DeployCommand extends Command {
         verbose: true);
   }
 
+  // Git clone latest metrics code, build and deploy.
   Future<void> buildAndDeploy(
     String appID,
     String projectID,
@@ -186,16 +192,16 @@ class DeployCommand extends Command {
     final configPath = '$workingDir/web/firebase-config.js';
     // git clone repo
     await cmd.run('git', ['clone', repoURL, srcPath], verbose: true);
-// clean previouse config
+    // clean previouse config
     await cmd.run('rm', ['-rf', configPath], verbose: true);
     await downloadSDKConfig(appID, configPath, projectID, firebaseToken);
-// add firebase project
+    // add firebase project
     await cmd.run('firebase', ['use', '--add', projectID],
         workingDirectory: workingDir, verbose: true);
-// flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
+    // flutter build web --dart-define=FLUTTER_WEB_USE_SKIA=true
     await cmd.run('flutter', ['build', 'web'],
         workingDirectory: workingDir, verbose: true);
-// firebase deploy --only hosting
+    // firebase deploy --only hosting
     await cmd.run('firebase', ['deploy', '--only', 'hosting'],
         workingDirectory: workingDir, verbose: true);
   }
