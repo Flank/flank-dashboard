@@ -45,6 +45,9 @@ class DropdownMenu<T> extends StatefulWidget {
   /// An [EdgeInsets] representing an empty space around the dropdown menu.
   final EdgeInsets menuPadding;
 
+  /// An [EdgeInsets] representing an empty space around the dropdown menu list.
+  final EdgeInsets listPadding;
+
   /// Creates a dropdown menu widget.
   ///
   /// Builds the opened menu using the [menuBuilder]. The [menuBuilder] should
@@ -55,6 +58,7 @@ class DropdownMenu<T> extends StatefulWidget {
   /// If [items] are null, an empty list used.
   /// If the [itemHeight] is null the [kMinInteractiveDimension] used.
   /// If the [menuPadding] is null the [EdgeInsets.zero] used.
+  /// If the [listPadding] is null the [EdgeInsets.zero] used.
   ///
   /// [itemBuilder], [buttonBuilder] and [menuBuilder] must not be `null`.
   const DropdownMenu({
@@ -68,9 +72,11 @@ class DropdownMenu<T> extends StatefulWidget {
     List<T> items,
     double itemHeight,
     EdgeInsets menuPadding,
+    EdgeInsets listPadding,
   })  : items = items ?? const [],
         itemHeight = itemHeight ?? kMinInteractiveDimension,
         menuPadding = menuPadding ?? EdgeInsets.zero,
+        listPadding = listPadding ?? EdgeInsets.zero,
         assert(maxVisibleItems != null && maxVisibleItems > 0),
         assert(menuBuilder != null),
         assert(itemBuilder != null),
@@ -120,7 +126,7 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
         listViewComponent: ListViewComponent(
           builder: (data) {
             return ListView.builder(
-              padding: EdgeInsets.zero,
+              padding: widget.listPadding,
               itemCount: data.itemCount,
               itemBuilder: data.itemBuilder,
             );
@@ -145,11 +151,14 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
     final numberOfItems = widget.items.length;
     final itemHeight = widget.itemHeight;
     final maxVisibleItems = widget.maxVisibleItems;
+    final verticalPadding = widget.listPadding.bottom + widget.listPadding.top;
 
     if (numberOfItems > maxVisibleItems) {
-      return maxVisibleItems * itemHeight + itemHeight / 2;
+      return maxVisibleItems * itemHeight +
+          itemHeight / 2 +
+          widget.listPadding.top;
     }
 
-    return numberOfItems * itemHeight;
+    return numberOfItems * itemHeight + verticalPadding;
   }
 }

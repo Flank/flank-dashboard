@@ -1,0 +1,78 @@
+@startuml user_profile_domain_class
+
+package base.domain.usecases {
+    interface UseCase<Type, Params> {
+        call: Type
+    }
+}
+
+package auth.domain {
+    package entities {
+        enum ThemeType {
+            light
+            dark
+        }
+
+
+        class UserProfile {
+            id : String
+            selectedTheme: ThemeType
+        }
+    }
+
+
+    package repository {
+        class UserRepository {
+            ...
+            Future<void> createUserProfile()
+            Stream<UserProfile> userProfileStream()
+            Future<void> updateUserProfile()
+        }
+    }
+
+
+    package usecases {
+        package parameters {
+            class UserIdParam {
+                userId : String
+            }
+
+            class UserProfileParam {
+                userId: String
+                selectedTheme: ThemeType
+            }
+        }
+
+        class ReceiveUserProfileUpdates {
+            Stream<UserProfile> call()
+        }
+
+        class CreateUserProfileUseCase {
+            Future<void> call()
+        }
+
+        class UpdateUserProfileUseCase {
+            Future<void> call()
+        }
+    }
+}
+
+
+UserProfile --> ThemeType : uses
+UserRepository --> UserProfile : uses
+
+ReceiveUserProfileUpdates ..|> UseCase
+UpdateUserProfileUseCase ..|> UseCase
+CreateUserProfileUseCase ..|> UseCase
+
+ReceiveUserProfileUpdates --> UserIdParam : uses
+ReceiveUserProfileUpdates --> UserProfile : uses
+
+CreateUserProfileUseCase --> UserProfileParam : uses
+UpdateUserProfileUseCase --> UserProfileParam : uses
+
+ReceiveUserProfileUpdates -up-> UserRepository : uses
+UpdateUserProfileUseCase -up-> UserRepository : uses
+CreateUserProfileUseCase -up-> UserRepository : uses
+
+@enduml

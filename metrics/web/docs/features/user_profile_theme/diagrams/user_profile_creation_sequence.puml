@@ -1,0 +1,67 @@
+@startuml web_layers_sequence_diagram
+    skinparam ParticipantPadding 20
+    skinparam BoxPadding 10
+
+    actor Bob
+
+    box "presentation"
+        participant AuthNotifier << (C,#ADD1B2) >>
+    end box
+
+    box "domain"
+        participant CreateUserProfileUseCase << (C,#ADD1B2) >>
+        participant ReceiveUserProfileUpdates << (C,#ADD1B2) >>
+    end box
+
+    box "data"
+        participant UserRepository << (C,#ADD1B2) >>
+        participant UserProfileModel << (C,#ADD1B2) >>
+    end box
+
+    database "Persistent Store" as PS
+
+    Bob -> AuthNotifier : Loggs in to the app
+    activate AuthNotifier
+
+    AuthNotifier -> ReceiveUserProfileUpdates : call(userIdParam)
+    activate ReceiveUserProfileUpdates
+
+    ReceiveUserProfileUpdates -> UserRepository : userProfileStream(userId)
+    activate UserRepository
+
+    UserRepository -> PS : Subscribe to user updates
+
+    PS -> UserRepository : User profile snapshot
+
+    UserRepository -> UserProfileModel : fromJson(json)
+    activate UserProfileModel
+
+    return userProfile
+    return userProfile
+    return userProfile
+
+    alt userProfile == null
+
+        AuthNotifier -> CreateUserProfileUseCase : call(userProfileParam)
+
+        activate CreateUserProfileUseCase
+        CreateUserProfileUseCase -> UserRepository : createUserProfile(userId, selectedTheme)
+        activate UserRepository
+        UserRepository -> UserRepository : create UserProfileModel
+        UserRepository -> UserProfileModel : toJson()
+        activate UserProfileModel
+        return userProfile json
+        UserRepository -> PS : create new user profile
+        deactivate UserRepository
+        deactivate CreateUserProfileUseCase
+    end
+
+    return Authenticate user to the app
+
+
+
+    deactivate UserRepository
+    deactivate ReceiveUserProfileUpdates
+    deactivate AuthNotifier
+
+@enduml

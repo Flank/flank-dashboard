@@ -40,20 +40,14 @@ class ProjectGroupsDropdownBody extends StatelessWidget {
               ],
             ),
             child: Card(
-              margin: const EdgeInsets.only(top: 4.0),
+              key: UniqueKey(),
+              margin: EdgeInsets.zero,
               color: theme.backgroundColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0),
               ),
               elevation: 0.0,
-              child: Padding(
-                key: UniqueKey(),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 4.0,
-                  horizontal: 1.0,
-                ),
-                child: data.child,
-              ),
+              child: data.child,
             ),
           ),
         );

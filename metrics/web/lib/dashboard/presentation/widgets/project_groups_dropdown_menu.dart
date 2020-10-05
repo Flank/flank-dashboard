@@ -53,7 +53,11 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
                   .selectProjectGroup(item.id);
             },
             menuPadding: const EdgeInsets.only(
-              top: _menuButtonHeight,
+              top: _menuButtonHeight + 4.0,
+            ),
+            listPadding: const EdgeInsets.symmetric(
+              vertical: 4.0,
+              horizontal: 1.0,
             ),
             menuBuilder: (data) {
               if (data.menuState == MenuState.OpeningStart) {
