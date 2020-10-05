@@ -45,7 +45,7 @@
         AuthNotifier -> CreateUserProfileUseCase : call(userProfileParam)
 
         activate CreateUserProfileUseCase
-        CreateUserProfileUseCase -> UserRepository : createUserProfile(userId, seelectedTheme)
+        CreateUserProfileUseCase -> UserRepository : createUserProfile(userId, selectedTheme)
         activate UserRepository
         UserRepository -> UserRepository : create UserProfileModel
         UserRepository -> UserProfileModel : toJson()

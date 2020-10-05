@@ -85,18 +85,10 @@ The following sequence diagram shows the process of changing the application the
 
 As we can see in the sequence diagram above, the `ThemeNotifier` should, in some way, communicate with the `AuthNotifier` and vise versa. Let's consider the way of communication between these two provides. 
 
-Since we are using the [Provider](https://pub.dev/packages/provider) package as state management, we have a [ProxyProvider](https://pub.dev/documentation/provider/latest/provider/ProxyProvider-class.html) class that allows us to make one `ChangeNotifier` depend on the other one. So, we should create a `ProxyProvider<ThemeNotifier, AuthNotifier, void>` to make the `AuthNotifier` change once the `ThemeNotifier` changes and vise versa. Let's consider the code sample of the provides communication: 
+To make the `AuthNotifier` and `ThemeNotifier` communicate, we should: 
 
+1. Create instances of these notifiers in the `initState` of the `InjectionContainer`.
+2. Add listeners to the `AuthNotifier` and the `ThemeNotifier` to make the `AuthNotifier` trigger the `ThemeNotifier` once it changes and vise versa. 
+3. Create a `ChangeNotifierProvider.value` provider for each of these notifiers to make them available across the project. 
 
-```dart
-  ProxyProvider2<Notifier1, Notifier2, void>(
-    update: (context, notifier1, notifier2, _) {
-      /// The place where the notifier1 and the notifier2 communicate.
-    },
-  );
-```
-
-
-The `update` method of the `ProxyProvider2` class is the place where the `Notifier1` and the `Notifier2` communicates. This method will be called each time when the `Notifier1` or the `Notifier2` calls the `notifyListeners` method, so we can easily trigger one notifier once another one changes.
-
-
+So, after we've finished with these steps, the `AuthNotifier` will notify the `ThemeNotifier` about the theme type changes in the persistent store, and the `ThemeNotifier` will notify the `AuthNotifier` that the user changed the theme type on the UI.
