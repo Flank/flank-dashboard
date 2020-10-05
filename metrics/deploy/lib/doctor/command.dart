@@ -1,14 +1,18 @@
-import 'package:args/command_runner.dart';
 import 'dart:io';
+
+import 'package:args/command_runner.dart';
 import 'package:process_run/process_run.dart' as cmd;
 
 class DoctorCommand extends Command {
+  @override
   final name = "doctor";
+  @override
   final description = "Check dependencies.";
 
   DoctorCommand();
 
-  void run() async {
+  @override
+  Future<void> run() async {
     print('Checking firebase-cli version.');
     try {
       await cmd.run('firebase', ['--version'], verbose: true);
