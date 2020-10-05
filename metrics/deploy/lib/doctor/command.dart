@@ -19,21 +19,21 @@ class DoctorCommand extends Command {
       await cmd.run('firebase', ['--version'], verbose: true);
     } catch (e) {
       print(e);
-      exit(0);
+      exit(1);
     }
     print('Checking gcloud cli version.');
     try {
       await cmd.run('gcloud', ['--version'], verbose: true);
     } catch (e) {
       print(e);
-      exit(0);
+      exit(1);
     }
     print('Checking flutter version.');
     try {
       await cmd.run('flutter', ['--version'], verbose: true);
     } catch (e) {
       print(e);
-      exit(0);
+      exit(1);
     }
   }
 }
