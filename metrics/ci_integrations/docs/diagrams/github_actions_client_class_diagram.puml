@@ -1,6 +1,4 @@
 @startuml
-scale 640 width
-scale 480 height
 
 package github_actions <<Folder>> {
 

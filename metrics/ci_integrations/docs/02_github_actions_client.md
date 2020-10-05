@@ -19,7 +19,7 @@ Details of the client integration is out of scope of this document.
 We should implement the GithubActionsClient and related models in a way they will fit the Metrics and CI integration requirements. The main idea is that client performs granular API calls so the developers can use different methods on demand. Consider the following class diagram that demonstrates a suggested structure.
 
 * Class diagram
-![scratch](https://user-images.githubusercontent.com/69351065/94947198-ea4f0080-04e5-11eb-9e6b-e4c7e2ff0f19.png)
+![Class Diagram](https://user-images.githubusercontent.com/69351065/94947198-ea4f0080-04e5-11eb-9e6b-e4c7e2ff0f19.png)
 
 * Package structure
 > * github_actions/
