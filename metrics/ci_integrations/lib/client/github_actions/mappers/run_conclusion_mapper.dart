@@ -1,37 +1,35 @@
 import 'package:ci_integration/client/github_actions/models/run_conclusion.dart';
 
-/// A class that provides methods for mapping Github Actions workflow run
-/// conclusion.
+/// A class that provides methods for mapping conclusions of
+/// Github Actions [WorkflowRun]s.
 class RunConclusionMapper {
-  /// A constant for the `success` conclusion of a Github Actions workflow run.
+  /// A conclusion for a successful workflow run.
   static const String success = 'success';
 
-  /// A constant for the `failure` conclusion of a Github Actions workflow run.
+  /// A conclusion for a failed workflow run.
   static const String failure = 'failure';
 
-  /// A constant for the `neutral` conclusion of a Github Actions workflow run.
+  /// A neutral conclusion for a workflow run.
   static const String neutral = 'neutral';
 
-  /// A constant for the `cancelled` conclusion of a Github Actions workflow run.
+  /// A conclusion for a cancelled workflow run.
   static const String cancelled = 'cancelled';
 
-  /// A constant for the `skipped` conclusion of a Github Actions workflow run.
+  /// A conclusion for a skipped workflow run.
   static const String skipped = 'skipped';
 
-  /// A constant for the `timed_out` conclusion of a Github Actions workflow run.
+  /// A conclusion for a timed out workflow run.
   static const String timedOut = 'timed_out';
 
-  /// A constant for the `action_required` conclusion of a Github Actions
-  /// workflow run.
+  /// A conclusion for a workflow run that requires an action.
   static const String actionRequired = 'action_required';
 
   /// Creates a new instance of the [RunConclusionMapper].
   const RunConclusionMapper();
 
-  /// Maps the [runConclusion] of a Github Actions workflow run to the
-  /// [RunConclusion].
-  RunConclusion map(String runConclusion) {
-    switch (runConclusion) {
+  /// Maps the [conclusion] of a workflow run to the [RunConclusion].
+  RunConclusion map(String conclusion) {
+    switch (conclusion) {
       case success:
         return RunConclusion.success;
       case failure:
@@ -51,10 +49,10 @@ class RunConclusionMapper {
     }
   }
 
-  /// Maps the [runConclusion] of Github Actions Workflow run to the form of
-  /// Github Actions API.
-  String unmap(RunConclusion runConclusion) {
-    switch (runConclusion) {
+  /// Maps the [conclusion] of a workflow run into the string that can be used
+  /// in API requests.
+  String unmap(RunConclusion conclusion) {
+    switch (conclusion) {
       case RunConclusion.success:
         return success;
       case RunConclusion.failure:

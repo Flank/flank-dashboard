@@ -1,22 +1,23 @@
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
 
-/// A class that provides methods for mapping Github Actions workflow run status.
+/// A class that provides methods for mapping statuses of Github Actions
+/// [WorkflowRun]s.
 class RunStatusMapper {
-  /// A constant for the `queued` status of a Github Actions workflow run.
+  /// A status for a queued workflow run.
   static const String queued = 'queued';
 
-  /// A constant for the `in_progress` status of a Github Actions workflow run.
+  /// A status for a workflow run that is in progress.
   static const String inProgress = 'in_progress';
 
-  /// A constant for the `completed` status of a Github Actions workflow run.
+  /// A status for a completed workflow run.
   static const String completed = 'completed';
 
   /// Creates a new instance of the [RunStatusMapper].
   const RunStatusMapper();
 
-  /// Maps the [runStatus] of a Github Actions workflow run to the [RunStatus].
-  RunStatus map(String runStatus) {
-    switch (runStatus) {
+  /// Maps the [status] of a workflow run to the [RunStatus].
+  RunStatus map(String status) {
+    switch (status) {
       case queued:
         return RunStatus.queued;
       case inProgress:
@@ -28,10 +29,10 @@ class RunStatusMapper {
     }
   }
 
-  /// Maps the [runStatus] of Github Actions Workflow run to the form of
-  /// Github Actions API.
-  String unmap(RunStatus runStatus) {
-    switch (runStatus) {
+  /// Maps the [status] of a workflow run into the string that can be used in
+  /// API requests.
+  String unmap(RunStatus status) {
+    switch (status) {
       case RunStatus.queued:
         return queued;
       case RunStatus.inProgress:

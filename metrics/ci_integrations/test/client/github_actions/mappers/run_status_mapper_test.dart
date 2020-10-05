@@ -10,6 +10,7 @@ void main() {
       ".map() maps the queued run status to the RunStatus.queued",
       () {
         final runStatus = runStatusMapper.map(RunStatusMapper.queued);
+
         const expectedRunStatus = RunStatus.queued;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -20,6 +21,7 @@ void main() {
       ".map() maps the in progress run status to the RunStatus.inProgress",
       () {
         final runStatus = runStatusMapper.map(RunStatusMapper.inProgress);
+
         const expectedRunStatus = RunStatus.inProgress;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -30,6 +32,7 @@ void main() {
       ".map() maps the completed run status to the RunStatus.completed",
       () {
         final runStatus = runStatusMapper.map(RunStatusMapper.completed);
+
         const expectedRunStatus = RunStatus.completed;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -55,9 +58,10 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunStatus.queued",
+      ".unmap() unmaps the RunStatus.queued to queued run status value",
       () {
         final runStatus = runStatusMapper.unmap(RunStatus.queued);
+
         const expectedRunStatus = RunStatusMapper.queued;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -65,9 +69,10 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunStatus.inProgress",
+      ".unmap() unmaps the RunStatus.inProgress to in progress run status value",
       () {
         final runStatus = runStatusMapper.unmap(RunStatus.inProgress);
+
         const expectedRunStatus = RunStatusMapper.inProgress;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -75,9 +80,10 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunStatus.completed",
+      ".unmap() unmaps the RunStatus.completed to completed run status value",
       () {
         final runStatus = runStatusMapper.unmap(RunStatus.completed);
+
         const expectedRunStatus = RunStatusMapper.completed;
 
         expect(runStatus, equals(expectedRunStatus));

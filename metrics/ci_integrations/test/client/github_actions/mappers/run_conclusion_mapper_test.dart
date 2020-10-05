@@ -11,6 +11,7 @@ void main() {
       () {
         const conclusion = RunConclusionMapper.success;
         final runConclusion = runConclusionMapper.map(conclusion);
+
         const expectedRunConclusion = RunConclusion.success;
 
         expect(runConclusion, equals(expectedRunConclusion));
@@ -22,6 +23,7 @@ void main() {
       () {
         const conclusion = RunConclusionMapper.failure;
         final runConclusion = runConclusionMapper.map(conclusion);
+
         const expectedRunConclusion = RunConclusion.failure;
 
         expect(runConclusion, equals(expectedRunConclusion));
@@ -33,6 +35,7 @@ void main() {
       () {
         const conclusion = RunConclusionMapper.neutral;
         final runConclusion = runConclusionMapper.map(conclusion);
+
         const expectedRunConclusion = RunConclusion.neutral;
 
         expect(runConclusion, equals(expectedRunConclusion));
@@ -44,6 +47,7 @@ void main() {
       () {
         const conclusion = RunConclusionMapper.cancelled;
         final runConclusion = runConclusionMapper.map(conclusion);
+
         const expectedRunConclusion = RunConclusion.cancelled;
 
         expect(runConclusion, equals(expectedRunConclusion));
@@ -55,6 +59,7 @@ void main() {
       () {
         const conclusion = RunConclusionMapper.skipped;
         final runConclusion = runConclusionMapper.map(conclusion);
+
         const expectedRunConclusion = RunConclusion.skipped;
 
         expect(runConclusion, equals(expectedRunConclusion));
@@ -77,6 +82,7 @@ void main() {
       () {
         const conclusion = RunConclusionMapper.actionRequired;
         final runConclusion = runConclusionMapper.map(conclusion);
+
         const expectedRunConclusion = RunConclusion.actionRequired;
 
         expect(runConclusion, equals(expectedRunConclusion));
@@ -102,9 +108,10 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.success",
+      ".unmap() unmaps the RunConclusion.success to successful run conclusion value",
       () {
         final runStatus = runConclusionMapper.unmap(RunConclusion.success);
+
         const expectedRunStatus = RunConclusionMapper.success;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -112,9 +119,10 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.failure",
+      ".unmap() unmaps the RunConclusion.failure to failed run conclusion value",
       () {
         final runStatus = runConclusionMapper.unmap(RunConclusion.failure);
+
         const expectedRunStatus = RunConclusionMapper.failure;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -122,9 +130,10 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.neutral",
+      ".unmap() unmaps the RunConclusion.neutral to neutral run conclusion value",
       () {
         final runStatus = runConclusionMapper.unmap(RunConclusion.neutral);
+
         const expectedRunStatus = RunConclusionMapper.neutral;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -132,9 +141,10 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.cancelled",
+      ".unmap() unmaps the RunConclusion.cancelled to cancelled run conclusion value",
       () {
         final runStatus = runConclusionMapper.unmap(RunConclusion.cancelled);
+
         const expectedRunStatus = RunConclusionMapper.cancelled;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -142,9 +152,10 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.skipped",
+      ".unmap() unmaps the RunConclusion.skipped to skipped run conclusion value",
       () {
         final runStatus = runConclusionMapper.unmap(RunConclusion.skipped);
+
         const expectedRunStatus = RunConclusionMapper.skipped;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -152,9 +163,10 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.timedOut",
+      ".unmap() unmaps the RunConclusion.timedOut to timed out run conclusion value",
       () {
         final runStatus = runConclusionMapper.unmap(RunConclusion.timedOut);
+
         const expectedRunStatus = RunConclusionMapper.timedOut;
 
         expect(runStatus, equals(expectedRunStatus));
@@ -162,10 +174,11 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.actionRequired",
+      ".unmap() unmaps the RunConclusion.actionRequired to action required run conclusion value",
       () {
         final runStatus =
             runConclusionMapper.unmap(RunConclusion.actionRequired);
+
         const expectedRunStatus = RunConclusionMapper.actionRequired;
 
         expect(runStatus, equals(expectedRunStatus));
