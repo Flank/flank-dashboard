@@ -12,6 +12,12 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   @override
   String get authErrorMessage => _authExceptionDescription?.message;
 
+  @override
+  String get emailErrorMessage => null;
+
+  @override
+  String get passwordErrorMessage => null;
+
   /// Contains text description of any authentication exception that may occur.
   AuthErrorMessage _authExceptionDescription;
 
@@ -36,6 +42,9 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
 
   @override
   Future<void> signInWithGoogle() async {}
+
+  @override
+  void clearErrorMessages() {}
 
   @override
   Future<void> signOut() async {

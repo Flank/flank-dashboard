@@ -49,6 +49,7 @@ class _AuthFormState extends State<AuthForm> {
                 key: const Key(AuthStrings.email),
                 controller: _emailController,
                 validator: EmailValidator.validate,
+                errorText: notifier.emailErrorMessage,
                 hint: AuthStrings.email,
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -58,6 +59,7 @@ class _AuthFormState extends State<AuthForm> {
                   key: const Key(AuthStrings.password),
                   controller: _passwordController,
                   validator: PasswordValidator.validate,
+                  errorText: notifier.passwordErrorMessage,
                   obscureText: _isPasswordObscure,
                   hint: AuthStrings.password,
                   suffixIcon: TappableArea(
