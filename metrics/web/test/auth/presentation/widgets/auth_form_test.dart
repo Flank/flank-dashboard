@@ -275,7 +275,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the email auth error message",
+      "applies the email error message to the email field",
       (tester) async {
         when(authNotifier.emailErrorMessage).thenReturn(errorMessage);
 
@@ -285,12 +285,15 @@ void main() {
           );
         });
 
-        expect(find.text(errorMessage), findsOneWidget);
+        final emailField =
+            tester.widget<MetricsTextFormField>(emailInputFinder);
+
+        expect(emailField.errorText, equals(errorMessage));
       },
     );
 
     testWidgets(
-      "displays the password auth error message",
+      "applies the password error message to the password field",
       (tester) async {
         when(authNotifier.passwordErrorMessage).thenReturn(errorMessage);
 
@@ -300,7 +303,10 @@ void main() {
           );
         });
 
-        expect(find.text(errorMessage), findsOneWidget);
+        final passwordField =
+            tester.widget<MetricsTextFormField>(passwordInputFinder);
+
+        expect(passwordField.errorText, equals(errorMessage));
       },
     );
   });
