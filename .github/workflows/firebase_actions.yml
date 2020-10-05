@@ -41,5 +41,5 @@ jobs:
 
       - name: Deploy Firestore security rules
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: firebase use test && firebase deploy --only firestore:rules
+        run: firebase use default && firebase deploy --only firestore:rules
         working-directory: metrics/firebase/
