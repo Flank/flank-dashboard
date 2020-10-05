@@ -1,0 +1,48 @@
+@startuml user_profile_domain_class
+
+package auth.data {
+    package repository {
+        class FirebaseUserRepository {}
+    }
+
+
+    package model {
+        class UserProfileData {
+            factory fromJson()
+        }
+    }
+
+}
+
+package auth.domain.entities {
+    class UserProfile {
+        id : String
+        selectedTheme: ThemeType
+    }
+}
+
+package core.src.data.model {
+    interface DataModel {
+        Map<String, dynamic> toJson()
+    }
+}
+
+package auth.domain.repository {
+    class UserRepository {
+        ...
+        Future<void> createUserProfile() 
+        Stream<UserProfile> userProfileStream()
+        Future<void> updateUserProfile()
+    }
+}
+
+
+FirebaseUserRepository ..|> UserRepository
+
+UserProfileData ..|> DataModel
+UserProfileData --|> UserProfile
+
+
+FirebaseUserRepository --> UserProfileData : uses
+
+@enduml
