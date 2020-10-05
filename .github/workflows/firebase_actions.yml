@@ -4,12 +4,10 @@ on:
   pull_request:
     paths:
       - metrics/firebase/**
-      - .github/workflows/**
   push:
     branches: master
     paths:
       - metrics/firebase/**
-      - .github/workflows/**
 
 
 jobs:
