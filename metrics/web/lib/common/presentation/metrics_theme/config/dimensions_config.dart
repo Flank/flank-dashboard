@@ -4,4 +4,5 @@ class DimensionsConfig {
   static const double appBarHeight = 64.0;
   static const double buttonHeight = 48.0;
   static const double circleGraphIndicatorOuterDiameter = 10.0;
+  static const double buildResultBarWidth = 10.0;
 }

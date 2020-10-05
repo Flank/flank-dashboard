@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -8,9 +9,6 @@ import 'package:metrics_core/metrics_core.dart';
 class MetricsColoredBar extends StatelessWidget {
   /// A border radius of this bar.
   static const _borderRadius = Radius.circular(1.0);
-
-  /// A width of this bar.
-  static const _barWidth = 10.0;
 
   /// An appearance strategy applied to the [MetricsColoredBar] widget.
   final BuildResultBarStyleStrategy barStrategy;
@@ -35,17 +33,18 @@ class MetricsColoredBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const barWidth = DimensionsConfig.buildResultBarWidth;
     final theme = barStrategy.getWidgetAppearance(
       MetricsTheme.of(context),
       status,
     );
 
     return Container(
-      width: _barWidth,
+      width: barWidth,
       color: isHovered ? theme.backgroundColor : null,
       alignment: Alignment.bottomCenter,
       child: ColoredBar(
-        width: _barWidth,
+        width: barWidth,
         height: height,
         borderRadius: const BorderRadius.only(
           topLeft: _borderRadius,

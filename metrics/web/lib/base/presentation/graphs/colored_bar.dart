@@ -18,6 +18,7 @@ class ColoredBar extends StatelessWidget {
   /// The width of this bar.
   final double width;
 
+  /// The height of this bar.
   final double height;
 
   /// Creates the [ColoredBar].

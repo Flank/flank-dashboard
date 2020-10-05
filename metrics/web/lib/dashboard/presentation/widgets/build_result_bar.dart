@@ -53,7 +53,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
     if (widget.buildResult == null || widget.buildResult.buildStatus == null) {
       final inactiveTheme = metricsTheme.inactiveWidgetTheme;
       return PlaceholderBar(
-        width: 10.0,
+        width: DimensionsConfig.buildResultBarWidth,
         height: 4.0,
         color: inactiveTheme.primaryColor,
       );
