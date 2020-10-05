@@ -355,6 +355,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final buildPerformancesByDay = List.generate(period, (i) {
       final date = currentDate.subtract(Duration(days: period - i - 1));
       final formattedDate = DateTime(date.year, date.month, date.day);
+
       return buildPerformancesMap[formattedDate];
     });
 
