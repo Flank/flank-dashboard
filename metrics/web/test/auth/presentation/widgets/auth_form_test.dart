@@ -285,8 +285,9 @@ void main() {
           );
         });
 
-        final emailField =
-            tester.widget<MetricsTextFormField>(emailInputFinder);
+        final emailField = tester.widget<MetricsTextFormField>(
+          emailInputFinder,
+        );
 
         expect(emailField.errorText, equals(errorMessage));
       },
@@ -303,8 +304,9 @@ void main() {
           );
         });
 
-        final passwordField =
-            tester.widget<MetricsTextFormField>(passwordInputFinder);
+        final passwordField = tester.widget<MetricsTextFormField>(
+          passwordInputFinder,
+        );
 
         expect(passwordField.errorText, equals(errorMessage));
       },
