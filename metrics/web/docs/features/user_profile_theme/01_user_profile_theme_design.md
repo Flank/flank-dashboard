@@ -75,7 +75,7 @@ Also, we should create a user profile record once we receive a new user. The fol
 
 ![User creation diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/user_profile_design/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_creation_sequence.puml)
 
-So, the `isLoggedIn` value of the `AuthNotifier` should depend on the `UserProfile` now, but not on the `FirebaseUser`. In other words, we can say that the user is logged in only when the `UserProfile` is nut null in the `AuthNotifier`.
+So, the `isLoggedIn` value of the `AuthNotifier` should depend on the `UserProfile` now, but not on the `FirebaseUser`. In other words, we can say that the user is logged in only when the `UserProfile` is not null in the `AuthNotifier`.
 
 Let's consider the mechanism of changing the selected theme. To change the selected theme, the UI should trigger the `changeTheme` method from the `ThemeNotifier` once the user toggles the `dark`/`light` theme. Also, the `AuthNotifier` should call the `changeTheme` method once the user selected theme changed in the database. The `ThemeNotifier`, in its turn, should call the `updateUserProfile` method from the `AuthNotifier` to update the selected theme in the database.
 
