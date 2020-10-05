@@ -1,7 +1,8 @@
 import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
+import 'package:ci_integration/integration/interface/base/client/mapper/mapper.dart';
 
 /// A class providing methods for mapping Jenkins build result.
-class JenkinsBuildResultMapper {
+class JenkinsBuildResultMapper implements Mapper<String, JenkinsBuildResult> {
   /// A constant for the `ABORTED` result of Jenkins build.
   static const String aborted = 'ABORTED';
 
@@ -20,6 +21,7 @@ class JenkinsBuildResultMapper {
   const JenkinsBuildResultMapper();
 
   /// Maps the [result] of Jenkins build to the [JenkinsBuildResult].
+  @override
   JenkinsBuildResult map(String result) {
     switch (result) {
       case aborted:
@@ -38,6 +40,7 @@ class JenkinsBuildResultMapper {
   }
 
   /// Maps the [result] of Jenkins build to the form of Jenkins API.
+  @override
   String unmap(JenkinsBuildResult result) {
     switch (result) {
       case JenkinsBuildResult.aborted:

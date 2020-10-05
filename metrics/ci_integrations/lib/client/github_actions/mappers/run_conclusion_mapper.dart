@@ -1,8 +1,9 @@
 import 'package:ci_integration/client/github_actions/models/run_conclusion.dart';
+import 'package:ci_integration/integration/interface/base/client/mapper/mapper.dart';
 
 /// A class that provides methods for mapping conclusions of
 /// Github Actions [WorkflowRun]s.
-class RunConclusionMapper {
+class RunConclusionMapper implements Mapper<String, RunConclusion> {
   /// A conclusion for a successful workflow run.
   static const String success = 'success';
 
@@ -28,6 +29,7 @@ class RunConclusionMapper {
   const RunConclusionMapper();
 
   /// Maps the [conclusion] of a workflow run to the [RunConclusion].
+  @override
   RunConclusion map(String conclusion) {
     switch (conclusion) {
       case success:
@@ -51,6 +53,7 @@ class RunConclusionMapper {
 
   /// Maps the [conclusion] of a workflow run into the string that can be used
   /// in API requests.
+  @override
   String unmap(RunConclusion conclusion) {
     switch (conclusion) {
       case RunConclusion.success:

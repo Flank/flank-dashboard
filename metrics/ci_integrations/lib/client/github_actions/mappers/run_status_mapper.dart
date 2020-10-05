@@ -1,8 +1,9 @@
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
+import 'package:ci_integration/integration/interface/base/client/mapper/mapper.dart';
 
 /// A class that provides methods for mapping statuses of Github Actions
 /// [WorkflowRun]s.
-class RunStatusMapper {
+class RunStatusMapper implements Mapper<String, RunStatus> {
   /// A status for a queued workflow run.
   static const String queued = 'queued';
 
@@ -16,6 +17,7 @@ class RunStatusMapper {
   const RunStatusMapper();
 
   /// Maps the [status] of a workflow run to the [RunStatus].
+  @override
   RunStatus map(String status) {
     switch (status) {
       case queued:
@@ -31,6 +33,7 @@ class RunStatusMapper {
 
   /// Maps the [status] of a workflow run into the string that can be used in
   /// API requests.
+  @override
   String unmap(RunStatus status) {
     switch (status) {
       case RunStatus.queued:
