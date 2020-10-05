@@ -3,13 +3,13 @@ import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
 import 'package:metrics/base/presentation/widgets/circle_graph_indicator.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
-import 'package:metrics/common/presentation/circle_graph_indicator/widgets/metrics_cancelled_circle_graph_indicator.dart';
-import 'package:metrics/common/presentation/circle_graph_indicator/widgets/metrics_failed_circle_graph_indicator.dart';
-import 'package:metrics/common/presentation/circle_graph_indicator/widgets/metrics_successful_circle_graph_indicator.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/cancelled_circle_graph_indicator.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/failed_graph_indicator.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/successful_graph_indicator.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/widgets/metrics_colored_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
-import 'file:///E:/Projects/monorepo_dashboard/metrics/web/lib/common/presentation/widgets/metrics_colored_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_result_bar_popup_card.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -141,11 +141,11 @@ class _BuildResultBarState extends State<BuildResultBar> {
   Widget _getCircleGraphIndicator(BuildStatus buildStatus) {
     switch (buildStatus) {
       case BuildStatus.successful:
-        return const MetricsSuccessfulCircleGraphIndicator();
+        return const SuccessfulGraphIndicator();
       case BuildStatus.cancelled:
-        return const MetricsCancelledCircleGraphIndicator();
+        return const CancelledGraphIndicator();
       case BuildStatus.failed:
-        return const MetricsFailedCircleGraphIndicator();
+        return const FailedGraphIndicator();
       default:
         return null;
     }

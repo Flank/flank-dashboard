@@ -7,7 +7,8 @@ import 'package:metrics/common/presentation/metrics_theme/model/add_project_grou
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/attention_level/build_result_bar_attention_level.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/theme_data/build_result_bar_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
@@ -47,7 +48,7 @@ void main() {
 
         expect(themeData.metricsWidgetTheme, isNotNull);
         expect(themeData.inactiveWidgetTheme, isNotNull);
-        expect(themeData.buildResultTheme, isNotNull);
+        expect(themeData.buildResultBarTheme, isNotNull);
         expect(themeData.deleteDialogTheme, isNotNull);
         expect(themeData.projectGroupDialogTheme, isNotNull);
         expect(themeData.projectGroupCardTheme, isNotNull);
@@ -78,7 +79,7 @@ void main() {
         const themeData = MetricsThemeData(
           metricsWidgetTheme: null,
           inactiveWidgetTheme: null,
-          buildResultTheme: null,
+          buildResultBarTheme: null,
           projectGroupCardTheme: null,
           addProjectGroupCardTheme: null,
           deleteDialogTheme: null,
@@ -105,7 +106,7 @@ void main() {
 
         expect(themeData.metricsWidgetTheme, isNotNull);
         expect(themeData.inactiveWidgetTheme, isNotNull);
-        expect(themeData.buildResultTheme, isNotNull);
+        expect(themeData.buildResultBarTheme, isNotNull);
         expect(themeData.projectGroupCardTheme, isNotNull);
         expect(themeData.addProjectGroupCardTheme, isNotNull);
         expect(themeData.deleteDialogTheme, isNotNull);
@@ -144,10 +145,8 @@ void main() {
           backgroundColor: backgroundColor,
         );
 
-        const buildResultsTheme = BuildResultsThemeData(
-          successfulColor: primaryColor,
-          failedColor: accentColor,
-          canceledColor: backgroundColor,
+        const buildResultBarTheme = BuildResultBarThemeData(
+          attentionLevel: BuildResultBarAttentionLevel(),
         );
 
         const projectGroupCardTheme = ProjectGroupCardThemeData(
@@ -270,7 +269,7 @@ void main() {
 
         final copiedTheme = themeData.copyWith(
           metricsWidgetTheme: metricsWidgetTheme,
-          buildResultTheme: buildResultsTheme,
+          buildResultBarTheme: buildResultBarTheme,
           projectGroupCardTheme: projectGroupCardTheme,
           addProjectGroupCardTheme: addProjectGroupTheme,
           deleteDialogTheme: deleteDialogTheme,
@@ -298,7 +297,7 @@ void main() {
 
         expect(copiedTheme.metricsWidgetTheme, equals(metricsWidgetTheme));
         expect(copiedTheme.inactiveWidgetTheme, equals(inactiveTheme));
-        expect(copiedTheme.buildResultTheme, equals(buildResultsTheme));
+        expect(copiedTheme.buildResultBarTheme, equals(buildResultBarTheme));
         expect(
           copiedTheme.projectGroupCardTheme,
           equals(projectGroupCardTheme),
@@ -363,8 +362,8 @@ void main() {
           equals(copiedTheme.metricsWidgetTheme),
         );
         expect(
-          themeData.buildResultTheme,
-          equals(copiedTheme.buildResultTheme),
+          themeData.buildResultBarTheme,
+          equals(copiedTheme.buildResultBarTheme),
         );
         expect(
           themeData.projectGroupCardTheme,

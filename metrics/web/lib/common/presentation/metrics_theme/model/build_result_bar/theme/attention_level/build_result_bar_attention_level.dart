@@ -6,11 +6,21 @@ import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar
 @immutable
 class BuildResultBarAttentionLevel {
   /// A [BuildResultBarStyle] for a build result bar widget
-  /// displaying the positive visual feedback.
+  /// that provide colors for the successful builds.
   final BuildResultBarStyle successful;
+
+  /// A [BuildResultBarStyle] for a build result bar widget
+  /// that provide colors for the cancelled builds.
   final BuildResultBarStyle cancelled;
+
+  /// A [BuildResultBarStyle] for a build result bar widget
+  /// that provide colors for the failed builds.
   final BuildResultBarStyle failed;
 
+  /// Creates a new instance of the [BuildResultBarAttentionLevel].
+  ///
+  /// If the [successful], [cancelled] or [failed] is null,
+  /// an empty [BuildResultBarStyle] used.
   const BuildResultBarAttentionLevel({
     BuildResultBarStyle successful,
     BuildResultBarStyle cancelled,

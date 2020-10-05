@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/attention_level/build_result_bar_attention_level.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/style/build_result_bar_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/theme_data/build_result_bar_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/dashboard_popup_card_view_model.dart';
@@ -22,10 +24,21 @@ void main() {
     const canceledColor = Colors.grey;
 
     const themeData = MetricsThemeData(
-      buildResultTheme: BuildResultsThemeData(
-        successfulColor: successfulColor,
-        failedColor: failedColor,
-        canceledColor: canceledColor,
+      buildResultBarTheme: BuildResultBarThemeData(
+        attentionLevel: BuildResultBarAttentionLevel(
+          successful: BuildResultBarStyle(
+            color: successfulColor,
+            backgroundColor: successfulColor,
+          ),
+          cancelled: BuildResultBarStyle(
+            color: canceledColor,
+            backgroundColor: canceledColor,
+          ),
+          failed: BuildResultBarStyle(
+            color: failedColor,
+            backgroundColor: failedColor,
+          ),
+        ),
       ),
     );
 

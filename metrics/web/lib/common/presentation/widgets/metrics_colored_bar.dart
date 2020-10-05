@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/style/build_result_bar_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value_based_appearance_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// Rectangle bar of the [BarGraph] painted based on [barStyleStrategy] and [buildStatus].
-class MetricsColoredBar <Style extends BuildResultBarStyle, Value> extends StatelessWidget {
+class MetricsColoredBar extends StatelessWidget {
   /// A border radius of this bar.
   static const _borderRadius = Radius.circular(1.0);
 
   /// A width of this bar.
   static const _barWidth = 10.0;
 
-  final ValueBasedAppearanceStrategy<Style, Value> barStrategy;
-  final Value status;
+  /// An appearance strategy applied to the [MetricsColoredBar] widget.
+  final BuildResultBarStyleStrategy barStrategy;
+
+  /// The resulting status of the build.
+  final BuildStatus status;
+
+  /// A height of this bar.
   final double height;
+
+  /// Indicates whether this widget is hovered.
   final bool isHovered;
 
-  const MetricsColoredBar({Key key, this.barStrategy, this.status, this.height, this.isHovered}) : super(key: key);
+  /// Creates a new instance of the [MetricsColoredBar].
+  const MetricsColoredBar({
+    Key key,
+    this.barStrategy,
+    this.status,
+    this.height,
+    this.isHovered,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,5 +56,3 @@ class MetricsColoredBar <Style extends BuildResultBarStyle, Value> extends State
     );
   }
 }
-
-/// Colors.red, yellow,              green, blue

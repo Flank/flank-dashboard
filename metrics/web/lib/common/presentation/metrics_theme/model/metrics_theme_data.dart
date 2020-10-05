@@ -1,5 +1,5 @@
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
-import 'package:metrics/common/presentation/circle_graph_indicator/theme/metrics_circle_graph_indicator_theme_data.dart';
+import 'package:metrics/common/presentation/graph_indicator/theme/graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
@@ -108,7 +108,8 @@ class MetricsThemeData {
   /// A theme for the bar graph popup.
   final BarGraphPopupThemeData barGraphPopupTheme;
 
-  final MetricsCircleGraphIndicatorThemeData metricsCircleGraphIndicatorTheme;
+  /// A theme for the graph indicator.
+  final GraphIndicatorThemeData metricsCircleGraphIndicatorTheme;
 
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
@@ -137,7 +138,7 @@ class MetricsThemeData {
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
     PageTitleThemeData pageTitleTheme,
-    MetricsCircleGraphIndicatorThemeData metricsCircleGraphIndicatorTheme,
+    GraphIndicatorThemeData metricsCircleGraphIndicatorTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
         buildResultBarTheme =
@@ -177,8 +178,8 @@ class MetricsThemeData {
         barGraphPopupTheme =
             barGraphPopupTheme ?? const BarGraphPopupThemeData(),
         pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData(),
-        metricsCircleGraphIndicatorTheme = metricsCircleGraphIndicatorTheme ??
-            const MetricsCircleGraphIndicatorThemeData();
+        metricsCircleGraphIndicatorTheme =
+            metricsCircleGraphIndicatorTheme ?? const GraphIndicatorThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -210,7 +211,7 @@ class MetricsThemeData {
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
     PageTitleThemeData pageTitleTheme,
-    MetricsCircleGraphIndicatorThemeData metricsCircleGraphIndicatorTheme,
+    GraphIndicatorThemeData metricsCircleGraphIndicatorTheme,
   }) {
     return MetricsThemeData(
       metricsWidgetTheme: metricsWidgetTheme ?? this.metricsWidgetTheme,

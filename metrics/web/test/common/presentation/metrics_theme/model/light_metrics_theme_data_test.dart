@@ -12,7 +12,7 @@ void main() {
         final lightMetricsThemeData = LightMetricsThemeData();
 
         expect(lightMetricsThemeData.metricsWidgetTheme, isNotNull);
-        expect(lightMetricsThemeData.buildResultTheme, isNotNull);
+        expect(lightMetricsThemeData.buildResultBarTheme, isNotNull);
         expect(lightMetricsThemeData.inactiveWidgetTheme, isNotNull);
         expect(lightMetricsThemeData.projectGroupCardTheme, isNotNull);
         expect(lightMetricsThemeData.addProjectGroupCardTheme, isNotNull);

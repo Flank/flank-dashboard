@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
-import 'package:metrics/common/presentation/circle_graph_indicator/attention_level/metrics_circle_graph_indicator_attention_level.dart';
-import 'package:metrics/common/presentation/circle_graph_indicator/style/metrics_circle_graph_indicator_style.dart';
-import 'package:metrics/common/presentation/circle_graph_indicator/theme/metrics_circle_graph_indicator_theme_data.dart';
+import 'package:metrics/common/presentation/graph_indicator/attention_level/graph_indicator_attention_level.dart';
+import 'package:metrics/common/presentation/graph_indicator/style/graph_indicator_style.dart';
+import 'package:metrics/common/presentation/graph_indicator/theme/graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
@@ -484,18 +484,17 @@ class DarkMetricsThemeData extends MetricsThemeData {
               color: Colors.white,
             ),
           ),
-          metricsCircleGraphIndicatorTheme:
-              const MetricsCircleGraphIndicatorThemeData(
-            attentionLevel: MetricsCircleGraphIndicatorAttentionLevel(
-              successful: MetricsCircleGraphIndicatorStyle(
+          metricsCircleGraphIndicatorTheme: const GraphIndicatorThemeData(
+            attentionLevel: GraphIndicatorAttentionLevel(
+              successful: GraphIndicatorStyle(
                 innerColor: ColorConfig.primaryColor,
                 outerColor: Colors.white,
               ),
-              failed: MetricsCircleGraphIndicatorStyle(
+              failed: GraphIndicatorStyle(
                 innerColor: ColorConfig.accentColor,
                 outerColor: Colors.white,
               ),
-              cancelled: MetricsCircleGraphIndicatorStyle(
+              cancelled: GraphIndicatorStyle(
                 innerColor: ColorConfig.accentColor,
                 outerColor: Colors.white,
               ),
