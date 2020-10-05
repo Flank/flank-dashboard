@@ -200,9 +200,9 @@ void main() {
     });
 
     test("loads the performance metrics", () async {
+      final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
       final expectedPerformanceMetrics =
           expectedProjectMetrics.performanceMetrics;
-
       final firstProjectMetrics =
           projectMetricsNotifier.projectsMetricsTileViewModels.first;
       final performanceMetrics = firstProjectMetrics.performanceSparkline;
@@ -210,7 +210,7 @@ void main() {
 
       expect(
         performancePoints.length,
-        expectedPerformanceMetrics.buildsPerformance.length,
+        period,
       );
 
       expect(
@@ -218,17 +218,65 @@ void main() {
         expectedPerformanceMetrics.averageBuildDuration,
       );
 
-      final firstBuildPerformance =
-          expectedPerformanceMetrics.buildsPerformance.first;
-      final performancePoint = performancePoints.first;
+      final currentDate = DateTime.now();
+      final buildPerformancesMap = groupBy(
+        expectedPerformanceMetrics.buildsPerformance,
+        (BuildPerformance metrics) {
+          final date = metrics.date;
+
+          return DateTime(date.year, date.month, date.day);
+        },
+      );
+      final buildPerformancesByDay = List.generate(period, (i) {
+        final date = currentDate.subtract(Duration(days: period - i - 1));
+        final formattedDate = DateTime(date.year, date.month, date.day);
+        return buildPerformancesMap[formattedDate];
+      });
+      final averageDurations = buildPerformancesByDay.map((e) {
+        if (e == null) return Duration.zero;
+
+        final totalDuration = e.fold<Duration>(
+          Duration.zero,
+          (previousValue, element) => previousValue + element.duration,
+        );
+
+        return totalDuration ~/ e.length;
+      }).toList();
+
+      final pointsSumX = performancePoints.fold<int>(
+        0,
+        (previousValue, element) => previousValue + element.x,
+      );
+      final pointsSumY = performancePoints.fold<int>(
+        0,
+        (previousValue, element) => previousValue + element.y,
+      );
+
+      final expectedPointsSumX = averageDurations.asMap().entries.fold<int>(
+        0,
+        (previousValue, element) {
+          final elementIndex = element.key;
+
+          return previousValue + elementIndex;
+        },
+      );
+      final expectedPointsSumY = averageDurations.asMap().entries.fold<int>(
+        0,
+        (previousValue, element) {
+          final duration = element.value;
+
+          return previousValue + duration.inMilliseconds;
+        },
+      );
 
       expect(
-        performancePoint.x,
-        firstBuildPerformance.date.millisecondsSinceEpoch,
+        pointsSumX,
+        expectedPointsSumX,
       );
+
       expect(
-        performancePoint.y,
-        firstBuildPerformance.duration.inMilliseconds,
+        pointsSumY,
+        expectedPointsSumY,
       );
     });
 
@@ -672,7 +720,7 @@ void main() {
 
     test(
       ".setProjectGroups() resets project group dropdown items and selected project group to null if project groups are null",
-          () {
+      () {
         final projectGroups = [
           ProjectGroupModel(
             id: "id",

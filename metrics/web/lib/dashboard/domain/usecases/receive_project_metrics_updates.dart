@@ -19,7 +19,7 @@ import 'package:rxdart/rxdart.dart';
 class ReceiveProjectMetricsUpdates
     implements UseCase<Stream<DashboardProjectMetrics>, ProjectIdParam> {
   static const int buildsToLoadForChartMetrics = 20;
-  static const Duration commonBuildsLoadingPeriod = Duration(days: 7);
+  static const Duration buildsLoadingPeriod = Duration(days: 7);
 
   final MetricsRepository _repository;
 
@@ -39,7 +39,7 @@ class ReceiveProjectMetricsUpdates
 
     final projectBuildsInPeriod = _repository.projectBuildsFromDateStream(
       projectId,
-      DateTime.now().subtract(commonBuildsLoadingPeriod).date,
+      DateTime.now().subtract(buildsLoadingPeriod).date,
     );
 
     final lastSuccessfulBuildStream = _repository.lastSuccessfulBuildStream(
@@ -96,7 +96,7 @@ class ReceiveProjectMetricsUpdates
     );
     final lastBuildsInPeriod = _getBuildsInPeriod(
       builds,
-      commonBuildsLoadingPeriod,
+      buildsLoadingPeriod,
     );
 
     final projectBuildStatusMetric = ProjectBuildStatusMetric(

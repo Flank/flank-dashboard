@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
@@ -331,7 +332,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
   /// Creates the project performance metrics from [PerformanceMetric].
   PerformanceSparklineViewModel _getPerformanceMetrics(
-      PerformanceMetric metric) {
+    PerformanceMetric metric,
+  ) {
     final performanceMetrics = metric?.buildsPerformance ?? DateTimeSet();
 
     if (performanceMetrics.isEmpty) {
@@ -340,10 +342,40 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       );
     }
 
-    final performance = performanceMetrics.map((metric) {
+    final currentDate = DateTime.now();
+    final buildPerformancesMap = groupBy(
+      performanceMetrics,
+      (BuildPerformance metrics) {
+        final date = metrics.date;
+
+        return DateTime(date.year, date.month, date.day);
+      },
+    );
+    final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
+    final buildPerformancesByDay = List.generate(period, (i) {
+      final date = currentDate.subtract(Duration(days: period - i - 1));
+      final formattedDate = DateTime(date.year, date.month, date.day);
+      return buildPerformancesMap[formattedDate];
+    });
+
+    final averageDurations = buildPerformancesByDay.map((e) {
+      if (e == null) return Duration.zero;
+
+      final totalDuration = e.fold<Duration>(
+        Duration.zero,
+        (previousValue, element) => previousValue + element.duration,
+      );
+
+      return totalDuration ~/ e.length;
+    }).toList();
+
+    final performance = averageDurations.asMap().entries.map((element) {
+      final index = element.key;
+      final duration = element.value;
+
       return Point(
-        metric.date.millisecondsSinceEpoch,
-        metric.duration.inMilliseconds,
+        index,
+        duration.inMilliseconds,
       );
     }).toList();
 
