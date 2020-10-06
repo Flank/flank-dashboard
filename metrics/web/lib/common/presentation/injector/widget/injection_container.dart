@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/data/repositories/firebase_user_repository.dart';
+import 'package:metrics/auth/domain/usecases/create_user_profile_usecase.dart';
 import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
+import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/data/repositories/firestore_project_repository.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
@@ -47,14 +50,23 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// A use case needed to be able to sign out a user.
   SignOutUseCase _signOutUseCase;
 
+  /// A use case needed to receive the authentication updates.
+  ReceiveAuthenticationUpdates _receiveAuthUpdates;
+
+  /// A use case needed to be able to receive the user profile updates.
+  ReceiveUserProfileUpdates _receiveUserProfileUpdates;
+
+  /// A use case needed to be able to create a new user profile.
+  CreateUserProfileUseCase _createUserProfileUseCase;
+
+  /// A use case needed to be able to update the existing user profile.
+  UpdateUserProfileUseCase _updateUserProfileUseCase;
+
   /// A use case needed to be able to receive the project updates.
   ReceiveProjectUpdates _receiveProjectUpdates;
 
   /// A use case needed to be able to receive the project metrics updates.
   ReceiveProjectMetricsUpdates _receiveProjectMetricsUpdates;
-
-  /// A use case needed to receive the authentication updates.
-  ReceiveAuthenticationUpdates _receiveAuthUpdates;
 
   /// A use case needed to receive the project group updates.
   ReceiveProjectGroupUpdates _receiveProjectGroupUpdates;
@@ -73,6 +85,12 @@ class _InjectionContainerState extends State<InjectionContainer> {
     return WidgetsBinding.instance.window.platformBrightness;
   }
 
+  /// The [ChangeNotifier] that holds the authentication state.
+  AuthNotifier _authNotifier;
+
+  /// The [ChangeNotifier] of the theme type.
+  ThemeNotifier _themeNotifier;
+
   @override
   void initState() {
     super.initState();
@@ -90,6 +108,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _googleSignInUseCase = GoogleSignInUseCase(_userRepository);
     _signOutUseCase = SignOutUseCase(_userRepository);
 
+    _receiveUserProfileUpdates = ReceiveUserProfileUpdates(_userRepository);
+    _createUserProfileUseCase = CreateUserProfileUseCase(_userRepository);
+    _updateUserProfileUseCase = UpdateUserProfileUseCase(_userRepository);
+
     _receiveProjectGroupUpdates = ReceiveProjectGroupUpdates(
       _projectGroupRepository,
     );
@@ -100,23 +122,29 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _deleteProjectGroupUseCase = DeleteProjectGroupUseCase(
       _projectGroupRepository,
     );
+
+    _authNotifier = AuthNotifier(
+      _receiveAuthUpdates,
+      _signInUseCase,
+      _googleSignInUseCase,
+      _signOutUseCase,
+      _receiveUserProfileUpdates,
+      _createUserProfileUseCase,
+      _updateUserProfileUseCase,
+    );
+
+    _themeNotifier = ThemeNotifier(brightness: platformBrightness);
+
+    _authNotifier.addListener(_authNotifierListener);
+    _themeNotifier.addListener(_themeNotifierListener);
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthNotifier>(
-          create: (_) => AuthNotifier(
-            _receiveAuthUpdates,
-            _signInUseCase,
-            _googleSignInUseCase,
-            _signOutUseCase,
-          ),
-        ),
-        ChangeNotifierProvider<ThemeNotifier>(
-          create: (_) => ThemeNotifier(brightness: platformBrightness),
-        ),
+        ChangeNotifierProvider.value(value: _authNotifier),
+        ChangeNotifierProvider.value(value: _themeNotifier),
         ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
           lazy: false,
           create: (_) => ProjectsNotifier(_receiveProjectUpdates),
@@ -173,6 +201,30 @@ class _InjectionContainerState extends State<InjectionContainer> {
     );
   }
 
+  /// A closure to be called when the [AuthNotifier] changes.
+  void _authNotifierListener() {
+    final updatedUserProfile = _authNotifier.userProfileModel;
+
+    _themeNotifier.changeTheme(updatedUserProfile?.selectedTheme);
+  }
+
+  /// A closure to be called when the [ThemeNotifier] changes.
+  void _themeNotifierListener() {
+    final selectedTheme = _themeNotifier.selectedTheme;
+
+    _authNotifier.changeTheme(selectedTheme);
+
+    final currentUserProfile = _authNotifier.userProfileModel;
+
+    if (currentUserProfile == null) {
+      return;
+    }
+
+    _authNotifier.updateUserProfile(
+      currentUserProfile.copyWith(selectedTheme: selectedTheme),
+    );
+  }
+
   /// Updates projects subscription based on user logged in status.
   void _updateProjectsSubscription(
     AuthNotifier authNotifier,
@@ -187,5 +239,12 @@ class _InjectionContainerState extends State<InjectionContainer> {
     } else {
       projectsNotifier.unsubscribeFromProjects();
     }
+  }
+
+  @override
+  void dispose() {
+    _authNotifier.removeListener(_authNotifierListener);
+    _themeNotifier.removeListener(_themeNotifierListener);
+    super.dispose();
   }
 }

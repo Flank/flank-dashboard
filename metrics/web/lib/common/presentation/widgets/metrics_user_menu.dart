@@ -71,7 +71,7 @@ class MetricsUserMenu extends StatelessWidget {
                         ),
                         Toggle(
                           value: !model.isDark,
-                          onToggle: (_) => model.changeTheme(),
+                          onToggle: (_) => model.toggleTheme(),
                         ),
                       ],
                     );
