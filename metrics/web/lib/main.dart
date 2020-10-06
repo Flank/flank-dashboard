@@ -24,6 +24,7 @@ void main() {
   runApp(MetricsApp());
 }
 
+/// The root widget of the application.
 class MetricsApp extends StatefulWidget {
   @override
   _MetricsAppState createState() => _MetricsAppState();

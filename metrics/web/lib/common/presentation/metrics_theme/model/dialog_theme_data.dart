@@ -23,6 +23,13 @@ class DialogThemeData {
   /// A [TextStyle] of the dialog error message.
   final TextStyle errorTextStyle;
 
+  /// Creates a new instance of the [DialogThemeData].
+  ///
+  /// If the [primaryColor] is null, a [Colors.blue] is used.
+  /// If the [accentColor] is null, a [Colors.red] is used.
+  /// If the [backgroundColor] is null, a [Colors.white] is used.
+  /// If the [barrierColor] is null, a [Colors.black45] is used.
+  /// If the [closeIconColor] is null, a [Colors.black] is used.
   const DialogThemeData({
     Color primaryColor,
     Color accentColor,

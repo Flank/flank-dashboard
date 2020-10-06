@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// ignore_for_file: public_member_api_docs
+// awaiting for the color palette from design team
+
 /// Holds the common colors for application themes.
 class ColorConfig {
   static const Color primaryColor = Color(0xFF20CE9A);

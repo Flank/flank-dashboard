@@ -6,14 +6,13 @@ import 'package:metrics/dashboard/domain/entities/collections/date_time_set_entr
 class BuildsOnDate implements DateTimeSetEntry {
   @override
   final DateTime date;
+
+  /// An total amount of the builds on [date].
   final int numberOfBuilds;
 
-  /// Creates the [BuildsOnDate].
+  /// Creates a new instance of the [BuildsOnDate].
   ///
   /// The [date] should contain the date only, without timestamp.
-  ///
-  /// [date] is the date the builds was started at.
-  /// [numberOfBuilds] is the total amount of builds on [date].
   BuildsOnDate({
     this.date,
     this.numberOfBuilds,

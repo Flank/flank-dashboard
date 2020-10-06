@@ -3,6 +3,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 
+/// A toggle widget providing an ability to the on/off a [value].
 class Toggle extends StatelessWidget {
   /// Indicates whether this toggle is enabled or not.
   final bool value;

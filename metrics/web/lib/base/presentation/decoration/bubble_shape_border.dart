@@ -3,10 +3,31 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 /// Enum that represents the side of the shape to display the arrow on.
-enum BubblePosition { bottom, top, left, right }
+enum BubblePosition {
+  /// Indicates the top side of the shape.
+  top,
+
+  /// Indicates the bottom side of the shape.
+  bottom,
+
+  /// Indicates the left side of the shape.
+  left,
+
+  /// Indicates the right side of the shape.
+  right,
+}
 
 /// Enum that represents the alignment of the arrow.
-enum BubbleAlignment { start, center, end }
+enum BubbleAlignment {
+  /// Place the arrow to the start edge of the shape.
+  start,
+
+  /// Place the arrow to the middle of the shape.
+  center,
+
+  /// Place the arrow to the end edge of the shape.
+  end,
+}
 
 /// A shape border with the arrow.
 class BubbleShapeBorder extends ShapeBorder {

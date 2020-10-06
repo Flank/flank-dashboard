@@ -1,5 +1,7 @@
 import 'package:duration/duration.dart';
 
+// ignore_for_file: public_member_api_docs
+
 /// Holds the strings used across the whole project.
 class CommonStrings {
   static const String home = 'Home';

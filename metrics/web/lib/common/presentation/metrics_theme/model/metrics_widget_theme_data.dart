@@ -5,26 +5,27 @@ class MetricsWidgetThemeData {
   static const Color _defaultPrimaryColor = Colors.blue;
   static const Color _defaultAccentColor = Colors.grey;
 
+  /// A main [Color] of the widget.
+  /// Used to paint the main elements of the widget,
+  /// like strokes of the graphs, etc.
   final Color primaryColor;
+
+  /// A secondary [Color], used to paint the secondary elements of the widget.
   final Color accentColor;
+
+  /// A background [Color] of the metrics widget.
   final Color backgroundColor;
+
+  /// A [TextStyle] applied to all text in metrics widget.
   final TextStyle textStyle;
 
   /// Creates the [MetricsWidgetThemeData].
   ///
-  /// [primaryColor] is the main color of the widget.
-  /// Used to paint the main elements of the widget, like strokes of the graphs, etc.
-  /// If the parameter is not specified or the null is passed,
+  /// If the [primaryColor] is not specified or the null is passed,
   /// the [_defaultPrimaryColor] will be used.
   ///
-  /// [accentColor] or the secondary color,
-  /// used to paint the secondary elements of the widget.
-  /// If nothing is specified, or the null is passed,
+  /// If [accentColor] is not specified or the null is passed,
   /// the [_defaultAccentColor] will be used.
-  ///
-  /// [backgroundColor] is the color of the background of the metrics widget.
-  ///
-  /// [textStyle] is the [TextStyle] applied to all text in metrics widget.
   const MetricsWidgetThemeData({
     Color primaryColor,
     Color accentColor,

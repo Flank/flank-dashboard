@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 /// Represents the project id param.
 @immutable
 class ProjectIdParam {
+  /// A project identifier.
   final String projectId;
 
   /// Creates the [ProjectIdParam] with the given [projectId].

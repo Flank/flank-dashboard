@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 /// Represents the build number metric entity.
 class BuildNumberMetric extends Equatable {
+  /// An amount of the builds.
   final int numberOfBuilds;
 
   @override
@@ -9,7 +10,7 @@ class BuildNumberMetric extends Equatable {
 
   /// Creates the [BuildNumberMetric].
   ///
-  /// [numberOfBuilds] is the number of builds for the last 7 days.
+  /// The [numberOfBuilds] default value is `0`.
   const BuildNumberMetric({
     this.numberOfBuilds = 0,
   });

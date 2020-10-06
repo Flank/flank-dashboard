@@ -45,6 +45,9 @@ import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_d
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 
+// ignore_for_file: public_member_api_docs
+// awaiting for the color palette from design team
+
 /// Stores the theme data for light metrics theme.
 class LightMetricsThemeData extends MetricsThemeData {
   static const Color scaffoldColor = Colors.white;
