@@ -913,6 +913,31 @@ void main() {
         expect(negativeToastFinder, findsOneWidget);
       },
     );
+
+    testWidgets(
+      "closes normally after the view model's reset",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(null);
+
+        await tester.enterText(groupNameFieldFinder, 'some text');
+
+        final infoDialog = tester.widget<InfoDialog>(find.byType(InfoDialog));
+        final closeIcon = infoDialog.closeIcon;
+        await tester.tap(find.byWidget(closeIcon));
+
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+      },
+    );
   });
 }
 
