@@ -252,8 +252,9 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   /// project group dialog values selected by user.
   void _updateActionButtonState() {
     final groupName = _groupNameController.value.text;
+    final dialogViewModel = _projectGroupsNotifier?.projectGroupDialogViewModel;
     final List<String> selectedProjectIds =
-        _projectGroupsNotifier.projectGroupDialogViewModel.selectedProjectIds;
+        dialogViewModel?.selectedProjectIds ?? [];
 
     if (selectedProjectIds.isNotEmpty &&
         _dataIsChanged(groupName, selectedProjectIds)) {
