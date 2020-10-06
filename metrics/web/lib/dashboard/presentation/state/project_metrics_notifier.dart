@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:metrics/common/presentation/constants/duration_constants.dart';
 import 'package:metrics/common/presentation/models/project_model.dart';
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
+import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_result_metric.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/dashboard_project_metrics.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
@@ -23,6 +24,7 @@ import 'package:metrics/dashboard/presentation/view_models/project_group_dropdow
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
+import 'package:metrics/util/date.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// The [ChangeNotifier] that holds the projects metrics data.
@@ -331,7 +333,8 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
   /// Creates the project performance metrics from [PerformanceMetric].
   PerformanceSparklineViewModel _getPerformanceMetrics(
-      PerformanceMetric metric) {
+    PerformanceMetric metric,
+  ) {
     final performanceMetrics = metric?.buildsPerformance ?? DateTimeSet();
 
     if (performanceMetrics.isEmpty) {
@@ -340,12 +343,34 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       );
     }
 
-    final performance = performanceMetrics.map((metric) {
-      return Point(
-        metric.date.millisecondsSinceEpoch,
-        metric.duration.inMilliseconds,
+    final buildPerformancesMap = groupBy<BuildPerformance, DateTime>(
+      performanceMetrics,
+      (metrics) => metrics.date.date,
+    );
+
+    final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
+    final currentDate = DateTime.now().date;
+    final performance = <Point<int>>[];
+
+    for (int i = 0; i < period; i++) {
+      final sliceDate = currentDate.subtract(Duration(days: period - i - 1));
+      final values = buildPerformancesMap[sliceDate];
+
+      if (values == null || values.isEmpty) {
+        performance.add(Point(i, 0));
+        continue;
+      }
+
+      final totalDuration = values.fold<Duration>(
+        Duration.zero,
+        (previous, element) {
+          return previous + element.duration;
+        },
       );
-    }).toList();
+
+      final averageDuration = totalDuration ~/ values.length;
+      performance.add(Point(i, averageDuration.inMilliseconds));
+    }
 
     return PerformanceSparklineViewModel(
       performance: UnmodifiableListView(performance),

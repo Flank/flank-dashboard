@@ -200,36 +200,28 @@ void main() {
     });
 
     test("loads the performance metrics", () async {
+      final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
       final expectedPerformanceMetrics =
           expectedProjectMetrics.performanceMetrics;
+
+      final buildPerformance =
+          expectedPerformanceMetrics.buildsPerformance.first;
+      final expectedX = List.generate(period, (index) => index);
+      final expectedY = List.generate(period - 1, (_) => 0);
+      expectedY.add(buildPerformance.duration.inMilliseconds);
 
       final firstProjectMetrics =
           projectMetricsNotifier.projectsMetricsTileViewModels.first;
       final performanceMetrics = firstProjectMetrics.performanceSparkline;
       final performancePoints = performanceMetrics.performance;
 
-      expect(
-        performancePoints.length,
-        expectedPerformanceMetrics.buildsPerformance.length,
-      );
-
+      expect(performancePoints, hasLength(equals(period)));
       expect(
         performanceMetrics.value,
-        expectedPerformanceMetrics.averageBuildDuration,
+        equals(expectedPerformanceMetrics.averageBuildDuration),
       );
-
-      final firstBuildPerformance =
-          expectedPerformanceMetrics.buildsPerformance.first;
-      final performancePoint = performancePoints.first;
-
-      expect(
-        performancePoint.x,
-        firstBuildPerformance.date.millisecondsSinceEpoch,
-      );
-      expect(
-        performancePoint.y,
-        firstBuildPerformance.duration.inMilliseconds,
-      );
+      expect(performancePoints.map((p) => p.x), equals(expectedX));
+      expect(performancePoints.map((p) => p.y), equals(expectedY));
     });
 
     test("loads the build result metrics", () async {
@@ -672,7 +664,7 @@ void main() {
 
     test(
       ".setProjectGroups() resets project group dropdown items and selected project group to null if project groups are null",
-          () {
+      () {
         final projectGroups = [
           ProjectGroupModel(
             id: "id",
