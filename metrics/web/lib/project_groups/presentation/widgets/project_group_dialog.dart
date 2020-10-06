@@ -253,10 +253,10 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
   void _updateActionButtonState() {
     final groupName = _groupNameController.value.text;
     final dialogViewModel = _projectGroupsNotifier?.projectGroupDialogViewModel;
-    final List<String> selectedProjectIds =
-        dialogViewModel?.selectedProjectIds ?? [];
+    final List<String> selectedProjectIds = dialogViewModel?.selectedProjectIds;
 
-    if (selectedProjectIds.isNotEmpty &&
+    if (selectedProjectIds != null &&
+        selectedProjectIds.isNotEmpty &&
         _dataIsChanged(groupName, selectedProjectIds)) {
       final groupNameErrorMessage =
           ProjectGroupNameValidator.validate(groupName);
