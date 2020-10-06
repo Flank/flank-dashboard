@@ -16,6 +16,7 @@ import 'package:metrics/dashboard/presentation/view_models/build_number_scorecar
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
@@ -366,7 +367,10 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       return BuildResultViewModel(
         url: result.url,
         buildStatus: result.buildStatus,
-        value: result.duration.inMilliseconds,
+        buildResultPopupViewModel: BuildResultPopupViewModel(
+          duration: result.duration,
+          date: result.date,
+        ),
       );
     }).toList();
 

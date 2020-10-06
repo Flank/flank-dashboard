@@ -6,9 +6,11 @@ import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -16,7 +18,9 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("BuildResultBarGraph", () {
-    const buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+
+    final buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
 
     testWidgets(
       "throws an AssertionError if the given build result metric is null",
@@ -91,7 +95,9 @@ void main() {
 
         final trimmedData = buildResults
             .sublist(buildResults.length - numberOfBars)
-            .map((barData) => barData.value);
+            .map((barData) {
+          return barData.buildResultPopupViewModel.duration.inMilliseconds;
+        });
 
         final barGraphWidget = tester.widget<BarGraph>(find.byWidgetPredicate(
           (widget) => widget is BarGraph,
@@ -110,18 +116,27 @@ void main() {
 /// A testbed class required to test the [BuildResultBarGraph].
 class _BuildResultBarGraphTestbed extends StatelessWidget {
   /// A list of [BuildResultViewModel] test data to test the [BuildResultBarGraph].
-  static const buildResultBarTestData = [
+  static final buildResultBarTestData = [
     BuildResultViewModel(
       buildStatus: BuildStatus.successful,
-      value: 5,
+      buildResultPopupViewModel: BuildResultPopupViewModel(
+        duration: const Duration(seconds: 5),
+        date: DateTime.now(),
+      ),
     ),
     BuildResultViewModel(
       buildStatus: BuildStatus.failed,
-      value: 2,
+      buildResultPopupViewModel: BuildResultPopupViewModel(
+        duration: const Duration(seconds: 2),
+        date: DateTime.now(),
+      ),
     ),
     BuildResultViewModel(
       buildStatus: BuildStatus.cancelled,
-      value: 8,
+      buildResultPopupViewModel: BuildResultPopupViewModel(
+        duration: const Duration(seconds: 8),
+        date: DateTime.now(),
+      ),
     ),
   ];
 
