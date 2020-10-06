@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
 /// Signature for the function that builds an offset using the [childSize].
 typedef OffsetBuilder = Offset Function(Size childSize);
@@ -33,15 +31,21 @@ class BasePopup extends StatefulWidget {
   /// A widget to display when the trigger widget is triggered.
   final Widget popup;
 
-  /// Defines if the popup should be closed when the user taps on an empty area
-  /// inside the popup.
-  final bool closePopupOnEmptySpaceTap;
+  /// Indicates whether the [popup] should prevent other [MouseRegion]s
+  /// visually behind it from detecting the pointer.
+  final bool popupOpaque;
+
+  /// Defines if the [popup] should close itself when user taps on space
+  /// outside the visible container of the [popup].
+  final bool closeOnTapOutside;
 
   /// Creates a new instance of the base popup.
   ///
   /// If the [popupConstraints] is null, an empty instance of
   /// the [BoxConstraints] is used.
-  /// The [closePopupOnEmptySpaceTap] defaults to `false`.
+  ///
+  /// The [popupOpaque] defaults value is `true`.
+  /// The [closeOnTapOutside] defaults value is `true`.
   ///
   /// All the required parameters must not be null.
   const BasePopup({
@@ -50,7 +54,8 @@ class BasePopup extends StatefulWidget {
     @required this.offsetBuilder,
     @required this.triggerBuilder,
     @required this.popup,
-    this.closePopupOnEmptySpaceTap = false,
+    this.popupOpaque = true,
+    this.closeOnTapOutside = true,
     this.routeObserver,
   })  : popupConstraints = popupConstraints ?? const BoxConstraints(),
         assert(offsetBuilder != null),
@@ -97,34 +102,29 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
     final childSize = childBox.size;
     final offset = widget.offsetBuilder(childSize);
 
-    final _widget = GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: _closePopup,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            left: offset.dx,
-            top: offset.dy,
-            child: CompositedTransformFollower(
-              link: _layerLink,
-              offset: offset,
-              child: TappableArea(
-                mouseCursor: SystemMouseCursors.basic,
-                onTap: _onPopupEmptySpaceTap,
-                builder: (context, isHovered, child) => child,
-                child: ConstrainedBox(
-                  constraints: widget.popupConstraints,
-                  child: widget.popup,
-                ),
-              ),
+    final popup = Stack(
+      children: <Widget>[
+        if (widget.closeOnTapOutside)
+          GestureDetector(
+            onTap: _closePopup,
+          ),
+        CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: offset,
+          child: MouseRegion(
+            opaque: widget.popupOpaque,
+            child: ConstrainedBox(
+              constraints: widget.popupConstraints,
+              child: widget.popup,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
 
     setState(() {
-      _overlayEntry = OverlayEntry(builder: (context) => _widget);
+      _overlayEntry = OverlayEntry(builder: (context) => popup);
     });
 
     Overlay.of(context).insert(_overlayEntry);
@@ -145,11 +145,6 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
         _overlayEntry = null;
       });
     }
-  }
-
-  /// Closes a [BasePopup.popup], when taps on the empty space.
-  void _onPopupEmptySpaceTap() {
-    if (widget.closePopupOnEmptySpaceTap) _closePopup();
   }
 
   @override

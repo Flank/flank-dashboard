@@ -133,9 +133,10 @@ class _BarGraphTestbed extends StatelessWidget {
   ];
 
   /// A default bar builder used in tests.
-  static Widget createBar(List<int> data, int index) {
+  static Widget createBar(List<int> data, int index, double height) {
     return _GraphTestBar(
       value: data[index].toInt(),
+      height: height,
     );
   }
 
@@ -146,7 +147,7 @@ class _BarGraphTestbed extends StatelessWidget {
   final List<int> data;
 
   /// The function for the [BarGraph.barBuilder] callback.
-  final Widget Function(List<int>, int) barBuilder;
+  final Widget Function(List<int>, int, double) barBuilder;
 
   /// Creates the instance of this testbed.
   ///
@@ -165,8 +166,9 @@ class _BarGraphTestbed extends StatelessWidget {
       body: BarGraph(
         data: data,
         graphPadding: graphPadding,
-        barBuilder:
-            barBuilder == null ? null : (index) => barBuilder(data, index),
+        barBuilder: barBuilder == null
+            ? null
+            : (index, height) => barBuilder(data, index, height),
       ),
     );
   }
@@ -177,16 +179,21 @@ class _GraphTestBar extends StatelessWidget {
   /// The value of this bar.
   final int value;
 
+  /// The height of this bar.
+  final double height;
+
   /// Creates this test bar with the [value].
   const _GraphTestBar({
     Key key,
     this.value,
+    this.height,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.blue,
+      height: height,
       child: FittedBox(
         child: Text('$value'),
       ),

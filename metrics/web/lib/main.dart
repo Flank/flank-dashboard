@@ -16,8 +16,10 @@ import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
 import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart';
 import 'package:metrics/util/favicon.dart';
 import 'package:provider/provider.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
+  VisibilityDetectorController.instance.updateInterval = Duration.zero;
   Favicon().setup();
   runApp(MetricsApp());
 }

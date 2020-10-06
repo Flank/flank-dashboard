@@ -67,7 +67,7 @@ void main() {
         repository.projectBuildsFromDateStream(
           any,
           DateTime.now()
-              .subtract(ReceiveProjectMetricsUpdates.commonBuildsLoadingPeriod)
+              .subtract(ReceiveProjectMetricsUpdates.buildsLoadingPeriod)
               .date,
         ),
       ).called(equals(1));
@@ -207,7 +207,7 @@ void main() {
       final actualBuildNumberMetrics = projectMetrics.buildNumberMetrics;
 
       final periodStartDate = DateTime.now().subtract(
-        ReceiveProjectMetricsUpdates.commonBuildsLoadingPeriod,
+        ReceiveProjectMetricsUpdates.buildsLoadingPeriod,
       );
 
       final buildsInPeriod = builds
@@ -225,7 +225,7 @@ void main() {
       final actualPerformanceMetric = projectMetrics.performanceMetrics;
 
       final periodStartDate = DateTime.now().subtract(
-        ReceiveProjectMetricsUpdates.commonBuildsLoadingPeriod,
+        ReceiveProjectMetricsUpdates.buildsLoadingPeriod,
       );
 
       final buildsInPeriod = builds
@@ -262,7 +262,7 @@ void main() {
       final firstPerformanceMetric = performanceMetrics.buildsPerformance.last;
 
       final periodStartDate = DateTime.now().subtract(
-        ReceiveProjectMetricsUpdates.commonBuildsLoadingPeriod,
+        ReceiveProjectMetricsUpdates.buildsLoadingPeriod,
       );
 
       final buildsInPeriod = builds
@@ -287,7 +287,7 @@ void main() {
     test("loads build number metric", () {
       final timestamp = DateTime.now();
       final buildsLoadingStartDate = timestamp
-          .subtract(ReceiveProjectMetricsUpdates.commonBuildsLoadingPeriod)
+          .subtract(ReceiveProjectMetricsUpdates.buildsLoadingPeriod)
           .date;
       final thisWeekBuilds = builds
           .where((build) => build.startedAt.isAfter(buildsLoadingStartDate));

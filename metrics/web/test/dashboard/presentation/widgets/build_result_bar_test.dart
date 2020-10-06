@@ -3,26 +3,49 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/attention_level/metrics_colored_bar_attention_level.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("BuildResultBar", () {
-    const successfulColor = Colors.green;
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+
+    const successfulColor = Colors.blue;
     const failedColor = Colors.red;
     const canceledColor = Colors.grey;
 
     const themeData = MetricsThemeData(
-      buildResultTheme: BuildResultsThemeData(
-        successfulColor: successfulColor,
-        failedColor: failedColor,
-        canceledColor: canceledColor,
+      metricsColoredBarTheme: MetricsColoredBarThemeData(
+        attentionLevel: MetricsColoredBarAttentionLevel(
+          positive: MetricsColoredBarStyle(
+            color: successfulColor,
+            backgroundColor: successfulColor,
+          ),
+          neutral: MetricsColoredBarStyle(
+            color: canceledColor,
+            backgroundColor: canceledColor,
+          ),
+          negative: MetricsColoredBarStyle(
+            color: failedColor,
+            backgroundColor: failedColor,
+          ),
+        ),
       ),
+    );
+
+    final buildResultPopupViewModel = BuildResultPopupViewModel(
+      duration: const Duration(seconds: 20),
+      date: DateTime.now(),
     );
 
     testWidgets(
@@ -37,9 +60,11 @@ void main() {
     testWidgets(
       "shows the PlaceholderBar if the build result status is null",
       (WidgetTester tester) async {
-        const buildResult = BuildResultViewModel(value: 20);
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
+        );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
         ));
 
@@ -50,9 +75,11 @@ void main() {
     testWidgets(
       "does not change the cursor style for the PlaceholderBar",
       (WidgetTester tester) async {
-        const buildResult = BuildResultViewModel(value: 20);
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
+        );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
         ));
 
@@ -66,35 +93,14 @@ void main() {
     );
 
     testWidgets(
-      "applies a tappable area to the ColoredBar",
-      (WidgetTester tester) async {
-        const buildResult = BuildResultViewModel(
-          value: 20,
-          buildStatus: BuildStatus.successful,
-        );
-
-        await tester.pumpWidget(const _BuildResultBarTestbed(
-          buildResult: buildResult,
-        ));
-
-        final finder = find.ancestor(
-          of: find.byType(ColoredBar),
-          matching: find.byType(TappableArea),
-        );
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "applies the successful color from the theme to the ColoredBar if the build status equals to successful",
       (tester) async {
-        const buildResult = BuildResultViewModel(
-          value: 20,
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
           buildStatus: BuildStatus.successful,
         );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
           themeData: themeData,
         ));
@@ -108,12 +114,12 @@ void main() {
     testWidgets(
       "applies the failed color from the theme to the ColoredBar if the build status equals to failed",
       (tester) async {
-        const buildResult = BuildResultViewModel(
-          value: 20,
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
           buildStatus: BuildStatus.failed,
         );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
           themeData: themeData,
         ));
@@ -127,12 +133,12 @@ void main() {
     testWidgets(
       "applies the cancelled color from the theme to the ColoredBar if the build status equals to cancelled",
       (tester) async {
-        const buildResult = BuildResultViewModel(
-          value: 20,
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
           buildStatus: BuildStatus.cancelled,
         );
 
-        await tester.pumpWidget(const _BuildResultBarTestbed(
+        await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
           themeData: themeData,
         ));
@@ -153,13 +159,19 @@ class _BuildResultBarTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData themeData;
 
+  /// A height of the [BuildResultBar].
+  final double barHeight;
+
   /// Creates an instance of this testbed.
   ///
-  /// If the [themeData] is not specified, an empty [MetricsThemeData] used.
+  /// The [themeData] default value is an empty [MetricsThemeData] instance.
+  /// The [strategy] default value is a [BuildResultBarAppearanceStrategy] instance.
+  /// The [barHeight] default value is `20.0`.
   const _BuildResultBarTestbed({
     Key key,
-    this.buildResult,
     this.themeData = const MetricsThemeData(),
+    this.barHeight = 20.0,
+    this.buildResult,
   }) : super(key: key);
 
   @override

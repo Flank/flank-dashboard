@@ -1,14 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A view model that represents the data of the bar to display in [BarGraph].
+/// A view model that represents the data of the bar to display on the [BarGraph].
 class BuildResultViewModel extends Equatable {
-  /// The abstract value of the build.
-  ///
-  /// Usually stands for the duration of the build this view model belongs to.
-  /// But can be any other integer parameter of the build.
-  final int value;
+  /// A view model with data to display on the build result popup.
+  final BuildResultPopupViewModel buildResultPopupViewModel;
 
   /// The resulting status of the build.
   final BuildStatus buildStatus;
@@ -17,12 +15,14 @@ class BuildResultViewModel extends Equatable {
   final String url;
 
   @override
-  List<Object> get props => [value, buildStatus, url];
+  List<Object> get props => [buildResultPopupViewModel, buildStatus, url];
 
   /// Creates the [BuildResultViewModel] with the given build parameters.
+  ///
+  /// The [buildResultPopupViewModel] must not be null.
   const BuildResultViewModel({
-    @required this.value,
+    @required this.buildResultPopupViewModel,
     this.buildStatus,
     this.url,
-  }) : assert(value != null);
+  }) : assert(buildResultPopupViewModel != null);
 }

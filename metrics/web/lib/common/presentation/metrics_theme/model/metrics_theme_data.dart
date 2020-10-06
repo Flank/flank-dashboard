@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
+import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_results_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
@@ -23,7 +23,6 @@ import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/te
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
-import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 
 /// Stores the theme data for all metrics widgets.
 class MetricsThemeData {
@@ -38,9 +37,8 @@ class MetricsThemeData {
   /// for metrics.
   final MetricsWidgetThemeData inactiveWidgetTheme;
 
-  /// A theme for the [BuildResultBarGraph] used to set the colors
-  /// of the graph bars.
-  final BuildResultsThemeData buildResultTheme;
+  /// A theme for colored bars.
+  final MetricsColoredBarThemeData metricsColoredBarTheme;
 
   /// A theme for dialogs.
   final ProjectGroupDialogThemeData projectGroupDialogTheme;
@@ -108,11 +106,14 @@ class MetricsThemeData {
   /// A theme for the bar graph popup.
   final BarGraphPopupThemeData barGraphPopupTheme;
 
+  /// A theme for the graph indicator.
+  final GraphIndicatorThemeData graphIndicatorTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricsWidgetThemeData metricsWidgetTheme,
     MetricsWidgetThemeData inactiveWidgetTheme,
-    BuildResultsThemeData buildResultTheme,
+    MetricsColoredBarThemeData metricsColoredBarTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     DeleteDialogThemeData deleteDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
@@ -135,14 +136,11 @@ class MetricsThemeData {
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
     PageTitleThemeData pageTitleTheme,
+    GraphIndicatorThemeData graphIndicatorTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
-        buildResultTheme = buildResultTheme ??
-            const BuildResultsThemeData(
-              canceledColor: Colors.grey,
-              successfulColor: Colors.teal,
-              failedColor: Colors.redAccent,
-            ),
+        metricsColoredBarTheme =
+            metricsColoredBarTheme ?? const MetricsColoredBarThemeData(),
         projectGroupDialogTheme =
             projectGroupDialogTheme ?? const ProjectGroupDialogThemeData(),
         deleteDialogTheme = deleteDialogTheme ?? const DeleteDialogThemeData(),
@@ -177,7 +175,9 @@ class MetricsThemeData {
         toastTheme = toastTheme ?? const ToastThemeData(),
         barGraphPopupTheme =
             barGraphPopupTheme ?? const BarGraphPopupThemeData(),
-        pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData();
+        pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData(),
+        graphIndicatorTheme =
+            graphIndicatorTheme ?? const GraphIndicatorThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -185,7 +185,7 @@ class MetricsThemeData {
   /// the value will be copied from the current instance.
   MetricsThemeData copyWith({
     MetricsWidgetThemeData metricsWidgetTheme,
-    BuildResultsThemeData buildResultTheme,
+    MetricsColoredBarThemeData metricsColoredBarTheme,
     ProjectGroupDialogThemeData projectGroupDialogTheme,
     DeleteDialogThemeData deleteDialogTheme,
     ProjectGroupCardThemeData projectGroupCardTheme,
@@ -209,10 +209,12 @@ class MetricsThemeData {
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
     PageTitleThemeData pageTitleTheme,
+    GraphIndicatorThemeData graphIndicatorTheme,
   }) {
     return MetricsThemeData(
       metricsWidgetTheme: metricsWidgetTheme ?? this.metricsWidgetTheme,
-      buildResultTheme: buildResultTheme ?? this.buildResultTheme,
+      metricsColoredBarTheme:
+          metricsColoredBarTheme ?? this.metricsColoredBarTheme,
       projectGroupDialogTheme:
           projectGroupDialogTheme ?? this.projectGroupDialogTheme,
       deleteDialogTheme: deleteDialogTheme ?? this.deleteDialogTheme,
@@ -245,6 +247,7 @@ class MetricsThemeData {
       toastTheme: toastTheme ?? this.toastTheme,
       pageTitleTheme: pageTitleTheme ?? this.pageTitleTheme,
       barGraphPopupTheme: barGraphPopupTheme ?? this.barGraphPopupTheme,
+      graphIndicatorTheme: graphIndicatorTheme ?? this.graphIndicatorTheme,
     );
   }
 }

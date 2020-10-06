@@ -136,19 +136,22 @@ void main() {
     );
 
     testWidgets(
-      "closes a popup, when tap on the popup's empty space if the closePopupOnEmptySpaceTap is true",
+      "closes a popup when tap outside of the popup if the closeOnTapOutside is true",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(
             popup: testPopupWidget,
             triggerBuilder: _defaultTriggerBuilder,
-            closePopupOnEmptySpaceTap: true,
+            closeOnTapOutside: true,
+            offsetBuilder: (Size childSize) {
+              return Offset(childSize.width, childSize.height);
+            },
           ),
         );
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
-        await tester.tap(popupWidgetFinder);
+        await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
 
         expect(popupWidgetFinder, findsNothing);
@@ -156,20 +159,20 @@ void main() {
     );
 
     testWidgets(
-      "does not close a popup, when tap on the popup's empty space if the closePopupOnEmptySpaceTap is false",
+      "does not close a popup when tap outside of the popup if the closeOnTapOutside is false",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(
             popup: testPopupWidget,
             triggerBuilder: _defaultTriggerBuilder,
-            closePopupOnEmptySpaceTap: false,
+            closeOnTapOutside: false,
           ),
         );
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
-        await tester.tap(popupWidgetFinder);
-        await tester.pumpAndSettle();
+        await tester.tap(triggerWidgetFinder);
+        await tester.pump();
 
         expect(popupWidgetFinder, findsOneWidget);
       },
@@ -301,16 +304,19 @@ class _BasePopupTestbed extends StatelessWidget {
   /// A callback that is called to build the trigger widget.
   final TriggerBuilder triggerBuilder;
 
-  /// Defines if the popup should be closed when the user taps on an empty area
-  /// inside the popup.
-  final bool closePopupOnEmptySpaceTap;
+  /// Defines the tap outside behavior to apply to the widget under tests.
+  final bool closeOnTapOutside;
+
+  /// Indicates the popup opaqueness to apply to the widget under tests.
+  final bool popupOpaque;
 
   /// Creates the a new base popup testbed.
   ///
   /// The [popup] defaults to the [SizedBox] with the empty constructor.
   /// The [popupConstraints] defaults to an empty [BoxConstraints] instance.
   /// The [offsetBuilder] defaults to the [_defaultOffsetBuilder].
-  /// The [closePopupOnEmptySpaceTap] defaults to the `false`.
+  /// The [closeOnTapOutside] defaults to the `true`.
+  /// The [popupOpaque] defaults to the `true`.
   /// If the given [navigatorKey], the default [GlobalKey] instance is used.
   /// If the given [routeObserver], the default [RouteObserver] instance is used.
   _BasePopupTestbed({
@@ -320,7 +326,8 @@ class _BasePopupTestbed extends StatelessWidget {
     this.popup = const SizedBox(),
     this.popupConstraints = const BoxConstraints(),
     this.offsetBuilder = _defaultOffsetBuilder,
-    this.closePopupOnEmptySpaceTap = false,
+    this.closeOnTapOutside = true,
+    this.popupOpaque = true,
     this.triggerBuilder,
   })  : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>(),
         routeObserver = routeObserver ?? RouteObserver(),
@@ -333,11 +340,12 @@ class _BasePopupTestbed extends StatelessWidget {
       navigatorObservers: [routeObserver],
       home: Scaffold(
         body: BasePopup(
+          popupOpaque: popupOpaque,
           routeObserver: routeObserver,
           triggerBuilder: triggerBuilder,
           popupConstraints: popupConstraints,
           offsetBuilder: offsetBuilder,
-          closePopupOnEmptySpaceTap: closePopupOnEmptySpaceTap,
+          closeOnTapOutside: closeOnTapOutside,
           popup: popup,
         ),
       ),
