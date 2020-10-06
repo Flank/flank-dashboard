@@ -3,12 +3,20 @@ import 'dart:async';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
+import 'package:metrics/auth/domain/entities/user_profile.dart';
+import 'package:metrics/auth/domain/usecases/create_user_profile_usecase.dart';
 import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
 import 'package:metrics/auth/domain/usecases/receive_authentication_updates.dart';
+import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
+import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
+import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
+import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -21,6 +29,9 @@ void main() {
     final googleSignInUseCase = GoogleSignInUseCaseMock();
     final signOutUseCase = SignOutUseCaseMock();
     final receiveAuthUpdates = ReceiveAuthenticationUpdatesMock();
+    final receiveUserProfileUpdates = ReceiveUserProfileUpdatesMock();
+    final createUserProfileUseCase = CreateUserProfileUseCaseMock();
+    final updateUserProfileUseCase = UpdateUserProfileUseCaseMock();
 
     const authException = AuthenticationException(
       code: AuthErrorCode.unknown,
@@ -47,6 +58,9 @@ void main() {
       signInUseCase,
       googleSignInUseCase,
       signOutUseCase,
+      receiveUserProfileUpdates,
+      createUserProfileUseCase,
+      updateUserProfileUseCase,
     );
 
     tearDown(() {
@@ -63,6 +77,9 @@ void main() {
           signInUseCase,
           googleSignInUseCase,
           signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
         ),
         MatcherUtil.throwsAssertionError,
       );
@@ -75,6 +92,9 @@ void main() {
           null,
           googleSignInUseCase,
           signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
         ),
         MatcherUtil.throwsAssertionError,
       );
@@ -89,6 +109,9 @@ void main() {
             signInUseCase,
             null,
             signOutUseCase,
+            receiveUserProfileUpdates,
+            createUserProfileUseCase,
+            updateUserProfileUseCase,
           ),
           MatcherUtil.throwsAssertionError,
         );
@@ -101,6 +124,60 @@ void main() {
           receiveAuthUpdates,
           signInUseCase,
           googleSignInUseCase,
+          null,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        ),
+        MatcherUtil.throwsAssertionError,
+      );
+    });
+
+    test(
+        "throws AssertionError if a receiveUserProfileUpdates parameter is null",
+        () {
+      expect(
+        () => AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          null,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        ),
+        MatcherUtil.throwsAssertionError,
+      );
+    });
+
+    test(
+        "throws AssertionError if a createUserProfileUseCase parameter is null",
+        () {
+      expect(
+        () => AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          null,
+          updateUserProfileUseCase,
+        ),
+        MatcherUtil.throwsAssertionError,
+      );
+    });
+
+    test(
+        "throws AssertionError if a updateUserProfileUseCase parameter is null",
+        () {
+      expect(
+        () => AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
           null,
         ),
         MatcherUtil.throwsAssertionError,
@@ -130,6 +207,28 @@ void main() {
         authNotifier.subscribeToAuthenticationUpdates();
 
         expect(userController.hasListener, isTrue);
+      },
+    );
+
+    test(
+      ".subscribeToUserProfileUpdates() does not call the use case if the given id is null",
+      () async {
+        authNotifier.subscribeToUserProfileUpdates(
+          null,
+        );
+
+        verifyNever(receiveUserProfileUpdates(any));
+      },
+    );
+
+    test(
+      ".updateUserProfile() does not call the use case if the given user profile is null",
+      () async {
+        await authNotifier.updateUserProfile(
+          null,
+        );
+
+        verifyNever(updateUserProfileUseCase(any));
       },
     );
 
@@ -376,6 +475,26 @@ void main() {
       },
     );
 
+    // test(
+    //   ".updateUserProfile() sets the user profile error message if the use case throws a persistent store exception",
+    //   () async {
+    //     const errorCode = PersistentStoreErrorCode.unknown;
+    //     const errorMessage = PersistentStoreErrorMessage(errorCode);
+
+    //     when(updateUserProfileUseCase(any)).thenThrow(
+    //       const PersistentStoreException(code: errorCode),
+    //     );
+
+    //     await authNotifier
+    //         .updateUserProfile();
+
+    //     expect(
+    //       authNotifier.userProfileSavingErrorMessage,
+    //       errorMessage.message,
+    //     );
+    //   },
+    // );
+
     test(".signOut() delegates to the SignOutUseCase", () async {
       await authNotifier.signOut();
 
@@ -409,3 +528,12 @@ class SignOutUseCaseMock extends Mock implements SignOutUseCase {}
 
 class ReceiveAuthenticationUpdatesMock extends Mock
     implements ReceiveAuthenticationUpdates {}
+
+class ReceiveUserProfileUpdatesMock extends Mock
+    implements ReceiveUserProfileUpdates {}
+
+class CreateUserProfileUseCaseMock extends Mock
+    implements CreateUserProfileUseCase {}
+
+class UpdateUserProfileUseCaseMock extends Mock
+    implements UpdateUserProfileUseCase {}

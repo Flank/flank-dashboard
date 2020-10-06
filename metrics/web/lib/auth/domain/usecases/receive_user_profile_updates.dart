@@ -5,7 +5,7 @@ import 'package:metrics/auth/domain/usecases/parameters/user_id_param.dart';
 import 'package:metrics/base/domain/usecases/usecase.dart';
 
 /// A [UseCase] that provides an ability to receive the user profile updates.
-@immutable
+// @immutable
 class ReceiveUserProfileUpdates
     implements UseCase<Stream<UserProfile>, UserIdParam> {
   /// A [UserRepository] that provides an ability to interact
