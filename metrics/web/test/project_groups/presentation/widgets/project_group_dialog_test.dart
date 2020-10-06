@@ -47,6 +47,12 @@ void main() {
       },
     );
 
+    Future<void> closeDialog(WidgetTester tester) async {
+      final infoDialog = tester.widget<InfoDialog>(find.byType(InfoDialog));
+      final closeIcon = infoDialog.closeIcon;
+      await tester.tap(find.byWidget(closeIcon));
+    }
+
     final groupNameFieldFinder = find.byWidgetPredicate(
       (widget) {
         return widget is MetricsTextFormField &&
@@ -929,10 +935,7 @@ void main() {
 
         await tester.enterText(groupNameFieldFinder, 'some text');
 
-        final infoDialog = tester.widget<InfoDialog>(find.byType(InfoDialog));
-        final closeIcon = infoDialog.closeIcon;
-        await tester.tap(find.byWidget(closeIcon));
-
+        await closeDialog(tester);
         await tester.pumpAndSettle();
 
         expect(tester.takeException(), isNull);
