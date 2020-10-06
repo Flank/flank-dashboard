@@ -171,7 +171,7 @@ void main() {
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
-        await tester.tapAt(Offset.infinite);
+        await tester.tap(triggerWidgetFinder);
         await tester.pump();
 
         expect(popupWidgetFinder, findsOneWidget);

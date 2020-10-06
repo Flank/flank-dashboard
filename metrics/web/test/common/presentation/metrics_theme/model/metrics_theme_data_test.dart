@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/attention_level/metrics_button_attention_level.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/theme/theme_data/metrics_button_theme_data.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/attention_level/metrics_colored_bar_attention_level.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/style/add_project_group_card_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/attention_level/build_result_bar_attention_level.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/theme_data/build_result_bar_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
@@ -48,7 +49,7 @@ void main() {
 
         expect(themeData.metricsWidgetTheme, isNotNull);
         expect(themeData.inactiveWidgetTheme, isNotNull);
-        expect(themeData.buildResultBarTheme, isNotNull);
+        expect(themeData.metricsColoredBarTheme, isNotNull);
         expect(themeData.deleteDialogTheme, isNotNull);
         expect(themeData.projectGroupDialogTheme, isNotNull);
         expect(themeData.projectGroupCardTheme, isNotNull);
@@ -79,7 +80,7 @@ void main() {
         const themeData = MetricsThemeData(
           metricsWidgetTheme: null,
           inactiveWidgetTheme: null,
-          buildResultBarTheme: null,
+          metricsColoredBarTheme: null,
           projectGroupCardTheme: null,
           addProjectGroupCardTheme: null,
           deleteDialogTheme: null,
@@ -106,7 +107,7 @@ void main() {
 
         expect(themeData.metricsWidgetTheme, isNotNull);
         expect(themeData.inactiveWidgetTheme, isNotNull);
-        expect(themeData.buildResultBarTheme, isNotNull);
+        expect(themeData.metricsColoredBarTheme, isNotNull);
         expect(themeData.projectGroupCardTheme, isNotNull);
         expect(themeData.addProjectGroupCardTheme, isNotNull);
         expect(themeData.deleteDialogTheme, isNotNull);
@@ -145,8 +146,12 @@ void main() {
           backgroundColor: backgroundColor,
         );
 
-        const buildResultBarTheme = BuildResultBarThemeData(
-          attentionLevel: BuildResultBarAttentionLevel(),
+        const metricsColoredBarTheme = MetricsColoredBarThemeData(
+          attentionLevel: MetricsColoredBarAttentionLevel(
+            positive: MetricsColoredBarStyle(
+              color: Colors.purpleAccent,
+            ),
+          ),
         );
 
         const projectGroupCardTheme = ProjectGroupCardThemeData(
@@ -269,7 +274,7 @@ void main() {
 
         final copiedTheme = themeData.copyWith(
           metricsWidgetTheme: metricsWidgetTheme,
-          buildResultBarTheme: buildResultBarTheme,
+          metricsColoredBarTheme: metricsColoredBarTheme,
           projectGroupCardTheme: projectGroupCardTheme,
           addProjectGroupCardTheme: addProjectGroupTheme,
           deleteDialogTheme: deleteDialogTheme,
@@ -297,7 +302,8 @@ void main() {
 
         expect(copiedTheme.metricsWidgetTheme, equals(metricsWidgetTheme));
         expect(copiedTheme.inactiveWidgetTheme, equals(inactiveTheme));
-        expect(copiedTheme.buildResultBarTheme, equals(buildResultBarTheme));
+        expect(
+            copiedTheme.metricsColoredBarTheme, equals(metricsColoredBarTheme));
         expect(
           copiedTheme.projectGroupCardTheme,
           equals(projectGroupCardTheme),
@@ -362,8 +368,8 @@ void main() {
           equals(copiedTheme.metricsWidgetTheme),
         );
         expect(
-          themeData.buildResultBarTheme,
-          equals(copiedTheme.buildResultBarTheme),
+          themeData.metricsColoredBarTheme,
+          equals(copiedTheme.metricsColoredBarTheme),
         );
         expect(
           themeData.projectGroupCardTheme,

@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/attention_level/metrics_colored_bar_attention_level.dart';
 import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/attention_level/build_result_bar_attention_level.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/build_result_bar/theme/theme_data/build_result_bar_theme_data.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
@@ -25,17 +25,17 @@ void main() {
     const canceledColor = Colors.grey;
 
     const themeData = MetricsThemeData(
-      buildResultBarTheme: BuildResultBarThemeData(
-        attentionLevel: BuildResultBarAttentionLevel(
-          successful: MetricsColoredBarStyle(
+      metricsColoredBarTheme: MetricsColoredBarThemeData(
+        attentionLevel: MetricsColoredBarAttentionLevel(
+          positive: MetricsColoredBarStyle(
             color: successfulColor,
             backgroundColor: successfulColor,
           ),
-          cancelled: MetricsColoredBarStyle(
+          neutral: MetricsColoredBarStyle(
             color: canceledColor,
             backgroundColor: canceledColor,
           ),
-          failed: MetricsColoredBarStyle(
+          negative: MetricsColoredBarStyle(
             color: failedColor,
             backgroundColor: failedColor,
           ),
@@ -162,9 +162,6 @@ class _BuildResultBarTestbed extends StatelessWidget {
   /// A height of the [BuildResultBar].
   final double barHeight;
 
-  /// An appearance strategy to apply to the widget under tests.
-  final BuildResultBarAppearanceStrategy strategy;
-
   /// Creates an instance of this testbed.
   ///
   /// The [themeData] default value is an empty [MetricsThemeData] instance.
@@ -173,7 +170,6 @@ class _BuildResultBarTestbed extends StatelessWidget {
   const _BuildResultBarTestbed({
     Key key,
     this.themeData = const MetricsThemeData(),
-    this.strategy = const BuildResultBarAppearanceStrategy(),
     this.barHeight = 20.0,
     this.buildResult,
   }) : super(key: key);
@@ -184,7 +180,6 @@ class _BuildResultBarTestbed extends StatelessWidget {
       metricsThemeData: themeData,
       body: BuildResultBar(
         buildResult: buildResult,
-        strategy: strategy,
       ),
     );
   }

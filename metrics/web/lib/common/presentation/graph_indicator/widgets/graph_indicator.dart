@@ -26,7 +26,7 @@ abstract class GraphIndicator extends StatelessWidget {
     );
   }
 
-  /// Selects a [GraphIndicatorStyle] for this circle graph
+  /// Selects a [GraphIndicatorStyle] for this graph indicator
   /// from the given [attentionLevel].
   GraphIndicatorStyle selectStyle(GraphIndicatorAttentionLevel attentionLevel);
 }

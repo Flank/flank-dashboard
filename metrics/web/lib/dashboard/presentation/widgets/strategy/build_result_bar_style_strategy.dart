@@ -16,16 +16,16 @@ class BuildResultBarAppearanceStrategy
     MetricsThemeData themeData,
     BuildStatus status,
   ) {
-    final buildResultTheme = themeData.buildResultBarTheme;
-    final attentionLevel = buildResultTheme.attentionLevel;
+    final coloredBarTheme = themeData.metricsColoredBarTheme;
+    final attentionLevel = coloredBarTheme.attentionLevel;
 
     switch (status) {
       case BuildStatus.successful:
-        return attentionLevel.successful;
+        return attentionLevel.positive;
       case BuildStatus.cancelled:
-        return attentionLevel.cancelled;
+        return attentionLevel.neutral;
       case BuildStatus.failed:
-        return attentionLevel.failed;
+        return attentionLevel.negative;
       default:
         return null;
     }

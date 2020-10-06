@@ -5,7 +5,6 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
 
 /// A [BarGraph] that displays the build result metric.
 ///
@@ -87,7 +86,6 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
                 ),
                 child: BuildResultBar(
                   buildResult: data,
-                  strategy: const BuildResultBarAppearanceStrategy(),
                 ),
               );
             },

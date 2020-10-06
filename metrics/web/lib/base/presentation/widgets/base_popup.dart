@@ -102,7 +102,7 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
     final childSize = childBox.size;
     final offset = widget.offsetBuilder(childSize);
 
-    final _widget = Stack(
+    final popup = Stack(
       children: <Widget>[
         if (widget.closeOnTapOutside)
           GestureDetector(
@@ -124,7 +124,7 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
     );
 
     setState(() {
-      _overlayEntry = OverlayEntry(builder: (context) => _widget);
+      _overlayEntry = OverlayEntry(builder: (context) => popup);
     });
 
     Overlay.of(context).insert(_overlayEntry);

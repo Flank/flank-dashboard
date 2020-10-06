@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 
-/// Rectangle bar of the [BarGraph] painted in [color].
+/// A widget that displays a rectangle bar of the [BarGraph] painted in [color].
 class ColoredBar extends StatelessWidget {
-  /// The color of this bar.
+  /// A color of this bar.
   final Color color;
 
-  /// The radius of the border of this bar.
+  /// A radius of the border of this bar.
   final BorderRadiusGeometry borderRadius;
 
-  /// The border decoration of this bar.
+  /// A border decoration of this bar.
   final BoxBorder border;
 
-  /// The padding to inset this bar.
+  /// A padding to inset this bar.
   final EdgeInsets padding;
 
-  /// The width of this bar.
+  /// A width of this bar.
   final double width;
 
-  /// The height of this bar.
+  /// A height of this bar.
   final double height;
 
   /// Creates the [ColoredBar].
   ///
   /// The [padding] defaults to the [EdgeInsets.zero].
   /// The [width] defaults to the `0.0`.
+  ///
+  /// The [width] must not be `null` or negative.
   const ColoredBar({
     Key key,
     this.padding = EdgeInsets.zero,

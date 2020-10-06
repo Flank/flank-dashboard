@@ -39,7 +39,7 @@ class MetricsTheme extends InheritedWidget {
     final oldData = oldWidget.data;
 
     return oldData.circlePercentageTheme != data.circlePercentageTheme ||
-        oldData.buildResultBarTheme != data.buildResultBarTheme ||
+        oldData.metricsColoredBarTheme != data.metricsColoredBarTheme ||
         oldData.metricsWidgetTheme != data.metricsWidgetTheme;
   }
 }
