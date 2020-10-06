@@ -47,6 +47,12 @@ void main() {
       },
     );
 
+    Future<void> closeDialog(WidgetTester tester) async {
+      final infoDialog = tester.widget<InfoDialog>(find.byType(InfoDialog));
+      final closeIcon = infoDialog.closeIcon;
+      await tester.tap(find.byWidget(closeIcon));
+    }
+
     final groupNameFieldFinder = find.byWidgetPredicate(
       (widget) {
         return widget is MetricsTextFormField &&
@@ -911,6 +917,28 @@ void main() {
         );
 
         expect(negativeToastFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "closes normally after the view model's reset",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        when(projectGroupsNotifier.projectGroupDialogViewModel)
+            .thenReturn(null);
+
+        await tester.enterText(groupNameFieldFinder, 'some text');
+
+        await closeDialog(tester);
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
       },
     );
   });
