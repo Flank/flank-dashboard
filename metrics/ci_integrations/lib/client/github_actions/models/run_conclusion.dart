@@ -1,23 +1,23 @@
-/// Represents the conclusion of a [WorkflowRun].
+/// Represents a conclusion of a [WorkflowRun].
 enum RunConclusion {
-  /// Represents the conclusion of a successful workflow run.
+  /// Represents a conclusion of a successful workflow run.
   success,
 
-  /// Represents the conclusion of a failed workflow run.
+  /// Represents a conclusion of a failed workflow run.
   failure,
 
-  /// A neutral conclusion for a workflow run.
+  /// Represents a neutral conclusion for a workflow run.
   neutral,
 
-  /// A conclusion for a cancelled workflow run.
+  /// Represents a conclusion for a cancelled workflow run.
   cancelled,
 
-  /// A conclusion for a skipped workflow run.
+  /// Represents a conclusion for a skipped workflow run.
   skipped,
 
-  /// A conclusion for a timed out workflow run.
+  /// Represents a conclusion for a timed out workflow run.
   timedOut,
 
-  /// A conclusion for a workflow run that requires an action.
+  /// Represents a conclusion for a workflow run that requires an action.
   actionRequired,
 }

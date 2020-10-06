@@ -28,7 +28,6 @@ class RunConclusionMapper implements Mapper<String, RunConclusion> {
   /// Creates a new instance of the [RunConclusionMapper].
   const RunConclusionMapper();
 
-  /// Maps the [conclusion] of a workflow run to the [RunConclusion].
   @override
   RunConclusion map(String conclusion) {
     switch (conclusion) {
@@ -51,8 +50,6 @@ class RunConclusionMapper implements Mapper<String, RunConclusion> {
     }
   }
 
-  /// Maps the [conclusion] of a workflow run into the string that can be used
-  /// in API requests.
   @override
   String unmap(RunConclusion conclusion) {
     switch (conclusion) {

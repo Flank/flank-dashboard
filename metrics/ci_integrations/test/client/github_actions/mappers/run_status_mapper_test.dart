@@ -2,100 +2,103 @@ import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.d
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:test/test.dart';
 
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
+
 void main() {
   group("RunStatusMapper", () {
-    const runStatusMapper = RunStatusMapper();
+    final mapper = RunStatusMapper();
 
     test(
       ".map() maps the queued run status to the RunStatus.queued",
       () {
-        final runStatus = runStatusMapper.map(RunStatusMapper.queued);
+        const expectedStatus = RunStatus.queued;
 
-        const expectedRunStatus = RunStatus.queued;
+        final status = mapper.map(RunStatusMapper.queued);
 
-        expect(runStatus, equals(expectedRunStatus));
+        expect(status, equals(expectedStatus));
       },
     );
 
     test(
       ".map() maps the in progress run status to the RunStatus.inProgress",
       () {
-        final runStatus = runStatusMapper.map(RunStatusMapper.inProgress);
+        const expectedStatus = RunStatus.inProgress;
 
-        const expectedRunStatus = RunStatus.inProgress;
+        final status = mapper.map(RunStatusMapper.inProgress);
 
-        expect(runStatus, equals(expectedRunStatus));
+        expect(status, equals(expectedStatus));
       },
     );
 
     test(
       ".map() maps the completed run status to the RunStatus.completed",
       () {
-        final runStatus = runStatusMapper.map(RunStatusMapper.completed);
+        const expectedStatus = RunStatus.completed;
 
-        const expectedRunStatus = RunStatus.completed;
+        final status = mapper.map(RunStatusMapper.completed);
 
-        expect(runStatus, equals(expectedRunStatus));
+        expect(status, equals(expectedStatus));
       },
     );
 
     test(
       ".map() maps the not specified run status to null",
       () {
-        final runStatus = runStatusMapper.map("TEST");
+        final status = mapper.map("TEST");
 
-        expect(runStatus, isNull);
+        expect(status, isNull);
       },
     );
 
     test(
       ".map() maps the null run status to null",
       () {
-        final result = runStatusMapper.map(null);
+        final result = mapper.map(null);
 
         expect(result, isNull);
       },
     );
 
     test(
-      ".unmap() unmaps the RunStatus.queued to queued run status value",
+      ".unmap() unmaps the RunStatus.queued to the queued run status value",
       () {
-        final runStatus = runStatusMapper.unmap(RunStatus.queued);
+        const expectedStatus = RunStatusMapper.queued;
 
-        const expectedRunStatus = RunStatusMapper.queued;
+        final status = mapper.unmap(RunStatus.queued);
 
-        expect(runStatus, equals(expectedRunStatus));
+        expect(status, equals(expectedStatus));
       },
     );
 
     test(
-      ".unmap() unmaps the RunStatus.inProgress to in progress run status value",
+      ".unmap() unmaps the RunStatus.inProgress to the in progress run status value",
       () {
-        final runStatus = runStatusMapper.unmap(RunStatus.inProgress);
+        const expectedStatus = RunStatusMapper.inProgress;
 
-        const expectedRunStatus = RunStatusMapper.inProgress;
+        final status = mapper.unmap(RunStatus.inProgress);
 
-        expect(runStatus, equals(expectedRunStatus));
+        expect(status, equals(expectedStatus));
       },
     );
 
     test(
-      ".unmap() unmaps the RunStatus.completed to completed run status value",
+      ".unmap() unmaps the RunStatus.completed to the completed run status value",
       () {
-        final runStatus = runStatusMapper.unmap(RunStatus.completed);
+        const expectedStatus = RunStatusMapper.completed;
 
-        const expectedRunStatus = RunStatusMapper.completed;
+        final status = mapper.unmap(RunStatus.completed);
 
-        expect(runStatus, equals(expectedRunStatus));
+        expect(status, equals(expectedStatus));
       },
     );
 
     test(
       ".unmap() unmaps null to null",
       () {
-        final runStatus = runStatusMapper.unmap(null);
+        final status = mapper.unmap(null);
 
-        expect(runStatus, isNull);
+        expect(status, isNull);
       },
     );
   });

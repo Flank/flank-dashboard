@@ -20,7 +20,6 @@ class JenkinsBuildResultMapper implements Mapper<String, JenkinsBuildResult> {
 
   const JenkinsBuildResultMapper();
 
-  /// Maps the [result] of Jenkins build to the [JenkinsBuildResult].
   @override
   JenkinsBuildResult map(String result) {
     switch (result) {
@@ -39,7 +38,6 @@ class JenkinsBuildResultMapper implements Mapper<String, JenkinsBuildResult> {
     }
   }
 
-  /// Maps the [result] of Jenkins build to the form of Jenkins API.
   @override
   String unmap(JenkinsBuildResult result) {
     switch (result) {

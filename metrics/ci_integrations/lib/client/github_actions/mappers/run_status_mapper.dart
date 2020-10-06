@@ -16,7 +16,6 @@ class RunStatusMapper implements Mapper<String, RunStatus> {
   /// Creates a new instance of the [RunStatusMapper].
   const RunStatusMapper();
 
-  /// Maps the [status] of a workflow run to the [RunStatus].
   @override
   RunStatus map(String status) {
     switch (status) {
@@ -31,8 +30,6 @@ class RunStatusMapper implements Mapper<String, RunStatus> {
     }
   }
 
-  /// Maps the [status] of a workflow run into the string that can be used in
-  /// API requests.
   @override
   String unmap(RunStatus status) {
     switch (status) {
