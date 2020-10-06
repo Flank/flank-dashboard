@@ -10,7 +10,7 @@ package github_actions <<Folder>> {
             +url: String
             +status: RunStatus
             +conclusion: RunConclusion
-            +timestamp: DateTime
+            +createdAt: DateTime
 
             +factory fromJson(Map<String, dynamic> json): WorkflowRun
             +toJson(): Map<String, dynamic>
@@ -20,7 +20,6 @@ package github_actions <<Folder>> {
         class WorkflowRunArtifact {
             +id: int
             +name: String
-            +runId: int
             +downloadUrl: String
 
            +factory fromJson(Map<String, dynamic> json): WorkflowRunArtifact
@@ -29,7 +28,6 @@ package github_actions <<Folder>> {
         }
 
         class WorkflowRunDuration {
-            +runId: int
             +duration: Duration
 
             +factory fromJson(Map<String, dynamic> json): WorkflowRunDuration
