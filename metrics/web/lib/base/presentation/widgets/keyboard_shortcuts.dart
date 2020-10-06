@@ -30,11 +30,11 @@ class KeyboardShortcuts extends StatelessWidget {
   Widget build(BuildContext context) {
     return Shortcuts(
       shortcuts: {
-        keysToPress: const _KeyboardShortCutIntent(),
+        keysToPress: const _KeyboardShortcutActivateIntent(),
       },
       child: Actions(
         actions: {
-          _KeyboardShortCutIntent: CallbackAction(
+          _KeyboardShortcutActivateIntent: CallbackAction(
             onInvoke: (_) => onKeysPressed(),
           ),
         },
@@ -45,7 +45,7 @@ class KeyboardShortcuts extends StatelessWidget {
 }
 
 /// An intent that activates the keyboard shortcuts.
-class _KeyboardShortCutIntent extends Intent {
-  /// Creates a new instance of the [_KeyboardShortCutIntent].
-  const _KeyboardShortCutIntent();
+class _KeyboardShortcutActivateIntent extends Intent {
+  /// Creates a new instance of the [_KeyboardShortcutActivateIntent].
+  const _KeyboardShortcutActivateIntent();
 }
