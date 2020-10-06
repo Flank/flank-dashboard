@@ -261,6 +261,36 @@ void main() {
     );
 
     testWidgets(
+      "resets the animation if the value changes to null",
+      (WidgetTester tester) async {
+        final valueNotifier = ValueNotifier(0.5);
+
+        await tester.pumpWidget(ValueListenableBuilder<double>(
+          valueListenable: valueNotifier,
+          builder: (_, value, __) {
+            return _CirclePercentageTestbed(
+              value: value,
+            );
+          },
+        ));
+        await tester.pumpAndSettle();
+
+        valueNotifier.value = null;
+
+        await tester.pumpAndSettle();
+
+        final animatedBuilder = tester.widget<AnimatedBuilder>(find.descendant(
+          of: find.byType(AspectRatio),
+          matching: find.byType(AnimatedBuilder),
+        ));
+
+        final animation = animatedBuilder.listenable as Animation;
+
+        expect(animation.value, equals(0.0));
+      },
+    );
+
+    testWidgets(
       "applies stroke color",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _CirclePercentageTestbed(
