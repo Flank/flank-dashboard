@@ -24,6 +24,7 @@ import 'package:metrics/dashboard/presentation/view_models/project_group_dropdow
 import 'package:metrics/dashboard/presentation/view_models/project_metrics_tile_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/stability_view_model.dart';
 import 'package:metrics/project_groups/presentation/models/project_group_model.dart';
+import 'package:metrics/util/date.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// The [ChangeNotifier] that holds the projects metrics data.
@@ -342,43 +343,34 @@ class ProjectMetricsNotifier extends ChangeNotifier {
       );
     }
 
-    final currentDate = DateTime.now();
-    final buildPerformancesMap = groupBy(
+    final buildPerformancesMap = groupBy<BuildPerformance, DateTime>(
       performanceMetrics,
-      (BuildPerformance metrics) {
-        final date = metrics.date;
-
-        return DateTime(date.year, date.month, date.day);
-      },
+      (metrics) => metrics.date.date,
     );
+
     final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
-    final buildPerformancesByDay = List.generate(period, (i) {
-      final date = currentDate.subtract(Duration(days: period - i - 1));
-      final formattedDate = DateTime(date.year, date.month, date.day);
+    final currentDate = DateTime.now().date;
+    final performance = <Point<int>>[];
 
-      return buildPerformancesMap[formattedDate];
-    });
+    for (int i = 0; i < period; i++) {
+      final sliceDate = currentDate.subtract(Duration(days: period - i - 1));
+      final values = buildPerformancesMap[sliceDate];
 
-    final averageDurations = buildPerformancesByDay.map((e) {
-      if (e == null) return Duration.zero;
+      if (values == null || values.isEmpty) {
+        performance.add(Point(i, 0));
+        continue;
+      }
 
-      final totalDuration = e.fold<Duration>(
+      final totalDuration = values.fold<Duration>(
         Duration.zero,
-        (previousValue, element) => previousValue + element.duration,
+        (previous, element) {
+          return previous + element.duration;
+        },
       );
 
-      return totalDuration ~/ e.length;
-    }).toList();
-
-    final performance = averageDurations.asMap().entries.map((element) {
-      final index = element.key;
-      final duration = element.value;
-
-      return Point(
-        index,
-        duration.inMilliseconds,
-      );
-    }).toList();
+      final averageDuration = totalDuration ~/ values.length;
+      performance.add(Point(i, averageDuration.inMilliseconds));
+    }
 
     return PerformanceSparklineViewModel(
       performance: UnmodifiableListView(performance),

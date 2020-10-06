@@ -203,81 +203,25 @@ void main() {
       final period = ReceiveProjectMetricsUpdates.buildsLoadingPeriod.inDays;
       final expectedPerformanceMetrics =
           expectedProjectMetrics.performanceMetrics;
+
+      final buildPerformance =
+          expectedPerformanceMetrics.buildsPerformance.first;
+      final expectedX = List.generate(period, (index) => index);
+      final expectedY = List.generate(period - 1, (_) => 0);
+      expectedY.add(buildPerformance.duration.inMilliseconds);
+
       final firstProjectMetrics =
           projectMetricsNotifier.projectsMetricsTileViewModels.first;
       final performanceMetrics = firstProjectMetrics.performanceSparkline;
       final performancePoints = performanceMetrics.performance;
 
-      expect(
-        performancePoints.length,
-        period,
-      );
-
+      expect(performancePoints, hasLength(equals(period)));
       expect(
         performanceMetrics.value,
-        expectedPerformanceMetrics.averageBuildDuration,
+        equals(expectedPerformanceMetrics.averageBuildDuration),
       );
-
-      final currentDate = DateTime.now();
-      final buildPerformancesMap = groupBy(
-        expectedPerformanceMetrics.buildsPerformance,
-        (BuildPerformance metrics) {
-          final date = metrics.date;
-
-          return DateTime(date.year, date.month, date.day);
-        },
-      );
-      final buildPerformancesByDay = List.generate(period, (i) {
-        final date = currentDate.subtract(Duration(days: period - i - 1));
-        final formattedDate = DateTime(date.year, date.month, date.day);
-        return buildPerformancesMap[formattedDate];
-      });
-      final averageDurations = buildPerformancesByDay.map((e) {
-        if (e == null) return Duration.zero;
-
-        final totalDuration = e.fold<Duration>(
-          Duration.zero,
-          (previousValue, element) => previousValue + element.duration,
-        );
-
-        return totalDuration ~/ e.length;
-      }).toList();
-
-      final pointsSumX = performancePoints.fold<int>(
-        0,
-        (previousValue, element) => previousValue + element.x,
-      );
-      final pointsSumY = performancePoints.fold<int>(
-        0,
-        (previousValue, element) => previousValue + element.y,
-      );
-
-      final expectedPointsSumX = averageDurations.asMap().entries.fold<int>(
-        0,
-        (previousValue, element) {
-          final elementIndex = element.key;
-
-          return previousValue + elementIndex;
-        },
-      );
-      final expectedPointsSumY = averageDurations.asMap().entries.fold<int>(
-        0,
-        (previousValue, element) {
-          final duration = element.value;
-
-          return previousValue + duration.inMilliseconds;
-        },
-      );
-
-      expect(
-        pointsSumX,
-        expectedPointsSumX,
-      );
-
-      expect(
-        pointsSumY,
-        expectedPointsSumY,
-      );
+      expect(performancePoints.map((p) => p.x), equals(expectedX));
+      expect(performancePoints.map((p) => p.y), equals(expectedY));
     });
 
     test("loads the build result metrics", () async {
