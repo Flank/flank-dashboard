@@ -9,6 +9,9 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("SparklineGraph", () {
+    const minAxisValue = 1;
+    const maxAxisValue = 8;
+
     testWidgets(
       "throws an AssertionError if the given strokeWidth is null",
       (WidgetTester tester) async {
@@ -184,15 +187,12 @@ void main() {
     );
 
     testWidgets(
-      "correctly calculates the chart axes bounds",
+      "creates X-axis in bounds from min to max X coordinate value",
       (WidgetTester tester) async {
-        const minAxisValue = 1;
-        const maxAxisValue = 8;
-
         const sparklineData = [
           Point(2, 3),
-          Point(minAxisValue, maxAxisValue),
-          Point(4, minAxisValue),
+          Point(minAxisValue, 7),
+          Point(4, 9),
           Point(maxAxisValue, 7),
           Point(3, 8),
         ];
@@ -206,17 +206,50 @@ void main() {
         final chartLine = chartWidget.lines.first;
 
         final xAxis = chartLine.xAxis as ChartAxis<num>;
-        final yAxis = chartLine.yAxis as ChartAxis<num>;
 
         final xValues = sparklineData.map((point) => point.x).toList();
         final xAxisSpan = xAxis.spanFn(xValues);
+
+        expect(xAxisSpan.min, equals(minAxisValue));
+        expect(xAxisSpan.max, equals(maxAxisValue));
+      },
+    );
+
+    testWidgets(
+      "creates Y-axis in bounds from min to max Y coordinate value taking into account the stroke width",
+      (WidgetTester tester) async {
+        const strokeWidth = 8.0;
+        const relativeStrokeWidth =
+            (maxAxisValue - minAxisValue) / strokeWidth / 2;
+
+        const expectedYAxisMin = minAxisValue - relativeStrokeWidth;
+        const expectedYAxisMax = maxAxisValue + relativeStrokeWidth;
+
+        const sparklineData = [
+          Point(2, 3),
+          Point(1, minAxisValue),
+          Point(4, 7),
+          Point(5, maxAxisValue),
+          Point(3, 6),
+        ];
+
+        await tester.pumpWidget(const _SparklineGraphTestbed(
+          data: sparklineData,
+          strokeWidth: strokeWidth,
+        ));
+
+        await tester.pumpAndSettle();
+
+        final chartWidget = tester.widget<LineChart>(find.byType(LineChart));
+        final chartLine = chartWidget.lines.first;
+
+        final yAxis = chartLine.yAxis as ChartAxis<num>;
+
         final yValues = sparklineData.map((point) => point.y).toList();
         final yAxisSpan = yAxis.spanFn(yValues);
 
-        expect(xAxisSpan.min, minAxisValue);
-        expect(xAxisSpan.max, maxAxisValue);
-        expect(yAxisSpan.min, minAxisValue);
-        expect(yAxisSpan.max, maxAxisValue);
+        expect(yAxisSpan.min, equals(expectedYAxisMin));
+        expect(yAxisSpan.max, equals(expectedYAxisMax));
       },
     );
   });
