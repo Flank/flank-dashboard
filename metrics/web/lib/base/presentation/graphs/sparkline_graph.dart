@@ -112,6 +112,8 @@ class SparklineGraph extends StatelessWidget {
   DoubleSpan _createYAxisSpan(List<num> data) {
     final axisSpan = _createAxisSpan(data);
 
+    if (axisSpan == null) return null;
+
     final relativeStrokeWidth = (axisSpan.max - axisSpan.min) / strokeWidth / 2;
 
     return DoubleSpan(
