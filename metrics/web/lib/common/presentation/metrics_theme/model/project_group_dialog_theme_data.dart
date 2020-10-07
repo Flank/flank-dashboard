@@ -16,7 +16,7 @@ class ProjectGroupDialogThemeData extends DialogThemeData {
   /// the project group dialog.
   final TextStyle counterTextStyle;
 
-  /// Creates a new instance of [ProjectGroupDialogThemeData].
+  /// Creates a new instance of the [ProjectGroupDialogThemeData].
   ///
   /// The [contentBorderColor] default value is [Colors.grey].
   const ProjectGroupDialogThemeData({

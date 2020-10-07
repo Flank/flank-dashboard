@@ -7,12 +7,12 @@ class BuildsOnDate implements DateTimeSetEntry {
   @override
   final DateTime date;
 
-  /// An total amount of the builds on [date].
+  /// A total number of builds on [date].
   final int numberOfBuilds;
 
   /// Creates a new instance of the [BuildsOnDate].
   ///
-  /// The [date] should contain the date only, without timestamp.
+  /// The [date] must contain the date only with no time parameters.
   BuildsOnDate({
     this.date,
     this.numberOfBuilds,

@@ -4,28 +4,30 @@ import 'package:flutter/material.dart';
 
 /// Enum that represents the side of the shape to display the arrow on.
 enum BubblePosition {
-  /// Indicates the top side of the shape.
+  /// A position that represents the top side of the shape.
   top,
 
-  /// Indicates the bottom side of the shape.
+  /// A position that represents the bottom side of the shape.
   bottom,
 
-  /// Indicates the left side of the shape.
+  /// A position that represents the left side of the shape.
   left,
 
-  /// Indicates the right side of the shape.
+  /// A position that represents the right side of the shape.
   right,
 }
 
 /// Enum that represents the alignment of the arrow.
 enum BubbleAlignment {
-  /// Place the arrow to the start edge of the shape.
+  /// An alignment that is used to place the arrow to the start edge
+  /// of the shape.
   start,
 
-  /// Place the arrow to the middle of the shape.
+  /// An alignment that is used to place the arrow to the middle of the shape.
   center,
 
-  /// Place the arrow to the end edge of the shape.
+  /// An alignment that is used to place the arrow to the end edge
+  /// of the shape.
   end,
 }
 

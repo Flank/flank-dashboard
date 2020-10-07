@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // ignore_for_file: public_member_api_docs
-// awaiting for the color palette from design team
+// Looking forward to the color palette from the design team.
 
 /// Holds the common colors for application themes.
 class ColorConfig {

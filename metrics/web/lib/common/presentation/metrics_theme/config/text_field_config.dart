@@ -3,7 +3,7 @@ import 'package:metrics/common/presentation/metrics_theme/config/color_config.da
 
 /// A class that holds the common text field styles for application themes.
 class TextFieldConfig {
-  /// A [TextStyle] of the error message to use in the text field.
+  /// A [TextStyle] of the text field error messages.
   static const TextStyle errorStyle = TextStyle(
     color: ColorConfig.accentColor,
     fontSize: 16.0,

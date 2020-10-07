@@ -10,7 +10,7 @@ class BuildPerformance implements DateTimeSetEntry {
   /// A [Duration] of the build.
   final Duration duration;
 
-  /// Creates a new instance of [BuildPerformance].
+  /// Creates a new instance of the [BuildPerformance].
   const BuildPerformance({
     this.date,
     this.duration,

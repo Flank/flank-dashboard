@@ -46,7 +46,7 @@ import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 
 // ignore_for_file: public_member_api_docs
-// awaiting for the color palette from design team
+// Looking forward to the color palette from the design team.
 
 /// Stores the theme data for dark metrics theme.
 class DarkMetricsThemeData extends MetricsThemeData {

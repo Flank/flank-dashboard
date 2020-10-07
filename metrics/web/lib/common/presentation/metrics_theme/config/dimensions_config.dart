@@ -3,12 +3,18 @@ class DimensionsConfig {
   /// A width of the main content on the page.
   static const double contentWidth = 1140.0;
 
-  /// A height of the app bar.
+  /// A height of the Metrics app bar.
   static const double appBarHeight = 64.0;
 
-  /// A height of the button.
+  /// A default height of buttons within the project.
   static const double buttonHeight = 48.0;
+
+  /// An outer diameter of the graph indicator.
   static const double graphIndicatorOuterDiameter = 10.0;
+
+  /// An inner diameter of the graph indicator.
   static const double graphIndicatorInnerDiameter = 4.0;
+
+  /// A width of the graph bar.
   static const double graphBarWidth = 10.0;
 }

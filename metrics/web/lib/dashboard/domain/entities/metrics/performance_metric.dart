@@ -4,7 +4,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart
 
 /// Represents the build performance metric.
 class PerformanceMetric extends Equatable {
-  /// A performance series of the builds.
+  /// A set of builds performance.
   final DateTimeSet<BuildPerformance> buildsPerformance;
 
   /// An average build duration of all builds in the [buildsPerformance].
@@ -15,10 +15,9 @@ class PerformanceMetric extends Equatable {
 
   /// Creates a new instance of the [PerformanceMetric].
   ///
-  /// The [averageBuildDuration] default value is an empty instance
-  /// of the [Duration].
+  /// The [averageBuildDuration] default value is [Duration.zero].
   const PerformanceMetric({
     this.buildsPerformance,
-    this.averageBuildDuration = const Duration(),
+    this.averageBuildDuration = Duration.zero,
   });
 }

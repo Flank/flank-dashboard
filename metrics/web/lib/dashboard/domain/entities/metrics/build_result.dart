@@ -5,7 +5,7 @@ import 'package:metrics_core/metrics_core.dart';
 ///
 /// Contains the data about build [url] and build [duration].
 class BuildResult extends Equatable {
-  /// A [DateTime] when the build started at.
+  /// A [DateTime] the build has been started at.
   final DateTime date;
 
   /// A [Duration] of the build.
@@ -14,7 +14,7 @@ class BuildResult extends Equatable {
   /// A [BuildStatus] of the build.
   final BuildStatus buildStatus;
 
-  /// A url to the build.
+  /// A URL to access the build.
   final String url;
 
   @override
