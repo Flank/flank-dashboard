@@ -73,7 +73,7 @@ void main() {
       updateUserProfileUseCase,
     );
 
-    setUp(() {
+    tearDown(() {
       reset(signInUseCase);
       reset(googleSignInUseCase);
       reset(signOutUseCase);
