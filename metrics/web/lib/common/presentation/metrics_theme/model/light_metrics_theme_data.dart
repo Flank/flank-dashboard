@@ -5,10 +5,10 @@ import 'package:metrics/common/presentation/button/theme/theme_data/metrics_butt
 import 'package:metrics/common/presentation/colored_bar/theme/attention_level/metrics_colored_bar_attention_level.dart';
 import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
 import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
+import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/attention_level/graph_indicator_attention_level.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
-import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/text_style_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/attention_level/add_project_group_card_attention_level.dart';
@@ -80,6 +80,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _neutralStatusColor = Color(0xFFFAF6E6);
   static const Color _inactiveStatusColor = Color(0xFF43494D);
   static const Color _iconColor = Color(0xFF2d2d33);
+  static const Color _performanceBackgroundColor = Color(0xFFf5f8fa);
 
   static const inputFocusedBorder = OutlineInputBorder(
     borderSide: BorderSide(color: _inputFocusedBorderColor),
@@ -351,23 +352,23 @@ class LightMetricsThemeData extends MetricsThemeData {
             valueTextStyle: MetricsTextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.w700,
-              color: ColorConfig.primaryColor,
+              color: _inactiveTextColor,
               lineHeightInPixels: 24.0,
             ),
             descriptionTextStyle: MetricsTextStyle(
               fontSize: 14.0,
-              color: ColorConfig.primaryColor,
+              color: _inactiveTextColor,
               fontWeight: FontWeight.w700,
               lineHeightInPixels: 14.0,
             ),
           ),
           performanceSparklineTheme: const SparklineThemeData(
-            strokeColor: ColorConfig.primaryColor,
-            fillColor: _positiveStatusColor,
+            strokeColor: _inactiveTextColor,
+            fillColor: _performanceBackgroundColor,
             textStyle: MetricsTextStyle(
               fontSize: 22.0,
               fontWeight: FontWeight.w700,
-              color: ColorConfig.primaryColor,
+              color: _inactiveTextColor,
               lineHeightInPixels: 26.0,
             ),
           ),

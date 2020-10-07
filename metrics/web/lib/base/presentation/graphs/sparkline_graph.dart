@@ -11,6 +11,9 @@ class SparklineGraph extends StatelessWidget {
   /// The minimal length of this graph axis.
   static const int _minChartAxisLength = 1;
 
+  /// A default axes [TickGenerator] that generates empty ticks.
+  static const _axisTickGenerator = FixedTickGenerator<num>(ticks: []);
+
   /// The class to present the line of this graph.
   final List<Point> data;
 
@@ -66,25 +69,24 @@ class SparklineGraph extends StatelessWidget {
           fill: PaintOptions.fill(
             color: fillColor,
           ),
-          xAxis: _createChartAxis(),
-          yAxis: _createChartAxis(),
+          xAxis: ChartAxis(
+            spanFn: _createAxisSpan,
+            tickGenerator: _axisTickGenerator,
+            paint: null,
+          ),
+          yAxis: ChartAxis(
+            spanFn: _createYAxisSpan,
+            tickGenerator: _axisTickGenerator,
+            paint: null,
+          ),
         ),
       ],
     );
   }
 
-  /// Creates the [ChartAxis].
-  ChartAxis<num> _createChartAxis() {
-    return ChartAxis(
-      spanFn: _createSpan,
-      tickGenerator: const FixedTickGenerator<num>(ticks: []),
-      paint: null,
-    );
-  }
-
   /// Creates the [DoubleSpan] for axes that represent
-  /// the visible range of the axis.
-  DoubleSpan _createSpan(List<num> data) {
+  /// the visible range of the axis from minimum value to maximum.
+  DoubleSpan _createAxisSpan(List<num> data) {
     if (data == null || data.isEmpty) return null;
 
     double min = data.first.toDouble();
@@ -101,5 +103,20 @@ class SparklineGraph extends StatelessWidget {
     }
 
     return DoubleSpan(min, max);
+  }
+
+  /// Creates the [DoubleSpan] for Y axis.
+  ///
+  /// Represents the visible range of the axis from min axis value minus half
+  /// of the [strokeWidth] to max axis value plus half of the [strokeWidth].
+  DoubleSpan _createYAxisSpan(List<num> data) {
+    final axisSpan = _createAxisSpan(data);
+
+    final relativeStrokeWidth = (axisSpan.max - axisSpan.min) / strokeWidth / 2;
+
+    return DoubleSpan(
+      axisSpan.min - relativeStrokeWidth,
+      axisSpan.max + relativeStrokeWidth,
+    );
   }
 }
