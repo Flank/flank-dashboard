@@ -25,10 +25,12 @@ The following diagram demonstrates the relationships between the above constitut
 # Getting started with Metrics :beginner:
 
 We've tried to document all important decisions & approaches used for the development of this project. Reading each document is not an easy task and requires some time and patience. To help you get started, we collected the most useful documents that should help you to make fist steps:
-1. [Why create a metrics platform? :thinking:](docs/01_design_doc.md)
-2. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
-3. [Dart code style :nail_care:](docs/10_dart_code_style.md)
-4. [Collaboration :raised_hands:](docs/11_collaboration.md)
+
+1. [Metrics developer configuration :gear:](docs/15_developer_configuration.md)
+2. [Why create a metrics platform? :thinking:](docs/01_design_doc.md)
+3. [GitHub Agile process :chart_with_upwards_trend:](docs/02_process.md)
+4. [Dart code style :nail_care:](docs/10_dart_code_style.md)
+5. [Collaboration :raised_hands:](docs/11_collaboration.md)
 
 Furthermore, every Metrics component requires component-specific documentation. Thus, to get started with the `CI integrations` it is recommended to get familiar with the following documents: 
 1. [CI integrations module architecture :building_construction:](metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)

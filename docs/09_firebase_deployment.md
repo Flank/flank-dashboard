@@ -127,6 +127,13 @@ To allow users sign-in using Google, please follow the next steps:
 4. Expand `Web SDK Configuration` and copy `Web client ID`, then press `Save`.
 5. Open `web/index.html` and replace `content` of `meta` tag with `name = "google-signin-client_id"` with the value from clipboard.
 
+Once you've done, you should add an allowed URLs to the Authorized JavaScript origins to be able to use the Google Sign-in from these origins. So, to do that, you should: 
+
+1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
+2. Open the side menu and go to the `APIs & Services` section.
+3. Go to the `Credentials` section, find the `Web client` in `OAuth 2.0 Client IDs` section and open it.
+4. Then you should find the `Authorized JavaScript origins` section. That is the place where you can add any origins you want to have access to the google sign.
+
 ## Building and deploying the application to the Firebase Hosting
 
 ### Preparing your environment
@@ -179,7 +186,19 @@ Once you've finished creating test data, you should deactivate the `seedData` cl
 1. Go to the `metrics/firebase/functions/index.js` file and change the `inactive` constant back to `true`.
 2. Redeploy this function, using the `firebase deploy --only functions` command.
 
-Also, to allow users to sign in with Google, you should configure the allowed user email domains within `Cloud Firestore`. Consider the following steps:
+Also, to allow users to sign in with Google, you should enable the `validateEmailDomain` function for all users and configure the allowed user email domains within `Cloud Firestore`. 
+
+To allow any user call the `validateEmailDomain` function deployed previously, you should follow the next steps: 
+
+1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
+2. Open the side menu and go to the `Cloud Functions` section.
+3. Find the `validateEmailDomain` function and check its checkbox.
+4. Tap the `SHOW INFO PANEL` button on the right top corner under your avatar if this panel is not opened.
+5. In the info panel, select the `PERMISSIONS` tab and click an `ADD MEMBER` button.
+6. In the opened menu, type `allUsers` in the `New members` field and select a `Cloud Functions` -> `Cloud Functions Invoker` role.
+7. Save the changes.
+
+Once you've finished with these steps, and the `validateEmailDomain` function available for all users, consider the following steps to configure allowed email domains: 
 
 1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
 2. Open the `Cloud Firestore` section on the left panel.
