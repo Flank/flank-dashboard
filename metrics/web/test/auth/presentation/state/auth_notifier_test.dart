@@ -57,6 +57,7 @@ void main() {
       password: Password(invalidPassword),
     );
 
+    final user = User(id: id, email: email);
     final userProfile = UserProfile(id: id, selectedTheme: selectedTheme);
     const userProfileModel = UserProfileModel(
       id: 'second id',
@@ -83,7 +84,8 @@ void main() {
       reset(updateUserProfileUseCase);
     });
 
-    test("throws AssertionError if a receiveAuthUpdates parameter is null", () {
+    test("throws AssertionError if a receive auth updates parameter is null",
+        () {
       expect(
         () => AuthNotifier(
           null,
@@ -98,7 +100,7 @@ void main() {
       );
     });
 
-    test("throws AssertionError if a signInUseCase parameter is null", () {
+    test("throws AssertionError if a sign in use case parameter is null", () {
       expect(
         () => AuthNotifier(
           receiveAuthUpdates,
@@ -114,7 +116,7 @@ void main() {
     });
 
     test(
-      "throws AssertionError if a googleSignInUseCase parameter is null",
+      "throws AssertionError if a google sign in use case parameter is null",
       () {
         expect(
           () => AuthNotifier(
@@ -131,7 +133,7 @@ void main() {
       },
     );
 
-    test("throws AssertionError if a signOutUseCase parameter is null", () {
+    test("throws AssertionError if a sign out use case parameter is null", () {
       expect(
         () => AuthNotifier(
           receiveAuthUpdates,
@@ -147,7 +149,7 @@ void main() {
     });
 
     test(
-      "throws AssertionError if a receiveUserProfileUpdates parameter is null",
+      "throws AssertionError if a receive user profile updates parameter is null",
       () {
         expect(
           () => AuthNotifier(
@@ -165,7 +167,7 @@ void main() {
     );
 
     test(
-      "throws AssertionError if a createUserProfileUseCase parameter is null",
+      "throws AssertionError if a create user profile use case parameter is null",
       () {
         expect(
           () => AuthNotifier(
@@ -183,7 +185,7 @@ void main() {
     );
 
     test(
-      "throws AssertionError if a updateUserProfileUseCase parameter is null",
+      "throws AssertionError if a update user profile use case parameter is null",
       () {
         expect(
           () => AuthNotifier(
@@ -201,7 +203,7 @@ void main() {
     );
 
     test(
-      ".subscribeToAuthenticationUpdates() delegates to receiveAuthUpdates usecase",
+      ".subscribeToAuthenticationUpdates() delegates to receive auth updates use case",
       () {
         when(receiveAuthUpdates.call())
             .thenAnswer((realInvocation) => const Stream.empty());
@@ -223,6 +225,38 @@ void main() {
         authNotifier.subscribeToAuthenticationUpdates();
 
         expect(userController.hasListener, isTrue);
+      },
+    );
+
+    test(
+      ".subscribeToAuthenticationUpdates() delegates to receive user profile updates when the user is not null",
+      () {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+        when(receiveAuthUpdates(any)).thenAnswer((_) => Stream.value(user));
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(userProfile),
+        );
+
+        final listener = expectAsyncUntil0(() {}, () {
+          if (authNotifier.userProfileModel != null) {
+            verify(receiveUserProfileUpdates(any)).called(1);
+            return true;
+          }
+          return false;
+        });
+
+        authNotifier.addListener(listener);
+
+        authNotifier.subscribeToAuthenticationUpdates();
       },
     );
 
@@ -470,7 +504,8 @@ void main() {
       },
     );
 
-    test(".signInWithEmailAndPassword() delegates to signInUseCase", () async {
+    test(".signInWithEmailAndPassword() delegates to sign in use case",
+        () async {
       await authNotifier.signInWithEmailAndPassword(email, password);
 
       final userCredentials = UserCredentialsParam(
@@ -493,7 +528,7 @@ void main() {
       verifyNever(signInUseCase(userCredentials));
     });
 
-    test(".signInWithGoogle() delegates to googleSignInUseCase", () async {
+    test(".signInWithGoogle() delegates to google sign in use case", () async {
       await authNotifier.signInWithGoogle();
 
       verify(googleSignInUseCase()).called(equals(1));
@@ -729,7 +764,7 @@ void main() {
       },
     );
 
-    test(".signOut() delegates to the SignOutUseCase", () async {
+    test(".signOut() delegates to the sign out use case", () async {
       await authNotifier.signOut();
 
       verify(signOutUseCase()).called(equals(1));
