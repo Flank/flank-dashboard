@@ -4,12 +4,12 @@ import 'package:ci_integration/client/github_actions/models/run_conclusion.dart'
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:equatable/equatable.dart';
 
-/// A class that represents the single Github Actions workflow run.
+/// A class that represents a single Github Actions workflow run.
 class WorkflowRun extends Equatable {
-  /// A unique id of this workflow run.
+  /// A unique identifier of this workflow run.
   final int id;
 
-  /// A number of this workflow run in the repository.
+  /// An order number of this workflow run in the repository.
   final int number;
 
   /// A link to access this workflow run in Github.
@@ -37,9 +37,9 @@ class WorkflowRun extends Equatable {
     this.createdAt,
   });
 
-  /// Creates an instance of the [WorkflowRun] from the decoded JSON object.
+  /// Creates a new instance of the [WorkflowRun] from the decoded JSON object.
   ///
-  /// Returns `null` if [json] is `null`.
+  /// Returns `null` if the given [json] is `null`.
   factory WorkflowRun.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
@@ -63,17 +63,17 @@ class WorkflowRun extends Equatable {
     );
   }
 
-  /// Creates a list of Github Actions workflow runs from the [list] of
-  /// decoded JSON objects.
+  /// Creates a list of [WorkflowRun] from the given [list] of decoded JSON
+  /// objects.
   ///
-  /// Returns `null` if the given list is `null`.
+  /// Returns `null` if the given [list] is `null`.
   static List<WorkflowRun> listFromJson(List<dynamic> list) {
     return list
         ?.map((json) => WorkflowRun.fromJson(json as Map<String, dynamic>))
         ?.toList();
   }
 
-  /// Converts this workflow run instance into the JSON encodable [Map].
+  /// Converts this run instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
     const statusMapper = RunStatusMapper();
     const conclusionMapper = RunConclusionMapper();

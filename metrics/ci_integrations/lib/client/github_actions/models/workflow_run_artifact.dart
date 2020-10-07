@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
-/// A class that represents the single Github Actions workflow run artifact.
+/// A class that represents an artifact of a Github Actions workflow run.
 class WorkflowRunArtifact extends Equatable {
-  /// The unique id of this run artifact.
+  /// A unique identifier of this artifact.
   final int id;
 
-  /// The name of this run artifact.
+  /// A name of this artifact.
   final String name;
 
-  /// The url needed to download this run artifact.
+  /// A URL needed to download this artifact.
   final String downloadUrl;
 
   @override
@@ -21,10 +21,10 @@ class WorkflowRunArtifact extends Equatable {
     this.downloadUrl,
   });
 
-  /// Creates an instance of the [WorkflowRunArtifact] from the decoded
+  /// Creates a new instance of the [WorkflowRunArtifact] from the decoded
   /// JSON object.
   ///
-  /// Returns `null` if [json] is `null`.
+  /// Returns `null` if the given [json] is `null`.
   factory WorkflowRunArtifact.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
@@ -35,10 +35,10 @@ class WorkflowRunArtifact extends Equatable {
     );
   }
 
-  /// Creates a list of Github Actions workflow run artifacts from the [list] of
-  /// decoded JSON objects.
+  /// Creates a list of [WorkflowRunArtifact] from the given [list] of decoded
+  /// JSON objects.
   ///
-  /// Returns `null` if the given list is `null`.
+  /// Returns `null` if the given [list] is `null`.
   static List<WorkflowRunArtifact> listFromJson(List<dynamic> list) {
     return list
         ?.map((json) =>
@@ -46,7 +46,7 @@ class WorkflowRunArtifact extends Equatable {
         ?.toList();
   }
 
-  /// Converts this workflow run artifact instance into the JSON encodable [Map].
+  /// Converts this artifact instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,

@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-/// A class that represents the single Github Actions workflow run duration.
+/// A class that represents a duration of a single Github Actions workflow run.
 class WorkflowRunDuration extends Equatable {
-  /// The duration of the workflow run.
+  /// A [Duration] of the workflow run.
   final Duration duration;
 
   @override
@@ -13,10 +13,10 @@ class WorkflowRunDuration extends Equatable {
     this.duration,
   });
 
-  /// Creates an instance of the [WorkflowRunDuration] from the decoded
+  /// Creates a new instance of the [WorkflowRunDuration] from the decoded
   /// JSON object.
   ///
-  /// Returns `null` if [json] is `null`.
+  /// Returns `null` if the given [json] is `null`.
   factory WorkflowRunDuration.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
@@ -29,7 +29,7 @@ class WorkflowRunDuration extends Equatable {
     );
   }
 
-  /// Converts this workflow run duration instance into the JSON encodable [Map].
+  /// Converts this run duration instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'run_duration_ms': duration?.inMilliseconds,

@@ -1,5 +1,3 @@
-import 'package:ci_integration/client/github_actions/mappers/run_conclusion_mapper.dart';
-import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/run_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
@@ -10,9 +8,6 @@ import 'package:test/test.dart';
 
 void main() {
   group("WorkflowRun", () {
-    final statusMapper = RunStatusMapper();
-    final conclusionMapper = RunConclusionMapper();
-
     const id = 1;
     const number = 1;
     const url = 'url';
@@ -33,8 +28,8 @@ void main() {
       id: id,
       number: number,
       url: url,
-      status: statusMapper.map(status),
-      conclusion: conclusionMapper.map(conclusion),
+      status: RunStatus.queued,
+      conclusion: RunConclusion.success,
       createdAt: createdAt,
     );
 
@@ -104,7 +99,7 @@ void main() {
           'url': 'url2',
           'status': 'completed',
           'conclusion': 'neutral',
-          'created_at': DateTime(2019).toUtc().toString(),
+          'created_at': DateTime(2019).toUtc().toIso8601String(),
         };
         final anotherRun = WorkflowRun.fromJson(anotherJson);
 
