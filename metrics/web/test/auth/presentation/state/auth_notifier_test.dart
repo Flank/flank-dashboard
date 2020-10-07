@@ -246,21 +246,6 @@ void main() {
     );
 
     test(
-      ".subscribeToUserProfileUpdates() subscribes to a user profile updates stream",
-      () {
-        final streamController = StreamController<UserProfile>();
-
-        when(receiveUserProfileUpdates(any)).thenAnswer(
-          (_) => streamController.stream,
-        );
-
-        authNotifier.subscribeToUserProfileUpdates(id);
-
-        expect(streamController.hasListener, isTrue);
-      },
-    );
-
-    test(
       ".subscribeToUserProfileUpdates() does not subscribe to user profile updates if the given id is null",
       () {
         final streamController = StreamController<UserProfile>();
@@ -272,6 +257,21 @@ void main() {
         authNotifier.subscribeToUserProfileUpdates(null);
 
         expect(streamController.hasListener, isFalse);
+      },
+    );
+
+    test(
+      ".subscribeToUserProfileUpdates() subscribes to a user profile updates stream",
+      () {
+        final streamController = StreamController<UserProfile>();
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => streamController.stream,
+        );
+
+        authNotifier.subscribeToUserProfileUpdates(id);
+
+        expect(streamController.hasListener, isTrue);
       },
     );
 
@@ -288,21 +288,12 @@ void main() {
           updateUserProfileUseCase,
         );
 
-        final userProfile = UserProfile(
-          id: 'some id',
-          selectedTheme: ThemeType.light,
-        );
-        final expectedUserProfileModel = UserProfileModel(
-          id: userProfile.id,
-          selectedTheme: userProfile.selectedTheme,
-        );
-
         when(receiveUserProfileUpdates(any)).thenAnswer(
           (_) => Stream.value(userProfile),
         );
 
         final listener = expectAsync0(() {
-          return authNotifier.userProfileModel == expectedUserProfileModel;
+          return authNotifier.userProfileModel == userProfileModel;
         });
 
         authNotifier.addListener(listener);
@@ -311,10 +302,44 @@ void main() {
       },
     );
 
-    // test(
-    //   ".subscribeToUserProfileUpdates() calls the create user profile use case if the stream emits null",
-    //   () {},
-    // );
+    test(
+      ".subscribeToUserProfileUpdates() calls the create user profile use case if the stream emits null",
+      () {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        authNotifier.changeTheme(selectedTheme);
+
+        final userProfileController = StreamController<UserProfile>();
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => userProfileController.stream,
+        );
+
+        final listener = expectAsyncUntil0(() {}, () {
+          if (authNotifier.userProfileModel != null) {
+            verify(createUserProfileUseCase(any)).called(1);
+            return true;
+          }
+
+          return false;
+        });
+
+        authNotifier.addListener(listener);
+
+        userProfileController.add(null);
+        userProfileController.add(userProfile);
+
+        authNotifier.subscribeToUserProfileUpdates(id);
+      },
+    );
 
     test(
       ".subscribeToUserProfileUpdates() set the is logged in status to true if the stream emits a user profile",
@@ -347,6 +372,42 @@ void main() {
 
           return false;
         });
+
+        authNotifier.addListener(listener);
+      },
+    );
+
+    test(
+      ".userProfileErrorMessage provides an error description if a user profile stream emits a persistent store exception",
+      () async {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        const errorCode = PersistentStoreErrorCode.unknown;
+        final userProfileController = StreamController<UserProfile>();
+        const errorMessage = PersistentStoreErrorMessage(errorCode);
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => userProfileController.stream,
+        );
+
+        authNotifier.subscribeToUserProfileUpdates(id);
+
+        userProfileController.addError(const PersistentStoreException(
+          code: errorCode,
+        ));
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () => authNotifier.userProfileErrorMessage == errorMessage.message,
+        );
 
         authNotifier.addListener(listener);
       },
@@ -720,16 +781,23 @@ void main() {
       ".dispose() cancels all created subscriptions",
       () {
         final userController = StreamController<User>();
+        final userProfileController = StreamController<UserProfile>();
 
         when(receiveAuthUpdates()).thenAnswer((_) => userController.stream);
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => userProfileController.stream,
+        );
 
         authNotifier.subscribeToAuthenticationUpdates();
+        authNotifier.subscribeToUserProfileUpdates(id);
 
         expect(userController.hasListener, isTrue);
+        expect(userProfileController.hasListener, isTrue);
 
         authNotifier.dispose();
 
         expect(userController.hasListener, isFalse);
+        expect(userProfileController.hasListener, isFalse);
       },
     );
   });
