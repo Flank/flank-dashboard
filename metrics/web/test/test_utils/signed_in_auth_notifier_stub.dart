@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:metrics/auth/domain/entities/theme_type.dart';
 import 'package:metrics/auth/presentation/models/auth_error_message.dart';
+import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 
 /// Stub implementation on the [AuthNotifier].
@@ -51,4 +53,25 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
     _isLoggedIn = false;
     notifyListeners();
   }
+
+  @override
+  void changeTheme(ThemeType themeType) {}
+
+  @override
+  ThemeType get selectedTheme => null;
+
+  @override
+  void subscribeToUserProfileUpdates(String id) {}
+
+  @override
+  Future<void> updateUserProfile(UserProfileModel userProfile) async {}
+
+  @override
+  String get userProfileErrorMessage => null;
+
+  @override
+  UserProfileModel get userProfileModel => null;
+
+  @override
+  String get userProfileSavingErrorMessage => null;
 }

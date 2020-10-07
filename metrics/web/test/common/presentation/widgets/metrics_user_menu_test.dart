@@ -168,7 +168,7 @@ void main() {
         await tester.tap(find.byType(Toggle));
         await tester.pumpAndSettle();
 
-        verify(themeNotifier.changeTheme()).called(equals(1));
+        verify(themeNotifier.toggleTheme()).called(equals(1));
       },
     );
 

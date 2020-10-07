@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
+import 'package:metrics/auth/domain/entities/theme_type.dart';
 import 'package:metrics/auth/domain/entities/user.dart';
 import 'package:metrics/auth/domain/entities/user_profile.dart';
 import 'package:metrics/auth/domain/usecases/create_user_profile_usecase.dart';
@@ -43,6 +44,9 @@ void main() {
       code: AuthErrorCode.wrongPassword,
     );
 
+    const id = 'id';
+    const selectedTheme = ThemeType.dark;
+
     const email = 'test@email.com';
     const password = 'password';
 
@@ -51,6 +55,12 @@ void main() {
     final invalidCredentials = UserCredentialsParam(
       email: Email(invalidEmail),
       password: Password(invalidPassword),
+    );
+
+    final userProfile = UserProfile(id: id, selectedTheme: selectedTheme);
+    const userProfileModel = UserProfileModel(
+      id: 'second id',
+      selectedTheme: ThemeType.light,
     );
 
     final authNotifier = AuthNotifier(
@@ -63,11 +73,14 @@ void main() {
       updateUserProfileUseCase,
     );
 
-    tearDown(() {
+    setUp(() {
       reset(signInUseCase);
       reset(googleSignInUseCase);
       reset(signOutUseCase);
       reset(receiveAuthUpdates);
+      reset(receiveUserProfileUpdates);
+      reset(createUserProfileUseCase);
+      reset(updateUserProfileUseCase);
     });
 
     test("throws AssertionError if a receiveAuthUpdates parameter is null", () {
@@ -134,55 +147,58 @@ void main() {
     });
 
     test(
-        "throws AssertionError if a receiveUserProfileUpdates parameter is null",
-        () {
-      expect(
-        () => AuthNotifier(
-          receiveAuthUpdates,
-          signInUseCase,
-          googleSignInUseCase,
-          signOutUseCase,
-          null,
-          createUserProfileUseCase,
-          updateUserProfileUseCase,
-        ),
-        MatcherUtil.throwsAssertionError,
-      );
-    });
+      "throws AssertionError if a receiveUserProfileUpdates parameter is null",
+      () {
+        expect(
+          () => AuthNotifier(
+            receiveAuthUpdates,
+            signInUseCase,
+            googleSignInUseCase,
+            signOutUseCase,
+            null,
+            createUserProfileUseCase,
+            updateUserProfileUseCase,
+          ),
+          MatcherUtil.throwsAssertionError,
+        );
+      },
+    );
 
     test(
-        "throws AssertionError if a createUserProfileUseCase parameter is null",
-        () {
-      expect(
-        () => AuthNotifier(
-          receiveAuthUpdates,
-          signInUseCase,
-          googleSignInUseCase,
-          signOutUseCase,
-          receiveUserProfileUpdates,
-          null,
-          updateUserProfileUseCase,
-        ),
-        MatcherUtil.throwsAssertionError,
-      );
-    });
+      "throws AssertionError if a createUserProfileUseCase parameter is null",
+      () {
+        expect(
+          () => AuthNotifier(
+            receiveAuthUpdates,
+            signInUseCase,
+            googleSignInUseCase,
+            signOutUseCase,
+            receiveUserProfileUpdates,
+            null,
+            updateUserProfileUseCase,
+          ),
+          MatcherUtil.throwsAssertionError,
+        );
+      },
+    );
 
     test(
-        "throws AssertionError if a updateUserProfileUseCase parameter is null",
-        () {
-      expect(
-        () => AuthNotifier(
-          receiveAuthUpdates,
-          signInUseCase,
-          googleSignInUseCase,
-          signOutUseCase,
-          receiveUserProfileUpdates,
-          createUserProfileUseCase,
-          null,
-        ),
-        MatcherUtil.throwsAssertionError,
-      );
-    });
+      "throws AssertionError if a updateUserProfileUseCase parameter is null",
+      () {
+        expect(
+          () => AuthNotifier(
+            receiveAuthUpdates,
+            signInUseCase,
+            googleSignInUseCase,
+            signOutUseCase,
+            receiveUserProfileUpdates,
+            createUserProfileUseCase,
+            null,
+          ),
+          MatcherUtil.throwsAssertionError,
+        );
+      },
+    );
 
     test(
       ".subscribeToAuthenticationUpdates() delegates to receiveAuthUpdates usecase",
@@ -211,51 +227,128 @@ void main() {
     );
 
     test(
-      ".subscribeToUserProfileUpdates() does not call the use case if the given id is null",
-      () async {
-        authNotifier.subscribeToUserProfileUpdates(
-          null,
-        );
+      ".subscribeToAuthenticationUpdates() unsubscribes from user updates when a user is null",
+      () {
+        final userController = StreamController<User>();
 
-        verifyNever(receiveUserProfileUpdates(any));
-      },
-    );
-
-    test(
-      ".updateUserProfile() does not call the use case if the given user profile is null",
-      () async {
-        await authNotifier.updateUserProfile(
-          null,
-        );
-
-        verifyNever(updateUserProfileUseCase(any));
-      },
-    );
-
-    test(".isLoggedIn status is true after a user signs in", () async {
-      final user = User(id: 'id', email: email);
-
-      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(user));
-
-      authNotifier.subscribeToAuthenticationUpdates();
-
-      await authNotifier.signInWithEmailAndPassword(email, password);
-
-      expect(authNotifier.isLoggedIn, isTrue);
-    });
-
-    test(
-      ".isLoggedIn status is true after a user signs in with Google",
-      () async {
-        final user = User(id: 'id', email: email);
-
-        when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(user));
+        when(receiveAuthUpdates()).thenAnswer((_) => userController.stream);
 
         authNotifier.subscribeToAuthenticationUpdates();
 
-        await authNotifier.signInWithGoogle();
+        expect(userController.hasListener, isTrue);
 
-        expect(authNotifier.isLoggedIn, isTrue);
+        when(receiveAuthUpdates()).thenAnswer((_) => const Stream.empty());
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        expect(userController.hasListener, isFalse);
+      },
+    );
+
+    test(
+      ".subscribeToUserProfileUpdates() subscribes to a user profile updates stream",
+      () {
+        final streamController = StreamController<UserProfile>();
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => streamController.stream,
+        );
+
+        authNotifier.subscribeToUserProfileUpdates(id);
+
+        expect(streamController.hasListener, isTrue);
+      },
+    );
+
+    test(
+      ".subscribeToUserProfileUpdates() does not subscribe to user profile updates if the given id is null",
+      () {
+        final streamController = StreamController<UserProfile>();
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => streamController.stream,
+        );
+
+        authNotifier.subscribeToUserProfileUpdates(null);
+
+        expect(streamController.hasListener, isFalse);
+      },
+    );
+
+    test(
+      ".subscribeToUserProfileUpdates() creates a user profile model from the user profile that stream emits",
+      () {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        final userProfile = UserProfile(
+          id: 'some id',
+          selectedTheme: ThemeType.light,
+        );
+        final expectedUserProfileModel = UserProfileModel(
+          id: userProfile.id,
+          selectedTheme: userProfile.selectedTheme,
+        );
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(userProfile),
+        );
+
+        final listener = expectAsync0(() {
+          return authNotifier.userProfileModel == expectedUserProfileModel;
+        });
+
+        authNotifier.addListener(listener);
+
+        authNotifier.subscribeToUserProfileUpdates(id);
+      },
+    );
+
+    // test(
+    //   ".subscribeToUserProfileUpdates() calls the create user profile use case if the stream emits null",
+    //   () {},
+    // );
+
+    test(
+      ".subscribeToUserProfileUpdates() set the is logged in status to true if the stream emits a user profile",
+      () {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        final userProfile = UserProfile(
+          id: 'some id',
+          selectedTheme: ThemeType.light,
+        );
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(userProfile),
+        );
+
+        authNotifier.subscribeToUserProfileUpdates(id);
+
+        final listener = expectAsync0(() {
+          if (authNotifier.isLoggedIn != null) {
+            return authNotifier.isLoggedIn;
+          }
+
+          return false;
+        });
+
+        authNotifier.addListener(listener);
       },
     );
 
@@ -475,31 +568,153 @@ void main() {
       },
     );
 
-    // test(
-    //   ".updateUserProfile() sets the user profile error message if the use case throws a persistent store exception",
-    //   () async {
-    //     const errorCode = PersistentStoreErrorCode.unknown;
-    //     const errorMessage = PersistentStoreErrorMessage(errorCode);
+    test(
+      ".updateUserProfile() delegates to the update user profile use case",
+      () async {
+        await authNotifier.updateUserProfile(userProfileModel);
 
-    //     when(updateUserProfileUseCase(any)).thenThrow(
-    //       const PersistentStoreException(code: errorCode),
-    //     );
+        verify(updateUserProfileUseCase(any)).called(1);
+      },
+    );
 
-    //     await authNotifier
-    //         .updateUserProfile();
+    test(
+      ".updateUserProfile() does not call the use case if the given user profile is the same as in the notifier",
+      () async {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
 
-    //     expect(
-    //       authNotifier.userProfileSavingErrorMessage,
-    //       errorMessage.message,
-    //     );
-    //   },
-    // );
+        final updatedUserProfile = UserProfileModel(
+          id: userProfile.id,
+          selectedTheme: userProfile.selectedTheme,
+        );
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(userProfile),
+        );
+
+        authNotifier.subscribeToUserProfileUpdates(id);
+
+        final listener = expectAsyncUntil0(
+          () async {
+            await authNotifier.updateUserProfile(updatedUserProfile);
+
+            verifyNever(updateUserProfileUseCase(any));
+          },
+          () => authNotifier.userProfileModel != null,
+        );
+
+        authNotifier.addListener(listener);
+      },
+    );
+
+    test(
+      ".updateUserProfile() does not call the use case if the given user profile is null",
+      () async {
+        await authNotifier.updateUserProfile(null);
+
+        verifyNever(updateUserProfileUseCase(any));
+      },
+    );
+
+    test(
+      ".updateUserProfile() sets the user profile error message if throws a persistent store exception",
+      () async {
+        const errorCode = PersistentStoreErrorCode.unknown;
+        const errorMessage = PersistentStoreErrorMessage(errorCode);
+
+        when(updateUserProfileUseCase(any)).thenThrow(
+          const PersistentStoreException(code: errorCode),
+        );
+
+        await authNotifier.updateUserProfile(userProfileModel);
+
+        expect(
+          authNotifier.userProfileSavingErrorMessage,
+          errorMessage.message,
+        );
+      },
+    );
+
+    test(
+      ".updateUserProfile() resets the project group error message",
+      () async {
+        const errorCode = PersistentStoreErrorCode.unknown;
+
+        when(updateUserProfileUseCase(any)).thenThrow(
+          const PersistentStoreException(code: errorCode),
+        );
+
+        await authNotifier.updateUserProfile(userProfileModel);
+
+        expect(
+          authNotifier.userProfileSavingErrorMessage,
+          isNotNull,
+        );
+
+        reset(updateUserProfileUseCase);
+
+        await authNotifier.updateUserProfile(userProfileModel);
+
+        expect(
+          authNotifier.userProfileSavingErrorMessage,
+          isNull,
+        );
+      },
+    );
 
     test(".signOut() delegates to the SignOutUseCase", () async {
       await authNotifier.signOut();
 
       verify(signOutUseCase()).called(equals(1));
     });
+
+    test(
+      ".changeTheme() changes the currently selected theme to the given theme",
+      () {
+        const expectedTheme = ThemeType.light;
+
+        authNotifier.changeTheme(expectedTheme);
+
+        expect(authNotifier.selectedTheme, equals(expectedTheme));
+      },
+    );
+
+    test(
+      ".changeTheme() does not change the currently selected theme if the given theme is null",
+      () {
+        const expectedTheme = ThemeType.light;
+
+        authNotifier.changeTheme(expectedTheme);
+
+        expect(authNotifier.selectedTheme, equals(expectedTheme));
+
+        authNotifier.changeTheme(null);
+
+        expect(authNotifier.selectedTheme, equals(expectedTheme));
+      },
+    );
+
+    test(
+      ".changeTheme() does not notify listeners if the given theme is the same as in the notifier",
+      () {
+        const theme = ThemeType.light;
+        bool isNotified = false;
+
+        authNotifier.changeTheme(theme);
+
+        authNotifier.addListener(() => isNotified = true);
+
+        authNotifier.changeTheme(theme);
+
+        expect(isNotified, isFalse);
+      },
+    );
 
     test(
       ".dispose() cancels all created subscriptions",

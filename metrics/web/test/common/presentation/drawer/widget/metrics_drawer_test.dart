@@ -35,7 +35,7 @@ void main() {
         await tester.tap(find.byType(Checkbox));
         await tester.pump();
 
-        verify(themeNotifier.changeTheme()).called(equals(1));
+        verify(themeNotifier.toggleTheme()).called(equals(1));
       },
     );
 

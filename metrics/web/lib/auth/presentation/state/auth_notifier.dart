@@ -176,13 +176,13 @@ class AuthNotifier extends ChangeNotifier {
             id: userProfile.id,
             selectedTheme: userProfile.selectedTheme,
           );
+
+          _isLoggedIn = true;
         } else {
           await _createUserProfile(
             UserProfileModel(id: id, selectedTheme: selectedTheme),
           );
         }
-
-        _isLoggedIn = true;
 
         notifyListeners();
       },
@@ -239,6 +239,31 @@ class AuthNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Updates the existing user profile, based on the updated [userProfile].
+  Future<void> updateUserProfile(UserProfileModel userProfile) async {
+    if (userProfile == null || userProfile == _userProfileModel) {
+      return;
+    }
+
+    _resetUserProfileSavingErrorMessage();
+
+    try {
+      await _updateUserProfileUseCase(
+        UserProfileParam(
+          id: userProfile.id,
+          selectedTheme: userProfile.selectedTheme,
+        ),
+      );
+    } on PersistentStoreException catch (exception) {
+      _userProfileSavingErrorHandler(exception.code);
+    }
+  }
+
+  /// Signs out the user from the app.
+  Future<void> signOut() async {
+    await _signOutUseCase();
+  }
+
   /// Changes the currently selected theme to the given [themeType].
   void changeTheme(ThemeType themeType) {
     if (themeType == null) {
@@ -257,6 +282,8 @@ class AuthNotifier extends ChangeNotifier {
       return;
     }
 
+    _resetUserProfileSavingErrorMessage();
+
     try {
       await _createUserProfileUseCase(
         UserProfileParam(
@@ -267,29 +294,6 @@ class AuthNotifier extends ChangeNotifier {
     } on PersistentStoreException catch (exception) {
       _userProfileSavingErrorHandler(exception.code);
     }
-  }
-
-  /// Updates the existing user profile, based on the updated [userProfile].
-  Future<void> updateUserProfile(UserProfileModel userProfile) async {
-    if (userProfile == null || userProfile == _userProfileModel) {
-      return;
-    }
-
-    try {
-      await _updateUserProfileUseCase(
-        UserProfileParam(
-          id: userProfile.id,
-          selectedTheme: userProfile.selectedTheme,
-        ),
-      );
-    } on PersistentStoreException catch (exception) {
-      _userProfileSavingErrorHandler(exception.code);
-    }
-  }
-
-  /// Signs out the user from the app.
-  Future<void> signOut() async {
-    await _signOutUseCase();
   }
 
   /// Handles an [error] occurred in user profile stream.
@@ -318,6 +322,12 @@ class AuthNotifier extends ChangeNotifier {
     } else {
       _authErrorMessage = _errorMessage;
     }
+  }
+
+  /// Resets the user profile saving error message.
+  void _resetUserProfileSavingErrorMessage() {
+    _userProfileSavingErrorMessage = null;
+    notifyListeners();
   }
 
   /// Handles an error occurred during saving a user profile.
