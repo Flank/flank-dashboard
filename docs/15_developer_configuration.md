@@ -53,7 +53,7 @@ Notice that if you are running the Flutter web application for the first time, y
 
 ## Running the Metrics Application
 
-To run the Metrics Application with an ability to use the Google Sign-in we should run the application on the `8080` or `5000` port. To do so, run the application with the the following arguments: 
+To run the Metrics Application with an ability to use the Google Sign-in we should run the application on the `8080` or `5000` port. To do so, run the application with the following arguments: 
 
 `--web-hostname=localhost --web-port=8080` or `--web-hostname=localhost --web-port=5000`
 
@@ -98,4 +98,4 @@ DONE:
 
 > What was the outcome of the project?
 
-As a result, we've got documented the currently used Flutter version and thee ways of running the Metrics application.
+As a result, we've got documented the currently used Flutter version and the ways of running the Metrics application.
