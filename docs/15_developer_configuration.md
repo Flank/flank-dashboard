@@ -29,19 +29,13 @@ The document with instructions on how to run the project locally and make all th
 
 IDE configuration is out of scope.
 
-# Design
-
-> Explain and diagram the technical design
->
-> Identify risks and edge cases
-
 # API
 
 > What will the proposed API look like?
 
 ## Supported browsers
 
-Currently, the Metrics Application supports only the Google Chrome browser. It means that the application is well-tested and debugged using the Google Chrome browser, and it can be not so stable on the other browsers.
+Latest Google Chrome browser.
 
 ## Flutter version
 
