@@ -132,7 +132,7 @@ Once you've done, you should add an allowed URLs to the Authorized JavaScript or
 1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
 2. Open the side menu and go to the `APIs & Services` section.
 3. Go to the `Credentials` section, find the `Web client` in `OAuth 2.0 Client IDs` section and open it.
-4. Then you should find the `Authorized JavaScript origins` section. That is the place where you can add any origins you want to have access to the google sign.
+4. Then you should find the `Authorized JavaScript origins` section. That is the place where you can add any URL origins that will have access to the google sign.
 
 ## Building and deploying the application to the Firebase Hosting
 

@@ -2,9 +2,13 @@
 
 > Summary of the proposed change
 
+Specify the relevant Flutter version for Metrics application and describe the ways of running the application with all features available.
+
 # References
 
 > Link to supporting documentation, GitHub tickets, etc.
+
+- [Web support for Flutter](https://flutter.dev/web)
 
 # Motivation
 
@@ -43,11 +47,17 @@ Currently, the Metrics Application supports only the Google Chrome browser. It m
 
 The Metrics Application is developing and testing on the Flutter `beta` channel and `1.22.0-12.1.pre` version.
 
+Notice that if you are running the Flutter web application for the first time, you should execute the following command to enable the web support: 
+
+`flutter config --enable-web`
+
 ## Running the Metrics Application
 
 To run the Metrics Application with an ability to use the Google Sign-in we should run the application on the `8080` or `5000` port. To do so, run the application with the the following arguments: 
 
-`--web-hostname=localhost --web-port=8080`
+`--web-hostname=localhost --web-port=8080` or `--web-hostname=localhost --web-port=5000`
+
+After the application started, you should copy the application URL from the Google Chrome debug window and place it to the regular Google Chrome window to be able to use the Google Sign-in.
 
 To run the application using the SKIA renderer we should use the following arguments: 
 
