@@ -11,7 +11,7 @@ class SparklineGraph extends StatelessWidget {
   /// The minimal length of this graph axis.
   static const int _minChartAxisLength = 1;
 
-  /// A default axes [TickGenerator] that generates empty ticks.
+  /// A default axes [TickGenerator] that generates empty tick list.
   static const _axisTickGenerator = FixedTickGenerator<num>(ticks: []);
 
   /// The class to present the line of this graph.
