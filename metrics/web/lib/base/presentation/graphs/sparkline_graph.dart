@@ -75,7 +75,7 @@ class SparklineGraph extends StatelessWidget {
             paint: null,
           ),
           yAxis: ChartAxis(
-            spanFn: _createYAxisSpan,
+            spanFn: _createStrokeFitAxisSpan,
             tickGenerator: _axisTickGenerator,
             paint: null,
           ),
@@ -107,9 +107,9 @@ class SparklineGraph extends StatelessWidget {
 
   /// Creates the [DoubleSpan] for Y axis.
   ///
-  /// Represents the visible range of the axis from min axis value minus half
-  /// of the [strokeWidth] to max axis value plus half of the [strokeWidth].
-  DoubleSpan _createYAxisSpan(List<num> data) {
+  /// Represents the visible range of the axis from min axis value to max axis
+  /// value with an additional indent to fit the stroke.
+  DoubleSpan _createStrokeFitAxisSpan(List<num> data) {
     final axisSpan = _createAxisSpan(data);
 
     if (axisSpan == null) return null;
