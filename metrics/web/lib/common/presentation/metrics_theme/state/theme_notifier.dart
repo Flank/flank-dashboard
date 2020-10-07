@@ -9,6 +9,8 @@ class ThemeNotifier extends ChangeNotifier {
   ThemeType _selectedTheme;
 
   /// Creates a new [ThemeNotifier] instance with the given [brightness].
+  ///
+  /// Sets the initial theme, based on the [brightness].
   ThemeNotifier({
     Brightness brightness,
   }) : _selectedTheme =
