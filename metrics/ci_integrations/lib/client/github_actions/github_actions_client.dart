@@ -8,72 +8,50 @@ import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.d
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_run_duration.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:ci_integration/util/url/url_utils.dart';
+import 'package:ci_integration/util/validator/string_validator.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
-import 'models/workflow_run_duration.dart';
-
 /// A client for interaction with the Github Actions API.
 class GithubActionsClient {
-  /// The Github API URL to use in HTTP requests.
+  /// A base Github API URL to use in HTTP requests for this client.
   final String githubApiUrl;
 
-  /// An owner of the repository.
+  /// An owner of the repository this client should perform requests to.
   final String repositoryOwner;
 
-  /// A name of the repository.
+  /// A name of the repository this client should perform requests to.
   final String repositoryName;
 
-  /// An authorization method used in HTTP requests.
+  /// An authorization method used in HTTP requests for this client.
   final AuthorizationBase authorization;
 
   /// The HTTP client for making requests to the Github Actions API.
   final Client _client = Client();
 
-  /// Creates a new instance of the [GithubActionsClient] using [githubApiUrl],
-  /// [repositoryOwner], [repositoryName] and the [authorization] method
-  /// (see [AuthorizationBase] and implementers) provided.
+  /// Creates a new instance of the [GithubActionsClient].
   ///
-  /// [githubApiUrl], [repositoryOwner], [repositoryName] are
-  /// required parameters. If any of them is empty or equals to `null`, the
-  /// [ArgumentError.value] is thrown.
+  /// Throws an [ArgumentError] if either [githubApiUrl], [repositoryOwner] or
+  /// [repositoryName] is `null` or empty.
   GithubActionsClient({
     @required this.githubApiUrl,
     @required this.repositoryOwner,
     @required this.repositoryName,
     this.authorization,
   }) {
-    if (githubApiUrl == null || githubApiUrl.isEmpty) {
-      throw ArgumentError.value(
-        githubApiUrl,
-        'githubApiUrl',
-        'must not be null or empty',
-      );
-    }
-
-    if (repositoryOwner == null || repositoryOwner.isEmpty) {
-      throw ArgumentError.value(
-        repositoryOwner,
-        'repositoryOwner',
-        'must not be null or empty',
-      );
-    }
-
-    if (repositoryName == null || repositoryName.isEmpty) {
-      throw ArgumentError.value(
-        repositoryName,
-        'repositoryName',
-        'must not be null or empty',
-      );
-    }
+    StringValidator.checkNotNullOrEmpty(githubApiUrl, name: 'githubApiUrl');
+    StringValidator.checkNotNullOrEmpty(repositoryOwner,
+        name: 'repositoryOwner');
+    StringValidator.checkNotNullOrEmpty(repositoryName, name: 'repositoryName');
   }
 
-  /// Returns the base API url for making HTTP requests.
-  String get baseUrl {
+  /// Returns the API base path to use in HTTP requests.
+  String get basePath {
     return '$githubApiUrl/repos/$repositoryOwner/$repositoryName/actions/';
   }
 
@@ -92,8 +70,8 @@ class GithubActionsClient {
   ///
   /// Awaits [responseFuture] and handles the result. If either the provided
   /// future throws or [HttpResponse.statusCode] is not equal to [HttpStatus.ok]
-  /// this method will result with [InteractionResult.error]. Otherwise,
-  /// delegates parsing [Response.body] JSON to the [bodyParser] method.
+  /// this method results with [InteractionResult.error]. Otherwise, delegates
+  /// parsing [Response.body] JSON to the given [bodyParser] callback.
   Future<InteractionResult<T>> _handleResponse<T>(
     Future<Response> responseFuture,
     BodyParserCallback<T> bodyParser,
@@ -120,24 +98,25 @@ class GithubActionsClient {
     }
   }
 
-  /// Retrieves a list of workflow runs by the given [workflowFileName].
+  /// Retrieves a list of [WorkflowRun]s by the given [workflowIdentifier].
   ///
-  /// Results with a [List] of [WorkflowRun]s.
+  /// The [workflowIdentifier] is either a workflow id or a name of the file
+  /// that defines the workflow.
   ///
-  /// [status] can be used to set the status of workflow runs to retrieve.
-  /// [status] defaults to [RunStatus.completed].
+  /// [status] is used as a filter query parameter to define the
+  /// [WorkflowRun.status] of runs to fetch.
   ///
-  /// [perPage] can be used to set the number of runs per page.
-  /// [perPage] defaults to `100` runs per page.
-  /// The maximum value of [perPage] is 100 runs per page.
+  /// [perPage] is used for limiting the number of runs and pagination in pair
+  /// with the [page] parameter. It defaults to `10` and is limited to `100`.
+  /// The greater values than `100` are ignored and considered as a maximum.
   ///
-  /// [page] can be used to set the number of a page to retrieve.
-  /// [page] defaults to the `1`st page.
+  /// [page] is used for pagination and defines a page of runs to fetch.
+  /// If the [page] is `null` or omitted, the first page is fetched.
   Future<InteractionResult<List<WorkflowRun>>> fetchWorkflowRuns(
-    String workflowFileName, {
-    RunStatus status = RunStatus.completed,
-    int perPage = 100,
-    int page = 1,
+    String workflowIdentifier, {
+    RunStatus status,
+    int perPage = 10,
+    int page,
   }) {
     const statusMapper = RunStatusMapper();
 
@@ -148,8 +127,8 @@ class GithubActionsClient {
     };
 
     final url = UrlUtils.buildUrl(
-      baseUrl,
-      path: 'workflows/$workflowFileName/runs',
+      basePath,
+      path: 'workflows/$workflowIdentifier/runs',
       queryParameters: queryParameters,
     );
 
@@ -166,12 +145,10 @@ class GithubActionsClient {
     );
   }
 
-  /// Retrieves a workflow run duration by the given [runId].
-  ///
-  /// Results with a [WorkflowRunDuration].
+  /// Fetches a [WorkflowRunDuration] for the run with the given [runId].
   Future<InteractionResult<WorkflowRunDuration>> fetchRunDuration(int runId) {
     final url = UrlUtils.buildUrl(
-      baseUrl,
+      basePath,
       path: 'runs/$runId/timing',
     );
 
@@ -185,20 +162,19 @@ class GithubActionsClient {
     );
   }
 
-  /// Retrieves a list of workflow run artifacts by the given [runId].
+  /// Fetches a list of artifacts for a workflow run with the given [runId].
   ///
-  /// Results with a [List] of [WorkflowRunArtifact]s.
+  /// [perPage] is used for limiting the number of artifacts and pagination in
+  /// pair with the [page] parameter. It defaults to `10` and is limited to
+  /// `100`. The greater values than `100` are ignored and considered as a
+  /// maximum.
   ///
-  /// [perPage] can be used to set the number of artifacts per page.
-  /// [perPage] defaults to `100` artifacts per page.
-  /// The maximum value of [perPage] is 100.
-  ///
-  /// [page] can be used to set the number of a page to retrieve.
-  /// [page] defaults to the `1`st page.
+  /// [page] is used for pagination and defines a page of artifacts to fetch.
+  /// If the [page] is `null` or omitted, the first page is fetched.
   Future<InteractionResult<List<WorkflowRunArtifact>>> fetchRunArtifacts(
     int runId, {
-    int perPage = 100,
-    int page = 1,
+    int perPage = 10,
+    int page,
   }) {
     final queryParameters = {
       'per_page': '$perPage',
@@ -206,7 +182,7 @@ class GithubActionsClient {
     };
 
     final url = UrlUtils.buildUrl(
-      baseUrl,
+      basePath,
       path: 'runs/$runId/artifacts',
       queryParameters: queryParameters,
     );
@@ -224,10 +200,13 @@ class GithubActionsClient {
     );
   }
 
-  /// Retrieves a workflow run artifact by the given download [url].
+  /// Fetches a workflow run artifact by the given download [url].
   ///
-  /// Results with a [Uint8List] that contains the artifact's bytes.
-  Future<InteractionResult<Uint8List>> downloadRunArtifact(String url) async {
+  /// The resulting [Uint8List] contains bytes of a zip archive with the desired
+  /// artifacts.
+  Future<InteractionResult<Uint8List>> downloadRunArtifactZip(
+    String url,
+  ) async {
     try {
       final response = await _client.get(url);
 

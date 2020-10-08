@@ -97,7 +97,7 @@ void main() {
     );
 
     test(
-      ".headers should contain the 'accept' header with the GithubActionsConstants.acceptHeader value",
+      ".headers contain the 'accept' header with the GithubActionsConstants.acceptHeader value",
       () {
         final headers = client.headers;
 
@@ -112,7 +112,7 @@ void main() {
     );
 
     test(
-      ".headers include authorization related header if such were provided",
+      ".headers include authorization info if the authorization is given",
       () {
         final client = _createClient(authorization: authorization);
         final headers = client.headers;
@@ -124,14 +124,13 @@ void main() {
     );
 
     test(
-      ".headers don't include authorization related header if such weren't provided",
+      ".headers do not include authorization info if the authorization is not given",
       () {
         final headers = client.headers;
 
         final authHeader = authorization.toMap().entries.first;
 
-        expect(headers.containsKey(authHeader.key), isFalse);
-        expect(headers.containsKey(authHeader.value), isFalse);
+        expect(headers, isNot(containsPair(authHeader.key, authHeader.value)));
       },
     );
   });
