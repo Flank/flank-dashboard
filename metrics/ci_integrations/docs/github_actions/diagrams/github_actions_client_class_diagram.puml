@@ -4,7 +4,7 @@ package github_actions <<Folder>> {
 
     package models <<Folder>> {
 
-        interface Pagination<T> {
+        abstract class Pagination<T> {
             +totalCount: int
             +page: int
             +pageCount: int
