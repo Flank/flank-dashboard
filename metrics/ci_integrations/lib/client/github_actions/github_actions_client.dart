@@ -9,6 +9,7 @@ import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_duration.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_runs_pagination.dart';
 import 'package:ci_integration/client/jenkins/jenkins_client.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
@@ -112,7 +113,7 @@ class GithubActionsClient {
   ///
   /// [page] is used for pagination and defines a page of runs to fetch.
   /// If the [page] is `null` or omitted, the first page is fetched.
-  Future<InteractionResult<List<WorkflowRun>>> fetchWorkflowRuns(
+  Future<InteractionResult<WorkflowRunsPagination>> fetchWorkflowRuns(
     String workflowIdentifier, {
     RunStatus status,
     int perPage = 10,
@@ -132,14 +133,15 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _handleResponse<List<WorkflowRun>>(
+    return _handleResponse<WorkflowRunsPagination>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) {
-        final runList =
-            json == null ? null : json['workflow_runs'] as List<dynamic>;
-
         return InteractionResult.success(
-          result: WorkflowRun.listFromJson(runList),
+          result: WorkflowRunsPagination.fromJson(
+            json,
+            page: page,
+            perPage: perPage,
+          ),
         );
       },
     );
