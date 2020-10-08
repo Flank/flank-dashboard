@@ -8,15 +8,21 @@ import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.d
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_duration.dart';
-import 'package:ci_integration/client/github_actions/models/workflow_runs_pagination.dart';
-import 'package:ci_integration/client/jenkins/jenkins_client.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:ci_integration/util/url/url_utils.dart';
 import 'package:ci_integration/util/validator/string_validator.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
+
+/// A callback for processing HTTP responses, using their [body] and [headers].
+typedef ResponseProcessingCallback<T> = InteractionResult<T> Function(
+  Map<String, dynamic> body,
+  Map<String, String> headers,
+);
 
 /// A client for interaction with the Github Actions API.
 class GithubActionsClient {
@@ -31,6 +37,9 @@ class GithubActionsClient {
 
   /// An authorization method used in HTTP requests for this client.
   final AuthorizationBase authorization;
+
+  /// A [RegExp] needed to parse next page URLs in [HttpResponse] headers.
+  final nextUrlRegexp = RegExp(r'(?<=<)(.*)(?=>)');
 
   /// The HTTP client for making requests to the Github Actions API.
   final Client _client = Client();
@@ -72,17 +81,18 @@ class GithubActionsClient {
   /// Awaits [responseFuture] and handles the result. If either the provided
   /// future throws or [HttpResponse.statusCode] is not equal to [HttpStatus.ok]
   /// this method results with [InteractionResult.error]. Otherwise, delegates
-  /// parsing [Response.body] JSON to the given [bodyParser] callback.
+  /// processing the response to the given [responseProcessor] callback.
   Future<InteractionResult<T>> _handleResponse<T>(
     Future<Response> responseFuture,
-    BodyParserCallback<T> bodyParser,
+    ResponseProcessingCallback<T> responseProcessor,
   ) async {
     try {
       final response = await responseFuture;
 
       if (response.statusCode == HttpStatus.ok) {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
-        return bodyParser(body);
+        final headers = response.headers;
+        return responseProcessor(body, headers);
       } else {
         final reason = response.body == null || response.body.isEmpty
             ? response.reasonPhrase
@@ -99,7 +109,7 @@ class GithubActionsClient {
     }
   }
 
-  /// Retrieves a list of [WorkflowRun]s by the given [workflowIdentifier].
+  /// Retrieves a [WorkflowRunsPage] by the given [workflowIdentifier].
   ///
   /// The [workflowIdentifier] is either a workflow id or a name of the file
   /// that defines the workflow.
@@ -113,12 +123,12 @@ class GithubActionsClient {
   ///
   /// [page] is used for pagination and defines a page of runs to fetch.
   /// If the [page] is `null` or omitted, the first page is fetched.
-  Future<InteractionResult<WorkflowRunsPagination>> fetchWorkflowRuns(
+  Future<InteractionResult<WorkflowRunsPage>> fetchWorkflowRuns(
     String workflowIdentifier, {
     RunStatus status,
     int perPage = 10,
     int page,
-  }) {
+  }) async {
     const statusMapper = RunStatusMapper();
 
     final queryParameters = {
@@ -133,14 +143,43 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _handleResponse<WorkflowRunsPagination>(
+    return _fetchWorkflowRuns(url);
+  }
+
+  /// Retrieves the next [WorkflowRunsPage] of the given [currentPage].
+  Future<InteractionResult<WorkflowRunsPage>> fetchNextRunsPage(
+    WorkflowRunsPage currentPage,
+  ) {
+    return _fetchWorkflowRuns(currentPage.nextPageUrl);
+  }
+
+  /// Retrieves a [WorkflowRunsPage] by the given [url].
+  ///
+  /// Both [fetchWorkflowRuns] and [fetchNextRunsPage] delegate retrieving
+  /// [WorkflowRunsPage]s to this method.
+  Future<InteractionResult<WorkflowRunsPage>> _fetchWorkflowRuns(
+    String url, {
+    int page,
+    int perPage,
+  }) {
+    return _handleResponse<WorkflowRunsPage>(
       _client.get(url, headers: headers),
-      (Map<String, dynamic> json) {
+      (Map<String, dynamic> json, Map<String, String> headers) {
+        final nextPageUrl = parseNextPageUrl(headers);
+
+        final totalCount = json == null ? null : json['total_count'] as int;
+
+        final runsList =
+            json == null ? null : json['workflow_runs'] as List<dynamic>;
+        final runs = WorkflowRun.listFromJson(runsList);
+
         return InteractionResult.success(
-          result: WorkflowRunsPagination.fromJson(
-            json,
+          result: WorkflowRunsPage(
+            totalCount: totalCount,
             page: page,
             perPage: perPage,
+            nextPageUrl: nextPageUrl,
+            values: runs,
           ),
         );
       },
@@ -156,7 +195,7 @@ class GithubActionsClient {
 
     return _handleResponse<WorkflowRunDuration>(
       _client.get(url, headers: headers),
-      (Map<String, dynamic> json) {
+      (Map<String, dynamic> json, _) {
         return InteractionResult.success(
           result: WorkflowRunDuration.fromJson(json),
         );
@@ -164,7 +203,7 @@ class GithubActionsClient {
     );
   }
 
-  /// Fetches a list of artifacts for a workflow run with the given [runId].
+  /// Retrieves a [WorkflowRunArtifactsPage] with the given [runId].
   ///
   /// [perPage] is used for limiting the number of artifacts and pagination in
   /// pair with the [page] parameter. It defaults to `10` and is limited to
@@ -173,7 +212,7 @@ class GithubActionsClient {
   ///
   /// [page] is used for pagination and defines a page of artifacts to fetch.
   /// If the [page] is `null` or omitted, the first page is fetched.
-  Future<InteractionResult<List<WorkflowRunArtifact>>> fetchRunArtifacts(
+  Future<InteractionResult<WorkflowRunArtifactsPage>> fetchRunArtifacts(
     int runId, {
     int perPage = 10,
     int page,
@@ -189,14 +228,44 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _handleResponse<List<WorkflowRunArtifact>>(
+    return _fetchRunArtifacts(url);
+  }
+
+  /// Retrieves the next [WorkflowRunArtifactsPage] of the given [currentPage].
+  Future<InteractionResult<WorkflowRunArtifactsPage>> fetchNextRunArtifactsPage(
+    WorkflowRunArtifactsPage currentPage,
+  ) {
+    return _fetchRunArtifacts(currentPage.nextPageUrl);
+  }
+
+  /// Retrieves [WorkflowRunArtifactsPage] by the given [url].
+  ///
+  /// Both [fetchRunArtifacts] and [fetchNextRunArtifactsPage] delegate
+  /// retrieving [WorkflowRunArtifactsPage]s to this method.
+  Future<InteractionResult<WorkflowRunArtifactsPage>> _fetchRunArtifacts(
+    String url, {
+    int page,
+    int perPage,
+  }) {
+    return _handleResponse<WorkflowRunArtifactsPage>(
       _client.get(url, headers: headers),
-      (Map<String, dynamic> json) {
-        final artifactList =
+      (Map<String, dynamic> json, Map<String, String> headers) {
+        final nextPageUrl = parseNextPageUrl(headers);
+
+        final totalCount = json == null ? null : json['total_count'] as int;
+
+        final artifactsList =
             json == null ? null : json['artifacts'] as List<dynamic>;
+        final artifacts = WorkflowRunArtifact.listFromJson(artifactsList);
 
         return InteractionResult.success(
-          result: WorkflowRunArtifact.listFromJson(artifactList),
+          result: WorkflowRunArtifactsPage(
+            totalCount: totalCount,
+            page: page,
+            perPage: perPage,
+            nextPageUrl: nextPageUrl,
+            values: artifacts,
+          ),
         );
       },
     );
@@ -228,6 +297,19 @@ class GithubActionsClient {
         message: 'Failed to perform an operation. Error details: $error',
       );
     }
+  }
+
+  /// Parses the next page URL from the given [headers].
+  String parseNextPageUrl(Map<String, String> headers) {
+    final linkHeader = headers['link'];
+    final nextLinkString = linkHeader.split(',').firstWhere(
+          (link) => link.contains('next'),
+          orElse: () => '',
+        );
+
+    final nextPageUrl = nextUrlRegexp.firstMatch(nextLinkString)?.group(0);
+
+    return nextPageUrl;
   }
 
   /// Closes the client and cleans up any resources associated with it.
