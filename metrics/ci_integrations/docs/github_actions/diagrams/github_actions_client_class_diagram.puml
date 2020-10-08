@@ -4,16 +4,16 @@ package github_actions <<Folder>> {
 
     package models <<Folder>> {
 
-        abstract class Pagination<T> {
+        interface Pagination<T> {
             +totalCount: int
             +page: int
             +pageCount: int
             +values: List<T>
         }
 
-        class WorkflowRunsPagination<WorkflowRun> extends Pagination
+        class WorkflowRunsPagination<WorkflowRun> implements Pagination
 
-        class WorkflowRunArtifactsPagination<WorkflowRunArtifact> extends Pagination
+        class WorkflowRunArtifactsPagination<WorkflowRunArtifact> implements Pagination
 
         class WorkflowRun {
             +id: int
