@@ -18,7 +18,7 @@ abstract class Page<T> extends Equatable {
   final List<T> values;
 
   /// Indicates whether this page has the next page to fetch.
-  bool get hasNext => nextPageUrl != null;
+  bool get hasNextPage => nextPageUrl != null;
 
   @override
   List<Object> get props => [totalCount, page, perPage, nextPageUrl, values];

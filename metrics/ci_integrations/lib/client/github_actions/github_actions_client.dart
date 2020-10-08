@@ -143,14 +143,21 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchWorkflowRuns(url);
+    return _fetchWorkflowRuns(url, page: page, perPage: perPage);
   }
 
   /// Retrieves the next [WorkflowRunsPage] of the given [currentPage].
   Future<InteractionResult<WorkflowRunsPage>> fetchNextRunsPage(
     WorkflowRunsPage currentPage,
   ) {
-    return _fetchWorkflowRuns(currentPage.nextPageUrl);
+    final nextPageNumber =
+        currentPage.page == null ? null : currentPage.page + 1;
+
+    return _fetchWorkflowRuns(
+      currentPage.nextPageUrl,
+      page: nextPageNumber,
+      perPage: currentPage.perPage,
+    );
   }
 
   /// Retrieves a [WorkflowRunsPage] by the given [url].
@@ -228,14 +235,21 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchRunArtifacts(url);
+    return _fetchRunArtifacts(url, page: page, perPage: perPage);
   }
 
   /// Retrieves the next [WorkflowRunArtifactsPage] of the given [currentPage].
   Future<InteractionResult<WorkflowRunArtifactsPage>> fetchNextRunArtifactsPage(
     WorkflowRunArtifactsPage currentPage,
   ) {
-    return _fetchRunArtifacts(currentPage.nextPageUrl);
+    final nextPageNumber =
+        currentPage.page == null ? null : currentPage.page + 1;
+
+    return _fetchRunArtifacts(
+      currentPage.nextPageUrl,
+      page: nextPageNumber,
+      perPage: currentPage.perPage,
+    );
   }
 
   /// Retrieves [WorkflowRunArtifactsPage] by the given [url].
