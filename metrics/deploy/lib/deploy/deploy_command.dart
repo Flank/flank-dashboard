@@ -4,19 +4,17 @@ import 'package:args/command_runner.dart';
 import 'package:process_run/process_run.dart' as cmd;
 import 'package:process_run/shell.dart';
 
-const _chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
-Random _rnd = Random();
-
-String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-    length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-
-// class extending [Command] to facilitate  building GCloud project,build and deploy metrics app.
+/// class extending [Command] to facilitate  building GCloud project,build and deploy metrics app.
 class DeployCommand extends Command {
   @override
   final name = "deploy";
   @override
   final description =
       "Creates GCloud and Firebase project and deploy metrics app.";
+
+  final _chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
+  final Random _rnd = Random();
+
   DeployCommand();
 
   @override
@@ -44,7 +42,11 @@ class DeployCommand extends Command {
     await promptTerminate();
   }
 
-  // Login to GCloud and Firebase and get firebase CI token
+  /// Generates random string for new project name
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+  /// Login to GCloud and Firebase and get firebase CI token
   Future<String> login() async {
     // GCloud login
     print('GCloud Login.');
@@ -56,7 +58,7 @@ class DeployCommand extends Command {
     return prompt('Copy Firebase Token from above');
   }
 
-  // Add project or use existing project
+  /// Add project or use existing project
   Future<String> addProject() async {
     var projectID = '';
     if (await promptConfirm('Create new project ?')) {
@@ -74,7 +76,7 @@ class DeployCommand extends Command {
     return projectID;
   }
 
-  //Add Firebase capabilities to project.
+  /// Add Firebase capabilities to project.
   Future<void> addFirebase(String projectID, String firebaseToken) async {
     if (await promptConfirm('Add firebase capabilities to project ?')) {
       print('Adding Firebase capabilities.');
@@ -86,7 +88,7 @@ class DeployCommand extends Command {
     }
   }
 
-  // Select GCP region
+  ///  Select GCP region
   Future<String> selectRegion() async {
     // TODO: Listing regions won't work on new projects as compute API not enabled yet.
     //await run('gcloud',['compute','regions','list'],verbose:true);
@@ -106,7 +108,7 @@ class DeployCommand extends Command {
     }
   }
 
-  // Create firestore database.
+  /// Create firestore database.
   Future<void> createDatabase(String region, String projectID) async {
     // gcloud alpha firestore databases create --region=europe-west --project $projectID --quiet
     if (await promptConfirm('Add project database ?')) {
@@ -130,7 +132,7 @@ class DeployCommand extends Command {
     }
   }
 
-  // Create Firebase web app.
+  /// Create Firebase web app.
   Future<String> createWebApp(String projectID, String firebaseToken) async {
     //firebase apps:create --project $projectID
     if (await promptConfirm('Add web app?')) {
@@ -157,7 +159,7 @@ class DeployCommand extends Command {
     return prompt('appID');
   }
 
-  // Downloads and writes web app SDK config to firebase-config.js file.
+  /// Downloads and writes web app SDK config to firebase-config.js file.
   Future<void> downloadSDKConfig(String appID, String configPath,
       String projectID, String firebaseToken) async {
     // Get config
@@ -180,7 +182,7 @@ class DeployCommand extends Command {
         verbose: true);
   }
 
-  // Git clone latest metrics code, build and deploy.
+  /// Git clone latest metrics code, build and deploy.
   Future<void> buildAndDeploy(
     String appID,
     String projectID,
@@ -206,6 +208,7 @@ class DeployCommand extends Command {
         workingDirectory: workingDir, verbose: true);
   }
 
+  /// Cleanup resources.
   Future<void> cleanup(String srcPath) async {
     await cmd.run('rm', ['-rf', srcPath], verbose: true);
   }
