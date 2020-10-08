@@ -5,10 +5,10 @@ import 'package:metrics/auth/domain/entities/theme_type.dart';
 /// A class that represents a user profile model used to
 /// transfer data between [ChangeNotifier]s.
 class UserProfileModel extends Equatable {
-  /// A unique identifier of the user profile.
+  /// A unique identifier of this user profile.
   final String id;
 
-  /// A selected theme of the user profile.
+  /// A selected theme of this user profile.
   final ThemeType selectedTheme;
 
   @override
@@ -22,6 +22,19 @@ class UserProfileModel extends Equatable {
     @required this.selectedTheme,
   })  : assert(id != null),
         assert(selectedTheme != null);
+
+  /// Returns a new instance of the [UserProfileModel] that is a combination
+  /// of this user profile model and the given [userProfileModel].
+  ///
+  /// If the given [userProfileModel] is `null`, returns this user profile model.
+  UserProfileModel merge(UserProfileModel userProfileModel) {
+    if (userProfileModel == null) return this;
+
+    return copyWith(
+      id: userProfileModel.id,
+      selectedTheme: userProfileModel.selectedTheme,
+    );
+  }
 
   /// Creates the new instance of the [UserProfileModel]
   /// based on the current instance.

@@ -56,6 +56,47 @@ void main() {
     );
 
     test(
+      ".merge() returns the same instance if the given user profile model is null",
+      () {
+        final firstUserProfileModel = UserProfileModel(
+          id: id,
+          selectedTheme: selectedTheme,
+        );
+
+        final secondUserProfileModel = firstUserProfileModel.merge(null);
+
+        expect(firstUserProfileModel, equals(secondUserProfileModel));
+      },
+    );
+
+    test(
+      ".merge() creates a new instance with the given fields replaced with the new values",
+      () {
+        const selectedTheme = ThemeType.light;
+
+        final firstUserProfileModel = UserProfileModel(
+          id: id,
+          selectedTheme: ThemeType.dark,
+        );
+
+        final secondUserProfileModel = UserProfileModel(
+          id: id,
+          selectedTheme: selectedTheme,
+        );
+
+        final mergedUserProfileModel = firstUserProfileModel.merge(
+          secondUserProfileModel,
+        );
+
+        expect(
+          mergedUserProfileModel.id,
+          equals(firstUserProfileModel.id),
+        );
+        expect(mergedUserProfileModel.selectedTheme, equals(selectedTheme));
+      },
+    );
+
+    test(
       ".copyWith() creates a new instance with the same fields if called without params",
       () {
         final firstUserProfileModel = UserProfileModel(
