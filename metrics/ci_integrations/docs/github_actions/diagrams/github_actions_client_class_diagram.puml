@@ -4,6 +4,17 @@ package github_actions <<Folder>> {
 
     package models <<Folder>> {
 
+        abstract class Pagination<T> {
+            +totalCount: int
+            +page: int
+            +pageCount: int
+            +values: List<T>
+        }
+
+        class WorkflowRunsPagination<WorkflowRun> extends Pagination
+
+        class WorkflowRunArtifactsPagination<WorkflowRunArtifact> extends Pagination
+
         class WorkflowRun {
             +id: int
             +number: int
@@ -74,8 +85,8 @@ package github_actions <<Folder>> {
         +authorization: AuthorizationBase
 
         +getHeaders() : Map<String, String>
-        +fetchWorkflowRuns(String workflowIdentifier, RunStatus status, int perPage, int page): Future<InteractionResult<List<WorkflowRun>>>
-        +fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<List<WorkflowRunArtifact>>>
+        +fetchWorkflowRuns(String workflowIdentifier, RunStatus status, int perPage, int page): Future<InteractionResult<WorkflowRunsPagination>>
+        +fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<WorkflowRunsPagination>>
         +downloadRunArtifactZip(String url): Future<InteractionResult<UInt8List>>
         +fetchRunDuration(int runId): Future<InteractionResult<WorkflowRunDuration>>
         +close(): void
@@ -83,9 +94,11 @@ package github_actions <<Folder>> {
 }
 
 
-WorkflowRun <-- GithubActionsClient : uses
 WorkflowRunDuration <-- GithubActionsClient : uses
-WorkflowRunArtifact <-- GithubActionsClient : uses
+WorkflowRunsPagination <-- GithubActionsClient : uses
+WorkflowRunArtifactsPagination <-- GithubActionsClient : uses
+WorkflowRun <-- WorkflowRunsPagination : uses
+WorkflowRunArtifact <-- WorkflowRunArtifactsPagination : uses
 RunStatusMapper <-- GithubActionsClient : uses
 RunConclusionMapper <-- GithubActionsClient : uses
 RunConclusion <-- WorkflowRun : uses
