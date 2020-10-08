@@ -10,7 +10,6 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_popup_vi
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics_core/metrics_core.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -18,8 +17,6 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("BuildResultBarGraph", () {
-    VisibilityDetectorController.instance.updateInterval = Duration.zero;
-
     final buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
 
     testWidgets(

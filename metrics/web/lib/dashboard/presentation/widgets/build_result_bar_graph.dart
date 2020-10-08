@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 
 /// A [BarGraph] that displays the build result metric.
 ///
@@ -57,11 +58,14 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
 
   @override
   Widget build(BuildContext context) {
+    final barGraphPadding = _missingBarsCount != 0 && _barsData.isNotEmpty
+        ? const EdgeInsets.only(left: 4.0)
+        : EdgeInsets.zero;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        Expanded(
-          flex: _missingBarsCount,
+        Flexible(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(
@@ -70,8 +74,8 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
             ),
           ),
         ),
-        Expanded(
-          flex: _barsData.length,
+        Padding(
+          padding: barGraphPadding,
           child: BarGraph(
             data: _barsData.map((data) {
               return data.buildResultPopupViewModel.duration.inMilliseconds;
@@ -79,12 +83,16 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
             graphPadding: EdgeInsets.zero,
             barBuilder: (index, height) {
               final data = _barsData[index];
+              final strategy = BuildResultBarPaddingStrategy(
+                buildResultViewModels: _barsData,
+              );
 
               return Container(
                 constraints: BoxConstraints(
                   minHeight: height,
                 ),
                 child: BuildResultBar(
+                  strategy: strategy,
                   buildResult: data,
                 ),
               );

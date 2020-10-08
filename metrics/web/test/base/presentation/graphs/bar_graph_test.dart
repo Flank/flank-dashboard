@@ -65,10 +65,7 @@ void main() {
 
         for (int i = 0; i < rowWidgets.length; i++) {
           final rowWidget = rowWidgets[i];
-          final bar = tester.widget<_GraphTestBar>(find.descendant(
-            of: find.byWidget(rowWidget),
-            matching: find.byType(_GraphTestBar),
-          ));
+          final bar = tester.widget<_GraphTestBar>(find.byWidget(rowWidget));
 
           expect(bar.value, _BarGraphTestbed.graphBarTestData[i]);
         }
@@ -194,9 +191,7 @@ class _GraphTestBar extends StatelessWidget {
     return Container(
       color: Colors.blue,
       height: height,
-      child: FittedBox(
-        child: Text('$value'),
-      ),
+      child: Text('$value'),
     );
   }
 }

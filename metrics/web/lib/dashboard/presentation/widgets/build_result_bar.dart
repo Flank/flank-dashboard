@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
-import 'package:metrics/base/presentation/widgets/circle_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/negative_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/graph_indicator.dart';
@@ -11,10 +10,10 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 /// A single bar for a [BarGraph] widget that displays the
 /// result of a [BuildResultViewModel] instance.
@@ -25,10 +24,15 @@ class BuildResultBar extends StatefulWidget {
   /// A [BuildResultViewModel] with data to display.
   final BuildResultViewModel buildResult;
 
+  /// A class that provides an [EdgeInsets] based
+  /// on the [BuildResultViewModel].
+  final BuildResultBarPaddingStrategy strategy;
+
   /// Creates the [BuildResultBar] with the given [buildResult].
   const BuildResultBar({
     Key key,
     this.buildResult,
+    this.strategy,
   }) : super(key: key);
 
   @override
@@ -39,17 +43,11 @@ class _BuildResultBarState extends State<BuildResultBar> {
   /// A width of the [BasePopup.popup].
   static const double _popupWidth = 146.0;
 
-  /// A top padding of the [BasePopup.popup] from the [CircleGraphIndicator].
-  static const double _topPadding = 4.0;
-
-  /// A [UniqueKey] for the [VisibilityDetector].
-  final UniqueKey _uniqueKey = UniqueKey();
-
   /// A strategy for this bar appearance.
   final _strategy = const BuildResultBarAppearanceStrategy();
 
-  /// Indicates whether the [CircleGraphIndicator] is visible.
-  bool _isIndicatorVisible = true;
+  /// An [EdgeInsets] to apply for this bar.
+  EdgeInsets get _padding => widget.strategy.getBarPadding(widget.buildResult);
 
   /// A [GraphIndicator] widget to use based on the [BuildResultBar.buildResult].
   Widget get _graphIndicator {
@@ -90,8 +88,10 @@ class _BuildResultBarState extends State<BuildResultBar> {
             minWidth: _popupWidth,
             maxWidth: _popupWidth,
           ),
-          offsetBuilder: (triggerSize) =>
-              _calculatePopupOffset(triggerSize, barHeight, indicatorRadius),
+          offsetBuilder: (triggerSize) => _calculatePopupOffset(
+            triggerSize,
+            indicatorRadius,
+          ),
           triggerBuilder: (context, openPopup, closePopup, isOpened) {
             return MouseRegion(
               onEnter: (_) => openPopup(),
@@ -99,37 +99,24 @@ class _BuildResultBarState extends State<BuildResultBar> {
               child: InkWell(
                 onTap: _onBarTap,
                 hoverColor: Colors.transparent,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    MetricsColoredBar<BuildStatus>(
-                      isHovered: isOpened,
-                      height: barHeight,
-                      strategy: _strategy,
-                      value: widget.buildResult.buildStatus,
-                    ),
-                    Positioned(
-                      bottom: barHeight - indicatorRadius,
-                      child: VisibilityDetector(
-                        key: _uniqueKey,
-                        onVisibilityChanged: (VisibilityInfo info) {
-                          final visible = info.visibleFraction != 0.0;
-                          final shouldReopen =
-                              visible != _isIndicatorVisible && isOpened;
-                          _setIndicatorVisibility(visible);
-
-                          if (shouldReopen) {
-                            closePopup();
-                            openPopup();
-                          }
-                        },
-                        child: Opacity(
-                          opacity: isOpened ? 1.0 : 0.0,
+                child: Padding(
+                  padding: _padding,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      MetricsColoredBar<BuildStatus>(
+                        isHovered: isOpened,
+                        height: barHeight,
+                        strategy: _strategy,
+                        value: widget.buildResult.buildStatus,
+                      ),
+                      if (isOpened)
+                        Positioned(
+                          bottom: barHeight - indicatorRadius,
                           child: _graphIndicator,
                         ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
@@ -146,23 +133,12 @@ class _BuildResultBarState extends State<BuildResultBar> {
   /// Calculates the [Offset] for the bar popup.
   Offset _calculatePopupOffset(
     Size triggerSize,
-    double barHeight,
     double indicatorRadius,
   ) {
-    final height = triggerSize.height;
-    final dx = triggerSize.width / 2.0 - _popupWidth / 2.0;
-    final dy = _isIndicatorVisible
-        ? height - barHeight + indicatorRadius + _topPadding
-        : height;
+    final paddingOffset = _padding.left - _padding.right;
+    final dx = triggerSize.width / 2 - _popupWidth / 2 + paddingOffset / 2;
 
-    return Offset(dx, dy);
-  }
-
-  /// Sets the [_isIndicatorVisible] to the given [value].
-  void _setIndicatorVisibility(bool value) {
-    if (mounted) {
-      setState(() => _isIndicatorVisible = value);
-    }
+    return Offset(dx, triggerSize.height);
   }
 
   /// Opens the [BuildResultViewModel.url].
