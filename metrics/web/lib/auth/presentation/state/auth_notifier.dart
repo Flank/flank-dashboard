@@ -274,17 +274,15 @@ class AuthNotifier extends ChangeNotifier {
 
       _isLoggedIn = true;
     } else {
-      await _createUserProfile(
-        UserProfileModel(id: id, selectedTheme: selectedTheme),
-      );
+      await _createUserProfile(id, selectedTheme);
     }
 
     notifyListeners();
   }
 
-  /// Creates the user profile, based on the given [userProfile] model.
-  Future<void> _createUserProfile(UserProfileModel userProfile) async {
-    if (userProfile == null) {
+  /// Creates the user profile, based on the given [id] and [selectedTheme].
+  Future<void> _createUserProfile(String id, ThemeType selectedTheme) async {
+    if (id == null || selectedTheme == null) {
       return;
     }
 
@@ -293,8 +291,8 @@ class AuthNotifier extends ChangeNotifier {
     try {
       await _createUserProfileUseCase(
         UserProfileParam(
-          id: userProfile.id,
-          selectedTheme: userProfile.selectedTheme,
+          id: id,
+          selectedTheme: selectedTheme,
         ),
       );
     } on PersistentStoreException catch (exception) {
