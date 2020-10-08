@@ -719,7 +719,7 @@ void main() {
     );
 
     test(
-      ".updateUserProfile() sets the user profile error message if throws a persistent store exception",
+      ".updateUserProfile() populates the user profile error message if an error occurred during updating the user profile",
       () async {
         const errorCode = PersistentStoreErrorCode.unknown;
         const errorMessage = PersistentStoreErrorMessage(errorCode);
@@ -738,7 +738,7 @@ void main() {
     );
 
     test(
-      ".updateUserProfile() resets the project group error message",
+      ".updateUserProfile() resets the user profile saving error message",
       () async {
         const errorCode = PersistentStoreErrorCode.unknown;
 
