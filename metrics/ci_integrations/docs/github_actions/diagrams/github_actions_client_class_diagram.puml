@@ -4,19 +4,20 @@ package github_actions <<Folder>> {
 
     package models <<Folder>> {
 
-        abstract class Pagination<T> {
+        abstract class Page<T> {
             +totalCount: int
             +page: int
             +pageCount: int
+            +nextPage: String
             +values: List<T>
         }
 
-        class WorkflowRunsPagination<WorkflowRun> implements Pagination {
-             +factory fromJson(Map<String, dynamic> json): WorkflowRunsPagination
+        class WorkflowRunsPage<WorkflowRun> implements Page {
+             +factory fromJson(Map<String, dynamic> json): WorkflowRunsPage
         }
 
-        class WorkflowRunArtifactsPagination<WorkflowRunArtifact> implements Pagination {
-            +factory fromJson(Map<String, dynamic> json): WorkflowRunArtifactsPagination
+        class WorkflowRunArtifactsPage<WorkflowRunArtifact> implements Page {
+            +factory fromJson(Map<String, dynamic> json): WorkflowRunArtifactsPage
         }
 
         class WorkflowRun {
@@ -89,8 +90,10 @@ package github_actions <<Folder>> {
         +authorization: AuthorizationBase
 
         +getHeaders() : Map<String, String>
-        +fetchWorkflowRuns(String workflowIdentifier, RunStatus status, int perPage, int page): Future<InteractionResult<WorkflowRunsPagination>>
-        +fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<WorkflowRunArtifactsPagination>>
+        +fetchWorkflowRuns(String workflowIdentifier, RunStatus status, int perPage, int page): Future<InteractionResult<WorkflowRunsPage>>
+        +fetchNextRunsPage(WorkflowRunsPage page) : Future<InteractionResult<WorkflowRunsPage>>
+        +fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<WorkflowRunArtifactsPage>>
+        +fetchNextRunArtifactsPage(WorkflowRunArtifactsPage page) : Future<InteractionResult<WorkflowRunArtifactsPage>>
         +downloadRunArtifactZip(String url): Future<InteractionResult<UInt8List>>
         +fetchRunDuration(int runId): Future<InteractionResult<WorkflowRunDuration>>
         +close(): void
@@ -99,10 +102,10 @@ package github_actions <<Folder>> {
 
 
 WorkflowRunDuration <-- GithubActionsClient : uses
-WorkflowRunsPagination <-- GithubActionsClient : uses
-WorkflowRunArtifactsPagination <-- GithubActionsClient : uses
-WorkflowRun <-- WorkflowRunsPagination : uses
-WorkflowRunArtifact <-- WorkflowRunArtifactsPagination : uses
+WorkflowRunsPage <-- GithubActionsClient : uses
+WorkflowRunArtifactsPage <-- GithubActionsClient : uses
+WorkflowRun <-- WorkflowRunsPage : uses
+WorkflowRunArtifact <-- WorkflowRunArtifactsPage : uses
 RunStatusMapper <-- GithubActionsClient : uses
 RunConclusionMapper <-- GithubActionsClient : uses
 RunConclusion <-- WorkflowRun : uses
