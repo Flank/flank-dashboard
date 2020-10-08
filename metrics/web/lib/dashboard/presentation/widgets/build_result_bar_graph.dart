@@ -58,9 +58,13 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
 
   @override
   Widget build(BuildContext context) {
-    final barGraphPadding = _missingBarsCount != 0 && _barsData.isNotEmpty
+    final graphPadding = _missingBarsCount != 0 && _barsData.isNotEmpty
         ? const EdgeInsets.only(left: 4.0)
         : EdgeInsets.zero;
+
+    final barStrategy = BuildResultBarPaddingStrategy(
+      buildResults: _barsData,
+    );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -75,7 +79,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
           ),
         ),
         Padding(
-          padding: barGraphPadding,
+          padding: graphPadding,
           child: BarGraph(
             data: _barsData.map((data) {
               return data.buildResultPopupViewModel.duration.inMilliseconds;
@@ -83,16 +87,13 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
             graphPadding: EdgeInsets.zero,
             barBuilder: (index, height) {
               final data = _barsData[index];
-              final strategy = BuildResultBarPaddingStrategy(
-                buildResultViewModels: _barsData,
-              );
 
               return Container(
                 constraints: BoxConstraints(
                   minHeight: height,
                 ),
                 child: BuildResultBar(
-                  strategy: strategy,
+                  strategy: barStrategy,
                   buildResult: data,
                 ),
               );

@@ -24,8 +24,8 @@ class BuildResultBar extends StatefulWidget {
   /// A [BuildResultViewModel] with data to display.
   final BuildResultViewModel buildResult;
 
-  /// A class that provides an [EdgeInsets] based
-  /// on the [BuildResultViewModel].
+  /// A class that provides an [EdgeInsets] padding to apply to this bar based
+  /// on the [buildResult] position among other results.
   final BuildResultBarPaddingStrategy strategy;
 
   /// Creates the [BuildResultBar] with the given [buildResult].
@@ -46,8 +46,10 @@ class _BuildResultBarState extends State<BuildResultBar> {
   /// A strategy for this bar appearance.
   final _strategy = const BuildResultBarAppearanceStrategy();
 
-  /// An [EdgeInsets] to apply for this bar.
-  EdgeInsets get _padding => widget.strategy.getBarPadding(widget.buildResult);
+  /// An [EdgeInsets] to apply to this bar.
+  EdgeInsets get _barPadding {
+    return widget.strategy.getBarPadding(widget.buildResult);
+  }
 
   /// A [GraphIndicator] widget to use based on the [BuildResultBar.buildResult].
   Widget get _graphIndicator {
@@ -100,7 +102,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
                 onTap: _onBarTap,
                 hoverColor: Colors.transparent,
                 child: Padding(
-                  padding: _padding,
+                  padding: _barPadding,
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
@@ -135,7 +137,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
     Size triggerSize,
     double indicatorRadius,
   ) {
-    final paddingOffset = _padding.left - _padding.right;
+    final paddingOffset = _barPadding.left - _barPadding.right;
     final dx = triggerSize.width / 2 - _popupWidth / 2 + paddingOffset / 2;
 
     return Offset(dx, triggerSize.height);

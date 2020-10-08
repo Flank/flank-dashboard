@@ -145,6 +145,32 @@ void main() {
         expect(coloredBar.color, equals(canceledColor));
       },
     );
+
+    testWidgets(
+      "applies the padding returned from the given build result bar strategy",
+      (tester) async {
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
+          buildStatus: BuildStatus.cancelled,
+        );
+        final strategy = BuildResultBarPaddingStrategy(
+          buildResults: [buildResult],
+        );
+        final expectedPadding = strategy.getBarPadding(buildResult);
+
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: buildResult,
+          strategy: strategy,
+          themeData: themeData,
+        ));
+
+        final paddingWidget = tester.widget<Padding>(find.byWidgetPredicate(
+          (widget) => widget is Padding && widget.child is Stack,
+        ));
+
+        expect(paddingWidget.padding, equals(expectedPadding));
+      },
+    );
   });
 }
 

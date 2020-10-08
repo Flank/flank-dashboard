@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 
 /// A class that represents the strategy of applying the [EdgeInsets]
-/// to the [BuildResultBar] based on the [BuildResultViewModel] value.
+/// to the [BuildResultBar] based on the [BuildResultViewModel] position.
 class BuildResultBarPaddingStrategy {
   /// A list of [BuildResultViewModel]s.
-  final List<BuildResultViewModel> buildResultViewModels;
+  final List<BuildResultViewModel> buildResults;
 
   /// Creates a new instance of the [BuildResultBarPaddingStrategy].
   ///
-  /// The [buildResultViewModels] default value is an empty [List].
+  /// The [buildResults] default value is an empty [List].
   const BuildResultBarPaddingStrategy({
-    this.buildResultViewModels = const [],
+    this.buildResults = const [],
   });
 
-  /// Provides the [EdgeInsets] based on the [buildResult].
+  /// Provides the [EdgeInsets] based on the [buildResult] position
+  /// among the [buildResults].
   EdgeInsets getBarPadding(BuildResultViewModel buildResult) {
-    final index = buildResultViewModels.indexOf(buildResult);
-    final isFirst = index == 0;
+    final index = buildResults.indexOf(buildResult);
 
-    if (isFirst) {
-      return const EdgeInsets.only(right: 2.0);
+    if (index == buildResults.length - 1) {
+      return const EdgeInsets.only(left: 2.0);
     }
 
-    final isLast = index == buildResultViewModels.length - 1;
-
-    if (isLast) {
-      return const EdgeInsets.only(left: 2.0);
+    if (index == 0) {
+      return const EdgeInsets.only(right: 2.0);
     }
 
     return const EdgeInsets.symmetric(horizontal: 2.0);
