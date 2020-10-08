@@ -74,9 +74,9 @@ package github_actions <<Folder>> {
         +authorization: AuthorizationBase
 
         +getHeaders() : Map<String, String>
-        +fetchWorkflowRuns(String workflowFileName, RunStatus status, int perPage, int page): Future<InteractionResult<List<WorkflowRun>>>
+        +fetchWorkflowRuns(String workflowIdentifier, RunStatus status, int perPage, int page): Future<InteractionResult<List<WorkflowRun>>>
         +fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<List<WorkflowRunArtifact>>>
-        +downloadRunArtifact(String url): Future<InteractionResult<UInt8List>>
+        +downloadRunArtifactZip(String url): Future<InteractionResult<UInt8List>>
         +fetchRunDuration(int runId): Future<InteractionResult<WorkflowRunDuration>>
         +close(): void
     }
