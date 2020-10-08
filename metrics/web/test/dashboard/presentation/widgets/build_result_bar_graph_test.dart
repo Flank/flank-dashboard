@@ -150,8 +150,6 @@ void main() {
         expect(barGraphData, equals(trimmedData));
       },
     );
-
-    testWidgets("description", (tester) async {});
   });
 }
 
