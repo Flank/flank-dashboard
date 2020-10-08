@@ -201,14 +201,14 @@ class _InjectionContainerState extends State<InjectionContainer> {
     );
   }
 
-  /// A closure to be called when the [AuthNotifier] changes.
+  /// Listens to [AuthNotifier]'s updates.
   void _authNotifierListener() {
     final updatedUserProfile = _authNotifier.userProfileModel;
 
     _themeNotifier.changeTheme(updatedUserProfile?.selectedTheme);
   }
 
-  /// A closure to be called when the [ThemeNotifier] changes.
+  /// Listens to [ThemeNotifier]'s updates.
   void _themeNotifierListener() {
     final selectedTheme = _themeNotifier.selectedTheme;
 
