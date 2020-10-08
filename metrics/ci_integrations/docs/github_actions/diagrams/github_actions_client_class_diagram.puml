@@ -1,39 +1,66 @@
-@startuml
+@startuml github_actions_client_class_diagram
 
-package github_actions <<Folder>> {
+package integration.interface.base.client.mapper {
+    interface Mapper<SourceType, DestinationType> {
+        map(SourceType value): DestinationType
+        unmap(DestinationType value): SourceType
+    }
+}
 
-    package models <<Folder>> {
+package github_actions {
+    package models {
+        interface Page<T> {
+            + totalCount: int
+            + page: int
+            + perPage: int
+            + nextPageUrl: String
+            + values: List<T>
+        }
+
+        class WorkflowRunsPage<WorkflowRun> implements Page {
+            + totalCount: int
+            + page: int
+            + perPage: int
+            + nextPageUrl: String
+            + values: List<WorkflowRun>
+        }
+
+        class WorkflowRunArtifactsPage<WorkflowRunArtifact> implements Page {
+            + totalCount: int
+            + page: int
+            + perPage: int
+            + nextPageUrl: String
+            + values: List<WorkflowRunArtifact>
+        }
 
         class WorkflowRun {
-            +id: int
-            +number: int
-            +url: String
-            +status: RunStatus
-            +conclusion: RunConclusion
-            +timestamp: DateTime
+            + id: int
+            + number: int
+            + url: String
+            + status: RunStatus
+            + conclusion: RunConclusion
+            + createdAt: DateTime
 
-            +factory fromJson(Map<String, dynamic> json): WorkflowRun
-            +toJson(): Map<String, dynamic>
-            +listFromJson(List<dynamic> list): List<WorkflowRun>
+            + factory fromJson(Map<String, dynamic> json): WorkflowRun
+            + toJson(): Map<String, dynamic>
+            + listFromJson(List<dynamic> list): List<WorkflowRun>
         }
 
         class WorkflowRunArtifact {
-            +id: int
-            +name: String
-            +runId: int
-            +downloadUrl: String
+            + id: int
+            + name: String
+            + downloadUrl: String
 
-           +factory fromJson(Map<String, dynamic> json): WorkflowRunArtifact
-           +toJson(): Map<String, dynamic>
-           +listFromJson(List<dynamic> list): List<WorkflowRunArtifact>
+            + factory fromJson(Map<String, dynamic> json): WorkflowRunArtifact
+            + toJson(): Map<String, dynamic>
+            + listFromJson(List<dynamic> list): List<WorkflowRunArtifact>
         }
 
         class WorkflowRunDuration {
-            +runId: int
-            +duration: Duration
+            + duration: Duration
 
-            +factory fromJson(Map<String, dynamic> json): WorkflowRunDuration
-            +toJson(): Map<String, dynamic>
+            + factory fromJson(Map<String, dynamic> json): WorkflowRunDuration
+            + toJson(): Map<String, dynamic>
         }
 
 
@@ -55,39 +82,43 @@ package github_actions <<Folder>> {
 
     }
 
-    package mappers <<Folder>> {
-        class RunConclusionMapper {
-            #map(String conclusion): RunConclusion
-            #unmap(RunConclusion conclusion): String
+    package mappers {
+        class RunConclusionMapper<String, RunConclusion> implements Mapper {
+            + map(String conclusion): RunConclusion
+            + unmap(RunConclusion conclusion): String
         }
 
-        class RunStatusMapper {
-            #map(String status): RunStatus
-            #unmap(RunStatus status): String
+        class RunStatusMapper<String, RunStatus> implements Mapper {
+            + map(String status): RunStatus
+            + unmap(RunStatus status): String
         }
 
     }
 
 
     class GithubActionsClient {
-        +repositoryOwner: String
-        +repositoryName: String
-        +githubApiUrl: String
-        +authorization: AuthorizationBase
+        + repositoryOwner: String
+        + repositoryName: String
+        + githubApiUrl: String
+        + authorization: AuthorizationBase
 
-        +getHeaders() : Map<String, String>
-        +fetchWorkflowRuns(String workflowFileName, RunStatus status, int perPage, int page): Future<InteractionResult<List<WorkflowRun>>>
-        +fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<List<WorkflowRunArtifact>>>
-        +downloadRunArtifact(String url): Future<InteractionResult<UInt8List>>
-        +fetchRunDuration(int runId): Future<InteractionResult<WorkflowRunDuration>>
-        +close(): void
+        + getHeaders() : Map<String, String>
+        + fetchWorkflowRuns(String workflowIdentifier, RunStatus status, int perPage, int page): Future<InteractionResult<WorkflowRunsPage>>
+        + fetchNextRunsPage(WorkflowRunsPage currentPage) : Future<InteractionResult<WorkflowRunsPage>>
+        + fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<WorkflowRunArtifactsPage>>
+        + fetchNextRunArtifactsPage(WorkflowRunArtifactsPage currentPage) : Future<InteractionResult<WorkflowRunArtifactsPage>>
+        + downloadRunArtifactZip(String url): Future<InteractionResult<UInt8List>>
+        + fetchRunDuration(int runId): Future<InteractionResult<WorkflowRunDuration>>
+        + close(): void
     }
 }
 
 
-WorkflowRun <-- GithubActionsClient : uses
 WorkflowRunDuration <-- GithubActionsClient : uses
-WorkflowRunArtifact <-- GithubActionsClient : uses
+WorkflowRunsPage <-- GithubActionsClient : uses
+WorkflowRunArtifactsPage <-- GithubActionsClient : uses
+WorkflowRun "1..N" -up-o "1" WorkflowRunsPage : uses
+WorkflowRunArtifact "1..N" -up-o "1" WorkflowRunArtifactsPage : uses
 RunStatusMapper <-- GithubActionsClient : uses
 RunConclusionMapper <-- GithubActionsClient : uses
 RunConclusion <-- WorkflowRun : uses
