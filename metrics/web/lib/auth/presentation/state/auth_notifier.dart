@@ -258,7 +258,6 @@ class AuthNotifier extends ChangeNotifier {
 
     if (_selectedTheme != themeType) {
       _selectedTheme = themeType;
-      notifyListeners();
     }
   }
 
