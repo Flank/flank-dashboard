@@ -11,9 +11,13 @@ package github_actions <<Folder>> {
             +values: List<T>
         }
 
-        class WorkflowRunsPagination<WorkflowRun> implements Pagination
+        class WorkflowRunsPagination<WorkflowRun> implements Pagination {
+             +factory fromJson(Map<String, dynamic> json): WorkflowRunsPagination
+        }
 
-        class WorkflowRunArtifactsPagination<WorkflowRunArtifact> implements Pagination
+        class WorkflowRunArtifactsPagination<WorkflowRunArtifact> implements Pagination {
+            +factory fromJson(Map<String, dynamic> json): WorkflowRunArtifactsPagination
+        }
 
         class WorkflowRun {
             +id: int
@@ -86,7 +90,7 @@ package github_actions <<Folder>> {
 
         +getHeaders() : Map<String, String>
         +fetchWorkflowRuns(String workflowIdentifier, RunStatus status, int perPage, int page): Future<InteractionResult<WorkflowRunsPagination>>
-        +fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<WorkflowRunsPagination>>
+        +fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<WorkflowRunArtifactsPagination>>
         +downloadRunArtifactZip(String url): Future<InteractionResult<UInt8List>>
         +fetchRunDuration(int runId): Future<InteractionResult<WorkflowRunDuration>>
         +close(): void
