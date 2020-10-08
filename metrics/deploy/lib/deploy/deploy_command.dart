@@ -19,23 +19,23 @@ class DeployCommand extends Command {
 
   @override
   Future<void> run() async {
-    final firebaseToken = await login();
+    final firebaseToken = await _login();
 
-    final projectID = await addProject();
+    final projectID = await _addProject();
 
-    await addFirebase(projectID, firebaseToken);
+    await _addFirebase(projectID, firebaseToken);
 
-    final region = await selectRegion();
+    final region = await _selectRegion();
 
-    await addProjectApp(region, projectID);
+    await _addProjectApp(region, projectID);
 
-    await createDatabase(region, projectID);
+    await _createDatabase(region, projectID);
 
-    final appID = await createWebApp(projectID, firebaseToken);
+    final appID = await _createWebApp(projectID, firebaseToken);
     const repoURL = 'git@github.com:platform-platform/monorepo.git';
     const srcPath = 'src';
     //final firebaseSrc = srcPath + '/metrics/firebase';
-    await buildAndDeploy(appID, projectID, firebaseToken, repoURL, srcPath);
+    await _buildAndDeploy(appID, projectID, firebaseToken, repoURL, srcPath);
     // Cleanup
     await cleanup(srcPath);
     // Terminate prompt entry.
@@ -43,11 +43,11 @@ class DeployCommand extends Command {
   }
 
   /// Generates random string for new project name
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+  String _getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   /// Login to GCloud and Firebase and get firebase CI token
-  Future<String> login() async {
+  Future<String> _login() async {
     // GCloud login
     print('GCloud Login.');
     await cmd.run('gcloud', ['auth', 'login'], verbose: true);
@@ -59,11 +59,11 @@ class DeployCommand extends Command {
   }
 
   /// Add project or use existing project
-  Future<String> addProject() async {
+  Future<String> _addProject() async {
     var projectID = '';
     if (await promptConfirm('Create new project ?')) {
       print('Creating new project');
-      projectID = 'metrics-${getRandomString(5)}';
+      projectID = 'metrics-${_getRandomString(5)}';
       await cmd.run('gcloud', ['projects', 'create', projectID], verbose: true);
     } else {
       print('List existing projects');
@@ -77,7 +77,7 @@ class DeployCommand extends Command {
   }
 
   /// Add Firebase capabilities to project.
-  Future<void> addFirebase(String projectID, String firebaseToken) async {
+  Future<void> _addFirebase(String projectID, String firebaseToken) async {
     if (await promptConfirm('Add firebase capabilities to project ?')) {
       print('Adding Firebase capabilities.');
       await cmd.run('firebase',
@@ -89,7 +89,7 @@ class DeployCommand extends Command {
   }
 
   ///  Select GCP region
-  Future<String> selectRegion() async {
+  Future<String> _selectRegion() async {
     // TODO: Listing regions won't work on new projects as compute API not enabled yet.
     //await run('gcloud',['compute','regions','list'],verbose:true);
     print('Select default region.');
@@ -97,7 +97,7 @@ class DeployCommand extends Command {
   }
 
   // Add project app needed to create firestore database.
-  Future<void> addProjectApp(String region, String projectID) async {
+  Future<void> _addProjectApp(String region, String projectID) async {
     if (await promptConfirm('Add project app ?')) {
       print('Adding project app.');
       await cmd.run('gcloud',
@@ -109,7 +109,7 @@ class DeployCommand extends Command {
   }
 
   /// Create firestore database.
-  Future<void> createDatabase(String region, String projectID) async {
+  Future<void> _createDatabase(String region, String projectID) async {
     // gcloud alpha firestore databases create --region=europe-west --project $projectID --quiet
     if (await promptConfirm('Add project database ?')) {
       print('Adding project database.');
@@ -133,7 +133,7 @@ class DeployCommand extends Command {
   }
 
   /// Create Firebase web app.
-  Future<String> createWebApp(String projectID, String firebaseToken) async {
+  Future<String> _createWebApp(String projectID, String firebaseToken) async {
     //firebase apps:create --project $projectID
     if (await promptConfirm('Add web app?')) {
       print('Adding Firebase web app.');
@@ -160,7 +160,7 @@ class DeployCommand extends Command {
   }
 
   /// Downloads and writes web app SDK config to firebase-config.js file.
-  Future<void> downloadSDKConfig(String appID, String configPath,
+  Future<void> _downloadSDKConfig(String appID, String configPath,
       String projectID, String firebaseToken) async {
     // Get config
     print('Write web app SDK config to firebase-config.js file.');
@@ -183,7 +183,7 @@ class DeployCommand extends Command {
   }
 
   /// Git clone latest metrics code, build and deploy.
-  Future<void> buildAndDeploy(
+  Future<void> _buildAndDeploy(
     String appID,
     String projectID,
     String firebaseToken,
@@ -196,7 +196,7 @@ class DeployCommand extends Command {
     await cmd.run('git', ['clone', repoURL, srcPath], verbose: true);
     // clean previouse config
     await cmd.run('rm', ['-rf', configPath], verbose: true);
-    await downloadSDKConfig(appID, configPath, projectID, firebaseToken);
+    await _downloadSDKConfig(appID, configPath, projectID, firebaseToken);
     // add firebase project
     await cmd.run('firebase', ['use', '--add', projectID],
         workingDirectory: workingDir, verbose: true);
