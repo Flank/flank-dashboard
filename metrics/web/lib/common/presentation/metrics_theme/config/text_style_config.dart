@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_text/style/metrics_text_style.dart';
 
 /// A class that holds the common text styles for application themes.
 class TextStyleConfig {

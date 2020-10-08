@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_style.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_text/style/metrics_text_style.dart';
 
-import '../../../test_utils/matcher_util.dart';
+import '../../../../../../test_utils/matcher_util.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
