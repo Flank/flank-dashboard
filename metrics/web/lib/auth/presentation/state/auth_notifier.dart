@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/entities/theme_type.dart';
+import 'package:metrics/auth/domain/entities/user_profile.dart';
 import 'package:metrics/auth/domain/usecases/create_user_profile_usecase.dart';
 import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/parameters/user_credentials_param.dart';
@@ -170,22 +171,7 @@ class AuthNotifier extends ChangeNotifier {
     final _userProfileUpdates = _receiveUserProfileUpdates(UserIdParam(id: id));
 
     _userProfileSubscription = _userProfileUpdates.listen(
-      (userProfile) async {
-        if (userProfile != null) {
-          _userProfileModel = UserProfileModel(
-            id: userProfile.id,
-            selectedTheme: userProfile.selectedTheme,
-          );
-
-          _isLoggedIn = true;
-        } else {
-          await _createUserProfile(
-            UserProfileModel(id: id, selectedTheme: selectedTheme),
-          );
-        }
-
-        notifyListeners();
-      },
+      (userProfile) => _userProfileUpdatesListener(id, userProfile),
       onError: _errorHandler,
     );
   }
@@ -274,6 +260,27 @@ class AuthNotifier extends ChangeNotifier {
       _selectedTheme = themeType;
       notifyListeners();
     }
+  }
+
+  /// Listens to user profile updates.
+  Future<void> _userProfileUpdatesListener(
+    String id,
+    UserProfile userProfile,
+  ) async {
+    if (userProfile != null) {
+      _userProfileModel = UserProfileModel(
+        id: userProfile.id,
+        selectedTheme: userProfile.selectedTheme,
+      );
+
+      _isLoggedIn = true;
+    } else {
+      await _createUserProfile(
+        UserProfileModel(id: id, selectedTheme: selectedTheme),
+      );
+    }
+
+    notifyListeners();
   }
 
   /// Creates the user profile, based on the given [userProfile] model.
