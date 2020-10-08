@@ -18,7 +18,10 @@ import 'package:rxdart/rxdart.dart';
 /// Provides an ability to get the [DashboardProjectMetrics] updates.
 class ReceiveProjectMetricsUpdates
     implements UseCase<Stream<DashboardProjectMetrics>, ProjectIdParam> {
+  /// A number of builds to load for chart metrics.
   static const int buildsToLoadForChartMetrics = 20;
+
+  /// A [Duration] of a loading period for builds.
   static const Duration buildsLoadingPeriod = Duration(days: 7);
 
   final MetricsRepository _repository;

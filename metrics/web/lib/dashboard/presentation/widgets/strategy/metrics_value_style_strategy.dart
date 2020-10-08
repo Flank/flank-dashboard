@@ -1,6 +1,6 @@
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/strategy/value_based_appearance_strategy.dart';
 
 /// A class that represents the strategy of applying the [MetricsWidgetThemeData]
@@ -25,6 +25,7 @@ class MetricsValueStyleStrategy
   /// to return the [MetricsCirclePercentageThemeData.lowPercentTheme].
   static const double lowPercentBound = 0.0;
 
+  /// Creates a new instance of the [MetricsValueStyleStrategy].
   const MetricsValueStyleStrategy();
 
   @override

@@ -6,8 +6,11 @@ import 'package:metrics/dashboard/domain/entities/collections/date_time_set_entr
 class BuildPerformance implements DateTimeSetEntry {
   @override
   final DateTime date;
+
+  /// A [Duration] of the build.
   final Duration duration;
 
+  /// Creates a new instance of the [BuildPerformance].
   const BuildPerformance({
     this.date,
     this.duration,

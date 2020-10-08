@@ -4,7 +4,10 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// Represents the user credentials parameter.
 class UserCredentialsParam extends Equatable {
+  /// An email of the user.
   final Email email;
+
+  /// A password of the user.
   final Password password;
 
   @override

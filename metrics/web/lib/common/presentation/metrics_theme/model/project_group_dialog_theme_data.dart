@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dialog_theme_data.dart';
 
+/// A class that stores the theme data for the project group dialogues.
 class ProjectGroupDialogThemeData extends DialogThemeData {
   /// A border [Color] of the project group dialog content.
   final Color contentBorderColor;
@@ -15,6 +16,9 @@ class ProjectGroupDialogThemeData extends DialogThemeData {
   /// the project group dialog.
   final TextStyle counterTextStyle;
 
+  /// Creates a new instance of the [ProjectGroupDialogThemeData].
+  ///
+  /// The [contentBorderColor] default value is [Colors.grey].
   const ProjectGroupDialogThemeData({
     Color primaryColor,
     Color backgroundColor,
