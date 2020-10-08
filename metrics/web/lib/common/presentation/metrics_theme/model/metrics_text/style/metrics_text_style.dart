@@ -2,10 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-/// The metrics [TextStyle], that calculates the [TextStyle.height] using
+/// A metrics [TextStyle], that calculates the [TextStyle.height] using
 /// the [lineHeightInPixels].
 class MetricsTextStyle extends TextStyle {
-  /// The height of the text in pixels.
+  /// A height of the text in pixels.
   final double lineHeightInPixels;
 
   /// Creates a new instance of the [MetricsTextStyle].
@@ -41,7 +41,8 @@ class MetricsTextStyle extends TextStyle {
     String fontFamily,
     List<String> fontFamilyFallback,
     String package,
-  }) : assert(fontSize == null || lineHeightInPixels == null || height == null),
+  })  : assert(
+            fontSize == null || lineHeightInPixels == null || height == null),
         super(
           inherit: inherit,
           color: color,
