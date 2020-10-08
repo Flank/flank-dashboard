@@ -57,9 +57,11 @@ class ThemeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Returns `true` if the given [brightness] is [Brightness.dark],
+  /// Returns `true` if the given [brightness] is [Brightness.dark] or `null`,
   /// otherwise, returns `false`.
   static bool _isBrightnessDark(Brightness brightness) {
+    if (brightness == null) return true;
+
     return brightness == Brightness.dark;
   }
 }

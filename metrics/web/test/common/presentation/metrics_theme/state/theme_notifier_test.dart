@@ -12,20 +12,20 @@ void main() {
     const darkTheme = ThemeType.dark;
 
     test(
-      "creates an instance with the light selected theme if the brightness is not specified",
+      "creates an instance with the dark selected theme if the brightness is not specified",
       () {
         final themeNotifier = ThemeNotifier();
 
-        expect(themeNotifier.selectedTheme, equals(lightTheme));
+        expect(themeNotifier.selectedTheme, equals(darkTheme));
       },
     );
 
     test(
-      "creates an instance with the light selected theme if the given brightness is null",
+      "creates an instance with the dark selected theme if the given brightness is null",
       () {
         final themeNotifier = ThemeNotifier(brightness: null);
 
-        expect(themeNotifier.selectedTheme, lightTheme);
+        expect(themeNotifier.selectedTheme, darkTheme);
       },
     );
 
@@ -73,11 +73,9 @@ void main() {
       () {
         final themeNotifier = ThemeNotifier();
 
-        expect(themeNotifier.selectedTheme, equals(lightTheme));
-
         themeNotifier.changeTheme(null);
 
-        expect(themeNotifier.selectedTheme, equals(lightTheme));
+        expect(themeNotifier.selectedTheme, equals(darkTheme));
       },
     );
 
@@ -88,7 +86,7 @@ void main() {
         final themeNotifier = ThemeNotifier();
 
         themeNotifier.addListener(() => isCalled = true);
-        themeNotifier.changeTheme(lightTheme);
+        themeNotifier.changeTheme(darkTheme);
 
         expect(isCalled, isFalse);
       },
@@ -141,13 +139,13 @@ void main() {
     );
 
     test(
-      ".setTheme() sets the light theme mode if the given brightness is null",
+      ".setTheme() sets the dark theme mode if the given brightness is null",
       () {
         final themeNotifier = ThemeNotifier();
 
         themeNotifier.setTheme(null);
 
-        expect(themeNotifier.isDark, isFalse);
+        expect(themeNotifier.isDark, isTrue);
       },
     );
 
