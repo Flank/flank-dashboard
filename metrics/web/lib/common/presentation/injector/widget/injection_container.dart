@@ -212,8 +212,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
   void _themeNotifierListener() {
     final selectedTheme = _themeNotifier.selectedTheme;
 
-    _authNotifier.changeTheme(selectedTheme);
-
     final currentUserProfile = _authNotifier.userProfileModel;
 
     if (currentUserProfile == null) {

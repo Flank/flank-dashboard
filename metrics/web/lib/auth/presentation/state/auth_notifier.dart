@@ -240,6 +240,7 @@ class AuthNotifier extends ChangeNotifier {
           selectedTheme: userProfile.selectedTheme,
         ),
       );
+      _changeTheme(userProfile.selectedTheme);
     } on PersistentStoreException catch (exception) {
       _userProfileSavingErrorHandler(exception.code);
     }
@@ -251,7 +252,7 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   /// Changes the currently selected theme to the given [themeType].
-  void changeTheme(ThemeType themeType) {
+  void _changeTheme(ThemeType themeType) {
     if (themeType == null) {
       return;
     }

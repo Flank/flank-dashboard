@@ -55,9 +55,6 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   }
 
   @override
-  void changeTheme(ThemeType themeType) {}
-
-  @override
   ThemeType get selectedTheme => null;
 
   @override

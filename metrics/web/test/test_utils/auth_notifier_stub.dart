@@ -47,9 +47,6 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   Future<void> signOut() async {}
 
   @override
-  void changeTheme(ThemeType themeType) {}
-
-  @override
   ThemeType get selectedTheme => null;
 
   @override

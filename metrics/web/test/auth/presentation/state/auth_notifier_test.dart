@@ -349,8 +349,6 @@ void main() {
           updateUserProfileUseCase,
         );
 
-        authNotifier.changeTheme(selectedTheme);
-
         final userProfileController = StreamController<UserProfile>();
 
         when(receiveUserProfileUpdates(any)).thenAnswer(
@@ -371,6 +369,7 @@ void main() {
         userProfileController.add(null);
         userProfileController.add(userProfile);
 
+        authNotifier.updateUserProfile(userProfileModel);
         authNotifier.subscribeToUserProfileUpdates(id);
       },
     );
@@ -769,48 +768,6 @@ void main() {
 
       verify(signOutUseCase()).called(equals(1));
     });
-
-    test(
-      ".changeTheme() changes the currently selected theme to the given theme",
-      () {
-        const expectedTheme = ThemeType.light;
-
-        authNotifier.changeTheme(expectedTheme);
-
-        expect(authNotifier.selectedTheme, equals(expectedTheme));
-      },
-    );
-
-    test(
-      ".changeTheme() does not change the currently selected theme if the given theme is null",
-      () {
-        const expectedTheme = ThemeType.light;
-
-        authNotifier.changeTheme(expectedTheme);
-
-        expect(authNotifier.selectedTheme, equals(expectedTheme));
-
-        authNotifier.changeTheme(null);
-
-        expect(authNotifier.selectedTheme, equals(expectedTheme));
-      },
-    );
-
-    test(
-      ".changeTheme() does not notify listeners if the given theme is the same as in the notifier",
-      () {
-        const theme = ThemeType.light;
-        bool isNotified = false;
-
-        authNotifier.changeTheme(theme);
-
-        authNotifier.addListener(() => isNotified = true);
-
-        authNotifier.changeTheme(theme);
-
-        expect(isNotified, isFalse);
-      },
-    );
 
     test(
       ".dispose() cancels all created subscriptions",
