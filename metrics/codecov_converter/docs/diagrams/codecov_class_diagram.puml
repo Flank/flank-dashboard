@@ -57,15 +57,18 @@ package specific_format {
 }
 
 
-CodeCovConverterRunner -left-> SpecificFormatCovConverterCommand : uses
+CodeCovConverterRunner -right-> SpecificFormatCovConverterCommand : uses
 CodeCovConverterRunner --> CodeCovArgumentsParser : uses
+
+CodeCovArgumentsParser -left-> CodeCovArguments : provides
 
 SpecificFormatCovConverterCommand --> SpecificFormatCovConverter : uses
 SpecificFormatCovConverterCommand --|> CodeCovConverterCommand
 
-SpecificFormatCovConverter ..|> CodeCovConverter
+SpecificFormatCovConverter .down.|> CodeCovConverter
 
 CodeCovConverterCommand --> CodeCovArguments : uses
+CodeCovConverterCommand -left-> CodeCovConverter : uses
 
 
 @enduml

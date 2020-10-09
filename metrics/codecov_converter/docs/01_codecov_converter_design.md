@@ -8,11 +8,14 @@ An explanation of the CodeCov Converter tool architecture design.
 
 > Link to supporting documentation, GitHub tickets, etc.
 
+- [LCOV Code Coverage](https://wiki.documentfoundation.org/Development/Lcov)
+- [Istanbul](https://istanbul.js.org/)
+
 # Motivation
 
 > What problem is this project solving?
 
-Since we have a `CI integrations` tool that stands for importing the CI builds to the Metrics application, we need to sure that the user can use this tool with any format of the coverage reports. To do so, to do that, we should create a separate, specific for `CI integrations`, coverage report format, and the tool that will convert the coverage reports with different formats into this format - the CodeCov Converter tool. To make the CodeCov Converter tool architecture clean and understandable, we need to create a document that will explain the main components and principles of the CodeCov tool.
+Since we have a `CI integrations` tool that stands for importing the CI builds to the Metrics application, we need to sure that the user can use this tool with any format of the coverage reports. To do so, we should create a separate, specific for `CI integrations`, coverage report format, and the tool that will convert the coverage reports with different formats into this format - the CodeCov Converter tool. To make the CodeCov Converter tool architecture clean and understandable, we need to create a document that will explain the main components and principles of the CodeCov tool.
 
 # Goals
 
@@ -20,13 +23,13 @@ Since we have a `CI integrations` tool that stands for importing the CI builds t
 
 - Explain the purpose of the CodeCov Converter tool.
 - Explain the main components of the CodeCov Converter tool.
-- Choose the way and the place of deploying the CodeCov Converter tool.
+- Explain adding the new format converter.
 
 # Non-Goals
 
 > Identify what's not in scope.
 
-- The document does not explains and shows the implementation details.
+The document does not explain and shows the implementation details.
 
 # Design
 
@@ -49,18 +52,18 @@ Let's consider the activity diagram of the coverage conversion process:
 
 ![Coverage conversion diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/codecov_converter/docs/diagrams/codecov_conversion_activity.puml)
 
-To run the command line application we should have the `CommandRunner` class. Let's name the `CodeCovConverterRunner` class that will extend the `CommandRunner`. It will be the place where we'll add our specific `CodeCovConverterCommand`s.
+To run the command line application, we should have a `CommandRunner` class. Let's name it `CodeCovConverterRunner`. This class will extend the `CommandRunner`. It will be the place where we'll add our specific `CodeCovConverterCommand`s.
 
 Also, we should be able to pass the following arguments to the CodeCov Converter tool: 
 
 - input - the file from where we'll read the specific coverage report;
 - output - the file to which we'll write the formatted coverage report;
 
-To be able to pass an arguments to our application we should create an `CodeCovArgumentsParser` that will take a `List<String>` as arguments and return the `CodeCovArguments` instance that will contain all given arguments.
+To be able to pass arguments to our application we should create a `CodeCovArgumentsParser` that will take a `List<String>` as arguments and return the `CodeCovArguments` instance that will contain all given arguments.
 
 ## Package structure
 
-Once we are done with all main classes and interfaces, let's consider the package structure of the `CodeCov Converter`: 
+Once we've finished with all main classes and interfaces, let's consider the package structure of the `CodeCov Converter`: 
 
 > lib
 >   - arguments
@@ -75,18 +78,9 @@ Once we are done with all main classes and interfaces, let's consider the packag
 >     - model
 >     - converter
 
-## Creating a new specific format converter
-
-Once we have a `CodeCovConverterCommand` abstract class, the `CodeCovConverter` interface, and the `CodeCovConverterRunner`,  we can create the first specific coverage parser. To implement it we should follow the next steps: 
-
-1. Create a specific implementation of the `CodeCovConverter`.
-2. Create a specific command extending the `CodeCovConverterCommand` that will use the specific `CodeCovConverter` created in the previous step.
-3. Add the previously created `CodeCovConverterCommand` to the `CodeCovConverterRunner` using the `addCommand` method.
-
 ## Structure of the CodeCov coverage report.
 
-Since we want to unify the coverage reports we should create a specific for CI integrations coverage report format. Currently, this report will contain only `line coverage percent`. 
-Let's consider the JSON summary structure: 
+Since we want to unify the coverage reports for the CI integrations, we should create a specific for CI integrations coverage report format. Currently, this report will contain only `line coverage percent`. Let's consider the JSON summary structure: 
 
 ```
 {
@@ -98,15 +92,29 @@ So, the JSON will contain only `pct` value that will represent the total line co
 
 ![Coverage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/codecov_converter/docs/diagrams/coverage_class_diagram.puml)
 
+
+## Creating a new specific format converter
+
+Once we have a `CodeCovConverterCommand` abstract class, the `CodeCovConverter` interface, and the `CodeCovConverterRunner`,  we can create the first specific coverage parser. To implement it, we should follow the next steps: 
+
+1. Create a specific implementation of the `CodeCovConverter`.
+2. Create a specific command extending the `CodeCovConverterCommand` that will use the specific `CodeCovConverter` created in the previous step.
+3. Add the previously created `CodeCovConverterCommand` to the `CodeCovConverterRunner` using the `addCommand` method.
+
+Currently, the CodeCov Converter tool should support the following coverage report formats: 
+
+- LCOV
+- Istanbul
+
 ## Summary
 
-Finally, let's consider the class diagram that provides an information about all classes and their relationships.
+Finally, let's consider the class diagram that provides information about all classes and their relationships.
 
 ![CodeCov class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/codecov_converter/docs/diagrams/codecov_class_diagram.puml)
 
-So, the application takes the arguments on run, parses them using the `CodeCovArgumentsParser`, and passes them to the specific converter command. The converter command in it's turn gets the input file path, converts it to the CI integrations coverage format, and writs it to the output file.
+So, the application takes the arguments on run, parses them using the `CodeCovArgumentsParser`, and passes these arguments to the specific converter command. The converter command, in its turn, gets the input file path, converts it to the CI integrations coverage format, and writes it to the output file.
 
-Let's consider the sequence diagram of these process taking the `specific` format as an example. 
+Let's consider the sequence diagram of these processes taking the `specific` format as an example:
 
 ![CodeCov sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/codecov_converter/docs/diagrams/codecov_sequence_diagram.puml)
 
