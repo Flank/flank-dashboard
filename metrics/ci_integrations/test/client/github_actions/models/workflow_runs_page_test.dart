@@ -31,27 +31,5 @@ void main() {
         expect(runsPage.values, equals(values));
       },
     );
-
-    test(
-      ".hasNextPage is false when the next page url is null",
-      () {
-        final runsPage = WorkflowRunsPage(
-          nextPageUrl: null,
-        );
-
-        expect(runsPage.hasNextPage, isFalse);
-      },
-    );
-
-    test(
-      ".hasNextPage is false when the next page url is specified",
-      () {
-        final runsPage = WorkflowRunsPage(
-          nextPageUrl: nextPageUrl,
-        );
-
-        expect(runsPage.hasNextPage, isTrue);
-      },
-    );
   });
 }

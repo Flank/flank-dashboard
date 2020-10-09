@@ -8,8 +8,10 @@ void main() {
     test(
       "throws an ArgumentError if the given value is null",
       () {
-        expect(() => StringValidator.checkNotNullOrEmpty(null),
-            throwsArgumentError);
+        expect(
+          () => StringValidator.checkNotNullOrEmpty(null),
+          throwsArgumentError,
+        );
       },
     );
 
@@ -17,7 +19,9 @@ void main() {
       "throws an ArgumentError if the given value is empty",
       () {
         expect(
-            () => StringValidator.checkNotNullOrEmpty(''), throwsArgumentError);
+          () => StringValidator.checkNotNullOrEmpty(''),
+          throwsArgumentError,
+        );
       },
     );
 
@@ -25,20 +29,21 @@ void main() {
       "validates the given value",
       () {
         expect(
-            () => StringValidator.checkNotNullOrEmpty('test'), returnsNormally);
+          () => StringValidator.checkNotNullOrEmpty('test'),
+          returnsNormally,
+        );
       },
     );
 
     test(
       "throws an ArgumentError that contains the name of a validated variable if specified",
       () {
-        const variableName = 'test';
+        const testName = 'test';
 
         expect(
-          () => StringValidator.checkNotNullOrEmpty(null, name: variableName),
+          () => StringValidator.checkNotNullOrEmpty(null, name: testName),
           throwsA(
-            (error) =>
-                error is ArgumentError && error.name.contains(variableName),
+            (error) => error is ArgumentError && error.name == testName,
           ),
         );
       },

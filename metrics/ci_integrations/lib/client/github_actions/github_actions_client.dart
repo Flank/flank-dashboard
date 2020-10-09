@@ -40,35 +40,39 @@ class GithubActionsClient {
   final AuthorizationBase authorization;
 
   /// A [RegExp] needed to parse next page URLs in [HttpResponse] headers.
-  final _nextUrlRegexp = RegExp(r'(?<=<)(.*)(?=>)');
+  final RegExp _nextUrlRegexp = RegExp('(?<=<)(.*)(?=>)');
 
-  /// The HTTP client for making requests to the Github Actions API.
+  /// An HTTP client for making requests to the Github Actions API.
   final Client _client = Client();
 
   /// Creates a new instance of the [GithubActionsClient].
   ///
+  /// The [githubApiUrl] defaults to the [GithubActionsConstants.githubApiUrl].
+  ///
   /// Throws an [ArgumentError] if either [githubApiUrl], [repositoryOwner] or
   /// [repositoryName] is `null` or empty.
   GithubActionsClient({
-    @required this.githubApiUrl,
     @required this.repositoryOwner,
     @required this.repositoryName,
+    this.githubApiUrl = GithubActionsConstants.githubApiUrl,
     this.authorization,
   }) {
     StringValidator.checkNotNullOrEmpty(githubApiUrl, name: 'githubApiUrl');
-    StringValidator.checkNotNullOrEmpty(repositoryOwner,
-        name: 'repositoryOwner');
+    StringValidator.checkNotNullOrEmpty(
+      repositoryOwner,
+      name: 'repositoryOwner',
+    );
     StringValidator.checkNotNullOrEmpty(repositoryName, name: 'repositoryName');
   }
 
-  /// Returns the API base path to use in HTTP requests.
+  /// Returns a base path to the API to use in HTTP requests.
   String get basePath {
     return '$githubApiUrl/repos/$repositoryOwner/$repositoryName/actions/';
   }
 
   /// Creates basic [Map] with headers for HTTP requests.
   ///
-  /// If provided authorization method is not `null` then adds the result
+  /// If the given [authorization] method is not `null`, then adds the result
   /// of [AuthorizationBase.toMap] method to headers.
   Map<String, String> get headers {
     return <String, String>{
@@ -79,9 +83,10 @@ class GithubActionsClient {
 
   /// A method for handling Github-specific HTTP responses.
   ///
-  /// Awaits [responseFuture] and handles the result. If either the provided
-  /// future throws or [HttpResponse.statusCode] is not equal to [HttpStatus.ok]
-  /// this method results with [InteractionResult.error]. Otherwise, delegates
+  /// Awaits [responseFuture] and handles the result. If either
+  /// the given [responseFuture] throws or the [HttpResponse.statusCode] is not
+  /// equal to [HttpStatus.ok] this method results
+  /// with [InteractionResult.error]. Otherwise, delegates
   /// processing the response to the given [responseProcessor] callback.
   Future<InteractionResult<T>> _handleResponse<T>(
     Future<Response> responseFuture,
@@ -110,17 +115,51 @@ class GithubActionsClient {
     }
   }
 
-  /// Retrieves a [WorkflowRunsPage] by the given [workflowIdentifier].
-  ///
-  /// A [workflowIdentifier] is either a workflow id or a name of the file
-  /// that defines the workflow.
+  /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun] by the
+  /// given [workflowIdentifier]. A [workflowIdentifier] is either a workflow
+  /// id or a name of the file that defines the workflow.
   ///
   /// A [status] is used as a filter query parameter to define the
   /// [WorkflowRun.status] of runs to fetch.
   ///
   /// A [perPage] is used for limiting the number of runs and pagination in pair
-  /// with the [page] parameter. It defaults to `10` and is limited to `100`.
-  /// The greater values than `100` are ignored and considered as a maximum.
+  /// with the [page] parameter. It defaults to `10` and satisfies the following
+  /// statements:
+  /// - if the given [status] is `null`, the [perPage] is limited to `100`;
+  /// - if the given [status] is not `null`, the [perPage] is limited to `25`.
+  /// If the given value of [perPage] is greater than its limit,
+  /// the upper bound is used.
+  ///
+  /// For example, performing requests with non-`null` status query:
+  /// ```dart
+  ///   // initialize client
+  ///   final fetchResult = await client.fetchWorkflowRuns(
+  ///     'id',
+  ///     status: RunStatus.completed,
+  ///     page: 3,
+  ///     perPage: 1000,
+  ///   );
+  ///
+  ///   final runs = fetchResult.result;
+  ///   print(runs.perPage); // prints 1000
+  ///   print(runs.page); // prints 3
+  ///   print(runs.values.length); // prints 25
+  /// ```
+  ///
+  /// In the case of `null` status query:
+  /// ```dart
+  ///   // initialize client
+  ///   final fetchResult = await client.fetchWorkflowRuns(
+  ///     'id',
+  ///     page: 3,
+  ///     perPage: 1000,
+  ///   );
+  ///
+  ///   final runs = fetchResult.result;
+  ///   print(runs.perPage); // prints 1000
+  ///   print(runs.page); // prints 3
+  ///   print(runs.values.length); // prints 100
+  /// ```
   ///
   /// A [page] is used for pagination and defines a page of runs to fetch.
   /// If the [page] is `null` or omitted, the first page is fetched.
@@ -131,11 +170,12 @@ class GithubActionsClient {
     int page,
   }) async {
     const statusMapper = RunStatusMapper();
+    final _page = page ?? 1;
 
     final queryParameters = {
       'status': statusMapper.unmap(status),
       'per_page': '$perPage',
-      'page': '$page',
+      'page': '$_page',
     };
 
     final url = UrlUtils.buildUrl(
@@ -144,10 +184,10 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchWorkflowRuns(url, page: page, perPage: perPage);
+    return _fetchWorkflowRuns(url, page: _page, perPage: perPage);
   }
 
-  /// Retrieves the next [WorkflowRunsPage] of the given [currentPage].
+  /// Fetches the next [WorkflowRunsPage] of the given [currentPage].
   ///
   /// If the given [currentPage] does not have the next page, the
   /// [InteractionResult.error] is returned.
@@ -170,14 +210,12 @@ class GithubActionsClient {
     );
   }
 
-  /// Retrieves a [WorkflowRunsPage] by the given [url].
+  /// Fetches a [WorkflowRunsPage] by the given [url].
   ///
   /// A [perPage] is used for limiting the number of runs and pagination in pair
-  /// with the [page] parameter. It defaults to `10` and is limited to `100`.
-  /// The greater values than `100` are ignored and considered as a maximum.
+  /// with the [page] parameter.
   ///
   /// A [page] is used for pagination and defines a page of runs to fetch.
-  /// If the [page] is `null` or omitted, the first page is fetched.
   ///
   /// Both [fetchWorkflowRuns] and [fetchNextRunsPage] delegate retrieving
   /// [WorkflowRunsPage]s to this method.
@@ -191,15 +229,14 @@ class GithubActionsClient {
       (Map<String, dynamic> json, Map<String, String> headers) {
         final nextPageUrl = _parseNextPageUrl(headers);
 
-        final totalCount = json == null ? null : json['total_count'] as int;
+        if (json == null) return const InteractionResult.success(result: null);
 
-        final runsList =
-            json == null ? null : json['workflow_runs'] as List<dynamic>;
+        final runsList = json['workflow_runs'] as List<dynamic>;
         final runs = WorkflowRun.listFromJson(runsList);
 
         return InteractionResult.success(
           result: WorkflowRunsPage(
-            totalCount: totalCount,
+            totalCount: json['total_count'] as int,
             page: page,
             perPage: perPage,
             nextPageUrl: nextPageUrl,
@@ -227,12 +264,27 @@ class GithubActionsClient {
     );
   }
 
-  /// Retrieves a [WorkflowRunArtifactsPage] with the given [runId].
+  /// Fetches a [WorkflowRunArtifactsPage] with the given [runId].
   ///
-  /// A [perPage] is used for limiting the number of artifacts and pagination in
-  /// pair with the [page] parameter. It defaults to `10` and is limited to
-  /// `100`. The greater values than `100` are ignored and considered as a
-  /// maximum.
+  /// A [perPage] is used for limiting the number of artifacts and pagination
+  /// in pair with the [page] parameter. It defaults to `10` and is limited
+  /// to `100`. If the given value of [perPage] is greater than its limit,
+  /// the upper bound is used.
+  ///
+  /// For example:
+  /// ```dart
+  ///   // initialize client
+  ///   final fetchResult = await client.fetchRunArtifacts(
+  ///     123,
+  ///     page: 3,
+  ///     perPage: 1000,
+  ///   );
+  ///
+  ///   final artifacts = fetchResult.result;
+  ///   print(artifacts.perPage); // prints 1000
+  ///   print(artifacts.page); // prints 3
+  ///   print(artifacts.values.length); // prints 100
+  /// ```
   ///
   /// A [page] is used for pagination and defines a page of artifacts to fetch.
   /// If the [page] is `null` or omitted, the first page is fetched.
@@ -241,9 +293,11 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) {
+    final _page = page ?? 1;
+
     final queryParameters = {
       'per_page': '$perPage',
-      'page': '$page',
+      'page': '$_page',
     };
 
     final url = UrlUtils.buildUrl(
@@ -252,17 +306,15 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchRunArtifacts(url, page: page, perPage: perPage);
+    return _fetchRunArtifacts(url, page: _page, perPage: perPage);
   }
 
-  /// Retrieves the next [WorkflowRunArtifactsPage] of the given [currentPage].
+  /// Fetches the next [WorkflowRunArtifactsPage] of the given [currentPage].
   ///
   /// If the given [currentPage] does not have the next page, the
   /// [InteractionResult.error] is returned.
   FutureOr<InteractionResult<WorkflowRunArtifactsPage>>
-      fetchNextRunArtifactsPage(
-    WorkflowRunArtifactsPage currentPage,
-  ) {
+      fetchNextRunArtifactsPage(WorkflowRunArtifactsPage currentPage) {
     if (!currentPage.hasNextPage) {
       return const InteractionResult.error(
         message: 'The last page is reached, there are no more runs to fetch!',
@@ -279,7 +331,7 @@ class GithubActionsClient {
     );
   }
 
-  /// Retrieves [WorkflowRunArtifactsPage] by the given [url].
+  /// Fetches [WorkflowRunArtifactsPage] by the given [url].
   ///
   /// A [perPage] is used for limiting the number of runs and pagination in pair
   /// with the [page] parameter.
@@ -298,15 +350,14 @@ class GithubActionsClient {
       (Map<String, dynamic> json, Map<String, String> headers) {
         final nextPageUrl = _parseNextPageUrl(headers);
 
-        final totalCount = json == null ? null : json['total_count'] as int;
+        if (json == null) return const InteractionResult.success(result: null);
 
-        final artifactsList =
-            json == null ? null : json['artifacts'] as List<dynamic>;
+        final artifactsList = json['artifacts'] as List<dynamic>;
         final artifacts = WorkflowRunArtifact.listFromJson(artifactsList);
 
         return InteractionResult.success(
           result: WorkflowRunArtifactsPage(
-            totalCount: totalCount,
+            totalCount: json['total_count'] as int,
             page: page,
             perPage: perPage,
             nextPageUrl: nextPageUrl,
@@ -317,7 +368,7 @@ class GithubActionsClient {
     );
   }
 
-  /// Fetches a workflow run artifact by the given download [url].
+  /// Downloads a workflow run artifact by the given download [url].
   ///
   /// The resulting [Uint8List] contains bytes of a zip archive with the desired
   /// artifacts.
@@ -347,7 +398,9 @@ class GithubActionsClient {
 
   /// Parses the next page URL from the given [headers].
   String _parseNextPageUrl(Map<String, String> headers) {
-    final linkHeader = headers['link'] ?? '';
+    final linkHeader = headers['link'];
+    if (linkHeader == null) return null;
+
     final nextPageUrlString = linkHeader.split(',').firstWhere(
           (link) => link.contains('rel="next"'),
           orElse: () => '',

@@ -99,14 +99,13 @@ void main() {
     test(
       ".headers contain the 'accept' header with the GithubActionsConstants.acceptHeader value",
       () {
+        final expectedHeaderValue = GithubActionsConstants.acceptHeader;
+
         final headers = client.headers;
 
         expect(
           headers,
-          containsPair(
-            HttpHeaders.acceptHeader,
-            GithubActionsConstants.acceptHeader,
-          ),
+          containsPair(HttpHeaders.acceptHeader, expectedHeaderValue),
         );
       },
     );

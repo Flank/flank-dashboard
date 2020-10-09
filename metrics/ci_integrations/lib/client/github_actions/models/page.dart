@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// An abstract class that represents a page of a paginated API request response.
+/// An abstract class that represents a page of a paginated API response.
 abstract class Page<T> extends Equatable {
   /// A number of entities that the whole list under pagination contains.
   final int totalCount;
@@ -31,4 +31,14 @@ abstract class Page<T> extends Equatable {
     this.nextPageUrl,
     this.values,
   });
+
+  @override
+  String toString() {
+    return '$runtimeType {'
+        'totalCount: $totalCount, '
+        'page: $page, '
+        'perPage: $perPage, '
+        'nextPageUrl: $nextPageUrl, '
+        'values: $values}';
+  }
 }
