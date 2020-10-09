@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 
 /// A [BarGraph] that displays the build result metric.
 ///
@@ -57,11 +58,18 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
 
   @override
   Widget build(BuildContext context) {
+    final graphPadding = _missingBarsCount != 0 && _barsData.isNotEmpty
+        ? const EdgeInsets.only(left: 4.0)
+        : EdgeInsets.zero;
+
+    final barStrategy = BuildResultBarPaddingStrategy(
+      buildResults: _barsData,
+    );
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        Expanded(
-          flex: _missingBarsCount,
+        Flexible(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(
@@ -70,8 +78,8 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
             ),
           ),
         ),
-        Expanded(
-          flex: _barsData.length,
+        Padding(
+          padding: graphPadding,
           child: BarGraph(
             data: _barsData.map((data) {
               return data.buildResultPopupViewModel.duration.inMilliseconds;
@@ -85,6 +93,7 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
                   minHeight: height,
                 ),
                 child: BuildResultBar(
+                  strategy: barStrategy,
                   buildResult: data,
                 ),
               );

@@ -41,7 +41,6 @@ dependencies:
       url: https://github.com/platform-platform/FlutterSwitch
       ref: master
   shimmer_animation: ^0.0.9
-  visibility_detector: ^0.1.5
   flutter_styled_toast:
     git:
       url: https://github.com/platform-platform/flutter_styled_toast

@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 /// Holds the strings for the project groups screen.
 class ProjectGroupsStrings {
   static const String addProjectGroup = 'Add new group';

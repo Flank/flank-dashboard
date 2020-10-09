@@ -70,11 +70,7 @@ class BarGraph<T extends num> extends StatelessWidget {
       final barData = data[index];
       final barHeight = barData.toDouble() * valueUnitHeight;
 
-      bars.add(
-        Flexible(
-          child: barBuilder(index, barHeight),
-        ),
-      );
+      bars.add(barBuilder(index, barHeight));
     }
 
     return bars;

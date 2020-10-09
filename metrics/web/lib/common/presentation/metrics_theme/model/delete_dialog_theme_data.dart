@@ -6,6 +6,7 @@ class DeleteDialogThemeData extends DialogThemeData {
   /// A [TextStyle] of the content text for the delete dialog.
   final TextStyle contentTextStyle;
 
+  /// Creates a new instance of the [DeleteDialogThemeData].
   const DeleteDialogThemeData({
     Color backgroundColor,
     Color closeIconColor,

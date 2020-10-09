@@ -7,6 +7,7 @@ import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 ///
 /// Applies the [TextStyle] from the [MetricsThemeData.inactiveWidgetTheme].
 class NoDataPlaceholder extends StatelessWidget {
+  /// Creates a new instance of the [NoDataPlaceholder].
   const NoDataPlaceholder({Key key}) : super(key: key);
 
   @override

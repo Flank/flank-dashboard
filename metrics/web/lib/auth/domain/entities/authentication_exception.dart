@@ -4,7 +4,10 @@ import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 /// Represents the authentication exception.
 @immutable
 class AuthenticationException implements Exception {
+  /// A unique code that identifies this exception.
   final AuthErrorCode code;
+
+  /// A human-friendly message that describes this exception.
   final String message;
 
   /// Creates the [AuthenticationException] with the given [message] and [code].
