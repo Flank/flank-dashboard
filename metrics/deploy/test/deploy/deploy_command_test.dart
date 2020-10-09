@@ -25,13 +25,13 @@ void main() {
         expect(runner.invocation, equals('metrics <command> [arguments]'));
       },
     );
-    test('returns the usage string', () {
+    test("returns the usage string", () {
       expect(runner.usage, equals('''
 Metrics installer.
 
 $_defaultUsage'''));
     });
-    test('contains custom commands', () {
+    test("contains custom commands", () {
       runner.addCommand(DeployCommand());
       expect(runner.usage, equals('''
 Metrics installer.

@@ -31,7 +31,7 @@ Metrics installer.
 
 $_defaultUsage'''));
     });
-    test('contains custom commands', () {
+    test("contains custom commands", () {
       runner.addCommand(DoctorCommand());
       expect(runner.usage, equals('''
 Metrics installer.
