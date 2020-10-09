@@ -74,7 +74,17 @@ void main() {
       updateUserProfileUseCase,
     );
 
-    tearDown(() {
+    setUpAll(() {
+      when(receiveAuthUpdates(any)).thenAnswer((_) => Stream.value(user));
+
+      when(receiveUserProfileUpdates(any)).thenAnswer(
+        (_) => Stream.value(userProfile),
+      );
+
+      authNotifier.subscribeToAuthenticationUpdates();
+    });
+
+    setUp(() {
       reset(signInUseCase);
       reset(googleSignInUseCase);
       reset(signOutUseCase);
@@ -205,8 +215,7 @@ void main() {
     test(
       ".subscribeToAuthenticationUpdates() delegates to receive auth updates use case",
       () {
-        when(receiveAuthUpdates.call())
-            .thenAnswer((realInvocation) => const Stream.empty());
+        when(receiveAuthUpdates()).thenAnswer((_) => const Stream.empty());
 
         authNotifier.subscribeToAuthenticationUpdates();
 
@@ -219,8 +228,7 @@ void main() {
       () {
         final userController = StreamController<User>();
 
-        when(receiveAuthUpdates.call())
-            .thenAnswer((realInvocation) => userController.stream);
+        when(receiveAuthUpdates()).thenAnswer((_) => userController.stream);
 
         authNotifier.subscribeToAuthenticationUpdates();
 
@@ -337,44 +345,6 @@ void main() {
     );
 
     test(
-      ".subscribeToUserProfileUpdates() calls the create user profile use case if the stream emits null",
-      () {
-        final authNotifier = AuthNotifier(
-          receiveAuthUpdates,
-          signInUseCase,
-          googleSignInUseCase,
-          signOutUseCase,
-          receiveUserProfileUpdates,
-          createUserProfileUseCase,
-          updateUserProfileUseCase,
-        );
-
-        final userProfileController = StreamController<UserProfile>();
-
-        when(receiveUserProfileUpdates(any)).thenAnswer(
-          (_) => userProfileController.stream,
-        );
-
-        final listener = expectAsyncUntil0(() {}, () {
-          if (authNotifier.userProfileModel != null) {
-            verify(createUserProfileUseCase(any)).called(1);
-            return true;
-          }
-
-          return false;
-        });
-
-        authNotifier.addListener(listener);
-
-        userProfileController.add(null);
-        userProfileController.add(userProfile);
-
-        authNotifier.updateUserProfile(userProfileModel);
-        authNotifier.subscribeToUserProfileUpdates(id);
-      },
-    );
-
-    test(
       ".subscribeToUserProfileUpdates() set the is logged in status to true if the stream emits a user profile",
       () {
         final authNotifier = AuthNotifier(
@@ -447,6 +417,16 @@ void main() {
     );
 
     test(".isLoggedIn status is false after a user signs out", () async {
+      final authNotifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        googleSignInUseCase,
+        signOutUseCase,
+        receiveUserProfileUpdates,
+        createUserProfileUseCase,
+        updateUserProfileUseCase,
+      );
+
       when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(null));
 
       authNotifier.subscribeToAuthenticationUpdates();
@@ -503,17 +483,19 @@ void main() {
       },
     );
 
-    test(".signInWithEmailAndPassword() delegates to sign in use case",
-        () async {
-      await authNotifier.signInWithEmailAndPassword(email, password);
+    test(
+      ".signInWithEmailAndPassword() delegates to sign in use case",
+      () async {
+        await authNotifier.signInWithEmailAndPassword(email, password);
 
-      final userCredentials = UserCredentialsParam(
-        email: Email(email),
-        password: Password(password),
-      );
+        final userCredentials = UserCredentialsParam(
+          email: Email(email),
+          password: Password(password),
+        );
 
-      verify(signInUseCase(userCredentials)).called(equals(1));
-    });
+        verify(signInUseCase(userCredentials)).called(equals(1));
+      },
+    );
 
     test(".signInWithEmailAndPassword() does nothing if isLoading is true", () {
       authNotifier.signInWithGoogle();

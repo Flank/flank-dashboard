@@ -227,20 +227,24 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Updates the existing user profile, based on the updated [userProfile].
   Future<void> updateUserProfile(UserProfileModel userProfile) async {
-    if (userProfile == null || userProfile == _userProfileModel) {
+    if (userProfile == null ||
+        _userProfileModel == null ||
+        userProfile == _userProfileModel) {
       return;
     }
 
     _resetUserProfileSavingErrorMessage();
 
+    final updatedUserProfile = _userProfileModel.merge(userProfile);
+
     try {
       await _updateUserProfileUseCase(
         UserProfileParam(
-          id: userProfile.id,
-          selectedTheme: userProfile.selectedTheme,
+          id: updatedUserProfile.id,
+          selectedTheme: updatedUserProfile.selectedTheme,
         ),
       );
-      _changeTheme(userProfile.selectedTheme);
+      _changeTheme(updatedUserProfile.selectedTheme);
     } on PersistentStoreException catch (exception) {
       _userProfileSavingErrorHandler(exception.code);
     }

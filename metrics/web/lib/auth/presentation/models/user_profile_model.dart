@@ -16,12 +16,11 @@ class UserProfileModel extends Equatable {
 
   /// Creates the [UserProfileModel] with the given [id] and the [selectedTheme].
   ///
-  /// The [id] and [selectedTheme] must not be null.
+  /// The [selectedTheme] must not be null.
   const UserProfileModel({
-    @required this.id,
     @required this.selectedTheme,
-  })  : assert(id != null),
-        assert(selectedTheme != null);
+    this.id,
+  }) : assert(selectedTheme != null);
 
   /// Returns a new instance of the [UserProfileModel] that is a combination
   /// of this user profile model and the given [userProfileModel].

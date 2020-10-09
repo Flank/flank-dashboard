@@ -11,13 +11,6 @@ void main() {
     const id = 'id';
     const selectedTheme = ThemeType.dark;
 
-    test("throws an AssertionError if the given id is null", () {
-      expect(
-        () => UserProfileModel(id: null, selectedTheme: selectedTheme),
-        MatcherUtil.throwsAssertionError,
-      );
-    });
-
     test("throws an AssertionError if the given selected theme is null", () {
       expect(
         () => UserProfileModel(id: id, selectedTheme: null),

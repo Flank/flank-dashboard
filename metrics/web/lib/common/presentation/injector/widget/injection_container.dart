@@ -7,6 +7,7 @@ import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
 import 'package:metrics/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:metrics/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
+import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/data/repositories/firestore_project_repository.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
@@ -210,17 +211,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
   /// Listens to [ThemeNotifier]'s updates.
   void _themeNotifierListener() {
-    final selectedTheme = _themeNotifier.selectedTheme;
-
-    final currentUserProfile = _authNotifier.userProfileModel;
-
-    if (currentUserProfile == null) {
-      return;
-    }
-
-    _authNotifier.updateUserProfile(
-      currentUserProfile.copyWith(selectedTheme: selectedTheme),
+    final userProfileModel = UserProfileModel(
+      selectedTheme: _themeNotifier.selectedTheme,
     );
+
+    _authNotifier.updateUserProfile(userProfileModel);
   }
 
   /// Updates projects subscription based on user logged in status.
