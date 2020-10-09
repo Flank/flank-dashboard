@@ -1,0 +1,31 @@
+@startuml coverage_class_diagram
+
+package core.src {
+    package domain {
+        package value_onjects {
+            class Percent {
+                value: double
+            }
+        }
+
+        package entities {
+            class Coverage {
+                percent: Percent
+            }
+        }
+    }
+
+
+    package data.model {
+        class CoverageModel {
+            Map<String, dynamic> toJson()
+            factory fromJson()
+        }
+    }
+}
+
+Coverage -> Percent : uses
+CoverageModel -|> Coverage
+
+
+@enduml

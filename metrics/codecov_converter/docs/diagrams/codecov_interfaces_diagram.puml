@@ -1,0 +1,38 @@
+@startuml codecov_interfaces_diagram
+
+class Command {
+    name: String
+    description: String
+    FutureOr<T> run()
+}
+
+package core.src.data.model {
+    class CoverageModel {
+        Parcent percent
+        Max<String, dynamic> toJson()
+    }
+}
+
+
+package common {
+    package command {
+        abstract CodeCovConverterCommand {
+            {abstract} converter : CodeCovConverter 
+            {abstract} name: String
+            {abstract} description: String
+            void run()
+        }
+    }
+
+    package converter {
+        interface CodeCovConverter {
+            {abstract} CoverageModel convert(File)
+        }
+    }
+}
+
+CodeCovConverterCommand --|> Command
+CodeCovConverter --> CoverageModel : provides
+CodeCovConverterCommand --> CodeCovConverter : uses
+
+@enduml

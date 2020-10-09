@@ -1,0 +1,11 @@
+@startuml codecov_conversion_activity 
+
+(*) --> Coverage
+---> "Get the file patch from config"
+---> "Get the file contents"
+---> "Convert the file contents to the Coverage instance"
+---> "Create a coverage json from the Converage instance"
+---> "Create a converage file"
+---> "Write a coverage json to the coverage file"
+
+@enduml
