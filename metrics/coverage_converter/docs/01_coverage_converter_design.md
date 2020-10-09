@@ -1,4 +1,4 @@
-# CodeCov Converter design
+# Coverage Converter design
 
 > Summary of the proposed change
 
@@ -44,13 +44,13 @@ The main purpose of this tool is to convert the given coverage report to the `CI
 
 Let's consider the class diagram explaining the main interfaces and dependencies between them: 
 
-![Interfaces diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/codecov_converter_design/metrics/codecov_converter/docs/diagrams/codecov_interfaces_diagram.puml)
+![Interfaces diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_interfaces_diagram.puml)
 
 As we can see above, the `CodeCovConverterCommand` uses the `CodeCovConverter` to convert the specific coverage report to the `CoverageModel` class that represents the `CI integrations` coverage report.
 
 Let's consider the activity diagram of the coverage conversion process: 
 
-![Coverage conversion diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/codecov_converter/docs/diagrams/codecov_conversion_activity.puml)
+![Coverage conversion diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_conversion_activity.puml)
 
 To run the command line application, we should have a `CommandRunner` class. Let's name it `CodeCovConverterRunner`. This class will extend the `CommandRunner`. It will be the place where we'll add our specific `CodeCovConverterCommand`s.
 
@@ -90,7 +90,7 @@ Since we want to unify the coverage reports for the CI integrations, we should c
 
 So, the JSON will contain only `pct` value that will represent the total coverage percent. Let's consider the class diagram of the coverage structure: 
 
-![Coverage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/codecov_converter/docs/diagrams/coverage_class_diagram.puml)
+![Coverage data model class diagram class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_data_model_class_diagram.puml)
 
 
 ## Creating a new specific format converter
@@ -110,13 +110,13 @@ Currently, the CodeCov Converter tool should support the following coverage repo
 
 Finally, let's consider the class diagram that provides information about all classes and their relationships.
 
-![CodeCov class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/codecov_converter/docs/diagrams/codecov_class_diagram.puml)
+![Coverage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_class_diagram.puml)
 
 So, the application takes the arguments on run, parses them using the `CodeCovArgumentsParser`, and passes these arguments to the specific converter command. The converter command, in its turn, gets the input file path, converts it to the CI integrations coverage format, and writes it to the output file.
 
 Let's consider the sequence diagram of these processes taking the `specific` format as an example:
 
-![CodeCov sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/codecov_converter/docs/diagrams/codecov_sequence_diagram.puml)
+![CodeCov sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_sequence_diagram.puml)
 
 # Dependencies
 

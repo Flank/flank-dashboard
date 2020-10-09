@@ -1,4 +1,4 @@
-@startuml codecov_conversion_activity 
+@startuml coverage_conversion_activity 
 
 (*) --> Coverage
 ---> "Get the file path from the arguments"

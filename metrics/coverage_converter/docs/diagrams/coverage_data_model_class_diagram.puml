@@ -1,4 +1,4 @@
-@startuml coverage_class_diagram
+@startuml coverage_data_model_class_diagram
 
 package core.src {
     package domain {

@@ -1,4 +1,4 @@
-@startuml codecov_interfaces_diagram
+@startuml coverage_interfaces_diagram.puml
 
 package package:args {
     class Command {
@@ -19,8 +19,8 @@ package core.src.data.model {
 
 package common {
     package command {
-        abstract CodeCovConverterCommand {
-            {abstract} converter : CodeCovConverter
+        abstract CoverageConverterCommand {
+            {abstract} converter : CoverageConverter
             {abstract} name: String
             {abstract} description: String
             void run()
@@ -28,14 +28,14 @@ package common {
     }
 
     package converter {
-        interface CodeCovConverter {
+        interface CoverageConverter {
             {abstract} CoverageModel convert(File)
         }
     }
 }
 
-CodeCovConverterCommand --|> Command
-CodeCovConverter --> CoverageModel : provides
-CodeCovConverterCommand --> CodeCovConverter : uses
+CoverageConverterCommand --|> Command
+CoverageConverter --> CoverageModel : provides
+CoverageConverterCommand --> CoverageConverter : uses
 
 @enduml
