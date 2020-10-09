@@ -35,6 +35,7 @@ void main() {
         expect(darkMetricsThemeData.circlePercentageTheme, isNotNull);
         expect(darkMetricsThemeData.toastTheme, isNotNull);
         expect(darkMetricsThemeData.pageTitleTheme, isNotNull);
+        expect(darkMetricsThemeData.graphIndicatorTheme, isNotNull);
       },
     );
   });

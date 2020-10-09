@@ -1,0 +1,52 @@
+import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/attention_level/metrics_colored_bar_attention_level.dart';
+import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
+import 'package:test/test.dart';
+
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+
+void main() {
+  group("MetricsColoredBarAttentionLevel", () {
+    test(
+      "creates an instance with default styles if the given styles are null",
+      () {
+        const attentionLevel = MetricsColoredBarAttentionLevel(
+          negative: null,
+          neutral: null,
+          positive: null,
+        );
+
+        expect(attentionLevel.positive, isNotNull);
+        expect(attentionLevel.neutral, isNotNull);
+        expect(attentionLevel.negative, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with default styles if styles are not specified",
+      () {
+        const attentionLevel = MetricsColoredBarAttentionLevel();
+
+        expect(attentionLevel.positive, isNotNull);
+        expect(attentionLevel.neutral, isNotNull);
+        expect(attentionLevel.negative, isNotNull);
+      },
+    );
+
+    test("creates an instance with the given styles", () {
+      const normal = MetricsColoredBarStyle(color: Colors.blue);
+      const secondary = MetricsColoredBarStyle(color: Colors.yellow);
+      const negative = MetricsColoredBarStyle(color: Colors.red);
+      final attentionLevel = MetricsColoredBarAttentionLevel(
+        positive: normal,
+        neutral: secondary,
+        negative: negative,
+      );
+
+      expect(attentionLevel.positive, equals(normal));
+      expect(attentionLevel.neutral, equals(secondary));
+      expect(attentionLevel.negative, equals(negative));
+    });
+  });
+}
