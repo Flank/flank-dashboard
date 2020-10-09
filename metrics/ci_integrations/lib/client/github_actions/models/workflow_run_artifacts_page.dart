@@ -1,7 +1,8 @@
+import 'package:ci_integration/client/github_actions/models/page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
-import 'package:ci_integration/util/model/page.dart';
 
-/// A class that represents a page of [WorkflowRunArtifact]
+/// A class that represents a page of [WorkflowRunArtifact] that is used to
+/// paginate the run artifacts fetching.
 class WorkflowRunArtifactsPage extends Page<WorkflowRunArtifact> {
   /// Creates a new instance of the [WorkflowRunArtifactsPage].
   const WorkflowRunArtifactsPage({

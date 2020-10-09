@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
@@ -39,7 +40,7 @@ class GithubActionsClient {
   final AuthorizationBase authorization;
 
   /// A [RegExp] needed to parse next page URLs in [HttpResponse] headers.
-  final nextUrlRegexp = RegExp(r'(?<=<)(.*)(?=>)');
+  final _nextUrlRegexp = RegExp(r'(?<=<)(.*)(?=>)');
 
   /// The HTTP client for making requests to the Github Actions API.
   final Client _client = Client();
@@ -111,17 +112,17 @@ class GithubActionsClient {
 
   /// Retrieves a [WorkflowRunsPage] by the given [workflowIdentifier].
   ///
-  /// The [workflowIdentifier] is either a workflow id or a name of the file
+  /// A [workflowIdentifier] is either a workflow id or a name of the file
   /// that defines the workflow.
   ///
-  /// [status] is used as a filter query parameter to define the
+  /// A [status] is used as a filter query parameter to define the
   /// [WorkflowRun.status] of runs to fetch.
   ///
-  /// [perPage] is used for limiting the number of runs and pagination in pair
+  /// A [perPage] is used for limiting the number of runs and pagination in pair
   /// with the [page] parameter. It defaults to `10` and is limited to `100`.
   /// The greater values than `100` are ignored and considered as a maximum.
   ///
-  /// [page] is used for pagination and defines a page of runs to fetch.
+  /// A [page] is used for pagination and defines a page of runs to fetch.
   /// If the [page] is `null` or omitted, the first page is fetched.
   Future<InteractionResult<WorkflowRunsPage>> fetchWorkflowRuns(
     String workflowIdentifier, {
@@ -147,9 +148,18 @@ class GithubActionsClient {
   }
 
   /// Retrieves the next [WorkflowRunsPage] of the given [currentPage].
-  Future<InteractionResult<WorkflowRunsPage>> fetchNextRunsPage(
+  ///
+  /// If the given [currentPage] does not have the next page, the
+  /// [InteractionResult.error] is returned.
+  FutureOr<InteractionResult<WorkflowRunsPage>> fetchNextRunsPage(
     WorkflowRunsPage currentPage,
   ) {
+    if (!currentPage.hasNextPage) {
+      return const InteractionResult.error(
+        message: 'The last page is reached, there are no more runs to fetch!',
+      );
+    }
+
     final nextPageNumber =
         currentPage.page == null ? null : currentPage.page + 1;
 
@@ -162,6 +172,13 @@ class GithubActionsClient {
 
   /// Retrieves a [WorkflowRunsPage] by the given [url].
   ///
+  /// A [perPage] is used for limiting the number of runs and pagination in pair
+  /// with the [page] parameter. It defaults to `10` and is limited to `100`.
+  /// The greater values than `100` are ignored and considered as a maximum.
+  ///
+  /// A [page] is used for pagination and defines a page of runs to fetch.
+  /// If the [page] is `null` or omitted, the first page is fetched.
+  ///
   /// Both [fetchWorkflowRuns] and [fetchNextRunsPage] delegate retrieving
   /// [WorkflowRunsPage]s to this method.
   Future<InteractionResult<WorkflowRunsPage>> _fetchWorkflowRuns(
@@ -172,7 +189,7 @@ class GithubActionsClient {
     return _handleResponse<WorkflowRunsPage>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
-        final nextPageUrl = parseNextPageUrl(headers);
+        final nextPageUrl = _parseNextPageUrl(headers);
 
         final totalCount = json == null ? null : json['total_count'] as int;
 
@@ -212,12 +229,12 @@ class GithubActionsClient {
 
   /// Retrieves a [WorkflowRunArtifactsPage] with the given [runId].
   ///
-  /// [perPage] is used for limiting the number of artifacts and pagination in
+  /// A [perPage] is used for limiting the number of artifacts and pagination in
   /// pair with the [page] parameter. It defaults to `10` and is limited to
   /// `100`. The greater values than `100` are ignored and considered as a
   /// maximum.
   ///
-  /// [page] is used for pagination and defines a page of artifacts to fetch.
+  /// A [page] is used for pagination and defines a page of artifacts to fetch.
   /// If the [page] is `null` or omitted, the first page is fetched.
   Future<InteractionResult<WorkflowRunArtifactsPage>> fetchRunArtifacts(
     int runId, {
@@ -239,9 +256,19 @@ class GithubActionsClient {
   }
 
   /// Retrieves the next [WorkflowRunArtifactsPage] of the given [currentPage].
-  Future<InteractionResult<WorkflowRunArtifactsPage>> fetchNextRunArtifactsPage(
+  ///
+  /// If the given [currentPage] does not have the next page, the
+  /// [InteractionResult.error] is returned.
+  FutureOr<InteractionResult<WorkflowRunArtifactsPage>>
+      fetchNextRunArtifactsPage(
     WorkflowRunArtifactsPage currentPage,
   ) {
+    if (!currentPage.hasNextPage) {
+      return const InteractionResult.error(
+        message: 'The last page is reached, there are no more runs to fetch!',
+      );
+    }
+
     final nextPageNumber =
         currentPage.page == null ? null : currentPage.page + 1;
 
@@ -254,6 +281,11 @@ class GithubActionsClient {
 
   /// Retrieves [WorkflowRunArtifactsPage] by the given [url].
   ///
+  /// A [perPage] is used for limiting the number of runs and pagination in pair
+  /// with the [page] parameter.
+  ///
+  /// A [page] is used for pagination and defines a page of runs to fetch.
+  ///
   /// Both [fetchRunArtifacts] and [fetchNextRunArtifactsPage] delegate
   /// retrieving [WorkflowRunArtifactsPage]s to this method.
   Future<InteractionResult<WorkflowRunArtifactsPage>> _fetchRunArtifacts(
@@ -264,7 +296,7 @@ class GithubActionsClient {
     return _handleResponse<WorkflowRunArtifactsPage>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
-        final nextPageUrl = parseNextPageUrl(headers);
+        final nextPageUrl = _parseNextPageUrl(headers);
 
         final totalCount = json == null ? null : json['total_count'] as int;
 
@@ -314,14 +346,14 @@ class GithubActionsClient {
   }
 
   /// Parses the next page URL from the given [headers].
-  String parseNextPageUrl(Map<String, String> headers) {
+  String _parseNextPageUrl(Map<String, String> headers) {
     final linkHeader = headers['link'] ?? '';
     final nextPageUrlString = linkHeader.split(',').firstWhere(
-          (link) => link.contains('next'),
+          (link) => link.contains('rel="next"'),
           orElse: () => '',
         );
 
-    final nextPageUrl = nextUrlRegexp.firstMatch(nextPageUrlString)?.group(0);
+    final nextPageUrl = _nextUrlRegexp.firstMatch(nextPageUrlString)?.group(0);
 
     return nextPageUrl;
   }

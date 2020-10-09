@@ -5,28 +5,27 @@ import 'package:test/test.dart';
 
 void main() {
   group("StringValidator", () {
-    Function _validatorCallback(String value, {String name}) {
-      return () => StringValidator.checkNotNullOrEmpty(value, name: name);
-    }
-
     test(
       "throws an ArgumentError if the given value is null",
       () {
-        expect(_validatorCallback(null), throwsArgumentError);
+        expect(() => StringValidator.checkNotNullOrEmpty(null),
+            throwsArgumentError);
       },
     );
 
     test(
       "throws an ArgumentError if the given value is empty",
       () {
-        expect(_validatorCallback(''), throwsArgumentError);
+        expect(
+            () => StringValidator.checkNotNullOrEmpty(''), throwsArgumentError);
       },
     );
 
     test(
       "validates the given value",
       () {
-        expect(_validatorCallback('test'), returnsNormally);
+        expect(
+            () => StringValidator.checkNotNullOrEmpty('test'), returnsNormally);
       },
     );
 
@@ -36,7 +35,7 @@ void main() {
         const variableName = 'test';
 
         expect(
-          _validatorCallback(null, name: variableName),
+          () => StringValidator.checkNotNullOrEmpty(null, name: variableName),
           throwsA(
             (error) =>
                 error is ArgumentError && error.name.contains(variableName),
@@ -49,7 +48,7 @@ void main() {
       "throws an ArgumentError that doesn't contain the name of a validated variable if it wasn't specified",
       () {
         expect(
-          _validatorCallback(null, name: null),
+          () => StringValidator.checkNotNullOrEmpty(null, name: null),
           throwsA(
             (error) => error is ArgumentError && error.name == null,
           ),
