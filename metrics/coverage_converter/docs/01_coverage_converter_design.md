@@ -52,7 +52,7 @@ Let's consider the activity diagram of the coverage conversion process:
 
 ![Coverage conversion diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_conversion_activity.puml)
 
-To run the command line application, we should have a `CommandRunner` class. Let's name it `CoverageConverterRunner`. This class will extend the `CommandRunner`. It will be the place where we'll add our specific `CoverageConverterCommand`s.
+To run the command line application, we should have a `CommandRunner` class. Let's name it `CoverageConverterRunner`. This class will extend `CommandRunner`. It will be the place where we'll add our specific `CoverageConverterCommand`s.
 
 Also, we should be able to pass the following arguments to the Coverage Converter tool: 
 
@@ -112,7 +112,7 @@ Finally, let's consider the class diagram that provides information about all cl
 
 ![Coverage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_class_diagram.puml)
 
-So, the application takes the arguments on run, parses them using the `CoverageArgumentsParser`, and passes these arguments to the specific converter command. The converter command, in its turn, gets the input file path, converts it to the CI integrations coverage format, and writes it to the output file.
+So, the application takes the arguments, parses them using the `CoverageArgumentsParser`, and passes these arguments to the specific converter command. The converter command, in its turn, gets the input file path, converts it to the CI integrations coverage format, and writes it to the output file.
 
 Let's consider the sequence diagram of these processes taking the `specific` format as an example:
 
