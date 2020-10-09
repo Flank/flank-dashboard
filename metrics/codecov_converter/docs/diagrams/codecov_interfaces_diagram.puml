@@ -1,10 +1,13 @@
 @startuml codecov_interfaces_diagram
 
-class Command {
-    name: String
-    description: String
-    FutureOr<T> run()
+package package:args {
+    class Command {
+        name: String
+        description: String
+        FutureOr<T> run()
+    }
 }
+
 
 package core.src.data.model {
     class CoverageModel {
@@ -17,7 +20,7 @@ package core.src.data.model {
 package common {
     package command {
         abstract CodeCovConverterCommand {
-            {abstract} converter : CodeCovConverter 
+            {abstract} converter : CodeCovConverter
             {abstract} name: String
             {abstract} description: String
             void run()

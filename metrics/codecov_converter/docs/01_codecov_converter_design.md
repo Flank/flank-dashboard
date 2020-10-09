@@ -80,7 +80,7 @@ Once we've finished with all main classes and interfaces, let's consider the pac
 
 ## Structure of the CodeCov coverage report.
 
-Since we want to unify the coverage reports for the CI integrations, we should create a specific for CI integrations coverage report format. Currently, this report will contain only `line coverage percent`. Let's consider the JSON summary structure: 
+Since we want to unify the coverage reports for the CI integrations, we should create a specific for CI integrations coverage report format. Currently, this report will contain only `total coverage percent`. Let's consider the JSON summary structure: 
 
 ```
 {
@@ -88,7 +88,7 @@ Since we want to unify the coverage reports for the CI integrations, we should c
 }
 ```
 
-So, the JSON will contain only `pct` value that will represent the total line coverage percent. Let's consider the class diagram of the coverage structure: 
+So, the JSON will contain only `pct` value that will represent the total coverage percent. Let's consider the class diagram of the coverage structure: 
 
 ![Coverage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/codecov_converter/docs/diagrams/coverage_class_diagram.puml)
 
