@@ -38,8 +38,8 @@ We should implement the GithubActionsClient and related models in a way they wil
 ## Table of methods
 | Client method | Endpoint name   |  API endpoint | Description |
 |---------------|------------------|-------------|---------------|
-| fetchWorkflowRuns | [List workflow runs](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-runs) | GET /repos/{owner}/{repo}/actions/workflows/{workflow_file_name}/runs | Lists runs for the specified workflow. |
-| fetchRunArtifacts |[List workflow run artifacts](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-run-artifacts)  | GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts | Lists artifacts for a workflow run. |
+| fetchWorkflowRuns, fetchNextRunsPage | [List workflow runs](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-runs) | GET /repos/{owner}/{repo}/actions/workflows/{workflow_file_name}/runs | Lists runs for the specified workflow. |
+| fetchRunArtifacts, fetchNextRunArtifactsPage |[List workflow run artifacts](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-run-artifacts)  | GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts | Lists artifacts for a workflow run. |
 | downloadRunArtifact| [Download an artifact](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#download-an-artifact)| GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip| Downloads the specified run artifact. |
 | fetchRunDuration | [Workflow run usage](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#get-workflow-run-usage)  | GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing | Gets the total run time for a specific workflow run. |
 

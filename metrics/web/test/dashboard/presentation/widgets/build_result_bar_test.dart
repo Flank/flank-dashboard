@@ -10,16 +10,13 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("BuildResultBar", () {
-    VisibilityDetectorController.instance.updateInterval = Duration.zero;
-
     const successfulColor = Colors.blue;
     const failedColor = Colors.red;
     const canceledColor = Colors.grey;
@@ -148,6 +145,32 @@ void main() {
         expect(coloredBar.color, equals(canceledColor));
       },
     );
+
+    testWidgets(
+      "applies the padding returned from the given build result bar strategy",
+      (tester) async {
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
+          buildStatus: BuildStatus.cancelled,
+        );
+        final strategy = BuildResultBarPaddingStrategy(
+          buildResults: [buildResult],
+        );
+        final expectedPadding = strategy.getBarPadding(buildResult);
+
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: buildResult,
+          strategy: strategy,
+          themeData: themeData,
+        ));
+
+        final paddingWidget = tester.widget<Padding>(find.byWidgetPredicate(
+          (widget) => widget is Padding && widget.child is Stack,
+        ));
+
+        expect(paddingWidget.padding, equals(expectedPadding));
+      },
+    );
   });
 }
 
@@ -162,14 +185,20 @@ class _BuildResultBarTestbed extends StatelessWidget {
   /// A height of the [BuildResultBar].
   final double barHeight;
 
+  /// A class that provides an [EdgeInsets] based
+  /// on the [BuildResultViewModel].
+  final BuildResultBarPaddingStrategy strategy;
+
   /// Creates an instance of this testbed.
   ///
   /// The [themeData] default value is an empty [MetricsThemeData] instance.
-  /// The [strategy] default value is a [BuildResultBarAppearanceStrategy] instance.
+  /// The [strategy] default value is an empty
+  /// [BuildResultBarPaddingStrategy] instance.
   /// The [barHeight] default value is `20.0`.
   const _BuildResultBarTestbed({
     Key key,
     this.themeData = const MetricsThemeData(),
+    this.strategy = const BuildResultBarPaddingStrategy(),
     this.barHeight = 20.0,
     this.buildResult,
   }) : super(key: key);
@@ -179,6 +208,7 @@ class _BuildResultBarTestbed extends StatelessWidget {
     return MetricsThemedTestbed(
       metricsThemeData: themeData,
       body: BuildResultBar(
+        strategy: strategy,
         buildResult: buildResult,
       ),
     );

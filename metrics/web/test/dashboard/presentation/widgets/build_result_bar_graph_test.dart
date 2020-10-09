@@ -9,8 +9,8 @@ import 'package:metrics/dashboard/presentation/view_models/build_result_view_mod
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -18,8 +18,6 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("BuildResultBarGraph", () {
-    VisibilityDetectorController.instance.updateInterval = Duration.zero;
-
     final buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
 
     testWidgets(
@@ -48,6 +46,48 @@ void main() {
         final barWidgets = tester.widgetList(find.byType(BuildResultBar));
 
         expect(barWidgets.length, buildResults.length);
+      },
+    );
+
+    testWidgets(
+      "displays the build result bars with the build result bar padding strategy",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+        ));
+
+        final barWidgets = tester.widgetList<BuildResultBar>(
+          find.byType(BuildResultBar),
+        );
+
+        final strategies = barWidgets.map((bar) => bar.strategy);
+
+        expect(strategies, everyElement(isNotNull));
+        expect(strategies, everyElement(isA<BuildResultBarPaddingStrategy>()));
+      },
+    );
+
+    testWidgets(
+      "displays the build result bars with the build result bar padding strategy initialized with build results",
+      (WidgetTester tester) async {
+        final results = UnmodifiableListView(buildResults);
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: results,
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+        ));
+
+        final barWidgets = tester.widgetList<BuildResultBar>(
+          find.byType(BuildResultBar),
+        );
+
+        final strategies = barWidgets.map((bar) => bar.strategy.buildResults);
+
+        expect(strategies, everyElement(equals(results)));
       },
     );
 

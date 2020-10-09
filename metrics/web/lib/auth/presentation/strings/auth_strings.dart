@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 /// Holds the strings for the authentication module.
 class AuthStrings {
   static const String email = 'Email address';

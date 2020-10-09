@@ -3,6 +3,7 @@ import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 
 /// Represents the build results metric entity.
 class BuildResultMetric extends Equatable {
+  /// A [List] of the build results.
   final List<BuildResult> buildResults;
 
   @override
