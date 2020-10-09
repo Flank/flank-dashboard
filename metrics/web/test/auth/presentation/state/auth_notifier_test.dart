@@ -288,32 +288,34 @@ void main() {
     );
 
     test(
-      ".subscribeToUserProfileUpdates() does not subscribe to user profile updates if the given id is null",
-      () {
-        final streamController = StreamController<UserProfile>();
-
-        when(receiveUserProfileUpdates(any)).thenAnswer(
-          (_) => streamController.stream,
-        );
-
-        authNotifier.subscribeToUserProfileUpdates(null);
-
-        expect(streamController.hasListener, isFalse);
-      },
-    );
-
-    test(
       ".subscribeToUserProfileUpdates() subscribes to a user profile updates stream",
       () {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
         final streamController = StreamController<UserProfile>();
 
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
         when(receiveUserProfileUpdates(any)).thenAnswer(
           (_) => streamController.stream,
         );
 
-        authNotifier.subscribeToUserProfileUpdates(id);
+        final listener = expectAsyncUntil0(
+          () {},
+          () => streamController.hasListener,
+        );
+        authNotifier.subscribeToAuthenticationUpdates();
 
-        expect(streamController.hasListener, isTrue);
+        authNotifier.addListener(listener);
+        streamController.add(userProfile);
       },
     );
 
@@ -330,6 +332,10 @@ void main() {
           updateUserProfileUseCase,
         );
 
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+
         when(receiveUserProfileUpdates(any)).thenAnswer(
           (_) => Stream.value(userProfile),
         );
@@ -340,7 +346,7 @@ void main() {
 
         authNotifier.addListener(listener);
 
-        authNotifier.subscribeToUserProfileUpdates(id);
+        authNotifier.subscribeToAuthenticationUpdates();
       },
     );
 
@@ -362,11 +368,15 @@ void main() {
           selectedTheme: ThemeType.light,
         );
 
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+
         when(receiveUserProfileUpdates(any)).thenAnswer(
           (_) => Stream.value(userProfile),
         );
 
-        authNotifier.subscribeToUserProfileUpdates(id);
+        authNotifier.subscribeToAuthenticationUpdates();
 
         final listener = expectAsync0(() {
           if (authNotifier.isLoggedIn != null) {
@@ -397,11 +407,15 @@ void main() {
         final userProfileController = StreamController<UserProfile>();
         const errorMessage = PersistentStoreErrorMessage(errorCode);
 
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+
         when(receiveUserProfileUpdates(any)).thenAnswer(
           (_) => userProfileController.stream,
         );
 
-        authNotifier.subscribeToUserProfileUpdates(id);
+        authNotifier.subscribeToAuthenticationUpdates();
 
         userProfileController.addError(const PersistentStoreException(
           code: errorCode,
@@ -671,11 +685,16 @@ void main() {
           id: userProfile.id,
           selectedTheme: userProfile.selectedTheme,
         );
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+
         when(receiveUserProfileUpdates(any)).thenAnswer(
           (_) => Stream.value(userProfile),
         );
 
-        authNotifier.subscribeToUserProfileUpdates(id);
+        authNotifier.subscribeToAuthenticationUpdates();
 
         final listener = expectAsyncUntil0(
           () async {
@@ -763,15 +782,12 @@ void main() {
         );
 
         authNotifier.subscribeToAuthenticationUpdates();
-        authNotifier.subscribeToUserProfileUpdates(id);
 
         expect(userController.hasListener, isTrue);
-        expect(userProfileController.hasListener, isTrue);
 
         authNotifier.dispose();
 
         expect(userController.hasListener, isFalse);
-        expect(userProfileController.hasListener, isFalse);
       },
     );
   });

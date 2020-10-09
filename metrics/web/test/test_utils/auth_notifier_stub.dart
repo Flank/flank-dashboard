@@ -50,9 +50,6 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   ThemeType get selectedTheme => null;
 
   @override
-  void subscribeToUserProfileUpdates(String id) {}
-
-  @override
   Future<void> updateUserProfile(UserProfileModel userProfile) async {}
 
   @override

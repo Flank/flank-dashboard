@@ -151,7 +151,7 @@ class AuthNotifier extends ChangeNotifier {
     _authUpdatesSubscription?.cancel();
     _authUpdatesSubscription = _receiveAuthUpdates().listen((user) {
       if (user != null) {
-        subscribeToUserProfileUpdates(user.id);
+        _subscribeToUserProfileUpdates(user.id);
       } else {
         _cancelUserProfileSubscription();
         _isLoggedIn = false;
@@ -161,7 +161,7 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   /// Subscribes to a user profile updates.
-  void subscribeToUserProfileUpdates(String id) {
+  void _subscribeToUserProfileUpdates(String id) {
     if (id == null) {
       return;
     }
@@ -227,6 +227,7 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Updates the existing user profile, based on the updated [userProfile].
   Future<void> updateUserProfile(UserProfileModel userProfile) async {
+    _changeTheme(userProfile?.selectedTheme);
     if (userProfile == null ||
         _userProfileModel == null ||
         userProfile == _userProfileModel) {
@@ -244,7 +245,6 @@ class AuthNotifier extends ChangeNotifier {
           selectedTheme: updatedUserProfile.selectedTheme,
         ),
       );
-      _changeTheme(updatedUserProfile.selectedTheme);
     } on PersistentStoreException catch (exception) {
       _userProfileSavingErrorHandler(exception.code);
     }
@@ -317,7 +317,6 @@ class AuthNotifier extends ChangeNotifier {
   void _cancelUserProfileSubscription() {
     _userProfileSubscription?.cancel();
     _userProfileModel = null;
-    _selectedTheme = null;
   }
 
   /// Handles an authentication error message based on the [errorCode].
