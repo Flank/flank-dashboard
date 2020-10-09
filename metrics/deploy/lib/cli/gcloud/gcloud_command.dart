@@ -1,21 +1,20 @@
 import 'dart:math';
 
-import 'package:args/command_runner.dart';
 import 'package:process_run/process_run.dart' as cmd;
 import 'package:process_run/shell.dart';
 
-
 /// class wrapping up gcloud CLI
 class GCloudCommand {
-  
   final _chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
   final Random _rnd = Random();
+  String projectID = '';
 
   /// Generates random string for new project name
   String _getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
   /// Login to GCloud and Firebase and get firebase CI token
-  Future<String> login() async {
+  Future<void> login() async {
     // GCloud login
     print('GCloud Login.');
     await cmd.run('gcloud', ['auth', 'login'], verbose: true);
@@ -23,7 +22,6 @@ class GCloudCommand {
 
   /// Add project or use existing project
   Future<String> addProject() async {
-    var projectID = '';
     if (await promptConfirm('Create new project ?')) {
       print('Creating new project');
       projectID = 'metrics-${_getRandomString(5)}';
@@ -74,7 +72,6 @@ class GCloudCommand {
       print('Skipping adding project database.');
     }
   }
-
 
   /// Cleanup resources.
   Future<void> cleanup(String srcPath) async {

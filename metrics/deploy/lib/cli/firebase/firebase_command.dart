@@ -1,13 +1,8 @@
-import 'dart:math';
-
-import 'package:args/command_runner.dart';
 import 'package:process_run/process_run.dart' as cmd;
 import 'package:process_run/shell.dart';
 
-
 /// class wrapping up firebase CLI
 class FirebaseCommand {
- 
   /// Login to GCloud and Firebase and get firebase CI token
   Future<String> login() async {
     // Firebase login
@@ -28,7 +23,6 @@ class FirebaseCommand {
       print('Skipping adding Firebase capabilities.');
     }
   }
-
 
   /// Create Firebase web app.
   Future<String> createWebApp(String projectID, String firebaseToken) async {
@@ -79,5 +73,4 @@ class FirebaseCommand {
         ],
         verbose: true);
   }
-
 }
