@@ -315,13 +315,13 @@ class GithubActionsClient {
 
   /// Parses the next page URL from the given [headers].
   String parseNextPageUrl(Map<String, String> headers) {
-    final linkHeader = headers['link'];
-    final nextLinkString = linkHeader.split(',').firstWhere(
+    final linkHeader = headers['link'] ?? '';
+    final nextPageUrlString = linkHeader.split(',').firstWhere(
           (link) => link.contains('next'),
           orElse: () => '',
         );
 
-    final nextPageUrl = nextUrlRegexp.firstMatch(nextLinkString)?.group(0);
+    final nextPageUrl = nextUrlRegexp.firstMatch(nextPageUrlString)?.group(0);
 
     return nextPageUrl;
   }
