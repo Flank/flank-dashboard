@@ -35,17 +35,17 @@ void main() {
     );
 
     test("creates an instance with the given styles", () {
-      const normal = GraphIndicatorStyle(innerColor: Colors.blue);
-      const secondary = GraphIndicatorStyle(innerColor: Colors.yellow);
+      const positive = GraphIndicatorStyle(innerColor: Colors.blue);
+      const neutral = GraphIndicatorStyle(innerColor: Colors.yellow);
       const negative = GraphIndicatorStyle(innerColor: Colors.red);
       final attentionLevel = GraphIndicatorAttentionLevel(
-        positive: normal,
-        neutral: secondary,
+        positive: positive,
+        neutral: neutral,
         negative: negative,
       );
 
-      expect(attentionLevel.positive, equals(normal));
-      expect(attentionLevel.neutral, equals(secondary));
+      expect(attentionLevel.positive, equals(positive));
+      expect(attentionLevel.neutral, equals(neutral));
       expect(attentionLevel.negative, equals(negative));
     });
   });

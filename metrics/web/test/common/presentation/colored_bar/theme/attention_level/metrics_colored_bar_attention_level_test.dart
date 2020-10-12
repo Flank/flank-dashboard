@@ -35,17 +35,17 @@ void main() {
     );
 
     test("creates an instance with the given styles", () {
-      const normal = MetricsColoredBarStyle(color: Colors.blue);
-      const secondary = MetricsColoredBarStyle(color: Colors.yellow);
+      const positive = MetricsColoredBarStyle(color: Colors.blue);
+      const neutral = MetricsColoredBarStyle(color: Colors.yellow);
       const negative = MetricsColoredBarStyle(color: Colors.red);
       final attentionLevel = MetricsColoredBarAttentionLevel(
-        positive: normal,
-        neutral: secondary,
+        positive: positive,
+        neutral: neutral,
         negative: negative,
       );
 
-      expect(attentionLevel.positive, equals(normal));
-      expect(attentionLevel.neutral, equals(secondary));
+      expect(attentionLevel.positive, equals(positive));
+      expect(attentionLevel.neutral, equals(neutral));
       expect(attentionLevel.negative, equals(negative));
     });
   });
