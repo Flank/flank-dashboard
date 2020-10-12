@@ -153,8 +153,9 @@ class AuthNotifier extends ChangeNotifier {
       if (user != null) {
         _subscribeToUserProfileUpdates(user.id);
       } else {
-        _cancelUserProfileSubscription();
         _isLoggedIn = false;
+        _selectedTheme = null;
+        _userProfileModel = null;
         notifyListeners();
       }
     });
@@ -236,6 +237,7 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Signs out the user from the app.
   Future<void> signOut() async {
+    await _userProfileSubscription?.cancel();
     await _signOutUseCase();
   }
 
@@ -309,12 +311,6 @@ class AuthNotifier extends ChangeNotifier {
     }
   }
 
-  /// Cancels created user profile subscription.
-  void _cancelUserProfileSubscription() {
-    _userProfileSubscription?.cancel();
-    _userProfileModel = null;
-  }
-
   /// Handles an authentication error message based on the [errorCode].
   void _handleAuthErrorMessage(AuthErrorCode errorCode) {
     final _errorMessage = AuthErrorMessage(errorCode);
@@ -343,7 +339,7 @@ class AuthNotifier extends ChangeNotifier {
   @override
   void dispose() {
     _authUpdatesSubscription?.cancel();
-    _cancelUserProfileSubscription();
+    _userProfileSubscription?.cancel();
 
     super.dispose();
   }
