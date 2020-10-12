@@ -136,7 +136,32 @@ void main() {
     );
 
     testWidgets(
-      "closes a popup when tap outside of the popup if the closeOnTapOutside is true",
+      "delegates the given opaque to the mouse region",
+      (WidgetTester tester) async {
+        const opaque = false;
+
+        await tester.pumpWidget(
+          _BasePopupTestbed(
+            popupOpaque: opaque,
+            popup: testPopupWidget,
+            triggerBuilder: _defaultTriggerBuilder,
+          ),
+        );
+
+        await tester.tap(triggerWidgetFinder);
+        await tester.pumpAndSettle();
+
+        final mouseRegion = tester.widget<MouseRegion>(find.ancestor(
+          of: popupWidgetFinder,
+          matching: find.byType(MouseRegion),
+        ));
+
+        expect(mouseRegion.opaque, equals(opaque));
+      },
+    );
+
+    testWidgets(
+      "closes a popup, when tap outside of popup if the closeOnTapOutside is true",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(
@@ -159,7 +184,7 @@ void main() {
     );
 
     testWidgets(
-      "does not close a popup when tap outside of the popup if the closeOnTapOutside is false",
+      "does not close a popup, when tap outside of popup if the closeOnTapOutside is false",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(
@@ -171,7 +196,7 @@ void main() {
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
-        await tester.tap(triggerWidgetFinder);
+        await tester.tapAt(Offset.infinite);
         await tester.pump();
 
         expect(popupWidgetFinder, findsOneWidget);
@@ -304,10 +329,12 @@ class _BasePopupTestbed extends StatelessWidget {
   /// A callback that is called to build the trigger widget.
   final TriggerBuilder triggerBuilder;
 
-  /// Defines the tap outside behavior to apply to the widget under tests.
+  /// Defines if the [popup] should close itself when user taps on space
+  /// outside the visible container of the [popup].
   final bool closeOnTapOutside;
 
-  /// Indicates the popup opaqueness to apply to the widget under tests.
+  /// Indicates whether the [popup] should prevent other [MouseRegion]s
+  /// visually behind it from detecting the pointer.
   final bool popupOpaque;
 
   /// Creates the a new base popup testbed.

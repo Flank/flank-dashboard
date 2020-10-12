@@ -1,5 +1,5 @@
-import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
@@ -26,6 +26,7 @@ void main() {
           duration: const Duration(seconds: 10),
           date: DateTime.now(),
         );
+
         final expected = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
           buildStatus: buildStatus,

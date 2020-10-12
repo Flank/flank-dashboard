@@ -19,17 +19,17 @@ class CircleGraphIndicator extends StatelessWidget {
   ///
   /// The [outerColor] default value is [Colors.black].
   /// The [innerColor] default value is [Colors.white].
-  /// The [outerDiameter] default value is `5.0`.
-  /// The [innerDiameter] default value is `2.0`.
   ///
   /// The given [outerDiameter] must be greater than the given [innerDiameter].
   const CircleGraphIndicator({
     Key key,
+    @required this.outerDiameter,
+    @required this.innerDiameter,
     this.outerColor = Colors.black,
     this.innerColor = Colors.white,
-    this.outerDiameter = 5.0,
-    this.innerDiameter = 2.0,
-  })  : assert(outerDiameter > innerDiameter),
+  })  : assert(outerDiameter != null),
+        assert(innerDiameter != null),
+        assert(outerDiameter > innerDiameter),
         super(key: key);
 
   @override

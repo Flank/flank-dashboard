@@ -27,7 +27,7 @@ class BuildResultBarAppearanceStrategy
       case BuildStatus.failed:
         return attentionLevel.negative;
       default:
-        return null;
+        return attentionLevel.neutral;
     }
   }
 }
