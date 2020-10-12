@@ -237,38 +237,6 @@ void main() {
     );
 
     test(
-      ".subscribeToAuthenticationUpdates() delegates to receive user profile updates when the user is not null",
-      () {
-        final authNotifier = AuthNotifier(
-          receiveAuthUpdates,
-          signInUseCase,
-          googleSignInUseCase,
-          signOutUseCase,
-          receiveUserProfileUpdates,
-          createUserProfileUseCase,
-          updateUserProfileUseCase,
-        );
-        when(receiveAuthUpdates(any)).thenAnswer((_) => Stream.value(user));
-
-        when(receiveUserProfileUpdates(any)).thenAnswer(
-          (_) => Stream.value(userProfile),
-        );
-
-        final listener = expectAsyncUntil0(() {}, () {
-          if (authNotifier.userProfileModel != null) {
-            verify(receiveUserProfileUpdates(any)).called(1);
-            return true;
-          }
-          return false;
-        });
-
-        authNotifier.addListener(listener);
-
-        authNotifier.subscribeToAuthenticationUpdates();
-      },
-    );
-
-    test(
       ".subscribeToAuthenticationUpdates() unsubscribes from user updates when a user is null",
       () {
         final userController = StreamController<User>();
@@ -320,7 +288,7 @@ void main() {
     );
 
     test(
-      ".subscribeToUserProfileUpdates() creates a user profile model from the user profile that stream emits",
+      ".subscribeToUserProfileUpdates() creates a user profile model once receiving the user profile",
       () {
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
@@ -449,6 +417,41 @@ void main() {
 
       expect(authNotifier.isLoggedIn, isFalse);
     });
+
+    test(
+      ".isLoading status is false until there is a user profile",
+      () {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        final userProfileController = StreamController<UserProfile>();
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => userProfileController.stream,
+        );
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () => authNotifier.isLoading == false,
+        );
+
+        authNotifier.addListener(listener);
+        userProfileController.add(userProfile);
+      },
+    );
 
     test(
       ".isLoading status is false after a user signs in with login and password",
