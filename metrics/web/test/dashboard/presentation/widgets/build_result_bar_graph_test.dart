@@ -19,6 +19,9 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("BuildResultBarGraph", () {
     final buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
+    final barGraphFinder = find.byWidgetPredicate(
+      (widget) => widget is BarGraph<int>,
+    );
 
     testWidgets(
       "throws an AssertionError if the given build result metric is null",
@@ -116,6 +119,48 @@ void main() {
         );
 
         expect(emptyBuildResultBars.length, missingBuildResultsCount);
+      },
+    );
+
+    testWidgets(
+      "applies a 4px padding from the left to the BarGraph if the missing bars and bars are not empty ",
+      (WidgetTester tester) async {
+        const expectedPadding = EdgeInsets.only(left: 4.0);
+        final numberOfBars = buildResults.length + 1;
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(
+              _BuildResultBarGraphTestbed.buildResultBarTestData,
+            ),
+            numberOfBuildsToDisplay: numberOfBars,
+          ),
+        ));
+
+        final barGraph = tester.widget<BarGraph>(barGraphFinder);
+
+        expect(barGraph.graphPadding, equals(expectedPadding));
+      },
+    );
+
+    testWidgets(
+      "applies a zero padding to the BarGraph if the missing bars or bars are empty ",
+      (WidgetTester tester) async {
+        const expectedPadding = EdgeInsets.zero;
+        final numberOfBars = buildResults.length;
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(
+              _BuildResultBarGraphTestbed.buildResultBarTestData,
+            ),
+            numberOfBuildsToDisplay: numberOfBars,
+          ),
+        ));
+
+        final barGraph = tester.widget<BarGraph>(barGraphFinder);
+
+        expect(barGraph.graphPadding, equals(expectedPadding));
       },
     );
 

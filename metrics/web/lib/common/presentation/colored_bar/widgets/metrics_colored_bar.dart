@@ -6,9 +6,6 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 
 /// A widget that displays the styled bar for the graphs.
 class MetricsColoredBar<T> extends StatelessWidget {
-  /// A border radius of this bar.
-  static const Radius _borderRadius = Radius.circular(1.0);
-
   /// An appearance strategy to apply to this bar.
   final MetricsColoredBarAppearanceStrategy<T> strategy;
 
@@ -36,6 +33,7 @@ class MetricsColoredBar<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const borderRadius = Radius.circular(1.0);
     const barWidth = DimensionsConfig.graphBarWidth;
     final style = strategy.getWidgetAppearance(MetricsTheme.of(context), value);
 
@@ -47,8 +45,8 @@ class MetricsColoredBar<T> extends StatelessWidget {
         width: barWidth,
         height: height,
         borderRadius: const BorderRadius.only(
-          topLeft: _borderRadius,
-          topRight: _borderRadius,
+          topLeft: borderRadius,
+          topRight: borderRadius,
         ),
         color: style.color,
       ),

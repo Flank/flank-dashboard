@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/colored_bar/theme/attention_level/me
 import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
 import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -120,6 +121,23 @@ void main() {
         final coloredBar = tester.widget<ColoredBar>(coloredBarFinder);
 
         expect(coloredBar.color, equals(expectedColor));
+      },
+    );
+
+    testWidgets(
+      "applies the width from the dimension config to the colored bar",
+      (WidgetTester tester) async {
+        const expectedWidth = DimensionsConfig.graphBarWidth;
+
+        await tester.pumpWidget(
+          const _MetricsColoredBarTestbed(
+            theme: metricsTheme,
+          ),
+        );
+
+        final coloredBar = tester.widget<ColoredBar>(coloredBarFinder);
+
+        expect(coloredBar.width, equals(expectedWidth));
       },
     );
   });
