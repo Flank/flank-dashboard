@@ -160,22 +160,6 @@ class AuthNotifier extends ChangeNotifier {
     });
   }
 
-  /// Subscribes to a user profile updates.
-  void _subscribeToUserProfileUpdates(String id) {
-    if (id == null) {
-      return;
-    }
-
-    _userProfileSubscription?.cancel();
-
-    final _userProfileUpdates = _receiveUserProfileUpdates(UserIdParam(id: id));
-
-    _userProfileSubscription = _userProfileUpdates.listen(
-      (userProfile) => _userProfileUpdatesListener(id, userProfile),
-      onError: _errorHandler,
-    );
-  }
-
   /// Signs in a user to the app using an [email] and a [password].
   ///
   /// Does nothing if the [isLoading] status is `true`.
@@ -255,11 +239,26 @@ class AuthNotifier extends ChangeNotifier {
     await _signOutUseCase();
   }
 
+  /// Subscribes to a user profile updates.
+  ///
+  /// Populates the [PersistentStoreErrorMessage] that occurred
+  /// during loading user profile data.
+  void _subscribeToUserProfileUpdates(String id) {
+    if (id == null || id == userProfileModel?.id) return;
+
+    _userProfileSubscription?.cancel();
+
+    final _userProfileUpdates = _receiveUserProfileUpdates(UserIdParam(id: id));
+
+    _userProfileSubscription = _userProfileUpdates.listen(
+      (userProfile) => _userProfileUpdatesListener(id, userProfile),
+      onError: _errorHandler,
+    );
+  }
+
   /// Changes the currently selected theme to the given [themeType].
   void _changeTheme(ThemeType themeType) {
-    if (themeType == null) {
-      return;
-    }
+    if (themeType == null) return;
 
     if (_selectedTheme != themeType) {
       _selectedTheme = themeType;
@@ -276,20 +275,17 @@ class AuthNotifier extends ChangeNotifier {
         id: userProfile.id,
         selectedTheme: userProfile.selectedTheme,
       );
-
       _isLoggedIn = true;
+
+      notifyListeners();
     } else {
       await _createUserProfile(id, selectedTheme);
     }
-
-    notifyListeners();
   }
 
   /// Creates the user profile, based on the given [id] and [selectedTheme].
   Future<void> _createUserProfile(String id, ThemeType selectedTheme) async {
-    if (id == null || selectedTheme == null) {
-      return;
-    }
+    if (id == null || selectedTheme == null) return;
 
     _resetUserProfileSavingErrorMessage();
 
