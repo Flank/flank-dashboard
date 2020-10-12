@@ -69,7 +69,7 @@ void main() {
     });
 
     test(
-      ".changeTheme() does not change the selected theme if the given value is null",
+      ".changeTheme() does not notify listeners if the given value is null",
       () {
         final themeNotifier = ThemeNotifier();
 
@@ -80,7 +80,7 @@ void main() {
     );
 
     test(
-      ".changeTheme() does not changes the selected theme if the given value is the same",
+      ".changeTheme() does not notify listeners if the given value is the same",
       () {
         bool isCalled = false;
         final themeNotifier = ThemeNotifier();

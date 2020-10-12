@@ -319,7 +319,7 @@ void main() {
     );
 
     test(
-      ".subscribeToUserProfileUpdates() set the is logged in status to true if the stream emits a user profile",
+      ".subscribeToUserProfileUpdates() set the is logged in status to true once receiving a user profile",
       () {
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
@@ -359,7 +359,7 @@ void main() {
     );
 
     test(
-      ".userProfileErrorMessage provides an error description if a user profile stream emits a persistent store exception",
+      ".userProfileErrorMessage provides an error description once receiving a persistent store exception",
       () async {
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
@@ -450,24 +450,6 @@ void main() {
 
         authNotifier.addListener(listener);
         userProfileController.add(userProfile);
-      },
-    );
-
-    test(
-      ".isLoading status is false after a user signs in with login and password",
-      () async {
-        await authNotifier.signInWithEmailAndPassword(email, password);
-
-        expect(authNotifier.isLoading, isFalse);
-      },
-    );
-
-    test(
-      ".isLoading status is false after a user signs in with Google",
-      () async {
-        await authNotifier.signInWithGoogle();
-
-        expect(authNotifier.isLoading, isFalse);
       },
     );
 
@@ -773,6 +755,37 @@ void main() {
       verify(signOutUseCase()).called(equals(1));
     });
 
+    test(".signOut() cancels the user profile subscription", () async {
+      final authNotifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        googleSignInUseCase,
+        signOutUseCase,
+        receiveUserProfileUpdates,
+        createUserProfileUseCase,
+        updateUserProfileUseCase,
+      );
+
+      final userProfileController = StreamController<UserProfile>();
+
+      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(user));
+      when(receiveUserProfileUpdates(any)).thenAnswer(
+        (_) => userProfileController.stream,
+      );
+
+      authNotifier.subscribeToAuthenticationUpdates();
+
+      authNotifier.addListener(() async {
+        expect(userProfileController.hasListener, isTrue);
+
+        await authNotifier.signOut();
+
+        expect(userProfileController.hasListener, isFalse);
+      });
+
+      userProfileController.add(userProfile);
+    });
+
     test(
       ".dispose() cancels all created subscriptions",
       () {
@@ -786,11 +799,17 @@ void main() {
 
         authNotifier.subscribeToAuthenticationUpdates();
 
-        expect(userController.hasListener, isTrue);
+        authNotifier.addListener(() {
+          expect(userController.hasListener, isTrue);
+          expect(userProfileController.hasListener, isTrue);
 
-        authNotifier.dispose();
+          authNotifier.dispose();
 
-        expect(userController.hasListener, isFalse);
+          expect(userController.hasListener, isFalse);
+          expect(userProfileController.hasListener, isFalse);
+        });
+
+        userProfileController.add(userProfile);
       },
     );
   });

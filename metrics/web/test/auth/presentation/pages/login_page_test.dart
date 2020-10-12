@@ -24,6 +24,8 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("LoginPage", () {
+    const error = "Something went wrong";
+
     void _setPlatformBrightness(WidgetTester tester, Brightness brightness) {
       final TestWidgetsFlutterBinding testBinding = tester.binding;
       testBinding.window.platformBrightnessTestValue = brightness;
@@ -136,8 +138,6 @@ void main() {
     testWidgets(
       "displays the negative toast when there is an auth error message",
       (WidgetTester tester) async {
-        const error = "Something went wrong";
-
         final authNotifier = AuthNotifierMock();
         when(authNotifier.isLoading).thenReturn(false);
 
@@ -160,8 +160,6 @@ void main() {
     testWidgets(
       "displays the negative toast when there is an error occurred during the user profile saving operation",
       (WidgetTester tester) async {
-        const error = "Something went wrong";
-
         final authNotifier = AuthNotifierMock();
         when(authNotifier.isLoading).thenReturn(false);
 
@@ -172,6 +170,28 @@ void main() {
         });
 
         when(authNotifier.userProfileSavingErrorMessage).thenReturn(error);
+        authNotifier.notifyListeners();
+        await tester.pumpAndSettle();
+
+        expect(find.widgetWithText(NegativeToast, error), findsOneWidget);
+
+        ToastManager().dismissAll();
+      },
+    );
+
+    testWidgets(
+      "displays the negative toast when there is an error occurred during loading user profile data",
+      (WidgetTester tester) async {
+        final authNotifier = AuthNotifierMock();
+        when(authNotifier.isLoading).thenReturn(false);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_LoginPageTestbed(
+            authNotifier: authNotifier,
+          ));
+        });
+
+        when(authNotifier.userProfileErrorMessage).thenReturn(error);
         authNotifier.notifyListeners();
         await tester.pumpAndSettle();
 

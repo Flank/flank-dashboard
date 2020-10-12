@@ -165,7 +165,7 @@ class AuthNotifier extends ChangeNotifier {
     if (_isLoading) return;
 
     _isLoading = true;
-    clearErrorMessages();
+    _clearErrorMessages();
 
     try {
       await _signInUseCase(UserCredentialsParam(
@@ -187,7 +187,7 @@ class AuthNotifier extends ChangeNotifier {
     if (_isLoading) return;
 
     _isLoading = true;
-    clearErrorMessages();
+    _clearErrorMessages();
 
     try {
       await _googleSignInUseCase();
@@ -200,7 +200,7 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   /// Clears all authentication error messages.
-  void clearErrorMessages() {
+  void _clearErrorMessages() {
     _authErrorMessage = null;
     _emailErrorMessage = null;
     _passwordErrorMessage = null;
@@ -240,7 +240,7 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Subscribes to a user profile updates.
   ///
-  /// Populates the [PersistentStoreErrorMessage] that occurred
+  /// Populates the [userProfileErrorMessage] that occurred
   /// during loading user profile data.
   void _subscribeToUserProfileUpdates(String id) {
     if (id == null || id == userProfileModel?.id) return;
@@ -251,7 +251,7 @@ class AuthNotifier extends ChangeNotifier {
 
     _userProfileSubscription = _userProfileUpdates.listen(
       (userProfile) => _userProfileUpdatesListener(id, userProfile),
-      onError: _errorHandler,
+      onError: _userProfileErrorHandler,
     );
   }
 
@@ -274,6 +274,7 @@ class AuthNotifier extends ChangeNotifier {
         id: userProfile.id,
         selectedTheme: userProfile.selectedTheme,
       );
+      _isLoading = false;
       _isLoggedIn = true;
 
       notifyListeners();
@@ -301,11 +302,14 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   /// Handles an [error] occurred in user profile stream.
-  void _errorHandler(error) {
+  void _userProfileErrorHandler(error) {
+    _isLoading = false;
+
     if (error is PersistentStoreException) {
       _userProfileErrorMessage = PersistentStoreErrorMessage(error.code);
-      notifyListeners();
     }
+
+    notifyListeners();
   }
 
   /// Handles an authentication error message based on the [errorCode].
