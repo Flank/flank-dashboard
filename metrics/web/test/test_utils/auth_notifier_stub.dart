@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
-import 'package:metrics/auth/domain/entities/theme_type.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 
 /// Stub implementation on the [AuthNotifier].
@@ -45,9 +44,6 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
 
   @override
   Future<void> signOut() async {}
-
-  @override
-  ThemeType get selectedTheme => null;
 
   @override
   Future<void> updateUserProfile(UserProfileModel userProfile) async {}

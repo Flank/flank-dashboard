@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:metrics/auth/domain/entities/theme_type.dart';
 import 'package:metrics/auth/presentation/models/auth_error_message.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
@@ -53,9 +52,6 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
     _isLoggedIn = false;
     notifyListeners();
   }
-
-  @override
-  ThemeType get selectedTheme => null;
 
   @override
   Future<void> updateUserProfile(UserProfileModel userProfile) async {}
