@@ -1,0 +1,15 @@
+name: deploy
+description: A sample command-line application.
+# version: 1.0.0
+# homepage: https://www.example.com
+
+environment:
+  sdk: '>=2.8.1 <3.0.0'
+
+dependencies:
+  process_run: ^0.10.12+3
+  safe_config: ^2.0.2
+
+dev_dependencies:
+  lint: ^1.0.0
+  test: ^1.14.4
