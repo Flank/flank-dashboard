@@ -40,7 +40,7 @@ class UrlUtils {
   /// Example:
   /// ```dart
   ///   const path = 'path/to/something';
-  ///   final result = splitMapJoinPathSegments(path, 'test');
+  ///   final result = UrlUtils.replacePathSeparators(path, 'test');
   ///   // prints `test/path/test/to/test/something`
   ///   print(result);
   /// ```

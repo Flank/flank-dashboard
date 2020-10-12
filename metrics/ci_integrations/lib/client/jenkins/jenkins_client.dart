@@ -32,7 +32,7 @@ class JenkinsClient {
   /// The base URL of the Jenkins instance.
   final String jenkinsUrl;
 
-  /// Creates an instance of [JenkinsClient] using [jekninsUrl] and
+  /// Creates an instance of [JenkinsClient] using [jenkinsUrl] and
   /// [authorization] method (see [AuthorizationBase] and implementers)
   /// provided.
   ///
