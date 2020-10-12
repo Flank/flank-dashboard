@@ -75,12 +75,17 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   }
 
   /// Shows the [NegativeToast] with an error message
-  /// if the auth error message is not null.
+  /// if either the auth error message
+  /// or saving user profile error message is not null.
   void _loggedInErrorListener() {
     final errorMessage = _authNotifier.authErrorMessage;
+    final savingUserProfileErrorMessage =
+        _authNotifier.userProfileSavingErrorMessage;
 
     if (errorMessage != null) {
       showToast(context, NegativeToast(message: errorMessage));
+    } else if (savingUserProfileErrorMessage != null) {
+      showToast(context, NegativeToast(message: savingUserProfileErrorMessage));
     }
   }
 

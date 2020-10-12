@@ -158,6 +158,30 @@ void main() {
     );
 
     testWidgets(
+      "displays the negative toast when there is an error occurred during the user profile saving operation",
+      (WidgetTester tester) async {
+        const error = "Something went wrong";
+
+        final authNotifier = AuthNotifierMock();
+        when(authNotifier.isLoading).thenReturn(false);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_LoginPageTestbed(
+            authNotifier: authNotifier,
+          ));
+        });
+
+        when(authNotifier.userProfileSavingErrorMessage).thenReturn(error);
+        authNotifier.notifyListeners();
+        await tester.pumpAndSettle();
+
+        expect(find.widgetWithText(NegativeToast, error), findsOneWidget);
+
+        ToastManager().dismissAll();
+      },
+    );
+
+    testWidgets(
       "navigates to the dashboard page if the login was successful",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
