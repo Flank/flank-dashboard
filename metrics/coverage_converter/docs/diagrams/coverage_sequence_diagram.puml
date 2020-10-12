@@ -10,7 +10,7 @@ participant SpecificCoverageConverterCommand
 participant SpecificCoverageConverter
 
 
-Bob -> CoverageConverterRunner : codecov_converter specific -i input.json -o output.json
+Bob -> CoverageConverterRunner : coverage_converter specific -i input.json -o output.json
 
 activate CoverageConverterRunner
 CoverageConverterRunner -> CoverageArgumentsParser : parse(arguments)

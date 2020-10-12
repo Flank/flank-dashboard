@@ -116,13 +116,13 @@ So, the application takes the arguments, parses them using the `CoverageArgument
 
 Let's consider the sequence diagram of these processes taking the `specific` format as an example:
 
-![CodeCov sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_sequence_diagram.puml)
+![Coverage sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_sequence_diagram.puml)
 
 # Dependencies
 
 > What is the project blocked on?
 
-This projects has no blockers.
+This project has no blockers.
 
 > What will be impacted by the project?
 
