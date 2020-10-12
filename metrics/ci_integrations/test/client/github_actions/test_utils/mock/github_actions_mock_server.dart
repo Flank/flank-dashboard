@@ -10,6 +10,7 @@ import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 
+/// A mock server for the Github Actions API.
 class GithubActionsMockServer extends ApiMockServer {
   @override
   List<RequestHandler> get handlers => [
@@ -133,7 +134,6 @@ class GithubActionsMockServer extends ApiMockServer {
       status: HttpStatus.found,
     );
 
-    await request.response.flush();
     await request.response.close();
   }
 
@@ -211,6 +211,14 @@ class GithubActionsMockServer extends ApiMockServer {
     return artifacts;
   }
 
+  /// Provides the [RunStatus], based on the `status` query parameter
+  /// in the given [request].
+  RunStatus _extractStatus(HttpRequest request) {
+    final status = request.uri.queryParameters['status'];
+
+    return const RunStatusMapper().map(status);
+  }
+
   /// Returns the `int` representation of the `per_page` query parameter
   /// of the given [request].
   int _extractPerPage(HttpRequest request) {
@@ -221,13 +229,5 @@ class GithubActionsMockServer extends ApiMockServer {
   /// of the given [request].
   int _extractPage(HttpRequest request) {
     return int.tryParse(request.uri.queryParameters['page']);
-  }
-
-  /// Provides the [RunStatus], based on the `status` query parameter
-  /// in the given [request].
-  RunStatus _extractStatus(HttpRequest request) {
-    final status = request.uri.queryParameters['status'];
-
-    return const RunStatusMapper().map(status);
   }
 }
