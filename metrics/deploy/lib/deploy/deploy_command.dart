@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:args/command_runner.dart';
 import 'package:process_run/process_run.dart' as cmd;
 import 'package:process_run/shell.dart';
@@ -13,41 +15,43 @@ class DeployCommand extends Command {
   final description =
       "Creates GCloud and Firebase project and deploy metrics app.";
 
-  final firebase = FirebaseCommand();
-  final gcloud = GCloudCommand();
-  final git = GitCommand();
+  final _firebase = FirebaseCommand();
+  final _gcloud = GCloudCommand();
+  final _git = GitCommand();
+  static const _repoURL = 'git@github.com:platform-platform/monorepo.git';
+  static const _srcPath = 'src';
 
   DeployCommand();
 
   @override
   Future<void> run() async {
-    final firebaseToken = await _login();
+    final _firebaseToken = await _login();
 
-    final projectID = await gcloud.addProject();
+    final _projectID = await _gcloud.addProject();
 
-    await firebase.addFirebase(projectID, firebaseToken);
+    await _firebase.addFirebase(_projectID, _firebaseToken);
 
-    final region = await _selectRegion();
+    final _region = await _selectRegion();
 
-    await gcloud.addProjectApp(region, projectID);
+    await _gcloud.addProjectApp(_region, _projectID);
 
-    await gcloud.createDatabase(region, projectID);
+    await _gcloud.createDatabase(_region, _projectID);
 
-    final appID = await firebase.createWebApp(projectID, firebaseToken);
-    const repoURL = 'git@github.com:platform-platform/monorepo.git';
-    const srcPath = 'src';
+    final _appID = await _firebase.createWebApp(_projectID, _firebaseToken);
+
     //final firebaseSrc = srcPath + '/metrics/firebase';
-    await _buildAndDeploy(appID, projectID, firebaseToken, repoURL, srcPath);
+    await _buildAndDeploy(
+        _appID, _projectID, _firebaseToken, _repoURL, _srcPath);
     // Cleanup
-    await cleanup(srcPath);
+    await cleanup(_srcPath);
     // Terminate prompt entry.
     await promptTerminate();
   }
 
   /// Login to GCloud and Firebase and get firebase CI token
   Future<String> _login() async {
-    await gcloud.login();
-    await firebase.login();
+    await _gcloud.login();
+    await _firebase.login();
     // Configure firebase project
     return prompt('Copy Firebase Token from above');
   }
@@ -71,10 +75,10 @@ class DeployCommand extends Command {
     final workingDir = '$srcPath/metrics/web';
     final configPath = '$workingDir/web/firebase-config.js';
     // git clone repo
-    await git.clone(repoURL, srcPath);
+    await _git.clone(repoURL, srcPath);
     // clean previouse config
     await cmd.run('rm', ['-rf', configPath], verbose: true);
-    await firebase.downloadSDKConfig(
+    await _firebase.downloadSDKConfig(
         appID, configPath, projectID, firebaseToken);
     // add firebase project
     await cmd.run('firebase', ['use', '--add', projectID],
@@ -89,6 +93,7 @@ class DeployCommand extends Command {
 
   /// Cleanup resources.
   Future<void> cleanup(String srcPath) async {
-    await cmd.run('rm', ['-rf', srcPath], verbose: true);
+    final configDirectory = Directory(srcPath);
+    await configDirectory.delete(recursive: true);
   }
 }

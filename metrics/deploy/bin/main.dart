@@ -8,7 +8,6 @@ Future main(List<String> arguments) async {
   final runner = CommandRunner("metrics", "Metrics installer.")
     ..addCommand(DoctorCommand())
     ..addCommand(DeployCommand());
-  await runner.run(arguments);
   try {
     await runner.run(arguments);
     exit(0);

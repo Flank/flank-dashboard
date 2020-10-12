@@ -2,7 +2,10 @@ import 'package:args/command_runner.dart';
 import 'package:deploy/deploy/deploy_command.dart';
 import 'package:test/test.dart';
 
-const _defaultUsage = '''
+void main() {
+  var runner;
+
+  const _defaultUsage = '''
 Usage: metrics <command> [arguments]
 
 Global options:
@@ -12,9 +15,6 @@ Available commands:
   help   Display help information for metrics.
 
 Run "metrics help <command>" for more information about a command.''';
-
-void main() {
-  var runner;
   group("DeployCommand", () {
     setUpAll(() {
       runner = CommandRunner('metrics', 'Metrics installer.');

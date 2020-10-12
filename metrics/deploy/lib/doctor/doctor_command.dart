@@ -14,14 +14,8 @@ class DoctorCommand extends Command {
 
   @override
   Future<void> run() async {
-    print('Checking firebase-cli version.');
-    try {
-      await cmd.run('firebase', ['--version'], verbose: true);
-      await cmd.run('gcloud', ['--version'], verbose: true);
-      await cmd.run('flutter', ['--version'], verbose: true);
-    } catch (e) {
-      print(e);
-      exit(1);
-    }
+    await cmd.run('firebase', ['--version'], verbose: true);
+    await cmd.run('gcloud', ['--version'], verbose: true);
+    await cmd.run('flutter', ['--version'], verbose: true);
   }
 }
