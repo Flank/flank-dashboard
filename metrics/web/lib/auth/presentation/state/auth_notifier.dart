@@ -121,9 +121,6 @@ class AuthNotifier extends ChangeNotifier {
   /// Indicates whether the sign-in process is in progress or not.
   bool get isLoading => _isLoading;
 
-  /// Provides a currenlty selected theme.
-  ThemeType get selectedTheme => _selectedTheme;
-
   /// Provides a class that represents a user profile model.
   UserProfileModel get userProfileModel => _userProfileModel;
 
@@ -281,7 +278,7 @@ class AuthNotifier extends ChangeNotifier {
 
       notifyListeners();
     } else {
-      await _createUserProfile(id, selectedTheme);
+      await _createUserProfile(id, _selectedTheme);
     }
   }
 
