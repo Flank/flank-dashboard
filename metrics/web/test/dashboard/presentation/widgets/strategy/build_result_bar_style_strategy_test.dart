@@ -8,16 +8,13 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("MetricsColoredBarAppearanceStrategy", () {
-    const positiveStyle = MetricsColoredBarStyle(color: Colors.yellow);
-    const negativeStyle = MetricsColoredBarStyle(color: Colors.red);
-    const neutralStyle = MetricsColoredBarStyle(color: Colors.grey);
+  group("BuildResultBarAppearanceStrategy", () {
     const theme = MetricsThemeData(
       metricsColoredBarTheme: MetricsColoredBarThemeData(
         attentionLevel: MetricsColoredBarAttentionLevel(
-          positive: positiveStyle,
-          negative: negativeStyle,
-          neutral: neutralStyle,
+          positive: MetricsColoredBarStyle(color: Colors.yellow),
+          negative: MetricsColoredBarStyle(color: Colors.red),
+          neutral: MetricsColoredBarStyle(color: Colors.grey),
         ),
       ),
     );
@@ -26,45 +23,49 @@ void main() {
     test(
       ".getWidgetAppearance() returns the neutral style if the given build status is null",
       () {
+        final style = theme.metricsColoredBarTheme.attentionLevel.neutral;
         final actualStyle = themeStrategy.getWidgetAppearance(theme, null);
 
-        expect(actualStyle, equals(neutralStyle));
+        expect(actualStyle, equals(style));
       },
     );
 
     test(
       ".getWidgetAppearance() returns the positive style if the given build status is successful",
       () {
+        final style = theme.metricsColoredBarTheme.attentionLevel.positive;
         final actualStyle = themeStrategy.getWidgetAppearance(
           theme,
           BuildStatus.successful,
         );
 
-        expect(actualStyle, equals(positiveStyle));
+        expect(actualStyle, equals(style));
       },
     );
 
     test(
       ".getWidgetAppearance() returns the negative style if the given build status is failed",
       () {
+        final style = theme.metricsColoredBarTheme.attentionLevel.negative;
         final actualStyle = themeStrategy.getWidgetAppearance(
           theme,
           BuildStatus.failed,
         );
 
-        expect(actualStyle, equals(negativeStyle));
+        expect(actualStyle, equals(style));
       },
     );
 
     test(
-      ".getWidgetAppearance() returns the negative style if the given build status is cancelled",
+      ".getWidgetAppearance() returns the neutral style if the given build status is cancelled",
       () {
+        final style = theme.metricsColoredBarTheme.attentionLevel.neutral;
         final actualStyle = themeStrategy.getWidgetAppearance(
           theme,
           BuildStatus.cancelled,
         );
 
-        expect(actualStyle, equals(neutralStyle));
+        expect(actualStyle, equals(style));
       },
     );
   });

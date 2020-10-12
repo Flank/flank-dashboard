@@ -63,7 +63,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the subtitle as a date of view model",
+      "displays the subtitle as a duration of view model",
       (tester) async {
         await tester.pumpWidget(_BuildResultPopupCardTestbed(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -140,7 +140,7 @@ void main() {
 
 /// A testbed class required to test the [BuildResultPopupCard].
 class _BuildResultPopupCardTestbed extends StatelessWidget {
-  /// A [BuildResultPopupViewModel] used in tests.
+  /// A [BuildResultPopupViewModel] with data to display.
   final BuildResultPopupViewModel buildResultPopupViewModel;
 
   /// A [MetricsThemeData] used in tests.

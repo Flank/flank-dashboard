@@ -10,6 +10,10 @@ void main() {
     const testPopupWidget = Text('popup widget');
     final triggerWidgetFinder = find.byWidget(testTriggerWidget);
     final popupWidgetFinder = find.byWidget(testPopupWidget);
+    final constrainedBoxFinder = find.ancestor(
+      of: popupWidgetFinder,
+      matching: find.byType(ConstrainedBox),
+    );
 
     Widget _defaultTriggerBuilder(
       BuildContext context,
@@ -125,11 +129,8 @@ void main() {
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
 
-        final constrainedBox = tester.widget<ConstrainedBox>(find.ancestor(
-          of: popupWidgetFinder,
-          matching: find.byType(ConstrainedBox),
-        ));
-        final actualBoxConstraints = constrainedBox.constraints;
+        final box = tester.widget<ConstrainedBox>(constrainedBoxFinder);
+        final actualBoxConstraints = box.constraints;
 
         expect(actualBoxConstraints, equals(boxConstraints));
       },
@@ -161,22 +162,41 @@ void main() {
     );
 
     testWidgets(
-      "closes a popup, when tap outside of popup if the closeOnTapOutside is true",
+      "applies the default box constraints to the popup widget if the given popup constraints is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(
+            popupConstraints: null,
             popup: testPopupWidget,
             triggerBuilder: _defaultTriggerBuilder,
-            closeOnTapOutside: true,
-            offsetBuilder: (Size childSize) {
-              return Offset(childSize.width, childSize.height);
-            },
           ),
         );
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
+
+        final box = tester.widget<ConstrainedBox>(constrainedBoxFinder);
+        final actualBoxConstraints = box.constraints;
+
+        expect(actualBoxConstraints, isNotNull);
+      },
+    );
+
+    testWidgets(
+      "closes a popup after tap outside of the popup content if the closeOnTapOutside is true",
+      (tester) async {
+        const defaultSize = 20.0;
+
+        await tester.pumpWidget(_BasePopupTestbed(
+          popupConstraints: const BoxConstraints(maxHeight: defaultSize),
+          popup: testPopupWidget,
+          triggerBuilder: _defaultTriggerBuilder,
+          closeOnTapOutside: true,
+        ));
+
         await tester.tap(triggerWidgetFinder);
+        await tester.pumpAndSettle();
+        await tester.tapAt(const Offset(defaultSize, defaultSize));
         await tester.pumpAndSettle();
 
         expect(popupWidgetFinder, findsNothing);
@@ -184,7 +204,7 @@ void main() {
     );
 
     testWidgets(
-      "does not close a popup, when tap outside of popup if the closeOnTapOutside is false",
+      "does not close a popup, after tap outside of the popup content if the closeOnTapOutside is false",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(
@@ -200,50 +220,6 @@ void main() {
         await tester.pump();
 
         expect(popupWidgetFinder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies the default box constraints to the popup widget if the given popup constraints is null",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          _BasePopupTestbed(
-            popupConstraints: null,
-            popup: testPopupWidget,
-            triggerBuilder: _defaultTriggerBuilder,
-          ),
-        );
-
-        await tester.tap(triggerWidgetFinder);
-        await tester.pumpAndSettle();
-
-        final constrainedBox = tester.widget<ConstrainedBox>(find.ancestor(
-          of: popupWidgetFinder,
-          matching: find.byType(ConstrainedBox),
-        ));
-        final actualBoxConstraints = constrainedBox.constraints;
-
-        expect(actualBoxConstraints, isNotNull);
-      },
-    );
-
-    testWidgets(
-      "closes a popup after tap outside of the popup content",
-      (tester) async {
-        const defaultSize = 20.0;
-
-        await tester.pumpWidget(_BasePopupTestbed(
-          popupConstraints: const BoxConstraints(maxHeight: defaultSize),
-          popup: testPopupWidget,
-          triggerBuilder: _defaultTriggerBuilder,
-        ));
-
-        await tester.tap(triggerWidgetFinder);
-        await tester.pumpAndSettle();
-        await tester.tapAt(const Offset(defaultSize, defaultSize));
-        await tester.pumpAndSettle();
-
-        expect(popupWidgetFinder, findsNothing);
       },
     );
 

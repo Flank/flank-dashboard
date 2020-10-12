@@ -56,7 +56,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates given height to the colored bar",
+      "delegates the given height to the colored bar",
       (WidgetTester tester) async {
         const height = 10.0;
         await tester.pumpWidget(
@@ -72,7 +72,7 @@ void main() {
     );
 
     testWidgets(
-      "applies background color from metrics colored bar style when the metrics colored bar is hovered",
+      "applies a background color from the metrics colored bar style when the metrics colored bar is hovered",
       (WidgetTester tester) async {
         final theme = metricsTheme.metricsColoredBarTheme;
         final expectedColor = theme.attentionLevel.neutral.backgroundColor;
@@ -107,7 +107,7 @@ void main() {
     );
 
     testWidgets(
-      "applies color from the metrics colored bar style to the colored bar",
+      "applies a color from the metrics colored bar style to the colored bar",
       (WidgetTester tester) async {
         final theme = metricsTheme.metricsColoredBarTheme;
         final expectedColor = theme.attentionLevel.neutral.color;
@@ -125,7 +125,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the width from the dimension config to the colored bar",
+      "applies a width from the dimension config to the colored bar",
       (WidgetTester tester) async {
         const expectedWidth = DimensionsConfig.graphBarWidth;
 

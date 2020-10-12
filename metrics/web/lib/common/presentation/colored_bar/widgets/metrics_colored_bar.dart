@@ -19,8 +19,6 @@ class MetricsColoredBar<T> extends StatelessWidget {
   final bool isHovered;
 
   /// Creates a new instance of the [MetricsColoredBar].
-  ///
-  /// The [isHovered] default value is `false`.
   const MetricsColoredBar({
     Key key,
     @required this.strategy,
