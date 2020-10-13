@@ -9,9 +9,13 @@ import 'package:ci_integration/client/github_actions/models/run_conclusion.dart'
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
+import 'package:ci_integration/client/github_actions/models/workflow_run_duration.dart';
 
 /// A mock server for the Github Actions API.
 class GithubActionsMockServer extends ApiMockServer {
+  /// A path to emulate a download url.
+  static const String _downloadPath = '/download';
+
   @override
   List<RequestHandler> get handlers => [
         RequestHandler.get(
@@ -58,15 +62,13 @@ class GithubActionsMockServer extends ApiMockServer {
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/artifact/download',
-          ),
-          dispatcher: _downloadResponse,
-        ),
-        RequestHandler.get(
-          pathMatcher: ExactPathMatcher(
             '/repos/owner/name/actions/artifacts/test/zip',
           ),
           dispatcher: _notFoundResponse,
+        ),
+        RequestHandler.get(
+          pathMatcher: ExactPathMatcher(_downloadPath),
+          dispatcher: _downloadResponse,
         ),
       ];
 
@@ -117,9 +119,11 @@ class GithubActionsMockServer extends ApiMockServer {
   /// Responses with the number of billable minutes and total run time
   /// for a specific workflow run.
   Future<void> _workflowUsageResponse(HttpRequest request) async {
-    final _response = {"run_duration_ms": 500000};
+    const workflowRunDuration = WorkflowRunDuration(
+      duration: Duration(milliseconds: 500000),
+    );
 
-    request.response.write(jsonEncode(_response));
+    request.response.write(jsonEncode(workflowRunDuration.toJson()));
 
     await request.response.flush();
     await request.response.close();
@@ -130,7 +134,7 @@ class GithubActionsMockServer extends ApiMockServer {
     final uri = Uri.parse(url);
 
     await request.response.redirect(
-      Uri(host: uri.host, port: uri.port, path: 'artifact/download'),
+      Uri(host: uri.host, port: uri.port, path: _downloadPath),
       status: HttpStatus.found,
     );
 
