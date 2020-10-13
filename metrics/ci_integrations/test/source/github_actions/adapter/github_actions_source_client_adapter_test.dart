@@ -1,5 +1,7 @@
+import 'package:archive/archive.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/source/github_actions/adapter/github_actions_source_client_adapter.dart';
+import 'package:ci_integration/util/archive/archive_util.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
@@ -11,6 +13,7 @@ void main() {
     const repositoryOwner = 'owner';
     const repositoryName = 'name';
     final authorization = BearerAuthorization('token');
+    final archiveUtil = ArchiveUtil(ZipDecoder());
     final client = GithubActionsClient(
       repositoryOwner: repositoryOwner,
       repositoryName: repositoryName,
@@ -21,18 +24,38 @@ void main() {
       "throws an ArgumentError if the given Github Actions client is null",
       () {
         expect(
-          () => GithubActionsSourceClientAdapter(null),
+          () => GithubActionsSourceClientAdapter(
+            githubActionsClient: null,
+            archiveUtil: archiveUtil,
+          ),
           throwsArgumentError,
         );
       },
     );
 
     test(
-      "creates an instance with the given Github Actions client",
+      "throws an ArgumentError if the given archive util is null",
       () {
-        final adapter = GithubActionsSourceClientAdapter(client);
+        expect(
+          () => GithubActionsSourceClientAdapter(
+            githubActionsClient: client,
+            archiveUtil: null,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "creates an instance with the given parameters",
+      () {
+        final adapter = GithubActionsSourceClientAdapter(
+          githubActionsClient: client,
+          archiveUtil: archiveUtil,
+        );
 
         expect(adapter.githubActionsClient, equals(client));
+        expect(adapter.archiveUtil, equals(archiveUtil));
       },
     );
   });

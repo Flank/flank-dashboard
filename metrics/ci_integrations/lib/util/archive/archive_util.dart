@@ -2,22 +2,32 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 
-/// A utility class needed to decode archives.
+/// A helper class that provides methods for decoding archives and listing
+/// decoded files.
 class ArchiveUtil {
   /// A [ZipDecoder] of this util.
-  static final _zipDecoder = ZipDecoder();
+  final ZipDecoder zipDecoder;
 
-  /// Decodes the given archive's [bytes] and returns a list of [ArchiveFile]s.
-  static List<ArchiveFile> decodeZip(Uint8List bytes) {
-    final archive = _zipDecoder.decodeBytes(bytes);
-    return archive.files;
+  /// Creates a new instance of the [ArchiveUtil].
+  ///
+  /// Throws an [ArgumentError] if the given [zipDecoder] is `null`.
+  ArchiveUtil(this.zipDecoder) {
+    ArgumentError.checkNotNull(zipDecoder);
   }
 
-  /// Returns the [ArchiveFile] with the given [fileName] from the archive,
-  /// specified by its [bytes].
-  /// If the file with such [fileName] was not found, returns `null`.
-  static ArchiveFile getArchiveFile({Uint8List bytes, String fileName}) {
-    final files = decodeZip(bytes);
+  /// Decodes the given archive's [bytes] and returns an [Archive].
+  Archive decodeArchive(Uint8List bytes) {
+    final archive = zipDecoder.decodeBytes(bytes);
+
+    return archive;
+  }
+
+  /// Returns the [ArchiveFile] with the given [fileName] from the [archive].
+  ///
+  /// Returns `null`, if a file with the given [fileName] is not found.
+  ArchiveFile getFile(Archive archive, String fileName) {
+    final files = archive.files;
+
     return files.firstWhere(
       (file) => file.name == fileName,
       orElse: () => null,

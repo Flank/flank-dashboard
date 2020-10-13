@@ -9,7 +9,6 @@ import 'package:ci_integration/client/github_actions/models/workflow_run_artifac
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_duration.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
-import 'package:ci_integration/coverage/coverage_json_summary/model/coverage.dart';
 import 'package:ci_integration/coverage/coverage_json_summary/model/coverage_json_summary.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/util/archive/archive_util.dart';
@@ -20,16 +19,24 @@ import 'package:metrics_core/metrics_core.dart';
 /// interface.
 class GithubActionsSourceClientAdapter implements SourceClient {
   /// A fetch limit for the paginated requests.
-  static const perPageLimit = 25;
+  static const int perPageLimit = 25;
 
   /// A [GithubActionsClient] instance to perform API calls.
   final GithubActionsClient githubActionsClient;
 
+  /// An [ArchiveUtil] to work with compressed coverage files.
+  final ArchiveUtil archiveUtil;
+
   /// Creates a new instance of the [GithubActionsSourceClientAdapter].
   ///
-  /// Throws an [ArgumentError] if the given [githubActionsClient] is `null`.
-  GithubActionsSourceClientAdapter(this.githubActionsClient) {
+  /// Throws an [ArgumentError] if either the given [githubActionsClient] or
+  /// [archiveUtil] is `null`.
+  GithubActionsSourceClientAdapter({
+    this.githubActionsClient,
+    this.archiveUtil,
+  }) {
     ArgumentError.checkNotNull(githubActionsClient, 'githubActionsClient');
+    ArgumentError.checkNotNull(archiveUtil, 'archiveUtil');
   }
 
   @override
@@ -79,9 +86,6 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
   /// Fetches a list of [WorkflowRun]s that have the [WorkflowRun.runNumber]
   /// greater than the given [lastBuildNumber].
-  ///
-  /// A [workflowIdentifier] is either a workflow id or a name of the file
-  /// that defines the workflow.
   Future<List<WorkflowRun>> _fetchRunsAfter({
     String workflowIdentifier,
     int lastBuildNumber,
@@ -95,72 +99,30 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
     final List<WorkflowRun> result = [];
 
-    while (page.hasNextPage) {
+    do {
       final runs = page.values;
 
       for (final run in runs) {
-        if (run.number > lastBuildNumber) {
-          result.add(run);
+        if (run.number <= lastBuildNumber) {
+          return result;
         }
-        if (run.number == lastBuildNumber) return result;
+
+        result.add(run);
       }
 
-      page = await _fetchNextRunsPage(page);
-    }
+      if (page.hasNextPage) {
+        final pageInteraction =
+            await githubActionsClient.fetchNextRunsPage(page);
+        _throwIfInteractionUnsuccessful(pageInteraction);
+        page = pageInteraction.result;
+      }
+    } while (page.hasNextPage);
 
     return result;
   }
 
-  /// Fetches the [WorkflowRunDuration] of the given [run].
-  Future<WorkflowRunDuration> _fetchRunDuration(WorkflowRun run) async {
-    final durationFetchResult =
-        await githubActionsClient.fetchRunDuration(run.id);
-
-    _throwIfInteractionUnsuccessful(durationFetchResult);
-
-    return durationFetchResult.result;
-  }
-
-  /// Fetches the coverage after the given [run].
-  /// If the coverage file was not found, returns 'null'.
-  Future<Percent> _fetchCoverage(WorkflowRun run) async {
-    WorkflowRunArtifactsPage page = await _fetchArtifactsPage(
-      runId: run.id,
-      perPage: perPageLimit,
-      page: 1,
-    );
-
-    while (true) {
-      final artifacts = page.values;
-
-      final coverageArtifact = artifacts.firstWhere(
-        (artifact) => artifact.name == 'coverage-summary.json',
-        orElse: () => null,
-      );
-
-      if (coverageArtifact != null) {
-        return _mapArtifactToCoverage(coverageArtifact);
-      }
-
-      if (!page.hasNextPage) return null;
-
-      page = await _fetchNextArtifactsPage(page);
-    }
-  }
-
-  /// Fetches a [WorkflowRunsPage] with the given [workflowIdentifier].
-  ///
-  /// A [workflowIdentifier] is either a workflow id or a name of the file
-  /// that defines the workflow.
-  ///
-  /// A [status] is used as a filter query parameter to define the
-  /// [WorkflowRun.status] of runs to fetch.
-  ///
-  /// A [perPage] is used for limiting the number of runs and pagination in pair
-  /// with the [page] parameter.
-  ///
-  /// A [page] is used for pagination and defines a page of runs to fetch.
-  /// If the [page] is `null` or omitted, the first page is fetched.
+  /// Fetches a [WorkflowRunsPage] with the given parameters delegating them to
+  /// the [GithubActionsClient.fetchWorkflowRuns] method.
   Future<WorkflowRunsPage> _fetchRunsPage({
     String workflowIdentifier,
     RunStatus status,
@@ -179,78 +141,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     return runsInteraction.result;
   }
 
-  /// Fetches a [WorkflowRunArtifactsPage] of a run with the given [runId].
-  ///
-  /// A [perPage] is used for limiting the number of runs and pagination in pair
-  /// with the [page] parameter.
-  ///
-  /// A [page] is used for pagination and defines a page of runs to fetch.
-  /// If the [page] is `null` or omitted, the first page is fetched.
-  Future<WorkflowRunArtifactsPage> _fetchArtifactsPage({
-    int runId,
-    int perPage,
-    int page,
-  }) async {
-    final artifactsInteraction = await githubActionsClient.fetchRunArtifacts(
-      runId,
-      perPage: perPage,
-      page: page,
-    );
-
-    _throwIfInteractionUnsuccessful(artifactsInteraction);
-
-    return artifactsInteraction.result;
-  }
-
-  /// Fetches the next [WorkflowRunsPage] of the given [currentPage].
-  Future<WorkflowRunsPage> _fetchNextRunsPage(
-    WorkflowRunsPage currentPage,
-  ) async {
-    final pageInteraction =
-        await githubActionsClient.fetchNextRunsPage(currentPage);
-
-    _throwIfInteractionUnsuccessful(pageInteraction);
-
-    return pageInteraction.result;
-  }
-
-  /// Fetches the next [WorkflowRunArtifactsPage] of the given [currentPage].
-  Future<WorkflowRunArtifactsPage> _fetchNextArtifactsPage(
-    WorkflowRunArtifactsPage currentPage,
-  ) async {
-    final pageInteraction =
-        await githubActionsClient.fetchNextRunArtifactsPage(currentPage);
-
-    _throwIfInteractionUnsuccessful(pageInteraction);
-
-    return pageInteraction.result;
-  }
-
-  /// Fetches the given [artifact], searches for the coverage file and converts
-  /// it to [Coverage].
-  ///
-  /// If the coverage file was not found, returns `null`.
-  Future<Percent> _mapArtifactToCoverage(
-    WorkflowRunArtifact artifact,
-  ) async {
-    final artifactInteraction =
-        await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
-    _throwIfInteractionUnsuccessful(artifactInteraction);
-
-    final artifactBytes = artifactInteraction.result;
-    final coverageJsonFile = ArchiveUtil.getArchiveFile(
-      bytes: artifactBytes,
-      fileName: 'coverage-summary.json',
-    );
-
-    final coverageJson =
-        jsonDecode(coverageJsonFile.content as String) as Map<String, dynamic>;
-    final coverage = CoverageJsonSummary.fromJson(coverageJson);
-
-    return coverage?.total?.branches?.percent;
-  }
-
-  /// Processes the given [runs] to a list of [BuildData]s.
+  /// Maps the given [runs] to a list of [BuildData]s.
   ///
   /// A [workflowIdentifier] is either a workflow id or a name of the file
   /// that defines the workflow.
@@ -272,6 +163,76 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     return Future.wait(buildDataFuture);
   }
 
+  /// Fetches the coverage for the given [run].
+  ///
+  /// Returns `null` if the coverage file is not found.
+  Future<Percent> _fetchCoverage(WorkflowRun run) async {
+    final artifactsInteraction = await githubActionsClient.fetchRunArtifacts(
+      run.id,
+      perPage: perPageLimit,
+      page: 1,
+    );
+    _throwIfInteractionUnsuccessful(artifactsInteraction);
+
+    WorkflowRunArtifactsPage page = artifactsInteraction.result;
+
+    do {
+      final artifacts = page.values;
+
+      final coverageArtifact = artifacts.firstWhere(
+        (artifact) => artifact.name == 'coverage-summary.json',
+        orElse: () => null,
+      );
+
+      if (coverageArtifact != null) {
+        return _mapArtifactToCoverage(coverageArtifact);
+      }
+
+      if (page.hasNextPage) {
+        final pageInteraction =
+            await githubActionsClient.fetchNextRunArtifactsPage(page);
+        _throwIfInteractionUnsuccessful(pageInteraction);
+
+        page = pageInteraction.result;
+      }
+    } while (page.hasNextPage);
+
+    return null;
+  }
+
+  /// Fetches the [WorkflowRunDuration] of the given [run].
+  Future<Duration> _fetchRunDuration(WorkflowRun run) async {
+    final durationInteraction =
+        await githubActionsClient.fetchRunDuration(run.id);
+
+    _throwIfInteractionUnsuccessful(durationInteraction);
+
+    return durationInteraction.result.duration;
+  }
+
+  /// Maps the given [artifact] to the coverage [Percent] value.
+  ///
+  /// Returns `null` if the coverage file is not found.
+  Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
+    final artifactInteraction =
+        await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
+    _throwIfInteractionUnsuccessful(artifactInteraction);
+
+    final artifactBytes = artifactInteraction.result;
+    final artifactArchive = archiveUtil.decodeArchive(artifactBytes);
+
+    final coverageJsonFile = archiveUtil.getFile(
+      artifactArchive,
+      'coverage-summary.json',
+    );
+
+    final coverageJson =
+        jsonDecode(coverageJsonFile.content as String) as Map<String, dynamic>;
+    final coverage = CoverageJsonSummary.fromJson(coverageJson);
+
+    return coverage?.total?.branches?.percent;
+  }
+
   /// Maps the given [run] to the [BuildData] instance.
   ///
   /// A [workflowIdentifier] is either a workflow id or a name of the file
@@ -283,14 +244,14 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   BuildData _mapRunToBuildData({
     String workflowIdentifier,
     WorkflowRun run,
-    WorkflowRunDuration runDuration,
+    Duration runDuration,
     Percent coverage,
   }) {
     return BuildData(
       buildNumber: run.number,
       startedAt: run.createdAt,
       buildStatus: _mapConclusionToBuildStatus(run.conclusion),
-      duration: runDuration.duration,
+      duration: runDuration,
       workflowName: workflowIdentifier,
       url: run.url,
       coverage: coverage,
@@ -311,8 +272,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     }
   }
 
-  /// Throws a [StateError] with the message of [interactionResult] if the
-  /// [interactionResult.result] is [InteractionResult.isError].
+  /// Throws a [StateError] with the message of [interactionResult] if this
+  /// result is [InteractionResult.isError].
   void _throwIfInteractionUnsuccessful(InteractionResult interactionResult) {
     if (interactionResult.isError) {
       throw StateError(interactionResult.message);
