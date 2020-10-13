@@ -308,6 +308,42 @@ void main() {
     );
 
     test(
+      ".subscribeToUserProfileUpdates() delegates to the sign out use case once receiving a persistent store exception",
+      () async {
+        const errorCode = PersistentStoreErrorCode.unknown;
+        const exception = PersistentStoreException(code: errorCode);
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
+        await authNotifier.updateUserProfile(userProfileModel);
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(null),
+        );
+
+        when(createUserProfileUseCase(any)).thenThrow(exception);
+
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        await untilCalled(signOutUseCase());
+
+        verify(signOutUseCase()).called(equals(1));
+      },
+    );
+
+    test(
       ".subscribeToUserProfileUpdates() set the is logged in status to true once receiving a user profile",
       () {
         final authNotifier = AuthNotifier(

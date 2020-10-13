@@ -282,6 +282,7 @@ class AuthNotifier extends ChangeNotifier {
       );
     } on PersistentStoreException catch (exception) {
       _userProfileSavingErrorHandler(exception.code);
+      await signOut();
     }
   }
 
@@ -321,6 +322,7 @@ class AuthNotifier extends ChangeNotifier {
   /// Handles an error occurred during saving a user profile.
   void _userProfileSavingErrorHandler(PersistentStoreErrorCode code) {
     _userProfileSavingErrorMessage = PersistentStoreErrorMessage(code);
+    _isLoading = false;
     notifyListeners();
   }
 
