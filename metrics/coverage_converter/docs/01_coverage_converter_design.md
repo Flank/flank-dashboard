@@ -8,6 +8,7 @@ An explanation of the Coverage Converter tool architecture design.
 
 > Link to supporting documentation, GitHub tickets, etc.
 
+- [CI integrations coverage report structure](https://github.com/platform-platform/monorepo/blob/codecov_converter_design/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-importing)
 - [LCOV Code Coverage](https://wiki.documentfoundation.org/Development/Lcov)
 - [Istanbul](https://istanbul.js.org/)
 
@@ -15,7 +16,7 @@ An explanation of the Coverage Converter tool architecture design.
 
 > What problem is this project solving?
 
-Since we have a `CI integrations` tool that stands for importing the CI builds to the Metrics application, we need to sure that the user can use this tool with any format of the coverage reports. To do so, we should create a separate, specific for `CI integrations`, coverage report format, and the tool that will convert the coverage reports with different formats into this format - the Coverage Converter tool. To make the Coverage Converter tool architecture clean and understandable, we need to create a document that will explain the main components and principles of the Coverage tool.
+Importing CI builds coverage data into the Metrics application could be tricky as there are many coverage formats and tools like Instanbul, LCOV, etc... To simplify integration we need to create a tool that can be used to convert coverage data from specific coverage tool output format into Metrics coverage format - the Coverage Converter tool. To make the Coverage Converter tool architecture clean and understandable, we need to create a document that will explain the main components and principles of the Coverage tool.
 
 # Goals
 
@@ -23,7 +24,7 @@ Since we have a `CI integrations` tool that stands for importing the CI builds t
 
 - Explain the purpose of the Coverage Converter tool.
 - Explain the main components of the Coverage Converter tool.
-- Explain adding the new format converter.
+- Explain adding the new specific format converter to the Coverage Converter tool.
 
 # Non-Goals
 
@@ -37,7 +38,7 @@ The document does not explain and shows the implementation details.
 
 ## Main interfaces and classes
 
-The main purpose of this tool is to convert the given coverage report to the `CI integrations` readable one. To do so, we should create the following interfaces and abstract classes: 
+The main purpose of this tool is to convert the given supported coverage report to the [CI integrations](https://github.com/platform-platform/monorepo/blob/codecov_converter_design/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-importing) format. To do so, we should create the following interfaces and abstract classes:
 
 - The `CoverageConverterCommand` interface - the common code coverage command interface. 
 - The `CoverageConverter` interface that will represent the common interface for converting the specific coverage report format to the `CI integrations` coverage report format.
@@ -77,20 +78,6 @@ Once we've finished with all main classes and interfaces, let's consider the pac
 >     - command
 >     - model
 >     - converter
-
-## Structure of the Coverage coverage report.
-
-Since we want to unify the coverage reports for the CI integrations, we should create a specific for CI integrations coverage report format. Currently, this report will contain only `total coverage percent`. Let's consider the JSON summary structure: 
-
-```
-{
-  pct: 0.6
-}
-```
-
-So, the JSON will contain only `pct` value that will represent the total coverage percent. Let's consider the class diagram of the coverage structure: 
-
-![Coverage data model class diagram class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_data_model_class_diagram.puml)
 
 
 ## Creating a new specific format converter
