@@ -40,9 +40,6 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   }
 
   @override
-  void clearErrorMessages() {}
-
-  @override
   Future<void> signOut() async {}
 
   @override
