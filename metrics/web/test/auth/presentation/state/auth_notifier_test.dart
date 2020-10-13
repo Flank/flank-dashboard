@@ -237,25 +237,6 @@ void main() {
     );
 
     test(
-      ".subscribeToAuthenticationUpdates() unsubscribes from user updates when a user is null",
-      () {
-        final userController = StreamController<User>();
-
-        when(receiveAuthUpdates()).thenAnswer((_) => userController.stream);
-
-        authNotifier.subscribeToAuthenticationUpdates();
-
-        expect(userController.hasListener, isTrue);
-
-        when(receiveAuthUpdates()).thenAnswer((_) => const Stream.empty());
-
-        authNotifier.subscribeToAuthenticationUpdates();
-
-        expect(userController.hasListener, isFalse);
-      },
-    );
-
-    test(
       ".subscribeToUserProfileUpdates() subscribes to a user profile updates stream",
       () {
         final authNotifier = AuthNotifier(
@@ -299,22 +280,30 @@ void main() {
           createUserProfileUseCase,
           updateUserProfileUseCase,
         );
+        final streamController = StreamController<UserProfile>();
+        final userProfile = UserProfile(
+          id: userProfileModel.id,
+          selectedTheme: userProfileModel.selectedTheme,
+        );
 
         when(receiveAuthUpdates(any)).thenAnswer(
           (_) => Stream.value(user),
         );
-
         when(receiveUserProfileUpdates(any)).thenAnswer(
-          (_) => Stream.value(userProfile),
+          (_) => streamController.stream,
         );
 
-        final listener = expectAsync0(() {
-          return authNotifier.userProfileModel == userProfileModel;
-        });
+        authNotifier.subscribeToAuthenticationUpdates();
+
+        final listener = expectAsyncUntil0(
+          () {},
+          () {
+            return authNotifier.userProfileModel == userProfileModel;
+          },
+        );
 
         authNotifier.addListener(listener);
-
-        authNotifier.subscribeToAuthenticationUpdates();
+        streamController.add(userProfile);
       },
     );
 
@@ -346,7 +335,7 @@ void main() {
 
         authNotifier.subscribeToAuthenticationUpdates();
 
-        final listener = expectAsync0(() {
+        final listener = expectAsyncUntil0(() {}, () {
           if (authNotifier.isLoggedIn != null) {
             return authNotifier.isLoggedIn;
           }
@@ -419,7 +408,7 @@ void main() {
     });
 
     test(
-      ".isLoading status is false until there is a user profile",
+      ".isLoading status is false until there is no user profile",
       () {
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
@@ -653,46 +642,30 @@ void main() {
       },
     );
 
-    test(
-      ".updateUserProfile() does not call the use case if the given user profile is the same as in the notifier",
-      () async {
-        final authNotifier = AuthNotifier(
-          receiveAuthUpdates,
-          signInUseCase,
-          googleSignInUseCase,
-          signOutUseCase,
-          receiveUserProfileUpdates,
-          createUserProfileUseCase,
-          updateUserProfileUseCase,
-        );
+    // test(
+    //   ".updateUserProfile() does not call the use case if the given user profile is the same as in the notifier",
+    //   () async {
+    //     final updatedUserProfile = UserProfileModel(
+    //       id: userProfile.id,
+    //       selectedTheme: userProfile.selectedTheme,
+    //     );
 
-        final updatedUserProfile = UserProfileModel(
-          id: userProfile.id,
-          selectedTheme: userProfile.selectedTheme,
-        );
+    //     final streamController = StreamController<UserProfile>();
 
-        when(receiveAuthUpdates(any)).thenAnswer(
-          (_) => Stream.value(user),
-        );
+    //     when(receiveUserProfileUpdates(any)).thenAnswer(
+    //       (_) => streamController.stream,
+    //     );
 
-        when(receiveUserProfileUpdates(any)).thenAnswer(
-          (_) => Stream.value(userProfile),
-        );
+    //     authNotifier.addListener(() async {
+    //       await authNotifier.updateUserProfile(updatedUserProfile);
 
-        authNotifier.subscribeToAuthenticationUpdates();
+    //       verifyNever(updateUserProfileUseCase(any));
 
-        final listener = expectAsyncUntil0(
-          () async {
-            await authNotifier.updateUserProfile(updatedUserProfile);
+    //     });
+    //     streamController.add(userProfile);
 
-            verifyNever(updateUserProfileUseCase(any));
-          },
-          () => authNotifier.userProfileModel != null,
-        );
-
-        authNotifier.addListener(listener);
-      },
-    );
+    //   },
+    // );
 
     test(
       ".updateUserProfile() does not call the use case if the given user profile is null",
