@@ -199,14 +199,6 @@ class AuthNotifier extends ChangeNotifier {
     }
   }
 
-  /// Clears all authentication error messages.
-  void _clearErrorMessages() {
-    _authErrorMessage = null;
-    _emailErrorMessage = null;
-    _passwordErrorMessage = null;
-    notifyListeners();
-  }
-
   /// Updates the existing user profile, based on the updated [userProfile].
   Future<void> updateUserProfile(UserProfileModel userProfile) async {
     _changeTheme(userProfile?.selectedTheme);
@@ -332,6 +324,14 @@ class AuthNotifier extends ChangeNotifier {
   /// Handles an error occurred during saving a user profile.
   void _userProfileSavingErrorHandler(PersistentStoreErrorCode code) {
     _userProfileSavingErrorMessage = PersistentStoreErrorMessage(code);
+    notifyListeners();
+  }
+
+  /// Clears all authentication error messages.
+  void _clearErrorMessages() {
+    _authErrorMessage = null;
+    _emailErrorMessage = null;
+    _passwordErrorMessage = null;
     notifyListeners();
   }
 
