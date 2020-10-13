@@ -206,8 +206,8 @@ void main() {
 
       final buildPerformance =
           expectedPerformanceMetrics.buildsPerformance.first;
-      final expectedX = List.generate(period, (index) => index);
-      final expectedY = List.generate(period - 1, (_) => 0);
+      final expectedX = List.generate(period + 1, (index) => index);
+      final expectedY = List.generate(period, (_) => 0);
       expectedY.add(buildPerformance.duration.inMilliseconds);
 
       final firstProjectMetrics =
@@ -215,7 +215,7 @@ void main() {
       final performanceMetrics = firstProjectMetrics.performanceSparkline;
       final performancePoints = performanceMetrics.performance;
 
-      expect(performancePoints, hasLength(equals(period)));
+      expect(performancePoints, hasLength(equals(period + 1)));
       expect(
         performanceMetrics.value,
         equals(expectedPerformanceMetrics.averageBuildDuration),
