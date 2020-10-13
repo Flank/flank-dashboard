@@ -1,7 +1,7 @@
 import 'package:ci_integration/integration/interface/source/config/parser/source_config_parser.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 
-/// A configuration parser for the Github Actions source integration
+/// A configuration parser for the Github Actions source integration.
 class GithubActionsSourceConfigParser
     implements SourceConfigParser<GithubActionsSourceConfig> {
   /// Creates a new instance of the [GithubActionsSourceConfigParser].

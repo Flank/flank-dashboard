@@ -1,34 +1,16 @@
-import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 import 'package:ci_integration/source/github_actions/config/parser/github_actions_source_config_parser.dart';
 import 'package:test/test.dart';
+
+import '../../test_utils/test_data/github_actions_config_test_data.dart';
 
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("GithubActionsSourceConfigParser", () {
-    const workflowIdentifier = 'workflow';
-    const repositoryOwner = 'owner';
-    const repositoryName = 'name';
-    const accessToken = 'token';
-
-    const configJson = <String, dynamic>{
-      'workflow_identifier': workflowIdentifier,
-      'repository_owner': repositoryOwner,
-      'repository_name': repositoryName,
-      'access_token': accessToken,
-    };
-
     const configMap = {
-      'github_actions': configJson,
+      'github_actions': GithubActionsConfigTestData.sourceConfigMap,
     };
-
-    final config = GithubActionsSourceConfig(
-      workflowIdentifier: workflowIdentifier,
-      repositoryOwner: repositoryOwner,
-      repositoryName: repositoryName,
-      accessToken: accessToken,
-    );
 
     final githubActionsConfigParser = GithubActionsSourceConfigParser();
 
@@ -84,9 +66,11 @@ void main() {
     test(
       ".parse() parses the given map into the GithubActionsSourceConfig",
       () {
+        final expected = GithubActionsConfigTestData.sourceConfig;
+
         final result = githubActionsConfigParser.parse(configMap);
 
-        expect(result, equals(config));
+        expect(result, equals(expected));
       },
     );
   });

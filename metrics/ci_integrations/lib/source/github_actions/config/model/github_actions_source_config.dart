@@ -3,10 +3,12 @@ import 'package:ci_integration/util/validator/string_validator.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// A class that represents the Github Actions source config.
+/// A class that represents a [SourceConfig] for the Github Actions integration.
 class GithubActionsSourceConfig extends Equatable implements SourceConfig {
-  /// An identifier that is either a workflow id or a name of the file
-  /// that defines the workflow.
+  /// A unique identifier of the Github Actions workflow to integrate.
+  ///
+  /// This is either a workflow id or a name of the file that defines
+  /// the workflow.
   final String workflowIdentifier;
 
   /// A name of the project's repository.
@@ -19,11 +21,11 @@ class GithubActionsSourceConfig extends Equatable implements SourceConfig {
   final String accessToken;
 
   @override
-  List<Object> get props =>
-      [workflowIdentifier, repositoryName, repositoryOwner, accessToken];
+  String get sourceProjectId => workflowIdentifier;
 
   @override
-  String get sourceProjectId => workflowIdentifier;
+  List<Object> get props =>
+      [workflowIdentifier, repositoryName, repositoryOwner, accessToken];
 
   /// Creates a new instance of the [GithubActionsSourceConfig].
   ///
@@ -31,8 +33,8 @@ class GithubActionsSourceConfig extends Equatable implements SourceConfig {
   /// or [repositoryOwner] is `null` or empty.
   GithubActionsSourceConfig({
     @required this.workflowIdentifier,
-    @required this.repositoryOwner,
     @required this.repositoryName,
+    @required this.repositoryOwner,
     this.accessToken,
   }) {
     StringValidator.checkNotNullOrEmpty(
@@ -40,18 +42,19 @@ class GithubActionsSourceConfig extends Equatable implements SourceConfig {
       name: 'workflowIdentifier',
     );
     StringValidator.checkNotNullOrEmpty(
-      repositoryOwner,
-      name: 'repositoryOwner',
-    );
-    StringValidator.checkNotNullOrEmpty(
       repositoryName,
       name: 'repositoryName',
     );
+    StringValidator.checkNotNullOrEmpty(
+      repositoryOwner,
+      name: 'repositoryOwner',
+    );
   }
 
-  /// Creates [GithubActionsSourceConfig] from the decoded JSON object.
+  /// Creates a new instance of the [GithubActionsSourceConfig] from the
+  /// decoded JSON object.
   ///
-  /// Returns `null` if [json] is `null`.
+  /// Returns `null` if the given [json] is `null`.
   factory GithubActionsSourceConfig.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 

@@ -1,49 +1,46 @@
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/test_data/github_actions_config_test_data.dart';
+
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("GithubActionsSourceConfig", () {
-    const workflowIdentifier = 'workflow';
-    const repositoryOwner = 'owner';
-    const repositoryName = 'name';
-    const accessToken = 'token';
+    const workflowIdentifier = GithubActionsConfigTestData.workflowIdentifier;
+    const repositoryOwner = GithubActionsConfigTestData.repositoryOwner;
+    const repositoryName = GithubActionsConfigTestData.repositoryName;
+    const accessToken = GithubActionsConfigTestData.accessToken;
 
-    const configJson = <String, dynamic>{
-      'workflow_identifier': workflowIdentifier,
-      'repository_owner': repositoryOwner,
-      'repository_name': repositoryName,
-      'access_token': accessToken,
-    };
-
-    final config = GithubActionsSourceConfig(
-      workflowIdentifier: workflowIdentifier,
-      repositoryOwner: repositoryOwner,
-      repositoryName: repositoryName,
-      accessToken: accessToken,
-    );
-
-    GithubActionsSourceConfig _createConfig({
-      String workflowIdentifier = workflowIdentifier,
-      String repositoryOwner = repositoryOwner,
-      String repositoryName = repositoryName,
-      String accessToken,
-    }) {
-      return GithubActionsSourceConfig(
-        workflowIdentifier: workflowIdentifier,
-        repositoryOwner: repositoryOwner,
-        repositoryName: repositoryName,
-        accessToken: accessToken,
-      );
-    }
+    const configMap = GithubActionsConfigTestData.sourceConfigMap;
+    final config = GithubActionsConfigTestData.sourceConfig;
 
     test(
       "throws an ArgumentError if the given workflow identifier is null",
       () {
         expect(
-          () => _createConfig(workflowIdentifier: null),
+          () => GithubActionsSourceConfig(
+            workflowIdentifier: null,
+            repositoryOwner: repositoryOwner,
+            repositoryName: repositoryName,
+            accessToken: accessToken,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given workflow identifier is empty",
+      () {
+        expect(
+          () => GithubActionsSourceConfig(
+            workflowIdentifier: '',
+            repositoryOwner: repositoryOwner,
+            repositoryName: repositoryName,
+            accessToken: accessToken,
+          ),
           throwsArgumentError,
         );
       },
@@ -53,7 +50,27 @@ void main() {
       "throws an ArgumentError if the given repository owner is null",
       () {
         expect(
-          () => _createConfig(repositoryOwner: null),
+          () => GithubActionsSourceConfig(
+            workflowIdentifier: workflowIdentifier,
+            repositoryOwner: null,
+            repositoryName: repositoryName,
+            accessToken: accessToken,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given repository owner is empty",
+      () {
+        expect(
+          () => GithubActionsSourceConfig(
+            workflowIdentifier: workflowIdentifier,
+            repositoryOwner: '',
+            repositoryName: repositoryName,
+            accessToken: accessToken,
+          ),
           throwsArgumentError,
         );
       },
@@ -63,7 +80,27 @@ void main() {
       "throws an ArgumentError if the given repository name is null",
       () {
         expect(
-          () => _createConfig(repositoryName: null),
+          () => GithubActionsSourceConfig(
+            workflowIdentifier: workflowIdentifier,
+            repositoryOwner: repositoryOwner,
+            repositoryName: null,
+            accessToken: accessToken,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given repository name is null",
+      () {
+        expect(
+          () => GithubActionsSourceConfig(
+            workflowIdentifier: workflowIdentifier,
+            repositoryOwner: repositoryOwner,
+            repositoryName: '',
+            accessToken: accessToken,
+          ),
           throwsArgumentError,
         );
       },
@@ -96,12 +133,20 @@ void main() {
     );
 
     test(
-      ".fromJson creates an instance from the given json",
+      ".fromJson creates a new instance from the given json",
       () {
-        final actualConfig = GithubActionsSourceConfig.fromJson(configJson);
+        final actualConfig = GithubActionsSourceConfig.fromJson(configMap);
 
         expect(actualConfig, equals(config));
       },
     );
+
+    test(".sourceProjectId returns the given workflow identifier value", () {
+      const expected = workflowIdentifier;
+
+      final sourceProjectId = config.sourceProjectId;
+
+      expect(sourceProjectId, equals(expected));
+    });
   });
 }
