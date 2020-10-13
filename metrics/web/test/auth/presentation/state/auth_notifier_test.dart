@@ -237,7 +237,7 @@ void main() {
     );
 
     test(
-      ".subscribeToUserProfileUpdates() subscribes to a user profile updates stream",
+      ".subscribeToAuthenticationUpdates() subscribes to a user profile updates stream",
       () {
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
@@ -269,7 +269,7 @@ void main() {
     );
 
     test(
-      ".subscribeToUserProfileUpdates() creates a user profile model once receiving the user profile",
+      ".subscribeToAuthenticationUpdates() creates a user profile model once receiving the user profile",
       () {
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
@@ -308,7 +308,7 @@ void main() {
     );
 
     test(
-      ".subscribeToUserProfileUpdates() delegates to the sign out use case once receiving a persistent store exception",
+      ".subscribeToAuthenticationUpdates() delegates to the sign out use case once receiving a persistent store exception",
       () async {
         const errorCode = PersistentStoreErrorCode.unknown;
         const exception = PersistentStoreException(code: errorCode);
@@ -344,7 +344,7 @@ void main() {
     );
 
     test(
-      ".subscribeToUserProfileUpdates() set the is logged in status to true once receiving a user profile",
+      ".subscribeToAuthenticationUpdates() set the is logged in status to true once receiving a user profile",
       () {
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
