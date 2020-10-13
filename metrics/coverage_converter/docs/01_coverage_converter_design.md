@@ -38,7 +38,7 @@ The document does not explain and shows the implementation details.
 
 ## Main interfaces and classes
 
-The main purpose of this tool is to convert the given supported coverage report to the [CI integrations](https://github.com/platform-platform/monorepo/blob/codecov_converter_design/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-importing) format. To do so, we should create the following interfaces and abstract classes:
+The main purpose of this tool is to convert the given supported coverage report to the [CI integrations format](https://github.com/platform-platform/monorepo/blob/codecov_converter_design/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-importing). To do so, we should create the following interfaces and abstract classes:
 
 - The `CoverageConverterCommand` interface - the common code coverage command interface. 
 - The `CoverageConverter` interface that will represent the common interface for converting the specific coverage report format to the `CI integrations` coverage report format.
