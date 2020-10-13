@@ -210,15 +210,13 @@ class AuthNotifier extends ChangeNotifier {
   /// Updates the existing user profile, based on the updated [userProfile].
   Future<void> updateUserProfile(UserProfileModel userProfile) async {
     _changeTheme(userProfile?.selectedTheme);
-    if (userProfile == null ||
-        _userProfileModel == null ||
-        userProfile == _userProfileModel) {
-      return;
-    }
+    if (userProfile == null || _userProfileModel == null) return;
 
     _resetUserProfileSavingErrorMessage();
 
     final updatedUserProfile = _userProfileModel.merge(userProfile);
+
+    if (updatedUserProfile == _userProfileModel) return;
 
     try {
       await _updateUserProfileUseCase(
