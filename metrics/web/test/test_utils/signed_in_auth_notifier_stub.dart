@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/presentation/models/auth_error_message.dart';
+import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 
 /// Stub implementation on the [AuthNotifier].
@@ -44,11 +45,20 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
   Future<void> signInWithGoogle() async {}
 
   @override
-  void clearErrorMessages() {}
-
-  @override
   Future<void> signOut() async {
     _isLoggedIn = false;
     notifyListeners();
   }
+
+  @override
+  Future<void> updateUserProfile(UserProfileModel userProfile) async {}
+
+  @override
+  String get userProfileErrorMessage => null;
+
+  @override
+  UserProfileModel get userProfileModel => null;
+
+  @override
+  String get userProfileSavingErrorMessage => null;
 }

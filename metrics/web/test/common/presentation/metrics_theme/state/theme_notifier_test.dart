@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:metrics/auth/domain/entities/theme_type.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:test/test.dart';
 
@@ -7,62 +8,110 @@ import 'package:test/test.dart';
 
 void main() {
   group("ThemeNotifier", () {
+    const lightTheme = ThemeType.light;
+    const darkTheme = ThemeType.dark;
+
     test(
-      "creates an instance with the default is dark value if the brightness is not specified",
+      "creates an instance with the dark selected theme if the brightness is not specified",
       () {
         final themeNotifier = ThemeNotifier();
 
-        expect(themeNotifier.isDark, isNotNull);
+        expect(themeNotifier.selectedTheme, equals(darkTheme));
       },
     );
 
     test(
-      "creates an instance with the default is dark value if the given brightness is null",
+      "creates an instance with the dark selected theme if the given brightness is null",
       () {
         final themeNotifier = ThemeNotifier(brightness: null);
 
-        expect(themeNotifier.isDark, isNotNull);
+        expect(themeNotifier.selectedTheme, darkTheme);
       },
     );
 
     test(
-      "creates an instance with the is dark value that corresponds to the given system's theme dark brightness",
+      "creates an instance with the dark selected theme that corresponds to the given system's theme dark brightness",
       () {
         final themeNotifier = ThemeNotifier(brightness: Brightness.dark);
 
-        expect(themeNotifier.isDark, isTrue);
+        expect(themeNotifier.selectedTheme, equals(darkTheme));
       },
     );
 
     test(
-      "creates an instance with the light theme mode that corresponds to the given light brightness",
+      "creates an instance with the light selected theme that corresponds to the given light brightness",
       () {
         final themeNotifier = ThemeNotifier(brightness: Brightness.light);
 
-        expect(themeNotifier.isDark, isFalse);
+        expect(themeNotifier.selectedTheme, equals(lightTheme));
       },
     );
 
+    test(".isDark is true if the selected theme is dark", () {
+      final themeNotifier = ThemeNotifier();
+      themeNotifier.changeTheme(darkTheme);
+
+      expect(themeNotifier.isDark, isTrue);
+    });
+
+    test(".isDark is false if the selected theme is light", () {
+      final themeNotifier = ThemeNotifier();
+      themeNotifier.changeTheme(lightTheme);
+
+      expect(themeNotifier.isDark, isFalse);
+    });
+
+    test(".changeTheme() changes the theme to the given value", () {
+      final themeNotifier = ThemeNotifier();
+      themeNotifier.changeTheme(lightTheme);
+
+      expect(themeNotifier.selectedTheme, equals(lightTheme));
+    });
+
     test(
-      ".changeTheme() changes the theme",
+      ".changeTheme() does not notify listeners if the given value is null",
       () {
         final themeNotifier = ThemeNotifier();
-        final initialTheme = themeNotifier.isDark;
 
-        themeNotifier.changeTheme();
+        themeNotifier.changeTheme(null);
 
-        expect(themeNotifier.isDark, isNot(initialTheme));
+        expect(themeNotifier.selectedTheme, equals(darkTheme));
       },
     );
 
     test(
-      ".changeTheme() notifies listeners about theme change",
+      ".changeTheme() does not notify listeners if the given value is the same",
+      () {
+        bool isCalled = false;
+        final themeNotifier = ThemeNotifier();
+
+        themeNotifier.addListener(() => isCalled = true);
+        themeNotifier.changeTheme(darkTheme);
+
+        expect(isCalled, isFalse);
+      },
+    );
+
+    test(
+      ".toggleTheme() changes the selected theme to the opposite",
+      () {
+        final themeNotifier = ThemeNotifier();
+        final initialTheme = themeNotifier.selectedTheme;
+
+        themeNotifier.toggleTheme();
+
+        expect(themeNotifier.selectedTheme, isNot(initialTheme));
+      },
+    );
+
+    test(
+      ".toggleTheme() notifies listeners about theme change",
       () {
         final themeNotifier = ThemeNotifier();
 
         themeNotifier.addListener(expectAsync0(() {}));
 
-        themeNotifier.changeTheme();
+        themeNotifier.toggleTheme();
       },
     );
 
@@ -90,13 +139,13 @@ void main() {
     );
 
     test(
-      ".setTheme() sets the light theme mode if the given brightness is null",
+      ".setTheme() sets the dark theme mode if the given brightness is null",
       () {
         final themeNotifier = ThemeNotifier();
 
         themeNotifier.setTheme(null);
 
-        expect(themeNotifier.isDark, isFalse);
+        expect(themeNotifier.isDark, isTrue);
       },
     );
 

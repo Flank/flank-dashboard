@@ -27,7 +27,7 @@ class MetricsDrawer extends StatelessWidget {
               return CheckboxListTile(
                 value: model.isDark,
                 title: const Text(CommonStrings.darkTheme),
-                onChanged: (_) => model.changeTheme(),
+                onChanged: (_) => model.toggleTheme(),
               );
             },
           ),

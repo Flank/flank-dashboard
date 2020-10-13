@@ -49,7 +49,7 @@ void main() {
 
         final currentTheme = themeWidget.data;
 
-        themeNotifier.changeTheme();
+        themeNotifier.toggleTheme();
         await tester.pump();
 
         final newThemeWidget = tester.widget<MetricsTheme>(
