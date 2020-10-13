@@ -510,8 +510,6 @@ void main() {
 
       await authNotifier.signInWithGoogle();
 
-      authNotifier.notifyListeners();
-
       verify(googleSignInUseCase()).called(equals(1));
     });
 
@@ -528,7 +526,6 @@ void main() {
 
       authNotifier.signInWithEmailAndPassword(email, password);
       authNotifier.signInWithGoogle();
-      authNotifier.notifyListeners();
 
       verifyNever(googleSignInUseCase());
     });
@@ -572,7 +569,6 @@ void main() {
             .thenAnswer((_) => Future.error(emailAuthException));
 
         await authNotifier.signInWithEmailAndPassword(email, password);
-        authNotifier.notifyListeners();
 
         expect(authNotifier.emailErrorMessage, isNotNull);
       },
@@ -595,7 +591,6 @@ void main() {
             .thenAnswer((_) => Future.error(passwordAuthException));
 
         await authNotifier.signInWithEmailAndPassword(email, password);
-        authNotifier.notifyListeners();
 
         expect(authNotifier.passwordErrorMessage, isNotNull);
       },
@@ -618,7 +613,6 @@ void main() {
             .thenAnswer((_) => Future.error(authException));
 
         await authNotifier.signInWithGoogle();
-        authNotifier.notifyListeners();
 
         expect(authNotifier.authErrorMessage, isNotNull);
       },
@@ -645,13 +639,9 @@ void main() {
           invalidPassword,
         );
 
-        authNotifier.notifyListeners();
-
         expect(authNotifier.authErrorMessage, isNotNull);
 
         await authNotifier.signInWithEmailAndPassword(email, password);
-
-        authNotifier.notifyListeners();
 
         expect(authNotifier.authErrorMessage, isNull);
       },
@@ -678,13 +668,9 @@ void main() {
           invalidPassword,
         );
 
-        authNotifier.notifyListeners();
-
         expect(authNotifier.emailErrorMessage, isNotNull);
 
         await authNotifier.signInWithEmailAndPassword(email, password);
-
-        authNotifier.notifyListeners();
 
         expect(authNotifier.emailErrorMessage, isNull);
       },
@@ -711,13 +697,9 @@ void main() {
           invalidPassword,
         );
 
-        authNotifier.notifyListeners();
-
         expect(authNotifier.passwordErrorMessage, isNotNull);
 
         await authNotifier.signInWithEmailAndPassword(email, password);
-
-        authNotifier.notifyListeners();
 
         expect(authNotifier.passwordErrorMessage, isNull);
       },
@@ -741,15 +723,11 @@ void main() {
 
         await authNotifier.signInWithGoogle();
 
-        authNotifier.notifyListeners();
-
         expect(authNotifier.authErrorMessage, isNotNull);
 
         when(googleSignInUseCase.call()).thenAnswer((_) => null);
 
         await authNotifier.signInWithGoogle();
-
-        authNotifier.notifyListeners();
 
         expect(authNotifier.authErrorMessage, isNull);
       },
