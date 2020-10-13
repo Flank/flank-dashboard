@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/negative_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/positive_graph_indicator.dart';
@@ -35,6 +36,12 @@ void main() {
       of: find.byType(InkWell),
       matching: find.byType(MouseRegion),
     );
+
+    Future<void> _hoverBar(WidgetTester tester) async {
+      final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+      mouseRegion.onEnter(const PointerEnterEvent());
+      await tester.pumpAndSettle();
+    }
 
     testWidgets(
       "displays the PlaceholderBar if the given buildResult is null",
@@ -114,9 +121,7 @@ void main() {
           buildResult: buildResult,
         ));
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        mouseRegion.onEnter(const PointerEnterEvent());
-        await tester.pumpAndSettle();
+        await _hoverBar(tester);
 
         expect(find.byType(BuildResultPopupCard), findsOneWidget);
       },
@@ -134,9 +139,8 @@ void main() {
           buildResult: buildResult,
         ));
 
+        await _hoverBar(tester);
         final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        mouseRegion.onEnter(const PointerEnterEvent());
-        await tester.pumpAndSettle();
         mouseRegion.onExit(const PointerExitEvent());
         await tester.pumpAndSettle();
 
@@ -145,7 +149,7 @@ void main() {
     );
 
     testWidgets(
-      "does not displays any of the graph indicators if the popup is closed",
+      "does not displays the graph indicator if the popup is closed",
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -156,14 +160,16 @@ void main() {
           buildResult: buildResult,
         ));
 
-        final graphIndicatorFinder = find.byType(PositiveGraphIndicator);
+        final graphIndicatorFinder = find.byWidgetPredicate(
+          (widget) => widget is GraphIndicator,
+        );
 
         expect(graphIndicatorFinder, findsNothing);
       },
     );
 
     testWidgets(
-      "displays the positive graph indicator if the build status equals to successful and the popup is opened",
+      "displays the positive graph indicator if the build status is successful and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -174,9 +180,7 @@ void main() {
           buildResult: buildResult,
         ));
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        mouseRegion.onEnter(const PointerEnterEvent());
-        await tester.pumpAndSettle();
+        await _hoverBar(tester);
 
         final graphIndicatorFinder = find.byType(PositiveGraphIndicator);
 
@@ -185,7 +189,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the negative graph indicator if the build status equals to failed and the popup is opened",
+      "displays the negative graph indicator if the build status is failed and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -196,9 +200,7 @@ void main() {
           buildResult: buildResult,
         ));
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        mouseRegion.onEnter(const PointerEnterEvent());
-        await tester.pumpAndSettle();
+        await _hoverBar(tester);
 
         final graphIndicatorFinder = find.byType(NegativeGraphIndicator);
 
@@ -207,7 +209,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the neutral graph indicator if the build status equals to cancelled and the popup is opened",
+      "displays the neutral graph indicator if the build status is cancelled and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -218,9 +220,7 @@ void main() {
           buildResult: buildResult,
         ));
 
-        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
-        mouseRegion.onEnter(const PointerEnterEvent());
-        await tester.pumpAndSettle();
+        await _hoverBar(tester);
 
         final graphIndicatorFinder = find.byType(NeutralGraphIndicator);
 

@@ -21,12 +21,11 @@ void main() {
     const themeStrategy = BuildResultBarAppearanceStrategy();
 
     test(
-      ".getWidgetAppearance() returns the neutral style if the given build status is null",
+      ".getWidgetAppearance() returns null if the given build status is null",
       () {
-        final style = theme.metricsColoredBarTheme.attentionLevel.neutral;
         final actualStyle = themeStrategy.getWidgetAppearance(theme, null);
 
-        expect(actualStyle, equals(style));
+        expect(actualStyle, isNull);
       },
     );
 

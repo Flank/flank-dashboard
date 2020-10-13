@@ -185,18 +185,18 @@ void main() {
     testWidgets(
       "closes a popup after tap outside of the popup content if the closeOnTapOutside is true",
       (tester) async {
-        const defaultSize = 20.0;
-
         await tester.pumpWidget(_BasePopupTestbed(
-          popupConstraints: const BoxConstraints(maxHeight: defaultSize),
           popup: testPopupWidget,
           triggerBuilder: _defaultTriggerBuilder,
+          offsetBuilder: (size) {
+            return Offset(size.width, size.height);
+          },
           closeOnTapOutside: true,
         ));
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
-        await tester.tapAt(const Offset(defaultSize, defaultSize));
+        await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
 
         expect(popupWidgetFinder, findsNothing);
@@ -204,24 +204,47 @@ void main() {
     );
 
     testWidgets(
-      "does not close a popup, after tap outside of the popup content if the closeOnTapOutside is false",
+      "does not close a popup after tap outside of the popup content if the closeOnTapOutside is false",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(
             popup: testPopupWidget,
             triggerBuilder: _defaultTriggerBuilder,
+            offsetBuilder: (size) {
+              return Offset(size.width, size.height);
+            },
             closeOnTapOutside: false,
           ),
         );
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
-        await tester.tapAt(Offset.infinite);
-        await tester.pump();
+        await tester.tap(triggerWidgetFinder);
+        await tester.pumpAndSettle();
 
         expect(popupWidgetFinder, findsOneWidget);
       },
     );
+
+    testWidgets("opens only one popup", (WidgetTester tester) async {
+      await tester.pumpWidget(
+        _BasePopupTestbed(
+          popup: testPopupWidget,
+          triggerBuilder: _defaultTriggerBuilder,
+          offsetBuilder: (size) {
+            return Offset(size.width, size.height);
+          },
+          closeOnTapOutside: false,
+        ),
+      );
+
+      await tester.tap(triggerWidgetFinder);
+      await tester.tap(triggerWidgetFinder);
+      await tester.tap(triggerWidgetFinder);
+      await tester.pumpAndSettle();
+
+      expect(popupWidgetFinder, findsOneWidget);
+    });
 
     testWidgets(
       "closes a popup after pushing a new route",
@@ -305,12 +328,10 @@ class _BasePopupTestbed extends StatelessWidget {
   /// A callback that is called to build the trigger widget.
   final TriggerBuilder triggerBuilder;
 
-  /// Defines if the [popup] should close itself when user taps on space
-  /// outside the visible container of the [popup].
+  /// A [popup] behavior on tap outside to apply to the widget under tests.
   final bool closeOnTapOutside;
 
-  /// Indicates whether the [popup] should prevent other [MouseRegion]s
-  /// visually behind it from detecting the pointer.
+  /// A popup opaqueness to apply to the widget under tests.
   final bool popupOpaque;
 
   /// Creates the a new base popup testbed.

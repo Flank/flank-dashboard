@@ -25,22 +25,21 @@ void main() {
         subtitleTextStyle: subtitleTextStyle,
       ),
     );
+
     final buildResultPopupViewModel = BuildResultPopupViewModel(
       duration: const Duration(seconds: 30000),
       date: DateTime.now(),
     );
-    final expectedTitle = DateFormat('EEEE, MMM d').format(
+    final titleFinder = find.text(DateFormat('EEEE, MMM d').format(
       buildResultPopupViewModel.date,
-    );
-    final expectedSubTitle = CommonStrings.duration(
+    ));
+    final subtitleFinder = find.text(CommonStrings.duration(
       buildResultPopupViewModel.duration,
-    );
-    final titleFinder = find.text(expectedTitle);
-    final subTitleFinder = find.text(expectedSubTitle);
+    ));
 
     testWidgets(
       "throws an AssertionError if the given build result popup view model is null",
-      (WidgetTester tester) async {
+      (tester) async {
         await tester.pumpWidget(
           const _BuildResultPopupCardTestbed(
             buildResultPopupViewModel: null,
@@ -52,7 +51,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the title as a date of view model",
+      "displays the title with the date from the given view model",
       (tester) async {
         await tester.pumpWidget(_BuildResultPopupCardTestbed(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -63,18 +62,18 @@ void main() {
     );
 
     testWidgets(
-      "displays the subtitle as a duration of view model",
+      "displays the subtitle with the duration from the given view model",
       (tester) async {
         await tester.pumpWidget(_BuildResultPopupCardTestbed(
           buildResultPopupViewModel: buildResultPopupViewModel,
         ));
 
-        expect(subTitleFinder, findsOneWidget);
+        expect(subtitleFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "applies the color from the metrics theme to the card",
+      "applies the color to the card from the metrics theme to the card",
       (tester) async {
         await tester.pumpWidget(_BuildResultPopupCardTestbed(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -130,7 +129,7 @@ void main() {
           themeData: themeData,
         ));
 
-        final textWidget = tester.widget<Text>(subTitleFinder);
+        final textWidget = tester.widget<Text>(subtitleFinder);
 
         expect(textWidget.style, equals(subtitleTextStyle));
       },

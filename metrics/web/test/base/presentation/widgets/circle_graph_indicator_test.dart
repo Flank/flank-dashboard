@@ -8,9 +8,12 @@ void main() {
     const outerDiameter = 13.0;
     const defaultColor = Colors.red;
 
-    final containerFinder = find.byType(Container);
-    final outerCircleFinder = containerFinder.first;
-    final innerCircleFinder = containerFinder.last;
+    final outerCircleFinder = find.byWidgetPredicate(
+      (widget) => widget is Container && widget.child is Container,
+    );
+    final innerCircleFinder = find.byWidgetPredicate(
+      (widget) => widget is Container && widget.child == null,
+    );
 
     testWidgets(
       "throws an AssertionError if the given outer diameter is null",
@@ -39,7 +42,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given inner diameter is greater then the outer",
+      "throws an AssertionError if the given inner diameter is greater than the outer",
       (tester) async {
         await tester.pumpWidget(
           const _CircleGraphIndicatorTestbed(
@@ -53,8 +56,24 @@ void main() {
     );
 
     testWidgets(
+      "throws an AssertionError if the given inner diameter is equal to the outer",
+      (tester) async {
+        await tester.pumpWidget(
+          const _CircleGraphIndicatorTestbed(
+            innerDiameter: 7.0,
+            outerDiameter: 7.0,
+          ),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
       "applies the given diameter to the outer circle",
       (tester) async {
+        const circleBounds = Size.square(outerDiameter);
+
         await tester.pumpWidget(
           const _CircleGraphIndicatorTestbed(
             outerDiameter: outerDiameter,
@@ -62,17 +81,17 @@ void main() {
         );
 
         final circle = tester.widget<Container>(outerCircleFinder);
+        final circleSizeBounds = circle.constraints.biggest;
 
-        expect(circle.constraints.minHeight, equals(outerDiameter));
-        expect(circle.constraints.maxHeight, equals(outerDiameter));
-        expect(circle.constraints.minWidth, equals(outerDiameter));
-        expect(circle.constraints.maxWidth, equals(outerDiameter));
+        expect(circleSizeBounds, equals(circleBounds));
       },
     );
 
     testWidgets(
       "applies the given diameter to the inner circle",
       (tester) async {
+        const circleBounds = Size.square(innerDiameter);
+
         await tester.pumpWidget(
           const _CircleGraphIndicatorTestbed(
             innerDiameter: innerDiameter,
@@ -80,41 +99,33 @@ void main() {
         );
 
         final circle = tester.widget<Container>(innerCircleFinder);
+        final circleSizeBounds = circle.constraints.biggest;
 
-        expect(circle.constraints.minHeight, equals(innerDiameter));
-        expect(circle.constraints.maxHeight, equals(innerDiameter));
-        expect(circle.constraints.minWidth, equals(innerDiameter));
-        expect(circle.constraints.maxWidth, equals(innerDiameter));
+        expect(circleSizeBounds, equals(circleBounds));
       },
     );
 
-    testWidgets(
-      "displays the given outer color",
-      (tester) async {
-        await tester.pumpWidget(
-          const _CircleGraphIndicatorTestbed(outerColor: defaultColor),
-        );
+    testWidgets("displays the given outer color", (tester) async {
+      await tester.pumpWidget(
+        const _CircleGraphIndicatorTestbed(outerColor: defaultColor),
+      );
 
-        final circle = tester.widget<Container>(outerCircleFinder);
-        final decoration = circle.decoration as BoxDecoration;
+      final circle = tester.widget<Container>(outerCircleFinder);
+      final decoration = circle.decoration as BoxDecoration;
 
-        expect(decoration.color, equals(defaultColor));
-      },
-    );
+      expect(decoration.color, equals(defaultColor));
+    });
 
-    testWidgets(
-      "displays the given inner color",
-      (tester) async {
-        await tester.pumpWidget(
-          const _CircleGraphIndicatorTestbed(innerColor: defaultColor),
-        );
+    testWidgets("displays the given inner color", (tester) async {
+      await tester.pumpWidget(
+        const _CircleGraphIndicatorTestbed(innerColor: defaultColor),
+      );
 
-        final circle = tester.widget<Container>(innerCircleFinder);
-        final decoration = circle.decoration as BoxDecoration;
+      final circle = tester.widget<Container>(innerCircleFinder);
+      final decoration = circle.decoration as BoxDecoration;
 
-        expect(decoration.color, equals(defaultColor));
-      },
-    );
+      expect(decoration.color, equals(defaultColor));
+    });
   });
 }
 

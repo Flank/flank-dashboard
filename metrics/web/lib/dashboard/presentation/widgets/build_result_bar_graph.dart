@@ -79,10 +79,10 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
           ),
         ),
         BarGraph(
+          graphPadding: graphPadding,
           data: _barsData.map((data) {
             return data.buildResultPopupViewModel.duration.inMilliseconds;
           }).toList(),
-          graphPadding: graphPadding,
           barBuilder: (index, height) {
             final data = _barsData[index];
 

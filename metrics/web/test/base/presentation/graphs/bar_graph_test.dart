@@ -22,8 +22,15 @@ void main() {
       (WidgetTester tester) async {
         await tester.pumpWidget(const _BarGraphTestbed(data: null));
 
+        final graphFinder = find.descendant(
+          of: find.byWidgetPredicate((widget) => widget is BarGraph),
+          matching: find.byWidgetPredicate(
+            (widget) => widget is Row && widget.children.isEmpty,
+          ),
+        );
+
         expect(tester.takeException(), isNull);
-        expect(find.byType(_BarGraphTestbed), findsOneWidget);
+        expect(graphFinder, findsOneWidget);
       },
     );
 
@@ -61,17 +68,11 @@ void main() {
         await tester.pumpWidget(const _BarGraphTestbed(data: graphBarTestData));
 
         final barsRow = tester.widget<Row>(find.byType(Row));
+        final bars = barsRow.children;
+        final values = bars.cast<_GraphTestBar>().map((bar) => bar.value);
 
-        final rowWidgets = barsRow.children;
-
-        expect(rowWidgets.length, graphBarTestData.length);
-
-        for (int i = 0; i < rowWidgets.length; i++) {
-          final rowWidget = rowWidgets[i];
-          final bar = tester.widget<_GraphTestBar>(find.byWidget(rowWidget));
-
-          expect(bar.value, graphBarTestData[i]);
-        }
+        expect(bars, hasLength(equals(graphBarTestData.length)));
+        expect(values, equals(graphBarTestData));
       },
     );
 
@@ -125,7 +126,7 @@ class _BarGraphTestbed extends StatelessWidget {
   /// A default bar builder used in tests.
   static Widget createBar(List<int> data, int index, double height) {
     return _GraphTestBar(
-      value: data[index].toInt(),
+      value: data[index],
       height: height,
     );
   }

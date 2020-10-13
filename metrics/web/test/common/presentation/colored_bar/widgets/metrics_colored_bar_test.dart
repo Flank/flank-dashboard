@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
+import 'package:metrics/common/presentation/colored_bar/strategy/metrics_colored_bar_appearance_strategy.dart';
 import 'package:metrics/common/presentation/colored_bar/theme/attention_level/metrics_colored_bar_attention_level.dart';
 import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
 import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
-import 'package:metrics_core/metrics_core.dart';
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
 
@@ -56,7 +55,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates the given height to the colored bar",
+      "applies the given height to the colored bar",
       (WidgetTester tester) async {
         const height = 10.0;
         await tester.pumpWidget(
@@ -72,7 +71,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a background color from the metrics colored bar style when the metrics colored bar is hovered",
+      "applies a background color from the style returned from strategy when the metrics colored bar is hovered",
       (WidgetTester tester) async {
         final theme = metricsTheme.metricsColoredBarTheme;
         final expectedColor = theme.attentionLevel.neutral.backgroundColor;
@@ -91,7 +90,7 @@ void main() {
     );
 
     testWidgets(
-      "does not apply background color if the metrics colored bar is not hovered",
+      "does not apply background color from the style returned from strategy if the metrics colored bar is not hovered",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _MetricsColoredBarTestbed(
@@ -107,7 +106,7 @@ void main() {
     );
 
     testWidgets(
-      "applies a color from the metrics colored bar style to the colored bar",
+      "applies a color from the style returned from strategy to the colored bar",
       (WidgetTester tester) async {
         final theme = metricsTheme.metricsColoredBarTheme;
         final expectedColor = theme.attentionLevel.neutral.color;
@@ -143,13 +142,27 @@ void main() {
   });
 }
 
+/// A stub implementation for the [MetricsColoredBarAppearanceStrategy] to use
+/// in tests. Always returns the [MetricsColoredBarAttentionLevel.neutral]
+/// style from the theme.
+class _MetricsColoredBarAppearanceStrategyStub
+    extends MetricsColoredBarAppearanceStrategy<int> {
+  /// Creates a new instance of the [_MetricsColoredBarAppearanceStrategyStub].
+  const _MetricsColoredBarAppearanceStrategyStub();
+
+  @override
+  MetricsColoredBarStyle getWidgetAppearance(MetricsThemeData themeData, __) {
+    return themeData.metricsColoredBarTheme.attentionLevel.neutral;
+  }
+}
+
 /// A testbed widget, used to test the [MetricsColoredBar] widget.
 class _MetricsColoredBarTestbed extends StatelessWidget {
   /// An appearance strategy to apply to this bar.
-  final BuildResultBarAppearanceStrategy strategy;
+  final MetricsColoredBarAppearanceStrategy<int> strategy;
 
   /// A value to display by this bar.
-  final BuildStatus buildStatus;
+  final int value;
 
   /// A height of this bar.
   final double height;
@@ -163,16 +176,16 @@ class _MetricsColoredBarTestbed extends StatelessWidget {
   /// Creates an instance of the [_GraphIndicatorTestbed].
   ///
   /// The [theme] defaults to an empty [MetricsThemeData] instance.
-  /// The [strategy] defaults to an empty
-  /// [BuildResultBarAppearanceStrategy] instance.
+  /// The [strategy] defaults to the
+  /// [_FakeMetricsColoredBarAppearanceStrategy] instance.
   /// The [isHovered] defaults to a `false`.
-  /// The [buildStatus] defaults to a [BuildStatus.cancelled].
+  /// The [value] defaults to `1`.
   const _MetricsColoredBarTestbed({
     Key key,
     this.theme = const MetricsThemeData(),
-    this.strategy = const BuildResultBarAppearanceStrategy(),
+    this.strategy = const _MetricsColoredBarAppearanceStrategyStub(),
     this.isHovered = false,
-    this.buildStatus = BuildStatus.cancelled,
+    this.value = 1,
     this.height,
   }) : super(key: key);
 
@@ -180,11 +193,11 @@ class _MetricsColoredBarTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       metricsThemeData: theme,
-      body: MetricsColoredBar<BuildStatus>(
+      body: MetricsColoredBar<int>(
         strategy: strategy,
         height: height,
         isHovered: isHovered,
-        value: buildStatus,
+        value: value,
       ),
     );
   }

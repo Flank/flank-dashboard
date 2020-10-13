@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/graph_indicator/theme/attention_leve
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/graph_indicator.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
@@ -24,6 +25,16 @@ void main() {
 
     final circleIndicatorFinder = find.byType(CircleGraphIndicator);
 
+    CircleGraphIndicator _findCircleIndicator(WidgetTester tester) {
+      return tester.widget<CircleGraphIndicator>(circleIndicatorFinder);
+    }
+
+    testWidgets("displays the circle graph indicator", (tester) async {
+      await tester.pumpWidget(const _GraphIndicatorTestbed());
+
+      expect(circleIndicatorFinder, findsOneWidget);
+    });
+
     testWidgets(
       "applies an inner color to the graph indicator from the metrics theme",
       (tester) async {
@@ -34,9 +45,7 @@ void main() {
           const _GraphIndicatorTestbed(metricsThemeData: metricsThemeData),
         );
 
-        final circleIndicator = tester.widget<CircleGraphIndicator>(
-          circleIndicatorFinder,
-        );
+        final circleIndicator = _findCircleIndicator(tester);
         final innerColor = circleIndicator.innerColor;
 
         expect(innerColor, equals(expectedInnerColor));
@@ -53,12 +62,36 @@ void main() {
           const _GraphIndicatorTestbed(metricsThemeData: metricsThemeData),
         );
 
-        final circleIndicator = tester.widget<CircleGraphIndicator>(
-          circleIndicatorFinder,
-        );
+        final circleIndicator = _findCircleIndicator(tester);
         final outerColor = circleIndicator.outerColor;
 
         expect(outerColor, equals(expectedOuterColor));
+      },
+    );
+
+    testWidgets(
+      "applies the outer diameter from the dimensions config to the circle indicator",
+      (tester) async {
+        const expectedDiameter = DimensionsConfig.graphIndicatorOuterDiameter;
+        await tester.pumpWidget(const _GraphIndicatorTestbed());
+
+        final circleIndicator = _findCircleIndicator(tester);
+        final diameter = circleIndicator.outerDiameter;
+
+        expect(diameter, equals(expectedDiameter));
+      },
+    );
+
+    testWidgets(
+      "applies the inner diameter from the dimensions config to the circle indicator",
+      (tester) async {
+        const expectedDiameter = DimensionsConfig.graphIndicatorInnerDiameter;
+        await tester.pumpWidget(const _GraphIndicatorTestbed());
+
+        final circleIndicator = _findCircleIndicator(tester);
+        final diameter = circleIndicator.innerDiameter;
+
+        expect(diameter, equals(expectedDiameter));
       },
     );
   });
@@ -81,16 +114,16 @@ class _GraphIndicatorTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       metricsThemeData: metricsThemeData,
-      body: const _GraphIndicatorStub(),
+      body: const _GraphIndicatorFake(),
     );
   }
 }
 
-/// A stub implementation of the [GraphIndicator] widget used for testing.
+/// A fake implementation of the [GraphIndicator] widget used for testing.
 /// Applies the [GraphIndicatorAttentionLevel.positive] graph indicator style.
-class _GraphIndicatorStub extends GraphIndicator {
-  /// Creates an instance of the [_GraphIndicatorStub].
-  const _GraphIndicatorStub({Key key}) : super(key: key);
+class _GraphIndicatorFake extends GraphIndicator {
+  /// Creates an instance of the [_GraphIndicatorFake].
+  const _GraphIndicatorFake({Key key}) : super(key: key);
 
   @override
   GraphIndicatorStyle selectStyle(GraphIndicatorAttentionLevel attentionLevel) {
