@@ -174,8 +174,6 @@ class AuthNotifier extends ChangeNotifier {
       ));
     } on AuthenticationException catch (exception) {
       _handleAuthErrorMessage(exception.code);
-    } finally {
-      notifyListeners();
     }
   }
 
@@ -192,8 +190,6 @@ class AuthNotifier extends ChangeNotifier {
       await _googleSignInUseCase();
     } on AuthenticationException catch (exception) {
       _handleAuthErrorMessage(exception.code);
-    } finally {
-      notifyListeners();
     }
   }
 
@@ -291,12 +287,11 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Handles an [error] occurred in user profile stream.
   void _userProfileErrorHandler(error) {
-    _isLoading = false;
-
     if (error is PersistentStoreException) {
       _userProfileErrorMessage = PersistentStoreErrorMessage(error.code);
     }
 
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -311,6 +306,10 @@ class AuthNotifier extends ChangeNotifier {
     } else {
       _authErrorMessage = _errorMessage;
     }
+
+    _isLoading = false;
+
+    notifyListeners();
   }
 
   /// Resets the user profile saving error message.

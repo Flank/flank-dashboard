@@ -498,14 +498,37 @@ void main() {
     });
 
     test(".signInWithGoogle() delegates to google sign in use case", () async {
+      final authNotifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        googleSignInUseCase,
+        signOutUseCase,
+        receiveUserProfileUpdates,
+        createUserProfileUseCase,
+        updateUserProfileUseCase,
+      );
+
       await authNotifier.signInWithGoogle();
+
+      authNotifier.notifyListeners();
 
       verify(googleSignInUseCase()).called(equals(1));
     });
 
     test(".signInWithGoogle() does nothing if isLoading is true", () {
+      final authNotifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        googleSignInUseCase,
+        signOutUseCase,
+        receiveUserProfileUpdates,
+        createUserProfileUseCase,
+        updateUserProfileUseCase,
+      );
+
       authNotifier.signInWithEmailAndPassword(email, password);
       authNotifier.signInWithGoogle();
+      authNotifier.notifyListeners();
 
       verifyNever(googleSignInUseCase());
     });
@@ -513,6 +536,16 @@ void main() {
     test(
       ".authErrorMessage is populated when the auth error occurred during the sign-in process",
       () async {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
         when(signInUseCase.call(any))
             .thenAnswer((_) => Future.error(authException));
 
@@ -525,10 +558,21 @@ void main() {
     test(
       ".emailErrorMessage is populated when the email-related error occurred during the sign-in process",
       () async {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
         when(signInUseCase.call(any))
             .thenAnswer((_) => Future.error(emailAuthException));
 
         await authNotifier.signInWithEmailAndPassword(email, password);
+        authNotifier.notifyListeners();
 
         expect(authNotifier.emailErrorMessage, isNotNull);
       },
@@ -537,10 +581,21 @@ void main() {
     test(
       ".passwordErrorMessage is populated when the password-related error occurred during the sign-in process",
       () async {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
         when(signInUseCase.call(any))
             .thenAnswer((_) => Future.error(passwordAuthException));
 
         await authNotifier.signInWithEmailAndPassword(email, password);
+        authNotifier.notifyListeners();
 
         expect(authNotifier.passwordErrorMessage, isNotNull);
       },
@@ -549,10 +604,21 @@ void main() {
     test(
       ".authErrorMessage is populated when the auth error occurred during the google sign-in process",
       () async {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
         when(googleSignInUseCase.call())
             .thenAnswer((_) => Future.error(authException));
 
         await authNotifier.signInWithGoogle();
+        authNotifier.notifyListeners();
 
         expect(authNotifier.authErrorMessage, isNotNull);
       },
@@ -561,6 +627,16 @@ void main() {
     test(
       ".signInWithEmailAndPassword() clears the authentication error message on a successful sign in",
       () async {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
         when(signInUseCase.call(invalidCredentials))
             .thenAnswer((_) => Future.error(authException));
 
@@ -569,9 +645,13 @@ void main() {
           invalidPassword,
         );
 
+        authNotifier.notifyListeners();
+
         expect(authNotifier.authErrorMessage, isNotNull);
 
         await authNotifier.signInWithEmailAndPassword(email, password);
+
+        authNotifier.notifyListeners();
 
         expect(authNotifier.authErrorMessage, isNull);
       },
@@ -580,6 +660,16 @@ void main() {
     test(
       ".signInWithEmailAndPassword() clears the authentication email error message on a successful sign in",
       () async {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
         when(signInUseCase.call(invalidCredentials))
             .thenAnswer((_) => Future.error(emailAuthException));
 
@@ -588,9 +678,13 @@ void main() {
           invalidPassword,
         );
 
+        authNotifier.notifyListeners();
+
         expect(authNotifier.emailErrorMessage, isNotNull);
 
         await authNotifier.signInWithEmailAndPassword(email, password);
+
+        authNotifier.notifyListeners();
 
         expect(authNotifier.emailErrorMessage, isNull);
       },
@@ -599,6 +693,16 @@ void main() {
     test(
       ".signInWithEmailAndPassword() clears the authentication password error message on a successful sign in",
       () async {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
         when(signInUseCase.call(invalidCredentials))
             .thenAnswer((_) => Future.error(passwordAuthException));
 
@@ -607,9 +711,13 @@ void main() {
           invalidPassword,
         );
 
+        authNotifier.notifyListeners();
+
         expect(authNotifier.passwordErrorMessage, isNotNull);
 
         await authNotifier.signInWithEmailAndPassword(email, password);
+
+        authNotifier.notifyListeners();
 
         expect(authNotifier.passwordErrorMessage, isNull);
       },
@@ -618,16 +726,30 @@ void main() {
     test(
       ".signInWithGoogle() clears the authentication error message on a successful sign in",
       () async {
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+        );
+
         when(googleSignInUseCase.call())
             .thenAnswer((_) => Future.error(authException));
 
         await authNotifier.signInWithGoogle();
+
+        authNotifier.notifyListeners();
 
         expect(authNotifier.authErrorMessage, isNotNull);
 
         when(googleSignInUseCase.call()).thenAnswer((_) => null);
 
         await authNotifier.signInWithGoogle();
+
+        authNotifier.notifyListeners();
 
         expect(authNotifier.authErrorMessage, isNull);
       },
@@ -641,31 +763,6 @@ void main() {
         verify(updateUserProfileUseCase(any)).called(1);
       },
     );
-
-    // test(
-    //   ".updateUserProfile() does not call the use case if the given user profile is the same as in the notifier",
-    //   () async {
-    //     final updatedUserProfile = UserProfileModel(
-    //       id: userProfile.id,
-    //       selectedTheme: userProfile.selectedTheme,
-    //     );
-
-    //     final streamController = StreamController<UserProfile>();
-
-    //     when(receiveUserProfileUpdates(any)).thenAnswer(
-    //       (_) => streamController.stream,
-    //     );
-
-    //     authNotifier.addListener(() async {
-    //       await authNotifier.updateUserProfile(updatedUserProfile);
-
-    //       verifyNever(updateUserProfileUseCase(any));
-
-    //     });
-    //     streamController.add(userProfile);
-
-    //   },
-    // );
 
     test(
       ".updateUserProfile() does not call the use case if the given user profile is null",
@@ -719,6 +816,29 @@ void main() {
           authNotifier.userProfileSavingErrorMessage,
           isNull,
         );
+      },
+    );
+
+    test(
+      ".updateUserProfile() does not call the use case if the given user profile is the same as in the notifier",
+      () async {
+        final updatedUserProfile = UserProfileModel(
+          id: userProfile.id,
+          selectedTheme: userProfile.selectedTheme,
+        );
+
+        final streamController = StreamController<UserProfile>();
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => streamController.stream,
+        );
+
+        authNotifier.addListener(() async {
+          await authNotifier.updateUserProfile(updatedUserProfile);
+
+          verifyNever(updateUserProfileUseCase(any));
+        });
+        streamController.add(userProfile);
       },
     );
 
