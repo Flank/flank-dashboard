@@ -239,6 +239,15 @@ void main() {
     test(
       ".subscribeToAuthenticationUpdates() subscribes to a user profile updates stream",
       () {
+        final streamController = StreamController<UserProfile>();
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => streamController.stream,
+        );
+
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
           signInUseCase,
@@ -247,14 +256,6 @@ void main() {
           receiveUserProfileUpdates,
           createUserProfileUseCase,
           updateUserProfileUseCase,
-        );
-        final streamController = StreamController<UserProfile>();
-
-        when(receiveAuthUpdates(any)).thenAnswer(
-          (_) => Stream.value(user),
-        );
-        when(receiveUserProfileUpdates(any)).thenAnswer(
-          (_) => streamController.stream,
         );
 
         final listener = expectAsyncUntil0(
@@ -271,15 +272,6 @@ void main() {
     test(
       ".subscribeToAuthenticationUpdates() creates a user profile model once receiving the user profile",
       () {
-        final authNotifier = AuthNotifier(
-          receiveAuthUpdates,
-          signInUseCase,
-          googleSignInUseCase,
-          signOutUseCase,
-          receiveUserProfileUpdates,
-          createUserProfileUseCase,
-          updateUserProfileUseCase,
-        );
         final streamController = StreamController<UserProfile>();
         final userProfile = UserProfile(
           id: userProfileModel.id,
@@ -291,6 +283,16 @@ void main() {
         );
         when(receiveUserProfileUpdates(any)).thenAnswer(
           (_) => streamController.stream,
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
         );
 
         authNotifier.subscribeToAuthenticationUpdates();
@@ -308,10 +310,20 @@ void main() {
     );
 
     test(
-      ".subscribeToAuthenticationUpdates() delegates to the sign out use case once receiving a persistent store exception",
+      ".subscribeToAuthenticationUpdates() delegates to the sign out use case once receiving an error creating user profile",
       () async {
         const errorCode = PersistentStoreErrorCode.unknown;
         const exception = PersistentStoreException(code: errorCode);
+
+        when(receiveAuthUpdates(any)).thenAnswer(
+          (_) => Stream.value(user),
+        );
+
+        when(receiveUserProfileUpdates(any)).thenAnswer(
+          (_) => Stream.value(null),
+        );
+
+        when(createUserProfileUseCase(any)).thenThrow(exception);
 
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
@@ -325,16 +337,6 @@ void main() {
 
         await authNotifier.updateUserProfile(userProfileModel);
 
-        when(receiveAuthUpdates(any)).thenAnswer(
-          (_) => Stream.value(user),
-        );
-
-        when(receiveUserProfileUpdates(any)).thenAnswer(
-          (_) => Stream.value(null),
-        );
-
-        when(createUserProfileUseCase(any)).thenThrow(exception);
-
         authNotifier.subscribeToAuthenticationUpdates();
 
         await untilCalled(signOutUseCase());
@@ -346,16 +348,6 @@ void main() {
     test(
       ".subscribeToAuthenticationUpdates() set the is logged in status to true once receiving a user profile",
       () {
-        final authNotifier = AuthNotifier(
-          receiveAuthUpdates,
-          signInUseCase,
-          googleSignInUseCase,
-          signOutUseCase,
-          receiveUserProfileUpdates,
-          createUserProfileUseCase,
-          updateUserProfileUseCase,
-        );
-
         final userProfile = UserProfile(
           id: 'some id',
           selectedTheme: ThemeType.light,
@@ -367,6 +359,16 @@ void main() {
 
         when(receiveUserProfileUpdates(any)).thenAnswer(
           (_) => Stream.value(userProfile),
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
         );
 
         authNotifier.subscribeToAuthenticationUpdates();
@@ -386,16 +388,6 @@ void main() {
     test(
       ".userProfileErrorMessage provides an error description once receiving a persistent store exception",
       () async {
-        final authNotifier = AuthNotifier(
-          receiveAuthUpdates,
-          signInUseCase,
-          googleSignInUseCase,
-          signOutUseCase,
-          receiveUserProfileUpdates,
-          createUserProfileUseCase,
-          updateUserProfileUseCase,
-        );
-
         const errorCode = PersistentStoreErrorCode.unknown;
         final userProfileController = StreamController<UserProfile>();
         const errorMessage = PersistentStoreErrorMessage(errorCode);
@@ -406,6 +398,16 @@ void main() {
 
         when(receiveUserProfileUpdates(any)).thenAnswer(
           (_) => userProfileController.stream,
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
         );
 
         authNotifier.subscribeToAuthenticationUpdates();
@@ -424,6 +426,8 @@ void main() {
     );
 
     test(".isLoggedIn status is false after a user signs out", () async {
+      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(null));
+
       final authNotifier = AuthNotifier(
         receiveAuthUpdates,
         signInUseCase,
@@ -433,8 +437,6 @@ void main() {
         createUserProfileUseCase,
         updateUserProfileUseCase,
       );
-
-      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(null));
 
       authNotifier.subscribeToAuthenticationUpdates();
 
@@ -446,16 +448,6 @@ void main() {
     test(
       ".isLoading status is false until there is no user profile",
       () {
-        final authNotifier = AuthNotifier(
-          receiveAuthUpdates,
-          signInUseCase,
-          googleSignInUseCase,
-          signOutUseCase,
-          receiveUserProfileUpdates,
-          createUserProfileUseCase,
-          updateUserProfileUseCase,
-        );
-
         final userProfileController = StreamController<UserProfile>();
 
         when(receiveUserProfileUpdates(any)).thenAnswer(
@@ -464,6 +456,16 @@ void main() {
 
         when(receiveAuthUpdates(any)).thenAnswer(
           (_) => Stream.value(user),
+        );
+
+        final authNotifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
         );
 
         authNotifier.subscribeToAuthenticationUpdates();
@@ -569,6 +571,9 @@ void main() {
     test(
       ".authErrorMessage is populated when the auth error occurred during the sign-in process",
       () async {
+        when(signInUseCase.call(any))
+            .thenAnswer((_) => Future.error(authException));
+
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
           signInUseCase,
@@ -578,9 +583,6 @@ void main() {
           createUserProfileUseCase,
           updateUserProfileUseCase,
         );
-
-        when(signInUseCase.call(any))
-            .thenAnswer((_) => Future.error(authException));
 
         await authNotifier.signInWithEmailAndPassword(email, password);
 
@@ -591,6 +593,9 @@ void main() {
     test(
       ".emailErrorMessage is populated when the email-related error occurred during the sign-in process",
       () async {
+        when(signInUseCase.call(any))
+            .thenAnswer((_) => Future.error(emailAuthException));
+
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
           signInUseCase,
@@ -600,9 +605,6 @@ void main() {
           createUserProfileUseCase,
           updateUserProfileUseCase,
         );
-
-        when(signInUseCase.call(any))
-            .thenAnswer((_) => Future.error(emailAuthException));
 
         await authNotifier.signInWithEmailAndPassword(email, password);
 
@@ -613,6 +615,9 @@ void main() {
     test(
       ".passwordErrorMessage is populated when the password-related error occurred during the sign-in process",
       () async {
+        when(signInUseCase.call(any))
+            .thenAnswer((_) => Future.error(passwordAuthException));
+
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
           signInUseCase,
@@ -622,9 +627,6 @@ void main() {
           createUserProfileUseCase,
           updateUserProfileUseCase,
         );
-
-        when(signInUseCase.call(any))
-            .thenAnswer((_) => Future.error(passwordAuthException));
 
         await authNotifier.signInWithEmailAndPassword(email, password);
 
@@ -635,6 +637,9 @@ void main() {
     test(
       ".authErrorMessage is populated when the auth error occurred during the google sign-in process",
       () async {
+        when(googleSignInUseCase.call())
+            .thenAnswer((_) => Future.error(authException));
+
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
           signInUseCase,
@@ -644,9 +649,6 @@ void main() {
           createUserProfileUseCase,
           updateUserProfileUseCase,
         );
-
-        when(googleSignInUseCase.call())
-            .thenAnswer((_) => Future.error(authException));
 
         await authNotifier.signInWithGoogle();
 
@@ -657,6 +659,9 @@ void main() {
     test(
       ".signInWithEmailAndPassword() clears the authentication error message on a successful sign in",
       () async {
+        when(signInUseCase.call(invalidCredentials))
+            .thenAnswer((_) => Future.error(authException));
+
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
           signInUseCase,
@@ -666,9 +671,6 @@ void main() {
           createUserProfileUseCase,
           updateUserProfileUseCase,
         );
-
-        when(signInUseCase.call(invalidCredentials))
-            .thenAnswer((_) => Future.error(authException));
 
         await authNotifier.signInWithEmailAndPassword(
           invalidEmail,
@@ -686,6 +688,9 @@ void main() {
     test(
       ".signInWithEmailAndPassword() clears the authentication email error message on a successful sign in",
       () async {
+        when(signInUseCase.call(invalidCredentials))
+            .thenAnswer((_) => Future.error(emailAuthException));
+
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
           signInUseCase,
@@ -695,9 +700,6 @@ void main() {
           createUserProfileUseCase,
           updateUserProfileUseCase,
         );
-
-        when(signInUseCase.call(invalidCredentials))
-            .thenAnswer((_) => Future.error(emailAuthException));
 
         await authNotifier.signInWithEmailAndPassword(
           invalidEmail,
@@ -715,6 +717,9 @@ void main() {
     test(
       ".signInWithEmailAndPassword() clears the authentication password error message on a successful sign in",
       () async {
+        when(signInUseCase.call(invalidCredentials))
+            .thenAnswer((_) => Future.error(passwordAuthException));
+
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
           signInUseCase,
@@ -724,9 +729,6 @@ void main() {
           createUserProfileUseCase,
           updateUserProfileUseCase,
         );
-
-        when(signInUseCase.call(invalidCredentials))
-            .thenAnswer((_) => Future.error(passwordAuthException));
 
         await authNotifier.signInWithEmailAndPassword(
           invalidEmail,
@@ -744,6 +746,9 @@ void main() {
     test(
       ".signInWithGoogle() clears the authentication error message on a successful sign in",
       () async {
+        when(googleSignInUseCase.call())
+            .thenAnswer((_) => Future.error(authException));
+
         final authNotifier = AuthNotifier(
           receiveAuthUpdates,
           signInUseCase,
@@ -753,9 +758,6 @@ void main() {
           createUserProfileUseCase,
           updateUserProfileUseCase,
         );
-
-        when(googleSignInUseCase.call())
-            .thenAnswer((_) => Future.error(authException));
 
         await authNotifier.signInWithGoogle();
 
@@ -863,6 +865,13 @@ void main() {
     });
 
     test(".signOut() cancels the user profile subscription", () async {
+      final userProfileController = StreamController<UserProfile>();
+
+      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(user));
+      when(receiveUserProfileUpdates(any)).thenAnswer(
+        (_) => userProfileController.stream,
+      );
+
       final authNotifier = AuthNotifier(
         receiveAuthUpdates,
         signInUseCase,
@@ -871,13 +880,6 @@ void main() {
         receiveUserProfileUpdates,
         createUserProfileUseCase,
         updateUserProfileUseCase,
-      );
-
-      final userProfileController = StreamController<UserProfile>();
-
-      when(receiveAuthUpdates()).thenAnswer((_) => Stream.value(user));
-      when(receiveUserProfileUpdates(any)).thenAnswer(
-        (_) => userProfileController.stream,
       );
 
       authNotifier.subscribeToAuthenticationUpdates();

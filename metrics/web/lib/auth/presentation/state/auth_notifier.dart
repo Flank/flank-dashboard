@@ -281,8 +281,8 @@ class AuthNotifier extends ChangeNotifier {
         ),
       );
     } on PersistentStoreException catch (exception) {
-      _userProfileSavingErrorHandler(exception.code);
       await signOut();
+      _userProfileSavingErrorHandler(exception.code);
     }
   }
 
