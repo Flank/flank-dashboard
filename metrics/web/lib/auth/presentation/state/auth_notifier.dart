@@ -175,7 +175,6 @@ class AuthNotifier extends ChangeNotifier {
     } on AuthenticationException catch (exception) {
       _handleAuthErrorMessage(exception.code);
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
   }
@@ -194,7 +193,6 @@ class AuthNotifier extends ChangeNotifier {
     } on AuthenticationException catch (exception) {
       _handleAuthErrorMessage(exception.code);
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
   }
