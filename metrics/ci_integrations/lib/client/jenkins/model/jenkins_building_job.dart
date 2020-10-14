@@ -21,6 +21,7 @@ class JenkinsBuildingJob extends JenkinsJob {
   List<Object> get props =>
       super.props..addAll([firstBuild, lastBuild, builds]);
 
+  /// Creates a new instance of the [JenkinsBuildingJob].
   const JenkinsBuildingJob({
     String name,
     String fullName,

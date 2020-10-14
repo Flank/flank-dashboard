@@ -25,6 +25,7 @@ class JenkinsJob extends Equatable {
   @override
   List<Object> get props => [name, fullName, url];
 
+  /// Creates a new instance of the [JenkinsJob].
   const JenkinsJob({
     this.name,
     this.fullName,

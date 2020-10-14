@@ -13,6 +13,7 @@ class JenkinsMultiBranchJob extends JenkinsJob {
   @override
   List<Object> get props => super.props..add(jobs);
 
+  /// Creates a new instance of the [JenkinsMultiBranchJob].
   const JenkinsMultiBranchJob({
     String name,
     String fullName,

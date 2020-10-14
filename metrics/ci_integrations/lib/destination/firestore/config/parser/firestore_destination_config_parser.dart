@@ -4,6 +4,7 @@ import 'package:ci_integration/integration/interface/destination/config/parser/d
 /// A configuration parser for the Firestore destination integration.
 class FirestoreDestinationConfigParser
     implements DestinationConfigParser<FirestoreDestinationConfig> {
+  /// Creates a new instance of the [FirestoreDestinationConfigParser].
   const FirestoreDestinationConfigParser();
 
   @override

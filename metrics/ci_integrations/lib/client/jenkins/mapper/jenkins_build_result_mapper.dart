@@ -18,6 +18,7 @@ class JenkinsBuildResultMapper implements Mapper<String, JenkinsBuildResult> {
   /// A constant for the `UNSTABLE` result of Jenkins build.
   static const String unstable = 'UNSTABLE';
 
+  /// Creates a new instance of the [JenkinsBuildResultMapper].
   const JenkinsBuildResultMapper();
 
   @override

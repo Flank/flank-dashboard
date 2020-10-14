@@ -11,6 +11,7 @@ import 'package:ci_integration/util/authorization/authorization.dart';
 class JenkinsSourceClientFactory
     implements
         SourceClientFactory<JenkinsSourceConfig, JenkinsSourceClientAdapter> {
+  /// Creates a new instance of the [JenkinsSourceClientFactory].
   const JenkinsSourceClientFactory();
 
   @override

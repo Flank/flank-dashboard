@@ -33,6 +33,7 @@ class JenkinsBuild extends Equatable {
   List<Object> get props =>
       [number, duration, timestamp, result, url, artifacts];
 
+  /// Creates a new instance of the [JenkinsBuild].
   const JenkinsBuild({
     this.number,
     this.duration,

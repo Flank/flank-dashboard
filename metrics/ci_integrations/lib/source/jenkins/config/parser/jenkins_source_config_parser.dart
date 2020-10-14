@@ -4,6 +4,7 @@ import 'package:ci_integration/source/jenkins/config/model/jenkins_source_config
 /// A configuration parser for the Jenkins source integration.
 class JenkinsSourceConfigParser
     implements SourceConfigParser<JenkinsSourceConfig> {
+  /// Creates a new instance of the [JenkinsSourceConfigParser].
   const JenkinsSourceConfigParser();
 
   @override

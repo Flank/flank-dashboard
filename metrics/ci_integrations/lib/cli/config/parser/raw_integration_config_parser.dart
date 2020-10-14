@@ -7,6 +7,7 @@ class RawIntegrationConfigParser {
   /// The YAML parser used to convert YAML string to the [Map] instance.
   static const YamlMapParser _parser = YamlMapParser();
 
+  /// Creates a new instance of the [RawIntegrationConfigParser].
   const RawIntegrationConfigParser();
 
   /// Parses the given [configYaml] into the [RawIntegrationConfig] instance.
