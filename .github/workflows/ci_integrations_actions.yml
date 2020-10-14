@@ -29,7 +29,7 @@ jobs:
         working-directory: metrics/ci_integrations/
 
       - name: Dart analyze
-        run: dartanalyzer lib
+        run: dartanalyzer lib test bin
         working-directory: metrics/ci_integrations/
 
       - name: Run tests
