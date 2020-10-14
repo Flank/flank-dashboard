@@ -418,19 +418,19 @@ void main() {
       () async {
         const runConclusions = [
           RunConclusion.success,
+          RunConclusion.skipped,
           RunConclusion.cancelled,
           RunConclusion.failure,
           RunConclusion.neutral,
           RunConclusion.actionRequired,
           RunConclusion.timedOut,
-          RunConclusion.skipped,
           null,
         ];
 
         const expectedStatuses = [
           BuildStatus.successful,
           BuildStatus.cancelled,
-          BuildStatus.failed,
+          BuildStatus.cancelled,
           BuildStatus.failed,
           BuildStatus.failed,
           BuildStatus.failed,
@@ -774,19 +774,19 @@ void main() {
       () async {
         const runConclusions = [
           RunConclusion.success,
+          RunConclusion.skipped,
           RunConclusion.cancelled,
           RunConclusion.failure,
           RunConclusion.neutral,
           RunConclusion.actionRequired,
           RunConclusion.timedOut,
-          RunConclusion.skipped,
           null,
         ];
 
         const expectedStatuses = [
           BuildStatus.successful,
           BuildStatus.cancelled,
-          BuildStatus.failed,
+          BuildStatus.cancelled,
           BuildStatus.failed,
           BuildStatus.failed,
           BuildStatus.failed,

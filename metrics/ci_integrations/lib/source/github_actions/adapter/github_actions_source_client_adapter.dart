@@ -272,8 +272,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     switch (conclusion) {
       case RunConclusion.success:
         return BuildStatus.successful;
-      case RunConclusion.failure:
-        return BuildStatus.failed;
+      case RunConclusion.skipped:
+        return BuildStatus.cancelled;
       case RunConclusion.cancelled:
         return BuildStatus.cancelled;
       default:
