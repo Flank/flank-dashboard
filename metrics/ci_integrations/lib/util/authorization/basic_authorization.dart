@@ -10,6 +10,7 @@ part of authorization;
 /// print(authorization.toMap());
 /// ```
 class BasicAuthorization extends AuthorizationBase {
+  /// Creates a new instance of the [BasicAuthorization].
   BasicAuthorization(String username, String password)
       : super(
           HttpHeaders.authorizationHeader,

@@ -13,6 +13,7 @@ class JenkinsBuildArtifact extends Equatable {
   @override
   List<Object> get props => [fileName, relativePath];
 
+  /// Creates a new instance of the [JenkinsBuildArtifact].
   const JenkinsBuildArtifact({
     this.fileName,
     this.relativePath,

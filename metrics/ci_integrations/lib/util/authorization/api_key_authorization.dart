@@ -12,5 +12,6 @@ part of authorization;
 /// print(authorization.toMap());
 /// ```
 class ApiKeyAuthorization extends AuthorizationBase {
+  /// Creates a new instance of the [ApiKeyAuthorization].
   ApiKeyAuthorization(String key, String value) : super(key, value);
 }

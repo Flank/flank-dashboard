@@ -240,8 +240,10 @@ void main() {
 
 class _FirestoreMock extends Mock implements client.Firestore {}
 
+// ignore: must_be_immutable
 class _CollectionReferenceMock extends Mock implements CollectionReference {}
 
+// ignore: must_be_immutable
 class _DocumentReferenceMock extends Mock implements DocumentReference {}
 
 class _DocumentMock extends Mock implements Document {}

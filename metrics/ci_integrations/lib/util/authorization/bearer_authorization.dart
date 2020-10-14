@@ -10,6 +10,7 @@ part of authorization;
 /// print(authorization.toMap());
 /// ```
 class BearerAuthorization extends AuthorizationBase {
+  /// Creates a new instance of the [BearerAuthorization].
   BearerAuthorization(String token)
       : super(HttpHeaders.authorizationHeader, 'Bearer $token');
 }
