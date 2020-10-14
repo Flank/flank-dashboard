@@ -355,7 +355,6 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     for (int i = 0; i <= period; i++) {
       final sliceDate = currentDate.subtract(Duration(days: period - i));
 
-      print(sliceDate);
       final values = buildPerformancesMap[sliceDate];
 
       if (values == null || values.isEmpty) {
