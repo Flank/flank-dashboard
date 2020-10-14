@@ -414,6 +414,61 @@ void main() {
     );
 
     test(
+      ".fetchBuilds() maps fetched builds statuses according to specification",
+      () async {
+        const runConclusions = [
+          RunConclusion.success,
+          RunConclusion.cancelled,
+          RunConclusion.failure,
+          RunConclusion.neutral,
+          RunConclusion.actionRequired,
+          RunConclusion.timedOut,
+          RunConclusion.skipped,
+          null,
+        ];
+
+        const expectedStatuses = [
+          BuildStatus.successful,
+          BuildStatus.cancelled,
+          BuildStatus.failed,
+          BuildStatus.failed,
+          BuildStatus.failed,
+          BuildStatus.failed,
+          BuildStatus.failed,
+          BuildStatus.failed,
+        ];
+
+        final workflowRuns = <WorkflowRun>[];
+        final expected = <BuildData>[];
+
+        for (int i = 0;
+            i < runConclusions.length && i < expectedStatuses.length;
+            i++) {
+          workflowRuns.add(createWorkflowRun(
+            runNumber: i + 1,
+            conclusion: runConclusions[i],
+          ));
+
+          expected.add(createBuildData(
+            buildNumber: i + 1,
+            buildStatus: expectedStatuses[i],
+          ));
+        }
+
+        final runsPage = WorkflowRunsPage(values: workflowRuns);
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([defaultRunArtifactPage]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+
+        final result = adapter.fetchBuilds(defaultWorkflowIdentifier);
+
+        expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(
       ".fetchBuildsAfter() fetches all builds after the given one",
       () {
         final runsPage = WorkflowRunsPage(
@@ -578,6 +633,139 @@ void main() {
         );
 
         expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() throws a StateError if fetching an artifact fails for any of the given runs",
+      () {
+        final runsPage = WorkflowRunsPage(
+          values: createWorkflowRuns(runNumbers: [4, 3, 2, 1]),
+        );
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([defaultRunArtifactPage]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+        whenFetchRunArtifacts()
+            .thenAnswer((_) => responses.error<WorkflowRunArtifactsPage>());
+
+        final firstBuild = createBuildData(buildNumber: 1);
+        final result = adapter.fetchBuildsAfter(
+          defaultWorkflowIdentifier,
+          firstBuild,
+        );
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() throws a StateError if fetching a duration fails for any of the given runs",
+      () {
+        final runsPage = WorkflowRunsPage(
+          values: createWorkflowRuns(runNumbers: [4, 3, 2, 1]),
+        );
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([defaultRunArtifactPage]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+        whenFetchRunDuration()
+            .thenAnswer((_) => responses.error<WorkflowRunDuration>());
+
+        final firstBuild = createBuildData(buildNumber: 1);
+        final result = adapter.fetchBuildsAfter(
+          defaultWorkflowIdentifier,
+          firstBuild,
+        );
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() throws a StateError if downloading an artifact archive fails for any of the given runs",
+      () {
+        final runsPage = WorkflowRunsPage(
+          values: createWorkflowRuns(runNumbers: [4, 3, 2, 1]),
+        );
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([defaultRunArtifactPage]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+        whenDownloadRunArtifactZip()
+            .thenAnswer((_) => responses.error<Uint8List>());
+
+        final firstBuild = createBuildData(buildNumber: 1);
+        final result = adapter.fetchBuildsAfter(
+          defaultWorkflowIdentifier,
+          firstBuild,
+        );
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchBuilds() throws a StateError if fetching next artifacts page fails",
+      () {
+        final runsPage = WorkflowRunsPage(
+          values: createWorkflowRuns(runNumbers: [4, 3, 2, 1]),
+        );
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([
+          emptyArtifactsPage,
+          defaultRunArtifactPage,
+        ]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+        whenFetchNextRunArtifactsPage()
+            .thenAnswer((_) => responses.error<WorkflowRunArtifactsPage>());
+
+        final firstBuild = createBuildData(buildNumber: 1);
+        final result = adapter.fetchBuildsAfter(
+          defaultWorkflowIdentifier,
+          firstBuild,
+        );
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchBuilds() throws a StateError if fetching next artifacts page fails",
+      () {
+        final firstPage = WorkflowRunsPage(
+          page: 1,
+          nextPageUrl: defaultUrl,
+          values: createWorkflowRuns(runNumbers: [6, 5]),
+        );
+        final secondPage = WorkflowRunsPage(
+          page: 2,
+          nextPageUrl: defaultUrl,
+          values: createWorkflowRuns(runNumbers: [4, 3]),
+        );
+
+        responses.addRunsPages([firstPage, secondPage]);
+
+        responses.addRunArtifactsPages([
+          defaultRunArtifactPage,
+        ]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+        whenFetchNextRunsPage()
+            .thenAnswer((_) => responses.error<WorkflowRunsPage>());
+
+        final firstBuild = createBuildData(buildNumber: 1);
+        final result = adapter.fetchBuildsAfter(
+          defaultWorkflowIdentifier,
+          firstBuild,
+        );
+
+        expect(result, throwsStateError);
       },
     );
   });
