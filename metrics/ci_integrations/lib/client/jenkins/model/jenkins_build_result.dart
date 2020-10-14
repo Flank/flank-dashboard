@@ -1,11 +1,12 @@
-/// Enum that represents the jenkins build result code.
+/// Enum that represents the Jenkins build result.
 enum JenkinsBuildResult {
   /// Indicates that the build was manually aborted.
   aborted,
 
   /// Indicates that the module was not built.
-  /// This status code is used in a multi-stage build (like maven2)
-  /// where a problem in earlier stage prevented later stages from building.
+  ///
+  /// This status is used in a multi-stage build (like maven2)
+  /// where a problem in an earlier stage prevented later stages from building.
   notBuild,
 
   /// Indicates that the build had a fatal error.
