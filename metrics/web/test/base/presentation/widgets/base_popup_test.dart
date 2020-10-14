@@ -10,6 +10,10 @@ void main() {
     const testPopupWidget = Text('popup widget');
     final triggerWidgetFinder = find.byWidget(testTriggerWidget);
     final popupWidgetFinder = find.byWidget(testPopupWidget);
+    final constrainedBoxFinder = find.ancestor(
+      of: popupWidgetFinder,
+      matching: find.byType(ConstrainedBox),
+    );
 
     Widget _defaultTriggerBuilder(
       BuildContext context,
@@ -125,56 +129,35 @@ void main() {
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
 
-        final constrainedBox = tester.widget<ConstrainedBox>(find.ancestor(
-          of: popupWidgetFinder,
-          matching: find.byType(ConstrainedBox),
-        ));
-        final actualBoxConstraints = constrainedBox.constraints;
+        final box = tester.widget<ConstrainedBox>(constrainedBoxFinder);
+        final actualBoxConstraints = box.constraints;
 
         expect(actualBoxConstraints, equals(boxConstraints));
       },
     );
 
     testWidgets(
-      "closes a popup when tap outside of the popup if the closeOnTapOutside is true",
+      "delegates the given opaque to the mouse region",
       (WidgetTester tester) async {
+        const opaque = false;
+
         await tester.pumpWidget(
           _BasePopupTestbed(
+            popupOpaque: opaque,
             popup: testPopupWidget,
             triggerBuilder: _defaultTriggerBuilder,
-            closeOnTapOutside: true,
-            offsetBuilder: (Size childSize) {
-              return Offset(childSize.width, childSize.height);
-            },
           ),
         );
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
-        await tester.tap(triggerWidgetFinder);
-        await tester.pumpAndSettle();
 
-        expect(popupWidgetFinder, findsNothing);
-      },
-    );
+        final mouseRegion = tester.widget<MouseRegion>(find.ancestor(
+          of: popupWidgetFinder,
+          matching: find.byType(MouseRegion),
+        ));
 
-    testWidgets(
-      "does not close a popup when tap outside of the popup if the closeOnTapOutside is false",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          _BasePopupTestbed(
-            popup: testPopupWidget,
-            triggerBuilder: _defaultTriggerBuilder,
-            closeOnTapOutside: false,
-          ),
-        );
-
-        await tester.tap(triggerWidgetFinder);
-        await tester.pumpAndSettle();
-        await tester.tap(triggerWidgetFinder);
-        await tester.pump();
-
-        expect(popupWidgetFinder, findsOneWidget);
+        expect(mouseRegion.opaque, equals(opaque));
       },
     );
 
@@ -192,35 +175,76 @@ void main() {
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
 
-        final constrainedBox = tester.widget<ConstrainedBox>(find.ancestor(
-          of: popupWidgetFinder,
-          matching: find.byType(ConstrainedBox),
-        ));
-        final actualBoxConstraints = constrainedBox.constraints;
+        final box = tester.widget<ConstrainedBox>(constrainedBoxFinder);
+        final actualBoxConstraints = box.constraints;
 
         expect(actualBoxConstraints, isNotNull);
       },
     );
 
     testWidgets(
-      "closes a popup after tap outside of the popup content",
+      "closes a popup after tap outside of the popup content if the closeOnTapOutside is true",
       (tester) async {
-        const defaultSize = 20.0;
-
         await tester.pumpWidget(_BasePopupTestbed(
-          popupConstraints: const BoxConstraints(maxHeight: defaultSize),
           popup: testPopupWidget,
           triggerBuilder: _defaultTriggerBuilder,
+          offsetBuilder: (size) {
+            return Offset(size.width, size.height);
+          },
+          closeOnTapOutside: true,
         ));
 
         await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
-        await tester.tapAt(const Offset(defaultSize, defaultSize));
+        await tester.tap(triggerWidgetFinder);
         await tester.pumpAndSettle();
 
         expect(popupWidgetFinder, findsNothing);
       },
     );
+
+    testWidgets(
+      "does not close a popup after tap outside of the popup content if the closeOnTapOutside is false",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          _BasePopupTestbed(
+            popup: testPopupWidget,
+            triggerBuilder: _defaultTriggerBuilder,
+            offsetBuilder: (size) {
+              return Offset(size.width, size.height);
+            },
+            closeOnTapOutside: false,
+          ),
+        );
+
+        await tester.tap(triggerWidgetFinder);
+        await tester.pumpAndSettle();
+        await tester.tap(triggerWidgetFinder);
+        await tester.pumpAndSettle();
+
+        expect(popupWidgetFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets("opens only one popup", (WidgetTester tester) async {
+      await tester.pumpWidget(
+        _BasePopupTestbed(
+          popup: testPopupWidget,
+          triggerBuilder: _defaultTriggerBuilder,
+          offsetBuilder: (size) {
+            return Offset(size.width, size.height);
+          },
+          closeOnTapOutside: false,
+        ),
+      );
+
+      await tester.tap(triggerWidgetFinder);
+      await tester.tap(triggerWidgetFinder);
+      await tester.tap(triggerWidgetFinder);
+      await tester.pumpAndSettle();
+
+      expect(popupWidgetFinder, findsOneWidget);
+    });
 
     testWidgets(
       "closes a popup after pushing a new route",
@@ -304,10 +328,10 @@ class _BasePopupTestbed extends StatelessWidget {
   /// A callback that is called to build the trigger widget.
   final TriggerBuilder triggerBuilder;
 
-  /// Defines the tap outside behavior to apply to the widget under tests.
+  /// A [popup] behavior on tap outside to apply to the widget under tests.
   final bool closeOnTapOutside;
 
-  /// Indicates the popup opaqueness to apply to the widget under tests.
+  /// A popup opaqueness to apply to the widget under tests.
   final bool popupOpaque;
 
   /// Creates the a new base popup testbed.

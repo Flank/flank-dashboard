@@ -4,6 +4,8 @@ import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("BarGraph", () {
     testWidgets(
@@ -16,12 +18,19 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given data is null",
+      "can be created if the given data is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _BarGraphTestbed(data: null));
 
+        final graphFinder = find.descendant(
+          of: find.byWidgetPredicate((widget) => widget is BarGraph),
+          matching: find.byWidgetPredicate(
+            (widget) => widget is Row && widget.children.isEmpty,
+          ),
+        );
+
         expect(tester.takeException(), isNull);
-        expect(find.byType(_BarGraphTestbed), findsOneWidget);
+        expect(graphFinder, findsOneWidget);
       },
     );
 
@@ -36,7 +45,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the graph padding",
+      "applies the given graph padding",
       (WidgetTester tester) async {
         const padding = EdgeInsets.all(8.0);
 
@@ -55,20 +64,15 @@ void main() {
     testWidgets(
       "builds all bar data from data list in the given order",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _BarGraphTestbed());
+        const graphBarTestData = [1, 6, 18, 13, 6, 19];
+        await tester.pumpWidget(const _BarGraphTestbed(data: graphBarTestData));
 
         final barsRow = tester.widget<Row>(find.byType(Row));
+        final bars = barsRow.children;
+        final values = bars.cast<_GraphTestBar>().map((bar) => bar.value);
 
-        final rowWidgets = barsRow.children;
-
-        expect(rowWidgets.length, _BarGraphTestbed.graphBarTestData.length);
-
-        for (int i = 0; i < rowWidgets.length; i++) {
-          final rowWidget = rowWidgets[i];
-          final bar = tester.widget<_GraphTestBar>(find.byWidget(rowWidget));
-
-          expect(bar.value, _BarGraphTestbed.graphBarTestData[i]);
-        }
+        expect(bars, hasLength(equals(graphBarTestData.length)));
+        expect(values, equals(graphBarTestData));
       },
     );
 
@@ -119,20 +123,10 @@ void main() {
 
 /// A testbed class required to test the [BarGraph] widget.
 class _BarGraphTestbed extends StatelessWidget {
-  /// The test data for the [BarGraph].
-  static const graphBarTestData = [
-    1,
-    6,
-    18,
-    13,
-    6,
-    19,
-  ];
-
   /// A default bar builder used in tests.
   static Widget createBar(List<int> data, int index, double height) {
     return _GraphTestBar(
-      value: data[index].toInt(),
+      value: data[index],
       height: height,
     );
   }
@@ -152,7 +146,7 @@ class _BarGraphTestbed extends StatelessWidget {
   /// The [barBuilder] defaults to the [createBar] function.
   const _BarGraphTestbed({
     Key key,
-    this.data = graphBarTestData,
+    this.data,
     this.barBuilder = createBar,
     this.graphPadding = const EdgeInsets.all(16.0),
   }) : super(key: key);

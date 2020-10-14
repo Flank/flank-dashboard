@@ -68,10 +68,9 @@ class _BuildResultBarState extends State<BuildResultBar> {
   @override
   Widget build(BuildContext context) {
     const indicatorRadius = DimensionsConfig.graphIndicatorOuterDiameter / 2.0;
-    final metricsTheme = MetricsTheme.of(context);
 
     if (widget.buildResult == null || widget.buildResult.buildStatus == null) {
-      final inactiveTheme = metricsTheme.inactiveWidgetTheme;
+      final inactiveTheme = MetricsTheme.of(context).inactiveWidgetTheme;
       return PlaceholderBar(
         width: DimensionsConfig.graphBarWidth,
         height: 4.0,

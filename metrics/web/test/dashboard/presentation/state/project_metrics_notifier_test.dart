@@ -245,6 +245,10 @@ void main() {
         expectedBuildResult.duration,
       );
       expect(
+        firstBuildResultMetric.buildResultPopupViewModel.date,
+        expectedBuildResult.date,
+      );
+      expect(
         firstBuildResultMetric.buildStatus,
         expectedBuildResult.buildStatus,
       );

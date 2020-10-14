@@ -19,6 +19,9 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("BuildResultBarGraph", () {
     final buildResults = _BuildResultBarGraphTestbed.buildResultBarTestData;
+    final barGraphFinder = find.byWidgetPredicate(
+      (widget) => widget is BarGraph<int>,
+    );
 
     testWidgets(
       "throws an AssertionError if the given build result metric is null",
@@ -45,7 +48,7 @@ void main() {
 
         final barWidgets = tester.widgetList(find.byType(BuildResultBar));
 
-        expect(barWidgets.length, buildResults.length);
+        expect(barWidgets, hasLength(equals(buildResults.length)));
       },
     );
 
@@ -92,6 +95,30 @@ void main() {
     );
 
     testWidgets(
+      "wraps each build result bar with constrained container having non-null min height",
+      (WidgetTester tester) async {
+        final results = UnmodifiableListView(buildResults);
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: results,
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+        ));
+
+        final containers = tester.widgetList<Container>(
+          find.byWidgetPredicate(
+            (widget) => widget is Container && widget.child is BuildResultBar,
+          ),
+        );
+        final minHeights = containers.map(
+          (container) => container.constraints.minHeight,
+        );
+
+        expect(minHeights, everyElement(isNotNull));
+      },
+    );
+
+    testWidgets(
       "creates an empty BuildResultBars to match the numberOfBuildsToDisplay",
       (WidgetTester tester) async {
         final numberOfBars = buildResults.length + 1;
@@ -115,7 +142,61 @@ void main() {
           (element) => element.buildResult == null,
         );
 
-        expect(emptyBuildResultBars.length, missingBuildResultsCount);
+        expect(emptyBuildResultBars, hasLength(missingBuildResultsCount));
+      },
+    );
+
+    testWidgets(
+      "applies a non-zero padding from the left to the BarGraph if there are both missing and result bars",
+      (WidgetTester tester) async {
+        const expectedPadding = EdgeInsets.only(left: 4.0);
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length + 1,
+          ),
+        ));
+
+        final barGraph = tester.widget<BarGraph>(barGraphFinder);
+
+        expect(barGraph.graphPadding, equals(expectedPadding));
+      },
+    );
+
+    testWidgets(
+      "applies a zero padding to the BarGraph if there are no missing bars",
+      (WidgetTester tester) async {
+        const expectedPadding = EdgeInsets.zero;
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView(buildResults),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+        ));
+
+        final barGraph = tester.widget<BarGraph>(barGraphFinder);
+
+        expect(barGraph.graphPadding, equals(expectedPadding));
+      },
+    );
+
+    testWidgets(
+      "applies a zero padding to the BarGraph if there are no result bars",
+      (WidgetTester tester) async {
+        const expectedPadding = EdgeInsets.zero;
+
+        await tester.pumpWidget(_BuildResultBarGraphTestbed(
+          buildResultMetric: BuildResultMetricViewModel(
+            buildResults: UnmodifiableListView([]),
+            numberOfBuildsToDisplay: buildResults.length,
+          ),
+        ));
+
+        final barGraph = tester.widget<BarGraph>(barGraphFinder);
+
+        expect(barGraph.graphPadding, equals(expectedPadding));
       },
     );
 
@@ -126,9 +207,7 @@ void main() {
 
         await tester.pumpWidget(_BuildResultBarGraphTestbed(
           buildResultMetric: BuildResultMetricViewModel(
-            buildResults: UnmodifiableListView(
-              _BuildResultBarGraphTestbed.buildResultBarTestData,
-            ),
+            buildResults: UnmodifiableListView(buildResults),
             numberOfBuildsToDisplay: numberOfBars,
           ),
         ));

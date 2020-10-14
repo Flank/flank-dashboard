@@ -1,96 +1,155 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
-import 'package:metrics/base/presentation/widgets/tappable_area.dart';
-import 'package:metrics/common/presentation/colored_bar/theme/attention_level/metrics_colored_bar_attention_level.dart';
-import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
-import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/graph_indicator.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/negative_graph_indicator.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
+import 'package:metrics/common/presentation/graph_indicator/widgets/positive_graph_indicator.dart';
+import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
+import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
   group("BuildResultBar", () {
-    const successfulColor = Colors.blue;
-    const failedColor = Colors.red;
-    const canceledColor = Colors.grey;
-
-    const themeData = MetricsThemeData(
-      metricsColoredBarTheme: MetricsColoredBarThemeData(
-        attentionLevel: MetricsColoredBarAttentionLevel(
-          positive: MetricsColoredBarStyle(
-            color: successfulColor,
-            backgroundColor: successfulColor,
-          ),
-          neutral: MetricsColoredBarStyle(
-            color: canceledColor,
-            backgroundColor: canceledColor,
-          ),
-          negative: MetricsColoredBarStyle(
-            color: failedColor,
-            backgroundColor: failedColor,
-          ),
-        ),
+    const metricsTheme = MetricsThemeData(
+      inactiveWidgetTheme: MetricsWidgetThemeData(
+        primaryColor: Colors.red,
       ),
     );
-
     final buildResultPopupViewModel = BuildResultPopupViewModel(
       duration: const Duration(seconds: 20),
       date: DateTime.now(),
     );
+    final placeholderFinder = find.byType(PlaceholderBar);
+    final mouseRegionFinder = find.ancestor(
+      of: find.byType(InkWell),
+      matching: find.byType(MouseRegion),
+    );
+
+    Future<void> _hoverBar(WidgetTester tester) async {
+      final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+      mouseRegion.onEnter(const PointerEnterEvent());
+      await tester.pumpAndSettle();
+    }
 
     testWidgets(
-      "display the PlaceholderBar if the given buildResult is null",
+      "displays the PlaceholderBar if the given buildResult is null",
       (tester) async {
-        await tester.pumpWidget(const _BuildResultBarTestbed());
+        await tester.pumpWidget(const _BuildResultBarTestbed(
+          buildResult: null,
+        ));
 
-        expect(find.byType(PlaceholderBar), findsOneWidget);
+        expect(placeholderFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "shows the PlaceholderBar if the build result status is null",
+      "displays the PlaceholderBar if the build result status is null",
       (WidgetTester tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
+          buildStatus: null,
         );
 
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
         ));
 
-        expect(find.byType(PlaceholderBar), findsOneWidget);
+        expect(placeholderFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "does not change the cursor style for the PlaceholderBar",
+      "applies the bar color from the inactive widget theme to the PlaceholderBar",
       (WidgetTester tester) async {
+        final expectedColor = metricsTheme.inactiveWidgetTheme.primaryColor;
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
+          buildStatus: null,
+        );
+
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: buildResult,
+          themeData: metricsTheme,
+        ));
+
+        final placeholderBar = tester.widget<PlaceholderBar>(placeholderFinder);
+
+        expect(placeholderBar.color, expectedColor);
+      },
+    );
+
+    testWidgets(
+      "applies the bar width from the dimension config to the PlaceholderBar",
+      (WidgetTester tester) async {
+        const expectedWidth = DimensionsConfig.graphBarWidth;
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
+          buildStatus: null,
         );
 
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
         ));
 
-        final finder = find.ancestor(
-          of: find.byType(PlaceholderBar),
-          matching: find.byType(TappableArea),
-        );
+        final placeholderBar = tester.widget<PlaceholderBar>(placeholderFinder);
 
-        expect(finder, findsNothing);
+        expect(placeholderBar.width, expectedWidth);
       },
     );
 
     testWidgets(
-      "applies the successful color from the theme to the ColoredBar if the build status equals to successful",
+      "opens the BuildResultPopupCard widget on hover",
+      (WidgetTester tester) async {
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
+          buildStatus: BuildStatus.successful,
+        );
+
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: buildResult,
+        ));
+
+        await _hoverBar(tester);
+
+        expect(find.byType(BuildResultPopupCard), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "closes the BuildResultPopupCard widget on exit",
+      (WidgetTester tester) async {
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
+          buildStatus: BuildStatus.successful,
+        );
+
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: buildResult,
+        ));
+
+        await _hoverBar(tester);
+        final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
+        mouseRegion.onExit(const PointerExitEvent());
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BuildResultPopupCard), findsNothing);
+      },
+    );
+
+    testWidgets(
+      "does not displays the graph indicator if the popup is closed",
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -99,17 +158,38 @@ void main() {
 
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
-          themeData: themeData,
         ));
 
-        final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
+        final graphIndicatorFinder = find.byWidgetPredicate(
+          (widget) => widget is GraphIndicator,
+        );
 
-        expect(coloredBar.color, equals(successfulColor));
+        expect(graphIndicatorFinder, findsNothing);
       },
     );
 
     testWidgets(
-      "applies the failed color from the theme to the ColoredBar if the build status equals to failed",
+      "displays the positive graph indicator if the build status is successful and the popup is opened",
+      (tester) async {
+        final buildResult = BuildResultViewModel(
+          buildResultPopupViewModel: buildResultPopupViewModel,
+          buildStatus: BuildStatus.successful,
+        );
+
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: buildResult,
+        ));
+
+        await _hoverBar(tester);
+
+        final graphIndicatorFinder = find.byType(PositiveGraphIndicator);
+
+        expect(graphIndicatorFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the negative graph indicator if the build status is failed and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -118,17 +198,18 @@ void main() {
 
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
-          themeData: themeData,
         ));
 
-        final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
+        await _hoverBar(tester);
 
-        expect(coloredBar.color, equals(failedColor));
+        final graphIndicatorFinder = find.byType(NegativeGraphIndicator);
+
+        expect(graphIndicatorFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "applies the cancelled color from the theme to the ColoredBar if the build status equals to cancelled",
+      "displays the neutral graph indicator if the build status is cancelled and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
@@ -137,12 +218,13 @@ void main() {
 
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
-          themeData: themeData,
         ));
 
-        final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
+        await _hoverBar(tester);
 
-        expect(coloredBar.color, equals(canceledColor));
+        final graphIndicatorFinder = find.byType(NeutralGraphIndicator);
+
+        expect(graphIndicatorFinder, findsOneWidget);
       },
     );
 
@@ -161,7 +243,6 @@ void main() {
         await tester.pumpWidget(_BuildResultBarTestbed(
           buildResult: buildResult,
           strategy: strategy,
-          themeData: themeData,
         ));
 
         final paddingWidget = tester.widget<Padding>(find.byWidgetPredicate(

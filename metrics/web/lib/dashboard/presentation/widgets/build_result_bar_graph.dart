@@ -78,27 +78,24 @@ class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
             ),
           ),
         ),
-        Padding(
-          padding: graphPadding,
-          child: BarGraph(
-            data: _barsData.map((data) {
-              return data.buildResultPopupViewModel.duration.inMilliseconds;
-            }).toList(),
-            graphPadding: EdgeInsets.zero,
-            barBuilder: (index, height) {
-              final data = _barsData[index];
+        BarGraph(
+          graphPadding: graphPadding,
+          data: _barsData.map((data) {
+            return data.buildResultPopupViewModel.duration.inMilliseconds;
+          }).toList(),
+          barBuilder: (index, height) {
+            final data = _barsData[index];
 
-              return Container(
-                constraints: BoxConstraints(
-                  minHeight: height,
-                ),
-                child: BuildResultBar(
-                  strategy: barStrategy,
-                  buildResult: data,
-                ),
-              );
-            },
-          ),
+            return Container(
+              constraints: BoxConstraints(
+                minHeight: height,
+              ),
+              child: BuildResultBar(
+                strategy: barStrategy,
+                buildResult: data,
+              ),
+            );
+          },
         ),
       ],
     );

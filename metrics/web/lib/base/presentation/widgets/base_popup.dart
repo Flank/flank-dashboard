@@ -98,6 +98,8 @@ class _BasePopupState extends State<BasePopup> with RouteAware {
 
   /// Opens a [BasePopup.popup].
   void _openPopup() {
+    if (_overlayEntry != null) return;
+
     final childBox = context.findRenderObject() as RenderBox;
     final childSize = childBox.size;
     final offset = widget.offsetBuilder(childSize);
