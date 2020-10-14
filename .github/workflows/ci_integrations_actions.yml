@@ -33,5 +33,9 @@ jobs:
         working-directory: metrics/ci_integrations/
 
       - name: Run tests
-        run: pub run test
+        run: bash test.sh
+        working-directory: metrics/ci_integrations/
+
+      - name: Run build
+        run: bash build.sh
         working-directory: metrics/ci_integrations/
