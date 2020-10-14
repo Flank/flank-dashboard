@@ -1,0 +1,37 @@
+name: Metrics CI Integrations Actions
+
+on:
+  pull_request:
+    types: [ opened, edited, synchronize ]
+  push:
+    branches: master
+
+jobs:
+  metrics-actions:
+    name: CI Integrations Actions
+    runs-on: macOS-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+          uses: actions/checkout@v2
+          with:
+            fetch-depth: 1
+            ref: ${{ github.ref }}
+
+      - uses: cedx/setup-dart@v2
+          with:
+            release-channel: beta
+            version: 2.10.0-110.5.beta
+
+      - name: Get dependencies
+          run: pub get
+          working-directory: metrics/ci_integrations/
+
+      - name: Dart analyze
+          run: dartanalyzer lib
+          working-directory: metrics/ci_integrations/
+
+      - name: Run tests
+          run: pub run test
+          working-directory: metrics/ci_integrations/
