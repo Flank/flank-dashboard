@@ -768,6 +768,65 @@ void main() {
         expect(result, throwsStateError);
       },
     );
+
+    test(
+      ".fetchBuildsAfter() maps fetched builds statuses according to specification",
+      () async {
+        const runConclusions = [
+          RunConclusion.success,
+          RunConclusion.cancelled,
+          RunConclusion.failure,
+          RunConclusion.neutral,
+          RunConclusion.actionRequired,
+          RunConclusion.timedOut,
+          RunConclusion.skipped,
+          null,
+        ];
+
+        const expectedStatuses = [
+          BuildStatus.successful,
+          BuildStatus.cancelled,
+          BuildStatus.failed,
+          BuildStatus.failed,
+          BuildStatus.failed,
+          BuildStatus.failed,
+          BuildStatus.failed,
+          BuildStatus.failed,
+        ];
+
+        final workflowRuns = <WorkflowRun>[];
+        final expected = <BuildData>[];
+
+        for (int i = 0;
+            i < runConclusions.length && i < expectedStatuses.length;
+            i++) {
+          workflowRuns.add(createWorkflowRun(
+            runNumber: i + 1,
+            conclusion: runConclusions[i],
+          ));
+
+          expected.add(createBuildData(
+            buildNumber: i + 1,
+            buildStatus: expectedStatuses[i],
+          ));
+        }
+
+        final runsPage = WorkflowRunsPage(values: workflowRuns);
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([defaultRunArtifactPage]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+
+        final firstBuild = createBuildData(buildNumber: 0);
+        final result = adapter.fetchBuildsAfter(
+          defaultWorkflowIdentifier,
+          firstBuild,
+        );
+
+        expect(result, completion(equals(expected)));
+      },
+    );
   });
 }
 
