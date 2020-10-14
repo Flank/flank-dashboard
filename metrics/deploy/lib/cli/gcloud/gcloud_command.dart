@@ -77,4 +77,9 @@ class GCloudCommand {
   Future<void> cleanup(String srcPath) async {
     await cmd.run('rm', ['-rf', srcPath], verbose: true);
   }
+
+  /// Print cli verison.
+  Future<void> version() async {
+    await cmd.run('gcloud', ['--version'], verbose: true);
+  }
 }

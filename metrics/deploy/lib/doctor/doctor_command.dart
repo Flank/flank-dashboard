@@ -1,6 +1,10 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
+import 'package:deploy/cli/firebase/firebase_command.dart';
+import 'package:deploy/cli/flutter/flutter_command.dart';
+import 'package:deploy/cli/gcloud/gcloud_command.dart';
+import 'package:deploy/cli/git/git_command.dart';
 import 'package:process_run/process_run.dart' as cmd;
 
 /// class providing doctor command to verify dependencies.
@@ -10,12 +14,18 @@ class DoctorCommand extends Command {
   @override
   final description = "Check dependencies.";
 
+  final _firebase = FirebaseCommand();
+  final _gcloud = GCloudCommand();
+  final _git = GitCommand();
+  final _fluter = FlutterCommand();
+
   DoctorCommand();
 
   @override
   Future<void> run() async {
-    await cmd.run('firebase', ['--version'], verbose: true);
-    await cmd.run('gcloud', ['--version'], verbose: true);
-    await cmd.run('flutter', ['--version'], verbose: true);
+    await _fluter.version();
+    await _firebase.version();
+    await _gcloud.version();
+    await _git.version();
   }
 }

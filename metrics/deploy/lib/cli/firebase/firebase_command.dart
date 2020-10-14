@@ -73,4 +73,9 @@ class FirebaseCommand {
         ],
         verbose: true);
   }
+
+  /// Print cli verison.
+  Future<void> version() async {
+    await cmd.run('firebase', ['--version'], verbose: true);
+  }
 }
