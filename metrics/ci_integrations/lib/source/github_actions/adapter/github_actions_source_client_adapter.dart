@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/models/run_conclusion.dart';
@@ -98,6 +99,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     );
 
     final List<WorkflowRun> result = [];
+    bool hasNext = false;
 
     do {
       final runs = page.values;
@@ -110,13 +112,16 @@ class GithubActionsSourceClientAdapter implements SourceClient {
         result.add(run);
       }
 
-      if (page.hasNextPage) {
+      hasNext = page.hasNextPage;
+
+      if (hasNext) {
         final pageInteraction =
             await githubActionsClient.fetchNextRunsPage(page);
         _throwIfInteractionUnsuccessful(pageInteraction);
+
         page = pageInteraction.result;
       }
-    } while (page.hasNextPage);
+    } while (hasNext);
 
     return result;
   }
@@ -175,6 +180,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     _throwIfInteractionUnsuccessful(artifactsInteraction);
 
     WorkflowRunArtifactsPage page = artifactsInteraction.result;
+    bool hasNext = false;
 
     do {
       final artifacts = page.values;
@@ -188,14 +194,16 @@ class GithubActionsSourceClientAdapter implements SourceClient {
         return _mapArtifactToCoverage(coverageArtifact);
       }
 
-      if (page.hasNextPage) {
+      hasNext = page.hasNextPage;
+
+      if (hasNext) {
         final pageInteraction =
             await githubActionsClient.fetchNextRunArtifactsPage(page);
         _throwIfInteractionUnsuccessful(pageInteraction);
 
         page = pageInteraction.result;
       }
-    } while (page.hasNextPage);
+    } while (hasNext);
 
     return null;
   }
@@ -227,7 +235,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     );
 
     final coverageJson =
-        jsonDecode(coverageJsonFile.content as String) as Map<String, dynamic>;
+        jsonDecode(utf8.decode(coverageJsonFile.content as Uint8List))
+            as Map<String, dynamic>;
     final coverage = CoverageJsonSummary.fromJson(coverageJson);
 
     return coverage?.total?.branches?.percent;
