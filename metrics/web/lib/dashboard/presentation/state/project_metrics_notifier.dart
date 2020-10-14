@@ -15,9 +15,9 @@ import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.da
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
@@ -352,8 +352,9 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     final currentDate = DateTime.now().date;
     final performance = <Point<int>>[];
 
-    for (int i = 0; i < period; i++) {
-      final sliceDate = currentDate.subtract(Duration(days: period - i - 1));
+    for (int i = 0; i <= period; i++) {
+      final sliceDate = currentDate.subtract(Duration(days: period - i));
+
       final values = buildPerformancesMap[sliceDate];
 
       if (values == null || values.isEmpty) {

@@ -22,7 +22,7 @@ class ReceiveProjectMetricsUpdates
   static const int buildsToLoadForChartMetrics = 20;
 
   /// A [Duration] of a loading period for builds.
-  static const Duration buildsLoadingPeriod = Duration(days: 7);
+  static const Duration buildsLoadingPeriod = Duration(days: 6);
 
   final MetricsRepository _repository;
 
@@ -124,7 +124,7 @@ class ReceiveProjectMetricsUpdates
 
   /// Gets the builds from [builds] started in [period] before now.
   List<Build> _getBuildsInPeriod(List<Build> builds, Duration period) {
-    final buildsLoadingPeriod = DateTime.now().subtract(period);
+    final buildsLoadingPeriod = DateTime.now().subtract(period).date;
 
     final lastBuildsInPeriod = builds
         .where((element) => element.startedAt.isAfter(buildsLoadingPeriod))
