@@ -325,6 +325,95 @@ void main() {
     );
 
     test(
+      ".fetchBuilds() throws a StateError if fetching an artifact fails for any of the given runs",
+      () {
+        final runsPage = WorkflowRunsPage(
+          values: createWorkflowRuns(runNumbers: [1, 2]),
+        );
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([
+          defaultRunArtifactPage,
+        ]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+        whenFetchRunArtifacts()
+            .thenAnswer((_) => responses.error<WorkflowRunArtifactsPage>());
+
+        final result = adapter.fetchBuilds(defaultWorkflowIdentifier);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchBuilds() throws a StateError if fetching a duration fails for any of the given runs",
+      () {
+        final runsPage = WorkflowRunsPage(
+          values: createWorkflowRuns(runNumbers: [1, 2]),
+        );
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([
+          defaultRunArtifactPage,
+        ]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+        whenFetchRunDuration()
+            .thenAnswer((_) => responses.error<WorkflowRunDuration>());
+
+        final result = adapter.fetchBuilds(defaultWorkflowIdentifier);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchBuilds() throws a StateError if downloading an artifact archive fails for any of the given runs",
+      () {
+        final runsPage = WorkflowRunsPage(
+          values: createWorkflowRuns(runNumbers: [1, 2]),
+        );
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([
+          defaultRunArtifactPage,
+        ]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+        whenDownloadRunArtifactZip()
+            .thenAnswer((_) => responses.error<Uint8List>());
+
+        final result = adapter.fetchBuilds(defaultWorkflowIdentifier);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
+      ".fetchBuilds() throws a StateError if fetching next artifacts page fails",
+      () {
+        final runsPage = WorkflowRunsPage(
+          values: createWorkflowRuns(runNumbers: [1, 2]),
+        );
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([
+          emptyArtifactsPage,
+          defaultRunArtifactPage,
+        ]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+        whenFetchNextRunArtifactsPage()
+            .thenAnswer((_) => responses.error<WorkflowRunArtifactsPage>());
+
+        final result = adapter.fetchBuilds(defaultWorkflowIdentifier);
+
+        expect(result, throwsStateError);
+      },
+    );
+
+    test(
       ".fetchBuildsAfter() fetches all builds after the given one",
       () {
         final runsPage = WorkflowRunsPage(
@@ -336,6 +425,54 @@ void main() {
 
         final firstBuild = createBuildData(buildNumber: 1);
         final expected = createBuildDatas(buildNumbers: [4, 3, 2]);
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+
+        final result = adapter.fetchBuildsAfter(
+          defaultWorkflowIdentifier,
+          firstBuild,
+        );
+
+        expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() returns an empty list if there are no new builds",
+      () {
+        final runsPage = WorkflowRunsPage(
+          values: createWorkflowRuns(runNumbers: [4, 3, 2, 1]),
+        );
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([defaultRunArtifactPage]);
+
+        final firstBuild = createBuildData(buildNumber: 5);
+        final expected = [];
+
+        whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
+
+        final result = adapter.fetchBuildsAfter(
+          defaultWorkflowIdentifier,
+          firstBuild,
+        );
+
+        expect(result, completion(equals(expected)));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() returns new builds if the given build was deleted",
+      () {
+        final runsPage = WorkflowRunsPage(
+          values: createWorkflowRuns(runNumbers: [7, 6, 5, 4, 2, 1]),
+        );
+        responses.addRunsPages([runsPage]);
+
+        responses.addRunArtifactsPages([defaultRunArtifactPage]);
+
+        final firstBuild = createBuildData(buildNumber: 3);
+        final expected = createBuildDatas(buildNumbers: [7, 6, 5, 4]);
 
         whenFetchRuns().thenAnswer((_) => responses.fetchWorkflowRuns());
 
@@ -525,6 +662,11 @@ class _GithubActionsClientResponse {
     final result = Uint8List.fromList([]);
 
     return _wrapFuture(InteractionResult.success(result: result));
+  }
+
+  /// Builds the error response creating an [InteractionResult.error] instance.
+  Future<InteractionResult<T>> error<T>() {
+    return _wrapFuture(InteractionResult<T>.error());
   }
 
   /// Wraps the given [value] into the [Future.value].
