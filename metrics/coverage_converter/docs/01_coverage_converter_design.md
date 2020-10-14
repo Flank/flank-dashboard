@@ -40,7 +40,7 @@ The document does not explain and shows the implementation details.
 
 The main purpose of this tool is to convert the given supported coverage report to the [CI integrations format](https://github.com/platform-platform/monorepo/blob/codecov_converter_design/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-importing). To do so, we should create the following interfaces and abstract classes:
 
-- The `CoverageConverterCommand` interface - the common code coverage command interface. 
+- The `CoverageConverterCommand`  - the common code coverage command that should be extended to implement a specific coverage converter.  
 - The `CoverageConverter` interface that will represent the common interface for converting the specific coverage report format to the `CI integrations` coverage report format.
 
 Let's consider the class diagram explaining the main interfaces and dependencies between them: 
@@ -57,8 +57,8 @@ To run the command line application, we should have a `CommandRunner` class. Let
 
 Also, we should be able to pass the following arguments to the Coverage Converter tool: 
 
-- input - the file from where we'll read the specific coverage report;
-- output - the file to which we'll write the formatted coverage report;
+- `input` - the file from where we'll read the specific coverage report;
+- `output` - the file to which we'll write the formatted coverage report. If the `output` parameter is not specified, we should use the `coverage-summary.json`.
 
 To be able to pass arguments to our application we should create a `CoverageArgumentsParser` that will take a `List<String>` as arguments and return the `CoverageConverterArguments` instance that will contain all given arguments.
 
@@ -133,7 +133,7 @@ No alternatives considered.
 
 DONE:
 
-  -
+  - Coverage Converter design.
 
 NEXT:
 
@@ -145,4 +145,4 @@ NEXT:
 
 > What was the outcome of the project?
 
-Work in progress.
+Coverage converter tool design complete and ready for implementation.

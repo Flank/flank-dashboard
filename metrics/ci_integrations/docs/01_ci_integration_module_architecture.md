@@ -40,7 +40,7 @@ The `SupportedSourceParties` is an integration point for all source integrations
 
 # Coverage importing
 
-Also, the `CI integration` module is used to get build coverage. The build coverage should be exported as a build artifact and have a specific name - `coverage-summary.json`. The build coverage JSON should have a specific structure, readable for the `CI integrations` module. To convert specific coverage formats like `Istanbul` or `LCOV`, we've created a [Coverage Converter tool](https://github.com/platform-platform/monorepo/blob/6b78497947d1114d78ff0cd6ab09c7c268d5c54c/metrics/coverage_converter/docs/01_coverage_converter_design.md#coverage-converter-design). Let's review the sample file:  
+`CI integration` component is also used to import build coverage data. The build coverage should be exported as a build artifact in your CI and have a specific name - `coverage-summary.json`. This file should have a specific structure, let's review the sample file:
 
 ```json
 {
@@ -48,12 +48,13 @@ Also, the `CI integration` module is used to get build coverage. The build cover
 }
 ```
 
-So, the JSON will contain only the `total coverage percent` value - the `pct` field, that will represent the total coverage percent. The `pct` field should be double and be in the range from 0.0 inclusive to 1.0 inclusive. Currently, the `CI integrations` module uses only `pct` value from the coverage JSON, but it can contain any other fields if needed. 
+So, the JSON will contain only one field: `pct`, that represents the total coverage percent. The `pct` field should be double and be in the range from 0.0 inclusive to 1.0 inclusive. Currently, the `CI integrations` tool uses only `pct` value from the coverage JSON, but it can contain any other fields if needed.
 
 Let's consider the class diagram of the coverage structure: 
 
 ![Coverage data model class diagram class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/ci_integrations/docs/diagrams/ci_integrations_coverage_class_diagram.puml)
 
+To help users with converting specific coverage formats like `Istanbul` or `LCOV`, we've created a [Coverage Converter tool](https://github.com/platform-platform/monorepo/blob/6b78497947d1114d78ff0cd6ab09c7c268d5c54c/metrics/coverage_converter/docs/01_coverage_converter_design.md#coverage-converter-design).
 
 # Adding new integration
 
