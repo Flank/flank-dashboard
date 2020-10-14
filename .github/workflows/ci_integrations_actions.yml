@@ -43,4 +43,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ci_integrations_cli
-          path: /build/ci_integrations
+          path: /Users/runner/work/monorepo/monorepo/metrics/ci_integrations/build/ci_integrations
