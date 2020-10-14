@@ -25,13 +25,13 @@ jobs:
           version: 2.10.0-110.5.beta
 
       - name: Get dependencies
-          run: pub get
-          working-directory: metrics/ci_integrations/
+        run: pub get
+        working-directory: metrics/ci_integrations/
 
       - name: Dart analyze
-          run: dartanalyzer lib
-          working-directory: metrics/ci_integrations/
+        run: dartanalyzer lib
+        working-directory: metrics/ci_integrations/
 
       - name: Run tests
-          run: pub run test
-          working-directory: metrics/ci_integrations/
+        run: pub run test
+        working-directory: metrics/ci_integrations/
