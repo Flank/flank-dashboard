@@ -7,7 +7,7 @@ class GitCommand {
     await cmd.run('git', ['clone', repoURL, srcPath], verbose: true);
   }
 
-  /// Print cli verison.
+  /// Prints cli verison.
   Future<void> version() async {
     await cmd.run('git', ['--version'], verbose: true);
   }
