@@ -150,8 +150,7 @@ class GithubActionsMockServer extends ApiMockServer {
     await request.response.close();
   }
 
-  /// Responses with the number of billable minutes and total run time
-  /// for a specific workflow run.
+  /// Responses with the total run time for a specific workflow run.
   Future<void> _workflowUsageResponse(HttpRequest request) async {
     const workflowRunDuration = WorkflowRunDuration(
       duration: Duration(milliseconds: 500000),
