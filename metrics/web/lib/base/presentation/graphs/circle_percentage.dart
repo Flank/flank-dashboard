@@ -91,7 +91,7 @@ class _CirclePercentageState extends State<CirclePercentage>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final initialPadding = _getChildPadding(constraints);
+        final innerRadius = _getInnerRadius(constraints);
 
         return Center(
           child: AspectRatio(
@@ -108,22 +108,32 @@ class _CirclePercentageState extends State<CirclePercentage>
                     strokeWidth: widget.strokeWidth,
                     valueStrokeWidth: widget.valueStrokeWidth,
                   ),
-                  child: Padding(
-                    padding: initialPadding + widget.padding,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Expanded(
-                          child: widget.value == null
-                              ? widget.placeholder ?? Container()
-                              : Center(
-                                  child: Text(
-                                    _getValueText(),
-                                    style: widget.valueStyle,
-                                  ),
-                                ),
+                  child: SizedBox(
+                    height: innerRadius,
+                    width: innerRadius,
+                    child: ClipOval(
+                      child: Padding(
+                        padding: widget.padding,
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Expanded(
+                                child: widget.value == null
+                                    ? widget.placeholder ?? Container()
+                                    : Center(
+                                        child: Text(
+                                          _getValueText(),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.clip,
+                                          style: widget.valueStyle,
+                                        ),
+                                      ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 );
@@ -151,14 +161,12 @@ class _CirclePercentageState extends State<CirclePercentage>
     return '${value.toInt()}%';
   }
 
-  /// Gets the initial child padding to fit the circle percentage.
-  EdgeInsets _getChildPadding(BoxConstraints constraints) {
+  /// Gets the radius of the inner circle of this graph.
+  double _getInnerRadius(BoxConstraints constraints) {
     final strokeWidth = widget.strokeWidth;
-
     final circleDiameter = min(constraints.maxWidth, constraints.maxHeight);
-    final maxChildSize = (circleDiameter - strokeWidth) / 2 * sqrt(2);
 
-    return EdgeInsets.all((circleDiameter - maxChildSize) / 2);
+    return circleDiameter - strokeWidth;
   }
 
   @override
