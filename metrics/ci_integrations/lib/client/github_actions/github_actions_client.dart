@@ -229,7 +229,7 @@ class GithubActionsClient {
       (Map<String, dynamic> json, Map<String, String> headers) {
         final nextPageUrl = _parseNextPageUrl(headers);
 
-        if (json == null) return const InteractionResult.success(result: null);
+        if (json == null) return const InteractionResult.success();
 
         final runsList = json['workflow_runs'] as List<dynamic>;
         final runs = WorkflowRun.listFromJson(runsList);
@@ -350,7 +350,7 @@ class GithubActionsClient {
       (Map<String, dynamic> json, Map<String, String> headers) {
         final nextPageUrl = _parseNextPageUrl(headers);
 
-        if (json == null) return const InteractionResult.success(result: null);
+        if (json == null) return const InteractionResult.success();
 
         final artifactsList = json['artifacts'] as List<dynamic>;
         final artifacts = WorkflowRunArtifact.listFromJson(artifactsList);

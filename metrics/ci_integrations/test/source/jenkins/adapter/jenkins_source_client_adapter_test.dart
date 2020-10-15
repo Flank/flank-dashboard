@@ -11,6 +11,9 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+// https://github.com/software-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+
 void main() {
   group("JenkinsSourceClientAdapter", () {
     const jobName = 'test-job';

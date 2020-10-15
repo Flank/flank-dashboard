@@ -51,6 +51,6 @@ class JenkinsBuildArtifact extends Equatable {
 
   @override
   String toString() {
-    return '$runtimeType ${toJson()}';
+    return 'JenkinsBuildArtifact ${toJson()}';
   }
 }

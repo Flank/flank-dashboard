@@ -179,6 +179,6 @@ class JenkinsQueryLimits extends Equatable {
 
   @override
   String toString() {
-    return '$runtimeType ${toQuery()}';
+    return 'JenkinsQueryLimits ${toQuery()}';
   }
 }

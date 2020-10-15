@@ -34,8 +34,8 @@ abstract class Page<T> extends Equatable {
 
   @override
   String toString() {
-    return '$runtimeType {'
-        'totalCount: $totalCount, '
+    return '$runtimeType '
+        '{totalCount: $totalCount, '
         'page: $page, '
         'perPage: $perPage, '
         'nextPageUrl: $nextPageUrl, '
