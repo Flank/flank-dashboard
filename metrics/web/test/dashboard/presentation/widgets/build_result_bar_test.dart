@@ -33,7 +33,7 @@ void main() {
     );
     final placeholderFinder = find.byType(PlaceholderBar);
     final mouseRegionFinder = find.ancestor(
-      of: find.byType(InkWell),
+      of: find.byType(GestureDetector),
       matching: find.byType(MouseRegion),
     );
 
