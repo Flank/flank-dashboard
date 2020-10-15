@@ -256,8 +256,14 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Returns the `int` representation of the `per_page` query parameter
   /// of the given [request].
+  ///
+  /// Returns `null` if the [perPage] is `null`.
   int _extractPerPage(HttpRequest request) {
-    return int.tryParse(request.uri.queryParameters['per_page']);
+    final perPage = request.uri.queryParameters['per_page'];
+
+    if (perPage == null) return null;
+
+    return int.tryParse(perPage);
   }
 
   /// Returns the `int` representation of the `page` query parameter
