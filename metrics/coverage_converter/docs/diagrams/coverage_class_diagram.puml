@@ -47,7 +47,7 @@ package common {
         }
 
 
-        package error_codes {
+        package error_code {
             enum CoverageConverterErrorCode {
                 noSuchFile
                 fileIsEmpty

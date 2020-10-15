@@ -1,0 +1,25 @@
+@startuml converter_exception_class_diagram
+
+
+package common.exception {
+    class CoverageConverterException{
+        code: CoverageConverterErrorCode
+        {method} String message
+        String toString()
+    }
+
+
+    package error_code {
+        enum CoverageConverterErrorCode {
+            noSuchFile
+            fileIsEmpty
+            invalidFileFormat
+        }
+    }
+
+}
+
+
+CoverageConverterException -> CoverageConverterErrorCode : uses
+
+@enduml
