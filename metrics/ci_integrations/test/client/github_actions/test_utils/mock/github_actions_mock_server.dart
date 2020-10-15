@@ -176,7 +176,7 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Returns a json, containing a [Uint8List] to emulate download.
   Future<void> _downloadResponse(HttpRequest request) async {
-    request.response.write(jsonEncode(<Uint8List>[]));
+    request.response.write(jsonEncode(Uint8List.fromList([])));
 
     await request.response.flush();
     await request.response.close();
