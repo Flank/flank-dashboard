@@ -268,8 +268,14 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Returns the `int` representation of the `page` query parameter
   /// of the given [request].
+  ///
+  /// Returns `null` if the [page] is `null`.
   int _extractPage(HttpRequest request) {
-    return int.tryParse(request.uri.queryParameters['page']);
+    final page = request.uri.queryParameters['page'];
+
+    if (page == null) return null;
+
+    return int.tryParse(page);
   }
 
   /// Returns last page's number.
