@@ -75,13 +75,22 @@ class GithubActionsMockServer extends ApiMockServer {
   /// Responses with a list of all workflow runs for a specific workflow.
   Future<void> _workflowRunsResponse(HttpRequest request) async {
     final status = _extractStatus(request);
+    final runsPerPage = _extractPerPage(request);
+    final pageNumber = _extractPage(request);
 
     List<WorkflowRun> workflowRuns = _generateWorkflowRuns(status);
 
+    final lastPageNumber = _getLastPageNumber(
+      workflowRuns.length,
+      runsPerPage,
+    );
+
+    final hasMorePages = pageNumber < lastPageNumber;
+
     workflowRuns = _paginate(
       workflowRuns,
-      _extractPerPage(request),
-      _extractPage(request),
+      runsPerPage,
+      pageNumber,
     );
 
     final _response = {
@@ -89,27 +98,52 @@ class GithubActionsMockServer extends ApiMockServer {
       'workflow_runs': workflowRuns.map((run) => run.toJson()).toList(),
     };
 
+    _setNextPageUrlHeader(request, hasMorePages, pageNumber);
+
     request.response.write(jsonEncode(_response));
 
     await request.response.flush();
     await request.response.close();
   }
 
+  /// Sets next page url header if the given [hasMorePages] parameter is `true`.
+  void _setNextPageUrlHeader(
+      HttpRequest request, bool hasMorePages, int pageNumber) {
+    if (hasMorePages) {
+      final requestUrl = request.requestedUri.toString();
+      final indexOfPageParam = requestUrl.indexOf("&page=");
+      final nextPageUrl = requestUrl.replaceRange(
+          indexOfPageParam, requestUrl.length, "&page=${pageNumber + 1}");
+
+      request.response.headers.set('link', '<$nextPageUrl> rel="next"');
+    }
+  }
+
   /// Responses with a list of artifacts for a specific workflow run.
   Future<void> _workflowRunArtifactsResponse(HttpRequest request) async {
+    final runsPerPage = _extractPerPage(request);
+    final pageNumber = _extractPage(request);
     List<WorkflowRunArtifact> artifacts = _generateArtifacts();
 
     artifacts = _paginate(
       artifacts,
-      _extractPerPage(request),
-      _extractPage(request),
+      runsPerPage,
+      pageNumber,
     );
+
+    final lastPageNumber = _getLastPageNumber(
+      artifacts.length,
+      runsPerPage,
+    );
+
+    final hasMorePages = pageNumber < lastPageNumber;
 
     final _response = {
       'total_count': artifacts.length,
       'artifacts': artifacts.map((artifact) => artifact.toJson()).toList(),
     };
 
+    _setNextPageUrlHeader(request, hasMorePages, pageNumber);
     request.response.write(jsonEncode(_response));
 
     await request.response.flush();
@@ -233,5 +267,12 @@ class GithubActionsMockServer extends ApiMockServer {
   /// of the given [request].
   int _extractPage(HttpRequest request) {
     return int.tryParse(request.uri.queryParameters['page']);
+  }
+
+  /// Returns last page's number.
+  int _getLastPageNumber(int total, int perPage) {
+    if (perPage == null || total == null) return 1;
+
+    return max((total / perPage).ceil(), 1);
   }
 }
