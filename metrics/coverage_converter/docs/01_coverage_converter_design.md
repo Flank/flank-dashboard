@@ -38,7 +38,7 @@ The document does not explain and shows the implementation details.
 
 ## Main interfaces and classes
 
-The main purpose of this tool is to convert the given supported coverage report to the [CI integrations format](https://github.com/platform-platform/monorepo/blob/codecov_converter_design/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#сoverage-report-format). To do so, we should create the following interfaces and abstract classes:
+The main purpose of this tool is to convert the given supported coverage report to the [CI integrations format](https://github.com/platform-platform/monorepo/blob/codecov_converter_design/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format). To do so, we should create the following interfaces and abstract classes:
 
 - The `CoverageConverterCommand`  - the common code coverage command that should be extended to implement a specific coverage converter.  
 - The `CoverageConverter` interface that will represent the common interface for converting the specific coverage report format to the `CI integrations` coverage report format.
@@ -59,7 +59,7 @@ As we can see in the diagram above, we should check if the input file exists and
 
 Let's consider the class diagram representing the exceptions package structure: 
 
-![Converter exception class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_converter_exception_class.puml)
+![Converter exception class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/converter_exception_class_diagram.puml)
 
 So, we have a `CoverageConverterException`, as we've mentioned above, and the `CoverageConverterErrorCode` that represents the different error codes. The `CoverageConverterException` should take a `CoverageConverterErrorCode` in the constructor and provide an error message based on the given `CoverageConverterErrorCode`. The `toString` method of the `CoverageConverterException` should return the `message`.
 
