@@ -103,23 +103,12 @@ class GithubActionsMockServer extends ApiMockServer {
 
     _setNextPageUrlHeader(request, hasMorePages, pageNumber);
 
-    request.response.write(jsonEncode(_response));
+    await _writeResponse(request, _response);
 
-    await request.response.flush();
-    await request.response.close();
-  }
+    // request.response.write(jsonEncode(_response));
 
-  /// Sets next page url header if the given [hasMorePages] parameter is `true`.
-  void _setNextPageUrlHeader(
-      HttpRequest request, bool hasMorePages, int pageNumber) {
-    if (hasMorePages) {
-      final requestUrl = request.requestedUri.toString();
-      final indexOfPageParam = requestUrl.indexOf("&page=");
-      final nextPageUrl = requestUrl.replaceRange(
-          indexOfPageParam, requestUrl.length, "&page=${pageNumber + 1}");
-
-      request.response.headers.set('link', '<$nextPageUrl> rel="next"');
-    }
+    // await request.response.flush();
+    // await request.response.close();
   }
 
   /// Responses with a list of artifacts for a specific workflow run.
@@ -147,10 +136,12 @@ class GithubActionsMockServer extends ApiMockServer {
     };
 
     _setNextPageUrlHeader(request, hasMorePages, pageNumber);
-    request.response.write(jsonEncode(_response));
 
-    await request.response.flush();
-    await request.response.close();
+    await _writeResponse(request, _response);
+    // request.response.write(jsonEncode(_response));
+
+    // await request.response.flush();
+    // await request.response.close();
   }
 
   /// Responses with the total run time for a specific workflow run.
@@ -159,10 +150,11 @@ class GithubActionsMockServer extends ApiMockServer {
       duration: Duration(milliseconds: 500000),
     );
 
-    request.response.write(jsonEncode(workflowRunDuration.toJson()));
+    await _writeResponse(request, workflowRunDuration.toJson());
+    // request.response.write(jsonEncode(workflowRunDuration.toJson()));
 
-    await request.response.flush();
-    await request.response.close();
+    // await request.response.flush();
+    // await request.response.close();
   }
 
   /// Redirects to the URL to download an archive for a repository.
@@ -179,10 +171,11 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Returns a json, containing a [Uint8List] to emulate download.
   Future<void> _downloadResponse(HttpRequest request) async {
-    request.response.write(jsonEncode(Uint8List.fromList([])));
+    await _writeResponse(request, Uint8List.fromList([]));
+    // request.response.write(jsonEncode(Uint8List.fromList([])));
 
-    await request.response.flush();
-    await request.response.close();
+    // await request.response.flush();
+    // await request.response.close();
   }
 
   /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
@@ -283,5 +276,26 @@ class GithubActionsMockServer extends ApiMockServer {
     if (perPage == null || total == null) return 1;
 
     return max((total / perPage).ceil(), 1);
+  }
+
+  /// Sets next page url header if the given [hasMorePages] parameter is `true`.
+  void _setNextPageUrlHeader(
+      HttpRequest request, bool hasMorePages, int pageNumber) {
+    if (hasMorePages) {
+      final requestUrl = request.requestedUri.toString();
+      final indexOfPageParam = requestUrl.indexOf("&page=");
+      final nextPageUrl = requestUrl.replaceRange(
+          indexOfPageParam, requestUrl.length, "&page=${pageNumber + 1}");
+
+      request.response.headers.set('link', '<$nextPageUrl> rel="next"');
+    }
+  }
+
+  /// Writes the given [response].
+  Future<void> _writeResponse(HttpRequest request, dynamic response) async {
+    request.response.write(jsonEncode(response));
+
+    await request.response.flush();
+    await request.response.close();
   }
 }
