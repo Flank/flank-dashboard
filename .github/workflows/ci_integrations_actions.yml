@@ -35,13 +35,3 @@ jobs:
       - name: Run tests
         run: bash test.sh
         working-directory: metrics/ci_integrations/
-
-      - name: Run build
-        run: bash build.sh
-        working-directory: metrics/ci_integrations/
-
-      - uses: actions/upload-artifact@v2
-        working-directory: metrics/ci_integrations/
-        with:
-          name: ci_integrations_cli
-          path: /build/ci_integrations
