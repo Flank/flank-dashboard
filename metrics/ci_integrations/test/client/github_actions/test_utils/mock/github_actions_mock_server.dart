@@ -219,17 +219,13 @@ class GithubActionsMockServer extends ApiMockServer {
         id: id,
         number: random.nextInt(100),
         url: 'url',
-        status: statuses[random.nextInt(statuses.length)],
+        status: status ?? statuses[random.nextInt(statuses.length)],
         conclusion: conclusions[random.nextInt(conclusions.length)],
         createdAt: DateTime.now().toUtc(),
       );
     });
 
-    if (status == null) {
-      return runs;
-    }
-
-    return runs.where((run) => run.status == status).toList();
+    return runs;
   }
 
   /// Generates a list of [WorkflowRunArtifact].
