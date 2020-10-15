@@ -50,7 +50,7 @@ The `SupportedSourceParties` is an integration point for all source integrations
 }
 ```
 
-So, the JSON will contain only one field: `pct`, that represents the total coverage percent. The `pct` field should be double and be in the range from 0.0 inclusive to 1.0 inclusive. Currently, the `CI integrations` tool uses only `pct` value from the coverage JSON, but it can contain any other fields if needed.
+So, the JSON will contain only one field: `pct`, which represents the total coverage percent. The `pct` field should be double and be in the range from 0.0 inclusive to 1.0 inclusive. Currently, the `CI integrations` tool uses only `pct` value from the coverage JSON, but it can contain any other fields if needed.
 
 Let's consider the class diagram of the coverage structure: 
 
