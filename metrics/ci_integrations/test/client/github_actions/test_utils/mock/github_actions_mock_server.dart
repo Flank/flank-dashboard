@@ -194,10 +194,10 @@ class GithubActionsMockServer extends ApiMockServer {
   }
 
   /// Chunks the given [items], limiting to the [limit],
-  /// starting from the [offset] index.
-  List<T> _paginate<T>(List<T> items, [int limit = 100, int offset = 0]) {
-    if (limit != null && offset != null) {
-      final from = (offset - 1) * limit;
+  /// starting from the [pageIndex].
+  List<T> _paginate<T>(List<T> items, [int limit = 100, int pageIndex = 0]) {
+    if (limit != null && pageIndex != null) {
+      final from = (pageIndex - 1) * limit;
 
       return items.skip(from).take(limit).toList();
     } else if (limit != null) {
