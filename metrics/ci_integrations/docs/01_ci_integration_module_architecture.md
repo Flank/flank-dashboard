@@ -54,9 +54,9 @@ So, the JSON will contain only one field: `pct`, which represents the total cove
 
 Let's consider the class diagram of the coverage structure: 
 
-![Coverage data model class diagram class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/ci_integrations/docs/diagrams/ci_integrations_coverage_class_diagram.puml)
+![Coverage data model class diagram class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_coverage_class_diagram.puml)
 
-To help users with converting specific coverage formats like `Istanbul` or `LCOV`, we've created a [Coverage Converter tool](https://github.com/platform-platform/monorepo/blob/6b78497947d1114d78ff0cd6ab09c7c268d5c54c/metrics/coverage_converter/docs/01_coverage_converter_design.md#coverage-converter-design).
+To help users with converting specific coverage formats like `Istanbul` or `LCOV`, we've created a [Coverage Converter tool](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md#coverage-converter-design).
 
 # Adding new integration
 
