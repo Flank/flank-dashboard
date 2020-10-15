@@ -38,6 +38,23 @@ package common {
             argParser : CoverageConverterArgumentsParser
         }
     }
+
+    package exceptions {
+        class CoverageConverterException{
+            code: CoverageConverterErrorCode
+            {method} String message
+            String toString()
+        }
+
+
+        package error_codes {
+            enum CoverageConverterErrorCode {
+                noSuchFile
+                fileIsEmpty
+                invalidFileFormat
+            }
+        }
+    }
 }
 
 package specific_format {
@@ -69,6 +86,10 @@ SpecificFormatCoverageConverter .down.|> CoverageConverter
 
 CoverageConverterCommand --> CoverageConverterArguments : uses
 CoverageConverterCommand -left-> CoverageConverter : uses
+CoverageConverterCommand -up-> CoverageConverterException : throws
+
+CoverageConverterException --> CoverageConverterErrorCode : uses
+
 
 
 @enduml

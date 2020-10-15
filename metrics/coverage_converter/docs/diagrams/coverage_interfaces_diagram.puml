@@ -30,6 +30,7 @@ package common {
     package converter {
         interface CoverageConverter {
             {abstract} CoverageModel convert(File)
+            {abstract} bool canConvert(File)
         }
     }
 }

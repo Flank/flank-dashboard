@@ -15,9 +15,32 @@ Bob -> CoverageConverterRunner : coverage_converter specific -i input.json -o ou
 activate CoverageConverterRunner
 CoverageConverterRunner -> CoverageArgumentsParser : parse(arguments)
 activate CoverageArgumentsParser
+
+alt inputFile == null
+activate CoverageArgumentsParser
+
+return throw ArgumentError
+activate CoverageConverterRunner
+CoverageConverterRunner -> Bob: prints error message
+deactivate CoverageConverterRunner
+
+end 
+
 return CoverageArguments instance
 CoverageConverterRunner -> SpecificCoverageConverterCommand : run()
 activate SpecificCoverageConverterCommand
+
+alt !inputFile.exists
+activate SpecificCoverageConverterCommand
+
+return throw an CoverageConverterException
+activate CoverageConverterRunner
+
+CoverageConverterRunner -> Bob : prints error message
+deactivate CoverageConverterRunner
+
+end
+
 SpecificCoverageConverterCommand -> SpecificCoverageConverter : convert(inputFile)
 activate SpecificCoverageConverter
 return CoverageModel instance

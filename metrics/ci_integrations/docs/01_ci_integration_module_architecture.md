@@ -42,6 +42,8 @@ The `SupportedSourceParties` is an integration point for all source integrations
 
 `CI integration` component is also used to import build coverage data. The build coverage should be exported as a build artifact in your CI and have a specific name - `coverage-summary.json`. This file should have a specific structure, let's review the sample file:
 
+## Coverage report format
+
 ```json
 {
   pct: 0.6

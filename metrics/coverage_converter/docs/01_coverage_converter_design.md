@@ -38,7 +38,7 @@ The document does not explain and shows the implementation details.
 
 ## Main interfaces and classes
 
-The main purpose of this tool is to convert the given supported coverage report to the [CI integrations format](https://github.com/platform-platform/monorepo/blob/codecov_converter_design/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-importing). To do so, we should create the following interfaces and abstract classes:
+The main purpose of this tool is to convert the given supported coverage report to the [CI integrations format](https://github.com/platform-platform/monorepo/blob/codecov_converter_design/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#сoverage-report-format). To do so, we should create the following interfaces and abstract classes:
 
 - The `CoverageConverterCommand`  - the common code coverage command that should be extended to implement a specific coverage converter.  
 - The `CoverageConverter` interface that will represent the common interface for converting the specific coverage report format to the `CI integrations` coverage report format.
@@ -53,6 +53,20 @@ Let's consider the activity diagram of the coverage conversion process:
 
 ![Coverage conversion diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_conversion_activity.puml)
 
+## Error handling
+
+As we can see in the diagram above, we should check if the input file exists and can be parsed using the chosen converter command and throw a `CoverageConverterException` if it is not.
+
+Let's consider the class diagram representing the exceptions package structure: 
+
+![Converter exception class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/codecov_converter_design/metrics/coverage_converter/docs/diagrams/coverage_converter_exception_class.puml)
+
+So, we have a `CoverageConverterException`, as we've mentioned above, and the `CoverageConverterErrorCode` that represents the different error codes. The `CoverageConverterException` should take a `CoverageConverterErrorCode` in the constructor and provide an error message based on the given `CoverageConverterErrorCode`. The `toString` method of the `CoverageConverterException` should return the `message`.
+
+All exceptions should be handled on the very top level - the `main` function. So, the `main` function will contain the try-catch block that will handle all exceptions, print them, and exit the app with code `1`.
+
+## CLI design
+
 To run the command line application, we should have a `CommandRunner` class. Let's name it `CoverageConverterRunner`. This class will extend `CommandRunner`. It will be the place where we'll add our specific `CoverageConverterCommand`s.
 
 Also, we should be able to pass the following arguments to the Coverage Converter tool: 
@@ -60,7 +74,9 @@ Also, we should be able to pass the following arguments to the Coverage Converte
 - `input` - the file from where we'll read the specific coverage report;
 - `output` - the file to which we'll write the formatted coverage report. If the `output` parameter is not specified, we should use the `coverage-summary.json`.
 
-To be able to pass arguments to our application we should create a `CoverageArgumentsParser` that will take a `List<String>` as arguments and return the `CoverageConverterArguments` instance that will contain all given arguments.
+To be able to pass arguments to our application we should create a `CoverageArgumentsParser` that will take a `List<String>` as arguments and return the `CoverageConverterArguments` instance that will contain all given arguments. 
+
+Note that the `input` argument is required. If the `input` argument is not specified, we should throw an `ArgumentException`.
 
 ## Package structure
 
@@ -71,6 +87,8 @@ Once we've finished with all main classes and interfaces, let's consider the pac
 >     - model
 >     - parser
 >   - common 
+>     - exception
+>       - error_codes
 >     - command
 >     - runner
 >     - converter
