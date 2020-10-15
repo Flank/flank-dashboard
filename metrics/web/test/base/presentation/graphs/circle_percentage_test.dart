@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
@@ -301,6 +303,61 @@ void main() {
         final circlePercentagePainter = _getCirclePercentagePainter(tester);
 
         expect(circlePercentagePainter.strokeColor, strokeColor);
+      },
+    );
+
+    testWidgets(
+      "displays a single line text containing the value",
+      (WidgetTester tester) async {
+        const value = 0.4;
+        final valueText = '${(value * 100).toInt()}%';
+        final valueTextFinder = find.text(valueText);
+
+        await tester.pumpWidget(const _CirclePercentageTestbed(
+          value: value,
+        ));
+        await tester.pumpAndSettle();
+
+        final valueTextWidget = tester.widget<Text>(valueTextFinder);
+
+        expect(valueTextWidget.maxLines, equals(1));
+      },
+    );
+
+    testWidgets(
+      "contains the center-aligned percent text inside the circle percentage graph",
+      (WidgetTester tester) async {
+        const strokeWidth = 7.0;
+        const value = 1.0;
+        final valueText = '${(value * 100).toInt()}%';
+
+        await tester.pumpWidget(const _CirclePercentageTestbed(
+          strokeWidth: strokeWidth,
+          value: value,
+        ));
+        await tester.pumpAndSettle();
+
+        final percentageFinder = find.descendant(
+          of: find.byType(CirclePercentage),
+          matching: find.byType(CustomPaint),
+        );
+        final valueTextFinder = find.text(valueText);
+
+        final percentageCenter = tester.getCenter(percentageFinder);
+        final percentagePainterSize = tester.getSize(percentageFinder);
+
+        final valueTextCenter = tester.getCenter(valueTextFinder);
+        final valueTextSize = tester.getSize(valueTextFinder);
+
+        final circlePercentageDiameter = min(
+          percentagePainterSize.width,
+          percentagePainterSize.height,
+        );
+        final innerCircleDiameter = circlePercentageDiameter - strokeWidth;
+
+        expect(valueTextCenter, equals(percentageCenter));
+        expect(valueTextSize.width, lessThanOrEqualTo(innerCircleDiameter));
+        expect(valueTextSize.height, lessThanOrEqualTo(innerCircleDiameter));
       },
     );
   });
