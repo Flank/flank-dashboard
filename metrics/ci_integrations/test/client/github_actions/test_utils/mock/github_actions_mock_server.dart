@@ -272,6 +272,8 @@ class GithubActionsMockServer extends ApiMockServer {
   }
 
   /// Returns last page's number.
+  ///
+  /// Returns `1` if the given [perPage] or [total] parameter is `null`.
   int _getLastPageNumber(int total, int perPage) {
     if (perPage == null || total == null) return 1;
 
