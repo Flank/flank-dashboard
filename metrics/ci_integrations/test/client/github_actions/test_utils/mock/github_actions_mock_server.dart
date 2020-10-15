@@ -74,7 +74,7 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Responses with a list of all workflow runs for a specific workflow.
   Future<void> _workflowRunsResponse(HttpRequest request) async {
-    final status = _extractStatus(request);
+    final status = _extractRunStatus(request);
     final runsPerPage = _extractPerPage(request);
     final pageNumber = _extractPage(request);
 
@@ -251,7 +251,7 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Provides the [RunStatus], based on the `status` query parameter
   /// in the given [request].
-  RunStatus _extractStatus(HttpRequest request) {
+  RunStatus _extractRunStatus(HttpRequest request) {
     final status = request.uri.queryParameters['status'];
 
     return const RunStatusMapper().map(status);
