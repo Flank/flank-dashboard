@@ -104,11 +104,6 @@ class GithubActionsMockServer extends ApiMockServer {
     _setNextPageUrlHeader(request, hasMorePages, pageNumber);
 
     await _writeResponse(request, _response);
-
-    // request.response.write(jsonEncode(_response));
-
-    // await request.response.flush();
-    // await request.response.close();
   }
 
   /// Responses with a list of artifacts for a specific workflow run.
@@ -138,10 +133,6 @@ class GithubActionsMockServer extends ApiMockServer {
     _setNextPageUrlHeader(request, hasMorePages, pageNumber);
 
     await _writeResponse(request, _response);
-    // request.response.write(jsonEncode(_response));
-
-    // await request.response.flush();
-    // await request.response.close();
   }
 
   /// Responses with the total run time for a specific workflow run.
@@ -151,10 +142,6 @@ class GithubActionsMockServer extends ApiMockServer {
     );
 
     await _writeResponse(request, workflowRunDuration.toJson());
-    // request.response.write(jsonEncode(workflowRunDuration.toJson()));
-
-    // await request.response.flush();
-    // await request.response.close();
   }
 
   /// Redirects to the URL to download an archive for a repository.
@@ -172,10 +159,6 @@ class GithubActionsMockServer extends ApiMockServer {
   /// Returns a json, containing a [Uint8List] to emulate download.
   Future<void> _downloadResponse(HttpRequest request) async {
     await _writeResponse(request, Uint8List.fromList([]));
-    // request.response.write(jsonEncode(Uint8List.fromList([])));
-
-    // await request.response.flush();
-    // await request.response.close();
   }
 
   /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
