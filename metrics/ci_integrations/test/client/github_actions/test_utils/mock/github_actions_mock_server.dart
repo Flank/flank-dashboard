@@ -241,7 +241,7 @@ class GithubActionsMockServer extends ApiMockServer {
         return WorkflowRunArtifact(
           id: id,
           name: 'coverage$id.json',
-          downloadUrl: 'https://api.github.com/download',
+          downloadUrl: 'https://api.github.com$_downloadPath',
         );
       },
     );
