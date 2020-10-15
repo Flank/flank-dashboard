@@ -63,6 +63,6 @@ class JenkinsBuildingJob extends JenkinsJob {
 
   @override
   String toString() {
-    return '$runtimeType ${toJson()}';
+    return 'JenkinsBuildingJob ${toJson()}';
   }
 }

@@ -96,6 +96,6 @@ class JenkinsBuild extends Equatable {
 
   @override
   String toString() {
-    return '$runtimeType ${toJson()}';
+    return 'JenkinsBuild ${toJson()}';
   }
 }

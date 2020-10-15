@@ -57,6 +57,6 @@ class WorkflowRunArtifact extends Equatable {
 
   @override
   String toString() {
-    return '$runtimeType ${toJson()}';
+    return 'WorkflowRunArtifact ${toJson()}';
   }
 }

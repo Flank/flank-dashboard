@@ -29,7 +29,7 @@ class InteractionResult<T> {
 
   @override
   String toString() {
-    return '$runtimeType { isError: $_isError, '
+    return 'InteractionResult<$T> { isError: $_isError, '
         'message: $message, '
         'result: $result }';
   }

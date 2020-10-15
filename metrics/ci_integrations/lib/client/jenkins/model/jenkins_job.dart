@@ -76,6 +76,6 @@ class JenkinsJob extends Equatable {
 
   @override
   String toString() {
-    return '$runtimeType ${toJson()}';
+    return 'JenkinsJob ${toJson()}';
   }
 }
