@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
@@ -95,11 +96,11 @@ class _BuildResultBarState extends State<BuildResultBar> {
           ),
           triggerBuilder: (context, openPopup, closePopup, isOpened) {
             return MouseRegion(
+              cursor: SystemMouseCursors.click,
               onEnter: (_) => openPopup(),
               onExit: (_) => closePopup(),
-              child: InkWell(
+              child: GestureDetector(
                 onTap: _onBarTap,
-                hoverColor: Colors.transparent,
                 child: Padding(
                   padding: _barPadding,
                   child: Stack(
