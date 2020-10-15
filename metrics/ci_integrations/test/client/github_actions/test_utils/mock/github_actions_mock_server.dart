@@ -190,7 +190,7 @@ class GithubActionsMockServer extends ApiMockServer {
     await request.response.close();
   }
 
-  /// Chunk the given [items], limiting to the [limit],
+  /// Chunks the given [items], limiting to the [limit],
   /// starting from the [offset] index.
   List<T> _paginate<T>(List<T> items, [int limit = 100, int offset = 0]) {
     if (limit != null && offset != null) {
