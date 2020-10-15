@@ -349,15 +349,15 @@ void main() {
         final valueTextCenter = tester.getCenter(valueTextFinder);
         final valueTextSize = tester.getSize(valueTextFinder);
 
-        final circlePercentageRadius = min(
+        final circlePercentageDiameter = min(
           percentagePainterSize.width,
           percentagePainterSize.height,
         );
-        final innerCircleRadius = circlePercentageRadius - strokeWidth;
+        final innerCircleDiameter = circlePercentageDiameter - strokeWidth;
 
         expect(valueTextCenter, equals(percentageCenter));
-        expect(valueTextSize.width, lessThanOrEqualTo(innerCircleRadius));
-        expect(valueTextSize.height, lessThanOrEqualTo(innerCircleRadius));
+        expect(valueTextSize.width, lessThanOrEqualTo(innerCircleDiameter));
+        expect(valueTextSize.height, lessThanOrEqualTo(innerCircleDiameter));
       },
     );
   });

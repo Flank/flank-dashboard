@@ -91,7 +91,7 @@ class _CirclePercentageState extends State<CirclePercentage>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final innerRadius = _getInnerRadius(constraints);
+        final innerDiameter = _getInnerDiameter(constraints);
 
         return Center(
           child: AspectRatio(
@@ -109,8 +109,8 @@ class _CirclePercentageState extends State<CirclePercentage>
                     valueStrokeWidth: widget.valueStrokeWidth,
                   ),
                   child: SizedBox(
-                    height: innerRadius,
-                    width: innerRadius,
+                    height: innerDiameter,
+                    width: innerDiameter,
                     child: ClipOval(
                       child: Padding(
                         padding: widget.padding,
@@ -161,8 +161,8 @@ class _CirclePercentageState extends State<CirclePercentage>
     return '${value.toInt()}%';
   }
 
-  /// Gets the radius of the inner circle of this graph.
-  double _getInnerRadius(BoxConstraints constraints) {
+  /// Gets the diameter of the inner circle of this graph.
+  double _getInnerDiameter(BoxConstraints constraints) {
     final strokeWidth = widget.strokeWidth;
     final circleDiameter = min(constraints.maxWidth, constraints.maxHeight);
 
