@@ -1,0 +1,95 @@
+@startuml coverage_class_diagram
+
+package arguments {
+    package model {
+        class CoverageConverterArguments {
+            inputFileName : String
+            outputFileName : String
+        }
+    }
+
+    package parser {
+        class CoverageConverterArgumentsParser {
+            CoverageConverterArguments parse()
+        }
+    }
+}
+
+package common {
+    package command {
+        abstract CoverageConverterCommand {
+            arguments : CoverageConverterArguments
+            {abstract} converter : CoverageConverter
+            {abstract} name: String
+            {abstract} description: String
+            void run()
+        }
+    }
+
+    package converter {
+        interface CoverageConverter {
+            {abstract} CoverageModel convert(File)
+        }
+    }
+
+
+    package runner {
+        class CoverageConverterRunner {
+            argParser : CoverageConverterArgumentsParser
+        }
+    }
+
+    package exceptions {
+        class CoverageConverterException{
+            code: CoverageConverterErrorCode
+            {method} String message
+            String toString()
+        }
+
+
+        package error_code {
+            enum CoverageConverterErrorCode {
+                noSuchFile
+                fileIsEmpty
+                invalidFileFormat
+            }
+        }
+    }
+}
+
+package specific_format {
+    package converter as specific_format.converter {
+        class SpecificFormatCoverageConverter {
+            CoverageModel convert(File)
+        }
+    }
+
+    package command as specific_format.command {
+        class SpecificFormatCoverageConverterCommand {
+            converter : SpecificFormatCoverageConverter
+            name: String
+            description: String
+        }
+    }
+}
+
+
+CoverageConverterRunner -right-> SpecificFormatCoverageConverterCommand : uses
+CoverageConverterRunner --> CoverageConverterArgumentsParser : uses
+
+CoverageConverterArgumentsParser -left-> CoverageConverterArguments : provides
+
+SpecificFormatCoverageConverterCommand --> SpecificFormatCoverageConverter : uses
+SpecificFormatCoverageConverterCommand --|> CoverageConverterCommand
+
+SpecificFormatCoverageConverter .down.|> CoverageConverter
+
+CoverageConverterCommand --> CoverageConverterArguments : uses
+CoverageConverterCommand -left-> CoverageConverter : uses
+CoverageConverterCommand -up-> CoverageConverterException : throws
+
+CoverageConverterException --> CoverageConverterErrorCode : uses
+
+
+
+@enduml

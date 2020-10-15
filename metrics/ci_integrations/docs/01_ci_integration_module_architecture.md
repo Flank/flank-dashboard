@@ -38,6 +38,26 @@ The `SupportedSourceParties` is an integration point for all source integrations
 
 ![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/software-platform/monorepo/master/metrics/ci_integrations/docs/diagrams/ci_integrations_class_diagram.puml)
 
+# Coverage importing
+
+`CI integration` component is also used to import build coverage data. The build coverage should be exported as a build artifact in your CI and have a specific name - `coverage-summary.json`. This file should have a specific structure, let's review the sample file:
+
+## Coverage report format
+
+```json
+{
+  pct: 0.6
+}
+```
+
+So, the JSON will contain only one field: `pct`, which represents the total coverage percent. The `pct` field should be double and be in the range from 0.0 inclusive to 1.0 inclusive. Currently, the `CI integrations` tool uses only `pct` value from the coverage JSON, but it can contain any other fields if needed.
+
+Let's consider the class diagram of the coverage structure: 
+
+![Coverage data model class diagram class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/ci_integrations/docs/diagrams/ci_integrations_coverage_class_diagram.puml)
+
+To help users with converting specific coverage formats like `Istanbul` or `LCOV`, we've created a [Coverage Converter tool](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md#coverage-converter-design).
+
 # Adding new integration
 
 Adding a new source integration and destination one is very similar. Let's look on adding new source integration steps: 

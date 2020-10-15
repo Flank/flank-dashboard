@@ -1,0 +1,42 @@
+@startuml coverage_interfaces_diagram.puml
+
+package package:args {
+    class Command {
+        name: String
+        description: String
+        FutureOr<T> run()
+    }
+}
+
+
+package core.src.data.model {
+    class CoverageModel {
+        Parcent percent
+        Max<String, dynamic> toJson()
+    }
+}
+
+
+package common {
+    package command {
+        abstract CoverageConverterCommand {
+            {abstract} converter : CoverageConverter
+            {abstract} name: String
+            {abstract} description: String
+            void run()
+        }
+    }
+
+    package converter {
+        interface CoverageConverter {
+            {abstract} CoverageModel convert(File)
+            {abstract} bool canConvert(File)
+        }
+    }
+}
+
+CoverageConverterCommand --|> Command
+CoverageConverter --> CoverageModel : provides
+CoverageConverterCommand --> CoverageConverter : uses
+
+@enduml
