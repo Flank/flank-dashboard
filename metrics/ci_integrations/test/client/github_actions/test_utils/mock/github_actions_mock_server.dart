@@ -16,6 +16,9 @@ class GithubActionsMockServer extends ApiMockServer {
   /// A path to emulate a download url.
   static const String _downloadPath = '/download';
 
+  /// A random value.
+  final random = Random();
+
   @override
   List<RequestHandler> get handlers => [
         RequestHandler.get(
@@ -206,7 +209,6 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Generates a list of [WorkflowRun], filtered by the given [RunStatus].
   List<WorkflowRun> _generateWorkflowRuns(RunStatus status) {
-    final random = Random();
     const statuses = RunStatus.values;
     const conclusions = RunConclusion.values;
 
