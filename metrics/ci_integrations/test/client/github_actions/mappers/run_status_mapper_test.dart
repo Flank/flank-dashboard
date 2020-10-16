@@ -2,7 +2,7 @@ import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.d
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:test/test.dart';
 
-// https://github.com/software-platform/monorepo/issues/140
+// https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 
 void main() {

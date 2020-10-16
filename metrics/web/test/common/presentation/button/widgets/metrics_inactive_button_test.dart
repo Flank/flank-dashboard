@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/button/theme/attention_level/metrics
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_inactive_button.dart';
 
-// https://github.com/software-platform/monorepo/issues/140
+// https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 
 void main() {

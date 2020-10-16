@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/toast/theme/attention_level/toast_at
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/widgets/positive_toast.dart';
 
-// https://github.com/software-platform/monorepo/issues/140
+// https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 
 void main() {

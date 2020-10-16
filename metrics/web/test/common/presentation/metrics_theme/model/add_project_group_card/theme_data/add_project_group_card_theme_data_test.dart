@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/add_project_grou
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/software-platform/monorepo/issues/140
+// https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 
 void main() {

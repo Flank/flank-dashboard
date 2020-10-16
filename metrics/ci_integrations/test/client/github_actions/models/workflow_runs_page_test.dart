@@ -2,7 +2,7 @@ import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
 import 'package:test/test.dart';
 
-// https://github.com/software-platform/monorepo/issues/140
+// https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {

@@ -11,12 +11,12 @@ dependencies:
   equatable: ^1.1.1
   firedart:
     git:
-      url: https://github.com/software-platform/firedart.git
+      url: https://github.com/platform-platform/firedart.git
   metrics_core:
     path: ../core
   yaml_map:
     git:
-      url: https://github.com/software-platform/monorepo.git
+      url: https://github.com/platform-platform/monorepo.git
       path: yaml_map
 
 dev_dependencies:
@@ -26,5 +26,5 @@ dev_dependencies:
   test_coverage: ^0.4.1
   api_mock_server:
     git:
-      url: https://github.com/software-platform/monorepo.git
+      url: https://github.com/platform-platform/monorepo.git
       path: api_mock_server

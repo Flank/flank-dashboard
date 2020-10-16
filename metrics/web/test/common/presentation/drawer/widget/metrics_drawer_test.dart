@@ -16,7 +16,7 @@ import '../../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../../test_utils/test_injection_container.dart';
 import '../../../../test_utils/theme_notifier_mock.dart';
 
-// https://github.com/software-platform/monorepo/issues/140
+// https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 
 void main() {

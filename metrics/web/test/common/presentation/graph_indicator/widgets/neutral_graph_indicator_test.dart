@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/graph_indicator/theme/attention_leve
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
 
-// https://github.com/software-platform/monorepo/issues/140
+// https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 
 void main() {

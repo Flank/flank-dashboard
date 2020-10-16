@@ -1,7 +1,7 @@
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:test/test.dart';
 
-// https://github.com/software-platform/monorepo/issues/140
+// https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 
 void main() {
