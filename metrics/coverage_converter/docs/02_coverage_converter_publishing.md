@@ -8,11 +8,11 @@ An explanation of the Coverage Converter tool publishing place and process
 
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [GitHub releases]()
-- [PPA]()
-- [Homebrew]()
-- [Chocolatey]()
-- [Dart packages]()
+- [GitHub releases](https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/managing-releases-in-a-repository)
+- [PPA](https://help.ubuntu.com/stable/ubuntu-help/addremove-ppa.html.en#:~:text=Personal%20Package%20Archives%20(PPAs)%20are,that%20it%20can%20be%20tested.)
+- [Homebrew](https://docs.brew.sh/Taps)
+- [Chocolatey](https://chocolatey.org/docs/create-packages)
+- [Dart packages](https://dart.dev/guides/libraries/create-library-packages)
 
 # Motivation
 
@@ -66,7 +66,7 @@ The GitHub provides an easy way of publishing the applications - GitHub Releases
 
 Moreover, GitHub Actions has ready-to-use actions that simplify the process of publishing: 
 
-- [Create release action](https://github.com/marketplace/actions/create-a-release) - an action that helps to create a new release.
+- [Create a release action](https://github.com/marketplace/actions/create-a-release) - an action that helps to create a new release.
 - [Upload a release asset action](https://github.com/marketplace/actions/upload-a-release-asset) - an action that helps to add assets to the existing release.
 
 ### Pros & Cons
@@ -97,7 +97,7 @@ Let's consider each of them separately:
 
 To download the Coverage Converter tool from the GitHub releases, follow the next steps: 
 
-1. Go to the [platform-platform/monorepo](https://github.com/platform-platform/monorepo/releases) GitHub repository releases page. 
+1. Go to the platform-platform/monorepo GitHub repository [releases page](https://github.com/platform-platform/monorepo/releases). 
 2. Find the version of the Coverage Converter tool you want to download.
 3. Open the `Assets` collapsible section and choose the Coverage Converter file compatible with your OS.
 4. Click to download
@@ -117,6 +117,8 @@ After these steps, you should obtain the download link similar to this one:
 As you can see, the link contains the release version. You can modify the link to make it refer to the latest release by removing the version from the URL and adding the `latest` keyword after the `releases`. So, the link should look like this: 
 
 `https://github.com/platform-platform/monorepo/releases/latest/download/coverage_converter_macos`
+
+## Using the Coverage Converter tool
 
 Once you've obtained the downloading link, you can download the Coverage Converter tool using the command line commands. Let's consider the macOS command-line command to download the Coverage Converter tool: 
 
