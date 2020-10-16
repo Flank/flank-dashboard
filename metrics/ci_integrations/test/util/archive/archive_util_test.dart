@@ -5,14 +5,12 @@ import 'package:ci_integration/util/archive/archive_util.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import 'zip_decoder_mock.dart';
-
 // https://github.com/software-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
-  group("ArchiveUtil", () {
-    final zipDecoderMock = ZipDecoderMock();
+  group("ArchiveHelper", () {
+    final zipDecoderMock = _ZipDecoderMock();
 
     final fileBytes = Uint8List.fromList([1, 2, 3, 4]);
     final archiveFile = ArchiveFile('test', 10, fileBytes);
@@ -28,23 +26,23 @@ void main() {
     test(
       "throws an ArgumentError if the given zip decoder is null",
       () {
-        expect(() => ArchiveUtil(null), throwsArgumentError);
+        expect(() => ArchiveHelper(null), throwsArgumentError);
       },
     );
 
     test(
       "creates an instance with the given zip decoder",
       () {
-        final util = ArchiveUtil(zipDecoderMock);
+        final helper = ArchiveHelper(zipDecoderMock);
 
-        expect(util.zipDecoder, equals(zipDecoderMock));
+        expect(helper.zipDecoder, equals(zipDecoderMock));
       },
     );
 
     test(
       ".decodeArchive() returns a decoded archive",
       () {
-        final util = ArchiveUtil(zipDecoderMock);
+        final util = ArchiveHelper(zipDecoderMock);
 
         when(zipDecoderMock.decodeBytes(archiveBytes)).thenReturn(archive);
 
@@ -57,7 +55,7 @@ void main() {
     test(
       ".getFile() returns an archive file if the given archive contains a file with the specified filename",
       () {
-        final util = ArchiveUtil(zipDecoderMock);
+        final util = ArchiveHelper(zipDecoderMock);
 
         final file = util.getFile(archive, 'test');
 
@@ -68,7 +66,7 @@ void main() {
     test(
       ".getFile() returns null if the given archive does not contain a file with the specified filename",
       () {
-        final util = ArchiveUtil(zipDecoderMock);
+        final util = ArchiveHelper(zipDecoderMock);
 
         final file = util.getFile(archive, 'not specified');
 
@@ -77,3 +75,5 @@ void main() {
     );
   });
 }
+
+class _ZipDecoderMock extends Mock implements ZipDecoder {}

@@ -4,14 +4,14 @@ import 'package:archive/archive.dart';
 
 /// A helper class that provides methods for decoding archives and listing
 /// decoded files.
-class ArchiveUtil {
+class ArchiveHelper {
   /// A [ZipDecoder] of this util.
   final ZipDecoder zipDecoder;
 
-  /// Creates a new instance of the [ArchiveUtil].
+  /// Creates a new instance of the [ArchiveHelper].
   ///
   /// Throws an [ArgumentError] if the given [zipDecoder] is `null`.
-  ArchiveUtil(this.zipDecoder) {
+  ArchiveHelper(this.zipDecoder) {
     ArgumentError.checkNotNull(zipDecoder);
   }
 
