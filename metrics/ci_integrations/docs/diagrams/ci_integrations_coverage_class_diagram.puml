@@ -2,7 +2,7 @@
 
 package core.src {
     package domain {
-        package value_onjects {
+        package value_objects {
             class Percent {
                 value: double
             }
@@ -21,11 +21,17 @@ package core.src {
             Map<String, dynamic> toJson()
             factory fromJson()
         }
+
+        interface DataModel {
+            {abstract} Map<String, dynamic> toJson()
+        }
     }
 }
 
 Coverage -> Percent : uses
 CoverageModel -|> Coverage
+
+CoverageModel ..|> DataModel
 
 
 @enduml
