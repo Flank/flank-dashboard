@@ -11,7 +11,7 @@ import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/project_metrics_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
 
-// https://github.com/software-platform/monorepo/issues/140
+// https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors
 
 void main() {
