@@ -1,4 +1,3 @@
-import 'package:ci_integration/client/github_actions/models/run_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:test/test.dart';
@@ -12,7 +11,6 @@ void main() {
     const number = 1;
     const url = 'url';
     const status = 'queued';
-    const conclusion = 'success';
     final createdAt = DateTime(2020).toUtc();
 
     final runJson = <String, dynamic>{
@@ -20,7 +18,6 @@ void main() {
       'run_number': number,
       'url': url,
       'status': status,
-      'conclusion': conclusion,
       'created_at': createdAt.toIso8601String(),
     };
 
@@ -29,20 +26,17 @@ void main() {
       number: number,
       url: url,
       status: RunStatus.queued,
-      conclusion: RunConclusion.success,
       createdAt: createdAt,
     );
 
     test("creates an instance with the given values", () {
       const status = RunStatus.inProgress;
-      const conclusion = RunConclusion.timedOut;
 
       final run = WorkflowRun(
         id: id,
         number: number,
         url: url,
         status: status,
-        conclusion: conclusion,
         createdAt: createdAt,
       );
 
@@ -50,7 +44,6 @@ void main() {
       expect(run.number, equals(number));
       expect(run.url, equals(url));
       expect(run.status, equals(status));
-      expect(run.conclusion, equals(conclusion));
       expect(run.createdAt, equals(createdAt));
     });
 

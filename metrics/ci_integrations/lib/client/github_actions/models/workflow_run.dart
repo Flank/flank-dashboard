@@ -1,6 +1,4 @@
-import 'package:ci_integration/client/github_actions/mappers/run_conclusion_mapper.dart';
 import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.dart';
-import 'package:ci_integration/client/github_actions/models/run_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:equatable/equatable.dart';
 
@@ -18,14 +16,11 @@ class WorkflowRun extends Equatable {
   /// A status of this workflow run.
   final RunStatus status;
 
-  /// A conclusion of this workflow run.
-  final RunConclusion conclusion;
-
   /// A timestamp this workflow run has started at.
   final DateTime createdAt;
 
   @override
-  List<Object> get props => [id, number, url, status, conclusion, createdAt];
+  List<Object> get props => [id, number, url, status, createdAt];
 
   /// Creates a new instance of the [WorkflowRun].
   const WorkflowRun({
@@ -33,7 +28,6 @@ class WorkflowRun extends Equatable {
     this.number,
     this.url,
     this.status,
-    this.conclusion,
     this.createdAt,
   });
 
@@ -46,9 +40,6 @@ class WorkflowRun extends Equatable {
     const statusMapper = RunStatusMapper();
     final status = statusMapper.map(json['status'] as String);
 
-    const conclusionMapper = RunConclusionMapper();
-    final conclusion = conclusionMapper.map(json['conclusion'] as String);
-
     final createdAt = json['created_at'] == null
         ? null
         : DateTime.parse(json['created_at'] as String);
@@ -58,7 +49,6 @@ class WorkflowRun extends Equatable {
       number: json['run_number'] as int,
       url: json['url'] as String,
       status: status,
-      conclusion: conclusion,
       createdAt: createdAt,
     );
   }
@@ -76,14 +66,12 @@ class WorkflowRun extends Equatable {
   /// Converts this run instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
     const statusMapper = RunStatusMapper();
-    const conclusionMapper = RunConclusionMapper();
 
     return <String, dynamic>{
       'id': id,
       'run_number': number,
       'url': url,
       'status': statusMapper.unmap(status),
-      'conclusion': conclusionMapper.unmap(conclusion),
       'created_at': createdAt?.toIso8601String(),
     };
   }
