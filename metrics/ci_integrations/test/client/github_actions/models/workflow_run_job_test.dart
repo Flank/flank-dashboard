@@ -15,7 +15,7 @@ void main() {
     const status = 'completed';
     const conclusion = 'success';
     final startedAt = DateTime(2019).toUtc();
-    final completedAt = DateTime(2019).toUtc();
+    final completedAt = DateTime(2020).toUtc();
 
     final jobJson = {
       'id': id,
