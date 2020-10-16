@@ -1,5 +1,5 @@
 import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.dart';
-import 'package:ci_integration/client/github_actions/models/run_status.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:equatable/equatable.dart';
 
 /// A class that represents a single Github Actions workflow run.
@@ -14,7 +14,7 @@ class WorkflowRun extends Equatable {
   final String url;
 
   /// A status of this workflow run.
-  final RunStatus status;
+  final GithubActionStatus status;
 
   /// A timestamp this workflow run has started at.
   final DateTime createdAt;

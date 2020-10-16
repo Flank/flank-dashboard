@@ -1,4 +1,4 @@
-import 'package:ci_integration/client/github_actions/models/run_status.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:test/test.dart';
 
@@ -25,12 +25,12 @@ void main() {
       id: id,
       number: number,
       url: url,
-      status: RunStatus.queued,
+      status: GithubActionStatus.queued,
       createdAt: createdAt,
     );
 
     test("creates an instance with the given values", () {
-      const status = RunStatus.inProgress;
+      const status = GithubActionStatus.inProgress;
 
       final run = WorkflowRun(
         id: id,

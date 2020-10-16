@@ -1,9 +1,9 @@
-import 'package:ci_integration/client/github_actions/models/run_status.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/integration/interface/base/client/mapper/mapper.dart';
 
 /// A class that provides methods for mapping statuses of Github Actions
 /// [WorkflowRun]s.
-class RunStatusMapper implements Mapper<String, RunStatus> {
+class RunStatusMapper implements Mapper<String, GithubActionStatus> {
   /// A status for a queued workflow run.
   static const String queued = 'queued';
 
@@ -17,27 +17,27 @@ class RunStatusMapper implements Mapper<String, RunStatus> {
   const RunStatusMapper();
 
   @override
-  RunStatus map(String status) {
+  GithubActionStatus map(String status) {
     switch (status) {
       case queued:
-        return RunStatus.queued;
+        return GithubActionStatus.queued;
       case inProgress:
-        return RunStatus.inProgress;
+        return GithubActionStatus.inProgress;
       case completed:
-        return RunStatus.completed;
+        return GithubActionStatus.completed;
       default:
         return null;
     }
   }
 
   @override
-  String unmap(RunStatus status) {
+  String unmap(GithubActionStatus status) {
     switch (status) {
-      case RunStatus.queued:
+      case GithubActionStatus.queued:
         return queued;
-      case RunStatus.inProgress:
+      case GithubActionStatus.inProgress:
         return inProgress;
-      case RunStatus.completed:
+      case GithubActionStatus.completed:
         return completed;
       default:
         return null;

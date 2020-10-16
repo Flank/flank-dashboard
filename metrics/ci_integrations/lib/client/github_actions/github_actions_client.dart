@@ -6,7 +6,7 @@ import 'dart:typed_data';
 
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.dart';
-import 'package:ci_integration/client/github_actions/models/run_status.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
@@ -164,7 +164,7 @@ class GithubActionsClient {
   /// If the [page] is `null` or omitted, the first page is fetched.
   Future<InteractionResult<WorkflowRunsPage>> fetchWorkflowRuns(
     String workflowIdentifier, {
-    RunStatus status,
+    GithubActionStatus status,
     int perPage = 10,
     int page,
   }) async {

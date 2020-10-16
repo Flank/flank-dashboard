@@ -1,5 +1,5 @@
 import 'package:ci_integration/client/github_actions/mappers/run_conclusion_mapper.dart';
-import 'package:ci_integration/client/github_actions/models/run_conclusion.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:test/test.dart';
 
 // https://github.com/platform-platform/monorepo/issues/140
@@ -12,7 +12,7 @@ void main() {
     test(
       ".map() maps the success run conclusion to the RunConclusion.success",
       () {
-        const expectedConclusion = RunConclusion.success;
+        const expectedConclusion = GithubActionConclusion.success;
 
         final conclusion = mapper.map(RunConclusionMapper.success);
 
@@ -23,7 +23,7 @@ void main() {
     test(
       ".map() maps the failure run conclusion to the RunConclusion.failure",
       () {
-        const expectedConclusion = RunConclusion.failure;
+        const expectedConclusion = GithubActionConclusion.failure;
 
         final conclusion = mapper.map(RunConclusionMapper.failure);
 
@@ -34,7 +34,7 @@ void main() {
     test(
       ".map() maps the neutral run conclusion to the RunConclusion.neutral",
       () {
-        const expectedConclusion = RunConclusion.neutral;
+        const expectedConclusion = GithubActionConclusion.neutral;
 
         final conclusion = mapper.map(RunConclusionMapper.neutral);
 
@@ -45,7 +45,7 @@ void main() {
     test(
       ".map() maps the cancelled run conclusion to the RunConclusion.cancelled",
       () {
-        const expectedConclusion = RunConclusion.cancelled;
+        const expectedConclusion = GithubActionConclusion.cancelled;
 
         final conclusion = mapper.map(RunConclusionMapper.cancelled);
 
@@ -56,7 +56,7 @@ void main() {
     test(
       ".map() maps the skipped run conclusion to the RunConclusion.skipped",
       () {
-        const expectedConclusion = RunConclusion.skipped;
+        const expectedConclusion = GithubActionConclusion.skipped;
 
         final conclusion = mapper.map(RunConclusionMapper.skipped);
 
@@ -67,7 +67,7 @@ void main() {
     test(
       ".map() maps the timed out run conclusion to the RunConclusion.timedOut",
       () {
-        const expectedConclusion = RunConclusion.timedOut;
+        const expectedConclusion = GithubActionConclusion.timedOut;
 
         final conclusion = mapper.map(RunConclusionMapper.timedOut);
 
@@ -78,7 +78,7 @@ void main() {
     test(
       ".map() maps the action required run conclusion to the RunConclusion.actionRequired",
       () {
-        const expectedConclusion = RunConclusion.actionRequired;
+        const expectedConclusion = GithubActionConclusion.actionRequired;
 
         final conclusion = mapper.map(RunConclusionMapper.actionRequired);
 
@@ -109,7 +109,7 @@ void main() {
       () {
         const expectedConclusion = RunConclusionMapper.success;
 
-        final conclusion = mapper.unmap(RunConclusion.success);
+        final conclusion = mapper.unmap(GithubActionConclusion.success);
 
         expect(conclusion, equals(expectedConclusion));
       },
@@ -120,7 +120,7 @@ void main() {
       () {
         const expectedConclusion = RunConclusionMapper.failure;
 
-        final conclusion = mapper.unmap(RunConclusion.failure);
+        final conclusion = mapper.unmap(GithubActionConclusion.failure);
 
         expect(conclusion, equals(expectedConclusion));
       },
@@ -131,7 +131,7 @@ void main() {
       () {
         const expectedConclusion = RunConclusionMapper.neutral;
 
-        final conclusion = mapper.unmap(RunConclusion.neutral);
+        final conclusion = mapper.unmap(GithubActionConclusion.neutral);
 
         expect(conclusion, equals(expectedConclusion));
       },
@@ -142,7 +142,7 @@ void main() {
       () {
         const expectedConclusion = RunConclusionMapper.cancelled;
 
-        final conclusion = mapper.unmap(RunConclusion.cancelled);
+        final conclusion = mapper.unmap(GithubActionConclusion.cancelled);
 
         expect(conclusion, equals(expectedConclusion));
       },
@@ -153,7 +153,7 @@ void main() {
       () {
         const expectedConclusion = RunConclusionMapper.skipped;
 
-        final conclusion = mapper.unmap(RunConclusion.skipped);
+        final conclusion = mapper.unmap(GithubActionConclusion.skipped);
 
         expect(conclusion, equals(expectedConclusion));
       },
@@ -164,7 +164,7 @@ void main() {
       () {
         const expectedConclusion = RunConclusionMapper.timedOut;
 
-        final conclusion = mapper.unmap(RunConclusion.timedOut);
+        final conclusion = mapper.unmap(GithubActionConclusion.timedOut);
 
         expect(conclusion, equals(expectedConclusion));
       },
@@ -175,7 +175,7 @@ void main() {
       () {
         const expectedConclusion = RunConclusionMapper.actionRequired;
 
-        final conclusion = mapper.unmap(RunConclusion.actionRequired);
+        final conclusion = mapper.unmap(GithubActionConclusion.actionRequired);
 
         expect(conclusion, equals(expectedConclusion));
       },

@@ -1,9 +1,9 @@
-import 'package:ci_integration/client/github_actions/models/run_conclusion.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/integration/interface/base/client/mapper/mapper.dart';
 
 /// A class that provides methods for mapping conclusions of
 /// Github Actions [WorkflowRun]s.
-class RunConclusionMapper implements Mapper<String, RunConclusion> {
+class RunConclusionMapper implements Mapper<String, GithubActionConclusion> {
   /// A conclusion for a successful workflow run.
   static const String success = 'success';
 
@@ -29,43 +29,43 @@ class RunConclusionMapper implements Mapper<String, RunConclusion> {
   const RunConclusionMapper();
 
   @override
-  RunConclusion map(String conclusion) {
+  GithubActionConclusion map(String conclusion) {
     switch (conclusion) {
       case success:
-        return RunConclusion.success;
+        return GithubActionConclusion.success;
       case failure:
-        return RunConclusion.failure;
+        return GithubActionConclusion.failure;
       case neutral:
-        return RunConclusion.neutral;
+        return GithubActionConclusion.neutral;
       case cancelled:
-        return RunConclusion.cancelled;
+        return GithubActionConclusion.cancelled;
       case skipped:
-        return RunConclusion.skipped;
+        return GithubActionConclusion.skipped;
       case timedOut:
-        return RunConclusion.timedOut;
+        return GithubActionConclusion.timedOut;
       case actionRequired:
-        return RunConclusion.actionRequired;
+        return GithubActionConclusion.actionRequired;
       default:
         return null;
     }
   }
 
   @override
-  String unmap(RunConclusion conclusion) {
+  String unmap(GithubActionConclusion conclusion) {
     switch (conclusion) {
-      case RunConclusion.success:
+      case GithubActionConclusion.success:
         return success;
-      case RunConclusion.failure:
+      case GithubActionConclusion.failure:
         return failure;
-      case RunConclusion.neutral:
+      case GithubActionConclusion.neutral:
         return neutral;
-      case RunConclusion.cancelled:
+      case GithubActionConclusion.cancelled:
         return cancelled;
-      case RunConclusion.skipped:
+      case GithubActionConclusion.skipped:
         return skipped;
-      case RunConclusion.timedOut:
+      case GithubActionConclusion.timedOut:
         return timedOut;
-      case RunConclusion.actionRequired:
+      case GithubActionConclusion.actionRequired:
         return actionRequired;
       default:
         return null;

@@ -1,5 +1,5 @@
 import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.dart';
-import 'package:ci_integration/client/github_actions/models/run_status.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:test/test.dart';
 
 // https://github.com/platform-platform/monorepo/issues/140
@@ -12,7 +12,7 @@ void main() {
     test(
       ".map() maps the queued run status to the RunStatus.queued",
       () {
-        const expectedStatus = RunStatus.queued;
+        const expectedStatus = GithubActionStatus.queued;
 
         final status = mapper.map(RunStatusMapper.queued);
 
@@ -23,7 +23,7 @@ void main() {
     test(
       ".map() maps the in progress run status to the RunStatus.inProgress",
       () {
-        const expectedStatus = RunStatus.inProgress;
+        const expectedStatus = GithubActionStatus.inProgress;
 
         final status = mapper.map(RunStatusMapper.inProgress);
 
@@ -34,7 +34,7 @@ void main() {
     test(
       ".map() maps the completed run status to the RunStatus.completed",
       () {
-        const expectedStatus = RunStatus.completed;
+        const expectedStatus = GithubActionStatus.completed;
 
         final status = mapper.map(RunStatusMapper.completed);
 
@@ -65,7 +65,7 @@ void main() {
       () {
         const expectedStatus = RunStatusMapper.queued;
 
-        final status = mapper.unmap(RunStatus.queued);
+        final status = mapper.unmap(GithubActionStatus.queued);
 
         expect(status, equals(expectedStatus));
       },
@@ -76,7 +76,7 @@ void main() {
       () {
         const expectedStatus = RunStatusMapper.inProgress;
 
-        final status = mapper.unmap(RunStatus.inProgress);
+        final status = mapper.unmap(GithubActionStatus.inProgress);
 
         expect(status, equals(expectedStatus));
       },
@@ -87,7 +87,7 @@ void main() {
       () {
         const expectedStatus = RunStatusMapper.completed;
 
-        final status = mapper.unmap(RunStatus.completed);
+        final status = mapper.unmap(GithubActionStatus.completed);
 
         expect(status, equals(expectedStatus));
       },
