@@ -91,7 +91,6 @@ void main() {
           'run_number': 2,
           'url': 'url2',
           'status': 'completed',
-          'conclusion': 'neutral',
           'created_at': DateTime(2019).toUtc().toIso8601String(),
         };
         final anotherRun = WorkflowRun.fromJson(anotherJson);
