@@ -5,7 +5,7 @@ import 'package:archive/archive.dart';
 /// A helper class that provides methods for decoding archives and listing
 /// decoded files.
 class ArchiveHelper {
-  /// A [ZipDecoder] of this util.
+  /// A [ZipDecoder] that is used by this helper.
   final ZipDecoder zipDecoder;
 
   /// Creates a new instance of the [ArchiveHelper].
