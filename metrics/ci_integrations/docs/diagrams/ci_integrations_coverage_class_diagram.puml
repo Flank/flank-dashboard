@@ -2,7 +2,7 @@
 
 package core.src {
     package domain {
-        package value_onjects {
+        package value_objects {
             class Percent {
                 value: double
             }
