@@ -2,19 +2,19 @@ import 'package:ci_integration/client/github_actions/models/github_action_status
 import 'package:ci_integration/integration/interface/base/client/mapper/mapper.dart';
 
 /// A class that provides methods for mapping statuses of Github Actions
-/// [WorkflowRun]s.
-class RunStatusMapper implements Mapper<String, GithubActionStatus> {
-  /// A status for a queued workflow run.
+/// [WorkflowRun]s and [WorkflowRunJob]s.
+class GithubActionStatusMapper implements Mapper<String, GithubActionStatus> {
+  /// A status for a queued workflow run or job.
   static const String queued = 'queued';
 
-  /// A status for a workflow run that is in progress.
+  /// A status for a workflow run or job that is in progress.
   static const String inProgress = 'in_progress';
 
-  /// A status for a completed workflow run.
+  /// A status for a completed workflow run or job.
   static const String completed = 'completed';
 
-  /// Creates a new instance of the [RunStatusMapper].
-  const RunStatusMapper();
+  /// Creates a new instance of the [GithubActionStatusMapper].
+  const GithubActionStatusMapper();
 
   @override
   GithubActionStatus map(String status) {

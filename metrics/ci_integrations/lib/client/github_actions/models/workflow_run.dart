@@ -1,4 +1,4 @@
-import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.dart';
+import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:equatable/equatable.dart';
 
@@ -37,7 +37,7 @@ class WorkflowRun extends Equatable {
   factory WorkflowRun.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
-    const statusMapper = RunStatusMapper();
+    const statusMapper = GithubActionStatusMapper();
     final status = statusMapper.map(json['status'] as String);
 
     final createdAt = json['created_at'] == null
@@ -65,7 +65,7 @@ class WorkflowRun extends Equatable {
 
   /// Converts this run instance into the JSON encodable [Map].
   Map<String, dynamic> toJson() {
-    const statusMapper = RunStatusMapper();
+    const statusMapper = GithubActionStatusMapper();
 
     return <String, dynamic>{
       'id': id,

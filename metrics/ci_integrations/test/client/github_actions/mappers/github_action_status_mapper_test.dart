@@ -1,4 +1,4 @@
-import 'package:ci_integration/client/github_actions/mappers/run_status_mapper.dart';
+import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:test/test.dart';
 
@@ -6,15 +6,15 @@ import 'package:test/test.dart';
 // ignore_for_file: prefer_const_constructors
 
 void main() {
-  group("RunStatusMapper", () {
-    final mapper = RunStatusMapper();
+  group("GithubActionStatusMapper", () {
+    final mapper = GithubActionStatusMapper();
 
     test(
       ".map() maps the queued run status to the RunStatus.queued",
       () {
         const expectedStatus = GithubActionStatus.queued;
 
-        final status = mapper.map(RunStatusMapper.queued);
+        final status = mapper.map(GithubActionStatusMapper.queued);
 
         expect(status, equals(expectedStatus));
       },
@@ -25,7 +25,7 @@ void main() {
       () {
         const expectedStatus = GithubActionStatus.inProgress;
 
-        final status = mapper.map(RunStatusMapper.inProgress);
+        final status = mapper.map(GithubActionStatusMapper.inProgress);
 
         expect(status, equals(expectedStatus));
       },
@@ -36,7 +36,7 @@ void main() {
       () {
         const expectedStatus = GithubActionStatus.completed;
 
-        final status = mapper.map(RunStatusMapper.completed);
+        final status = mapper.map(GithubActionStatusMapper.completed);
 
         expect(status, equals(expectedStatus));
       },
@@ -63,7 +63,7 @@ void main() {
     test(
       ".unmap() unmaps the RunStatus.queued to the queued run status value",
       () {
-        const expectedStatus = RunStatusMapper.queued;
+        const expectedStatus = GithubActionStatusMapper.queued;
 
         final status = mapper.unmap(GithubActionStatus.queued);
 
@@ -74,7 +74,7 @@ void main() {
     test(
       ".unmap() unmaps the RunStatus.inProgress to the in progress run status value",
       () {
-        const expectedStatus = RunStatusMapper.inProgress;
+        const expectedStatus = GithubActionStatusMapper.inProgress;
 
         final status = mapper.unmap(GithubActionStatus.inProgress);
 
@@ -85,7 +85,7 @@ void main() {
     test(
       ".unmap() unmaps the RunStatus.completed to the completed run status value",
       () {
-        const expectedStatus = RunStatusMapper.completed;
+        const expectedStatus = GithubActionStatusMapper.completed;
 
         final status = mapper.unmap(GithubActionStatus.completed);
 
