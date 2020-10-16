@@ -11,8 +11,9 @@ package package:args {
 
 package core.src.data.model {
     class CoverageModel {
-        Parcent percent
-        Max<String, dynamic> toJson()
+        Percent percent
+        Map<String, dynamic> toJson()
+        factory fromJson
     }
 }
 

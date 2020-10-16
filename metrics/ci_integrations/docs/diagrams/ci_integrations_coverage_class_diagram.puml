@@ -21,11 +21,17 @@ package core.src {
             Map<String, dynamic> toJson()
             factory fromJson()
         }
+
+        interface DataModel {
+            {abstract} Map<String, dynamic> toJson()
+        }
     }
 }
 
 Coverage -> Percent : uses
 CoverageModel -|> Coverage
+
+CoverageModel ..|> DataModel
 
 
 @enduml
