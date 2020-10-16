@@ -217,6 +217,7 @@ Cons:
 DONE:
 
   - Investigate the ways of publishing the Coverage Converter tool.
+  - Explain the way of using the Coverage Converter tool.
 
 NEXT:
 
