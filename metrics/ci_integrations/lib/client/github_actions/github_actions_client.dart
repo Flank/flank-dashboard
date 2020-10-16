@@ -10,7 +10,6 @@ import 'package:ci_integration/client/github_actions/models/run_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
-import 'package:ci_integration/client/github_actions/models/workflow_run_duration.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
@@ -242,23 +241,6 @@ class GithubActionsClient {
             nextPageUrl: nextPageUrl,
             values: runs,
           ),
-        );
-      },
-    );
-  }
-
-  /// Fetches a [WorkflowRunDuration] for the run with the given [runId].
-  Future<InteractionResult<WorkflowRunDuration>> fetchRunDuration(int runId) {
-    final url = UrlUtils.buildUrl(
-      basePath,
-      path: 'runs/$runId/timing',
-    );
-
-    return _handleResponse<WorkflowRunDuration>(
-      _client.get(url, headers: headers),
-      (Map<String, dynamic> json, _) {
-        return InteractionResult.success(
-          result: WorkflowRunDuration.fromJson(json),
         );
       },
     );
