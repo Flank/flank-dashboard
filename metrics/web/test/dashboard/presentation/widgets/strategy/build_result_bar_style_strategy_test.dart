@@ -56,12 +56,12 @@ void main() {
     );
 
     test(
-      ".getWidgetAppearance() returns the neutral style if the given build status is cancelled",
+      ".getWidgetAppearance() returns the neutral style if the given build status is unknown",
       () {
         final style = theme.metricsColoredBarTheme.attentionLevel.neutral;
         final actualStyle = themeStrategy.getWidgetAppearance(
           theme,
-          BuildStatus.cancelled,
+          BuildStatus.unknown,
         );
 
         expect(actualStyle, equals(style));

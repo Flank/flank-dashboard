@@ -226,11 +226,11 @@ void main() {
         ];
         const expectedStatuses = [
           BuildStatus.failed,
-          BuildStatus.failed,
-          BuildStatus.cancelled,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
           BuildStatus.successful,
-          BuildStatus.successful,
-          BuildStatus.failed,
+          BuildStatus.unknown,
         ];
         final jenkinsBuilds = <JenkinsBuild>[];
         final expected = <BuildData>[];
@@ -356,11 +356,11 @@ void main() {
         ];
         const expectedStatuses = [
           BuildStatus.failed,
-          BuildStatus.failed,
-          BuildStatus.cancelled,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
           BuildStatus.successful,
-          BuildStatus.successful,
-          BuildStatus.failed,
+          BuildStatus.unknown,
         ];
         final jenkinsBuilds = <JenkinsBuild>[];
         final expected = <BuildData>[];

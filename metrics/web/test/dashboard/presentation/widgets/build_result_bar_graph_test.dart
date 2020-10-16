@@ -251,7 +251,7 @@ class _BuildResultBarGraphTestbed extends StatelessWidget {
       ),
     ),
     BuildResultViewModel(
-      buildStatus: BuildStatus.cancelled,
+      buildStatus: BuildStatus.unknown,
       buildResultPopupViewModel: BuildResultPopupViewModel(
         duration: const Duration(seconds: 8),
         date: DateTime.now(),

@@ -209,11 +209,11 @@ void main() {
     );
 
     testWidgets(
-      "displays the neutral graph indicator if the build status is cancelled and the popup is opened",
+      "displays the neutral graph indicator if the build status is unknown and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: BuildStatus.cancelled,
+          buildStatus: BuildStatus.unknown,
         );
 
         await tester.pumpWidget(_BuildResultBarTestbed(
@@ -233,7 +233,7 @@ void main() {
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: BuildStatus.cancelled,
+          buildStatus: BuildStatus.unknown,
         );
         final strategy = BuildResultBarPaddingStrategy(
           buildResults: [buildResult],

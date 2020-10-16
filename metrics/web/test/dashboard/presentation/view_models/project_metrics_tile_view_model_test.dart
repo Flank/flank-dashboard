@@ -138,7 +138,7 @@ void main() {
             numberOfBuildsToDisplay: 1,
           ),
           buildStatus: ProjectBuildStatusViewModel(
-            value: BuildStatus.cancelled,
+            value: BuildStatus.unknown,
           ),
         );
 

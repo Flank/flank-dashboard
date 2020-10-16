@@ -21,7 +21,7 @@ void main() {
       ),
       BuildResultViewModel(
         buildResultPopupViewModel: popupViewModel,
-        buildStatus: BuildStatus.cancelled,
+        buildStatus: BuildStatus.unknown,
       ),
       BuildResultViewModel(
         buildResultPopupViewModel: popupViewModel,
@@ -75,7 +75,7 @@ void main() {
         const expectedInsets = EdgeInsets.only(left: 2.0);
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: popupViewModel,
-          buildStatus: BuildStatus.cancelled,
+          buildStatus: BuildStatus.unknown,
         );
         final strategy = BuildResultBarPaddingStrategy(
           buildResults: [buildResult],

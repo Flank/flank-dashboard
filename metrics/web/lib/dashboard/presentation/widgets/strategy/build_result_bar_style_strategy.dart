@@ -22,10 +22,10 @@ class BuildResultBarAppearanceStrategy
     switch (status) {
       case BuildStatus.successful:
         return attentionLevel.positive;
-      case BuildStatus.cancelled:
-        return attentionLevel.neutral;
       case BuildStatus.failed:
         return attentionLevel.negative;
+      case BuildStatus.unknown:
+        return attentionLevel.neutral;
       default:
         return null;
     }

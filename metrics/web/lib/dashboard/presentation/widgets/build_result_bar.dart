@@ -57,7 +57,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
     switch (widget.buildResult.buildStatus) {
       case BuildStatus.successful:
         return const PositiveGraphIndicator();
-      case BuildStatus.cancelled:
+      case BuildStatus.unknown:
         return const NeutralGraphIndicator();
       case BuildStatus.failed:
         return const NegativeGraphIndicator();

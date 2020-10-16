@@ -20,7 +20,7 @@ void main() {
     test(
       "equals to another BuildResultViewModel with the same parameters",
       () {
-        const buildStatus = BuildStatus.cancelled;
+        const buildStatus = BuildStatus.unknown;
         const url = 'url';
         final buildResultPopupViewModel = BuildResultPopupViewModel(
           duration: const Duration(seconds: 10),

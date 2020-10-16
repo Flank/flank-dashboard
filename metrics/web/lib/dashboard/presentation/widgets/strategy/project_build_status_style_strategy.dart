@@ -18,8 +18,6 @@ class ProjectBuildStatusStyleStrategy implements BuildStatusStyleStrategy {
     switch (value) {
       case BuildStatus.successful:
         return attentionLevelTheme.positive;
-      case BuildStatus.cancelled:
-        return attentionLevelTheme.negative;
       case BuildStatus.failed:
         return attentionLevelTheme.negative;
       default:
@@ -32,7 +30,6 @@ class ProjectBuildStatusStyleStrategy implements BuildStatusStyleStrategy {
     switch (value) {
       case BuildStatus.successful:
         return "icons/successful_status.svg";
-      case BuildStatus.cancelled:
       case BuildStatus.failed:
         return "icons/failed_status.svg";
       default:

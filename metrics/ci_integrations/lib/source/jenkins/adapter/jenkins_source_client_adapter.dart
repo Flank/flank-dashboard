@@ -207,14 +207,12 @@ class JenkinsSourceClientAdapter implements SourceClient {
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].
   BuildStatus _mapJenkinsBuildResult(JenkinsBuildResult result) {
     switch (result) {
-      case JenkinsBuildResult.aborted:
-        return BuildStatus.cancelled;
-      case JenkinsBuildResult.unstable:
-        return BuildStatus.successful;
       case JenkinsBuildResult.success:
         return BuildStatus.successful;
-      default:
+      case JenkinsBuildResult.failure:
         return BuildStatus.failed;
+      default:
+        return BuildStatus.unknown;
     }
   }
 
