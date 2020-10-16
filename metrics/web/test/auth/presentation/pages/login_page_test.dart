@@ -19,17 +19,13 @@ import 'package:provider/provider.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/auth_notifier_stub.dart';
+import '../../../test_utils/binding_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("LoginPage", () {
     const error = "Something went wrong";
-
-    void _setPlatformBrightness(WidgetTester tester, Brightness brightness) {
-      final TestWidgetsFlutterBinding testBinding = tester.binding;
-      testBinding.window.platformBrightnessTestValue = brightness;
-    }
 
     const metricsThemeData = MetricsThemeData(
       loginTheme: LoginThemeData(
@@ -75,7 +71,7 @@ void main() {
       "applies the theme brightness that corresponds the operating system's brightness",
       (WidgetTester tester) async {
         const expectedPlatformBrightness = Brightness.light;
-        _setPlatformBrightness(tester, expectedPlatformBrightness);
+        BindingUtil.setPlatformBrightness(tester, expectedPlatformBrightness);
 
         final loginKey = GlobalKey();
 
@@ -99,7 +95,7 @@ void main() {
       "listens for the changes of the platform theme brightness",
       (WidgetTester tester) async {
         const initialPlatformBrightness = Brightness.light;
-        _setPlatformBrightness(tester, initialPlatformBrightness);
+        BindingUtil.setPlatformBrightness(tester, initialPlatformBrightness);
 
         final loginKey = GlobalKey();
 
@@ -110,7 +106,7 @@ void main() {
         });
 
         const expectedPlatformBrightness = Brightness.dark;
-        _setPlatformBrightness(tester, expectedPlatformBrightness);
+        BindingUtil.setPlatformBrightness(tester, expectedPlatformBrightness);
 
         await tester.pump();
 

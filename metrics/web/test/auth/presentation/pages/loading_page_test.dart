@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/loading_page.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
@@ -11,7 +12,9 @@ import 'package:network_image_mock/network_image_mock.dart';
 import 'package:provider/provider.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
+import '../../../test_utils/binding_util.dart';
 import '../../../test_utils/test_injection_container.dart';
+import '../../../test_utils/theme_notifier_mock.dart';
 
 void main() {
   group("LoadingPage", () {
@@ -78,6 +81,38 @@ void main() {
         expect(find.byType(DashboardPage), findsOneWidget);
       },
     );
+
+    testWidgets(
+      "sets the application theme based on the platform brightness once opened",
+      (tester) async {
+        final themeNotifier = ThemeNotifierMock();
+        final currentBrightness = tester.binding.window.platformBrightness;
+
+        await tester.pumpWidget(
+          _LoadingPageTestbed(themeNotifier: themeNotifier),
+        );
+
+        verify(themeNotifier.setTheme(currentBrightness)).called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "updates the application theme based on the platform brightness once brightness changed",
+      (tester) async {
+        const brightness = Brightness.dark;
+        final themeNotifier = ThemeNotifierMock();
+        BindingUtil.setPlatformBrightness(tester, Brightness.light);
+
+        await tester.pumpWidget(_LoadingPageTestbed(
+          themeNotifier: themeNotifier,
+        ));
+
+        BindingUtil.setPlatformBrightness(tester, brightness);
+        await tester.pump();
+
+        verify(themeNotifier.setTheme(brightness)).called(equals(1));
+      },
+    );
   });
 }
 
@@ -86,15 +121,20 @@ class _LoadingPageTestbed extends StatelessWidget {
   /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
 
+  /// A [ThemeNotifier] used in tests.
+  final ThemeNotifier themeNotifier;
+
   /// Creates the [_LoadingPageTestbed] with the given [authNotifier].
   const _LoadingPageTestbed({
     this.authNotifier,
+    this.themeNotifier,
   });
 
   @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
       authNotifier: authNotifier,
+      themeNotifier: themeNotifier,
       child: Builder(
         builder: (context) {
           return MaterialApp(
