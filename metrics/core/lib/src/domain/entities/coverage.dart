@@ -18,17 +18,4 @@ class Coverage extends Equatable {
   }) {
     ArgumentError.checkNotNull(percent, 'percent');
   }
-
-  /// Creates [Coverage] from the decoded JSON object.
-  ///
-  /// Returns `null` if [json] is `null`.
-  factory Coverage.fromJson(Map<String, dynamic> json) {
-    if (json == null) return null;
-
-    final coveragePercent = json['pct'] as int;
-
-    return Coverage(
-      percent: Percent(coveragePercent / 100),
-    );
-  }
 }
