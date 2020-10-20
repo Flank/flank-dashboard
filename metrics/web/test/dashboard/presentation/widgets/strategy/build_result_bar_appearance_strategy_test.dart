@@ -3,7 +3,7 @@ import 'package:metrics/common/presentation/colored_bar/theme/attention_level/me
 import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
 import 'package:metrics/common/presentation/colored_bar/theme/theme_data/metrics_colored_bar_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
@@ -21,11 +21,12 @@ void main() {
     const themeStrategy = BuildResultBarAppearanceStrategy();
 
     test(
-      ".getWidgetAppearance() returns null if the given build status is null",
+      ".getWidgetAppearance() returns the neutral style if the given build status is null",
       () {
+        final style = theme.metricsColoredBarTheme.attentionLevel.neutral;
         final actualStyle = themeStrategy.getWidgetAppearance(theme, null);
 
-        expect(actualStyle, isNull);
+        expect(actualStyle, style);
       },
     );
 

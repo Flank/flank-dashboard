@@ -38,7 +38,7 @@ void main() {
     });
 
     test(
-      ".fromJson() create a BuildData with null buildStatus if the json contains invalid enum value",
+      ".fromJson() create a BuildData with unknown buildStatus if the json contains invalid enum value",
       () {
         final _buildDataJson = Map<String, dynamic>.from(buildDataJson);
 
@@ -46,7 +46,7 @@ void main() {
 
         final buildData = BuildDataDeserializer.fromJson(_buildDataJson, id);
 
-        expect(buildData.buildStatus, isNull);
+        expect(buildData.buildStatus, BuildStatus.unknown);
       },
     );
   });
