@@ -6,6 +6,7 @@ export 'src/data/model/data_model.dart';
 export 'src/data/model/project_data.dart';
 export 'src/domain/entities/build.dart';
 export 'src/domain/entities/build_status.dart';
+export 'src/domain/entities/coverage.dart';
 export 'src/domain/entities/project.dart';
 export 'src/domain/value_objects/email.dart';
 export 'src/domain/value_objects/exceptions/email_validation_error_code.dart';
