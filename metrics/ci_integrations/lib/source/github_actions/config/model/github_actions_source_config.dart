@@ -23,7 +23,7 @@ class GithubActionsSourceConfig extends Equatable implements SourceConfig {
   /// This name must uniquely identify a job among other jobs within the workflow.
   final String jobName;
 
-  /// A name of the artifact that contain a coverage data for a single run
+  /// A name of the artifact that contains a coverage data for a single run
   /// of the job.
   final String coverageArtifactName;
 
