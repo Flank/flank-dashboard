@@ -3,6 +3,10 @@ import 'package:test/test.dart';
 
 void main() {
   group("CoverageData", () {
+    const percent = 0.6;
+    final json = {
+      'pct': percent.toString(),
+    };
     test(
       "throws an ArgumentError if the given percent is null",
       () {
@@ -19,7 +23,6 @@ void main() {
     test(
       ".fromJson() creates a new instance from the decoded JSON object",
       () {
-        const percent = 0.6;
         const coverageJson = {
           'pct': percent,
         };
@@ -33,5 +36,11 @@ void main() {
         expect(coverageModel, equals(expectedCoverageModel));
       },
     );
+
+    test(".toJson() converts an instance to the json encodable map", () {
+      final coverageData = CoverageData(percent: Percent(percent));
+
+      expect(coverageData.toJson(), equals(json));
+    });
   });
 }
