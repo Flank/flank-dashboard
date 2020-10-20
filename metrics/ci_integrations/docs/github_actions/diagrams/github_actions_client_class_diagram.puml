@@ -118,12 +118,12 @@ package github_actions {
 
         + getHeaders() : Map<String, String>
         + fetchWorkflowRuns(String workflowIdentifier, GithubActionStatus status, int perPage, int page): Future<InteractionResult<WorkflowRunsPage>>
-        + fetchNextRuns(WorkflowRunsPage currentPage) : Future<InteractionResult<WorkflowRunsPage>>
+        + fetchWorkflowRunsNext(WorkflowRunsPage currentPage) : Future<InteractionResult<WorkflowRunsPage>>
         + fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<WorkflowRunArtifactsPage>>
-        + fetchNextRunArtifacts(WorkflowRunArtifactsPage currentPage) : Future<InteractionResult<WorkflowRunArtifactsPage>>
+        + fetchRunArtifactsNext(WorkflowRunArtifactsPage currentPage) : Future<InteractionResult<WorkflowRunArtifactsPage>>
         + downloadRunArtifactZip(String url): Future<InteractionResult<UInt8List>>
         + fetchRunJobs(int runId, GithubActionStatus status, int perPage, int page): Future<InteractionResult<WorkflowRunJobsPage>>
-        + fetchNextRunJobs(WorkflowRunJobsPage currentPage): Future<InteractionResult<WorkflowRunJobsPage>>
+        + fetchRunJobsNext(WorkflowRunJobsPage currentPage): Future<InteractionResult<WorkflowRunJobsPage>>
         + close(): void
     }
 }

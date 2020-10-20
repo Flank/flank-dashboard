@@ -23,6 +23,7 @@ We should implement the GithubActionsClient and related models in a way they wil
 ![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/github_actions_redesign/metrics/ci_integrations/docs/github_actions/diagrams/github_actions_client_class_diagram.puml)
 
 * Package structure
+
 > * github_actions/
 >   * github_actions_client.dart
 >   * mappers/
@@ -42,10 +43,10 @@ We should implement the GithubActionsClient and related models in a way they wil
 ## Table of methods
 | Client method | Endpoint name   |  API endpoint | Description |
 |---------------|------------------|-------------|---------------|
-| fetchWorkflowRuns, fetchNextRuns | [List workflow runs](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-runs) | **`GET`** /repos/**{owner}**/**{repo}**/actions/workflows/**{workflow_file_name}**/runs | Lists runs for the specified workflow. |
-| fetchRunArtifacts, fetchNextRunArtifacts |[List workflow run artifacts](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-run-artifacts)  | **`GET`** /repos/**{owner}**/**{repo}**/actions/runs/**{run_id}**/artifacts | Lists artifacts for a workflow run. |
-| downloadRunArtifact| [Download an artifact](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#download-an-artifact)| **`GET`** /repos/**{owner}**/**{repo}**/actions/artifacts/**{artifact_id}**/zip | Downloads the specified run artifact. |
-| fetchRunJobs, fetchNextRunJobs | [List jobs for a workflow run](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-jobs-for-a-workflow-run)  | **`GET`** /repos/**{owner}**/**{repo}**/actions/runs/**{run_id}**/jobs | Lists jobs for a workflow run.|
+| fetchWorkflowRuns, fetchWorkflowRunsNext | [List workflow runs](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-runs) | **`GET`** /repos/**{owner}**/**{repo}**/actions/workflows/**{workflow_file_name}**/runs | Lists runs for the specified workflow. |
+| fetchRunArtifacts, fetchRunArtifactsNext |[List workflow run artifacts](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-run-artifacts)  | **`GET`** /repos/**{owner}**/**{repo}**/actions/runs/**{run_id}**/artifacts | Lists artifacts for a workflow run. |
+| downloadRunArtifactZip| [Download an artifact](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#download-an-artifact)| **`GET`** /repos/**{owner}**/**{repo}**/actions/artifacts/**{artifact_id}**/zip | Downloads the specified run artifact. |
+| fetchRunJobs, fetchRunJobsNext | [List jobs for a workflow run](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-jobs-for-a-workflow-run)  | **`GET`** /repos/**{owner}**/**{repo}**/actions/runs/**{run_id}**/jobs | Lists jobs for a workflow run.|
 
 ## Authorization
 * Fetching data from private repositories requires authorization. Authorization also increases the maximum number of requests per hour (5000 for authorized users and 60 for unauthorized users).
