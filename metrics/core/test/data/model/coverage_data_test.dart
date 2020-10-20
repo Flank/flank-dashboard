@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group("CoverageData", () {
     test(
-      "can't be created with the null percent",
+      "throws an ArgumentError if the given percent is null",
       () {
         expect(() => CoverageData(percent: null), throwsArgumentError);
       },
