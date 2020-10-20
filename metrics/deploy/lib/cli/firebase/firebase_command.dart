@@ -1,18 +1,19 @@
 import 'package:process_run/process_run.dart' as cmd;
 import 'package:process_run/shell.dart';
 
-/// class wrapping up firebase CLI
+/// A wrapper class for the Firebase CLI.
 class FirebaseCommand {
-  /// Login to GCloud and Firebase and get firebase CI token
+  /// Logins to GCloud and Firebase and gets firebase CI token.
   Future<String> login() async {
-    // Firebase login
+    // Logins to Firebase.
     print('Firebase login.');
     await cmd.run('firebase', ['login:ci', '--interactive'], verbose: true);
-    // Configure firebase project
+    // Configures firebase project.
     return prompt('Copy Firebase Token from above');
   }
 
-  /// Add Firebase capabilities to project.
+  /// Adds Firebase capabilities to the project
+  /// based on the given [projectID] and [firebaseToken].
   Future<void> addFirebase(String projectID, String firebaseToken) async {
     if (await promptConfirm('Add firebase capabilities to project ?')) {
       print('Adding Firebase capabilities.');
@@ -24,7 +25,7 @@ class FirebaseCommand {
     }
   }
 
-  /// Create Firebase web app.
+  /// Creates Firebase web app with the given [projectID] and [firebaseToken].
   Future<String> createWebApp(String projectID, String firebaseToken) async {
     //firebase apps:create --project $projectID
     if (await promptConfirm('Add web app?')) {
@@ -54,7 +55,7 @@ class FirebaseCommand {
   /// Downloads and writes web app SDK config to firebase-config.js file.
   Future<void> downloadSDKConfig(String appID, String configPath,
       String projectID, String firebaseToken) async {
-    // Get config
+    // Gets config.
     print('Write web app SDK config to firebase-config.js file.');
     await cmd.run(
         'firebase',

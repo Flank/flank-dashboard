@@ -4,18 +4,26 @@ import 'package:deploy/cli/flutter/flutter_command.dart';
 import 'package:deploy/cli/gcloud/gcloud_command.dart';
 import 'package:deploy/cli/git/git_command.dart';
 
-/// class providing doctor command to verify dependencies.
+/// A class providing doctor command to verify dependencies.
 class DoctorCommand extends Command {
   @override
   final name = "doctor";
   @override
   final description = "Check dependencies.";
 
+  /// Provides Firebase CLI.
   final _firebase = FirebaseCommand();
+
+  /// Provides GCloud CLI.
   final _gcloud = GCloudCommand();
+
+  /// Provides Git CLI.
   final _git = GitCommand();
+
+  /// Provides Flutter CLI.
   final _flutter = FlutterCommand();
 
+  /// Creates this doctor command instance.
   DoctorCommand();
 
   @override

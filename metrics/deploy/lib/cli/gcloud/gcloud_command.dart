@@ -3,24 +3,29 @@ import 'dart:math';
 import 'package:process_run/process_run.dart' as cmd;
 import 'package:process_run/shell.dart';
 
-/// class wrapping up gcloud CLI
+/// A wrapper class for the GCloud CLI.
 class GCloudCommand {
+  /// Literal and numerical symbols.
   final _chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
+
+  /// A generator of random value.
   final Random _rnd = Random();
+
+  /// The unique identifier of the project.
   String projectID = '';
 
-  /// Generates random string for new project name
+  /// Generates a random string for the new project name.
   String _getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-  /// Login to GCloud and Firebase and get firebase CI token
+  /// Logins to GCloud and Firebase and gets firebase CI token.
   Future<void> login() async {
-    // GCloud login
+    // Logins to GCloud.
     print('GCloud Login.');
     await cmd.run('gcloud', ['auth', 'login'], verbose: true);
   }
 
-  /// Add project or use existing project
+  /// Adds project or uses existing project.
   Future<String> addProject() async {
     if (await promptConfirm('Create new project ?')) {
       print('Creating new project');
@@ -37,7 +42,7 @@ class GCloudCommand {
     return projectID;
   }
 
-  // Add project app needed to create firestore database.
+  /// Adds project app needed to create firestore database.
   Future<void> addProjectApp(String region, String projectID) async {
     if (await promptConfirm('Add project app ?')) {
       print('Adding project app.');
@@ -49,7 +54,7 @@ class GCloudCommand {
     }
   }
 
-  /// Create firestore database.
+  /// Creates firestore database with the given [region] and [projectID].
   Future<void> createDatabase(String region, String projectID) async {
     // gcloud alpha firestore databases create --region=europe-west --project $projectID --quiet
     if (await promptConfirm('Add project database ?')) {
@@ -73,12 +78,12 @@ class GCloudCommand {
     }
   }
 
-  /// Cleanup resources.
+  /// Cleans up resources.
   Future<void> cleanup(String srcPath) async {
     await cmd.run('rm', ['-rf', srcPath], verbose: true);
   }
 
-  /// Prints cli verison.
+  /// Prints CLI version.
   Future<void> version() async {
     await cmd.run('gcloud', ['--version'], verbose: true);
   }
