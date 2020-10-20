@@ -1,7 +1,7 @@
 import 'common_strings.dart';
 import 'error_code/coverage_converter_error_code.dart';
 
-/// A class that provides the coverage converter error description, based on [CoverageConverterErrorCode].
+/// A class that represents the coverage converter [Exception].
 class CoverageConverterException implements Exception {
   /// An [CoverageConverterErrorCode] provides an information about
   /// concrete coverage converter exception.
