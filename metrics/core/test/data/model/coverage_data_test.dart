@@ -2,16 +2,16 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("CoverageModel", () {
+  group("CoverageData", () {
     test(
       "can't be created with the null percent",
       () {
-        expect(() => CoverageModel(percent: null), throwsArgumentError);
+        expect(() => CoverageData(percent: null), throwsArgumentError);
       },
     );
 
     test('.fromJson() returns null if the given JSON is null', () {
-      final coverageModel = CoverageModel.fromJson(null);
+      final coverageModel = CoverageData.fromJson(null);
 
       expect(coverageModel, isNull);
     });
@@ -24,11 +24,11 @@ void main() {
           'pct': percent,
         };
 
-        final expectedCoverageModel = CoverageModel(
+        final expectedCoverageModel = CoverageData(
           percent: Percent(percent / 100),
         );
 
-        final coverageModel = CoverageModel.fromJson(coverageJson);
+        final coverageModel = CoverageData.fromJson(coverageJson);
 
         expect(coverageModel, equals(expectedCoverageModel));
       },
