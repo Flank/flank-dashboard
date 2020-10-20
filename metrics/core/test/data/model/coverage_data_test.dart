@@ -10,14 +10,14 @@ void main() {
       },
     );
 
-    test('.fromJson() returns null if the given JSON is null', () {
+    test(".fromJson() returns null if the given JSON is null", () {
       final coverageModel = CoverageData.fromJson(null);
 
       expect(coverageModel, isNull);
     });
 
     test(
-      '.fromJson() creates a new instance from the decoded JSON object',
+      ".fromJson() creates a new instance from the decoded JSON object",
       () {
         const percent = 100;
         const coverageJson = {
