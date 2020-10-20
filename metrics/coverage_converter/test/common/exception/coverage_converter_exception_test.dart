@@ -7,7 +7,7 @@ import '../../../lib/common/exception/error_code/coverage_converter_error_code.d
 void main() {
   group("CoverageConverterException", () {
     test(
-      "maps the 'no such file' error code to the 'no such file' error message",
+      ".message returns no such file error message if the given code is `noSuchFile`",
       () {
         const coverageConverterException =
             CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
@@ -17,7 +17,7 @@ void main() {
     );
 
     test(
-      "maps the 'file is empty' error code to the 'file is empty' error message",
+      ".message returns file is empty error message if the given code is `fileIsEmpty`",
       () {
         const coverageConverterException =
             CoverageConverterException(CoverageConverterErrorCode.fileIsEmpty);
@@ -27,7 +27,7 @@ void main() {
     );
 
     test(
-      "maps the 'invalid file format' error code to the 'invalid file format' error message",
+      ".message returns invalid file format error message if the given code is `invalidFileFormat`",
       () {
         const coverageConverterException = CoverageConverterException(
             CoverageConverterErrorCode.invalidFileFormat);
