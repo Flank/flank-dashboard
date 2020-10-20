@@ -16,32 +16,37 @@ Details of the client integration is out of scope of this document.
 * [Third-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md)
 
 ## Design
-We should implement the GithubActionsClient and related models in a way they will fit the Metrics and CI integration requirements. The main idea is that client performs granular API calls so the developers can use different methods on demand. Consider the following class diagram that demonstrates a suggested structure.
+We should implement the GithubActionsClient and related models in a way they will fit the Metrics and CI integration
+ requirements. The main idea is that client performs granular API calls, so the developers can use different methods on demand. Consider the following class diagram that demonstrates a suggested structure.
 
 * Class diagram
 ![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/github_actions/diagrams/github_actions_client_class_diagram.puml)
 
 * Package structure
+
 > * github_actions/
 >   * github_actions_client.dart
 >   * mappers/
->      * run_conclusion_mapper.dart
->      * run_status_mapper.dart
+>      * github_action_conclusion_mapper.dart
+>      * github_action_status_mapper.dart
 >   * models/
->      * run_conclusion.dart
->      * run_status.dart
+>      * github_action_conclusion.dart
+>      * github_action_status.dart
 >      * workflow_run.dart
 >      * workflow_run_artifact.dart
->      * workflow_run_duration.dart
-
+>      * workflow_job.dart
+>      * page.dart
+>      * workflow_runs_page.dart
+>      * workflow_jobs_page.dart
+>      * workflow_run_artifacts_page.dart
 
 ## Table of methods
 | Client method | Endpoint name   |  API endpoint | Description |
 |---------------|------------------|-------------|---------------|
-| fetchWorkflowRuns, fetchNextRunsPage | [List workflow runs](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-runs) | GET /repos/{owner}/{repo}/actions/workflows/{workflow_file_name}/runs | Lists runs for the specified workflow. |
-| fetchRunArtifacts, fetchNextRunArtifactsPage |[List workflow run artifacts](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-run-artifacts)  | GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts | Lists artifacts for a workflow run. |
-| downloadRunArtifact| [Download an artifact](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#download-an-artifact)| GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}/zip| Downloads the specified run artifact. |
-| fetchRunDuration | [Workflow run usage](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#get-workflow-run-usage)  | GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing | Gets the total run time for a specific workflow run. |
+| fetchWorkflowRuns, fetchWorkflowRunsNext | [List workflow runs](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-runs) | **`GET`** /repos/**{owner}**/**{repo}**/actions/workflows/**{workflow_file_name}**/runs | Lists runs for the specified workflow. |
+| fetchRunArtifacts, fetchRunArtifactsNext |[List workflow run artifacts](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-workflow-run-artifacts)  | **`GET`** /repos/**{owner}**/**{repo}**/actions/runs/**{run_id}**/artifacts | Lists artifacts for a workflow run. |
+| downloadRunArtifactZip| [Download an artifact](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#download-an-artifact)| **`GET`** /repos/**{owner}**/**{repo}**/actions/artifacts/**{artifact_id}**/zip | Downloads the specified run artifact. |
+| fetchRunJobs, fetchRunJobsNext | [List jobs for a workflow run](https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-jobs-for-a-workflow-run)  | **`GET`** /repos/**{owner}**/**{repo}**/actions/runs/**{run_id}**/jobs | Lists jobs for a workflow run.|
 
 ## Authorization
 * Fetching data from private repositories requires authorization. Authorization also increases the maximum number of requests per hour (5000 for authorized users and 60 for unauthorized users).

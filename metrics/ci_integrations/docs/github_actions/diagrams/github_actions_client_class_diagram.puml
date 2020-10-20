@@ -17,7 +17,7 @@ package github_actions {
             + values: List<T>
         }
 
-        class WorkflowRunsPage<WorkflowRun> implements Page {
+        class WorkflowRunsPage<WorkflowRun> {
             + totalCount: int
             + page: int
             + perPage: int
@@ -25,7 +25,7 @@ package github_actions {
             + values: List<WorkflowRun>
         }
 
-        class WorkflowRunArtifactsPage<WorkflowRunArtifact> implements Page {
+        class WorkflowRunArtifactsPage<WorkflowRunArtifact> {
             + totalCount: int
             + page: int
             + perPage: int
@@ -33,17 +33,39 @@ package github_actions {
             + values: List<WorkflowRunArtifact>
         }
 
+        class WorkflowRunJobsPage<WorkflowRunJob> {
+            + totalCount: int
+            + page: int
+            + perPage: int
+            + nextPageUrl: String
+            + values: List<WorkflowRunJob>
+        }
+
         class WorkflowRun {
             + id: int
             + number: int
             + url: String
-            + status: RunStatus
-            + conclusion: RunConclusion
+            + status: GithubActionStatus
             + createdAt: DateTime
 
-            + factory fromJson(Map<String, dynamic> json): WorkflowRun
+            + //factory// fromJson(Map<String, dynamic> json): WorkflowRun
             + toJson(): Map<String, dynamic>
-            + listFromJson(List<dynamic> list): List<WorkflowRun>
+            + {static} listFromJson(List<dynamic> list): List<WorkflowRun>
+        }
+
+        class WorkflowRunJob {
+            + id: int
+            + runId: int
+            + name: String
+            + url: String
+            + status: GithubActionStatus
+            + conclusion: GithubActionConclusion
+            + startedAt: DateTime
+            + completedAt: DateTime
+
+            + //factory// fromJson(Map<String, dynamic> json): WorkflowRunJob
+            + toJson(): Map<String, dynamic>
+            + {static} listFromJson(List<dynamic> list): List<WorkflowRunJob>
         }
 
         class WorkflowRunArtifact {
@@ -51,26 +73,18 @@ package github_actions {
             + name: String
             + downloadUrl: String
 
-            + factory fromJson(Map<String, dynamic> json): WorkflowRunArtifact
+            + //factory// fromJson(Map<String, dynamic> json): WorkflowRunArtifact
             + toJson(): Map<String, dynamic>
-            + listFromJson(List<dynamic> list): List<WorkflowRunArtifact>
+            + {static} listFromJson(List<dynamic> list): List<WorkflowRunArtifact>
         }
 
-        class WorkflowRunDuration {
-            + duration: Duration
-
-            + factory fromJson(Map<String, dynamic> json): WorkflowRunDuration
-            + toJson(): Map<String, dynamic>
-        }
-
-
-        enum RunStatus {
+        enum GithubActionStatus {
             queued
             inProgress
             completed
         }
 
-        enum RunConclusion {
+        enum GithubActionConclusion {
             success
             failure
             neutral
@@ -83,14 +97,14 @@ package github_actions {
     }
 
     package mappers {
-        class RunConclusionMapper<String, RunConclusion> implements Mapper {
-            + map(String conclusion): RunConclusion
-            + unmap(RunConclusion conclusion): String
+        class GithubActionConclusionMapper<String, GithubActionConclusion> implements Mapper {
+            + map(String conclusion): GithubActionConclusion
+            + unmap(GithubActionConclusion conclusion): String
         }
 
-        class RunStatusMapper<String, RunStatus> implements Mapper {
-            + map(String status): RunStatus
-            + unmap(RunStatus status): String
+        class GithubActionStatusMapper<String, GithubActionStatus> implements Mapper {
+            + map(String status): GithubActionStatus
+            + unmap(GithubActionStatus status): String
         }
 
     }
@@ -103,25 +117,38 @@ package github_actions {
         + authorization: AuthorizationBase
 
         + getHeaders() : Map<String, String>
-        + fetchWorkflowRuns(String workflowIdentifier, RunStatus status, int perPage, int page): Future<InteractionResult<WorkflowRunsPage>>
-        + fetchNextRunsPage(WorkflowRunsPage currentPage) : Future<InteractionResult<WorkflowRunsPage>>
+        + fetchWorkflowRuns(String workflowIdentifier, GithubActionStatus status, int perPage, int page): Future<InteractionResult<WorkflowRunsPage>>
+        + fetchWorkflowRunsNext(WorkflowRunsPage currentPage) : Future<InteractionResult<WorkflowRunsPage>>
         + fetchRunArtifacts(int runId, int perPage, int page): Future<InteractionResult<WorkflowRunArtifactsPage>>
-        + fetchNextRunArtifactsPage(WorkflowRunArtifactsPage currentPage) : Future<InteractionResult<WorkflowRunArtifactsPage>>
+        + fetchRunArtifactsNext(WorkflowRunArtifactsPage currentPage) : Future<InteractionResult<WorkflowRunArtifactsPage>>
         + downloadRunArtifactZip(String url): Future<InteractionResult<UInt8List>>
-        + fetchRunDuration(int runId): Future<InteractionResult<WorkflowRunDuration>>
+        + fetchRunJobs(int runId, GithubActionStatus status, int perPage, int page): Future<InteractionResult<WorkflowRunJobsPage>>
+        + fetchRunJobsNext(WorkflowRunJobsPage currentPage): Future<InteractionResult<WorkflowRunJobsPage>>
         + close(): void
     }
 }
 
+WorkflowRunJobsPage .up.|> Page
+WorkflowRunArtifactsPage .up.|> Page
+WorkflowRunsPage .up.|> Page
 
-WorkflowRunDuration <-- GithubActionsClient : uses
-WorkflowRunsPage <-- GithubActionsClient : uses
-WorkflowRunArtifactsPage <-- GithubActionsClient : uses
+GithubActionStatusMapper <-right- GithubActionsClient : uses
+GithubActionConclusionMapper <-right- GithubActionsClient : uses
+
+WorkflowRunsPage <-up- GithubActionsClient : uses
+WorkflowRunArtifactsPage <-up- GithubActionsClient : uses
+WorkflowRunJobsPage <-up- GithubActionsClient : uses
+
 WorkflowRun "1..N" -up-o "1" WorkflowRunsPage : uses
 WorkflowRunArtifact "1..N" -up-o "1" WorkflowRunArtifactsPage : uses
-RunStatusMapper <-- GithubActionsClient : uses
-RunConclusionMapper <-- GithubActionsClient : uses
-RunConclusion <-- WorkflowRun : uses
-RunStatus <-- WorkflowRun : uses
+WorkflowRunJob "1..N" -up-o "1" WorkflowRunJobsPage : uses
+
+GithubActionStatus <-- WorkflowRun : uses
+GithubActionConclusion <-- WorkflowRunJob : uses
+GithubActionStatus <-- WorkflowRunJob : uses
+
+WorkflowRunJobsPage -right[hidden]-> WorkflowRunsPage
+WorkflowRunJob -right[hidden]-> WorkflowRun
+GithubActionConclusionMapper <-up[hidden]- GithubActionStatusMapper
 
 @enduml
