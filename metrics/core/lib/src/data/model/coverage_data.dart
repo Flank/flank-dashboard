@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:metrics_core/src/domain/entities/coverage.dart';
 
-/// [DataModel] that represents the [Coverage] entity.
+/// A [DataModel] that represents the [Coverage] entity.
 class CoverageData extends Coverage implements DataModel {
   /// Creates a new instance of the [CoverageData] with the given [percent].
   CoverageData({@required Percent percent}) : super(percent: percent);
