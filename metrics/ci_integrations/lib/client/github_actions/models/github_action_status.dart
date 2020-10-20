@@ -1,4 +1,4 @@
-/// Represents a status of a [WorkflowRun] or a [WorkflowRunJob].
+/// Represents a Github Actions status.
 enum GithubActionStatus {
   /// Represents a status for a queued workflow run or a workflow run job.
   queued,

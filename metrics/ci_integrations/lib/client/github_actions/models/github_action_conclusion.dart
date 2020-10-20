@@ -1,4 +1,4 @@
-/// Represents a conclusion of a [WorkflowRunJob].
+/// Represents a Github Actions conclusion.
 enum GithubActionConclusion {
   /// Represents a conclusion of a successful workflow run job.
   success,
