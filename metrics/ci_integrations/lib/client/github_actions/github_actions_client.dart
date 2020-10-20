@@ -192,7 +192,7 @@ class GithubActionsClient {
   ///
   /// If the given [currentPage] does not have the next page, the
   /// [InteractionResult.error] is returned.
-  FutureOr<InteractionResult<WorkflowRunsPage>> fetchNextRuns(
+  FutureOr<InteractionResult<WorkflowRunsPage>> fetchWorkflowRunsNext(
     WorkflowRunsPage currentPage,
   ) {
     if (!currentPage.hasNextPage) {
@@ -218,7 +218,7 @@ class GithubActionsClient {
   ///
   /// A [page] is used for pagination and defines a page of runs to fetch.
   ///
-  /// Both [fetchWorkflowRuns] and [fetchNextRuns] delegate retrieving
+  /// Both [fetchWorkflowRuns] and [fetchWorkflowRunsNext] delegate retrieving
   /// [WorkflowRunsPage]s to this method.
   Future<InteractionResult<WorkflowRunsPage>> _fetchWorkflowRuns(
     String url, {
@@ -324,7 +324,7 @@ class GithubActionsClient {
   ///
   /// If the given [currentPage] does not have the next page, the
   /// [InteractionResult.error] is returned.
-  FutureOr<InteractionResult<WorkflowRunJobsPage>> fetchNextRunJobs(
+  FutureOr<InteractionResult<WorkflowRunJobsPage>> fetchRunJobsNext(
     WorkflowRunJobsPage currentPage,
   ) {
     if (!currentPage.hasNextPage) {
@@ -350,7 +350,7 @@ class GithubActionsClient {
   ///
   /// A [page] is used for pagination and defines a page of runs to fetch.
   ///
-  /// Both [fetchRunJobs] and [fetchNextRunJobs] delegate retrieving
+  /// Both [fetchRunJobs] and [fetchRunJobsNext] delegate retrieving
   /// [WorkflowRunJobsPage]s to this method.
   Future<InteractionResult<WorkflowRunJobsPage>> _fetchRunJobsPage(
     String url, {
@@ -429,7 +429,7 @@ class GithubActionsClient {
   ///
   /// If the given [currentPage] does not have the next page, the
   /// [InteractionResult.error] is returned.
-  FutureOr<InteractionResult<WorkflowRunArtifactsPage>> fetchNextRunArtifacts(
+  FutureOr<InteractionResult<WorkflowRunArtifactsPage>> fetchRunArtifactsNext(
     WorkflowRunArtifactsPage currentPage,
   ) {
     if (!currentPage.hasNextPage) {
@@ -455,7 +455,7 @@ class GithubActionsClient {
   ///
   /// A [page] is used for pagination and defines a page of runs to fetch.
   ///
-  /// Both [fetchRunArtifacts] and [fetchNextRunArtifacts] delegate
+  /// Both [fetchRunArtifacts] and [fetchRunArtifactsNext] delegate
   /// retrieving [WorkflowRunArtifactsPage]s to this method.
   Future<InteractionResult<WorkflowRunArtifactsPage>> _fetchRunArtifacts(
     String url, {
