@@ -185,7 +185,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       orElse: () => null,
     );
 
-    CoverageModel coverage;
+    CoverageData coverage;
 
     if (coverageArtifact != null) {
       final artifactContentFetchResult =
@@ -197,7 +197,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       _throwIfInteractionUnsuccessful(artifactContentFetchResult);
 
       final artifactContent = artifactContentFetchResult.result;
-      coverage = CoverageModel.fromJson(artifactContent);
+      coverage = CoverageData.fromJson(artifactContent);
     }
 
     return coverage?.percent;
