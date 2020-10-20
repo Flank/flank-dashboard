@@ -14,10 +14,10 @@ class CoverageData extends Coverage implements DataModel {
   factory CoverageData.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
 
-    final coveragePercent = json['pct'] as int;
+    final coveragePercent = json['pct'] as double;
 
     return CoverageData(
-      percent: Percent(coveragePercent / 100),
+      percent: Percent(coveragePercent),
     );
   }
 

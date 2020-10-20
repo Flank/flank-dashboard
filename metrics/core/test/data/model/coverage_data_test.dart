@@ -19,13 +19,13 @@ void main() {
     test(
       ".fromJson() creates a new instance from the decoded JSON object",
       () {
-        const percent = 100;
+        const percent = 0.6;
         const coverageJson = {
           'pct': percent,
         };
 
         final expectedCoverageModel = CoverageData(
-          percent: Percent(percent / 100),
+          percent: Percent(percent),
         );
 
         final coverageModel = CoverageData.fromJson(coverageJson);
