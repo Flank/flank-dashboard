@@ -5,49 +5,69 @@ import 'package:meta/meta.dart';
 
 /// A class that represents a [SourceConfig] for the Github Actions integration.
 class GithubActionsSourceConfig extends Equatable implements SourceConfig {
+  /// An owner of the project's repository.
+  final String repositoryOwner;
+
+  /// A name of the project's repository.
+  final String repositoryName;
+
   /// A unique identifier of the Github Actions workflow to integrate.
   ///
   /// This is either a workflow id or a name of the file that defines
   /// the workflow.
   final String workflowIdentifier;
 
-  /// A name of the project's repository.
-  final String repositoryName;
+  /// A name of the Github Actions workflow job associated with the repository
+  /// project to use in integration.
+  ///
+  /// This name must uniquely identify a job among other jobs within the workflow.
+  final String jobName;
 
-  /// An owner of the project's repository.
-  final String repositoryOwner;
+  /// A name of the artifact that contain a coverage data for a single run
+  /// of the job.
+  final String coverageArtifactName;
 
   /// A Github access token.
   final String accessToken;
 
   @override
-  String get sourceProjectId => workflowIdentifier;
+  String get sourceProjectId => jobName;
 
   @override
-  List<Object> get props =>
-      [workflowIdentifier, repositoryName, repositoryOwner, accessToken];
+  List<Object> get props => [
+        workflowIdentifier,
+        repositoryName,
+        repositoryOwner,
+        jobName,
+        coverageArtifactName,
+        accessToken,
+      ];
 
   /// Creates a new instance of the [GithubActionsSourceConfig].
   ///
-  /// Throws an [ArgumentError] if either [workflowIdentifier], [repositoryName]
-  /// or [repositoryOwner] is `null` or empty.
+  /// Throws an [ArgumentError] if one of the required parameters
+  /// is `null` or empty.
   GithubActionsSourceConfig({
-    @required this.workflowIdentifier,
-    @required this.repositoryName,
     @required this.repositoryOwner,
+    @required this.repositoryName,
+    @required this.workflowIdentifier,
+    @required this.jobName,
+    @required this.coverageArtifactName,
     this.accessToken,
   }) {
+    StringValidator.checkNotNullOrEmpty(
+      repositoryOwner,
+      name: 'repositoryOwner',
+    );
+    StringValidator.checkNotNullOrEmpty(repositoryName, name: 'repositoryName');
     StringValidator.checkNotNullOrEmpty(
       workflowIdentifier,
       name: 'workflowIdentifier',
     );
+    StringValidator.checkNotNullOrEmpty(jobName, name: 'jobName');
     StringValidator.checkNotNullOrEmpty(
-      repositoryName,
-      name: 'repositoryName',
-    );
-    StringValidator.checkNotNullOrEmpty(
-      repositoryOwner,
-      name: 'repositoryOwner',
+      coverageArtifactName,
+      name: 'coverageArtifactName',
     );
   }
 
@@ -59,9 +79,11 @@ class GithubActionsSourceConfig extends Equatable implements SourceConfig {
     if (json == null) return null;
 
     return GithubActionsSourceConfig(
-      workflowIdentifier: json['workflow_identifier'] as String,
       repositoryOwner: json['repository_owner'] as String,
       repositoryName: json['repository_name'] as String,
+      workflowIdentifier: json['workflow_identifier'] as String,
+      jobName: json['job_name'] as String,
+      coverageArtifactName: json['coverage_artifact_name'] as String,
       accessToken: json['access_token'] as String,
     );
   }

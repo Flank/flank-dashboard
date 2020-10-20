@@ -11,6 +11,9 @@ void main() {
     const workflowIdentifier = GithubActionsConfigTestData.workflowIdentifier;
     const repositoryOwner = GithubActionsConfigTestData.repositoryOwner;
     const repositoryName = GithubActionsConfigTestData.repositoryName;
+    const jobName = GithubActionsConfigTestData.jobName;
+    const coverageArtifactName =
+        GithubActionsConfigTestData.coverageArtifactName;
     const accessToken = GithubActionsConfigTestData.accessToken;
 
     const configMap = GithubActionsConfigTestData.sourceConfigMap;
@@ -24,6 +27,8 @@ void main() {
             workflowIdentifier: null,
             repositoryOwner: repositoryOwner,
             repositoryName: repositoryName,
+            jobName: jobName,
+            coverageArtifactName: coverageArtifactName,
             accessToken: accessToken,
           ),
           throwsArgumentError,
@@ -39,6 +44,8 @@ void main() {
             workflowIdentifier: '',
             repositoryOwner: repositoryOwner,
             repositoryName: repositoryName,
+            jobName: jobName,
+            coverageArtifactName: coverageArtifactName,
             accessToken: accessToken,
           ),
           throwsArgumentError,
@@ -54,6 +61,8 @@ void main() {
             workflowIdentifier: workflowIdentifier,
             repositoryOwner: null,
             repositoryName: repositoryName,
+            jobName: jobName,
+            coverageArtifactName: coverageArtifactName,
             accessToken: accessToken,
           ),
           throwsArgumentError,
@@ -69,6 +78,8 @@ void main() {
             workflowIdentifier: workflowIdentifier,
             repositoryOwner: '',
             repositoryName: repositoryName,
+            jobName: jobName,
+            coverageArtifactName: coverageArtifactName,
             accessToken: accessToken,
           ),
           throwsArgumentError,
@@ -84,6 +95,8 @@ void main() {
             workflowIdentifier: workflowIdentifier,
             repositoryOwner: repositoryOwner,
             repositoryName: null,
+            jobName: jobName,
+            coverageArtifactName: coverageArtifactName,
             accessToken: accessToken,
           ),
           throwsArgumentError,
@@ -99,6 +112,76 @@ void main() {
             workflowIdentifier: workflowIdentifier,
             repositoryOwner: repositoryOwner,
             repositoryName: '',
+            jobName: jobName,
+            coverageArtifactName: coverageArtifactName,
+            accessToken: accessToken,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given job name is null",
+      () {
+        expect(
+          () => GithubActionsSourceConfig(
+            workflowIdentifier: workflowIdentifier,
+            repositoryOwner: repositoryOwner,
+            repositoryName: repositoryName,
+            jobName: null,
+            coverageArtifactName: coverageArtifactName,
+            accessToken: accessToken,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given job name is empty",
+      () {
+        expect(
+          () => GithubActionsSourceConfig(
+            workflowIdentifier: workflowIdentifier,
+            repositoryOwner: repositoryOwner,
+            repositoryName: repositoryName,
+            jobName: '',
+            coverageArtifactName: coverageArtifactName,
+            accessToken: accessToken,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given coverage artifact name is null",
+      () {
+        expect(
+          () => GithubActionsSourceConfig(
+            workflowIdentifier: workflowIdentifier,
+            repositoryOwner: repositoryOwner,
+            repositoryName: repositoryName,
+            jobName: jobName,
+            coverageArtifactName: null,
+            accessToken: accessToken,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given coverage artifact name is empty",
+      () {
+        expect(
+          () => GithubActionsSourceConfig(
+            workflowIdentifier: workflowIdentifier,
+            repositoryOwner: repositoryOwner,
+            repositoryName: repositoryName,
+            jobName: jobName,
+            coverageArtifactName: '',
             accessToken: accessToken,
           ),
           throwsArgumentError,
@@ -113,6 +196,8 @@ void main() {
           workflowIdentifier: workflowIdentifier,
           repositoryOwner: repositoryOwner,
           repositoryName: repositoryName,
+          jobName: jobName,
+          coverageArtifactName: coverageArtifactName,
           accessToken: accessToken,
         );
 
@@ -141,8 +226,8 @@ void main() {
       },
     );
 
-    test(".sourceProjectId returns the given workflow identifier value", () {
-      const expected = workflowIdentifier;
+    test(".sourceProjectId returns the given job name value", () {
+      const expected = jobName;
 
       final sourceProjectId = config.sourceProjectId;
 
