@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 
-import '../../../lib/common/exception/coverage_converter_error_strings.dart';
+import '../../../lib/common/exception/common_strings.dart';
 import '../../../lib/common/exception/coverage_converter_exception.dart';
 import '../../../lib/common/exception/error_code/coverage_converter_error_code.dart';
 
@@ -12,8 +12,7 @@ void main() {
         const coverageConverterException =
             CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
 
-        expect(coverageConverterException.message,
-            CoverageConverterErrorStrings.noSuchFile);
+        expect(coverageConverterException.message, CommonStrings.noSuchFile);
       },
     );
 
@@ -23,8 +22,7 @@ void main() {
         const coverageConverterException =
             CoverageConverterException(CoverageConverterErrorCode.fileIsEmpty);
 
-        expect(coverageConverterException.message,
-            CoverageConverterErrorStrings.fileIsEmpty);
+        expect(coverageConverterException.message, CommonStrings.fileIsEmpty);
       },
     );
 
@@ -35,7 +33,7 @@ void main() {
             CoverageConverterErrorCode.invalidFileFormat);
 
         expect(coverageConverterException.message,
-            CoverageConverterErrorStrings.invalidFileFormat);
+            CommonStrings.invalidFileFormat);
       },
     );
 

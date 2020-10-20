@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
-/// Holds the strings for the coverage converter exception.
-class CoverageConverterErrorStrings {
+/// A class that holds the common strings.
+class CommonStrings {
   static const String noSuchFile = 'The input file was not found';
   static const String fileIsEmpty = 'The input file is empty';
   static const String invalidFileFormat =

@@ -1,4 +1,4 @@
-import 'coverage_converter_error_strings.dart';
+import 'common_strings.dart';
 import 'error_code/coverage_converter_error_code.dart';
 
 /// A class that provides the coverage converter error description, based on [CoverageConverterErrorCode].
@@ -14,11 +14,11 @@ class CoverageConverterException {
   String get message {
     switch (_code) {
       case CoverageConverterErrorCode.noSuchFile:
-        return CoverageConverterErrorStrings.noSuchFile;
+        return CommonStrings.noSuchFile;
       case CoverageConverterErrorCode.fileIsEmpty:
-        return CoverageConverterErrorStrings.fileIsEmpty;
+        return CommonStrings.fileIsEmpty;
       case CoverageConverterErrorCode.invalidFileFormat:
-        return CoverageConverterErrorStrings.invalidFileFormat;
+        return CommonStrings.invalidFileFormat;
       default:
         return null;
     }
