@@ -197,7 +197,8 @@ class GithubActionsClient {
   ) {
     if (!currentPage.hasNextPage) {
       return const InteractionResult.error(
-        message: 'The last page is reached, there are no more runs to fetch!',
+        message:
+            'The last page is reached, there are no more elements to fetch!',
       );
     }
 
@@ -329,7 +330,8 @@ class GithubActionsClient {
   ) {
     if (!currentPage.hasNextPage) {
       return const InteractionResult.error(
-        message: 'The last page is reached, there are no more runs to fetch!',
+        message:
+            'The last page is reached, there are no more elements to fetch!',
       );
     }
 
@@ -434,7 +436,8 @@ class GithubActionsClient {
   ) {
     if (!currentPage.hasNextPage) {
       return const InteractionResult.error(
-        message: 'The last page is reached, there are no more runs to fetch!',
+        message:
+            'The last page is reached, there are no more elements to fetch!',
       );
     }
 

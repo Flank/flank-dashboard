@@ -10,7 +10,7 @@ void main() {
     final mapper = GithubActionStatusMapper();
 
     test(
-      ".map() maps the queued run status to the RunStatus.queued",
+      ".map() maps the queued run status to the GithubActionStatus.queued",
       () {
         const expectedStatus = GithubActionStatus.queued;
 
@@ -21,7 +21,7 @@ void main() {
     );
 
     test(
-      ".map() maps the in progress run status to the RunStatus.inProgress",
+      ".map() maps the in progress run status to the GithubActionStatus.inProgress",
       () {
         const expectedStatus = GithubActionStatus.inProgress;
 
@@ -32,7 +32,7 @@ void main() {
     );
 
     test(
-      ".map() maps the completed run status to the RunStatus.completed",
+      ".map() maps the completed run status to the GithubActionStatus.completed",
       () {
         const expectedStatus = GithubActionStatus.completed;
 
@@ -61,7 +61,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunStatus.queued to the queued run status value",
+      ".unmap() unmaps the GithubActionStatus.queued to the queued run status value",
       () {
         const expectedStatus = GithubActionStatusMapper.queued;
 
@@ -72,7 +72,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunStatus.inProgress to the in progress run status value",
+      ".unmap() unmaps the GithubActionStatus.inProgress to the in progress run status value",
       () {
         const expectedStatus = GithubActionStatusMapper.inProgress;
 
@@ -83,7 +83,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunStatus.completed to the completed run status value",
+      ".unmap() unmaps the GithubActionStatus.completed to the completed run status value",
       () {
         const expectedStatus = GithubActionStatusMapper.completed;
 

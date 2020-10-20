@@ -128,7 +128,7 @@ void main() {
     );
 
     test(
-      ".toJson converts an instance to the json map",
+      ".toJson() converts an instance to the json map",
       () {
         final json = job.toJson();
 

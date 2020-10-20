@@ -1,5 +1,5 @@
+import 'package:ci_integration/client/github_actions/mappers/github_action_conclusion_mapper.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
-import 'package:ci_integration/client/github_actions/mappers/run_conclusion_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';

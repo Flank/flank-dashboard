@@ -1,29 +1,28 @@
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/integration/interface/base/client/mapper/mapper.dart';
 
-/// A class that provides methods for mapping conclusions of
-/// Github Actions [WorkflowRunJob]s.
+/// A class that provides methods for mapping Github Actions conclusions.
 class GithubActionConclusionMapper
     implements Mapper<String, GithubActionConclusion> {
-  /// A conclusion for a successful workflow run job.
+  /// A Github Actions successful conclusion.
   static const String success = 'success';
 
-  /// A conclusion for a failed workflow run job.
+  /// A Github Actions failed conclusion.
   static const String failure = 'failure';
 
-  /// A neutral conclusion for a workflow run job.
+  /// A Github Actions neutral conclusion.
   static const String neutral = 'neutral';
 
-  /// A conclusion for a cancelled workflow run job.
+  /// A Github Actions cancelled conclusion.
   static const String cancelled = 'cancelled';
 
-  /// A conclusion for a skipped workflow run job.
+  /// A Github Actions skipped conclusion.
   static const String skipped = 'skipped';
 
-  /// A conclusion for a timed out workflow run job.
+  /// A Github Actions timed out conclusion.
   static const String timedOut = 'timed_out';
 
-  /// A conclusion for a workflow run job that requires an action.
+  /// A Github Actions action required conclusion.
   static const String actionRequired = 'action_required';
 
   /// Creates a new instance of the [GithubActionConclusionMapper].

@@ -1,4 +1,4 @@
-import 'package:ci_integration/client/github_actions/mappers/run_conclusion_mapper.dart';
+import 'package:ci_integration/client/github_actions/mappers/github_action_conclusion_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:test/test.dart';
 
@@ -10,7 +10,7 @@ void main() {
     final mapper = GithubActionConclusionMapper();
 
     test(
-      ".map() maps the success run conclusion to the RunConclusion.success",
+      ".map() maps the success run conclusion to the GithubActionConclusion.success",
       () {
         const expectedConclusion = GithubActionConclusion.success;
 
@@ -21,7 +21,7 @@ void main() {
     );
 
     test(
-      ".map() maps the failure run conclusion to the RunConclusion.failure",
+      ".map() maps the failure run conclusion to the GithubActionConclusion.failure",
       () {
         const expectedConclusion = GithubActionConclusion.failure;
 
@@ -32,7 +32,7 @@ void main() {
     );
 
     test(
-      ".map() maps the neutral run conclusion to the RunConclusion.neutral",
+      ".map() maps the neutral run conclusion to the GithubActionConclusion.neutral",
       () {
         const expectedConclusion = GithubActionConclusion.neutral;
 
@@ -43,7 +43,7 @@ void main() {
     );
 
     test(
-      ".map() maps the cancelled run conclusion to the RunConclusion.cancelled",
+      ".map() maps the cancelled run conclusion to the GithubActionConclusion.cancelled",
       () {
         const expectedConclusion = GithubActionConclusion.cancelled;
 
@@ -54,7 +54,7 @@ void main() {
     );
 
     test(
-      ".map() maps the skipped run conclusion to the RunConclusion.skipped",
+      ".map() maps the skipped run conclusion to the GithubActionConclusion.skipped",
       () {
         const expectedConclusion = GithubActionConclusion.skipped;
 
@@ -65,7 +65,7 @@ void main() {
     );
 
     test(
-      ".map() maps the timed out run conclusion to the RunConclusion.timedOut",
+      ".map() maps the timed out run conclusion to the GithubActionConclusion.timedOut",
       () {
         const expectedConclusion = GithubActionConclusion.timedOut;
 
@@ -76,7 +76,7 @@ void main() {
     );
 
     test(
-      ".map() maps the action required run conclusion to the RunConclusion.actionRequired",
+      ".map() maps the action required run conclusion to the GithubActionConclusion.actionRequired",
       () {
         const expectedConclusion = GithubActionConclusion.actionRequired;
 
@@ -106,7 +106,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.success to the successful run conclusion value",
+      ".unmap() unmaps the GithubActionConclusion.success to the successful run conclusion value",
       () {
         const expectedConclusion = GithubActionConclusionMapper.success;
 
@@ -117,7 +117,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.failure to the failed run conclusion value",
+      ".unmap() unmaps the GithubActionConclusion.failure to the failed run conclusion value",
       () {
         const expectedConclusion = GithubActionConclusionMapper.failure;
 
@@ -128,7 +128,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.neutral to the neutral run conclusion value",
+      ".unmap() unmaps the GithubActionConclusion.neutral to the neutral run conclusion value",
       () {
         const expectedConclusion = GithubActionConclusionMapper.neutral;
 
@@ -139,7 +139,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.cancelled to the cancelled run conclusion value",
+      ".unmap() unmaps the GithubActionConclusion.cancelled to the cancelled run conclusion value",
       () {
         const expectedConclusion = GithubActionConclusionMapper.cancelled;
 
@@ -150,7 +150,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.skipped to the skipped run conclusion value",
+      ".unmap() unmaps the GithubActionConclusion.skipped to the skipped run conclusion value",
       () {
         const expectedConclusion = GithubActionConclusionMapper.skipped;
 
@@ -161,7 +161,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.timedOut to the timed out run conclusion value",
+      ".unmap() unmaps the GithubActionConclusion.timedOut to the timed out run conclusion value",
       () {
         const expectedConclusion = GithubActionConclusionMapper.timedOut;
 
@@ -172,7 +172,7 @@ void main() {
     );
 
     test(
-      ".unmap() unmaps the RunConclusion.actionRequired to the action required run conclusion value",
+      ".unmap() unmaps the GithubActionConclusion.actionRequired to the action required run conclusion value",
       () {
         const expectedConclusion = GithubActionConclusionMapper.actionRequired;
 
