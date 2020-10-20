@@ -7,7 +7,7 @@ class CoverageData extends Coverage implements DataModel {
   /// Creates a new instance of the [CoverageData] with the given [percent].
   CoverageData({@required Percent percent}) : super(percent: percent);
 
-  //// Creates a new instance of the [CoverageData] from the decoded
+  /// Creates a new instance of the [CoverageData] from the decoded
   /// JSON object.
   ///
   /// Returns `null` if the given [json] is `null`.
@@ -24,7 +24,7 @@ class CoverageData extends Coverage implements DataModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'pct': percent.toString(),
+      'pct': percent?.value?.toString(),
     };
   }
 }
