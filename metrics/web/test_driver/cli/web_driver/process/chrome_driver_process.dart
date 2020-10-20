@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:process_run/which.dart';
+
 import '../../common/process/process_wrapper.dart';
 import '../command/chrome_driver_command.dart';
 
@@ -10,14 +12,25 @@ class ChromeDriverProcess extends ProcessWrapper {
   ChromeDriverProcess._(Process process) : super(process);
 
   /// Starts the chrome driver in a separate process.
+  ///
+  /// If there any global-accessible chromedriver - uses this executable,
+  /// otherwise uses the executable from the given [workingDir].
   static Future<ChromeDriverProcess> start(
     ChromeDriverCommand args, {
     String workingDir,
   }) async {
+    String globalChromedriverDir;
+    final chromedriver = whichSync('chromedriver');
+
+    if (chromedriver != null) {
+      final chromeDriverFile = File(chromedriver);
+      globalChromedriverDir = chromeDriverFile.parent.path;
+    }
+
     final process = await Process.start(
       ChromeDriverCommand.executableName,
       args.buildArgs(),
-      workingDirectory: workingDir,
+      workingDirectory: globalChromedriverDir ?? workingDir,
     );
 
     return ChromeDriverProcess._(process);

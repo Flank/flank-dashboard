@@ -86,7 +86,7 @@ class FlutterWebDriver {
 
   /// Prepares the web driver for the driver tests.
   Future<void> _prepareWebDriver() async {
-    await ChromeDriver.prepare(_args.workingDir);
+    await ChromeDriver().prepare(_args.workingDir);
   }
 
   /// Runs the flutter web app on specified [port].
