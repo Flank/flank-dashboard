@@ -7,10 +7,12 @@ class CoverageConverterException implements Exception {
   /// concrete coverage converter exception.
   final CoverageConverterErrorCode _code;
 
-  /// Creates the [CoverageConverterException] from the given [CoverageConverterErrorCode].
+  /// Creates the [CoverageConverterException]
+  /// with the given [CoverageConverterErrorCode].
   const CoverageConverterException(this._code);
 
-  /// Provides an coverage converter error message based on the [CoverageConverterErrorCode].
+  /// Provides an coverage converter error message
+  /// based on the [CoverageConverterErrorCode].
   String get message {
     switch (_code) {
       case CoverageConverterErrorCode.noSuchFile:
