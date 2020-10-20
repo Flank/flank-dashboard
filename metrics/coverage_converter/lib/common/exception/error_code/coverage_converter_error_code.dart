@@ -1,11 +1,11 @@
-/// Enum that represents the coverage converter error code.
+/// A enum that represents the coverage converter error code.
 enum CoverageConverterErrorCode {
-  /// Indicates that the file is not found.
+  /// Indicates that the input file is not found.
   noSuchFile,
 
   /// Indicates that the input file is empty.
   fileIsEmpty,
 
-  /// Indicates that the given file's format is not supported.
+  /// Indicates that the input file's format is not valid.
   invalidFileFormat,
 }
