@@ -8,31 +8,36 @@ void main() {
     test(
       ".message returns no such file error message if the given code is `noSuchFile`",
       () {
+        final expectedMessage = CommonStrings.noSuchFile;
+
         const coverageConverterException =
             CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
 
-        expect(coverageConverterException.message, CommonStrings.noSuchFile);
+        expect(coverageConverterException.message, equals(expectedMessage));
       },
     );
 
     test(
       ".message returns file is empty error message if the given code is `fileIsEmpty`",
       () {
+        final expectedMessage = CommonStrings.fileIsEmpty;
+
         const coverageConverterException =
             CoverageConverterException(CoverageConverterErrorCode.fileIsEmpty);
 
-        expect(coverageConverterException.message, CommonStrings.fileIsEmpty);
+        expect(coverageConverterException.message, equals(expectedMessage));
       },
     );
 
     test(
       ".message returns invalid file format error message if the given code is `invalidFileFormat`",
       () {
+        final expectedMessage = CommonStrings.invalidFileFormat;
+
         const coverageConverterException = CoverageConverterException(
             CoverageConverterErrorCode.invalidFileFormat);
 
-        expect(coverageConverterException.message,
-            CommonStrings.invalidFileFormat);
+        expect(coverageConverterException.message, equals(expectedMessage));
       },
     );
 
