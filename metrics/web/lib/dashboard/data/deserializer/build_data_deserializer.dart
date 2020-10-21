@@ -10,7 +10,7 @@ class BuildDataDeserializer {
     final coverage = json['coverage'] as double;
     final buildStatus = BuildStatus.values.firstWhere(
       (element) => '$element' == buildResultValue,
-      orElse: () => null,
+      orElse: () => BuildStatus.unknown,
     );
 
     return BuildData(

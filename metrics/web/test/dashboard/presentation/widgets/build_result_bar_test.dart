@@ -55,32 +55,12 @@ void main() {
     );
 
     testWidgets(
-      "displays the PlaceholderBar if the build result status is null",
-      (WidgetTester tester) async {
-        final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: null,
-        );
-
-        await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: buildResult,
-        ));
-
-        expect(placeholderFinder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "applies the bar color from the inactive widget theme to the PlaceholderBar",
       (WidgetTester tester) async {
         final expectedColor = metricsTheme.inactiveWidgetTheme.primaryColor;
-        final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: null,
-        );
 
-        await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: buildResult,
+        await tester.pumpWidget(const _BuildResultBarTestbed(
+          buildResult: null,
           themeData: metricsTheme,
         ));
 
@@ -94,13 +74,9 @@ void main() {
       "applies the bar width from the dimension config to the PlaceholderBar",
       (WidgetTester tester) async {
         const expectedWidth = DimensionsConfig.graphBarWidth;
-        final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: null,
-        );
 
-        await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: buildResult,
+        await tester.pumpWidget(const _BuildResultBarTestbed(
+          buildResult: null,
         ));
 
         final placeholderBar = tester.widget<PlaceholderBar>(placeholderFinder);
@@ -209,11 +185,11 @@ void main() {
     );
 
     testWidgets(
-      "displays the neutral graph indicator if the build status is cancelled and the popup is opened",
+      "displays the neutral graph indicator if the build status is unknown and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: BuildStatus.cancelled,
+          buildStatus: BuildStatus.unknown,
         );
 
         await tester.pumpWidget(_BuildResultBarTestbed(
@@ -233,7 +209,7 @@ void main() {
       (tester) async {
         final buildResult = BuildResultViewModel(
           buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: BuildStatus.cancelled,
+          buildStatus: BuildStatus.unknown,
         );
         final strategy = BuildResultBarPaddingStrategy(
           buildResults: [buildResult],

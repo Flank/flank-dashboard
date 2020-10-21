@@ -5,6 +5,7 @@ import 'package:metrics_core/src/domain/value_objects/percent.dart';
 
 /// [DataModel] that represents the [Build] entity.
 class BuildData extends Build implements DataModel {
+  /// Creates a new instance of the [BuildData].
   const BuildData({
     String id,
     String projectId,

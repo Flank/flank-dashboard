@@ -52,46 +52,33 @@ void main() {
     );
 
     test(
-      ".getWidgetAppearance() returns the negative style if the given build status is cancelled",
+      ".getWidgetAppearance() returns the unknown style if the given build status is unknown",
       () {
         final actualStyle = themeStrategy.getWidgetAppearance(
           theme,
-          BuildStatus.cancelled,
+          BuildStatus.unknown,
         );
-
-        expect(actualStyle, equals(negativeStyle));
-      },
-    );
-
-    test(
-      ".getWidgetAppearance() returns the unknown style if the given build status is null",
-      () {
-        final actualStyle = themeStrategy.getWidgetAppearance(theme, null);
 
         expect(actualStyle, equals(unknownStyle));
       },
     );
 
     test(
-      ".getIconImage() returns a path to the successful status icon if the given build status is null",
+      ".getWidgetAppearance() returns null if the given build status is null",
+      () {
+        final actualStyle = themeStrategy.getWidgetAppearance(theme, null);
+
+        expect(actualStyle, isNull);
+      },
+    );
+
+    test(
+      ".getIconImage() returns a path to the successful status icon if the given build status is successful",
       () {
         const expectedIconPath = 'icons/successful_status.svg';
 
         final actualIconPath = themeStrategy.getIconImage(
           BuildStatus.successful,
-        );
-
-        expect(actualIconPath, equals(expectedIconPath));
-      },
-    );
-
-    test(
-      ".getIconImage() returns a path to the failed status icon if the given build status is cancelled",
-      () {
-        const expectedIconPath = 'icons/failed_status.svg';
-
-        final actualIconPath = themeStrategy.getIconImage(
-          BuildStatus.cancelled,
         );
 
         expect(actualIconPath, equals(expectedIconPath));
@@ -112,13 +99,24 @@ void main() {
     );
 
     test(
-      ".getIconImage() returns a path to the unknown status icon if the given build status is null",
+      ".getIconImage() returns a path to the unknown status icon if the given build status is unknown",
       () {
         const expectedIconPath = 'icons/unknown_status.svg';
 
-        final actualIconPath = themeStrategy.getIconImage(null);
+        final actualIconPath = themeStrategy.getIconImage(
+          BuildStatus.unknown,
+        );
 
         expect(actualIconPath, equals(expectedIconPath));
+      },
+    );
+
+    test(
+      ".getIconImage() returns null if the given build status is null",
+      () {
+        final actualIconPath = themeStrategy.getIconImage(null);
+
+        expect(actualIconPath, isNull);
       },
     );
   });

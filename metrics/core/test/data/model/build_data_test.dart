@@ -42,7 +42,7 @@ void main() {
         const projectId = 'newProjectId';
         const buildNumber = 10;
         final startedAt = DateTime(2020, 12, 31);
-        const buildStatus = BuildStatus.cancelled;
+        const buildStatus = BuildStatus.unknown;
         const duration = Duration();
         const workflowName = 'newWorkflowName';
         const url = 'newUrl';

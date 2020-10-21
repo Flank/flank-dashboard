@@ -30,11 +30,11 @@ void main() {
       "equals to another ProjectBuildStatusViewModel with the same value",
       () {
         final firstViewModel = ProjectBuildStatusViewModel(
-          value: BuildStatus.cancelled,
+          value: BuildStatus.unknown,
         );
 
         final secondViewModel = ProjectBuildStatusViewModel(
-          value: BuildStatus.cancelled,
+          value: BuildStatus.unknown,
         );
 
         expect(firstViewModel, equals(secondViewModel));
