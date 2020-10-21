@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 /// Represents the project entity.
 @immutable
 class Project {
-  /// An identifier of the project.
+  /// A unique identifier of this project.
   final String id;
 
   /// A name of this project.
