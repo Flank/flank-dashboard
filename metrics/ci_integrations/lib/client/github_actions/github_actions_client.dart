@@ -27,9 +27,16 @@ typedef ResponseProcessingCallback<T> = InteractionResult<T> Function(
   Map<String, String> headers,
 );
 
-/// A callback for fetching the new pages in paginated requests.
+/// A callback for fetching a new page that is used in requests for pagination.
+///
+/// A [url] is a URL to perform an HTTP request and fetch a new page.
+///
+/// A [perPage] is used for limiting the number of runs and pagination in pair
+/// with the [page] parameter.
+///
+/// A [page] is used for pagination and defines a page of runs to fetch.
 typedef PageFetchingCallback<T extends Page> = Future<InteractionResult<T>>
-    Function(String nextPageUrl, int page, int perPage);
+    Function(String url, int page, int perPage);
 
 /// A client for interaction with the Github Actions API.
 class GithubActionsClient {
@@ -85,40 +92,6 @@ class GithubActionsClient {
       HttpHeaders.acceptHeader: GithubActionsConstants.acceptHeader,
       if (authorization != null) ...authorization.toMap(),
     };
-  }
-
-  /// A method for handling Github-specific HTTP responses.
-  ///
-  /// Awaits [responseFuture] and handles the result. If either
-  /// the given [responseFuture] throws or the [HttpResponse.statusCode] is not
-  /// equal to [HttpStatus.ok] this method results
-  /// with [InteractionResult.error]. Otherwise, delegates
-  /// processing the response to the given [responseProcessor] callback.
-  Future<InteractionResult<T>> _handleResponse<T>(
-    Future<Response> responseFuture,
-    ResponseProcessingCallback<T> responseProcessor,
-  ) async {
-    try {
-      final response = await responseFuture;
-
-      if (response.statusCode == HttpStatus.ok) {
-        final body = jsonDecode(response.body) as Map<String, dynamic>;
-        final headers = response.headers;
-        return responseProcessor(body, headers);
-      } else {
-        final reason = response.body == null || response.body.isEmpty
-            ? response.reasonPhrase
-            : response.body;
-        return InteractionResult.error(
-          message: 'Failed to perform an operation with code '
-              '${response.statusCode}. Reason: $reason',
-        );
-      }
-    } catch (error) {
-      return InteractionResult.error(
-        message: 'Failed to perform an operation. Error details: $error',
-      );
-    }
   }
 
   /// Fetches a [WorkflowRunsPage] with a list of [WorkflowRun] by the
@@ -190,32 +163,19 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchWorkflowRuns(url, _page, perPage);
+    return _fetchWorkflowRunsPage(url, _page, perPage);
   }
 
   /// Fetches the next [WorkflowRunsPage] of the given [currentPage].
-  ///
-  /// If the given [currentPage] does not have the next page, the
-  /// [InteractionResult.error] is returned.
   FutureOr<InteractionResult<WorkflowRunsPage>> fetchWorkflowRunsNext(
     WorkflowRunsPage currentPage,
   ) {
-    return _processPage(
-      currentPage: currentPage,
-      pageFetchingCallback: _fetchWorkflowRuns,
-    );
+    return _processPage(currentPage, _fetchWorkflowRunsPage);
   }
 
-  /// Fetches a [WorkflowRunsPage] by the given [url].
-  ///
-  /// A [perPage] is used for limiting the number of runs and pagination in pair
-  /// with the [page] parameter.
-  ///
-  /// A [page] is used for pagination and defines a page of runs to fetch.
-  ///
-  /// Both [fetchWorkflowRuns] and [fetchWorkflowRunsNext] delegate retrieving
-  /// [WorkflowRunsPage]s to this method.
-  Future<InteractionResult<WorkflowRunsPage>> _fetchWorkflowRuns(
+  /// Fetches a [WorkflowRunsPage] by the given parameters.
+  /// A [PageFetchingCallback] for the [WorkflowRunsPage]s.
+  Future<InteractionResult<WorkflowRunsPage>> _fetchWorkflowRunsPage(
     String url,
     int page,
     int perPage,
@@ -244,7 +204,7 @@ class GithubActionsClient {
   }
 
   /// Fetches a [WorkflowRunJobsPage] with a list of [WorkflowRunJob] by the
-  /// given [runId]. A [runId] is the unique identifier of a [WorkflowRun]
+  /// given [runId]. A [runId] is a unique identifier of the [WorkflowRun] the
   /// [WorkflowRunJob]s belong to.
   ///
   /// A [status] is used as a filter query parameter to define the
@@ -316,27 +276,14 @@ class GithubActionsClient {
   }
 
   /// Fetches the next [WorkflowRunJobsPage] of the given [currentPage].
-  ///
-  /// If the given [currentPage] does not have the next page, the
-  /// [InteractionResult.error] is returned.
   FutureOr<InteractionResult<WorkflowRunJobsPage>> fetchRunJobsNext(
     WorkflowRunJobsPage currentPage,
   ) {
-    return _processPage(
-      currentPage: currentPage,
-      pageFetchingCallback: _fetchRunJobsPage,
-    );
+    return _processPage(currentPage, _fetchRunJobsPage);
   }
 
-  /// Fetches a [WorkflowRunJobsPage] by the given [url].
-  ///
-  /// A [perPage] is used for limiting the number of runs and pagination in pair
-  /// with the [page] parameter.
-  ///
-  /// A [page] is used for pagination and defines a page of runs to fetch.
-  ///
-  /// Both [fetchRunJobs] and [fetchRunJobsNext] delegate retrieving
-  /// [WorkflowRunJobsPage]s to this method.
+  /// Fetches a [WorkflowRunJobsPage] by the given parameters.
+  /// A [PageFetchingCallback] for the [WorkflowRunJobsPage]s.
   Future<InteractionResult<WorkflowRunJobsPage>> _fetchRunJobsPage(
     String url,
     int page,
@@ -407,32 +354,19 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchRunArtifacts(url, _page, perPage);
+    return _fetchRunArtifactsPage(url, _page, perPage);
   }
 
   /// Fetches the next [WorkflowRunArtifactsPage] of the given [currentPage].
-  ///
-  /// If the given [currentPage] does not have the next page, the
-  /// [InteractionResult.error] is returned.
   FutureOr<InteractionResult<WorkflowRunArtifactsPage>> fetchRunArtifactsNext(
     WorkflowRunArtifactsPage currentPage,
   ) {
-    return _processPage(
-      currentPage: currentPage,
-      pageFetchingCallback: _fetchRunArtifacts,
-    );
+    return _processPage(currentPage, _fetchRunArtifactsPage);
   }
 
   /// Fetches [WorkflowRunArtifactsPage] by the given [url].
-  ///
-  /// A [perPage] is used for limiting the number of runs and pagination in pair
-  /// with the [page] parameter.
-  ///
-  /// A [page] is used for pagination and defines a page of runs to fetch.
-  ///
-  /// Both [fetchRunArtifacts] and [fetchRunArtifactsNext] delegate
-  /// retrieving [WorkflowRunArtifactsPage]s to this method.
-  Future<InteractionResult<WorkflowRunArtifactsPage>> _fetchRunArtifacts(
+  /// A [PageFetchingCallback] for the [WorkflowRunArtifactsPage]s.
+  Future<InteractionResult<WorkflowRunArtifactsPage>> _fetchRunArtifactsPage(
     String url,
     int page,
     int perPage,
@@ -460,20 +394,48 @@ class GithubActionsClient {
     );
   }
 
+  /// Downloads a workflow run artifact by the given download [url].
+  ///
+  /// The resulting [Uint8List] contains bytes of a zip archive with the desired
+  /// artifacts.
+  Future<InteractionResult<Uint8List>> downloadRunArtifactZip(
+    String url,
+  ) async {
+    try {
+      final response = await _client.get(url);
+
+      if (response.statusCode == HttpStatus.ok) {
+        return InteractionResult.success(result: response.bodyBytes);
+      } else {
+        final reason = response.body == null || response.body.isEmpty
+            ? response.reasonPhrase
+            : response.body;
+        return InteractionResult.error(
+          message: 'Failed to perform an operation with code '
+              '${response.statusCode}. Reason: $reason',
+        );
+      }
+    } catch (error) {
+      return InteractionResult.error(
+        message: 'Failed to perform an operation. Error details: $error',
+      );
+    }
+  }
+
   /// Processes the given [currentPage] and delegates fetching to the given
   /// [pageFetchingCallback].
   ///
   /// If the given [currentPage] does not [Page.hasNextPage], returns an
   /// [InteractionResult.error]. Otherwise, increments the current page number
   /// and calls the given [pageFetchingCallback].
-  FutureOr<InteractionResult<T>> _processPage<T extends Page>({
+  FutureOr<InteractionResult<T>> _processPage<T extends Page>(
     T currentPage,
     PageFetchingCallback<T> pageFetchingCallback,
-  }) {
+  ) {
     if (!currentPage.hasNextPage) {
       return const InteractionResult.error(
-        message:
-            'The last page is reached, there are no more elements to fetch!',
+        message: 'The last page is reached, '
+            'there are no more elements to fetch!',
       );
     }
 
@@ -487,18 +449,24 @@ class GithubActionsClient {
     );
   }
 
-  /// Downloads a workflow run artifact by the given download [url].
+  /// A method for handling Github-specific HTTP responses.
   ///
-  /// The resulting [Uint8List] contains bytes of a zip archive with the desired
-  /// artifacts.
-  Future<InteractionResult<Uint8List>> downloadRunArtifactZip(
-    String url,
+  /// Awaits [responseFuture] and handles the result. If either
+  /// the given [responseFuture] throws or the [HttpResponse.statusCode] is not
+  /// equal to [HttpStatus.ok] this method results
+  /// with [InteractionResult.error]. Otherwise, delegates
+  /// processing the response to the given [responseProcessor] callback.
+  Future<InteractionResult<T>> _handleResponse<T>(
+    Future<Response> responseFuture,
+    ResponseProcessingCallback<T> responseProcessor,
   ) async {
     try {
-      final response = await _client.get(url);
+      final response = await responseFuture;
 
       if (response.statusCode == HttpStatus.ok) {
-        return InteractionResult.success(result: response.bodyBytes);
+        final body = jsonDecode(response.body) as Map<String, dynamic>;
+        final headers = response.headers;
+        return responseProcessor(body, headers);
       } else {
         final reason = response.body == null || response.body.isEmpty
             ? response.reasonPhrase
