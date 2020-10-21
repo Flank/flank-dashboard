@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
 import 'package:provider/provider.dart';
 
 /// A page that shows until the authentication status is unknown.
@@ -32,22 +33,24 @@ class _LoadingPageState extends State<LoadingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedBuilder(
-        animation: _animationController,
-        builder: (_, __) {
-          return Opacity(
-            opacity: _animationController.value,
-            child: const Center(
-              child: Text(
-                CommonStrings.metrics,
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
+      body: PlatformBrightnessObserver(
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (_, __) {
+            return Opacity(
+              opacity: _animationController.value,
+              child: const Center(
+                child: Text(
+                  CommonStrings.metrics,
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

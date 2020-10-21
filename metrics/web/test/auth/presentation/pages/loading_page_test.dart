@@ -5,6 +5,7 @@ import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -76,6 +77,17 @@ void main() {
         });
 
         expect(find.byType(DashboardPage), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the PlatformBrightnessObserver widget",
+      (tester) async {
+        await tester.pumpWidget(
+          const _LoadingPageTestbed(),
+        );
+
+        expect(find.byType(PlatformBrightnessObserver), findsOneWidget);
       },
     );
   });
