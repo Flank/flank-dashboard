@@ -49,5 +49,17 @@ void main() {
         expect(coverageConverterException.message, isNull);
       },
     );
+
+    test(
+      ".toString() returns no such file error message if the given code is `noSuchFile`",
+      () {
+        final expectedMessage = CommonStrings.noSuchFile;
+
+        const coverageConverterException =
+            CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
+
+        expect(coverageConverterException.toString(), equals(expectedMessage));
+      },
+    );
   });
 }
