@@ -1,10 +1,9 @@
-import 'package:ci_integration/client/github_actions/models/run_conclusion.dart';
-import 'package:ci_integration/client/github_actions/models/run_status.dart';
+import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:test/test.dart';
 
 // https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("WorkflowRun", () {
@@ -12,7 +11,6 @@ void main() {
     const number = 1;
     const url = 'url';
     const status = 'queued';
-    const conclusion = 'success';
     final createdAt = DateTime(2020).toUtc();
 
     final runJson = <String, dynamic>{
@@ -20,7 +18,6 @@ void main() {
       'run_number': number,
       'url': url,
       'status': status,
-      'conclusion': conclusion,
       'created_at': createdAt.toIso8601String(),
     };
 
@@ -28,21 +25,18 @@ void main() {
       id: id,
       number: number,
       url: url,
-      status: RunStatus.queued,
-      conclusion: RunConclusion.success,
+      status: GithubActionStatus.queued,
       createdAt: createdAt,
     );
 
     test("creates an instance with the given values", () {
-      const status = RunStatus.inProgress;
-      const conclusion = RunConclusion.timedOut;
+      const status = GithubActionStatus.inProgress;
 
       final run = WorkflowRun(
         id: id,
         number: number,
         url: url,
         status: status,
-        conclusion: conclusion,
         createdAt: createdAt,
       );
 
@@ -50,7 +44,6 @@ void main() {
       expect(run.number, equals(number));
       expect(run.url, equals(url));
       expect(run.status, equals(status));
-      expect(run.conclusion, equals(conclusion));
       expect(run.createdAt, equals(createdAt));
     });
 
@@ -98,7 +91,6 @@ void main() {
           'run_number': 2,
           'url': 'url2',
           'status': 'completed',
-          'conclusion': 'neutral',
           'created_at': DateTime(2019).toUtc().toIso8601String(),
         };
         final anotherRun = WorkflowRun.fromJson(anotherJson);
