@@ -4,16 +4,15 @@ import 'error_code/coverage_converter_error_code.dart';
 
 /// A class that represents the coverage converter [Exception].
 class CoverageConverterException implements Exception {
-  /// An [CoverageConverterErrorCode] provides an information about
-  /// concrete coverage converter exception.
+  /// An [CoverageConverterErrorCode] provides an information
+  /// about concrete coverage converter exception.
   final CoverageConverterErrorCode _code;
 
   /// Creates the [CoverageConverterException]
   /// with the given [CoverageConverterErrorCode].
   const CoverageConverterException(this._code);
 
-  /// Provides an coverage converter error message
-  /// based on the [CoverageConverterErrorCode].
+  /// Provides an error message based on the [CoverageConverterErrorCode].
   String get message {
     switch (_code) {
       case CoverageConverterErrorCode.noSuchFile:
