@@ -69,8 +69,6 @@ Moreover, GitHub Actions has ready-to-use actions that simplify the process of p
 - [Create a release action](https://github.com/marketplace/actions/create-a-release) - an action that helps to create a new release.
 - [Upload a release asset action](https://github.com/marketplace/actions/upload-a-release-asset) - an action that helps to add assets to the existing release.
 
-But, the downloading process on the CI becomes a bit more complex comparing to the `Homebrew`, `PPA`, or `Chocolatey` because these package management tools allow users to easily download and install (make it executable and make it OS-wide command) using only one command (for example `brew tap coverage_converter` for `Homebrew`). In the case of publishing the Coverage Converter tool to the GitHub Releases, the installation requires a bit more steps, described in the [Downloading using the command line commands](#Downloading-using-the-command-line-commands) section. Moreover, downloading the latest version of the Coverage Converter tool required a bit more complex configuration - get the download link, change it to point to the latest release (see detail in the [Downloading the latest release](#Downloading-the-latest-release) section), but the package management tools download the latest release of the package by default. 
-
 ### Pros & Cons
 
 Pros: 
@@ -81,7 +79,7 @@ Pros:
 
 Cons: 
 - More complex configuration for monorepo (could be solved with tags, etc..)
-- Downloading on the CI becomes a bit more complex comparing to the [Personal Package Archive (PPA), Homebrew, and Chocolatey.](#Personal-Package-Archive-(PPA)-Homebrew-and-Chocolatey).
+- Downloading to CI action becomes a bit more complex compared to the [alternatives](#Personal-Package-Archive-(PPA)-Homebrew-and-Chocolatey), see more [here](#Downloading-using-the-command-line-commands)
 
 So, the GitHub Releases is the best choice in our case because it allows us easily configure the publishing and allows users to easily download and start using the Coverage Converter tool. 
 
@@ -91,7 +89,7 @@ Once we've chosen the [GitHub Releases](#GitHub-Releases), let's consider the de
 
 # Coverage Converter usage
 
-Once we've chosen the publishing mechanism of the Coverage Converter, it is time to explain the way of using the converter. First of all, you should download the Coverage Converter tool. There are a couple of ways to do that: 
+First of all, you should download the Coverage Converter tool. There are a couple of ways to do that:
 
 - Download using the GitHub GUI.
 - Download using the command line commands.
@@ -109,7 +107,7 @@ To download the Coverage Converter tool from the GitHub releases, follow the nex
 
 ## Downloading using the command line commands
 
-If you want to download the Coverage Converter tool from the CI, for examples, or just using the command line, you should follow the steps below: 
+If you want to download the Coverage Converter tool you should follow the steps below: 
 
 1. Open the GitHub repository releases and find the release you want to download, as described in the [Downloading using the GitHub GUI](#Downloading-using-the-GitHub-GUI) section.
 2. Find the executable file compatible with your OS
@@ -166,8 +164,6 @@ This project will be tested manually.
 
 > Summarize alternative designs (pros & cons)
 
-# Coverage Converter publishing
-
 ## Personal Package Archive (PPA), Homebrew, and Chocolatey.
 
 The alternative of the GitHub Releases is to publish the CLI to the package managers of different platforms. So, we'll deploy the CLI to the following package managers: 
@@ -185,10 +181,9 @@ Pros:
 - Makes the CLI global-accessible command after installation.
 
 Cons: 
-- Complex configuration process.
-- Requires a separate configuration file for each platform (package management tool).
+- Complex configuration process that requires a full configuration process for each platform (package manager).
 - Some package management tools do not support publishing the compiled executables, so we should compile it on the user's machine.
-- Bad integration with GitHub Actions.
+- No existing integration with GitHub Actions.
 
 ## pub.dev publishing
 
