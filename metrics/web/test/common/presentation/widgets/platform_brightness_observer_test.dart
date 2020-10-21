@@ -23,7 +23,7 @@ void main() {
     );
 
     testWidgets(
-      "display the given child",
+      "displays the given child",
       (tester) async {
         const child = Text('child');
 
