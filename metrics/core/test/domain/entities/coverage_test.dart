@@ -12,7 +12,7 @@ void main() {
     );
 
     test(
-      "two instances with the same percents are equal",
+      "equals to another Coverage instance if their values are the same",
       () {
         const percent = 0.6;
 

@@ -42,7 +42,7 @@ void main() {
     );
 
     test(
-      "returns null if the given error code is null",
+      ".message returns null if the given error code is null",
       () {
         const coverageConverterException = CoverageConverterException(null);
 
@@ -51,14 +51,13 @@ void main() {
     );
 
     test(
-      ".toString() returns no such file error message if the given code is `noSuchFile`",
+      ".toString() returns the error message",
       () {
-        final expectedMessage = CommonStrings.noSuchFile;
-
         const coverageConverterException =
             CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
 
-        expect(coverageConverterException.toString(), equals(expectedMessage));
+        expect(coverageConverterException.toString(),
+            equals(coverageConverterException.message));
       },
     );
   });

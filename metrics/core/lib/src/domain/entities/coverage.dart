@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// The class that represents the code coverage entity.
+/// A class that represents the code coverage entity.
 class Coverage extends Equatable {
   /// The code coverage percent.
   final Percent percent;
