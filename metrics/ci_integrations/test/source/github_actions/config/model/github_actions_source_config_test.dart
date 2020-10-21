@@ -204,6 +204,8 @@ void main() {
         expect(config.workflowIdentifier, equals(workflowIdentifier));
         expect(config.repositoryOwner, equals(repositoryOwner));
         expect(config.repositoryName, equals(repositoryName));
+        expect(config.jobName, equals(jobName));
+        expect(config.coverageArtifactName, equals(coverageArtifactName));
         expect(config.accessToken, equals(accessToken));
       },
     );
