@@ -5,8 +5,11 @@ import 'package:metrics_core/metrics_core.dart';
 
 /// A view model that represents the data of the bar to display on the [BarGraph].
 class BuildResultViewModel extends Equatable {
-  /// A view model with data to display on the build result popup.
-  final BuildResultPopupViewModel buildResultPopupViewModel;
+  /// A [Duration] of the build.
+  final Duration duration;
+
+  /// A [DateTime] when the build is started.
+  final DateTime date;
 
   /// The resulting status of the build.
   final BuildStatus buildStatus;
@@ -15,14 +18,16 @@ class BuildResultViewModel extends Equatable {
   final String url;
 
   @override
-  List<Object> get props => [buildResultPopupViewModel, buildStatus, url];
+  List<Object> get props => [duration, date, buildStatus, url];
 
   /// Creates the [BuildResultViewModel] with the given build parameters.
   ///
   /// The [buildResultPopupViewModel] must not be null.
   const BuildResultViewModel({
-    @required this.buildResultPopupViewModel,
+    @required this.duration,
+    @required this.date,
     this.buildStatus,
     this.url,
-  }) : assert(buildResultPopupViewModel != null);
+  })  : assert(date != null),
+        assert(duration != null);
 }

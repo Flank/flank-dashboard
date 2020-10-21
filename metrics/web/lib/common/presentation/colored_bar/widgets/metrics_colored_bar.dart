@@ -39,7 +39,6 @@ class MetricsColoredBar<T> extends StatelessWidget {
 
     return Container(
       width: barWidth,
-      color: isHovered ? style.backgroundColor : null,
       alignment: Alignment.bottomCenter,
       child: ColoredBar(
         width: barWidth,
@@ -48,7 +47,7 @@ class MetricsColoredBar<T> extends StatelessWidget {
           topLeft: borderRadius,
           topRight: borderRadius,
         ),
-        color: style.color,
+        color: isHovered ? style.backgroundColor : style.color,
       ),
     );
   }

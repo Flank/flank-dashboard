@@ -43,3 +43,4 @@ class ProjectBuildStatusStyleStrategy implements BuildStatusStyleStrategy {
     return null;
   }
 }
+

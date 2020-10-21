@@ -42,7 +42,7 @@ class BuildResultBar extends StatefulWidget {
 
 class _BuildResultBarState extends State<BuildResultBar> {
   /// A width of the [BasePopup.popup].
-  static const double _popupWidth = 146.0;
+  static const double _popupWidth = 162.0;
 
   /// A strategy for this bar appearance.
   final _strategy = const BuildResultBarAppearanceStrategy();
@@ -114,7 +114,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
                       ),
                       if (isOpened)
                         Positioned(
-                          bottom: barHeight - indicatorRadius,
+                          bottom: -indicatorRadius,
                           child: _graphIndicator,
                         ),
                     ],
@@ -124,8 +124,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
             );
           },
           popup: BuildResultPopupCard(
-            buildResultPopupViewModel:
-                widget.buildResult.buildResultPopupViewModel,
+            buildResultPopupViewModel: widget.buildResult,
           ),
         );
       },
@@ -139,8 +138,9 @@ class _BuildResultBarState extends State<BuildResultBar> {
   ) {
     final paddingOffset = _barPadding.left - _barPadding.right;
     final dx = triggerSize.width / 2 - _popupWidth / 2 + paddingOffset / 2;
+    final dy = triggerSize.height + indicatorRadius + 4.0;
 
-    return Offset(dx, triggerSize.height);
+    return Offset(dx, dy);
   }
 
   /// Opens the [BuildResultViewModel.url].

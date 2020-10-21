@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/value_image/widgets/value_image.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_status_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -31,7 +32,6 @@ class ProjectBuildStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final projectBuildStatus = buildStatus?.value ?? BuildStatus.unknown;
-    final iconImage = buildStatusStyleStrategy.getIconImage(projectBuildStatus);
     final theme = buildStatusStyleStrategy.getWidgetAppearance(
       MetricsTheme.of(context),
       projectBuildStatus,
@@ -44,7 +44,10 @@ class ProjectBuildStatus extends StatelessWidget {
         color: theme.backgroundColor,
         shape: BoxShape.circle,
       ),
-      child: Image.network(iconImage),
+      child: ValueImage<BuildStatus>(
+        value: projectBuildStatus,
+        strategy: buildStatusStyleStrategy,
+      ),
     );
   }
 }
