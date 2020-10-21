@@ -87,7 +87,7 @@ So, the GitHub Releases is the best choice in our case because it allows us easi
 
 ### Publishing details
 
-Once we've chosen the [GitHub Releases](#GitHub-Releases), let's consider the deployment process in more detail. To publish the application to the GitHub releases, we should create a tag that will correspond to the release. Since we want to keep the release history and we'll have more than one project on our repository, we should create a tag that will contain the version number and the name of the project - `v1.0-coverage`. Also, we want to publish the `pre-release` versions, so we should create a tag for those releases. Since we don't want to keep the `pre-release` versions history, we can create a `coverage_snapshot` tag that will be re-assigned on each release.
+Once we've chosen the [GitHub Releases](#GitHub-Releases), let's consider the deployment process in more detail. To publish the application to the GitHub releases, we should create a tag that will correspond to the release. Since we want to keep the release history and we'll have more than one project on our repository, we should create a tag that will contain the version number and the name of the project - `v1.0-coverage-converter`. Also, we want to publish the `pre-release` versions, so we should create a tag for those releases. Since we don't want to keep the `pre-release` versions history, we can create a `coverage-converter-snapshot` tag that will be re-assigned on each release.
 
 # Coverage Converter usage
 
