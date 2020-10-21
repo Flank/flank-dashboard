@@ -5,7 +5,6 @@ import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_result.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
-import 'package:ci_integration/coverage/coverage_json_summary/model/coverage_json_summary.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -186,7 +185,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
       orElse: () => null,
     );
 
-    CoverageJsonSummary coverage;
+    CoverageData coverage;
 
     if (coverageArtifact != null) {
       final artifactContentFetchResult =
@@ -198,10 +197,10 @@ class JenkinsSourceClientAdapter implements SourceClient {
       _throwIfInteractionUnsuccessful(artifactContentFetchResult);
 
       final artifactContent = artifactContentFetchResult.result;
-      coverage = CoverageJsonSummary.fromJson(artifactContent);
+      coverage = CoverageData.fromJson(artifactContent);
     }
 
-    return coverage?.total?.branches?.percent;
+    return coverage?.percent;
   }
 
   /// Maps the [result] of a [JenkinsBuild] to the [BuildStatus].

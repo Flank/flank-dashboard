@@ -5,21 +5,21 @@ import 'package:test/test.dart';
 
 void main() {
   group("Percent", () {
-    test("can't be created with the null value", () {
+    test("throws an ArgumentError if the given percent is null", () {
       expect(
         () => Percent(null),
         throwsArgumentError,
       );
     });
 
-    test("can't be created with the value, less than 0.0", () {
+    test("throws an ArgumentError if the given percent is less than 0.0", () {
       expect(
         () => Percent(-1.0),
         throwsArgumentError,
       );
     });
 
-    test("can't be created with the value, more than 1.0", () {
+    test("throws an ArgumentError if the given percent is more than 1.0", () {
       expect(
         () => Percent(1.1),
         throwsArgumentError,
