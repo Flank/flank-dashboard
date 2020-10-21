@@ -17,7 +17,7 @@ package core.src {
 
 
     package data.model {
-        class CoverageModel {
+        class CoverageData {
             Map<String, dynamic> toJson()
             factory fromJson()
         }
@@ -29,9 +29,9 @@ package core.src {
 }
 
 Coverage -> Percent : uses
-CoverageModel -|> Coverage
+CoverageData -|> Coverage
 
-CoverageModel ..|> DataModel
+CoverageData ..|> DataModel
 
 
 @enduml

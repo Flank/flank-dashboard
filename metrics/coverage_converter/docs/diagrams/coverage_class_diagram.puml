@@ -3,8 +3,8 @@
 package arguments {
     package model {
         class CoverageConverterArguments {
-            inputFileName : String
-            outputFileName : String
+            inputFilePath : String
+            outputFilePath : String
         }
     }
 
@@ -28,7 +28,7 @@ package common {
 
     package converter {
         interface CoverageConverter {
-            {abstract} CoverageModel convert(File)
+            {abstract} CoverageData convert(File)
         }
     }
 
@@ -60,7 +60,7 @@ package common {
 package specific_format {
     package converter as specific_format.converter {
         class SpecificFormatCoverageConverter {
-            CoverageModel convert(File)
+            CoverageData convert(File)
         }
     }
 

@@ -43,7 +43,7 @@ end
 
 SpecificCoverageConverterCommand -> SpecificCoverageConverter : convert(inputFile)
 activate SpecificCoverageConverter
-return CoverageModel instance
+return CoverageData instance
 SpecificCoverageConverterCommand -> SpecificCoverageConverterCommand : write Coverage as a json to output file
 return 
 return
