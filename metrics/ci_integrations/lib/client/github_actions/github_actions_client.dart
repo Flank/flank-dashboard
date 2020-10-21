@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
+import 'package:ci_integration/client/github_actions/models/page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
@@ -25,6 +26,10 @@ typedef ResponseProcessingCallback<T> = InteractionResult<T> Function(
   Map<String, dynamic> body,
   Map<String, String> headers,
 );
+
+/// A callback for fetching the new pages in paginated requests.
+typedef PageFetchingCallback<T extends Page> = Future<InteractionResult<T>>
+    Function(String nextPageUrl, int page, int perPage);
 
 /// A client for interaction with the Github Actions API.
 class GithubActionsClient {
@@ -185,7 +190,7 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchWorkflowRuns(url, page: _page, perPage: perPage);
+    return _fetchWorkflowRuns(url, _page, perPage);
   }
 
   /// Fetches the next [WorkflowRunsPage] of the given [currentPage].
@@ -195,20 +200,9 @@ class GithubActionsClient {
   FutureOr<InteractionResult<WorkflowRunsPage>> fetchWorkflowRunsNext(
     WorkflowRunsPage currentPage,
   ) {
-    if (!currentPage.hasNextPage) {
-      return const InteractionResult.error(
-        message:
-            'The last page is reached, there are no more elements to fetch!',
-      );
-    }
-
-    final nextPageNumber =
-        currentPage.page == null ? null : currentPage.page + 1;
-
-    return _fetchWorkflowRuns(
-      currentPage.nextPageUrl,
-      page: nextPageNumber,
-      perPage: currentPage.perPage,
+    return _processPage(
+      currentPage: currentPage,
+      pageFetchingCallback: _fetchWorkflowRuns,
     );
   }
 
@@ -222,10 +216,10 @@ class GithubActionsClient {
   /// Both [fetchWorkflowRuns] and [fetchWorkflowRunsNext] delegate retrieving
   /// [WorkflowRunsPage]s to this method.
   Future<InteractionResult<WorkflowRunsPage>> _fetchWorkflowRuns(
-    String url, {
+    String url,
     int page,
     int perPage,
-  }) {
+  ) {
     return _handleResponse<WorkflowRunsPage>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
@@ -318,7 +312,7 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchRunJobsPage(url, page: _page, perPage: perPage);
+    return _fetchRunJobsPage(url, _page, perPage);
   }
 
   /// Fetches the next [WorkflowRunJobsPage] of the given [currentPage].
@@ -328,20 +322,9 @@ class GithubActionsClient {
   FutureOr<InteractionResult<WorkflowRunJobsPage>> fetchRunJobsNext(
     WorkflowRunJobsPage currentPage,
   ) {
-    if (!currentPage.hasNextPage) {
-      return const InteractionResult.error(
-        message:
-            'The last page is reached, there are no more elements to fetch!',
-      );
-    }
-
-    final nextPageNumber =
-        currentPage.page == null ? null : currentPage.page + 1;
-
-    return _fetchRunJobsPage(
-      currentPage.nextPageUrl,
-      page: nextPageNumber,
-      perPage: currentPage.perPage,
+    return _processPage(
+      currentPage: currentPage,
+      pageFetchingCallback: _fetchRunJobsPage,
     );
   }
 
@@ -355,10 +338,10 @@ class GithubActionsClient {
   /// Both [fetchRunJobs] and [fetchRunJobsNext] delegate retrieving
   /// [WorkflowRunJobsPage]s to this method.
   Future<InteractionResult<WorkflowRunJobsPage>> _fetchRunJobsPage(
-    String url, {
+    String url,
     int page,
     int perPage,
-  }) {
+  ) {
     return _handleResponse(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
@@ -424,7 +407,7 @@ class GithubActionsClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchRunArtifacts(url, page: _page, perPage: perPage);
+    return _fetchRunArtifacts(url, _page, perPage);
   }
 
   /// Fetches the next [WorkflowRunArtifactsPage] of the given [currentPage].
@@ -434,20 +417,9 @@ class GithubActionsClient {
   FutureOr<InteractionResult<WorkflowRunArtifactsPage>> fetchRunArtifactsNext(
     WorkflowRunArtifactsPage currentPage,
   ) {
-    if (!currentPage.hasNextPage) {
-      return const InteractionResult.error(
-        message:
-            'The last page is reached, there are no more elements to fetch!',
-      );
-    }
-
-    final nextPageNumber =
-        currentPage.page == null ? null : currentPage.page + 1;
-
-    return _fetchRunArtifacts(
-      currentPage.nextPageUrl,
-      page: nextPageNumber,
-      perPage: currentPage.perPage,
+    return _processPage(
+      currentPage: currentPage,
+      pageFetchingCallback: _fetchRunArtifacts,
     );
   }
 
@@ -461,10 +433,10 @@ class GithubActionsClient {
   /// Both [fetchRunArtifacts] and [fetchRunArtifactsNext] delegate
   /// retrieving [WorkflowRunArtifactsPage]s to this method.
   Future<InteractionResult<WorkflowRunArtifactsPage>> _fetchRunArtifacts(
-    String url, {
+    String url,
     int page,
     int perPage,
-  }) {
+  ) {
     return _handleResponse<WorkflowRunArtifactsPage>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
@@ -485,6 +457,33 @@ class GithubActionsClient {
           ),
         );
       },
+    );
+  }
+
+  /// Processes the given [currentPage] and delegates fetching to the given
+  /// [pageFetchingCallback].
+  ///
+  /// If the given [currentPage] does not [Page.hasNextPage], returns an
+  /// [InteractionResult.error]. Otherwise, increments the current page number
+  /// and calls the given [pageFetchingCallback].
+  FutureOr<InteractionResult<T>> _processPage<T extends Page>({
+    T currentPage,
+    PageFetchingCallback<T> pageFetchingCallback,
+  }) {
+    if (!currentPage.hasNextPage) {
+      return const InteractionResult.error(
+        message:
+            'The last page is reached, there are no more elements to fetch!',
+      );
+    }
+
+    final nextPageNumber =
+        currentPage.page == null ? null : currentPage.page + 1;
+
+    return pageFetchingCallback(
+      currentPage.nextPageUrl,
+      nextPageNumber,
+      currentPage.perPage,
     );
   }
 
