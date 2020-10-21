@@ -56,8 +56,10 @@ void main() {
         const coverageConverterException =
             CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
 
-        expect(coverageConverterException.toString(),
-            equals(coverageConverterException.message));
+        expect(
+          coverageConverterException.toString(),
+          equals(coverageConverterException.message),
+        );
       },
     );
   });
