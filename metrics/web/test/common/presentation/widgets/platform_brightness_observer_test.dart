@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
+import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
+import 'package:mockito/mockito.dart';
+
+import '../../../test_utils/binding_util.dart';
+import '../../../test_utils/metrics_themed_testbed.dart';
+import '../../../test_utils/test_injection_container.dart';
+import '../../../test_utils/theme_notifier_mock.dart';
+
+void main() {
+  group("PlatformBrightnessObserver", () {
+    testWidgets(
+      "throws an AssertionError if the given child is null",
+      (tester) async {
+        await tester.pumpWidget(const _PlatformBrightnessObserverTestbed(
+          child: null,
+        ));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "display the given child",
+      (tester) async {
+        await tester.pumpWidget(const _PlatformBrightnessObserverTestbed(
+          child: null,
+        ));
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
+      "sets the application theme based on the platform brightness once opened",
+      (tester) async {
+        final themeNotifier = ThemeNotifierMock();
+        final currentBrightness = tester.binding.window.platformBrightness;
+
+        await tester.pumpWidget(
+          _PlatformBrightnessObserverTestbed(themeNotifier: themeNotifier),
+        );
+
+        verify(themeNotifier.setTheme(currentBrightness)).called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "updates the application theme based on the platform brightness once brightness changed",
+      (tester) async {
+        const brightness = Brightness.dark;
+        final themeNotifier = ThemeNotifierMock();
+        BindingUtil.setPlatformBrightness(tester, Brightness.light);
+
+        await tester.pumpWidget(_PlatformBrightnessObserverTestbed(
+          themeNotifier: themeNotifier,
+        ));
+
+        BindingUtil.setPlatformBrightness(tester, brightness);
+        await tester.pump();
+
+        verify(themeNotifier.setTheme(brightness)).called(equals(1));
+      },
+    );
+  });
+}
+
+/// A testbed class used to test the [PlatformBrightnessObserver] widget.
+class _PlatformBrightnessObserverTestbed extends StatelessWidget {
+  /// A [ThemeNotifier] used in tests.
+  final ThemeNotifier themeNotifier;
+
+  /// A child widget of the [PlatformBrightnessObserver].
+  final Widget child;
+
+  /// Creates a new instance of this testbed.
+  ///
+  /// The [child] defaults to [SizedBox].
+  const _PlatformBrightnessObserverTestbed({
+    Key key,
+    this.themeNotifier,
+    this.child = const SizedBox(),
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TestInjectionContainer(
+      themeNotifier: themeNotifier,
+      child: MetricsThemedTestbed(
+        body: PlatformBrightnessObserver(
+          child: child,
+        ),
+      ),
+    );
+  }
+}

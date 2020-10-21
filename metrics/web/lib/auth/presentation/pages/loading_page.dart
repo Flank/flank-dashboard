@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
 import 'package:provider/provider.dart';
 
 /// A page that shows until the authentication status is unknown.
@@ -12,7 +12,7 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
+    with TickerProviderStateMixin {
   /// Duration of the `metrics` text animation.
   static const _animationDuration = Duration(seconds: 1);
 
@@ -26,47 +26,31 @@ class _LoadingPageState extends State<LoadingPage>
   void initState() {
     _initAnimation();
     _subscribeToAuthUpdates();
-    WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updatePlatformBrightness();
-    });
 
     super.initState();
   }
 
   @override
-  void didChangePlatformBrightness() {
-    _updatePlatformBrightness();
-    super.didChangePlatformBrightness();
-  }
-
-  /// Changes the theme according to the operating system's brightness.
-  void _updatePlatformBrightness() {
-    final brightness = WidgetsBinding.instance.window.platformBrightness;
-    final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
-
-    themeNotifier.setTheme(brightness);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedBuilder(
-        animation: _animationController,
-        builder: (_, __) {
-          return Opacity(
-            opacity: _animationController.value,
-            child: const Center(
-              child: Text(
-                CommonStrings.metrics,
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
+      body: PlatformBrightnessObserver(
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (_, __) {
+            return Opacity(
+              opacity: _animationController.value,
+              child: const Center(
+                child: Text(
+                  CommonStrings.metrics,
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -116,7 +100,6 @@ class _LoadingPageState extends State<LoadingPage>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _animationController.dispose();
     _authNotifier.removeListener(_authNotifierListener);
     super.dispose();
