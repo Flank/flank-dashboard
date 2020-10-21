@@ -1,8 +1,7 @@
+import 'package:coverage_converter/common/exception/coverage_converter_exception.dart';
+import 'package:coverage_converter/common/exception/error_code/coverage_converter_error_code.dart';
+import 'package:coverage_converter/common/strings/common_strings.dart';
 import 'package:test/test.dart';
-
-import '../../../lib/common/exception/common_strings.dart';
-import '../../../lib/common/exception/coverage_converter_exception.dart';
-import '../../../lib/common/exception/error_code/coverage_converter_error_code.dart';
 
 void main() {
   group("CoverageConverterException", () {

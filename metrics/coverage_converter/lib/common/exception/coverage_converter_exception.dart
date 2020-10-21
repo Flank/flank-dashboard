@@ -1,4 +1,5 @@
-import 'common_strings.dart';
+import 'package:coverage_converter/common/strings/common_strings.dart';
+
 import 'error_code/coverage_converter_error_code.dart';
 
 /// A class that represents the coverage converter [Exception].
