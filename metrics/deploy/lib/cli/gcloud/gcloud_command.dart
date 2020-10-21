@@ -18,14 +18,14 @@ class GCloudCommand {
   String _getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-  /// Logins to GCloud and Firebase and gets firebase CI token.
+  /// Logins to GCloud and Firebase and gets the Firebase CI token.
   Future<void> login() async {
     // Logins to GCloud.
     print('GCloud Login.');
     await cmd.run('gcloud', ['auth', 'login'], verbose: true);
   }
 
-  /// Adds project or uses existing project.
+  /// Adds project or uses an existing one.
   Future<String> addProject() async {
     if (await promptConfirm('Create new project ?')) {
       print('Creating new project');
@@ -42,7 +42,7 @@ class GCloudCommand {
     return projectID;
   }
 
-  /// Adds project app needed to create firestore database.
+  /// Adds project app needed to create a Firestore database.
   Future<void> addProjectApp(String region, String projectID) async {
     if (await promptConfirm('Add project app ?')) {
       print('Adding project app.');
@@ -54,7 +54,7 @@ class GCloudCommand {
     }
   }
 
-  /// Creates firestore database with the given [region] and [projectID].
+  /// Creates a Firestore database with the given [region] and [projectID].
   Future<void> createDatabase(String region, String projectID) async {
     // gcloud alpha firestore databases create --region=europe-west --project $projectID --quiet
     if (await promptConfirm('Add project database ?')) {

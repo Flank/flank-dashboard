@@ -3,7 +3,7 @@ import 'package:process_run/shell.dart';
 
 /// A wrapper class for the Firebase CLI.
 class FirebaseCommand {
-  /// Logins to GCloud and Firebase and gets firebase CI token.
+  /// Logins to GCloud and Firebase and gets the Firebase CI token.
   Future<String> login() async {
     // Logins to Firebase.
     print('Firebase login.');
