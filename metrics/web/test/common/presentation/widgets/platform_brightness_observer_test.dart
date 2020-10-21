@@ -25,11 +25,13 @@ void main() {
     testWidgets(
       "display the given child",
       (tester) async {
+        const child = Text('child');
+
         await tester.pumpWidget(const _PlatformBrightnessObserverTestbed(
-          child: null,
+          child: child,
         ));
 
-        expect(tester.takeException(), isAssertionError);
+        expect(find.byWidget(child), findsOneWidget);
       },
     );
 
@@ -75,7 +77,7 @@ class _PlatformBrightnessObserverTestbed extends StatelessWidget {
   /// A child widget of the [PlatformBrightnessObserver].
   final Widget child;
 
-  /// Creates a new instance of this testbed.
+  /// Creates a new instance of the platform brightness observer testbed.
   ///
   /// The [child] defaults to [SizedBox].
   const _PlatformBrightnessObserverTestbed({
