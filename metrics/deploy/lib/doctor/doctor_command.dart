@@ -6,25 +6,23 @@ import 'package:deploy/cli/git/git_command.dart';
 
 /// A class providing doctor command to verify dependencies.
 class DoctorCommand extends Command {
-  /// A name of this command.
   @override
-  final name = "doctor";
+  final String name = "doctor";
 
-  /// A description of this command.
   @override
-  final description = "Check dependencies.";
+  final String description = "Check dependencies.";
 
   /// A [FirebaseCommand] needed to get the Firebase CLI version.
-  final _firebase = FirebaseCommand();
+  final FirebaseCommand _firebase = FirebaseCommand();
 
   /// A [GCloudCommand] needed to get the GCloud CLI version.
-  final _gcloud = GCloudCommand();
+  final GCloudCommand _gcloud = GCloudCommand();
 
   /// A [GitCommand] needed to get the Git CLI version.
-  final _git = GitCommand();
+  final GitCommand _git = GitCommand();
 
   /// A [FlutterCommand] needed to get the Flutter CLI version.
-  final _flutter = FlutterCommand();
+  final FlutterCommand _flutter = FlutterCommand();
 
   @override
   Future<void> run() async {

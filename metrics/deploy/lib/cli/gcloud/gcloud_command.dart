@@ -6,7 +6,7 @@ import 'package:process_run/shell.dart';
 /// A wrapper class for the GCloud CLI.
 class GCloudCommand {
   /// Literal and numerical symbols.
-  final _chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
+  final String _chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
 
   /// A generator of random value.
   final Random _rnd = Random();
