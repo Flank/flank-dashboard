@@ -596,7 +596,7 @@ class _JenkinsClientResponse {
   /// method.
   Future<InteractionResult<Map<String, dynamic>>> artifact([_]) {
     final result = <String, dynamic>{
-      'pct': 60,
+      'pct': 0.6,
     };
     return _wrapFuture(InteractionResult.success(result: result));
   }
