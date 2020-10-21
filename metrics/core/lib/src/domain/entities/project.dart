@@ -6,10 +6,10 @@ class Project {
   /// An identifier of the project.
   final String id;
 
-  /// A name of the project.
+  /// A name of this project.
   final String name;
 
-  /// Creates the [Project] with [name] and [id].
+  /// Creates a new instance of the [Project].
   const Project({
     @required this.id,
     @required this.name,

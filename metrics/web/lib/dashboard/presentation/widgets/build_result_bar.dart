@@ -54,9 +54,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
 
   /// A [GraphIndicator] widget to use based on the [BuildResultBar.buildResult].
   Widget get _graphIndicator {
-    if (widget.buildResult == null || widget.buildResult.buildStatus == null) {
-      return null;
-    }
+    if (widget.buildResult?.buildStatus == null) return null;
 
     switch (widget.buildResult.buildStatus) {
       case BuildStatus.successful:
@@ -64,9 +62,10 @@ class _BuildResultBarState extends State<BuildResultBar> {
       case BuildStatus.failed:
         return const NegativeGraphIndicator();
       case BuildStatus.unknown:
-      default:
         return const NeutralGraphIndicator();
     }
+
+    return null;
   }
 
   @override

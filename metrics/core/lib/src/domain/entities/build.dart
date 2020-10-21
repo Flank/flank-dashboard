@@ -13,7 +13,7 @@ class Build extends Equatable {
   /// A number of this build.
   final int buildNumber;
 
-  /// A [DateTime] this build was started at.
+  /// A [DateTime] this build has been started at.
   final DateTime startedAt;
 
   /// A resulting status of this build.

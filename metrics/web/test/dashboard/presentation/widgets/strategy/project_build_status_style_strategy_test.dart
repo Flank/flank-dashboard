@@ -64,11 +64,11 @@ void main() {
     );
 
     test(
-      ".getWidgetAppearance() returns the unknown style if the given build status is null",
+      ".getWidgetAppearance() returns null if the given build status is null",
       () {
         final actualStyle = themeStrategy.getWidgetAppearance(theme, null);
 
-        expect(actualStyle, equals(unknownStyle));
+        expect(actualStyle, isNull);
       },
     );
 
@@ -112,13 +112,11 @@ void main() {
     );
 
     test(
-      ".getIconImage() returns a path to the unknown status icon if the given build status is null",
+      ".getIconImage() returns null if the given build status is null",
       () {
-        const expectedIconPath = 'icons/unknown_status.svg';
-
         final actualIconPath = themeStrategy.getIconImage(null);
 
-        expect(actualIconPath, equals(expectedIconPath));
+        expect(actualIconPath, isNull);
       },
     );
   });

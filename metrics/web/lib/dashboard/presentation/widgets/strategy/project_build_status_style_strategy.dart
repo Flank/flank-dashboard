@@ -17,33 +17,29 @@ class ProjectBuildStatusStyleStrategy implements BuildStatusStyleStrategy {
     final attentionLevelTheme =
         themeData.projectBuildStatusTheme.attentionLevel;
 
-    if (value == null) return attentionLevelTheme.unknown;
-
     switch (value) {
       case BuildStatus.successful:
         return attentionLevelTheme.positive;
       case BuildStatus.failed:
         return attentionLevelTheme.negative;
       case BuildStatus.unknown:
-      default:
         return attentionLevelTheme.unknown;
     }
+
+    return null;
   }
 
   @override
   String getIconImage(BuildStatus value) {
-    const unknownIcon = "icons/unknown_status.svg";
-
-    if (value == null) return unknownIcon;
-
     switch (value) {
       case BuildStatus.successful:
         return "icons/successful_status.svg";
       case BuildStatus.failed:
         return "icons/failed_status.svg";
       case BuildStatus.unknown:
-      default:
-        return unknownIcon;
+        return "icons/unknown_status.svg";
     }
+
+    return null;
   }
 }
