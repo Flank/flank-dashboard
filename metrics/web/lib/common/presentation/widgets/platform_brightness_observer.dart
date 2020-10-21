@@ -9,7 +9,7 @@ class PlatformBrightnessObserver extends StatefulWidget {
   /// A child widget to display.
   final Widget child;
 
-  /// Creates a [PlatformBrightnessObserver].
+  /// Creates a new instance of the [PlatformBrightnessObserver].
   ///
   /// The [child] must not be null.
   const PlatformBrightnessObserver({
