@@ -41,7 +41,7 @@ Software engineers should always follow the complete process while working on ev
 
 Make sure to commit effort and don't skip steps.
 
-After completing Design and before moving to Development - make sure to approve Design document with your Team Leader or (if you are a Team Leader - with your peer), discuss it with the team.
+After completing Design and before moving to Development - make sure to approve the Design document with your Team Leader (if you are a Team Leader - with your peer) or discuss it with the team.
 
 ### Design documentation
 
