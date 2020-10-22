@@ -43,7 +43,7 @@ Performance Metric (Light theme).
 #### Description
 A builds metric is a count of performed builds per week per project. 
 #### Source
-The information about the number of builds comes from the CI.
+The information about the number of builds comes from the CI system.
 #### Date ranges
 A builds metric includes the builds number per last 6 days including the current day.    
 #### Appearance
@@ -76,12 +76,12 @@ Stability (Dark theme) - Positive, Neutral, Negative, Inactive.
 ![Stability (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/percentage_light.png?raw=true)   
 Stability (Light theme) - Positive, Neutral, Negative, Inactive. 
 
-## Coverage
+## Coverage Metric
 #### Description
 Coverage metric is a ratio of lines of code executed while running tests to total lines of code, measured in percent.
 #### Source
 The information about the coverage comes from the coverage artifact that is created by the CI system and converted by 
-the CI integrations module.
+the CI integrations module. See [coverage converter design](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md).
 #### Date ranges
 A coverage metric includes the stability of the last 6 days including the current day.
 #### Appearance
