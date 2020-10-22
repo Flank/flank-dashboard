@@ -13,7 +13,7 @@ void main() {
         const style = MetricsColoredBarStyle();
 
         expect(style.color, isNotNull);
-        expect(style.backgroundColor, isNotNull);
+        expect(style.hoverColor, isNotNull);
       },
     );
 
@@ -22,11 +22,11 @@ void main() {
       const backgroundColor = Colors.grey;
       final style = MetricsColoredBarStyle(
         color: color,
-        backgroundColor: backgroundColor,
+        hoverColor: backgroundColor,
       );
 
       expect(style.color, equals(color));
-      expect(style.backgroundColor, equals(backgroundColor));
+      expect(style.hoverColor, equals(backgroundColor));
     });
   });
 }

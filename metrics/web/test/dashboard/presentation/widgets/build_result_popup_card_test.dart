@@ -4,8 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/common/presentation/value_image/widgets/value_image.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
+import 'package:metrics_core/metrics_core.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -29,6 +32,7 @@ void main() {
     final buildResultPopupViewModel = BuildResultPopupViewModel(
       duration: const Duration(seconds: 30000),
       date: DateTime.now(),
+      buildStatus: BuildStatus.unknown,
     );
     final titleFinder = find.text(DateFormat('EEEE, MMM d').format(
       buildResultPopupViewModel.date,
@@ -53,9 +57,11 @@ void main() {
     testWidgets(
       "displays the title with the date from the given view model",
       (tester) async {
-        await tester.pumpWidget(_BuildResultPopupCardTestbed(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_BuildResultPopupCardTestbed(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+          ));
+        });
 
         expect(titleFinder, findsOneWidget);
       },
@@ -64,10 +70,11 @@ void main() {
     testWidgets(
       "displays the subtitle with the duration from the given view model",
       (tester) async {
-        await tester.pumpWidget(_BuildResultPopupCardTestbed(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-        ));
-
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_BuildResultPopupCardTestbed(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+          ));
+        });
         expect(subtitleFinder, findsOneWidget);
       },
     );
@@ -75,10 +82,12 @@ void main() {
     testWidgets(
       "applies the color to the card from the metrics theme to the card",
       (tester) async {
-        await tester.pumpWidget(_BuildResultPopupCardTestbed(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          themeData: themeData,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_BuildResultPopupCardTestbed(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+            themeData: themeData,
+          ));
+        });
 
         final card = tester.widget<Card>(find.byType(Card));
 
@@ -89,10 +98,12 @@ void main() {
     testWidgets(
       "applies the shadow color from the metrics theme to the build result popup card",
       (tester) async {
-        await tester.pumpWidget(_BuildResultPopupCardTestbed(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          themeData: themeData,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_BuildResultPopupCardTestbed(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+            themeData: themeData,
+          ));
+        });
 
         final container = tester.widget<Container>(
           find.ancestor(
@@ -110,10 +121,12 @@ void main() {
     testWidgets(
       "applies the title text style from the metrics theme to the title",
       (tester) async {
-        await tester.pumpWidget(_BuildResultPopupCardTestbed(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          themeData: themeData,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_BuildResultPopupCardTestbed(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+            themeData: themeData,
+          ));
+        });
 
         final textWidget = tester.widget<Text>(titleFinder);
 
@@ -124,14 +137,34 @@ void main() {
     testWidgets(
       "applies the subtitle text style from the metrics theme to the subtitle",
       (tester) async {
-        await tester.pumpWidget(_BuildResultPopupCardTestbed(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          themeData: themeData,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_BuildResultPopupCardTestbed(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+            themeData: themeData,
+          ));
+        });
 
         final textWidget = tester.widget<Text>(subtitleFinder);
 
         expect(textWidget.style, equals(subtitleTextStyle));
+      },
+    );
+
+    testWidgets(
+      "delegates the build status from the view model to the ValueImage",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_BuildResultPopupCardTestbed(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+            themeData: themeData,
+          ));
+        });
+
+        final valueImage = tester.widget<ValueImage<BuildStatus>>(
+          find.byWidgetPredicate((widget) => widget is ValueImage<BuildStatus>),
+        );
+
+        expect(valueImage.value, equals(buildResultPopupViewModel.buildStatus));
       },
     );
   });

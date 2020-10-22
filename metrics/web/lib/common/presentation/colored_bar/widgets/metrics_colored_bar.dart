@@ -47,7 +47,7 @@ class MetricsColoredBar<T> extends StatelessWidget {
           topLeft: borderRadius,
           topRight: borderRadius,
         ),
-        color: isHovered ? style.backgroundColor : style.color,
+        color: isHovered ? style.hoverColor : style.color,
       ),
     );
   }

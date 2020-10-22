@@ -491,15 +491,15 @@ class DarkMetricsThemeData extends MetricsThemeData {
             attentionLevel: MetricsColoredBarAttentionLevel(
               positive: MetricsColoredBarStyle(
                 color: ColorConfig.primaryColor,
-                backgroundColor: ColorConfig.primaryButtonHoverColor,
+                hoverColor: ColorConfig.primaryButtonHoverColor,
               ),
               negative: MetricsColoredBarStyle(
                 color: ColorConfig.accentColor,
-                backgroundColor: ColorConfig.accentButtonHoverColor,
+                hoverColor: ColorConfig.accentButtonHoverColor,
               ),
               neutral: MetricsColoredBarStyle(
                 color: ColorConfig.shimmerColor,
-                backgroundColor: _pageTitleIconColor,
+                hoverColor: _pageTitleIconColor,
               ),
             ),
           ),

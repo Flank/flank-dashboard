@@ -514,15 +514,15 @@ class LightMetricsThemeData extends MetricsThemeData {
             attentionLevel: MetricsColoredBarAttentionLevel(
               positive: MetricsColoredBarStyle(
                 color: ColorConfig.primaryColor,
-                backgroundColor: _positiveStatusColor,
+                hoverColor: _positiveStatusColor,
               ),
               negative: MetricsColoredBarStyle(
                 color: ColorConfig.accentColor,
-                backgroundColor: _negativeStatusColor,
+                hoverColor: _negativeStatusColor,
               ),
               neutral: MetricsColoredBarStyle(
                 color: ColorConfig.accentColor,
-                backgroundColor: _negativeStatusColor,
+                hoverColor: _negativeStatusColor,
               ),
             ),
           ),

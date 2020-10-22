@@ -9,12 +9,12 @@ import 'package:metrics/common/presentation/graph_indicator/widgets/positive_gra
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -27,9 +27,10 @@ void main() {
         primaryColor: Colors.red,
       ),
     );
-    final buildResultPopupViewModel = BuildResultPopupViewModel(
+    final successfulBuildResult = BuildResultViewModel(
       duration: const Duration(seconds: 20),
       date: DateTime.now(),
+      buildStatus: BuildStatus.successful,
     );
     final placeholderFinder = find.byType(PlaceholderBar);
     final mouseRegionFinder = find.ancestor(
@@ -40,7 +41,9 @@ void main() {
     Future<void> _hoverBar(WidgetTester tester) async {
       final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
       mouseRegion.onEnter(const PointerEnterEvent());
-      await tester.pumpAndSettle();
+      await mockNetworkImagesFor(() {
+        return tester.pumpAndSettle();
+      });
     }
 
     testWidgets(
@@ -88,13 +91,8 @@ void main() {
     testWidgets(
       "opens the BuildResultPopupCard widget on hover",
       (WidgetTester tester) async {
-        final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: BuildStatus.successful,
-        );
-
         await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: buildResult,
+          buildResult: successfulBuildResult,
         ));
 
         await _hoverBar(tester);
@@ -106,13 +104,8 @@ void main() {
     testWidgets(
       "closes the BuildResultPopupCard widget on exit",
       (WidgetTester tester) async {
-        final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: BuildStatus.successful,
-        );
-
         await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: buildResult,
+          buildResult: successfulBuildResult,
         ));
 
         await _hoverBar(tester);
@@ -127,13 +120,8 @@ void main() {
     testWidgets(
       "does not displays the graph indicator if the popup is closed",
       (tester) async {
-        final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: BuildStatus.successful,
-        );
-
         await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: buildResult,
+          buildResult: successfulBuildResult,
         ));
 
         final graphIndicatorFinder = find.byWidgetPredicate(
@@ -147,13 +135,8 @@ void main() {
     testWidgets(
       "displays the positive graph indicator if the build status is successful and the popup is opened",
       (tester) async {
-        final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: BuildStatus.successful,
-        );
-
         await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: buildResult,
+          buildResult: successfulBuildResult,
         ));
 
         await _hoverBar(tester);
@@ -168,7 +151,8 @@ void main() {
       "displays the negative graph indicator if the build status is failed and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
+          duration: Duration.zero,
+          date: DateTime.now(),
           buildStatus: BuildStatus.failed,
         );
 
@@ -188,7 +172,8 @@ void main() {
       "displays the neutral graph indicator if the build status is unknown and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
+          duration: Duration.zero,
+          date: DateTime.now(),
           buildStatus: BuildStatus.unknown,
         );
 
@@ -207,17 +192,13 @@ void main() {
     testWidgets(
       "applies the padding returned from the given build result bar strategy",
       (tester) async {
-        final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
-          buildStatus: BuildStatus.unknown,
-        );
         final strategy = BuildResultBarPaddingStrategy(
-          buildResults: [buildResult],
+          buildResults: [successfulBuildResult],
         );
-        final expectedPadding = strategy.getBarPadding(buildResult);
+        final expectedPadding = strategy.getBarPadding(successfulBuildResult);
 
         await tester.pumpWidget(_BuildResultBarTestbed(
-          buildResult: buildResult,
+          buildResult: successfulBuildResult,
           strategy: strategy,
         ));
 

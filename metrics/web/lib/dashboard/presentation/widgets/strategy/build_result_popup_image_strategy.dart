@@ -1,13 +1,12 @@
-import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/value_image/strategy/value_based_image_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents the [BuildResultPopupStatusStrategy] of applying the [MetricsThemeData]
-/// based on the [BuildStatus] value.
-class BuildResultPopupStatusStrategy
+/// A class that represents the [ValueBasedImageStrategy] of applying
+/// the image based on the [BuildStatus] value.
+class BuildResultPopupImageStrategy
     implements ValueBasedImageStrategy<BuildStatus> {
-  /// Creates a new instance of the [BuildResultPopupStatusStrategy].
-  const BuildResultPopupStatusStrategy();
+  /// Creates a new instance of the [BuildResultPopupImageStrategy].
+  const BuildResultPopupImageStrategy();
 
   @override
   String getIconImage(BuildStatus value) {
