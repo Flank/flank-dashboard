@@ -6,19 +6,19 @@ The information about the build result comes from the CI system with the other i
 * A successful build result indicates the success of all necessary checks, such as tests, code style analysis, builds, 
 and others. A successful build result is displayed as a checkmark on a green background.   
 * A failed build result indicates a failure of some necessary checks. A failed build result is displayed as a cross on a red background. 
-* An unknown build status indicates an absence of builds to display a build result. An unknown build result is displayed as a dash on a gray background. 
+* An unknown build status indicates an absence of builds to display a build result. An unknown build result is displayed as a dash on a gray background.    
 ![Build Results (Dark theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_results.png?raw=true)    
-Build Results (Dark theme) - Positive, Negative, Unknown.
+Build Results (Dark theme) - Positive, Negative, Unknown.    
 ![Build Results (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_results_light.png?raw=true)    
-Build Results (Light theme) - Positive, Negative, Unknown.
+Build Results (Light theme) - Positive, Negative, Unknown.    
 
 ## Performance
 A Performance metric is an average build duration of successful builds excluding the queue time. The information about each build duration comes from the CI and includes the duration of all performed checks. It is displayed as a label, with a performance sparkline graph below it.
 A performance sparkline graph displays an average daily performance grouped by the last 7 days including the current day.        
 ![Performance Sparkline Graph (Dark theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/performance_graph.png?raw=true)    
-Performance Sparkline Graph (Dark theme).
-![Performance Sparkline Graph (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/performance_graph_light.png?raw=true)    
-Performance Sparkline Graph (Light theme).
+Performance Sparkline Graph (Dark theme).    
+![Performance Sparkline Graph (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/performance_graph_light.png?raw=true)      
+Performance Sparkline Graph (Light theme).    
 
 ## Builds
 Builds metric is a count of builds per week per project. The information about the number of builds comes from the CI.
