@@ -1,43 +1,49 @@
 @startuml coverage_sequence_diagram
 
-
 actor Bob
 
-
 participant CoverageConverterRunner
-participant CoverageArgumentsParser
 participant SpecificCoverageConverterCommand
+participant CoverageConverterArgumentsManager
 participant SpecificCoverageConverter
-
 
 Bob -> CoverageConverterRunner : coverage_converter specific -i input.json -o output.json
 
 activate CoverageConverterRunner
-CoverageConverterRunner -> CoverageArgumentsParser : parse(arguments)
-activate CoverageArgumentsParser
-
-alt inputFile == null
-activate CoverageArgumentsParser
-
-return throw ArgumentError
-activate CoverageConverterRunner
-CoverageConverterRunner -> Bob: prints error message
-deactivate CoverageConverterRunner
-
-end 
-
-return CoverageArguments instance
 CoverageConverterRunner -> SpecificCoverageConverterCommand : run()
 activate SpecificCoverageConverterCommand
 
+SpecificCoverageConverterCommand -> CoverageConverterArgumentsManager : parseArgResults(argResults)
+activate CoverageConverterArgumentsManager
+
+
+alt inputFile == null
+    activate CoverageConverterArgumentsManager
+
+    return throw ArgumentError
+    activate SpecificCoverageConverterCommand
+    ' return throw ArgumentError
+    SpecificCoverageConverterCommand -> CoverageConverterRunner: throw ArgumentError
+    deactivate SpecificCoverageConverterCommand
+    activate CoverageConverterRunner
+    CoverageConverterRunner -> Bob: prints error message
+    deactivate CoverageConverterRunner
+
+end
+
+return CoverageArguments instance
+
+
 alt !inputFile.exists
-activate SpecificCoverageConverterCommand
+    activate SpecificCoverageConverterCommand
 
-return throw an CoverageConverterException
-activate CoverageConverterRunner
+    SpecificCoverageConverterCommand --> CoverageConverterRunner: throw an CoverageConverterException
+    deactivate SpecificCoverageConverterCommand
 
-CoverageConverterRunner -> Bob : prints error message
-deactivate CoverageConverterRunner
+    activate CoverageConverterRunner
+
+    CoverageConverterRunner -> Bob : prints error message
+    deactivate CoverageConverterRunner
 
 end
 
@@ -45,7 +51,7 @@ SpecificCoverageConverterCommand -> SpecificCoverageConverter : convert(inputFil
 activate SpecificCoverageConverter
 return CoverageData instance
 SpecificCoverageConverterCommand -> SpecificCoverageConverterCommand : write Coverage as a json to output file
-return 
+return
 return
 
 @enduml

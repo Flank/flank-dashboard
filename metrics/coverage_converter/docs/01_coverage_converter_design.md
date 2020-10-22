@@ -74,9 +74,14 @@ Also, we should be able to pass the following arguments to the Coverage Converte
 - `input` - the file from where we'll read the specific coverage report;
 - `output` - the file to which we'll write the formatted coverage report. If the `output` parameter is not specified, we should use the `coverage-summary.json`.
 
-To be able to pass arguments to our application we should create a `CoverageArgumentsParser` that will take a `List<String>` as arguments and return the `CoverageConverterArguments` instance that will contain all given arguments. 
+To be able to pass arguments to our application, we should create a `CoverageConverterArgumentsManager` that will have such methods: 
 
-Note that the `input` argument is required. If the `input` argument is not specified, we should throw an `ArgumentException`.
+- `configureArguments` - a method needed to configure the `ArgParser` with the proper options/flags;
+- `parseArgResults` - a method needed to parse the `ArgResults` class returned by the `ArgParser` to the `CoverageConverterArguments` object.
+
+We should inject the `CoverageConverterArgumentsManager` to the `CoverageConverterCommand` to be able to test the `CoverageConverterCommand` without any dependencies on `CoverageConverterArgumentsManager`. 
+
+So, the `CoverageConverterCommand` will contain the `CoverageConverterArgumentsManager` and configure its `ArgParser` using the `configureArguments` method in the constructor body.
 
 ## Package structure
 
@@ -117,7 +122,7 @@ Finally, let's consider the class diagram that provides information about all cl
 
 ![Coverage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/coverage_converter/docs/diagrams/coverage_class_diagram.puml)
 
-So, the application takes the arguments, parses them using the `CoverageArgumentsParser`, and passes these arguments to the specific converter command. The converter command, in its turn, gets the input file path, converts it to the CI integrations coverage format, and writes it to the output file.
+So, the application takes the arguments, parses them using the `CoverageConverterArgumentsManager`, and passes these arguments to the specific converter command. The converter command, in its turn, gets the input file path, converts it to the CI integrations coverage format, and writes it to the output file.
 
 Let's consider the sequence diagram of these processes taking the `specific` format as an example:
 

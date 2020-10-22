@@ -8,9 +8,10 @@ package arguments {
         }
     }
 
-    package parser {
-        class CoverageConverterArgumentsParser {
-            CoverageConverterArguments parse()
+    package manager {
+        class CoverageConverterArgumentsManager {
+            void configureArguments(ArgParser)
+            CoverageConverterArguments parseArgResults(ArgResults)
         }
     }
 }
@@ -75,9 +76,8 @@ package specific_format {
 
 
 CoverageConverterRunner -right-> SpecificFormatCoverageConverterCommand : uses
-CoverageConverterRunner --> CoverageConverterArgumentsParser : uses
 
-CoverageConverterArgumentsParser -left-> CoverageConverterArguments : provides
+CoverageConverterArgumentsManager -left-> CoverageConverterArguments : provides
 
 SpecificFormatCoverageConverterCommand --> SpecificFormatCoverageConverter : uses
 SpecificFormatCoverageConverterCommand --|> CoverageConverterCommand
@@ -87,6 +87,7 @@ SpecificFormatCoverageConverter .down.|> CoverageConverter
 CoverageConverterCommand --> CoverageConverterArguments : uses
 CoverageConverterCommand -left-> CoverageConverter : uses
 CoverageConverterCommand -up-> CoverageConverterException : throws
+CoverageConverterCommand --> CoverageConverterArgumentsManager : uses
 
 CoverageConverterException --> CoverageConverterErrorCode : uses
 
