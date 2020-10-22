@@ -29,6 +29,7 @@ A performance metric is an average build duration of successful builds excluding
 The information about each build duration comes from the CI system and includes the duration of all performed checks. 
 #### Date ranges
 A performance metric displays the performance by the last 6 days, including the current day.
+A sparkline performance graph displays an average daily performance of the last 6 days, including the current day.
 #### Appearance
 A performance metric is displayed as a label, with a performance sparkline graph below it.
 
