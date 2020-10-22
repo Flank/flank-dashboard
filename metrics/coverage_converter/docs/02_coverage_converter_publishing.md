@@ -115,13 +115,7 @@ If you want to download the Coverage Converter tool you should follow the steps 
 
 After these steps, you should obtain the download link similar to this one: 
 
-`https://github.com/platform-platform/monorepo/releases/download/v1.0.0/coverage_converter_macos`
-
-### Downloading the latest release
-
-As you can see, the link contains the release version. You can modify the link to make it refer to the latest release by removing the version from the URL and adding the `latest` keyword after the `releases`. So, the link should look like this: 
-
-`https://github.com/platform-platform/monorepo/releases/latest/download/coverage_converter_macos`
+`https://github.com/platform-platform/monorepo/releases/download/v1.0.0-coverage-converter/coverage_converter_macos`
 
 ## Using the Coverage Converter tool
 
@@ -129,7 +123,9 @@ Once you've obtained the download link, you can download the Coverage Converter 
 
 `curl -o <output> -k <url>`
 
-Where the `<output>` is the file path where you want to download the coverage converter, and the `<url>` is the download URL obtained previously. 
+Where the `<output>` is the file path where you want to download the coverage converter, and the `<url>` is the download URL obtained previously. Let's consider the example download command: 
+
+`curl -o coverage_converter_macos -k https://github.com/platform-platform/monorepo/releases/download/v1.0.0-coverage-converter/coverage_converter_macos`
 
 So, when you've got the Coverage Converter executable, you probably, want to convert coverage to be readable by the CI integrations tool. To run the conversion process, you should have the coverage report in one of the supported formats: 
 
