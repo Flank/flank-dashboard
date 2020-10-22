@@ -22,7 +22,6 @@ alt inputFile == null
 
     return throw ArgumentError
     activate SpecificCoverageConverterCommand
-    ' return throw ArgumentError
     SpecificCoverageConverterCommand -> CoverageConverterRunner: throw ArgumentError
     deactivate SpecificCoverageConverterCommand
     activate CoverageConverterRunner
@@ -37,7 +36,7 @@ return CoverageArguments instance
 alt !inputFile.exists
     activate SpecificCoverageConverterCommand
 
-    SpecificCoverageConverterCommand --> CoverageConverterRunner: throw an CoverageConverterException
+    SpecificCoverageConverterCommand --> CoverageConverterRunner: throw a CoverageConverterException
     deactivate SpecificCoverageConverterCommand
 
     activate CoverageConverterRunner
