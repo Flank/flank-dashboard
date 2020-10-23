@@ -28,9 +28,10 @@ A build results metric includes the build results and duration of the latest bui
 #### Source
 The information about build results comes from the CI system that performs these builds.
 #### Date ranges
-The build results metric includes the results of the last 20 builds
+The build results metric includes the results of the last 20 builds.
 #### Appearance
-The build results metric appears as a bar graph. Each bar stands for one build result. The height of each bar stands for the build duration.
+The build results metric appears as a bar graph. Each bar stands for one build result. 
+The height of each bar stands for the build duration. The height of each bar is relative. That means that two bars in different projects with the same height may have a different duration.
 * If the build result is successful the app uses a green bar.
 * If the build result is failed the app uses a red bar.
 * If the build result is unknown the app uses a grey dash at the bottom of a bar.
@@ -69,19 +70,19 @@ A builds metric includes the builds number by the last 7 days including the curr
 #### Appearance
 A builds metric is a label containing the number of builds.
 
-![Builds Number (Dark theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/builds.png?raw=true)    
-Builds Number (Dark theme).      
+![Builds (Dark theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/builds.png?raw=true)    
+Builds (Dark theme).      
 
-![Builds Number (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/builds_light.png?raw=true)   
-Builds Number (Light theme).    
+![Builds (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/builds_light.png?raw=true)   
+Builds (Light theme).    
                     
 ## Stability Metric
 #### Description
-A Stability metric is a ratio of successful builds of the last 14 builds. 
+A Stability metric is a ratio of successful builds of the last 20 builds. 
 #### Source
 The information about stability is calculated based on the builds (and it's statuses) ran on the CI
 #### Date ranges
-A stability metric includes the stability of the last 14 builds.
+A stability metric includes the stability of the last 20 builds.
 #### Appearance
 Depending on its value, stability appears differently:
 * A positive stability has the value >= 80% and the app applies green colors to it.
