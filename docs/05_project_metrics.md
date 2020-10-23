@@ -81,7 +81,7 @@ Builds (Light theme).
 #### Description
 A Stability metric is a ratio of successful builds of the last 20 builds. 
 #### Source
-The information about stability is calculated based on the builds (and its statuses) ran on the CI.
+A stability metric is calculated out of the last 20 builds.
 #### Date ranges
 A stability metric includes the stability of the last 20 builds.
 #### Appearance
