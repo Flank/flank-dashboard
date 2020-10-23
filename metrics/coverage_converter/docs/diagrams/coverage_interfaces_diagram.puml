@@ -10,7 +10,7 @@ package package:args {
 
 
 package core.src.data.model {
-    class CoverageModel {
+    class CoverageData {
         Percent percent
         Map<String, dynamic> toJson()
         factory fromJson
@@ -30,14 +30,14 @@ package common {
 
     package converter {
         interface CoverageConverter {
-            {abstract} CoverageModel convert(File)
+            {abstract} CoverageData convert(File)
             {abstract} bool canConvert(File)
         }
     }
 }
 
 CoverageConverterCommand --|> Command
-CoverageConverter --> CoverageModel : provides
+CoverageConverter --> CoverageData : provides
 CoverageConverterCommand --> CoverageConverter : uses
 
 @enduml

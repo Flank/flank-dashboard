@@ -1,20 +1,119 @@
 # Project metrics definitions
 
-## Build Result
-Project build result - successful or failed. 
+## Build Status Metric
+#### Description 
+A build status metric is the result of the latest build. It can be successful, failed, or unknown.
+* A successful build result indicates the success of all necessary checks, such as tests, code style analysis, builds, 
+and others.   
+* In any other cases the build result is unknown.
+* An unknown build status indicates an absence of builds to display a build result.
+#### Source
+The information about the build result comes from the CI system with the other information about other builds.  
+#### Date ranges
+The build status includes the status of the latest build.
+#### Appearance
+* A successful build result is a checkmark on a green background. 
+* A failed build result is a cross on a red background. 
+* An unknown build result is a dash on a gray background.   
 
-## Performance
-Average build duration (without queue time) of successful builds.
+![Build Statuses (Dark theme)](./images/build_statuses.png?raw=true)    
+Build Statuses (Dark theme) - Positive, Negative, Unknown.    
 
-## Builds
-Count of builds per week per project.
+![Build Statuses (Light theme)](./images/build_statuses_light.png?raw=true)    
+Build Statuses (Light theme) - Positive, Negative, Unknown.    
 
-## Stability
-Percentage of successful builds to total builds per week. For example, if 6 our of 10 builds are successful metric value is 60%. 
+## Build Results Metric
+#### Description
+A build results metric includes the build results and duration of the latest builds. Same as build statuses, build results can be successful, failed, neutral or unknown.
+#### Source
+The information about build results comes from the CI system that performs these builds.
+#### Date ranges
+The build results metric includes the results of the last 20 builds.
+#### Appearance
+The build results metric appears as a bar graph. Each bar stands for one build result. 
+The height of each bar stands for the build duration. The height of each bar is relative. That means that two bars in different projects with the same height may have a different duration.
+* If the build result is successful the app uses a green bar.
+* If the build result is failed the app uses a red bar.
+* If the build result is neutral the app uses a grey bar.
+* If there are not enough builds to fill in all the 20 bars the app will fill the rest with the grey dashes at the bottom of a graph.
 
-## Coverage
-Shows the percentage of lines of code executed while running tests to total lines of code.
+![Build Results (Dark theme)](./images/build_results_bar.png?raw=true)    
+Build Results (Dark theme).    
 
-**branch coverage** is the selected metric for code coverage. Web projects report a summary JSON `coverage/coverage-summary.json` from [istanbul](https://istanbul.js.org/docs/advanced/alternative-reporters/#json-summary)
+![Build Results (Light theme)](./images/build_results_bar_light.png?raw=true)    
+Build Results (Light theme).
 
 
+## Performance Metric
+#### Description
+A performance metric is an average build duration of successful builds, excluding the queue time. 
+#### Source
+The information about each build duration comes from the CI system and includes the duration of all performed checks. 
+#### Date ranges
+A performance metric displays the performance by the last 7 days, including the current day (today and 6 days before).
+A sparkline performance graph displays an average daily performance of the last 7 days, including the current day (today and 6 days before).
+#### Appearance
+A performance metric is a label, with a performance sparkline graph below it.
+
+![Performance Metric (Dark theme)](./images/performance_graph.png?raw=true)    
+Performance Metric (Dark theme).    
+
+![Performance Metric (Light theme)](./images/performance_graph_light.png?raw=true)      
+Performance Metric (Light theme).    
+
+## Builds Metric
+#### Description
+A builds metric is a count of performed builds of the project per week. 
+#### Source
+The information about the number of builds comes from the CI system.
+#### Date ranges
+A builds metric includes the builds number by the last 7 days including the current day (today and 6 days before).    
+#### Appearance
+A builds metric is a label containing the number of builds.
+
+![Builds (Dark theme)](./images/builds.png?raw=true)    
+Builds (Dark theme).      
+
+![Builds (Light theme)](./images/builds_light.png?raw=true)   
+Builds (Light theme).    
+                    
+## Stability Metric
+#### Description
+A Stability metric is a ratio of successful builds of the last 20 builds. 
+#### Source
+A stability metric is calculated out of the last 20 builds.
+#### Date ranges
+A stability metric includes the stability of the last 20 builds.
+#### Appearance
+Depending on its value, stability appears differently:
+* A positive stability has the value >= 80% and the app applies green colors to it.
+* A neutral stability has the value < 80% and >= 51%, and the app applies yellow colors to it.
+* A negative stability has the value < 51% and the app applies red colors to it.
+* In all other cases, the stability is inactive and the app displays it as a dash mark on a grey background.
+
+![Stability (Dark theme)](./images/percentage.png?raw=true)    
+Stability (Dark theme) - Positive, Neutral, Negative, Inactive.
+
+![Stability (Light theme)](./images/percentage_light.png?raw=true)   
+Stability (Light theme) - Positive, Neutral, Negative, Inactive. 
+
+## Coverage Metric
+#### Description
+Coverage metric is a ratio of lines of code executed while running tests to total lines of code, measured in percent.
+#### Source
+The CI system generates the coverage artifact. After that the CI integrations component processes this artifact and transfers the coverage to the database. 
+See [coverage converter design](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md).
+#### Date ranges
+A coverage metric displays the coverage of the last successful build.
+#### Appearance
+Depending on its value, coverage appears differently:
+* A positive coverage has the value >= 80% and the app applies green colors to it.
+* A neutral coverage has the value >= 80% < 80% and >= 51% and the app applies yellow colors to it.
+* A negative coverage has the value >= 80% and the app applies red colors to it.
+* In all other cases the coverage is inactive and the app displays the stability as a dash mark on a grey background.
+
+![Coverage (Dark theme)](./images/percentage.png?raw=true)    
+Coverage (Dark theme) - Positive, Neutral, Negative, Inactive. 
+
+![Coverage (Light theme)](./images/percentage_light.png?raw=true)   
+Coverage (Light theme) - Positive, Neutral, Negative, Inactive. 

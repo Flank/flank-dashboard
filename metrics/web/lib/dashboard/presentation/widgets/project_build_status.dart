@@ -30,7 +30,7 @@ class ProjectBuildStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final projectBuildStatus = buildStatus?.value;
+    final projectBuildStatus = buildStatus?.value ?? BuildStatus.unknown;
     final iconImage = buildStatusStyleStrategy.getIconImage(projectBuildStatus);
     final theme = buildStatusStyleStrategy.getWidgetAppearance(
       MetricsTheme.of(context),

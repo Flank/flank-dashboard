@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("ProjectBuildStatusMetric", () {
-    test("successfuly creates an instance with the given build status", () {
+    test("successfully creates an instance with the given build status", () {
       const expectedStatus = BuildStatus.failed;
 
       const buildStatus = ProjectBuildStatusMetric(status: expectedStatus);

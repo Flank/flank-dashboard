@@ -226,11 +226,11 @@ void main() {
         ];
         const expectedStatuses = [
           BuildStatus.failed,
-          BuildStatus.failed,
-          BuildStatus.cancelled,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
           BuildStatus.successful,
-          BuildStatus.successful,
-          BuildStatus.failed,
+          BuildStatus.unknown,
         ];
         final jenkinsBuilds = <JenkinsBuild>[];
         final expected = <BuildData>[];
@@ -356,11 +356,11 @@ void main() {
         ];
         const expectedStatuses = [
           BuildStatus.failed,
-          BuildStatus.failed,
-          BuildStatus.cancelled,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
+          BuildStatus.unknown,
           BuildStatus.successful,
-          BuildStatus.successful,
-          BuildStatus.failed,
+          BuildStatus.unknown,
         ];
         final jenkinsBuilds = <JenkinsBuild>[];
         final expected = <BuildData>[];
@@ -596,11 +596,7 @@ class _JenkinsClientResponse {
   /// method.
   Future<InteractionResult<Map<String, dynamic>>> artifact([_]) {
     final result = <String, dynamic>{
-      'total': {
-        'branches': {
-          'pct': 60,
-        },
-      },
+      'pct': 0.6,
     };
     return _wrapFuture(InteractionResult.success(result: result));
   }

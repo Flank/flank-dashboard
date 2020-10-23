@@ -1,21 +1,34 @@
-import 'dart:io';
-
 import 'package:args/command_runner.dart';
-import 'package:process_run/process_run.dart' as cmd;
+import 'package:deploy/cli/firebase/firebase_command.dart';
+import 'package:deploy/cli/flutter/flutter_command.dart';
+import 'package:deploy/cli/gcloud/gcloud_command.dart';
+import 'package:deploy/cli/git/git_command.dart';
 
-/// class providing doctor command to verify dependencies.
+/// A class providing doctor command to verify dependencies.
 class DoctorCommand extends Command {
   @override
-  final name = "doctor";
-  @override
-  final description = "Check dependencies.";
+  final String name = "doctor";
 
-  DoctorCommand();
+  @override
+  final String description = "Check dependencies.";
+
+  /// A [FirebaseCommand] needed to get the Firebase CLI version.
+  final FirebaseCommand _firebase = FirebaseCommand();
+
+  /// A [GCloudCommand] needed to get the GCloud CLI version.
+  final GCloudCommand _gcloud = GCloudCommand();
+
+  /// A [GitCommand] needed to get the Git CLI version.
+  final GitCommand _git = GitCommand();
+
+  /// A [FlutterCommand] needed to get the Flutter CLI version.
+  final FlutterCommand _flutter = FlutterCommand();
 
   @override
   Future<void> run() async {
-    await cmd.run('firebase', ['--version'], verbose: true);
-    await cmd.run('gcloud', ['--version'], verbose: true);
-    await cmd.run('flutter', ['--version'], verbose: true);
+    await _flutter.version();
+    await _firebase.version();
+    await _gcloud.version();
+    await _git.version();
   }
 }

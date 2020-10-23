@@ -3,31 +3,22 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 
 import '../../common/config/driver_tests_config.dart';
-import '../../util/file_utils.dart';
+import 'web_driver.dart';
 
-/// Represents the chrome driver.
-class ChromeDriver {
-  /// Check if the chrome driver file exists in [workingDir].
-  /// If not - downloads the chrome driver and makes it executable.
-  static Future<void> prepare(String workingDir) async {
-    final chromeDriver = "$workingDir/chromedriver";
-    final chromeDriverZip = "$chromeDriver.zip";
-    final chromeDriverFile = File(chromeDriver);
+/// A class that represents the chrome [WebDriver].
+class ChromeDriver extends WebDriver {
+  final ZipDecoder _archiveDecoder = ZipDecoder();
 
-    if (!chromeDriverFile.existsSync()) {
-      await FileUtils.download(
-        DriverTestsConfig.chromeDriverDownloadUrl,
-        chromeDriverZip,
-      );
+  @override
+  String get downloadUrl => DriverTestsConfig.chromeDriverDownloadUrl;
 
-      final ZipDecoder archive = ZipDecoder();
-      final chromeDriverBytes = File(chromeDriverZip).readAsBytesSync();
+  @override
+  String get executableName => 'chromedriver';
 
-      final chromeDriverArchive = archive.decodeBytes(chromeDriverBytes);
+  @override
+  Archive decodeArchive(String filePath) {
+    final chromeDriverBytes = File(filePath).readAsBytesSync();
 
-      FileUtils.extractFromArchive(chromeDriverArchive, workingDir);
-
-      await Process.run('chmod', ['a+x', chromeDriver]);
-    }
+    return _archiveDecoder.decodeBytes(chromeDriverBytes);
   }
 }

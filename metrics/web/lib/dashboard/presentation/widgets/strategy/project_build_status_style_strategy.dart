@@ -11,20 +11,22 @@ class ProjectBuildStatusStyleStrategy implements BuildStatusStyleStrategy {
 
   @override
   ProjectBuildStatusStyle getWidgetAppearance(
-      MetricsThemeData themeData, BuildStatus value) {
+    MetricsThemeData themeData,
+    BuildStatus value,
+  ) {
     final attentionLevelTheme =
         themeData.projectBuildStatusTheme.attentionLevel;
 
     switch (value) {
       case BuildStatus.successful:
         return attentionLevelTheme.positive;
-      case BuildStatus.cancelled:
-        return attentionLevelTheme.negative;
       case BuildStatus.failed:
         return attentionLevelTheme.negative;
-      default:
+      case BuildStatus.unknown:
         return attentionLevelTheme.unknown;
     }
+
+    return null;
   }
 
   @override
@@ -32,11 +34,12 @@ class ProjectBuildStatusStyleStrategy implements BuildStatusStyleStrategy {
     switch (value) {
       case BuildStatus.successful:
         return "icons/successful_status.svg";
-      case BuildStatus.cancelled:
       case BuildStatus.failed:
         return "icons/failed_status.svg";
-      default:
+      case BuildStatus.unknown:
         return "icons/unknown_status.svg";
     }
+
+    return null;
   }
 }

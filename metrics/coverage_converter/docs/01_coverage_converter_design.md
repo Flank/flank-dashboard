@@ -47,7 +47,7 @@ Let's consider the class diagram explaining the main interfaces and dependencies
 
 ![Interfaces diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/coverage_converter/docs/diagrams/coverage_interfaces_diagram.puml)
 
-As we can see above, the `CoverageConverterCommand` uses the `CoverageConverter` to convert the specific coverage report to the `CoverageModel` class that represents the `CI integrations` coverage report.
+As we can see above, the `CoverageConverterCommand` uses the `CoverageConverter` to convert the specific coverage report to the `CoverageData` class that represents the `CI integrations` coverage report.
 
 Let's consider the activity diagram of the coverage conversion process: 
 

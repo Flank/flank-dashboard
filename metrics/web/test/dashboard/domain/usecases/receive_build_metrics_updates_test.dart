@@ -368,7 +368,7 @@ void main() {
           Build(
             id: '2',
             startedAt: DateTime.now(),
-            buildStatus: BuildStatus.cancelled,
+            buildStatus: BuildStatus.unknown,
             duration: const Duration(minutes: 3),
             coverage: Percent(0.2),
           ),
@@ -395,7 +395,7 @@ class _MetricsRepositoryStub implements MetricsRepository {
     startedAt: DateTime.now().subtract(const Duration(days: 1)),
     duration: const Duration(minutes: 6),
     coverage: Percent(0.1),
-    buildStatus: BuildStatus.cancelled,
+    buildStatus: BuildStatus.unknown,
   );
 
   /// A test [Build]s used in tests.

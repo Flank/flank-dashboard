@@ -3,6 +3,7 @@ import 'package:metrics_core/src/domain/entities/project.dart';
 
 /// [DataModel] that represents the [Project] entity.
 class ProjectData extends Project implements DataModel {
+  /// Creates a new instance of the [ProjectData].
   const ProjectData({
     String id,
     String name,

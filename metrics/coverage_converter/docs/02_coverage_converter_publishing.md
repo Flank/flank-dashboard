@@ -2,14 +2,14 @@
 
 > Summary of the proposed change
 
-An explanation of the Coverage Converter tool publishing place and process
+An explanation of the Coverage Converter tool publishing approach.
 
 # References
 
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [GitHub releases](https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/managing-releases-in-a-repository)
-- [PPA](https://help.ubuntu.com/stable/ubuntu-help/addremove-ppa.html.en#:~:text=Personal%20Package%20Archives%20(PPAs)%20are,that%20it%20can%20be%20tested.)
+- [PPA](https://help.ubuntu.com/stable/ubuntu-help/addremove-ppa.html.en)
 - [Homebrew](https://docs.brew.sh/Taps)
 - [Chocolatey](https://chocolatey.org/docs/create-packages)
 - [Dart packages](https://dart.dev/guides/libraries/create-library-packages)
@@ -78,15 +78,20 @@ Pros:
 - Can publish any file type, so downloading the CLI user gets the ready-to-use application.
 
 Cons: 
-- Requires a separate repository for each project. 
-- Should be built on all supported platforms to publish the binary.
-- Downloading on the CI can be a bit complex because it requires manual downloading and installation.
+- More complex configuration for monorepo (could be solved with tags, etc..)
+- Downloading to CI action becomes a bit more complex compared to the [alternatives](#Personal-Package-Archive-(PPA)-Homebrew-and-Chocolatey), see more [here](#Downloading-using-the-command-line-commands)
 
-So, the GitHub Releases is the best choice in our case because it allows us easily configure the publishing mechanism and allows users to comparatively easy download and start using the Coverage Converter tool. 
+So, the GitHub Releases is the best choice in our case because it allows us easily configure the publishing and allows users to easily download and start using the Coverage Converter tool. 
+
+### Publishing details
+
+Once we've chosen the [GitHub Releases](#GitHub-Releases), let's consider the deployment process in more detail. To publish the application to the GitHub releases, we should create a tag that will correspond to the release. Since we want to keep the release history and we'll have more than one project on our repository, we should create a tag that will contain the version number and the name of the project - `v1.0-coverage-converter`.
+
+For every time that we change coverage converter tool sources, we use a `coverage-converter-snapshot` tag that will be re-assigned after each build to the newly published binary. It should be marked as `pre-release`. There should be only 1 release at a time with `coverage-converter-snapshot` tag.
 
 # Coverage Converter usage
 
-Once we've chosen the publishing mechanism of the Coverage Converter, it is time to explain the way of using the converter. First of all, you should download the Coverage Converter tool. There are a couple of ways to do that: 
+First of all, you should download the Coverage Converter tool. There are a couple of ways to do that:
 
 - Download using the GitHub GUI.
 - Download using the command line commands.
@@ -100,31 +105,37 @@ To download the Coverage Converter tool from the GitHub releases, follow the nex
 1. Go to the platform-platform/monorepo GitHub repository [releases page](https://github.com/platform-platform/monorepo/releases). 
 2. Find the version of the Coverage Converter tool you want to download.
 3. Open the `Assets` collapsible section and choose the Coverage Converter file compatible with your OS.
-4. Click to download
+4. Click to download.
+
+## Downloading the latest snapshot release
+
+To download the latest snapshot release you should use the following links: 
+
+ - [macOS download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_macos)
+ - [Linux download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_linux)
+ - [Windows download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_windows) 
 
 ## Downloading using the command line commands
 
-If you want to download the Coverage Converter tool from the CI, for examples, or just using the command line, you should follow the steps below: 
+If you want to download the Coverage Converter tool you should follow the steps below: 
 
 1. Open the GitHub repository releases and find the release you want to download, as described in the [Downloading using the GitHub GUI](#Downloading-using-the-GitHub-GUI) section.
-2. Find the executable file compatible with your OS
+2. Find the executable file compatible with your OS.
 3. Right-click on this file and copy the link address. 
 
 After these steps, you should obtain the download link similar to this one: 
 
-`https://github.com/platform-platform/monorepo/releases/download/v1.0.0/coverage_converter_macos`
-
-As you can see, the link contains the release version. You can modify the link to make it refer to the latest release by removing the version from the URL and adding the `latest` keyword after the `releases`. So, the link should look like this: 
-
-`https://github.com/platform-platform/monorepo/releases/latest/download/coverage_converter_macos`
+`https://github.com/platform-platform/monorepo/releases/download/v1.0.0-coverage-converter/coverage_converter_macos`
 
 ## Using the Coverage Converter tool
 
-Once you've obtained the downloading link, you can download the Coverage Converter tool using the command line commands. Let's consider the macOS command-line command to download the Coverage Converter tool: 
+Once you've obtained the download link, you can download the Coverage Converter tool using the CLI tools. Let's consider the macOS command to download the Coverage Converter tool:
 
 `curl -o <output> -k <url>`
 
-Where the `<output>` is the file path where you want to download the coverage converter, and the `<url>` is the download URL obtained previously. 
+Where the `<output>` is the file path where you want to download the coverage converter, and the `<url>` is the download URL obtained previously. Let's consider the example download command: 
+
+`curl -o coverage_converter_macos -k https://github.com/platform-platform/monorepo/releases/download/v1.0.0-coverage-converter/coverage_converter_macos`
 
 So, when you've got the Coverage Converter executable, you probably, want to convert coverage to be readable by the CI integrations tool. To run the conversion process, you should have the coverage report in one of the supported formats: 
 
@@ -135,10 +146,7 @@ Let's consider the command for converting the `LCOV` format for macOS:
 
 `./coverage_converter_macos lcov -i <YOUR_COVERAGE_REPORT_FILE> -o <COVERAGE_REPORT_OUTPUT_FILE.json>`
 
-As you can see, the Coverage Converter CLI contains a separate command for each supported coverage format. So, to convert the `Istanbul` coverage report, you should replace the `lcov` command with `istanbul` and so on. Also, let's review the CLI arguments: 
-
-- `-i, --input` - the parameter to specify the input coverage file path. This parameter is required, and the CLI cannot be run without this argument.
-- `-o, --output` - the parameter to specify the output coverage file path. This parameter could be 
+As you can see, the Coverage Converter CLI contains a separate command for each supported coverage format. So, to convert the `Istanbul` coverage report, you should replace the `lcov` command with `istanbul` and so on. See [Coverage Converter design](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md#cli-design) document for detailed description of the CLI arguments.
 
 After the conversion process is finished, the command will create a `COVERAGE_REPORT_OUTPUT_FILE.json` file with the coverage report JSON readable by the CI integrations tool.
 
@@ -162,8 +170,6 @@ This project will be tested manually.
 
 > Summarize alternative designs (pros & cons)
 
-# Coverage Converter publishing
-
 ## Personal Package Archive (PPA), Homebrew, and Chocolatey.
 
 The alternative of the GitHub Releases is to publish the CLI to the package managers of different platforms. So, we'll deploy the CLI to the following package managers: 
@@ -172,7 +178,7 @@ The alternative of the GitHub Releases is to publish the CLI to the package mana
 - `Homebrew` for the macOS users
 - `Chocolatey` for Windows users
 
-This alternative is pretty complex in configuration, but it provides an easy way of installing the CLI using the single platform-unified command. So, let's consider the main Pros & Cons of this alternative: 
+This alternative is pretty complex in configuration, but it provides an easy way of installing the Coverage Converter tool using the single platform-unified command. So, let's consider the main Pros & Cons of this alternative: 
 
 ### Pros & Cons
 
@@ -181,14 +187,13 @@ Pros:
 - Makes the CLI global-accessible command after installation.
 
 Cons: 
-- Complex configuration process.
-- Requires a separate configuration file for each platform (package management tool).
+- Complex configuration process that requires a full configuration process for each platform (package manager).
 - Some package management tools do not support publishing the compiled executables, so we should compile it on the user's machine.
-- Bad integration with GitHub Actions.
+- No existing integration with GitHub Actions.
 
 ## pub.dev publishing
 
-Another alternative is to publish the Coverage Converter tool as a Dart package. It will allow users to install the CLI using the `pub global activate` command, but it requires the Dart SDK installed. 
+Another alternative is to publish the Coverage Converter tool as a Dart package. It will allow users to install the CLI tool using the `pub global activate` command, but it requires the Dart SDK installed.
 
 To publish the Dart package, you should: 
 
@@ -200,10 +205,10 @@ Let's consider the pros and cons of this publishing approach:
 ### Pros & Cons
 
 Pros: 
-- Easy to publish 
-- Easy to download and install the command-line application
-- Single publishing for all platforms
-- Does not require building before publishing
+- Easy to publish.
+- Easy to download and install the command-line application.
+- Single publishing for all platforms.
+- Does not require building before publishing.
 
 Cons: 
 - To install the package, a user should have the Dart SDK installed.

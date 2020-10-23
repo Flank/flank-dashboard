@@ -28,15 +28,33 @@ Meet industry standards for Agile development using 1 week sprints.
 
 The process should work for the team, the team shouldn't work for the process. Adjustments to the project management approach are expected.
 
-## Writing bash scripts
+## Design first
 
-Make sure your shell script is safe by adding the following lines: 
-```bash
-#!/usr/bin/env bash
-set -euxo pipefail
-```
+Software engineers should always follow the complete process while working on every task:
 
-Read more [here](https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/)
+- Analysis
+- Specification
+- Design
+- Development
+- Testing
+- Maintenance
+
+Make sure to commit effort and don't skip steps.
+
+After completing Design and before moving to Development - make sure to approve the Design document with your Team Leader (if you are a Team Leader - with your peer) or discuss it with the team.
+
+### Design documentation
+
+To capture design documentation, we use the following techniques and tools:
+
+- Documentation using [design doc](01_design_doc.md) template or custom structure where it makes sense
+- Diagrams using [PlantUml](https://plantuml.com/) - as it allows to include diagrams directly into design documents from diagram source
+- Use grammar checkers like [Grammarly](https://grammarly.com)
+
+Examples:
+
+- Application architecture: [Metrics Web Application architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md)
+- Feature design: [User Profile Theme](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/user_profile_theme/01_user_profile_theme_design.md)
 
 ## Workflow
 
@@ -183,6 +201,16 @@ Team members should be in a shared Slack channel to asynchronously share informa
   - https://dart.dev/guides/libraries/create-library-packages
 - Use tool folder instead of bin for private scripts
   - https://dart.dev/tools/pub/package-layout#public-tools
+
+## Writing bash scripts
+
+Make sure your shell script is safe by adding the following lines: 
+```bash
+#!/usr/bin/env bash
+set -euxo pipefail
+```
+
+Read more [here](https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/)
 
 # Alternatives Considered
 

@@ -4,27 +4,34 @@ import 'package:metrics_core/src/domain/value_objects/percent.dart';
 
 /// Represents a single finished build from CI.
 class Build extends Equatable {
+  /// A unique identifier of this build.
   final String id;
+
+  /// A unique identifier of the project this build belongs to.
   final String projectId;
+
+  /// A number of this build.
   final int buildNumber;
+
+  /// A [DateTime] this build has been started at.
   final DateTime startedAt;
+
+  /// A resulting status of this build.
   final BuildStatus buildStatus;
+
+  /// A [Duration] of this build.
   final Duration duration;
+
+  /// A name of the workflow that was used to run the build.
   final String workflowName;
+
+  /// A URL of the source control revision used to run the build.
   final String url;
+
+  /// A project test coverage percent of this build.
   final Percent coverage;
 
-  /// Creates the [Build].
-  ///
-  /// [id] is the unique identifier of this build.
-  /// [projectId] is the unique identifier of the project this build belongs to.
-  /// [buildNumber] is the number of this build.
-  /// [startedAt] is the date and time this build was started at.
-  /// [buildStatus] is the resulting status of this build.
-  /// [duration] is the duration of this build.
-  /// [workflowName] is the name of the workflow that was used to run the build.
-  /// [url] is the URL of the source control revision used to run the build.
-  /// [coverage] is the project test coverage percent of this build.
+  /// Creates a new instance of the [Build].
   const Build({
     this.id,
     this.projectId,

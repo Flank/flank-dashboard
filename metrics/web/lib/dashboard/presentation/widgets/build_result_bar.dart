@@ -12,7 +12,7 @@ import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
-import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_style_strategy.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -54,23 +54,23 @@ class _BuildResultBarState extends State<BuildResultBar> {
 
   /// A [GraphIndicator] widget to use based on the [BuildResultBar.buildResult].
   Widget get _graphIndicator {
-    switch (widget.buildResult.buildStatus) {
+    switch (widget.buildResult?.buildStatus) {
       case BuildStatus.successful:
         return const PositiveGraphIndicator();
-      case BuildStatus.cancelled:
-        return const NeutralGraphIndicator();
       case BuildStatus.failed:
         return const NegativeGraphIndicator();
-      default:
-        return null;
+      case BuildStatus.unknown:
+        return const NeutralGraphIndicator();
     }
+
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     const indicatorRadius = DimensionsConfig.graphIndicatorOuterDiameter / 2.0;
 
-    if (widget.buildResult == null || widget.buildResult.buildStatus == null) {
+    if (widget.buildResult == null) {
       final inactiveTheme = MetricsTheme.of(context).inactiveWidgetTheme;
       return PlaceholderBar(
         width: DimensionsConfig.graphBarWidth,
