@@ -39,7 +39,7 @@ package common {
     package command {
         abstract CoverageConverterCommand<T exetends CoverageConverterArguments> {
             {abstract} argumentsParser: ArgumentsParser<T>
-            {abstract} converter : CoverageConverter
+            {abstract} converter : CoverageConverter<T>
             {abstract} name: String
             {abstract} description: String
             void run()
