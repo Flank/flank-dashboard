@@ -4,9 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/value_image/widgets/value_image.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
+import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_image_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -29,7 +31,7 @@ void main() {
       ),
     );
 
-    final buildResultPopupViewModel = BuildResultPopupViewModel(
+    final buildResultPopupViewModel = BuildResultBarViewModel(
       duration: const Duration(seconds: 30000),
       date: DateTime.now(),
       buildStatus: BuildStatus.unknown,
@@ -151,7 +153,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates the build status from the view model to the ValueImage",
+      "displays the ValueImage with the build status from the given view model",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_BuildResultPopupCardTestbed(
@@ -160,11 +162,32 @@ void main() {
           ));
         });
 
-        final valueImage = tester.widget<ValueImage<BuildStatus>>(
-          find.byWidgetPredicate((widget) => widget is ValueImage<BuildStatus>),
+        final valueImage = tester.widget<ValueNetworkImage<BuildStatus>>(
+          find.byWidgetPredicate(
+              (widget) => widget is ValueNetworkImage<BuildStatus>),
         );
 
         expect(valueImage.value, equals(buildResultPopupViewModel.buildStatus));
+      },
+    );
+
+    testWidgets(
+      "displays the ValueImage with the BuildResultPopupImageStrategy",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_BuildResultPopupCardTestbed(
+            buildResultPopupViewModel: buildResultPopupViewModel,
+            themeData: themeData,
+          ));
+        });
+
+        final valueImage = tester.widget<ValueNetworkImage<BuildStatus>>(
+          find.byWidgetPredicate(
+            (widget) => widget is ValueNetworkImage<BuildStatus>,
+          ),
+        );
+
+        expect(valueImage.strategy, isA<BuildResultPopupImageStrategy>());
       },
     );
   });
@@ -172,8 +195,8 @@ void main() {
 
 /// A testbed class required to test the [BuildResultPopupCard].
 class _BuildResultPopupCardTestbed extends StatelessWidget {
-  /// A [BuildResultPopupViewModel] with data to display.
-  final BuildResultPopupViewModel buildResultPopupViewModel;
+  /// A [BuildResultViewModel] with data to display.
+  final BuildResultViewModel buildResultPopupViewModel;
 
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData themeData;

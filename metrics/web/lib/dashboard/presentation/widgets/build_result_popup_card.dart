@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/value_image/widgets/value_image.dart';
+import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_image_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// A widget that displays a metrics result bar popup with specific shape.
 class BuildResultPopupCard extends StatelessWidget {
-  /// A [BuildResultPopupViewModel] with data to display.
-  final BuildResultPopupViewModel buildResultPopupViewModel;
+  /// A [BuildResultViewModel] with data to display.
+  final BuildResultViewModel buildResultPopupViewModel;
 
   /// Creates a new instance of the [BuildResultPopupCard].
   ///
@@ -52,38 +52,39 @@ class BuildResultPopupCard extends StatelessWidget {
           position: BubblePosition.top,
         ),
         child: Padding(
-          padding: const EdgeInsets.only(
-            top: 10.0 + arrowHeight,
-            left: 8.0,
-            right: 16.0,
-            bottom: 14.0,
-          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 10.0,
+          ).copyWith(top: 10.0 + arrowHeight),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ValueImage<BuildStatus>(
+              ValueNetworkImage<BuildStatus>(
                 width: 24.0,
                 height: 24.0,
                 value: buildResultPopupViewModel.buildStatus,
                 strategy: const BuildResultPopupImageStrategy(),
               ),
               Flexible(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 2.0, top: 4.0),
-                      child: Text(
-                        title,
-                        style: theme.titleTextStyle,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 2.0),
+                        child: Text(
+                          title,
+                          style: theme.titleTextStyle,
+                        ),
                       ),
-                    ),
-                    Text(
-                      subtitle,
-                      style: theme.subtitleTextStyle,
-                    ),
-                  ],
+                      Text(
+                        subtitle,
+                        style: theme.subtitleTextStyle,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

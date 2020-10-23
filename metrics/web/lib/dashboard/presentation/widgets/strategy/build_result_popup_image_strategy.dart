@@ -1,15 +1,15 @@
-import 'package:metrics/common/presentation/value_image/strategy/value_based_image_strategy.dart';
+import 'package:metrics/common/presentation/value_image/strategy/value_based_image_asset_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that represents the [ValueBasedImageStrategy] of applying
+/// A class that represents the [ValueBasedImageAssetStrategy] of applying
 /// the image based on the [BuildStatus] value.
 class BuildResultPopupImageStrategy
-    implements ValueBasedImageStrategy<BuildStatus> {
+    implements ValueBasedImageAssetStrategy<BuildStatus> {
   /// Creates a new instance of the [BuildResultPopupImageStrategy].
   const BuildResultPopupImageStrategy();
 
   @override
-  String getIconImage(BuildStatus value) {
+  String getImageAsset(BuildStatus value) {
     switch (value) {
       case BuildStatus.successful:
         return "icons/successful.svg";

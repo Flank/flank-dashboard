@@ -1,14 +1,14 @@
-import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
 void main() {
-  group("BuildResultPopupViewModel", () {
+  group("BuildResultBarViewModel", () {
     test("throws an AssertionError if the given duration is null", () {
       expect(
-        () => BuildResultPopupViewModel(
+        () => BuildResultBarViewModel(
           duration: null,
           date: DateTime.now(),
         ),
@@ -18,7 +18,7 @@ void main() {
 
     test("throws an AssertionError if the given date is null", () {
       expect(
-        () => BuildResultPopupViewModel(
+        () => BuildResultBarViewModel(
           date: null,
           duration: Duration.zero,
         ),
@@ -27,22 +27,25 @@ void main() {
     });
 
     test(
-      "equals to another BuildResultPopupViewModel with the same parameters",
+      "equals to another BuildResultBarViewModel with the same parameters",
       () {
         const duration = Duration.zero;
         const buildStatus = BuildStatus.unknown;
+        const url = 'url';
         final date = DateTime.now();
 
-        final expected = BuildResultPopupViewModel(
+        final expected = BuildResultBarViewModel(
           duration: duration,
           date: date,
           buildStatus: buildStatus,
+          url: url,
         );
 
-        final buildResult = BuildResultPopupViewModel(
+        final buildResult = BuildResultBarViewModel(
           duration: duration,
           date: date,
           buildStatus: buildStatus,
+          url: url,
         );
 
         expect(buildResult, equals(expected));

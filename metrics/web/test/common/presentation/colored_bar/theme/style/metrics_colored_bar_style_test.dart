@@ -19,14 +19,14 @@ void main() {
 
     test("creates an instance with the given values", () {
       const color = Colors.red;
-      const backgroundColor = Colors.grey;
+      const hoverColor = Colors.grey;
       final style = MetricsColoredBarStyle(
         color: color,
-        hoverColor: backgroundColor,
+        hoverColor: hoverColor,
       );
 
       expect(style.color, equals(color));
-      expect(style.hoverColor, equals(backgroundColor));
+      expect(style.hoverColor, equals(hoverColor));
     });
   });
 }

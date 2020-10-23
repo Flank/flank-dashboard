@@ -18,7 +18,9 @@ import 'package:metrics/dashboard/presentation/view_models/stability_view_model.
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_style_strategy.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/dimensions_util.dart';
@@ -336,6 +338,26 @@ void main() {
         });
 
         expect(find.byType(BuildResultBarGraph), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays ProjectBuildStatus widget with the ProjectBuildStatusStyleStrategy",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectMetricsTileTestbed(
+            projectMetrics: testProjectMetrics,
+          ));
+        });
+
+        final projectBuildStatus = tester.widget<ProjectBuildStatus>(
+          find.byType(ProjectBuildStatus),
+        );
+
+        expect(
+          projectBuildStatus.buildStatusStyleStrategy,
+          isA<ProjectBuildStatusStyleStrategy>(),
+        );
       },
     );
   });

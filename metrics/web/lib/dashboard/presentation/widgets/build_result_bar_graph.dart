@@ -3,7 +3,7 @@ import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 
@@ -36,7 +36,7 @@ class BuildResultBarGraph extends StatefulWidget {
 }
 
 class _BuildResultBarGraphState extends State<BuildResultBarGraph> {
-  List<BuildResultViewModel> _barsData;
+  List<BuildResultBarViewModel> _barsData;
   int _missingBarsCount = 0;
 
   @override

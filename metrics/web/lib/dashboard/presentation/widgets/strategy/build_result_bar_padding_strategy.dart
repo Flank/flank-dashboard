@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 
 /// A class that represents the strategy of applying the [EdgeInsets]
-/// to the [BuildResultBar] based on the [BuildResultViewModel] position.
+/// to the [BuildResultBar] based on the [BuildResultBarViewModel] position.
 class BuildResultBarPaddingStrategy {
-  /// A list of [BuildResultViewModel]s.
-  final List<BuildResultViewModel> buildResults;
+  /// A list of [BuildResultBarViewModel]s.
+  final List<BuildResultBarViewModel> buildResults;
 
   /// Creates a new instance of the [BuildResultBarPaddingStrategy].
   ///
@@ -17,7 +17,7 @@ class BuildResultBarPaddingStrategy {
 
   /// Provides the [EdgeInsets] based on the [buildResult] position
   /// among the [buildResults].
-  EdgeInsets getBarPadding(BuildResultViewModel buildResult) {
+  EdgeInsets getBarPadding(BuildResultBarViewModel buildResult) {
     final index = buildResults.indexOf(buildResult);
 
     if (index == buildResults.length - 1) {

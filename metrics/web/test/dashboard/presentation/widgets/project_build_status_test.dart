@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
-import 'package:metrics/common/presentation/value_image/widgets/value_image.dart';
+import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_image_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_style_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -66,7 +67,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates the build status from the view model to the ValueImage",
+      "displays the ValueImage with the build status from the given view model",
       (tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
@@ -76,11 +77,33 @@ void main() {
           ),
         );
 
-        final valueImage = tester.widget<ValueImage<BuildStatus>>(
-          find.byWidgetPredicate((widget) => widget is ValueImage<BuildStatus>),
+        final valueImage = tester.widget<ValueNetworkImage<BuildStatus>>(
+          find.byWidgetPredicate(
+              (widget) => widget is ValueNetworkImage<BuildStatus>),
         );
 
         expect(valueImage.value, equals(successfulBuildStatus.value));
+      },
+    );
+
+    testWidgets(
+      "displays the ValueImage with the ProjectBuildStatusImageStrategy",
+      (tester) async {
+        await mockNetworkImagesFor(
+          () => tester.pumpWidget(
+            const _ProjectBuildStatusTestbed(
+              buildStatus: successfulBuildStatus,
+            ),
+          ),
+        );
+
+        final valueImage = tester.widget<ValueNetworkImage<BuildStatus>>(
+          find.byWidgetPredicate(
+            (widget) => widget is ValueNetworkImage<BuildStatus>,
+          ),
+        );
+
+        expect(valueImage.strategy, isA<ProjectBuildStatusImageStrategy>());
       },
     );
   });

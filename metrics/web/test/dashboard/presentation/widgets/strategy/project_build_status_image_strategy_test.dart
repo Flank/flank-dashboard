@@ -2,46 +2,49 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_st
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
+// https://github.com/platform-platform/monorepo/issues/140
+// ignore_for_file: prefer_const_constructors
+
 void main() {
   group("ProjectBuildStatusImageStrategy", () {
     const successfulImage = "icons/successful_status.svg";
     const failedImage = "icons/failed_status.svg";
     const unknownImage = "icons/unknown_status.svg";
-    const imageStrategy = ProjectBuildStatusImageStrategy();
+    final strategy = ProjectBuildStatusImageStrategy();
 
     test(
-      ".getIconImage() returns the successful image if the given build status is successful",
+      ".getImageAsset() returns the successful image if the given build status is successful",
       () {
-        final actualStyle = imageStrategy.getIconImage(BuildStatus.successful);
+        final actualImage = strategy.getImageAsset(BuildStatus.successful);
 
-        expect(actualStyle, equals(successfulImage));
+        expect(actualImage, equals(successfulImage));
       },
     );
 
     test(
-      ".getIconImage() returns the failed image if the given build status is failed",
+      ".getImageAsset() returns the failed image if the given build status is failed",
       () {
-        final actualStyle = imageStrategy.getIconImage(BuildStatus.failed);
+        final actualImage = strategy.getImageAsset(BuildStatus.failed);
 
-        expect(actualStyle, equals(failedImage));
+        expect(actualImage, equals(failedImage));
       },
     );
 
     test(
-      ".getIconImage() returns the unknown image if the given build status is unknown",
+      ".getImageAsset() returns the unknown image if the given build status is unknown",
       () {
-        final actualStyle = imageStrategy.getIconImage(BuildStatus.unknown);
+        final actualImage = strategy.getImageAsset(BuildStatus.unknown);
 
-        expect(actualStyle, equals(unknownImage));
+        expect(actualImage, equals(unknownImage));
       },
     );
 
     test(
-      ".getIconImage() returns null if the given build status is null",
+      ".getImageAsset() returns null if the given build status is null",
       () {
-        final actualStyle = imageStrategy.getIconImage(null);
+        final actualImage = strategy.getImageAsset(null);
 
-        expect(actualStyle, isNull);
+        expect(actualImage, isNull);
       },
     );
   });

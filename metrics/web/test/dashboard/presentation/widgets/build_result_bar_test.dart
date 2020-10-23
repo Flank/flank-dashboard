@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
+import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/negative_graph_indicator.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
@@ -9,9 +10,10 @@ import 'package:metrics/common/presentation/graph_indicator/widgets/positive_gra
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -27,7 +29,7 @@ void main() {
         primaryColor: Colors.red,
       ),
     );
-    final successfulBuildResult = BuildResultViewModel(
+    final successfulBuildResult = BuildResultBarViewModel(
       duration: const Duration(seconds: 20),
       date: DateTime.now(),
       buildStatus: BuildStatus.successful,
@@ -150,7 +152,7 @@ void main() {
     testWidgets(
       "displays the negative graph indicator if the build status is failed and the popup is opened",
       (tester) async {
-        final buildResult = BuildResultViewModel(
+        final buildResult = BuildResultBarViewModel(
           duration: Duration.zero,
           date: DateTime.now(),
           buildStatus: BuildStatus.failed,
@@ -171,7 +173,7 @@ void main() {
     testWidgets(
       "displays the neutral graph indicator if the build status is unknown and the popup is opened",
       (tester) async {
-        final buildResult = BuildResultViewModel(
+        final buildResult = BuildResultBarViewModel(
           duration: Duration.zero,
           date: DateTime.now(),
           buildStatus: BuildStatus.unknown,
@@ -209,13 +211,28 @@ void main() {
         expect(paddingWidget.padding, equals(expectedPadding));
       },
     );
+
+    testWidgets(
+      "displays the MetricsColoredBar with the BuildResultBarAppearanceStrategy",
+      (tester) async {
+        await tester.pumpWidget(_BuildResultBarTestbed(
+          buildResult: successfulBuildResult,
+        ));
+
+        final bar = tester.widget<MetricsColoredBar>(find.byWidgetPredicate(
+          (widget) => widget is MetricsColoredBar<BuildStatus>,
+        ));
+
+        expect(bar.strategy, isA<BuildResultBarAppearanceStrategy>());
+      },
+    );
   });
 }
 
 /// A testbed class required to test the [BuildResultBar].
 class _BuildResultBarTestbed extends StatelessWidget {
-  /// A [BuildResultViewModel] to display.
-  final BuildResultViewModel buildResult;
+  /// A [BuildResultBarViewModel] to display.
+  final BuildResultBarViewModel buildResult;
 
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData themeData;
@@ -224,7 +241,7 @@ class _BuildResultBarTestbed extends StatelessWidget {
   final double barHeight;
 
   /// A class that provides an [EdgeInsets] based
-  /// on the [BuildResultViewModel].
+  /// on the [BuildResultBarViewModel].
   final BuildResultBarPaddingStrategy strategy;
 
   /// Creates an instance of this testbed.

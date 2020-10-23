@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/value_image/widgets/value_image.dart';
+import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_image_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_status_style_strategy.dart';
@@ -45,7 +45,7 @@ class ProjectBuildStatus extends StatelessWidget {
         color: theme.backgroundColor,
         shape: BoxShape.circle,
       ),
-      child: ValueImage<BuildStatus>(
+      child: ValueNetworkImage<BuildStatus>(
         value: projectBuildStatus,
         strategy: const ProjectBuildStatusImageStrategy(),
       ),

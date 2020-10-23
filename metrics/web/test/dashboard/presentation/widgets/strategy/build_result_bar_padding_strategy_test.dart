@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
@@ -10,17 +10,17 @@ import 'package:test/test.dart';
 void main() {
   group("BuildResultBarPaddingStrategy", () {
     final buildResults = [
-      BuildResultViewModel(
+      BuildResultBarViewModel(
         duration: Duration(),
         date: DateTime.now(),
         buildStatus: BuildStatus.successful,
       ),
-      BuildResultViewModel(
+      BuildResultBarViewModel(
         duration: Duration(),
         date: DateTime.now(),
         buildStatus: BuildStatus.failed,
       ),
-      BuildResultViewModel(
+      BuildResultBarViewModel(
         duration: Duration(),
         date: DateTime.now(),
         buildStatus: BuildStatus.unknown,
@@ -71,7 +71,7 @@ void main() {
       ".getBarPadding() returns an edge insets only with left value if there is only one build result",
       () {
         const expectedInsets = EdgeInsets.only(left: 2.0);
-        final buildResult = BuildResultViewModel(
+        final buildResult = BuildResultBarViewModel(
           date: DateTime.now(),
           duration: Duration.zero,
         );
