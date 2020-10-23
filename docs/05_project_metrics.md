@@ -45,7 +45,7 @@ A builds metric is a count of performed builds of the project per week.
 #### Source
 The information about the number of builds comes from the CI system.
 #### Date ranges
-A builds metric includes the builds number per last 6 days including the current day.    
+A builds metric includes the builds number by the last 7 days including the current day (today and 6 days before).    
 #### Appearance
 A builds metric is a label containing the number of builds.
 
@@ -80,7 +80,7 @@ Stability (Light theme) - Positive, Neutral, Negative, Inactive.
 #### Description
 Coverage metric is a ratio of lines of code executed while running tests to total lines of code, measured in percent.
 #### Source
-The CI system generates the coverage artifact. After that the CI component processes this artifact and transfers the coverage to the database. 
+The CI system generates the coverage artifact. After that the CI integrations component processes this artifact and transfers the coverage to the database. 
 See [coverage converter design](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md).
 #### Date ranges
 A coverage metric displays the coverage of the last successful build.
