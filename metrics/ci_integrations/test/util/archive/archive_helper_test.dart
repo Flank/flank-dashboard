@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:ci_integration/util/archive/archive_util.dart';
+import 'package:ci_integration/util/archive/archive_helper.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -11,6 +11,7 @@ import 'package:test/test.dart';
 void main() {
   group("ArchiveHelper", () {
     final zipDecoderMock = _ZipDecoderMock();
+    final archiveHelper = ArchiveHelper(zipDecoderMock);
 
     final fileBytes = Uint8List.fromList([1, 2, 3, 4]);
     final archiveFile = ArchiveFile('test', 10, fileBytes);
@@ -42,11 +43,9 @@ void main() {
     test(
       ".decodeArchive() returns a decoded archive",
       () {
-        final util = ArchiveHelper(zipDecoderMock);
-
         when(zipDecoderMock.decodeBytes(archiveBytes)).thenReturn(archive);
 
-        final actualArchive = util.decodeArchive(archiveBytes);
+        final actualArchive = archiveHelper.decodeArchive(archiveBytes);
 
         expect(actualArchive, equals(archive));
       },
@@ -55,9 +54,7 @@ void main() {
     test(
       ".getFile() returns an archive file if the given archive contains a file with the specified filename",
       () {
-        final util = ArchiveHelper(zipDecoderMock);
-
-        final file = util.getFile(archive, 'test');
+        final file = archiveHelper.getFile(archive, 'test');
 
         expect(file, equals(archiveFile));
       },
@@ -66,9 +63,7 @@ void main() {
     test(
       ".getFile() returns null if the given archive does not contain a file with the specified filename",
       () {
-        final util = ArchiveHelper(zipDecoderMock);
-
-        final file = util.getFile(archive, 'not specified');
+        final file = archiveHelper.getFile(archive, 'not specified');
 
         expect(file, isNull);
       },

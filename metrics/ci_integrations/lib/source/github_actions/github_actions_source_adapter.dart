@@ -12,8 +12,9 @@ import 'package:ci_integration/client/github_actions/models/workflow_run_job.dar
 import 'package:ci_integration/client/github_actions/models/workflow_run_jobs_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
-import 'package:ci_integration/util/archive/archive_util.dart';
+import 'package:ci_integration/util/archive/archive_helper.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
+import 'package:meta/meta.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An adapter for [GithubActionsClient] to implement the [SourceClient]
@@ -25,12 +26,19 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// A [GithubActionsClient] instance to perform API calls.
   final GithubActionsClient githubActionsClient;
 
-  /// A name of the Github Actions workflow job associated with the repository
-  /// project.
+  /// A name of the Github Actions workflow job this adapter should work with.
+  ///
+  /// This name is used to filter workflow run jobs using [WorkflowRunJob.name].
+  /// The [GithubActionsSourceConfig.jobName] provides a configuration for this
+  /// parameter.
   final String jobName;
 
-  /// A name of the artifact that contains a coverage data for a single run
-  /// of the job.
+  /// A name of the coverage artifact this adapter should fetch.
+  ///
+  /// This name is used to filter workflow run artifacts using
+  /// [WorkflowRunArtifact.name].
+  /// The [GithubActionsSourceConfig.coverageArtifactName] provides a
+  /// configuration for this parameter.
   final String coverageArtifactName;
 
   /// An [ArchiveHelper] to work with the compressed responses data.
@@ -38,18 +46,18 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
   /// Creates a new instance of the [GithubActionsSourceClientAdapter].
   ///
-  /// Throws an [ArgumentError] if either the given [githubActionsClient] or
-  /// [archiveHelper] is `null`.
+  /// Throws an [ArgumentError] if at least one of the required parameters
+  /// is `null`.
   GithubActionsSourceClientAdapter({
-    this.githubActionsClient,
-    this.jobName,
-    this.coverageArtifactName,
-    this.archiveHelper,
+    @required this.githubActionsClient,
+    @required this.archiveHelper,
+    @required this.jobName,
+    @required this.coverageArtifactName,
   }) {
     ArgumentError.checkNotNull(githubActionsClient, 'githubActionsClient');
+    ArgumentError.checkNotNull(archiveHelper, 'archiveHelper');
     ArgumentError.checkNotNull(jobName, 'jobName');
     ArgumentError.checkNotNull(coverageArtifactName, 'coverageArtifactName');
-    ArgumentError.checkNotNull(archiveHelper, 'archiveUtil');
   }
 
   @override
@@ -169,25 +177,36 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     String workflowIdentifier,
     List<WorkflowRun> runs,
   }) async {
-    final buildFutures = runs.map(
-      (run) => _mapRunToBuildData(
+    final List<BuildData> result = [];
+
+    for (final run in runs) {
+      final buildData = await _mapRunToBuildData(
         workflowIdentifier: workflowIdentifier,
         run: run,
-      ),
-    );
+      );
 
-    return Future.wait(buildFutures);
+      if (buildData != null) {
+        result.add(buildData);
+      }
+    }
+
+    return result;
   }
 
   /// Maps the given [run] to the [BuildData] instance.
   ///
   /// A [workflowIdentifier] is either a workflow id or a name of the file
   /// that defines the workflow.
+  ///
+  /// Returns `null` if the [WorkflowRunJob] associated with the given [run]
+  /// has the [GithubActionConclusion.skipped].
   Future<BuildData> _mapRunToBuildData({
     String workflowIdentifier,
     WorkflowRun run,
   }) async {
     final job = await _fetchJob(run);
+
+    if (job.conclusion == GithubActionConclusion.skipped) return null;
 
     return BuildData(
       buildNumber: run.number,
@@ -300,9 +319,10 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     return coverage?.percent;
   }
 
-  /// Calculates the duration of the given [job].
-  /// Returns `null` if either of the [job.startedAt] or [job.completedAt] is
-  /// `null`.
+  /// Calculates a [Duration] of the given [job].
+  ///
+  /// Returns `null` if either [WorkflowRunJob.startedAt] or
+  /// [WorkflowRunJob.completedAt] is`null`.
   Duration _calculateJobDuration(WorkflowRunJob job) {
     if (job.startedAt == null || job.completedAt == null) return null;
 
