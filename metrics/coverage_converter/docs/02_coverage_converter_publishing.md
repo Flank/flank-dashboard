@@ -85,7 +85,9 @@ So, the GitHub Releases is the best choice in our case because it allows us easi
 
 ### Publishing details
 
-Once we've chosen the [GitHub Releases](#GitHub-Releases), let's consider the deployment process in more detail. To publish the application to the GitHub releases, we should create a tag that will correspond to the release. Since we want to keep the release history and we'll have more than one project on our repository, we should create a tag that will contain the version number and the name of the project - `v1.0-coverage-converter`. Also, we want to publish the `pre-release` versions, so we should create a tag for those releases. Since we don't want to keep the `pre-release` versions history, we can create a `coverage-converter-snapshot` tag that will be re-assigned on each release.
+Once we've chosen the [GitHub Releases](#GitHub-Releases), let's consider the deployment process in more detail. To publish the application to the GitHub releases, we should create a tag that will correspond to the release. Since we want to keep the release history and we'll have more than one project on our repository, we should create a tag that will contain the version number and the name of the project - `v1.0-coverage-converter`.
+
+For every time that we change coverage converter tool sources, we use a `coverage-converter-snapshot` tag that will be re-assigned after each build to the newly published binary. It should be marked as `pre-release`. There should be only 1 release at a time with `coverage-converter-snapshot` tag.
 
 # Coverage Converter usage
 
@@ -103,14 +105,22 @@ To download the Coverage Converter tool from the GitHub releases, follow the nex
 1. Go to the platform-platform/monorepo GitHub repository [releases page](https://github.com/platform-platform/monorepo/releases). 
 2. Find the version of the Coverage Converter tool you want to download.
 3. Open the `Assets` collapsible section and choose the Coverage Converter file compatible with your OS.
-4. Click to download
+4. Click to download.
+
+## Downloading the latest snapshot release
+
+To download the latest snapshot release you should use the following links: 
+
+ - [macOS download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_macos)
+ - [Linux download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_linux)
+ - [Windows download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_windows) 
 
 ## Downloading using the command line commands
 
 If you want to download the Coverage Converter tool you should follow the steps below: 
 
 1. Open the GitHub repository releases and find the release you want to download, as described in the [Downloading using the GitHub GUI](#Downloading-using-the-GitHub-GUI) section.
-2. Find the executable file compatible with your OS
+2. Find the executable file compatible with your OS.
 3. Right-click on this file and copy the link address. 
 
 After these steps, you should obtain the download link similar to this one: 
@@ -195,10 +205,10 @@ Let's consider the pros and cons of this publishing approach:
 ### Pros & Cons
 
 Pros: 
-- Easy to publish 
-- Easy to download and install the command-line application
-- Single publishing for all platforms
-- Does not require building before publishing
+- Easy to publish.
+- Easy to download and install the command-line application.
+- Single publishing for all platforms.
+- Does not require building before publishing.
 
 Cons: 
 - To install the package, a user should have the Dart SDK installed.
