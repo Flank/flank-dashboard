@@ -1,8 +1,8 @@
 # Project metrics definitions
 
-## Build Result Metric
+## Build Status Metric
 #### Description 
-A build result is the result of the latest build. It can be successful, failed, or unknown.
+A build status metric is the result of the latest build. It can be successful, failed, or unknown.
 * A successful build result indicates the success of all necessary checks, such as tests, code style analysis, builds, 
 and others.   
 * In any other cases the build result is unknown.
@@ -16,11 +16,31 @@ The build status includes the status of the latest build.
 * A failed build result is a cross on a red background. 
 * An unknown build result is a dash on a gray background.   
 
-![Build Results (Dark theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_results.png?raw=true)    
-Build Results (Dark theme) - Positive, Negative, Unknown.    
+![Build Statuses (Dark theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_statuses.png?raw=true)    
+Build Statuses (Dark theme) - Positive, Negative, Unknown.    
 
-![Build Results (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_results_light.png?raw=true)    
-Build Results (Light theme) - Positive, Negative, Unknown.    
+![Build Statuses (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_statuses_light.png?raw=true)    
+Build Statuses (Light theme) - Positive, Negative, Unknown.    
+
+## Build Results Metric
+#### Description
+A build results metric includes the build results and duration of the latest builds. Same as build statuses, build results can be successful, failed, unknown.
+#### Source
+The information about build results comes from the CI system that performs these builds.
+#### Date ranges
+The build results metric includes the results of the last 20 builds
+#### Appearance
+The build results metric appears as a bar graph. Each bar stands for one build result. The height of each bar stands for the build duration.
+* If the build result is successful the app uses a green bar.
+* If the build result is failed the app uses a red bar.
+* If the build result is unknown the app uses a grey dash at the bottom of a bar.
+
+![Build Results (Dark theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_results.png?raw=true)    
+Build Results (Dark theme).    
+
+![Build Statuses (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_results_light.png?raw=true)    
+Build Results (Light theme).
+
 
 ## Performance Metric
 #### Description
@@ -57,12 +77,11 @@ Builds Number (Light theme).
                     
 ## Stability Metric
 #### Description
-A Stability metric is a ratio of successful builds to total builds for the last 7 days, measured in percent. 
-For example, if 6 out of 10 builds are successful metric value is 60%. 
+A Stability metric is a ratio of successful builds of the last 14 builds. 
 #### Source
 The information about stability is calculated based on the builds (and it's statuses) ran on the CI
 #### Date ranges
-A stability metric includes the stability of the last 6 days including the current day.
+A stability metric includes the stability of the last 14 builds.
 #### Appearance
 Depending on its value, stability appears differently:
 * A positive stability has the value >= 80% and the app applies green colors to it.
