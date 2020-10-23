@@ -38,7 +38,7 @@ The build results metric appears as a bar graph. Each bar stands for one build r
 ![Build Results (Dark theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_results.png?raw=true)    
 Build Results (Dark theme).    
 
-![Build Statuses (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_results_light.png?raw=true)    
+![Build Results (Light theme)](https://github.com/platform-platform/monorepo/blob/update_project_metrics_document/docs/images/build_results_light.png?raw=true)    
 Build Results (Light theme).
 
 
