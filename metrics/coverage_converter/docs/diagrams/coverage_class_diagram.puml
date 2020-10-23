@@ -1,25 +1,32 @@
 @startuml coverage_class_diagram
 
-package arguments {
-    package model {
-        class CoverageConverterArguments {
-            inputFilePath : String
-            outputFilePath : String
-        }
-    }
-
-    package parser {
-        class CoverageConverterArgumentsParser {
-            CoverageConverterArguments parse()
-        }
-    }
-}
-
 package common {
+    package arguments {
+        package model {
+            class CoverageConverterArguments {
+                inputFilePath : String
+                outputFilePath : String
+            }
+        }
+
+        package parser {
+            class CoverageConverterArgumentsParser<CoverageConverterArguments> {
+                void configureArguments(ArgParser)
+                CoverageConverterArguments parseArgResults(ArgResults)
+            }
+            
+            abstract ArgumentsParser<T extends CoverageConverterArguments> {
+                void configureArguments(ArgParser)
+                {abstract} T parseArgResults(ArgResults)
+            }
+        }
+    }
+
+
     package command {
-        abstract CoverageConverterCommand {
-            arguments : CoverageConverterArguments
-            {abstract} converter : CoverageConverter
+        abstract CoverageConverterCommand<T extends CoverageConverterArguments> {
+            argumentsParser : ArgumentsParser<T>
+            {abstract} converter : CoverageConverter<T>
             {abstract} name: String
             {abstract} description: String
             void run()
@@ -27,8 +34,9 @@ package common {
     }
 
     package converter {
-        interface CoverageConverter {
-            {abstract} CoverageData convert(File)
+        interface CoverageConverter<T extends CoverageConverterArguments> {
+            {abstract} CoverageData convert(File, T)
+            {abstract} bool canConvert(File, T)
         }
     }
 
@@ -75,9 +83,10 @@ package specific_format {
 
 
 CoverageConverterRunner -right-> SpecificFormatCoverageConverterCommand : uses
-CoverageConverterRunner --> CoverageConverterArgumentsParser : uses
 
 CoverageConverterArgumentsParser -left-> CoverageConverterArguments : provides
+CoverageConverterArgumentsParser ..|> ArgumentsParser
+
 
 SpecificFormatCoverageConverterCommand --> SpecificFormatCoverageConverter : uses
 SpecificFormatCoverageConverterCommand --|> CoverageConverterCommand
@@ -87,6 +96,7 @@ SpecificFormatCoverageConverter .down.|> CoverageConverter
 CoverageConverterCommand --> CoverageConverterArguments : uses
 CoverageConverterCommand -left-> CoverageConverter : uses
 CoverageConverterCommand -up-> CoverageConverterException : throws
+CoverageConverterCommand --> CoverageConverterArgumentsParser : uses
 
 CoverageConverterException --> CoverageConverterErrorCode : uses
 

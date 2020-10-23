@@ -19,9 +19,27 @@ package core.src.data.model {
 
 
 package common {
+    package arguments {
+        package model {
+            class CoverageConverterArguments {
+                inputFilePath : String
+                outputFilePath : String
+            }
+        }
+
+        package parser {
+            abstract ArgumentsParser<T extends CoverageConverterArguments> {
+                void configureArguments(ArgParser)
+                {abstract} T parseArgResults(ArgResults)
+            }
+        }
+    }
+
+
     package command {
-        abstract CoverageConverterCommand {
-            {abstract} converter : CoverageConverter
+        abstract CoverageConverterCommand<T exetends CoverageConverterArguments> {
+            {abstract} argumentsParser: ArgumentsParser<T>
+            {abstract} converter : CoverageConverter<T>
             {abstract} name: String
             {abstract} description: String
             void run()
@@ -29,9 +47,9 @@ package common {
     }
 
     package converter {
-        interface CoverageConverter {
-            {abstract} CoverageData convert(File)
-            {abstract} bool canConvert(File)
+        interface CoverageConverter<T extends CoverageConverterArguments> {
+            {abstract} CoverageData convert(File, T)
+            {abstract} bool canConvert(File, T)
         }
     }
 }
@@ -39,5 +57,7 @@ package common {
 CoverageConverterCommand --|> Command
 CoverageConverter --> CoverageData : provides
 CoverageConverterCommand --> CoverageConverter : uses
+CoverageConverterCommand --> ArgumentsParser : uses
+ArgumentsParser --> CoverageConverterArguments : provides
 
 @enduml

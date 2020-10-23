@@ -74,9 +74,16 @@ Also, we should be able to pass the following arguments to the Coverage Converte
 - `input` - the file from where we'll read the specific coverage report;
 - `output` - the file to which we'll write the formatted coverage report. If the `output` parameter is not specified, we should use the `coverage-summary.json`.
 
-To be able to pass arguments to our application we should create a `CoverageArgumentsParser` that will take a `List<String>` as arguments and return the `CoverageConverterArguments` instance that will contain all given arguments. 
+To be able to pass arguments to our application, we should create an `ArgumentsParser` abstract class that will provider such API: 
 
-Note that the `input` argument is required. If the `input` argument is not specified, we should throw an `ArgumentException`.
+- `configureArguments` - a method needed to configure the `ArgParser` with the `input` and `output` options(arguments). Methods that overrides this should call the `super` implementation. 
+- `parseArgResults` - an abstract method needed to parse the `ArgResults` class returned by the `ArgParser` to the object, extending `CoverageConverterArguments` object.
+
+We should inject the `ArgumentsParser` to the `CoverageConverterCommand` to be able to test the `CoverageConverterCommand` without any dependencies on `ArgumentsParser`. 
+
+Also, we should create a `CoverageConverterArgumentsParser` class that will implement the `parseArgResults` methods and parse arguments to the `CoverageConverterArguments` object.
+
+So, the `CoverageConverterCommand` will contain the `ArgumentsParser` and configure its `ArgParser` using the `configureArguments` method in the constructor body.
 
 ## Package structure
 
@@ -111,13 +118,22 @@ Currently, the Coverage Converter tool should support the following coverage rep
 - LCOV
 - Istanbul
 
+### Adding specific arguments
+
+When we have a specific format coverage converter, we may have wanted to add additional arguments specific to this converter. To add specific arguments, we should: 
+
+1. Create a new model that will extend the `CoverageConverterArguments`. 
+2. Implement the `ArgumentsParser` that will extend the `configureArguments` method and implement the `parseArgResults` method to return the arguments model created in the previous step.
+3. Make your specific command use the `ArgumentsParser` created in the previous step by overriding the `argParser` getter.
+4. Make your converter take a model created in the first step as an argument of the `convert` method, specifying the generic.
+
 ## Summary
 
 Finally, let's consider the class diagram that provides information about all classes and their relationships.
 
 ![Coverage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/coverage_converter/docs/diagrams/coverage_class_diagram.puml)
 
-So, the application takes the arguments, parses them using the `CoverageArgumentsParser`, and passes these arguments to the specific converter command. The converter command, in its turn, gets the input file path, converts it to the CI integrations coverage format, and writes it to the output file.
+So, the application takes the arguments, parses them using the `ArgumentsParser`, and passes these arguments to the specific converter command. The converter command, in its turn, gets the input file path, converts it to the CI integrations coverage format, and writes it to the output file.
 
 Let's consider the sequence diagram of these processes taking the `specific` format as an example:
 
