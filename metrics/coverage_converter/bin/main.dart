@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:coverage_converter/common/runner/coverage_converter_runner.dart';
 
-void main(List<String> arguments) {
+Future<void> main(List<String> arguments) async {
   final runner = CoverageConverterRunner();
 
   try {
-    runner.run(arguments);
+    await runner.run(arguments);
     exit(0);
   } catch (exception) {
     stderr.writeln(exception);
