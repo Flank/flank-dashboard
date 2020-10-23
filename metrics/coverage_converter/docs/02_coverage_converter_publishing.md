@@ -54,11 +54,11 @@ There are a couple of places we can publish the Coverage Converter:
 - pub.dev publishing.
 
 
-Since we are using the GitHub Actions for building our projects, the GitHub Releases seems to be the most convenient way of publishing. Let's take a closer look at the GitHub Releases: 
+Since we are using GitHub Actions for building our projects, GitHub Releases seems to be the most convenient way of publishing. Let's take a closer look at the GitHub Releases: 
 
 ## GitHub Releases
 
-The GitHub provides an easy way of publishing the applications - GitHub Releases. It allows you to create a GitHub release and publish any files you want there. So, to publish a Coverage Converter CLI, we'll need to follow the next steps: 
+GitHub provides an easy way of publishing the applications - GitHub Releases. It allows you to create a GitHub release and publish any files you want there. So, to publish a Coverage Converter CLI, we'll need to follow the next steps: 
 
 1. Build the Coverage Converter tool.
 2. Create a new release.
@@ -74,12 +74,12 @@ Moreover, GitHub Actions has ready-to-use actions that simplify the process of p
 Pros: 
 - Easy to configure.
 - Great integration with GitHub Actions.
-- Does not require any configuration files to publish.
+- It does not require any configuration files to publish.
 - Can publish any file type, so downloading the CLI user gets the ready-to-use application.
 
 Cons: 
 - More complex configuration for monorepo (could be solved with tags, etc..)
-- Downloading to CI action becomes a bit more complex compared to the [alternatives](#Personal-Package-Archive-(PPA)-Homebrew-and-Chocolatey), see more [here](#Downloading-using-the-command-line-commands)
+- Downloading to CI action becomes a bit more complex compared to the [alternatives](#Personal-Package-Archive-(PPA)-Homebrew-and-Chocolatey); see more [here](#Downloading-using-the-command-line-commands)
 
 So, the GitHub Releases is the best choice in our case because it allows us easily configure the publishing and allows users to easily download and start using the Coverage Converter tool. 
 
@@ -109,7 +109,7 @@ To download the Coverage Converter tool from the GitHub releases, follow the nex
 
 ## Downloading the latest snapshot release
 
-To download the latest snapshot release you should use the following links: 
+To download the latest snapshot release, you should use the following links: 
 
  - [macOS download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_macos)
  - [Linux download](https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_linux)
@@ -146,7 +146,7 @@ Let's consider the command for converting the `LCOV` format for macOS:
 
 `./coverage_converter_macos lcov -i <YOUR_COVERAGE_REPORT_FILE> -o <COVERAGE_REPORT_OUTPUT_FILE.json>`
 
-As you can see, the Coverage Converter CLI contains a separate command for each supported coverage format. So, to convert the `Istanbul` coverage report, you should replace the `lcov` command with `istanbul` and so on. See [Coverage Converter design](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md#cli-design) document for detailed description of the CLI arguments.
+As you can see, the Coverage Converter CLI contains a separate command for each supported coverage format. So, to convert the `Istanbul` coverage report, you should replace the `lcov` command with `istanbul` and so on. See [Coverage Converter design](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md#cli-design) document for a detailed description of the CLI arguments.
 
 After the conversion process is finished, the command will create a `COVERAGE_REPORT_OUTPUT_FILE.json` file with the coverage report JSON readable by the CI integrations tool.
 
