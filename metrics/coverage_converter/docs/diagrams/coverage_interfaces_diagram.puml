@@ -49,7 +49,7 @@ package common {
     package converter {
         interface CoverageConverter<T extends CoverageConverterArguments> {
             {abstract} CoverageData convert(File, T)
-            {abstract} bool canConvert(File)
+            {abstract} bool canConvert(File, T)
         }
     }
 }
