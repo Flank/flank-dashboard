@@ -16,10 +16,10 @@ The build status includes the status of the latest build.
 * A failed build result is a cross on a red background. 
 * An unknown build result is a dash on a gray background.   
 
-![Build Statuses (Dark theme)](images/build_statuses.png?raw=true)    
+![Build Statuses (Dark theme)](./images/build_statuses.png?raw=true)    
 Build Statuses (Dark theme) - Positive, Negative, Unknown.    
 
-![Build Statuses (Light theme)](images/build_statuses_light.png?raw=true)    
+![Build Statuses (Light theme)](./images/build_statuses_light.png?raw=true)    
 Build Statuses (Light theme) - Positive, Negative, Unknown.    
 
 ## Build Results Metric
@@ -36,10 +36,10 @@ The height of each bar stands for the build duration. The height of each bar is 
 * If the build result is failed the app uses a red bar.
 * If the build result is unknown the app uses a grey dash at the bottom of a bar.
 
-![Build Results (Dark theme)](images/build_results_bar.png?raw=true)    
+![Build Results (Dark theme)](./images/build_results_bar.png?raw=true)    
 Build Results (Dark theme).    
 
-![Build Results (Light theme)](images/build_results_bar_light.png?raw=true)    
+![Build Results (Light theme)](./images/build_results_bar_light.png?raw=true)    
 Build Results (Light theme).
 
 
@@ -54,10 +54,10 @@ A sparkline performance graph displays an average daily performance of the last 
 #### Appearance
 A performance metric is a label, with a performance sparkline graph below it.
 
-![Performance Metric (Dark theme)](images/performance_graph.png?raw=true)    
+![Performance Metric (Dark theme)](./images/performance_graph.png?raw=true)    
 Performance Metric (Dark theme).    
 
-![Performance Metric (Light theme)](images/performance_graph_light.png?raw=true)      
+![Performance Metric (Light theme)](./images/performance_graph_light.png?raw=true)      
 Performance Metric (Light theme).    
 
 ## Builds Metric
@@ -70,10 +70,10 @@ A builds metric includes the builds number by the last 7 days including the curr
 #### Appearance
 A builds metric is a label containing the number of builds.
 
-![Builds (Dark theme)](images/builds.png?raw=true)    
+![Builds (Dark theme)](./images/builds.png?raw=true)    
 Builds (Dark theme).      
 
-![Builds (Light theme)](images/builds_light.png?raw=true)   
+![Builds (Light theme)](./images/builds_light.png?raw=true)   
 Builds (Light theme).    
                     
 ## Stability Metric
@@ -90,10 +90,10 @@ Depending on its value, stability appears differently:
 * A negative stability has the value < 51% and the app applies red colors to it.
 * In all other cases, the stability is inactive and the app displays it as a dash mark on a grey background.
 
-![Stability (Dark theme)](images/percentage.png?raw=true)    
+![Stability (Dark theme)](./images/percentage.png?raw=true)    
 Stability (Dark theme) - Positive, Neutral, Negative, Inactive.
 
-![Stability (Light theme)](images/percentage_light.png?raw=true)   
+![Stability (Light theme)](./images/percentage_light.png?raw=true)   
 Stability (Light theme) - Positive, Neutral, Negative, Inactive. 
 
 ## Coverage Metric
@@ -111,8 +111,8 @@ Depending on its value, coverage appears differently:
 * A negative coverage has the value >= 80% and the app applies red colors to it.
 * In all other cases the coverage is inactive and the app displays the stability as a dash mark on a grey background.
 
-![Coverage (Dark theme)](images/percentage.png?raw=true)    
+![Coverage (Dark theme)](./images/percentage.png?raw=true)    
 Coverage (Dark theme) - Positive, Neutral, Negative, Inactive. 
 
-![Coverage (Light theme)](images/percentage_light.png?raw=true)   
+![Coverage (Light theme)](./images/percentage_light.png?raw=true)   
 Coverage (Light theme) - Positive, Neutral, Negative, Inactive. 
