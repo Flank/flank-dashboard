@@ -79,7 +79,7 @@ To be able to pass arguments to our application, we should create an `ArgumentsP
 - `configureArguments` - a method needed to configure the `ArgParser` with the `input` and `output` options(arguments). Methods that overrides this should call the `super` implementation. 
 - `parseArgResults` - an abstract method needed to parse the `ArgResults` class returned by the `ArgParser` to the object, extending `CoverageConverterArguments` object.
 
-We should inject the `ArgumentsParser` to the `CoverageConverterCommand` to be able to test the `CoverageConverterCommand` without any dependencies on `CoverageConverterArgumentsManager`. 
+We should inject the `ArgumentsParser` to the `CoverageConverterCommand` to be able to test the `CoverageConverterCommand` without any dependencies on `ArgumentsParser`. 
 
 Also, we should create a `CoverageConverterArgumentsParser` class that will implement the `parseArgResults` methods and parse arguments to the `CoverageConverterArguments` object.
 
@@ -133,7 +133,7 @@ Finally, let's consider the class diagram that provides information about all cl
 
 ![Coverage class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/coverage_design_inprovement/metrics/coverage_converter/docs/diagrams/coverage_class_diagram.puml)
 
-So, the application takes the arguments, parses them using the `CoverageConverterArgumentsManager`, and passes these arguments to the specific converter command. The converter command, in its turn, gets the input file path, converts it to the CI integrations coverage format, and writes it to the output file.
+So, the application takes the arguments, parses them using the `ArgumentsParser`, and passes these arguments to the specific converter command. The converter command, in its turn, gets the input file path, converts it to the CI integrations coverage format, and writes it to the output file.
 
 Let's consider the sequence diagram of these processes taking the `specific` format as an example:
 
