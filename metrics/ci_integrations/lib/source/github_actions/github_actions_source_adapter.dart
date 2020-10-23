@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
@@ -61,19 +62,10 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String workflowIdentifier) async {
-    final runsPage = await _fetchRunsPage(
+  Future<List<BuildData>> fetchBuilds(String workflowIdentifier) {
+    return _fetchLatestBuilds(
       workflowIdentifier: workflowIdentifier,
-      status: GithubActionStatus.completed,
-      perPage: fetchLimit,
-      page: 1,
-    );
-
-    final runs = runsPage.values;
-
-    return _mapRunsToBuildData(
-      runs: runs,
-      workflowIdentifier: workflowIdentifier,
+      numberOfBuildsToFetch: fetchLimit,
     );
   }
 
@@ -102,10 +94,48 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       lastRunNumber: lastBuildNumber,
     );
 
-    return _mapRunsToBuildData(
-      runs: runsAfter,
+    return _mapRunsToBuildData(runsAfter);
+  }
+
+  /// Fetches a list of the latest [BuildData].
+  /// Maximum number of [BuildData] to fetch equals to the given
+  /// [numberOfBuildsToFetch].
+  Future<List<BuildData>> _fetchLatestBuilds({
+    String workflowIdentifier,
+    int numberOfBuildsToFetch,
+  }) async {
+    final List<BuildData> result = [];
+
+    WorkflowRunsPage page = await _fetchRunsPage(
       workflowIdentifier: workflowIdentifier,
+      status: GithubActionStatus.completed,
+      perPage: fetchLimit,
+      page: 1,
     );
+    bool hasNext = false;
+
+    do {
+      final runs = page.values;
+
+      final builds = await _mapRunsToBuildData(runs);
+
+      final length = min(builds.length, numberOfBuildsToFetch - result.length);
+      for (int i = 0; i < length; ++i) {
+        result.add(builds[i]);
+      }
+
+      hasNext = page.hasNextPage;
+
+      if (hasNext) {
+        final interaction =
+            await githubActionsClient.fetchWorkflowRunsNext(page);
+        _throwIfInteractionUnsuccessful(interaction);
+
+        page = interaction.result;
+      }
+    } while (hasNext && result.length < numberOfBuildsToFetch);
+
+    return result;
   }
 
   /// Fetches a list of [WorkflowRun]s that have the [WorkflowRun.number]
@@ -173,17 +203,11 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   ///
   /// A [workflowIdentifier] is either a workflow id or a name of the file
   /// that defines the workflow.
-  Future<List<BuildData>> _mapRunsToBuildData({
-    String workflowIdentifier,
-    List<WorkflowRun> runs,
-  }) async {
+  Future<List<BuildData>> _mapRunsToBuildData(List<WorkflowRun> runs) async {
     final List<BuildData> result = [];
 
     for (final run in runs) {
-      final buildData = await _mapRunToBuildData(
-        workflowIdentifier: workflowIdentifier,
-        run: run,
-      );
+      final buildData = await _mapRunToBuildData(run);
 
       if (buildData != null) {
         result.add(buildData);
@@ -200,10 +224,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   ///
   /// Returns `null` if the [WorkflowRunJob] associated with the given [run]
   /// has the [GithubActionConclusion.skipped].
-  Future<BuildData> _mapRunToBuildData({
-    String workflowIdentifier,
-    WorkflowRun run,
-  }) async {
+  Future<BuildData> _mapRunToBuildData(WorkflowRun run) async {
     final job = await _fetchJob(run);
 
     if (job.conclusion == GithubActionConclusion.skipped) return null;
@@ -213,7 +234,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       startedAt: job.startedAt,
       buildStatus: _mapConclusionToBuildStatus(job.conclusion),
       duration: _calculateJobDuration(job),
-      workflowName: workflowIdentifier,
+      workflowName: job.name,
       url: job.url,
       coverage: await _fetchCoverage(run),
     );
