@@ -91,7 +91,9 @@ Builds metric with no builds (Light theme).
                     
 ## Stability Metric
 #### Description
-A Stability metric is a ratio of successful builds of the last 20 builds. 
+A Stability metric is a ratio of successful builds to all builds for the last 20 builds. So, stability is equal to `S/T`, where: 
+* `S` is the number of successful builds of the last 20 builds.
+* `T` is the number of all builds for the last 20 builds.
 #### Source
 A stability metric is calculated out of the last 20 builds.
 #### Date ranges
@@ -111,7 +113,7 @@ Stability (Light theme) - Positive, Neutral, Negative, Inactive.
 
 ## Coverage Metric
 #### Description
-Coverage metrics displays a project code coverage of the tests, measured in percent. Depending on the configuration it could be: line coverage, branch, function, etc...
+Coverage metrics displays a project code coverage of the tests, measured in percent. Depending on the configuration it could be: line coverage, branch, function, etc.
 #### Source
 The CI system generates the coverage artifact. After that the CI integrations component processes this artifact and transfers the coverage to the database. 
 See [coverage converter design](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md).
