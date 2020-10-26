@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
@@ -62,117 +61,71 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String workflowIdentifier) {
-    return _fetchLatestBuilds(
-      workflowIdentifier: workflowIdentifier,
-      numberOfBuildsToFetch: fetchLimit,
-    );
+  Future<List<BuildData>> fetchBuilds(String workflowIdentifier) async {
+    return _fetchLatestBuilds(workflowIdentifier);
   }
 
   @override
   Future<List<BuildData>> fetchBuildsAfter(
     String workflowIdentifier,
     BuildData build,
-  ) async {
-    final initialRunsPage = await _fetchRunsPage(
+  ) {
+    final latestBuildNumber = build.buildNumber;
+
+    return _fetchLatestBuilds(workflowIdentifier, latestBuildNumber);
+  }
+
+  /// Fetches the latest builds by the given [workflowIdentifier].
+  ///
+  /// If the [latestBuildNumber] is not `null`, returns all builds with the
+  /// [BuildData.buildNumber] greater than the given [latestBuildNumber].
+  ///
+  /// If the [latestBuildNumber] is null, returns the latest [fetchLimit] or
+  /// less builds.
+  Future<List<BuildData>> _fetchLatestBuilds(
+    String workflowIdentifier, [
+    int latestBuildNumber,
+  ]) async {
+    final List<BuildData> result = [];
+    bool hasNext = true;
+
+    WorkflowRunsPage runsPage = await _fetchRunsPage(
       workflowIdentifier: workflowIdentifier,
       status: GithubActionStatus.completed,
       perPage: 1,
       page: 1,
     );
 
-    final initialRuns = initialRunsPage?.values;
-    if (initialRuns == null || initialRuns.isEmpty) return [];
-
-    final lastRunNumber = initialRuns.first.number;
-    final lastBuildNumber = build.buildNumber;
-
-    if (lastRunNumber <= lastBuildNumber) return [];
-
-    final runsAfter = await _fetchRunsAfter(
-      workflowIdentifier: workflowIdentifier,
-      lastRunNumber: lastBuildNumber,
-    );
-
-    return _mapRunsToBuildData(runsAfter);
-  }
-
-  /// Fetches a list of the latest [BuildData].
-  /// Maximum number of [BuildData] to fetch equals to the given
-  /// [numberOfBuildsToFetch].
-  Future<List<BuildData>> _fetchLatestBuilds({
-    String workflowIdentifier,
-    int numberOfBuildsToFetch,
-  }) async {
-    final List<BuildData> result = [];
-
-    WorkflowRunsPage page = await _fetchRunsPage(
-      workflowIdentifier: workflowIdentifier,
-      status: GithubActionStatus.completed,
-      perPage: fetchLimit,
-      page: 1,
-    );
-    bool hasNext = false;
-
     do {
-      final runs = page.values;
-
-      final builds = await _mapRunsToBuildData(runs);
-
-      final length = min(builds.length, numberOfBuildsToFetch - result.length);
-      for (int i = 0; i < length; ++i) {
-        result.add(builds[i]);
-      }
-
-      hasNext = page.hasNextPage;
-
-      if (hasNext) {
-        final interaction =
-            await githubActionsClient.fetchWorkflowRunsNext(page);
-        _throwIfInteractionUnsuccessful(interaction);
-
-        page = interaction.result;
-      }
-    } while (hasNext && result.length < numberOfBuildsToFetch);
-
-    return result;
-  }
-
-  /// Fetches a list of [WorkflowRun]s that have the [WorkflowRun.number]
-  /// greater than the given [lastRunNumber].
-  Future<List<WorkflowRun>> _fetchRunsAfter({
-    String workflowIdentifier,
-    int lastRunNumber,
-  }) async {
-    WorkflowRunsPage page = await _fetchRunsPage(
-      workflowIdentifier: workflowIdentifier,
-      status: GithubActionStatus.completed,
-      perPage: fetchLimit,
-      page: 1,
-    );
-
-    final List<WorkflowRun> result = [];
-    bool hasNext = false;
-
-    do {
-      final runs = page.values;
+      hasNext = runsPage.hasNextPage;
+      final runs = runsPage.values;
 
       for (final run in runs) {
-        if (run.number <= lastRunNumber) {
-          return result;
+        if (latestBuildNumber != null && run.number <= latestBuildNumber) {
+          hasNext = false;
+          break;
         }
 
-        result.add(run);
-      }
+        final job = await _fetchJob(run);
 
-      hasNext = page.hasNextPage;
+        if (job == null || job.conclusion == GithubActionConclusion.skipped) {
+          continue;
+        } else {
+          final build = await _mapJobToBuildData(job, run);
+          result.add(build);
+
+          if (latestBuildNumber == null && result.length == fetchLimit) {
+            hasNext = false;
+            break;
+          }
+        }
+      }
 
       if (hasNext) {
         final interaction =
-            await githubActionsClient.fetchWorkflowRunsNext(page);
+            await githubActionsClient.fetchWorkflowRunsNext(runsPage);
         _throwIfInteractionUnsuccessful(interaction);
-
-        page = interaction.result;
+        runsPage = interaction.result;
       }
     } while (hasNext);
 
@@ -199,36 +152,17 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     return interaction.result;
   }
 
-  /// Maps the given [runs] to a list of [BuildData]s.
-  ///
-  /// A [workflowIdentifier] is either a workflow id or a name of the file
-  /// that defines the workflow.
-  Future<List<BuildData>> _mapRunsToBuildData(List<WorkflowRun> runs) async {
-    final List<BuildData> result = [];
-
-    for (final run in runs) {
-      final buildData = await _mapRunToBuildData(run);
-
-      if (buildData != null) {
-        result.add(buildData);
-      }
-    }
-
-    return result;
-  }
-
-  /// Maps the given [run] to the [BuildData] instance.
+  /// Maps the given [job] adn [run] to the [BuildData] instance.
   ///
   /// A [workflowIdentifier] is either a workflow id or a name of the file
   /// that defines the workflow.
   ///
   /// Returns `null` if the [WorkflowRunJob] associated with the given [run]
   /// has the [GithubActionConclusion.skipped].
-  Future<BuildData> _mapRunToBuildData(WorkflowRun run) async {
-    final job = await _fetchJob(run);
-
-    if (job.conclusion == GithubActionConclusion.skipped) return null;
-
+  Future<BuildData> _mapJobToBuildData(
+    WorkflowRunJob job,
+    WorkflowRun run,
+  ) async {
     return BuildData(
       buildNumber: run.number,
       startedAt: job.startedAt,
