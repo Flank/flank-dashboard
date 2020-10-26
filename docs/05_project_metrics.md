@@ -2,11 +2,12 @@
 
 ## Build Status Metric
 #### Description 
-A build status metric is the result of the latest build. It can be successful, failed, or unknown.
+A build status metric is the result of the latest build. It can be successful, failed, or unknown. If there are no builds for this project, the build status metrics can be `null`.
 * A successful build result indicates the success of all necessary checks, such as tests, code style analysis, builds, 
 and others.   
 * A failed build result indicates the CI building job failed (some tests failed, compile-time error, CI-side issues, etc.)
-* An unknown build status indicates an absence of builds to display a build result.
+* An unknown build result indicates that the last build has a build status, different from successful or failed.
+* A `null` build status indicates that there are no builds.
 #### Source
 The information about the build result comes from the CI system with the other information about other builds.  
 #### Date ranges
@@ -14,7 +15,7 @@ The build status includes the status of the latest build.
 #### Appearance
 * A successful build result is a checkmark on a green background. 
 * A failed build result is a cross on a red background. 
-* An unknown build result is a dash on a gray background.   
+* An unknown or `null` build result is a dash on a gray background.   
 
 ![Build Statuses (Dark theme)](./images/build_statuses.png?raw=true)    
 Build Statuses (Dark theme) - Positive, Negative, Unknown.    
@@ -53,13 +54,19 @@ The information about each build duration comes from the CI system and includes 
 A performance metric displays the performance by the last 7 days, including the current day (today and 6 days before).
 A sparkline performance graph displays an average daily build duration of the last 7 days, including the current day (today and 6 days before).
 #### Appearance
-A performance metric is a label, with a performance sparkline graph below it.
+A performance metric is a label with a performance sparkline graph below it. If there are no builds for the last 7 days, the grey dash is displayed instead of a sparkline graph with a label.
 
 ![Performance Metric (Dark theme)](./images/performance_graph.png?raw=true)    
 Performance Metric (Dark theme).    
 
 ![Performance Metric (Light theme)](./images/performance_graph_light.png?raw=true)      
-Performance Metric (Light theme).    
+Performance Metric (Light theme).  
+
+![Empty Performance Metric (Dark theme)](./images/placeholder.png?raw=true)    
+Performance Metric with no builds (Dark theme).    
+
+![Empty Performance Metric (Light theme)](./images/placeholder_light.png?raw=true)      
+Empty Performance Metric with no builds (Light theme).    
 
 ## Builds Metric
 #### Description
@@ -69,13 +76,19 @@ The information about the number of builds comes from the CI system.
 #### Date ranges
 A builds metric includes the number of builds by the last 7 days, including the current day (today and 6 days before).    
 #### Appearance
-A builds metric is a label containing the number of builds.
+A builds metric is a label containing the number of builds. If there are no builds for the last 7 days, the grey dash is displayed.
 
 ![Builds (Dark theme)](./images/builds.png?raw=true)    
 Builds (Dark theme).      
 
 ![Builds (Light theme)](./images/builds_light.png?raw=true)   
-Builds (Light theme).    
+Builds (Light theme).   
+
+![Empty Builds (Dark theme)](./images/placeholder.png?raw=true)    
+Builds metric with no builds (Dark theme).      
+
+![Empty Builds (Light theme)](./images/placeholder_light.png?raw=true)   
+Builds metric with no builds (Light theme).    
                     
 ## Stability Metric
 #### Description
