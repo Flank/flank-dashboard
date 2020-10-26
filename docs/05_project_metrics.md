@@ -44,7 +44,6 @@ Build Results (Dark theme).
 ![Build Results (Light theme)](./images/build_results_bar_light.png?raw=true)    
 Build Results (Light theme).
 
-
 ## Performance Metric
 #### Description
 A performance metric is an average build duration of successful builds, excluding the queue time. 
@@ -66,7 +65,7 @@ Performance Metric (Light theme).
 Performance Metric with no builds (Dark theme).    
 
 ![Empty Performance Metric (Light theme)](./images/placeholder_light.png?raw=true)      
-Empty Performance Metric with no builds (Light theme).    
+Performance Metric with no builds (Light theme).    
 
 ## Builds Metric
 #### Description
@@ -102,7 +101,7 @@ Depending on its value, stability appears differently:
 * A positive stability has the value >= 80% and the app applies green colors to it.
 * A neutral stability has the value < 80% and >= 51%, and the app applies yellow colors to it.
 * A negative stability has the value < 51% and the app applies red colors to it.
-* In all other cases (there are no builds at all, or no builds reports the build status), the stability is inactive and the app displays it as a dash mark on a grey background.
+* In all other cases (there are no builds at all, or no builds report the build status), the stability is inactive, and the app displays it as a dash mark on a grey background.
 
 ![Stability (Dark theme)](./images/percentage.png?raw=true)    
 Stability (Dark theme) - Positive, Neutral, Negative, Inactive.
