@@ -12,9 +12,8 @@ package buildkite {
         class BuildkiteBuild {
             + id: int
             + number: int
-            + state: BuildkiteState
-            + name: String
-            + url: String
+            + state: BuildkiteBuildState
+            + webUrl: String
             + startedAt: DateTime
             + finishedAt: DateTime
 
@@ -27,6 +26,7 @@ package buildkite {
             + id: int
             + filename: String
             + downloadUrl: String
+            + mimeType: String
 
             + factory fromJson(Map<String, dynamic> json): BuildkiteArtifact
             + toJson(): Map<String, dynamic>
@@ -54,7 +54,7 @@ package buildkite {
             + values: List<BuildkiteArtifact>
         }
 
-        enum BuildkiteState {
+        enum BuildkiteBuildState {
           running,
           scheduled,
           passed,
@@ -63,30 +63,30 @@ package buildkite {
           canceled,
           canceling,
           skipped,
-          not_run,
+          notRun,
           finished
         }
     }
 
     package mappers {
-        class BuildkiteStateMapper<String, BuildkiteState> implements Mapper {
-            + map(String state): BuildkiteState
-            + unmap(BuildkiteState state): String
+        class BuildkiteBuildStateMapper<String, BuildkiteBuildState> implements Mapper {
+            + map(String state): BuildkiteBuildState
+            + unmap(BuildkiteBuildState state): String
         }
 
     }
 
     class BuildkiteClient {
-        + organisationSlug: String
         + buildkiteApiUrl: String
+        + organizationSlug: String
         + authorization: AuthorizationBase
 
         + getHeaders(): Map<String, String>
-        + fetchBuildkiteBuilds(String pipelineSlug, BuildkiteState state, int perPage, int page): Future<InteractionResult<BuildkiteBuildsPage>>
+        + fetchBuildkiteBuilds(String pipelineSlug, BuildkiteBuildState state, DateTime finishedFrom, int perPage, int page): Future<InteractionResult<BuildkiteBuildsPage>>
         + fetchBuildkiteBuildsNext(BuildkiteBuildsPage currentPage): Future<InteractionResult<BuildkiteBuildsPage>>
         + fetchBuildkiteArtifacts(int buildNumber, int perPage, int page): Future<InteractionResult<BuildkiteArtifactsPage>
         + fetchBuildkiteArtifactsNext(BuildkiteArtifactsPage currentPage): Future<InteractionResult<BuildkiteArtifactsPage>
-        + downloadBuildkiteArtifactZip(String url): Future<InteractionResult<UInt8List>>
+        + downloadBuildkiteArtifact(String url): Future<InteractionResult<UInt8List>>
         + close(): void
     }
 }
@@ -95,7 +95,7 @@ BuildkiteBuildsPage <-- BuildkiteClient : uses
 BuildkiteArtifactsPage <-- BuildkiteClient : uses
 BuildkiteBuild "1..N" -up-o "1" BuildkiteBuildsPage : uses
 BuildkiteArtifact "1..N" -up-o "1" BuildkiteArtifactsPage : uses
-BuildkiteStateMapper <-- BuildkiteClient : uses
-BuildkiteState <-- BuildkiteBuild : uses
+BuildkiteBuildStateMapper <-- BuildkiteClient : uses
+BuildkiteBuildState <-- BuildkiteBuild : uses
 
 @enduml
