@@ -74,6 +74,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       workflowIdentifier: workflowIdentifier,
       status: GithubActionStatus.completed,
       page: 1,
+      perPage: 1,
     );
 
     final runs = firstRunsPage.values;
@@ -103,6 +104,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       workflowIdentifier: workflowIdentifier,
       status: GithubActionStatus.completed,
       page: 1,
+      perPage: fetchLimit,
     );
 
     do {
@@ -182,7 +184,11 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   Future<WorkflowRunJob> _fetchJob(WorkflowRun run) async {
     final runId = run.id;
 
-    final interaction = await githubActionsClient.fetchRunJobs(runId);
+    final interaction = await githubActionsClient.fetchRunJobs(
+      runId,
+      page: 1,
+      perPage: 25,
+    );
 
     _throwIfInteractionUnsuccessful(interaction);
 
