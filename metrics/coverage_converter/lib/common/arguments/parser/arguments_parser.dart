@@ -10,7 +10,7 @@ abstract class ArgumentsParser<T extends CoverageConverterArguments> {
   /// A name of the output file path argument.
   static const String outputArgumentName = 'output';
 
-  /// Configures the [argParser] to accept the required arguments.
+  /// Configures the given [argParser] to accept the required arguments.
   ///
   /// The implementers must call super implementation.
   @mustCallSuper

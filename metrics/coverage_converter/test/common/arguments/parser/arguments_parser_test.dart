@@ -35,7 +35,7 @@ void main() {
     );
 
     test(
-      ".configureArguments() configures the given arg parser to have the default output argument value",
+      ".configureArguments() configures the given arg parser to have the default output option value",
       () {
         final parser = ArgParser();
         final argumentsParser = _ArgumentsParserFake();

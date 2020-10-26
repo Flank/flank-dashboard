@@ -2,7 +2,7 @@ import 'package:args/args.dart';
 import 'package:coverage_converter/common/arguments/model/coverage_converter_arguments.dart';
 import 'package:coverage_converter/common/arguments/parser/arguments_parser.dart';
 
-/// A class used to parse the coverage converter command
+/// An [ArgumentsParser] used to parse the coverage converter command
 /// arguments to [CoverageConverterArguments] object.
 class CoverageConverterArgumentsParser
     extends ArgumentsParser<CoverageConverterArguments> {
