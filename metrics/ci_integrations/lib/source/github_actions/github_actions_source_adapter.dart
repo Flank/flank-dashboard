@@ -69,8 +69,20 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   Future<List<BuildData>> fetchBuildsAfter(
     String workflowIdentifier,
     BuildData build,
-  ) {
+  ) async {
+    final firstRunsPage = await _fetchRunsPage(
+      workflowIdentifier: workflowIdentifier,
+      status: GithubActionStatus.completed,
+      page: 1,
+    );
+
+    final runs = firstRunsPage.values;
+
     final latestBuildNumber = build.buildNumber;
+
+    if (runs.isEmpty || runs.first.number <= latestBuildNumber) {
+      return [];
+    }
 
     return _fetchLatestBuilds(workflowIdentifier, latestBuildNumber);
   }
@@ -78,10 +90,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// Fetches the latest builds by the given [workflowIdentifier].
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the
-  /// [BuildData.buildNumber] greater than the given [latestBuildNumber].
-  ///
-  /// If the [latestBuildNumber] is null, returns the latest [fetchLimit] or
-  /// less builds.
+  /// [Build.buildNumber] greater than the given [latestBuildNumber]. Otherwise,
+  /// returns no more than the latest [fetchLimit] builds.
   Future<List<BuildData>> _fetchLatestBuilds(
     String workflowIdentifier, [
     int latestBuildNumber,
@@ -92,7 +102,6 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     WorkflowRunsPage runsPage = await _fetchRunsPage(
       workflowIdentifier: workflowIdentifier,
       status: GithubActionStatus.completed,
-      perPage: 1,
       page: 1,
     );
 
@@ -152,13 +161,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     return interaction.result;
   }
 
-  /// Maps the given [job] adn [run] to the [BuildData] instance.
-  ///
-  /// A [workflowIdentifier] is either a workflow id or a name of the file
-  /// that defines the workflow.
-  ///
-  /// Returns `null` if the [WorkflowRunJob] associated with the given [run]
-  /// has the [GithubActionConclusion.skipped].
+  /// Maps the given [job] and [run] to the [BuildData] instance.
   Future<BuildData> _mapJobToBuildData(
     WorkflowRunJob job,
     WorkflowRun run,
@@ -215,14 +218,14 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   ///
   /// Returns `null` if the coverage file is not found.
   Future<Percent> _fetchCoverage(WorkflowRun run) async {
-    final artifactsInteraction = await githubActionsClient.fetchRunArtifacts(
+    final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
       perPage: fetchLimit,
       page: 1,
     );
-    _throwIfInteractionUnsuccessful(artifactsInteraction);
+    _throwIfInteractionUnsuccessful(interaction);
 
-    WorkflowRunArtifactsPage page = artifactsInteraction.result;
+    WorkflowRunArtifactsPage page = interaction.result;
     bool hasNext = false;
 
     do {
@@ -253,7 +256,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
   /// Maps the given [artifact] to the coverage [Percent] value.
   ///
-  /// Returns `null` if the coverage file is not found.
+  /// Returns `null` if the coverage artifact with the [coverageArtifactName]
+  /// is not found.
   Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
