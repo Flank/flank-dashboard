@@ -28,7 +28,7 @@ We should implement the BuildkiteClient and related models in a way they will fi
 >   * interfaces/
 >      * page.dart
 >   * mappers/
->      * buildkite_state_mapper.dart
+>      * buildkite_build_state_mapper.dart
 >   * models/
 >      * buildkite_build_state.dart
 >      * buildkite_artifact.dart
