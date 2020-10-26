@@ -9,7 +9,7 @@ import 'package:metrics/common/presentation/graph_indicator/widgets/positive_gra
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/colored_bar/widgets/metrics_colored_bar.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
@@ -17,13 +17,13 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// A single bar for a [BarGraph] widget that displays the
-/// result of a [BuildResultBarViewModel] instance.
+/// result of a [BuildResultViewModel] instance.
 ///
 /// Displays the [PlaceholderBar] if either [buildResult] or
-/// [BuildResultBarViewModel.buildStatus] is `null`.
+/// [BuildResultViewModel.buildStatus] is `null`.
 class BuildResultBar extends StatefulWidget {
-  /// A [BuildResultBarViewModel] with data to display.
-  final BuildResultBarViewModel buildResult;
+  /// A [BuildResultViewModel] with data to display.
+  final BuildResultViewModel buildResult;
 
   /// A class that provides an [EdgeInsets] padding to apply to this bar based
   /// on the [buildResult] position among other results.
@@ -140,7 +140,7 @@ class _BuildResultBarState extends State<BuildResultBar> {
     return Offset(dx, dy);
   }
 
-  /// Opens the [BuildResultBarViewModel.url].
+  /// Opens the [BuildResultViewModel.url].
   Future<void> _onBarTap() async {
     final url = widget.buildResult.url;
     if (url == null) return;

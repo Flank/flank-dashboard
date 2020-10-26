@@ -10,7 +10,7 @@ import 'package:metrics/common/presentation/graph_indicator/widgets/positive_gra
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_appearance_strategy.dart';
@@ -29,7 +29,7 @@ void main() {
         primaryColor: Colors.red,
       ),
     );
-    final successfulBuildResult = BuildResultBarViewModel(
+    final successfulBuildResult = BuildResultViewModel(
       duration: const Duration(seconds: 20),
       date: DateTime.now(),
       buildStatus: BuildStatus.successful,
@@ -152,7 +152,7 @@ void main() {
     testWidgets(
       "displays the negative graph indicator if the build status is failed and the popup is opened",
       (tester) async {
-        final buildResult = BuildResultBarViewModel(
+        final buildResult = BuildResultViewModel(
           duration: Duration.zero,
           date: DateTime.now(),
           buildStatus: BuildStatus.failed,
@@ -173,7 +173,7 @@ void main() {
     testWidgets(
       "displays the neutral graph indicator if the build status is unknown and the popup is opened",
       (tester) async {
-        final buildResult = BuildResultBarViewModel(
+        final buildResult = BuildResultViewModel(
           duration: Duration.zero,
           date: DateTime.now(),
           buildStatus: BuildStatus.unknown,
@@ -231,8 +231,8 @@ void main() {
 
 /// A testbed class required to test the [BuildResultBar].
 class _BuildResultBarTestbed extends StatelessWidget {
-  /// A [BuildResultBarViewModel] to display.
-  final BuildResultBarViewModel buildResult;
+  /// A [BuildResultViewModel] to display.
+  final BuildResultViewModel buildResult;
 
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData themeData;
@@ -241,7 +241,7 @@ class _BuildResultBarTestbed extends StatelessWidget {
   final double barHeight;
 
   /// A class that provides an [EdgeInsets] based
-  /// on the [BuildResultBarViewModel].
+  /// on the [BuildResultViewModel].
   final BuildResultBarPaddingStrategy strategy;
 
   /// Creates an instance of this testbed.

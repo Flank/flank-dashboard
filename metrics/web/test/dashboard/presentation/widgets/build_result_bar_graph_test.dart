@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
@@ -233,19 +233,19 @@ void main() {
 
 /// A testbed class required to test the [BuildResultBarGraph].
 class _BuildResultBarGraphTestbed extends StatelessWidget {
-  /// A list of [BuildResultBarViewModel] test data to test the [BuildResultBarGraph].
+  /// A list of [BuildResultViewModel] test data to test the [BuildResultBarGraph].
   static final buildResultBarTestData = [
-    BuildResultBarViewModel(
+    BuildResultViewModel(
       duration: const Duration(seconds: 5),
       date: DateTime.now(),
       buildStatus: BuildStatus.successful,
     ),
-    BuildResultBarViewModel(
+    BuildResultViewModel(
       duration: const Duration(seconds: 5),
       date: DateTime.now(),
       buildStatus: BuildStatus.failed,
     ),
-    BuildResultBarViewModel(
+    BuildResultViewModel(
       duration: const Duration(seconds: 5),
       date: DateTime.now(),
       buildStatus: BuildStatus.unknown,

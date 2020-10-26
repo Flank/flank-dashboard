@@ -15,7 +15,7 @@ import 'package:metrics/dashboard/domain/usecases/parameters/project_id_param.da
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_number_scorecard_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/coverage_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/performance_sparkline_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/project_build_status_view_model.dart';
@@ -389,7 +389,7 @@ class ProjectMetricsNotifier extends ChangeNotifier {
     }
 
     final buildResultViewModels = buildResults.map((result) {
-      return BuildResultBarViewModel(
+      return BuildResultViewModel(
         date: result.date,
         duration: result.duration,
         buildStatus: result.buildStatus,

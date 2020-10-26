@@ -1,17 +1,23 @@
-import 'package:equatable/equatable.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// An abstract view model that represents the build result data.
-abstract class BuildResultViewModel extends Equatable {
-  /// A [Duration] of the build.
-  final Duration duration;
+/// A view model that represents the data of the bar to display on the [BarGraph].
+class BuildResultViewModel extends BuildResultPopupViewModel {
+  /// The url of the CI build.
+  final String url;
 
-  /// A [DateTime] when the build is started.
-  final DateTime date;
-
-  /// The resulting status of the build.
-  final BuildStatus buildStatus;
+  @override
+  List<Object> get props => [duration, date, buildStatus, url];
 
   /// Creates a new instance of the [BuildResultViewModel].
-  const BuildResultViewModel({this.duration, this.date, this.buildStatus});
+  const BuildResultViewModel({
+    DateTime date,
+    Duration duration,
+    BuildStatus buildStatus,
+    this.url,
+  }) : super(
+    duration: duration,
+    date: date,
+    buildStatus: buildStatus,
+  );
 }

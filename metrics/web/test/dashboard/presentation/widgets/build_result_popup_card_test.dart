@@ -5,8 +5,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_image_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -31,7 +30,7 @@ void main() {
       ),
     );
 
-    final buildResultPopupViewModel = BuildResultBarViewModel(
+    final buildResultPopupViewModel = BuildResultPopupViewModel(
       duration: const Duration(seconds: 30000),
       date: DateTime.now(),
       buildStatus: BuildStatus.unknown,
@@ -195,8 +194,8 @@ void main() {
 
 /// A testbed class required to test the [BuildResultPopupCard].
 class _BuildResultPopupCardTestbed extends StatelessWidget {
-  /// A [BuildResultViewModel] with data to display.
-  final BuildResultViewModel buildResultPopupViewModel;
+  /// A [BuildResultPopupViewModel] with data to display.
+  final BuildResultPopupViewModel buildResultPopupViewModel;
 
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData themeData;

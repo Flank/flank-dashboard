@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_bar_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
@@ -40,7 +40,7 @@ void main() {
     test(
       "equals to another BuildResultMetricViewModel with the same parameters",
       () {
-        const buildResults = <BuildResultBarViewModel>[];
+        const buildResults = <BuildResultViewModel>[];
         const numberOfBuildsToDisplay = 10;
         final expected = BuildResultMetricViewModel(
           buildResults: UnmodifiableListView(buildResults),
