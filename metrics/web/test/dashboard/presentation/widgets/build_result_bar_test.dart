@@ -10,6 +10,7 @@ import 'package:metrics/common/presentation/graph_indicator/widgets/positive_gra
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_widget_theme_data.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_popup_card.dart';
@@ -32,6 +33,11 @@ void main() {
     final successfulBuildResult = BuildResultViewModel(
       duration: const Duration(seconds: 20),
       date: DateTime.now(),
+      buildResultPopupViewModel: BuildResultPopupViewModel(
+        date: DateTime.now(),
+        duration: Duration.zero,
+        buildStatus: BuildStatus.successful,
+      ),
       buildStatus: BuildStatus.successful,
     );
     final placeholderFinder = find.byType(PlaceholderBar);
@@ -155,6 +161,11 @@ void main() {
         final buildResult = BuildResultViewModel(
           duration: Duration.zero,
           date: DateTime.now(),
+          buildResultPopupViewModel: BuildResultPopupViewModel(
+            duration: Duration.zero,
+            date: DateTime.now(),
+            buildStatus: BuildStatus.failed,
+          ),
           buildStatus: BuildStatus.failed,
         );
 
@@ -176,6 +187,11 @@ void main() {
         final buildResult = BuildResultViewModel(
           duration: Duration.zero,
           date: DateTime.now(),
+          buildResultPopupViewModel: BuildResultPopupViewModel(
+            duration: Duration.zero,
+            date: DateTime.now(),
+            buildStatus: BuildStatus.unknown,
+          ),
           buildStatus: BuildStatus.unknown,
         );
 

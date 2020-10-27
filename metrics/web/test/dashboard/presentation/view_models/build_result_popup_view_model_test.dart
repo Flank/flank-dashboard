@@ -8,7 +8,7 @@ void main() {
   group("BuildResultPopupViewModel", () {
     test("throws an AssertionError if the given duration is null", () {
       expect(
-            () => BuildResultPopupViewModel(
+        () => BuildResultPopupViewModel(
           duration: null,
           date: DateTime.now(),
         ),
@@ -18,7 +18,7 @@ void main() {
 
     test("throws an AssertionError if the given date is null", () {
       expect(
-            () => BuildResultPopupViewModel(
+        () => BuildResultPopupViewModel(
           date: null,
           duration: Duration.zero,
         ),
@@ -28,7 +28,7 @@ void main() {
 
     test(
       "equals to another BuildResultPopupViewModel with the same parameters",
-          () {
+      () {
         const duration = Duration.zero;
         const buildStatus = BuildStatus.unknown;
         final date = DateTime.now();

@@ -121,7 +121,8 @@ class _BuildResultBarState extends State<BuildResultBar> {
             );
           },
           popup: BuildResultPopupCard(
-            buildResultPopupViewModel: widget.buildResult,
+            buildResultPopupViewModel:
+                widget.buildResult.buildResultPopupViewModel,
           ),
         );
       },

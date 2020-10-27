@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
 import 'package:metrics_core/metrics_core.dart';
@@ -9,21 +10,28 @@ import 'package:test/test.dart';
 
 void main() {
   group("BuildResultBarPaddingStrategy", () {
+    final buildResultPopupViewModel = BuildResultPopupViewModel(
+      duration: Duration.zero,
+      date: DateTime.now(),
+    );
     final buildResults = [
       BuildResultViewModel(
         duration: Duration(),
         date: DateTime.now(),
         buildStatus: BuildStatus.successful,
+        buildResultPopupViewModel: buildResultPopupViewModel,
       ),
       BuildResultViewModel(
         duration: Duration(),
         date: DateTime.now(),
         buildStatus: BuildStatus.failed,
+        buildResultPopupViewModel: buildResultPopupViewModel,
       ),
       BuildResultViewModel(
         duration: Duration(),
         date: DateTime.now(),
         buildStatus: BuildStatus.unknown,
+        buildResultPopupViewModel: buildResultPopupViewModel,
       ),
     ];
 
@@ -74,6 +82,7 @@ void main() {
         final buildResult = BuildResultViewModel(
           date: DateTime.now(),
           duration: Duration.zero,
+          buildResultPopupViewModel: buildResultPopupViewModel,
         );
         final strategy = BuildResultBarPaddingStrategy(
           buildResults: [buildResult],
