@@ -23,10 +23,8 @@ We should implement the BuildkiteClient and related models in a way they will fi
 
 * Package structure
 
-> * buidlkite/
+> * buildkite/
 >   * buildkite_client.dart
->   * interfaces/
->      * page.dart
 >   * mappers/
 >      * buildkite_build_state_mapper.dart
 >   * models/
@@ -45,7 +43,9 @@ We should implement the BuildkiteClient and related models in a way they will fi
 
 ## Authorization
 * API access tokens allow to call the API without using your username and password. They can be created on your [API Access Tokens page](https://buildkite.com/user/api-access-tokens), limited to individual organizations and permissions, and revoked at any time from the web interface [or the REST API](https://buildkite.com/docs/apis/rest-api/access-token#revoke-the-current-token).
-* Also, while creating an access token, specifying a [Token Scopes](https://buildkite.com/docs/apis/managing-api-tokens#token-scopes), helps to use API more granular.
+* Each token has its scope of access to the organization within Buildkite. REST API scopes are very granular and the list of them is presented in the [Token scopes section](https://buildkite.com/docs/apis/managing-api-tokens#token-scopes) of the [Managing API Access Tokens documentation](https://buildkite.com/docs/apis/managing-api-tokens). The `BuildkiteClient` implementation requires the given token to have the following scopes: 
+    - `read_builds`
+    - `read_artifacts`
 * For authorization, add the following request header (replace `YOUR_TOKEN` with your valid token):
 ```
 Authorization: token {YOUR_TOKEN}

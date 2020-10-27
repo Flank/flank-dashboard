@@ -7,6 +7,16 @@ package integration.interface.base.client.mapper {
     }
 }
 
+package integration.interface.base.client.model {
+    interface Page<T> {
+        + totalCount: int
+        + page: int
+        + perPage: int
+        + nextPageUrl: String
+        + values: List<T>
+    }
+}
+
 package buildkite {
     package models {
         class BuildkiteBuild {
@@ -31,13 +41,6 @@ package buildkite {
             + factory fromJson(Map<String, dynamic> json): BuildkiteArtifact
             + toJson(): Map<String, dynamic>
             + listFromJson(List<dynamic> list): List<BuildkiteArtifact>
-        }
-
-        interface Page<T> {
-            + page: int
-            + perPage: int
-            + nextPageUrl: String
-            + values: List<T>
         }
 
         class BuildkiteBuildsPage<BuildkiteBuild> implements Page {
