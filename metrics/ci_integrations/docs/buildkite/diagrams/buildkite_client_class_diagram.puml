@@ -1,0 +1,104 @@
+@startuml buildkite_client_class_diagram
+
+package integration.interface.base.client.mapper {
+    interface Mapper<SourceType, DestinationType> {
+        map(SourceType value): DestinationType
+        unmap(DestinationType value): SourceType
+    }
+}
+
+package integration.interface.base.client.model {
+    interface Page<T> {
+        + totalCount: int
+        + page: int
+        + perPage: int
+        + nextPageUrl: String
+        + values: List<T>
+    }
+}
+
+package buildkite {
+    package models {
+        class BuildkiteBuild {
+            + id: int
+            + number: int
+            + state: BuildkiteBuildState
+            + webUrl: String
+            + startedAt: DateTime
+            + finishedAt: DateTime
+
+            + factory fromJson(Map<String, dynamic> json): BuildkiteBuild
+            + toJson(): Map<String, dynamic>
+            + listFromJson(List<dynamic> list): List<BuildkiteBuild>
+        }
+
+        class BuildkiteArtifact {
+            + id: int
+            + filename: String
+            + downloadUrl: String
+            + mimeType: String
+
+            + factory fromJson(Map<String, dynamic> json): BuildkiteArtifact
+            + toJson(): Map<String, dynamic>
+            + listFromJson(List<dynamic> list): List<BuildkiteArtifact>
+        }
+
+        class BuildkiteBuildsPage<BuildkiteBuild> implements Page {
+            + page: int
+            + perPage: int
+            + nextPageUrl: String
+            + values: List<BuildkiteBuild>
+        }
+
+        class BuildkiteArtifactsPage<BuildkiteArtifact> implements Page {
+            + page: int
+            + perPage: int
+            + nextPageUrl: String
+            + values: List<BuildkiteArtifact>
+        }
+
+        enum BuildkiteBuildState {
+          running,
+          scheduled,
+          passed,
+          failed,
+          blocked,
+          canceled,
+          canceling,
+          skipped,
+          notRun,
+          finished
+        }
+    }
+
+    package mappers {
+        class BuildkiteBuildStateMapper<String, BuildkiteBuildState> implements Mapper {
+            + map(String state): BuildkiteBuildState
+            + unmap(BuildkiteBuildState state): String
+        }
+
+    }
+
+    class BuildkiteClient {
+        + buildkiteApiUrl: String
+        + organizationSlug: String
+        + authorization: AuthorizationBase
+
+        + getHeaders(): Map<String, String>
+        + fetchBuildkiteBuilds(String pipelineSlug, BuildkiteBuildState state, DateTime finishedFrom, int perPage, int page): Future<InteractionResult<BuildkiteBuildsPage>>
+        + fetchBuildkiteBuildsNext(BuildkiteBuildsPage currentPage): Future<InteractionResult<BuildkiteBuildsPage>>
+        + fetchBuildkiteArtifacts(int buildNumber, int perPage, int page): Future<InteractionResult<BuildkiteArtifactsPage>
+        + fetchBuildkiteArtifactsNext(BuildkiteArtifactsPage currentPage): Future<InteractionResult<BuildkiteArtifactsPage>
+        + downloadBuildkiteArtifact(String url): Future<InteractionResult<UInt8List>>
+        + close(): void
+    }
+}
+
+BuildkiteBuildsPage <-- BuildkiteClient : uses
+BuildkiteArtifactsPage <-- BuildkiteClient : uses
+BuildkiteBuild "1..N" -up-o "1" BuildkiteBuildsPage : uses
+BuildkiteArtifact "1..N" -up-o "1" BuildkiteArtifactsPage : uses
+BuildkiteBuildStateMapper <-- BuildkiteClient : uses
+BuildkiteBuildState <-- BuildkiteBuild : uses
+
+@enduml
