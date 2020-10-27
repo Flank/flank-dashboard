@@ -12,6 +12,7 @@ import 'package:ci_integration/client/github_actions/models/workflow_run_job.dar
 import 'package:ci_integration/client/github_actions/models/workflow_run_jobs_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
 import 'package:ci_integration/integration/interface/source/client/source_client.dart';
+import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 import 'package:ci_integration/util/archive/archive_helper.dart';
 import 'package:ci_integration/util/model/interaction_result.dart';
 import 'package:meta/meta.dart';
@@ -70,6 +71,9 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     String workflowIdentifier,
     BuildData build,
   ) async {
+    ArgumentError.checkNotNull(build, 'build');
+    final latestBuildNumber = build.buildNumber;
+
     final firstRunsPage = await _fetchRunsPage(
       workflowIdentifier: workflowIdentifier,
       status: GithubActionStatus.completed,
@@ -77,13 +81,9 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       perPage: 1,
     );
 
-    final runs = firstRunsPage.values;
+    final runs = firstRunsPage.values ?? [];
 
-    final latestBuildNumber = build.buildNumber;
-
-    if (runs.isEmpty || runs.first.number <= latestBuildNumber) {
-      return [];
-    }
+    if (runs.isEmpty || runs.first.number <= latestBuildNumber) return [];
 
     return _fetchLatestBuilds(workflowIdentifier, latestBuildNumber);
   }
@@ -148,14 +148,14 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   Future<WorkflowRunsPage> _fetchRunsPage({
     String workflowIdentifier,
     GithubActionStatus status,
-    int perPage,
     int page,
+    int perPage,
   }) async {
     final interaction = await githubActionsClient.fetchWorkflowRuns(
       workflowIdentifier,
       status: status,
-      perPage: perPage,
       page: page,
+      perPage: perPage,
     );
 
     _throwIfInteractionUnsuccessful(interaction);
@@ -187,7 +187,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     final interaction = await githubActionsClient.fetchRunJobs(
       runId,
       page: 1,
-      perPage: 25,
+      perPage: fetchLimit,
     );
 
     _throwIfInteractionUnsuccessful(interaction);
@@ -222,12 +222,13 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
   /// Fetches the coverage for the given [run].
   ///
-  /// Returns `null` if the coverage file is not found.
+  /// Returns `null` if the coverage artifact with the [coverageArtifactName]
+  /// is not found.
   Future<Percent> _fetchCoverage(WorkflowRun run) async {
     final interaction = await githubActionsClient.fetchRunArtifacts(
       run.id,
-      perPage: fetchLimit,
       page: 1,
+      perPage: fetchLimit,
     );
     _throwIfInteractionUnsuccessful(interaction);
 
@@ -262,8 +263,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
   /// Maps the given [artifact] to the coverage [Percent] value.
   ///
-  /// Returns `null` if the coverage artifact with the [coverageArtifactName]
-  /// is not found.
+  /// Returns `null` if the coverage file is not found.
   Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
