@@ -7,11 +7,42 @@ import '../../../test_utils/matcher_util.dart';
 
 void main() {
   group("BuildResultViewModel", () {
+    final buildResultPopupViewModel = BuildResultPopupViewModel(
+      duration: Duration.zero,
+      date: DateTime.now(),
+    );
+
+    test("throws an AssertionError if the given duration is null", () {
+      expect(
+        () => BuildResultViewModel(
+          duration: null,
+          date: DateTime.now(),
+          buildResultPopupViewModel: buildResultPopupViewModel,
+        ),
+        MatcherUtil.throwsAssertionError,
+      );
+    });
+
+    test("throws an AssertionError if the given date is null", () {
+      expect(
+        () => BuildResultViewModel(
+          date: null,
+          duration: Duration.zero,
+          buildResultPopupViewModel: buildResultPopupViewModel,
+        ),
+        MatcherUtil.throwsAssertionError,
+      );
+    });
+
     test(
       "throws an AssertionError if the given buildResultPopupViewModel is null",
       () {
         expect(
-          () => BuildResultViewModel(buildResultPopupViewModel: null),
+          () => BuildResultViewModel(
+            date: DateTime.now(),
+            duration: Duration.zero,
+            buildResultPopupViewModel: null,
+          ),
           MatcherUtil.throwsAssertionError,
         );
       },
@@ -20,23 +51,25 @@ void main() {
     test(
       "equals to another BuildResultViewModel with the same parameters",
       () {
+        const duration = Duration.zero;
         const buildStatus = BuildStatus.unknown;
         const url = 'url';
-        final buildResultPopupViewModel = BuildResultPopupViewModel(
-          duration: const Duration(seconds: 10),
-          date: DateTime.now(),
-        );
+        final date = DateTime.now();
 
         final expected = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
+          duration: duration,
+          date: date,
           buildStatus: buildStatus,
           url: url,
+          buildResultPopupViewModel: buildResultPopupViewModel,
         );
 
         final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: buildResultPopupViewModel,
+          duration: duration,
+          date: date,
           buildStatus: buildStatus,
           url: url,
+          buildResultPopupViewModel: buildResultPopupViewModel,
         );
 
         expect(buildResult, equals(expected));

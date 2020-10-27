@@ -10,22 +10,28 @@ import 'package:test/test.dart';
 
 void main() {
   group("BuildResultBarPaddingStrategy", () {
-    final popupViewModel = BuildResultPopupViewModel(
-      duration: Duration(),
+    final buildResultPopupViewModel = BuildResultPopupViewModel(
+      duration: Duration.zero,
       date: DateTime.now(),
     );
     final buildResults = [
       BuildResultViewModel(
-        buildResultPopupViewModel: popupViewModel,
+        duration: Duration(),
+        date: DateTime.now(),
         buildStatus: BuildStatus.successful,
+        buildResultPopupViewModel: buildResultPopupViewModel,
       ),
       BuildResultViewModel(
-        buildResultPopupViewModel: popupViewModel,
-        buildStatus: BuildStatus.unknown,
-      ),
-      BuildResultViewModel(
-        buildResultPopupViewModel: popupViewModel,
+        duration: Duration(),
+        date: DateTime.now(),
         buildStatus: BuildStatus.failed,
+        buildResultPopupViewModel: buildResultPopupViewModel,
+      ),
+      BuildResultViewModel(
+        duration: Duration(),
+        date: DateTime.now(),
+        buildStatus: BuildStatus.unknown,
+        buildResultPopupViewModel: buildResultPopupViewModel,
       ),
     ];
 
@@ -74,8 +80,9 @@ void main() {
       () {
         const expectedInsets = EdgeInsets.only(left: 2.0);
         final buildResult = BuildResultViewModel(
-          buildResultPopupViewModel: popupViewModel,
-          buildStatus: BuildStatus.unknown,
+          date: DateTime.now(),
+          duration: Duration.zero,
+          buildResultPopupViewModel: buildResultPopupViewModel,
         );
         final strategy = BuildResultBarPaddingStrategy(
           buildResults: [buildResult],

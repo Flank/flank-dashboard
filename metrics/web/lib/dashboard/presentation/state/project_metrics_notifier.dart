@@ -391,12 +391,15 @@ class ProjectMetricsNotifier extends ChangeNotifier {
 
     final buildResultViewModels = buildResults.map((result) {
       return BuildResultViewModel(
-        url: result.url,
-        buildStatus: result.buildStatus,
         buildResultPopupViewModel: BuildResultPopupViewModel(
-          duration: result.duration,
           date: result.date,
+          duration: result.duration,
+          buildStatus: result.buildStatus,
         ),
+        date: result.date,
+        duration: result.duration,
+        buildStatus: result.buildStatus,
+        url: result.url,
       );
     }).toList();
 

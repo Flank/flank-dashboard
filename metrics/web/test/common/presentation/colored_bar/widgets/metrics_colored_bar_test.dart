@@ -20,17 +20,13 @@ void main() {
         attentionLevel: MetricsColoredBarAttentionLevel(
           neutral: MetricsColoredBarStyle(
             color: Colors.orange,
-            backgroundColor: Colors.white,
+            hoverColor: Colors.white,
           ),
         ),
       ),
     );
 
     final coloredBarFinder = find.byType(ColoredBar);
-    final containerFinder = find.ancestor(
-      of: coloredBarFinder,
-      matching: find.byType(Container),
-    );
 
     testWidgets(
       "throws an AssertionError if the given strategy is null",
@@ -71,59 +67,6 @@ void main() {
     );
 
     testWidgets(
-      "applies a background color from the style returned from strategy when the metrics colored bar is hovered",
-      (WidgetTester tester) async {
-        final theme = metricsTheme.metricsColoredBarTheme;
-        final expectedColor = theme.attentionLevel.neutral.backgroundColor;
-
-        await tester.pumpWidget(
-          const _MetricsColoredBarTestbed(
-            theme: metricsTheme,
-            isHovered: true,
-          ),
-        );
-
-        final containerWidget = tester.widget<Container>(containerFinder);
-
-        expect(containerWidget.color, equals(expectedColor));
-      },
-    );
-
-    testWidgets(
-      "does not apply background color from the style returned from strategy if the metrics colored bar is not hovered",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const _MetricsColoredBarTestbed(
-            theme: metricsTheme,
-            isHovered: false,
-          ),
-        );
-
-        final containerWidget = tester.widget<Container>(containerFinder);
-
-        expect(containerWidget.color, isNull);
-      },
-    );
-
-    testWidgets(
-      "applies a color from the style returned from strategy to the colored bar",
-      (WidgetTester tester) async {
-        final theme = metricsTheme.metricsColoredBarTheme;
-        final expectedColor = theme.attentionLevel.neutral.color;
-
-        await tester.pumpWidget(
-          const _MetricsColoredBarTestbed(
-            theme: metricsTheme,
-          ),
-        );
-
-        final coloredBar = tester.widget<ColoredBar>(coloredBarFinder);
-
-        expect(coloredBar.color, equals(expectedColor));
-      },
-    );
-
-    testWidgets(
       "applies a width from the dimension config to the colored bar",
       (WidgetTester tester) async {
         const expectedWidth = DimensionsConfig.graphBarWidth;
@@ -137,6 +80,44 @@ void main() {
         final coloredBar = tester.widget<ColoredBar>(coloredBarFinder);
 
         expect(coloredBar.width, equals(expectedWidth));
+      },
+    );
+
+    testWidgets(
+      "applies a hover color from the style returned from strategy when the metrics colored bar is hovered",
+      (WidgetTester tester) async {
+        final theme = metricsTheme.metricsColoredBarTheme;
+        final expectedColor = theme.attentionLevel.neutral.hoverColor;
+
+        await tester.pumpWidget(
+          const _MetricsColoredBarTestbed(
+            theme: metricsTheme,
+            isHovered: true,
+          ),
+        );
+
+        final coloredBar = tester.widget<ColoredBar>(coloredBarFinder);
+
+        expect(coloredBar.color, equals(expectedColor));
+      },
+    );
+
+    testWidgets(
+      "applies a color from the style returned from strategy to the colored bar if the metrics colored bar is not hovered",
+      (WidgetTester tester) async {
+        final theme = metricsTheme.metricsColoredBarTheme;
+        final expectedColor = theme.attentionLevel.neutral.color;
+
+        await tester.pumpWidget(
+          const _MetricsColoredBarTestbed(
+            theme: metricsTheme,
+            isHovered: false,
+          ),
+        );
+
+        final coloredBar = tester.widget<ColoredBar>(coloredBarFinder);
+
+        expect(coloredBar.color, equals(expectedColor));
       },
     );
   });

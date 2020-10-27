@@ -71,53 +71,5 @@ void main() {
         expect(actualStyle, isNull);
       },
     );
-
-    test(
-      ".getIconImage() returns a path to the successful status icon if the given build status is successful",
-      () {
-        const expectedIconPath = 'icons/successful_status.svg';
-
-        final actualIconPath = themeStrategy.getIconImage(
-          BuildStatus.successful,
-        );
-
-        expect(actualIconPath, equals(expectedIconPath));
-      },
-    );
-
-    test(
-      ".getIconImage() returns a path to the failed status icon if the given build status is failed",
-      () {
-        const expectedIconPath = 'icons/failed_status.svg';
-
-        final actualIconPath = themeStrategy.getIconImage(
-          BuildStatus.failed,
-        );
-
-        expect(actualIconPath, equals(expectedIconPath));
-      },
-    );
-
-    test(
-      ".getIconImage() returns a path to the unknown status icon if the given build status is unknown",
-      () {
-        const expectedIconPath = 'icons/unknown_status.svg';
-
-        final actualIconPath = themeStrategy.getIconImage(
-          BuildStatus.unknown,
-        );
-
-        expect(actualIconPath, equals(expectedIconPath));
-      },
-    );
-
-    test(
-      ".getIconImage() returns null if the given build status is null",
-      () {
-        final actualIconPath = themeStrategy.getIconImage(null);
-
-        expect(actualIconPath, isNull);
-      },
-    );
   });
 }

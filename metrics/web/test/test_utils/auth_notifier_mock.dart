@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:mockito/mockito.dart';
 

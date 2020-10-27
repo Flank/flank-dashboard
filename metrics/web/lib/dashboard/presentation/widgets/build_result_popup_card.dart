@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/value_image/widgets/value_network_image.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
+import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_popup_image_strategy.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// A widget that displays a metrics result bar popup with specific shape.
 class BuildResultPopupCard extends StatelessWidget {
@@ -50,23 +53,39 @@ class BuildResultPopupCard extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: 14.0,
-            horizontal: 16.0,
-          ).copyWith(top: 14.0 + arrowHeight),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+            horizontal: 8.0,
+            vertical: 10.0,
+          ).copyWith(top: 10.0 + arrowHeight),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 2.0),
-                child: Text(
-                  title,
-                  style: theme.titleTextStyle,
-                ),
+              ValueNetworkImage<BuildStatus>(
+                width: 24.0,
+                height: 24.0,
+                value: buildResultPopupViewModel.buildStatus,
+                strategy: const BuildResultPopupImageStrategy(),
               ),
-              Text(
-                subtitle,
-                style: theme.subtitleTextStyle,
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 2.0),
+                        child: Text(
+                          title,
+                          style: theme.titleTextStyle,
+                        ),
+                      ),
+                      Text(
+                        subtitle,
+                        style: theme.subtitleTextStyle,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

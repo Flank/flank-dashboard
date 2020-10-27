@@ -241,11 +241,11 @@ void main() {
       final firstBuildResultMetric = buildResultMetrics.buildResults.first;
 
       expect(
-        firstBuildResultMetric.buildResultPopupViewModel.duration,
+        firstBuildResultMetric.duration,
         expectedBuildResult.duration,
       );
       expect(
-        firstBuildResultMetric.buildResultPopupViewModel.date,
+        firstBuildResultMetric.date,
         expectedBuildResult.date,
       );
       expect(

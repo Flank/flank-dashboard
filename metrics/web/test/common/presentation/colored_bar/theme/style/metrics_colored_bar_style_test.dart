@@ -13,20 +13,20 @@ void main() {
         const style = MetricsColoredBarStyle();
 
         expect(style.color, isNotNull);
-        expect(style.backgroundColor, isNotNull);
+        expect(style.hoverColor, isNotNull);
       },
     );
 
     test("creates an instance with the given values", () {
       const color = Colors.red;
-      const backgroundColor = Colors.grey;
+      const hoverColor = Colors.grey;
       final style = MetricsColoredBarStyle(
         color: color,
-        backgroundColor: backgroundColor,
+        hoverColor: hoverColor,
       );
 
       expect(style.color, equals(color));
-      expect(style.backgroundColor, equals(backgroundColor));
+      expect(style.hoverColor, equals(hoverColor));
     });
   });
 }

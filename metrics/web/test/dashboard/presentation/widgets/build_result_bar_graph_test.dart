@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/bar_graph.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_metric_view_model.dart';
-import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/view_models/build_result_popup_view_model.dart';
+import 'package:metrics/dashboard/presentation/view_models/build_result_view_model.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/strategy/build_result_bar_padding_strategy.dart';
@@ -215,7 +215,7 @@ void main() {
         final trimmedData = buildResults
             .sublist(buildResults.length - numberOfBars)
             .map((barData) {
-          return barData.buildResultPopupViewModel.duration.inMilliseconds;
+          return barData.duration.inMilliseconds;
         });
 
         final barGraphWidget = tester.widget<BarGraph>(find.byWidgetPredicate(
@@ -234,28 +234,31 @@ void main() {
 
 /// A testbed class required to test the [BuildResultBarGraph].
 class _BuildResultBarGraphTestbed extends StatelessWidget {
+  /// A [BuildResultPopupViewModel] test data to test the [BuildResultBarGraph].
+  static final _buildResultPopupViewModel = BuildResultPopupViewModel(
+    duration: Duration.zero,
+    date: DateTime.now(),
+  );
+
   /// A list of [BuildResultViewModel] test data to test the [BuildResultBarGraph].
   static final buildResultBarTestData = [
     BuildResultViewModel(
+      duration: const Duration(seconds: 5),
+      date: DateTime.now(),
       buildStatus: BuildStatus.successful,
-      buildResultPopupViewModel: BuildResultPopupViewModel(
-        duration: const Duration(seconds: 5),
-        date: DateTime.now(),
-      ),
+      buildResultPopupViewModel: _buildResultPopupViewModel,
     ),
     BuildResultViewModel(
+      duration: const Duration(seconds: 5),
+      date: DateTime.now(),
       buildStatus: BuildStatus.failed,
-      buildResultPopupViewModel: BuildResultPopupViewModel(
-        duration: const Duration(seconds: 2),
-        date: DateTime.now(),
-      ),
+      buildResultPopupViewModel: _buildResultPopupViewModel,
     ),
     BuildResultViewModel(
+      duration: const Duration(seconds: 5),
+      date: DateTime.now(),
       buildStatus: BuildStatus.unknown,
-      buildResultPopupViewModel: BuildResultPopupViewModel(
-        duration: const Duration(seconds: 8),
-        date: DateTime.now(),
-      ),
+      buildResultPopupViewModel: _buildResultPopupViewModel,
     ),
   ];
 

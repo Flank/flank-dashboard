@@ -505,7 +505,7 @@ class LightMetricsThemeData extends MetricsThemeData {
                 outerColor: Colors.white,
               ),
               neutral: GraphIndicatorStyle(
-                innerColor: ColorConfig.accentColor,
+                innerColor: _userMenuActiveColor,
                 outerColor: Colors.white,
               ),
             ),
@@ -514,15 +514,15 @@ class LightMetricsThemeData extends MetricsThemeData {
             attentionLevel: MetricsColoredBarAttentionLevel(
               positive: MetricsColoredBarStyle(
                 color: ColorConfig.primaryColor,
-                backgroundColor: _positiveStatusColor,
+                hoverColor: ColorConfig.primaryButtonHoverColor,
               ),
               negative: MetricsColoredBarStyle(
                 color: ColorConfig.accentColor,
-                backgroundColor: _negativeStatusColor,
+                hoverColor: ColorConfig.accentButtonHoverColor,
               ),
               neutral: MetricsColoredBarStyle(
-                color: ColorConfig.accentColor,
-                backgroundColor: _negativeStatusColor,
+                color: ColorConfig.shimmerColor,
+                hoverColor: _userMenuActiveColor,
               ),
             ),
           ),

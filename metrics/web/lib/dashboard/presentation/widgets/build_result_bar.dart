@@ -42,10 +42,7 @@ class BuildResultBar extends StatefulWidget {
 
 class _BuildResultBarState extends State<BuildResultBar> {
   /// A width of the [BasePopup.popup].
-  static const double _popupWidth = 146.0;
-
-  /// A strategy for this bar appearance.
-  final _strategy = const BuildResultBarAppearanceStrategy();
+  static const double _popupWidth = 162.0;
 
   /// An [EdgeInsets] to apply to this bar.
   EdgeInsets get _barPadding {
@@ -109,12 +106,12 @@ class _BuildResultBarState extends State<BuildResultBar> {
                       MetricsColoredBar<BuildStatus>(
                         isHovered: isOpened,
                         height: barHeight,
-                        strategy: _strategy,
+                        strategy: const BuildResultBarAppearanceStrategy(),
                         value: widget.buildResult.buildStatus,
                       ),
                       if (isOpened)
                         Positioned(
-                          bottom: barHeight - indicatorRadius,
+                          bottom: -indicatorRadius,
                           child: _graphIndicator,
                         ),
                     ],
@@ -139,8 +136,9 @@ class _BuildResultBarState extends State<BuildResultBar> {
   ) {
     final paddingOffset = _barPadding.left - _barPadding.right;
     final dx = triggerSize.width / 2 - _popupWidth / 2 + paddingOffset / 2;
+    final dy = triggerSize.height + indicatorRadius + 4.0;
 
-    return Offset(dx, triggerSize.height);
+    return Offset(dx, dy);
   }
 
   /// Opens the [BuildResultViewModel.url].

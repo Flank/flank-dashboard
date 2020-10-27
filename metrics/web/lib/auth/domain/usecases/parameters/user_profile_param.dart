@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:meta/meta.dart';
 import 'package:metrics/auth/domain/entities/theme_type.dart';
 
 /// A class that represents the user profile parameter.
