@@ -27,12 +27,13 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// A [GithubActionsClient] instance to perform API calls.
   final GithubActionsClient githubActionsClient;
 
-  /// A name of the Github Actions workflow job this adapter should work with.
+  /// A unique identifier of the Github Actions workflow
+  /// this adapter should work with.
   ///
-  /// This name is used to filter workflow run jobs using [WorkflowRunJob.name].
-  /// The [GithubActionsSourceConfig.jobName] provides a configuration for this
-  /// parameter.
-  final String jobName;
+  /// This identifier is used to fetch [WorkflowRun]s.
+  /// The [GithubActionsSourceConfig.workflowIdentifier] provides a
+  /// configuration for this parameter.
+  final String workflowIdentifier;
 
   /// A name of the coverage artifact this adapter should fetch.
   ///
@@ -52,31 +53,29 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   GithubActionsSourceClientAdapter({
     @required this.githubActionsClient,
     @required this.archiveHelper,
-    @required this.jobName,
+    @required this.workflowIdentifier,
     @required this.coverageArtifactName,
   }) {
     ArgumentError.checkNotNull(githubActionsClient, 'githubActionsClient');
     ArgumentError.checkNotNull(archiveHelper, 'archiveHelper');
-    ArgumentError.checkNotNull(jobName, 'jobName');
+    ArgumentError.checkNotNull(workflowIdentifier, 'workflowIdentifier');
     ArgumentError.checkNotNull(coverageArtifactName, 'coverageArtifactName');
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String workflowIdentifier) async {
-    return _fetchLatestBuilds(workflowIdentifier);
+  Future<List<BuildData>> fetchBuilds(String jobName) async {
+    return _fetchLatestBuilds(jobName);
   }
 
   @override
   Future<List<BuildData>> fetchBuildsAfter(
-    String workflowIdentifier,
+    String jobName,
     BuildData build,
   ) async {
     ArgumentError.checkNotNull(build, 'build');
     final latestBuildNumber = build.buildNumber;
 
     final firstRunsPage = await _fetchRunsPage(
-      workflowIdentifier: workflowIdentifier,
-      status: GithubActionStatus.completed,
       page: 1,
       perPage: 1,
     );
@@ -85,24 +84,22 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
     if (runs.isEmpty || runs.first.number <= latestBuildNumber) return [];
 
-    return _fetchLatestBuilds(workflowIdentifier, latestBuildNumber);
+    return _fetchLatestBuilds(jobName, latestBuildNumber);
   }
 
-  /// Fetches the latest builds by the given [workflowIdentifier].
+  /// Fetches the latest builds by the given [jobName].
   ///
   /// If the [latestBuildNumber] is not `null`, returns all builds with the
   /// [Build.buildNumber] greater than the given [latestBuildNumber]. Otherwise,
   /// returns no more than the latest [fetchLimit] builds.
   Future<List<BuildData>> _fetchLatestBuilds(
-    String workflowIdentifier, [
+    String jobName, [
     int latestBuildNumber,
   ]) async {
     final List<BuildData> result = [];
     bool hasNext = true;
 
     WorkflowRunsPage runsPage = await _fetchRunsPage(
-      workflowIdentifier: workflowIdentifier,
-      status: GithubActionStatus.completed,
       page: 1,
       perPage: fetchLimit,
     );
@@ -117,7 +114,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
           break;
         }
 
-        final job = await _fetchJob(run);
+        final job = await _fetchJob(run, jobName);
 
         if (job == null || job.conclusion == GithubActionConclusion.skipped) {
           continue;
@@ -146,14 +143,12 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// Fetches a [WorkflowRunsPage] with the given parameters delegating them to
   /// the [GithubActionsClient.fetchWorkflowRuns] method.
   Future<WorkflowRunsPage> _fetchRunsPage({
-    String workflowIdentifier,
-    GithubActionStatus status,
     int page,
     int perPage,
   }) async {
     final interaction = await githubActionsClient.fetchWorkflowRuns(
       workflowIdentifier,
-      status: status,
+      status: GithubActionStatus.completed,
       page: page,
       perPage: perPage,
     );
@@ -180,8 +175,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   }
 
   /// Fetches a [WorkflowRunJob] of the given [run] that has the the
-  /// [WorkflowRunJob.name] that is equal to the [jobName].
-  Future<WorkflowRunJob> _fetchJob(WorkflowRun run) async {
+  /// [WorkflowRunJob.name] that is equal to the given [jobName].
+  Future<WorkflowRunJob> _fetchJob(WorkflowRun run, String jobName) async {
     final runId = run.id;
 
     final interaction = await githubActionsClient.fetchRunJobs(
