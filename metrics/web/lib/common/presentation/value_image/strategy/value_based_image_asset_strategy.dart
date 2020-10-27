@@ -1,4 +1,4 @@
-/// A base class for an image asset strategy based on value.
+/// A base class for a strategy of applying the image asset based on a value.
 abstract class ValueBasedImageAssetStrategy<T> {
   /// Creates a new instance of the [ValueBasedImageAssetStrategy].
   const ValueBasedImageAssetStrategy();

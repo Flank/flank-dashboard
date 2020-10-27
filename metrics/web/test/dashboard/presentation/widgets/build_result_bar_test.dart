@@ -31,13 +31,13 @@ void main() {
       ),
     );
     final successfulBuildResult = BuildResultViewModel(
-      duration: const Duration(seconds: 20),
-      date: DateTime.now(),
       buildResultPopupViewModel: BuildResultPopupViewModel(
         date: DateTime.now(),
         duration: Duration.zero,
         buildStatus: BuildStatus.successful,
       ),
+      date: DateTime.now(),
+      duration: const Duration(seconds: 20),
       buildStatus: BuildStatus.successful,
     );
     final placeholderFinder = find.byType(PlaceholderBar);
@@ -159,13 +159,13 @@ void main() {
       "displays the negative graph indicator if the build status is failed and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
-          duration: Duration.zero,
-          date: DateTime.now(),
           buildResultPopupViewModel: BuildResultPopupViewModel(
-            duration: Duration.zero,
             date: DateTime.now(),
+            duration: Duration.zero,
             buildStatus: BuildStatus.failed,
           ),
+          date: DateTime.now(),
+          duration: Duration.zero,
           buildStatus: BuildStatus.failed,
         );
 
@@ -185,13 +185,13 @@ void main() {
       "displays the neutral graph indicator if the build status is unknown and the popup is opened",
       (tester) async {
         final buildResult = BuildResultViewModel(
-          duration: Duration.zero,
-          date: DateTime.now(),
           buildResultPopupViewModel: BuildResultPopupViewModel(
-            duration: Duration.zero,
             date: DateTime.now(),
+            duration: Duration.zero,
             buildStatus: BuildStatus.unknown,
           ),
+          date: DateTime.now(),
+          duration: Duration.zero,
           buildStatus: BuildStatus.unknown,
         );
 
