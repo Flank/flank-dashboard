@@ -4,12 +4,13 @@ import 'package:test/test.dart';
 
 void main() {
   group("Coverage", () {
-    test(
-      "throws an ArgumentError if the given percent is null",
-      () {
-        expect(() => Coverage(percent: null), throwsArgumentError);
-      },
-    );
+    test("creates an instance with the given parameters", () {
+      final percent = Percent(0.3);
+
+      final coverage = Coverage(percent: percent);
+
+      expect(coverage.percent, equals(percent));
+    });
 
     test(
       "equals to another Coverage instance if their values are the same",

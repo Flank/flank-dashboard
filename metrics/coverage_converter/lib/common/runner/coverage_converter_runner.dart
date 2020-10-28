@@ -1,4 +1,5 @@
 import 'package:args/command_runner.dart';
+import 'package:coverage_converter/lcov/command/lcov_coverage_converter_command.dart';
 
 /// A [CommandRunner] for the coverage converter CLI.
 class CoverageConverterRunner extends CommandRunner<void> {
@@ -8,5 +9,7 @@ class CoverageConverterRunner extends CommandRunner<void> {
       : super(
           'coverage_converter',
           'A coverage converter tool.',
-        );
+        ) {
+    addCommand(LcovCoverageConverterCommand());
+  }
 }
