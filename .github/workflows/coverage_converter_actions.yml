@@ -1,4 +1,4 @@
-name: Coverage Converter Publish Actions
+name: Coverage Converter Actions
 
 on:
   pull_request:
