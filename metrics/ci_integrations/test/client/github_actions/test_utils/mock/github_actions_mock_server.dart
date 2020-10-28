@@ -4,7 +4,6 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:api_mock_server/api_mock_server.dart';
-import 'package:ci_integration/client/github_actions/mappers/github_action_conclusion_mapper.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
@@ -17,64 +16,56 @@ class GithubActionsMockServer extends ApiMockServer {
   /// A path to emulate a download url.
   static const String _downloadPath = '/download';
 
-  /// A [GithubActionStatusMapper] of this mock server;
-  static const GithubActionStatusMapper statusMapper =
-      GithubActionStatusMapper();
-
-  /// A [GithubActionConclusionMapper] of this mock server;
-  static const GithubActionConclusionMapper conclusionMapper =
-      GithubActionConclusionMapper();
-
-  /// A random value.
-  final random = Random();
+  /// Returns a base path of the Github Actions API.
+  String get basePath => '/repos/owner/name/actions';
 
   @override
   List<RequestHandler> get handlers => [
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/repos/owner/name/actions/workflows/workflow_id/runs',
+            '$basePath/workflows/workflow_id/runs',
           ),
           dispatcher: _workflowRunsResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/repos/owner/name/actions/workflows/test/runs',
+            '$basePath/workflows/test/runs',
           ),
           dispatcher: _notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/repos/owner/name/actions/runs/1/jobs',
+            '$basePath/runs/1/jobs',
           ),
           dispatcher: _workflowRunJobsResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/repos/owner/name/actions/runs/test/jobs',
+            '$basePath/runs/test/jobs',
           ),
           dispatcher: _notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/repos/owner/name/actions/runs/1/artifacts',
+            '$basePath/runs/1/artifacts',
           ),
           dispatcher: _workflowRunArtifactsResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/repos/owner/name/actions/runs/test/artifacts',
+            '$basePath/runs/test/artifacts',
           ),
           dispatcher: _notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/repos/owner/name/actions/artifacts/artifact_id/zip',
+            '$basePath/artifacts/artifact_id/zip',
           ),
           dispatcher: _downloadArtifactResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
-            '/repos/owner/name/actions/artifacts/test/zip',
+            '$basePath/artifacts/test/zip',
           ),
           dispatcher: _notFoundResponse,
         ),
@@ -98,9 +89,7 @@ class GithubActionsMockServer extends ApiMockServer {
     );
 
     final hasMorePages = pageNumber < lastPageNumber;
-    if (hasMorePages) {
-      _setNextPageUrlHeader(request, pageNumber);
-    }
+    _setNextPageUrlHeader(request, hasMorePages, pageNumber);
 
     workflowRuns = _paginate(
       workflowRuns,
@@ -130,9 +119,7 @@ class GithubActionsMockServer extends ApiMockServer {
     );
 
     final hasMorePages = pageNumber < lastPageNumber;
-    if (hasMorePages) {
-      _setNextPageUrlHeader(request, pageNumber);
-    }
+    _setNextPageUrlHeader(request, hasMorePages, pageNumber);
 
     workflowRunJobs = _paginate(
       workflowRunJobs,
@@ -165,9 +152,7 @@ class GithubActionsMockServer extends ApiMockServer {
     );
 
     final hasMorePages = pageNumber < lastPageNumber;
-    if (hasMorePages) {
-      _setNextPageUrlHeader(request, pageNumber);
-    }
+    _setNextPageUrlHeader(request, hasMorePages, pageNumber);
 
     final _response = {
       'total_count': artifacts.length,
@@ -189,7 +174,7 @@ class GithubActionsMockServer extends ApiMockServer {
     await request.response.close();
   }
 
-  /// Returns a json, containing a [Uint8List] to emulate download.
+  /// Returns a [Uint8List] to emulate download.
   Future<void> _downloadResponse(HttpRequest request) async {
     await _writeResponse(request, Uint8List.fromList([]));
   }
@@ -204,7 +189,7 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Chunks the given [items], limiting to the [limit],
   /// starting from the [pageIndex].
-  List<T> _paginate<T>(List<T> items, [int limit = 100, int pageIndex = 0]) {
+  List<T> _paginate<T>(List<T> items, [int limit, int pageIndex]) {
     if (limit != null && pageIndex != null) {
       final from = (pageIndex - 1) * limit;
 
@@ -225,7 +210,7 @@ class GithubActionsMockServer extends ApiMockServer {
         id: runNumber,
         number: runNumber,
         url: 'url',
-        status: status ?? _generateRandomStatus(),
+        status: status ?? GithubActionStatus.completed,
         createdAt: DateTime.now().toUtc(),
       );
     });
@@ -243,26 +228,14 @@ class GithubActionsMockServer extends ApiMockServer {
         runId: 1,
         name: 'name',
         url: 'url',
-        status: status ?? _generateRandomStatus(),
-        conclusion: _generateRandomConclusion(),
+        status: status ?? GithubActionStatus.completed,
+        conclusion: GithubActionConclusion.success,
         startedAt: DateTime(2019),
         completedAt: DateTime(2020),
       );
     });
 
     return jobs;
-  }
-
-  /// Generates a random [GithubActionStatus].
-  GithubActionStatus _generateRandomStatus() {
-    const statuses = GithubActionStatus.values;
-    return statuses[random.nextInt(statuses.length)];
-  }
-
-  /// Generates a random [GithubActionStatus].
-  GithubActionConclusion _generateRandomConclusion() {
-    const conclusions = GithubActionConclusion.values;
-    return conclusions[random.nextInt(conclusions.length)];
   }
 
   /// Generates a list of [WorkflowRunArtifact].
@@ -285,7 +258,7 @@ class GithubActionsMockServer extends ApiMockServer {
   GithubActionStatus _extractRunStatus(HttpRequest request) {
     final status = request.uri.queryParameters['status'];
 
-    return statusMapper.map(status);
+    return const GithubActionStatusMapper().map(status);
   }
 
   /// Returns the `int` representation of the `per_page` query parameter
@@ -322,13 +295,16 @@ class GithubActionsMockServer extends ApiMockServer {
   }
 
   /// Sets next page url header.
-  void _setNextPageUrlHeader(HttpRequest request, int pageNumber) {
-    final requestUrl = request.requestedUri.toString();
-    final indexOfPageParam = requestUrl.indexOf("&page=");
-    final nextPageUrl = requestUrl.replaceRange(
-        indexOfPageParam, requestUrl.length, "&page=${pageNumber + 1}");
+  void _setNextPageUrlHeader(
+      HttpRequest request, bool hasMorePages, int pageNumber) {
+    if (hasMorePages) {
+      final requestUrl = request.requestedUri.toString();
+      final indexOfPageParam = requestUrl.indexOf("&page=");
+      final nextPageUrl = requestUrl.replaceRange(
+          indexOfPageParam, requestUrl.length, "&page=${pageNumber + 1}");
 
-    request.response.headers.set('link', '<$nextPageUrl> rel="next"');
+      request.response.headers.set('link', '<$nextPageUrl> rel="next"');
+    }
   }
 
   /// Writes the given [response].
