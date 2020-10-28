@@ -7,7 +7,11 @@ environment:
 dependencies:
   args: ^1.6.0
   meta: ^1.2.3
+  equatable: ^1.2.5
+  metrics_core:
+    path: ../core
 
 dev_dependencies:
   lint: ^1.1.1
+  mockito: ^4.1.3
   test: ^1.15.4  

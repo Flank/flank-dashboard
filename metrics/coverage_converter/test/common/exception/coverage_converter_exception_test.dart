@@ -62,5 +62,18 @@ void main() {
         );
       },
     );
+
+    test(
+      "equals to another instance with the same code",
+      () {
+        const firstException =
+            CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
+
+        const secondException =
+            CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
+
+        expect(firstException, equals(secondException));
+      },
+    );
   });
 }
