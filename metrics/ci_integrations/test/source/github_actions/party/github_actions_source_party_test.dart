@@ -4,16 +4,16 @@ import 'package:ci_integration/source/github_actions/party/github_actions_source
 import 'package:test/test.dart';
 
 // https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: prefer_const_constructors
 
 void main() {
   group("GithubActionsSourceParty", () {
-    final githubActionsSourceParty = GithubActionsSourceParty();
+    final party = GithubActionsSourceParty();
 
     test(
       "uses GithubActionsSourceClientFactory as a client factory",
       () {
-        final clientFactory = githubActionsSourceParty.clientFactory;
+        final clientFactory = party.clientFactory;
 
         expect(clientFactory, isA<GithubActionsSourceClientFactory>());
       },
@@ -22,7 +22,7 @@ void main() {
     test(
       "uses GithubActionsSourceConfigParser as a config parser",
       () {
-        final configParser = githubActionsSourceParty.configParser;
+        final configParser = party.configParser;
 
         expect(configParser, isA<GithubActionsSourceConfigParser>());
       },

@@ -1,4 +1,3 @@
-import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/source/github_actions/client_factory/github_actions_source_client_factory.dart';
 import 'package:ci_integration/source/github_actions/config/model/github_actions_source_config.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
@@ -10,20 +9,15 @@ import '../test_utils/test_data/github_actions_config_test_data.dart';
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
-  final githubActionsSourceConfig = GithubActionsConfigTestData.sourceConfig;
-  final githubActionsSourceClientFactory = GithubActionsSourceClientFactory();
-
-  GithubActionsClient createClient(GithubActionsSourceConfig config) {
-    final adapter = githubActionsSourceClientFactory.create(config);
-    return adapter.githubActionsClient;
-  }
+  final config = GithubActionsConfigTestData.sourceConfig;
+  final factory = GithubActionsSourceClientFactory();
 
   group("GithubActionSourceClientFactory", () {
     test(
       ".create() throws an ArgumentError if the given config is null",
       () {
         expect(
-          () => githubActionsSourceClientFactory.create(null),
+          () => factory.create(null),
           throwsArgumentError,
         );
       },
@@ -32,9 +26,10 @@ void main() {
     test(
       ".create() creates a client with the repository owner from the given config",
       () {
-        final repositoryOwner = githubActionsSourceConfig.repositoryOwner;
+        final repositoryOwner = config.repositoryOwner;
 
-        final client = createClient(githubActionsSourceConfig);
+        final adapter = factory.create(config);
+        final client = adapter.githubActionsClient;
 
         expect(client.repositoryOwner, equals(repositoryOwner));
       },
@@ -43,9 +38,10 @@ void main() {
     test(
       ".create() creates a client with the repository name from the given config",
       () {
-        final repositoryName = githubActionsSourceConfig.repositoryName;
+        final repositoryName = config.repositoryName;
 
-        final client = createClient(githubActionsSourceConfig);
+        final adapter = factory.create(config);
+        final client = adapter.githubActionsClient;
 
         expect(client.repositoryName, equals(repositoryName));
       },
@@ -54,12 +50,13 @@ void main() {
     test(
       ".create() creates a client with the authorization credentials from the given config",
       () {
-        final accessToken = githubActionsSourceConfig.accessToken;
+        final accessToken = config.accessToken;
         final authorization = BearerAuthorization(accessToken);
 
-        final client = createClient(githubActionsSourceConfig);
+        final adapter = factory.create(config);
+        final client = adapter.githubActionsClient;
 
-        expect(client.authorization, authorization);
+        expect(client.authorization, equals(authorization));
       },
     );
 
@@ -75,7 +72,8 @@ void main() {
           accessToken: null,
         );
 
-        final client = createClient(config);
+        final adapter = factory.create(config);
+        final client = adapter.githubActionsClient;
 
         expect(client.authorization, isNull);
       },
@@ -84,10 +82,9 @@ void main() {
     test(
       ".create() creates an adapter with the workflow identifier from the given config",
       () {
-        final workflowIdentifier = githubActionsSourceConfig.workflowIdentifier;
+        final workflowIdentifier = config.workflowIdentifier;
 
-        final adapter =
-            githubActionsSourceClientFactory.create(githubActionsSourceConfig);
+        final adapter = factory.create(config);
 
         expect(adapter.workflowIdentifier, equals(workflowIdentifier));
       },
@@ -96,11 +93,9 @@ void main() {
     test(
       ".create() creates an adapter with the coverage artifact name from the given config",
       () {
-        final coverageArtifactName =
-            githubActionsSourceConfig.coverageArtifactName;
+        final coverageArtifactName = config.coverageArtifactName;
 
-        final adapter =
-            githubActionsSourceClientFactory.create(githubActionsSourceConfig);
+        final adapter = factory.create(config);
 
         expect(adapter.coverageArtifactName, equals(coverageArtifactName));
       },
@@ -109,8 +104,7 @@ void main() {
     test(
       ".create() creates an adapter with the Github Actions client",
       () {
-        final adapter =
-            githubActionsSourceClientFactory.create(githubActionsSourceConfig);
+        final adapter = factory.create(config);
 
         expect(adapter.githubActionsClient, isNotNull);
       },
@@ -119,8 +113,7 @@ void main() {
     test(
       ".create() creates an adapter with the archive helper",
       () {
-        final adapter =
-            githubActionsSourceClientFactory.create(githubActionsSourceConfig);
+        final adapter = factory.create(config);
 
         expect(adapter.archiveHelper, isNotNull);
       },

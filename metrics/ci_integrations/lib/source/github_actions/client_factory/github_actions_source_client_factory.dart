@@ -18,9 +18,7 @@ class GithubActionsSourceClientFactory
   const GithubActionsSourceClientFactory();
 
   @override
-  GithubActionsSourceClientAdapter create(
-    GithubActionsSourceConfig config,
-  ) {
+  GithubActionsSourceClientAdapter create(GithubActionsSourceConfig config) {
     ArgumentError.checkNotNull(config, 'config');
 
     final zipDecoder = ZipDecoder();
