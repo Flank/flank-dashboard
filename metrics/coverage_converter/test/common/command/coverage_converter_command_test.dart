@@ -22,12 +22,13 @@ void main() {
 
     tearDown(() {
       reset(inputFile);
+      reset(outputFile);
     });
 
     test(
       "throws a 'no such file' exception if the given input file does not exist",
       () {
-        const expectedException = CoverageConverterException(
+        const noSuchFileException = CoverageConverterException(
           CoverageConverterErrorCode.noSuchFile,
         );
 
@@ -37,14 +38,14 @@ void main() {
           inputFile: inputFile,
         );
 
-        expect(command.run, throwsA(equals(expectedException)));
+        expect(command.run, throwsA(equals(noSuchFileException)));
       },
     );
 
     test(
       "throws an 'invalid file format' exception if the converter can't convert the given input file",
       () {
-        const expectedException = CoverageConverterException(
+        const invalidFormatException = CoverageConverterException(
           CoverageConverterErrorCode.invalidFileFormat,
         );
 
@@ -58,7 +59,7 @@ void main() {
           converter: converter,
         );
 
-        expect(command.run, throwsA(equals(expectedException)));
+        expect(command.run, throwsA(equals(invalidFormatException)));
       },
     );
 
@@ -96,13 +97,13 @@ void main() {
 
         final command = _CoverageConverterCommandFake(
           inputFile: inputFile,
-          outputFile: inputFile,
+          outputFile: outputFile,
           converter: converter,
         );
 
         await command.run();
 
-        verify(inputFile.writeAsStringSync(coverageJson)).called(equals(1));
+        verify(outputFile.writeAsStringSync(coverageJson)).called(equals(1));
       },
     );
   });
