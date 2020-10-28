@@ -1,0 +1,148 @@
+name: Coverage Converter Actions
+
+on:
+  pull_request:
+    types: [ opened, edited, synchronize ]
+    paths:
+      - 'metrics/coverage_converter/**'
+  push:
+    branches: master
+    paths:
+      - 'metrics/coverage_converter/**'
+
+jobs:
+  linux-actions:
+    name: Coverage Converter Linux Actions
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
+      - uses: cedx/setup-dart@v2
+        with:
+          release-channel: beta
+          version: 2.10.0-110.5.beta
+
+      - name: Get Dependencies
+        run: pub get
+        working-directory: metrics/coverage_converter/
+
+      - name: Run Analyzer
+        run: dartanalyzer . --fatal-infos --fatal-warnings
+        working-directory: metrics/coverage_converter/
+
+      - name: Run Tests
+        run: pub run test
+        working-directory: metrics/coverage_converter/
+
+      - name: Build Project
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: dart2native bin/main.dart -o ./coverage_converter_linux
+        working-directory: metrics/coverage_converter/
+
+      - name: Upload Artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage_converter_linux
+          path: metrics/coverage_converter/coverage_converter_linux
+          if-no-files-found: error
+
+  macos-actions:
+    name: Coverage Converter MacOS Actions
+    runs-on: macOS-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    timeout-minutes: 60
+    needs: [linux-actions]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
+      - uses: cedx/setup-dart@v2
+        with:
+          release-channel: beta
+          version: 2.10.0-110.5.beta
+
+      - name: Get Dependencies
+        run: pub get
+        working-directory: metrics/coverage_converter/
+
+      - name: Build Project
+        run: dart2native bin/main.dart -o ./coverage_converter_macos
+        working-directory: metrics/coverage_converter/
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage_converter_macos
+          path: metrics/coverage_converter/coverage_converter_macos
+          if-no-files-found: error
+
+  release-actions:
+    name: Coverage Converter Release Actions
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: [macos-actions, linux-actions]
+
+    steps:
+      - name: Download MacOS Build
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage_converter_macos
+          path: metrics/coverage_converter/
+
+      - name: Download Linux Build
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage_converter_linux
+          path: metrics/coverage_converter/
+
+      - name: Delete Old Release
+        uses: dev-drprasad/delete-tag-and-release@v0.1.2
+        with:
+          delete_release: true
+          tag_name: coverage-converter-snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: coverage-converter-snapshot
+          release_name: Coverage converter snapshot
+          draft: false
+          prerelease: true
+
+      - name: Upload Release Asset
+        id: upload-macos-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: metrics/coverage_converter/coverage_converter_macos
+          asset_name: coverage_converter_macos
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset
+        id: upload-linux-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: metrics/coverage_converter/coverage_converter_linux
+          asset_name: coverage_converter_linux
+          asset_content_type: application/octet-stream
