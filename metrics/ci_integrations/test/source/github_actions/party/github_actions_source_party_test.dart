@@ -3,9 +3,6 @@ import 'package:ci_integration/source/github_actions/config/parser/github_action
 import 'package:ci_integration/source/github_actions/party/github_actions_source_party.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("GithubActionsSourceParty", () {
     final party = GithubActionsSourceParty();
