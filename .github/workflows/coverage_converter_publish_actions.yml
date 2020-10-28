@@ -1,18 +1,64 @@
 name: Coverage Converter Publish Actions
 
 on:
-  push:
+  pull_request:
+    types: [ opened, edited, synchronize ]
     paths:
       - 'metrics/coverage_converter/**'
-    branches:
-      - 'master'
+  push:
+    branches: master
+    paths:
+      - 'metrics/coverage_converter/**'
 
 jobs:
-  macos-actions:
-    name: Coverage Converter MacOs Build Actions
-    runs-on: macOS-latest
+  linux-actions:
+    name: Coverage Converter Linux Publish Actions
+    runs-on: ubuntu-latest
     timeout-minutes: 60
 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
+      - uses: cedx/setup-dart@v2
+        with:
+          release-channel: beta
+          version: 2.10.0-110.5.beta
+
+      - name: Get Dependencies
+        run: pub get
+        working-directory: metrics/coverage_converter/
+
+      - name: Run Analyzer
+        working-directory: metrics/coverage_converter/
+        run: dartanalyzer ./
+
+      - name: Run Tests
+        working-directory: metrics/coverage_converter/
+        run: pub run test
+
+      - name: Build Project
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        working-directory: metrics/coverage_converter/
+        run: dart2native bin/main.dart -o ./coverage_converter_linux
+
+      - name: Upload Artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage_converter_linux
+          path: metrics/coverage_converter/coverage_converter_linux
+          if-no-files-found: error
+
+  macos-actions:
+    name: Coverage Converter MacOS Publish Actions
+    runs-on: macOS-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    timeout-minutes: 60
+    needs: [linux-actions]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -40,43 +86,11 @@ jobs:
           path: metrics/coverage_converter/coverage_converter_macos
           if-no-files-found: error
 
-  linux-actions:
-    name: Coverage Converter Linux Build Actions
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          ref: ${{ github.ref }}
-
-      - uses: cedx/setup-dart@v2
-        with:
-          release-channel: beta
-          version: 2.10.0-110.5.beta
-
-      - name: Get dependencies
-        run: pub get
-        working-directory: metrics/coverage_converter/
-
-      - name: Build Project
-        working-directory: metrics/coverage_converter/
-        run: dart2native bin/main.dart -o ./coverage_converter_linux
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage_converter_linux
-          path: metrics/coverage_converter/coverage_converter_linux
-          if-no-files-found: error
-
-
   release-actions:
     name: Coverage Converter Release Actions
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: [macos-actions, linux-actions]
 
     steps:
@@ -111,7 +125,7 @@ jobs:
           draft: false
           prerelease: true
 
-      - name: Upload MacOS Release Asset
+      - name: Upload Release Asset
         id: upload-macos-release-asset
         uses: actions/upload-release-asset@v1
         env:
@@ -122,7 +136,7 @@ jobs:
           asset_name: coverage_converter_macos
           asset_content_type: application/octet-stream
 
-      - name: Upload Linux Release Asset
+      - name: Upload Release Asset
         id: upload-linux-release-asset
         uses: actions/upload-release-asset@v1
         env:
