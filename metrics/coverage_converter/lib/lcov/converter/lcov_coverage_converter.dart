@@ -5,7 +5,7 @@ import 'package:coverage_converter/common/converter/coverage_converter.dart';
 import 'package:lcov/lcov.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [CoverageConverter] used to convert the `lcov` coverage reports.
+/// A [CoverageConverter] used to convert the LCOV coverage reports.
 class LcovCoverageConverter implements CoverageConverter {
   @override
   bool canConvert(File inputFile, CoverageConverterArguments arguments) {

@@ -21,7 +21,7 @@ class LcovCoverageConverterCommand extends CoverageConverterCommand {
   /// with the given [argumentsParser].
   ///
   /// If the [argumentsParser] is null,
-  /// the [CoverageConverterArgumentsParser] used.
+  /// the [CoverageConverterArgumentsParser] is used.
   LcovCoverageConverterCommand({
     ArgumentsParser<CoverageConverterArguments> argumentsParser,
   }) : super(argumentsParser ?? CoverageConverterArgumentsParser());

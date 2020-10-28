@@ -31,7 +31,7 @@ void main() {
       },
     );
 
-    test("provides an lcov coverage converter", () {
+    test("provides an LCOV coverage converter", () {
       final command = LcovCoverageConverterCommand();
 
       expect(command.converter, isA<LcovCoverageConverter>());
