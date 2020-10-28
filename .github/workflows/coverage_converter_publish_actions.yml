@@ -12,7 +12,7 @@ on:
 
 jobs:
   linux-actions:
-    name: Coverage Converter Linux Publish Actions
+    name: Coverage Converter Linux Actions
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -33,17 +33,17 @@ jobs:
         working-directory: metrics/coverage_converter/
 
       - name: Run Analyzer
+        run: dartanalyzer . --fatal-infos --fatal-warnings
         working-directory: metrics/coverage_converter/
-        run: dartanalyzer ./
 
       - name: Run Tests
-        working-directory: metrics/coverage_converter/
         run: pub run test
+        working-directory: metrics/coverage_converter/
 
       - name: Build Project
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        working-directory: metrics/coverage_converter/
         run: dart2native bin/main.dart -o ./coverage_converter_linux
+        working-directory: metrics/coverage_converter/
 
       - name: Upload Artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
@@ -54,7 +54,7 @@ jobs:
           if-no-files-found: error
 
   macos-actions:
-    name: Coverage Converter MacOS Publish Actions
+    name: Coverage Converter MacOS Actions
     runs-on: macOS-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     timeout-minutes: 60
@@ -76,8 +76,8 @@ jobs:
         working-directory: metrics/coverage_converter/
 
       - name: Build Project
-        working-directory: metrics/coverage_converter/
         run: dart2native bin/main.dart -o ./coverage_converter_macos
+        working-directory: metrics/coverage_converter/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
