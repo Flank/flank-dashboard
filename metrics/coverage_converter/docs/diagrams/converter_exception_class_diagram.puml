@@ -4,7 +4,7 @@
 package common.exception {
     class CoverageConverterException{
         code: CoverageConverterErrorCode
-        stacktrace: String
+        stackTrace: StackTrace
         {method} String message
         String toString()
     }
