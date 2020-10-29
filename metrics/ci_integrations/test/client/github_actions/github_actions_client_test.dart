@@ -157,7 +157,6 @@ void main() {
       ".fetchWorkflowRuns() fails if a workflow is not found",
       () async {
         final interaction = await client.fetchWorkflowRuns("test");
-
         final isError = interaction.isError;
 
         expect(isError, isTrue);
@@ -177,9 +176,7 @@ void main() {
     test(
       ".fetchWorkflowRuns() applies the default per page parameter if it is not specified",
       () async {
-        final interaction = await client.fetchWorkflowRuns(
-          workflowId,
-        );
+        final interaction = await client.fetchWorkflowRuns(workflowId);
         final runsPage = interaction.result;
 
         expect(runsPage.perPage, equals(defaultPerPage));
@@ -351,7 +348,6 @@ void main() {
       ".fetchRunJobs() fails if an associated workflow run with such id is not found",
       () async {
         final interaction = await client.fetchRunJobs(10);
-
         final isError = interaction.isError;
 
         expect(isError, isTrue);
@@ -396,10 +392,7 @@ void main() {
     test(
       ".fetchRunJobs() fetches the first page if the given page parameter is null",
       () async {
-        final interaction = await client.fetchRunJobs(
-          runId,
-          page: null,
-        );
+        final interaction = await client.fetchRunJobs(runId, page: null);
         final jobsPage = interaction.result;
 
         expect(jobsPage.page, equals(1));
@@ -488,10 +481,7 @@ void main() {
     test(
       ".fetchRunJobsNext() returns a next workflow run jobs page after the given one",
       () async {
-        final interaction = await client.fetchRunJobs(
-          runId,
-          page: defaultPage,
-        );
+        final interaction = await client.fetchRunJobs(runId, page: defaultPage);
         final jobsPage = interaction.result;
 
         final nextInteraction = await client.fetchRunJobsNext(jobsPage);
@@ -504,10 +494,7 @@ void main() {
     test(
       ".fetchRunJobsNext() returns an error if the given page is the last page",
       () async {
-        final interaction = await client.fetchRunJobs(
-          runId,
-          perPage: 100,
-        );
+        final interaction = await client.fetchRunJobs(runId, perPage: 100);
         final firstPage = interaction.result;
 
         final nextInteraction = await client.fetchRunJobsNext(firstPage);
@@ -536,7 +523,6 @@ void main() {
       ".fetchRunArtifacts() fails if an associated workflow run is not found",
       () async {
         final interaction = await client.fetchRunArtifacts(10);
-
         final isError = interaction.isError;
 
         expect(isError, isTrue);
@@ -581,10 +567,7 @@ void main() {
     test(
       ".fetchRunArtifacts() fetches the first page if the given page parameter is null",
       () async {
-        final interaction = await client.fetchRunArtifacts(
-          runId,
-          page: null,
-        );
+        final interaction = await client.fetchRunArtifacts(runId, page: null);
         final artifactsPage = interaction.result;
 
         expect(artifactsPage.page, equals(1));
@@ -672,10 +655,7 @@ void main() {
     test(
       ".fetchRunArtifactsNext() returns an error if the given page is the last page",
       () async {
-        final interaction = await client.fetchRunArtifacts(
-          runId,
-          perPage: 100,
-        );
+        final interaction = await client.fetchRunArtifacts(runId, perPage: 100);
         final firstPage = interaction.result;
 
         final nextInteraction = await client.fetchRunArtifactsNext(firstPage);
@@ -704,7 +684,6 @@ void main() {
       ".downloadRunArtifactZip() fails with the error if the given url is null",
       () async {
         final interaction = await client.downloadRunArtifactZip(null);
-
         final isError = interaction.isError;
 
         expect(isError, isTrue);
@@ -714,11 +693,8 @@ void main() {
     test(
       ".downloadRunArtifactZip() fails with the error if the artifact associated with the given download url is not found",
       () async {
-        const artifactId = 'test';
-        final downloadUrl = '${client.basePath}artifacts/$artifactId/zip';
-
+        final downloadUrl = '${client.basePath}artifacts/test/zip';
         final interaction = await client.downloadRunArtifactZip(downloadUrl);
-
         final isError = interaction.isError;
 
         expect(isError, isTrue);
