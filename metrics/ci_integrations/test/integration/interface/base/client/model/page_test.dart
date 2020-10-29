@@ -1,4 +1,4 @@
-import 'package:ci_integration/client/github_actions/models/page.dart';
+import 'package:ci_integration/integration/interface/base/client/model/page.dart';
 import 'package:test/test.dart';
 
 // https://github.com/platform-platform/monorepo/issues/140
