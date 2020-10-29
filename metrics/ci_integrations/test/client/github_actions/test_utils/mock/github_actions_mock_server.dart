@@ -83,10 +83,7 @@ class GithubActionsMockServer extends ApiMockServer {
 
     List<WorkflowRun> workflowRuns = _generateWorkflowRuns(status);
 
-    final lastPageNumber = _getLastPageNumber(workflowRuns.length, runsPerPage);
-
-    final hasMorePages = pageNumber < lastPageNumber;
-    _setNextPageUrlHeader(request, hasMorePages, pageNumber);
+    _setNextPageUrlHeader(request, workflowRuns.length);
 
     workflowRuns = _paginate(workflowRuns, runsPerPage, pageNumber);
 
@@ -106,13 +103,7 @@ class GithubActionsMockServer extends ApiMockServer {
 
     List<WorkflowRunJob> workflowRunJobs = _generateWorkflowRunJobs(status);
 
-    final lastPageNumber = _getLastPageNumber(
-      workflowRunJobs.length,
-      runsPerPage,
-    );
-
-    final hasMorePages = pageNumber < lastPageNumber;
-    _setNextPageUrlHeader(request, hasMorePages, pageNumber);
+    _setNextPageUrlHeader(request, workflowRunJobs.length);
 
     workflowRunJobs = _paginate(workflowRunJobs, runsPerPage, pageNumber);
 
@@ -130,10 +121,7 @@ class GithubActionsMockServer extends ApiMockServer {
     final pageNumber = _extractPage(request);
     List<WorkflowRunArtifact> artifacts = _generateArtifacts();
 
-    final lastPageNumber = _getLastPageNumber(artifacts.length, runsPerPage);
-
-    final hasMorePages = pageNumber < lastPageNumber;
-    _setNextPageUrlHeader(request, hasMorePages, pageNumber);
+    _setNextPageUrlHeader(request, artifacts.length);
 
     artifacts = _paginate(artifacts, runsPerPage, pageNumber);
 
@@ -145,7 +133,7 @@ class GithubActionsMockServer extends ApiMockServer {
     await _writeResponse(request, _response);
   }
 
-  /// Redirects to the URL to download an archive for a repository.
+  /// Redirects to the artifact download URL.
   Future<void> _downloadArtifactResponse(HttpRequest request) async {
     final uri = Uri.parse(url);
 
@@ -236,18 +224,17 @@ class GithubActionsMockServer extends ApiMockServer {
     return artifacts;
   }
 
-  /// Provides the [RunStatus], based on the `status` query parameter
-  /// in the given [request].
+  /// Returns the [GithubActionStatus], based on the `status` query parameter
+  /// of the given [request].
   GithubActionStatus _extractRunStatus(HttpRequest request) {
     final status = request.uri.queryParameters['status'];
 
     return const GithubActionStatusMapper().map(status);
   }
 
-  /// Returns the `int` representation of the `per_page` query parameter
-  /// of the given [request].
+  /// Returns the `per_page` query parameter of the given [request].
   ///
-  /// Returns `null` if the [perPage] is `null`.
+  /// Returns `null` if the `perPage` is `null`.
   int _extractPerPage(HttpRequest request) {
     final perPage = request.uri.queryParameters['per_page'];
 
@@ -256,10 +243,9 @@ class GithubActionsMockServer extends ApiMockServer {
     return int.tryParse(perPage);
   }
 
-  /// Returns the `int` representation of the `page` query parameter
-  /// of the given [request].
+  /// Returns the `page` query parameter of the given [request].
   ///
-  /// Returns `null` if the [page] is `null`.
+  /// Returns `null` if the `page` is `null`.
   int _extractPage(HttpRequest request) {
     final page = request.uri.queryParameters['page'];
 
@@ -268,7 +254,7 @@ class GithubActionsMockServer extends ApiMockServer {
     return int.tryParse(page);
   }
 
-  /// Returns the last page's number.
+  /// Returns the last page number.
   ///
   /// Returns `1` if the given [perPage] or [total] parameter is `null`.
   int _getLastPageNumber(int total, int perPage) {
@@ -277,13 +263,17 @@ class GithubActionsMockServer extends ApiMockServer {
     return max((total / perPage).ceil(), 1);
   }
 
-  /// Sets the next page url header.
+  /// Sets the next page url header using the given [request] and [itemsCount].
   void _setNextPageUrlHeader(
     HttpRequest request,
-    bool hasMorePages,
-    int pageNumber,
+    int itemsCount,
   ) {
-    if (hasMorePages) {
+    final runsPerPage = _extractPerPage(request);
+    final pageNumber = _extractPage(request);
+
+    final lastPageNumber = _getLastPageNumber(itemsCount, runsPerPage);
+
+    if (pageNumber < lastPageNumber) {
       final requestUrl = request.requestedUri.toString();
       final indexOfPageParam = requestUrl.indexOf("&page=");
       final nextPageUrl = requestUrl.replaceRange(
