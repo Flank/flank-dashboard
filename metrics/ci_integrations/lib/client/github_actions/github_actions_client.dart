@@ -254,7 +254,7 @@ class GithubActionsClient {
   Future<InteractionResult<WorkflowRunJobsPage>> fetchRunJobs(
     int runId, {
     GithubActionStatus status,
-    int perPage,
+    int perPage = 10,
     int page,
   }) {
     const statusMapper = GithubActionStatusMapper();
