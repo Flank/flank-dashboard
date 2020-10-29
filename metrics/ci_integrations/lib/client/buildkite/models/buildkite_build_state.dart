@@ -19,7 +19,7 @@ enum BuildkiteBuildState {
   /// Represents a state for a canceled build.
   canceled,
 
-  /// Represents a state for a canceling build.
+  /// Represents a state for a build that is being canceled.
   canceling,
 
   /// Represents a state for a skipped build.

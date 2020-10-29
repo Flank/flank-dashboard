@@ -22,7 +22,7 @@ class BuildkiteBuildStateMapper implements Mapper<String, BuildkiteBuildState> {
   /// A state for a canceled build.
   static const String canceled = 'canceled';
 
-  /// A state for a canceling build.
+  /// A state for a build that is being canceled.
   static const String canceling = 'canceling';
 
   /// A state for a skipped build.
