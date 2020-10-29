@@ -83,7 +83,12 @@ class GithubActionsMockServer extends ApiMockServer {
 
     List<WorkflowRun> workflowRuns = _generateWorkflowRuns(status);
 
-    _setNextPageUrlHeader(request, workflowRuns.length);
+    _setNextPageUrlHeader(
+      request,
+      workflowRuns.length,
+      runsPerPage,
+      pageNumber,
+    );
 
     workflowRuns = _paginate(workflowRuns, runsPerPage, pageNumber);
 
@@ -103,7 +108,12 @@ class GithubActionsMockServer extends ApiMockServer {
 
     List<WorkflowRunJob> workflowRunJobs = _generateWorkflowRunJobs(status);
 
-    _setNextPageUrlHeader(request, workflowRunJobs.length);
+    _setNextPageUrlHeader(
+      request,
+      workflowRunJobs.length,
+      runsPerPage,
+      pageNumber,
+    );
 
     workflowRunJobs = _paginate(workflowRunJobs, runsPerPage, pageNumber);
 
@@ -119,9 +129,15 @@ class GithubActionsMockServer extends ApiMockServer {
   Future<void> _workflowRunArtifactsResponse(HttpRequest request) async {
     final runsPerPage = _extractPerPage(request);
     final pageNumber = _extractPage(request);
+
     List<WorkflowRunArtifact> artifacts = _generateArtifacts();
 
-    _setNextPageUrlHeader(request, artifacts.length);
+    _setNextPageUrlHeader(
+      request,
+      artifacts.length,
+      runsPerPage,
+      pageNumber,
+    );
 
     artifacts = _paginate(artifacts, runsPerPage, pageNumber);
 
@@ -172,7 +188,9 @@ class GithubActionsMockServer extends ApiMockServer {
     return items;
   }
 
-  /// Generates a list of [WorkflowRun], filtered by the given [status].
+  /// Generates a list of [WorkflowRun] with the given [status].
+  ///
+  /// If the given [status] is null, the [GithubActionStatus.completed] is used.
   List<WorkflowRun> _generateWorkflowRuns(GithubActionStatus status) {
     final runs = List.generate(100, (index) {
       final runNumber = index + 1;
@@ -189,7 +207,9 @@ class GithubActionsMockServer extends ApiMockServer {
     return runs;
   }
 
-  /// Generates a list of [WorkflowRunJob]s, filtered by the given [status].
+  /// Generates a list of [WorkflowRunJob] with the given [status].
+  ///
+  /// If the given [status] is null, the [GithubActionStatus.completed] is used.
   List<WorkflowRunJob> _generateWorkflowRunJobs(GithubActionStatus status) {
     final jobs = List.generate(100, (index) {
       final id = index + 1;
@@ -267,23 +287,22 @@ class GithubActionsMockServer extends ApiMockServer {
   void _setNextPageUrlHeader(
     HttpRequest request,
     int itemsCount,
+    int runsPerPage,
+    int pageNumber,
   ) {
-    final runsPerPage = _extractPerPage(request);
-    final pageNumber = _extractPage(request);
-
     final lastPageNumber = _getLastPageNumber(itemsCount, runsPerPage);
 
-    if (pageNumber < lastPageNumber) {
-      final requestUrl = request.requestedUri.toString();
-      final indexOfPageParam = requestUrl.indexOf("&page=");
-      final nextPageUrl = requestUrl.replaceRange(
-        indexOfPageParam,
-        requestUrl.length,
-        "&page=${pageNumber + 1}",
-      );
+    if (pageNumber >= lastPageNumber) return;
 
-      request.response.headers.set('link', '<$nextPageUrl> rel="next"');
-    }
+    final requestUrl = request.requestedUri.toString();
+    final indexOfPageParam = requestUrl.indexOf("&page=");
+    final nextPageUrl = requestUrl.replaceRange(
+      indexOfPageParam,
+      requestUrl.length,
+      "&page=${pageNumber + 1}",
+    );
+
+    request.response.headers.set('link', '<$nextPageUrl> rel="next"');
   }
 
   /// Writes the given [response].
