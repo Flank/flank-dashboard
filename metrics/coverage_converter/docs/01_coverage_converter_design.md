@@ -61,7 +61,7 @@ Let's consider the class diagram representing the exceptions package structure:
 
 ![Converter exception class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/coverage_converter_design_improvement/metrics/coverage_converter/docs/diagrams/converter_exception_class_diagram.puml)
 
-So, we have a `CoverageConverterException`, as we've mentioned above, and the `CoverageConverterErrorCode` that represents the different error codes. The `CoverageConverterException` should take a `CoverageConverterErrorCode` in the constructor and provide an error message based on the given `CoverageConverterErrorCode`. The `toString` method of the `CoverageConverterException` should return the `message`.
+So, we have a `CoverageConverterException`, as we've mentioned above, and the `CoverageConverterErrorCode` that represents the different error codes. The `CoverageConverterException` should take a `CoverageConverterErrorCode` and a `String` stacktrace of the original error in the constructor and provide an error message based on the given `CoverageConverterErrorCode`. The `toString` method of the `CoverageConverterException` should return the `message` with the `stacktrace`.
 
 All exceptions should be handled on the very top level - the `main` function. So, the `main` function will contain the try-catch block that will handle all exceptions, print them, and exit the app with code `1`.
 
