@@ -13,12 +13,10 @@ void main() {
     final zipDecoderMock = _ZipDecoderMock();
     final archiveHelper = ArchiveHelper(zipDecoderMock);
 
-    final fileBytes = Uint8List.fromList([1, 2, 3, 4]);
-    final archiveFile = ArchiveFile('test', 10, fileBytes);
-
     final archiveBytes = Uint8List.fromList([5, 6, 7, 8]);
     final archive = Archive();
-    archive.files = [archiveFile];
+    final fileBytes = Uint8List.fromList([1, 2, 3, 4]);
+    archive.files = [ArchiveFile('test', 10, fileBytes)];
 
     tearDown(() {
       reset(zipDecoderMock);
@@ -52,20 +50,20 @@ void main() {
     );
 
     test(
-      ".getFile() returns an archive file if the given archive contains a file with the specified filename",
+      ".getFileContent() returns content bytes of a file with the specified filename",
       () {
-        final file = archiveHelper.getFile(archive, 'test');
+        final bytes = archiveHelper.getFileContent(archive, 'test');
 
-        expect(file, equals(archiveFile));
+        expect(bytes, equals(fileBytes));
       },
     );
 
     test(
-      ".getFile() returns null if the given archive does not contain a file with the specified filename",
+      ".getFileContent() returns null if the given archive does not contain a file with the specified filename",
       () {
-        final file = archiveHelper.getFile(archive, 'not specified');
+        final bytes = archiveHelper.getFileContent(archive, 'not specified');
 
-        expect(file, isNull);
+        expect(bytes, isNull);
       },
     );
   });

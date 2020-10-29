@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
@@ -267,12 +266,12 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     final artifactBytes = interaction.result;
     final artifactArchive = archiveHelper.decodeArchive(artifactBytes);
 
-    final coverageFile = archiveHelper.getFile(
+    final content = archiveHelper.getFileContent(
       artifactArchive,
       'coverage-summary.json',
     );
 
-    final coverageContent = utf8.decode(coverageFile.content as Uint8List);
+    final coverageContent = utf8.decode(content);
     final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
     final coverage = CoverageData.fromJson(coverageJson);
 
