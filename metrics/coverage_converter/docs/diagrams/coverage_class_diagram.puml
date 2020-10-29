@@ -67,8 +67,9 @@ package common {
 
 package specific_format {
     package converter as specific_format.converter {
-        class SpecificFormatCoverageConverter {
-            CoverageData convert(File)
+        class SpecificFormatCoverageConverter<SpecificCoverageArguments, SpecificFormatReport> {
+            CoverageData convert(SpecificFormatReport, SpecificCoverageArguments)
+            SpecificFormatReport parse(File)
         }
     }
 
