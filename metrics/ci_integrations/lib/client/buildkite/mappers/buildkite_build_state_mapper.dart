@@ -1,36 +1,38 @@
 import 'package:ci_integration/client/buildkite/models/buildkite_build_state.dart';
 import 'package:ci_integration/integration/interface/base/client/mapper/mapper.dart';
 
-/// A class that provides methods for mapping Buildkite build statuses.
+/// A class that provides methods for mapping Buildkite build states.
 class BuildkiteBuildStateMapper implements Mapper<String, BuildkiteBuildState> {
-  /// A running build status.
+  /// A state for a running build.
   static const String running = 'running';
 
-  /// A scheduled build status.
+  /// A state for a scheduled build.
   static const String scheduled = 'scheduled';
 
-  /// A successful finished build status.
+  /// A state for a successfully passed build.
   static const String passed = 'passed';
 
-  /// A failed build status.
+  /// A state for a failed build.
   static const String failed = 'failed';
 
-  /// A status that indicates the build blocked by another build.
+  /// A shortcut state that indicates builds which are blocked by
+  /// a pipeline step.
   static const String blocked = 'blocked';
 
-  /// A canceled build status.
+  /// A state for a canceled build.
   static const String canceled = 'canceled';
 
-  /// A canceling build status.
+  /// A state for a canceling build.
   static const String canceling = 'canceling';
 
-  /// A skipped build status.
+  /// A state for a skipped build.
   static const String skipped = 'skipped';
 
-  /// A status that indicates the build has never run.
+  /// A state that indicates the build has never run.
   static const String notRun = 'not_run';
 
-  /// A finished build status.
+  /// A shortcut state that indicates builds with passed, failed, blocked,
+  /// or canceled states.
   static const String finished = 'finished';
 
   /// Creates a new instance of the [BuildkiteBuildStateMapper].
