@@ -24,9 +24,9 @@ package common {
 
 
     package command {
-        abstract CoverageConverterCommand<T extends CoverageConverterArguments> {
-            argumentsParser : ArgumentsParser<T>
-            {abstract} converter : CoverageConverter<T>
+        abstract CoverageConverterCommand<T exetends CoverageConverterArguments> {
+            argumentsParser: ArgumentsParser<T>
+            {abstract} converter : CoverageConverter<T, R>
             {abstract} name: String
             {abstract} description: String
             void run()
@@ -34,9 +34,9 @@ package common {
     }
 
     package converter {
-        interface CoverageConverter<T extends CoverageConverterArguments> {
-            {abstract} CoverageData convert(File, T)
-            {abstract} bool canConvert(File, T)
+        interface CoverageConverter<T extends CoverageConverterArguments, R> {
+            {abstract} CoverageData convert(R, T)
+            {abstract} R parse(File)
         }
     }
 

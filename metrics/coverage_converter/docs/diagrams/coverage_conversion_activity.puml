@@ -3,7 +3,8 @@
 (*) --> Coverage
 ---> "Get the input file path from the arguments"
 if "Input file exists" then
-if "Can convert" then
+---> [true] "Parse the input file to the specific coverage report instance"
+if "Parsing succeessfull" then
 ---> [true] "Convert the input file to the CoverageData instance"
 ---> "Create a coverage json from the CoverageData instance"
 ---> "Create an output coverage file"
