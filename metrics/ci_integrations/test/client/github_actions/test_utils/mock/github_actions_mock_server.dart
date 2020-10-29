@@ -188,7 +188,7 @@ class GithubActionsMockServer extends ApiMockServer {
     return items;
   }
 
-  /// Generates a list of [WorkflowRun] with the given [status].
+  /// Generates a list of [WorkflowRun]s with the given [status].
   ///
   /// If the given [status] is null, the [GithubActionStatus.completed] is used.
   List<WorkflowRun> _generateWorkflowRuns(GithubActionStatus status) {
@@ -207,7 +207,7 @@ class GithubActionsMockServer extends ApiMockServer {
     return runs;
   }
 
-  /// Generates a list of [WorkflowRunJob] with the given [status].
+  /// Generates a list of [WorkflowRunJob]s with the given [status].
   ///
   /// If the given [status] is null, the [GithubActionStatus.completed] is used.
   List<WorkflowRunJob> _generateWorkflowRunJobs(GithubActionStatus status) {
