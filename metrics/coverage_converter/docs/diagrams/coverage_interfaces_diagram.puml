@@ -37,7 +37,7 @@ package common {
 
 
     package command {
-        abstract CoverageConverterCommand<T exetends CoverageConverterArguments> {
+        abstract CoverageConverterCommand<T extends CoverageConverterArguments> {
             argumentsParser: ArgumentsParser<T>
             {abstract} converter : CoverageConverter<T, R>
             {abstract} name: String
