@@ -83,19 +83,12 @@ class GithubActionsMockServer extends ApiMockServer {
 
     List<WorkflowRun> workflowRuns = _generateWorkflowRuns(status);
 
-    final lastPageNumber = _getLastPageNumber(
-      workflowRuns.length,
-      runsPerPage,
-    );
+    final lastPageNumber = _getLastPageNumber(workflowRuns.length, runsPerPage);
 
     final hasMorePages = pageNumber < lastPageNumber;
     _setNextPageUrlHeader(request, hasMorePages, pageNumber);
 
-    workflowRuns = _paginate(
-      workflowRuns,
-      runsPerPage,
-      pageNumber,
-    );
+    workflowRuns = _paginate(workflowRuns, runsPerPage, pageNumber);
 
     final _response = {
       'total_count': workflowRuns.length,
@@ -121,11 +114,8 @@ class GithubActionsMockServer extends ApiMockServer {
     final hasMorePages = pageNumber < lastPageNumber;
     _setNextPageUrlHeader(request, hasMorePages, pageNumber);
 
-    workflowRunJobs = _paginate(
-      workflowRunJobs,
-      runsPerPage,
-      pageNumber,
-    );
+    workflowRunJobs = _paginate(workflowRunJobs, runsPerPage, pageNumber);
+
     final _response = {
       'total_count': workflowRunJobs.length,
       'jobs': workflowRunJobs.map((run) => run.toJson()).toList(),
@@ -140,19 +130,12 @@ class GithubActionsMockServer extends ApiMockServer {
     final pageNumber = _extractPage(request);
     List<WorkflowRunArtifact> artifacts = _generateArtifacts();
 
-    artifacts = _paginate(
-      artifacts,
-      runsPerPage,
-      pageNumber,
-    );
-
-    final lastPageNumber = _getLastPageNumber(
-      artifacts.length,
-      runsPerPage,
-    );
+    final lastPageNumber = _getLastPageNumber(artifacts.length, runsPerPage);
 
     final hasMorePages = pageNumber < lastPageNumber;
     _setNextPageUrlHeader(request, hasMorePages, pageNumber);
+
+    artifacts = _paginate(artifacts, runsPerPage, pageNumber);
 
     final _response = {
       'total_count': artifacts.length,
@@ -238,7 +221,7 @@ class GithubActionsMockServer extends ApiMockServer {
     return jobs;
   }
 
-  /// Generates a list of [WorkflowRunArtifact].
+  /// Generates a list of [WorkflowRunArtifact]s.
   List<WorkflowRunArtifact> _generateArtifacts() {
     final artifacts = List.generate(100, (index) {
       final id = index + 1;
@@ -285,7 +268,7 @@ class GithubActionsMockServer extends ApiMockServer {
     return int.tryParse(page);
   }
 
-  /// Returns last page's number.
+  /// Returns the last page's number.
   ///
   /// Returns `1` if the given [perPage] or [total] parameter is `null`.
   int _getLastPageNumber(int total, int perPage) {
@@ -294,14 +277,20 @@ class GithubActionsMockServer extends ApiMockServer {
     return max((total / perPage).ceil(), 1);
   }
 
-  /// Sets next page url header.
+  /// Sets the next page url header.
   void _setNextPageUrlHeader(
-      HttpRequest request, bool hasMorePages, int pageNumber) {
+    HttpRequest request,
+    bool hasMorePages,
+    int pageNumber,
+  ) {
     if (hasMorePages) {
       final requestUrl = request.requestedUri.toString();
       final indexOfPageParam = requestUrl.indexOf("&page=");
       final nextPageUrl = requestUrl.replaceRange(
-          indexOfPageParam, requestUrl.length, "&page=${pageNumber + 1}");
+        indexOfPageParam,
+        requestUrl.length,
+        "&page=${pageNumber + 1}",
+      );
 
       request.response.headers.set('link', '<$nextPageUrl> rel="next"');
     }
