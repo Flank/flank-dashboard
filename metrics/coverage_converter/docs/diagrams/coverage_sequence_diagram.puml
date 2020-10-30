@@ -22,10 +22,10 @@ alt inputFile == null
 
     return throw ArgumentError
     activate SpecificCoverageConverterCommand
-    SpecificCoverageConverterCommand -> CoverageConverterRunner: throw ArgumentError
+    SpecificCoverageConverterCommand --> CoverageConverterRunner: throw ArgumentError
     deactivate SpecificCoverageConverterCommand
     activate CoverageConverterRunner
-    CoverageConverterRunner -> Bob: prints error message
+    CoverageConverterRunner --> Bob: prints error message
     deactivate CoverageConverterRunner
 
 end
@@ -41,14 +41,35 @@ alt !inputFile.exists
 
     activate CoverageConverterRunner
 
-    CoverageConverterRunner -> Bob : prints error message
+    CoverageConverterRunner --> Bob : prints error message
     deactivate CoverageConverterRunner
 
 end
 
-SpecificCoverageConverterCommand -> SpecificCoverageConverter : convert(inputFile)
+SpecificCoverageConverterCommand -> SpecificCoverageConverter : parse(inputFile)
 activate SpecificCoverageConverter
+
+
+alt error during parsing 
+activate SpecificCoverageConverter
+
+return throws an error
+activate SpecificCoverageConverterCommand
+SpecificCoverageConverterCommand --> CoverageConverterRunner: throws a invalid file format exception
+deactivate SpecificCoverageConverterCommand
+activate CoverageConverterRunner
+CoverageConverterRunner --> Bob : prints error message
+deactivate CoverageConverterRunner
+
+end 
+
+activate SpecificCoverageConverter
+SpecificCoverageConverter --> SpecificCoverageConverterCommand: parsed coverage report instance
+
+SpecificCoverageConverterCommand -> SpecificCoverageConverter : convert(reportInstance, arguments)
+
 return CoverageData instance
+
 SpecificCoverageConverterCommand -> SpecificCoverageConverterCommand : write Coverage as a json to output file
 return
 return
