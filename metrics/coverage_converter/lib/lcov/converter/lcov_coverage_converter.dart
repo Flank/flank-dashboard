@@ -2,34 +2,34 @@ import 'dart:io';
 
 import 'package:coverage_converter/common/arguments/model/coverage_converter_arguments.dart';
 import 'package:coverage_converter/common/converter/coverage_converter.dart';
+import 'package:coverage_converter/common/exception/coverage_converter_exception.dart';
+import 'package:coverage_converter/common/exception/error_code/coverage_converter_error_code.dart';
 import 'package:lcov/lcov.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// A [CoverageConverter] used to convert the LCOV coverage reports.
-class LcovCoverageConverter implements CoverageConverter {
+class LcovCoverageConverter
+    implements CoverageConverter<CoverageConverterArguments, Report> {
   @override
-  bool canConvert(File inputFile, CoverageConverterArguments arguments) {
-    if (inputFile == null) return false;
-
-    final coverage = inputFile.readAsStringSync();
+  Report parse(File inputFile) {
+    final coverage = inputFile?.readAsStringSync() ?? '';
 
     try {
-      Report.fromCoverage(coverage);
-      return true;
-    } on LcovException {
-      return false;
+      return Report.fromCoverage(coverage);
+    } catch (_, stackTrace) {
+      throw CoverageConverterException(
+        CoverageConverterErrorCode.invalidFileFormat,
+        stackTrace: stackTrace,
+      );
     }
   }
 
   @override
-  CoverageData convert(File inputFile, CoverageConverterArguments arguments) {
-    final coverage = inputFile.readAsStringSync();
-    final report = Report.fromCoverage(coverage);
-
+  CoverageData convert(Report coverage, CoverageConverterArguments arguments) {
     int foundLines = 0;
     int hitLines = 0;
 
-    for (final record in report.records) {
+    for (final record in coverage.records) {
       final lines = record.lines;
 
       foundLines += lines.found;

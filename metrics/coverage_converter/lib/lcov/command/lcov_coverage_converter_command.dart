@@ -4,6 +4,7 @@ import 'package:coverage_converter/common/arguments/parser/coverage_converter_ar
 import 'package:coverage_converter/common/command/coverage_converter_command.dart';
 import 'package:coverage_converter/common/converter/coverage_converter.dart';
 import 'package:coverage_converter/lcov/converter/lcov_coverage_converter.dart';
+import 'package:lcov/lcov.dart';
 
 /// A [CoverageConverterCommand] used to convert the LCOV coverage report.
 class LcovCoverageConverterCommand extends CoverageConverterCommand {
@@ -14,7 +15,7 @@ class LcovCoverageConverterCommand extends CoverageConverterCommand {
   String get description => 'Convert an LCOV coverage format.';
 
   @override
-  CoverageConverter<CoverageConverterArguments> get converter =>
+  CoverageConverter<CoverageConverterArguments, Report> get converter =>
       LcovCoverageConverter();
 
   /// Creates a new instance of the [LcovCoverageConverterCommand]
