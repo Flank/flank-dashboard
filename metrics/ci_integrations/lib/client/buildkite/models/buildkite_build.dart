@@ -10,6 +10,9 @@ class BuildkiteBuild extends Equatable {
   /// An order number of this build in the pipeline.
   final int number;
 
+  /// Indicates whether this build blocked by a pipeline step.
+  final bool blocked;
+
   /// A state of this build.
   final BuildkiteBuildState state;
 
@@ -23,12 +26,14 @@ class BuildkiteBuild extends Equatable {
   final DateTime finishedAt;
 
   @override
-  List<Object> get props => [id, number, state, webUrl, startedAt, finishedAt];
+  List<Object> get props =>
+      [id, number, blocked, state, webUrl, startedAt, finishedAt];
 
   /// Creates a new instance of the [BuildkiteBuild].
   const BuildkiteBuild({
     this.id,
     this.number,
+    this.blocked,
     this.state,
     this.webUrl,
     this.startedAt,
@@ -56,6 +61,7 @@ class BuildkiteBuild extends Equatable {
     return BuildkiteBuild(
       id: json['id'] as int,
       number: json['number'] as int,
+      blocked: json['blocked'] as bool,
       webUrl: json['web_url'] as String,
       state: state,
       startedAt: startedAt,
@@ -80,6 +86,7 @@ class BuildkiteBuild extends Equatable {
     return <String, dynamic>{
       'id': id,
       'number': number,
+      'blocked': blocked,
       'web_url': webUrl,
       'state': stateMapper.unmap(state),
       'started_at': startedAt?.toIso8601String(),

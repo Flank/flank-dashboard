@@ -2,39 +2,39 @@ import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
 import 'package:test/test.dart';
 
 // https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: prefer_const_constructors
 
 void main() {
   group("BuildkiteArtifact", () {
     const id = 1;
-    const fileName = 'test';
+    const filename = 'test';
     const downloadUrl = 'url';
     const mimeType = 'application/x-gzip';
 
     final artifactJson = <String, dynamic>{
       'id': id,
-      'filename': fileName,
+      'filename': filename,
       'download_url': downloadUrl,
       'mime_type': mimeType
     };
 
     final expectedArtifact = BuildkiteArtifact(
       id: id,
-      fileName: fileName,
+      filename: filename,
       downloadUrl: downloadUrl,
       mimeType: mimeType,
     );
 
     test("creates an instance with the given values", () {
-      const artifact = BuildkiteArtifact(
+      final artifact = BuildkiteArtifact(
         id: id,
-        fileName: fileName,
+        filename: filename,
         downloadUrl: downloadUrl,
         mimeType: mimeType,
       );
 
       expect(artifact.id, equals(id));
-      expect(artifact.fileName, equals(fileName));
+      expect(artifact.filename, equals(filename));
       expect(artifact.downloadUrl, equals(downloadUrl));
       expect(artifact.mimeType, equals(mimeType));
     });
@@ -66,7 +66,7 @@ void main() {
     test(".listFromJson() maps a list of build's artifacts", () {
       final anotherArtifactJson = <String, dynamic>{
         'id': id,
-        'filename': fileName,
+        'filename': filename,
         'download_url': downloadUrl,
         'mime_type': mimeType,
       };

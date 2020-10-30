@@ -3,13 +3,11 @@ import 'package:ci_integration/client/buildkite/models/buildkite_build.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build_state.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
-
 void main() {
   group("BuildkiteBuild", () {
     const id = 1;
     const number = 1;
+    const blocked = false;
     const state = BuildkiteBuildStateMapper.passed;
     const webUrl = 'url';
     final startedAt = DateTime(2020).toUtc();
@@ -18,6 +16,7 @@ void main() {
     final buildJson = <String, dynamic>{
       'id': id,
       'number': number,
+      'blocked' : blocked,
       'web_url': webUrl,
       'state': state,
       'started_at': startedAt?.toIso8601String(),
@@ -27,6 +26,7 @@ void main() {
     final expectedBuild = BuildkiteBuild(
       id: id,
       number: number,
+      blocked: blocked,
       state: BuildkiteBuildState.passed,
       webUrl: webUrl,
       startedAt: startedAt,
@@ -39,6 +39,7 @@ void main() {
       final build = BuildkiteBuild(
         id: id,
         number: number,
+        blocked: blocked,
         state: state,
         webUrl: webUrl,
         startedAt: startedAt,
@@ -47,6 +48,7 @@ void main() {
 
       expect(build.id, equals(id));
       expect(build.number, equals(number));
+      expect(build.blocked, equals(blocked));
       expect(build.state, equals(state));
       expect(build.webUrl, equals(webUrl));
       expect(build.startedAt, equals(startedAt));
@@ -81,6 +83,7 @@ void main() {
       final anotherJson = <String, dynamic>{
         'id': 2,
         'number': 2,
+        'blocked' : blocked,
         'web_url': 'url',
         'state': BuildkiteBuildStateMapper.failed,
         'started_at': DateTime(2020, 3).toIso8601String(),

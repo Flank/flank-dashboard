@@ -3,7 +3,7 @@ import 'package:ci_integration/client/buildkite/models/buildkite_builds_page.dar
 import 'package:test/test.dart';
 
 // https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: prefer_const_constructors
 
 void main() {
   group("BuildkiteBuildsPage", () {

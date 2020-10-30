@@ -6,24 +6,24 @@ class BuildkiteArtifact extends Equatable {
   final int id;
 
   /// A name of this artifact.
-  final String fileName;
+  final String filename;
 
   /// A URL needed to download this artifact.
   final String downloadUrl;
 
-  /// A standard that indicates the nature and format of an artifact.
+  /// A mime type of this artifact that indicates its nature and format.
   final String mimeType;
 
   /// Creates a new instance of the [BuildkiteArtifact].
   const BuildkiteArtifact({
     this.id,
-    this.fileName,
+    this.filename,
     this.downloadUrl,
     this.mimeType,
   });
 
   @override
-  List<Object> get props => [id, fileName, downloadUrl, mimeType];
+  List<Object> get props => [id, filename, downloadUrl, mimeType];
 
   /// Creates a new instance of the [BuildkiteArtifact] from the decoded
   /// JSON object.
@@ -34,7 +34,7 @@ class BuildkiteArtifact extends Equatable {
 
     return BuildkiteArtifact(
       id: json['id'] as int,
-      fileName: json['filename'] as String,
+      filename: json['filename'] as String,
       downloadUrl: json['download_url'] as String,
       mimeType: json['mime_type'] as String,
     );
@@ -55,7 +55,7 @@ class BuildkiteArtifact extends Equatable {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'id': id,
-      'filename': fileName,
+      'filename': filename,
       'download_url': downloadUrl,
       'mime_type': mimeType
     };
