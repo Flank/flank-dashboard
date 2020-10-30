@@ -141,7 +141,8 @@ class GithubActionsClient {
   /// ```
   ///
   /// A [page] is used for pagination and defines a page of runs to fetch.
-  /// If the [page] is `null` or omitted, the first page is fetched.
+  /// If the [page] is `null`, less than or equals to zero,
+  /// the first page is fetched.
   Future<InteractionResult<WorkflowRunsPage>> fetchWorkflowRuns(
     String workflowIdentifier, {
     GithubActionStatus status,
@@ -149,7 +150,7 @@ class GithubActionsClient {
     int page,
   }) async {
     const statusMapper = GithubActionStatusMapper();
-    final _page = page ?? 1;
+    final _page = _getValidPageNumber(page);
 
     final queryParameters = {
       'status': statusMapper.unmap(status),
@@ -250,15 +251,17 @@ class GithubActionsClient {
   /// ```
   ///
   /// A [page] is used for pagination and defines a page of jobs to fetch.
-  /// If the [page] is `null` or omitted, the first page is fetched.
+  /// If the [page] is `null`, less than or equals to zero,
+  /// the first page is fetched.
   Future<InteractionResult<WorkflowRunJobsPage>> fetchRunJobs(
     int runId, {
     GithubActionStatus status,
-    int perPage,
+    int perPage = 10,
     int page,
   }) {
     const statusMapper = GithubActionStatusMapper();
-    final _page = page ?? 1;
+
+    final _page = _getValidPageNumber(page);
 
     final queryParameters = {
       'status': statusMapper.unmap(status),
@@ -335,13 +338,14 @@ class GithubActionsClient {
   /// ```
   ///
   /// A [page] is used for pagination and defines a page of artifacts to fetch.
-  /// If the [page] is `null` or omitted, the first page is fetched.
+  /// If the [page] is `null`, less than or equals to zero,
+  /// the first page is fetched.
   Future<InteractionResult<WorkflowRunArtifactsPage>> fetchRunArtifacts(
     int runId, {
     int perPage = 10,
     int page,
   }) {
-    final _page = page ?? 1;
+    final _page = _getValidPageNumber(page);
 
     final queryParameters = {
       'per_page': '$perPage',
@@ -496,6 +500,15 @@ class GithubActionsClient {
     final nextPageUrl = _nextUrlRegexp.firstMatch(nextPageUrlString)?.group(0);
 
     return nextPageUrl;
+  }
+
+  /// Returns the valid page number based on the given [pageNumber]
+  ///
+  /// If the given [pageNumber] is `null` or less than zero, returns `1`,
+  /// otherwise, returns [pageNumber].
+  int _getValidPageNumber(int pageNumber) {
+    if (pageNumber == null || pageNumber <= 0) return 1;
+    return pageNumber;
   }
 
   /// Closes the client and cleans up any resources associated with it.
