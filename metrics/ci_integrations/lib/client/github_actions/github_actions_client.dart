@@ -150,7 +150,7 @@ class GithubActionsClient {
     int page,
   }) async {
     const statusMapper = GithubActionStatusMapper();
-    final _page = _processPageNumber(page);
+    final _page = _getValidPageNumber(page);
 
     final queryParameters = {
       'status': statusMapper.unmap(status),
@@ -261,7 +261,7 @@ class GithubActionsClient {
   }) {
     const statusMapper = GithubActionStatusMapper();
 
-    final _page = _processPageNumber(page);
+    final _page = _getValidPageNumber(page);
 
     final queryParameters = {
       'status': statusMapper.unmap(status),
@@ -345,7 +345,7 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) {
-    final _page = _processPageNumber(page);
+    final _page = _getValidPageNumber(page);
 
     final queryParameters = {
       'per_page': '$perPage',
@@ -502,11 +502,11 @@ class GithubActionsClient {
     return nextPageUrl;
   }
 
-  /// Processes the given [pageNumber].
+  /// Returns the valid page number based on the given [pageNumber]
   ///
   /// If the given [pageNumber] is `null` or less than zero, returns `1`,
   /// otherwise, returns [pageNumber].
-  int _processPageNumber(int pageNumber) {
+  int _getValidPageNumber(int pageNumber) {
     if (pageNumber == null || pageNumber <= 0) return 1;
     return pageNumber;
   }
