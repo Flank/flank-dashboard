@@ -1,14 +1,10 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/github_actions_client.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
-import 'package:ci_integration/client/github_actions/models/workflow_run_artifacts_page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
-import 'package:ci_integration/client/github_actions/models/workflow_run_jobs_page.dart';
-import 'package:ci_integration/client/github_actions/models/workflow_runs_page.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
@@ -162,16 +158,6 @@ void main() {
     );
 
     test(
-      ".fetchWorkflowRuns() returns a workflow runs page",
-      () async {
-        final interactionResult = await client.fetchWorkflowRuns(workflowId);
-        final runsPage = interactionResult.result;
-
-        expect(runsPage, isA<WorkflowRunsPage>());
-      },
-    );
-
-    test(
       ".fetchWorkflowRuns() applies the default per page parameter if it is not specified",
       () async {
         final interactionResult = await client.fetchWorkflowRuns(workflowId);
@@ -296,21 +282,6 @@ void main() {
     );
 
     test(
-      ".fetchWorkflowRunsNext() returns a workflow runs page",
-      () async {
-        final interactionResult = await client.fetchWorkflowRuns(workflowId);
-        final runsPage = interactionResult.result;
-
-        final nextInteractionResult = await client.fetchWorkflowRunsNext(
-          runsPage,
-        );
-        final nextRunsPage = nextInteractionResult.result;
-
-        expect(nextRunsPage, isA<WorkflowRunsPage>());
-      },
-    );
-
-    test(
       ".fetchWorkflowRunsNext() returns a next workflow runs page after the given one",
       () async {
         final interactionResult = await client.fetchWorkflowRuns(
@@ -353,16 +324,6 @@ void main() {
         final isError = interactionResult.isError;
 
         expect(isError, isTrue);
-      },
-    );
-
-    test(
-      ".fetchRunJobs() returns a workflow run jobs page",
-      () async {
-        final interactionResult = await client.fetchRunJobs(runId);
-        final jobsPage = interactionResult.result;
-
-        expect(jobsPage, isA<WorkflowRunJobsPage>());
       },
     );
 
@@ -481,19 +442,6 @@ void main() {
     );
 
     test(
-      ".fetchRunJobsNext() returns a workflow run jobs page",
-      () async {
-        final interactionResult = await client.fetchRunJobs(runId);
-        final jobsPage = interactionResult.result;
-
-        final nextInteractionResult = await client.fetchRunJobsNext(jobsPage);
-        final nextJobsPage = nextInteractionResult.result;
-
-        expect(nextJobsPage, isA<WorkflowRunJobsPage>());
-      },
-    );
-
-    test(
       ".fetchRunJobsNext() returns a next workflow run jobs page after the given one",
       () async {
         final interactionResult = await client.fetchRunJobs(
@@ -532,16 +480,6 @@ void main() {
         final isError = interactionResult.isError;
 
         expect(isError, isTrue);
-      },
-    );
-
-    test(
-      ".fetchRunArtifacts() returns a run artifacts page",
-      () async {
-        final interactionResult = await client.fetchRunArtifacts(runId);
-        final artifactsPage = interactionResult.result;
-
-        expect(artifactsPage, isA<WorkflowRunArtifactsPage>());
       },
     );
 
@@ -645,21 +583,6 @@ void main() {
     );
 
     test(
-      ".fetchRunArtifactsNext() returns a workflow run artifacts page",
-      () async {
-        final interactionResult = await client.fetchRunArtifacts(runId);
-        final artifactsPage = interactionResult.result;
-
-        final nextInteractionResult = await client.fetchRunArtifactsNext(
-          artifactsPage,
-        );
-        final nextArtifactsPage = nextInteractionResult.result;
-
-        expect(nextArtifactsPage, isA<WorkflowRunArtifactsPage>());
-      },
-    );
-
-    test(
       ".fetchRunArtifactsNext() returns a next workflow run artifacts page after the given one",
       () async {
         final interactionResult = await client.fetchRunArtifacts(
@@ -715,21 +638,6 @@ void main() {
         final isError = interactionResult.isError;
 
         expect(isError, isTrue);
-      },
-    );
-
-    test(
-      ".downloadRunArtifactZip() returns the body bytes of the run artifact",
-      () async {
-        const artifactId = 'artifact_id';
-        final downloadUrl = '${client.basePath}artifacts/$artifactId/zip';
-
-        final interactionResult = await client.downloadRunArtifactZip(
-          downloadUrl,
-        );
-        final bodyBytes = interactionResult.result;
-
-        expect(bodyBytes, isA<Uint8List>());
       },
     );
   });

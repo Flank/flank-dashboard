@@ -150,11 +150,7 @@ class GithubActionsClient {
     int page,
   }) async {
     const statusMapper = GithubActionStatusMapper();
-    int _page = page;
-
-    if (_page == null || _page <= 0) {
-      _page = 1;
-    }
+    final _page = _processPageNumber(page);
 
     final queryParameters = {
       'status': statusMapper.unmap(status),
@@ -265,11 +261,7 @@ class GithubActionsClient {
   }) {
     const statusMapper = GithubActionStatusMapper();
 
-    int _page = page;
-
-    if (_page == null || _page <= 0) {
-      _page = 1;
-    }
+    final _page = _processPageNumber(page);
 
     final queryParameters = {
       'status': statusMapper.unmap(status),
@@ -353,11 +345,7 @@ class GithubActionsClient {
     int perPage = 10,
     int page,
   }) {
-    int _page = page;
-
-    if (_page == null || _page <= 0) {
-      _page = 1;
-    }
+    final _page = _processPageNumber(page);
 
     final queryParameters = {
       'per_page': '$perPage',
@@ -512,6 +500,15 @@ class GithubActionsClient {
     final nextPageUrl = _nextUrlRegexp.firstMatch(nextPageUrlString)?.group(0);
 
     return nextPageUrl;
+  }
+
+  /// Processes the given [pageNumber].
+  ///
+  /// If the given [pageNumber] is `null` or less than zero, returns `1`,
+  /// otherwise, returns [pageNumber].
+  int _processPageNumber(int pageNumber) {
+    if (pageNumber == null || pageNumber <= 0) return 1;
+    return pageNumber;
   }
 
   /// Closes the client and cleans up any resources associated with it.
