@@ -339,8 +339,6 @@ class _SvgImageTestbed extends StatelessWidget {
   final RendererHelper rendererHelper;
 
   /// Creates a new instance of the svg image testbed.
-  ///
-  /// The [fit] defaults to the [BoxFit.none].
   const _SvgImageTestbed(
     this.src, {
     this.fit,
