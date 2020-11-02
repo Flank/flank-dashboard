@@ -30,9 +30,7 @@ class SvgImage extends StatelessWidget {
   /// Creates a new instance of the [SvgImage].
   ///
   /// If the given [fit] is `null` the [BoxFit.none] is used.
-  ///
-  /// If the given [rendererHelper] is `null` the [_defaultRendererHelper]
-  /// is used.
+  /// If the given [rendererHelper] is `null` the default helper is used.
   const SvgImage(
     this.src, {
     this.height,
