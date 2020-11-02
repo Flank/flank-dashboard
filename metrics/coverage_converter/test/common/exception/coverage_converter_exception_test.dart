@@ -73,7 +73,7 @@ void main() {
     );
 
     test(
-      ".toString() returns the error message if the guven stacktrace is null",
+      ".toString() returns the error message if the given stackTrace is null",
       () {
         const coverageConverterException = CoverageConverterException(
           CoverageConverterErrorCode.noSuchFile,
