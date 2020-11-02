@@ -16,6 +16,7 @@ import '../../utils/file_mock.dart';
 
 void main() {
   group("CoverageConverterCommand", () {
+    final converter = _CoverageConverterMock();
     final coverage = CoverageData(percent: Percent(1.0));
     final inputFile = FileMock();
     final outputFile = FileMock();
@@ -23,6 +24,7 @@ void main() {
     tearDown(() {
       reset(inputFile);
       reset(outputFile);
+      reset(converter);
     });
 
     test(
@@ -43,16 +45,14 @@ void main() {
     );
 
     test(
-      "throws an 'invalid file format' exception if the converter can't convert the given input file",
+      "throws an 'invalid file format' exception if the converter throws an 'invalid file format' exception",
       () {
         const invalidFormatException = CoverageConverterException(
           CoverageConverterErrorCode.invalidFileFormat,
         );
 
-        final converter = _CoverageConverterMock();
-
         when(inputFile.existsSync()).thenReturn(true);
-        when(converter.canConvert(any, any)).thenReturn(false);
+        when(converter.parse(any)).thenThrow(invalidFormatException);
 
         final command = _CoverageConverterCommandFake(
           inputFile: inputFile,
@@ -66,10 +66,7 @@ void main() {
     test(
       "converts the input file",
       () async {
-        final converter = _CoverageConverterMock();
-
         when(inputFile.existsSync()).thenReturn(true);
-        when(converter.canConvert(any, any)).thenReturn(true);
         when(converter.convert(any, any)).thenReturn(coverage);
 
         final command = _CoverageConverterCommandFake(
@@ -87,12 +84,9 @@ void main() {
     test(
       "writes the converted file to the output file as a JSON",
       () async {
-        final converter = _CoverageConverterMock();
         final coverageJson = jsonEncode(coverage.toJson());
 
         when(inputFile.existsSync()).thenReturn(true);
-        when(outputFile.existsSync()).thenReturn(true);
-        when(converter.canConvert(any, any)).thenReturn(true);
         when(converter.convert(any, any)).thenReturn(coverage);
 
         final command = _CoverageConverterCommandFake(

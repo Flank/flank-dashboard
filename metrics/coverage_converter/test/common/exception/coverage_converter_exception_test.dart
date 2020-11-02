@@ -51,10 +51,33 @@ void main() {
     );
 
     test(
-      ".toString() returns the error message",
+      ".toString() returns the error message with the given stackTrace",
       () {
-        const coverageConverterException =
-            CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
+        const stackTraceString = "stacktrace";
+        final stackTrace = StackTrace.fromString(stackTraceString);
+
+        final coverageConverterException = CoverageConverterException(
+          CoverageConverterErrorCode.noSuchFile,
+          stackTrace: stackTrace,
+        );
+
+        expect(
+          coverageConverterException.toString(),
+          contains(coverageConverterException.message),
+        );
+        expect(
+          coverageConverterException.toString(),
+          contains(coverageConverterException.stackTrace.toString()),
+        );
+      },
+    );
+
+    test(
+      ".toString() returns the error message if the given stackTrace is null",
+      () {
+        const coverageConverterException = CoverageConverterException(
+          CoverageConverterErrorCode.noSuchFile,
+        );
 
         expect(
           coverageConverterException.toString(),
@@ -64,13 +87,19 @@ void main() {
     );
 
     test(
-      "equals to another instance with the same code",
+      "equals to another instance with the same parameters",
       () {
-        const firstException =
-            CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
+        const stackTrace = StackTrace.empty;
 
-        const secondException =
-            CoverageConverterException(CoverageConverterErrorCode.noSuchFile);
+        const firstException = CoverageConverterException(
+          CoverageConverterErrorCode.noSuchFile,
+          stackTrace: stackTrace,
+        );
+
+        const secondException = CoverageConverterException(
+          CoverageConverterErrorCode.noSuchFile,
+          stackTrace: stackTrace,
+        );
 
         expect(firstException, equals(secondException));
       },

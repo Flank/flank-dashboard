@@ -2,18 +2,20 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:coverage_converter/common/arguments/model/coverage_converter_arguments.dart';
+import 'package:coverage_converter/common/exception/coverage_converter_exception.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An interface for all specific coverage format converters.
-abstract class CoverageConverter<T extends CoverageConverterArguments> {
+abstract class CoverageConverter<T extends CoverageConverterArguments, R> {
   /// Creates a new instance of the [CoverageConverter].
   const CoverageConverter();
 
-  /// Converts the coverage report from the given [inputFile]
-  /// to the [CoverageData].
-  FutureOr<CoverageData> convert(File inputFile, T arguments);
+  /// Parses the contents of the [inputFile] to the [R] instance.
+  ///
+  /// If the [inputFile] is null, or has an invalid coverage
+  /// report throws a [CoverageConverterException].
+  FutureOr<R> parse(File inputFile);
 
-  /// Indicates whether this converter can convert the coverage report
-  /// from the given [inputFile].
-  FutureOr<bool> canConvert(File inputFile, T arguments);
+  /// Converts the given [coverage] report to the [CoverageData].
+  FutureOr<CoverageData> convert(R coverage, T arguments);
 }

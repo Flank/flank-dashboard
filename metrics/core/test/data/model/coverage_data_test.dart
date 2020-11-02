@@ -7,12 +7,14 @@ void main() {
     final json = {
       'pct': percent.toString(),
     };
-    test(
-      "throws an ArgumentError if the given percent is null",
-      () {
-        expect(() => CoverageData(percent: null), throwsArgumentError);
-      },
-    );
+
+    test("creates an instance with the given parameters", () {
+      final percent = Percent(0.3);
+
+      final coverageData = CoverageData(percent: percent);
+
+      expect(coverageData.percent, equals(percent));
+    });
 
     test(".fromJson() returns null if the given JSON is null", () {
       final coverageModel = CoverageData.fromJson(null);

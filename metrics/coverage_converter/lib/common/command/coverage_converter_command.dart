@@ -15,7 +15,7 @@ abstract class CoverageConverterCommand<T extends CoverageConverterArguments>
   final ArgumentsParser<T> argumentsParser;
 
   /// A [CoverageConverter] used to convert the specific coverage report.
-  CoverageConverter get converter;
+  CoverageConverter<T, dynamic> get converter;
 
   /// Creates a new instance of the [CoverageConverterCommand]
   /// with the given [argumentsParser].
@@ -38,14 +38,9 @@ abstract class CoverageConverterCommand<T extends CoverageConverterArguments>
       );
     }
 
-    final canConvert = await converter.canConvert(inputFile, arguments);
-    if (!canConvert) {
-      throw const CoverageConverterException(
-        CoverageConverterErrorCode.invalidFileFormat,
-      );
-    }
+    final coverage = await converter.parse(inputFile);
+    final coverageData = await converter.convert(coverage, arguments);
 
-    final coverageData = await converter.convert(inputFile, arguments);
     final outputFile = getOutputFile(arguments.outputFilePath);
 
     outputFile.writeAsStringSync(jsonEncode(coverageData.toJson()));

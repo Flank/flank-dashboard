@@ -9,9 +9,15 @@ class CoverageConverterException extends Equatable implements Exception {
   /// about concrete coverage converter exception.
   final CoverageConverterErrorCode _code;
 
+  /// A [StackTrace] of this error.
+  final StackTrace stackTrace;
+
   /// Creates the [CoverageConverterException]
   /// with the given [CoverageConverterErrorCode].
-  const CoverageConverterException(this._code);
+  const CoverageConverterException(
+    this._code, {
+    this.stackTrace,
+  });
 
   @override
   List<Object> get props => [_code];
@@ -32,6 +38,8 @@ class CoverageConverterException extends Equatable implements Exception {
 
   @override
   String toString() {
-    return message;
+    if (stackTrace == null) return message;
+
+    return "$message \n\n$stackTrace";
   }
 }
