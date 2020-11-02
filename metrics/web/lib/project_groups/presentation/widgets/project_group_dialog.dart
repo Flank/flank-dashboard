@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/value_form_field.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_inactive_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
@@ -129,7 +130,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
             maxHeight: 726.0,
           ),
           closeIconPadding: const EdgeInsets.only(top: 16.0, right: 16.0),
-          closeIcon: Image.network(
+          closeIcon: SvgImage(
             'icons/close.svg',
             color: dialogTheme.closeIconColor,
             height: 24.0,
@@ -172,7 +173,7 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
                             onChanged:
                                 _projectGroupsNotifier.filterByProjectName,
                             prefixIconBuilder: (context, color) {
-                              return Image.network(
+                              return SvgImage(
                                 'icons/search.svg',
                                 width: 20.0,
                                 height: 20.0,

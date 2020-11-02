@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/dropdown_menu.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/widgets/metrics_input_placeholder.dart';
@@ -106,7 +107,7 @@ class _ProjectGroupsDropdownMenuState extends State<ProjectGroupsDropdownMenu> {
                           vertical: 14.0,
                           horizontal: 12.0,
                         ),
-                        child: Image.network(
+                        child: SvgImage(
                           "icons/dropdown.svg",
                           height: 20.0,
                           width: 20.0,

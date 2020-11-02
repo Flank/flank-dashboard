@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/widgets/metrics_checkbox.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -83,10 +84,9 @@ void main() {
 
         final finder = find.byType(AnimatedCrossFade);
         final crossFade = tester.widget<AnimatedCrossFade>(finder);
-        final firstChild = crossFade.firstChild as Image;
-        final imageProvider = firstChild.image as NetworkImage;
+        final image = crossFade.firstChild as SvgImage;
 
-        expect(imageProvider.url, equals('icons/check-box.svg'));
+        expect(image.src, equals('icons/check-box.svg'));
       },
     );
 
@@ -104,10 +104,9 @@ void main() {
 
         final finder = find.byType(AnimatedCrossFade);
         final crossFade = tester.widget<AnimatedCrossFade>(finder);
-        final firstChild = crossFade.firstChild as Image;
-        final imageProvider = firstChild.image as NetworkImage;
+        final image = crossFade.firstChild as SvgImage;
 
-        expect(imageProvider.url, equals('icons/check-box-hovered.svg'));
+        expect(image.src, equals('icons/check-box-hovered.svg'));
       },
     );
 
@@ -122,10 +121,9 @@ void main() {
 
         final finder = find.byType(AnimatedCrossFade);
         final crossFade = tester.widget<AnimatedCrossFade>(finder);
-        final secondChild = crossFade.secondChild as Image;
-        final imageProvider = secondChild.image as NetworkImage;
+        final image = crossFade.secondChild as SvgImage;
 
-        expect(imageProvider.url, equals('icons/check-box-blank.svg'));
+        expect(image.src, equals('icons/check-box-blank.svg'));
       },
     );
 
@@ -143,10 +141,9 @@ void main() {
 
         final finder = find.byType(AnimatedCrossFade);
         final crossFade = tester.widget<AnimatedCrossFade>(finder);
-        final secondChild = crossFade.secondChild as Image;
-        final imageProvider = secondChild.image as NetworkImage;
+        final image = crossFade.secondChild as SvgImage;
 
-        expect(imageProvider.url, equals('icons/check-box-blank-hovered.svg'));
+        expect(image.src, equals('icons/check-box-blank-hovered.svg'));
       },
     );
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +40,7 @@ class MetricsThemeImage extends StatelessWidget {
     return Selector<ThemeNotifier, bool>(
       selector: (_, notifier) => notifier.isDark,
       builder: (_, isDark, __) {
-        return Image.network(
+        return SvgImage(
           isDark ? darkAsset : lightAsset,
           width: width,
           height: height,

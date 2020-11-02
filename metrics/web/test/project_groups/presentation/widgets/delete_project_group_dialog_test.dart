@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_neutral_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
@@ -84,10 +85,9 @@ void main() {
 
         final infoDialog = FinderUtil.findInfoDialog(tester);
 
-        final closeIconImage = infoDialog.closeIcon as Image;
-        final closeIconNetworkImage = closeIconImage.image as NetworkImage;
+        final closeIconImage = infoDialog.closeIcon as SvgImage;
 
-        expect(closeIconNetworkImage.url, equals('icons/close.svg'));
+        expect(closeIconImage.src, equals('icons/close.svg'));
       },
     );
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
@@ -65,7 +66,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                         onPressed: _showEditProjectGroupDialog,
                         iconPadding: _buttonIconPadding,
                         iconBuilder: (context, isHovered) {
-                          return Image.network(
+                          return SvgImage(
                             'icons/edit.svg',
                             width: _iconBoxSide,
                             height: _iconBoxSide,
@@ -86,7 +87,7 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
                         onPressed: _showDeleteProjectGroupDialog,
                         iconPadding: _buttonIconPadding,
                         iconBuilder: (context, isHovered) {
-                          return Image.network(
+                          return SvgImage(
                             'icons/delete.svg',
                             width: _iconBoxSide,
                             height: _iconBoxSide,

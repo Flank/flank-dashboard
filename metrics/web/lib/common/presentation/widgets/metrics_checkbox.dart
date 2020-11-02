@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 
 /// A widget that displays a metrics styled checkbox.
 class MetricsCheckbox extends StatelessWidget {
@@ -34,13 +35,13 @@ class MetricsCheckbox extends StatelessWidget {
       child: AnimatedCrossFade(
         crossFadeState: state,
         duration: const Duration(milliseconds: 100),
-        firstChild: Image.network(
+        firstChild: SvgImage(
           isHovered ? 'icons/check-box-hovered.svg' : 'icons/check-box.svg',
           width: 20.0,
           height: 20.0,
           fit: BoxFit.contain,
         ),
-        secondChild: Image.network(
+        secondChild: SvgImage(
           isHovered
               ? 'icons/check-box-blank-hovered.svg'
               : 'icons/check-box-blank.svg',
