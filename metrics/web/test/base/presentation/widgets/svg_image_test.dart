@@ -13,10 +13,6 @@ void main() {
     const defaultSrc = 'src';
     final rendererHelperMock = _RendererHelperMock();
 
-    setUpAll(() {
-      reset(rendererHelperMock);
-    });
-
     testWidgets(
       "displays the svg picture widget if the application uses the SKIA renderer",
       (WidgetTester tester) async {
@@ -36,7 +32,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given src to the svg picture widget when using Skia renderer",
+      "applies the given src to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         when(rendererHelperMock.isSkia).thenReturn(true);
 
@@ -54,7 +50,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given fit to the svg picture widget when using Skia renderer",
+      "applies the given fit to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         const fit = BoxFit.contain;
 
@@ -77,7 +73,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the Boxfit.none to the svg picture widget if the given fit is null when using Skia renderer",
+      "applies the Boxfit.none to the svg picture widget if the given fit is null when using SKIA renderer",
       (WidgetTester tester) async {
         when(rendererHelperMock.isSkia).thenReturn(true);
 
@@ -98,7 +94,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given width to the svg picture widget when using Skia renderer",
+      "applies the given width to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         const width = 10.0;
 
@@ -121,7 +117,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given height to the svg picture widget when using Skia renderer",
+      "applies the given height to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         const height = 10.0;
 
@@ -144,7 +140,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given color to the svg picture widget when using Skia renderer",
+      "applies the given color to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         const color = Colors.red;
         const expectedColorFilter = ColorFilter.mode(color, BlendMode.srcIn);
@@ -168,7 +164,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the network image widget if the application when does not use the SKIA renderer",
+      "displays the network image widget if the application when not using use the SKIA renderer",
       (WidgetTester tester) async {
         when(rendererHelperMock.isSkia).thenReturn(false);
 
@@ -186,7 +182,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given src to the network image widget when does not use the SKIA renderer",
+      "applies the given src to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         when(rendererHelperMock.isSkia).thenReturn(false);
 
@@ -207,7 +203,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given fit to the network image widget when does not use the SKIA renderer",
+      "applies the given fit to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const fit = BoxFit.contain;
 
@@ -230,7 +226,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the BoxFit.none to the network image widget if the given fit is null when does not use the SKIA renderer",
+      "applies the BoxFit.none to the network image widget if the given fit is null when not using the SKIA renderer",
       (WidgetTester tester) async {
         when(rendererHelperMock.isSkia).thenReturn(false);
 
@@ -251,7 +247,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given height to the network image widget when does not use the SKIA renderer",
+      "applies the given height to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const height = 20.0;
 
@@ -274,7 +270,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given width to the network image widget when does not use the SKIA renderer",
+      "applies the given width to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const width = 20.0;
 
@@ -297,7 +293,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given color to the network image widget when does not use the SKIA renderer",
+      "applies the given color to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const color = Colors.red;
 
