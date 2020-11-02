@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("BuildkiteBuild", () {
-    const id = 1;
+    const id = "1";
     const number = 1;
     const blocked = false;
     const state = BuildkiteBuildStateMapper.passed;

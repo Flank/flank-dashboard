@@ -10,7 +10,7 @@ void main() {
     const page = 1;
     const perPage = 1;
     const nextPageUrl = 'url';
-    const values = [BuildkiteArtifact(id: 1), BuildkiteArtifact(id: 2)];
+    const values = [BuildkiteArtifact(id: "1"), BuildkiteArtifact(id: "2")];
 
     test("creates an instance with the given values", () {
       final runsPage = BuildkiteArtifactsPage(

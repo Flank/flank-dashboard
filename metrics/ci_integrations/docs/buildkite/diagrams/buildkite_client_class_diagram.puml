@@ -20,7 +20,7 @@ package integration.interface.base.client.model {
 package buildkite {
     package models {
         class BuildkiteBuild {
-            + id: int
+            + id: String
             + number: int
             + blocked: bool
             + state: BuildkiteBuildState
@@ -34,7 +34,7 @@ package buildkite {
         }
 
         class BuildkiteArtifact {
-            + id: int
+            + id: String
             + filename: String
             + downloadUrl: String
             + mimeType: String
@@ -88,7 +88,7 @@ package buildkite {
         + getHeaders(): Map<String, String>
         + fetchBuildkiteBuilds(String pipelineSlug, BuildkiteBuildState state, DateTime finishedFrom, int perPage, int page): Future<InteractionResult<BuildkiteBuildsPage>>
         + fetchBuildkiteBuildsNext(BuildkiteBuildsPage currentPage): Future<InteractionResult<BuildkiteBuildsPage>>
-        + fetchBuildkiteArtifacts(int buildNumber, int perPage, int page): Future<InteractionResult<BuildkiteArtifactsPage>
+        + fetchBuildkiteArtifacts(String pipelineSlug, int buildNumber, int perPage, int page): Future<InteractionResult<BuildkiteArtifactsPage>
         + fetchBuildkiteArtifactsNext(BuildkiteArtifactsPage currentPage): Future<InteractionResult<BuildkiteArtifactsPage>
         + downloadBuildkiteArtifact(String url): Future<InteractionResult<UInt8List>>
         + close(): void

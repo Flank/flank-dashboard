@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("BuildkiteArtifact", () {
-    const id = 1;
+    const id = "1";
     const filename = 'test';
     const downloadUrl = 'url';
     const mimeType = 'application/x-gzip';
