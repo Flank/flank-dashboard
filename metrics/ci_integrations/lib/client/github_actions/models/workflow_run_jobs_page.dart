@@ -1,5 +1,5 @@
-import 'package:ci_integration/client/github_actions/models/page.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
+import 'package:ci_integration/integration/interface/base/client/model/page.dart';
 
 /// A class that represents a page of [WorkflowRunJob] that is used to
 /// paginate the run jobs fetching.
