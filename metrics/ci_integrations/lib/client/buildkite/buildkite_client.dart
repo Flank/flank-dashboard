@@ -94,7 +94,7 @@ class BuildkiteClient {
   /// [BuildkiteBuild.state] of builds to fetch.
   ///
   /// A [perPage] is used for limiting the number of builds and pagination
-  /// in pair with the [page] parameter. It defaults to `10` and limited
+  /// in pair with the [page] parameter. It defaults to `10` and is limited
   /// to `100`.
   /// If the given value of [perPage] is greater than its limit,
   /// the upper bound is used.
