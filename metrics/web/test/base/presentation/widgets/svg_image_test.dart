@@ -20,10 +20,7 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(
-              defaultSrc,
-              rendererHelper: rendererHelperMock,
-            ),
+            _SvgImageTestbed(defaultSrc, rendererHelper: rendererHelperMock),
           );
         });
 
@@ -53,7 +50,6 @@ void main() {
       "applies the given fit to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         const fit = BoxFit.contain;
-
         when(rendererHelperMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
@@ -97,7 +93,6 @@ void main() {
       "applies the given width to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         const width = 10.0;
-
         when(rendererHelperMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
@@ -120,7 +115,6 @@ void main() {
       "applies the given height to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         const height = 10.0;
-
         when(rendererHelperMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
@@ -144,7 +138,6 @@ void main() {
       (WidgetTester tester) async {
         const color = Colors.red;
         const expectedColorFilter = ColorFilter.mode(color, BlendMode.srcIn);
-
         when(rendererHelperMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
@@ -170,10 +163,7 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(
-              defaultSrc,
-              rendererHelper: rendererHelperMock,
-            ),
+            _SvgImageTestbed(defaultSrc, rendererHelper: rendererHelperMock),
           );
         });
 
@@ -188,10 +178,7 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(
-              defaultSrc,
-              rendererHelper: rendererHelperMock,
-            ),
+            _SvgImageTestbed(defaultSrc, rendererHelper: rendererHelperMock),
           );
         });
 
@@ -206,7 +193,6 @@ void main() {
       "applies the given fit to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const fit = BoxFit.contain;
-
         when(rendererHelperMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
@@ -250,7 +236,6 @@ void main() {
       "applies the given height to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const height = 20.0;
-
         when(rendererHelperMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
@@ -273,7 +258,6 @@ void main() {
       "applies the given width to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const width = 20.0;
-
         when(rendererHelperMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
@@ -296,7 +280,6 @@ void main() {
       "applies the given color to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const color = Colors.red;
-
         when(rendererHelperMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
