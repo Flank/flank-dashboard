@@ -9,11 +9,20 @@ void main() {
     const buildkiteApiUrl = "buildkiteApiUrl";
     const organizationSlug = "orgSlug";
     final authorization = BearerAuthorization("token");
-    final client = BuildkiteClient(
-      buildkiteApiUrl: buildkiteApiUrl,
-      organizationSlug: organizationSlug,
-      authorization: authorization,
-    );
+
+    BuildkiteClient client;
+
+    setUpAll(() {
+      client = BuildkiteClient(
+        buildkiteApiUrl: buildkiteApiUrl,
+        organizationSlug: organizationSlug,
+        authorization: authorization,
+      );
+    });
+
+    tearDownAll(() {
+      client.close();
+    });
 
     test("throws an ArgumentError if the given Buildkite API URL is null", () {
       expect(
@@ -80,7 +89,7 @@ void main() {
     });
 
     test(
-      ".headers contain a 'content type' header with the HttpHeaders.contentTypeHeader value",
+      ".headers contain a 'content-type' header with the content type json value",
       () {
         final expectedHeaderValue = ContentType.json.value;
 
@@ -94,7 +103,7 @@ void main() {
     );
 
     test(
-      ".headers contain an 'accept' header with the HttpHeaders.acceptHeader value",
+      ".headers contain an 'accept' header with the content type json value",
       () {
         final expectedHeaderValue = ContentType.json.value;
 

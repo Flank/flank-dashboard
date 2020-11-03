@@ -40,7 +40,8 @@ class BuildkiteClient {
   /// A base Buildkite API URL to use in HTTP requests for this client.
   final String buildkiteApiUrl;
 
-  /// An organization name on Buildkite as used in URLs.
+  /// A unique slug (identifier) of the organization in the scope of which
+  /// this client should perform requests.
   final String organizationSlug;
 
   /// An authorization method used in HTTP requests for this client.
@@ -52,7 +53,7 @@ class BuildkiteClient {
   /// A [RegExp] needed to parse next page URLs in [HttpResponse] headers.
   final RegExp _nextUrlRegexp = RegExp('(?<=<)(.*)(?=>)');
 
-  /// Creates a new instance of the [BuildkiteClient];
+  /// Creates a new instance of the [BuildkiteClient].
   ///
   /// The [buildkiteApiUrl] defaults to the [BuildkiteConstants.buildkiteApiUrl].
   ///
@@ -105,7 +106,8 @@ class BuildkiteClient {
   /// the upper bound is used.
   ///
   /// A [page] is used for pagination and defines a page of builds to fetch.
-  /// If the [page] is `null` or omitted, the first page is fetched.
+  /// If the [page] is `null`, non-positive or omitted,
+  /// the first page is fetched.
   Future<InteractionResult<BuildkiteBuildsPage>> fetchBuildkiteBuilds(
     String pipelineSlug, {
     BuildkiteBuildState state,
@@ -166,7 +168,7 @@ class BuildkiteClient {
     );
   }
 
-  /// Fetches a [BuildkiteArtifactPage] with the given [pipelineSlug] and
+  /// Fetches a [BuildkiteArtifactPage] by the given [pipelineSlug] and
   /// [buildNumber].
   ///
   /// A [perPage] is used for limiting the number of artifacts and pagination
@@ -175,7 +177,7 @@ class BuildkiteClient {
   /// the upper bound is used.
   ///
   /// A [page] is used for pagination and defines a page of artifacts to fetch.
-  /// If the [page] is `null`, less than or equals to zero,
+  /// If the [page] is `null`, non-positive, or omitted,
   /// the first page is fetched.
   Future<InteractionResult<BuildkiteArtifactsPage>> fetchBuildkiteArtifacts(
     String pipelineSlug,
@@ -351,7 +353,7 @@ class BuildkiteClient {
     return nextPageUrl;
   }
 
-  /// Returns the valid page number based on the given [pageNumber]
+  /// Returns a valid page number based on the given [pageNumber].
   ///
   /// If the given [pageNumber] is `null` or less than zero, returns `1`,
   /// otherwise, returns [pageNumber].
