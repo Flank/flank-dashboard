@@ -271,6 +271,8 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       'coverage-summary.json',
     );
 
+    if (content == null) return null;
+
     final coverageContent = utf8.decode(content);
     final coverageJson = jsonDecode(coverageContent) as Map<String, dynamic>;
     final coverage = CoverageData.fromJson(coverageJson);

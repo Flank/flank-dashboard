@@ -4,8 +4,11 @@ import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A class that cointains methods for generating Github Actions test data
+/// A class that contains methods for generating Github Actions test data
 /// to use in tests.
+/// 
+/// The generator uses the values it is initialized with as the default values 
+/// to the data being generated.
 class GithubActionsTestDataGenerator {
   /// A workflow identifier to use in this test data generator.
   final String workflowIdentifier;
@@ -43,8 +46,8 @@ class GithubActionsTestDataGenerator {
     this.duration,
   });
   
-  /// Generates a [WorkflowRun] instance using the given [id], [runNumber] and
-  /// [status].
+  /// Generates a [WorkflowRun] instance using the given parameters 
+  /// and default values.
   /// 
   /// The [id] defaults to `1`.
   /// The [runNumber] defaults to `1`.
@@ -74,8 +77,8 @@ class GithubActionsTestDataGenerator {
     }).toList();
   }
   
-  /// Generates a [WorkflowRunJob] instance using the given [id], [runId],
-  /// [status] and [conclusion].
+  /// Generates a [WorkflowRunJob] instance using the given parameters 
+  /// and default values.
   /// 
   /// The [id] defaults to `1`.
   /// The [runId] defaults to `1`.
@@ -115,8 +118,8 @@ class GithubActionsTestDataGenerator {
     return List.generate(length, (_) => generateWorkflowRunJob());
   }
 
-  /// Generates a [BuildData] instance using the given [buildNumber] and 
-  /// [buildStatus].
+  /// Generates a [BuildData] instance using the given parameters 
+  /// and default values.
   /// 
   /// The [buildStatus] defaults to the [BuildStatus.successful].
   BuildData generateBuildData({
