@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/svg_image/strategy/svg_image_strategy.dart';
-import 'package:metrics/base/presentation/widgets/svg_image/widgets/svg_image.dart';
+import 'package:metrics/base/presentation/widgets/strategy/svg_image_strategy.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
@@ -38,6 +38,21 @@ void main() {
         });
 
         expect(find.byType(SvgPicture), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "uses the given strategy to detect whether the SKIA renderer is used",
+      (WidgetTester tester) async {
+        when(strategyMock.isSkia).thenReturn(true);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _SvgImageTestbed(strategy: strategyMock),
+          );
+        });
+
+        verify(strategyMock.isSkia).called(1);
       },
     );
 
@@ -78,7 +93,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given alignment to the svg picture widget when using SKIA renderer",
+      "aligns the svg picture to the center if the given alignment is null when using SKIA renderer",
       (WidgetTester tester) async {
         const alignment = Alignment.bottomLeft;
         when(strategyMock.isSkia).thenReturn(true);
@@ -218,7 +233,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the Alignment.center to the network image widget when the given one is null when not using the SKIA renderer",
+      "aligns to the network image to the center if the given alignment is null when not using the SKIA renderer",
       (WidgetTester tester) async {
         when(strategyMock.isSkia).thenReturn(false);
 
@@ -233,6 +248,7 @@ void main() {
         expect(image.alignment, equals(Alignment.center));
       },
     );
+
     testWidgets(
       "applies the given alignment to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {

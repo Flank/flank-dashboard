@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
-import 'package:metrics/base/presentation/widgets/svg_image/widgets/svg_image.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_neutral_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';

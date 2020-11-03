@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:metrics/base/presentation/widgets/svg_image/strategy/svg_image_strategy.dart';
+import 'package:metrics/base/presentation/widgets/strategy/svg_image_strategy.dart';
 
 /// A widget that displays an SVG image.
 ///

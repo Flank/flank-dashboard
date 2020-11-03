@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/svg_image/widgets/svg_image.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 
