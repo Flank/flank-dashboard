@@ -406,7 +406,7 @@ class GithubActionsClient {
     String url,
   ) async {
     try {
-      final response = await _client.get(url);
+      final response = await _client.get(url, headers: headers);
 
       if (response.statusCode == HttpStatus.ok) {
         return InteractionResult.success(result: response.bodyBytes);
