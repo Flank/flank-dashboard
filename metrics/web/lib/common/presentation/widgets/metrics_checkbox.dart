@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/svg_image.dart';
+import 'package:metrics/base/presentation/widgets/svg_image/widgets/svg_image.dart';
 
 /// A widget that displays a metrics styled checkbox.
 class MetricsCheckbox extends StatelessWidget {

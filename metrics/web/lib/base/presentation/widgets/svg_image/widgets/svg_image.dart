@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:metrics/util/renderer_helper.dart';
+import 'package:metrics/base/presentation/widgets/svg_image/strategy/svg_image_strategy.dart';
 
-/// A class that displays an SVG image according to the graphics engine.
+/// A widget that displays an SVG image.
+///
+/// Uses the [SvgPicture.network] if the application uses SKIA renderer,
+/// otherwise uses the [Image.network].
 class SvgImage extends StatelessWidget {
-  /// A default [RendererHelper] of the [SvgImage] class.
-  static const _defaultRendererHelper = RendererHelper();
+  /// A default [SvgImageStrategy] of the [SvgImage] class.
+  static const _defaultStrategy = SvgImageStrategy();
 
-  /// A path to this image to display.
+  /// A source of the image to display.
   final String src;
 
   /// A height of this image.
@@ -23,27 +26,34 @@ class SvgImage extends StatelessWidget {
   /// A [Color] used to combine with this image.
   final Color color;
 
-  /// A [RendererHelper] that helps to get the information about
+  /// An [AlignmentGeometry] to align this image within its parent widget.
+  final AlignmentGeometry alignment;
+
+  /// An [SvgImageStrategy] that helps to get the information about
   /// the current application's instance renderer.
-  final RendererHelper rendererHelper;
+  final SvgImageStrategy strategy;
 
   /// Creates a new instance of the [SvgImage].
   ///
+  /// If the given [alignment] is `null` the [Alignment.center] is used.
   /// If the given [fit] is `null` the [BoxFit.none] is used.
-  /// If the given [rendererHelper] is `null` the default helper is used.
+  /// If the given [strategy] is `null`, the instance of the [SvgImageStrategy]
+  /// is used.
   const SvgImage(
     this.src, {
     this.height,
     this.width,
     this.color,
+    AlignmentGeometry alignment,
     BoxFit fit,
-    RendererHelper rendererHelper,
-  })  : fit = fit ?? BoxFit.none,
-        rendererHelper = rendererHelper ?? _defaultRendererHelper;
+    SvgImageStrategy strategy,
+  })  : alignment = alignment ?? Alignment.center,
+        fit = fit ?? BoxFit.none,
+        strategy = strategy ?? _defaultStrategy;
 
   @override
   Widget build(BuildContext context) {
-    final _isSkia = rendererHelper.isSkia;
+    final _isSkia = strategy.isSkia;
 
     return _isSkia
         ? SvgPicture.network(
@@ -52,6 +62,7 @@ class SvgImage extends StatelessWidget {
             width: width,
             fit: fit,
             color: color,
+            alignment: alignment,
           )
         : Image.network(
             src,
@@ -59,6 +70,7 @@ class SvgImage extends StatelessWidget {
             width: width,
             fit: fit,
             color: color,
+            alignment: alignment,
           );
   }
 }

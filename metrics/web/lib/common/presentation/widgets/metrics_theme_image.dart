@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/base/presentation/widgets/svg_image.dart';
+import 'package:metrics/base/presentation/widgets/svg_image/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:provider/provider.dart';
 

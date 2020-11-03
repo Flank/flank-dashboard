@@ -32,7 +32,6 @@ class MetricsAppBar extends StatelessWidget {
                 lightAsset: 'icons/logo-metrics-appbar-light.svg',
                 width: 116.0,
                 height: 32.0,
-                fit: BoxFit.none,
               ),
             ),
           ),

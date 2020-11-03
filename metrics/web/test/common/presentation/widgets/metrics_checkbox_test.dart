@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/base/presentation/widgets/svg_image.dart';
+import 'package:metrics/base/presentation/widgets/svg_image/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/widgets/metrics_checkbox.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
