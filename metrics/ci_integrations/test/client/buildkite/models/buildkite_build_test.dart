@@ -81,7 +81,7 @@ void main() {
 
     test(".listFromJson() maps a list of buildkite builds", () {
       final anotherJson = <String, dynamic>{
-        'id': 2,
+        'id': "2",
         'number': 2,
         'blocked' : blocked,
         'web_url': 'url',

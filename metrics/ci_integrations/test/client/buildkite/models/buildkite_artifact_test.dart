@@ -65,10 +65,10 @@ void main() {
 
     test(".listFromJson() maps a list of build's artifacts", () {
       final anotherArtifactJson = <String, dynamic>{
-        'id': id,
-        'filename': filename,
-        'download_url': downloadUrl,
-        'mime_type': mimeType,
+        'id': "2",
+        'filename': "filename",
+        'download_url': "url",
+        'mime_type': "mimeType",
       };
       final anotherArtifact = BuildkiteArtifact.fromJson(anotherArtifactJson);
 

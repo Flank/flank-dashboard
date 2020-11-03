@@ -38,7 +38,7 @@ typedef PageFetchingCallback<T extends Page> = Future<InteractionResult<T>>
 /// A client for interaction with the Buildkite API.
 class BuildkiteClient {
   /// A base Buildkite API URL to use in HTTP requests for this client.
-  final String builkiteApiUrl;
+  final String buildkiteApiUrl;
 
   /// An organization name on Buildkite as used in URLs.
   final String organizationSlug;
@@ -54,16 +54,21 @@ class BuildkiteClient {
 
   /// Creates a new instance of the [BuildkiteClient];
   ///
-  /// The [builkiteApiUrl] defaults to the [BuildkiteConstants.buildkiteApiUrl].
+  /// The [buildkiteApiUrl] defaults to the [BuildkiteConstants.buildkiteApiUrl].
   ///
+  /// Throws an [ArgumentError] if [authorization] is `null`.
   /// Throws an [ArgumentError] if either [organizationSlug] or
-  /// [builkiteApiUrl] is `null` or empty.
+  /// [buildkiteApiUrl] is `null` or empty.
   BuildkiteClient({
     @required this.organizationSlug,
-    this.builkiteApiUrl = BuildkiteConstants.buildkiteApiUrl,
-    this.authorization,
+    @required this.authorization,
+    this.buildkiteApiUrl = BuildkiteConstants.buildkiteApiUrl,
   }) {
-    StringValidator.checkNotNullOrEmpty(builkiteApiUrl, name: 'builkiteApiUrl');
+    ArgumentError.checkNotNull(authorization, 'authorization');
+    StringValidator.checkNotNullOrEmpty(
+      buildkiteApiUrl,
+      name: 'buildkiteApiUrl',
+    );
     StringValidator.checkNotNullOrEmpty(
       organizationSlug,
       name: 'organizationSlug',
@@ -72,7 +77,7 @@ class BuildkiteClient {
 
   /// Returns a base path to the Buildkite API to use in HTTP requests.
   String get basePath {
-    return '$builkiteApiUrl/organizations/$organizationSlug/';
+    return '$buildkiteApiUrl/organizations/$organizationSlug/';
   }
 
   /// Creates basic [Map] with headers for HTTP requests.
