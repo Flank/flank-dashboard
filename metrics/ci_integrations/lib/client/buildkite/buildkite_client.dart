@@ -237,23 +237,25 @@ class BuildkiteClient {
   Future<InteractionResult<Uint8List>> downloadBuildkiteArtifact(
     String url,
   ) async {
+    if (url == null) return null;
+
     final request = Request('GET', Uri.parse(url))
       ..headers.addAll(headers)
       ..followRedirects = false;
 
     try {
-      final redirectionResponse = await _client.send(request);
-      final redirectionStatusCode = redirectionResponse.statusCode;
+      final redirect = await _client.send(request);
 
-      if (redirectionStatusCode != HttpStatus.found) {
+      if (redirect.statusCode != HttpStatus.found) {
         return InteractionResult.error(
           message: 'Failed to perform a redirection with code '
-              '$redirectionStatusCode.',
+              '${redirect.statusCode}.',
         );
       }
 
-      final response =
-          await _client.get(redirectionResponse.headers['location']);
+      final response = await _client.get(
+        redirect.headers[HttpHeaders.locationHeader],
+      );
 
       if (response.statusCode == HttpStatus.ok) {
         return InteractionResult.success(result: response.bodyBytes);
@@ -273,6 +275,7 @@ class BuildkiteClient {
     }
   }
 
+  /// Processes the given [currentPage] and delegates fetching to the given
   /// [pageFetchingCallback].
   ///
   /// If the given [currentPage] does not [Page.hasNextPage], returns an
