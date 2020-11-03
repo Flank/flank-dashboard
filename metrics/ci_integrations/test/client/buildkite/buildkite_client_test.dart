@@ -5,7 +5,7 @@ import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("group", () {
+  group("BuildkiteClient", () {
     const buildkiteApiUrl = "buildkiteApiUrl";
     const organizationSlug = "orgSlug";
     final authorization = BearerAuthorization("token");
