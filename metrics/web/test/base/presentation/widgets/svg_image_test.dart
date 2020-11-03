@@ -13,6 +13,10 @@ void main() {
     const testImageSrc = 'src';
     final strategyMock = _SvgImageStrategyMock();
 
+    setUp(() {
+      reset(strategyMock);
+    });
+
     testWidgets(
       "applies the default strategy if the given strategy is null",
       (WidgetTester tester) async {
