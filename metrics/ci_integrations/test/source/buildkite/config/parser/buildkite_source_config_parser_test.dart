@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 import '../../test_utils/test_data/buildkite_config_test_data.dart';
 
-// ignore_for_file: prefer_const_constructors,
+// ignore_for_file: prefer_const_constructors
 
 void main() {
   group("BuildkiteSourceConfigParser", () {

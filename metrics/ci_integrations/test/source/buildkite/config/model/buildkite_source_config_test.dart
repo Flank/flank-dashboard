@@ -3,9 +3,6 @@ import 'package:test/test.dart';
 
 import '../../test_utils/test_data/buildkite_config_test_data.dart';
 
-// ignore_for_file: avoid_redundant_argument_values
-// prefer_const_constructors,
-
 void main() {
   group("BuildkiteSourceConfig", () {
     const accessToken = BuildkiteConfigTestData.accessToken;

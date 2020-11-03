@@ -11,14 +11,14 @@ class BuildkiteSourceConfig extends Equatable implements SourceConfig {
   /// A Buildkite pipeline identifier.
   final String pipelineSlug;
 
-  /// An organization name on Buildkite as used in URLs.
+  /// A Buildkite organization identifier.
   final String organizationSlug;
 
   @override
   String get sourceProjectId => pipelineSlug;
 
   @override
-  List<Object> get props => [accessToken, organizationSlug, pipelineSlug];
+  List<Object> get props => [accessToken, pipelineSlug, organizationSlug];
 
   /// Creates a new instance of the [BuildkiteSourceConfig].
   ///
