@@ -16,7 +16,7 @@ class WorkflowRunJob extends Equatable {
   /// A name of this workflow run job.
   final String name;
 
-  /// A link to access this workflow run job in Github.
+  /// A link to access this workflow run job in Github web UI.
   final String url;
 
   /// A status of this workflow run job.
@@ -72,7 +72,7 @@ class WorkflowRunJob extends Equatable {
       id: json['id'] as int,
       runId: json['run_id'] as int,
       name: json['name'] as String,
-      url: json['url'] as String,
+      url: json['html_url'] as String,
       status: status,
       conclusion: conclusion,
       startedAt: startedAt,
@@ -99,7 +99,7 @@ class WorkflowRunJob extends Equatable {
       'id': id,
       'run_id': runId,
       'name': name,
-      'url': url,
+      'html_url': url,
       'status': statusMapper.unmap(status),
       'conclusion': conclusionMapper.unmap(conclusion),
       'started_at': startedAt?.toIso8601String(),

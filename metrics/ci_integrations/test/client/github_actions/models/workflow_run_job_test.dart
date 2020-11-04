@@ -20,7 +20,7 @@ void main() {
     final jobJson = {
       'id': id,
       'run_id': runId,
-      'url': url,
+      'html_url': url,
       'name': name,
       'status': status,
       'conclusion': conclusion,
