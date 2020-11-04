@@ -9,11 +9,11 @@ jobs:
     name: Get changed projects
     runs-on: ubuntu-latest
     outputs:
-      is_metrics_web_changed: ${{ steps.changed_projects.outputs.is_metrics_web_changed }}
-      is_ci_integrations_changed: ${{ steps.changed_projects.outputs.is_ci_integrations_changed }}
-      is_coverage_converter_changed: ${{ steps.changed_projects.outputs.is_coverage_converter_changed }}
-      is_firebase_changed: ${{ steps.changed_projects.outputs.is_firebase_changed }}
-      is_core_changed: ${{ steps.changed_projects.outputs.is_core_changed }}
+      web: ${{ steps.changed_projects.outputs.web }}
+      ci_integrations: ${{ steps.changed_projects.outputs.ci_integrations }}
+      coverage_converter: ${{ steps.changed_projects.outputs.coverage_converter }}
+      firebase: ${{ steps.changed_projects.outputs.firebase }}
+      core: ${{ steps.changed_projects.outputs.core }}
     steps:
       - name: Get changed files
         id: changed_files
@@ -30,35 +30,35 @@ jobs:
           FIREBASE="metrics/firebase"
           CORE="metrics/core"
           if [[ "$CHANGED" == *"$WEB"* ]]; then
-            echo "::set-output name=is_metrics_web_changed::true"
+            echo "::set-output name=web::true"
           else
-            echo "::set-output name=is_metrics_web_changed::false"
+            echo "::set-output name=web::false"
           fi
           if [[ "$CHANGED" == *"$INTEGRATIONS"* ]]; then
-            echo "::set-output name=is_ci_integrations_changed::true"
+            echo "::set-output name=ci_integrations::true"
           else
-            echo "::set-output name=is_ci_integrations_changed::false"
+            echo "::set-output name=ci_integrations::false"
           fi
           if [[ "$CHANGED" == *"$COVERAGE"* ]]; then
-            echo "::set-output name=is_coverage_converter_changed::true"
+            echo "::set-output name=coverage_converter::true"
           else
-            echo "::set-output name=is_coverage_converter_changed::false"
+            echo "::set-output name=coverage_converter::false"
           fi
           if [[ "$CHANGED" == *"$FIREBASE"* ]]; then
-            echo "::set-output name=is_firebase_changed::true"
+            echo "::set-output name=firebase::true"
           else
-            echo "::set-output name=is_firebase_changed::false"
+            echo "::set-output name=firebase::false"
           fi
           if [[ "$CHANGED" == *"$CORE"* ]]; then
-            echo "::set-output name=is_core_changed::true"
+            echo "::set-output name=core::true"
           else
-            echo "::set-output name=is_core_changed::false"
+            echo "::set-output name=core::false"
           fi
   metrics-web-actions:
     name: Metrics Web Actions
     runs-on: macOS-latest
     needs: [ changed_projects ]
-    if: needs.changed_projects.outputs.is_metrics_web_changed == 'true' || needs.changed_projects.outputs.is_core_changed == 'true'
+    if: needs.changed_projects.outputs.web == 'true' || needs.changed_projects.outputs.core == 'true'
     timeout-minutes: 60
     env:
       WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
@@ -108,7 +108,7 @@ jobs:
     runs-on: macOS-latest
     timeout-minutes: 60
     needs: [ changed_projects ]
-    if: needs.changed_projects.outputs.is_firebase_changed == 'true'
+    if: needs.changed_projects.outputs.firebase == 'true'
     env:
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       PROJECT_PATH: metrics/firebase/
@@ -136,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     needs: [ changed_projects ]
-    if: needs.changed_projects.outputs.is_coverage_converter_changed == 'true' || needs.changed_projects.outputs.is_core_changed == 'true'
+    if: needs.changed_projects.outputs.coverage_converter == 'true' || needs.changed_projects.outputs.core == 'true'
 
     steps:
       - name: Checkout
@@ -167,7 +167,7 @@ jobs:
     runs-on: macOS-latest
     timeout-minutes: 60
     needs: [ changed_projects ]
-    if: needs.changed_projects.outputs.is_ci_integrations_changed == 'true' || needs.changed_projects.outputs.is_core_changed == 'true'
+    if: needs.changed_projects.outputs.ci_integrations == 'true' || needs.changed_projects.outputs.core == 'true'
 
     steps:
       - name: Checkout
