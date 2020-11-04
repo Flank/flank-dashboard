@@ -70,7 +70,7 @@ jobs:
     name: Metrics Web Actions
     runs-on: macOS-latest
     needs: [ check_changed ]
-    if: needs.check_changed.outputs.is_metrics_web_changed == true || needs.check_changed.outputs.is_core_changed == true
+    if: needs.check_changed.outputs.is_metrics_web_changed == 'true' || needs.check_changed.outputs.is_core_changed == 'true'
     timeout-minutes: 60
     env:
       WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
@@ -120,7 +120,7 @@ jobs:
     runs-on: macOS-latest
     timeout-minutes: 60
     needs: [ check_changed ]
-    if: needs.check_changed.outputs.is_firebase_changed == true
+    if: needs.check_changed.outputs.is_firebase_changed == 'true'
     env:
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       PROJECT_PATH: metrics/firebase/
@@ -148,7 +148,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     needs: [ check_changed ]
-    if: needs.check_changed.outputs.is_coverage_converter_changed == true || needs.check_changed.outputs.is_core_changed == true
+    if: needs.check_changed.outputs.is_coverage_converter_changed == 'true' || needs.check_changed.outputs.is_core_changed == 'true'
 
     steps:
       - name: Checkout
@@ -179,7 +179,7 @@ jobs:
     runs-on: macOS-latest
     timeout-minutes: 60
     needs: [ check_changed ]
-    if: needs.check_changed.outputs.is_ci_integrations_changed == true || ${{ needs.check_changed.outputs.is_core_changed }} == true
+    if: needs.check_changed.outputs.is_ci_integrations_changed == 'true' || needs.check_changed.outputs.is_core_changed == 'true'
 
     steps:
       - name: Checkout
