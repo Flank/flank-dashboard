@@ -16,7 +16,7 @@ void main() {
     final runJson = <String, dynamic>{
       'id': id,
       'run_number': number,
-      'url': url,
+      'html_url': url,
       'status': status,
       'created_at': createdAt.toIso8601String(),
     };
