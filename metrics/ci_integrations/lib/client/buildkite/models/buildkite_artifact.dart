@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 /// A class that represents an artifact of a Buildkite build.
 class BuildkiteArtifact extends Equatable {
   /// A unique identifier of this artifact.
-  final int id;
+  final String id;
 
   /// A name of this artifact.
   final String filename;
@@ -33,7 +33,7 @@ class BuildkiteArtifact extends Equatable {
     if (json == null) return null;
 
     return BuildkiteArtifact(
-      id: json['id'] as int,
+      id: json['id'] as String,
       filename: json['filename'] as String,
       downloadUrl: json['download_url'] as String,
       mimeType: json['mime_type'] as String,

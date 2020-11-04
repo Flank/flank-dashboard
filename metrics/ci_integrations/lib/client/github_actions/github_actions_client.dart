@@ -502,7 +502,7 @@ class GithubActionsClient {
     return nextPageUrl;
   }
 
-  /// Returns the valid page number based on the given [pageNumber]
+  /// Returns a valid page number based on the given [pageNumber].
   ///
   /// If the given [pageNumber] is `null` or less than zero, returns `1`,
   /// otherwise, returns [pageNumber].

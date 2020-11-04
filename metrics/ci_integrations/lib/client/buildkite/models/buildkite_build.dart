@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 /// A class that represents a single Buildkite build.
 class BuildkiteBuild extends Equatable {
   /// A unique identifier of this build.
-  final int id;
+  final String id;
 
   /// An order number of this build in the pipeline.
   final int number;
@@ -59,7 +59,7 @@ class BuildkiteBuild extends Equatable {
         : DateTime.parse(json['finished_at'] as String);
 
     return BuildkiteBuild(
-      id: json['id'] as int,
+      id: json['id'] as String,
       number: json['number'] as int,
       blocked: json['blocked'] as bool,
       webUrl: json['web_url'] as String,

@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("BuildkiteBuild", () {
-    const id = 1;
+    const id = "1";
     const number = 1;
     const blocked = false;
     const state = BuildkiteBuildStateMapper.passed;
@@ -81,7 +81,7 @@ void main() {
 
     test(".listFromJson() maps a list of buildkite builds", () {
       final anotherJson = <String, dynamic>{
-        'id': 2,
+        'id': "2",
         'number': 2,
         'blocked' : blocked,
         'web_url': 'url',
