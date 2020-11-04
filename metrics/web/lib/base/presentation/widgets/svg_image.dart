@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:metrics/base/presentation/widgets/strategy/svg_image_strategy.dart';
+import 'package:metrics/util/web_platform.dart';
 
 /// A widget that displays an SVG image.
 ///
 /// Uses the [SvgPicture.network] if the application uses SKIA renderer,
 /// otherwise uses the [Image.network].
 class SvgImage extends StatelessWidget {
-  /// A default [SvgImageStrategy] of the [SvgImage] class.
-  static const _defaultStrategy = SvgImageStrategy();
+  /// A default [WebPlatform] of the [SvgImage] class.
+  static const _defaultWebPlatform = WebPlatform();
 
   /// A source of the image to display.
   final String src;
@@ -29,15 +29,14 @@ class SvgImage extends StatelessWidget {
   /// An [AlignmentGeometry] to align this image within its parent widget.
   final AlignmentGeometry alignment;
 
-  /// An [SvgImageStrategy] that helps to get the information about
-  /// the current application's instance renderer.
-  final SvgImageStrategy strategy;
+  /// A [WebPlatform] of the current application's instance.
+  final WebPlatform webPlatform;
 
   /// Creates a new instance of the [SvgImage].
   ///
   /// If the given [alignment] is `null` the [Alignment.center] is used.
   /// If the given [fit] is `null` the [BoxFit.none] is used.
-  /// If the given [strategy] is `null`, the instance of the [SvgImageStrategy]
+  /// If the given [webPlatform] is `null`, the instance of the [WebPlatform]
   /// is used.
   const SvgImage(
     this.src, {
@@ -46,14 +45,14 @@ class SvgImage extends StatelessWidget {
     this.color,
     AlignmentGeometry alignment,
     BoxFit fit,
-    SvgImageStrategy strategy,
+    WebPlatform webPlatform,
   })  : alignment = alignment ?? Alignment.center,
         fit = fit ?? BoxFit.none,
-        strategy = strategy ?? _defaultStrategy;
+        webPlatform = webPlatform ?? _defaultWebPlatform;
 
   @override
   Widget build(BuildContext context) {
-    final _isSkia = strategy.isSkia;
+    final _isSkia = webPlatform.isSkia;
 
     return _isSkia
         ? SvgPicture.network(
