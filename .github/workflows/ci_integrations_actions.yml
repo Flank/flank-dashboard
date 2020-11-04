@@ -44,12 +44,12 @@ jobs:
         working-directory: metrics/ci_integrations/
 
       - name: Convert coverage report
-        run: ./coverage_coverter lcov -i coverage/lcov.info -o coverage_report.json
+        run: ./coverage_coverter lcov -i coverage/lcov.info -o coverage-summary.json
         working-directory: metrics/ci_integrations/
 
       - name: Export coverage report
         uses: actions/upload-artifact@v2
         with:
-          name: coverage_report.json
-          path: metrics/ci_integrations/coverage_report.json
+          name: coverage_report
+          path: metrics/ci_integrations/coverage-summary.json
           if-no-files-found: error
