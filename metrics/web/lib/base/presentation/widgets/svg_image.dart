@@ -8,7 +8,7 @@ import 'package:metrics/util/web_platform.dart';
 /// otherwise uses the [Image.network].
 class SvgImage extends StatelessWidget {
   /// A default [WebPlatform] of the [SvgImage] class.
-  static const _defaultWebPlatform = WebPlatform();
+  static const _defaultPlatform = WebPlatform();
 
   /// A source of the image to display.
   final String src;
@@ -29,14 +29,14 @@ class SvgImage extends StatelessWidget {
   /// An [AlignmentGeometry] to align this image within its parent widget.
   final AlignmentGeometry alignment;
 
-  /// A [WebPlatform] of the current application's instance.
-  final WebPlatform webPlatform;
+  /// A [WebPlatform] used to detect if the current application uses SKIA.
+  final WebPlatform platform;
 
   /// Creates a new instance of the [SvgImage].
   ///
   /// If the given [alignment] is `null` the [Alignment.center] is used.
   /// If the given [fit] is `null` the [BoxFit.none] is used.
-  /// If the given [webPlatform] is `null`, the instance of the [WebPlatform]
+  /// If the given [platform] is `null`, the instance of the [WebPlatform]
   /// is used.
   const SvgImage(
     this.src, {
@@ -45,14 +45,14 @@ class SvgImage extends StatelessWidget {
     this.color,
     AlignmentGeometry alignment,
     BoxFit fit,
-    WebPlatform webPlatform,
+    WebPlatform platform,
   })  : alignment = alignment ?? Alignment.center,
         fit = fit ?? BoxFit.none,
-        webPlatform = webPlatform ?? _defaultWebPlatform;
+        platform = platform ?? _defaultPlatform;
 
   @override
   Widget build(BuildContext context) {
-    final _isSkia = webPlatform.isSkia;
+    final _isSkia = platform.isSkia;
 
     return _isSkia
         ? SvgPicture.network(

@@ -11,33 +11,33 @@ import 'package:network_image_mock/network_image_mock.dart';
 void main() {
   group("SvgImage", () {
     const testImageSrc = 'src';
-    final webPlatformMock = _WebPlatformMock();
+    final platformMock = _WebPlatformMock();
 
-    setUp(() {
-      reset(webPlatformMock);
+    tearDown(() {
+      reset(platformMock);
     });
 
     testWidgets(
-      "applies the default strategy if the given strategy is null",
+      "applies the default web platform if the given one is null",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _SvgImageTestbed(webPlatform: null));
+          return tester.pumpWidget(const _SvgImageTestbed(platform: null));
         });
 
         final svgImage = tester.widget<SvgImage>(find.byType(SvgImage));
 
-        expect(svgImage.webPlatform, isNotNull);
+        expect(svgImage.platform, isNotNull);
       },
     );
 
     testWidgets(
       "displays the svg picture widget if the application uses the SKIA renderer",
       (WidgetTester tester) async {
-        when(webPlatformMock.isSkia).thenReturn(true);
+        when(platformMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(webPlatform: webPlatformMock),
+            _SvgImageTestbed(platform: platformMock),
           );
         });
 
@@ -46,28 +46,28 @@ void main() {
     );
 
     testWidgets(
-      "uses the given strategy to detect whether the SKIA renderer is used",
+      "uses the given web platform to detect whether the SKIA renderer is used",
       (WidgetTester tester) async {
-        when(webPlatformMock.isSkia).thenReturn(true);
+        when(platformMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(webPlatform: webPlatformMock),
+            _SvgImageTestbed(platform: platformMock),
           );
         });
 
-        verify(webPlatformMock.isSkia).called(1);
+        verify(platformMock.isSkia).called(1);
       },
     );
 
     testWidgets(
       "applies the given src to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
-        when(webPlatformMock.isSkia).thenReturn(true);
+        when(platformMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(src: testImageSrc, webPlatform: webPlatformMock),
+            _SvgImageTestbed(src: testImageSrc, platform: platformMock),
           );
         });
 
@@ -82,14 +82,11 @@ void main() {
       "applies the given alignment to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         const alignment = Alignment.bottomLeft;
-        when(webPlatformMock.isSkia).thenReturn(true);
+        when(platformMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(
-              alignment: alignment,
-              webPlatform: webPlatformMock,
-            ),
+            _SvgImageTestbed(alignment: alignment, platform: platformMock),
           );
         });
 
@@ -102,32 +99,11 @@ void main() {
     testWidgets(
       "aligns the svg picture to the center if the given alignment is null when using SKIA renderer",
       (WidgetTester tester) async {
-        const alignment = Alignment.bottomLeft;
-        when(webPlatformMock.isSkia).thenReturn(true);
+        when(platformMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(
-              alignment: alignment,
-              webPlatform: webPlatformMock,
-            ),
-          );
-        });
-
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
-
-        expect(svgPicture.alignment, equals(alignment));
-      },
-    );
-
-    testWidgets(
-      "applies the Alignment.center to the svg picture widget if the given alignment is null when using SKIA renderer",
-      (WidgetTester tester) async {
-        when(webPlatformMock.isSkia).thenReturn(true);
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _SvgImageTestbed(webPlatform: webPlatformMock, alignment: null),
+            _SvgImageTestbed(alignment: null, platform: platformMock),
           );
         });
 
@@ -138,13 +114,13 @@ void main() {
     );
 
     testWidgets(
-      "applies the Boxfit.none to the svg picture widget if the given fit is null when using SKIA renderer",
+      "applies the BoxFit.none to the svg picture widget if the given fit is null when using SKIA renderer",
       (WidgetTester tester) async {
-        when(webPlatformMock.isSkia).thenReturn(true);
+        when(platformMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(webPlatform: webPlatformMock, fit: null),
+            _SvgImageTestbed(platform: platformMock, fit: null),
           );
         });
 
@@ -155,14 +131,32 @@ void main() {
     );
 
     testWidgets(
-      "applies the given width to the svg picture widget when using SKIA renderer",
+      "applies the given fit to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
-        const width = 10.0;
-        when(webPlatformMock.isSkia).thenReturn(true);
+        const fit = BoxFit.contain;
+        when(platformMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(webPlatform: webPlatformMock, width: width),
+            _SvgImageTestbed(platform: platformMock, fit: fit),
+          );
+        });
+
+        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+
+        expect(svgPicture.fit, equals(fit));
+      },
+    );
+
+    testWidgets(
+      "applies the given width to the svg picture widget when using SKIA renderer",
+      (WidgetTester tester) async {
+        const width = 10.0;
+        when(platformMock.isSkia).thenReturn(true);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _SvgImageTestbed(platform: platformMock, width: width),
           );
         });
 
@@ -176,11 +170,11 @@ void main() {
       "applies the given height to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         const height = 10.0;
-        when(webPlatformMock.isSkia).thenReturn(true);
+        when(platformMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(webPlatform: webPlatformMock, height: height),
+            _SvgImageTestbed(platform: platformMock, height: height),
           );
         });
 
@@ -195,11 +189,11 @@ void main() {
       (WidgetTester tester) async {
         const color = Colors.red;
         const expectedColorFilter = ColorFilter.mode(color, BlendMode.srcIn);
-        when(webPlatformMock.isSkia).thenReturn(true);
+        when(platformMock.isSkia).thenReturn(true);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(webPlatform: webPlatformMock, color: color),
+            _SvgImageTestbed(platform: platformMock, color: color),
           );
         });
 
@@ -212,11 +206,11 @@ void main() {
     testWidgets(
       "displays the network image widget if the application doesn't use the SKIA renderer",
       (WidgetTester tester) async {
-        when(webPlatformMock.isSkia).thenReturn(false);
+        when(platformMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(webPlatform: webPlatformMock),
+            _SvgImageTestbed(platform: platformMock),
           );
         });
 
@@ -227,13 +221,13 @@ void main() {
     testWidgets(
       "applies the given src to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
-        when(webPlatformMock.isSkia).thenReturn(false);
+        when(platformMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _SvgImageTestbed(
               src: testImageSrc,
-              webPlatform: webPlatformMock,
+              platform: platformMock,
             ),
           );
         });
@@ -248,11 +242,11 @@ void main() {
     testWidgets(
       "aligns to the network image to the center if the given alignment is null when not using the SKIA renderer",
       (WidgetTester tester) async {
-        when(webPlatformMock.isSkia).thenReturn(false);
+        when(platformMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(alignment: null, webPlatform: webPlatformMock),
+            _SvgImageTestbed(alignment: null, platform: platformMock),
           );
         });
 
@@ -266,13 +260,13 @@ void main() {
       "applies the given alignment to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const alignment = Alignment.bottomLeft;
-        when(webPlatformMock.isSkia).thenReturn(false);
+        when(platformMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _SvgImageTestbed(
               alignment: alignment,
-              webPlatform: webPlatformMock,
+              platform: platformMock,
             ),
           );
         });
@@ -287,11 +281,11 @@ void main() {
       "applies the given fit to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const fit = BoxFit.contain;
-        when(webPlatformMock.isSkia).thenReturn(false);
+        when(platformMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(fit: fit, webPlatform: webPlatformMock),
+            _SvgImageTestbed(fit: fit, platform: platformMock),
           );
         });
 
@@ -304,11 +298,11 @@ void main() {
     testWidgets(
       "applies the BoxFit.none to the network image widget if the given fit is null when not using the SKIA renderer",
       (WidgetTester tester) async {
-        when(webPlatformMock.isSkia).thenReturn(false);
+        when(platformMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(fit: null, webPlatform: webPlatformMock),
+            _SvgImageTestbed(fit: null, platform: platformMock),
           );
         });
 
@@ -322,11 +316,11 @@ void main() {
       "applies the given height to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const height = 20.0;
-        when(webPlatformMock.isSkia).thenReturn(false);
+        when(platformMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(height: height, webPlatform: webPlatformMock),
+            _SvgImageTestbed(height: height, platform: platformMock),
           );
         });
 
@@ -340,11 +334,11 @@ void main() {
       "applies the given width to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const width = 20.0;
-        when(webPlatformMock.isSkia).thenReturn(false);
+        when(platformMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(width: width, webPlatform: webPlatformMock),
+            _SvgImageTestbed(width: width, platform: platformMock),
           );
         });
 
@@ -358,12 +352,12 @@ void main() {
       "applies the given color to the network image widget when not using the SKIA renderer",
       (WidgetTester tester) async {
         const color = Colors.red;
-        when(webPlatformMock.isSkia).thenReturn(false);
+        when(platformMock.isSkia).thenReturn(false);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _SvgImageTestbed(
-              webPlatform: webPlatformMock,
+              platform: platformMock,
               color: color,
             ),
           );
@@ -401,7 +395,7 @@ class _SvgImageTestbed extends StatelessWidget {
   final AlignmentGeometry alignment;
 
   /// A [WebPlatform] of the [SvgImage].
-  final WebPlatform webPlatform;
+  final WebPlatform platform;
 
   /// Creates a new instance of the svg image testbed.
   ///
@@ -413,7 +407,7 @@ class _SvgImageTestbed extends StatelessWidget {
     this.width,
     this.color,
     this.alignment,
-    this.webPlatform,
+    this.platform,
   });
 
   @override
@@ -427,7 +421,7 @@ class _SvgImageTestbed extends StatelessWidget {
           width: width,
           color: color,
           alignment: alignment,
-          webPlatform: webPlatform,
+          platform: platform,
         ),
       ),
     );
