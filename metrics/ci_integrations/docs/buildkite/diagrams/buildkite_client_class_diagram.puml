@@ -86,11 +86,11 @@ package buildkite {
         + authorization: AuthorizationBase
 
         + getHeaders(): Map<String, String>
-        + fetchBuildkiteBuilds(String pipelineSlug, BuildkiteBuildState state, DateTime finishedFrom, int perPage, int page): Future<InteractionResult<BuildkiteBuildsPage>>
-        + fetchBuildkiteBuildsNext(BuildkiteBuildsPage currentPage): Future<InteractionResult<BuildkiteBuildsPage>>
-        + fetchBuildkiteArtifacts(String pipelineSlug, int buildNumber, int perPage, int page): Future<InteractionResult<BuildkiteArtifactsPage>
-        + fetchBuildkiteArtifactsNext(BuildkiteArtifactsPage currentPage): Future<InteractionResult<BuildkiteArtifactsPage>
-        + downloadBuildkiteArtifact(String url): Future<InteractionResult<UInt8List>>
+        + fetchBuilds(String pipelineSlug, BuildkiteBuildState state, DateTime finishedFrom, int perPage, int page): Future<InteractionResult<BuildkiteBuildsPage>>
+        + fetchBuildsNext(BuildkiteBuildsPage currentPage): Future<InteractionResult<BuildkiteBuildsPage>>
+        + fetchArtifacts(String pipelineSlug, int buildNumber, int perPage, int page): Future<InteractionResult<BuildkiteArtifactsPage>
+        + fetchArtifactsNext(BuildkiteArtifactsPage currentPage): Future<InteractionResult<BuildkiteArtifactsPage>
+        + downloadArtifact(String url): Future<InteractionResult<UInt8List>>
         + close(): void
     }
 }

@@ -108,7 +108,7 @@ class BuildkiteClient {
   /// A [page] is used for pagination and defines a page of builds to fetch.
   /// If the [page] is `null`, non-positive or omitted,
   /// the first page is fetched.
-  Future<InteractionResult<BuildkiteBuildsPage>> fetchBuildkiteBuilds(
+  Future<InteractionResult<BuildkiteBuildsPage>> fetchBuilds(
     String pipelineSlug, {
     BuildkiteBuildState state,
     int perPage = 10,
@@ -129,19 +129,19 @@ class BuildkiteClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchBuildkiteBuildsPage(url, _page, perPage);
+    return _fetchBuildsPage(url, _page, perPage);
   }
 
   /// Fetches the next [BuildkiteBuildsPage] of the given [currentPage].
-  FutureOr<InteractionResult<BuildkiteBuildsPage>> fetchBuildkiteBuildsNext(
+  FutureOr<InteractionResult<BuildkiteBuildsPage>> fetchBuildsNext(
     BuildkiteBuildsPage currentPage,
   ) {
-    return _processPage(currentPage, _fetchBuildkiteBuildsPage);
+    return _processPage(currentPage, _fetchBuildsPage);
   }
 
   /// Fetches a [BuildkiteBuildsPage] by the given parameters.
   /// A [PageFetchingCallback] for the [BuildkiteBuildsPage]s.
-  Future<InteractionResult<BuildkiteBuildsPage>> _fetchBuildkiteBuildsPage(
+  Future<InteractionResult<BuildkiteBuildsPage>> _fetchBuildsPage(
     String url,
     int page,
     int perPage,
@@ -179,7 +179,7 @@ class BuildkiteClient {
   /// A [page] is used for pagination and defines a page of artifacts to fetch.
   /// If the [page] is `null`, non-positive, or omitted,
   /// the first page is fetched.
-  Future<InteractionResult<BuildkiteArtifactsPage>> fetchBuildkiteArtifacts(
+  Future<InteractionResult<BuildkiteArtifactsPage>> fetchArtifacts(
     String pipelineSlug,
     int buildNumber, {
     int perPage = 10,
@@ -198,19 +198,23 @@ class BuildkiteClient {
       queryParameters: queryParameters,
     );
 
-    return _fetchBuildkiteArtifactsPage(url, _page, perPage);
+    return _fetchArtifactsPage(url, _page, perPage);
   }
 
   /// Fetches the next [BuildkiteArtifactsPage] of the given [currentPage].
-  FutureOr<InteractionResult<BuildkiteArtifactsPage>>
-      fetchBuildkiteArtifactsNext(BuildkiteArtifactsPage currentPage) {
-    return _processPage(currentPage, _fetchBuildkiteArtifactsPage);
+  FutureOr<InteractionResult<BuildkiteArtifactsPage>> fetchArtifactsNext(
+    BuildkiteArtifactsPage currentPage,
+  ) {
+    return _processPage(currentPage, _fetchArtifactsPage);
   }
 
   /// Fetches [BuildkiteArtifactsPage] by the given [url].
   /// A [PageFetchingCallback] for the [BuildkiteArtifactsPage]s.
-  Future<InteractionResult<BuildkiteArtifactsPage>>
-      _fetchBuildkiteArtifactsPage(String url, int page, int perPage) {
+  Future<InteractionResult<BuildkiteArtifactsPage>> _fetchArtifactsPage(
+    String url,
+    int page,
+    int perPage,
+  ) {
     return _handleResponse<BuildkiteArtifactsPage>(
       _client.get(url, headers: headers),
       (json, Map<String, String> headers) {
@@ -236,9 +240,7 @@ class BuildkiteClient {
   /// Downloads a build artifact by the given download [url].
   ///
   /// The resulting [Uint8List] contains bytes of a desired artifact.
-  Future<InteractionResult<Uint8List>> downloadBuildkiteArtifact(
-    String url,
-  ) async {
+  Future<InteractionResult<Uint8List>> downloadArtifact(String url) async {
     if (url == null) return null;
 
     final request = Request('GET', Uri.parse(url))
