@@ -8,14 +8,13 @@ class BuildkiteSourceConfig extends Equatable implements SourceConfig {
   /// A Buildkite access token.
   final String accessToken;
 
-  /// A Buildkite pipeline identifier.
+  /// A unique slug (identifier) of the Buildkite pipeline.
   final String pipelineSlug;
 
-  /// A Buildkite organization identifier.
+  /// A unique slug (identifier) of the Buildkite organization.
   final String organizationSlug;
 
-  /// A name of an artifact that contains a coverage data
-  /// for a Buildkite build.
+  /// A name of an artifact that contains a coverage data for a Buildkite build.
   final String coverageArtifactName;
 
   @override
