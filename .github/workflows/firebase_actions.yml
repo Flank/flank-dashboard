@@ -1,14 +1,10 @@
 name: Firebase Actions
 
 on:
-  pull_request:
-    paths:
-      - metrics/firebase/**
   push:
     branches: master
     paths:
       - metrics/firebase/**
-
 
 jobs:
   metrics-actions:
@@ -38,6 +34,5 @@ jobs:
         working-directory: metrics/firebase/
 
       - name: Deploy Firestore security rules
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: firebase use default && firebase deploy --only firestore:rules
         working-directory: metrics/firebase/
