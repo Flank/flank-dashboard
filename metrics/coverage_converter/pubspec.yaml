@@ -8,7 +8,7 @@ dependencies:
   args: ^1.6.0
   meta: ^1.2.3
   equatable: ^1.2.5
-  lcov: ^6.0.0
+  lcov: ^5.3.0
   metrics_core:
     path: ../core
 
