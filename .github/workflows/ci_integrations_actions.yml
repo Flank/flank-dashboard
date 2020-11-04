@@ -5,6 +5,7 @@ on:
     branches: master
     paths:
       - metrics/ci_integrations/**
+      - metrics/core/**
 
 jobs:
   metrics-actions:

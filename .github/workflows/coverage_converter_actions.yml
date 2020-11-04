@@ -4,7 +4,8 @@ on:
   push:
     branches: master
     paths:
-      - 'metrics/coverage_converter/**'
+      - metrics/coverage_converter/**
+      - metrics/core/**
 
 jobs:
   macos-actions:

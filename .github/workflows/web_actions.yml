@@ -5,6 +5,7 @@ on:
     branches: master
     paths:
       - metrics/web/**
+      - metrics/core/**
 
 jobs:
   metrics-actions:
