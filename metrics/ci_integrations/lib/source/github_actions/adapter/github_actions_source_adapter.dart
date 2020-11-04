@@ -255,12 +255,13 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     return null;
   }
 
-  /// Maps the file with the given [coverageArtifactName] from [artifact] to the coverage [Percent] value.
+  /// Maps the [artifact] with the [artifactName] to the coverage
+  /// [Percent] value.
   ///
   /// Returns `null` if the coverage file is not found.
   Future<Percent> _mapArtifactToCoverage(
     WorkflowRunArtifact artifact,
-    String coverageArtifactName,
+    String artifactName,
   ) async {
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
@@ -271,7 +272,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
     final content = archiveHelper.getFileContent(
       artifactArchive,
-      coverageArtifactName,
+      artifactName,
     );
 
     if (content == null) return null;
