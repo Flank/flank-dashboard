@@ -238,7 +238,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
       );
 
       if (coverageArtifact != null) {
-        return _mapArtifactToCoverage(coverageArtifact, coverageArtifactName);
+        return _mapArtifactToCoverage(coverageArtifact);
       }
 
       hasNext = page.hasNextPage;
@@ -255,14 +255,10 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     return null;
   }
 
-  /// Maps the [artifact] with the [artifactName] to the coverage
-  /// [Percent] value.
+  /// Maps the given [artifact] to the coverage [Percent] value.
   ///
   /// Returns `null` if the coverage file is not found.
-  Future<Percent> _mapArtifactToCoverage(
-    WorkflowRunArtifact artifact,
-    String artifactName,
-  ) async {
+  Future<Percent> _mapArtifactToCoverage(WorkflowRunArtifact artifact) async {
     final interaction =
         await githubActionsClient.downloadRunArtifactZip(artifact.downloadUrl);
     _throwIfInteractionUnsuccessful(interaction);
@@ -272,7 +268,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
 
     final content = archiveHelper.getFileContent(
       artifactArchive,
-      artifactName,
+      'coverage-summary.json',
     );
 
     if (content == null) return null;
