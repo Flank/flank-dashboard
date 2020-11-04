@@ -6,6 +6,8 @@ import 'package:metrics/util/web_platform.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../test_utils/finder_util.dart';
+
 // ignore_for_file: avoid_redundant_argument_values
 
 void main() {
@@ -18,7 +20,7 @@ void main() {
     });
 
     testWidgets(
-      "applies the default web platform if the given one is null",
+      "applies the default platform if the given one is null",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _SvgImageTestbed(platform: null));
@@ -27,6 +29,21 @@ void main() {
         final svgImage = tester.widget<SvgImage>(find.byType(SvgImage));
 
         expect(svgImage.platform, isNotNull);
+      },
+    );
+
+    testWidgets(
+      "uses the given platform to detect whether the SKIA renderer is used",
+      (WidgetTester tester) async {
+        when(platformMock.isSkia).thenReturn(true);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _SvgImageTestbed(platform: platformMock),
+          );
+        });
+
+        verify(platformMock.isSkia).called(1);
       },
     );
 
@@ -46,21 +63,6 @@ void main() {
     );
 
     testWidgets(
-      "uses the given web platform to detect whether the SKIA renderer is used",
-      (WidgetTester tester) async {
-        when(platformMock.isSkia).thenReturn(true);
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _SvgImageTestbed(platform: platformMock),
-          );
-        });
-
-        verify(platformMock.isSkia).called(1);
-      },
-    );
-
-    testWidgets(
       "applies the given src to the svg picture widget when using SKIA renderer",
       (WidgetTester tester) async {
         when(platformMock.isSkia).thenReturn(true);
@@ -71,7 +73,7 @@ void main() {
           );
         });
 
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final svgPicture = FinderUtil.findSvgPicture(tester);
         final picture = svgPicture.pictureProvider as NetworkPicture;
 
         expect(picture.url, equals(testImageSrc));
@@ -90,7 +92,7 @@ void main() {
           );
         });
 
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final svgPicture = FinderUtil.findSvgPicture(tester);
 
         expect(svgPicture.alignment, equals(alignment));
       },
@@ -107,7 +109,7 @@ void main() {
           );
         });
 
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final svgPicture = FinderUtil.findSvgPicture(tester);
 
         expect(svgPicture.alignment, equals(Alignment.center));
       },
@@ -124,7 +126,7 @@ void main() {
           );
         });
 
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final svgPicture = FinderUtil.findSvgPicture(tester);
 
         expect(svgPicture.fit, equals(BoxFit.none));
       },
@@ -142,7 +144,7 @@ void main() {
           );
         });
 
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final svgPicture = FinderUtil.findSvgPicture(tester);
 
         expect(svgPicture.fit, equals(fit));
       },
@@ -160,7 +162,7 @@ void main() {
           );
         });
 
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final svgPicture = FinderUtil.findSvgPicture(tester);
 
         expect(svgPicture.width, equals(width));
       },
@@ -178,7 +180,7 @@ void main() {
           );
         });
 
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final svgPicture = FinderUtil.findSvgPicture(tester);
 
         expect(svgPicture.height, equals(height));
       },
@@ -197,7 +199,7 @@ void main() {
           );
         });
 
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final svgPicture = FinderUtil.findSvgPicture(tester);
 
         expect(svgPicture.colorFilter, equals(expectedColorFilter));
       },
@@ -232,7 +234,7 @@ void main() {
           );
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findImage(tester);
         final networkImage = image.image as NetworkImage;
 
         expect(networkImage.url, equals(testImageSrc));
@@ -250,7 +252,7 @@ void main() {
           );
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findImage(tester);
 
         expect(image.alignment, equals(Alignment.center));
       },
@@ -271,7 +273,7 @@ void main() {
           );
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findImage(tester);
 
         expect(image.alignment, equals(alignment));
       },
@@ -289,7 +291,7 @@ void main() {
           );
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findImage(tester);
 
         expect(image.fit, equals(fit));
       },
@@ -306,7 +308,7 @@ void main() {
           );
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findImage(tester);
 
         expect(image.fit, equals(BoxFit.none));
       },
@@ -324,7 +326,7 @@ void main() {
           );
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findImage(tester);
 
         expect(image.height, equals(height));
       },
@@ -342,7 +344,7 @@ void main() {
           );
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findImage(tester);
 
         expect(image.width, equals(width));
       },
@@ -363,7 +365,7 @@ void main() {
           );
         });
 
-        final image = tester.widget<Image>(find.byType(Image));
+        final image = FinderUtil.findImage(tester);
 
         expect(image.color, equals(color));
       },

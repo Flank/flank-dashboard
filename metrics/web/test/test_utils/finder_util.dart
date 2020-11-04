@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
@@ -19,6 +20,16 @@ class FinderUtil {
     );
 
     return containerWidget.decoration as BoxDecoration;
+  }
+
+  /// Finds the [SvgPicture] in the widget tree under tests using the given [tester].
+  static SvgPicture findSvgPicture(WidgetTester tester) {
+    return tester.widget<SvgPicture>(find.byType(SvgPicture));
+  }
+
+  /// Finds the [Image] in the widget tree under tests using the given [tester].
+  static Image findImage(WidgetTester tester) {
+    return tester.widget<Image>(find.byType(Image));
   }
 
   /// Finds the [TextField] in the widget tree under tests using the given [tester].

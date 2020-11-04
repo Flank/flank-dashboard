@@ -1,5 +1,5 @@
 /// A class that represents the information about the environment in which the
-/// current program is running.
+/// current application is running.
 class WebPlatform {
   /// Creates a new instance of the [WebPlatform].
   const WebPlatform();
