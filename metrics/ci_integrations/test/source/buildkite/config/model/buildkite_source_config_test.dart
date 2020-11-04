@@ -8,7 +8,6 @@ void main() {
     const accessToken = BuildkiteConfigTestData.accessToken;
     const organizationSlug = BuildkiteConfigTestData.organizationSlug;
     const pipelineSlug = BuildkiteConfigTestData.pipelineSlug;
-    const coverageArtifactName = BuildkiteConfigTestData.coverageArtifactName;
 
     const configMap = BuildkiteConfigTestData.sourceConfigMap;
     final config = BuildkiteConfigTestData.sourceConfig;
@@ -21,7 +20,6 @@ void main() {
             accessToken: null,
             pipelineSlug: pipelineSlug,
             organizationSlug: organizationSlug,
-            coverageArtifactName: coverageArtifactName,
           ),
           throwsArgumentError,
         );
@@ -36,7 +34,6 @@ void main() {
             accessToken: '',
             pipelineSlug: pipelineSlug,
             organizationSlug: organizationSlug,
-            coverageArtifactName: coverageArtifactName,
           ),
           throwsArgumentError,
         );
@@ -51,7 +48,6 @@ void main() {
             accessToken: accessToken,
             pipelineSlug: null,
             organizationSlug: organizationSlug,
-            coverageArtifactName: coverageArtifactName,
           ),
           throwsArgumentError,
         );
@@ -66,7 +62,6 @@ void main() {
             accessToken: accessToken,
             pipelineSlug: '',
             organizationSlug: organizationSlug,
-            coverageArtifactName: coverageArtifactName,
           ),
           throwsArgumentError,
         );
@@ -81,7 +76,6 @@ void main() {
             accessToken: accessToken,
             pipelineSlug: pipelineSlug,
             organizationSlug: null,
-            coverageArtifactName: coverageArtifactName,
           ),
           throwsArgumentError,
         );
@@ -96,37 +90,6 @@ void main() {
             accessToken: accessToken,
             pipelineSlug: pipelineSlug,
             organizationSlug: '',
-            coverageArtifactName: coverageArtifactName,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the coverage artifact name is null",
-      () {
-        expect(
-          () => BuildkiteSourceConfig(
-            accessToken: accessToken,
-            pipelineSlug: pipelineSlug,
-            organizationSlug: organizationSlug,
-            coverageArtifactName: null,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the coverage artifact name is empty",
-      () {
-        expect(
-          () => BuildkiteSourceConfig(
-            accessToken: accessToken,
-            pipelineSlug: pipelineSlug,
-            organizationSlug: organizationSlug,
-            coverageArtifactName: '',
           ),
           throwsArgumentError,
         );
@@ -140,13 +103,11 @@ void main() {
           accessToken: accessToken,
           pipelineSlug: pipelineSlug,
           organizationSlug: organizationSlug,
-          coverageArtifactName: coverageArtifactName,
         );
 
         expect(config.accessToken, equals(accessToken));
         expect(config.pipelineSlug, equals(pipelineSlug));
         expect(config.organizationSlug, equals(organizationSlug));
-        expect(config.coverageArtifactName, equals(coverageArtifactName));
       },
     );
 
