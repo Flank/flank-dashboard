@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/base_popup.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/routes/observers/overlay_entry_route_observer.dart';
@@ -49,7 +50,7 @@ class MetricsUserMenuButton extends StatelessWidget {
           child: TappableArea(
             onTap: openPopup,
             builder: (context, isHovered, _) {
-              return Image.network(
+              return SvgImage(
                 'icons/avatar.svg',
                 width: 32.0,
                 height: 32.0,

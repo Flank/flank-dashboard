@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/value_image/strategy/value_based_image_asset_strategy.dart';
 
 /// A widget that displays an image from the [strategy] depending on
@@ -30,7 +31,7 @@ class ValueNetworkImage<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconImage = strategy.getImageAsset(value);
 
-    return Image.network(
+    return SvgImage(
       iconImage,
       height: height,
       width: width,

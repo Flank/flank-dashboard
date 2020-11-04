@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -30,7 +31,7 @@ class MetricsPageTitle extends StatelessWidget {
             child: TappableArea(
               onTap: () => _navigateBack(context),
               builder: (context, isHovered, child) => child,
-              child: Image.network(
+              child: SvgImage(
                 'icons/arrow-back.svg',
                 width: 32.0,
                 height: 32.0,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 
@@ -20,7 +21,7 @@ class ProjectSearchInput extends StatelessWidget {
     return MetricsTextFormField(
       onChanged: onChanged,
       prefixIconBuilder: (context, color) {
-        return Image.network(
+        return SvgImage(
           'icons/search.svg',
           width: 20.0,
           height: 20.0,

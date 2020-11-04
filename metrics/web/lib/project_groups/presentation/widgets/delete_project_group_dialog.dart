@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/info_dialog.dart';
+import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_neutral_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
@@ -44,7 +45,7 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
             maxWidth: 480.0,
           ),
           closeIconPadding: const EdgeInsets.only(top: 16.0, right: 16.0),
-          closeIcon: Image.network(
+          closeIcon: SvgImage(
             'icons/close.svg',
             color: dialogTheme.closeIconColor,
             height: 24.0,
