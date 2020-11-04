@@ -23,7 +23,7 @@ class CoverageData extends Coverage implements DataModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'pct': percent?.value?.toString(),
+      'pct': percent?.value,
     };
   }
 }

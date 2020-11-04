@@ -5,7 +5,7 @@ void main() {
   group("CoverageData", () {
     const percent = 0.6;
     final json = {
-      'pct': percent.toString(),
+      'pct': percent,
     };
 
     test("creates an instance with the given parameters", () {
