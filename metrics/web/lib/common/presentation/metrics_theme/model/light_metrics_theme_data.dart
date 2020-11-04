@@ -59,11 +59,10 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveButtonColor = Color(0xFFf0f0f5);
   static const Color _inactiveButtonHoverColor = Color(0xFFcccccc);
   static const Color _inactiveTextColor = Color(0xff040d14);
+  static const Color _userMenuTextColor = Color(0xFF0d0d0d);
   static const Color _cardHoverColor = Color(0xFFf6f8f9);
   static const Color _borderColor = Color(0xFFe3e9ed);
   static const Color _tableHeaderColor = Color(0xFF79858b);
-  static const Color _inactiveToggleColor = Color(0xFF88889b);
-  static const Color _inactiveToggleHoverColor = Color(0xFF5d5d6a);
   static const Color _textPlaceholderColor = Color(0xFFdcdce3);
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
@@ -390,9 +389,9 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           toggleTheme: const ToggleThemeData(
             activeColor: ColorConfig.primaryColor,
-            activeHoverColor: ColorConfig.primaryHoverColor,
-            inactiveColor: _inactiveToggleColor,
-            inactiveHoverColor: _inactiveToggleHoverColor,
+            activeHoverColor: ColorConfig.primaryButtonHoverColor,
+            inactiveColor: ColorConfig.shimmerColor,
+            inactiveHoverColor: _userMenuActiveColor,
           ),
           userMenuButtonTheme: const UserMenuButtonThemeData(
             hoverColor: _userMenuActiveColor,
@@ -415,26 +414,26 @@ class LightMetricsThemeData extends MetricsThemeData {
                   color: ColorConfig.accentTranslucentColor,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
-                  lineHeightInPixels: 20,
+                  lineHeightInPixels: 20.0,
                 ),
               ),
             ),
           ),
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.white,
-            dividerColor: scaffoldColor,
+            dividerColor: _textPlaceholderColor,
             shadowColor: _shadowColor,
-            contentTextStyle: TextStyle(
-              color: _inactiveTextColor,
+            contentTextStyle: MetricsTextStyle(
+              color: _userMenuTextColor,
+              lineHeightInPixels: 20.0,
               fontSize: 16.0,
-              height: 1.0,
             ),
           ),
           textPlaceholderTheme: const TextPlaceholderThemeData(
             textStyle: MetricsTextStyle(
               color: _textPlaceholderColor,
               fontSize: 14.0,
-              lineHeightInPixels: 18,
+              lineHeightInPixels: 18.0,
             ),
           ),
           inputPlaceholderTheme: const ShimmerPlaceholderThemeData(
