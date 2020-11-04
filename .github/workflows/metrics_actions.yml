@@ -5,23 +5,23 @@ on:
     types: [ opened, edited, synchronize ]
 
 jobs:
-  check_changed:
-    name: Check changed files
+  changed_projects:
+    name: Get changed projects
     runs-on: ubuntu-latest
     outputs:
-      is_metrics_web_changed: ${{ steps.check_changed.outputs.is_metrics_web_changed }}
-      is_ci_integrations_changed: ${{ steps.check_changed.outputs.is_ci_integrations_changed }}
-      is_coverage_converter_changed: ${{ steps.check_changed.outputs.is_coverage_converter_changed }}
-      is_firebase_changed: ${{ steps.check_changed.outputs.is_firebase_changed }}
-      is_core_changed: ${{ steps.check_changed.outputs.is_core_changed }}
+      is_metrics_web_changed: ${{ steps.changed_projects.outputs.is_metrics_web_changed }}
+      is_ci_integrations_changed: ${{ steps.changed_projects.outputs.is_ci_integrations_changed }}
+      is_coverage_converter_changed: ${{ steps.changed_projects.outputs.is_coverage_converter_changed }}
+      is_firebase_changed: ${{ steps.changed_projects.outputs.is_firebase_changed }}
+      is_core_changed: ${{ steps.changed_projects.outputs.is_core_changed }}
     steps:
       - name: Get changed files
         id: changed_files
         uses: jitterbit/get-changed-files@v1
         with:
           format: 'space-delimited'
-      - name: Check file changed
-        id: check_changed
+      - name: Check changed projects
+        id: changed_projects
         run: |
           CHANGED="${{ steps.changed_files.outputs.all }}"
           WEB="metrics/web"
@@ -57,8 +57,8 @@ jobs:
   metrics-web-actions:
     name: Metrics Web Actions
     runs-on: macOS-latest
-    needs: [ check_changed ]
-    if: needs.check_changed.outputs.is_metrics_web_changed == 'true' || needs.check_changed.outputs.is_core_changed == 'true'
+    needs: [ changed_projects ]
+    if: needs.changed_projects.outputs.is_metrics_web_changed == 'true' || needs.changed_projects.outputs.is_core_changed == 'true'
     timeout-minutes: 60
     env:
       WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
@@ -107,8 +107,8 @@ jobs:
     name: Firebase Actions
     runs-on: macOS-latest
     timeout-minutes: 60
-    needs: [ check_changed ]
-    if: needs.check_changed.outputs.is_firebase_changed == 'true'
+    needs: [ changed_projects ]
+    if: needs.changed_projects.outputs.is_firebase_changed == 'true'
     env:
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       PROJECT_PATH: metrics/firebase/
@@ -135,8 +135,8 @@ jobs:
     name: Coverage Converter Actions
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [ check_changed ]
-    if: needs.check_changed.outputs.is_coverage_converter_changed == 'true' || needs.check_changed.outputs.is_core_changed == 'true'
+    needs: [ changed_projects ]
+    if: needs.changed_projects.outputs.is_coverage_converter_changed == 'true' || needs.changed_projects.outputs.is_core_changed == 'true'
 
     steps:
       - name: Checkout
@@ -166,8 +166,8 @@ jobs:
     name: CI Integrations Actions
     runs-on: macOS-latest
     timeout-minutes: 60
-    needs: [ check_changed ]
-    if: needs.check_changed.outputs.is_ci_integrations_changed == 'true' || needs.check_changed.outputs.is_core_changed == 'true'
+    needs: [ changed_projects ]
+    if: needs.changed_projects.outputs.is_ci_integrations_changed == 'true' || needs.changed_projects.outputs.is_core_changed == 'true'
 
     steps:
       - name: Checkout
