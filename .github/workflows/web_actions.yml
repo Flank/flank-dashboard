@@ -61,7 +61,7 @@ jobs:
           chmod a+x coverage
         working-directory: metrics/web/
 
-      - name: Connvert coverage report
+      - name: Convert coverage report
         run: ./coverage lcov -i build/coverage.info -o coverage-summary.json
         working-directory: metrics/web/
 
