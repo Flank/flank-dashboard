@@ -14,11 +14,20 @@ class BuildkiteSourceConfig extends Equatable implements SourceConfig {
   /// A Buildkite organization identifier.
   final String organizationSlug;
 
+  /// A name of an artifact that contains a coverage data
+  /// for a Buildkite build.
+  final String coverageArtifactName;
+
   @override
   String get sourceProjectId => pipelineSlug;
 
   @override
-  List<Object> get props => [accessToken, pipelineSlug, organizationSlug];
+  List<Object> get props => [
+        accessToken,
+        pipelineSlug,
+        organizationSlug,
+        coverageArtifactName,
+      ];
 
   /// Creates a new instance of the [BuildkiteSourceConfig].
   ///
@@ -28,6 +37,7 @@ class BuildkiteSourceConfig extends Equatable implements SourceConfig {
     @required this.accessToken,
     @required this.pipelineSlug,
     @required this.organizationSlug,
+    @required this.coverageArtifactName,
   }) {
     StringValidator.checkNotNullOrEmpty(
       accessToken,
@@ -40,6 +50,10 @@ class BuildkiteSourceConfig extends Equatable implements SourceConfig {
     StringValidator.checkNotNullOrEmpty(
       organizationSlug,
       name: 'organizationSlug',
+    );
+    StringValidator.checkNotNullOrEmpty(
+      coverageArtifactName,
+      name: 'coverageArtifactName',
     );
   }
 
@@ -54,6 +68,7 @@ class BuildkiteSourceConfig extends Equatable implements SourceConfig {
       accessToken: json['access_token'] as String,
       pipelineSlug: json['pipeline_slug'] as String,
       organizationSlug: json['organization_slug'] as String,
+      coverageArtifactName: json['coverage_artifact_name'] as String,
     );
   }
 }

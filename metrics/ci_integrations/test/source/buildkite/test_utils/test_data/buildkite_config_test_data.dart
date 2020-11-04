@@ -11,11 +11,15 @@ class BuildkiteConfigTestData {
   /// An organization slug to use in tests.
   static const String organizationSlug = 'organization-slug';
 
+  /// A coverage artifact name to use in tests.
+  static const String coverageArtifactName = 'coverage-artifact-name';
+
   /// A decoded JSON object with Buildkite test configurations.
   static const Map<String, dynamic> sourceConfigMap = {
     'access_token': accessToken,
     'pipeline_slug': pipelineSlug,
     'organization_slug': organizationSlug,
+    'coverage_artifact_name': coverageArtifactName,
   };
 
   /// A source config to use in tests.
@@ -23,5 +27,6 @@ class BuildkiteConfigTestData {
     accessToken: accessToken,
     pipelineSlug: pipelineSlug,
     organizationSlug: organizationSlug,
+    coverageArtifactName: coverageArtifactName,
   );
 }
