@@ -46,7 +46,7 @@ The `SupportedSourceParties` is an integration point for all source integrations
 
 ```json
 {
-  pct: 0.6
+  "pct": 0.6
 }
 ```
 
