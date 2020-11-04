@@ -87,7 +87,9 @@ void main() {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _SvgImageTestbed(
-                alignment: alignment, webPlatform: webPlatformMock),
+              alignment: alignment,
+              webPlatform: webPlatformMock,
+            ),
           );
         });
 
@@ -106,7 +108,9 @@ void main() {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _SvgImageTestbed(
-                alignment: alignment, webPlatform: webPlatformMock),
+              alignment: alignment,
+              webPlatform: webPlatformMock,
+            ),
           );
         });
 
@@ -227,7 +231,10 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(src: testImageSrc, webPlatform: webPlatformMock),
+            _SvgImageTestbed(
+              src: testImageSrc,
+              webPlatform: webPlatformMock,
+            ),
           );
         });
 
@@ -264,7 +271,9 @@ void main() {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _SvgImageTestbed(
-                alignment: alignment, webPlatform: webPlatformMock),
+              alignment: alignment,
+              webPlatform: webPlatformMock,
+            ),
           );
         });
 
@@ -353,7 +362,10 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(webPlatform: webPlatformMock, color: color),
+            _SvgImageTestbed(
+              webPlatform: webPlatformMock,
+              color: color,
+            ),
           );
         });
 
