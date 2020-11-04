@@ -86,7 +86,8 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(alignment: alignment, webPlatform: webPlatformMock),
+            _SvgImageTestbed(
+                alignment: alignment, webPlatform: webPlatformMock),
           );
         });
 
@@ -104,7 +105,8 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(alignment: alignment, webPlatform: webPlatformMock),
+            _SvgImageTestbed(
+                alignment: alignment, webPlatform: webPlatformMock),
           );
         });
 
@@ -261,7 +263,8 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _SvgImageTestbed(alignment: alignment, webPlatform: webPlatformMock),
+            _SvgImageTestbed(
+                alignment: alignment, webPlatform: webPlatformMock),
           );
         });
 
