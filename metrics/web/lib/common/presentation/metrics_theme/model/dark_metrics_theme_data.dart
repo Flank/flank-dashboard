@@ -70,6 +70,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveColor = Color(0xFF43494d);
   static const Color _cardHoverColor = Color(0xFF212124);
   static const Color _borderColor = Color(0xFF2d2d33);
+  static const Color _dividerColor = Color(0xFF252528);
   static const Color _loginOptionHoverColor = Color(0xFFe5e5e5);
   static const Color _loginOptionTextColor = Color(0xFF757575);
   static const Color _tileBorderColor = Color(0xFF0e0d0d);
@@ -80,8 +81,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _sparklineStrokeColor = Color(0xFFDCDCE5);
   static const Color _sparklineTextColor = Color(0xFFD7D7E5);
   static const Color _sparklineFillColor = Color(0xFF29292B);
-  static const Color _inactiveToggleColor = Color(0xFF2F2F33);
-  static const Color _inactiveToggleHoverColor = Color(0xFF262626);
+  static const Color _inactiveToggleColor = Color(0xFF1B1B1D);
   static const Color _textPlaceholderColor = Color(0xFF51585c);
   static const Color _addProjectGroupCardHoverColor = Color(0xff07372f);
   static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.32);
@@ -416,9 +416,9 @@ class DarkMetricsThemeData extends MetricsThemeData {
           ),
           toggleTheme: const ToggleThemeData(
             activeColor: ColorConfig.primaryColor,
-            activeHoverColor: ColorConfig.primaryHoverColor,
+            activeHoverColor: ColorConfig.primaryButtonHoverColor,
             inactiveColor: _inactiveToggleColor,
-            inactiveHoverColor: _inactiveToggleHoverColor,
+            inactiveHoverColor: _dividerColor,
           ),
           userMenuButtonTheme: const UserMenuButtonThemeData(
             hoverColor: ColorConfig.shimmerColor,
@@ -426,12 +426,12 @@ class DarkMetricsThemeData extends MetricsThemeData {
           ),
           userMenuTheme: const UserMenuThemeData(
             backgroundColor: Colors.black,
-            dividerColor: scaffoldColor,
+            dividerColor: _dividerColor,
             shadowColor: _shadowColor,
-            contentTextStyle: TextStyle(
+            contentTextStyle: MetricsTextStyle(
               color: Colors.white,
+              lineHeightInPixels: 20.0,
               fontSize: 16.0,
-              height: 1.0,
             ),
           ),
           textPlaceholderTheme: const TextPlaceholderThemeData(
