@@ -31,45 +31,48 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   }
 
   @override
-  Future<List<BuildData>> fetchBuilds(String pipeline) async {
-    return _fetchLatestBuilds(pipeline);
+  Future<List<BuildData>> fetchBuilds(String pipelineSlug) async {
+    return _fetchLatestBuilds(pipelineSlug);
   }
 
   @override
   Future<List<BuildData>> fetchBuildsAfter(
-    String pipeline,
+    String pipelineSlug,
     BuildData build,
   ) async {
     ArgumentError.checkNotNull(build, 'build');
-    final latestBuildNumber = build.buildNumber;
+    final finishedAt = build.startedAt.add(build.duration);
 
     final firstBuildsPage = await _fetchBuildsPage(
-      pipeline,
+      pipelineSlug,
       page: 1,
       perPage: 1,
     );
 
     final builds = firstBuildsPage.values ?? [];
 
-    if (builds.isEmpty || builds.first.number <= latestBuildNumber) return [];
+    if (builds.isEmpty || builds.first.finishedAt.isBefore(finishedAt)) {
+      return [];
+    }
 
-    return _fetchLatestBuilds(pipeline, latestBuildNumber);
+    return _fetchLatestBuilds(pipelineSlug, finishedAt);
   }
 
-  /// Fetches the latest builds by the given [pipeline].
+  /// Fetches the latest builds by the given [pipelineSlug].
   ///
-  /// If the [latestBuildNumber] is not `null`, returns all builds with the
-  /// [Build.buildNumber] greater than the given [latestBuildNumber]. Otherwise,
-  /// returns no more than the latest [fetchLimit] builds.
+  /// If the [finishedFrom] is not `null`, returns all builds finished
+  /// on or after the given [finishedFrom]. Otherwise, returns no more than
+  /// the latest [fetchLimit] builds.
   Future<List<BuildData>> _fetchLatestBuilds(
-    String pipeline, [
-    int latestBuildNumber,
+    String pipelineSlug, [
+    DateTime finishedFrom,
   ]) async {
     final List<BuildData> result = [];
     bool hasNext = true;
 
     BuildkiteBuildsPage buildsPage = await _fetchBuildsPage(
-      pipeline,
+      pipelineSlug,
+      finishedFrom: finishedFrom,
       page: 1,
       perPage: fetchLimit,
     );
@@ -79,18 +82,13 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       final builds = buildsPage.values;
 
       for (final build in builds) {
-        if (latestBuildNumber != null && build.number <= latestBuildNumber) {
-          hasNext = false;
-          break;
-        }
-
         if (build == null || build.blocked) {
           continue;
         } else {
-          final buildData = await _mapBuildToBuildData(pipeline, build);
+          final buildData = await _mapBuildToBuildData(pipelineSlug, build);
           result.add(buildData);
 
-          if (latestBuildNumber == null && result.length == fetchLimit) {
+          if (finishedFrom == null && result.length == fetchLimit) {
             hasNext = false;
             break;
           }
@@ -110,15 +108,16 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   }
 
   /// Fetches a [BuildkiteBuildsPage] with the given parameters delegating them
-  /// to the [BuildkiteClient.fetchBuildkiteBuilds] method.
+  /// to the [BuildkiteClient.fetchBuilds] method.
   Future<BuildkiteBuildsPage> _fetchBuildsPage(
-    String pipeline, {
+    String pipelineSlug, {
+    DateTime finishedFrom,
     int page,
     int perPage,
   }) async {
     final interaction = await buildkiteClient.fetchBuilds(
-      pipeline,
-      state: BuildkiteBuildState.finished,
+      pipelineSlug,
+      finishedFrom: finishedFrom,
       page: page,
       perPage: perPage,
     );
@@ -135,22 +134,26 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   ) async {
     return BuildData(
       buildNumber: build.number,
-      startedAt: build.startedAt,
+      startedAt: build.startedAt ?? build.finishedAt ?? DateTime.now(),
       buildStatus: _mapStateToBuildStatus(build.state),
       duration: _calculateJobDuration(build),
       workflowName: pipeline,
-      url: build.webUrl,
+      url: build.webUrl ?? "",
       coverage: await _fetchCoverage(pipeline, build),
     );
   }
 
-  /// Fetches the coverage for the given [build] in the [pipeline].
+  /// Fetches the coverage for the given [build] of a pipeline with the given
+  /// [pipelineSlug].
   ///
   /// Returns `null` if the code coverage artifact for the given build
   /// is not found.
-  Future<Percent> _fetchCoverage(String pipeline, BuildkiteBuild build) async {
+  Future<Percent> _fetchCoverage(
+    String pipelineSlug,
+    BuildkiteBuild build,
+  ) async {
     final interaction = await buildkiteClient.fetchArtifacts(
-      pipeline,
+      pipelineSlug,
       build.number,
       page: 1,
       perPage: fetchLimit,
@@ -188,7 +191,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   /// Maps the given [artifact] to the coverage [Percent] value.
   ///
   /// Returns `null` if either the coverage file is not found or
-  /// [FormatException] is occurred.
+  /// JSON content parsing is failed.
   Future<Percent> _mapArtifactToCoverage(BuildkiteArtifact artifact) async {
     final interaction =
         await buildkiteClient.downloadArtifact(artifact.downloadUrl);
@@ -215,7 +218,9 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   /// Returns `null` if either [BuildkiteBuild.startedAt] or
   /// [BuildkiteBuild.finishedAt] is `null`.
   Duration _calculateJobDuration(BuildkiteBuild build) {
-    if (build.startedAt == null || build.finishedAt == null) return null;
+    if (build.startedAt == null || build.finishedAt == null) {
+      return Duration.zero;
+    }
 
     return build.finishedAt.difference(build.startedAt);
   }
