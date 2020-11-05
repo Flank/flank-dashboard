@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:api_mock_server/api_mock_server.dart';
@@ -10,6 +8,8 @@ import 'package:ci_integration/client/github_actions/models/github_action_status
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
+
+import '../../../test_utils/mock_server_utils.dart';
 
 /// A mock server for the Github Actions API.
 class GithubActionsMockServer extends ApiMockServer {
@@ -78,75 +78,83 @@ class GithubActionsMockServer extends ApiMockServer {
   /// Responses with a list of all workflow runs for a specific workflow.
   Future<void> _workflowRunsResponse(HttpRequest request) async {
     final status = _extractRunStatus(request);
-    final runsPerPage = _extractPerPage(request);
-    final pageNumber = _extractPage(request);
+    final runsPerPage = MockServerUtils.extractPerPage(request);
+    final pageNumber = MockServerUtils.extractPage(request);
 
     List<WorkflowRun> workflowRuns = _generateWorkflowRuns(status);
 
-    _setNextPageUrlHeader(
+    MockServerUtils.setNextPageUrlHeader(
       request,
       workflowRuns.length,
       runsPerPage,
       pageNumber,
     );
 
-    workflowRuns = _paginate(workflowRuns, runsPerPage, pageNumber);
+    workflowRuns = MockServerUtils.paginate(
+      workflowRuns,
+      runsPerPage,
+      pageNumber,
+    );
 
     final _response = {
       'total_count': workflowRuns.length,
       'workflow_runs': workflowRuns.map((run) => run.toJson()).toList(),
     };
 
-    await _writeResponse(request, _response);
+    await MockServerUtils.writeResponse(request, _response);
   }
 
   /// Responses with a list of all workflow run jobs for a specific workflow run.
   Future<void> _workflowRunJobsResponse(HttpRequest request) async {
     final status = _extractRunStatus(request);
-    final runsPerPage = _extractPerPage(request);
-    final pageNumber = _extractPage(request);
+    final runsPerPage = MockServerUtils.extractPerPage(request);
+    final pageNumber = MockServerUtils.extractPage(request);
 
     List<WorkflowRunJob> workflowRunJobs = _generateWorkflowRunJobs(status);
 
-    _setNextPageUrlHeader(
+    MockServerUtils.setNextPageUrlHeader(
       request,
       workflowRunJobs.length,
       runsPerPage,
       pageNumber,
     );
 
-    workflowRunJobs = _paginate(workflowRunJobs, runsPerPage, pageNumber);
+    workflowRunJobs = MockServerUtils.paginate(
+      workflowRunJobs,
+      runsPerPage,
+      pageNumber,
+    );
 
     final _response = {
       'total_count': workflowRunJobs.length,
       'jobs': workflowRunJobs.map((run) => run.toJson()).toList(),
     };
 
-    await _writeResponse(request, _response);
+    await MockServerUtils.writeResponse(request, _response);
   }
 
   /// Responses with a list of artifacts for a specific workflow run.
   Future<void> _workflowRunArtifactsResponse(HttpRequest request) async {
-    final runsPerPage = _extractPerPage(request);
-    final pageNumber = _extractPage(request);
+    final runsPerPage = MockServerUtils.extractPerPage(request);
+    final pageNumber = MockServerUtils.extractPage(request);
 
     List<WorkflowRunArtifact> artifacts = _generateArtifacts();
 
-    _setNextPageUrlHeader(
+    MockServerUtils.setNextPageUrlHeader(
       request,
       artifacts.length,
       runsPerPage,
       pageNumber,
     );
 
-    artifacts = _paginate(artifacts, runsPerPage, pageNumber);
+    artifacts = MockServerUtils.paginate(artifacts, runsPerPage, pageNumber);
 
     final _response = {
       'total_count': artifacts.length,
       'artifacts': artifacts.map((artifact) => artifact.toJson()).toList(),
     };
 
-    await _writeResponse(request, _response);
+    await MockServerUtils.writeResponse(request, _response);
   }
 
   /// Redirects to the artifact download URL.
@@ -163,7 +171,7 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Returns a [Uint8List] to emulate download.
   Future<void> _downloadResponse(HttpRequest request) async {
-    await _writeResponse(request, Uint8List.fromList([]));
+    await MockServerUtils.writeResponse(request, Uint8List.fromList([]));
   }
 
   /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
@@ -172,20 +180,6 @@ class GithubActionsMockServer extends ApiMockServer {
     request.response.statusCode = HttpStatus.notFound;
 
     await request.response.close();
-  }
-
-  /// Chunks the given [items], limiting to the [limit],
-  /// starting from the [pageIndex].
-  List<T> _paginate<T>(List<T> items, [int limit, int pageIndex]) {
-    if (limit != null && pageIndex != null) {
-      final from = (pageIndex - 1) * limit;
-
-      return items.skip(from).take(limit).toList();
-    } else if (limit != null) {
-      return items.take(limit).toList();
-    }
-
-    return items;
   }
 
   /// Generates a list of [WorkflowRun]s with the given [status].
@@ -250,66 +244,5 @@ class GithubActionsMockServer extends ApiMockServer {
     final status = request.uri.queryParameters['status'];
 
     return const GithubActionStatusMapper().map(status);
-  }
-
-  /// Returns the `per_page` query parameter of the given [request].
-  ///
-  /// Returns `null` if the `perPage` is `null`.
-  int _extractPerPage(HttpRequest request) {
-    final perPage = request.uri.queryParameters['per_page'];
-
-    if (perPage == null) return null;
-
-    return int.tryParse(perPage);
-  }
-
-  /// Returns the `page` query parameter of the given [request].
-  ///
-  /// Returns `null` if the `page` is `null`.
-  int _extractPage(HttpRequest request) {
-    final page = request.uri.queryParameters['page'];
-
-    if (page == null) return null;
-
-    return int.tryParse(page);
-  }
-
-  /// Returns the last page number.
-  ///
-  /// Returns `1` if the given [perPage] or [total] parameter is `null`.
-  int _getLastPageNumber(int total, int perPage) {
-    if (perPage == null || total == null) return 1;
-
-    return max((total / perPage).ceil(), 1);
-  }
-
-  /// Sets the next page url header using the given [request] and [itemsCount].
-  void _setNextPageUrlHeader(
-    HttpRequest request,
-    int itemsCount,
-    int runsPerPage,
-    int pageNumber,
-  ) {
-    final lastPageNumber = _getLastPageNumber(itemsCount, runsPerPage);
-
-    if (pageNumber >= lastPageNumber) return;
-
-    final requestUrl = request.requestedUri.toString();
-    final indexOfPageParam = requestUrl.indexOf("&page=");
-    final nextPageUrl = requestUrl.replaceRange(
-      indexOfPageParam,
-      requestUrl.length,
-      "&page=${pageNumber + 1}",
-    );
-
-    request.response.headers.set('link', '<$nextPageUrl> rel="next"');
-  }
-
-  /// Writes the given [response].
-  Future<void> _writeResponse(HttpRequest request, dynamic response) async {
-    request.response.write(jsonEncode(response));
-
-    await request.response.flush();
-    await request.response.close();
   }
 }

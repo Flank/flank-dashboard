@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:api_mock_server/api_mock_server.dart';
@@ -8,6 +6,8 @@ import 'package:ci_integration/client/buildkite/mappers/buildkite_build_state_ma
 import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build_state.dart';
+
+import '../../../test_utils/mock_server_utils.dart';
 
 /// A mock server for the Buildkite API.
 class BuildkiteMockServer extends ApiMockServer {
@@ -66,37 +66,55 @@ class BuildkiteMockServer extends ApiMockServer {
         AuthCredentials(token: 'token'),
       ];
 
-  /// Responses with a list of all builds for a specific pipeline.
+  /// Responses with a list of [BuildkiteBuild]s having the build state
+  /// specified in the [request] parameters.
+  ///
+  /// Takes the per page and the page number parameters from the [request] and
+  /// returns the per page number of builds from the page with the page number.
   Future<void> _pipelineBuildsResponse(HttpRequest request) async {
     final state = _extractBuildState(request);
-    final perPage = _extractPerPage(request);
-    final pageNumber = _extractPage(request);
+    final perPage = MockServerUtils.extractPerPage(request);
+    final pageNumber = MockServerUtils.extractPage(request);
 
     List<BuildkiteBuild> builds = _generateBuilds(state);
 
-    _setNextPageUrlHeader(request, builds.length, perPage, pageNumber);
+    MockServerUtils.setNextPageUrlHeader(
+      request,
+      builds.length,
+      perPage,
+      pageNumber,
+    );
 
-    builds = _paginate(builds, perPage, pageNumber);
+    builds = MockServerUtils.paginate(builds, perPage, pageNumber);
 
     final _response = builds.map((build) => build.toJson()).toList();
 
-    await _writeResponse(request, _response);
+    await MockServerUtils.writeResponse(request, _response);
   }
 
-  /// Responses with a list of all artifacts for a specific build.
+  /// Responses with a list of [BuildkiteArtifact]s.
+  ///
+  /// Takes the per page and the page number parameters from the [request] and
+  /// returns the per page number of artifacts from the page with the page
+  /// number.
   Future<void> _pipelineBuildArtifactsResponse(HttpRequest request) async {
-    final perPage = _extractPerPage(request);
-    final pageNumber = _extractPage(request);
+    final perPage = MockServerUtils.extractPerPage(request);
+    final pageNumber = MockServerUtils.extractPage(request);
 
     List<BuildkiteArtifact> artifacts = _generateArtifacts();
 
-    _setNextPageUrlHeader(request, artifacts.length, perPage, pageNumber);
+    MockServerUtils.setNextPageUrlHeader(
+      request,
+      artifacts.length,
+      perPage,
+      pageNumber,
+    );
 
-    artifacts = _paginate(artifacts, perPage, pageNumber);
+    artifacts = MockServerUtils.paginate(artifacts, perPage, pageNumber);
 
     final _response = artifacts.map((artifact) => artifact.toJson()).toList();
 
-    await _writeResponse(request, _response);
+    await MockServerUtils.writeResponse(request, _response);
   }
 
   /// Redirects to the artifact download URL.
@@ -113,7 +131,7 @@ class BuildkiteMockServer extends ApiMockServer {
 
   /// Returns a [Uint8List] to emulate download.
   Future<void> _downloadResponse(HttpRequest request) async {
-    await _writeResponse(request, Uint8List.fromList([]));
+    await MockServerUtils.writeResponse(request, Uint8List.fromList([]));
   }
 
   /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
@@ -130,28 +148,6 @@ class BuildkiteMockServer extends ApiMockServer {
     final state = request.uri.queryParameters['state'];
 
     return const BuildkiteBuildStateMapper().map(state);
-  }
-
-  /// Returns the `per_page` query parameter of the given [request].
-  ///
-  /// Returns `null` if the `perPage` is `null`.
-  int _extractPerPage(HttpRequest request) {
-    final perPage = request.uri.queryParameters['per_page'];
-
-    if (perPage == null) return null;
-
-    return int.tryParse(perPage);
-  }
-
-  /// Returns the `page` query parameter of the given [request].
-  ///
-  /// Returns `null` if the `page` is `null`.
-  int _extractPage(HttpRequest request) {
-    final page = request.uri.queryParameters['page'];
-
-    if (page == null) return null;
-
-    return int.tryParse(page);
   }
 
   /// Generates a list of [BuildkiteBuild]s with the given [state].
@@ -172,7 +168,7 @@ class BuildkiteMockServer extends ApiMockServer {
     );
   }
 
-  /// Generates a list of [BuildKiteArtifact]s.
+  /// Generates a list of [BuildkiteArtifact]s.
   List<BuildkiteArtifact> _generateArtifacts() {
     return List.generate(
       100,
@@ -183,59 +179,5 @@ class BuildkiteMockServer extends ApiMockServer {
         mimeType: 'json',
       ),
     );
-  }
-
-  /// Sets the next page url header using the given [request], [itemsCount],
-  /// [runsPerPage] and [pageNumber].
-  void _setNextPageUrlHeader(
-    HttpRequest request,
-    int itemsCount,
-    int runsPerPage,
-    int pageNumber,
-  ) {
-    final lastPageNumber = _getLastPageNumber(itemsCount, runsPerPage);
-
-    if (pageNumber >= lastPageNumber) return;
-
-    final requestUrl = request.requestedUri.toString();
-    final indexOfPageParam = requestUrl.indexOf("&page=");
-    final nextPageUrl = requestUrl.replaceRange(
-      indexOfPageParam,
-      requestUrl.length,
-      "&page=${pageNumber + 1}",
-    );
-
-    request.response.headers.set('link', '<$nextPageUrl> rel="next"');
-  }
-
-  /// Returns the last page number.
-  ///
-  /// Returns `1` if the given [perPage] or [total] parameter is `null`.
-  int _getLastPageNumber(int total, int perPage) {
-    if (perPage == null || total == null) return 1;
-
-    return max((total / perPage).ceil(), 1);
-  }
-
-  /// Chunks the given [items], limiting to the [limit],
-  /// starting from the [pageIndex].
-  List<T> _paginate<T>(List<T> items, [int limit, int pageIndex]) {
-    if (limit != null && pageIndex != null) {
-      final from = (pageIndex - 1) * limit;
-
-      return items.skip(from).take(limit).toList();
-    } else if (limit != null) {
-      return items.take(limit).toList();
-    }
-
-    return items;
-  }
-
-  /// Writes the given [response].
-  Future<void> _writeResponse(HttpRequest request, dynamic response) async {
-    request.response.write(jsonEncode(response));
-
-    await request.response.flush();
-    await request.response.close();
   }
 }
