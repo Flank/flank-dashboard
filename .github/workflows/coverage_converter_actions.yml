@@ -169,5 +169,5 @@ jobs:
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           repository: platform-platform/monorepo
-          event-type: build_finished
-          client-payload: '{"sync_coverage": "true"}'
+          event-type: building_project
+          client-payload: '{"building_coverage_converter": "true"}'

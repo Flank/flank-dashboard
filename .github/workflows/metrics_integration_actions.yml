@@ -2,14 +2,14 @@ name: Metrics Integration Actions
 
 on:
   repository_dispatch:
-    types: [ build_finished ]
+    types: [ building_project ]
 
 
 jobs:
   ci_integrations_sync:
     name: Sync CI integrations
     runs-on: macos-latest
-    if: github.event.client_payload.sync_ci_integrations == 'true'
+    if: github.event.client_payload.building_ci_integrations == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -40,7 +40,7 @@ jobs:
   coverage_converter_sync:
     name: Sync Coverage Converter
     runs-on: macos-latest
-    if: github.event.client_payload.sync_coverage == 'true'
+    if: github.event.client_payload.building_coverage_converter == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -72,7 +72,7 @@ jobs:
   metrics_web_sync:
     name: Sync Metrics Web
     runs-on: macos-latest
-    if: github.event.client_payload.sync_web == 'true'
+    if: github.event.client_payload.building_metrics_web == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
