@@ -78,8 +78,8 @@ class GithubActionsMockServer extends ApiMockServer {
   /// Responses with a list of all workflow runs for a specific workflow.
   Future<void> _workflowRunsResponse(HttpRequest request) async {
     final status = _extractRunStatus(request);
-    final runsPerPage = MockServerUtils.extractPerPage(request);
-    final pageNumber = MockServerUtils.extractPage(request);
+    final runsPerPage = _extractPerPage(request);
+    final pageNumber = _extractPage(request);
 
     List<WorkflowRun> workflowRuns = _generateWorkflowRuns(status);
 
@@ -107,8 +107,8 @@ class GithubActionsMockServer extends ApiMockServer {
   /// Responses with a list of all workflow run jobs for a specific workflow run.
   Future<void> _workflowRunJobsResponse(HttpRequest request) async {
     final status = _extractRunStatus(request);
-    final runsPerPage = MockServerUtils.extractPerPage(request);
-    final pageNumber = MockServerUtils.extractPage(request);
+    final runsPerPage = _extractPerPage(request);
+    final pageNumber = _extractPage(request);
 
     List<WorkflowRunJob> workflowRunJobs = _generateWorkflowRunJobs(status);
 
@@ -135,8 +135,8 @@ class GithubActionsMockServer extends ApiMockServer {
 
   /// Responses with a list of artifacts for a specific workflow run.
   Future<void> _workflowRunArtifactsResponse(HttpRequest request) async {
-    final runsPerPage = MockServerUtils.extractPerPage(request);
-    final pageNumber = MockServerUtils.extractPage(request);
+    final runsPerPage = _extractPerPage(request);
+    final pageNumber = _extractPage(request);
 
     List<WorkflowRunArtifact> artifacts = _generateArtifacts();
 
@@ -244,5 +244,27 @@ class GithubActionsMockServer extends ApiMockServer {
     final status = request.uri.queryParameters['status'];
 
     return const GithubActionStatusMapper().map(status);
+  }
+
+  /// Returns the `per_page` query parameter of the given [request].
+  ///
+  /// Returns `null` if the `perPage` is `null`.
+  int _extractPerPage(HttpRequest request) {
+    final perPage = request.uri.queryParameters['per_page'];
+
+    if (perPage == null) return null;
+
+    return int.tryParse(perPage);
+  }
+
+  /// Returns the `page` query parameter of the given [request].
+  ///
+  /// Returns `null` if the `page` is `null`.
+  int _extractPage(HttpRequest request) {
+    final page = request.uri.queryParameters['page'];
+
+    if (page == null) return null;
+
+    return int.tryParse(page);
   }
 }

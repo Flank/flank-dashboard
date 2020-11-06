@@ -69,12 +69,13 @@ class BuildkiteMockServer extends ApiMockServer {
   /// Responses with a list of [BuildkiteBuild]s having the build state
   /// specified in the [request] parameters.
   ///
-  /// Takes the per page and the page number parameters from the [request] and
-  /// returns the per page number of builds from the page with the page number.
+  /// Takes the per page and the page number parameters from the [request]
+  /// and returns the per page number of [BuildkiteBuild]s from the page with
+  /// the page number.
   Future<void> _pipelineBuildsResponse(HttpRequest request) async {
     final state = _extractBuildState(request);
-    final perPage = MockServerUtils.extractPerPage(request);
-    final pageNumber = MockServerUtils.extractPage(request);
+    final perPage = _extractPerPage(request);
+    final pageNumber = _extractPage(request);
 
     List<BuildkiteBuild> builds = _generateBuilds(state);
 
@@ -94,12 +95,12 @@ class BuildkiteMockServer extends ApiMockServer {
 
   /// Responses with a list of [BuildkiteArtifact]s.
   ///
-  /// Takes the per page and the page number parameters from the [request] and
-  /// returns the per page number of artifacts from the page with the page
-  /// number.
+  /// Takes the per page and the page number parameters from the [request]
+  /// and returns the per page number of [BuildkiteArtifact]s from the page with
+  /// the page number.
   Future<void> _pipelineBuildArtifactsResponse(HttpRequest request) async {
-    final perPage = MockServerUtils.extractPerPage(request);
-    final pageNumber = MockServerUtils.extractPage(request);
+    final perPage = _extractPerPage(request);
+    final pageNumber = _extractPage(request);
 
     List<BuildkiteArtifact> artifacts = _generateArtifacts();
 
@@ -179,5 +180,27 @@ class BuildkiteMockServer extends ApiMockServer {
         mimeType: 'json',
       ),
     );
+  }
+
+  /// Returns the `per_page` query parameter of the given [request].
+  ///
+  /// Returns `null` if the `perPage` is `null`.
+  int _extractPerPage(HttpRequest request) {
+    final perPage = request.uri.queryParameters['per_page'];
+
+    if (perPage == null) return null;
+
+    return int.tryParse(perPage);
+  }
+
+  /// Returns the `page` query parameter of the given [request].
+  ///
+  /// Returns `null` if the `page` is `null`.
+  int _extractPage(HttpRequest request) {
+    final page = request.uri.queryParameters['page'];
+
+    if (page == null) return null;
+
+    return int.tryParse(page);
   }
 }

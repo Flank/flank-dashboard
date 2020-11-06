@@ -13,28 +13,6 @@ class MockServerUtils {
     await request.response.close();
   }
 
-  /// Returns the `per_page` query parameter of the given [request].
-  ///
-  /// Returns `null` if the `perPage` is `null`.
-  static int extractPerPage(HttpRequest request) {
-    final perPage = request.uri.queryParameters['per_page'];
-
-    if (perPage == null) return null;
-
-    return int.tryParse(perPage);
-  }
-
-  /// Returns the `page` query parameter of the given [request].
-  ///
-  /// Returns `null` if the `page` is `null`.
-  static int extractPage(HttpRequest request) {
-    final page = request.uri.queryParameters['page'];
-
-    if (page == null) return null;
-
-    return int.tryParse(page);
-  }
-
   /// Chunks the given [items], limiting to the [limit],
   /// starting from the [pageIndex].
   static List<T> paginate<T>(List<T> items, [int limit, int pageIndex]) {
@@ -74,7 +52,7 @@ class MockServerUtils {
 
   /// Returns the last page number.
   ///
-  /// Returns `1` if the given [perPage] or [total] parameter is `null` 
+  /// Returns `1` if the given [perPage] or [total] parameter is `null`
   /// or the given [perPage] is less than zero.
   static int _getLastPageNumber(int total, int perPage) {
     if (perPage == null || perPage <= 0 || total == null) return 1;
