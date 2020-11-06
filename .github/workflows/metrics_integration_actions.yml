@@ -1,0 +1,101 @@
+name: Metrics Integration Actions
+
+on:
+  repository_dispatch:
+    types: [ build_finished ]
+
+
+jobs:
+  ci_integrations_sync:
+    name: Sync CI integrations
+    runs-on: macos-latest
+    if: github.event.client_payload.sync_ci_integrations == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+      - name: Download Ci integrations
+        run: |
+          curl -L -o ci_integrations "https://docs.google.com/uc?export=download&id=1Uex_lKxXybX0WFU7nSo49jgM0smbbjc3"
+          chmod a+x ci_integrations
+      - name: Wait For CI Inntegrations check finished
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: CI Integrations Actions
+          ref: ${{ github.sha }}
+          timeoutSeconds: 3600
+      - name: Apply environment variables
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
+          WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
+        run: eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
+        working-directory: metrics/ci_integrations/
+      - name: Sync CI integrations
+        run: ./ci_integrations sync --config-file metrics/ci_integrations/integration.yml
+
+  coverage_converter_sync:
+    name: Sync Coverage Converter
+    runs-on: macos-latest
+    if: github.event.client_payload.sync_coverage == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+      - name: Download Ci integrations
+        run: |
+          curl -L -o ci_integrations "https://docs.google.com/uc?export=download&id=1Uex_lKxXybX0WFU7nSo49jgM0smbbjc3"
+          chmod a+x ci_integrations
+      - name: Wait For Coverage Converter check finished
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Coverage Converter Release Actions
+          ref: ${{ github.sha }}
+          timeoutSeconds: 3600
+      - name: Apply environment variables
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
+          WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
+        run: eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
+        working-directory: metrics/coverage_converter/
+      - name: Sync Coverage Converter
+        run: ./ci_integrations sync --config-file metrics/coverage_converter/integration.yml
+
+
+  metrics_web_sync:
+    name: Sync Metrics Web
+    runs-on: macos-latest
+    if: github.event.client_payload.sync_web == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+      - name: Download Ci integrations
+        run: |
+          curl -L -o ci_integrations "https://docs.google.com/uc?export=download&id=1Uex_lKxXybX0WFU7nSo49jgM0smbbjc3"
+          chmod a+x ci_integrations
+      - name: Wait For Metrics Web check finished
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Metrics actions
+          ref: ${{ github.sha }}
+          timeoutSeconds: 3600
+      - name: Apply environment variables
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
+          WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
+        run: eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
+        working-directory: metrics/web/
+      - name: Sync Metrics Web 
+        run: ./ci_integrations sync --config-file metrics/web/integration.yml

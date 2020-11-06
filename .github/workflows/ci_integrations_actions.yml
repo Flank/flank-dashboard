@@ -53,3 +53,15 @@ jobs:
           name: coverage_report
           path: metrics/ci_integrations/coverage-summary.json
           if-no-files-found: error
+
+  notify-actions:
+    name: Notify about building the CI integrations
+    runs-on: macos-latest
+    steps:
+      - name: Notify CI Run finished
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: platform-platform/monorepo
+          event-type: build_finished
+          client-payload: '{"sync_ci_integrations": "true"}'
