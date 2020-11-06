@@ -23,7 +23,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
 
   /// Creates a new instance of the [BuildkiteSourceClientAdapter].
   ///
-  /// Throws an [ArgumentError] if [buildkiteClient] is `null.
+  /// Throws an [ArgumentError] if [buildkiteClient] is `null`.
   BuildkiteSourceClientAdapter({
     @required this.buildkiteClient,
   }) {
@@ -129,7 +129,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
 
   /// Maps the given [build] to the [BuildData] instance.
   Future<BuildData> _mapBuildToBuildData(
-    String pipeline,
+    String pipelineSlug,
     BuildkiteBuild build,
   ) async {
     return BuildData(
@@ -137,9 +137,9 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       startedAt: build.startedAt ?? build.finishedAt ?? DateTime.now(),
       buildStatus: _mapStateToBuildStatus(build.state),
       duration: _calculateJobDuration(build),
-      workflowName: pipeline,
+      workflowName: pipelineSlug,
       url: build.webUrl ?? "",
-      coverage: await _fetchCoverage(pipeline, build),
+      coverage: await _fetchCoverage(pipelineSlug, build),
     );
   }
 

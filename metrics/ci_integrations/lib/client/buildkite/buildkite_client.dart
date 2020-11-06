@@ -122,9 +122,9 @@ class BuildkiteClient {
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
-      'finished_from': finishedFrom?.toIso8601String(),
-      'state': stateMapper.unmap(state),
-      'per_page': '$perPage',
+      if (finishedFrom != null) 'finished_from': finishedFrom.toIso8601String(),
+      if (state != null) 'state': stateMapper.unmap(state),
+      if (perPage != null) 'per_page': '$perPage',
       'page': '$_page',
     };
 
@@ -193,7 +193,7 @@ class BuildkiteClient {
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
-      'per_page': '$perPage',
+      if (perPage != null) 'per_page': '$perPage',
       'page': '$_page',
     };
 
