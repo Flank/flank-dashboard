@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:api_mock_server/api_mock_server.dart';
@@ -83,7 +84,7 @@ class GithubActionsMockServer extends ApiMockServer {
 
     List<WorkflowRun> workflowRuns = _generateWorkflowRuns(status);
 
-    MockServerUtils.setNextPageUrlHeader(
+    _setNextPageUrlHeader(
       request,
       workflowRuns.length,
       runsPerPage,
@@ -112,7 +113,7 @@ class GithubActionsMockServer extends ApiMockServer {
 
     List<WorkflowRunJob> workflowRunJobs = _generateWorkflowRunJobs(status);
 
-    MockServerUtils.setNextPageUrlHeader(
+    _setNextPageUrlHeader(
       request,
       workflowRunJobs.length,
       runsPerPage,
@@ -140,12 +141,7 @@ class GithubActionsMockServer extends ApiMockServer {
 
     List<WorkflowRunArtifact> artifacts = _generateArtifacts();
 
-    MockServerUtils.setNextPageUrlHeader(
-      request,
-      artifacts.length,
-      runsPerPage,
-      pageNumber,
-    );
+    _setNextPageUrlHeader(request, artifacts.length, runsPerPage, pageNumber);
 
     artifacts = MockServerUtils.paginate(artifacts, runsPerPage, pageNumber);
 
@@ -266,5 +262,38 @@ class GithubActionsMockServer extends ApiMockServer {
     if (page == null) return null;
 
     return int.tryParse(page);
+  }
+
+  /// Sets the next page url header using the given [request], [itemsCount],
+  /// [perPage] and [pageNumber].
+  void _setNextPageUrlHeader(
+    HttpRequest request,
+    int itemsCount,
+    int perPage,
+    int pageNumber,
+  ) {
+    final lastPageNumber = _getLastPageNumber(itemsCount, perPage);
+
+    if (pageNumber >= lastPageNumber) return;
+
+    final requestUrl = request.requestedUri.toString();
+    final indexOfPageParam = requestUrl.indexOf("&page=");
+    final nextPageUrl = requestUrl.replaceRange(
+      indexOfPageParam,
+      requestUrl.length,
+      "&page=${pageNumber + 1}",
+    );
+
+    request.response.headers.set('link', '<$nextPageUrl> rel="next"');
+  }
+
+  /// Returns the last page number.
+  ///
+  /// Returns `1` if the given [perPage] or [total] parameter is `null`
+  /// or the given [perPage] is less than zero.
+  int _getLastPageNumber(int total, int perPage) {
+    if (perPage == null || perPage <= 0 || total == null) return 1;
+
+    return max((total / perPage).ceil(), 1);
   }
 }
