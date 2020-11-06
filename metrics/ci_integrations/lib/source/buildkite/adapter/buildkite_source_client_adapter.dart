@@ -41,7 +41,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
     BuildData build,
   ) async {
     ArgumentError.checkNotNull(build, 'build');
-    final finishedAt = build.startedAt.add(build.duration);
+    final latestBuildNumber = build.buildNumber;
 
     final firstBuildsPage = await _fetchBuildsPage(
       pipelineSlug,
@@ -51,28 +51,25 @@ class BuildkiteSourceClientAdapter implements SourceClient {
 
     final builds = firstBuildsPage.values ?? [];
 
-    if (builds.isEmpty || builds.first.finishedAt.isBefore(finishedAt)) {
-      return [];
-    }
+    if (builds.isEmpty || builds.first.number <= latestBuildNumber) return [];
 
-    return _fetchLatestBuilds(pipelineSlug, finishedAt);
+    return _fetchLatestBuilds(pipelineSlug, latestBuildNumber);
   }
 
   /// Fetches the latest builds by the given [pipelineSlug].
   ///
-  /// If the [finishedFrom] is not `null`, returns all builds finished
-  /// on or after the given [finishedFrom]. Otherwise, returns no more than
-  /// the latest [fetchLimit] builds.
+  /// If the [latestBuildNumber] is not `null`, returns all builds with the
+  /// [Build.buildNumber] greater than the given [latestBuildNumber]. Otherwise,
+  /// returns no more than the latest [fetchLimit] builds.
   Future<List<BuildData>> _fetchLatestBuilds(
     String pipelineSlug, [
-    DateTime finishedFrom,
+    int latestBuildNumber,
   ]) async {
     final List<BuildData> result = [];
     bool hasNext = true;
 
     BuildkiteBuildsPage buildsPage = await _fetchBuildsPage(
       pipelineSlug,
-      finishedFrom: finishedFrom,
       page: 1,
       perPage: fetchLimit,
     );
@@ -82,13 +79,18 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       final builds = buildsPage.values;
 
       for (final build in builds) {
+        if (latestBuildNumber != null && build.number <= latestBuildNumber) {
+          hasNext = false;
+          break;
+        }
+
         if (build == null || build.blocked) {
           continue;
         } else {
           final buildData = await _mapBuildToBuildData(pipelineSlug, build);
           result.add(buildData);
 
-          if (finishedFrom == null && result.length == fetchLimit) {
+          if (latestBuildNumber == null && result.length == fetchLimit) {
             hasNext = false;
             break;
           }
@@ -111,13 +113,12 @@ class BuildkiteSourceClientAdapter implements SourceClient {
   /// to the [BuildkiteClient.fetchBuilds] method.
   Future<BuildkiteBuildsPage> _fetchBuildsPage(
     String pipelineSlug, {
-    DateTime finishedFrom,
     int page,
     int perPage,
   }) async {
     final interaction = await buildkiteClient.fetchBuilds(
       pipelineSlug,
-      finishedFrom: finishedFrom,
+      state: BuildkiteBuildState.finished,
       page: page,
       perPage: perPage,
     );
