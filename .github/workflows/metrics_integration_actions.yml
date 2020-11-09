@@ -4,7 +4,6 @@ on:
   repository_dispatch:
     types: [ building_project ]
 
-
 jobs:
   ci_integrations_sync:
     name: CI integrations build data sync

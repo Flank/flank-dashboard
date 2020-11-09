@@ -99,7 +99,6 @@ jobs:
           path: metrics/coverage_converter/coverage_converter_linux
           if-no-files-found: error
 
-
   release-actions:
     name: Coverage Converter Release Actions
     runs-on: ubuntu-latest
