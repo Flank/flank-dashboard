@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:api_mock_server/api_mock_server.dart';
@@ -178,40 +177,37 @@ class JenkinsMockServer extends ApiMockServer {
 
   /// Responses with a [JenkinsMultiBranchJob] for the given [request].
   Future<void> _multiBranchJobResponse(HttpRequest request) async {
-    String responseBody;
-
     if (_treeQueryContains(request, RegExp(r'jobs\[[\w\W]+\]'))) {
       final limits = _extractLimits(request, RegExp(r'jobs\[[\w\W]+\]'));
-      responseBody = jsonEncode(_buildMultiBranchJob(
+
+      final response = _buildMultiBranchJob(
         hasJobs: true,
         limits: limits,
-      ));
-    } else {
-      responseBody = jsonEncode(_buildMultiBranchJob());
-    }
+      );
 
-    request.response.write(responseBody);
-    await request.response.flush();
-    await request.response.close();
+      await MockServerUtils.writeResponse(request, response);
+    } else {
+      final response = _buildMultiBranchJob();
+
+      await MockServerUtils.writeResponse(request, response);
+    }
   }
 
   /// Responses with a [JenkinsBuildingJob] for the given [request].
   Future<void> _buildingJobResponse(HttpRequest request) async {
-    String responseBody;
-
     if (_treeQueryContains(request, TreeQuery.build)) {
       final limits = _extractLimits(request, 'builds[${TreeQuery.build}]');
-      responseBody = jsonEncode(_buildBuildingJob(
+      final response = _buildBuildingJob(
         hasBuilds: true,
         limits: limits,
-      ));
-    } else {
-      responseBody = jsonEncode(_buildBuildingJob());
-    }
+      );
 
-    request.response.write(responseBody);
-    await request.response.flush();
-    await request.response.close();
+      await MockServerUtils.writeResponse(request, response);
+    } else {
+      final response = _buildBuildingJob();
+
+      await MockServerUtils.writeResponse(request, response);
+    }
   }
 
   /// Responses with a list of [JenkinsBuildArtifact]s for the given [request].
@@ -231,15 +227,13 @@ class JenkinsMockServer extends ApiMockServer {
 
     final limits = _extractLimits(request, 'artifacts');
     if (limits == null) {
-      request.response.write(jsonEncode(_response));
+      await MockServerUtils.writeResponse(request, _response);
     } else {
       _response['artifacts'] = _response['artifacts']
           .sublist(limits.lower, limits.upper == 0 ? 0 : limits.upper - 1);
-      request.response.write(jsonEncode(_response));
-    }
 
-    await request.response.flush();
-    await request.response.close();
+      await MockServerUtils.writeResponse(request, _response);
+    }
   }
 
   /// Responses with artifact content for the given [request].
@@ -250,8 +244,6 @@ class JenkinsMockServer extends ApiMockServer {
       'pct': 40,
     };
 
-    request.response.write(jsonEncode(artifactContent));
-    await request.response.flush();
-    await request.response.close();
+    await MockServerUtils.writeResponse(request, artifactContent);
   }
 }
