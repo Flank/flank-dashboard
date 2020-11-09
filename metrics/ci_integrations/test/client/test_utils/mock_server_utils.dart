@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 /// A class that holds methods for processing requests in mock servers.
 class MockServerUtils {
@@ -34,5 +35,10 @@ class MockServerUtils {
     request.response.statusCode = HttpStatus.notFound;
 
     await request.response.close();
+  }
+
+  /// Returns a [Uint8List] to emulate download.
+  static Future<void> downloadResponse(HttpRequest request) async {
+    await MockServerUtils.writeResponse(request, Uint8List.fromList([]));
   }
 }

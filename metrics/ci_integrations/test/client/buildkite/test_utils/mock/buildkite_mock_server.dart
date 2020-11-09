@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:api_mock_server/api_mock_server.dart';
 import 'package:ci_integration/client/buildkite/mappers/buildkite_build_state_mapper.dart';
@@ -58,7 +57,7 @@ class BuildkiteMockServer extends ApiMockServer {
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(_downloadPath),
-          dispatcher: _downloadResponse,
+          dispatcher: MockServerUtils.downloadResponse,
         ),
       ];
 
@@ -119,11 +118,6 @@ class BuildkiteMockServer extends ApiMockServer {
     );
 
     await request.response.close();
-  }
-
-  /// Returns a [Uint8List] to emulate download.
-  Future<void> _downloadResponse(HttpRequest request) async {
-    await MockServerUtils.writeResponse(request, Uint8List.fromList([]));
   }
 
   /// Returns the [BuildkiteBuildState], based on the `state` query parameter

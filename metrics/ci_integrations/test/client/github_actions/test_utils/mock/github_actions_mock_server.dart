@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:api_mock_server/api_mock_server.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
@@ -72,7 +71,7 @@ class GithubActionsMockServer extends ApiMockServer {
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(_downloadPath),
-          dispatcher: _downloadResponse,
+          dispatcher: MockServerUtils.downloadResponse,
         ),
       ];
 
@@ -163,11 +162,6 @@ class GithubActionsMockServer extends ApiMockServer {
     );
 
     await request.response.close();
-  }
-
-  /// Returns a [Uint8List] to emulate download.
-  Future<void> _downloadResponse(HttpRequest request) async {
-    await MockServerUtils.writeResponse(request, Uint8List.fromList([]));
   }
 
   /// Generates a list of [WorkflowRun]s with the given [status].
