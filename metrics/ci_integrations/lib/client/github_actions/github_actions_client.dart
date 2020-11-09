@@ -153,8 +153,8 @@ class GithubActionsClient {
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
-      'status': statusMapper.unmap(status),
-      'per_page': '$perPage',
+      if (status != null) 'status': statusMapper.unmap(status),
+      if (perPage != null) 'per_page': '$perPage',
       'page': '$_page',
     };
 
@@ -264,8 +264,8 @@ class GithubActionsClient {
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
-      'status': statusMapper.unmap(status),
-      'per_page': '$perPage',
+      if (status != null) 'status': statusMapper.unmap(status),
+      if (perPage != null) 'per_page': '$perPage',
       'page': '$_page',
     };
 
@@ -348,7 +348,7 @@ class GithubActionsClient {
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
-      'per_page': '$perPage',
+      if (perPage != null) 'per_page': '$perPage',
       'page': '$_page',
     };
 

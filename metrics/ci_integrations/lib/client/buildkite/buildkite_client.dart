@@ -96,6 +96,9 @@ class BuildkiteClient {
   /// Fetches a [BuildkiteBuildsPage] with a list of [BuildkiteBuild] by the
   /// given [pipelineSlug]. A [pipelineSlug] is a pipeline identifier.
   ///
+  /// A [finishedFrom] is used as a filter query parameter to define builds
+  /// finished on or after the given [DateTime].
+  ///
   /// A [state] is used as a filter query parameter to define the
   /// [BuildkiteBuild.state] of builds to fetch.
   ///
@@ -110,6 +113,7 @@ class BuildkiteClient {
   /// the first page is fetched.
   Future<InteractionResult<BuildkiteBuildsPage>> fetchBuilds(
     String pipelineSlug, {
+    DateTime finishedFrom,
     BuildkiteBuildState state,
     int perPage = 10,
     int page,
@@ -118,8 +122,9 @@ class BuildkiteClient {
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
-      'state': stateMapper.unmap(state),
-      'per_page': '$perPage',
+      if (finishedFrom != null) 'finished_from': finishedFrom.toIso8601String(),
+      if (state != null) 'state': stateMapper.unmap(state),
+      if (perPage != null) 'per_page': '$perPage',
       'page': '$_page',
     };
 
@@ -188,7 +193,7 @@ class BuildkiteClient {
     final _page = _getValidPageNumber(page);
 
     final queryParameters = {
-      'per_page': '$perPage',
+      if (perPage != null) 'per_page': '$perPage',
       'page': '$_page',
     };
 
