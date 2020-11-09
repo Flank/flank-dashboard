@@ -31,10 +31,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
           WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
-        run: eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
-        working-directory: metrics/ci_integrations/
+        run: eval "echo \"$(sed 's/"/\\"/g' ci_integrations_config.yml)\"" >> integration.yml
+        working-directory: .metrics/
       - name: CI integrations build data sync
-        run: ./ci_integrations sync --config-file metrics/ci_integrations/integration.yml
+        run: ./ci_integrations sync --config-file .metrics/integration.yml
 
   coverage_converter_sync:
     name: Coverage Converter build data sync
@@ -62,10 +62,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
           WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
-        run: eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
-        working-directory: metrics/coverage_converter/
+        run: eval "echo \"$(sed 's/"/\\"/g' coverage_converter_config.yml)\"" >> integration.yml
+        working-directory: .metrics/
       - name: Coverage Converter build data sync
-        run: ./ci_integrations sync --config-file metrics/coverage_converter/integration.yml
+        run: ./ci_integrations sync --config-file .metrics/integration.yml
 
   metrics_web_sync:
     name: Metrics Web build data sync
@@ -93,7 +93,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
           WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
-        run: eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
-        working-directory: metrics/web/
+        run: eval "echo \"$(sed 's/"/\\"/g' metrics_web_config.yml)\"" >> integration.yml
+        working-directory: .metrics/
       - name: Metrics Web build data sync
-        run: ./ci_integrations sync --config-file metrics/web/integration.yml
+        run: ./ci_integrations sync --config-file .metrics/integration.yml
