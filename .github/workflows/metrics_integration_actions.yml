@@ -7,7 +7,7 @@ on:
 
 jobs:
   ci_integrations_sync:
-    name: Sync CI integrations
+    name: CI integrations build data sync
     runs-on: macos-latest
     if: github.event.client_payload.building_ci_integrations == 'true'
     steps:
@@ -38,7 +38,7 @@ jobs:
         run: ./ci_integrations sync --config-file metrics/ci_integrations/integration.yml
 
   coverage_converter_sync:
-    name: Sync Coverage Converter
+    name: Coverage Converter build data sync
     runs-on: macos-latest
     if: github.event.client_payload.building_coverage_converter == 'true'
     steps:
@@ -69,7 +69,7 @@ jobs:
         run: ./ci_integrations sync --config-file metrics/coverage_converter/integration.yml
 
   metrics_web_sync:
-    name: Sync Metrics Web
+    name: Metrics Web build data sync
     runs-on: macos-latest
     if: github.event.client_payload.building_metrics_web == 'true'
     steps:

@@ -98,6 +98,8 @@ jobs:
   notify-actions:
     name: Notify about building the Web
     runs-on: macos-latest
+    needs: [ metrics-actions ]
+    if: "always()"
     steps:
       - name: Notify about building the Web
         uses: peter-evans/repository-dispatch@v1

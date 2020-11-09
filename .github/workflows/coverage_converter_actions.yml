@@ -163,6 +163,8 @@ jobs:
   notify-actions:
     name: Notify about building the Coverage Converter
     runs-on: macos-latest
+    needs: [ macos-actions, linux-actions, release-actions ]
+    if: "always()"
     steps:
       - name: Notify about building the Coverage Converter
         uses: peter-evans/repository-dispatch@v1
