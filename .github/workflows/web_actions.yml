@@ -17,7 +17,6 @@ jobs:
       WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       PROJECT_PATH: metrics/web/
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -94,3 +93,17 @@ jobs:
       - name: Deploy SKIA version to Firebase
         run: firebase deploy --only hosting:metrics-skia
         working-directory: metrics/web/
+
+  notify-actions:
+    name: Notify about building the Web
+    runs-on: macos-latest
+    needs: [ metrics-actions ]
+    if: "always()"
+    steps:
+      - name: Notify about building the Web
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: platform-platform/monorepo
+          event-type: building_project
+          client-payload: '{"building_metrics_web": "true"}'

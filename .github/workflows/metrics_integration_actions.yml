@@ -1,0 +1,99 @@
+name: Metrics Integration Actions
+
+on:
+  repository_dispatch:
+    types: [ building_project ]
+
+jobs:
+  ci_integrations_sync:
+    name: CI integrations build data sync
+    runs-on: macos-latest
+    if: github.event.client_payload.building_ci_integrations == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+      - name: Download Ci integrations
+        run: |
+          curl -L -o ci_integrations "https://docs.google.com/uc?export=download&id=1Uex_lKxXybX0WFU7nSo49jgM0smbbjc3"
+          chmod a+x ci_integrations
+      - name: Wait For CI Integrations check finished
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Notify about building the CI integrations
+          ref: ${{ github.sha }}
+          timeoutSeconds: 3600
+      - name: Apply environment variables
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
+          WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
+        run: eval "echo \"$(sed 's/"/\\"/g' ci_integrations_config.yml)\"" >> integration.yml
+        working-directory: .metrics/
+      - name: CI integrations build data sync
+        run: ./ci_integrations sync --config-file .metrics/integration.yml
+
+  coverage_converter_sync:
+    name: Coverage Converter build data sync
+    runs-on: macos-latest
+    if: github.event.client_payload.building_coverage_converter == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+      - name: Download Ci integrations
+        run: |
+          curl -L -o ci_integrations "https://docs.google.com/uc?export=download&id=1Uex_lKxXybX0WFU7nSo49jgM0smbbjc3"
+          chmod a+x ci_integrations
+      - name: Wait For Coverage Converter check finished
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Notify about building the Coverage Converter
+          ref: ${{ github.sha }}
+          timeoutSeconds: 3600
+      - name: Apply environment variables
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
+          WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
+        run: eval "echo \"$(sed 's/"/\\"/g' coverage_converter_config.yml)\"" >> integration.yml
+        working-directory: .metrics/
+      - name: Coverage Converter build data sync
+        run: ./ci_integrations sync --config-file .metrics/integration.yml
+
+  metrics_web_sync:
+    name: Metrics Web build data sync
+    runs-on: macos-latest
+    if: github.event.client_payload.building_metrics_web == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+      - name: Download Ci integrations
+        run: |
+          curl -L -o ci_integrations "https://docs.google.com/uc?export=download&id=1Uex_lKxXybX0WFU7nSo49jgM0smbbjc3"
+          chmod a+x ci_integrations
+      - name: Wait For Metrics Web check finished
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Notify about building the Web
+          ref: ${{ github.sha }}
+          timeoutSeconds: 3600
+      - name: Apply environment variables
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
+          WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
+        run: eval "echo \"$(sed 's/"/\\"/g' metrics_web_config.yml)\"" >> integration.yml
+        working-directory: .metrics/
+      - name: Metrics Web build data sync
+        run: ./ci_integrations sync --config-file .metrics/integration.yml
