@@ -23,7 +23,7 @@ jobs:
         uses: fountainhead/action-wait-for-check@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: CI Integrations Actions
+          checkName: Notify about building the CI integrations
           ref: ${{ github.sha }}
           timeoutSeconds: 3600
       - name: Apply environment variables
@@ -54,7 +54,7 @@ jobs:
         uses: fountainhead/action-wait-for-check@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: Coverage Converter Release Actions
+          checkName: Notify about building the Coverage Converter
           ref: ${{ github.sha }}
           timeoutSeconds: 3600
       - name: Apply environment variables
@@ -85,7 +85,7 @@ jobs:
         uses: fountainhead/action-wait-for-check@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: Metrics actions
+          checkName: Notify about building the Web
           ref: ${{ github.sha }}
           timeoutSeconds: 3600
       - name: Apply environment variables
