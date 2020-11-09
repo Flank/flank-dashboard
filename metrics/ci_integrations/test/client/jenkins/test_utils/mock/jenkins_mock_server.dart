@@ -177,37 +177,38 @@ class JenkinsMockServer extends ApiMockServer {
 
   /// Responses with a [JenkinsMultiBranchJob] for the given [request].
   Future<void> _multiBranchJobResponse(HttpRequest request) async {
+    JenkinsMultiBranchJob response;
+
     if (_treeQueryContains(request, RegExp(r'jobs\[[\w\W]+\]'))) {
       final limits = _extractLimits(request, RegExp(r'jobs\[[\w\W]+\]'));
 
-      final response = _buildMultiBranchJob(
+      response = _buildMultiBranchJob(
         hasJobs: true,
         limits: limits,
       );
-
-      await MockServerUtils.writeResponse(request, response);
     } else {
-      final response = _buildMultiBranchJob();
-
-      await MockServerUtils.writeResponse(request, response);
+      response = _buildMultiBranchJob();
     }
+
+    await MockServerUtils.writeResponse(request, response);
   }
 
   /// Responses with a [JenkinsBuildingJob] for the given [request].
   Future<void> _buildingJobResponse(HttpRequest request) async {
+    JenkinsBuildingJob response;
+
     if (_treeQueryContains(request, TreeQuery.build)) {
       final limits = _extractLimits(request, 'builds[${TreeQuery.build}]');
-      final response = _buildBuildingJob(
+
+      response = _buildBuildingJob(
         hasBuilds: true,
         limits: limits,
       );
-
-      await MockServerUtils.writeResponse(request, response);
     } else {
-      final response = _buildBuildingJob();
-
-      await MockServerUtils.writeResponse(request, response);
+      response = _buildBuildingJob();
     }
+
+    await MockServerUtils.writeResponse(request, response);
   }
 
   /// Responses with a list of [JenkinsBuildArtifact]s for the given [request].
@@ -226,14 +227,12 @@ class JenkinsMockServer extends ApiMockServer {
     };
 
     final limits = _extractLimits(request, 'artifacts');
-    if (limits == null) {
-      await MockServerUtils.writeResponse(request, _response);
-    } else {
+    if (limits != null) {
       _response['artifacts'] = _response['artifacts']
           .sublist(limits.lower, limits.upper == 0 ? 0 : limits.upper - 1);
-
-      await MockServerUtils.writeResponse(request, _response);
     }
+
+    await MockServerUtils.writeResponse(request, _response);
   }
 
   /// Responses with artifact content for the given [request].
