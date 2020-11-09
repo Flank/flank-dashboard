@@ -30,7 +30,7 @@ class BuildkiteMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/pipelines/not_found/builds',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -42,7 +42,7 @@ class BuildkiteMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/pipelines/pipeline_slug/builds/not_found/artifacts',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -54,7 +54,7 @@ class BuildkiteMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/pipelines/pipeline_slug/builds/1/artifacts/not_found/download',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(_downloadPath),
@@ -124,14 +124,6 @@ class BuildkiteMockServer extends ApiMockServer {
   /// Returns a [Uint8List] to emulate download.
   Future<void> _downloadResponse(HttpRequest request) async {
     await MockServerUtils.writeResponse(request, Uint8List.fromList([]));
-  }
-
-  /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
-  /// and closes it.
-  Future<void> _notFoundResponse(HttpRequest request) async {
-    request.response.statusCode = HttpStatus.notFound;
-
-    await request.response.close();
   }
 
   /// Returns the [BuildkiteBuildState], based on the `state` query parameter

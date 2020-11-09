@@ -5,7 +5,9 @@ import 'dart:io';
 class MockServerUtils {
   /// Writes the given [response].
   static Future<void> writeResponse(
-      HttpRequest request, dynamic response) async {
+    HttpRequest request,
+    dynamic response,
+  ) async {
     request.response.write(jsonEncode(response));
 
     await request.response.flush();
@@ -24,5 +26,13 @@ class MockServerUtils {
     }
 
     return items;
+  }
+
+  /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
+  /// and closes it.
+  static Future<void> notFoundResponse(HttpRequest request) async {
+    request.response.statusCode = HttpStatus.notFound;
+
+    await request.response.close();
   }
 }

@@ -32,7 +32,7 @@ class GithubActionsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/workflows/test/runs',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -44,7 +44,7 @@ class GithubActionsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/runs/test/jobs',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -56,7 +56,7 @@ class GithubActionsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/runs/test/artifacts',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -68,7 +68,7 @@ class GithubActionsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/artifacts/test/zip',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(_downloadPath),
@@ -168,14 +168,6 @@ class GithubActionsMockServer extends ApiMockServer {
   /// Returns a [Uint8List] to emulate download.
   Future<void> _downloadResponse(HttpRequest request) async {
     await MockServerUtils.writeResponse(request, Uint8List.fromList([]));
-  }
-
-  /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
-  /// and closes it.
-  Future<void> _notFoundResponse(HttpRequest request) async {
-    request.response.statusCode = HttpStatus.notFound;
-
-    await request.response.close();
   }
 
   /// Generates a list of [WorkflowRun]s with the given [status].
