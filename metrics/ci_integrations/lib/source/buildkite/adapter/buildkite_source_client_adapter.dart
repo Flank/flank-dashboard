@@ -216,7 +216,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
 
   /// Calculates a [Duration] of the given [build].
   ///
-  /// Returns `null` if either [BuildkiteBuild.startedAt] or
+  /// Returns [Duration.zero] if either [BuildkiteBuild.startedAt] or
   /// [BuildkiteBuild.finishedAt] is `null`.
   Duration _calculateJobDuration(BuildkiteBuild build) {
     if (build.startedAt == null || build.finishedAt == null) {
