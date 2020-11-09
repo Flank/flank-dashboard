@@ -96,7 +96,7 @@ jobs:
         working-directory: metrics/web/
 
   notify-actions:
-    name: Notify about building the CI integrations
+    name: Notify about building the Web
     runs-on: macos-latest
     steps:
       - name: Notify CI Run finished

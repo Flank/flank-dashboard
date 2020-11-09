@@ -20,7 +20,7 @@ jobs:
         run: |
           curl -L -o ci_integrations "https://docs.google.com/uc?export=download&id=1Uex_lKxXybX0WFU7nSo49jgM0smbbjc3"
           chmod a+x ci_integrations
-      - name: Wait For CI Inntegrations check finished
+      - name: Wait For CI Integrations check finished
         uses: fountainhead/action-wait-for-check@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -34,7 +34,7 @@ jobs:
           WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
         run: eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
         working-directory: metrics/ci_integrations/
-      - name: Sync CI integrations
+      - name: CI integrations build data sync
         run: ./ci_integrations sync --config-file metrics/ci_integrations/integration.yml
 
   coverage_converter_sync:
@@ -65,9 +65,8 @@ jobs:
           WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
         run: eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
         working-directory: metrics/coverage_converter/
-      - name: Sync Coverage Converter
+      - name: Coverage Converter build data sync
         run: ./ci_integrations sync --config-file metrics/coverage_converter/integration.yml
-
 
   metrics_web_sync:
     name: Sync Metrics Web
@@ -97,5 +96,5 @@ jobs:
           WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
         run: eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
         working-directory: metrics/web/
-      - name: Sync Metrics Web 
+      - name: Metrics Web build data sync
         run: ./ci_integrations sync --config-file metrics/web/integration.yml
