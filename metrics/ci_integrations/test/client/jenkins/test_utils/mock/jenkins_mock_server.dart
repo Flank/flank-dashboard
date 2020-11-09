@@ -12,6 +12,8 @@ import 'package:ci_integration/client/jenkins/model/jenkins_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_multi_branch_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
 
+import '../../../test_utils/mock_server_utils.dart';
+
 /// A mock server for the Jenkins API.
 class JenkinsMockServer extends ApiMockServer {
   @override
@@ -26,7 +28,7 @@ class JenkinsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '/job/name/${JenkinsClient.jsonApiPath}',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -38,7 +40,7 @@ class JenkinsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '/job/test/job/dev${JenkinsClient.jsonApiPath}',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -50,7 +52,7 @@ class JenkinsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '/job/test/job/master/10${JenkinsClient.jsonApiPath}',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -62,7 +64,7 @@ class JenkinsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '/job/test/job/master/1/artifact/coverage/test.json',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
       ];
 
@@ -250,14 +252,6 @@ class JenkinsMockServer extends ApiMockServer {
 
     request.response.write(jsonEncode(artifactContent));
     await request.response.flush();
-    await request.response.close();
-  }
-
-  /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
-  /// and closes it.
-  Future<void> _notFoundResponse(HttpRequest request) async {
-    request.response.statusCode = HttpStatus.notFound;
-
     await request.response.close();
   }
 }
