@@ -6,21 +6,21 @@ void main() {
     const localhostUrl = 'http://localhost:8080';
 
     test(
-      ".buildUrl() should throw ArgumentError if a URL is null",
+      ".buildUrl() throws an ArgumentError if the given URL is null",
       () {
         expect(() => UrlUtils.buildUrl(null), throwsArgumentError);
       },
     );
 
     test(
-      ".buildUrl() should throw FormatException if a URL is invalid",
+      ".buildUrl() throw a FormatException if the given URL is invalid",
       () {
         expect(() => UrlUtils.buildUrl('test'), throwsFormatException);
       },
     );
 
     test(
-      ".buildUrl() should not add query parameters if not provided",
+      ".buildUrl() does not add query parameters if not provided",
       () {
         final result = UrlUtils.buildUrl(localhostUrl);
         final actual = Uri.parse(result).hasQuery;
@@ -30,7 +30,7 @@ void main() {
     );
 
     test(
-      ".buildUrl() should not add query parameters if empty map provided",
+      ".buildUrl() does not add query parameters if an empty map provided",
       () {
         final result = UrlUtils.buildUrl(localhostUrl, queryParameters: {});
         final actual = Uri.parse(result).hasQuery;
@@ -40,7 +40,7 @@ void main() {
     );
 
     test(
-      ".buildUrl() should add query parameters if not empty map provided",
+      ".buildUrl() adds query parameters if not empty map provided",
       () {
         final result = UrlUtils.buildUrl(
           localhostUrl,
@@ -53,7 +53,7 @@ void main() {
     );
 
     test(
-      ".buildUrl() should build a valid URL from parts provided",
+      ".buildUrl() builds a valid URL from parts provided",
       () {
         final result = UrlUtils.buildUrl(
           '$localhostUrl/',
@@ -70,7 +70,7 @@ void main() {
     );
 
     test(
-      ".replacePathSeparators() should throw ArgumentError if the path is null",
+      ".replacePathSeparators() throws an ArgumentError if the path is null",
       () {
         expect(
           () => UrlUtils.replacePathSeparators(null, ''),
@@ -80,7 +80,7 @@ void main() {
     );
 
     test(
-      ".replacePathSeparators() should throw ArgumentError if the replacement is null",
+      ".replacePathSeparators() throws an ArgumentError if the replacement is null",
       () {
         expect(
           () => UrlUtils.replacePathSeparators('', null),
@@ -90,7 +90,7 @@ void main() {
     );
 
     test(
-      ".replacePathSeparators() should result with path starting with the given replacement",
+      ".replacePathSeparators() results with path starting with the given replacement",
       () {
         final result = UrlUtils.replacePathSeparators('path', 'test');
 
@@ -99,7 +99,7 @@ void main() {
     );
 
     test(
-      ".replacePathSeparators() should replace path separators with the given replacement segment",
+      ".replacePathSeparators() replaces path separators with the given replacement segment",
       () {
         final result = UrlUtils.replacePathSeparators('path/to', 'test');
 

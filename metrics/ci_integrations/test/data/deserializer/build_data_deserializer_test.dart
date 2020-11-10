@@ -24,7 +24,7 @@ void main() {
     };
 
     test(
-      ".fromJson() should return null if the given JSON is null",
+      ".fromJson() returns null if the given JSON is null",
       () {
         final buildData = BuildDataDeserializer.fromJson(null, id);
 
@@ -32,7 +32,7 @@ void main() {
       },
     );
 
-    test(".fromJson() should return BuildData from a JSON map", () {
+    test(".fromJson() returns BuildData from a JSON map", () {
       final expectedBuildData = BuildData(
         id: id,
         duration: duration,

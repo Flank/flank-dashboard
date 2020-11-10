@@ -10,20 +10,20 @@ void main() {
     const fileArtifactJson = JenkinsArtifactsTestData.fileArtifactJson;
     const fileArtifact = JenkinsArtifactsTestData.fileArtifact;
 
-    test(".fromJson() should return null if a given json is null", () {
+    test(".fromJson() returns null if a given json is null", () {
       final job = JenkinsBuildArtifact.fromJson(null);
 
       expect(job, isNull);
     });
 
-    test(".fromJson() should create an instance from a json map", () {
+    test(".fromJson() creates an instance from a json map", () {
       final job = JenkinsBuildArtifact.fromJson(artifactJson);
 
       expect(job, equals(artifact));
     });
 
     test(
-      ".listFromJson() should map a null list as null one",
+      ".listFromJson() maps a null list as null one",
       () {
         final jobs = JenkinsBuildArtifact.listFromJson(null);
 
@@ -32,7 +32,7 @@ void main() {
     );
 
     test(
-      ".listFromJson() should map an empty list as empty one",
+      ".listFromJson() maps an empty list as empty one",
       () {
         final jobs = JenkinsBuildArtifact.listFromJson([]);
 
@@ -41,7 +41,7 @@ void main() {
     );
 
     test(
-      ".listFromJson() should map a list of jobs json maps",
+      ".listFromJson() maps a list of jobs json maps",
       () {
         final jobs = JenkinsBuildArtifact.listFromJson([
           artifactJson,
@@ -53,7 +53,7 @@ void main() {
       },
     );
 
-    test(".toJson() should convert an instance to the json map", () {
+    test(".toJson() converts an instance to the json map", () {
       final json = artifact.toJson();
 
       expect(json, equals(artifactJson));

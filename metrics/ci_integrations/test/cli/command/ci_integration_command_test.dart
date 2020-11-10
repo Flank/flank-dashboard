@@ -19,14 +19,14 @@ void main() {
     });
 
     test(
-      "should throw ArgumentError trying to create instance with null logger",
+      "throws an ArgumentError if the given logger is null",
       () {
         expect(() => CiIntegrationCommandStub(null), throwsArgumentError);
       },
     );
 
     test(
-      ".getArgumentValue() should return null if option was not parsed",
+      ".getArgumentValue() returns null if option was not parsed",
       () async {
         await runner.run(['test']);
         final optionValue = command.getArgumentValue(optionName);
@@ -36,7 +36,7 @@ void main() {
     );
 
     test(
-      ".getArgumentValue() should return the argument value",
+      ".getArgumentValue() returns the argument value",
       () async {
         const argumentValue = 'argumentValue';
         await runner.run(['test', '--$optionName', argumentValue]);

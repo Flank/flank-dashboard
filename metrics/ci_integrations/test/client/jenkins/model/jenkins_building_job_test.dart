@@ -73,26 +73,26 @@ void main() {
       };
     });
 
-    test(".fromJson() should return null if the given json is null", () {
+    test(".fromJson() returns null if the given json is null", () {
       final job = JenkinsBuildingJob.fromJson(null);
 
       expect(job, isNull);
     });
 
-    test(".fromJson() should create an instance from the json map", () {
+    test(".fromJson() creates an instance from the json map", () {
       final job = JenkinsBuildingJob.fromJson(buildingJobJson);
 
       expect(job, equals(buildingJob));
     });
 
-    test(".toJson() should populate a json map with a list of builds", () {
+    test(".toJson() populates a json map with a list of builds", () {
       final job = JenkinsBuildingJob(name: 'name', builds: [jenkinsBuild]);
       final json = job.toJson();
 
       expect(json, containsPair('builds', [jenkinsBuildJson]));
     });
 
-    test(".toJson() should convert an instance to the json map", () {
+    test(".toJson() converts an instance to the json map", () {
       final json = buildingJob.toJson();
 
       expect(json, equals(buildingJobJson));

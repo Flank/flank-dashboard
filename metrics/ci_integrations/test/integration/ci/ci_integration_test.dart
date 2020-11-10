@@ -15,7 +15,7 @@ void main() {
     );
 
     test(
-      "should throw ArgumentError trying to create an instance with null source client",
+      "throws an ArgumentError if the given source client is null",
       () {
         expect(
           () => CiIntegration(
@@ -28,7 +28,7 @@ void main() {
     );
 
     test(
-      "should throw ArgumentError trying to create an instance with null destination client",
+      "throws an ArgumentError if the given destination client is null",
       () {
         expect(
           () => CiIntegration(
@@ -41,7 +41,7 @@ void main() {
     );
 
     test(
-      ".sync() should throw ArgumentError if the given config is null",
+      ".sync() throws an ArgumentError if the given config is null",
       () {
         final ciIntegration = CiIntegration(
           sourceClient: SourceClientStub(),
@@ -53,7 +53,7 @@ void main() {
     );
 
     test(
-      ".sync() should result with an error if a source client throws fetching all builds",
+      ".sync() results with an error if a source client throws fetching all builds",
       () {
         final sourceClient = SourceClientStub(
           fetchBuildsCallback: (_) => throw UnimplementedError(),
@@ -73,7 +73,7 @@ void main() {
     );
 
     test(
-      ".sync() should result with an error if a source client throws fetching the builds after the given one",
+      ".sync() results with an error if a source client throws fetching the builds after the given one",
       () {
         final sourceClient = SourceClientStub(
           fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
@@ -87,7 +87,7 @@ void main() {
     );
 
     test(
-      ".sync() should result with error if a destination client throws fetching the last build",
+      ".sync() results with an error if a destination client throws fetching the last build",
       () {
         final destinationClient = DestinationClientStub(
           fetchLastBuildCallback: (_) => throw UnimplementedError(),
@@ -103,7 +103,7 @@ void main() {
     );
 
     test(
-      ".sync() should result with an error if a destination client throws adding new builds",
+      ".sync() results with an error if a destination client throws adding new builds",
       () {
         final destinationClient = DestinationClientStub(
           addBuildsCallback: (_, __) => throw UnimplementedError(),
@@ -119,7 +119,7 @@ void main() {
     );
 
     test(
-      ".sync() should ignore empty list of new builds and not call adding builds",
+      ".sync() ignores empty list of new builds and not call adding builds",
       () {
         final sourceClient = SourceClientStub(
           fetchBuildsAfterCallback: (_, __) => Future.value([]),
@@ -139,7 +139,7 @@ void main() {
     );
 
     test(
-      ".sync() should synchronize builds",
+      ".sync() synchronizes builds",
       () {
         final ciIntegration = CiIntegrationStub();
         final result =

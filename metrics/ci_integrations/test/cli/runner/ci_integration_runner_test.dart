@@ -9,14 +9,14 @@ void main() {
     final CiIntegrationsRunner runner = CiIntegrationsRunner(logger);
 
     test(
-      "should throw an ArgumentError trying to create an instance with null logger",
+      "throws an ArgumentError if the given logger is null",
       () {
         expect(() => CiIntegrationsRunner(null), throwsArgumentError);
       },
     );
 
     test(
-      "should have the executable name equals to the 'ci_integrations'",
+      "has the executable name equals to the 'ci_integrations'",
       () {
         final executableName = runner.executableName;
 
@@ -25,7 +25,7 @@ void main() {
     );
 
     test(
-      "should have a non-empty description",
+      "has a non-empty description",
       () {
         final description = runner.description;
 
@@ -34,7 +34,7 @@ void main() {
     );
 
     test(
-      "should register SyncCommand on create",
+      "registers SyncCommand on create",
       () {
         final SyncCommand syncCommand = SyncCommand(logger);
         final syncCommandName = syncCommand.name;

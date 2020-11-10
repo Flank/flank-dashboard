@@ -7,13 +7,13 @@ void main() {
   group("JenkinsSourceParty", () {
     final jenkinsSourceParty = JenkinsSourceParty();
 
-    test("should use JenkinsSourceClientFactory as a client factory", () {
+    test("uses JenkinsSourceClientFactory as a client factory", () {
       final clientFactory = jenkinsSourceParty.clientFactory;
 
       expect(clientFactory, isA<JenkinsSourceClientFactory>());
     });
 
-    test("should use JenkinsConfigParser as a config parser", () {
+    test("uses JenkinsConfigParser as a config parser", () {
       final configParser = jenkinsSourceParty.configParser;
 
       expect(configParser, isA<JenkinsSourceConfigParser>());

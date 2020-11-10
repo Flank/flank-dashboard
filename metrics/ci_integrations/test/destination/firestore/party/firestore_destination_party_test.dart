@@ -8,7 +8,7 @@ void main() {
     final firestoreDestinationParty = FirestoreDestinationParty();
 
     test(
-      "should use FirestoreDestinationClientFactory as a client factory",
+      "uses FirestoreDestinationClientFactory as a client factory",
       () {
         final clientFactory = firestoreDestinationParty.clientFactory;
 
@@ -16,7 +16,7 @@ void main() {
       },
     );
 
-    test("should use FirestoreConfigParser as a config parser", () {
+    test("uses FirestoreConfigParser as a config parser", () {
       final configParser = firestoreDestinationParty.configParser;
 
       expect(configParser, isA<FirestoreDestinationConfigParser>());

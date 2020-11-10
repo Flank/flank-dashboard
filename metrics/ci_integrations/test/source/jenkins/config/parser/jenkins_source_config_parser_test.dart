@@ -14,14 +14,14 @@ void main() {
 
     final jenkinsConfigParser = JenkinsSourceConfigParser();
 
-    test(".canParse() should return false if the given map is null", () {
+    test(".canParse() returns false if the given map is null", () {
       final canParse = jenkinsConfigParser.canParse(null);
 
       expect(canParse, isFalse);
     });
 
     test(
-      ".canParse() should return false if the given map does not contain a Jenkins key",
+      ".canParse() returns false if the given map does not contain a Jenkins key",
       () {
         final map = {'test': {}};
 
@@ -32,7 +32,7 @@ void main() {
     );
 
     test(
-      ".canParse() should return true if the parser can parse the given map",
+      ".canParse() returns true if the parser can parse the given map",
       () {
         final canParse = jenkinsConfigParser.canParse(jenkinsConfigMap);
 
@@ -41,7 +41,7 @@ void main() {
     );
 
     test(
-      ".parse() should return null if the given map is null",
+      ".parse() returns null if the given map is null",
       () {
         final result = jenkinsConfigParser.parse(null);
 
@@ -50,7 +50,7 @@ void main() {
     );
 
     test(
-      ".parse() should return null if the given map does not contain a Jenkins key",
+      ".parse() returns null if the given map does not contain a Jenkins key",
       () {
         final map = {'test': {}};
 
@@ -61,7 +61,7 @@ void main() {
     );
 
     test(
-      ".parse() should parse the given map into the JenkinsConfig",
+      ".parse() parses the given map into the JenkinsConfig",
       () {
         final result = jenkinsConfigParser.parse(jenkinsConfigMap);
 
