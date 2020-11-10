@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:api_mock_server/api_mock_server.dart';
@@ -11,6 +10,8 @@ import 'package:ci_integration/client/jenkins/model/jenkins_building_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_multi_branch_job.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_query_limits.dart';
+
+import '../../../test_utils/mock_server_utils.dart';
 
 /// A mock server for the Jenkins API.
 class JenkinsMockServer extends ApiMockServer {
@@ -26,7 +27,7 @@ class JenkinsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '/job/name/${JenkinsClient.jsonApiPath}',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -38,7 +39,7 @@ class JenkinsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '/job/test/job/dev${JenkinsClient.jsonApiPath}',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -50,7 +51,7 @@ class JenkinsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '/job/test/job/master/10${JenkinsClient.jsonApiPath}',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -62,7 +63,7 @@ class JenkinsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '/job/test/job/master/1/artifact/coverage/test.json',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
       ];
 
@@ -176,40 +177,38 @@ class JenkinsMockServer extends ApiMockServer {
 
   /// Responses with a [JenkinsMultiBranchJob] for the given [request].
   Future<void> _multiBranchJobResponse(HttpRequest request) async {
-    String responseBody;
+    JenkinsMultiBranchJob response;
 
     if (_treeQueryContains(request, RegExp(r'jobs\[[\w\W]+\]'))) {
       final limits = _extractLimits(request, RegExp(r'jobs\[[\w\W]+\]'));
-      responseBody = jsonEncode(_buildMultiBranchJob(
+
+      response = _buildMultiBranchJob(
         hasJobs: true,
         limits: limits,
-      ));
+      );
     } else {
-      responseBody = jsonEncode(_buildMultiBranchJob());
+      response = _buildMultiBranchJob();
     }
 
-    request.response.write(responseBody);
-    await request.response.flush();
-    await request.response.close();
+    await MockServerUtils.writeResponse(request, response);
   }
 
   /// Responses with a [JenkinsBuildingJob] for the given [request].
   Future<void> _buildingJobResponse(HttpRequest request) async {
-    String responseBody;
+    JenkinsBuildingJob response;
 
     if (_treeQueryContains(request, TreeQuery.build)) {
       final limits = _extractLimits(request, 'builds[${TreeQuery.build}]');
-      responseBody = jsonEncode(_buildBuildingJob(
+
+      response = _buildBuildingJob(
         hasBuilds: true,
         limits: limits,
-      ));
+      );
     } else {
-      responseBody = jsonEncode(_buildBuildingJob());
+      response = _buildBuildingJob();
     }
 
-    request.response.write(responseBody);
-    await request.response.flush();
-    await request.response.close();
+    await MockServerUtils.writeResponse(request, response);
   }
 
   /// Responses with a list of [JenkinsBuildArtifact]s for the given [request].
@@ -228,16 +227,12 @@ class JenkinsMockServer extends ApiMockServer {
     };
 
     final limits = _extractLimits(request, 'artifacts');
-    if (limits == null) {
-      request.response.write(jsonEncode(_response));
-    } else {
+    if (limits != null) {
       _response['artifacts'] = _response['artifacts']
           .sublist(limits.lower, limits.upper == 0 ? 0 : limits.upper - 1);
-      request.response.write(jsonEncode(_response));
     }
 
-    await request.response.flush();
-    await request.response.close();
+    await MockServerUtils.writeResponse(request, _response);
   }
 
   /// Responses with artifact content for the given [request].
@@ -248,16 +243,6 @@ class JenkinsMockServer extends ApiMockServer {
       'pct': 40,
     };
 
-    request.response.write(jsonEncode(artifactContent));
-    await request.response.flush();
-    await request.response.close();
-  }
-
-  /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
-  /// and closes it.
-  Future<void> _notFoundResponse(HttpRequest request) async {
-    request.response.statusCode = HttpStatus.notFound;
-
-    await request.response.close();
+    await MockServerUtils.writeResponse(request, artifactContent);
   }
 }

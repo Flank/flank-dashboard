@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:api_mock_server/api_mock_server.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
@@ -10,6 +8,8 @@ import 'package:ci_integration/client/github_actions/models/github_action_status
 import 'package:ci_integration/client/github_actions/models/workflow_run.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
+
+import '../../../test_utils/mock_server_utils.dart';
 
 /// A mock server for the Github Actions API.
 class GithubActionsMockServer extends ApiMockServer {
@@ -31,7 +31,7 @@ class GithubActionsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/workflows/test/runs',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -43,7 +43,7 @@ class GithubActionsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/runs/test/jobs',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -55,7 +55,7 @@ class GithubActionsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/runs/test/artifacts',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(
@@ -67,11 +67,11 @@ class GithubActionsMockServer extends ApiMockServer {
           pathMatcher: ExactPathMatcher(
             '$basePath/artifacts/test/zip',
           ),
-          dispatcher: _notFoundResponse,
+          dispatcher: MockServerUtils.notFoundResponse,
         ),
         RequestHandler.get(
           pathMatcher: ExactPathMatcher(_downloadPath),
-          dispatcher: _downloadResponse,
+          dispatcher: MockServerUtils.downloadResponse,
         ),
       ];
 
@@ -90,14 +90,18 @@ class GithubActionsMockServer extends ApiMockServer {
       pageNumber,
     );
 
-    workflowRuns = _paginate(workflowRuns, runsPerPage, pageNumber);
+    workflowRuns = MockServerUtils.paginate(
+      workflowRuns,
+      runsPerPage,
+      pageNumber,
+    );
 
     final _response = {
       'total_count': workflowRuns.length,
       'workflow_runs': workflowRuns.map((run) => run.toJson()).toList(),
     };
 
-    await _writeResponse(request, _response);
+    await MockServerUtils.writeResponse(request, _response);
   }
 
   /// Responses with a list of all workflow run jobs for a specific workflow run.
@@ -115,14 +119,18 @@ class GithubActionsMockServer extends ApiMockServer {
       pageNumber,
     );
 
-    workflowRunJobs = _paginate(workflowRunJobs, runsPerPage, pageNumber);
+    workflowRunJobs = MockServerUtils.paginate(
+      workflowRunJobs,
+      runsPerPage,
+      pageNumber,
+    );
 
     final _response = {
       'total_count': workflowRunJobs.length,
       'jobs': workflowRunJobs.map((run) => run.toJson()).toList(),
     };
 
-    await _writeResponse(request, _response);
+    await MockServerUtils.writeResponse(request, _response);
   }
 
   /// Responses with a list of artifacts for a specific workflow run.
@@ -132,21 +140,16 @@ class GithubActionsMockServer extends ApiMockServer {
 
     List<WorkflowRunArtifact> artifacts = _generateArtifacts();
 
-    _setNextPageUrlHeader(
-      request,
-      artifacts.length,
-      runsPerPage,
-      pageNumber,
-    );
+    _setNextPageUrlHeader(request, artifacts.length, runsPerPage, pageNumber);
 
-    artifacts = _paginate(artifacts, runsPerPage, pageNumber);
+    artifacts = MockServerUtils.paginate(artifacts, runsPerPage, pageNumber);
 
     final _response = {
       'total_count': artifacts.length,
       'artifacts': artifacts.map((artifact) => artifact.toJson()).toList(),
     };
 
-    await _writeResponse(request, _response);
+    await MockServerUtils.writeResponse(request, _response);
   }
 
   /// Redirects to the artifact download URL.
@@ -159,33 +162,6 @@ class GithubActionsMockServer extends ApiMockServer {
     );
 
     await request.response.close();
-  }
-
-  /// Returns a [Uint8List] to emulate download.
-  Future<void> _downloadResponse(HttpRequest request) async {
-    await _writeResponse(request, Uint8List.fromList([]));
-  }
-
-  /// Adds a [HttpStatus.notFound] status code to the [HttpRequest.response]
-  /// and closes it.
-  Future<void> _notFoundResponse(HttpRequest request) async {
-    request.response.statusCode = HttpStatus.notFound;
-
-    await request.response.close();
-  }
-
-  /// Chunks the given [items], limiting to the [limit],
-  /// starting from the [pageIndex].
-  List<T> _paginate<T>(List<T> items, [int limit, int pageIndex]) {
-    if (limit != null && pageIndex != null) {
-      final from = (pageIndex - 1) * limit;
-
-      return items.skip(from).take(limit).toList();
-    } else if (limit != null) {
-      return items.take(limit).toList();
-    }
-
-    return items;
   }
 
   /// Generates a list of [WorkflowRun]s with the given [status].
@@ -274,23 +250,15 @@ class GithubActionsMockServer extends ApiMockServer {
     return int.tryParse(page);
   }
 
-  /// Returns the last page number.
-  ///
-  /// Returns `1` if the given [perPage] or [total] parameter is `null`.
-  int _getLastPageNumber(int total, int perPage) {
-    if (perPage == null || total == null) return 1;
-
-    return max((total / perPage).ceil(), 1);
-  }
-
-  /// Sets the next page url header using the given [request] and [itemsCount].
+  /// Sets the next page url header using the given [request], [itemsCount],
+  /// [perPage] and [pageNumber].
   void _setNextPageUrlHeader(
     HttpRequest request,
     int itemsCount,
-    int runsPerPage,
+    int perPage,
     int pageNumber,
   ) {
-    final lastPageNumber = _getLastPageNumber(itemsCount, runsPerPage);
+    final lastPageNumber = _getLastPageNumber(itemsCount, perPage);
 
     if (pageNumber >= lastPageNumber) return;
 
@@ -305,11 +273,13 @@ class GithubActionsMockServer extends ApiMockServer {
     request.response.headers.set('link', '<$nextPageUrl> rel="next"');
   }
 
-  /// Writes the given [response].
-  Future<void> _writeResponse(HttpRequest request, dynamic response) async {
-    request.response.write(jsonEncode(response));
+  /// Returns the last page number.
+  ///
+  /// Returns `1` if the given [perPage] or [total] parameter is `null`
+  /// or the given [perPage] is less than zero.
+  int _getLastPageNumber(int total, int perPage) {
+    if (perPage == null || perPage <= 0 || total == null) return 1;
 
-    await request.response.flush();
-    await request.response.close();
+    return max((total / perPage).ceil(), 1);
   }
 }
