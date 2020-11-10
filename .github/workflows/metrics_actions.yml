@@ -192,3 +192,27 @@ jobs:
       - name: Run tests
         run: bash test.sh
         working-directory: metrics/ci_integrations/
+    
+  links_check_actions:
+    name: Links Check Actions
+    runs-on: macOS-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+          uses: actions/checkout@v2
+          with:
+            fetch-depth: 1
+            ref: ${{ github.ref }}
+
+      - uses: cedx/setup-dart@v2
+        with:
+          release-channel: beta
+          version: 2.10.0-110.5.beta
+
+      - name: Get all changed files
+          id: files
+          uses: jitterbit/get-changed-files@v1
+
+      - name: Check links are pointing to master
+          run: dart metrics/links_checker/main.dart ${{ steps.files.outputs.added_modified }}
