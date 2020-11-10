@@ -9,5 +9,5 @@ destination:
     firebase_project_id: firebaseId
     firebase_user_email: user_email
     firebase_user_pass: user_pass
-    firebase_web_api_key: firebase_web_api_key
+    firebase_public_api_key: firebase_public_api_key
     metrics_project_id: id
