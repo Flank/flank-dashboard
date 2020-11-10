@@ -29,7 +29,7 @@ const builds = {
     projectId: "2",
     buildNumber: 1,
     startedAt: new firestore.Timestamp.now(),
-    buildStatus: "BuildStatus.cancelled",
+    buildStatus: "BuildStatus.unknown",
     workflowName: "workflow",
     duration: 345,
     url: "url2",
