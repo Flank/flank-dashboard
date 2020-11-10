@@ -8,9 +8,7 @@ dependencies:
   meta: ^1.1.8
   equatable: ^1.1.1
   email_validator: ^1.0.4
-  lcov: ^5.3.0
 
 dev_dependencies:
   lint: ^1.1.1
   test: ^1.14.1
-  test_coverage: ^0.4.1
