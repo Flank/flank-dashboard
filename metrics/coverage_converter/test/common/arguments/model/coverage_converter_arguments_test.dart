@@ -7,7 +7,7 @@ void main() {
     const outputFilePath = "coverage/coverage-summary.json";
 
     test(
-      "throws an ArgumentError if the inputFilePath is null",
+      "throws an ArgumentError if the input file path is null",
       () {
         expect(
           () => CoverageConverterArguments(outputFilePath: outputFilePath),
@@ -17,7 +17,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the outputFilePath is null",
+      "throws an ArgumentError if the output file path is null",
       () {
         expect(
           () => CoverageConverterArguments(inputFilePath: inputFilePath),

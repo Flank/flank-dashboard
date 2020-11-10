@@ -51,7 +51,7 @@ void main() {
     );
 
     test(
-      ".toString() returns the error message with the given stackTrace",
+      ".toString() returns the error message with the given stack trace",
       () {
         const stackTraceString = "stacktrace";
         final stackTrace = StackTrace.fromString(stackTraceString);
@@ -73,7 +73,7 @@ void main() {
     );
 
     test(
-      ".toString() returns the error message if the given stackTrace is null",
+      ".toString() returns the error message if the given stack trace is null",
       () {
         const coverageConverterException = CoverageConverterException(
           CoverageConverterErrorCode.noSuchFile,
