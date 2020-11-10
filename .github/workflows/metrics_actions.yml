@@ -200,10 +200,10 @@ jobs:
 
     steps:
       - name: Checkout
-          uses: actions/checkout@v2
-          with:
-            fetch-depth: 1
-            ref: ${{ github.ref }}
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
 
       - uses: cedx/setup-dart@v2
         with:
@@ -211,8 +211,8 @@ jobs:
           version: 2.10.0-110.5.beta
 
       - name: Get all changed files
-          id: files
-          uses: jitterbit/get-changed-files@v1
+        id: files
+        uses: jitterbit/get-changed-files@v1
 
       - name: Check links are pointing to master
-          run: dart metrics/links_checker/main.dart ${{ steps.files.outputs.added_modified }}
+        run: dart metrics/links_checker/main.dart ${{ steps.files.outputs.added_modified }}
