@@ -29,3 +29,9 @@ dev_dependencies:
     git:
       url: https://github.com/platform-platform/monorepo.git
       path: api_mock_server
+
+dependency_overrides:
+  coverage:
+    git:
+      url: https://github.com/dart-lang/coverage
+      ref: 3dd55046117786ea7a7fb92bc812a2a5e25643b
