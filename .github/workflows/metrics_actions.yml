@@ -215,4 +215,4 @@ jobs:
         uses: jitterbit/get-changed-files@v1
 
       - name: Check links are pointing to master
-        run: dart metrics/links_checker/main.dart ${{ steps.files.outputs.added_modified }}
+        run: dart scripts/links_checker/main.dart ${{ steps.files.outputs.added_modified }}
