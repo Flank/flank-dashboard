@@ -76,8 +76,9 @@ class BuildkiteMockServer extends ApiMockServer {
     final state = _extractBuildState(request);
     final perPage = _extractPerPage(request);
     final pageNumber = _extractPage(request);
+    final finishedFrom = _extractFinishedFrom(request);
 
-    List<BuildkiteBuild> builds = _generateBuilds(state);
+    List<BuildkiteBuild> builds = _generateBuilds(state, finishedFrom);
 
     _setNextPageUrlHeader(request, builds.length, perPage, pageNumber);
 
@@ -131,7 +132,10 @@ class BuildkiteMockServer extends ApiMockServer {
   /// Generates a list of [BuildkiteBuild]s with the given [state].
   ///
   /// If the given [state] is null, the [BuildkiteBuildState.finished] is used.
-  List<BuildkiteBuild> _generateBuilds(BuildkiteBuildState state) {
+  List<BuildkiteBuild> _generateBuilds(
+    BuildkiteBuildState state, [
+    DateTime finishedFrom,
+  ]) {
     return List.generate(
       100,
       (index) => BuildkiteBuild(
@@ -141,7 +145,7 @@ class BuildkiteMockServer extends ApiMockServer {
         state: state ?? BuildkiteBuildState.finished,
         webUrl: 'url',
         startedAt: DateTime(2020),
-        finishedAt: DateTime(2021),
+        finishedAt: finishedFrom ?? DateTime(2021),
       ),
     );
   }
@@ -157,6 +161,18 @@ class BuildkiteMockServer extends ApiMockServer {
         mimeType: 'json',
       ),
     );
+  }
+
+  /// Returns the `finished_from` query parameter of the given [request].
+  ///
+  /// Returns `null` if the [finishedFrom] is `null` or the [DateTime] can't be
+  /// parsed from the given [finishedFrom].
+  DateTime _extractFinishedFrom(HttpRequest request) {
+    final finishedFrom = request.uri.queryParameters['finished_from'];
+
+    if (finishedFrom == null) return null;
+
+    return DateTime.tryParse(finishedFrom);
   }
 
   /// Returns the `per_page` query parameter of the given [request].
