@@ -18,7 +18,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the itemBuilder parameter is null",
+      "throws an AssertionError if the item builder parameter is null",
       (tester) async {
         await tester.pumpWidget(const _DropdownMenuTestbed(itemBuilder: null));
 
@@ -27,7 +27,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the buttonBuilder parameter is null",
+      "throws an AssertionError if the button builder parameter is null",
       (tester) async {
         await tester.pumpWidget(
           const _DropdownMenuTestbed(buttonBuilder: null),
@@ -38,7 +38,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the menuBuilder parameter is null",
+      "throws an AssertionError if the menu builder parameter is null",
       (tester) async {
         await tester.pumpWidget(const _DropdownMenuTestbed(menuBuilder: null));
 
@@ -47,7 +47,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the maxVisibleItems parameter is null",
+      "throws an AssertionError if the max visible items parameter is null",
       (tester) async {
         await tester.pumpWidget(
           const _DropdownMenuTestbed(maxVisibleItems: null),
@@ -58,7 +58,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the maxVisibleItems parameter is zero",
+      "throws an AssertionError if the max visible items parameter is zero",
       (tester) async {
         await tester.pumpWidget(
           const _DropdownMenuTestbed(maxVisibleItems: 0),
@@ -69,7 +69,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the maxVisibleItems parameter is negative",
+      "throws an AssertionError if the max visible items parameter is negative",
       (tester) async {
         await tester.pumpWidget(
           const _DropdownMenuTestbed(maxVisibleItems: -4),
@@ -93,7 +93,7 @@ void main() {
     );
 
     testWidgets(
-      "uses a minimum interactive dimension constant as a default if the itemHeight parameter is null",
+      "uses a minimum interactive dimension constant as a default if the item height parameter is null",
       (tester) async {
         await tester.pumpWidget(const _DropdownMenuTestbed(itemHeight: null));
 
@@ -108,7 +108,7 @@ void main() {
     );
 
     testWidgets(
-      "uses a zero padding as a default if the menuPadding parameter is null",
+      "uses a zero padding as a default if the menu padding parameter is null",
       (tester) async {
         final menuWidget = Container(
           height: 30.0,
@@ -173,7 +173,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates the given initiallySelectedItemIndex parameter to the SelectionMenu widget",
+      "delegates the given initially selected item index parameter to the SelectionMenu widget",
       (tester) async {
         const expectedIndex = 1;
 
@@ -265,7 +265,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the given menuPadding to the DropdownMenu widget",
+      "applies the given menu padding to the DropdownMenu widget",
       (tester) async {
         const expectedPadding = EdgeInsets.all(8.0);
         final menuWidget = Container(

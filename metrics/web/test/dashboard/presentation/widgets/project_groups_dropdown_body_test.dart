@@ -62,7 +62,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the menuState from the given data to the dropdown body",
+      "applies the menu state from the given data to the dropdown body",
       (tester) async {
         const menuState = MenuState.Opened;
         final animationComponentData = _AnimationComponentDataStub(

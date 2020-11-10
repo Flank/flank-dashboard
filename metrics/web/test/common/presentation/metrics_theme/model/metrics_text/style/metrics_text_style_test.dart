@@ -44,7 +44,7 @@ void main() {
     );
 
     test(
-      "applies the given height when the given lineHeightInPixels is not null and the fontSize is null",
+      "applies the given height when the given line height in pixels is not null and the font size is null",
       () {
         const textStyle = MetricsTextStyle(
           lineHeightInPixels: lineHeightInPixels,
@@ -57,7 +57,7 @@ void main() {
     );
 
     test(
-      "applies the given height when the given lineHeightInPixels is null and the fontSize is not null",
+      "applies the given height when the given line height in pixels is null and the font size is not null",
       () {
         const textStyle = MetricsTextStyle(
           lineHeightInPixels: null,

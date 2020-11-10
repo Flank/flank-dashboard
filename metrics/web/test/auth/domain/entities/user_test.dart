@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("User", () {
-    test("can't be created with null id", () {
+    test("throws an ArgumentError if the given id is null", () {
       expect(() => User(id: null), throwsArgumentError);
     });
   });

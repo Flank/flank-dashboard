@@ -6,7 +6,7 @@ void main() {
     const isValid = true;
     const json = {'isValid': isValid};
 
-    test("throws an ArgumentError if the given isValid is null", () {
+    test("throws an ArgumentError if the given is valid is null", () {
       expect(
         () => EmailDomainValidationResultData(isValid: null),
         throwsArgumentError,

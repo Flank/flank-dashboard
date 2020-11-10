@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 void main() {
   group("EmailValidator", () {
     test(
-      ".validate() returns the email required error message if the given email is null",
+      ".validate() returns the 'email required' error message if the given email is null",
       () {
         final validationResult = EmailValidator.validate(null);
 
@@ -14,7 +14,7 @@ void main() {
     );
 
     test(
-      ".validate() returns the invalid email error message if the given email is malformed",
+      ".validate() returns the 'invalid email' error message if the given email is malformed",
       () {
         final validationResult = EmailValidator.validate('not valid');
 

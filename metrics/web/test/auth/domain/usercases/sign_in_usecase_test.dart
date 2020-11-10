@@ -21,7 +21,7 @@ void main() {
       password: Password('password'),
     );
 
-    test("can't be created with null repository", () {
+    test("throws an AssertionError if the given repository is null", () {
       expect(
         () => SignInUseCase(null),
         MatcherUtil.throwsAssertionError,

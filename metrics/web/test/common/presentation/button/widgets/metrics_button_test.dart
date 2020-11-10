@@ -44,7 +44,7 @@ void main() {
     void defaultOnPressed() {}
 
     testWidgets(
-      "throws AssertionError if the given label is null",
+      "throws an AssertionError if the given label is null",
       (tester) async {
         await tester.pumpWidget(
           const _MetricsButtonTestbed(label: null),

@@ -183,7 +183,7 @@ void main() {
     );
 
     testWidgets(
-      "closes a popup after tap outside of the popup content if the closeOnTapOutside is true",
+      "closes a popup after tap outside of the popup content if the close on tap outside is true",
       (tester) async {
         await tester.pumpWidget(_BasePopupTestbed(
           popup: testPopupWidget,
@@ -204,7 +204,7 @@ void main() {
     );
 
     testWidgets(
-      "does not close a popup after tap outside of the popup content if the closeOnTapOutside is false",
+      "does not close a popup after tap outside of the popup content if the close on tap outside is false",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _BasePopupTestbed(

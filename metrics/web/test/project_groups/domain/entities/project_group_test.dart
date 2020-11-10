@@ -21,7 +21,7 @@ void main() {
       );
     });
 
-    test("throws an ArgumentError when created with null projectIds", () {
+    test("throws an ArgumentError when created with null project ids", () {
       expect(
         () => ProjectGroup(id: id, name: name, projectIds: null),
         throwsArgumentError,
