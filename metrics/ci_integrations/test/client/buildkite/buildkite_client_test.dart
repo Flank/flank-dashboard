@@ -14,7 +14,6 @@ void main() {
   group("BuildkiteClient", () {
     const testPageNumber = 1;
     const buildNumber = 1;
-    const buildkiteApiUrl = "buildkiteApiUrl";
     const organizationSlug = "organization_slug";
     const pipelineSlug = 'pipeline_slug';
     final authorization = ApiKeyAuthorization(
@@ -94,6 +93,8 @@ void main() {
     });
 
     test("creates an instance with the given values", () {
+      const buildkiteApiUrl = "buildkiteApiUrl";
+
       final client = BuildkiteClient(
         buildkiteApiUrl: buildkiteApiUrl,
         organizationSlug: organizationSlug,

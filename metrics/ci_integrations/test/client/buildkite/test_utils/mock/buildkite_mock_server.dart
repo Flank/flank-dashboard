@@ -129,11 +129,13 @@ class BuildkiteMockServer extends ApiMockServer {
     return const BuildkiteBuildStateMapper().map(state);
   }
 
-  /// Generates a list of [BuildkiteBuild]s with the given [state].
+  /// Generates a list of [BuildkiteBuild]s with the given [state]
+  /// and [finishedFrom].
   ///
-  /// If the given [state] is null, the [BuildkiteBuildState.finished] is used.
-  List<BuildkiteBuild> _generateBuilds(
-    BuildkiteBuildState state, [
+  /// If the given [state] is `null`, the [BuildkiteBuildState.finished] is used.
+  /// If the given [finishedFrom] is `null`, the [DateTime(2021)] is used.
+  List<BuildkiteBuild> _generateBuilds([
+    BuildkiteBuildState state,
     DateTime finishedFrom,
   ]) {
     return List.generate(
