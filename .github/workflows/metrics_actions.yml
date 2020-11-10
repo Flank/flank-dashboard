@@ -193,7 +193,7 @@ jobs:
         run: bash test.sh
         working-directory: metrics/ci_integrations/
     
-  links_check_actions:
+  links-check-actions:
     name: Links Check Actions
     runs-on: macOS-latest
     timeout-minutes: 60
