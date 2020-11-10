@@ -17,9 +17,6 @@ class BuildkiteTestDataGenerator {
   /// A url to use in this test data generator.
   final String webUrl;
 
-  /// An blocked indicator to use in this test data generator.
-  final bool blocked;
-
   /// A start [DateTime] to use in this test data generator.
   final DateTime startedAt;
 
@@ -34,7 +31,6 @@ class BuildkiteTestDataGenerator {
     this.pipelineSlug,
     this.coverage,
     this.webUrl,
-    this.blocked,
     this.startedAt,
     this.finishedAt,
     this.duration,
@@ -46,7 +42,7 @@ class BuildkiteTestDataGenerator {
   /// The [id] defaults to `test1`.
   /// The [number] defaults to `1`.
   /// The [blocked] defaults to `false`.
-  /// The [status] defaults to [BuildkiteBuildState.finished].
+  /// The [state] defaults to [BuildkiteBuildState.passed].
   BuildkiteBuild generateBuildkiteBuild({
     String id = 'test1',
     int number = 1,
@@ -75,7 +71,7 @@ class BuildkiteTestDataGenerator {
     }).toList();
   }
 
-  /// Generates a list of [BuildkiteBuild] using the given [states].
+  /// Generates a list of [BuildkiteBuild]s using the given [states].
   ///
   /// The [states] defaults to an empty list.
   List<BuildkiteBuild> generateBuildkiteBuildsByStates({
@@ -84,9 +80,11 @@ class BuildkiteTestDataGenerator {
     final result = <BuildkiteBuild>[];
 
     for (int i = 0; i < states.length; i++) {
-      result.add(
-        generateBuildkiteBuild(id: "${i+1}", number: i + 1, state: states[i]),
-      );
+      result.add(generateBuildkiteBuild(
+        id: "${i + 1}",
+        number: i + 1,
+        state: states[i],
+      ));
     }
 
     return result;
@@ -131,9 +129,10 @@ class BuildkiteTestDataGenerator {
     final result = <BuildData>[];
 
     for (int i = 0; i < states.length; i++) {
-      result.add(
-        generateBuildData(buildNumber: i + 1, buildStatus: states[i]),
-      );
+      result.add(generateBuildData(
+        buildNumber: i + 1,
+        buildStatus: states[i],
+      ));
     }
 
     return result;
