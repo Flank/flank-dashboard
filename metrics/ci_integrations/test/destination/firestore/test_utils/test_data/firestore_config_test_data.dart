@@ -6,14 +6,14 @@ class FirestoreConfigTestData {
   static const String metricsProjectId = 'metricsProjectId';
   static const String firebaseUserEmail = 'firebaseUserEmail';
   static const String firebaseUserPassword = 'firebaseUserPassword';
-  static const String firebaseWebApiKey = 'firebaseWebApiKey';
+  static const String firebasePublicApiKey = 'firebasePublicApiKey';
 
   static const Map<String, dynamic> firestoreDestinationConfigMap = {
     'firebase_project_id': firebaseProjectId,
     'metrics_project_id': metricsProjectId,
     'firebase_user_email': firebaseUserEmail,
     'firebase_user_pass': firebaseUserPassword,
-    'firebase_web_api_key': firebaseWebApiKey
+    'firebase_public_api_key': firebasePublicApiKey
   };
 
   static final FirestoreDestinationConfig firestoreDestiantionConfig =
@@ -22,6 +22,6 @@ class FirestoreConfigTestData {
     firebaseProjectId: firebaseProjectId,
     firebaseUserEmail: firebaseUserEmail,
     firebaseUserPassword: firebaseUserPassword,
-    firebaseWebApiKey: firebaseWebApiKey,
+    firebasePublicApiKey: firebasePublicApiKey,
   );
 }
