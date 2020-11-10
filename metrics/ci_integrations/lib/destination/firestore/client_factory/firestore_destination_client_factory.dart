@@ -29,7 +29,7 @@ class FirestoreDestinationClientFactory
 
     final auth = _firebaseAuth ??
         FirebaseAuth.initialize(
-          config.firebaseWebApiKey,
+          config.firebasePublicApiKey,
           VolatileStore(),
         );
 

@@ -23,7 +23,7 @@ class ConfigTestData {
           firebase_project_id: ${FirestoreConfigTestData.firebaseProjectId}
           firebase_user_email: ${FirestoreConfigTestData.firebaseUserEmail}
           firebase_user_pass: ${FirestoreConfigTestData.firebaseUserPassword}
-          firebase_web_api_key: ${FirestoreConfigTestData.firebaseWebApiKey}
+          firebase_public_api_key: ${FirestoreConfigTestData.firebasePublicApiKey}
           metrics_project_id: ${FirestoreConfigTestData.metricsProjectId}
       ''';
 
