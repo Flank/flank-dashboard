@@ -8,25 +8,25 @@ void main() {
   group("SupportedSourceParties", () {
     final supportedSourceParties = SupportedSourceParties();
 
-    test(".parties contains a Jenkins source party", () {
+    test(".parties list contains a Jenkins source party", () {
       final parties = supportedSourceParties.parties;
 
       expect(parties, contains(isA<JenkinsSourceParty>()));
     });
 
-    test(".parties contains a Github Actions source party", () {
+    test(".parties list contains a Github Actions source party", () {
       final parties = supportedSourceParties.parties;
 
       expect(parties, contains(isA<GithubActionsSourceParty>()));
     });
 
-    test(".parties contains a Buildkite source party", () {
+    test(".parties list contains a Buildkite source party", () {
       final parties = supportedSourceParties.parties;
 
       expect(parties, contains(isA<BuildkiteSourceParty>()));
     });
 
-    test(".parties is an unmodifiable list", () {
+    test(".parties list is an unmodifiable list", () {
       final parties = supportedSourceParties.parties;
 
       expect(() => parties.add(null), throwsUnsupportedError);
