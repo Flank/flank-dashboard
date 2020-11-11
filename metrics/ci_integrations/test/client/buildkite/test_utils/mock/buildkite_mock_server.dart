@@ -74,7 +74,7 @@ class BuildkiteMockServer extends ApiMockServer {
   /// the page number.
   Future<void> _pipelineBuildsResponse(HttpRequest request) async {
     final state = _extractBuildState(request);
-    final perPage = _extractPerPage(request);
+    final perPage = _getValidPerPage(_extractPerPage(request));
     final pageNumber = _extractPage(request);
     final finishedFrom = _extractFinishedFrom(request);
 
@@ -95,7 +95,7 @@ class BuildkiteMockServer extends ApiMockServer {
   /// and returns the per page number of [BuildkiteArtifact]s from the page with
   /// the page number.
   Future<void> _pipelineBuildArtifactsResponse(HttpRequest request) async {
-    final perPage = _extractPerPage(request);
+    final perPage = _getValidPerPage(_extractPerPage(request));
     final pageNumber = _extractPage(request);
 
     List<BuildkiteArtifact> artifacts = _generateArtifacts();
@@ -175,6 +175,16 @@ class BuildkiteMockServer extends ApiMockServer {
     if (finishedFrom == null) return null;
 
     return DateTime.tryParse(finishedFrom);
+  }
+
+  /// Returns a valid per page number based on the given [perPage].
+  ///
+  /// If the given [perPage] is `null` or less or equal to zero, returns `30`,
+  /// otherwise, returns [perPage].
+  int _getValidPerPage(int perPage) {
+    if (perPage == null || perPage <= 0) return 30;
+
+    return perPage;
   }
 
   /// Returns the `per_page` query parameter of the given [request].
