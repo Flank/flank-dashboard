@@ -19,7 +19,7 @@ void main() {
       );
     });
 
-    test('mapElement() should map <failure> element', () {
+    test("mapElement() maps <failure> element", () {
       const expected = JUnitTestCaseFailure(text: text);
 
       final result = parser.mapElement(element);

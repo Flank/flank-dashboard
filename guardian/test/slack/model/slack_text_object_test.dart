@@ -6,15 +6,14 @@ import 'package:test/test.dart';
 
 void main() {
   group('SlackTextObject', () {
-    test('fromJson() should return null if decoded map is null', () {
+    test("fromJson() returns null if decoded map is null", () {
       final result = SlackTextObject.fromJson(null);
 
       expect(result, isNull);
     });
 
     test(
-      'fromJson() should map decoded JSON as SlackPlainTextObject '
-      'if type property is plain_text',
+      "fromJson() maps decoded JSON as SlackPlainTextObject if type property is plain_text",
       () {
         const map = {'type': 'plain_text'};
         final result = SlackTextObject.fromJson(map);
@@ -24,8 +23,7 @@ void main() {
     );
 
     test(
-      'fromJson() should map decoded JSON as SlackMarkdownTextObject '
-      'if type property is markdwn',
+      "fromJson() maps decoded JSON as SlackMarkdownTextObject if type property is mrkdwn",
       () {
         const map = {'type': 'mrkdwn'};
         final result = SlackTextObject.fromJson(map);
@@ -34,15 +32,14 @@ void main() {
       },
     );
 
-    test('listFromJson() should map empty list as empty', () {
+    test("listFromJson() maps an empty list as empty", () {
       final result = SlackTextObject.listFromJson([]);
 
       expect(result, isEmpty);
     });
 
     test(
-      'listFromJson() should map list of decoded JSON objects to list '
-      'of section blocks',
+      "listFromJson() maps a list of decoded JSON objects to list of section blocks",
       () {
         const list = [
           {'type': 'plain_text', 'text': 'test'},
@@ -58,14 +55,14 @@ void main() {
       },
     );
 
-    test('validate() should result with false if text is null', () {
+    test("validate() results with false if text is null", () {
       const textObject = SlackTextObjectTestbed(null);
       final result = textObject.validate();
 
       expect(result.isValid, isFalse);
     });
 
-    test('validate() should result with false if text is empty', () {
+    test("validate() results with false if text is empty", () {
       const textObject = SlackTextObjectTestbed('');
       final result = textObject.validate();
 
@@ -73,7 +70,7 @@ void main() {
     });
 
     test(
-      'validate() should result with false if text length is out of limits',
+      "validate() results with false if text length is out of limits",
       () {
         const textObject = SlackTextObjectTestbed('test message');
         final result = textObject.validate(4);
@@ -83,7 +80,7 @@ void main() {
     );
 
     test(
-      'validate() should result with true on non-null text when maxLength is null',
+      "validate() results with true on non-null text when maxLength is null",
       () {
         const textObject = SlackTextObjectTestbed('test');
         final result = textObject.validate();
@@ -93,7 +90,7 @@ void main() {
     );
 
     test(
-      'validate() should result with true on valid text',
+      "validate() results with true on valid text",
       () {
         const textObject = SlackTextObjectTestbed('test');
         final result = textObject.validate(10);

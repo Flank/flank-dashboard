@@ -7,7 +7,7 @@ void main() {
   group('XmlAttributeValueParser', () {
     final parser = IntAttributeValueParser();
 
-    test('canParse() should return true if value can be parsed', () {
+    test("canParse() returns true if value can be parsed", () {
       const value = '123';
 
       final canParse = parser.canParse(value);
@@ -15,7 +15,7 @@ void main() {
       expect(canParse, isTrue);
     });
 
-    test('canParse() should return false if value cannot be parsed', () {
+    test("canParse() returns false if value cannot be parsed", () {
       const value = 'no int';
 
       final canParse = parser.canParse(value);
@@ -24,7 +24,7 @@ void main() {
     });
 
     test(
-      'parse() should throw FormatException on value that cannot be parsed',
+      "parse() throws a FormatException on value that cannot be parsed",
       () {
         const value = 'no int';
 
@@ -32,7 +32,7 @@ void main() {
       },
     );
 
-    test('parse() should parse valid value', () {
+    test("parse() parses valid value", () {
       const value = '123';
 
       final parsed = parser.parse(value);
@@ -40,7 +40,7 @@ void main() {
       expect(parsed, equals(123));
     });
 
-    test('tryParse() should return null on value that cannot be parsed', () {
+    test("tryParse() returns null on value that cannot be parsed", () {
       const value = 'no int';
 
       final parsed = parser.tryParse(value);
@@ -48,7 +48,7 @@ void main() {
       expect(parsed, isNull);
     });
 
-    test('tryParse() should parse valid value', () {
+    test("tryParse() parses valid value", () {
       const value = '123';
 
       final parsed = parser.tryParse(value);
@@ -58,7 +58,7 @@ void main() {
   });
 
   group('StringAttributeValueParser', () {
-    test('parseString() should throw FormatException on null input', () {
+    test("parseString() throws a FormatException on null input", () {
       const String value = null;
 
       expect(
@@ -67,7 +67,7 @@ void main() {
       );
     });
 
-    test('parseString() should return value on non-null input', () {
+    test("parseString() returns value on non-null input", () {
       const value = 'any';
 
       final result = StringAttributeValueParser.parseString(value);
@@ -77,7 +77,7 @@ void main() {
   });
 
   group('BoolAttributeValueParser', () {
-    test('parseBool() should throw FormatException on null input', () {
+    test("parseBool() throws a FormatException on null input", () {
       const String value = null;
 
       expect(
@@ -86,7 +86,7 @@ void main() {
       );
     });
 
-    test('parseBool() should throw FormatException on invalid input', () {
+    test("parseBool() throws a FormatException on invalid input", () {
       const String value = 'not bool';
 
       expect(
@@ -95,7 +95,7 @@ void main() {
       );
     });
 
-    test('parseBool() should parse bool on valid source string', () {
+    test("parseBool() parses bool on valid source string", () {
       const String value = 'true';
 
       final result = BoolAttributeValueParser.parseBool(value);
@@ -103,7 +103,7 @@ void main() {
       expect(result, isTrue);
     });
 
-    test('tryParseBool() should return null on invalid input', () {
+    test("tryParseBool() returns null on invalid input", () {
       const value = 'not bool';
 
       final result = BoolAttributeValueParser.tryParseBool(value);
@@ -111,7 +111,7 @@ void main() {
       expect(result, isNull);
     });
 
-    test('tryParseBool() should parse bool on valid source string', () {
+    test("tryParseBool() parses bool on valid source string", () {
       const value = 'true';
 
       final result = BoolAttributeValueParser.tryParseBool(value);

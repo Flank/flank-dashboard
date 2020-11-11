@@ -36,7 +36,7 @@ void main() {
     });
 
     test(
-      'getAttributes() should return map with attributes names and values',
+      "getAttributes() returns a map with attributes names and values",
       () {
         const expected = {
           'count': '2',
@@ -50,7 +50,7 @@ void main() {
     );
 
     test(
-      'checkAttributes() should return false if attribute is not presented',
+      "checkAttributes() returns false if attribute is not presented",
       () {
         const attributes = {
           'name': StringAttributeValueParser(),
@@ -63,7 +63,7 @@ void main() {
     );
 
     test(
-      'checkAttributes() should return false if cannot parse attribute',
+      "checkAttributes() returns false if cannot parse attribute",
       () {
         const attributes = {
           'type': IntAttributeValueParser(),
@@ -76,8 +76,7 @@ void main() {
     );
 
     test(
-      'checkAttributes() should return true if attribute is present '
-      'and can be parsed',
+      "checkAttributes() returns true if attribute is present and can be parsed",
       () {
         const attributes = {
           'type': StringAttributeValueParser(),
@@ -90,7 +89,7 @@ void main() {
     );
 
     test(
-      'countChildren() should count nested elements with name specified in parser',
+      "countChildren() counts nested elements with name specified in parser",
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -100,14 +99,14 @@ void main() {
       },
     );
 
-    test('validate() should return true by default', () {
+    test("validate() returns true by default", () {
       final result = parserStub.validate(xmlElement);
 
       expect(result, isTrue);
     });
 
     test(
-      'parseChildren() should parse nested elements with name specified in parser',
+      "parseChildren() parses nested elements with name specified in parser",
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -118,8 +117,7 @@ void main() {
     );
 
     test(
-      'parseChildren() should return empty list if there are no nested elements '
-      'with name specified in parser',
+      "parseChildren() returns an  empty list if there are no nested elements with name specified in parser",
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -133,8 +131,7 @@ void main() {
     );
 
     test(
-      'parseChild() should throw StateError if there are more than '
-      'one nested element matching given name',
+      "parseChild() throws a StateError if there are more than one nested element matching given name",
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -146,8 +143,7 @@ void main() {
     );
 
     test(
-      'parseChild() should parse single nested element '
-      'with name specified in parser',
+      "parseChild() parses single nested element with name specified in parser",
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -159,8 +155,7 @@ void main() {
     );
 
     test(
-      'parse() should throw ArgumentError if '
-      'parser name does not match element name',
+      "parse() throws an ArgumentError if parser name does not match element name",
       () {
         final parserStub = XmlElementParserTestbed('random');
 
@@ -169,7 +164,7 @@ void main() {
     );
 
     test(
-      'parse() should throw FormatException if failed to validate element',
+      "parse() throws a FormatException if failed to validate element",
       () {
         final parserStub = AlwaysInvalidXmlElementParserTestbed('stubs');
 
@@ -181,7 +176,7 @@ void main() {
     );
 
     test(
-      'parse() should parse element',
+      "parse() parses an element",
       () {
         final parserStub = XmlElementParserTestbed('stubs');
 
