@@ -38,7 +38,7 @@ void main() {
     });
 
     test(
-      ".fromJson() create a BuildData with unknown build status if the json contains invalid enum value",
+      ".fromJson() creates a BuildData with unknown build status if the json contains invalid enum value",
       () {
         final _buildDataJson = Map<String, dynamic>.from(buildDataJson);
 

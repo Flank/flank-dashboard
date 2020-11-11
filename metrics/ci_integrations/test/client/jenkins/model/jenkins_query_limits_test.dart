@@ -59,7 +59,7 @@ void main() {
     );
 
     test(
-      ".startAt(n) throws and ArgumentError if the given number is null",
+      ".startAt(n) throws an ArgumentError if the given number is null",
       () {
         expect(() => JenkinsQueryLimits.startAt(null), throwsArgumentError);
       },
@@ -116,7 +116,7 @@ void main() {
     );
 
     test(
-      ".endAt(n) throw an ArgumentError if the given number is negative",
+      ".endAt(n) throws an ArgumentError if the given number is negative",
       () {
         expect(() => JenkinsQueryLimits.endAt(-1), throwsArgumentError);
       },

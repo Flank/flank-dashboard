@@ -22,7 +22,7 @@ void main() {
     );
 
     test(
-      ".encode() base64 encode string with username and password",
+      ".encode() returns base64 encoded string with given username and password",
       () {
         final encoded = BasicAuthorization.encode(username, password);
 

@@ -13,7 +13,7 @@ void main() {
     );
 
     test(
-      ".buildUrl() throw a FormatException if the given URL is invalid",
+      ".buildUrl() throws a FormatException if the given URL is invalid",
       () {
         expect(() => UrlUtils.buildUrl('test'), throwsFormatException);
       },

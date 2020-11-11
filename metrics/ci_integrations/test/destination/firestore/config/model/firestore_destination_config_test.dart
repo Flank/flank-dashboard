@@ -74,7 +74,7 @@ void main() {
     );
 
     test(
-      "throws an ArgumentError if the given firebase web api key is null",
+      "throws an ArgumentError if the given firebase public API key is null",
       () {
         expect(
           () => FirestoreDestinationConfig(

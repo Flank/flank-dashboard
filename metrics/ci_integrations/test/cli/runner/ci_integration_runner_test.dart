@@ -16,7 +16,7 @@ void main() {
     );
 
     test(
-      "has the executable name equals to the 'ci_integrations'",
+      "has an executable name equals to the 'ci_integrations'",
       () {
         final executableName = runner.executableName;
 
