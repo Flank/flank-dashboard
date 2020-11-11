@@ -67,17 +67,18 @@ class BuildkiteMockServer extends ApiMockServer {
       ];
 
   /// Responses with a list of [BuildkiteBuild]s having the build state
-  /// specified in the [request] parameters.
+  /// and the finished at specified in the [request] parameters.
   ///
   /// Takes the per page and the page number parameters from the [request]
   /// and returns the per page number of [BuildkiteBuild]s from the page with
   /// the page number.
   Future<void> _pipelineBuildsResponse(HttpRequest request) async {
     final state = _extractBuildState(request);
-    final perPage = _extractPerPage(request);
+    final perPage = _getValidPerPage(_extractPerPage(request));
     final pageNumber = _extractPage(request);
+    final finishedFrom = _extractFinishedFrom(request);
 
-    List<BuildkiteBuild> builds = _generateBuilds(state);
+    List<BuildkiteBuild> builds = _generateBuilds(state, finishedFrom);
 
     _setNextPageUrlHeader(request, builds.length, perPage, pageNumber);
 
@@ -94,7 +95,7 @@ class BuildkiteMockServer extends ApiMockServer {
   /// and returns the per page number of [BuildkiteArtifact]s from the page with
   /// the page number.
   Future<void> _pipelineBuildArtifactsResponse(HttpRequest request) async {
-    final perPage = _extractPerPage(request);
+    final perPage = _getValidPerPage(_extractPerPage(request));
     final pageNumber = _extractPage(request);
 
     List<BuildkiteArtifact> artifacts = _generateArtifacts();
@@ -128,10 +129,15 @@ class BuildkiteMockServer extends ApiMockServer {
     return const BuildkiteBuildStateMapper().map(state);
   }
 
-  /// Generates a list of [BuildkiteBuild]s with the given [state].
+  /// Generates a list of [BuildkiteBuild]s with the given [state]
+  /// and [finishedFrom].
   ///
-  /// If the given [state] is null, the [BuildkiteBuildState.finished] is used.
-  List<BuildkiteBuild> _generateBuilds(BuildkiteBuildState state) {
+  /// If the given [state] is `null`, the [BuildkiteBuildState.finished] is used.
+  /// If the given [finishedFrom] is `null`, the [DateTime.now] is used.
+  List<BuildkiteBuild> _generateBuilds([
+    BuildkiteBuildState state,
+    DateTime finishedFrom,
+  ]) {
     return List.generate(
       100,
       (index) => BuildkiteBuild(
@@ -141,7 +147,7 @@ class BuildkiteMockServer extends ApiMockServer {
         state: state ?? BuildkiteBuildState.finished,
         webUrl: 'url',
         startedAt: DateTime(2020),
-        finishedAt: DateTime(2021),
+        finishedAt: finishedFrom ?? DateTime.now(),
       ),
     );
   }
@@ -157,6 +163,28 @@ class BuildkiteMockServer extends ApiMockServer {
         mimeType: 'json',
       ),
     );
+  }
+
+  /// Returns the `finished_from` query parameter of the given [request].
+  ///
+  /// Returns `null` if the `finishedFrom` is `null` or the [DateTime] can't be
+  /// parsed from the given `finishedFrom`.
+  DateTime _extractFinishedFrom(HttpRequest request) {
+    final finishedFrom = request.uri.queryParameters['finished_from'];
+
+    if (finishedFrom == null) return null;
+
+    return DateTime.tryParse(finishedFrom);
+  }
+
+  /// Returns a valid per page number based on the given [perPage].
+  ///
+  /// If the given [perPage] is `null` or less or equal to zero, returns `30`,
+  /// otherwise, returns [perPage].
+  int _getValidPerPage(int perPage) {
+    if (perPage == null || perPage <= 0) return 30;
+
+    return perPage;
   }
 
   /// Returns the `per_page` query parameter of the given [request].
