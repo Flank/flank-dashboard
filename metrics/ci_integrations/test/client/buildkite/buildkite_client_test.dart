@@ -358,11 +358,7 @@ void main() {
     test(
       ".fetchArtifacts() fails if an associated build with such number is not found",
       () async {
-        const buildNumber = 10;
-        final interactionResult = await client.fetchArtifacts(
-          pipelineSlug,
-          buildNumber,
-        );
+        final interactionResult = await client.fetchArtifacts(pipelineSlug, 10);
 
         expect(interactionResult.isError, isTrue);
       },
