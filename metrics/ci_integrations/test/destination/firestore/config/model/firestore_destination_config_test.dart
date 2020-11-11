@@ -18,7 +18,7 @@ void main() {
             firebaseProjectId: FirestoreConfigTestData.firebaseProjectId,
             firebaseUserEmail: FirestoreConfigTestData.firebaseUserEmail,
             firebaseUserPassword: FirestoreConfigTestData.firebaseUserPassword,
-            firebaseWebApiKey: FirestoreConfigTestData.firebaseWebApiKey,
+            firebasePublicApiKey: FirestoreConfigTestData.firebasePublicApiKey,
           ),
           throwsArgumentError,
         );
@@ -34,7 +34,7 @@ void main() {
             firebaseProjectId: null,
             firebaseUserEmail: FirestoreConfigTestData.firebaseUserEmail,
             firebaseUserPassword: FirestoreConfigTestData.firebaseUserPassword,
-            firebaseWebApiKey: FirestoreConfigTestData.firebaseWebApiKey,
+            firebasePublicApiKey: FirestoreConfigTestData.firebasePublicApiKey,
           ),
           throwsArgumentError,
         );
@@ -50,7 +50,7 @@ void main() {
             firebaseProjectId: FirestoreConfigTestData.firebaseProjectId,
             firebaseUserEmail: null,
             firebaseUserPassword: FirestoreConfigTestData.firebaseUserPassword,
-            firebaseWebApiKey: FirestoreConfigTestData.firebaseWebApiKey,
+            firebasePublicApiKey: FirestoreConfigTestData.firebasePublicApiKey,
           ),
           throwsArgumentError,
         );
@@ -66,7 +66,7 @@ void main() {
             firebaseProjectId: FirestoreConfigTestData.firebaseProjectId,
             firebaseUserEmail: FirestoreConfigTestData.firebaseUserEmail,
             firebaseUserPassword: null,
-            firebaseWebApiKey: FirestoreConfigTestData.firebaseWebApiKey,
+            firebasePublicApiKey: FirestoreConfigTestData.firebasePublicApiKey,
           ),
           throwsArgumentError,
         );
@@ -74,7 +74,7 @@ void main() {
     );
 
     test(
-      "can't be created when the firebaseWebApiKey is null",
+      "can't be created when the firebasePublicApiKey is null",
       () {
         expect(
           () => FirestoreDestinationConfig(
@@ -82,7 +82,7 @@ void main() {
             firebaseProjectId: FirestoreConfigTestData.firebaseProjectId,
             firebaseUserEmail: FirestoreConfigTestData.firebaseUserEmail,
             firebaseUserPassword: FirestoreConfigTestData.firebaseUserPassword,
-            firebaseWebApiKey: null,
+            firebasePublicApiKey: null,
           ),
           throwsArgumentError,
         );

@@ -8,7 +8,7 @@ admin.firestore().settings(settings);
 /**
  * A list of available build statuses.
  */
-const buildStatuses = ['BuildStatus.successful', 'BuildStatus.cancelled', 'BuildStatus.failed'];
+const buildStatuses = ['BuildStatus.successful', 'BuildStatus.unknown', 'BuildStatus.failed'];
 
 /* eslint-disable no-await-in-loop */
 

@@ -17,8 +17,8 @@ class FirestoreDestinationConfig extends Equatable
   /// The Firebase user password.
   final String firebaseUserPassword;
 
-  /// The Firebase Web API key.
-  final String firebaseWebApiKey;
+  /// The Firebase public API key.
+  final String firebasePublicApiKey;
 
   @override
   List<Object> get props => [
@@ -26,7 +26,7 @@ class FirestoreDestinationConfig extends Equatable
         metricsProjectId,
         firebaseUserEmail,
         firebaseUserPassword,
-        firebaseWebApiKey,
+        firebasePublicApiKey,
       ];
 
   @override
@@ -40,13 +40,13 @@ class FirestoreDestinationConfig extends Equatable
     @required this.firebaseProjectId,
     @required this.firebaseUserEmail,
     @required this.firebaseUserPassword,
-    @required this.firebaseWebApiKey,
+    @required this.firebasePublicApiKey,
     @required this.metricsProjectId,
   }) {
     ArgumentError.checkNotNull(firebaseProjectId, 'firebaseProjectId');
     ArgumentError.checkNotNull(firebaseUserEmail, 'firebaseUserEmail');
     ArgumentError.checkNotNull(firebaseUserPassword, 'firebaseUserPassword');
-    ArgumentError.checkNotNull(firebaseWebApiKey, 'firebaseWebApiKey');
+    ArgumentError.checkNotNull(firebasePublicApiKey, 'firebasePublicApiKey');
     ArgumentError.checkNotNull(metricsProjectId, 'metricsProjectId');
   }
 
@@ -60,7 +60,7 @@ class FirestoreDestinationConfig extends Equatable
       firebaseProjectId: json['firebase_project_id'] as String,
       firebaseUserPassword: json['firebase_user_pass'] as String,
       firebaseUserEmail: json['firebase_user_email'] as String,
-      firebaseWebApiKey: json['firebase_web_api_key'] as String,
+      firebasePublicApiKey: json['firebase_public_api_key'] as String,
       metricsProjectId: json['metrics_project_id'] as String,
     );
   }
