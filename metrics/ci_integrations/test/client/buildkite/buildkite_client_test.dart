@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:ci_integration/client/buildkite/buildkite_client.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_artifacts_page.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_build_state.dart';
+import 'package:ci_integration/client/buildkite/models/buildkite_builds_page.dart';
 import 'package:ci_integration/util/authorization/authorization.dart';
 import 'package:test/test.dart';
 
@@ -145,7 +147,8 @@ void main() {
     test(
       ".basePath returns a base path to the Buildkite API using the given values",
       () {
-        final basePath = "${buildkiteMockServer.url}/organizations/$organizationSlug/";
+        final basePath =
+            "${buildkiteMockServer.url}/organizations/$organizationSlug/";
 
         final clientBasePath = client.basePath;
 
@@ -158,9 +161,7 @@ void main() {
       () async {
         final result = await client.fetchBuilds('not_found');
 
-        final isError = result.isError;
-
-        expect(isError, isTrue);
+        expect(result.isError, isTrue);
       },
     );
 
@@ -209,6 +210,19 @@ void main() {
         final interactionResult = await client.fetchBuilds(
           pipelineSlug,
           page: -1,
+        );
+        final buildkiteBuildsPage = interactionResult.result;
+
+        expect(buildkiteBuildsPage.page, equals(1));
+      },
+    );
+
+    test(
+      ".fetchBuilds() fetches the first page if the given page parameter is zero",
+      () async {
+        final interactionResult = await client.fetchBuilds(
+          pipelineSlug,
+          page: 0,
         );
         final buildkiteBuildsPage = interactionResult.result;
 
@@ -333,16 +347,11 @@ void main() {
     test(
       ".fetchBuildsNext() returns an error if the given page is the last page",
       () async {
-        final interactionResult = await client.fetchBuilds(
-          pipelineSlug,
-          perPage: 100,
-        );
-        final firstPage = interactionResult.result;
+        const buildsPage = BuildkiteBuildsPage(nextPageUrl: null);
 
-        final nextInteractionResult = await client.fetchBuildsNext(firstPage);
-        final isError = nextInteractionResult.isError;
+        final nextInteractionResult = await client.fetchBuildsNext(buildsPage);
 
-        expect(isError, isTrue);
+        expect(nextInteractionResult.isError, isTrue);
       },
     );
 
@@ -354,9 +363,8 @@ void main() {
           pipelineSlug,
           buildNumber,
         );
-        final isError = interactionResult.isError;
 
-        expect(isError, isTrue);
+        expect(interactionResult.isError, isTrue);
       },
     );
 
@@ -411,6 +419,20 @@ void main() {
           pipelineSlug,
           buildNumber,
           page: -1,
+        );
+        final artifactsPage = interactionResult.result;
+
+        expect(artifactsPage.page, equals(1));
+      },
+    );
+
+    test(
+      ".fetchArtifacts() fetches the first page if the given page parameter is zero",
+      () async {
+        final interactionResult = await client.fetchArtifacts(
+          pipelineSlug,
+          buildNumber,
+          page: 0,
         );
         final artifactsPage = interactionResult.result;
 
@@ -496,19 +518,13 @@ void main() {
     test(
       ".fetchArtifactsNext() returns an error if the given page is the last page",
       () async {
-        final interactionResult = await client.fetchArtifacts(
-          pipelineSlug,
-          buildNumber,
-          perPage: 100,
-        );
-        final artifactsPage = interactionResult.result;
+        const artifactsPage = BuildkiteArtifactsPage(nextPageUrl: null);
 
         final nextInteractionResult = await client.fetchArtifactsNext(
           artifactsPage,
         );
-        final isError = nextInteractionResult.isError;
 
-        expect(isError, isTrue);
+        expect(nextInteractionResult.isError, isTrue);
       },
     );
 
@@ -528,9 +544,8 @@ void main() {
             '${client.basePath}pipelines/$pipelineSlug/builds/$buildNumber/artifacts/not_found/download';
 
         final interactionResult = await client.downloadArtifact(downloadUrl);
-        final isError = interactionResult.isError;
 
-        expect(isError, isTrue);
+        expect(interactionResult.isError, isTrue);
       },
     );
   });

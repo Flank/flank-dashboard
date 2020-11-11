@@ -67,7 +67,7 @@ class BuildkiteMockServer extends ApiMockServer {
       ];
 
   /// Responses with a list of [BuildkiteBuild]s having the build state
-  /// specified in the [request] parameters.
+  /// and the finished at specified in the [request] parameters.
   ///
   /// Takes the per page and the page number parameters from the [request]
   /// and returns the per page number of [BuildkiteBuild]s from the page with
@@ -133,7 +133,7 @@ class BuildkiteMockServer extends ApiMockServer {
   /// and [finishedFrom].
   ///
   /// If the given [state] is `null`, the [BuildkiteBuildState.finished] is used.
-  /// If the given [finishedFrom] is `null`, the [DateTime(2021)] is used.
+  /// If the given [finishedFrom] is `null`, the [DateTime.now] is used.
   List<BuildkiteBuild> _generateBuilds([
     BuildkiteBuildState state,
     DateTime finishedFrom,
@@ -147,7 +147,7 @@ class BuildkiteMockServer extends ApiMockServer {
         state: state ?? BuildkiteBuildState.finished,
         webUrl: 'url',
         startedAt: DateTime(2020),
-        finishedAt: finishedFrom ?? DateTime(2021),
+        finishedAt: finishedFrom ?? DateTime.now(),
       ),
     );
   }
@@ -167,8 +167,8 @@ class BuildkiteMockServer extends ApiMockServer {
 
   /// Returns the `finished_from` query parameter of the given [request].
   ///
-  /// Returns `null` if the [finishedFrom] is `null` or the [DateTime] can't be
-  /// parsed from the given [finishedFrom].
+  /// Returns `null` if the `finishedFrom` is `null` or the [DateTime] can't be
+  /// parsed from the given `finishedFrom`.
   DateTime _extractFinishedFrom(HttpRequest request) {
     final finishedFrom = request.uri.queryParameters['finished_from'];
 
