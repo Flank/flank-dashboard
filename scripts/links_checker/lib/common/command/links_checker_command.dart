@@ -7,6 +7,9 @@ class LinksCheckerCommand extends Command<void> {
   /// An [ArgumentsParser] used to parse the arguments for this command.
   final LinksCheckerArgumentsParser argumentsParser;
 
+  /// A [LinksChecker] needed to run
+  LinksChecker get linksChecker => LinksChecker();
+
   /// Creates a new instance of the [LinksCheckerCommand]
   /// with the given [argumentsParser].
   ///
@@ -27,9 +30,8 @@ class LinksCheckerCommand extends Command<void> {
   @override
   void run() {
     final arguments = argumentsParser.parseArgResults(argResults);
-
-    final checker = LinksChecker(arguments.paths);
-
-    checker.check();
+    
+    final files = linksChecker.parse(arguments.paths);
+    linksChecker.check(files);
   }
 }

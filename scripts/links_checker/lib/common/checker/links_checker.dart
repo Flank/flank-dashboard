@@ -5,44 +5,21 @@ import 'package:links_checker/common/exception/links_checker_exception.dart';
 /// A class that checks that all Monorepo URLs point to the master branch
 /// in the given files.
 class LinksChecker {
-  /// A string containing the space-delimited paths of files to analyze.
-  final String paths;
-
-  /// A [List] of [File]s to analyze.
-  final List<File> _files = [];
-
   /// A [List] of URL prefixes that indicate that the URL points to the Monorepo
   /// repository.
   final List<String> _prefixes = [
-    'https://raw.githubusercontent.com/platform-platform/monorepo',
-    'https://github.com/platform-platform/monorepo/blob',
-    'https://github.com/platform-platform/monorepo/raw',
-    'https://github.com/platform-platform/monorepo/tree',
+    'raw.githubusercontent.com/platform-platform/monorepo',
+    'github.com/platform-platform/monorepo/blob',
+    'github.com/platform-platform/monorepo/raw',
+    'github.com/platform-platform/monorepo/tree',
   ];
 
   /// A URL [RegExp] to parse URLs.
   final urlRegExp = RegExp(
       r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)');
 
-  /// Creates a new instance of the [LinksChecker]
-  /// and initializes the files to analyze by the given [paths].
-  LinksChecker(this.paths) {
-    final files = _getFiles(paths);
-
-    _files.addAll(files);
-  }
-
-  /// Runs checks for all files.
-  void check() {
-    final analysisResult = _analyzeFiles(_files);
-    
-    if (analysisResult.isNotEmpty) {
-      throw LinksCheckerException(analysisResult);
-    }
-  }
-
   /// Returns a list of [File]s by the the given [paths].
-  List<File> _getFiles(String paths) {
+  List<File> parse(String paths) {
     final files = <File>[];
 
     for (final path in paths.split(' ')) {
@@ -52,6 +29,15 @@ class LinksChecker {
     }
 
     return files;
+  }
+
+  /// Runs checks for all files.
+  void check(List<File> files) {
+    final analysisResult = _analyzeFiles(files);
+
+    if (analysisResult.isNotEmpty) {
+      throw LinksCheckerException(analysisResult);
+    }
   }
 
   /// Analyzes the given [files] and returns a list containing descriptions
@@ -101,7 +87,7 @@ class LinksChecker {
   }
 
   /// Returns the [file]'s content as a [String].
-  /// 
+  ///
   /// Returns `null`, if the given [file] can't be read.
   String _getFileContent(File file) {
     try {
