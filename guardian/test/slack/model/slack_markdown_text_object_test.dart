@@ -16,7 +16,7 @@ void main() {
     );
 
     test(
-      "toJson() includes the verbatim property to map if not null",
+      "toJson() includes the verbatim property to the map if not null",
       () {
         const markdownTextObject = SlackMarkdownTextObject(
           text: 'test',
@@ -34,7 +34,7 @@ void main() {
       expect(result, isNull);
     });
 
-    test("fromJson() converts map to text object", () {
+    test("fromJson() converts a map to the text object", () {
       final result = SlackMarkdownTextObject.fromJson(markdownTextObjectMap);
 
       expect(result, equals(markdownTextObject));

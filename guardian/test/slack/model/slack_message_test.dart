@@ -61,7 +61,7 @@ void main() {
     });
 
     test(
-      "validate() results with false if both text and blocks are missing",
+      "validate() returns false if both text and blocks are missing",
       () {
         const message = SlackMessage();
         final result = message.validate();
@@ -71,7 +71,7 @@ void main() {
     );
 
     test(
-      "validate() results with false if text is empty on missign blocks",
+      "validate() returns false if text is empty on missign blocks",
       () {
         const message = SlackMessage(text: '');
         final result = message.validate();
@@ -81,7 +81,7 @@ void main() {
     );
 
     test(
-      "validate() results with false if there is at least one invalid block in blocks",
+      "validate() returns false if there is at least one invalid block in blocks",
       () {
         const message = SlackMessage(blocks: [SlackSectionBlock()]);
         final result = message.validate();
@@ -91,7 +91,7 @@ void main() {
     );
 
     test(
-      "validate() results with false if there are more than 50 blocks",
+      "validate() returns false if there are more than 50 blocks",
       () {
         final message = SlackMessage(
           blocks: List.generate(

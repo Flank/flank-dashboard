@@ -66,7 +66,7 @@ void main() {
     );
 
     test(
-      ".startAt(n) throws an ArgumentError tif the given number is negative",
+      ".startAt(n) throws an ArgumentError if the given number is negative",
       () {
         expect(() => JenkinsQueryLimits.startAt(-1), throwsArgumentError);
       },

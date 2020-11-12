@@ -543,7 +543,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsAfter() throws ArgumentError if the build is null",
+      ".fetchBuildsAfter() throws an ArgumentError if the build is null",
       () {
         final result = adapter.fetchBuildsAfter(pipelineSlug, null);
 

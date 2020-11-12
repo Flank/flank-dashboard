@@ -7,7 +7,7 @@ void main() {
   group('XmlAttributeValueParser', () {
     final parser = IntAttributeValueParser();
 
-    test("canParse() returns true if value can be parsed", () {
+    test("canParse() returns true if the value can be parsed", () {
       const value = '123';
 
       final canParse = parser.canParse(value);
@@ -15,7 +15,7 @@ void main() {
       expect(canParse, isTrue);
     });
 
-    test("canParse() returns false if value cannot be parsed", () {
+    test("canParse() returns false if the value cannot be parsed", () {
       const value = 'no int';
 
       final canParse = parser.canParse(value);
@@ -24,7 +24,7 @@ void main() {
     });
 
     test(
-      "parse() throws a FormatException on value that cannot be parsed",
+      "parse() throws a FormatException on the value that cannot be parsed",
       () {
         const value = 'no int';
 
@@ -40,7 +40,7 @@ void main() {
       expect(parsed, equals(123));
     });
 
-    test("tryParse() returns null on value that cannot be parsed", () {
+    test("tryParse() returns null on the value that cannot be parsed", () {
       const value = 'no int';
 
       final parsed = parser.tryParse(value);

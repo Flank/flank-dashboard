@@ -8,7 +8,7 @@ void main() {
     final parser = YamlMapParser();
 
     test(
-      "parse() throws an ArgumentError if given input is not dictionary",
+      "parse() throws an ArgumentError if the given input is not a dictionary",
       () {
         const yamlString = '1';
 
@@ -16,7 +16,7 @@ void main() {
       },
     );
 
-    test("parse() throws an ArgumentError if given input is null", () {
+    test("parse() throws an ArgumentError if the given input is null", () {
       expect(() => parser.parse(null), throwsArgumentError);
     });
 
@@ -28,7 +28,7 @@ void main() {
     });
 
     test(
-      "parse() throws a FormatException if given input has complex keys",
+      "parse() throws a FormatException if the given input has complex keys",
       () {
         const yamlString = '{1, 2}: 3';
 

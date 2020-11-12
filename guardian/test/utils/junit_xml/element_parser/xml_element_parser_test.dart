@@ -89,7 +89,7 @@ void main() {
     );
 
     test(
-      "countChildren() counts nested elements with name specified in parser",
+      "countChildren() counts nested elements with the name specified in a parser",
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -106,7 +106,7 @@ void main() {
     });
 
     test(
-      "parseChildren() parses nested elements with name specified in parser",
+      "parseChildren() parses nested elements with the name specified in a parser",
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -117,7 +117,7 @@ void main() {
     );
 
     test(
-      "parseChildren() returns an  empty list if there are no nested elements with name specified in parser",
+      "parseChildren() returns an empty list if there are no nested elements with the name specified in a parser",
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -131,7 +131,7 @@ void main() {
     );
 
     test(
-      "parseChild() throws a StateError if there are more than one nested element matching given name",
+      "parseChild() throws a StateError if there is more than one nested element matching the given name",
       () {
         final parserStub = XmlElementParserTestbed('stub');
 
@@ -143,7 +143,7 @@ void main() {
     );
 
     test(
-      "parseChild() parses single nested element with name specified in parser",
+      "parseChild() parses single nested element with the name specified in a parser",
       () {
         final parserStub = XmlElementParserTestbed('stub');
 

@@ -35,14 +35,14 @@ void main() {
       },
     );
 
-    test("sendMessage() results with an error on null message", () {
+    test("sendMessage() returns an error on null message", () {
       final result =
           slackClient.sendMessage(null).then((result) => result.isError);
 
       expect(result, completion(isTrue));
     });
 
-    test("sendMessage() results with an error on empty message", () {
+    test("sendMessage() returns an error on empty message", () {
       const message = SlackMessage(text: '');
       final result =
           slackClient.sendMessage(message).then((result) => result.isError);
@@ -50,7 +50,7 @@ void main() {
       expect(result, completion(isTrue));
     });
 
-    test("sendMessage() results with an error on invalid blocks", () {
+    test("sendMessage() returns an error on invalid blocks", () {
       const message = SlackMessage(text: 'test', blocks: [
         SlackSectionBlock(),
       ]);
@@ -61,7 +61,7 @@ void main() {
       expect(result, completion(isTrue));
     });
 
-    test("sendMessage() results with a success on valid message", () {
+    test("sendMessage() returns a success on valid message", () {
       const message = SlackMessage(text: 'test', blocks: [
         SlackSectionBlock(
           text: SlackMarkdownTextObject(text: 'test'),

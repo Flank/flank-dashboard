@@ -53,7 +53,7 @@ void main() {
     );
 
     test(
-      ".sync() results with an error if a source client throws fetching all builds",
+      ".sync() returns an error if a source client throws fetching all builds",
       () {
         final sourceClient = SourceClientStub(
           fetchBuildsCallback: (_) => throw UnimplementedError(),
@@ -73,7 +73,7 @@ void main() {
     );
 
     test(
-      ".sync() results with an error if a source client throws fetching the builds after the given one",
+      ".sync() returns an error if a source client throws fetching the builds after the given one",
       () {
         final sourceClient = SourceClientStub(
           fetchBuildsAfterCallback: (_, __) => throw UnimplementedError(),
@@ -87,7 +87,7 @@ void main() {
     );
 
     test(
-      ".sync() results with an error if a destination client throws fetching the last build",
+      ".sync() returns an error if a destination client throws fetching the last build",
       () {
         final destinationClient = DestinationClientStub(
           fetchLastBuildCallback: (_) => throw UnimplementedError(),
@@ -103,7 +103,7 @@ void main() {
     );
 
     test(
-      ".sync() results with an error if a destination client throws adding new builds",
+      ".sync() returns an error if a destination client throws adding new builds",
       () {
         final destinationClient = DestinationClientStub(
           addBuildsCallback: (_, __) => throw UnimplementedError(),

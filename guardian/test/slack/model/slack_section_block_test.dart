@@ -69,7 +69,7 @@ void main() {
     );
 
     test(
-      "validate() results with false on both text and fields missing",
+      "validate() returns false on both text and fields missing",
       () {
         const sectionBlock = SlackSectionBlock();
         final result = sectionBlock.validate();
@@ -79,7 +79,7 @@ void main() {
     );
 
     test(
-      "validate() results with false on text with length out of limit",
+      "validate() returns false on text with length out of limit",
       () {
         final sectionBlock = SlackSectionBlock(
           text: SlackPlainTextObject(text: '1' * 3001),
@@ -91,7 +91,7 @@ void main() {
     );
 
     test(
-      "validate() results with false if there are more than 10 fields",
+      "validate() returns false if there are more than 10 fields",
       () {
         final sectionBlock = SlackSectionBlock(
           fields: List.generate(
@@ -106,7 +106,7 @@ void main() {
     );
 
     test(
-      "validate() results with false if at least one field contains text with length out of limit",
+      "validate() returns false if at least one field contains text with length out of limit",
       () {
         final sectionBlock = SlackSectionBlock(
           fields: [

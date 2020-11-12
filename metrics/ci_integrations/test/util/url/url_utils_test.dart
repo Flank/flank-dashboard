@@ -90,7 +90,7 @@ void main() {
     );
 
     test(
-      ".replacePathSeparators() results with path starting with the given replacement",
+      ".replacePathSeparators() results with a path starting with the given replacement",
       () {
         final result = UrlUtils.replacePathSeparators('path', 'test');
 

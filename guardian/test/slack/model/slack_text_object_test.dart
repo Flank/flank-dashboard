@@ -55,14 +55,14 @@ void main() {
       },
     );
 
-    test("validate() results with false if text is null", () {
+    test("validate() returns false if text is null", () {
       const textObject = SlackTextObjectTestbed(null);
       final result = textObject.validate();
 
       expect(result.isValid, isFalse);
     });
 
-    test("validate() results with false if text is empty", () {
+    test("validate() returns false if text is empty", () {
       const textObject = SlackTextObjectTestbed('');
       final result = textObject.validate();
 
@@ -70,7 +70,7 @@ void main() {
     });
 
     test(
-      "validate() results with false if text length is out of limits",
+      "validate() returns false if text length is out of limits",
       () {
         const textObject = SlackTextObjectTestbed('test message');
         final result = textObject.validate(4);
@@ -80,7 +80,7 @@ void main() {
     );
 
     test(
-      "validate() results with true on non-null text when maxLength is null",
+      "validate() returns true on non-null text when maxLength is null",
       () {
         const textObject = SlackTextObjectTestbed('test');
         final result = textObject.validate();
@@ -90,7 +90,7 @@ void main() {
     );
 
     test(
-      "validate() results with true on valid text",
+      "validate() returns true on valid text",
       () {
         const textObject = SlackTextObjectTestbed('test');
         final result = textObject.validate(10);

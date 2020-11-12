@@ -12,7 +12,7 @@ void main() {
           YamlMapFormatter.defaultSpacesPerIndentationLevel);
     });
 
-    test("format() throws an ArgumentError if input is null", () {
+    test("format() throws an ArgumentError if the input is null", () {
       expect(() => formatter.format(null), throwsArgumentError);
     });
 
