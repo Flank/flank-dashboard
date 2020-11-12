@@ -2,7 +2,7 @@ name: Metrics Actions
 
 on:
   pull_request:
-    types: [ opened, edited, synchronize ]
+    types: [opened, edited, synchronize]
 
 jobs:
   changed_projects:
@@ -19,7 +19,7 @@ jobs:
         id: changed_files
         uses: jitterbit/get-changed-files@v1
         with:
-          format: 'space-delimited'
+          format: "space-delimited"
       - name: Check changed projects
         id: changed_projects
         run: |
@@ -57,7 +57,7 @@ jobs:
   metrics-web-actions:
     name: Metrics Web Actions
     runs-on: macOS-latest
-    needs: [ changed_projects ]
+    needs: [changed_projects]
     if: needs.changed_projects.outputs.web == 'true' || needs.changed_projects.outputs.core == 'true'
     timeout-minutes: 60
     env:
@@ -75,8 +75,8 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'beta'
-          flutter-version: '1.22.0-12.1.pre'
+          channel: "beta"
+          flutter-version: "1.22.0-12.1.pre"
 
       - uses: cedx/setup-dart@v2
         with:
@@ -107,7 +107,7 @@ jobs:
     name: Firebase Actions
     runs-on: macOS-latest
     timeout-minutes: 60
-    needs: [ changed_projects ]
+    needs: [changed_projects]
     if: needs.changed_projects.outputs.firebase == 'true'
     env:
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
@@ -135,7 +135,7 @@ jobs:
     name: Coverage Converter Actions
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    needs: [ changed_projects ]
+    needs: [changed_projects]
     if: needs.changed_projects.outputs.coverage_converter == 'true' || needs.changed_projects.outputs.core == 'true'
 
     steps:
@@ -166,7 +166,7 @@ jobs:
     name: CI Integrations Actions
     runs-on: macOS-latest
     timeout-minutes: 60
-    needs: [ changed_projects ]
+    needs: [changed_projects]
     if: needs.changed_projects.outputs.ci_integrations == 'true' || needs.changed_projects.outputs.core == 'true'
 
     steps:
@@ -192,7 +192,7 @@ jobs:
       - name: Run tests
         run: bash test.sh
         working-directory: metrics/ci_integrations/
-    
+
   check-links-actions:
     name: Check Links Actions
     runs-on: macOS-latest
@@ -208,6 +208,10 @@ jobs:
         with:
           release-channel: beta
           version: 2.10.0-110.5.beta
+
+      - name: Get dependencies
+        run: pub get
+        working-directory: scripts/links_checker/
 
       - name: Get all changed files
         id: files
