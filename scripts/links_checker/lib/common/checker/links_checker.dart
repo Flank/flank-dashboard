@@ -120,7 +120,7 @@ class LinksChecker {
     final masterPrefixes = _prefixes.map((prefix) => '$prefix/master').toList();
 
     final pointsToMaster = masterPrefixes.any((prefix) => url.contains(prefix));
-    final isRawPrefix = _prefixes.any((prefix) => prefix == url);
+    final isRawPrefix = _prefixes.any((prefix) => url.endsWith(prefix));
 
     return pointsToMaster || isRawPrefix;
   }

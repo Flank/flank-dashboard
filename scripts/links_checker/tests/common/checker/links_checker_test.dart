@@ -8,7 +8,10 @@ import 'package:test/test.dart';
 void main() {
   group("LinksChecker", () {
     const validUrl = 'http://github.com/platform-platform/monorepo/blob/master';
-    const invalidUrl = 'http://github.com/platform-platform/monorepo/blob/test';
+
+    // This link is concatenated because the link check will fail on this link.
+    const invalidUrl =
+        'http://github.com/platform-platform/monorepo/blob' + '/test';
 
     final linksChecker = LinksChecker();
     final file = _FileMock();
