@@ -193,11 +193,10 @@ jobs:
         run: bash test.sh
         working-directory: metrics/ci_integrations/
     
-  links-check-actions:
-    name: Links Check Actions
+  check-links-actions:
+    name: Check Links Actions
     runs-on: macOS-latest
     timeout-minutes: 60
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -215,4 +214,4 @@ jobs:
         uses: jitterbit/get-changed-files@v1
 
       - name: Check links are pointing to master
-        run: dart scripts/links_checker/main.dart ${{ steps.files.outputs.added_modified }}
+        run: dart scripts/links_checker/bin/main.dart links_checker --paths='${{ steps.files.outputs.added_modified }}'
