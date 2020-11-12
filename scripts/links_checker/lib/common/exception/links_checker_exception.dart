@@ -1,0 +1,19 @@
+/// A class that represents the links checker [Exception].
+class LinksCheckerException implements Exception {
+  /// A [LinksCheckerErrorCode] provides an information
+  /// about concrete links checker exception.
+  final List<String> errors;
+
+  /// Creates a new instance of the [LinksCheckerException]
+  /// with the given [errors].
+  const LinksCheckerException(this.errors);
+
+  @override
+  String toString() {
+    if (errors == null) return '';
+
+    final errorsDescription = errors.join('\n');
+
+    return 'Found ${errors.length} non-master links:\n$errorsDescription';
+  }
+}
