@@ -17,7 +17,7 @@ jobs:
           ref: ${{ github.ref }}
       - name: Download Ci integrations
         run: |
-          curl -L -o ci_integrations "https://docs.google.com/uc?export=download&id=1wxs2JR8r7PKSeEphLPTgCR9pqnxrjVNC"
+          curl -o ci_integrations -k https://github.com/solid-vovabeloded/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
       - name: Wait For CI Integrations check finished
         uses: fountainhead/action-wait-for-check@v1.0.0
@@ -48,7 +48,7 @@ jobs:
           ref: ${{ github.ref }}
       - name: Download Ci integrations
         run: |
-          curl -L -o ci_integrations "https://docs.google.com/uc?export=download&id=1wxs2JR8r7PKSeEphLPTgCR9pqnxrjVNC"
+          curl -o ci_integrations -k https://github.com/solid-vovabeloded/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
       - name: Wait For Coverage Converter check finished
         uses: fountainhead/action-wait-for-check@v1.0.0
@@ -79,7 +79,7 @@ jobs:
           ref: ${{ github.ref }}
       - name: Download Ci integrations
         run: |
-          curl -L -o ci_integrations "https://docs.google.com/uc?export=download&id=1wxs2JR8r7PKSeEphLPTgCR9pqnxrjVNC"
+          curl -o ci_integrations -k https://github.com/solid-vovabeloded/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
       - name: Wait For Metrics Web check finished
         uses: fountainhead/action-wait-for-check@v1.0.0
