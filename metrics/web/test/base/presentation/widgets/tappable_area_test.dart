@@ -28,7 +28,7 @@ void main() {
     void _defaultOnTap() {}
 
     testWidgets(
-      "throws an assertion error if the given builder is null",
+      "throws an AssertionError if the given builder is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const TappableAreaTestbed(builder: null),

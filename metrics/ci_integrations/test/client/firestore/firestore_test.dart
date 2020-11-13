@@ -8,20 +8,20 @@ void main() {
     const apiKey = 'apiKey';
 
     test(
-      "should throw an AssertionError trying to create an instance with empty project id",
+      "throws an AssertionError if the given project id is empty",
       () {
         expect(() => Firestore(''), throwsA(isA<AssertionError>()));
       },
     );
 
-    test("should create an instance with the given project id", () {
+    test("creates an instance with the given project id", () {
       final result = Firestore(projectId);
 
       expect(result.projectId, equals(projectId));
     });
 
     test(
-      "should create an instance with the given Firebase authentication",
+      "creates an instance with the given Firebase authentication",
       () {
         final firebaseAuth = fd.FirebaseAuth(apiKey, fd.VolatileStore());
 

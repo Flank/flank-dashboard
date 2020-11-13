@@ -38,7 +38,7 @@ void main() {
     );
 
     test(
-      ".fromJson returns null if the given json is null",
+      ".fromJson() returns null if the given json is null",
       () {
         final artifact = WorkflowRunArtifact.fromJson(null);
 
@@ -47,7 +47,7 @@ void main() {
     );
 
     test(
-      ".fromJson creates an instance from the given json",
+      ".fromJson() creates an instance from the given json",
       () {
         final runArtifact = WorkflowRunArtifact.fromJson(artifactJson);
 

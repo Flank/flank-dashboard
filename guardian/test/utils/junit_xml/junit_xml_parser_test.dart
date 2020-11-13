@@ -12,17 +12,17 @@ void main() {
     final iosPassTest = File('test/resources/ios_pass.xml');
     final iosFailTest = File('test/resources/ios_fail.xml');
 
-    test('parse() should throw ArgumentError on null input', () {
+    test("parse() throws an ArgumentError on null input", () {
       expect(() => parser.parse(null), throwsArgumentError);
     });
 
-    test('parse() should throw XmlException on empty XML string', () {
+    test("parse() throws a XmlException on empty XML string", () {
       const emptyXml = '';
       expect(() => parser.parse(emptyXml), throwsA(isA<XmlException>()));
     });
 
     test(
-      'parse() should throw XmlException on XML string with no root element',
+      "parse() throws a XmlException on XML string with no root element",
       () {
         const noRootXml = "<?xml version='1.0' encoding='UTF-8' ?>";
         expect(() => parser.parse(noRootXml), throwsA(isA<XmlException>()));
@@ -30,7 +30,7 @@ void main() {
     );
 
     test(
-      'parse() should throw XmlException on XML string with two root elements',
+      "parse() throws a XmlException on XML string with two root elements",
       () {
         const twoRootXml = '''
           <?xml version='1.0' encoding='UTF-8' ?>
@@ -41,7 +41,7 @@ void main() {
       },
     );
 
-    test('parse() should throw ArgumentError on not JUnitXML input', () {
+    test("parse() throws an ArgumentError on not JUnitXML input", () {
       const randomXml = '''
         <?xml version='1.0' encoding='UTF-8' ?>
         <node></node>
@@ -50,8 +50,7 @@ void main() {
     });
 
     test(
-      'parse() should throw FormatException on '
-      'invalid JUnitXML report',
+      "parse() throws a FormatException on invalid JUnitXML report",
       () {
         const missedTestSuiteAttributesXml = '''
           <?xml version='1.0' encoding='UTF-8' ?>
@@ -66,7 +65,7 @@ void main() {
       },
     );
 
-    test('parse() should parse android_pass.xml', () {
+    test("parse() parses android_pass.xml", () {
       final result = parser.parse(androidPassTest.readAsStringSync());
 
       final expected = JUnitXmlReport(JUnitTestSuites(
@@ -96,7 +95,7 @@ void main() {
       expect(result, equals(expected));
     });
 
-    test('parse() should parse android_fail.xml', () {
+    test("parse() parses android_fail.xml", () {
       final result = parser.parse(androidFailTest.readAsStringSync());
 
       final expected = JUnitXmlReport(JUnitTestSuites(
@@ -137,7 +136,7 @@ void main() {
       expect(result, equals(expected));
     });
 
-    test('parse() should parse ios_pass.xml', () {
+    test("parse() parses ios_pass.xml", () {
       final result = parser.parse(iosPassTest.readAsStringSync());
 
       const expected = JUnitXmlReport(JUnitTestSuites(
@@ -171,7 +170,7 @@ void main() {
       expect(result, equals(expected));
     });
 
-    test('parse() should parse ios_fail.xml', () {
+    test("parse() parses ios_fail.xml", () {
       final result = parser.parse(iosFailTest.readAsStringSync());
 
       const expected = JUnitXmlReport(JUnitTestSuites(

@@ -11,7 +11,7 @@ import '../../../../test_utils/test_injection_container.dart';
 void main() {
   group("MetricsScaffold", () {
     testWidgets(
-      "throws an AssertionError if trying to create without a body",
+      "throws an AssertionError if the given body is null",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsScaffoldTestbed(body: null));

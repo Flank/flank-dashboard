@@ -10,7 +10,7 @@ void main() {
     final firestoreConfig = FirestoreConfigTestData.firestoreDestiantionConfig;
 
     test(
-      "can't be created when the metricsProjectId is null",
+      "throws an ArgumentError if the given metrics project id is null",
       () {
         expect(
           () => FirestoreDestinationConfig(
@@ -26,7 +26,7 @@ void main() {
     );
 
     test(
-      "can't be created when the firebaseProjectId is null",
+      "throws an ArgumentError if the given firebase project id is null",
       () {
         expect(
           () => FirestoreDestinationConfig(
@@ -42,7 +42,7 @@ void main() {
     );
 
     test(
-      "can't be created when the firebaseUserEmail is null",
+      "throws an ArgumentError if the given firebase user email is null",
       () {
         expect(
           () => FirestoreDestinationConfig(
@@ -58,7 +58,7 @@ void main() {
     );
 
     test(
-      "can't be created when the firebaseUserPassword is null",
+      "throws an ArgumentError if the given firebase user password is null",
       () {
         expect(
           () => FirestoreDestinationConfig(
@@ -74,7 +74,7 @@ void main() {
     );
 
     test(
-      "can't be created when the firebasePublicApiKey is null",
+      "throws an ArgumentError if the given firebase public API key is null",
       () {
         expect(
           () => FirestoreDestinationConfig(

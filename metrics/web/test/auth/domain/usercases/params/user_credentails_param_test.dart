@@ -6,7 +6,7 @@ import '../../../../test_utils/matcher_util.dart';
 
 void main() {
   group("UserCredentialsParam", () {
-    test("can't be created with null email", () {
+    test("throws an AssertionError if the given email is null", () {
       expect(
         () => UserCredentialsParam(
           email: null,
@@ -16,7 +16,7 @@ void main() {
       );
     });
 
-    test("can't be created with null password", () {
+    test("throws an AssertionError if the given password is null", () {
       expect(
         () => UserCredentialsParam(
           email: Email('email@mail.mail'),

@@ -39,8 +39,7 @@ void main() {
     });
 
     test(
-      'validate() should return false if <testcase> element '
-      'contains more than one <system-out> elements',
+      "validate() returns false if <testcase> element contains more than one <system-out> elements",
       () {
         final result = parser.validate(twoSystemOutElement);
 
@@ -49,8 +48,7 @@ void main() {
     );
 
     test(
-      'validate() should return false if <testcase> element '
-      'contains more than one <system-err> elements',
+      "validate() returns false if <testcase> element contains more than one <system-err> elements",
       () {
         final result = parser.validate(twoSystemErrElement);
 
@@ -58,19 +56,19 @@ void main() {
       },
     );
 
-    test('validate() should return true on valid <testcase> element', () {
+    test("validate() returns true on valid <testcase> element", () {
       final result = parser.validate(validElement);
 
       expect(result, isTrue);
     });
 
-    test('mapElement() should map empty <testcase/> element', () {
+    test("mapElement() maps an empty <testcase/> element", () {
       final result = parser.mapElement(emptyElement);
 
       expect(result, equals(const JUnitTestCase()));
     });
 
-    test('mapElement() should map <testcase> element', () {
+    test("mapElement() maps <testcase> element", () {
       const expected = JUnitTestCase(
         name: 'randomTestCase()',
         classname: 'RandomClass',

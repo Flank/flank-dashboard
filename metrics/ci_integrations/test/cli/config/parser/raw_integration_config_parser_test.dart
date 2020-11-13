@@ -27,14 +27,14 @@ void main() {
     };
 
     test(
-      ".parse() should throw an ArgumentError if the given configYaml is null",
+      ".parse() throws an ArgumentError if the given config yaml is null",
       () {
         expect(() => configParser.parse(null), throwsArgumentError);
       },
     );
 
     test(
-      ".parse() should throw a FormatException if the source config is missing",
+      ".parse() throws a FormatException if the source config is missing",
       () {
         expect(
           () => configParser.parse(destinationConfig),
@@ -44,14 +44,14 @@ void main() {
     );
 
     test(
-      ".parse() should throw a FormatException if the destination config is missing",
+      ".parse() throws a FormatException if the destination config is missing",
       () {
         expect(() => configParser.parse(sourceConfig), throwsFormatException);
       },
     );
 
     test(
-      ".parse() should create RawIntegrationConfig from the given config yaml string",
+      ".parse() creates a RawIntegrationConfig from the given config yaml string",
       () {
         final config = configParser.parse('$sourceConfig$destinationConfig');
 

@@ -21,7 +21,7 @@ void main() {
       ''');
     });
 
-    test('mapElement() should map list of properties', () {
+    test("mapElement() maps a list of properties", () {
       const expected = [
         JUnitProperty(name: 'var1', value: '1'),
         JUnitProperty(name: 'var2', value: '2'),
@@ -50,19 +50,19 @@ void main() {
       ''');
     });
 
-    test('validate() should return false on missing required attribute(s)', () {
+    test("validate() returns false on missing required attribute(s)", () {
       final result = parser.validate(emptyPropertyElement);
 
       expect(result, isFalse);
     });
 
-    test('validate() should return true on valid <property> element', () {
+    test("validate() returns true on valid <property> element", () {
       final result = parser.validate(propertyElement);
 
       expect(result, isTrue);
     });
 
-    test('mapElement() should map <property> element', () {
+    test("mapElement() maps <property> element", () {
       const expected = JUnitProperty(name: 'var1', value: '1');
 
       final result = parser.mapElement(propertyElement);

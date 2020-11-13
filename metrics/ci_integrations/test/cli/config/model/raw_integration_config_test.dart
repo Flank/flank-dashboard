@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group("RawIntegrationConfig", () {
     test(
-      "can't be created when the source is null",
+      "throws an ArgumentError if the given source is null",
       () {
         expect(
           () => RawIntegrationConfig(
@@ -17,7 +17,7 @@ void main() {
     );
 
     test(
-      "can't be created when the destination is null",
+      "throws an ArgumentError if the given destination is null",
       () {
         expect(
           () => RawIntegrationConfig(

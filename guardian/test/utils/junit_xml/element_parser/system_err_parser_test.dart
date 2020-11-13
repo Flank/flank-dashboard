@@ -19,7 +19,7 @@ void main() {
       );
     });
 
-    test('mapElement() should map <system-err> element', () {
+    test("mapElement() maps <system-err> element", () {
       const expected = JUnitSystemErrData(text: text);
 
       final result = parser.mapElement(element);

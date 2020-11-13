@@ -77,7 +77,7 @@ void main() {
         return when(ciIntegrationMock.sync(syncConfig));
       }
 
-      test("should have the 'config-file' option", () {
+      test("has the 'config-file' option", () {
         final argParser = syncCommand.argParser;
         final options = argParser.options;
 

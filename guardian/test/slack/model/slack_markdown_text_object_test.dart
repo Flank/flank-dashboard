@@ -7,7 +7,7 @@ void main() {
     const markdownTextObjectMap = {'type': 'mrkdwn', 'text': 'test'};
 
     test(
-      'toJson() should return map with non-null properties of text object',
+      "toJson() returns a map with non-null properties of text object",
       () {
         final map = markdownTextObject.toJson();
 
@@ -16,7 +16,7 @@ void main() {
     );
 
     test(
-      'toJson() should include the verbatim property to map if not null',
+      "toJson() includes the verbatim property to the map if not null",
       () {
         const markdownTextObject = SlackMarkdownTextObject(
           text: 'test',
@@ -28,13 +28,13 @@ void main() {
       },
     );
 
-    test('fromJson() should return null if decoded map is null', () {
+    test("fromJson() returns null if decoded map is null", () {
       final result = SlackMarkdownTextObject.fromJson(null);
 
       expect(result, isNull);
     });
 
-    test('fromJson() should convert map to text object', () {
+    test("fromJson() converts a map to the text object", () {
       final result = SlackMarkdownTextObject.fromJson(markdownTextObjectMap);
 
       expect(result, equals(markdownTextObject));

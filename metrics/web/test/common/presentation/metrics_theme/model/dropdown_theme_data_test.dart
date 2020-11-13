@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group("DropdownThemeData", () {
     test(
-      "creates an instance with the default openedButtonBorderColor if given color is null",
+      "creates an instance with the default opened button border color if given color is null",
       () {
         final themeData = DropdownThemeData(
           openedButtonBorderColor: null,
@@ -19,7 +19,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the default closedButtonBorderColor if given color is null",
+      "creates an instance with the default closed button border color if given color is null",
       () {
         final themeData = DropdownThemeData(
           closedButtonBorderColor: null,
@@ -30,7 +30,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the default hoverBorderColor if given color is null",
+      "creates an instance with the default hover border color if given color is null",
       () {
         final themeData = DropdownThemeData(
           hoverBorderColor: null,

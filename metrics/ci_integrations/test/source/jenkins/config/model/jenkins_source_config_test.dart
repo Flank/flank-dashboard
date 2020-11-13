@@ -9,7 +9,7 @@ void main() {
     final jenkinsConfig = JenkinsConfigTestData.jenkinsSourceConfig;
 
     test(
-      "can't be created with null url",
+      "throws an ArgumentError if the given url is null",
       () {
         expect(
           () => JenkinsSourceConfig(
@@ -22,7 +22,7 @@ void main() {
     );
 
     test(
-      "can't be created with null jobName",
+      "throws an ArgumentError if the given job name is null",
       () {
         expect(
           () => JenkinsSourceConfig(
@@ -35,7 +35,7 @@ void main() {
     );
 
     test(
-      ".fromJson() should create a new instance of the JenkinsConfig from JSON encodable Map",
+      ".fromJson() creates a new instance of the JenkinsConfig from JSON encodable Map",
       () {
         final jenkinsConfig = JenkinsSourceConfig.fromJson(jenkinsConfigJson);
 
@@ -44,7 +44,7 @@ void main() {
     );
 
     test(
-      ".fromJson() should return null if null is passed",
+      ".fromJson() returns null if null is passed",
       () {
         final config = JenkinsSourceConfig.fromJson(null);
 
@@ -52,7 +52,7 @@ void main() {
       },
     );
 
-    test(".sourceProjectId should return the jobName property value", () {
+    test(".sourceProjectId returns the job name property value", () {
       const expected = JenkinsConfigTestData.jobName;
 
       final sourceProjectId = jenkinsConfig.sourceProjectId;

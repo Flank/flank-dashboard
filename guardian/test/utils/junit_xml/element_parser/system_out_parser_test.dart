@@ -19,7 +19,7 @@ void main() {
       );
     });
 
-    test('mapElement() should map <system-out> element', () {
+    test("mapElement() maps <system-out> element", () {
       const expected = JUnitSystemOutData(text: text);
 
       final result = parser.mapElement(element);

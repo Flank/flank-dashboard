@@ -85,7 +85,7 @@ void main() {
     }
 
     testWidgets(
-      "throws an AssertionError if a projectMetrics parameter is null",
+      "throws an AssertionError if a project metrics parameter is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _ProjectMetricsTileTestbed(
           projectMetrics: null,

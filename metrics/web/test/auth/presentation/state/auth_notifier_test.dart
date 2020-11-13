@@ -346,7 +346,7 @@ void main() {
     );
 
     test(
-      ".subscribeToAuthenticationUpdates() set the is logged in status to true once receiving a user profile",
+      ".subscribeToAuthenticationUpdates() sets the is logged in status to true once receiving a user profile",
       () {
         final userProfile = UserProfile(
           id: 'some id',

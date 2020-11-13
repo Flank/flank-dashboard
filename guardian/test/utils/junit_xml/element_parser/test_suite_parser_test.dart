@@ -56,8 +56,7 @@ void main() {
     });
 
     test(
-      'validate() should return false if <testsuite> element '
-      'contains more than one <system-out> elements',
+      "validate() returns false if <testsuite> element contains more than one <system-out> elements",
       () {
         final result = parser.validate(twoSystemOutElement);
 
@@ -66,8 +65,7 @@ void main() {
     );
 
     test(
-      'validate() should return false if <testsuite> element '
-      'contains more than one <system-err> elements',
+      "validate() returns false if <testsuite> element contains more than one <system-err> elements",
       () {
         final result = parser.validate(twoSystemErrElement);
 
@@ -76,8 +74,7 @@ void main() {
     );
 
     test(
-      'validate() should return false if <testsuite> element '
-      'contains more than one <properties> elements',
+      "validate() returns false if <testsuite> element contains more than one <properties> elements",
       () {
         final result = parser.validate(twoPropertiesElement);
 
@@ -85,19 +82,19 @@ void main() {
       },
     );
 
-    test('validate() should return false on missing required attribute(s)', () {
+    test("validate() returns false on missing required attribute(s)", () {
       final result = parser.validate(invalidElement);
 
       expect(result, isFalse);
     });
 
-    test('validate() should return true on valid <testsuite> element', () {
+    test("validate() returns true on valid <testsuite> element", () {
       final result = parser.validate(validElement);
 
       expect(result, isTrue);
     });
 
-    test('mapElement() should map <testsuite> element', () {
+    test("mapElement() maps <testsuite> element", () {
       const expected = JUnitTestSuite(
         name: 'RandomClass',
         tests: 1,

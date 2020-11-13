@@ -10,7 +10,7 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("StabilityCirclePercentage", () {
     testWidgets(
-      "can't be created with null percent",
+      "throws an AssertionError if the given percent is null",
       (tester) async {
         await tester.pumpWidget(const _StabilityCirclePercentageTestbed(
           stability: null,

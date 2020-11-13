@@ -4,8 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('ValidationResult', () {
     test(
-      'combine() should return failed validation result '
-      'combining valid and invalid results',
+      "combine() returns failed validation result combining valid and invalid results",
       () {
         final valid = ValidationResult.valid();
         final invalid = ValidationResult.invalid();
@@ -16,8 +15,7 @@ void main() {
     );
 
     test(
-      'combine() should return failed validation result '
-      'combining invalid results',
+      "combine() returns failed validation result combining invalid results",
       () {
         final invalidFirst = ValidationResult.invalid();
         final invalidSecond = ValidationResult.invalid();
@@ -28,8 +26,7 @@ void main() {
     );
 
     test(
-      'combine() should return successful validation result '
-      'combining valid results',
+      "combine() returns successful validation result combining valid results",
       () {
         final validFirst = ValidationResult.valid();
         final validSecond = ValidationResult.valid();
@@ -40,7 +37,7 @@ void main() {
     );
 
     test(
-      'combine() should use first validation message of invalid results',
+      "combine() uses first validation message of invalid results",
       () {
         final first = ValidationResult.invalid('first');
         final second = ValidationResult.valid('second');

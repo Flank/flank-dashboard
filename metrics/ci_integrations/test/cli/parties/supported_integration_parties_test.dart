@@ -19,7 +19,7 @@ void main() {
     });
 
     test(
-      "should create default SupportedSourceParties instance if no source parties are given",
+      "creates default SupportedSourceParties instance if no source parties are given",
       () {
         final parties = SupportedIntegrationParties(
           destinationParties: destinationPartiesMock,
@@ -31,7 +31,7 @@ void main() {
     );
 
     test(
-      "should create default SupportedDestinationParties instance if no destination parties are given",
+      "creates default SupportedDestinationParties instance if no destination parties are given",
       () {
         final parties = SupportedIntegrationParties(
           sourceParties: sourcePartiesMock,

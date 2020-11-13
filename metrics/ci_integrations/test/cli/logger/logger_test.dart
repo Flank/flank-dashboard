@@ -13,7 +13,7 @@ void main() {
     final messageSink = IOSinkStub();
 
     test(
-      "should create Logger with default stderr if no error sink is given",
+      "creates Logger with default stderr if no error sink is given",
       () {
         final logger = Logger(messageSink: messageSink);
         final errorSink = logger.errorSink;
@@ -23,7 +23,7 @@ void main() {
     );
 
     test(
-      "should create Logger with default stdout if no message sink is given",
+      "creates Logger with default stdout if no message sink is given",
       () {
         final logger = Logger(errorSink: errorSink);
         final messageSink = logger.messageSink;
@@ -32,7 +32,7 @@ void main() {
       },
     );
 
-    test(".printError() should print the given error to the error sink", () {
+    test(".printError() prints the given error to the error sink", () {
       final unimplementedMessageSink = IOSinkStub(
         writelnCallback: (_) => throw UnimplementedError(),
       );
@@ -49,7 +49,7 @@ void main() {
     });
 
     test(
-      ".printMessage() should print the given message to the message sink",
+      ".printMessage() prints the given message to the message sink",
       () {
         final unimplementedErrorSink = IOSinkStub(
           writelnCallback: (_) => throw UnimplementedError(),

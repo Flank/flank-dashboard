@@ -66,7 +66,7 @@ void main() {
     });
 
     test(
-      "should throw an ArgumentError trying to create an instance with null Firestore",
+      "throws an ArgumentError if the given Firestore is null",
       () {
         expect(
           () => FirestoreDestinationClientAdapter(null),
@@ -76,7 +76,7 @@ void main() {
     );
 
     test(
-      ".addBuilds() should return normally if firestore throws GrpcError.notFound",
+      ".addBuilds() returns normally if firestore throws GrpcError.notFound",
       () {
         whenFetchProject().thenThrow(GrpcError.notFound());
 
@@ -87,7 +87,7 @@ void main() {
     );
 
     test(
-      ".addBuilds() should throw an exception if the firestore throws exception different from GrpcError.notFound",
+      ".addBuilds() throws an exception if the firestore throws exception different from GrpcError.notFound",
       () {
         whenFetchProject().thenThrow(Exception());
 
@@ -98,7 +98,7 @@ void main() {
     );
 
     test(
-      ".addBuilds() should rethrow GrpcError with status different from 'notFound'",
+      ".addBuilds() rethrows GrpcError with status different from 'notFound'",
       () {
         final error = GrpcError.cancelled();
         whenFetchProject().thenThrow(error);
@@ -110,7 +110,7 @@ void main() {
     );
 
     test(
-      ".addBuilds() should not add builds if fetching the project throws",
+      ".addBuilds() does not add builds if fetching the project throws",
       () async {
         whenFetchProject().thenThrow(GrpcError.notFound());
 
@@ -121,7 +121,7 @@ void main() {
     );
 
     test(
-      ".addBuilds() should add given builds for the given project",
+      ".addBuilds() adds given builds for the given project",
       () async {
         const builds = [
           BuildData(buildNumber: 1),
@@ -147,7 +147,7 @@ void main() {
     );
 
     test(
-      ".addBuilds() should stop adding builds if adding one of them is failed",
+      ".addBuilds() stops adding builds if adding one of them is failed",
       () async {
         const builds = [
           BuildData(buildNumber: 1),
@@ -181,7 +181,7 @@ void main() {
       },
     );
 
-    test(".addBuilds() should add builds in the given order", () async {
+    test(".addBuilds() adds builds in the given order", () async {
       const builds = [
         BuildData(buildNumber: 1),
         BuildData(buildNumber: 2),
@@ -209,7 +209,7 @@ void main() {
     });
 
     test(
-      ".fetchLastBuild() should return null, if there are no builds for a project with the given id",
+      ".fetchLastBuild() returns null if there are no builds for a project with the given id",
       () {
         whenFetchLastBuild().thenAnswer((_) => Future.value([]));
 
@@ -220,7 +220,7 @@ void main() {
     );
 
     test(
-      ".fetchLastBuild() should return the last build for a project with the given id",
+      ".fetchLastBuild() returns the last build for a project with the given id",
       () {
         whenFetchLastBuild().thenAnswer((_) => Future.value([_documentMock]));
         when(_documentMock.id).thenReturn(testDocumentId);

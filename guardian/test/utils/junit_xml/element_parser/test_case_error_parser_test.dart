@@ -19,7 +19,7 @@ void main() {
       );
     });
 
-    test('mapElement() should map <error> element', () {
+    test("mapElement() maps <error> element", () {
       const expected = JUnitTestCaseError(text: text);
 
       final result = parser.mapElement(element);

@@ -31,7 +31,7 @@ void main() {
     };
 
     test(
-      'toJson() should return map with non-null properties of section block',
+      "toJson() returns a map with non-null properties of section block",
       () {
         final map = sectionBlock.toJson();
 
@@ -39,27 +39,26 @@ void main() {
       },
     );
 
-    test('fromJson() should return null if decoded map is null', () {
+    test("fromJson() returns null if decoded map is null", () {
       final result = SlackSectionBlock.fromJson(null);
 
       expect(result, isNull);
     });
 
-    test('fromJson() should convert map to section block', () {
+    test("fromJson() converts a map to section block", () {
       final result = SlackSectionBlock.fromJson(sectionBlockMap);
 
       expect(result, equals(sectionBlock));
     });
 
-    test('listFromJson() should map empty list as empty', () {
+    test("listFromJson() maps an empty list as empty", () {
       final result = SlackSectionBlock.listFromJson([]);
 
       expect(result, isEmpty);
     });
 
     test(
-      'listFromJson() should map list of decoded JSON objects to list '
-      'of section blocks',
+      "listFromJson() maps a list of decoded JSON objects to list of section blocks",
       () {
         const list = [sectionBlockMap, sectionBlockMap];
         const expected = [sectionBlock, sectionBlock];
@@ -70,7 +69,7 @@ void main() {
     );
 
     test(
-      'validate() should result with false on both text and fields missing',
+      "validate() returns false on both text and fields missing",
       () {
         const sectionBlock = SlackSectionBlock();
         final result = sectionBlock.validate();
@@ -80,7 +79,7 @@ void main() {
     );
 
     test(
-      'validate() should result with false on text with length out of limit',
+      "validate() returns false on text with length out of limit",
       () {
         final sectionBlock = SlackSectionBlock(
           text: SlackPlainTextObject(text: '1' * 3001),
@@ -92,7 +91,7 @@ void main() {
     );
 
     test(
-      'validate() should result with false if there are more than 10 fields',
+      "validate() returns false if there are more than 10 fields",
       () {
         final sectionBlock = SlackSectionBlock(
           fields: List.generate(
@@ -107,8 +106,7 @@ void main() {
     );
 
     test(
-      'validate() should result with false if at least one field '
-      'contains text with length out of limit',
+      "validate() returns false if at least one field contains text with length out of limit",
       () {
         final sectionBlock = SlackSectionBlock(
           fields: [
@@ -123,8 +121,7 @@ void main() {
     );
 
     test(
-      'validate() should validate result with false if one of presented text '
-      'and fields is invalid',
+      "validate() validates result with false if one of presented text and fields is invalid",
       () {
         const sectionBlock = SlackSectionBlock(
           text: SlackMarkdownTextObject(text: 'test'),
@@ -140,7 +137,7 @@ void main() {
     );
 
     test(
-      'validate() should validate section block',
+      "validate() validates section block",
       () {
         const sectionBlock = SlackSectionBlock(
           text: SlackMarkdownTextObject(text: 'test'),

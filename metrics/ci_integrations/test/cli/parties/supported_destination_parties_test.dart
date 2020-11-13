@@ -6,13 +6,13 @@ void main() {
   group("SupportedDestinationParties", () {
     final supportedDestinationParties = SupportedDestinationParties();
 
-    test(".parties should contain the Firestore destination party", () {
+    test(".parties contain the Firestore destination party", () {
       final parties = supportedDestinationParties.parties;
 
       expect(parties, contains(isA<FirestoreDestinationParty>()));
     });
 
-    test(".parties should be an unmodifiable list", () {
+    test(".parties is an unmodifiable list", () {
       final parties = supportedDestinationParties.parties;
 
       expect(() => parties.add(null), throwsUnsupportedError);
