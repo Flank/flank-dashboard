@@ -14,7 +14,7 @@ class DriverTestsConfig {
   ///
   /// Will be used to download the chrome driver if there are no 'chromedriver'
   /// file will be found in working directory.
-  static const String macChromeDriverDownloadUrl =
+  static const String macOsChromeDriverDownloadUrl =
       'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_mac64.zip';
 
   /// Chrome driver download url for Linux.
