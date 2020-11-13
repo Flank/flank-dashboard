@@ -12,7 +12,7 @@ class ChromeDriver extends WebDriver {
   @override
   String get downloadUrl {
     return Platform.isMacOS
-        ? DriverTestsConfig.macChromeDriverDownloadUrl
+        ? DriverTestsConfig.macOsChromeDriverDownloadUrl
         : DriverTestsConfig.linuxChromeDriverDownloadUrl;
   }
 
