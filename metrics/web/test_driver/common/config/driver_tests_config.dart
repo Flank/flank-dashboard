@@ -23,4 +23,11 @@ class DriverTestsConfig {
   /// file will be found in working directory.
   static const String linuxChromeDriverDownloadUrl =
       'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip';
+
+  /// Chrome driver download url for Windows.
+  ///
+  /// Will be used to download the chrome driver if there are no 'chromedriver'
+  /// file will be found in working directory.
+  static const String windowsChromeDriverDownloadUrl =
+      'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_win32.zip';
 }
