@@ -146,7 +146,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: metrics/ci_integrations/ci_integrations_macos
+          asset_path: metrics/ci_integrations/ci_integrations_linux
           asset_name: ci_integrations_linux
           asset_content_type: application/octet-stream
 
