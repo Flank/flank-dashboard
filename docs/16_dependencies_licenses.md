@@ -1,0 +1,159 @@
+# Dependencies licenses
+
+> Summary of the proposed change
+
+Combine license document(s) for all components in monorepo in one document.
+
+# References
+
+## CI Integrations
+
+| Name        | Source          | License  |
+|:-------------:|:-------------:|:-----:|
+|args| [pub.dev](https://pub.dev/packages/args) | [BSD](https://github.com/dart-lang/args/blob/master/LICENSE) |
+|http|	[pub.dev](https://pub.dev/packages/http)|	[BSD](https://github.com/dart-lang/http/blob/master/LICENSE)|
+|meta |	[pub.dev](https://pub.dev/packages/meta)|	[BSD](https://github.com/dart-lang/sdk/blob/master/pkg/meta/LICENSE)|
+|equatable|	[pub.dev](https://pub.dev/packages/equatable)|	[MIT](https://github.com/felangel/equatable/blob/master/LICENSE)|
+|archive|	[pub.dev](https://pub.dev/packages/archive)|	[Apache 2.0](https://github.com/brendan-duncan/archive/blob/master/LICENSE)|
+|firedart|	[pub.dev](https://pub.dev/packages/firedart)|	[Apache 2.0](https://github.com/cachapa/firedart/blob/master/LICENSE)|
+|dev:           |               |       |	
+|lint| [pub.dev](https://pub.dev/packages/lint)| [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE)	|
+|test| [pub.dev](https://pub.dev/packages/test)| [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE)	|
+|mockito| [pub.dev](https://pub.dev/packages/mockito)| [Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |	
+|coverage| [pub.dev](https://pub.dev/packages/coverage)| [Apache 2.0](https://github.com/dart-lang/coverage/blob/master/LICENSE) |	
+|test_coverage|	[pub.dev](https://pub.dev/packages/test_coverage)|	[BSD](https://github.com/pulyaevskiy/test-coverage/blob/master/LICENSE)|
+
+## Core
+
+| Name        | Source          | License  |
+|:-------------:|:-------------:|:-----:|
+| meta     | [pub.dev](https://pub.dev/packages/meta) | [BSD](https://github.com/dart-lang/sdk/blob/master/pkg/meta/LICENSE) |
+|equatable	|[pub.dev](https://pub.dev/packages/equatable)	|[MIT](https://github.com/felangel/equatable/blob/master/LICENSE)|
+|email_validator	|[pub.dev](https://pub.dev/packages/email_validator)	|[MIT](https://github.com/fredeil/email-validator.dart/blob/master/LICENSE)|
+|dev:           |               |       |	
+|lint	|[pub.dev](https://pub.dev/packages/lint)	|[Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE)|
+|test	|[pub.dev](https://pub.dev/packages/test)	|[BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE)|
+
+
+## Coverage Converter	
+
+| Name        | Source          | License  |
+|:-------------:|:-------------:|:-----:|
+|args| [pub.dev](https://pub.dev/packages/args) | [BSD](https://github.com/dart-lang/args/blob/master/LICENSE) |
+|meta| [pub.dev](https://pub.dev/packages/meta) |	[BSD](https://github.com/dart-lang/sdk/blob/master/pkg/meta/LICENSE) |
+|equatable|	[pub.dev](https://pub.dev/packages/equatable) | [MIT](https://github.com/felangel/equatable/blob/master/LICENSE) |
+|lcov| [pub.dev](https://pub.dev/packages/lcov) | [MIT](https://git.belin.io/cedx/lcov.dart/src/branch/main/LICENSE.md) |
+|dev:           |               |       |	
+|coverage| [pub.dev](https://pub.dev/packages/coverage) | [Apache 2.0](https://github.com/dart-lang/coverage/blob/master/LICENSE) | 
+|test_coverage| [pub.dev](https://pub.dev/packages/test_coverage) |	[BSD](https://github.com/pulyaevskiy/test-coverage/blob/master/LICENSE) |
+|lint|	[pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
+|mockito| [pub.dev](https://pub.dev/packages/mockito) |	[Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |
+|test|	[pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
+
+## Deploy
+
+| Name        | Source          | License  |
+|:-------------:|:-------------:|:-----:|
+|process_run	|[pub.dev](https://pub.dev/packages/process_run)	|[BSD](https://github.com/tekartik/process_run.dart/blob/master/LICENSE)|
+|safe_config	|[pub.dev](https://pub.dev/packages/safe_config)	|[BSD](https://github.com/stablekernel/safe_config/blob/master/LICENSE)|
+|dev:           |               |       |	
+|lint	|[pub.dev](https://pub.dev/packages/lint)	|[Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE)|
+|test	|[pub.dev](https://pub.dev/packages/test)	|[BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE)|
+
+## Web
+
+| Name        | Source          | License  |
+|:-------------:|:-------------:|:-----:|	
+|provider| [pub.dev](https://pub.dev/packages/provider) | [MIT](https://github.com/rrousselGit/provider/blob/master/LICENSE) |
+|equatable| [pub.dev](https://pub.dev/packages/equatable) |	[MIT](https://github.com/felangel/equatable/blob/master/LICENSE) |	
+|fcharts| [pub.dev](https://pub.dev/packages/fcharts) |	[MIT](https://github.com/thekeenant/fcharts/blob/master/LICENSE) |
+|url_launcher| [pub.dev](https://pub.dev/packages/url_launcher) | [BSD](https://github.com/flutter/plugins/blob/master/packages/url_launcher/url_launcher/LICENSE) |
+|cupertino_icons| [pub.dev](https://pub.dev/packages/cupertino_icons) |	[MIT](https://github.com/flutter/cupertino_icons/blob/master/LICENSE) |	
+|cloud_firestore| [pub.dev](https://pub.dev/packages/cloud_firestore) |	[BSD](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/cloud_firestore/cloud_firestore/LICENSE) |
+|cloud_functions| [pub.dev](https://pub.dev/packages/cloud_functions) | [BSD](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/cloud_functions/cloud_functions/LICENSE) |	
+|rxdart| [pub.dev](https://pub.dev/packages/rxdart) | [Apache 2.0](https://github.com/ReactiveX/rxdart/blob/master/LICENSE) |
+|collection| [pub.dev](https://pub.dev/packages/collection) | [BSD](https://github.com/dart-lang/collection/blob/master/LICENSE) |	
+|meta| [pub.dev](https://pub.dev/packages/meta) | [BSD](https://github.com/dart-lang/sdk/blob/master/pkg/meta/LICENSE) |
+|firebase_auth| [pub.dev](https://pub.dev/packages/firebase_auth) | [BSD](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_auth/firebase_auth/LICENSE) | 
+|universal_html| [pub.dev](https://pub.dev/packages/universal_html) | [Apache 2.0](https://github.com/dint-dev/web_browser/blob/master/LICENSE) |
+|google_sign_in| [pub.dev](https://pub.dev/packages/google_sign_in)	| [BSD](https://github.com/flutter/plugins/blob/master/packages/google_sign_in/google_sign_in/LICENSE) |	
+|selection_menu| [pub.dev](https://pub.dev/packages/selection_menu) | [MIT](https://github.com/HussainTaj-W/flutter-package-selection_menu/blob/master/LICENSE) |
+|duration| [pub.dev](https://pub.dev/packages/duration) | [BSD](https://github.com/desktop-dart/duration/blob/master/LICENSE) |	
+|flutter_switch| [pub.dev](https://pub.dev/packages/flutter_switch) | [BSD](https://github.com/boringdeveloper/FlutterSwitch/blob/master/LICENSE) | 
+|shimmer_animation| [pub.dev](https://pub.dev/packages/shimmer_animation) | [MIT](https://github.com/maddyb99/shimmer_animation/blob/master/LICENSE) |
+|flutter_styled_toast| [pub.dev](https://pub.dev/packages/flutter_styled_toast) | [Apache 2.0](https://github.com/JackJonson/flutter_styled_toast/blob/master/LICENSE) | 
+|flutter_svg| [pub.dev](https://pub.dev/packages/flutter_svg) |	[MIT](https://github.com/dnfield/flutter_svg/blob/master/LICENSE) |
+|dev:           |               |       |			
+|process_run| [pub.dev](https://pub.dev/packages/process_run) |	[BSD](https://github.com/tekartik/process_run.dart/blob/master/LICENSE) |
+|test| [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |	
+|lint|	[pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
+|args|	[pub.dev](https://pub.dev/packages/args) | [BSD](https://github.com/dart-lang/args/blob/master/LICENSE) |	
+|mockito| [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |
+|network_image_mock| [pub.dev](https://pub.dev/packages/network_image_mock) | [BSD](https://github.com/stelynx/network_image_mock/blob/master/LICENSE) |
+
+
+## api_mock_server			
+
+| Name        | Source          | License  |
+|:-------------:|:-------------:|:-----:|
+|http	|[pub.dev](https://pub.dev/packages/http)	|[BSD](https://github.com/dart-lang/http/blob/master/LICENSE)|
+|dev:           |		        |       |	
+|lint	|[pub.dev](https://pub.dev/packages/lint)	|[Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE)|
+|test	|[pub.dev](https://pub.dev/packages/test)	|[BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE)|
+
+## shell_words		
+
+| Name        | Source          | License  |
+|:-------------:|:-------------:|:-----:|
+|unicode	|[pub.dev](https://pub.dev/packages/unicode)|[BSD](https://github.com/mezoni/unicode/blob/master/LICENSE)|
+|dev:           |               |       |	
+|pedantic	|[pub.dev](https://pub.dev/packages/pedantic)|[BSD](https://github.com/dart-lang/pedantic/blob/master/LICENSE)|
+|test	|[pub.dev](https://pub.dev/packages/test)	|[BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE)|
+
+## Guardian			
+
+| Name        | Source          | License  |
+|:-------------:|:-------------:|:-----:|
+|args	|[pub.dev](https://pub.dev/packages/args)	|[BSD](https://github.com/dart-lang/args/blob/master/LICENSE)|
+|http	|[pub.dev](https://pub.dev/packages/http)	|[BSD](https://github.com/dart-lang/http/blob/master/LICENSE)|
+|meta	|[pub.dev](https://pub.dev/packages/meta)	|[BSD](https://github.com/dart-lang/sdk/blob/master/pkg/meta/LICENSE)|
+|xml 	|[pub.dev](https://pub.dev/packages/xml)	|[MIT](https://github.com/renggli/dart-xml/blob/master/LICENSE)|
+|equatable	|[pub.dev](https://pub.dev/packages/equatable)	|[MIT](https://github.com/felangel/equatable/blob/master/LICENSE)|
+|dev:           |               |       |	
+|lint	|[pub.dev](https://pub.dev/packages/lint)	|[Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE)|
+|test	|[pub.dev](https://pub.dev/packages/test)	|[BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE)|
+
+## Yaml Map	
+
+| Name        | Source          | License  |
+|:-------------:|:-------------:|:-----:|	
+|yaml| [pub.dev](https://pub.dev/packages/yaml) | [BSD](https://github.com/dart-lang/yaml/blob/master/LICENSE) |
+|dev:           |               |       |		
+|lint| [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
+|test|	[pub.dev](https://pub.dev/packages/test) |	[BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
+
+## Third Party API
+
+| Name        | Source          | License  |
+|:-------------:|:-------------:|:-----:|	
+|Github| [docs.github](https://docs.github.com)| [Policies](https://docs.github.com/en/free-pro-team@latest/github/site-policy)|
+|Buildkite| [buildkite.com](https://buildkite.com)| [Terms of Service](https://buildkite.com/terms-of-service)|
+|Jenkins| [jenkins.io](https://www.jenkins.io)| [MIT](https://www.jenkins.io/license/)|
+
+
+
+# Motivation
+> What problem is this project solving?
+
+Find the plugin's license used in the monorepo quickly.
+
+# Goals
+> Identify success metrics and measurable goals.
+
+* Have a list of all dependencies.
+* Easy access to license links.
+
+# Non-Goals
+> Identify what's not in scope.
+
+The list of plugins dependencies is out of scope.
