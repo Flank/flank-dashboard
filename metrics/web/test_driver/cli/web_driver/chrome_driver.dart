@@ -10,7 +10,17 @@ class ChromeDriver extends WebDriver {
   final ZipDecoder _archiveDecoder = ZipDecoder();
 
   @override
-  String get downloadUrl => DriverTestsConfig.chromeDriverDownloadUrl;
+  String get downloadUrl {
+    if (Platform.isMacOS) {
+      return DriverTestsConfig.macOsChromeDriverDownloadUrl;
+    }
+
+    if (Platform.isWindows) {
+      return DriverTestsConfig.windowsChromeDriverDownloadUrl;
+    }
+
+    return DriverTestsConfig.linuxChromeDriverDownloadUrl;
+  }
 
   @override
   String get executableName => 'chromedriver';
