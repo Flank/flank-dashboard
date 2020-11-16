@@ -13,9 +13,11 @@ class ChromeDriver extends WebDriver {
   String get downloadUrl {
     if (Platform.isMacOS) return DriverTestsConfig.macOsChromeDriverDownloadUrl;
 
-    if (Platform.isLinux) return DriverTestsConfig.linuxChromeDriverDownloadUrl;
+    if (Platform.isWindows) {
+      return DriverTestsConfig.windowsChromeDriverDownloadUrl;
+    }
 
-    return DriverTestsConfig.windowsChromeDriverDownloadUrl;
+    return DriverTestsConfig.linuxChromeDriverDownloadUrl;
   }
 
   @override

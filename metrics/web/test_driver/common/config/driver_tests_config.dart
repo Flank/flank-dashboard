@@ -12,22 +12,22 @@ class DriverTestsConfig {
 
   /// Chrome driver download url for macOS.
   ///
-  /// Will be used to download the chrome driver if there are no 'chromedriver'
-  /// file will be found in working directory.
+  /// This will be used to download Chrome driver if there is no `chromedriver`
+  /// file found in the working directory.
   static const String macOsChromeDriverDownloadUrl =
       'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_mac64.zip';
 
   /// Chrome driver download url for Linux.
   ///
-  /// Will be used to download the chrome driver if there are no 'chromedriver'
-  /// file will be found in working directory.
+  /// This will be used to download Chrome driver if there is no `chromedriver`
+  /// file found in the working directory.
   static const String linuxChromeDriverDownloadUrl =
       'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip';
 
   /// Chrome driver download url for Windows.
   ///
-  /// Will be used to download the chrome driver if there are no 'chromedriver'
-  /// file will be found in working directory.
+  /// This will be used to download Chrome driver if there is no `chromedriver`
+  /// file found in the working directory.
   static const String windowsChromeDriverDownloadUrl =
       'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_win32.zip';
 }
