@@ -1,13 +1,17 @@
 import 'package:args/command_runner.dart';
 import 'package:links_checker/common/arguments/parser/links_checker_arguments_parser.dart';
 import 'package:links_checker/common/checker/links_checker.dart';
+import 'package:links_checker/common/utils/file_helper.dart';
 
 /// A [LinksCheckerCommand] used to check links validity in files.
 class LinksCheckerCommand extends Command<void> {
   /// An [ArgumentsParser] used to parse the arguments for this command.
   final LinksCheckerArgumentsParser argumentsParser;
 
-  /// A [LinksChecker] needed to run
+  /// A class that provides methods for working with files.
+  final FileHelper fileHelper;
+
+  /// A [LinksChecker] that validates URLs for a list of files.
   LinksChecker get linksChecker => LinksChecker();
 
   /// Creates a new instance of the [LinksCheckerCommand]
@@ -17,21 +21,24 @@ class LinksCheckerCommand extends Command<void> {
   /// the [LinksCheckerArgumentsParser] is used.
   LinksCheckerCommand({
     LinksCheckerArgumentsParser argumentsParser,
-  }) : argumentsParser = argumentsParser ?? LinksCheckerArgumentsParser() {
+    FileHelper fileHelper,
+  })  : argumentsParser = argumentsParser ?? LinksCheckerArgumentsParser(),
+        fileHelper = fileHelper ?? const FileHelper() {
     this.argumentsParser.configureArguments(argParser);
   }
 
   @override
-  String get description => 'Check links validity in files';
+  String get description => 'Check links validity in the given files.';
 
   @override
-  String get name => 'links_checker';
+  String get name => 'validate';
 
   @override
   void run() {
     final arguments = argumentsParser.parseArgResults(argResults);
-    
-    final files = linksChecker.parse(arguments.paths);
-    linksChecker.check(files);
+
+    final files = fileHelper.getFiles(arguments.paths);
+
+    linksChecker.checkFiles(files);
   }
 }

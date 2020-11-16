@@ -1,5 +1,4 @@
 import 'package:args/args.dart';
-import 'package:links_checker/common/arguments/models/links_checker_arguments.dart';
 import 'package:links_checker/common/arguments/parser/links_checker_arguments_parser.dart';
 import 'package:test/test.dart';
 
@@ -9,7 +8,7 @@ void main() {
       ".configureArguments() configures the given arg parser to accept the paths option",
       () {
         final parser = ArgParser();
-        final argumentsParser = _ArgumentsParserFake();
+        final argumentsParser = LinksCheckerArgumentsParser();
 
         argumentsParser.configureArguments(parser);
 
@@ -18,11 +17,23 @@ void main() {
         expect(options, contains(LinksCheckerArgumentsParser.paths));
       },
     );
-  });
-}
 
-/// An [ArgumentsParser] fake class needed to test the non-abstract methods.
-class _ArgumentsParserFake extends LinksCheckerArgumentsParser {
-  @override
-  LinksCheckerArguments parseArgResults(ArgResults argResults) => null;
+    test(
+      ".parseArgResults() parses the given paths option value to a links checker arguments instance with paths",
+      () {
+        const paths = "file1 file2";
+        const options = ["--paths", paths];
+
+        final parser = ArgParser();
+        final argumentsParser = LinksCheckerArgumentsParser();
+
+        argumentsParser.configureArguments(parser);
+
+        final argResults = parser.parse(options);
+        final arguments = argumentsParser.parseArgResults(argResults);
+
+        expect(arguments.paths, equals(paths));
+      },
+    );
+  });
 }

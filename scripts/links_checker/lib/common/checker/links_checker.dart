@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:links_checker/common/exception/links_checker_exception.dart';
 
 /// A class that checks that all Monorepo URLs point to the master branch
-/// in the given files.
+/// in files by the given paths.
 class LinksChecker {
   /// A [List] of URL prefixes that indicate that the URL points to the Monorepo
   /// repository.
@@ -18,33 +18,8 @@ class LinksChecker {
   final urlRegExp = RegExp(
       r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)');
 
-  /// Returns a list of [File]s by the the given [paths].
-  List<File> parse(String paths) {
-    final files = <File>[];
-
-    for (final path in paths.split(' ')) {
-      final file = File(path);
-
-      if (file.existsSync()) files.add(file);
-    }
-
-    return files;
-  }
-
-  /// Runs checks for all files.
-  void check(List<File> files) {
-    final analysisResult = _analyzeFiles(files);
-
-    if (analysisResult.isNotEmpty) {
-      throw LinksCheckerException(analysisResult);
-    }
-  }
-
-  /// Analyzes the given [files] and returns a list containing descriptions
-  /// of errors occurred in the given [files].
-  ///
-  /// Returns an empty list if there are no errors.
-  List<String> _analyzeFiles(List<File> files) {
+  /// Checks all the given files to contain links that point to master.
+  void checkFiles(List<File> files) {
     final errors = <String>[];
 
     for (final file in files) {
@@ -52,43 +27,39 @@ class LinksChecker {
       errors.addAll(fileErrors);
     }
 
-    return errors;
+    if (errors.isNotEmpty) {
+      throw LinksCheckerException(errors);
+    }
   }
 
   /// Analyzes the given [file] and returns a list containing descriptions
   /// of errors occurred in the given [file].
   ///
-  /// Returns an empty list if there are no errors or the file's content can't be
-  /// readed.
+  /// Returns an empty list if there are no errors or reading the [file]
+  /// content is failed.
   List<String> _analyzeFile(File file) {
     final errors = <String>[];
     final fileContent = _getFileContent(file);
 
     if (fileContent == null) return errors;
 
-    int lineIndex = 1;
     final lines = fileContent.split('\n');
 
-    for (final line in lines) {
-      final urls = _parseMonorepoUrls(line);
+    for (int i = 0; i < lines.length; ++i) {
+      final invalidUrls = _parseMonorepoUrls(lines[i]).skipWhile(_isValidUrl);
 
-      for (final url in urls) {
-        if (!_isValidUrl(url)) {
-          final errorDescription = 'In ${file.path}, line $lineIndex, $url';
+      final descriptions =
+          invalidUrls.map((url) => 'In ${file.path}, line ${i + 1}, $url');
 
-          errors.add(errorDescription);
-        }
-      }
-
-      ++lineIndex;
+      errors.addAll(descriptions);
     }
 
     return errors;
   }
 
-  /// Returns the [file]'s content as a [String].
+  /// Returns the content of the given [file].
   ///
-  /// Returns `null`, if the given [file] can't be read.
+  /// Returns `null`, if reading the given [file] fails.
   String _getFileContent(File file) {
     try {
       return file.readAsStringSync();
@@ -99,29 +70,23 @@ class LinksChecker {
 
   /// Returns a list of Monorepo URLs from the given [string].
   List<String> _parseMonorepoUrls(String string) {
-    final urls = _parseUrls(string);
+    final urls =
+        urlRegExp.allMatches(string).map((match) => match.group(0)).toList();
 
-    return urls.where((url) => _isMonorepoUrl(url)).toList();
-  }
-
-  /// Returns a list of URLs from the given [string] matching the URL [RegExp].
-  List<String> _parseUrls(String string) {
-    return urlRegExp.allMatches(string).map((match) => match.group(0)).toList();
-  }
-
-  /// Returns `true` if the given [url] contains any of the Monorepo URL prefixes.
-  bool _isMonorepoUrl(String url) {
-    return _prefixes.any((prefix) => url.contains(prefix));
+    return urls
+        .where((url) => _prefixes.any((prefix) => url.contains(prefix)))
+        .toList();
   }
 
   /// Returns `true` if the given [url] points to `master` branch or is a raw
   /// Monorepo URL prefix.
   bool _isValidUrl(String url) {
-    final masterPrefixes = _prefixes.map((prefix) => '$prefix/master').toList();
+    final masterPrefixes =
+        _prefixes.map((prefix) => '$prefix/master/').toList();
 
     final pointsToMaster = masterPrefixes.any((prefix) => url.contains(prefix));
-    final isRawPrefix = _prefixes.any((prefix) => url.endsWith(prefix));
+    final isMonorepoLink = _prefixes.any((prefix) => url.endsWith(prefix));
 
-    return pointsToMaster || isRawPrefix;
+    return pointsToMaster || isMonorepoLink;
   }
 }

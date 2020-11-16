@@ -13,13 +13,13 @@ void main() {
     test(
       "checks the given files by paths",
       () {
-        when(linksChecker.check(any)).thenReturn(null);
+        when(linksChecker.checkFiles(any)).thenReturn(null);
 
         final command = _LinksCheckerCommandFake(linksChecker: linksChecker);
 
         command.run();
 
-        verify(linksChecker.check(any)).called(equals(1));
+        verify(linksChecker.checkFiles(any)).called(equals(1));
       },
     );
   });

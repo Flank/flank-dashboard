@@ -7,11 +7,10 @@ import 'package:test/test.dart';
 
 void main() {
   group("LinksChecker", () {
-    const validUrl = 'http://github.com/platform-platform/monorepo/blob/master';
+    const url = 'http://github.com/platform-platform/monorepo/blob';
 
-    // This link is concatenated because the link check will fail on this link.
-    const invalidUrl =
-        'http://github.com/platform-platform/monorepo/blob' + '/test';
+    const validUrl = '$url/master/';
+    const invalidUrl = '$url/test/';
 
     final linksChecker = LinksChecker();
     final file = _FileMock();
@@ -22,21 +21,21 @@ void main() {
     });
 
     test(
-      '.check() returns normally if the given files contain only valid links',
+      '.checkFiles() returns normally if the given files contain only valid links',
       () {
         when(file.readAsStringSync()).thenReturn(validUrl);
 
-        expect(() => linksChecker.check(files), returnsNormally);
+        expect(() => linksChecker.checkFiles(files), returnsNormally);
       },
     );
 
     test(
-      ".check() throws a LinksCheckerException if the given files contain invalid links",
+      ".checkFiles() throws a LinksCheckerException if the given files contain invalid links",
       () {
         when(file.readAsStringSync()).thenReturn(invalidUrl);
 
         expect(
-          () => linksChecker.check(files),
+          () => linksChecker.checkFiles(files),
           throwsA(isA<LinksCheckerException>()),
         );
       },

@@ -10,7 +10,8 @@ class LinksCheckerArgumentsParser {
   void configureArguments(ArgParser argParser) {
     argParser.addOption(
       paths,
-      help: 'A string respresenting paths of files to analyze.',
+      help:
+          'A string representing the space-separated paths of files to analyze.',
       valueHelp: "'file1 file2 file3'",
       abbr: 'p',
     );

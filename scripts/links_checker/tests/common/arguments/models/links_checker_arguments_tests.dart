@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group("LinksCheckerArguments", () {
     test(
-      "throws an ArgumentError if the paths is null",
+      "throws an ArgumentError if paths value is null",
       () {
         expect(() => LinksCheckerArguments(paths: null), throwsArgumentError);
       },
