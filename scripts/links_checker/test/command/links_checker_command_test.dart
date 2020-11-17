@@ -17,11 +17,11 @@ void main() {
     });
 
     test(
-      ".description contains a not null value",
+      ".description contains a non-empty description of a command",
       () {
         final command = LinksCheckerCommand();
 
-        expect(command.description, isNotNull);
+        expect(command.description, isNotEmpty);
       },
     );
 
@@ -46,9 +46,8 @@ void main() {
     test(
       ".run() uses the given argument parser's .parseArgResults() to parse arguments",
       () {
-        when(argumentsParser.parseArgResults(any)).thenReturn(
-          LinksCheckerArguments(paths: []),
-        );
+        when(argumentsParser.parseArgResults(any))
+            .thenReturn(LinksCheckerArguments(paths: []));
 
         final command = LinksCheckerCommand(argumentsParser: argumentsParser);
         command.run();
@@ -60,10 +59,10 @@ void main() {
     test(
       ".run() uses the given file helper util's .getFiles() to get files from paths",
       () {
-        when(fileHelperUtil.getFiles(any)).thenReturn([]);
-        when(argumentsParser.parseArgResults(any)).thenReturn(
-          LinksCheckerArguments(paths: []),
-        );
+        final paths = ['file1', 'path/to/file2'];
+        when(fileHelperUtil.getFiles(paths)).thenReturn([]);
+        when(argumentsParser.parseArgResults(any))
+            .thenReturn(LinksCheckerArguments(paths: paths));
 
         final command = LinksCheckerCommand(
           fileHelperUtil: fileHelperUtil,
@@ -71,19 +70,18 @@ void main() {
         );
         command.run();
 
-        verify(fileHelperUtil.getFiles(any)).called(1);
+        verify(fileHelperUtil.getFiles(paths)).called(1);
       },
     );
 
     test(
-      ".run() uses the given links cheker's .checkFiles() to validate files for a valid links",
+      ".run() uses the given links checker .checkFiles() to validate files for a valid links",
       () {
         final linksChecker = _LinksCheckerMock();
-        
-        when(linksChecker.checkFiles(any)).thenReturn(null);
-        when(argumentsParser.parseArgResults(any)).thenReturn(
-          LinksCheckerArguments(paths: []),
-        );
+
+        when(linksChecker.checkFiles([])).thenReturn(null);
+        when(argumentsParser.parseArgResults(any))
+            .thenReturn(LinksCheckerArguments(paths: []));
 
         final command = LinksCheckerCommand(
           linksChecker: linksChecker,
@@ -91,7 +89,7 @@ void main() {
         );
         command.run();
 
-        verify(linksChecker.checkFiles(any)).called(equals(1));
+        verify(linksChecker.checkFiles([])).called(equals(1));
       },
     );
   });

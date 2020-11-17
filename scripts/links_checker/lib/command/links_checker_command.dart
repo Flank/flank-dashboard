@@ -14,6 +14,12 @@ class LinksCheckerCommand extends Command<void> {
   /// A [LinksChecker] that validates URLs for a list of files.
   final LinksChecker linksChecker;
 
+  @override
+  String get description => 'Check links validity in the given files.';
+
+  @override
+  String get name => 'validate';
+
   /// Creates a new instance of the [LinksCheckerCommand]
   /// with the given [argumentsParser], [fileHelperUtil] and [linksChecker].
   ///
@@ -31,12 +37,6 @@ class LinksCheckerCommand extends Command<void> {
         linksChecker = linksChecker ?? LinksChecker() {
     this.argumentsParser.configureArguments(argParser);
   }
-
-  @override
-  String get description => 'Check links validity in the given files.';
-
-  @override
-  String get name => 'validate';
 
   @override
   void run() {

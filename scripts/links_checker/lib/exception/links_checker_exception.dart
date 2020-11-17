@@ -1,7 +1,7 @@
 /// A class that represents the links checker [Exception].
 class LinksCheckerException implements Exception {
-  /// A [LinksCheckerErrorCode] provides an information
-  /// about concrete links checker exception.
+  /// A list of errors that provides an information
+  /// about concrete links checker exceptions.
   final List<String> errors;
 
   /// Creates a new instance of the [LinksCheckerException]

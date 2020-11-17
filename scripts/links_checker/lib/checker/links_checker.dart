@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:links_checker/exception/links_checker_exception.dart';
 
 /// A class that checks that all Monorepo URLs point to the master branch
-/// in files by the given paths.
+/// in the given files.
 class LinksChecker {
   /// A [List] of URL prefixes that indicate that the URL points to the Monorepo
   /// repository.
@@ -14,11 +14,11 @@ class LinksChecker {
     'github.com/platform-platform/monorepo/tree',
   ];
 
-  /// A URL [RegExp] to parse URLs.
+  /// A [RegExp] to parse URLs.
   final urlRegExp = RegExp(
       r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)');
 
-  /// Checks all the given files to contain links that point to master.
+  /// Checks all the given [files] to contain links that point to master.
   void checkFiles(List<File> files) {
     final errors = <String>[];
 
@@ -33,7 +33,7 @@ class LinksChecker {
   }
 
   /// Analyzes the given [file] and returns a list containing descriptions
-  /// of errors occurred in the given [file].
+  /// of errors in the given [file].
   ///
   /// Returns an empty list if there are no errors or reading the [file]
   /// content is failed.

@@ -1,6 +1,6 @@
 /// A class that represents the links checker arguments.
 class LinksCheckerArguments {
-  /// A [List] of paths of files to analyze.
+  /// A [List] of paths to files to analyze.
   final List<String> paths;
 
   /// Creates a new instance of the [LinksCheckerArguments].

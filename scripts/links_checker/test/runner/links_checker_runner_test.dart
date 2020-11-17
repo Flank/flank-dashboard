@@ -8,6 +8,22 @@ void main() {
       expect(() => LinksCheckerRunner(), returnsNormally);
     });
 
+    test(".executableName contains a non-empty name of a tool", () {
+      final runner = LinksCheckerRunner();
+
+      final description = runner.executableName;
+
+      expect(description, isNotEmpty);
+    });
+
+    test(".description contains a non-empty description of a tool", () {
+      final runner = LinksCheckerRunner();
+
+      final description = runner.description;
+
+      expect(description, isNotEmpty);
+    });
+
     test("contains a links checker command", () {
       final runner = LinksCheckerRunner();
 

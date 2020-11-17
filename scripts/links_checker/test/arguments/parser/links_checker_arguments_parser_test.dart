@@ -23,10 +23,10 @@ void main() {
     test(
       ".parseArgResults() parses the given paths option value to a links checker arguments instance with paths",
       () {
-        const paths = 'file1 file2';
+        const paths = 'file1 path/to/file2';
         const options = ['--paths', paths];
 
-        final expected = ['file1', 'file2'];
+        final expected = ['file1', 'path/to/file2'];
 
         final parser = ArgParser();
         final argumentsParser = LinksCheckerArgumentsParser();
