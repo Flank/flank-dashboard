@@ -1,5 +1,5 @@
-import 'package:links_checker/common/command/links_checker_command.dart';
-import 'package:links_checker/common/runner/links_checker_runner.dart';
+import 'package:links_checker/command/links_checker_command.dart';
+import 'package:links_checker/runner/links_checker_runner.dart';
 import 'package:test/test.dart';
 
 void main() {

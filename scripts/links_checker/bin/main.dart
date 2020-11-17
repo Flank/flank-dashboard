@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:links_checker/common/runner/links_checker_runner.dart';
+import 'package:links_checker/runner/links_checker_runner.dart';
 
 Future<void> main(List<String> args) async {
   final runner = LinksCheckerRunner();

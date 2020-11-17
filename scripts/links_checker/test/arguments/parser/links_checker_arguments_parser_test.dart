@@ -1,6 +1,8 @@
 import 'package:args/args.dart';
-import 'package:links_checker/common/arguments/parser/links_checker_arguments_parser.dart';
+import 'package:links_checker/arguments/parser/links_checker_arguments_parser.dart';
 import 'package:test/test.dart';
+
+// ignore_for_file: prefer_const_constructors
 
 void main() {
   group("LinksCheckerArgumentsParser", () {
@@ -21,8 +23,10 @@ void main() {
     test(
       ".parseArgResults() parses the given paths option value to a links checker arguments instance with paths",
       () {
-        const paths = "file1 file2";
-        const options = ["--paths", paths];
+        const paths = 'file1 file2';
+        const options = ['--paths', paths];
+
+        final expected = ['file1', 'file2'];
 
         final parser = ArgParser();
         final argumentsParser = LinksCheckerArgumentsParser();
@@ -32,7 +36,7 @@ void main() {
         final argResults = parser.parse(options);
         final arguments = argumentsParser.parseArgResults(argResults);
 
-        expect(arguments.paths, equals(paths));
+        expect(arguments.paths, equals(expected));
       },
     );
   });

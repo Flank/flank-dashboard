@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:links_checker/common/checker/links_checker.dart';
-import 'package:links_checker/common/exception/links_checker_exception.dart';
+import 'package:links_checker/checker/links_checker.dart';
+import 'package:links_checker/exception/links_checker_exception.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -9,7 +9,7 @@ void main() {
   group("LinksChecker", () {
     final linksChecker = LinksChecker();
     final file = _FileMock();
-    final files = <_FileMock>[file];
+    final files = <File>[file];
 
     const urls = [
       'http://raw.githubusercontent.com/platform-platform/monorepo',
@@ -26,13 +26,14 @@ void main() {
 
     const validSuffix = 'master/';
     const invalidSuffix = 'invalid/';
+    const validLikeSuffix = 'master_like/';
 
     tearDown(() {
       reset(file);
     });
 
     test(
-      '.checkFiles() returns normally if the given files contain only valid links',
+      ".checkFiles() returns normally if the given files contain only valid links",
       () {
         final validUrls = urls.map((url) => '$url/$validSuffix').join(',');
 
@@ -48,6 +49,21 @@ void main() {
         final invalidUrls = urls.map((url) => '$url/$invalidSuffix').join(',');
 
         when(file.readAsStringSync()).thenReturn(invalidUrls);
+
+        expect(
+          () => linksChecker.checkFiles(files),
+          throwsA(isA<LinksCheckerException>()),
+        );
+      },
+    );
+
+    test(
+      ".checkFiles() throws a LinksCheckerException if the given files contain master-like links",
+      () {
+        final masterLikeUrls =
+            urls.map((url) => '$url/$validLikeSuffix').join(',');
+
+        when(file.readAsStringSync()).thenReturn(masterLikeUrls);
 
         expect(
           () => linksChecker.checkFiles(files),

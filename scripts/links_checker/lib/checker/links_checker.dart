@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:links_checker/common/exception/links_checker_exception.dart';
+import 'package:links_checker/exception/links_checker_exception.dart';
 
 /// A class that checks that all Monorepo URLs point to the master branch
 /// in files by the given paths.

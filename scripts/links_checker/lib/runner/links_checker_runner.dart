@@ -1,5 +1,5 @@
 import 'package:args/command_runner.dart';
-import 'package:links_checker/common/command/links_checker_command.dart';
+import 'package:links_checker/command/links_checker_command.dart';
 
 /// A [CommandRunner] for the links checker CLI.
 class LinksCheckerRunner extends CommandRunner<void> {

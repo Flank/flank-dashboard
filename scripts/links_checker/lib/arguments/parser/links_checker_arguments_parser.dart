@@ -1,8 +1,12 @@
 import 'package:args/args.dart';
-import 'package:links_checker/common/arguments/models/links_checker_arguments.dart';
+import 'package:links_checker/arguments/models/links_checker_arguments.dart';
 
-/// Parses the arguments for the links checker.
+/// A class that provides methods for registering
+/// and parsing the [LinksCheckerArguments].
 class LinksCheckerArgumentsParser {
+  /// Creates a new instance of the [LinksCheckerArgumentsParser].
+  const LinksCheckerArgumentsParser();
+
   /// A name of the paths argument.
   static const String paths = 'paths';
 
@@ -20,7 +24,8 @@ class LinksCheckerArgumentsParser {
   /// Parses the [argResults] to the [LinksCheckerArguments] object.
   LinksCheckerArguments parseArgResults(ArgResults argResults) {
     final pathsArg = argResults[paths] as String;
+    final pathsList = pathsArg.split(' ');
 
-    return LinksCheckerArguments(paths: pathsArg);
+    return LinksCheckerArguments(paths: pathsList);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:links_checker/common/exception/links_checker_exception.dart';
+import 'package:links_checker/exception/links_checker_exception.dart';
 import 'package:test/test.dart';
 
 // ignore_for_file: prefer_const_constructors

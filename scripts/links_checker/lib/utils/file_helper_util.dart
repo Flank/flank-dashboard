@@ -1,15 +1,15 @@
 import 'dart:io';
 
 /// A class that provides methods for working with files.
-class FileHelper {
-  /// Returns a new instance of the [FileHelper].
-  const FileHelper();
+class FileHelperUtil {
+  /// Returns a new instance of the [FileHelperUtil].
+  const FileHelperUtil();
 
   /// Returns a [List] of [File]s by the given [paths].
-  List<File> getFiles(String paths) {
+  List<File> getFiles(List<String> paths) {
     final files = <File>[];
 
-    for (final path in paths.split(' ')) {
+    for (final path in paths) {
       final file = getFile(path);
 
       if (file != null) files.add(file);
