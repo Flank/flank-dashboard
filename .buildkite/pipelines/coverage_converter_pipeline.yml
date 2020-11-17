@@ -1,7 +1,7 @@
 steps:
   - label: "Dart analyze"
     commands:
-      - "cd metrics/ci_integrations"
+      - "cd metrics/coverage_converter"
       - "pub get"
       - "dartanalyzer . --fatal-infos --fatal-warnings"
 
@@ -10,10 +10,10 @@ steps:
 
   - label: "Run tests"
     commands:
-      - "cd metrics/ci_integrations"
+      - "cd metrics/coverage_converter"
       - "pub get"
       - "pub run test_coverage --print-test-output --no-badge"
-    artifact_paths: "metrics/ci_integrations/coverage/lcov.info"
+    artifact_paths: "metrics/coverage_converter/coverage/lcov.info"
 
   - wait: ~
     continue_on_failure: true
@@ -22,12 +22,12 @@ steps:
     commands:
       - "curl -o coverage_converter -k https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_linux -L"
       - "chmod a+x coverage_converter"
-      - "buildkite-agent artifact download metrics/ci_integrations/coverage/lcov.info ."
-      - "./coverage_converter lcov -i metrics/ci_integrations/coverage/lcov.info -o coverage-summary.json"
+      - "buildkite-agent artifact download metrics/coverage_converter/coverage/lcov.info ."
+      - "./coverage_converter lcov -i metrics/coverage_converter/coverage/lcov.info -o coverage-summary.json"
     artifact_paths: "coverage-summary.json"
 
   - wait: ~
     continue_on_failure: true
 
-  - trigger: sync-ci-integrations-pipeline
+  - trigger: sync-coverage-converter-pipeline
     async: true

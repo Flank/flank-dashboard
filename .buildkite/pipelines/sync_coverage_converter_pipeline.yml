@@ -1,0 +1,4 @@
+steps:
+  - label: "Run Coverage Converter sync command"
+    commands:
+      - "bash scripts/buildkite/sync_coverage_converter.sh"

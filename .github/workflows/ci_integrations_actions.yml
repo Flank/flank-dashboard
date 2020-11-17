@@ -155,7 +155,18 @@ jobs:
     runs-on: macos-latest
     needs: [ ci-integrations-publish-actions ]
     if: "always()"
+    env:
+      BUILDKITE_TOKEN: ${{ secrets.BUILDKITE_TOKEN }}
+      ORGANIZATION_SLUG: metrics
+      PIPELINE_SLUG: ci-integrations-pipeline
+
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
       - name: Notify about building the CI integrations
         uses: peter-evans/repository-dispatch@v1
         with:
@@ -163,3 +174,6 @@ jobs:
           repository: platform-platform/monorepo
           event-type: building_project
           client-payload: '{"building_ci_integrations": "true"}'
+
+      - name: Notify Buildkite about building the CI Integrations
+        run: bash scripts/github/trigger_buildkite_pipeline.sh
