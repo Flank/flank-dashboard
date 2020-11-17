@@ -7,7 +7,7 @@ void main() {
     const token = 'token';
 
     test(
-      ".toMap() should include provided header and token as a key and value respectively",
+      ".toMap() includes provided header and token as a key and value respectively",
       () {
         final authorization = AuthorizationBaseTestbed(header, token);
         final expected = {header: token};
@@ -18,7 +18,7 @@ void main() {
     );
 
     test(
-      "should throw ArgumentError creating a new instance with null header",
+      "throws an ArgumentError if the given header is null",
       () {
         expect(
           () => AuthorizationBaseTestbed(null, token),
@@ -28,7 +28,7 @@ void main() {
     );
 
     test(
-      "should throw ArgumentError creating a new instance with empty header",
+      "throws an ArgumentError if the given header is empty",
       () {
         expect(
           () => AuthorizationBaseTestbed('', token),
@@ -38,7 +38,7 @@ void main() {
     );
 
     test(
-      "should throw ArgumentError creating a new instance with null token",
+      "throws an ArgumentError if the given token is null",
       () {
         expect(
           () => AuthorizationBaseTestbed(header, null),

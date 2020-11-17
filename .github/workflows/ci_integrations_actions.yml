@@ -12,7 +12,6 @@ jobs:
     name: CI Integrations Actions
     runs-on: macOS-latest
     timeout-minutes: 60
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -54,10 +53,107 @@ jobs:
           path: metrics/ci_integrations/coverage-summary.json
           if-no-files-found: error
 
+  ci-integrations-build-actions:
+    name: CI Integrations Build Actions
+    needs: [ ci-integrations-actions ]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest, ubuntu-latest ]
+        include:
+          - os: macos-latest
+            output_name: "ci_integrations_macos"
+          - os: ubuntu-latest
+            output_name: "ci_integrations_linux"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
+      - uses: cedx/setup-dart@v2
+        with:
+          release-channel: beta
+          version: 2.10.0-110.5.beta
+
+      - name: Get dependencies
+        run: pub get
+        working-directory: metrics/ci_integrations/
+
+      - name: Build Application
+        run: dart2native -o ${{ matrix.output_name }} bin/main.dart
+        working-directory: metrics/ci_integrations/
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.output_name }}
+          path: metrics/ci_integrations/${{ matrix.output_name }}
+          if-no-files-found: error
+
+  ci-integrations-publish-actions:
+    name: CI Integrations Publish Actions
+    needs: [ ci-integrations-build-actions ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download MacOS Build
+        uses: actions/download-artifact@v2
+        with:
+          name: ci_integrations_macos
+          path: metrics/ci_integrations/
+
+      - name: Download Linux Build
+        uses: actions/download-artifact@v2
+        with:
+          name: ci_integrations_linux
+          path: metrics/ci_integrations/
+
+      - name: Delete Old Release
+        uses: dev-drprasad/delete-tag-and-release@v0.1.2
+        with:
+          delete_release: true
+          tag_name: ci_integrations-snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ci_integrations-snapshot
+          release_name: CI Integrations snapshot
+          draft: false
+          prerelease: true
+
+      - name: Upload MacOS Release Asset
+        id: upload-macos-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: metrics/ci_integrations/ci_integrations_macos
+          asset_name: ci_integrations_macos
+          asset_content_type: application/octet-stream
+
+      - name: Upload Linux Release Asset
+        id: upload-linux-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: metrics/ci_integrations/ci_integrations_linux
+          asset_name: ci_integrations_linux
+          asset_content_type: application/octet-stream
+
   notify-actions:
     name: Notify about building the CI integrations
     runs-on: macos-latest
-    needs: [ ci-integrations-actions ]
+    needs: [ ci-integrations-publish-actions ]
     if: "always()"
     steps:
       - name: Notify about building the CI integrations

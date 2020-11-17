@@ -21,7 +21,7 @@ void main() {
     );
 
     test(
-      "throws an AssertionError if the maintainState is null",
+      "throws an AssertionError if the maintain state is null",
       () {
         expect(
           () => MetricsPageRoute(
@@ -35,7 +35,7 @@ void main() {
     );
 
     test(
-      "throws an AssertionError if the fullscreenDialog is null",
+      "throws an AssertionError if the fullscreen dialog is null",
       () {
         expect(
           () => MetricsPageRoute(

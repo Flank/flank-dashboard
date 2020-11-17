@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group("SyncConfig", () {
     test(
-      "should throw an ArgumentError trying to create an instance with no sourceProjectId",
+      "throws an ArgumentError if the given source project id is null",
       () {
         expect(
           () => SyncConfig(
@@ -17,7 +17,7 @@ void main() {
     );
 
     test(
-      "should throw an ArgumentError trying to create an instance with no destinationProjectId",
+      "throws an ArgumentError if the given destination project id is null",
       () {
         expect(
           () => SyncConfig(

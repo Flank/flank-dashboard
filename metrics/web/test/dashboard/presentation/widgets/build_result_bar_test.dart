@@ -55,7 +55,7 @@ void main() {
     }
 
     testWidgets(
-      "displays the PlaceholderBar if the given buildResult is null",
+      "displays the PlaceholderBar if the given build result is null",
       (tester) async {
         await tester.pumpWidget(const _BuildResultBarTestbed(
           buildResult: null,

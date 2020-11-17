@@ -21,20 +21,20 @@ void main() {
       url: jobUrl,
     );
 
-    test(".fromJson() should return null if a given json is null", () {
+    test(".fromJson() returns null if a given json is null", () {
       final job = JenkinsJob.fromJson(null);
 
       expect(job, isNull);
     });
 
-    test(".fromJson() should create an instance from a json map", () {
+    test(".fromJson() creates an instance from a json map", () {
       final job = JenkinsJob.fromJson(jobJson);
 
       expect(job, equals(jenkinsJob));
     });
 
     test(
-      ".fromJson() should create the JenkinsMultiBranchJob instance if a json map contains the 'jobs' property",
+      ".fromJson() creates the JenkinsMultiBranchJob instance if a json map contains the 'jobs' property",
       () {
         final job = JenkinsJob.fromJson(const {
           'jobs': [
@@ -52,7 +52,7 @@ void main() {
     );
 
     test(
-      ".fromJson() should create the JenkinsBuildingJob instance if a json map contains the 'builds' property",
+      ".fromJson() creates the JenkinsBuildingJob instance if a json map contains the 'builds' property",
       () {
         final job = JenkinsJob.fromJson(const {
           'builds': [
@@ -68,7 +68,7 @@ void main() {
     );
 
     test(
-      ".listFromJson() should map a null list as null one",
+      ".listFromJson() maps a null list as null one",
       () {
         final jobs = JenkinsJob.listFromJson(null);
 
@@ -77,7 +77,7 @@ void main() {
     );
 
     test(
-      ".listFromJson() should map an empty list as empty one",
+      ".listFromJson() maps an empty list as empty one",
       () {
         final jobs = JenkinsJob.listFromJson([]);
 
@@ -86,7 +86,7 @@ void main() {
     );
 
     test(
-      ".listFromJson() should map a list of jobs json maps",
+      ".listFromJson() maps a list of jobs json maps",
       () {
         final jobs = JenkinsJob.listFromJson([jobJson, jobJson]);
 
@@ -94,7 +94,7 @@ void main() {
       },
     );
 
-    test(".toJson() should convert an instance to the json map", () {
+    test(".toJson() converts an instance to the json map", () {
       final json = jenkinsJob.toJson();
 
       expect(json, equals(jobJson));

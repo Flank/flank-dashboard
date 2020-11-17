@@ -40,7 +40,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given isHovered is null",
+      "throws an AssertionError if the given is hovered is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _MetricsColoredBarTestbed(isHovered: null),

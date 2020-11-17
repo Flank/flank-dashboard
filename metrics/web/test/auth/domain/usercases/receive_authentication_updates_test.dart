@@ -14,7 +14,7 @@ void main() {
       reset(repository);
     });
 
-    test("can't be created with null repository", () {
+    test("throws an AssertionError if the given repository is null", () {
       expect(
         () => ReceiveAuthenticationUpdates(null),
         MatcherUtil.throwsAssertionError,

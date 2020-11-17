@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group("PasswordValidationErrorMessage", () {
     test(
-      ".message maps isNull error code to required password message",
+      ".message maps 'is null' error code to the required password message",
       () {
         const errorMessage = PasswordValidationErrorMessage(
           PasswordValidationErrorCode.isNull,
@@ -20,7 +20,7 @@ void main() {
     );
 
     test(
-      ".message maps tooShortPassword error code to password must be at least minPasswordLength characters long error message",
+      ".message maps 'too short password' error code to the 'password must be at least min password length characters long' error message",
       () {
         const errorMessage = PasswordValidationErrorMessage(
           PasswordValidationErrorCode.tooShortPassword,

@@ -17,9 +17,10 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../test_utils/extensions/interaction_result_answer.dart';
 import '../test_utils/test_data/github_actions_test_data_generator.dart';
 
-// https://github.com/software-platform/monorepo/issues/140
+// https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
@@ -1078,27 +1079,3 @@ class _GithubActionsClientMock extends Mock implements GithubActionsClient {}
 class _ArchiveHelperMock extends Mock implements ArchiveHelper {}
 
 class _ArchiveMock extends Mock implements Archive {}
-
-extension _InteractionResultAnswer<T>
-    on PostExpectation<FutureOr<InteractionResult<T>>> {
-  void thenSuccessWith(T result, [String message]) {
-    return thenAnswer(
-      (_) => Future.value(
-        InteractionResult<T>.success(
-          message: message,
-          result: result,
-        ),
-      ),
-    );
-  }
-
-  void thenErrorWith([String message]) {
-    return thenAnswer(
-      (_) => Future.value(
-        InteractionResult<T>.error(
-          message: message,
-        ),
-      ),
-    );
-  }
-}

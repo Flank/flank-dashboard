@@ -18,7 +18,7 @@ void main() {
     );
 
     test(
-      ".error() should create an instance describing the failed interaction",
+      ".error() creates an instance describing the failed interaction",
       () {
         expect(failed.isError, isTrue);
         expect(failed.message, equals(errorMessage));
@@ -27,7 +27,7 @@ void main() {
     );
 
     test(
-      ".success() should create an instance describing the success interaction",
+      ".success() creates an instance describing the success interaction",
       () {
         expect(success.isSuccess, isTrue);
         expect(success.message, equals(successMessage));

@@ -28,7 +28,7 @@ void main() {
     };
 
     test(
-      'toJson() should return map with non-null properties of slack message',
+      "toJson() returns a map with non-null properties of slack message",
       () {
         const message = SlackMessage(text: 'text');
         const expected = {'text': 'text'};
@@ -39,7 +39,7 @@ void main() {
     );
 
     test(
-      'toJson() should include blocks to resulting map if presented',
+      "toJson() includes blocks to resulting map if presented",
       () {
         final expected = slackMessageMap['blocks'];
         final map = slackMessage.toJson();
@@ -48,20 +48,20 @@ void main() {
       },
     );
 
-    test('fromJson() should return null if decoded map is null', () {
+    test("fromJson() returns null if decoded map is null", () {
       final result = SlackMessage.fromJson(null);
 
       expect(result, isNull);
     });
 
-    test('fromJson() should convert map to Slack message', () {
+    test("fromJson() converts a map to Slack message", () {
       final result = SlackMessage.fromJson(slackMessageMap);
 
       expect(result, equals(slackMessage));
     });
 
     test(
-      'validate() should result with false if both text and blocks are missing',
+      "validate() returns false if both text and blocks are missing",
       () {
         const message = SlackMessage();
         final result = message.validate();
@@ -71,7 +71,7 @@ void main() {
     );
 
     test(
-      'validate() should result with false if text is empty on missign blocks',
+      "validate() returns false if text is empty on missign blocks",
       () {
         const message = SlackMessage(text: '');
         final result = message.validate();
@@ -81,8 +81,7 @@ void main() {
     );
 
     test(
-      'validate() should result with false if there is at least one invalid '
-      'block in blocks',
+      "validate() returns false if there is at least one invalid block in blocks",
       () {
         const message = SlackMessage(blocks: [SlackSectionBlock()]);
         final result = message.validate();
@@ -92,7 +91,7 @@ void main() {
     );
 
     test(
-      'validate() should result with false if there are more than 50 blocks',
+      "validate() returns false if there are more than 50 blocks",
       () {
         final message = SlackMessage(
           blocks: List.generate(
@@ -109,7 +108,7 @@ void main() {
     );
 
     test(
-      'validate() should validate slack message',
+      "validate() validates slack message",
       () {
         final result = slackMessage.validate();
 

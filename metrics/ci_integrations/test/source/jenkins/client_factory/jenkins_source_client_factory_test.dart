@@ -19,14 +19,14 @@ void main() {
     }
 
     test(
-      ".create() should throw ArgumentError if the given config is null",
+      ".create() throws an ArgumentError if the given config is null",
       () {
         expect(() => jenkinsSourceParty.create(null), throwsArgumentError);
       },
     );
 
     test(
-      ".create() should create a client for the Jenkins instance running on the given url",
+      ".create() creates a client for the Jenkins instance running on the given url",
       () {
         final url = jenkinsConfig.url;
 
@@ -37,7 +37,7 @@ void main() {
     );
 
     test(
-      ".create() should not create authorization if the credentials are not given",
+      ".create() does not create authorization if the credentials are not given",
       () {
         final jenkinsConfig = JenkinsSourceConfig(
           url: JenkinsConfigTestData.url,
@@ -51,7 +51,7 @@ void main() {
     );
 
     test(
-      ".create() should create a client with the given auth credentials",
+      ".create() creates a client with the given auth credentials",
       () {
         final authorization = BasicAuthorization(
           JenkinsConfigTestData.username,

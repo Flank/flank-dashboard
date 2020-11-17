@@ -82,7 +82,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the textStyle from the user menu theme to the switch theme text widget",
+      "applies the text style from the user menu theme to the switch theme text widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsUserMenuTestbed(
           theme: testTheme,
@@ -97,7 +97,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the textStyle from the user menu theme to the project groups Text widget",
+      "applies the text style from the user menu theme to the project groups Text widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsUserMenuTestbed(
           theme: testTheme,
@@ -112,7 +112,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the textStyle from the user menu theme to the logOut Text widget",
+      "applies the text style from the user menu theme to the logOut Text widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsUserMenuTestbed(
           theme: testTheme,

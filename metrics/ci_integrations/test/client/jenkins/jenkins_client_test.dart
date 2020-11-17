@@ -65,21 +65,21 @@ void main() {
     });
 
     test(
-      "should throw ArgumentError creating a client instance with a null URL",
+      "throws an ArgumentError if the given URL is null",
       () {
         expect(() => JenkinsClient(jenkinsUrl: null), throwsArgumentError);
       },
     );
 
     test(
-      "should throw ArgumentError creating a client instance with an empty URL",
+      "throws an ArgumentError if the given URL is empty",
       () {
         expect(() => JenkinsClient(jenkinsUrl: ''), throwsArgumentError);
       },
     );
 
     test(
-      ".headers should contain the 'content-type' header with an application-json value",
+      ".headers contain the 'content-type' header with an application-json value",
       () {
         final headers = jenkinsClient.headers;
 
@@ -91,7 +91,7 @@ void main() {
     );
 
     test(
-      ".headers should contain the 'accept' header with an application-json value",
+      ".headers contain the 'accept' header with an application-json value",
       () {
         final headers = jenkinsClient.headers;
 
@@ -103,7 +103,7 @@ void main() {
     );
 
     test(
-      ".headers should include authorization related header if provided",
+      ".headers include authorization related header if provided",
       () {
         final headers = jenkinsClient.headers;
         final authHeader = authorization.toMap().entries.first;
@@ -116,7 +116,7 @@ void main() {
     );
 
     test(
-      ".headers should not include authorization related header if client is not authorized",
+      ".headers do not include authorization related header if client is not authorized",
       () {
         final headers = unauthorizedJenkinsClient.headers;
         final expectedHeaders = {
@@ -128,7 +128,7 @@ void main() {
       },
     );
 
-    test("should fail to perform requests if not authorized", () {
+    test("fails to perform requests if not authorized", () {
       final result = unauthorizedJenkinsClient
           .fetchJob('test')
           .then((result) => result.isError);
@@ -136,14 +136,14 @@ void main() {
       expect(result, completion(isTrue));
     });
 
-    test(".fetchJob() should fail if a job is not found", () {
+    test(".fetchJob() fails if a job is not found", () {
       final result =
           jenkinsClient.fetchJob('name').then((result) => result.isError);
 
       expect(result, completion(isTrue));
     });
 
-    test(".fetchJob() should respond with a job", () {
+    test(".fetchJob() responds with a job", () {
       final result =
           jenkinsClient.fetchJob('test').then((result) => result.result);
       const expected = JenkinsMultiBranchJob(
@@ -156,7 +156,7 @@ void main() {
     });
 
     test(
-      ".fetchJobByFullName() should fail if a job with the given full name is not found",
+      ".fetchJobByFullName() fails if a job with the given full name is not found",
       () {
         final result = jenkinsClient
             .fetchJobByFullName('test/dev')
@@ -167,7 +167,7 @@ void main() {
     );
 
     test(
-      ".fetchJobByFullName() should respond with a job matching the given full name",
+      ".fetchJobByFullName() responds with a job matching the given full name",
       () {
         final result = jenkinsClient
             .fetchJobByFullName('test/master')
@@ -182,7 +182,7 @@ void main() {
       },
     );
 
-    test(".fetchJobs() should fail if a job is not found", () {
+    test(".fetchJobs() fails if a job is not found", () {
       final result =
           jenkinsClient.fetchJobs('name').then((result) => result.isError);
 
@@ -190,7 +190,7 @@ void main() {
     });
 
     test(
-      ".fetchJobs() should respond with a list of jobs",
+      ".fetchJobs() responds with a list of jobs",
       () {
         final result =
             jenkinsClient.fetchJobs('test').then((result) => result.result);
@@ -206,7 +206,7 @@ void main() {
       },
     );
 
-    test(".fetchJobs() should apply limits to request if provided", () {
+    test(".fetchJobs() applies limits to request if provided", () {
       final result = jenkinsClient
           .fetchJobs('test', limits: JenkinsQueryLimits.endBefore(0))
           .then((result) => result.result);
@@ -216,7 +216,7 @@ void main() {
     });
 
     test(
-      ".fetchJobsByUrl() should fail if a multi-branch job is not found",
+      ".fetchJobsByUrl() fails if a multi-branch job is not found",
       () {
         final result = jenkinsClient
             .fetchJobsByUrl('${jenkinsMockServer.url}/job/name')
@@ -227,7 +227,7 @@ void main() {
     );
 
     test(
-      ".fetchJobsByUrl() should respond with a list of jobs",
+      ".fetchJobsByUrl() responds with a list of jobs",
       () {
         final result = jenkinsClient
             .fetchJobsByUrl('${jenkinsMockServer.url}/job/test')
@@ -244,7 +244,7 @@ void main() {
       },
     );
 
-    test(".fetchJobsByUrl() should apply limits to request if provided", () {
+    test(".fetchJobsByUrl() applies limits to request if provided", () {
       final result = jenkinsClient
           .fetchJobsByUrl(
             '${jenkinsMockServer.url}/job/test',
@@ -256,7 +256,7 @@ void main() {
       expect(result, completion(equals(expected)));
     });
 
-    test(".fetchBuilds() should fail if a building job is not found", () {
+    test(".fetchBuilds() fails if a building job is not found", () {
       final result = jenkinsClient
           .fetchBuilds('test/dev')
           .then((result) => result.isError);
@@ -265,7 +265,7 @@ void main() {
     });
 
     test(
-      ".fetchBuilds() should respond with a building job populated with builds related data",
+      ".fetchBuilds() responds with a building job populated with builds related data",
       () {
         final result = jenkinsClient
             .fetchBuilds('test/master')
@@ -284,7 +284,7 @@ void main() {
     );
 
     test(
-      ".fetchBuilds() should apply limits to request if provided",
+      ".fetchBuilds() applies limits to request if provided",
       () {
         final result = jenkinsClient
             .fetchBuilds(
@@ -305,7 +305,7 @@ void main() {
       },
     );
 
-    test(".fetchBuildsByUrl() should fail if a building job is not found", () {
+    test(".fetchBuildsByUrl() fails if a building job is not found", () {
       final result = jenkinsClient
           .fetchBuildsByUrl('${jenkinsMockServer.url}/job/test/job/dev')
           .then((result) => result.isError);
@@ -314,7 +314,7 @@ void main() {
     });
 
     test(
-      ".fetchBuildsByUrl() should respond with a building job populated with builds related data",
+      ".fetchBuildsByUrl() responds with a building job populated with builds related data",
       () {
         final result = jenkinsClient
             .fetchBuildsByUrl('${jenkinsMockServer.url}/job/test/job/master')
@@ -333,7 +333,7 @@ void main() {
     );
 
     test(
-      ".fetchBuildsByUrl() should apply limits to request if provided",
+      ".fetchBuildsByUrl() applies limits to request if provided",
       () {
         final result = jenkinsClient
             .fetchBuildsByUrl(
@@ -355,7 +355,7 @@ void main() {
     );
 
     test(
-      ".fetchArtifactsByBuildUrl() should fail if build with the given url is not found",
+      ".fetchArtifactsByBuildUrl() fails if build with the given url is not found",
       () {
         final url = '${jenkinsMockServer.url}/job/test/job/master/10';
         final result = jenkinsClient
@@ -367,7 +367,7 @@ void main() {
     );
 
     test(
-      ".fetchArtifactsByBuildUrl() should respond with a list of artifacts for the build matching given url",
+      ".fetchArtifactsByBuildUrl() responds with a list of artifacts for the build matching given url",
       () {
         final url = '${jenkinsMockServer.url}/job/test/job/master/1';
         final result = jenkinsClient
@@ -389,7 +389,7 @@ void main() {
     );
 
     test(
-      ".fetchArtifactsByBuildUrl() should apply limits to request if provided",
+      ".fetchArtifactsByBuildUrl() applies limits to request if provided",
       () {
         final url = '${jenkinsMockServer.url}/job/test/job/master/1';
         final result = jenkinsClient
@@ -410,7 +410,7 @@ void main() {
     );
 
     test(
-      ".fetchArtifactByRelativePath() should fail if artifact is not found",
+      ".fetchArtifactByRelativePath() fails if artifact is not found",
       () {
         final url = '${jenkinsMockServer.url}/job/test/job/master/10';
         final result = jenkinsClient
@@ -422,7 +422,7 @@ void main() {
     );
 
     test(
-      ".fetchArtifactByRelativePath() should respond with an artifact content",
+      ".fetchArtifactByRelativePath() responds with an artifact content",
       () {
         final url = '${jenkinsMockServer.url}/job/test/job/master/1';
         final result = jenkinsClient
@@ -439,7 +439,7 @@ void main() {
     );
 
     test(
-      ".fetchArtifact() should fail if the given artifact is not found for the given build",
+      ".fetchArtifact() fails if the given artifact is not found for the given build",
       () {
         final build = JenkinsBuild(
           url: '${jenkinsMockServer.url}/job/test/job/master/10',
@@ -456,7 +456,7 @@ void main() {
       },
     );
 
-    test(".fetchArtifact() should respond with an artifact content", () {
+    test(".fetchArtifact() responds with an artifact content", () {
       final build = JenkinsBuild(
         url: '${jenkinsMockServer.url}/job/test/job/master/1',
       );

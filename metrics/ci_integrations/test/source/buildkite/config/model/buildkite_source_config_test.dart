@@ -112,7 +112,7 @@ void main() {
     );
 
     test(
-      ".fromJson returns null if the given json is null",
+      ".fromJson() returns null if the given json is null",
       () {
         final actualConfig = BuildkiteSourceConfig.fromJson(null);
 
@@ -121,7 +121,7 @@ void main() {
     );
 
     test(
-      ".fromJson creates a new instance from the given json",
+      ".fromJson() creates a new instance from the given json",
       () {
         final actualConfig = BuildkiteSourceConfig.fromJson(configMap);
 

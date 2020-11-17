@@ -25,7 +25,7 @@ void main() {
       );
     });
 
-    test("throws an AssertionError if the given arrowSize is null", () {
+    test("throws an AssertionError if the given arrow size is null", () {
       expect(
         () => BubbleShapeBorder(arrowSize: null),
         MatcherUtil.throwsAssertionError,
@@ -39,7 +39,7 @@ void main() {
       );
     });
 
-    test("throws an AssertionError if the given borderRadius is null", () {
+    test("throws an AssertionError if the given border radius is null", () {
       expect(
         () => BubbleShapeBorder(borderRadius: null),
         MatcherUtil.throwsAssertionError,

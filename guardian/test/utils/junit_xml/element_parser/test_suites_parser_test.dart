@@ -27,13 +27,13 @@ void main() {
       ''');
     });
 
-    test('mapElement() should map empty <testsuites> element', () {
+    test("mapElement() maps an empty <testsuites> element", () {
       final result = parser.mapElement(emptyElement);
 
       expect(result, equals(const JUnitTestSuites(testSuites: [])));
     });
 
-    test('mapElement() should map <testsuites> element', () {
+    test("mapElement() maps <testsuites> element", () {
       const expected = JUnitTestSuites(
         tests: 1,
         time: 0.123,

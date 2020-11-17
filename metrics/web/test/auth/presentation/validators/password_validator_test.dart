@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group("PasswordValidator", () {
     test(
-      ".validate() returns the password required error message if the password is null",
+      ".validate() returns the 'password required' error message if the password is null",
       () {
         final validationResult = PasswordValidator.validate(null);
 
@@ -18,7 +18,7 @@ void main() {
     );
 
     test(
-      ".validate() returns the password too short error message if the password is less than Password.minPasswordLength",
+      ".validate() returns the 'password too short' error message if the password is less than Password.minPasswordLength",
       () {
         final validationResult = PasswordValidator.validate('pass');
         final expectedMessage = AuthStrings.getPasswordMinLengthErrorMessage(

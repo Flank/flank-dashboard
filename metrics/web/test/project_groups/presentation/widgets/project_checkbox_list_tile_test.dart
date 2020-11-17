@@ -68,7 +68,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the checkbox value corresponding to the project checkbox view model isChecked value",
+      "applies the checkbox value corresponding to the project checkbox view model is checked value",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(

@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("FirebaseUserAdapter", () {
-    test("can't be created with null firebaseUser", () {
+    test("throws an ArgumentError if the given firebase user is null", () {
       expect(() => FirebaseUserAdapter(null), throwsArgumentError);
     });
 

@@ -11,7 +11,7 @@ void main() {
     final token = base64Encode(utf8.encode('$username:$password'));
 
     test(
-      "should create basic authorization instance with 'Authorization' header and token with 'Basic' type",
+      "creates basic authorization instance with 'Authorization' header and token with 'Basic' type",
       () {
         final authorization = BasicAuthorization(username, password);
         final expected = {HttpHeaders.authorizationHeader: 'Basic $token'};
@@ -22,7 +22,7 @@ void main() {
     );
 
     test(
-      ".encode() should base64 encode string with username and password",
+      ".encode() returns base64 encoded string with given username and password",
       () {
         final encoded = BasicAuthorization.encode(username, password);
 
@@ -31,7 +31,7 @@ void main() {
     );
 
     test(
-      ".encode() should consider null username as empty",
+      ".encode() considers null username as empty",
       () {
         final encoded = BasicAuthorization.encode(null, password);
         final expected = base64Encode(utf8.encode(':$password'));
@@ -41,7 +41,7 @@ void main() {
     );
 
     test(
-      ".encode() should consider null password as empty",
+      ".encode() considers null password as empty",
       () {
         final encoded = BasicAuthorization.encode(username, null);
         final expected = base64Encode(utf8.encode('$username:'));

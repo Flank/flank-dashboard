@@ -13,7 +13,7 @@ void main() {
     const maxAxisValue = 8;
 
     testWidgets(
-      "throws an AssertionError if the given strokeWidth is null",
+      "throws an AssertionError if the given stroke width is null",
       (WidgetTester tester) async {
         await tester
             .pumpWidget(const _SparklineGraphTestbed(strokeWidth: null));
@@ -23,7 +23,7 @@ void main() {
     );
 
     testWidgets(
-      "throws an AssertionError if the given strokeWidth is negative",
+      "throws an AssertionError if the given stroke width is negative",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _SparklineGraphTestbed(
           strokeWidth: -1.0,

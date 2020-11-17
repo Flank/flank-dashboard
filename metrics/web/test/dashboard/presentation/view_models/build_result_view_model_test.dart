@@ -35,7 +35,7 @@ void main() {
     });
 
     test(
-      "throws an AssertionError if the given buildResultPopupViewModel is null",
+      "throws an AssertionError if the given build result popup view model is null",
       () {
         expect(
           () => BuildResultViewModel(

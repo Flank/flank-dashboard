@@ -39,13 +39,13 @@ void main() {
       expect(artifact.mimeType, equals(mimeType));
     });
 
-    test(".fromJson returns null if the given json is null", () {
+    test(".fromJson() returns null if the given json is null", () {
       final artifact = BuildkiteArtifact.fromJson(null);
 
       expect(artifact, isNull);
     });
 
-    test(".fromJson creates an instance from the given json", () {
+    test(".fromJson() creates an instance from the given json", () {
       final artifact = BuildkiteArtifact.fromJson(artifactJson);
 
       expect(artifact, equals(expectedArtifact));

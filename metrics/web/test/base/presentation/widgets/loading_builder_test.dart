@@ -10,7 +10,7 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("LoadingBuilder", () {
     testWidgets(
-      "can't be created when the builder is null",
+      "throws an AssertionError if the given builder is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _LoadingBuilderTestbed(builder: null));
 
@@ -19,7 +19,7 @@ void main() {
     );
 
     testWidgets(
-      "can't be created when the isLoading is null",
+      "throws an AssertionError if the given is loading is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _LoadingBuilderTestbed(isLoading: null));
 
@@ -28,7 +28,7 @@ void main() {
     );
 
     testWidgets(
-      "can't be created when the loadingPlaceholder is null",
+      "throws an AssertionError if the given loading placeholder is null",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           const _LoadingBuilderTestbed(loadingPlaceholder: null),
@@ -39,7 +39,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the loading placeholder if the isLoading is true",
+      "displays the loading placeholder if the is loading is true",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _LoadingBuilderTestbed(
           isLoading: true,
@@ -50,7 +50,7 @@ void main() {
     );
 
     testWidgets(
-      "builds using the builder function when the isLoading is false",
+      "builds using the builder function when the is loading is false",
       (WidgetTester tester) async {
         bool isBuilderFunctionCalled = false;
 

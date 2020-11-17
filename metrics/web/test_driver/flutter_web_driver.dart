@@ -73,7 +73,7 @@ class FlutterWebDriver {
   /// Sets up logger corresponding to [_args], passed to the application.
   void _setupLogger(bool quiet) {
     final Directory logsDir = Directory(_args.logsDir);
-    if (!logsDir.existsSync()) logsDir.createSync();
+    if (!logsDir.existsSync()) logsDir.createSync(recursive: true);
 
     Logger.setup(quiet: quiet, logsDirectory: logsDir);
   }
@@ -81,7 +81,7 @@ class FlutterWebDriver {
   /// Checks if the working dir exists and creates it if not.
   void _prepareWorkingDir() {
     final Directory workingDir = Directory(_args.workingDir);
-    if (!workingDir.existsSync()) workingDir.createSync();
+    if (!workingDir.existsSync()) workingDir.createSync(recursive: true);
   }
 
   /// Prepares the web driver for the driver tests.

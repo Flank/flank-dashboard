@@ -54,6 +54,36 @@ jobs:
           else
             echo "::set-output name=core::false"
           fi
+  core-actions:
+    name: Core Actions
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [ changed_projects ]
+    if: needs.changed_projects.outputs.core == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
+      - uses: cedx/setup-dart@v2
+        with:
+          release-channel: beta
+          version: 2.10.0-110.5.beta
+
+      - name: Get Dependencies
+        run: pub get
+        working-directory: metrics/core/
+
+      - name: Run Analyzer
+        run: dartanalyzer . --fatal-infos --fatal-warnings
+        working-directory: metrics/core/
+
+      - name: Run Tests
+        run: pub run test
+        working-directory: metrics/core/
+
   metrics-web-actions:
     name: Metrics Web Actions
     runs-on: macOS-latest
@@ -65,7 +95,6 @@ jobs:
       WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       PROJECT_PATH: metrics/web/
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -112,7 +141,6 @@ jobs:
     env:
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       PROJECT_PATH: metrics/firebase/
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -137,7 +165,6 @@ jobs:
     timeout-minutes: 60
     needs: [changed_projects]
     if: needs.changed_projects.outputs.coverage_converter == 'true' || needs.changed_projects.outputs.core == 'true'
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -168,7 +195,6 @@ jobs:
     timeout-minutes: 60
     needs: [changed_projects]
     if: needs.changed_projects.outputs.ci_integrations == 'true' || needs.changed_projects.outputs.core == 'true'
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2

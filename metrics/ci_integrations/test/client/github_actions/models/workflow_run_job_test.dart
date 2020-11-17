@@ -68,7 +68,7 @@ void main() {
     );
 
     test(
-      ".fromJson returns null if the given json is null",
+      ".fromJson() returns null if the given json is null",
       () {
         final job = WorkflowRunJob.fromJson(null);
 
@@ -77,7 +77,7 @@ void main() {
     );
 
     test(
-      ".fromJson creates an instance from the given json",
+      ".fromJson() creates an instance from the given json",
       () {
         final result = WorkflowRunJob.fromJson(jobJson);
 

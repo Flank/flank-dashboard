@@ -7,30 +7,36 @@ void main() {
   group('YamlMapParser', () {
     final parser = YamlMapParser();
 
-    test('parse() should throw ArgumentError if input is not dictionary', () {
-      const yamlString = '1';
+    test(
+      "parse() throws an ArgumentError if the given input is not a dictionary",
+      () {
+        const yamlString = '1';
 
-      expect(() => parser.parse(yamlString), throwsArgumentError);
-    });
+        expect(() => parser.parse(yamlString), throwsArgumentError);
+      },
+    );
 
-    test('parse() should throw ArgumentError if input is null', () {
+    test("parse() throws an ArgumentError if the given input is null", () {
       expect(() => parser.parse(null), throwsArgumentError);
     });
 
-    test('parse() should return empty map on empty input', () {
+    test("parse() returns an empty map on empty input", () {
       const yamlString = '';
       final result = parser.parse(yamlString);
 
       expect(result, isEmpty);
     });
 
-    test('parse() should throw FormatException if input has complex keys', () {
-      const yamlString = '{1, 2}: 3';
+    test(
+      "parse() throws a FormatException if the given input has complex keys",
+      () {
+        const yamlString = '{1, 2}: 3';
 
-      expect(() => parser.parse(yamlString), throwsFormatException);
-    });
+        expect(() => parser.parse(yamlString), throwsFormatException);
+      },
+    );
 
-    test('parse() should parse nested YAML dictionaries', () {
+    test("parse() parses nested YAML dictionaries", () {
       // Formatted yaml string
       // f1:
       //   f2: 1
@@ -49,7 +55,7 @@ void main() {
       );
     });
 
-    test('parse() should parse YAML lists', () {
+    test("parse() parses YAML lists", () {
       // Formatted yaml string
       // list:
       //   - 1
@@ -65,7 +71,7 @@ void main() {
       );
     });
 
-    test('parse() should parse YAML strings', () {
+    test("parse() parses YAML strings", () {
       // Formatted yaml string
       // string: 'value'
       const yamlString = "string: 'value'";
@@ -74,7 +80,7 @@ void main() {
       expect(result, equals({'string': 'value'}));
     });
 
-    test('parse() should parse YAML nums', () {
+    test("parse() parses YAML nums", () {
       // Formatted yaml string
       // int: 1
       // double: 1.0

@@ -37,26 +37,26 @@ void main() {
       ],
     );
 
-    test(".fromJson() should return null if the given json is null", () {
+    test(".fromJson() returns null if the given json is null", () {
       final job = JenkinsMultiBranchJob.fromJson(null);
 
       expect(job, isNull);
     });
 
-    test(".fromJson() should create an instance from the json map", () {
+    test(".fromJson() creates an instance from the json map", () {
       final job = JenkinsMultiBranchJob.fromJson(multiBranchJobJson);
 
       expect(job, equals(multiBranchJob));
     });
 
-    test(".toJson() should populate a json map with a list of jobs", () {
+    test(".toJson() populates a json map with a list of jobs", () {
       const job = JenkinsMultiBranchJob(name: 'name', jobs: []);
       final json = job.toJson();
 
       expect(json, containsPair('jobs', isEmpty));
     });
 
-    test(".toJson() should convert an instance to the json map", () {
+    test(".toJson() converts an instance to the json map", () {
       final json = multiBranchJob.toJson();
 
       expect(json, equals(multiBranchJobJson));

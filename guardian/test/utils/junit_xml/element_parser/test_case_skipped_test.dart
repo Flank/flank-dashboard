@@ -19,7 +19,7 @@ void main() {
       );
     });
 
-    test('mapElement() should map <skipped> element', () {
+    test("mapElement() maps <skipped> element", () {
       const expected = JUnitTestCaseSkipped(text: text);
 
       final result = parser.mapElement(element);

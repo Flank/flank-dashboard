@@ -7,7 +7,7 @@ import '../../../test_utils/matcher_util.dart';
 
 void main() {
   group("BuildResultMetricViewModel", () {
-    test("throws an AssertionError if the given buildResults is null", () {
+    test("throws an AssertionError if the given build results is null", () {
       expect(
         () => BuildResultMetricViewModel(
           buildResults: null,
@@ -17,7 +17,7 @@ void main() {
     });
 
     test(
-      "throws an AssertionError if the given numberOfBuildsToDisplay is null",
+      "throws an AssertionError if the given number of builds to display is null",
       () {
         expect(
           () => BuildResultMetricViewModel(

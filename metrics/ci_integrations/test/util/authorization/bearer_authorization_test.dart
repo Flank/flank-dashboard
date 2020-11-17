@@ -8,7 +8,7 @@ void main() {
     const token = 'token';
 
     test(
-      "should create bearer authorization instance with 'Authorization' header and token with 'Bearer' type",
+      "creates bearer authorization instance with 'Authorization' header and token with 'Bearer' type",
       () {
         final authorization = BearerAuthorization(token);
         final expected = {HttpHeaders.authorizationHeader: 'Bearer $token'};
