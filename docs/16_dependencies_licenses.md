@@ -5,8 +5,31 @@
 Combine license document(s) for all components in monorepo in one document.
 
 # References
+> Link to supporting documentation, GitHub tickets, etc.
+- [Software license](https://en.wikipedia.org/wiki/Software_license)
+- [Dart package dependencies](https://dart.dev/tools/pub/dependencies)
 
-## CI Integrations
+# Motivation
+> What problem is this project solving?
+
+Find the plugin's license used in the monorepo quickly.
+
+# Goals
+> Identify success metrics and measurable goals.
+
+* Provide a list of dependencies we use in different Metrics components.
+* Provide information about a license of each dependency.
+
+# Non-Goals
+> Identify what's not in scope.
+
+The list of dependencies for the Third Party API is out of the scope.
+
+# Table of licenses
+
+Each Metrics component contains a list of dependencies like plugins, packages, etc. The following subsections provide a table of licenses for such dependencies for each component.
+
+## [CI Integrations](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations)
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -16,26 +39,32 @@ Combine license document(s) for all components in monorepo in one document.
 | equatable | [pub.dev](https://pub.dev/packages/equatable) | [MIT](https://github.com/felangel/equatable/blob/master/LICENSE) |
 | archive | [pub.dev](https://pub.dev/packages/archive) | [Apache 2.0](https://github.com/brendan-duncan/archive/blob/master/LICENSE) |
 | firedart | [pub.dev](https://pub.dev/packages/firedart) | [Apache 2.0](https://github.com/cachapa/firedart/blob/master/LICENSE) |
-| dev: |  |  |	
+
+### Dev dependencies
+| Name | Source | License |
+| :---: | :---: | :---: |
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 | mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |	
 | coverage | [pub.dev](https://pub.dev/packages/coverage) | [Apache 2.0](https://github.com/dart-lang/coverage/blob/master/LICENSE) |
 | test_coverage| [pub.dev](https://pub.dev/packages/test_coverage) | [BSD](https://github.com/pulyaevskiy/test-coverage/blob/master/LICENSE) |
 
-## Core
+## [Core](https://github.com/platform-platform/monorepo/tree/master/metrics/core)
 
 | Name | Source | License |
 | :---: | :---: | :---: |
 | meta | [pub.dev](https://pub.dev/packages/meta) | [BSD](https://github.com/dart-lang/sdk/blob/master/pkg/meta/LICENSE) |
 | equatable | [pub.dev](https://pub.dev/packages/equatable) | [MIT](https://github.com/felangel/equatable/blob/master/LICENSE) |
 | email_validator | [pub.dev](https://pub.dev/packages/email_validator) | [MIT](https://github.com/fredeil/email-validator.dart/blob/master/LICENSE) |
-| dev: |  |  |	
+
+### Dev dependencies
+| Name | Source | License |
+| :---: | :---: | :---: |	
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
 
-## Coverage Converter	
+## [Coverage Converter](https://github.com/platform-platform/monorepo/tree/master/metrics/coverage_converter)	
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -43,24 +72,30 @@ Combine license document(s) for all components in monorepo in one document.
 | meta | [pub.dev](https://pub.dev/packages/meta) |	[BSD](https://github.com/dart-lang/sdk/blob/master/pkg/meta/LICENSE) |
 | equatable |	[pub.dev](https://pub.dev/packages/equatable) | [MIT](https://github.com/felangel/equatable/blob/master/LICENSE) |
 | lcov | [pub.dev](https://pub.dev/packages/lcov) | [MIT](https://git.belin.io/cedx/lcov.dart/src/branch/main/LICENSE.md) |
-| dev: |  |  |	
+
+### Dev dependencies
+| Name | Source | License |
+| :---: | :---: | :---: |
 | coverage | [pub.dev](https://pub.dev/packages/coverage) | [Apache 2.0](https://github.com/dart-lang/coverage/blob/master/LICENSE) | 
 | test_coverage | [pub.dev](https://pub.dev/packages/test_coverage) | [BSD](https://github.com/pulyaevskiy/test-coverage/blob/master/LICENSE) |
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
 | mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## Deploy
+## [Deploy](https://github.com/platform-platform/monorepo/tree/master/metrics/deploy)
 
 | Name | Source | License |
 | :---: | :---: | :---: |
 | process_run | [pub.dev](https://pub.dev/packages/process_run) | [BSD](https://github.com/tekartik/process_run.dart/blob/master/LICENSE) |
 | safe_config | [pub.dev](https://pub.dev/packages/safe_config) | [BSD](https://github.com/stablekernel/safe_config/blob/master/LICENSE) |
-| dev: |  |  |
+
+### Dev dependencies
+| Name | Source | License |
+| :---: | :---: | :---: |
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## Web
+## [Web](https://github.com/platform-platform/monorepo/tree/master/metrics/web)
 
 | Name | Source | License |
 | :---: | :---: | :---: |	
@@ -83,7 +118,10 @@ Combine license document(s) for all components in monorepo in one document.
 | shimmer_animation | [pub.dev](https://pub.dev/packages/shimmer_animation) | [MIT](https://github.com/maddyb99/shimmer_animation/blob/master/LICENSE) |
 | flutter_styled_toast | [pub.dev](https://pub.dev/packages/flutter_styled_toast) | [Apache 2.0](https://github.com/JackJonson/flutter_styled_toast/blob/master/LICENSE) | 
 | flutter_svg | [pub.dev](https://pub.dev/packages/flutter_svg) | [MIT](https://github.com/dnfield/flutter_svg/blob/master/LICENSE) |
-| dev: |  |  |		
+
+### Dev dependencies
+| Name | Source | License |
+| :---: | :---: | :---: |	
 | process_run | [pub.dev](https://pub.dev/packages/process_run) | [BSD](https://github.com/tekartik/process_run.dart/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |	
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
@@ -92,25 +130,31 @@ Combine license document(s) for all components in monorepo in one document.
 | network_image_mock | [pub.dev](https://pub.dev/packages/network_image_mock) | [BSD](https://github.com/stelynx/network_image_mock/blob/master/LICENSE) |
 
 
-## api_mock_server			
+## [API Mock Server](https://github.com/platform-platform/monorepo/tree/master/api_mock_server)			
 
 | Name | Source | License |
 | :---: | :---: | :---: |
 | http | [pub.dev](https://pub.dev/packages/http) | [BSD](https://github.com/dart-lang/http/blob/master/LICENSE) |
-| dev: |  |  |	
+
+### Dev dependencies
+| Name | Source | License |
+| :---: | :---: | :---: |	
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## shell_words		
+## [Shell Words](https://github.com/platform-platform/monorepo/tree/master/shell_words)		
 
 | Name | Source | License |
 | :---: | :---: | :---: |
 | unicode |[pub.dev](https://pub.dev/packages/unicode) | [BSD](https://github.com/mezoni/unicode/blob/master/LICENSE) |
-| dev: |  |  |	
+
+### Dev dependencies
+| Name | Source | License |
+| :---: | :---: | :---: |
 | pedantic | [pub.dev](https://pub.dev/packages/pedantic) | [BSD](https://github.com/dart-lang/pedantic/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## Guardian			
+## [Guardian](https://github.com/platform-platform/monorepo/tree/master/guardian)		
 
 | Name | Source | License |
 | :---: | :---: | :---: |
@@ -119,41 +163,26 @@ Combine license document(s) for all components in monorepo in one document.
 | meta | [pub.dev](https://pub.dev/packages/meta) | [BSD](https://github.com/dart-lang/sdk/blob/master/pkg/meta/LICENSE) |
 | xml | [pub.dev](https://pub.dev/packages/xml) | [MIT](https://github.com/renggli/dart-xml/blob/master/LICENSE) |
 | equatable | [pub.dev](https://pub.dev/packages/equatable) | [MIT](https://github.com/felangel/equatable/blob/master/LICENSE) |
-| dev: |  |  |	
+
+### Dev dependencies
+| Name | Source | License |	
+| :---: | :---: | :---: |
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## Yaml Map	
+## [Yaml Map](https://github.com/platform-platform/monorepo/tree/master/yaml_map)	
 
 | Name | Source | License |
 | :---: | :---: | :---: |
 | yaml | [pub.dev](https://pub.dev/packages/yaml) | [BSD](https://github.com/dart-lang/yaml/blob/master/LICENSE) |
-| dev: |  |  |		
+
+### Dev dependencies
+| Name | Source | License |	
+| :---: | :---: | :---: |
 | lint | [pub.dev](https://pub.dev/packages/lint) | [Apache 2.0](https://github.com/passsy/dart-lint/blob/master/LICENSE) |
 | test | [pub.dev](https://pub.dev/packages/test) | [BSD](https://github.com/dart-lang/test/blob/master/pkgs/test/LICENSE) |
 
-## Third Party API
+# Results
+> What was the outcome of the project?
 
-| Name | Source | License |
-| :---: | :---: | :---: |	
-| Github | [docs.github](https://docs.github.com) | [Policies](https://docs.github.com/en/free-pro-team@latest/github/site-policy) |
-| Buildkite | [buildkite.com](https://buildkite.com) | [Terms of Service](https://buildkite.com/terms-of-service) |
-| Jenkins | [jenkins.io](https://www.jenkins.io) | [MIT](https://www.jenkins.io/license/) |
-
-
-
-# Motivation
-> What problem is this project solving?
-
-Find the plugin's license used in the monorepo quickly.
-
-# Goals
-> Identify success metrics and measurable goals.
-
-* Have a list of all dependencies.
-* Easy access to license links.
-
-# Non-Goals
-> Identify what's not in scope.
-
-The list of plugins dependencies is out of scope.
+The document provides comprehensive information about the dependencies' licenses of different Metrics components.
