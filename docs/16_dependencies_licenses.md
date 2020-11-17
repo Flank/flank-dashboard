@@ -6,13 +6,14 @@ Combine license document(s) for all components in monorepo in one document.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
+
 - [Software license](https://en.wikipedia.org/wiki/Software_license)
 - [Dart package dependencies](https://dart.dev/tools/pub/dependencies)
 
 # Motivation
 > What problem is this project solving?
 
-Find the plugin's license used in the monorepo quickly.
+Quickly find a dependency and license of this dependency used in a Metrics component.
 
 # Goals
 > Identify success metrics and measurable goals.
@@ -27,7 +28,8 @@ The list of dependencies for the Third Party API is out of the scope.
 
 # Table of licenses
 
-Each Metrics component contains a list of dependencies like plugins, packages, etc. The following subsections provide a table of licenses for such dependencies for each component.
+Each Metrics component contains a list of dependencies like plugins, packages, etc. The following subsections provide tables
+ of licenses of such dependencies for each component.
 
 ## [CI Integrations](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations)
 
@@ -117,6 +119,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | flutter_switch | [pub.dev](https://pub.dev/packages/flutter_switch) | [BSD](https://github.com/boringdeveloper/FlutterSwitch/blob/master/LICENSE) | 
 | shimmer_animation | [pub.dev](https://pub.dev/packages/shimmer_animation) | [MIT](https://github.com/maddyb99/shimmer_animation/blob/master/LICENSE) |
 | flutter_styled_toast | [pub.dev](https://pub.dev/packages/flutter_styled_toast) | [Apache 2.0](https://github.com/JackJonson/flutter_styled_toast/blob/master/LICENSE) | 
+| statsfl | [pub.dev](https://pub.dev/packages/statsfl) | [MIT](https://github.com/gskinnerTeam/flutter-stats-fl/blob/master/LICENSE) | 
 | flutter_svg | [pub.dev](https://pub.dev/packages/flutter_svg) | [MIT](https://github.com/dnfield/flutter_svg/blob/master/LICENSE) |
 
 ### Dev dependencies
