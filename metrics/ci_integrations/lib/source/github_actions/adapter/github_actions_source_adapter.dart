@@ -295,6 +295,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
     switch (conclusion) {
       case GithubActionConclusion.success:
         return BuildStatus.successful;
+      case GithubActionConclusion.timedOut:
       case GithubActionConclusion.failure:
         return BuildStatus.failed;
       default:

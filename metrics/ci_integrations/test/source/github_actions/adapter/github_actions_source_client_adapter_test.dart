@@ -502,17 +502,17 @@ void main() {
         const conclusions = [
           GithubActionConclusion.success,
           GithubActionConclusion.failure,
+          GithubActionConclusion.timedOut,
           GithubActionConclusion.cancelled,
           GithubActionConclusion.neutral,
           GithubActionConclusion.actionRequired,
-          GithubActionConclusion.timedOut,
           null,
         ];
 
         const expectedStatuses = [
           BuildStatus.successful,
           BuildStatus.failed,
-          BuildStatus.unknown,
+          BuildStatus.failed,
           BuildStatus.unknown,
           BuildStatus.unknown,
           BuildStatus.unknown,
@@ -1010,17 +1010,18 @@ void main() {
         const conclusions = [
           GithubActionConclusion.success,
           GithubActionConclusion.failure,
+          GithubActionConclusion.timedOut,
           GithubActionConclusion.cancelled,
           GithubActionConclusion.neutral,
           GithubActionConclusion.actionRequired,
-          GithubActionConclusion.timedOut,
+
           null,
         ];
 
         const expectedStatuses = [
           BuildStatus.successful,
           BuildStatus.failed,
-          BuildStatus.unknown,
+          BuildStatus.failed,
           BuildStatus.unknown,
           BuildStatus.unknown,
           BuildStatus.unknown,

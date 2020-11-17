@@ -1,0 +1,13 @@
+name: links_checker
+description: A package providing a links checker tool.
+
+environment:
+  sdk: '>=2.7.0 <3.0.0'
+
+dependencies:
+  args: ^1.6.0
+
+dev_dependencies:
+  test: ^1.15.4  
+  lint: ^1.1.1
+  mockito: ^4.1.3
