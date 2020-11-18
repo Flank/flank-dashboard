@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
@@ -8,6 +9,7 @@ import 'package:metrics/common/presentation/metrics_theme/config/text_style_conf
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
+import 'package:metrics/common/presentation/routes/observers/firebase_analytics_observer.dart';
 import 'package:metrics/common/presentation/routes/observers/overlay_entry_route_observer.dart';
 import 'package:metrics/common/presentation/routes/observers/toast_route_observer.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
@@ -37,6 +39,11 @@ class _MetricsAppState extends State<MetricsApp> {
   /// when the page route changes.
   final _userMenuRouteObserver = OverlayEntryRouteObserver();
 
+  /// A route observer used to send an event to firebase analytics
+  /// when the page route changes.
+  final _analyticsObserver =
+      FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
+
   @override
   Widget build(BuildContext context) {
     return MetricsFPSMonitor(
@@ -60,7 +67,11 @@ class _MetricsAppState extends State<MetricsApp> {
                 isLoggedIn: Provider.of<AuthNotifier>(context, listen: false)
                     .isLoggedIn,
               ),
-              navigatorObservers: [_toastRouteObserver, _userMenuRouteObserver],
+              navigatorObservers: [
+                _analyticsObserver,
+                _toastRouteObserver,
+                _userMenuRouteObserver
+              ],
               themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
               theme: ThemeData(
                 fontFamily: TextStyleConfig.defaultFontFamily,

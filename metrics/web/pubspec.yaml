@@ -52,6 +52,7 @@ dependencies:
       url: https://github.com/platform-platform/flutter-stats-fl
       ref: master
   flutter_svg: ^0.19.1
+  firebase_analytics: ^5.0.16
 
 dev_dependencies:
   process_run: ^0.11.0+2

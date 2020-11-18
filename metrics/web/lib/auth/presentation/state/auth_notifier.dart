@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
@@ -37,6 +38,9 @@ class AuthNotifier extends ChangeNotifier {
   static const List<AuthErrorCode> _passwordErrorCodes = [
     AuthErrorCode.wrongPassword,
   ];
+
+  /// A [FirebaseAnalytics] needed to get the Firebase Analytics API.
+  final FirebaseAnalytics _analytics = FirebaseAnalytics();
 
   /// Used to receive authentication updates.
   final ReceiveAuthenticationUpdates _receiveAuthUpdates;
@@ -148,6 +152,8 @@ class AuthNotifier extends ChangeNotifier {
     _authUpdatesSubscription?.cancel();
     _authUpdatesSubscription = _receiveAuthUpdates().listen((user) {
       if (user != null) {
+        _analytics.setUserId(user.id);
+        _analytics.logLogin(loginMethod: "email");
         _subscribeToUserProfileUpdates(user.id);
       } else {
         _isLoggedIn = false;
