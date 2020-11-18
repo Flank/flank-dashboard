@@ -14,9 +14,11 @@ class WebPlatform {
   /// the SKIA renderer.
   bool get _useSkia => const bool.fromEnvironment('FLUTTER_WEB_USE_SKIA');
 
+  /// Indicates whether this application's instance is launched from
+  /// the desktop platform.
+  bool get _isDesktop =>
+      Platform.isLinux || Platform.isMacOS || Platform.isWindows;
+
   /// Indicates whether this application's instance uses the SKIA renderer.
-  bool get isSkia =>
-      _useSkia ||
-      _autoDetect &&
-          (Platform.isLinux || Platform.isMacOS || Platform.isWindows);
+  bool get isSkia => _useSkia || (_autoDetect && _isDesktop);
 }

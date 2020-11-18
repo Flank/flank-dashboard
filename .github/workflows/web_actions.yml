@@ -90,7 +90,7 @@ jobs:
         run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true
         working-directory: metrics/web/
 
-      - name: Deploy SKIA version to Firebase
+      - name: Deploy auto renderer version to Firebase
         run: firebase deploy --only hosting:metrics-skia
         working-directory: metrics/web/
 
