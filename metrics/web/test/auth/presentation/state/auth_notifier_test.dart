@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/auth/domain/entities/theme_type.dart';
@@ -20,11 +22,13 @@ import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
-import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
+// ignore_for_file: avoid_redundant_argument_values
+
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   group("AuthNotifier", () {
     final signInUseCase = SignInUseCaseMock();
     final googleSignInUseCase = GoogleSignInUseCaseMock();
@@ -33,6 +37,7 @@ void main() {
     final receiveUserProfileUpdates = ReceiveUserProfileUpdatesMock();
     final createUserProfileUseCase = CreateUserProfileUseCaseMock();
     final updateUserProfileUseCase = UpdateUserProfileUseCaseMock();
+    final firebaseAnalyticsMock = FirebaseAnalyticsMock();
 
     const authException = AuthenticationException(
       code: AuthErrorCode.unknown,
@@ -72,6 +77,7 @@ void main() {
       receiveUserProfileUpdates,
       createUserProfileUseCase,
       updateUserProfileUseCase,
+      analytics: firebaseAnalyticsMock,
     );
 
     setUpAll(() {
@@ -213,6 +219,37 @@ void main() {
     );
 
     test(
+      "applies the default analytics to the auth notifier if the given analytics is null",
+      () {
+        final notifier = AuthNotifier(
+          receiveAuthUpdates,
+          signInUseCase,
+          googleSignInUseCase,
+          signOutUseCase,
+          receiveUserProfileUpdates,
+          createUserProfileUseCase,
+          updateUserProfileUseCase,
+          analytics: null,
+        );
+        expect(notifier.analytics, isNotNull);
+      },
+    );
+
+    test("applies the given analytics to the notifier", () {
+      final notifier = AuthNotifier(
+        receiveAuthUpdates,
+        signInUseCase,
+        googleSignInUseCase,
+        signOutUseCase,
+        receiveUserProfileUpdates,
+        createUserProfileUseCase,
+        updateUserProfileUseCase,
+        analytics: firebaseAnalyticsMock,
+      );
+      expect(notifier.analytics, equals(firebaseAnalyticsMock));
+    });
+
+    test(
       ".subscribeToAuthenticationUpdates() delegates to receive auth updates use case",
       () {
         when(receiveAuthUpdates()).thenAnswer((_) => const Stream.empty());
@@ -256,6 +293,7 @@ void main() {
           receiveUserProfileUpdates,
           createUserProfileUseCase,
           updateUserProfileUseCase,
+          analytics: firebaseAnalyticsMock,
         );
 
         final listener = expectAsyncUntil0(
@@ -293,6 +331,7 @@ void main() {
           receiveUserProfileUpdates,
           createUserProfileUseCase,
           updateUserProfileUseCase,
+          analytics: firebaseAnalyticsMock,
         );
 
         authNotifier.subscribeToAuthenticationUpdates();
@@ -333,6 +372,7 @@ void main() {
           receiveUserProfileUpdates,
           createUserProfileUseCase,
           updateUserProfileUseCase,
+          analytics: firebaseAnalyticsMock,
         );
 
         await authNotifier.updateUserProfile(userProfileModel);
@@ -369,6 +409,7 @@ void main() {
           receiveUserProfileUpdates,
           createUserProfileUseCase,
           updateUserProfileUseCase,
+          analytics: firebaseAnalyticsMock,
         );
 
         authNotifier.subscribeToAuthenticationUpdates();
@@ -408,6 +449,7 @@ void main() {
           receiveUserProfileUpdates,
           createUserProfileUseCase,
           updateUserProfileUseCase,
+          analytics: firebaseAnalyticsMock,
         );
 
         authNotifier.subscribeToAuthenticationUpdates();
@@ -466,6 +508,7 @@ void main() {
           receiveUserProfileUpdates,
           createUserProfileUseCase,
           updateUserProfileUseCase,
+          analytics: firebaseAnalyticsMock,
         );
 
         authNotifier.subscribeToAuthenticationUpdates();
@@ -880,6 +923,7 @@ void main() {
         receiveUserProfileUpdates,
         createUserProfileUseCase,
         updateUserProfileUseCase,
+        analytics: firebaseAnalyticsMock,
       );
 
       authNotifier.subscribeToAuthenticationUpdates();
@@ -941,3 +985,5 @@ class CreateUserProfileUseCaseMock extends Mock
 
 class UpdateUserProfileUseCaseMock extends Mock
     implements UpdateUserProfileUseCase {}
+
+class FirebaseAnalyticsMock extends Mock implements FirebaseAnalytics {}

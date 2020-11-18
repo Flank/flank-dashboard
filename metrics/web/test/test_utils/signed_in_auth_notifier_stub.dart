@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/presentation/models/auth_error_message.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
@@ -61,4 +62,7 @@ class SignedInAuthNotifierStub extends ChangeNotifier implements AuthNotifier {
 
   @override
   String get userProfileSavingErrorMessage => null;
+
+  @override
+  FirebaseAnalytics get analytics => null;
 }

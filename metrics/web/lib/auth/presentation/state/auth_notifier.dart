@@ -40,7 +40,7 @@ class AuthNotifier extends ChangeNotifier {
   ];
 
   /// A [FirebaseAnalytics] needed to get the Firebase Analytics API.
-  final FirebaseAnalytics _analytics = FirebaseAnalytics();
+  final FirebaseAnalytics analytics;
 
   /// Used to receive authentication updates.
   final ReceiveAuthenticationUpdates _receiveAuthUpdates;
@@ -102,7 +102,8 @@ class AuthNotifier extends ChangeNotifier {
 
   /// Creates a new instance of auth notifier.
   ///
-  /// All the parameters must not be null.
+  /// If [analytics] is `null`, the [FirebaseAnalytics] used.
+  /// All required parameters must not be `null`.
   AuthNotifier(
     this._receiveAuthUpdates,
     this._signInUseCase,
@@ -110,8 +111,10 @@ class AuthNotifier extends ChangeNotifier {
     this._signOutUseCase,
     this._receiveUserProfileUpdates,
     this._createUserProfileUseCase,
-    this._updateUserProfileUseCase,
-  )   : assert(_receiveAuthUpdates != null),
+    this._updateUserProfileUseCase, {
+    FirebaseAnalytics analytics,
+  })  : analytics = analytics ?? FirebaseAnalytics(),
+        assert(_receiveAuthUpdates != null),
         assert(_signInUseCase != null),
         assert(_googleSignInUseCase != null),
         assert(_signOutUseCase != null),
@@ -152,8 +155,8 @@ class AuthNotifier extends ChangeNotifier {
     _authUpdatesSubscription?.cancel();
     _authUpdatesSubscription = _receiveAuthUpdates().listen((user) {
       if (user != null) {
-        _analytics.setUserId(user.id);
-        _analytics.logLogin(loginMethod: "email");
+        analytics.setUserId(user.id);
+        analytics.logLogin(loginMethod: "email");
         _subscribeToUserProfileUpdates(user.id);
       } else {
         _isLoggedIn = false;

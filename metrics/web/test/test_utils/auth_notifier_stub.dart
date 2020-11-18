@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
@@ -53,4 +54,7 @@ class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {
 
   @override
   String get userProfileSavingErrorMessage => null;
+
+  @override
+  FirebaseAnalytics get analytics => null;
 }
