@@ -86,8 +86,8 @@ jobs:
         run: flutter channel master && flutter upgrade
         working-directory: metrics/web/
 
-      - name: Build release app using SKIA
-        run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_USE_SKIA=true
+      - name: Build release app using auto renderer
+        run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true
         working-directory: metrics/web/
 
       - name: Deploy SKIA version to Firebase

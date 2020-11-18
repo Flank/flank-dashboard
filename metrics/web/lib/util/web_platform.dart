@@ -1,9 +1,22 @@
+import 'package:universal_io/io.dart';
+
 /// A class that represents the information about the environment in which the
 /// current application is running.
 class WebPlatform {
   /// Creates a new instance of the [WebPlatform].
   const WebPlatform();
 
+  /// Indicates whether this application's instance uses auto-detection
+  /// for the renderer.
+  bool get _autoDetect => const bool.fromEnvironment('FLUTTER_WEB_AUTO_DETECT');
+
+  /// Indicates whether this application's instance forced to use
+  /// the SKIA renderer.
+  bool get _useSkia => const bool.fromEnvironment('FLUTTER_WEB_USE_SKIA');
+
   /// Indicates whether this application's instance uses the SKIA renderer.
-  bool get isSkia => const bool.fromEnvironment('FLUTTER_WEB_USE_SKIA');
+  bool get isSkia =>
+      _useSkia ||
+      _autoDetect &&
+          (Platform.isLinux || Platform.isMacOS || Platform.isWindows);
 }
