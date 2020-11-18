@@ -141,7 +141,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
     final buildDataFutures = builds.where((build) {
       return _checkBuildFinishedAndInRange(build, startAfterBuildNumber);
     }).map((build) async {
-      return _mapJenkinsBuild(jobName, build, await _fetchCoverage(build));
+      return _mapJenkinsBuild(jobName, build);
     });
 
     return Future.wait(buildDataFutures);
@@ -159,19 +159,18 @@ class JenkinsSourceClientAdapter implements SourceClient {
   }
 
   /// Maps the given [jenkinsBuild] to the [BuildData] instance.
-  BuildData _mapJenkinsBuild(
+  Future<BuildData> _mapJenkinsBuild(
     String jobName,
     JenkinsBuild jenkinsBuild,
-    Percent coverage,
-  ) {
+  ) async {
     return BuildData(
       buildNumber: jenkinsBuild.number,
-      startedAt: jenkinsBuild.timestamp,
+      startedAt: jenkinsBuild.timestamp ?? DateTime.now(),
       buildStatus: _mapJenkinsBuildResult(jenkinsBuild.result),
-      duration: jenkinsBuild.duration,
+      duration: jenkinsBuild.duration ?? Duration.zero,
       workflowName: jobName,
-      url: jenkinsBuild.url,
-      coverage: coverage,
+      url: jenkinsBuild.url ?? '',
+      coverage: await _fetchCoverage(jenkinsBuild),
     );
   }
 

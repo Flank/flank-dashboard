@@ -1129,6 +1129,25 @@ void main() {
       },
     );
 
+    test(
+      ".fetchBuildsAfter() maps fetched builds' workflowName to the empty string if the pipelineSlug is null",
+      () async {
+        final firstBuild = testData.generateBuildData(buildNumber: 1);
+        const build = BuildkiteBuild(
+          number: 2,
+          blocked: false,
+        );
+        whenFetchBuilds(
+          withArtifactsPage: defaultArtifactsPage,
+        ).thenSuccessWith(const BuildkiteBuildsPage(values: [build]));
+
+        final result = await adapter.fetchBuildsAfter(null, firstBuild);
+        final workflowName = result.first.workflowName;
+
+        expect(workflowName, equals(''));
+      },
+    );
+
     test(".dispose() closes the Buildkite client", () {
       adapter.dispose();
 

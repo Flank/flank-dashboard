@@ -164,11 +164,11 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   ) async {
     return BuildData(
       buildNumber: run.number,
-      startedAt: job.startedAt,
+      startedAt: job.startedAt ?? job.completedAt ?? DateTime.now(),
       buildStatus: _mapConclusionToBuildStatus(job.conclusion),
       duration: _calculateJobDuration(job),
       workflowName: job.name,
-      url: job.url,
+      url: job.url ?? '',
       coverage: await _fetchCoverage(run),
     );
   }
@@ -285,7 +285,7 @@ class GithubActionsSourceClientAdapter implements SourceClient {
   /// Returns `null` if either [WorkflowRunJob.startedAt] or
   /// [WorkflowRunJob.completedAt] is`null`.
   Duration _calculateJobDuration(WorkflowRunJob job) {
-    if (job.startedAt == null || job.completedAt == null) return null;
+    if (job.startedAt == null || job.completedAt == null) return Duration.zero;
 
     return job.completedAt.difference(job.startedAt);
   }
