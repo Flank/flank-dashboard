@@ -53,6 +53,13 @@ dependencies:
       ref: master
   flutter_svg: ^0.19.1
 
+dependency_overrides:
+  universal_io:
+    git:
+      url: https://github.com/platform-platform/universal_io
+      ref: master
+      path: packages/universal_io
+
 dev_dependencies:
   process_run: ^0.11.0+2
   flutter_test:

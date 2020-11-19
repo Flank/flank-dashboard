@@ -113,6 +113,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | meta | [pub.dev](https://pub.dev/packages/meta) | [BSD](https://github.com/dart-lang/sdk/blob/master/pkg/meta/LICENSE) |
 | firebase_auth | [pub.dev](https://pub.dev/packages/firebase_auth) | [BSD](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_auth/firebase_auth/LICENSE) | 
 | universal_html | [pub.dev](https://pub.dev/packages/universal_html) | [Apache 2.0](https://github.com/dint-dev/web_browser/blob/master/LICENSE) |
+| universal_io | [pub.dev](https://pub.dev/packages/universal_io) | [Apache 2.0](https://github.com/dint-dev/universal_io/blob/master/LICENSE) |
 | google_sign_in | [pub.dev](https://pub.dev/packages/google_sign_in) | [BSD](https://github.com/flutter/plugins/blob/master/packages/google_sign_in/google_sign_in/LICENSE) |	
 | selection_menu | [pub.dev](https://pub.dev/packages/selection_menu) | [MIT](https://github.com/HussainTaj-W/flutter-package-selection_menu/blob/master/LICENSE) |
 | duration | [pub.dev](https://pub.dev/packages/duration) | [BSD](https://github.com/desktop-dart/duration/blob/master/LICENSE)|
