@@ -134,6 +134,23 @@ Once you've done, you should add an allowed URLs to the Authorized JavaScript or
 3. Go to the `Credentials` section, find the `Web client` in `OAuth 2.0 Client IDs` section and open it.
 4. Then you should find the `Authorized JavaScript origins` section. That is the place where you can add any URL origins that will have access to the google sign.
 
+## Firebase Key Restrictions
+
+To enable Firebase key restrictions, follow the next steps:
+
+1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
+2. Open the side menu and go to the `APIs & Services` section.
+3. Go to the `Credentials` section, find the `Browser Key` in `API Keys` section and open it.
+4. Scroll down to the `API Restrictions` section and click `Restrict key` button.
+5. In the displayed dropdown enable the following APIs:
+    - Google Identity Toolkit API
+    - The Token Service API
+    - Cloud Functions API
+    - Firestore API
+    - Firebase Installations API
+    - Cloud Logging API
+6. Click `Save` button.
+
 ## Building and deploying the application to the Firebase Hosting
 
 ### Preparing your environment
