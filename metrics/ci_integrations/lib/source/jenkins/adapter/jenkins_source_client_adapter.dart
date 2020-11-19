@@ -140,9 +140,7 @@ class JenkinsSourceClientAdapter implements SourceClient {
   }) {
     final buildDataFutures = builds.where((build) {
       return _checkBuildFinishedAndInRange(build, startAfterBuildNumber);
-    }).map((build) async {
-      return _mapJenkinsBuild(jobName, build);
-    });
+    }).map((build) => _mapJenkinsBuild(jobName, build));
 
     return Future.wait(buildDataFutures);
   }

@@ -138,7 +138,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       startedAt: build.startedAt ?? build.finishedAt ?? DateTime.now(),
       buildStatus: _mapStateToBuildStatus(build.state),
       duration: _calculateJobDuration(build),
-      workflowName: pipelineSlug ?? '',
+      workflowName: pipelineSlug,
       url: build.webUrl ?? '',
       coverage: await _fetchCoverage(pipelineSlug, build),
     );

@@ -555,6 +555,151 @@ void main() {
     );
 
     test(
+      ".fetchBuilds() maps fetched run jobs' startedAt date to the completedAt date if the startedAt date is null",
+      () async {
+        final completedAt = DateTime.now();
+        final workflowRun = WorkflowRun(number: 1);
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          startedAt: null,
+          completedAt: completedAt,
+        );
+
+        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobs(
+          any,
+          status: anyNamed('status'),
+          page: anyNamed('page'),
+          perPage: anyNamed('perPage'),
+        )).thenSuccessWith(
+          WorkflowRunJobsPage(values: [workflowRunJob]),
+        );
+
+        final result = await adapter.fetchBuilds(jobName);
+        final startedAt = result.first.startedAt;
+
+        expect(startedAt, equals(completedAt));
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps fetched run jobs' startedAt date to the DateTime.now() date if the startedAt and completedAt dates are null",
+      () async {
+        final workflowRun = WorkflowRun(number: 2);
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          startedAt: null,
+          completedAt: null,
+        );
+
+        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobs(
+          any,
+          status: anyNamed('status'),
+          page: anyNamed('page'),
+          perPage: anyNamed('perPage'),
+        )).thenSuccessWith(
+          WorkflowRunJobsPage(values: [workflowRunJob]),
+        );
+
+        final result = await adapter.fetchBuilds(jobName);
+        final startedAt = result.first.startedAt;
+
+        expect(startedAt, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps fetched run jobs' duration to the Duration.zero if the startedAt date is null",
+      () async {
+        final workflowRun = WorkflowRun(number: 2);
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          startedAt: null,
+          completedAt: DateTime.now(),
+        );
+
+        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobs(
+          any,
+          status: anyNamed('status'),
+          page: anyNamed('page'),
+          perPage: anyNamed('perPage'),
+        )).thenSuccessWith(
+          WorkflowRunJobsPage(values: [workflowRunJob]),
+        );
+
+        final result = await adapter.fetchBuilds(jobName);
+        final duration = result.first.duration;
+
+        expect(duration, equals(Duration.zero));
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps fetched run jobs' duration to the Duration.zero if the completedAt date is null",
+      () async {
+        final workflowRun = WorkflowRun(number: 2);
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          startedAt: DateTime.now(),
+          completedAt: null,
+        );
+
+        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobs(
+          any,
+          status: anyNamed('status'),
+          page: anyNamed('page'),
+          perPage: anyNamed('perPage'),
+        )).thenSuccessWith(
+          WorkflowRunJobsPage(values: [workflowRunJob]),
+        );
+
+        final result = await adapter.fetchBuilds(jobName);
+        final duration = result.first.duration;
+
+        expect(duration, equals(Duration.zero));
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps fetched run jobs' url to the empty string if the url is null",
+      () async {
+        final workflowRun = WorkflowRun(number: 2);
+        final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
+        final workflowRunJob = WorkflowRunJob(
+          name: jobName,
+          url: null,
+        );
+
+        whenFetchWorkflowRuns(withArtifactsPage: defaultArtifactsPage)
+            .thenSuccessWith(workflowRunsPage);
+        when(githubActionsClientMock.fetchRunJobs(
+          any,
+          status: anyNamed('status'),
+          page: anyNamed('page'),
+          perPage: anyNamed('perPage'),
+        )).thenSuccessWith(
+          WorkflowRunJobsPage(values: [workflowRunJob]),
+        );
+
+        final result = await adapter.fetchBuilds(jobName);
+        final url = result.first.url;
+
+        expect(url, equals(''));
+      },
+    );
+
+    test(
       ".fetchBuildsAfter() fetches all builds after the given one",
       () {
         final runsPage = WorkflowRunsPage(
@@ -1090,8 +1235,9 @@ void main() {
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
         final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final startedAt = result.first.startedAt;
 
-        expect(result.first.startedAt, equals(completedAt));
+        expect(startedAt, equals(completedAt));
       },
     );
 
@@ -1120,13 +1266,14 @@ void main() {
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
         final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final startedAt = result.first.startedAt;
 
-        expect(result.first.startedAt, isNotNull);
+        expect(startedAt, isNotNull);
       },
     );
 
     test(
-      ".fetchBuildsAfter() maps fetched run jobs' difference between the startedAt and completedAt dates to the Duration.zero if the startedAt date is null",
+      ".fetchBuildsAfter() maps fetched run jobs' duration to the Duration.zero if the startedAt date is null",
       () async {
         final workflowRun = WorkflowRun(number: 2);
         final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
@@ -1150,13 +1297,14 @@ void main() {
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
         final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final duration = result.first.duration;
 
-        expect(result.first.duration, equals(Duration.zero));
+        expect(duration, equals(Duration.zero));
       },
     );
 
     test(
-      ".fetchBuildsAfter() maps fetched run jobs' difference between the startedAt and completedAt dates to the Duration.zero if the completedAt date is null",
+      ".fetchBuildsAfter() maps fetched run jobs' duration to the Duration.zero if the completedAt date is null",
       () async {
         final workflowRun = WorkflowRun(number: 2);
         final workflowRunsPage = WorkflowRunsPage(values: [workflowRun]);
@@ -1180,8 +1328,9 @@ void main() {
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
         final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final duration = result.first.duration;
 
-        expect(result.first.duration, equals(Duration.zero));
+        expect(duration, equals(Duration.zero));
       },
     );
 
@@ -1209,8 +1358,9 @@ void main() {
         final firstBuild = testData.generateBuildData(buildNumber: 1);
 
         final result = await adapter.fetchBuildsAfter(jobName, firstBuild);
+        final url = result.first.url;
 
-        expect(result.first.url, equals(''));
+        expect(url, equals(''));
       },
     );
 
