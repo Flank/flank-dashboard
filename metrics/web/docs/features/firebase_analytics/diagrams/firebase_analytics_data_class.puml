@@ -1,0 +1,15 @@
+@startuml
+package auth.data.repository {
+        class FirebaseAnalyticsRepository {}
+}
+
+package auth.domain.repository {
+    class AnalyticsRepository {
+        ...
+        Future<void> logPageView() 
+        Future<void> logLogin()
+    }
+}
+
+FirebaseAnalyticsRepository ..|> AnalyticsRepository
+@enduml

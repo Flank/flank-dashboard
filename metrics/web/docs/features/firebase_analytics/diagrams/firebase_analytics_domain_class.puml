@@ -1,0 +1,38 @@
+@startuml
+package base.domain.usecases {
+    interface UseCase<Type, Params> {
+        call: Type
+    }
+}
+package auth.domain {
+    package repository {
+        class AnalyticsRepository {
+            ...
+            Future<void> logPageView()
+            Future<void> logLogin()
+        }
+    }
+    package usecases {
+        package parameters {
+            class UserIdParam {
+                userId : String
+            }
+            class PageNameParam {
+                name : String
+            }
+        }
+        class LogPageViewUseCase {
+            Future<void> call()
+        }
+        class LogLoginUseCase {
+            Future<void> call()
+        }
+    }
+}
+LogPageViewUseCase ..|> UseCase
+LogLoginUseCase ..|> UseCase
+LogLoginUseCase --> UserIdParam : uses
+LogPageViewUseCase --> PageNameParam : uses
+LogPageViewUseCase -up-> AnalyticsRepository : uses
+LogLoginUseCase -up-> AnalyticsRepository : uses
+@enduml

@@ -1,0 +1,23 @@
+@startuml
+package auth.presentation.state {
+    class AuthNotifier {
+        void logLogin()
+    }
+}
+
+package common.presentation.routes.observers {
+    class FirebaseAnalyticsObserver {
+        analytics : FirebaseAnalytics
+    }
+}
+
+package auth.domain.usecases {
+    class LogLoginUseCase{}
+    class LogPageViewUseCase{}
+}
+
+
+
+AuthNotifier --> LogLoginUseCase : uses
+FirebaseAnalyticsObserver --> LogPageViewUseCase : uses
+@enduml
