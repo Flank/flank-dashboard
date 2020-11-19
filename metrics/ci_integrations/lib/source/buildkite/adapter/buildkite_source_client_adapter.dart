@@ -139,7 +139,7 @@ class BuildkiteSourceClientAdapter implements SourceClient {
       buildStatus: _mapStateToBuildStatus(build.state),
       duration: _calculateJobDuration(build),
       workflowName: pipelineSlug,
-      url: build.webUrl ?? "",
+      url: build.webUrl ?? '',
       coverage: await _fetchCoverage(pipelineSlug, build),
     );
   }

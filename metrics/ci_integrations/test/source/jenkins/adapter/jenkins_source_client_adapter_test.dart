@@ -259,6 +259,69 @@ void main() {
     );
 
     test(
+      ".fetchBuilds() maps fetched builds startedAt date to the DateTime.now() if the timestamp is null",
+      () async {
+        final jenkinsBuild = JenkinsBuild(
+          number: 2,
+          timestamp: null,
+          building: false,
+          artifacts: const [defaultArtifact],
+        );
+
+        responses.addBuilds([jenkinsBuild]);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuilds(jobName);
+        final startedAt = result.first.startedAt;
+
+        expect(startedAt, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps fetched builds duration to the Duration.zero if the duration is null",
+      () async {
+        final jenkinsBuild = JenkinsBuild(
+          number: 2,
+          duration: null,
+          building: false,
+          artifacts: const [defaultArtifact],
+        );
+
+        responses.addBuilds([jenkinsBuild]);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuilds(jobName);
+        final duration = result.first.duration;
+
+        expect(duration, equals(Duration.zero));
+      },
+    );
+
+    test(
+      ".fetchBuilds() maps fetched url to the empty string if the url is null",
+      () async {
+        final jenkinsBuild = JenkinsBuild(
+          number: 2,
+          url: null,
+          building: false,
+          artifacts: const [defaultArtifact],
+        );
+
+        responses.addBuilds([jenkinsBuild]);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuilds(jobName);
+        final url = result.first.url;
+
+        expect(url, equals(''));
+      },
+    );
+
+    test(
       ".fetchBuildsAfter() fetches builds which are not building",
       () {
         const build = BuildData(buildNumber: 1);
@@ -518,6 +581,74 @@ void main() {
       },
     );
 
+    test(
+      ".fetchBuildsAfter() maps fetched builds startedAt date to the DateTime.now() if the timestamp is null",
+      () async {
+        const build = BuildData(buildNumber: 1);
+
+        final jenkinsBuild = JenkinsBuild(
+          number: 2,
+          timestamp: null,
+          building: false,
+          artifacts: const [defaultArtifact],
+        );
+
+        responses.addBuilds([jenkinsBuild]);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuildsAfter(jobName, build);
+        final startedAt = result.first.startedAt;
+
+        expect(startedAt, isNotNull);
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() maps fetched builds duration to the Duration.zero if the duration is null",
+      () async {
+        const build = BuildData(buildNumber: 1);
+
+        final jenkinsBuild = JenkinsBuild(
+          number: 2,
+          duration: null,
+          building: false,
+          artifacts: const [defaultArtifact],
+        );
+
+        responses.addBuilds([jenkinsBuild]);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuildsAfter(jobName, build);
+        final duration = result.first.duration;
+
+        expect(duration, equals(Duration.zero));
+      },
+    );
+
+    test(
+      ".fetchBuildsAfter() maps fetched url to the empty string if the url is null",
+      () async {
+        const build = BuildData(buildNumber: 1);
+
+        final jenkinsBuild = JenkinsBuild(
+          number: 2,
+          url: null,
+          building: false,
+          artifacts: const [defaultArtifact],
+        );
+
+        responses.addBuilds([jenkinsBuild]);
+
+        whenFetchBuilds().thenAnswer(responses.fetchBuilds);
+
+        final result = await adapter.fetchBuildsAfter(jobName, build);
+        final url = result.first.url;
+
+        expect(url, equals(''));
+      },
+    );
     test(".dispose() closes the Jenkins client", () {
       adapter.dispose();
 
