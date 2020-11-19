@@ -164,18 +164,7 @@ jobs:
     runs-on: macos-latest
     needs: [ macos-actions, linux-actions, release-actions ]
     if: "always()"
-    env:
-      BUILDKITE_TOKEN: ${{ secrets.BUILDKITE_TOKEN }}
-      ORGANIZATION_SLUG: metrics
-      PIPELINE_SLUG: coverage-converter-pipeline
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          ref: ${{ github.ref }}
-
       - name: Notify about building the Coverage Converter
         uses: peter-evans/repository-dispatch@v1
         with:
@@ -183,6 +172,3 @@ jobs:
           repository: platform-platform/monorepo
           event-type: building_project
           client-payload: '{"building_coverage_converter": "true"}'
-
-      - name: Notify Buildkite about building the Coverage Converter
-        run: bash scripts/github/trigger_buildkite_pipeline.sh

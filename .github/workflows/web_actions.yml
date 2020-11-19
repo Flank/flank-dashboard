@@ -99,18 +99,7 @@ jobs:
     runs-on: macos-latest
     needs: [ metrics-actions ]
     if: "always()"
-    env:
-      BUILDKITE_TOKEN: ${{ secrets.BUILDKITE_TOKEN }}
-      ORGANIZATION_SLUG: metrics
-      PIPELINE_SLUG: metrics-web-pipeline
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          ref: ${{ github.ref }}
-
       - name: Notify about building the Web
         uses: peter-evans/repository-dispatch@v1
         with:
@@ -118,6 +107,3 @@ jobs:
           repository: platform-platform/monorepo
           event-type: building_project
           client-payload: '{"building_metrics_web": "true"}'
-
-      - name: Notify Buildkite about building the Web
-        run: bash scripts/github/trigger_buildkite_pipeline.sh
