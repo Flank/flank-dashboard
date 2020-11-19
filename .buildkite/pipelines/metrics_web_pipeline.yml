@@ -1,4 +1,12 @@
 steps:
+  - label: "Enable web support"
+    commands:
+      - flutter channel beta
+      - flutter config --enable-web
+
+  - wait: ~
+    continue_on_failure: true
+
   - label: "Flutter analyze"
     commands:
       - cd metrics/web
