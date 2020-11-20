@@ -2,7 +2,7 @@ steps:
   - label: "Dart analyze"
     key: "analyze"
     commands:
-      - cd metrics/ci_integrations
+      - cd metrics/coverage_converter
       - pub get
       - dartanalyzer . --fatal-infos --fatal-warnings
 
@@ -10,10 +10,10 @@ steps:
     key: "tests"
     depends_on: "analyze"
     commands:
-      - cd metrics/ci_integrations
+      - cd metrics/coverage_converter
       - pub get
       - pub run test_coverage --print-test-output --no-badge
-    artifact_paths: "metrics/ci_integrations/coverage/lcov.info"
+    artifact_paths: "metrics/coverage_converter/coverage/lcov.info"
 
   - label: "Export coverage report"
     key: "coverage"
@@ -21,8 +21,8 @@ steps:
     commands:
       - curl -o coverage_converter -k https://github.com/platform-platform/monorepo/releases/download/coverage-converter-snapshot/coverage_converter_linux -L
       - chmod a+x coverage_converter
-      - buildkite-agent artifact download metrics/ci_integrations/coverage/lcov.info .
-      - ./coverage_converter lcov -i metrics/ci_integrations/coverage/lcov.info -o coverage-summary.json
+      - buildkite-agent artifact download metrics/coverage_converter/coverage/lcov.info .
+      - ./coverage_converter lcov -i metrics/coverage_converter/coverage/lcov.info -o coverage-summary.json
     artifact_paths: "coverage-summary.json"
 
   - label: "Finalize build"
@@ -32,7 +32,7 @@ steps:
     commands:
       - echo "The build is completed."
 
-  - label: "Trigger sync for a CI Integrations project"
+  - label: "Trigger sync for a Coverage Converter project"
     trigger: sync-pipeline
     depends_on: "finalize"
     allow_dependency_failure: true
@@ -40,4 +40,4 @@ steps:
     build:
       env:
         PIPELINE_SLUG: "${BUILDKITE_PIPELINE_SLUG}"
-        METRICS_PROJECT_ID: "buildkite_ci_integrations"
+        METRICS_PROJECT_ID: "buildkite_coverage_converter"
