@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:metrics_core/metrics_core.dart';
 
-/// A [ValueObject] represents an email.
+/// A [ValueObject] that represents an email value.
 class Email extends ValueObject<String> {
   @override
   final String value;
