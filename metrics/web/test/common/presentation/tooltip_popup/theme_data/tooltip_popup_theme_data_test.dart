@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/tooltip_popup/theme_data/tooltip_popup_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_popup/theme_data/tooltip_popup_theme_data.dart';
 
 // https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
@@ -8,20 +8,20 @@ import 'package:metrics/common/presentation/metrics_theme/model/tooltip_popup/th
 void main() {
   group("TooltipPopupThemeData", () {
     test(
-      "creates an instance with the default color if the color is not specified",
+      "creates an instance with the default background color if the color is not specified",
       () {
         final themeData = TooltipPopupThemeData();
 
-        expect(themeData.color, isNotNull);
+        expect(themeData.backgroundColor, isNotNull);
       },
     );
 
     test(
-      "creates an instance with the default color if the given color is null",
+      "creates an instance with the default background color if the given color is null",
       () {
-        final themeData = TooltipPopupThemeData(color: null);
+        final themeData = TooltipPopupThemeData(backgroundColor: null);
 
-        expect(themeData.color, isNotNull);
+        expect(themeData.backgroundColor, isNotNull);
       },
     );
 
@@ -35,15 +35,15 @@ void main() {
     );
 
     test("creates an instance with the given values", () {
-      const color = Colors.white;
+      const backGroundColor = Colors.white;
       const textStyle = TextStyle(color: Colors.blue);
 
       final themeData = TooltipPopupThemeData(
-        color: color,
+        backgroundColor: backGroundColor,
         textStyle: textStyle,
       );
 
-      expect(themeData.color, equals(color));
+      expect(themeData.backgroundColor, equals(backGroundColor));
       expect(themeData.textStyle, equals(textStyle));
     });
   });
