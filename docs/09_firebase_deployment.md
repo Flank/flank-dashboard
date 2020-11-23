@@ -138,13 +138,27 @@ Once you've done, you should add an allowed URLs to the Authorized JavaScript or
 
 To enable Firebase key restrictions, follow the next steps:
 
+First, lets restrict the browser key.
+
 1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
 2. Open the side menu and go to the `APIs & Services` section.
 3. Go to the `Credentials` section, find the `Browser Key` in the `API Keys` section and open it.
-5. Under the `Application restrictions` click `Http referrers(web sites)` and then `Add an item` to restrict the key usage requests to the specified websites.
-4. To specify the enabled APIs that this key can call, scroll down to the `API Restrictions` section and click `Restrict key` button.
-5. In the displayed dropdown enable the following API: `Google Identity Toolkit API`.
-6. Click `Save` button.
+4. Under the `Application restrictions` click `Http referrers(web sites)` and then `Add an item` to restrict the key usage requests to the specified websites(including `localhost/*`).
+5. To specify the enabled APIs that this key can call, scroll down to the `API Restrictions` section and click `Restrict key` button.
+6. In the displayed dropdown enable the following API: `Google Identity Toolkit API` and `Token Service API`.
+7. Click `Save` button.
+
+To be able to make build data synchronizations, we need to setup a new key for CI Integrations.
+
+1. Go back to the [Credentials](https://console.cloud.google.com/apis/credentials) section.
+2. Click `Create Credentials` button in the top of the page and select `API Key`.
+3. In the opened dialog click the `Restrict Key` button.
+4. Set a new name of the created `API key`, e.g. `CI Integrations Key`.
+5. Scroll down to the `API Restrictions` section and click `Restrict key` button.
+6. In the displayed dropdown enable the following API: `Google Identity Toolkit API`.
+7. Click `Save` button.
+
+After that, update the CI Integration configurations to use the previously created key.
 
 ## Building and deploying the application to the Firebase Hosting
 
