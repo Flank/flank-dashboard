@@ -4,10 +4,10 @@ package base.domain.usecases {
         call: Type
     }
 }
+
 package auth.domain {
-    package repository {
-        class AnalyticsRepository {
-            ...
+    package repositories {
+        abstract class AnalyticsRepository {
             Future<void> logPageView()
             Future<void> logLogin()
         }
@@ -17,18 +17,22 @@ package auth.domain {
             class UserIdParam {
                 userId : String
             }
+
             class PageNameParam {
                 name : String
             }
         }
+
         class LogPageViewUseCase {
             Future<void> call()
         }
+
         class LogLoginUseCase {
             Future<void> call()
         }
     }
 }
+
 LogPageViewUseCase ..|> UseCase
 LogLoginUseCase ..|> UseCase
 LogLoginUseCase --> UserIdParam : uses

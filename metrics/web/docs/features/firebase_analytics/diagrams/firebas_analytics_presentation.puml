@@ -1,7 +1,7 @@
 @startuml
 package auth.presentation.state {
     class AuthNotifier {
-        void logLogin()
+        - void logLogin()
     }
 }
 
@@ -15,8 +15,6 @@ package auth.domain.usecases {
     class LogLoginUseCase{}
     class LogPageViewUseCase{}
 }
-
-
 
 AuthNotifier --> LogLoginUseCase : uses
 FirebaseAnalyticsObserver --> LogPageViewUseCase : uses
