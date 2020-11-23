@@ -36,6 +36,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_
 import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/tooltip_icon/theme_data/tooltip_icon_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/tooltip_popup/theme_data/tooltip_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
@@ -91,6 +92,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
   static const Color _pageTitleIconColor = Color(0xFF4f4f56);
   static const Color _popupColor = Color(0xFFf5f5ff);
+  static const Color _inactiveToggleIconColor = Color(0xFF3B3B41);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = MetricsTextStyle(
@@ -127,6 +129,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
           tooltipPopupTheme: const TooltipPopupThemeData(
             color: _popupColor,
             textStyle: TextStyleConfig.popupTitleStyle,
+          ),
+          tooltipIconTheme: const TooltipIconThemeData(
+            color: _inactiveToggleIconColor,
+            hoverColor: ColorConfig.shimmerColor,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,

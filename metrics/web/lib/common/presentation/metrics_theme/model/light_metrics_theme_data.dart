@@ -36,6 +36,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_
 import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/tooltip_icon/theme_data/tooltip_icon_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/tooltip_popup/theme_data/tooltip_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
@@ -127,6 +128,10 @@ class LightMetricsThemeData extends MetricsThemeData {
           tooltipPopupTheme: const TooltipPopupThemeData(
             color: Colors.white,
             textStyle: TextStyleConfig.popupTitleStyle,
+          ),
+          tooltipIconTheme: const TooltipIconThemeData(
+            color: _textPlaceholderColor,
+            hoverColor: ColorConfig.shimmerColor,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,

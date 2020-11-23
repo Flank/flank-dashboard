@@ -17,6 +17,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_
 import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/tooltip_icon/theme_data/tooltip_icon_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/tooltip_popup/theme_data/tooltip_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
@@ -110,6 +111,9 @@ class MetricsThemeData {
   /// A theme for the tooltip popup.
   final TooltipPopupThemeData tooltipPopupTheme;
 
+  /// A theme for the tooltip icon.
+  final TooltipIconThemeData tooltipIconTheme;
+
   /// A theme for the graph indicator.
   final GraphIndicatorThemeData graphIndicatorTheme;
 
@@ -140,6 +144,7 @@ class MetricsThemeData {
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
     TooltipPopupThemeData tooltipPopupTheme,
+    TooltipIconThemeData tooltipIconTheme,
     PageTitleThemeData pageTitleTheme,
     GraphIndicatorThemeData graphIndicatorTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -181,6 +186,7 @@ class MetricsThemeData {
         barGraphPopupTheme =
             barGraphPopupTheme ?? const BarGraphPopupThemeData(),
         tooltipPopupTheme = tooltipPopupTheme ?? const TooltipPopupThemeData(),
+        tooltipIconTheme = tooltipIconTheme ?? const TooltipIconThemeData(),
         pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData(),
         graphIndicatorTheme =
             graphIndicatorTheme ?? const GraphIndicatorThemeData();
@@ -215,6 +221,7 @@ class MetricsThemeData {
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
     TooltipPopupThemeData tooltipPopupTheme,
+    TooltipIconThemeData tooltipIconTheme,
     PageTitleThemeData pageTitleTheme,
     GraphIndicatorThemeData graphIndicatorTheme,
   }) {
@@ -255,6 +262,7 @@ class MetricsThemeData {
       pageTitleTheme: pageTitleTheme ?? this.pageTitleTheme,
       barGraphPopupTheme: barGraphPopupTheme ?? this.barGraphPopupTheme,
       tooltipPopupTheme: tooltipPopupTheme ?? this.tooltipPopupTheme,
+      tooltipIconTheme: tooltipIconTheme ?? this.tooltipIconTheme,
       graphIndicatorTheme: graphIndicatorTheme ?? this.graphIndicatorTheme,
     );
   }

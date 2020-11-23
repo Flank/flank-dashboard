@@ -30,6 +30,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_
 import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/tooltip_icon/theme_data/tooltip_icon_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/tooltip_popup/theme_data/tooltip_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
@@ -74,6 +75,7 @@ void main() {
         expect(themeData.toastTheme, isNotNull);
         expect(themeData.barGraphPopupTheme, isNotNull);
         expect(themeData.tooltipPopupTheme, isNotNull);
+        expect(themeData.tooltipIconTheme, isNotNull);
         expect(themeData.pageTitleTheme, isNotNull);
         expect(themeData.graphIndicatorTheme, isNotNull);
       },
@@ -108,6 +110,7 @@ void main() {
           toastTheme: null,
           barGraphPopupTheme: null,
           tooltipPopupTheme: null,
+          tooltipIconTheme: null,
           pageTitleTheme: null,
           graphIndicatorTheme: null,
         );
@@ -137,6 +140,7 @@ void main() {
         expect(themeData.toastTheme, isNotNull);
         expect(themeData.barGraphPopupTheme, isNotNull);
         expect(themeData.tooltipPopupTheme, isNotNull);
+        expect(themeData.tooltipIconTheme, isNotNull);
         expect(themeData.pageTitleTheme, isNotNull);
         expect(themeData.graphIndicatorTheme, isNotNull);
       },
@@ -283,6 +287,10 @@ void main() {
           color: Colors.blue,
         );
 
+        const tooltipIconTheme = TooltipIconThemeData(
+          color: Colors.yellow,
+        );
+
         const graphIndicatorTheme = GraphIndicatorThemeData(
           attentionLevel: GraphIndicatorAttentionLevel(),
         );
@@ -315,6 +323,7 @@ void main() {
           toastTheme: toastTheme,
           barGraphPopupTheme: barGraphPopupTheme,
           tooltipPopupTheme: tooltipPopupTheme,
+          tooltipIconTheme: tooltipIconTheme,
           pageTitleTheme: pageTitleTheme,
           graphIndicatorTheme: graphIndicatorTheme,
         );
@@ -374,6 +383,7 @@ void main() {
         expect(copiedTheme.toastTheme, equals(toastTheme));
         expect(copiedTheme.barGraphPopupTheme, equals(barGraphPopupTheme));
         expect(copiedTheme.tooltipPopupTheme, equals(tooltipPopupTheme));
+        expect(copiedTheme.tooltipIconTheme, equals(tooltipIconTheme));
         expect(copiedTheme.pageTitleTheme, equals(pageTitleTheme));
         expect(copiedTheme.graphIndicatorTheme, equals(graphIndicatorTheme));
       },
@@ -471,6 +481,10 @@ void main() {
         expect(
           themeData.tooltipPopupTheme,
           equals(copiedTheme.tooltipPopupTheme),
+        );
+        expect(
+          themeData.tooltipIconTheme,
+          equals(copiedTheme.tooltipIconTheme),
         );
         expect(themeData.pageTitleTheme, equals(copiedTheme.pageTitleTheme));
         expect(

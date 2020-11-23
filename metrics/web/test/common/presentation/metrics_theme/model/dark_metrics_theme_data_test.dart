@@ -38,6 +38,7 @@ void main() {
         expect(darkMetricsThemeData.graphIndicatorTheme, isNotNull);
         expect(darkMetricsThemeData.barGraphPopupTheme, isNotNull);
         expect(darkMetricsThemeData.tooltipPopupTheme, isNotNull);
+        expect(darkMetricsThemeData.tooltipIconTheme, isNotNull);
       },
     );
   });
