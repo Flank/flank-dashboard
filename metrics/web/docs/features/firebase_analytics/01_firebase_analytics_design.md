@@ -31,7 +31,6 @@ Once we've created a `domain` and `data` layers, it's time to create a `presenta
 3. Create a `FirebaseAnalyticsObserver` to be able to log the page changes.
 4. Integrate the `LogPageViewUseCase` to the `FirebaseAnalyticsObserver`. 
 
-
 The structure of the presentation layer shown in the following diagram: 
 
 ![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firebase_analytics_design/metrics/web/docs/features/firebase_analytics/diagrams/firebas_analytics_presentation.puml)
