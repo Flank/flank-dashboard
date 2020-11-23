@@ -12,7 +12,7 @@ class TooltipPopupThemeData {
   ///
   /// If the given [backgroundColor] is null, the [Colors.grey] is used.
   const TooltipPopupThemeData({
-    this.textStyle,
     Color backgroundColor,
+    this.textStyle,
   }) : backgroundColor = backgroundColor ?? Colors.grey;
 }
