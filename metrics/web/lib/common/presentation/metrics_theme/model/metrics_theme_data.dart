@@ -17,6 +17,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/scorecard/theme_
 import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/sparkline/theme_data/sparkline_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/text_field_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/tooltip_popup/theme_data/tooltip_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
@@ -106,6 +107,9 @@ class MetricsThemeData {
   /// A theme for the bar graph popup.
   final BarGraphPopupThemeData barGraphPopupTheme;
 
+  /// A theme for the tooltip popup.
+  final TooltipPopupThemeData tooltipPopupTheme;
+
   /// A theme for the graph indicator.
   final GraphIndicatorThemeData graphIndicatorTheme;
 
@@ -135,6 +139,7 @@ class MetricsThemeData {
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
+    TooltipPopupThemeData tooltipPopupTheme,
     PageTitleThemeData pageTitleTheme,
     GraphIndicatorThemeData graphIndicatorTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -175,6 +180,7 @@ class MetricsThemeData {
         toastTheme = toastTheme ?? const ToastThemeData(),
         barGraphPopupTheme =
             barGraphPopupTheme ?? const BarGraphPopupThemeData(),
+        tooltipPopupTheme = tooltipPopupTheme ?? const TooltipPopupThemeData(),
         pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData(),
         graphIndicatorTheme =
             graphIndicatorTheme ?? const GraphIndicatorThemeData();
@@ -208,6 +214,7 @@ class MetricsThemeData {
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
+    TooltipPopupThemeData tooltipPopupTheme,
     PageTitleThemeData pageTitleTheme,
     GraphIndicatorThemeData graphIndicatorTheme,
   }) {
@@ -247,6 +254,7 @@ class MetricsThemeData {
       toastTheme: toastTheme ?? this.toastTheme,
       pageTitleTheme: pageTitleTheme ?? this.pageTitleTheme,
       barGraphPopupTheme: barGraphPopupTheme ?? this.barGraphPopupTheme,
+      tooltipPopupTheme: tooltipPopupTheme ?? this.tooltipPopupTheme,
       graphIndicatorTheme: graphIndicatorTheme ?? this.graphIndicatorTheme,
     );
   }

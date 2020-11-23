@@ -36,6 +36,8 @@ void main() {
         expect(darkMetricsThemeData.toastTheme, isNotNull);
         expect(darkMetricsThemeData.pageTitleTheme, isNotNull);
         expect(darkMetricsThemeData.graphIndicatorTheme, isNotNull);
+        expect(darkMetricsThemeData.barGraphPopupTheme, isNotNull);
+        expect(darkMetricsThemeData.tooltipPopupTheme, isNotNull);
       },
     );
   });
