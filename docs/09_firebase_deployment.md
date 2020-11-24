@@ -134,29 +134,29 @@ Once you've done, you should add an allowed URLs to the Authorized JavaScript or
 3. Go to the `Credentials` section, find the `Web client` in `OAuth 2.0 Client IDs` section and open it.
 4. Then you should find the `Authorized JavaScript origins` section. That is the place where you can add any URL origins that will have access to the google sign.
 
-## Firebase Key Restrictions
+## API Key Restrictions
 
-To enable Firebase key restrictions, follow the next steps:
+To enable API key restrictions, follow the next steps:
 
-First, lets restrict the browser key.
+First, let's restrict the browser key.
 
 1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
 2. Open the side menu and go to the `APIs & Services` section.
 3. Go to the `Credentials` section, find the `Browser Key` in the `API Keys` section and open it.
-4. Under the `Application restrictions` click `Http referrers(web sites)` and then `Add an item` to restrict the key usage requests to the specified websites(including `localhost/*`).
-5. To specify the enabled APIs that this key can call, scroll down to the `API Restrictions` section and click `Restrict key` button.
-6. In the displayed dropdown enable the following API: `Google Identity Toolkit API` and `Token Service API`.
+4. Under the `Application restrictions`, click `HTTP referrers(web sites)` and then `Add an item` to add URLs that can use this API key.
+5. To specify the APIs available for this key, scroll down to the `API Restrictions` section, and click the `Restrict key` button.
+6. In the opened dropdown, enable the following APIs: `Google Identity Toolkit API` and `Token Service API`.
 7. Click `Save` button.
 
-To be able to make build data synchronizations, we need to setup a new key for CI Integrations.
+To be able to synchronize the build data using the CI Integrations tool, we need to set up a new API key. The following steps are required to do so: 
 
 1. Go back to the [Credentials](https://console.cloud.google.com/apis/credentials) section.
-2. Click `Create Credentials` button in the top of the page and select `API Key`.
-3. In the opened dialog click the `Restrict Key` button.
+2. Click the `Create Credentials` button at the top of the page and select `API Key`.
+3. In the opened dialog, click the `Restrict Key` button.
 4. Set a new name of the created `API key`, e.g. `CI Integrations Key`.
-5. Scroll down to the `API Restrictions` section and click `Restrict key` button.
-6. In the displayed dropdown enable the following API: `Google Identity Toolkit API`.
-7. Click `Save` button.
+5. Scroll down to the `API Restrictions` section and click the `Restrict key` button.
+6. In the displayed dropdown, enable the `Google Identity Toolkit API`.
+7. Click the `Save` button.
 
 After that, update the CI Integration configurations to use the previously created key.
 
