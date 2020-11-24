@@ -33,4 +33,4 @@ Once we've created a `domain` and `data` layers, it's time to create a `presenta
 
 The structure of the presentation layer shown in the following diagram: 
 
-![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firebase_analytics_design/metrics/web/docs/features/firebase_analytics/diagrams/firebas_analytics_presentation.puml)
+![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firebase_analytics_design/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_presentation.puml)
