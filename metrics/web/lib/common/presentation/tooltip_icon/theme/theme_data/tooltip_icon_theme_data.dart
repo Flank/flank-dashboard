@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A class that stores the theme data for the tooltip icon.
+@immutable
 class TooltipIconThemeData {
   /// A [Color] of the tooltip icon.
   final Color color;

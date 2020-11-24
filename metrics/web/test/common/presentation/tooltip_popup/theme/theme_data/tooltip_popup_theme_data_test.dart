@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/tooltip_popup/theme_data/tooltip_popup_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_popup/theme/theme_data/tooltip_popup_theme_data.dart';
 
 // https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
@@ -22,15 +22,6 @@ void main() {
         final themeData = TooltipPopupThemeData(backgroundColor: null);
 
         expect(themeData.backgroundColor, isNotNull);
-      },
-    );
-
-    test(
-      "creates an instance with null text style if the parameters are not specified",
-      () {
-        final themeData = TooltipPopupThemeData();
-
-        expect(themeData.textStyle, isNull);
       },
     );
 

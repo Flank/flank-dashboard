@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/presentation/tooltip_icon/theme_data/tooltip_icon_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_icon/theme/theme_data/tooltip_icon_theme_data.dart';
 
 // https://github.com/platform-platform/monorepo/issues/140
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values

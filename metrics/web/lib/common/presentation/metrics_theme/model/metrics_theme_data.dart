@@ -22,8 +22,8 @@ import 'package:metrics/common/presentation/page_title/theme/page_title_theme_da
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
-import 'package:metrics/common/presentation/tooltip_icon/theme_data/tooltip_icon_theme_data.dart';
-import 'package:metrics/common/presentation/tooltip_popup/theme_data/tooltip_popup_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_icon/theme/theme_data/tooltip_icon_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_popup/theme/theme_data/tooltip_popup_theme_data.dart';
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 
 /// Stores the theme data for all metrics widgets.

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A class that stores the theme data for the tooltip popup.
+@immutable
 class TooltipPopupThemeData {
   /// A [TextStyle] of the tooltip popup's text.
   final TextStyle textStyle;
