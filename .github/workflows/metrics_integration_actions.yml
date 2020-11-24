@@ -31,6 +31,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
           WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
+          CI_INTEGRATIONS_FIREBASE_API_KEY: ${{ secrets.CI_INTEGRATIONS_FIREBASE_API_KEY }}
         run: eval "echo \"$(sed 's/"/\\"/g' ci_integrations_config.yml)\"" >> integration.yml
         working-directory: .metrics/
       - name: CI integrations build data sync
@@ -62,6 +63,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
           WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
+          CI_INTEGRATIONS_FIREBASE_API_KEY: ${{ secrets.CI_INTEGRATIONS_FIREBASE_API_KEY }}
         run: eval "echo \"$(sed 's/"/\\"/g' coverage_converter_config.yml)\"" >> integration.yml
         working-directory: .metrics/
       - name: Coverage Converter build data sync
@@ -93,6 +95,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
           WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
+          CI_INTEGRATIONS_FIREBASE_API_KEY: ${{ secrets.CI_INTEGRATIONS_FIREBASE_API_KEY }}
         run: eval "echo \"$(sed 's/"/\\"/g' metrics_web_config.yml)\"" >> integration.yml
         working-directory: .metrics/
       - name: Metrics Web build data sync
