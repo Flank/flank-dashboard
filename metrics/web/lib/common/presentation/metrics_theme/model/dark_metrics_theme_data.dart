@@ -91,7 +91,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _negativeStatusColor = Color(0xFF2d1f1f);
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
   static const Color _pageTitleIconColor = Color(0xFF4f4f56);
-  static const Color _popupColor = Color(0xFFf5f5ff);
+  static const Color _popupColor = Color(0xFFf5f8fa);
   static const Color _inactiveToggleIconColor = Color(0xFF3B3B41);
 
   /// The default [TextStyle] for dropdown within the application.
