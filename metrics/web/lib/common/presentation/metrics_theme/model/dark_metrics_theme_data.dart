@@ -92,7 +92,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
   static const Color _pageTitleIconColor = Color(0xFF4f4f56);
   static const Color _popupColor = Color(0xFFf5f8fa);
-  static const Color _inactiveToggleIconColor = Color(0xFF3B3B41);
+  static const Color _tooltipIconColor = Color(0xFF3B3B41);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = MetricsTextStyle(
@@ -128,10 +128,10 @@ class DarkMetricsThemeData extends MetricsThemeData {
           ),
           tooltipPopupTheme: const TooltipPopupThemeData(
             backgroundColor: _popupColor,
-            textStyle: TextStyleConfig.popupTitleStyle,
+            textStyle: TextStyleConfig.popupTooltipStyle,
           ),
           tooltipIconTheme: const TooltipIconThemeData(
-            color: _inactiveToggleIconColor,
+            color: _tooltipIconColor,
             hoverColor: ColorConfig.shimmerColor,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(

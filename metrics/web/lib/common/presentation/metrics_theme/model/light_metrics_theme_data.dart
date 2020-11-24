@@ -127,7 +127,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           tooltipPopupTheme: const TooltipPopupThemeData(
             backgroundColor: Colors.white,
-            textStyle: TextStyleConfig.popupTitleStyle,
+            textStyle: TextStyleConfig.popupTooltipStyle,
           ),
           tooltipIconTheme: const TooltipIconThemeData(
             color: _textPlaceholderColor,

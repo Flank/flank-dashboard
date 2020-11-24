@@ -8,7 +8,7 @@ import 'package:metrics/common/presentation/tooltip_popup/theme/theme_data/toolt
 void main() {
   group("TooltipPopupThemeData", () {
     test(
-      "creates an instance with the default background color if the color is not specified",
+      "creates an instance with the default background color if it is not specified",
       () {
         final themeData = TooltipPopupThemeData();
 
