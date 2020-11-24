@@ -24,12 +24,12 @@ The following class diagram represents the classes of the data layer required fo
 
 ### Presentation layer
 
-Once we've created a `domain` and `data` layers, it's time to create a `presentation` layer. This layer contains the `AuthNotifier` - the class that manages the authentication state and will log the user login. Also, the `presentation` layer contains the `FirebaseAnalyticsObserver` responsible for logging the page when the user changes the current page. To introduce this feature, we should follow the next steps: 
+Once we've created a `domain` and `data` layers, it's time to create a `presentation` layer. This layer contains the `AnalyticsNotifier` - the class that logs analytics data such as user logins or page changes. Also, the `presentation` layer contains the `FirebaseAnalyticsObserver` responsible for providing a callback when the user changes the current page. To introduce this feature, we should follow the next steps: 
 
-1. Create a method in the `AuthNotifier` to be able to log the user login.
-2. Integrate the `LogLoginUseCase` to the `AuthNotifier`. 
+1. Create methods in the `AnalyticsNotifier` to be able to log the user logins and page changes.
+2. Integrate the `LogLoginUseCase` and `LogPageViewUseCase`  to the `AnalyticsNotifier`. 
 3. Create a `FirebaseAnalyticsObserver` to be able to log the page changes.
-4. Integrate the `LogPageViewUseCase` to the `FirebaseAnalyticsObserver`. 
+4. Integrate the `AnalyticsNotifier` to the `FirebaseAnalyticsObserver`.
 
 The structure of the presentation layer shown in the following diagram: 
 

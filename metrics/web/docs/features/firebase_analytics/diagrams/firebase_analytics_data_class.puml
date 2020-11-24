@@ -1,10 +1,10 @@
 @startuml
-package auth.data.repositories {
+package analytics.data.repositories {
     class FirebaseAnalyticsRepository {}
 }
 
-package auth.domain.repositories {
-    abstract class AnalyticsRepository {
+package analytics.domain.repositories {
+    interface AnalyticsRepository {
         Future<void> logPageView()
         Future<void> logLogin()
     }

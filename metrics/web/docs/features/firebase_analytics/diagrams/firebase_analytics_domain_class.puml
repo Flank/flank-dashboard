@@ -5,9 +5,9 @@ package base.domain.usecases {
     }
 }
 
-package auth.domain {
+package analytics.domain {
     package repositories {
-        abstract class AnalyticsRepository {
+        interface AnalyticsRepository {
             Future<void> logPageView()
             Future<void> logLogin()
         }
@@ -19,7 +19,7 @@ package auth.domain {
             }
 
             class PageNameParam {
-                name : String
+                name : PageName
             }
         }
 
@@ -31,6 +31,10 @@ package auth.domain {
             Future<void> call()
         }
     }
+
+    package entities{
+        enum PageName {}
+    }
 }
 
 LogPageViewUseCase ..|> UseCase
@@ -39,4 +43,5 @@ LogLoginUseCase --> UserIdParam : uses
 LogPageViewUseCase --> PageNameParam : uses
 LogPageViewUseCase -up-> AnalyticsRepository : uses
 LogLoginUseCase -up-> AnalyticsRepository : uses
+PageNameParam --> PageName : uses
 @enduml
