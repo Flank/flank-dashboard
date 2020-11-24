@@ -27,10 +27,19 @@ The following class diagram represents the classes of the data layer required fo
 Once we've created a `domain` and `data` layers, it's time to create a `presentation` layer. This layer contains the `AnalyticsNotifier` - the class that logs analytics data such as user logins or page changes. Also, the `presentation` layer contains the `FirebaseAnalyticsObserver` responsible for providing a callback when the user changes the current page. To introduce this feature, we should follow the next steps: 
 
 1. Create methods in the `AnalyticsNotifier` to be able to log the user logins and page changes.
-2. Integrate the `LogLoginUseCase` and `LogPageViewUseCase`  to the `AnalyticsNotifier`. 
-3. Create a `FirebaseAnalyticsObserver` to be able to log the page changes.
-4. Integrate the `AnalyticsNotifier` to the `FirebaseAnalyticsObserver`.
+2. Integrate the `LogLoginUseCase` and `LogPageViewUseCase`  to the `AnalyticsNotifier`.
+3. Integrate the `AnalyticsNotifier` to the sign in logic block to be able to log the user logins.
+4. Create a `FirebaseAnalyticsObserver` to be able to track the page changes.
+5. Integrate the `AnalyticsNotifier` to the `FirebaseAnalyticsObserver` to be able to log the page changes.
 
 The structure of the presentation layer shown in the following diagram: 
 
 ![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firebase_analytics_design/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_presentation.puml)
+
+The following sequence diagram displays the logic of logging the user logins.
+
+![Log login sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firebase_analytics_design/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_log_login_sequence.puml)
+
+The following sequence diagram displays the logic of logging the page changes.
+
+![Log page view sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/firebase_analytics_design/metrics/web/docs/features/firebase_analytics/diagrams/firebase_analytics_log_page_view_sequence.puml)

@@ -1,15 +1,13 @@
 @startuml
 package analytics.presentation.state {
     class AnalyticsNotifier {
-        + void logLogin()
-        + void logPageView()
+        void logLogin()
+        void logPageView()
     }
 }
 
 package common.presentation.routes.observers {
-    class FirebaseAnalyticsObserver {
-        analytics : FirebaseAnalytics
-    }
+    class FirebaseAnalyticsObserver{}
 }
 
 package analytics.domain.usecases {
