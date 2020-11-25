@@ -20,7 +20,7 @@ package common.presentation.state {
 package widgets {}
 
 RemoteConfigNotifier --> widgets : notifies
-widgets --> RemoteConfigNotifier : notifies
+widgets --> RemoteConfigNotifier : uses
 
 RemoteConfigNotifier --> GetRemoteConfigUseCase : uses
 

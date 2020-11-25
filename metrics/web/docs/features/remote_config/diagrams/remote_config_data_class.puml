@@ -1,37 +1,26 @@
 @startuml
 
-package base.domain.usecases {
-    interface UseCase<Type, Params> {
-        call: Type
-    }
+package common.domain.repository {
+    interface RemoteConfigRepository {}
 }
 
-package common.domain {
+package common.domain.entities {
+    interface RemoteConfig {}
+}
+
+package common.data {
     package repository {
-        interface RemoteConfigRepository {
-            + Future<RemoteConfig> getConfig()
-        }
+        class FirebaseRemoteConfigRepository {}
     }
 
-    package entities {
-        interface RemoteConfig {
-            + isLoginFormEnabled: bool
-            + isFpsMonitorEnabled: bool
-            + isRendererDisplayEnabled: bool
-        }
-    }
-
-    package usecases {
-        class GetRemoteConfigUseCase {
-            + Future<RemoteConfig> call()
-        }
+    package adapter {
+        class FirebaseRemoteConfigAdapter {}
     }
 }
 
-GetRemoteConfigUseCase ..|> UseCase
-GetRemoteConfigUseCase -up-> RemoteConfigRepository : uses
-GetRemoteConfigUseCase --> RemoteConfig : uses
+FirebaseRemoteConfigRepository ..|> RemoteConfigRepository
+FirebaseRemoteConfigRepository --> FirebaseRemoteConfigAdapter : uses
 
-RemoteConfigRepository --> RemoteConfig: uses
+FirebaseRemoteConfigAdapter ..|> RemoteConfig
 
 @enduml
