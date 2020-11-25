@@ -25,9 +25,9 @@ For our purposes, we need to specify parameters for the `FPS Monitor`, `Login Fo
 Example of possible key-values are:
 
 ```json
-    isLoginFormEnabled: true
-    isFpsMonitorEnabled: false
-    isRendererDisplayEnabled: false
+isLoginFormEnabled: true
+isFpsMonitorEnabled: false
+isRendererDisplayEnabled: false
 ```
 
 ## Metrics application
@@ -56,7 +56,7 @@ The following class diagram represents the classes of the data layer required fo
 
 Once we've created a domain and data layers, it's time to create a presentation layer. This layer contains the `RemoteConfigNotifier` - the class that manages `Remote Config` values.
 
-1. Create the `RemoteConfigNotifier`.
+1. Create a `RemoteConfigNotifier` class.
 2. Implement the fields that stand for `Remote Config` values.
 3. Inject the notifier into the `InjectionContainer`.
 
@@ -70,4 +70,4 @@ So, when the user enters the application, the following sequence diagram describ
 
 Let's consider the mechanism of applying the `Remote Config` values in the application.
 
-When the user enters the application, he sees the `LoadingPage` while waiting until `_initializeRemoteConfig` method of the `RemoteConfigNotifier` finishes. After that the `isLoading` status of the `RemoteConfigNotifier` sets to `false` and the user can see the UI with `Remote Config` values applied.
+When the user enters the application, he sees the `LoadingPage` while waiting until the `_initializeRemoteConfig` method of the `RemoteConfigNotifier` finishes. After that, the `isLoading` status of the `RemoteConfigNotifier` sets to `false`, and the user can see the UI with `Remote Config` values applied.
