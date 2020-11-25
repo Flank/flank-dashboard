@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 
 /// A utility class that helps getting information about the Chromedriver.
-class ChromeDriverUtil {
+class ChromeDriverUtils {
   /// A URL needed to fetch the identifier of the Chromedriver's latest version.
   static const latestVersionUrl =
       'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';

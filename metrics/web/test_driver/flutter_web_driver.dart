@@ -10,7 +10,7 @@ import 'cli/web_driver/runner/chrome_driver_runner.dart';
 import 'common/config/logs_file_config.dart';
 import 'common/logger/logger.dart';
 import 'process_manager/process_manager.dart';
-import 'util/chrome_driver_util.dart';
+import 'util/chrome_driver_utils.dart';
 
 /// Runs the application and driver tests for this application.
 class FlutterWebDriver {
@@ -86,15 +86,15 @@ class FlutterWebDriver {
 
   /// Prepares the web driver for the driver tests.
   Future<void> _prepareWebDriver() async {
-    String driverVersion;
+    String version;
 
     if (_args.chromedriverVersion == null) {
-      driverVersion = await ChromeDriverUtil.getLatestVersion();
+      version = await ChromeDriverUtils.getLatestVersion();
     } else {
-      driverVersion = _args.chromedriverVersion;
+      version = _args.chromedriverVersion;
     }
 
-    await ChromeDriver(version: driverVersion).prepare(_args.workingDir);
+    await ChromeDriver(version: version).prepare(_args.workingDir);
   }
 
   /// Runs the driver tests.
