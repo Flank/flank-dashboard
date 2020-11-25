@@ -1,0 +1,37 @@
+@startuml
+
+package base.domain.usecases {
+    interface UseCase<Type, Params> {
+        call: Type
+    }
+}
+
+package common.domain {
+    package repository {
+        interface RemoteConfigRepository {
+            + Future<RemoteConfig> getConfig()
+        }
+    }
+
+    package entities {
+        interface RemoteConfig {
+            + isLoginFormEnabled: bool
+            + isFpsMonitorEnabled: bool
+            + isRendererDisplayEnabled: bool
+        }
+    }
+
+    package usecases {
+        class GetRemoteConfigUseCase {
+            + Future<RemoteConfig> call()
+        }
+    }
+}
+
+GetRemoteConfigUseCase ..|> UseCase
+GetRemoteConfigUseCase -up-> RemoteConfigRepository : uses
+GetRemoteConfigUseCase --> RemoteConfig : uses
+
+RemoteConfigRepository --> RemoteConfig: uses
+
+@enduml
