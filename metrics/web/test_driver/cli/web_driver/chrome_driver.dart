@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:archive/archive.dart';
+import 'package:meta/meta.dart';
 
 import '../../common/config/driver_tests_config.dart';
 import 'web_driver.dart';
@@ -9,17 +10,22 @@ import 'web_driver.dart';
 class ChromeDriver extends WebDriver {
   final ZipDecoder _archiveDecoder = ZipDecoder();
 
+  /// A version of the Chromedriver.
+  final String version;
+
+  /// Creates a new instance of the [ChromeDriver] with the given [version].
+  ///
+  /// The [version] must not be `null`.
+  ChromeDriver({
+    @required this.version,
+  }) : assert(version != null);
+
   @override
   String get downloadUrl {
-    if (Platform.isMacOS) {
-      return DriverTestsConfig.macOsChromeDriverDownloadUrl;
-    }
+    const basePath = DriverTestsConfig.baseDownloadPath;
+    final platformDriverName = _getPlatformDriverName();
 
-    if (Platform.isWindows) {
-      return DriverTestsConfig.windowsChromeDriverDownloadUrl;
-    }
-
-    return DriverTestsConfig.linuxChromeDriverDownloadUrl;
+    return '$basePath/$version/$platformDriverName';
   }
 
   @override
@@ -30,5 +36,18 @@ class ChromeDriver extends WebDriver {
     final chromeDriverBytes = File(filePath).readAsBytesSync();
 
     return _archiveDecoder.decodeBytes(chromeDriverBytes);
+  }
+
+  /// Returns a name of the Chromedriver compatible with the current [Platform].
+  String _getPlatformDriverName() {
+    if (Platform.isMacOS) {
+      return DriverTestsConfig.macosDriverName;
+    }
+
+    if (Platform.isWindows) {
+      return DriverTestsConfig.windowsDriverName;
+    }
+
+    return DriverTestsConfig.linuxDriverName;
   }
 }

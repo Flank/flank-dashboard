@@ -10,24 +10,16 @@ class DriverTestsConfig {
   /// Will be used if no --working-dir param will be specified.
   static const String defaultWorkingDirectory = 'build';
 
-  /// Chrome driver download url for macOS.
-  ///
-  /// This will be used to download Chrome driver if there is no `chromedriver`
-  /// file found in the working directory.
-  static const String macOsChromeDriverDownloadUrl =
-      'https://chromedriver.storage.googleapis.com/87.0.4280.20/chromedriver_mac64.zip';
+  /// A base URL download path for the Chromedriver.
+  static const String baseDownloadPath =
+      'https://chromedriver.storage.googleapis.com';
 
-  /// Chrome driver download url for Linux.
-  ///
-  /// This will be used to download Chrome driver if there is no `chromedriver`
-  /// file found in the working directory.
-  static const String linuxChromeDriverDownloadUrl =
-      'https://chromedriver.storage.googleapis.com/87.0.4280.20/chromedriver_linux64.zip';
+  /// A Chromedriver name for macOS.
+  static const String macosDriverName = 'chromedriver_mac64.zip';
 
-  /// Chrome driver download url for Windows.
-  ///
-  /// This will be used to download Chrome driver if there is no `chromedriver`
-  /// file found in the working directory.
-  static const String windowsChromeDriverDownloadUrl =
-      'https://chromedriver.storage.googleapis.com/87.0.4280.20/chromedriver_win32.zip';
+  /// A Chromedriver name for Linux.
+  static const String linuxDriverName = 'chromedriver_linux64.zip';
+
+  /// A Chromedriver name for Windows.
+  static const String windowsDriverName = 'chromedriver_win32.zip';
 }
