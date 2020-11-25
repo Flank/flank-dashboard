@@ -1,6 +1,7 @@
 @startuml
 package analytics.presentation.state {
     class AnalyticsNotifier {
+        userId: String
         void logLogin()
         void logPageView()
     }

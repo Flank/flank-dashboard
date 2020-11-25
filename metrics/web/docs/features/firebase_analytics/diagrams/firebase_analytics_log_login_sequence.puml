@@ -5,7 +5,7 @@
     actor Bob
 
     box "presentation"
-        participant UI << (C,#ADD1B2) >>
+        participant AuthNotifier << (C,#ADD1B2) >>
         participant AnalyticsNotifier << (C,#ADD1B2) >>
     end box
 
@@ -19,10 +19,10 @@
 
     database "Persistent Store" as PS
 
-    Bob -> UI : Logs in to the app
-    activate UI
+    Bob -> AuthNotifier : Logs in to the app
+    activate AuthNotifier
 
-    UI -> AnalyticsNotifier : logLogin(userId)
+    AuthNotifier -> AnalyticsNotifier : logLogin(userId)
     activate AnalyticsNotifier
 
     AnalyticsNotifier -> LogLoginUseCase : call(userIdParam)
@@ -33,8 +33,12 @@
 
     AnalyticsRepository -> PS : Save analytics data
 
-    deactivate UI
-    deactivate AnalyticsRepository
+        alt userId == null  ||  userId == AnalyticsNotifier.userId
+            AuthNotifier <-- AnalyticsNotifier :  end statement
+                deactivate AnalyticsNotifier
+                deactivate AuthNotifier
+        end
+
     deactivate LogLoginUseCase
     deactivate AnalyticsNotifier
 @enduml
