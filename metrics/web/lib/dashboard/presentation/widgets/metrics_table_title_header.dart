@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/tooltip_icon/widgets/tooltip_icon.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 
@@ -12,6 +13,7 @@ class MetricsTableTitleHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const padding = EdgeInsets.only(right: 6.0);
     final metricsTableHeaderTheme = MetricsTheme.of(context)
         .projectMetricsTableTheme
         .metricsTableHeaderTheme;
@@ -25,11 +27,56 @@ class MetricsTableTitleHeader extends StatelessWidget {
       child: MetricsTableRow(
         status: Container(),
         name: Container(),
-        buildResults: const Text(DashboardStrings.lastBuilds),
-        performance: const Text(DashboardStrings.performance),
-        buildNumber: const Text(DashboardStrings.builds),
-        stability: const Text(DashboardStrings.stability),
-        coverage: const Text(DashboardStrings.coverage),
+        buildResults: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Padding(
+              padding: padding,
+              child: Text(DashboardStrings.lastBuilds),
+            ),
+            TooltipIcon(tooltip: DashboardStrings.lastBuildsDescription),
+          ],
+        ),
+        performance: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Padding(
+              padding: padding,
+              child: Text(DashboardStrings.performance),
+            ),
+            TooltipIcon(tooltip: DashboardStrings.performanceDescription),
+          ],
+        ),
+        buildNumber: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Padding(
+              padding: padding,
+              child: Text(DashboardStrings.builds),
+            ),
+            TooltipIcon(tooltip: DashboardStrings.buildsDescription),
+          ],
+        ),
+        stability: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Padding(
+              padding: padding,
+              child: Text(DashboardStrings.stability),
+            ),
+            TooltipIcon(tooltip: DashboardStrings.stabilityDescription),
+          ],
+        ),
+        coverage: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Padding(
+              padding: padding,
+              child: Text(DashboardStrings.coverage),
+            ),
+            TooltipIcon(tooltip: DashboardStrings.coverageDescription),
+          ],
+        ),
       ),
     );
   }

@@ -47,10 +47,11 @@ class MetricsTableRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const padding = EdgeInsets.only(right: 28.0);
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      padding: const EdgeInsets.only(left: 32.0, right: 28.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           status,
           Flexible(
@@ -60,28 +61,40 @@ class MetricsTableRow extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 750.0,
+            width: 754.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                SizedBox(
-                  width: 276.0,
-                  child: buildResults,
+                Padding(
+                  padding: padding,
+                  child: SizedBox(
+                    width: 276.0,
+                    child: buildResults,
+                  ),
+                ),
+                Padding(
+                  padding: padding,
+                  child: SizedBox(
+                    width: 144.0,
+                    child: performance,
+                  ),
+                ),
+                Padding(
+                  padding: padding,
+                  child: SizedBox(
+                    width: 74.0,
+                    child: buildNumber,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 23.0),
+                  child: SizedBox(
+                    width: 72.0,
+                    child: stability,
+                  ),
                 ),
                 SizedBox(
-                  width: 144.0,
-                  child: performance,
-                ),
-                SizedBox(
-                  width: 74.0,
-                  child: buildNumber,
-                ),
-                SizedBox(
-                  width: 72.0,
-                  child: stability,
-                ),
-                SizedBox(
-                  width: 72.0,
+                  width: 81.0,
                   child: coverage,
                 ),
               ],

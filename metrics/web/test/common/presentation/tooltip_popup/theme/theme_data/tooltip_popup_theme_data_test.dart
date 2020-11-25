@@ -25,6 +25,24 @@ void main() {
       },
     );
 
+    test(
+      "creates an instance with the default shadow color if it is not specified",
+      () {
+        final themeData = TooltipPopupThemeData();
+
+        expect(themeData.shadowColor, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with the default shadow color if the given color is null",
+      () {
+        final themeData = TooltipPopupThemeData(shadowColor: null);
+
+        expect(themeData.shadowColor, isNotNull);
+      },
+    );
+
     test("creates an instance with the given values", () {
       const backGroundColor = Colors.white;
       const textStyle = TextStyle(color: Colors.blue);

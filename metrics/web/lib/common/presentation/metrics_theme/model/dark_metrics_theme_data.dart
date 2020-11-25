@@ -86,7 +86,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _inactiveToggleColor = Color(0xFF1B1B1D);
   static const Color _textPlaceholderColor = Color(0xFF51585c);
   static const Color _addProjectGroupCardHoverColor = Color(0xff07372f);
-  static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.5);
   static const Color _positiveStatusColor = Color(0xFF182b27);
   static const Color _negativeStatusColor = Color(0xFF2d1f1f);
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
@@ -128,6 +128,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           ),
           tooltipPopupTheme: const TooltipPopupThemeData(
             backgroundColor: _popupColor,
+            shadowColor: _shadowColor,
             textStyle: TextStyleConfig.tooltipPopupStyle,
           ),
           tooltipIconTheme: const TooltipIconThemeData(
