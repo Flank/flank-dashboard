@@ -38,6 +38,7 @@
     AnalyticsRepository -> PS : Save analytics data
 
     deactivate UI
+    deactivate FirebaseAnalyticsObserver
     deactivate AnalyticsRepository
     deactivate LogPageViewUseCase
     deactivate AnalyticsNotifier
