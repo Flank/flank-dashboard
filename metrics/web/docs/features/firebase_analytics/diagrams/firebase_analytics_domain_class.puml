@@ -1,7 +1,7 @@
 @startuml
 package base.domain.usecases {
     interface UseCase<Type, Params> {
-        call: Type
+        Type call()
     }
 }
 
@@ -19,7 +19,7 @@ package analytics.domain {
             }
 
             class PageNameParam {
-                name : PageName
+                name : String
             }
         }
 
@@ -33,7 +33,7 @@ package analytics.domain {
     }
 
     package entities{
-        enum PageName {}
+        class PageName {}
     }
 }
 
