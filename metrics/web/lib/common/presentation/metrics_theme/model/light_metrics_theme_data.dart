@@ -43,6 +43,8 @@ import 'package:metrics/common/presentation/toast/theme/attention_level/toast_at
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_icon/theme/theme_data/tooltip_icon_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_popup/theme/theme_data/tooltip_popup_theme_data.dart';
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 
 // ignore_for_file: public_member_api_docs
@@ -122,6 +124,14 @@ class LightMetricsThemeData extends MetricsThemeData {
             shadowColor: _shadowColor,
             titleTextStyle: TextStyleConfig.popupTitleStyle,
             subtitleTextStyle: TextStyleConfig.popupSubtitleStyle,
+          ),
+          tooltipPopupTheme: const TooltipPopupThemeData(
+            backgroundColor: Colors.white,
+            textStyle: TextStyleConfig.tooltipPopupStyle,
+          ),
+          tooltipIconTheme: const TooltipIconThemeData(
+            color: _textPlaceholderColor,
+            hoverColor: ColorConfig.shimmerColor,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,

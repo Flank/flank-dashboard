@@ -43,6 +43,8 @@ import 'package:metrics/common/presentation/toast/theme/attention_level/toast_at
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_icon/theme/theme_data/tooltip_icon_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_popup/theme/theme_data/tooltip_popup_theme_data.dart';
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 
 // ignore_for_file: public_member_api_docs
@@ -89,7 +91,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _negativeStatusColor = Color(0xFF2d1f1f);
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
   static const Color _pageTitleIconColor = Color(0xFF4f4f56);
-  static const Color _popupColor = Color(0xFFf5f5ff);
+  static const Color _popupColor = Color(0xFFf5f8fa);
+  static const Color _tooltipIconColor = Color(0xFF3B3B41);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = MetricsTextStyle(
@@ -122,6 +125,14 @@ class DarkMetricsThemeData extends MetricsThemeData {
             shadowColor: _shadowColor,
             titleTextStyle: TextStyleConfig.popupTitleStyle,
             subtitleTextStyle: TextStyleConfig.popupSubtitleStyle,
+          ),
+          tooltipPopupTheme: const TooltipPopupThemeData(
+            backgroundColor: _popupColor,
+            textStyle: TextStyleConfig.tooltipPopupStyle,
+          ),
+          tooltipIconTheme: const TooltipIconThemeData(
+            color: _tooltipIconColor,
+            hoverColor: ColorConfig.shimmerColor,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,

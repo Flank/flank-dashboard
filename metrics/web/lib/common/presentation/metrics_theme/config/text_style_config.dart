@@ -25,7 +25,7 @@ class TextStyleConfig {
   static const TextStyle popupTitleStyle = MetricsTextStyle(
     fontSize: 13.0,
     lineHeightInPixels: 16.0,
-    color: ColorConfig.secondaryPopupTextColor,
+    color: ColorConfig.shimmerColor,
     fontWeight: FontWeight.normal,
   );
 
@@ -35,5 +35,13 @@ class TextStyleConfig {
     lineHeightInPixels: 16.0,
     color: ColorConfig.popupTextColor,
     fontWeight: FontWeight.w500,
+  );
+
+  /// A [TextStyle] of the tooltip popup.
+  static const TextStyle tooltipPopupStyle = MetricsTextStyle(
+    fontSize: 13.0,
+    lineHeightInPixels: 16.0,
+    color: ColorConfig.popupTextColor,
+    fontWeight: FontWeight.normal,
   );
 }

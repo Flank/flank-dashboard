@@ -22,6 +22,8 @@ import 'package:metrics/common/presentation/page_title/theme/page_title_theme_da
 import 'package:metrics/common/presentation/text_placeholder/theme/theme_data/text_placeholder_theme_data.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_icon/theme/theme_data/tooltip_icon_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_popup/theme/theme_data/tooltip_popup_theme_data.dart';
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 
 /// Stores the theme data for all metrics widgets.
@@ -106,6 +108,12 @@ class MetricsThemeData {
   /// A theme for the bar graph popup.
   final BarGraphPopupThemeData barGraphPopupTheme;
 
+  /// A theme for the tooltip popup.
+  final TooltipPopupThemeData tooltipPopupTheme;
+
+  /// A theme for the tooltip icon.
+  final TooltipIconThemeData tooltipIconTheme;
+
   /// A theme for the graph indicator.
   final GraphIndicatorThemeData graphIndicatorTheme;
 
@@ -135,6 +143,8 @@ class MetricsThemeData {
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
+    TooltipPopupThemeData tooltipPopupTheme,
+    TooltipIconThemeData tooltipIconTheme,
     PageTitleThemeData pageTitleTheme,
     GraphIndicatorThemeData graphIndicatorTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
@@ -175,6 +185,8 @@ class MetricsThemeData {
         toastTheme = toastTheme ?? const ToastThemeData(),
         barGraphPopupTheme =
             barGraphPopupTheme ?? const BarGraphPopupThemeData(),
+        tooltipPopupTheme = tooltipPopupTheme ?? const TooltipPopupThemeData(),
+        tooltipIconTheme = tooltipIconTheme ?? const TooltipIconThemeData(),
         pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData(),
         graphIndicatorTheme =
             graphIndicatorTheme ?? const GraphIndicatorThemeData();
@@ -208,6 +220,8 @@ class MetricsThemeData {
     CirclePercentageThemeData circlePercentageTheme,
     ToastThemeData toastTheme,
     BarGraphPopupThemeData barGraphPopupTheme,
+    TooltipPopupThemeData tooltipPopupTheme,
+    TooltipIconThemeData tooltipIconTheme,
     PageTitleThemeData pageTitleTheme,
     GraphIndicatorThemeData graphIndicatorTheme,
   }) {
@@ -247,6 +261,8 @@ class MetricsThemeData {
       toastTheme: toastTheme ?? this.toastTheme,
       pageTitleTheme: pageTitleTheme ?? this.pageTitleTheme,
       barGraphPopupTheme: barGraphPopupTheme ?? this.barGraphPopupTheme,
+      tooltipPopupTheme: tooltipPopupTheme ?? this.tooltipPopupTheme,
+      tooltipIconTheme: tooltipIconTheme ?? this.tooltipIconTheme,
       graphIndicatorTheme: graphIndicatorTheme ?? this.graphIndicatorTheme,
     );
   }

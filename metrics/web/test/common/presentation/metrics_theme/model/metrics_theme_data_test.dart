@@ -37,6 +37,8 @@ import 'package:metrics/common/presentation/toast/theme/attention_level/toast_at
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_icon/theme/theme_data/tooltip_icon_theme_data.dart';
+import 'package:metrics/common/presentation/tooltip_popup/theme/theme_data/tooltip_popup_theme_data.dart';
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 import 'package:test/test.dart';
 
@@ -72,6 +74,8 @@ void main() {
         expect(themeData.inputPlaceholderTheme, isNotNull);
         expect(themeData.toastTheme, isNotNull);
         expect(themeData.barGraphPopupTheme, isNotNull);
+        expect(themeData.tooltipPopupTheme, isNotNull);
+        expect(themeData.tooltipIconTheme, isNotNull);
         expect(themeData.pageTitleTheme, isNotNull);
         expect(themeData.graphIndicatorTheme, isNotNull);
       },
@@ -105,6 +109,8 @@ void main() {
           circlePercentageTheme: null,
           toastTheme: null,
           barGraphPopupTheme: null,
+          tooltipPopupTheme: null,
+          tooltipIconTheme: null,
           pageTitleTheme: null,
           graphIndicatorTheme: null,
         );
@@ -133,6 +139,8 @@ void main() {
         expect(themeData.circlePercentageTheme, isNotNull);
         expect(themeData.toastTheme, isNotNull);
         expect(themeData.barGraphPopupTheme, isNotNull);
+        expect(themeData.tooltipPopupTheme, isNotNull);
+        expect(themeData.tooltipIconTheme, isNotNull);
         expect(themeData.pageTitleTheme, isNotNull);
         expect(themeData.graphIndicatorTheme, isNotNull);
       },
@@ -275,6 +283,14 @@ void main() {
           color: Colors.green,
         );
 
+        const tooltipPopupTheme = TooltipPopupThemeData(
+          backgroundColor: Colors.blue,
+        );
+
+        const tooltipIconTheme = TooltipIconThemeData(
+          color: Colors.yellow,
+        );
+
         const graphIndicatorTheme = GraphIndicatorThemeData(
           attentionLevel: GraphIndicatorAttentionLevel(),
         );
@@ -306,6 +322,8 @@ void main() {
           circlePercentageTheme: circlePercentageTheme,
           toastTheme: toastTheme,
           barGraphPopupTheme: barGraphPopupTheme,
+          tooltipPopupTheme: tooltipPopupTheme,
+          tooltipIconTheme: tooltipIconTheme,
           pageTitleTheme: pageTitleTheme,
           graphIndicatorTheme: graphIndicatorTheme,
         );
@@ -364,6 +382,8 @@ void main() {
         );
         expect(copiedTheme.toastTheme, equals(toastTheme));
         expect(copiedTheme.barGraphPopupTheme, equals(barGraphPopupTheme));
+        expect(copiedTheme.tooltipPopupTheme, equals(tooltipPopupTheme));
+        expect(copiedTheme.tooltipIconTheme, equals(tooltipIconTheme));
         expect(copiedTheme.pageTitleTheme, equals(pageTitleTheme));
         expect(copiedTheme.graphIndicatorTheme, equals(graphIndicatorTheme));
       },
@@ -457,6 +477,14 @@ void main() {
         expect(
           themeData.barGraphPopupTheme,
           equals(copiedTheme.barGraphPopupTheme),
+        );
+        expect(
+          themeData.tooltipPopupTheme,
+          equals(copiedTheme.tooltipPopupTheme),
+        );
+        expect(
+          themeData.tooltipIconTheme,
+          equals(copiedTheme.tooltipIconTheme),
         );
         expect(themeData.pageTitleTheme, equals(copiedTheme.pageTitleTheme));
         expect(
