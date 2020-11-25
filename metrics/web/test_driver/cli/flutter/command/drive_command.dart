@@ -104,4 +104,10 @@ class DriveCommand extends RunCommandBase {
   void browserDimension(String browserDimension) {
     add("--browser-dimension=$browserDimension");
   }
+
+  /// --dart-define=FLUTTER_WEB_USE_SKIA=[value]
+  ///
+  /// Specifies whether to use Skia for rendering application under tests or not.
+  void useSkia({bool value = true}) =>
+      add('--dart-define=FLUTTER_WEB_USE_SKIA=$value');
 }

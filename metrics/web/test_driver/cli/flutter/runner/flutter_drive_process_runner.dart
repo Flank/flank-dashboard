@@ -13,25 +13,25 @@ class FlutterDriveProcessRunner implements ProcessRunner {
   final _driveCommand = DriveCommand()
     ..target('test_driver/app.dart')
     ..driver('test_driver/app_test.dart')
-    ..device(Device.chrome)
+    ..device(Device.webServer)
+    ..profile()
     ..noKeepAppRunning();
 
   /// Creates the [FlutterDriveProcessRunner].
   ///
-  /// [port] is the port used by application under test.
   /// [browserName] is the name of the browser which will be used to test the app.
   /// [verbose] specifies whether print the detailed logs from
   /// the 'flutter drive' command or not.
   /// The [environment] contains relevant to driver tests information.
   FlutterDriveProcessRunner({
     this.environment,
-    int port,
     BrowserName browserName,
+    bool useSkia = false,
     bool verbose = true,
   }) {
     _driveCommand
-      ..useExistingApp('http://localhost:$port/#')
-      ..browserName(browserName);
+      ..browserName(browserName)
+      ..useSkia(value: useSkia);
 
     if (verbose) {
       _driveCommand.verbose();
