@@ -128,7 +128,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
           ),
           tooltipPopupTheme: const TooltipPopupThemeData(
             backgroundColor: _popupColor,
-            textStyle: TextStyleConfig.popupTooltipStyle,
+            textStyle: TextStyleConfig.tooltipPopupStyle,
           ),
           tooltipIconTheme: const TooltipIconThemeData(
             color: _tooltipIconColor,

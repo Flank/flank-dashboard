@@ -37,8 +37,8 @@ class TextStyleConfig {
     fontWeight: FontWeight.w500,
   );
 
-  /// A [TextStyle] of the popup tooltip.
-  static const TextStyle popupTooltipStyle = MetricsTextStyle(
+  /// A [TextStyle] of the tooltip popup.
+  static const TextStyle tooltipPopupStyle = MetricsTextStyle(
     fontSize: 13.0,
     lineHeightInPixels: 16.0,
     color: ColorConfig.popupTextColor,
