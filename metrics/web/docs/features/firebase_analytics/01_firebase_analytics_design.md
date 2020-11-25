@@ -10,7 +10,7 @@ In the application domain layer, we should add an ability to log user activities
 2. Implement the `LogLoginUseCase` and `LogPageViewUseCase` classes.
 3. Add the needed parameter classes.
 
-Also, to be sure that the logged page exists, the domain layer contains the PageName class that stores all existing page names.
+Also, to be sure that the logged page exists and avoid passing the invalid data to the `logPageView` method, the domain layer contains the `PageName` class that implements an `Enum` interface from the `metrics core` package. The `PageName` class has a private constructor that will make us safe that someone will instantiate a new instance with a wrong page name somewhere.
 
 So, the domain layer should look like this:
 
@@ -29,8 +29,8 @@ The following class diagram represents the classes of the data layer required fo
 Once we've created a `domain` and `data` layers, it's time to create a `presentation` layer. This layer contains the `AnalyticsNotifier` - the class used to log analytics data such as user login or page change. Also, the `presentation` layer contains the `FirebaseAnalyticsObserver` responsible for providing a callback when the user changes the current page. To introduce this feature, we should follow the next steps: 
 
 1. Create methods in the `AnalyticsNotifier` to be able to log the user logins and page changes.
-2. Integrate the `LogLoginUseCase` and `LogPageViewUseCase`  to the `AnalyticsNotifier`.
-3. Integrate the `AnalyticsNotifier` to the sign in logic block to be able to log the user logins.
+2. Integrate the `LogLoginUseCase` and `LogPageViewUseCase` to the `AnalyticsNotifier`.
+3. Connect the `AnalyticsNotifier` with the `AuthNotifier` to be able to log the user logins.
 4. Create a `FirebaseAnalyticsObserver` to be able to track the page changes.
 5. Integrate the `AnalyticsNotifier` to the `FirebaseAnalyticsObserver` to be able to log the page changes.
 

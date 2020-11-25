@@ -1,4 +1,5 @@
 @startuml
+package web {
 package base.domain.usecases {
     interface UseCase<Type, Params> {
         Type call()
@@ -33,7 +34,16 @@ package analytics.domain {
     }
 
     package entities{
-        class PageName {}
+        class PageName<T> {
+         values: UnmodifiableSetView<PageName<T>>
+        }
+    }
+}
+}
+
+package core.domain.entities {
+    interface Enum<T>{
+      value: T
     }
 }
 
@@ -44,4 +54,5 @@ LogPageViewUseCase --> PageNameParam : uses
 LogPageViewUseCase -up-> AnalyticsRepository : uses
 LogLoginUseCase -up-> AnalyticsRepository : uses
 PageNameParam --> PageName : uses
+PageName ..|> Enum
 @enduml

@@ -34,7 +34,7 @@
     AnalyticsRepository -> PS : Save analytics data
 
         alt userId == null  ||  userId == AnalyticsNotifier.userId
-            AuthNotifier <-- AnalyticsNotifier :  end statement
+            AuthNotifier <-- AnalyticsNotifier :  do nothing
                 deactivate AnalyticsNotifier
                 deactivate AuthNotifier
         end
