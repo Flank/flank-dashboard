@@ -1,0 +1,14 @@
+@startuml
+package analytics.data.repositories {
+    class FirebaseAnalyticsRepository {}
+}
+
+package analytics.domain.repositories {
+    interface AnalyticsRepository {
+        Future<void> logPageView()
+        Future<void> logLogin()
+    }
+}
+
+FirebaseAnalyticsRepository ..|> AnalyticsRepository
+@enduml

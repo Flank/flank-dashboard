@@ -1,0 +1,44 @@
+@startuml web_layers_sequence_diagram
+    skinparam ParticipantPadding 20
+    skinparam BoxPadding 10
+
+    actor Bob
+
+    box "presentation"
+        participant AuthNotifier << (C,#ADD1B2) >>
+        participant AnalyticsNotifier << (C,#ADD1B2) >>
+    end box
+
+    box "domain"
+        participant LogLoginUseCase << (C,#ADD1B2) >>
+    end box
+
+    box "data"
+        participant AnalyticsRepository << (C,#ADD1B2) >>
+    end box
+
+    database "Persistent Store" as PS
+
+    Bob -> AuthNotifier : Logs in to the app
+    activate AuthNotifier
+
+    AuthNotifier -> AnalyticsNotifier : logLogin(userId)
+    activate AnalyticsNotifier
+
+    AnalyticsNotifier -> LogLoginUseCase : call(userIdParam)
+    activate LogLoginUseCase
+
+    LogLoginUseCase -> AnalyticsRepository : logLogin(userId)
+    activate AnalyticsRepository
+
+    AnalyticsRepository -> PS : Save analytics data
+
+        alt userId == null  ||  userId == AnalyticsNotifier.userId
+            AuthNotifier <-- AnalyticsNotifier :  do nothing
+                deactivate AnalyticsNotifier
+                deactivate AuthNotifier
+        end
+
+    deactivate LogLoginUseCase
+    deactivate AnalyticsNotifier
+@enduml

@@ -1,0 +1,58 @@
+@startuml
+package web {
+package base.domain.usecases {
+    interface UseCase<Type, Params> {
+        Type call()
+    }
+}
+
+package analytics.domain {
+    package repositories {
+        interface AnalyticsRepository {
+            Future<void> logPageView()
+            Future<void> logLogin()
+        }
+    }
+    package usecases {
+        package parameters {
+            class UserIdParam {
+                userId : String
+            }
+
+            class PageNameParam {
+                name : String
+            }
+        }
+
+        class LogPageViewUseCase {
+            Future<void> call()
+        }
+
+        class LogLoginUseCase {
+            Future<void> call()
+        }
+    }
+
+    package entities{
+        class PageName<T> {
+         values: UnmodifiableSetView<PageName<T>>
+        }
+    }
+}
+}
+
+package core.domain.entities {
+    interface Enum<T>{
+      value: T
+    }
+}
+
+LogPageViewUseCase ..|> UseCase
+LogLoginUseCase ..|> UseCase
+LogLoginUseCase --> UserIdParam : uses
+LogPageViewUseCase --> PageNameParam : uses
+LogPageViewUseCase -up-> AnalyticsRepository : uses
+LogLoginUseCase -up-> AnalyticsRepository : uses
+PageNameParam --> PageName : uses
+PageName ..|> Enum
+@enduml

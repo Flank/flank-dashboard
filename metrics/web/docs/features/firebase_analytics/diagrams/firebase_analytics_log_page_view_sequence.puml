@@ -1,0 +1,45 @@
+@startuml web_layers_sequence_diagram
+    skinparam ParticipantPadding 20
+    skinparam BoxPadding 10
+
+    actor Bob
+
+    box "presentation"
+        participant UI << (C,#ADD1B2) >>
+        participant FirebaseAnalyticsObserver << (C,#ADD1B2) >>
+        participant AnalyticsNotifier << (C,#ADD1B2) >>
+    end box
+
+    box "domain"
+        participant LogPageViewUseCase << (C,#ADD1B2) >>
+    end box
+
+    box "data"
+        participant AnalyticsRepository << (C,#ADD1B2) >>
+    end box
+
+    database "Persistent Store" as PS
+
+    Bob -> UI : Navigates to the new page
+    activate UI
+
+    UI -> FirebaseAnalyticsObserver : retrieves the current page name
+    activate FirebaseAnalyticsObserver
+
+    FirebaseAnalyticsObserver -> AnalyticsNotifier : logPageView(pageName)
+    activate AnalyticsNotifier
+
+    AnalyticsNotifier -> LogPageViewUseCase : call(pageNameParam)
+    activate LogPageViewUseCase
+
+    LogPageViewUseCase -> AnalyticsRepository : logPageView(pageName)
+    activate AnalyticsRepository
+
+    AnalyticsRepository -> PS : Save analytics data
+
+    deactivate UI
+    deactivate FirebaseAnalyticsObserver
+    deactivate AnalyticsRepository
+    deactivate LogPageViewUseCase
+    deactivate AnalyticsNotifier
+@enduml

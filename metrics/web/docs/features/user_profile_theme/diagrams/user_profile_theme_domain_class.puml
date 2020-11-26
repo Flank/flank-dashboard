@@ -2,7 +2,7 @@
 
 package base.domain.usecases {
     interface UseCase<Type, Params> {
-        call: Type
+        Type call()
     }
 }
 

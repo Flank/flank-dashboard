@@ -1,0 +1,22 @@
+@startuml
+package analytics.presentation.state {
+    class AnalyticsNotifier {
+        userId: String
+        void logLogin()
+        void logPageView()
+    }
+}
+
+package common.presentation.routes.observers {
+    class FirebaseAnalyticsObserver{}
+}
+
+package analytics.domain.usecases {
+    class LogLoginUseCase{}
+    class LogPageViewUseCase{}
+}
+
+AnalyticsNotifier --> LogLoginUseCase : uses
+AnalyticsNotifier --> LogPageViewUseCase : uses
+FirebaseAnalyticsObserver --> AnalyticsNotifier : uses
+@enduml
