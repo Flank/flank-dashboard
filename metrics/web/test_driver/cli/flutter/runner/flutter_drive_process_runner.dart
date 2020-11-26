@@ -25,7 +25,7 @@ class FlutterDriveProcessRunner implements ProcessRunner {
   /// [verbose] defaults to 'true'.
   ///
   /// [browserName] is the name of the browser which will be used to test the app.
-  /// [useSkia] defines whether to run application under tests using
+  /// [useSkia] defines whether to run application under test using
   /// SKIA renderer or not.
   /// [verbose] specifies whether print the detailed logs from
   /// the 'flutter drive' command or not.

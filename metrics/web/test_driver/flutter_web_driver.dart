@@ -92,7 +92,7 @@ class FlutterWebDriver {
   ///
   /// [verbose] defines whether print the detailed logs or not.
   /// [logsFileName] is the name of file to store the logs.
-  /// [useSkia] defines whether to run the application under tests
+  /// [useSkia] defines whether to run the application under test
   /// using the SKIA renderer.
   Future<void> _runDriverTests(
     bool verbose,
