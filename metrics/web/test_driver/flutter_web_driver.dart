@@ -13,13 +13,15 @@ import 'process_manager/process_manager.dart';
 
 /// Runs the application and driver tests for this application.
 class FlutterWebDriver {
+  /// An application arguments used to configure testing.
+  ///
+  /// See [DriverTestArgumentsParser] for all supported arguments.
   final DriverTestArguments _args;
+
+  /// A [ProcessManager] used to manage run processes.
   ProcessManager _processManager;
 
   /// Creates the [FlutterWebDriver].
-  ///
-  /// [args] is the application arguments used to configure testing.
-  /// See [DriverTestArgumentsParser] for all supported arguments..
   FlutterWebDriver(this._args);
 
   /// Configures environment and starts driver tests.
@@ -88,9 +90,10 @@ class FlutterWebDriver {
 
   /// Runs the driver tests.
   ///
-  /// [port] is the port on which the application under test is running.
   /// [verbose] defines whether print the detailed logs or not.
-  /// [logsFileName] is the name of file to store the logs
+  /// [logsFileName] is the name of file to store the logs.
+  /// [useSkia] defines whether to run the application under tests
+  /// using the SKIA renderer.
   Future<void> _runDriverTests(
     bool verbose,
     String logsFileName, {

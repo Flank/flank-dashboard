@@ -8,8 +8,10 @@ import '../process/flutter_process.dart';
 
 /// Runs the flutter driver tests.
 class FlutterDriveProcessRunner implements ProcessRunner {
+  /// The [environment] contains relevant to driver tests information.
   final FlutterDriveEnvironment environment;
 
+  /// A [DriveCommand] which defines the parameters to run the driver tests with.
   final _driveCommand = DriveCommand()
     ..target('test_driver/app.dart')
     ..driver('test_driver/app_test.dart')
@@ -19,10 +21,14 @@ class FlutterDriveProcessRunner implements ProcessRunner {
 
   /// Creates the [FlutterDriveProcessRunner].
   ///
+  /// [useSkia] defaults to 'false'.
+  /// [verbose] defaults to 'true'.
+  ///
   /// [browserName] is the name of the browser which will be used to test the app.
+  /// [useSkia] defines whether to run application under tests using
+  /// SKIA renderer or not.
   /// [verbose] specifies whether print the detailed logs from
   /// the 'flutter drive' command or not.
-  /// The [environment] contains relevant to driver tests information.
   FlutterDriveProcessRunner({
     this.environment,
     BrowserName browserName,
