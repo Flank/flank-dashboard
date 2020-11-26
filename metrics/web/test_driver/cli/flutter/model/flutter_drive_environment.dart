@@ -3,7 +3,7 @@ import '../../common/model/environment.dart';
 
 /// A class that represents the `flutter drive` process environment.
 class FlutterDriveEnvironment implements Environment {
-  /// User credentials needed to log in to the application under tests.
+  /// User credentials needed to log in to the application under test.
   final UserCredentials userCredentials;
 
   /// Creates the [Environment] with the given credentials.

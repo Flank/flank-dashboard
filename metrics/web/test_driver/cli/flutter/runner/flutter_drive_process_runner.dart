@@ -8,30 +8,36 @@ import '../process/flutter_process.dart';
 
 /// Runs the flutter driver tests.
 class FlutterDriveProcessRunner implements ProcessRunner {
+  /// The [environment] contains relevant to driver tests information.
   final FlutterDriveEnvironment environment;
 
+  /// A [DriveCommand] which defines the parameters to run the driver tests with.
   final _driveCommand = DriveCommand()
     ..target('test_driver/app.dart')
     ..driver('test_driver/app_test.dart')
-    ..device(Device.chrome)
+    ..device(Device.webServer)
+    ..profile()
     ..noKeepAppRunning();
 
   /// Creates the [FlutterDriveProcessRunner].
   ///
-  /// [port] is the port used by application under test.
+  /// [useSkia] defaults to 'false'.
+  /// [verbose] defaults to 'true'.
+  ///
   /// [browserName] is the name of the browser which will be used to test the app.
+  /// [useSkia] defines whether to run application under test using
+  /// SKIA renderer or not.
   /// [verbose] specifies whether print the detailed logs from
   /// the 'flutter drive' command or not.
-  /// The [environment] contains relevant to driver tests information.
   FlutterDriveProcessRunner({
     this.environment,
-    int port,
     BrowserName browserName,
+    bool useSkia = false,
     bool verbose = true,
   }) {
     _driveCommand
-      ..useExistingApp('http://localhost:$port/#')
-      ..browserName(browserName);
+      ..browserName(browserName)
+      ..useSkia(value: useSkia);
 
     if (verbose) {
       _driveCommand.verbose();

@@ -8,7 +8,6 @@ import '../model/user_credentials.dart';
 /// Parses the arguments for the driver tests.
 class DriverTestArgumentsParser {
   static const String _workingDirOptionName = 'working-dir';
-  static const String _portOptionName = 'port';
   static const String _storeLogsToOptionName = 'store-logs-to';
   static const String _browserNameOptionName = 'browser-name';
   static const String _emailOptionName = 'email';
@@ -27,9 +26,6 @@ class DriverTestArgumentsParser {
   DriverTestArguments parseArguments(List<String> args) {
     final result = _parser.parse(args);
 
-    final portArgString = result[_portOptionName] as String;
-    final port = int.tryParse(portArgString) ?? DriverTestsConfig.port;
-
     final browserNameArg = result[_browserNameOptionName] as String;
     final browserName =
         BrowserName.fromValue(browserNameArg) ?? BrowserName.chrome;
@@ -43,7 +39,6 @@ class DriverTestArgumentsParser {
     final password = result[_passwordOptionName] as String;
 
     return DriverTestArguments(
-      port: port,
       logsDir: logsDir,
       workingDir: workingDir,
       browserName: browserName,
@@ -86,12 +81,6 @@ class DriverTestArgumentsParser {
       help:
           "The directory to save the selenium server and browser drivers files.",
       defaultsTo: DriverTestsConfig.defaultWorkingDirectory,
-    );
-
-    _parser.addOption(
-      _portOptionName,
-      help: 'The port to serve the application under tests from.',
-      defaultsTo: '${DriverTestsConfig.port}',
     );
 
     _parser.addOption(
