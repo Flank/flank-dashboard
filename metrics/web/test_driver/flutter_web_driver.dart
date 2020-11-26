@@ -44,13 +44,13 @@ class FlutterWebDriver {
       workingDir: _args.workingDir,
     );
 
-    Logger.log("Running tests...");
+    Logger.log("Running driver tests...");
     await _runDriverTests(
       verbose,
       LogsFileConfig.driverLogsFileName,
     );
 
-    Logger.log("Running tests with SKIA renderer...");
+    Logger.log("Running driver tests with SKIA renderer...");
     await _runDriverTests(
       verbose,
       LogsFileConfig.skiaDriverLogsFileName,
@@ -125,11 +125,8 @@ class FlutterWebDriver {
     final logsDirUri = Logger.logsDirectory.absolute.uri;
 
     Logger.log(
-        "Flutter logs are stored in $logsDirUri${LogsFileConfig.flutterLogsFileName} file");
-    Logger.log(
         "Driver logs are stored in $logsDirUri${LogsFileConfig.driverLogsFileName} file");
-    Logger.log(
-        "Flutter, ran with skia renderer, logs are stored in $logsDirUri${LogsFileConfig.skiaFlutterLogsFileName} file");
+
     Logger.log(
         "Driver, ran with skia renderer, logs are stored in $logsDirUri${LogsFileConfig.skiaDriverLogsFileName} file");
 

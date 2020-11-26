@@ -96,4 +96,10 @@ abstract class RunCommandBase extends FlutterCommand {
   void trackWidgetCreation() => add('--track-widget-creation');
 
   void noTrackWidgetCreation() => add('--no-track-widget-creation');
+
+  /// --dart-define=FLUTTER_WEB_USE_SKIA=[value]
+  ///
+  /// Specifies whether to use Skia for rendering or not.
+  void useSkia({bool value = true}) =>
+      add('--dart-define=FLUTTER_WEB_USE_SKIA=$value');
 }
