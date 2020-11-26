@@ -89,7 +89,12 @@ class FlutterWebDriver {
     String version;
 
     if (_args.chromedriverVersion == null) {
-      version = await ChromeDriverUtils.getLatestVersion();
+      try {
+        version = await ChromeDriverUtils.getLatestVersion();
+      } catch (e) {
+        stderr.writeln(e.message);
+        exit(0);
+      }
     } else {
       version = _args.chromedriverVersion;
     }

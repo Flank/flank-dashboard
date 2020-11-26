@@ -9,6 +9,10 @@ class ChromeDriverUtils {
     final response = await http
         .get('${DriverTestsConfig.chromedriverUrlBasePath}/LATEST_RELEASE');
 
+    if (response.statusCode != 200) {
+      throw Exception('Fetching the latest Chromedriver version failed.');
+    }
+
     return response.body;
   }
 }
