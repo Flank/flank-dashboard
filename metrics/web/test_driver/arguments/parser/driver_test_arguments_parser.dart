@@ -103,7 +103,7 @@ class DriverTestArgumentsParser {
     _parser.addOption(
       _chromedriverVersion,
       help:
-          'The chromedriver version to use for tests. Uses the latest version if not specified.',
+          'The chromedriver version to use for tests. If not specified, the latest version is used.',
     );
 
     _parser.addOption(

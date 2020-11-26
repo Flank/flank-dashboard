@@ -22,10 +22,10 @@ class ChromeDriver extends WebDriver {
 
   @override
   String get downloadUrl {
-    const basePath = DriverTestsConfig.baseDownloadPath;
-    final platformDriverName = _getPlatformDriverName();
+    const basePath = DriverTestsConfig.chromedriverUrlBasePath;
+    final driverArchiveName = _getDriverArchiveName();
 
-    return '$basePath/$version/$platformDriverName';
+    return '$basePath/$version/$driverArchiveName';
   }
 
   @override
@@ -38,16 +38,16 @@ class ChromeDriver extends WebDriver {
     return _archiveDecoder.decodeBytes(chromeDriverBytes);
   }
 
-  /// Returns a name of the Chromedriver compatible with the current [Platform].
-  String _getPlatformDriverName() {
+  /// Returns the name of the Chromedriver compatible with the current [Platform].
+  String _getDriverArchiveName() {
     if (Platform.isMacOS) {
-      return DriverTestsConfig.macosDriverName;
+      return DriverTestsConfig.macosDriverArchiveName;
     }
 
     if (Platform.isWindows) {
-      return DriverTestsConfig.windowsDriverName;
+      return DriverTestsConfig.windowsDriverArchiveName;
     }
 
-    return DriverTestsConfig.linuxDriverName;
+    return DriverTestsConfig.linuxDriverArchiveName;
   }
 }

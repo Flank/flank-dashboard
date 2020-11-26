@@ -3,24 +3,31 @@ import 'user_credentials.dart';
 
 /// Represents the arguments for the test driver application.
 class DriverTestArguments {
+  /// The directory to run all the commands.
   final String workingDir;
+
+  /// The directory to store the logs from commands.
   final String logsDir;
+
+  /// The version of the chromedriver.
   final String chromedriverVersion;
+
+  /// The name of the browser, used to run the tests.
   final BrowserName browserName;
+
+  /// Specifies whether run all commands with the `--verbose` flag or not.
   final bool verbose;
+
+  /// Disables any prints to the console.
   final bool quiet;
+
+  /// Specifies whether to print the usage information or not.
   final bool showHelp;
+
+  /// The user credentials for the application.
   final UserCredentials credentials;
 
-  /// Creates the [DriverTestArguments].
-  ///
-  /// [workingDir] is the directory to run all the commands.
-  /// [logsDir] is the directory to store the logs from commands.
-  /// [chromedriverVersion] is the version of the chromedriver.
-  /// [browserName] is the name of the browser, used to run the tests.
-  /// [verbose] specifies whether run all commands with the `--verbose` flag or not.
-  /// [quiet] disables any prints to the console.
-  /// [showHelp] specifies whether to print the usage information or not.
+  /// Creates a new instance of the [DriverTestArguments].
   DriverTestArguments({
     this.workingDir,
     this.logsDir,
