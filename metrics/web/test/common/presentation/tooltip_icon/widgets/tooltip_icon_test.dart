@@ -59,7 +59,7 @@ void main() {
     );
 
     testWidgets(
-      "opens the BuildResultPopupCard widget on hover with the given tooltip text",
+      "opens the TooltipPopup widget on hover with the given tooltip text",
       (WidgetTester tester) async {
         const tooltip = 'test';
 

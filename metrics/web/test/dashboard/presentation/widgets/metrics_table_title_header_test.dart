@@ -7,6 +7,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_title_header.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
@@ -34,11 +35,13 @@ void main() {
           ),
         );
 
-        await tester.pumpWidget(
-          const _MetricsTableTitleHeaderTestbed(
-            metricsThemeData: themeData,
-          ),
-        );
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _MetricsTableTitleHeaderTestbed(
+              metricsThemeData: themeData,
+            ),
+          );
+        });
 
         final defaultTextStyle = tester.widget<DefaultTextStyle>(
           find.descendant(
@@ -55,7 +58,9 @@ void main() {
     testWidgets(
       "applies an empty container to the build status",
       (tester) async {
-        await tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
 
         final metricsTableRowWidget = tester.widget<MetricsTableRow>(
           find.byType(MetricsTableRow),
@@ -68,7 +73,9 @@ void main() {
     testWidgets(
       "applies an empty container to the project name",
       (tester) async {
-        await tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
 
         final metricsTableRowWidget = tester.widget<MetricsTableRow>(
           find.byType(MetricsTableRow),
@@ -81,7 +88,9 @@ void main() {
     testWidgets(
       "displays the performance header",
       (tester) async {
-        await tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
 
         expect(find.text(DashboardStrings.performance), findsOneWidget);
       },
@@ -90,7 +99,9 @@ void main() {
     testWidgets(
       "displays the builds header",
       (tester) async {
-        await tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
 
         expect(find.text(DashboardStrings.builds), findsOneWidget);
       },
@@ -99,7 +110,9 @@ void main() {
     testWidgets(
       "displays the stability header",
       (tester) async {
-        await tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
 
         expect(find.text(DashboardStrings.stability), findsOneWidget);
       },
@@ -108,7 +121,9 @@ void main() {
     testWidgets(
       "displays the coverage header",
       (tester) async {
-        await tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
 
         expect(find.text(DashboardStrings.coverage), findsOneWidget);
       },

@@ -45,14 +45,17 @@ void main() {
 
     test("creates an instance with the given values", () {
       const backGroundColor = Colors.white;
+      const shadowColor = Colors.black;
       const textStyle = TextStyle(color: Colors.blue);
 
       final themeData = TooltipPopupThemeData(
         backgroundColor: backGroundColor,
+        shadowColor: shadowColor,
         textStyle: textStyle,
       );
 
       expect(themeData.backgroundColor, equals(backGroundColor));
+      expect(themeData.shadowColor, equals(shadowColor));
       expect(themeData.textStyle, equals(textStyle));
     });
   });

@@ -127,7 +127,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           tooltipPopupTheme: const TooltipPopupThemeData(
             backgroundColor: Colors.white,
-            shadowColor:Color.fromRGBO(0, 0, 0, 0.32),
+            shadowColor: Color.fromRGBO(0, 0, 0, 0.32),
             textStyle: TextStyleConfig.tooltipPopupStyle,
           ),
           tooltipIconTheme: const TooltipIconThemeData(
@@ -334,10 +334,11 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           projectMetricsTableTheme: const ProjectMetricsTableThemeData(
             metricsTableHeaderTheme: MetricsTableHeaderThemeData(
-              textStyle: TextStyle(
-                color: _tableHeaderColor,
-                fontWeight: FontWeight.w400,
-              ),
+              textStyle: MetricsTextStyle(
+                  color: _tableHeaderColor,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14.0,
+                  lineHeightInPixels: 16.0),
             ),
             projectMetricsTileTheme: ProjectMetricsTileThemeData(
               backgroundColor: Colors.white,

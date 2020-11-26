@@ -49,7 +49,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the background color from the metrics theme to the build result popup card",
+      "applies the background color from the metrics theme to the tooltip popup",
       (WidgetTester tester) async {
         final backgroundColor = themeData.tooltipPopupTheme.backgroundColor;
 

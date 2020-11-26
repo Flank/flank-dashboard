@@ -121,12 +121,15 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
               ),
             ),
           ),
-          coverage: SizedBox(
-            height: 72.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics == null,
-              builder: (_) => CoverageCirclePercentage(
-                coverage: projectMetrics.coverage,
+          coverage: Padding(
+            padding: const EdgeInsets.only(left: 5.0, right: 4.0),
+            child: SizedBox(
+              height: 72.0,
+              child: LoadingBuilder(
+                isLoading: projectMetrics == null,
+                builder: (_) => CoverageCirclePercentage(
+                  coverage: projectMetrics.coverage,
+                ),
               ),
             ),
           ),

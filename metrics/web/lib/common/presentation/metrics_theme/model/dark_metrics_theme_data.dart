@@ -323,9 +323,11 @@ class DarkMetricsThemeData extends MetricsThemeData {
           ),
           projectMetricsTableTheme: const ProjectMetricsTableThemeData(
             metricsTableHeaderTheme: MetricsTableHeaderThemeData(
-              textStyle: TextStyle(
+              textStyle: MetricsTextStyle(
                 color: _tableHeaderColor,
                 fontWeight: FontWeight.normal,
+                fontSize: 14.0,
+                lineHeightInPixels: 16.0
               ),
             ),
             metricsTableHeaderPlaceholderTheme: ShimmerPlaceholderThemeData(

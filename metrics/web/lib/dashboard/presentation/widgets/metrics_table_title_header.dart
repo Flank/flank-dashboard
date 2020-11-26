@@ -30,9 +30,11 @@ class MetricsTableTitleHeader extends StatelessWidget {
         buildResults: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Padding(
-              padding: padding,
-              child: Text(DashboardStrings.lastBuilds),
+            Flexible(
+              child: Padding(
+                padding: padding,
+                child: Text(DashboardStrings.lastBuilds),
+              ),
             ),
             TooltipIcon(tooltip: DashboardStrings.lastBuildsDescription),
           ],
@@ -40,9 +42,11 @@ class MetricsTableTitleHeader extends StatelessWidget {
         performance: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Padding(
-              padding: padding,
-              child: Text(DashboardStrings.performance),
+            Flexible(
+              child: Padding(
+                padding: padding,
+                child: Text(DashboardStrings.performance),
+              ),
             ),
             TooltipIcon(tooltip: DashboardStrings.performanceDescription),
           ],
@@ -50,9 +54,11 @@ class MetricsTableTitleHeader extends StatelessWidget {
         buildNumber: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Padding(
-              padding: padding,
-              child: Text(DashboardStrings.builds),
+            Flexible(
+              child: Padding(
+                padding: padding,
+                child: Text(DashboardStrings.builds),
+              ),
             ),
             TooltipIcon(tooltip: DashboardStrings.buildsDescription),
           ],
@@ -60,9 +66,11 @@ class MetricsTableTitleHeader extends StatelessWidget {
         stability: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Padding(
-              padding: padding,
-              child: Text(DashboardStrings.stability),
+            Flexible(
+              child: Padding(
+                padding: padding,
+                child: Text(DashboardStrings.stability),
+              ),
             ),
             TooltipIcon(tooltip: DashboardStrings.stabilityDescription),
           ],
@@ -70,9 +78,11 @@ class MetricsTableTitleHeader extends StatelessWidget {
         coverage: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Padding(
-              padding: padding,
-              child: Text(DashboardStrings.coverage),
+            Flexible(
+              child: Padding(
+                padding: padding,
+                child: Text(DashboardStrings.coverage),
+              ),
             ),
             TooltipIcon(tooltip: DashboardStrings.coverageDescription),
           ],
