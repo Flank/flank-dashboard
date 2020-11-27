@@ -47,11 +47,11 @@ class DriverTestArgumentsParser {
       verbose: verbose,
       quiet: quiet,
       showHelp: showHelp,
+      chromedriverVersion: chromedriverVersion,
       credentials: UserCredentials(
         email: email,
         password: password,
       ),
-      chromedriverVersion: chromedriverVersion,
     );
   }
 

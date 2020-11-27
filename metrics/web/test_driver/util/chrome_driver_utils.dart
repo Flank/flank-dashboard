@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 
-import '../common/config/driver_tests_config.dart';
+import '../cli/web_driver/chrome_driver.dart';
 
 /// A utility class that provides a method for fetching information
 /// about the Chromedriver.
@@ -8,7 +8,7 @@ class ChromeDriverUtils {
   /// Returns the latest version of the Chromedriver.
   static Future<String> getLatestVersion() async {
     final response = await http
-        .get('${DriverTestsConfig.chromedriverUrlBasePath}/LATEST_RELEASE');
+        .get('${ChromeDriver.chromedriverUrlBasePath}/LATEST_RELEASE');
 
     if (response.statusCode != 200) {
       throw Exception(

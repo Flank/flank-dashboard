@@ -8,14 +8,17 @@ import '../../util/file_utils.dart';
 
 /// An abstract class that represents the web driver.
 abstract class WebDriver {
+  /// A version of this web driver.
+  final String version;
+
   /// An executable name of this web driver.
   String get executableName;
 
   /// A URL used to download this web driver.
   FutureOr<String> get downloadUrl;
 
-  /// A version of this web driver.
-  String get version;
+  /// Creates a new instance of the [WebDriver].
+  const WebDriver(this.version);
 
   /// Decodes the archive file specified as a [filePath].
   Archive decodeArchive(String filePath);
