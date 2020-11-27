@@ -12,17 +12,16 @@ package common.presentation.routes {
             Widget build()
             Future<void> setNewRoutePath()
         }
-        class RoutePageManager{
-            static RoutePageManager of()
-            Future setNewRoutePath()
+        class MetricsPageGenerator{
+            static MaterialPage generatePage()
         }
 
 }
 
 MetricsRouterDelegate --* ChangeNotifier : with
 MetricsRouterDelegate --* PopNavigatorRouterDelegateMixin : with
-MetricsRouterDelegate --> RoutePageManager : uses
+MetricsRouterDelegate --> MetricsPageGenerator : uses
 RoutePageManager --|> ChangeNotifier : extends
-Router --> MetricsRouterDelegate : uses
-Router --> MetricsRouteInformationParser :uses
+MaterialApp.router --> MetricsRouterDelegate : uses
+MaterialApp.router --> MetricsRouteInformationParser :uses
 @enduml
