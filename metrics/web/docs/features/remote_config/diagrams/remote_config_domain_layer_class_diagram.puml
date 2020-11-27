@@ -1,0 +1,40 @@
+@startuml remote_config_domain_layer_class_diagram
+
+package base.domain.usecases {
+    interface UseCase<Type, Params> {
+        call: Type
+    }
+}
+
+package common.domain {
+    package repository {
+        interface RemoteConfigurationRepository {
+            + void applyDefaults();
+            + Future<void> fetch();
+            + Future<void> activate();
+            + Map<String, RemoteConfigValue> getConfigMap();
+        }
+    }
+
+    package entities {
+        class RemoteConfiguration {
+            + isLoginFormEnabled: bool
+            + isFpsMonitorEnabled: bool
+            + isRendererDisplayEnabled: bool
+        }
+    }
+
+    package usecases {
+        class FetchRemoteConfigurationUseCase {
+            + Future<RemoteConfiguration> call()
+        }
+    }
+}
+
+FetchRemoteConfigurationUseCase ..|> UseCase
+FetchRemoteConfigurationUseCase -up-> RemoteConfigurationRepository : uses
+FetchRemoteConfigurationUseCase --> RemoteConfiguration : uses
+
+' RemoteConfigurationRepository --> RemoteConfiguration: uses
+
+@enduml

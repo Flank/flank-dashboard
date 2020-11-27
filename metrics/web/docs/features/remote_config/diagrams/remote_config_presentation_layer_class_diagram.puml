@@ -1,0 +1,32 @@
+@startuml remote_config_presentation_layer_class_diagram
+
+package base.domain.usecases {
+    class FetchRemoteConfigurationUseCase {}
+}
+
+package common.presentation.state {
+    class RemoteConfigurationNotifier {
+        + isLoading : bool
+        + remoteConfiguration : RemoteConfiguration
+
+        - _fetchRemoteConfigurationUseCase : FetchRemoteConfigurationUseCase
+
+        + Future<void> initializeRemoteConfig()   
+    }
+}
+
+package widgets {
+    class CoolWidget {}
+}
+
+package pages {
+    class CoolPage {}
+}
+
+CoolWidget --> RemoteConfigurationNotifier : uses
+
+CoolPage --> RemoteConfigurationNotifier : uses
+
+RemoteConfigurationNotifier --> FetchRemoteConfigurationUseCase : uses
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml remote_config_sequence_diagram
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+box "presentation"
+participant RemoteConfigurationNotifier << (C,#ADD1B2) >>
+end box
+
+box "domain"
+participant FetchRemoteConfigurationUseCase << (C,#ADD1B2) >>
+end box
+
+box "data"
+participant RemoteConfigurationRepository << (C,#ADD1B2) >>
+participant FirebaseRemoteConfigurationAdapter << (C,#ADD1B2) >>
+end box
+
+database "Firebase Remote Config" as FRC
+
+Bob -> RemoteConfigurationNotifier : Enters the application
+activate RemoteConfigurationNotifier
+
+RemoteConfigurationNotifier -> FetchRemoteConfigurationUseCase : call()
+activate FetchRemoteConfigurationUseCase
+
+FetchRemoteConfigurationUseCase -> RemoteConfigurationRepository : fetchConfiguration()
+activate RemoteConfigurationRepository
+
+RemoteConfigurationRepository -> FRC : Fetch remote configuration
+
+FRC -> RemoteConfigurationRepository : Remote config
+
+RemoteConfigurationRepository -> FirebaseRemoteConfigurationAdapter : FirebaseRemoteConfigurationAdapter(remoteConfig)
+activate FirebaseRemoteConfigAdapter
+
+return remoteConfiguration
+return remoteConfiguration
+return remoteConfiguration
+
+
+return Application shows or hides UI parts
+
+
+
+deactivate RemoteConfigurationRepository
+
+@enduml

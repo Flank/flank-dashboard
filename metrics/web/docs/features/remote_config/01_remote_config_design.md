@@ -1,28 +1,31 @@
 # Firebase Remote config design
 
-We want to add the `Remote Config` feature to the Metrics application.
-The `Remote Config` lets us disable or enable app features remotely from the Firebase Console.
-The following steps are required to introduce the `Remote Config` in the application.
+## TL;DR
+
+Introducing the `Remote Config` feature to the Metrics Web Application allows us to control features behavior for the application remotely without changing a codebase and redeploying. We can change configurations remotely direct from the Firebase Console and these changes will affect the application without any additional steps. This document lists steps and designs the `Remote Config` feature to introduce in the Metrics Web Application.
 
 ## Firebase API Key restrictions
 
-We need to enable the `Remote Config` API:
+At the first stage, you should enable the `Remote Config API`. Consider the following steps:
 
-1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
-2. Open the side menu and go to the `APIs & Services` section.
-3. Go to the `Credentials` section, find the `Browser Key` in the `API Keys` section, and open it.
-4. Scroll down to the `API Restrictions` section, and click the `Restrict Key` button.
-5. In the opened dropdown, enable the following APIs: `Firebase Installations API` and `Firebase Remote Config API`.
+1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select the required project in the top left corner.
+2. Open the side navigation menu and go to the `APIs & Services` page.
+3. On the `APIs & Services` page open the `Credentials` section and click on the `Browser Key` under the `API Keys` sub-section.
+4. Under the `API Restrictions` section on the page with the key configurations, select the `Restrict Key` option.
+5. Open the appeared dropdown and enable the following APIs: `Firebase Installations API` and `Firebase Remote Config API`.
+
+Once the above steps are completed, the `Remote Config API` is enabled for your web project. Please note that it may take some time for settings to take effect.
 
 ## Firebase Configuration
 
-The `Remote Config` will contain key-value pairs where the key stands for the feature name and the value indicates whether this feature is enabled or not.
+The `Remote Config` contains key-value pairs where a single key stands for a feature name it controls and a value indicates whether this feature is enabled or not. You can create and manage the `Remote Config` parameters in the Firebase Console. Consider the following steps to open the required page:
 
-So, we need to specify these parameters in the Firebase console.
+1. Open the [Firebase console](https://console.firebase.google.com/) and select your project.
+2. Click the `Remote Config` on the left panel.
+3. Fill the `Parameter key` and the `Default value` inputs.
+4. Click `Add parameter` button, to add the filled key-value pair.
 
-For our purposes, we need to specify parameters for the `FPS Monitor`, `Login Form`, and `Renderer Display` features.
-
-Example of possible key-values are:
+For the Metrics Web Application purposes, we should specify parameters for the `FPS Monitor`, `Login Form`, and `Renderer Display` features. Thus, the configurations may look like the following:
 
 ```json
 isLoginFormEnabled: true
@@ -30,44 +33,42 @@ isFpsMonitorEnabled: false
 isRendererDisplayEnabled: false
 ```
 
+Once the configurations are ready, we should prepare the Metrics Web application to use them.
+
 ## Metrics application
 
-### Domain layer
-
-In the application domain layer, we should add an ability to read values from the `Remote Config`. For this purpose, we should:
-
-1. Create the `RemoteConfig` entity.
-2. Add the `getConfig` method to the `RemoteConfigRepository`.
-3. Implement the `GetRemoteConfigUseCase` class.
-
-So, the domain layer should look like this:
-
-![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_domain_class.puml)
+The following paragraph provides an implementation of remote config integration for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
 
 ### Data layer
 
-The `FirebaseRemoteConfigRepository` of the data layer should implement the methods from the `RemoteConfigRepository` interface. To do that, we should create a `FirebaseRemoteConfigAdapter` class.
+The data layer provides the `FirebaseRemoteConfigurationRepository` implementation that uses the [Firebase package](https://pub.dev/packages/firebase) available for Flutter for Web and the `RemoteConfigurationData` that represents the `RemoteConfiguration` entity.
 
-The following class diagram represents the classes of the data layer required for this feature:
+The following class diagram states the structure of the data layer:
 
-![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_data_class.puml)
+![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_data_layer_class_diagram.puml)
+
+### Domain layer
+
+The domain layer should provide an interface for the `FirebaseRemoteConfigurationRepository` we need to interact with the `Remote Config API`. Also, the layer provides all the use cases required to interact with the repository, and entities required for the `Remote Config` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
+
+- Implement the `RemoteConfigurationRepository` interface with a `applyDefaults()`, `fetch()`, `activate()`, and `getConfigMap()` methods.
+- Add the `RemoteConfiguration` entity with fields that come from a remote API.
+- Add the `FetchRemoteConfigurationUseCase` to perform fetching configurations.
+
+The following class diagram demonstrates the domain layer structure:
+
+![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_domain_layer_class_diagram.puml)
 
 ### Presentation layer
 
-Once we've created a domain and data layers, it's time to create a presentation layer. This layer contains the `RemoteConfigNotifier` - the class that manages `Remote Config` values.
+Once we've added both the domain and data layers, it's time to add the feature to the presentation. The state of the remote config is maintained by the `RemoteConfigurationNotifier` integrated to the `InjectionContainer` so it is available within the application.
 
-1. Create a `RemoteConfigNotifier` class.
-2. Implement the fields that stand for `Remote Config` values.
-3. Inject the notifier into the `InjectionContainer`.
+The following class diagram demonstrates the structure of the presentation layer:
 
-The following class diagram represents the classes of the presentation layer required for this feature:
+![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_presentation_layer_class_diagram.puml)
 
-![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_presentation_class.puml)
+The following sequence diagram describes how the application applies `Remote Config` values when a user enters the application:
 
-So, when the user enters the application, the following sequence diagram describes how the application applies `Remote Config` values:
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_sequence_diagram.puml)
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_sequence.puml)
-
-Let's consider the mechanism of applying the `Remote Config` values in the application.
-
-When the user enters the application, he sees the `LoadingPage` while waiting until the `_initializeRemoteConfig` method of the `RemoteConfigNotifier` finishes. After that, the `isLoading` status of the `RemoteConfigNotifier` sets to `false`, and the user can see the UI with `Remote Config` values applied.
+Let's consider the mechanism of applying the `Remote Config` values in the application. When a user enters the application, he or she stays on the `LoadingPage` until the `initializeRemoteConfiguration` method of the `RemoteConfigurationNotifier` finishes. Once the initializing completes, the `isLoading` status of the `RemoteConfigNotifier` is set to `false`. The user then can proceed to the application with the configurations applied.

@@ -1,0 +1,26 @@
+@startuml remote_config_data_layer_class_diagram
+
+package common.domain.repository {
+    interface RemoteConfigurationRepository {}
+}
+
+package common.domain.entities {
+    interface RemoteConfiguration {}
+}
+
+package common.data {
+    package repository {
+        class FirebaseRemoteConfigurationRepository {}
+    }
+
+    package model {
+        class RemoteConfigurationData {}
+    }
+}
+
+FirebaseRemoteConfigurationRepository ..|> RemoteConfigurationRepository
+FirebaseRemoteConfigurationRepository --> RemoteConfigurationData : uses
+
+RemoteConfigurationData ..|> RemoteConfiguration
+
+@enduml
