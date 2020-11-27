@@ -1,7 +1,7 @@
 import '../../common/config/browser_name.dart';
 import 'user_credentials.dart';
 
-/// Represents the arguments for the test driver application.
+/// A class that represents the arguments for the test driver application.
 class DriverTestArguments {
   /// A working directory to run all the commands.
   final String workingDir;

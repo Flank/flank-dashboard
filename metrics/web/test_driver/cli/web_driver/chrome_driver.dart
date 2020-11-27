@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:archive/archive.dart';
-import 'package:meta/meta.dart';
 
 import '../../common/config/driver_tests_config.dart';
+import '../../util/chrome_driver_utils.dart';
 import 'web_driver.dart';
 
 /// A class that represents the chrome [WebDriver].
@@ -11,22 +11,22 @@ class ChromeDriver extends WebDriver {
   final ZipDecoder _archiveDecoder = ZipDecoder();
 
   /// A version of the Chromedriver.
-  final String version;
+  final String _version;
 
-  /// Creates a new instance of the [ChromeDriver] with the given [version].
-  ///
-  /// The [version] must not be `null`.
-  ChromeDriver({
-    @required this.version,
-  }) : assert(version != null);
+  /// Creates a new instance of the [ChromeDriver] with the given version.
+  ChromeDriver(this._version);
 
   @override
-  String get downloadUrl {
-    const basePath = DriverTestsConfig.chromedriverUrlBasePath;
-    final driverArchiveName = _getDriverArchiveName();
+  Future<String> get downloadUrl async {
+    String _driverVersion = _version;
 
-    return '$basePath/$version/$driverArchiveName';
+    _driverVersion ??= await ChromeDriverUtils.getLatestVersion();
+
+    return _buildDownloadUrl(_driverVersion);
   }
+
+  @override
+  String get version => _version;
 
   @override
   String get executableName => 'chromedriver';
@@ -36,6 +36,15 @@ class ChromeDriver extends WebDriver {
     final chromeDriverBytes = File(filePath).readAsBytesSync();
 
     return _archiveDecoder.decodeBytes(chromeDriverBytes);
+  }
+
+  /// Builds the download URL for the Chromedriver based
+  /// on the given [driverVersion].
+  String _buildDownloadUrl(driverVersion) {
+    const basePath = DriverTestsConfig.chromedriverUrlBasePath;
+    final driverArchiveName = _getDriverArchiveName();
+
+    return '$basePath/$driverVersion/$driverArchiveName';
   }
 
   /// Returns the name of the Chromedriver compatible with the current [Platform].

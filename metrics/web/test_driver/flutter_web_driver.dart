@@ -86,20 +86,7 @@ class FlutterWebDriver {
 
   /// Prepares the web driver for the driver tests.
   Future<void> _prepareWebDriver() async {
-    String version;
-
-    if (_args.chromedriverVersion == null) {
-      try {
-        version = await ChromeDriverUtils.getLatestVersion();
-      } catch (e) {
-        stderr.writeln(e.message);
-        exit(0);
-      }
-    } else {
-      version = _args.chromedriverVersion;
-    }
-
-    await ChromeDriver(version: version).prepare(_args.workingDir);
+    await ChromeDriver(_args.chromedriverVersion).prepare(_args.workingDir);
   }
 
   /// Runs the driver tests.
