@@ -64,6 +64,19 @@ void main() {
     );
 
     testWidgets(
+      "displays the given tooltip text",
+      (WidgetTester tester) async {
+        const tooltip = "test";
+
+        await tester.pumpWidget(
+          const _TooltipPopupTestbed(tooltip: tooltip),
+        );
+
+        expect(find.text(tooltip), findsOneWidget);
+      },
+    );
+
+    testWidgets(
       "applies the text style from the metrics theme to the tooltip text",
       (WidgetTester tester) async {
         const tooltip = "test";
@@ -86,7 +99,7 @@ void main() {
 
 /// A testbed class required to test the [TooltipPopup].
 class _TooltipPopupTestbed extends StatelessWidget {
-  /// The tooltip text to display.
+  /// A tooltip text of the [TooltipPopup].
   final String tooltip;
 
   /// A [MetricsThemeData] used in tests.

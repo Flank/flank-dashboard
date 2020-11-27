@@ -24,8 +24,7 @@ import '../../../test_utils/test_injection_container.dart';
 void main() {
   group("MetricsTable", () {
     Finder _findRowByText(String text) {
-      final rowFinder =
-          find.ancestor(of: find.text(text), matching: find.byType(Row));
+      final rowFinder = find.widgetWithText(Row, text);
 
       return rowFinder.first;
     }
@@ -226,8 +225,12 @@ void main() {
         });
         await tester.pumpAndSettle();
 
+        final coverageMetricWidget = find.ancestor(
+          of: find.byType(CoverageCirclePercentage),
+          matching: find.byType(Padding),
+        );
         final coverageMetricWidgetCenter = tester.getCenter(
-          find.byType(CoverageCirclePercentage),
+          coverageMetricWidget.first,
         );
 
         final coverageTitleCenter =

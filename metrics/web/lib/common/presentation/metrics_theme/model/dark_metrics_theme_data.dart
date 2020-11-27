@@ -327,7 +327,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 color: _tableHeaderColor,
                 fontWeight: FontWeight.normal,
                 fontSize: 14.0,
-                lineHeightInPixels: 16.0
+                lineHeightInPixels: 16.0,
               ),
             ),
             metricsTableHeaderPlaceholderTheme: ShimmerPlaceholderThemeData(

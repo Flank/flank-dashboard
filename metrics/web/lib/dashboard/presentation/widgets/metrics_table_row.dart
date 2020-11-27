@@ -50,7 +50,7 @@ class MetricsTableRow extends StatelessWidget {
     const padding = EdgeInsets.only(right: 28.0);
 
     return Container(
-      padding: const EdgeInsets.only(left: 32.0, right: 28.0),
+      padding: const EdgeInsets.only(left: 32.0, right: 26.0),
       child: Row(
         children: <Widget>[
           status,
@@ -61,7 +61,7 @@ class MetricsTableRow extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 754.0,
+            width: 756.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -80,21 +80,21 @@ class MetricsTableRow extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: padding,
+                  padding: const EdgeInsets.only(right: 27.0),
                   child: SizedBox(
                     width: 74.0,
                     child: buildNumber,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 23.0),
+                  padding: const EdgeInsets.only(right: 22.0),
                   child: SizedBox(
-                    width: 72.0,
+                    width: 74.0,
                     child: stability,
                   ),
                 ),
                 SizedBox(
-                  width: 81.0,
+                  width: 83.0,
                   child: coverage,
                 ),
               ],

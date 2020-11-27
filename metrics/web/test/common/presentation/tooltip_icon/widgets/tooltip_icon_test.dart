@@ -29,9 +29,8 @@ void main() {
     Future<void> _hoverBar(WidgetTester tester) async {
       final mouseRegion = tester.widget<MouseRegion>(mouseRegionFinder);
       mouseRegion.onEnter(const PointerEnterEvent());
-      await mockNetworkImagesFor(() {
-        return tester.pumpAndSettle();
-      });
+
+      return tester.pumpAndSettle();
     }
 
     testWidgets(
@@ -115,7 +114,7 @@ void main() {
 
 /// A testbed class required to test the [TooltipIcon].
 class _TooltipIconTestbed extends StatelessWidget {
-  /// The tooltip text to display in the [TooltipPopup].
+  /// A tooltip text to display in the [TooltipPopup].
   final String tooltip;
 
   /// A [MetricsThemeData] used in tests.

@@ -5,13 +5,13 @@ import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/tooltip_popup/widgets/tooltip_popup.dart';
 
-/// A widget that displays the [TooltipPopup] on hover.
+/// A widget with a tooltip icon that displays the [TooltipPopup] on hover.
 class TooltipIcon extends StatelessWidget {
-  /// The tooltip text to display in the [TooltipPopup].
-  final String tooltip;
+  /// A width of the [TooltipPopup].
+  static const double _tooltipPopupWidth = 187.0;
 
-  /// A width of the [BasePopup.popup].
-  static const double _popupWidth = 187.0;
+  /// A tooltip text to display in the [TooltipPopup].
+  final String tooltip;
 
   /// Creates a new instance of the [TooltipIcon].
   ///
@@ -30,11 +30,11 @@ class TooltipIcon extends StatelessWidget {
       popupOpaque: false,
       closeOnTapOutside: false,
       popupConstraints: const BoxConstraints(
-        minWidth: _popupWidth,
-        maxWidth: _popupWidth,
+        minWidth: _tooltipPopupWidth,
+        maxWidth: _tooltipPopupWidth,
       ),
       offsetBuilder: (triggerSize) {
-        final dx = triggerSize.width / 2 - _popupWidth / 2;
+        final dx = triggerSize.width / 2 - _tooltipPopupWidth / 2;
         final dy = triggerSize.height + 4.0;
 
         return Offset(dx, dy);
@@ -45,7 +45,7 @@ class TooltipIcon extends StatelessWidget {
           onExit: (_) => closePopup(),
           child: SvgImage(
             'icons/info.svg',
-            width: 16.0,
+            width: 20.0,
             height: 16.0,
             color: isOpened ? iconTheme.hoverColor : iconTheme.color,
           ),

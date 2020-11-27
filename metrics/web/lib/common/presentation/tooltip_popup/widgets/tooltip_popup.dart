@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 
 /// A widget that displays a tooltip popup with specific shape.
 class TooltipPopup extends StatelessWidget {
-  /// The tooltip text to display.
+  /// A tooltip text to display.
   final String tooltip;
 
   /// Create a new instance of the [TooltipPopup].

@@ -122,7 +122,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
             ),
           ),
           coverage: Padding(
-            padding: const EdgeInsets.only(left: 5.0, right: 4.0),
+            padding: const EdgeInsets.only(left: 5.0, right: 6.0),
             child: SizedBox(
               height: 72.0,
               child: LoadingBuilder(

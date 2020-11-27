@@ -13,7 +13,7 @@ class MetricsTableTitleHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const padding = EdgeInsets.only(right: 6.0);
+    const padding = EdgeInsets.only(right: 4.0);
     final metricsTableHeaderTheme = MetricsTheme.of(context)
         .projectMetricsTableTheme
         .metricsTableHeaderTheme;
