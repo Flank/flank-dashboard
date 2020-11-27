@@ -1,4 +1,4 @@
-import 'enum.dart';
+import 'package:metrics_core/metrics_core.dart';
 
 /// An enum representing device ids that Flutter can run applications on.
 ///

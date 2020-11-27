@@ -1,0 +1,37 @@
+import 'package:metrics/analytics/domain/entities/page_name.dart';
+import 'package:metrics/analytics/domain/usecases/log_page_view_use_case.dart';
+import 'package:metrics/analytics/domain/usecases/parameters/page_name_param.dart';
+import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
+
+import '../../../test_utils/analytics_repository_mock.dart';
+import '../../../test_utils/matcher_util.dart';
+
+void main() {
+  group("LogPageViewUseCase", () {
+    final repository = AnalyticsRepositoryMock();
+
+    tearDown(() {
+      reset(repository);
+    });
+
+    final pageNameParam = PageNameParam(pageName: PageName.dashboardPage);
+
+    test("throws an AssertionError if the given repository is null", () {
+      expect(
+        () => LogPageViewUseCase(null),
+        MatcherUtil.throwsAssertionError,
+      );
+    });
+
+    test("delegates call to the AnalyticsRepository.logPageView", () async {
+      final logPageViewUseCase = LogPageViewUseCase(repository);
+
+      await logPageViewUseCase(pageNameParam);
+
+      verify(repository.logPageView(
+        pageNameParam.pageName.value,
+      )).called(equals(1));
+    });
+  });
+}

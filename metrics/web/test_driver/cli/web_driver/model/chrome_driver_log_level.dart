@@ -1,4 +1,5 @@
-import '../../../common/model/enum.dart';
+import 'package:metrics_core/metrics_core.dart';
+
 import '../command/chrome_driver_command.dart';
 
 /// A class that holds the [ChromeDriverCommand] log levels.
