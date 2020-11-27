@@ -14,7 +14,7 @@ end box
 
 box "data"
 participant RemoteConfigurationRepository << (C,#ADD1B2) >>
-participant FirebaseRemoteConfigurationAdapter << (C,#ADD1B2) >>
+participant RemoteConfigurationData << (C,#ADD1B2) >>
 end box
 
 database "Firebase Remote Config" as FRC
@@ -25,15 +25,15 @@ activate RemoteConfigurationNotifier
 RemoteConfigurationNotifier -> FetchRemoteConfigurationUseCase : call()
 activate FetchRemoteConfigurationUseCase
 
-FetchRemoteConfigurationUseCase -> RemoteConfigurationRepository : fetchConfiguration()
+FetchRemoteConfigurationUseCase -> RemoteConfigurationRepository
 activate RemoteConfigurationRepository
 
 RemoteConfigurationRepository -> FRC : Fetch remote configuration
 
 FRC -> RemoteConfigurationRepository : Remote config
 
-RemoteConfigurationRepository -> FirebaseRemoteConfigurationAdapter : FirebaseRemoteConfigurationAdapter(remoteConfig)
-activate FirebaseRemoteConfigAdapter
+RemoteConfigurationRepository -> RemoteConfigurationData : .fromMap(remoteConfigMap)
+activate RemoteConfigurationData
 
 return remoteConfiguration
 return remoteConfiguration
