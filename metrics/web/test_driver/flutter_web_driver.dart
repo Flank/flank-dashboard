@@ -10,7 +10,6 @@ import 'cli/web_driver/runner/chrome_driver_runner.dart';
 import 'common/config/logs_file_config.dart';
 import 'common/logger/logger.dart';
 import 'process_manager/process_manager.dart';
-import 'util/chrome_driver_utils.dart';
 
 /// Runs the application and driver tests for this application.
 class FlutterWebDriver {
