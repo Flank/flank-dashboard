@@ -51,7 +51,7 @@ The following class diagram states the structure of the data layer:
 
 The domain layer should provide an interface for the `FirebaseRemoteConfigurationRepository` we need to interact with the `Remote Config API`. Also, the layer provides all the use cases required to interact with the repository, and entities required for the `Remote Config` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
 
-- Implement the `RemoteConfigurationRepository` interface with a `applyDefaults()`, `fetch()`, `activate()`, and `getConfigMap()` methods.
+- Implement the `RemoteConfigurationRepository` interface with a `applyDefaults()`, `fetch()`, `activate()`, and `getConfiguration()` methods.
 - Add the `RemoteConfiguration` entity with fields that come from a remote API.
 - Add the `FetchRemoteConfigurationUseCase` to perform fetching configurations.
 
