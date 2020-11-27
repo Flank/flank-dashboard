@@ -2,7 +2,7 @@ import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An [Enum] that represents the page names.
-class PageName implements Enum<String> {
+class PageName extends Enum<String> {
   /// A [PageName] that represents the login page name.
   static const PageName loginPage = PageName._(RouteName.login);
 
@@ -21,9 +21,6 @@ class PageName implements Enum<String> {
     projectGroupsPage,
   };
 
-  @override
-  final String value;
-
   /// Creates a new instance of the [PageName].
-  const PageName._(this.value);
+  const PageName._(String value) : super(value);
 }
