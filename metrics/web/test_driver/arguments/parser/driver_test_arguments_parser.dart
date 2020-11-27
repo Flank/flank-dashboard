@@ -10,6 +10,7 @@ class DriverTestArgumentsParser {
   static const String _workingDirOptionName = 'working-dir';
   static const String _storeLogsToOptionName = 'store-logs-to';
   static const String _browserNameOptionName = 'browser-name';
+  static const String _chromedriverVersion = 'chromedriver-version';
   static const String _emailOptionName = 'email';
   static const String _passwordOptionName = 'password';
   static const String _verboseFlagName = 'verbose';
@@ -37,6 +38,7 @@ class DriverTestArgumentsParser {
     final showHelp = result[_helpFlagName] as bool;
     final email = result[_emailOptionName] as String;
     final password = result[_passwordOptionName] as String;
+    final chromedriverVersion = result[_chromedriverVersion] as String;
 
     return DriverTestArguments(
       logsDir: logsDir,
@@ -45,6 +47,7 @@ class DriverTestArgumentsParser {
       verbose: verbose,
       quiet: quiet,
       showHelp: showHelp,
+      chromedriverVersion: chromedriverVersion,
       credentials: UserCredentials(
         email: email,
         password: password,
@@ -95,6 +98,12 @@ class DriverTestArgumentsParser {
       help: 'Name of browser where tests will be executed.',
       allowed: BrowserName.values.map((name) => name.toString()),
       defaultsTo: '${BrowserName.chrome}',
+    );
+
+    _parser.addOption(
+      _chromedriverVersion,
+      help:
+          'The chromedriver version to use for tests if the driver is not installed. If not specified, the latest version is used.',
     );
 
     _parser.addOption(

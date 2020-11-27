@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
@@ -7,11 +8,17 @@ import '../../util/file_utils.dart';
 
 /// An abstract class that represents the web driver.
 abstract class WebDriver {
+  /// A version of this web driver.
+  final String version;
+
   /// An executable name of this web driver.
   String get executableName;
 
   /// A URL used to download this web driver.
-  String get downloadUrl;
+  FutureOr<String> get downloadUrl;
+
+  /// Creates a new instance of the [WebDriver].
+  const WebDriver(this.version);
 
   /// Decodes the archive file specified as a [filePath].
   Archive decodeArchive(String filePath);
@@ -26,7 +33,7 @@ abstract class WebDriver {
 
     if (!webDriverFile.existsSync() && globalChromedriver == null) {
       await FileUtils.download(
-        downloadUrl,
+        await downloadUrl,
         webDriverFilePath,
       );
 
