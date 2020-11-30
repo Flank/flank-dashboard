@@ -5,7 +5,11 @@ import 'package:metrics/common/domain/entities/remote_configuration.dart';
 /// Provides an ability to get the remote configuration data.
 abstract class RemoteConfigurationRepository {
   /// Applies the default values for the remote configuration.
-  void applyDefaults(Map<String, dynamic> defaults);
+  void setDefaults({
+    bool isLoginFormEnabled,
+    bool isFpsMonitorEnabled,
+    bool isRendererDisplayEnabled,
+  });
 
   /// Fetches parameter values from the remote configuration service.
   Future<void> fetch();

@@ -4,15 +4,8 @@ import 'package:metrics/common/domain/repositories/remote_configuration_reposito
 
 /// A [UseCase] that provides an ability to fetch the [RemoteConfiguration].
 class FetchRemoteConfigurationUseCase
-    extends UseCase<RemoteConfiguration, void> {
+    extends UseCase<Future<RemoteConfiguration>, void> {
   final RemoteConfigurationRepository _repository;
-
-  /// Default values for the [RemoteConfiguration].
-  static const Map<String, bool> _remoteConfigDefaults = {
-    'isLoginFormEnabled': true,
-    'isFpsMonitorEnabled': false,
-    'isRendererDisplayEnabled': false,
-  };
 
   /// Creates the [FetchRemoteConfigurationUseCase] use case with
   /// the given [RemoteConfigurationRepository].
@@ -23,10 +16,9 @@ class FetchRemoteConfigurationUseCase
   }
 
   @override
-  RemoteConfiguration call([_]) {
-    _repository.applyDefaults(_remoteConfigDefaults);
-    _repository.fetch();
-    _repository.activate();
+  Future<RemoteConfiguration> call([_]) async {
+    await _repository.fetch();
+    await _repository.activate();
 
     return _repository.getConfiguration();
   }

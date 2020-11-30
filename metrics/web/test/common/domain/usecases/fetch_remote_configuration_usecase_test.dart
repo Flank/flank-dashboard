@@ -30,18 +30,9 @@ void main() {
     });
 
     test(
-      ".call() uses the apply defaults method of the remote configuration repository",
-      () async {
-        useCase();
-
-        verify(repository.applyDefaults(any)).called(1);
-      },
-    );
-
-    test(
       ".call() uses the fetch method of the remote configuration repository",
       () async {
-        useCase();
+        await useCase();
 
         verify(repository.fetch()).called(1);
       },
@@ -50,7 +41,7 @@ void main() {
     test(
       ".call() uses the activate method of the remote configuration repository",
       () async {
-        useCase();
+        await useCase();
 
         verify(repository.activate()).called(1);
       },
@@ -59,7 +50,7 @@ void main() {
     test(
       ".call() uses the get configuration method of the remote configuration repository",
       () async {
-        useCase();
+        await useCase();
 
         verify(repository.getConfiguration()).called(1);
       },
