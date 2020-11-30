@@ -2,6 +2,7 @@
 
 package base.domain.usecases {
     class FetchRemoteConfigurationUseCase {}
+    class SetDefaultRemoteConfigurationUseCase {}
 }
 
 package common.presentation.state {
@@ -29,5 +30,6 @@ CoolWidget --> RemoteConfigurationNotifier : uses
 CoolPage --> RemoteConfigurationNotifier : uses
 
 RemoteConfigurationNotifier --> FetchRemoteConfigurationUseCase : uses
+RemoteConfigurationNotifier --> SetDefaultRemoteConfigurationUseCase : uses
 
 @enduml
