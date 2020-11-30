@@ -15,7 +15,7 @@ participant FetchRemoteConfigurationUseCase << (C,#ADD1B2) >>
 end box
 
 box "data"
-participant RemoteConfigurationRepository << (C,#ADD1B2) >>
+participant FirebaseRemoteConfigurationRepository << (C,#ADD1B2) >>
 participant RemoteConfigurationDeserializer << (C,#ADD1B2) >>
 end box
 
@@ -30,38 +30,38 @@ activate RemoteConfigurationNotifier
 RemoteConfigurationNotifier -> SetDefaultRemoteConfigurationUseCase : call(remoteConfigurationParams)
 activate SetDefaultRemoteConfigurationUseCase
 
-SetDefaultRemoteConfigurationUseCase -> RemoteConfigurationRepository : setDefaults(isLoginFormEnabled, isFpsMonitorEnabled, isRendererDisplayEnabled)
-activate RemoteConfigurationRepository
+SetDefaultRemoteConfigurationUseCase -> FirebaseRemoteConfigurationRepository : setDefaults(isLoginFormEnabled, isFpsMonitorEnabled, isRendererDisplayEnabled)
+activate FirebaseRemoteConfigurationRepository
 deactivate SetDefaultRemoteConfigurationUseCase
 
 RemoteConfigurationNotifier -> FetchRemoteConfigurationUseCase : call()
 activate FetchRemoteConfigurationUseCase
 
-FetchRemoteConfigurationUseCase -> RemoteConfigurationRepository : fetch()
+FetchRemoteConfigurationUseCase -> FirebaseRemoteConfigurationRepository : fetch()
 
-RemoteConfigurationRepository -> FRC : Fetch remote configuration
+FirebaseRemoteConfigurationRepository -> FRC : Fetch remote configuration
 
-FRC --> RemoteConfigurationRepository : Remote config
+FRC --> FirebaseRemoteConfigurationRepository : Remote config
 
-FetchRemoteConfigurationUseCase -> RemoteConfigurationRepository : activate()
-FetchRemoteConfigurationUseCase -> RemoteConfigurationRepository : getConfiguration()
+FetchRemoteConfigurationUseCase -> FirebaseRemoteConfigurationRepository : activate()
+FetchRemoteConfigurationUseCase -> FirebaseRemoteConfigurationRepository : getConfiguration()
 
-RemoteConfigurationRepository -> RemoteConfigurationDeserializer : .fromMap(remoteConfigMap)
+FirebaseRemoteConfigurationRepository -> RemoteConfigurationDeserializer : .fromMap(remoteConfigMap)
 activate RemoteConfigurationDeserializer
 
-RemoteConfigurationDeserializer --> RemoteConfigurationRepository : remoteConfig
+RemoteConfigurationDeserializer --> FirebaseRemoteConfigurationRepository : remoteConfig
 deactivate RemoteConfigurationDeserializer
 
-RemoteConfigurationRepository --> FetchRemoteConfigurationUseCase : remoteConfig
-deactivate RemoteConfigurationRepository
+FirebaseRemoteConfigurationRepository --> FetchRemoteConfigurationUseCase : remoteConfig
+deactivate FirebaseRemoteConfigurationRepository
 
 FetchRemoteConfigurationUseCase --> RemoteConfigurationNotifier : remoteConfig
 deactivate FetchRemoteConfigurationUseCase
 
-RemoteConfigurationNotifier --> UI : Configuration changes
+RemoteConfigurationNotifier --> UI : Notify about new configurations
 deactivate RemoteConfigurationNotifier
 
-UI --> Bob : Updated UI
+UI --> Bob : Dismiss the loading screen
 deactivate UI
 
 @enduml
