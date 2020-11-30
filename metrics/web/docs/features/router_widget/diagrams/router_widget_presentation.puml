@@ -7,7 +7,6 @@ package common.presentation.routes {
         }
 
         class MetricsRouterDelegate{
-            pageManager : RoutePageManager
 
             Widget build()
             Future<void> setNewRoutePath()
@@ -21,7 +20,6 @@ package common.presentation.routes {
 MetricsRouterDelegate --* ChangeNotifier : with
 MetricsRouterDelegate --* PopNavigatorRouterDelegateMixin : with
 MetricsRouterDelegate --> MetricsPageGenerator : uses
-RoutePageManager --|> ChangeNotifier : extends
 MaterialApp.router --> MetricsRouterDelegate : uses
 MaterialApp.router --> MetricsRouteInformationParser :uses
 @enduml
