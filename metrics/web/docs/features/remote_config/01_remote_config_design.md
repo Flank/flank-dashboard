@@ -54,7 +54,7 @@ The domain layer should provide an interface for the `FirebaseRemoteConfiguratio
 
 - Implement the `RemoteConfigurationRepository` interface with appropriate methods.
 - Add the `RemoteConfiguration` entity with fields that come from a remote API.
-- Add the `SetDefaultRemoteConfigurationUseCase` to set the default configuration.
+- Add the `SetDefaultRemoteConfigurationUseCase` to set the default configurations.
 - Add the `FetchRemoteConfigurationUseCase` to perform fetching configurations.
 
 The following class diagram demonstrates the domain layer structure:

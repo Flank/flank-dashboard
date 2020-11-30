@@ -10,6 +10,7 @@ package common.presentation.state {
         + remoteConfiguration : RemoteConfiguration
 
         - _fetchRemoteConfigurationUseCase : FetchRemoteConfigurationUseCase
+        - _setDefaultRemoteConfigurationUseCase : SetDefaultRemoteConfigurationUseCase
 
         + Future<void> initializeRemoteConfig()   
     }

@@ -5,7 +5,7 @@ package common.domain.repository {
 }
 
 package common.domain.entities {
-    interface RemoteConfiguration {}
+    class RemoteConfiguration {}
 }
 
 package common.data {
