@@ -5,6 +5,8 @@ import 'package:metrics/common/domain/repositories/remote_configuration_reposito
 /// A [UseCase] that provides an ability to fetch the [RemoteConfiguration].
 class FetchRemoteConfigurationUseCase
     extends UseCase<Future<RemoteConfiguration>, void> {
+  /// A [RemoteConfigurationRepository] that provides an ability to interact
+  /// with the persistent store.
   final RemoteConfigurationRepository _repository;
 
   /// Creates the [FetchRemoteConfigurationUseCase] use case with
