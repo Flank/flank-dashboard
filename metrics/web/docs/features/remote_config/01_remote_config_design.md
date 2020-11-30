@@ -46,7 +46,7 @@ The data layer provides the `FirebaseRemoteConfigurationRepository` implementati
 
 The following class diagram states the structure of the data layer:
 
-![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_data_layer_class_diagram.puml)
+![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/remote_config/diagrams/remote_config_data_layer_class_diagram.puml)
 
 ### Domain layer
 
@@ -59,7 +59,7 @@ The domain layer should provide an interface for the `FirebaseRemoteConfiguratio
 
 The following class diagram demonstrates the domain layer structure:
 
-![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_domain_layer_class_diagram.puml)
+![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/remote_config/diagrams/remote_config_domain_layer_class_diagram.puml)
 
 ### Presentation layer
 
@@ -67,10 +67,10 @@ Once we've added both the domain and data layers, it's time to add the feature t
 
 The following class diagram demonstrates the structure of the presentation layer:
 
-![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_presentation_layer_class_diagram.puml)
+![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/remote_config/diagrams/remote_config_presentation_layer_class_diagram.puml)
 
 The following sequence diagram describes how the application applies `Remote Config` values when a user enters the application:
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/remote_config_design/metrics/web/docs/features/remote_config/diagrams/remote_config_sequence_diagram.puml)
+![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/remote_config/diagrams/remote_config_sequence_diagram.puml)
 
 Let's consider the mechanism of applying the `Remote Config` values in the application. When a user enters the application, he or she stays on the `LoadingPage` until the `initializeRemoteConfiguration` method of the `RemoteConfigurationNotifier` finishes. Once the initializing completes, the `isLoading` status of the `RemoteConfigNotifier` is set to `false`. The user then can proceed to the application with the configurations applied.
