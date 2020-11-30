@@ -13,10 +13,14 @@ class TooltipIcon extends StatelessWidget {
   /// A tooltip text to display in the [TooltipPopup].
   final String tooltip;
 
+  /// A source of the image to display.
+  final String src;
+
   /// Creates a new instance of the [TooltipIcon].
   ///
   /// The [tooltip] must not be `null`.
-  const TooltipIcon({
+  const TooltipIcon(
+    this.src, {
     Key key,
     @required this.tooltip,
   })  : assert(tooltip != null),
@@ -43,11 +47,14 @@ class TooltipIcon extends StatelessWidget {
         return MouseRegion(
           onEnter: (_) => openPopup(),
           onExit: (_) => closePopup(),
-          child: SvgImage(
-            'icons/info.svg',
-            width: 20.0,
-            height: 16.0,
-            color: isOpened ? iconTheme.hoverColor : iconTheme.color,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2.0),
+            child: SvgImage(
+              src,
+              width: 16.0,
+              height: 16.0,
+              color: isOpened ? iconTheme.hoverColor : iconTheme.color,
+            ),
           ),
         );
       },

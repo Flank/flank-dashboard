@@ -73,7 +73,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
             buildStatusStyleStrategy: const ProjectBuildStatusStyleStrategy(),
           ),
           name: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 16.0, right: 28.0),
             child: Text(
               projectMetrics.projectName ?? '',
               style: theme.textStyle,

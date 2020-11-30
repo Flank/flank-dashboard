@@ -342,6 +342,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               textStyle: MetricsTextStyle(
                 fontSize: 24.0,
                 lineHeightInPixels: 28.0,
+                fontWeight: FontWeight.w500,
               ),
             ),
             projectMetricsTilePlaceholderTheme: ShimmerPlaceholderThemeData(

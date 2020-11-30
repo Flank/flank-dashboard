@@ -45,15 +45,17 @@ void main() {
     );
 
     testWidgets(
-      "displays an info image",
+      "displays the image from the given src",
       (WidgetTester tester) async {
+        const src = 'test';
+
         await mockNetworkImagesFor(() async {
-          await tester.pumpWidget(const _TooltipIconTestbed());
+          await tester.pumpWidget(const _TooltipIconTestbed(src: src));
         });
 
         final image = FinderUtil.findNetworkImageWidget(tester);
 
-        expect(image.url, equals("icons/info.svg"));
+        expect(image.url, equals(src));
       },
     );
 
@@ -117,6 +119,9 @@ class _TooltipIconTestbed extends StatelessWidget {
   /// A tooltip text to display in the [TooltipPopup].
   final String tooltip;
 
+  /// A source of the image to display.
+  final String src;
+
   /// A [MetricsThemeData] used in tests.
   final MetricsThemeData themeData;
 
@@ -128,6 +133,7 @@ class _TooltipIconTestbed extends StatelessWidget {
     Key key,
     this.themeData = const MetricsThemeData(),
     this.tooltip = 'tooltip',
+    this.src = 'src',
   }) : super(key: key);
 
   @override
@@ -135,6 +141,7 @@ class _TooltipIconTestbed extends StatelessWidget {
     return MetricsThemedTestbed(
       metricsThemeData: themeData,
       body: TooltipIcon(
+        src,
         tooltip: tooltip,
       ),
     );
