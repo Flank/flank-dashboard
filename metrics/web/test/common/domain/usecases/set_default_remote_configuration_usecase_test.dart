@@ -8,10 +8,6 @@ void main() {
   group("SetDefaultRemoteConfigurationUseCase", () {
     final repository = RemoteConfigurationRepositoryMock();
 
-    tearDown(() {
-      reset(repository);
-    });
-
     test(
       "throws an ArgumentError if the given repository is null",
       () {

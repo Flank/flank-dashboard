@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 /// Represents the remote configuration parameter.
 class RemoteConfigurationParam extends Equatable {
-  /// Indicates whether the login form feature is enabled.
+  /// Indicates whether to show the login form.
   final bool isLoginFormEnabled;
 
   /// Indicates whether the FPS monitor feature is enabled.

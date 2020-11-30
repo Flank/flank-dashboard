@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 /// An entity representing the remote configuration.
 @immutable
 class RemoteConfiguration {
-  /// Indicates whether the login form feature is enabled.
+  /// Indicates whether to show the login form.
   final bool isLoginFormEnabled;
 
   /// Indicates whether the FPS monitor feature is enabled.
