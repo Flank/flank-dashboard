@@ -9,7 +9,7 @@ package base.domain.usecases {
 package common.domain {
     package repository {
         interface RemoteConfigurationRepository {
-            + void applyDefaults();
+            + void setDefaults(isLoginFormEnabled, isFpsMonitorEnabled, isRendererDisplayEnabled);
             + Future<void> fetch();
             + Future<void> activate();
             + RemoteConfiguration getConfiguration();
@@ -28,12 +28,30 @@ package common.domain {
         class FetchRemoteConfigurationUseCase {
             + Future<RemoteConfiguration> call()
         }
+
+        class SetDefaultRemoteConfigurationUseCase {
+            + void call(RemoteConfigurationParam params);
+        }
+
+        package parameters {
+            class RemoteConfigurationParam {
+                + isLoginFormEnabled : bool;
+                + isFpsMonitorEnabled : bool;
+                + isRendererDisplayEnabled : bool;
+            }
+        }
+
     }
 }
 
 FetchRemoteConfigurationUseCase ..|> UseCase
+SetDefaultRemoteConfigurationUseCase ..|> UseCase
+
 FetchRemoteConfigurationUseCase -up-> RemoteConfigurationRepository : uses
+SetDefaultRemoteConfigurationUseCase -up-> RemoteConfigurationRepository : uses
 
 RemoteConfigurationRepository --> RemoteConfiguration: uses
+
+SetDefaultRemoteConfigurationUseCase --> RemoteConfigurationParam : uses
 
 @enduml

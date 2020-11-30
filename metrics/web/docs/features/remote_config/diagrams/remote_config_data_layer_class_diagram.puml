@@ -13,14 +13,16 @@ package common.data {
         class FirebaseRemoteConfigurationRepository {}
     }
 
-    package model {
-        class RemoteConfigurationData {}
+    package deserializer {
+        class RemoteConfigurationDeserializer {
+            # RemoteConfiguration fromMap(Map<String, RemoteConfigValue> map)
+        }
     }
 }
 
 FirebaseRemoteConfigurationRepository ..|> RemoteConfigurationRepository
-FirebaseRemoteConfigurationRepository --> RemoteConfigurationData : uses
+FirebaseRemoteConfigurationRepository --> RemoteConfigurationDeserializer : uses
 
-RemoteConfigurationData ..|> RemoteConfiguration
+RemoteConfigurationDeserializer --> RemoteConfiguration : uses
 
 @enduml

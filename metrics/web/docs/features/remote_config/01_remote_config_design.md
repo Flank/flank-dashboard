@@ -21,9 +21,10 @@ Once the above steps are completed, the `Remote Config API` is enabled for your 
 The `Remote Config` contains key-value pairs where a single key stands for a feature name it controls and a value indicates whether this feature is enabled or not. You can create and manage the `Remote Config` parameters in the Firebase Console. Consider the following steps to open the required page:
 
 1. Open the [Firebase console](https://console.firebase.google.com/) and select your project.
-2. Click the `Remote Config` on the left panel.
-3. Fill the `Parameter key` and the `Default value` inputs.
-4. Click `Add parameter` button, to add the filled key-value pair.
+2. On the left panel, scroll down to the `Grow` section.
+3. Click the `Remote Config` to browse to the configurations.
+
+In order to add new values, fill both the `Parameter key` and `Default value` for the configuration you want to add and press the `Add parameter` button. Newly added key-value pairs aren't available until published. To publish draft changes press the `Publish changes` button at the top of the page that is highlighted with orange. 
 
 For the Metrics Web Application purposes, we should specify parameters for the `FPS Monitor`, `Login Form`, and `Renderer Display` features. Thus, the configurations may look like the following:
 
@@ -51,8 +52,9 @@ The following class diagram states the structure of the data layer:
 
 The domain layer should provide an interface for the `FirebaseRemoteConfigurationRepository` we need to interact with the `Remote Config API`. Also, the layer provides all the use cases required to interact with the repository, and entities required for the `Remote Config` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
 
-- Implement the `RemoteConfigurationRepository` interface with a `applyDefaults()`, `fetch()`, `activate()`, and `getConfiguration()` methods.
+- Implement the `RemoteConfigurationRepository` interface with appropriate methods.
 - Add the `RemoteConfiguration` entity with fields that come from a remote API.
+- Add the `SetDefaultRemoteConfigurationUseCase` to set the default configuration.
 - Add the `FetchRemoteConfigurationUseCase` to perform fetching configurations.
 
 The following class diagram demonstrates the domain layer structure:

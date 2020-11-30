@@ -5,45 +5,63 @@ skinparam BoxPadding 10
 actor Bob
 
 box "presentation"
+participant UI
 participant RemoteConfigurationNotifier << (C,#ADD1B2) >>
 end box
 
 box "domain"
+participant SetDefaultRemoteConfigurationUseCase << (C,#ADD1B2) >>
 participant FetchRemoteConfigurationUseCase << (C,#ADD1B2) >>
 end box
 
 box "data"
 participant RemoteConfigurationRepository << (C,#ADD1B2) >>
-participant RemoteConfigurationData << (C,#ADD1B2) >>
+participant RemoteConfigurationDeserializer << (C,#ADD1B2) >>
 end box
 
 database "Firebase Remote Config" as FRC
 
-Bob -> RemoteConfigurationNotifier : Enters the application
+Bob -> UI : Enters the application
+activate UI
+
+UI -> RemoteConfigurationNotifier : Initialize remote configuration
 activate RemoteConfigurationNotifier
+
+RemoteConfigurationNotifier -> SetDefaultRemoteConfigurationUseCase : call(remoteConfigurationParams)
+activate SetDefaultRemoteConfigurationUseCase
+
+SetDefaultRemoteConfigurationUseCase -> RemoteConfigurationRepository : setDefaults(isLoginFormEnabled, isFpsMonitorEnabled, isRendererDisplayEnabled)
+activate RemoteConfigurationRepository
+deactivate SetDefaultRemoteConfigurationUseCase
 
 RemoteConfigurationNotifier -> FetchRemoteConfigurationUseCase : call()
 activate FetchRemoteConfigurationUseCase
 
-FetchRemoteConfigurationUseCase -> RemoteConfigurationRepository
-activate RemoteConfigurationRepository
+FetchRemoteConfigurationUseCase -> RemoteConfigurationRepository : fetch()
 
 RemoteConfigurationRepository -> FRC : Fetch remote configuration
 
-FRC -> RemoteConfigurationRepository : Remote config
+FRC --> RemoteConfigurationRepository : Remote config
 
-RemoteConfigurationRepository -> RemoteConfigurationData : .fromMap(remoteConfigMap)
-activate RemoteConfigurationData
+FetchRemoteConfigurationUseCase -> RemoteConfigurationRepository : activate()
+FetchRemoteConfigurationUseCase -> RemoteConfigurationRepository : getConfiguration()
 
-return remoteConfiguration
-return remoteConfiguration
-return remoteConfiguration
+RemoteConfigurationRepository -> RemoteConfigurationDeserializer : .fromMap(remoteConfigMap)
+activate RemoteConfigurationDeserializer
 
+RemoteConfigurationDeserializer --> RemoteConfigurationRepository : remoteConfig
+deactivate RemoteConfigurationDeserializer
 
-return Application shows or hides UI parts
-
-
-
+RemoteConfigurationRepository --> FetchRemoteConfigurationUseCase : remoteConfig
 deactivate RemoteConfigurationRepository
+
+FetchRemoteConfigurationUseCase --> RemoteConfigurationNotifier : remoteConfig
+deactivate FetchRemoteConfigurationUseCase
+
+RemoteConfigurationNotifier --> UI : Configuration changes
+deactivate RemoteConfigurationNotifier
+
+UI --> Bob : Updated UI
+deactivate UI
 
 @enduml
