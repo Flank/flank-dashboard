@@ -9,7 +9,7 @@ class PageName extends Enum<String> {
   /// A [PageName] that represents the dashboard page name.
   static const PageName dashboardPage = PageName._(RouteName.dashboard);
 
-  /// A [PageName] that represents the projects group page name.
+  /// A [PageName] that represents the project groups page name.
   static const PageName projectGroupsPage = PageName._(RouteName.projectGroup);
 
   /// A [Set] of the [PageName]s.

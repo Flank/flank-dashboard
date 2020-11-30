@@ -31,7 +31,7 @@ void main() {
 
       const values = PageName.values;
 
-      expect(values.containsAll(expectedValues), isTrue);
+      expect(values, containsAll(expectedValues));
     });
   });
 }

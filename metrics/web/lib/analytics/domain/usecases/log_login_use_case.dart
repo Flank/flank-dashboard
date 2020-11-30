@@ -1,6 +1,6 @@
 import 'package:metrics/analytics/domain/repositories/analytics_repository.dart';
-import 'package:metrics/analytics/domain/usecases/parameters/user_id_param.dart';
 import 'package:metrics/base/domain/usecases/usecase.dart';
+import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 
 /// A [UseCase] that provides an ability to log user logins.
 class LogLoginUseCase implements UseCase<Future<void>, UserIdParam> {
@@ -9,7 +9,11 @@ class LogLoginUseCase implements UseCase<Future<void>, UserIdParam> {
   final AnalyticsRepository _repository;
 
   /// Creates a [LogLoginUseCase] with the given [AnalyticsRepository].
-  const LogLoginUseCase(this._repository) : assert(_repository != null);
+  ///
+  /// The given [AnalyticsRepository] must not be `null`.
+  LogLoginUseCase(this._repository) {
+    ArgumentError.checkNotNull(_repository, '_repository');
+  }
 
   @override
   Future<void> call(UserIdParam params) {

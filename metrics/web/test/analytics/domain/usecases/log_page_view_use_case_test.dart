@@ -20,11 +20,11 @@ void main() {
     test("throws an AssertionError if the given repository is null", () {
       expect(
         () => LogPageViewUseCase(null),
-        MatcherUtil.throwsAssertionError,
+        throwsArgumentError,
       );
     });
 
-    test("delegates call to the AnalyticsRepository.logPageView", () async {
+    test("delegates call to the given AnalyticsRepository", () async {
       final logPageViewUseCase = LogPageViewUseCase(repository);
 
       await logPageViewUseCase(pageNameParam);

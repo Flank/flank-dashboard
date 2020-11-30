@@ -9,7 +9,11 @@ class LogPageViewUseCase implements UseCase<Future<void>, PageNameParam> {
   final AnalyticsRepository _repository;
 
   /// Creates a [LogPageViewUseCase] with the given [AnalyticsRepository].
-  const LogPageViewUseCase(this._repository) : assert(_repository != null);
+  ///
+  /// The given [AnalyticsRepository] must not be `null`.
+  LogPageViewUseCase(this._repository) {
+    ArgumentError.checkNotNull(_repository, '_repository');
+  }
 
   @override
   Future<void> call(PageNameParam params) {
