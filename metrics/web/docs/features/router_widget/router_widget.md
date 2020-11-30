@@ -7,12 +7,13 @@ Use the Router widget instead of Navigator on the Web App.
 # References
 
 > Link to supporting documentation, GitHub tickets, etc.
+* [Learning Flutter’s new navigation and routing system](https://medium.com/flutter/learning-flutters-new-navigation-and-routing-system-7c9068155ade)
 
-[Router Class](https://api.flutter.dev/flutter/widgets/Router-class.html)
+* [Router Class](https://api.flutter.dev/flutter/widgets/Router-class.html)
 
-[MaterialApp.router](https://api.flutter.dev/flutter/material/MaterialApp/MaterialApp.router.html)
+* [MaterialApp.router](https://api.flutter.dev/flutter/material/MaterialApp/MaterialApp.router.html)
 
-[Example](https://github.com/orestesgaolin/navigator_20_example/blob/master/lib/main_router.dart)
+* [Example](https://github.com/orestesgaolin/navigator_20_example/blob/master/lib/main_router.dart)
 
 # Motivation
 
@@ -45,30 +46,28 @@ This layer contains the `MetricsRouteInformationParser` - the class that is used
 Example:
 
 ``` class MetricsRouterInformationParser extends RouteInformationParser<String> {
-   @override
-   Future<String> parseRouteInformation(
-       RouteInformation routeInformation) async {
-     final uri = Uri.parse(routeInformation.location);
-     final path = uri.pathSegments.first;
-     if (path == RouteName.dashboard) return RouteName.dashboard;
-     ...
-   }
- 
-   @override
-   RouteInformation restoreRouteInformation(String path) {
-     if (path == RouteName.dashboard) {
-       return const RouteInformation(location: RouteName.dashboard);
-     }
-     ...
-   }
- }
+      @override
+      Future<String> parseRouteInformation(
+          RouteInformation routeInformation) async {
+        final uri = Uri.parse(routeInformation.location);
+        final path = uri.pathSegments.first;
+        if (path == RouteName.dashboard) return RouteName.dashboard;
+      }
+    
+      @override
+      RouteInformation restoreRouteInformation(String path) {
+        if (path == RouteName.dashboard) {
+          return const RouteInformation(location: RouteName.dashboard);
+        }
+      }
+    }
  ```
 
 Also, the `presentation` layer contains the `PageGenerator` class, similar to exist `RouteGenerator` class to encapsulate the logic of page creation.
 
 Moreover, this layer contains the  `MetricsRouterDelegate` class - a delegate that is used by the `Router` widget to build and configure a navigating widget. 
 
-The `build` method in a `MetricsRouterDelegate` needs to return a `Navigator`.
+The `build` method in a `MetricsRouterDelegate` needs to return a `Navigator`. In this way, our navigation changes will be reflected in the address bar.
 
 The `onPopPage` callback uses `notifyListeners`. When the `MetricsRouterDelegate` notifies its listeners, the `Router` widget is likewise notified that the `MetricsRouterDelegate`'s `currentConfiguration` has changed and that it's the `build` method needs to be called again to build a new `Navigator`.
 
@@ -76,11 +75,11 @@ Example:
 ```
 class MetricsRouterDelegate extends RouterDelegate<String>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<String> {
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  final _navigatorKey = GlobalKey<NavigatorState>();
   final List<Page> _pages = [];
   final bool isLoggedIn;
 
-  MetricsRouterDelegate(this.isLoggedIn);
+  MetricsRouterDelegate({this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -118,20 +117,19 @@ class MetricsRouterDelegate extends RouterDelegate<String>
 
 ```
 
-To introduce this feature, we should follow the next steps: 
-
-1. Create a `MetricsRouteInformationParser` class.
-2. Implement a `parseRouteInformation` method.
-3. Implement a `restoreRouteInformation` method.
-4. Create a `PageGenerator` class.
-5. Create a `MetricsRouterDelegate` class.
-6. Implement a `build` method.
-7. Implement a `setNewRoutePath` method.
-8. Change the `main` method to use `MaterialApp.router` with the implementations described above instead of `MaterialApp`.
-
 The structure of the presentation layer shown in the following diagram: 
 
 ![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/router_widget/metrics/web/docs/features/router_widget/diagrams/router_widget_presentation.puml)
+
+When the RouteInformationProvider emits a new route, it notifies the Router about changes.
+
+Router delegates parsing of changes to the RouteInformationParser, which converts it into an abstract data type T.
+
+RouterDelegate’s setNewRoutePath method is called with this data type and must update the application state to reflect the change and call notifyListeners.
+
+When notifyListeners is called, it tells the Router to rebuild the RouterDelegate (using its build() method).
+
+RouterDelegate.build() returns a new Navigator, whose pages now reflect the change to the app state.
 
 The following sequence diagram shows the process of changing the route: 
 ![Route change diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/router_widget/metrics/web/docs/features/router_widget/diagrams/route_change_sequence.puml)

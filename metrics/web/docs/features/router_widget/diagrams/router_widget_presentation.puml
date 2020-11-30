@@ -17,8 +17,8 @@ package common.presentation.routes {
 
 }
 
-MetricsRouterDelegate --* ChangeNotifier : with
-MetricsRouterDelegate --* PopNavigatorRouterDelegateMixin : with
+MetricsRouterDelegate --|> ChangeNotifier : with
+MetricsRouterDelegate --|> PopNavigatorRouterDelegateMixin : with
 MetricsRouterDelegate --> MetricsPageGenerator : uses
 MaterialApp.router --> MetricsRouterDelegate : uses
 MaterialApp.router --> MetricsRouteInformationParser :uses

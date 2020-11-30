@@ -4,29 +4,27 @@ skinparam ParticipantPadding 20
 
     actor Bob
 
-    participant UI << (C,#ADD1B2) >>
     participant RouteInformationProvider << (C,#ADD1B2) >>
+    participant Router << (C,#ADD1B2) >>
     participant RouteInformationParser << (C,#ADD1B2) >>
     participant RouterDelegate << (C,#ADD1B2) >>
-    participant Router << (C,#ADD1B2) >>
     participant AppState << (C,#ADD1B2) >>
 
     ' User changes page using the UI.
 
-    Bob -> UI : Open new page
-    activate UI
-    UI -> RouteInformationProvider : New intent
-    deactivate UI
+    Bob -> RouteInformationProvider : Enter URL in Browser
     activate RouteInformationProvider
-    RouteInformationProvider -> RouteInformationParser : Call
+    RouteInformationProvider -> Router : notifyListeners()
     deactivate RouteInformationProvider
+    activate Router
+    Router -> RouteInformationParser : parseRouteInformation()
+    deactivate Router
     activate RouteInformationParser
-    RouteInformationParser -> RouterDelegate : Set new Route
+    RouteInformationParser -> RouterDelegate : setNewRoutePath()
     deactivate RouteInformationParser
     activate RouterDelegate
-    RouterDelegate -> Router : Rebuild
-    Router -> RouterDelegate : Obtain newly configured Navigator for rebuild
-    RouterDelegate -> AppState : Modifies based on system notifications
-    AppState -> RouterDelegate : Request changes to navigator
+    RouterDelegate -> Router : notifyListeners()
+    RouterDelegate -> AppState : build()
+    AppState -> RouterDelegate : Navigator.push()
     deactivate RouterDelegate
 @enduml
