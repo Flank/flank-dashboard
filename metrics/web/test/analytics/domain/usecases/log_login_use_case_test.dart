@@ -4,7 +4,6 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/analytics_repository_mock.dart';
-import '../../../test_utils/matcher_util.dart';
 
 void main() {
   group("LogLoginUseCase", () {
