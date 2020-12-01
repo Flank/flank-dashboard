@@ -50,7 +50,6 @@ class TooltipTitle extends StatelessWidget {
           src,
           tooltip: tooltip,
         ),
-        // add a field icon to the TooltipIcon
       ],
     );
   }
