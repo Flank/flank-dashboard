@@ -18,16 +18,18 @@ class TooltipIcon extends StatelessWidget {
 
   /// Creates a new instance of the [TooltipIcon].
   ///
-  /// The [tooltip] must not be `null`.
-  const TooltipIcon(
-    this.src, {
+  /// The [tooltip] and [src] must not be `null`.
+  const TooltipIcon({
     Key key,
     @required this.tooltip,
+    @required this.src,
   })  : assert(tooltip != null),
+        assert(src != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    const imageSize = 16.0;
     final iconTheme = MetricsTheme.of(context).tooltipIconTheme;
 
     return BasePopup(
@@ -51,8 +53,8 @@ class TooltipIcon extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 2.0),
             child: SvgImage(
               src,
-              width: 16.0,
-              height: 16.0,
+              width: imageSize,
+              height: imageSize,
               color: isOpened ? iconTheme.hoverColor : iconTheme.color,
             ),
           ),

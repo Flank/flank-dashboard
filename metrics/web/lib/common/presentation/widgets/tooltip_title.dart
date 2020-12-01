@@ -16,19 +16,19 @@ class TooltipTitle extends StatelessWidget {
 
   /// Creates a new instance of the [TooltipTitle].
   ///
-  /// The [tooltip] and [title] must not be `null`.
-  const TooltipTitle(
-    this.src, {
+  /// The [tooltip], [title] and [src] must not be `null`.
+  const TooltipTitle({
     Key key,
     @required this.title,
     @required this.tooltip,
+    @required this.src,
   })  : assert(title != null),
         assert(tooltip != null),
+        assert(src != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const padding = EdgeInsets.only(right: 4.0);
     final metricsTableHeaderTheme = MetricsTheme.of(context)
         .projectMetricsTableTheme
         .metricsTableHeaderTheme;
@@ -39,7 +39,7 @@ class TooltipTitle extends StatelessWidget {
       children: [
         Flexible(
           child: Padding(
-            padding: padding,
+            padding: const EdgeInsets.only(right: 4.0),
             child: Text(
               title,
               style: textStyle,
@@ -47,7 +47,7 @@ class TooltipTitle extends StatelessWidget {
           ),
         ),
         TooltipIcon(
-          src,
+          src: src,
           tooltip: tooltip,
         ),
       ],

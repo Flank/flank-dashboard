@@ -45,6 +45,17 @@ void main() {
     );
 
     testWidgets(
+      "throws an AssertionError if the given src is null",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const _TooltipIconTestbed(src: null),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
+    testWidgets(
       "displays the image from the given src",
       (WidgetTester tester) async {
         const src = 'test';
@@ -119,7 +130,7 @@ class _TooltipIconTestbed extends StatelessWidget {
   /// A tooltip text to display in the [TooltipPopup].
   final String tooltip;
 
-  /// A source of the image to display.
+  /// A [TooltipIcon]'s source of the image.
   final String src;
 
   /// A [MetricsThemeData] used in tests.
@@ -129,6 +140,7 @@ class _TooltipIconTestbed extends StatelessWidget {
   ///
   /// The [themeData] defaults to an empty [MetricsThemeData] instance.
   /// The [tooltip] defaults to `tooltip`.
+  /// The [src] defaults to `src`.
   const _TooltipIconTestbed({
     Key key,
     this.themeData = const MetricsThemeData(),
@@ -141,7 +153,7 @@ class _TooltipIconTestbed extends StatelessWidget {
     return MetricsThemedTestbed(
       metricsThemeData: themeData,
       body: TooltipIcon(
-        src,
+        src: src,
         tooltip: tooltip,
       ),
     );

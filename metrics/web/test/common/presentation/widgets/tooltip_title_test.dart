@@ -46,6 +46,17 @@ void main() {
       },
     );
 
+    testWidgets(
+      "throws an AssertionError if the given src is null",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          const _TooltipTitleTestbed(src: null),
+        );
+
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
+
     testWidgets("displays the given title text", (WidgetTester tester) async {
       await mockNetworkImagesFor(() async {
         await tester.pumpWidget(const _TooltipTitleTestbed(title: title));
@@ -116,13 +127,13 @@ void main() {
 
 /// A testbed class required to test the [_TooltipTitleTestbed].
 class _TooltipTitleTestbed extends StatelessWidget {
-  /// A title of the tooltip.
+  /// A title of the [TooltipTitle].
   final String title;
 
-  /// A tooltip text to display.
+  /// A tooltip text of the [TooltipTitle].
   final String tooltip;
 
-  /// A source of the image to display.
+  /// A [TooltipTitle]'s source of the image.
   final String src;
 
   /// A [MetricsThemeData] used in tests.
@@ -147,7 +158,7 @@ class _TooltipTitleTestbed extends StatelessWidget {
     return MetricsThemedTestbed(
       metricsThemeData: themeData,
       body: TooltipTitle(
-        src,
+        src: src,
         title: title,
         tooltip: tooltip,
       ),

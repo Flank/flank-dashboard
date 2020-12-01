@@ -18,27 +18,27 @@ class MetricsTableTitleHeader extends StatelessWidget {
       status: Container(),
       name: Container(),
       buildResults: const TooltipTitle(
-        src,
+        src: src,
         tooltip: DashboardStrings.lastBuildsDescription,
         title: DashboardStrings.lastBuilds,
       ),
       performance: const TooltipTitle(
-        src,
+        src: src,
         tooltip: DashboardStrings.performanceDescription,
         title: DashboardStrings.performance,
       ),
       buildNumber: const TooltipTitle(
-        src,
+        src: src,
         tooltip: DashboardStrings.buildsDescription,
         title: DashboardStrings.builds,
       ),
       stability: const TooltipTitle(
-        src,
+        src: src,
         tooltip: DashboardStrings.stabilityDescription,
         title: DashboardStrings.stability,
       ),
       coverage: const TooltipTitle(
-        src,
+        src: src,
         tooltip: DashboardStrings.coverageDescription,
         title: DashboardStrings.coverage,
       ),

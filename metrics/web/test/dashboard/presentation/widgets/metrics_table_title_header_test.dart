@@ -14,6 +14,26 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 void main() {
   group("MetricsTableTitleHeader", () {
     const src = 'icons/info.svg';
+    final lastBuildsFinder = find.widgetWithText(
+      TooltipTitle,
+      DashboardStrings.lastBuilds,
+    );
+    final performanceFinder = find.widgetWithText(
+      TooltipTitle,
+      DashboardStrings.performance,
+    );
+    final buildsFinder = find.widgetWithText(
+      TooltipTitle,
+      DashboardStrings.builds,
+    );
+    final stabilityFinder = find.widgetWithText(
+      TooltipTitle,
+      DashboardStrings.stability,
+    );
+    final coverageFinder = find.widgetWithText(
+      TooltipTitle,
+      DashboardStrings.coverage,
+    );
 
     setUpAll(() {
       DimensionsUtil.setTestWindowSize(width: DimensionsConfig.contentWidth);
@@ -54,92 +74,137 @@ void main() {
     );
 
     testWidgets(
-      "displays the TooltipTitle with the last builds title, last builds description and info src",
+      "the last builds TooltipTitle displays the last builds tooltip description",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
         });
 
-        final finder =
-            find.widgetWithText(TooltipTitle, DashboardStrings.lastBuilds);
-        final tooltipTitle = tester.widget<TooltipTitle>(finder);
+        final tooltipTitle = tester.widget<TooltipTitle>(lastBuildsFinder);
         final tooltip = tooltipTitle.tooltip;
 
-        expect(finder, findsOneWidget);
-        expect(tooltipTitle.src, equals(src));
         expect(tooltip, equals(DashboardStrings.lastBuildsDescription));
       },
     );
 
     testWidgets(
-      "displays the TooltipTitle with the performance title, performance description and info src",
+      "the last builds TooltipTitle displays the info image",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
         });
 
-        final finder =
-            find.widgetWithText(TooltipTitle, DashboardStrings.performance);
-        final tooltipTitle = tester.widget<TooltipTitle>(finder);
+        final tooltipTitle = tester.widget<TooltipTitle>(lastBuildsFinder);
+
+        expect(tooltipTitle.src, equals(src));
+      },
+    );
+
+    testWidgets(
+      "the performance TooltipTitle displays the performance tooltip description",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
+
+        final tooltipTitle = tester.widget<TooltipTitle>(performanceFinder);
         final tooltip = tooltipTitle.tooltip;
 
-        expect(finder, findsOneWidget);
-        expect(tooltipTitle.src, equals(src));
         expect(tooltip, equals(DashboardStrings.performanceDescription));
       },
     );
 
     testWidgets(
-      "displays the TooltipTitle with the builds title, builds description and info src",
+      "the performance TooltipTitle displays the info image",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
         });
 
-        final finder =
-            find.widgetWithText(TooltipTitle, DashboardStrings.builds);
-        final tooltipTitle = tester.widget<TooltipTitle>(finder);
+        final tooltipTitle = tester.widget<TooltipTitle>(performanceFinder);
+
+        expect(tooltipTitle.src, equals(src));
+      },
+    );
+
+    testWidgets(
+      "the builds TooltipTitle displays the builds tooltip description",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
+
+        final tooltipTitle = tester.widget<TooltipTitle>(buildsFinder);
         final tooltip = tooltipTitle.tooltip;
 
-        expect(finder, findsOneWidget);
-        expect(tooltipTitle.src, equals(src));
         expect(tooltip, equals(DashboardStrings.buildsDescription));
       },
     );
 
     testWidgets(
-      "displays the TooltipTitle with the stability title, stability description and info src",
+      "the builds TooltipTitle displays the info image",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
         });
 
-        final finder =
-            find.widgetWithText(TooltipTitle, DashboardStrings.stability);
-        final tooltipTitle = tester.widget<TooltipTitle>(finder);
+        final tooltipTitle = tester.widget<TooltipTitle>(buildsFinder);
+
+        expect(tooltipTitle.src, equals(src));
+      },
+    );
+
+    testWidgets(
+      "the stability TooltipTitle displays the stability tooltip description",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
+
+        final tooltipTitle = tester.widget<TooltipTitle>(stabilityFinder);
         final tooltip = tooltipTitle.tooltip;
 
-        expect(finder, findsOneWidget);
-        expect(tooltipTitle.src, equals(src));
         expect(tooltip, equals(DashboardStrings.stabilityDescription));
       },
     );
 
     testWidgets(
-      "displays the TooltipTitle with the coverage title, coverage description and info src",
+      "the stability TooltipTitle displays the info image",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
         });
 
-        final finder =
-            find.widgetWithText(TooltipTitle, DashboardStrings.coverage);
-        final tooltipTitle = tester.widget<TooltipTitle>(finder);
+        final tooltipTitle = tester.widget<TooltipTitle>(stabilityFinder);
+
+        expect(tooltipTitle.src, equals(src));
+      },
+    );
+
+    testWidgets(
+      "the coverage TooltipTitle displays the coverage tooltip description",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
+
+        final tooltipTitle = tester.widget<TooltipTitle>(coverageFinder);
         final tooltip = tooltipTitle.tooltip;
 
-        expect(finder, findsOneWidget);
-        expect(tooltipTitle.src, equals(src));
         expect(tooltip, equals(DashboardStrings.coverageDescription));
+      },
+    );
+
+    testWidgets(
+      "the coverage TooltipTitle displays the info image",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
+
+        final tooltipTitle = tester.widget<TooltipTitle>(coverageFinder);
+
+        expect(tooltipTitle.src, equals(src));
       },
     );
   });
