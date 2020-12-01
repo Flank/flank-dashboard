@@ -17,7 +17,7 @@ void main() {
       expect(syncError.toString(), equals(message));
     });
 
-    test(".toString returns an empty string if the message is null", () {
+    test(".toString() returns an empty string if the message is null", () {
       final syncError = SyncError();
 
       expect(syncError.toString(), isEmpty);
