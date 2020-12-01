@@ -4,7 +4,7 @@ import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 
 /// A [UseCase] that provides an ability to log user logins.
 class LogLoginUseCase implements UseCase<Future<void>, UserIdParam> {
-  /// A [AnalyticsRepository] that provides an ability to interact
+  /// An [AnalyticsRepository] that provides an ability to interact
   /// with the store.
   final AnalyticsRepository _repository;
 

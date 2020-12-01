@@ -4,7 +4,7 @@ import 'package:metrics/base/domain/usecases/usecase.dart';
 
 /// A [UseCase] that provides an ability to log page changes.
 class LogPageViewUseCase implements UseCase<Future<void>, PageNameParam> {
-  /// A [AnalyticsRepository] that provides an ability to interact
+  /// An [AnalyticsRepository] that provides an ability to interact
   /// with the store.
   final AnalyticsRepository _repository;
 

@@ -15,7 +15,7 @@ void main() {
 
     final userIdParam = UserIdParam(id: "id");
 
-    test("throws an AssertionError if the given repository is null", () {
+    test("throws an ArgumentError if the given repository is null", () {
       expect(
         () => LogLoginUseCase(null),
         throwsArgumentError,

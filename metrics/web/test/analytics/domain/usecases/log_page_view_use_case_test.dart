@@ -16,7 +16,7 @@ void main() {
 
     final pageNameParam = PageNameParam(pageName: PageName.dashboardPage);
 
-    test("throws an AssertionError if the given repository is null", () {
+    test("throws an ArgumentError if the given repository is null", () {
       expect(
         () => LogPageViewUseCase(null),
         throwsArgumentError,
