@@ -44,4 +44,4 @@ To learn more about `steps` consider the following link: https://buildkite.com/d
 
 The following sequence diagram shows how the Buildkite works:
 
-![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/docs/diagrams/buildkite_sequence_diagram.puml)
+![Buildkite sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/docs/diagrams/buildkite_sequence_diagram.puml)
