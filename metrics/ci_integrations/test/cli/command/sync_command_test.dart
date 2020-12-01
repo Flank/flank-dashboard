@@ -232,7 +232,7 @@ void main() {
         expect(syncCommand.disposeCallCount, equals(1));
       });
 
-      test(".run() logs an error if sync throws", () async {
+      test(".run() throws a sync error if sync throws", () async {
         when(destinationPartiesMock.parties).thenReturn([]);
         whenRunSync().thenThrow(Exception());
 
@@ -271,7 +271,7 @@ void main() {
       );
 
       test(
-        ".sync() throws a SyncError if a sync result is an error",
+        ".sync() throws a sync error if a sync result is an error",
         () async {
           const interactionResult = InteractionResult.error();
 

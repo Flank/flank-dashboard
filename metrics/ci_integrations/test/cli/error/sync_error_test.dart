@@ -20,7 +20,7 @@ void main() {
     test(".toString returns an empty string if the message is null", () {
       final syncError = SyncError();
 
-      expect(syncError.toString(), equals(''));
+      expect(syncError.toString(), isEmpty);
     });
   });
 }
