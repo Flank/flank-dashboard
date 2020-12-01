@@ -5,6 +5,7 @@ import 'package:args/command_runner.dart';
 import 'package:ci_integration/cli/command/ci_integration_command.dart';
 import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
 import 'package:ci_integration/cli/config/parser/raw_integration_config_parser.dart';
+import 'package:ci_integration/cli/error/sync_error.dart';
 import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/cli/parties/parties.dart';
 import 'package:ci_integration/cli/parties/supported_integration_parties.dart';
@@ -92,15 +93,15 @@ class SyncCommand extends CiIntegrationCommand<void> {
 
         await sync(syncConfig, sourceClient, destinationClient);
       } catch (e) {
-        logger.printError(
-          'Failed to perform a sync due to the following error: $e',
+        throw SyncError(
+          message: 'Failed to perform a sync due to the following error: $e',
         );
       } finally {
         await dispose(sourceClient, destinationClient);
       }
     } else {
-      logger.printError(
-        'The configuration file $configFilePath does not exist.',
+      throw SyncError(
+        message: 'The configuration file $configFilePath does not exist.',
       );
     }
   }
@@ -157,7 +158,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
   }
 
   /// Creates a [CiIntegration] instance with the given
-  /// [sourceConfig] and [destinationConfig].
+  /// [sourceClient] and [destinationClient].
   CiIntegration createCiIntegration(
     SourceClient sourceClient,
     DestinationClient destinationClient,
@@ -168,7 +169,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     );
   }
 
-  /// Runs the [CiIntegration.sync] method on the given [config].
+  /// Runs the [CiIntegration.sync] method on the given [syncConfig].
   Future<void> sync(
     SyncConfig syncConfig,
     SourceClient sourceClient,
@@ -180,7 +181,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     if (result.isSuccess) {
       logger.printMessage(result.message);
     } else {
-      logger.printError(result.message);
+      throw SyncError(message: result.message);
     }
   }
 

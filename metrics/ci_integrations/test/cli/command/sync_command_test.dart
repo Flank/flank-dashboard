@@ -19,6 +19,7 @@ import 'package:firedart/firedart.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../test_utils/matcher_util.dart';
 import '../test_util/mock/mocks.dart';
 import '../test_util/stub/logger_stub.dart';
 import '../test_util/test_data/config_test_data.dart';
@@ -197,13 +198,11 @@ void main() {
       );
 
       test(
-        ".run() logs an error if the given config file does not exist",
+        ".run() throws a sync error if the given config file does not exist",
         () async {
           when(fileMock.existsSync()).thenReturn(false);
 
-          await syncCommand.run();
-
-          expect(loggerStub.errorLogsNumber, equals(1));
+          expect(syncCommand.run(), MatcherUtil.throwsSyncError);
         },
       );
 
@@ -212,14 +211,14 @@ void main() {
         () async {
           when(fileMock.existsSync()).thenReturn(false);
 
-          await syncCommand.run();
-
+          expect(syncCommand.run(), MatcherUtil.throwsSyncError);
           verifyNever(ciIntegrationMock.sync(any));
         },
       );
 
       test(".run() calls dispose once", () async {
-        whenRunSync().thenAnswer((_) => Future.value(any));
+        whenRunSync()
+            .thenAnswer((_) => Future.value(const InteractionResult.success()));
 
         await syncCommand.run();
 
@@ -229,24 +228,23 @@ void main() {
       test(".run() calls dispose once if sync throws", () async {
         whenRunSync().thenThrow(Exception());
 
-        await syncCommand.run();
-
+        await expectLater(syncCommand.run(), MatcherUtil.throwsSyncError);
         expect(syncCommand.disposeCallCount, equals(1));
       });
 
-      test(".run() logs an error if sync throws", () async {
+      test(".run() throws a sync error if sync throws", () async {
         when(destinationPartiesMock.parties).thenReturn([]);
         whenRunSync().thenThrow(Exception());
 
-        await syncCommand.run();
-
-        expect(loggerStub.errorLogsNumber, equals(1));
+        expect(syncCommand.run(), MatcherUtil.throwsSyncError);
       });
 
       test(
         ".run() runs sync on the given config",
         () async {
-          whenRunSync().thenAnswer((_) => Future.value(any));
+          whenRunSync().thenAnswer(
+            (_) => Future.value(const InteractionResult.success()),
+          );
 
           await syncCommand.run();
 
@@ -273,20 +271,20 @@ void main() {
       );
 
       test(
-        ".sync() prints an error message if a sync result is an error",
+        ".sync() throws a sync error if a sync result is an error",
         () async {
           const interactionResult = InteractionResult.error();
 
           when(ciIntegrationMock.sync(syncConfig))
               .thenAnswer((_) => Future.value(interactionResult));
 
-          await syncCommand.sync(
+          final syncFuture = syncCommand.sync(
             syncConfig,
             sourceClientMock,
             destinationClientMock,
           );
 
-          expect(loggerStub.errorLogsNumber, equals(1));
+          expect(syncFuture, MatcherUtil.throwsSyncError);
         },
       );
 
