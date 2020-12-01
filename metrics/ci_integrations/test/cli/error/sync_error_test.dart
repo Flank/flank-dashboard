@@ -11,7 +11,7 @@ void main() {
       expect(syncError.message, equals(message));
     });
 
-    test(".toString returns an error message", () {
+    test(".toString() returns an error message", () {
       final syncError = SyncError(message: message);
 
       expect(syncError.toString(), equals(message));
