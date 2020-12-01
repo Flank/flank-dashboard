@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
+import 'package:metrics/common/presentation/widgets/tooltip_title.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_row.dart';
 
@@ -12,24 +12,35 @@ class MetricsTableTitleHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final metricsTableHeaderTheme = MetricsTheme.of(context)
-        .projectMetricsTableTheme
-        .metricsTableHeaderTheme;
-    final textStyle = DefaultTextStyle.of(context)
-        .style
-        .merge(metricsTableHeaderTheme.textStyle);
+    const src = 'icons/info.svg';
 
-    return DefaultTextStyle(
-      textAlign: TextAlign.center,
-      style: textStyle,
-      child: MetricsTableRow(
-        status: Container(),
-        name: Container(),
-        buildResults: const Text(DashboardStrings.lastBuilds),
-        performance: const Text(DashboardStrings.performance),
-        buildNumber: const Text(DashboardStrings.builds),
-        stability: const Text(DashboardStrings.stability),
-        coverage: const Text(DashboardStrings.coverage),
+    return MetricsTableRow(
+      status: Container(),
+      name: Container(),
+      buildResults: const TooltipTitle(
+        src: src,
+        tooltip: DashboardStrings.lastBuildsDescription,
+        title: DashboardStrings.lastBuilds,
+      ),
+      performance: const TooltipTitle(
+        src: src,
+        tooltip: DashboardStrings.performanceDescription,
+        title: DashboardStrings.performance,
+      ),
+      buildNumber: const TooltipTitle(
+        src: src,
+        tooltip: DashboardStrings.buildsDescription,
+        title: DashboardStrings.builds,
+      ),
+      stability: const TooltipTitle(
+        src: src,
+        tooltip: DashboardStrings.stabilityDescription,
+        title: DashboardStrings.stability,
+      ),
+      coverage: const TooltipTitle(
+        src: src,
+        tooltip: DashboardStrings.coverageDescription,
+        title: DashboardStrings.coverage,
       ),
     );
   }

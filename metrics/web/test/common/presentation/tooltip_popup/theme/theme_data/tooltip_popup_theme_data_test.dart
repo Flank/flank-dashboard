@@ -25,16 +25,37 @@ void main() {
       },
     );
 
+    test(
+      "creates an instance with the default shadow color if it is not specified",
+      () {
+        final themeData = TooltipPopupThemeData();
+
+        expect(themeData.shadowColor, isNotNull);
+      },
+    );
+
+    test(
+      "creates an instance with the default shadow color if the given color is null",
+      () {
+        final themeData = TooltipPopupThemeData(shadowColor: null);
+
+        expect(themeData.shadowColor, isNotNull);
+      },
+    );
+
     test("creates an instance with the given values", () {
       const backGroundColor = Colors.white;
+      const shadowColor = Colors.black;
       const textStyle = TextStyle(color: Colors.blue);
 
       final themeData = TooltipPopupThemeData(
         backgroundColor: backGroundColor,
+        shadowColor: shadowColor,
         textStyle: textStyle,
       );
 
       expect(themeData.backgroundColor, equals(backGroundColor));
+      expect(themeData.shadowColor, equals(shadowColor));
       expect(themeData.textStyle, equals(textStyle));
     });
   });

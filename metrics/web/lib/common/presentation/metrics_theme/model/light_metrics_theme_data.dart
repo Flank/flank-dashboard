@@ -68,7 +68,7 @@ class LightMetricsThemeData extends MetricsThemeData {
   static const Color _textPlaceholderColor = Color(0xFFdcdce3);
   static const Color _addProjectGroupCardBackgroundColor = Color(0xffd7faf4);
   static const Color _addProjectGroupCardHoverColor = Color(0xffc3f5eb);
-  static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.32);
+  static const Color _shadowColor = Color.fromRGBO(0, 0, 0, 0.5);
   static const Color _hoverBorderColor = Color(0xffb6b6ba);
   static const Color _positiveToastColor = Color(0xFFE1FAF4);
   static const Color _negativeToastColor = Color(0xFFFFEDE5);
@@ -127,6 +127,7 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           tooltipPopupTheme: const TooltipPopupThemeData(
             backgroundColor: Colors.white,
+            shadowColor: Color.fromRGBO(0, 0, 0, 0.32),
             textStyle: TextStyleConfig.tooltipPopupStyle,
           ),
           tooltipIconTheme: const TooltipIconThemeData(
@@ -333,10 +334,11 @@ class LightMetricsThemeData extends MetricsThemeData {
           ),
           projectMetricsTableTheme: const ProjectMetricsTableThemeData(
             metricsTableHeaderTheme: MetricsTableHeaderThemeData(
-              textStyle: TextStyle(
-                color: _tableHeaderColor,
-                fontWeight: FontWeight.w400,
-              ),
+              textStyle: MetricsTextStyle(
+                  color: _tableHeaderColor,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14.0,
+                  lineHeightInPixels: 16.0),
             ),
             projectMetricsTileTheme: ProjectMetricsTileThemeData(
               backgroundColor: Colors.white,

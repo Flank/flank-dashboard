@@ -23,6 +23,12 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("MetricsTable", () {
+    Finder _findRowByText(String text) {
+      final rowFinder = find.widgetWithText(Row, text);
+
+      return rowFinder.first;
+    }
+
     testWidgets(
       "contains MetricsTableHeader widget",
       (WidgetTester tester) async {
@@ -135,9 +141,8 @@ void main() {
           find.byType(BuildResultBarGraph),
         );
 
-        final lastBuildsTitleCenter = tester.getCenter(
-          find.text(DashboardStrings.lastBuilds),
-        );
+        final lastBuildsTitleCenter =
+            tester.getCenter(_findRowByText(DashboardStrings.lastBuilds));
 
         expect(
           buildResultBarGraphWidgetCenter.dx,
@@ -158,9 +163,8 @@ void main() {
           find.byType(PerformanceSparklineGraph),
         );
 
-        final performanceTitleCenter = tester.getCenter(
-          find.text(DashboardStrings.performance),
-        );
+        final performanceTitleCenter =
+            tester.getCenter(_findRowByText(DashboardStrings.performance));
 
         expect(
           performanceMetricWidgetCenter.dx,
@@ -181,9 +185,8 @@ void main() {
           find.byType(BuildNumberScorecard),
         );
 
-        final buildNumberTitleCenter = tester.getCenter(
-          find.text(DashboardStrings.builds),
-        );
+        final buildNumberTitleCenter =
+            tester.getCenter(_findRowByText(DashboardStrings.builds));
 
         expect(
           buildNumberMetricWidgetCenter.dx,
@@ -204,9 +207,8 @@ void main() {
           find.byType(StabilityCirclePercentage),
         );
 
-        final stabilityTitleCenter = tester.getCenter(
-          find.text(DashboardStrings.stability),
-        );
+        final stabilityTitleCenter =
+            tester.getCenter(_findRowByText(DashboardStrings.stability));
 
         expect(
           stabilityMetricWidgetCenter.dx,
@@ -223,13 +225,16 @@ void main() {
         });
         await tester.pumpAndSettle();
 
+        final coverageMetricWidget = find.ancestor(
+          of: find.byType(CoverageCirclePercentage),
+          matching: find.byType(Padding),
+        );
         final coverageMetricWidgetCenter = tester.getCenter(
-          find.byType(CoverageCirclePercentage),
+          coverageMetricWidget.first,
         );
 
-        final coverageTitleCenter = tester.getCenter(
-          find.text(DashboardStrings.coverage),
-        );
+        final coverageTitleCenter =
+            tester.getCenter(_findRowByText(DashboardStrings.coverage));
 
         expect(
           coverageMetricWidgetCenter.dx,

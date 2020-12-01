@@ -73,7 +73,7 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
             buildStatusStyleStrategy: const ProjectBuildStatusStyleStrategy(),
           ),
           name: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 16.0, right: 28.0),
             child: Text(
               projectMetrics.projectName ?? '',
               style: theme.textStyle,
@@ -121,12 +121,15 @@ class _ProjectMetricsTileState extends State<ProjectMetricsTile>
               ),
             ),
           ),
-          coverage: SizedBox(
-            height: 72.0,
-            child: LoadingBuilder(
-              isLoading: projectMetrics == null,
-              builder: (_) => CoverageCirclePercentage(
-                coverage: projectMetrics.coverage,
+          coverage: Padding(
+            padding: const EdgeInsets.only(left: 5.0, right: 6.0),
+            child: SizedBox(
+              height: 72.0,
+              child: LoadingBuilder(
+                isLoading: projectMetrics == null,
+                builder: (_) => CoverageCirclePercentage(
+                  coverage: projectMetrics.coverage,
+                ),
               ),
             ),
           ),

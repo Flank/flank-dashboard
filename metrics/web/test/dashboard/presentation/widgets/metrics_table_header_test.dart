@@ -6,6 +6,7 @@ import 'package:metrics/dashboard/presentation/widgets/metrics_table_header.dart
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_loading_header.dart';
 import 'package:metrics/dashboard/presentation/widgets/metrics_table_title_header.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/project_metrics_notifier_mock.dart';
@@ -30,9 +31,11 @@ void main() {
         final notifier = ProjectMetricsNotifierMock();
         when(notifier.isMetricsLoading).thenReturn(false);
 
-        await tester.pumpWidget(_DashboardTableHeaderTestbed(
-          metricsNotifier: notifier,
-        ));
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_DashboardTableHeaderTestbed(
+            metricsNotifier: notifier,
+          ));
+        });
 
         expect(find.byType(MetricsTableTitleHeader), findsOneWidget);
       },

@@ -9,11 +9,17 @@ class TooltipPopupThemeData {
   /// A background [Color] of the tooltip popup.
   final Color backgroundColor;
 
+  /// A shadow [Color] of the tooltip popup.
+  final Color shadowColor;
+
   /// Creates a new instance of the [TooltipPopupThemeData].
   ///
-  /// If the given [backgroundColor] is null, the [Colors.grey] is used.
+  /// If the given [backgroundColor] or [shadowColor] is null,
+  /// the [Colors.grey] is used.
   const TooltipPopupThemeData({
     Color backgroundColor,
+    Color shadowColor,
     this.textStyle,
-  }) : backgroundColor = backgroundColor ?? Colors.grey;
+  })  : backgroundColor = backgroundColor ?? Colors.grey,
+        shadowColor = shadowColor ?? Colors.grey;
 }
