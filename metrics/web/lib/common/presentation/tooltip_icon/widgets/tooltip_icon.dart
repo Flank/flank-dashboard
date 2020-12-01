@@ -13,7 +13,7 @@ class TooltipIcon extends StatelessWidget {
   /// A tooltip text to display in the [TooltipPopup].
   final String tooltip;
 
-  /// A source of the image to display.
+  /// A source of the icon to display.
   final String src;
 
   /// Creates a new instance of the [TooltipIcon].
@@ -29,7 +29,7 @@ class TooltipIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const imageSize = 16.0;
+    const iconSize = 16.0;
     final iconTheme = MetricsTheme.of(context).tooltipIconTheme;
 
     return BasePopup(
@@ -53,8 +53,8 @@ class TooltipIcon extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 2.0),
             child: SvgImage(
               src,
-              width: imageSize,
-              height: imageSize,
+              width: iconSize,
+              height: iconSize,
               color: isOpened ? iconTheme.hoverColor : iconTheme.color,
             ),
           ),

@@ -56,7 +56,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the image from the given src",
+      "displays the icon from the given src",
       (WidgetTester tester) async {
         const src = 'test';
 
@@ -64,9 +64,9 @@ void main() {
           await tester.pumpWidget(const _TooltipIconTestbed(src: src));
         });
 
-        final image = FinderUtil.findNetworkImageWidget(tester);
+        final icon = FinderUtil.findNetworkImageWidget(tester);
 
-        expect(image.url, equals(src));
+        expect(icon.url, equals(src));
       },
     );
 
@@ -88,7 +88,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the color from the metrics theme to the image if popup is closed",
+      "applies the color from the metrics theme to the icon if popup is closed",
       (WidgetTester tester) async {
         final color = themeData.tooltipIconTheme.color;
 
@@ -98,14 +98,14 @@ void main() {
           ));
         });
 
-        final image = tester.widget<SvgImage>(find.byType(SvgImage));
+        final icon = tester.widget<SvgImage>(find.byType(SvgImage));
 
-        expect(image.color, color);
+        expect(icon.color, color);
       },
     );
 
     testWidgets(
-      "applies the hover color from the metrics theme to the image if popup is opened",
+      "applies the hover color from the metrics theme to the icon if popup is opened",
       (WidgetTester tester) async {
         final hoverColor = themeData.tooltipIconTheme.hoverColor;
 
@@ -117,9 +117,9 @@ void main() {
 
         await _hoverBar(tester);
 
-        final image = tester.widget<SvgImage>(find.byType(SvgImage));
+        final icon = tester.widget<SvgImage>(find.byType(SvgImage));
 
-        expect(image.color, hoverColor);
+        expect(icon.color, hoverColor);
       },
     );
   });
@@ -130,7 +130,7 @@ class _TooltipIconTestbed extends StatelessWidget {
   /// A tooltip text to display in the [TooltipPopup].
   final String tooltip;
 
-  /// A [TooltipIcon]'s source of the image.
+  /// A [TooltipIcon]'s source of the icon.
   final String src;
 
   /// A [MetricsThemeData] used in tests.

@@ -109,7 +109,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the TooltipIcon with the given image src",
+      "displays the TooltipIcon with the given icon src",
       (WidgetTester tester) async {
         const src = 'test';
 
@@ -133,7 +133,7 @@ class _TooltipTitleTestbed extends StatelessWidget {
   /// A tooltip text of the [TooltipTitle].
   final String tooltip;
 
-  /// A [TooltipTitle]'s source of the image.
+  /// A [TooltipTitle]'s source of the icon.
   final String src;
 
   /// A [MetricsThemeData] used in tests.

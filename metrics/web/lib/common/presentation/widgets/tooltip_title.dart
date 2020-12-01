@@ -11,7 +11,7 @@ class TooltipTitle extends StatelessWidget {
   /// A tooltip text to display.
   final String tooltip;
 
-  /// A source of the image to display.
+  /// A source of the icon to display.
   final String src;
 
   /// Creates a new instance of the [TooltipTitle].
