@@ -108,13 +108,16 @@ void main() {
       },
     );
 
-    testWidgets("displays the performance tooltip title", (tester) async {
-      await mockNetworkImagesFor(() {
-        return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
-      });
+    testWidgets(
+      "displays the performance tooltip title",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
 
-      expect(performanceFinder, findsOneWidget);
-    });
+        expect(performanceFinder, findsOneWidget);
+      },
+    );
 
     testWidgets(
       "applies the performance description to the performance tooltip title",
@@ -143,13 +146,16 @@ void main() {
       },
     );
 
-    testWidgets("displays the builds tooltip title", (tester) async {
-      await mockNetworkImagesFor(() {
-        return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
-      });
+    testWidgets(
+      "displays the builds tooltip title",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
 
-      expect(buildsFinder, findsOneWidget);
-    });
+        expect(buildsFinder, findsOneWidget);
+      },
+    );
 
     testWidgets(
       "applies the builds description to the builds tooltip title",
@@ -178,13 +184,16 @@ void main() {
       },
     );
 
-    testWidgets("displays the stability tooltip title", (tester) async {
-      await mockNetworkImagesFor(() {
-        return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
-      });
+    testWidgets(
+      "displays the stability tooltip title",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
 
-      expect(stabilityFinder, findsOneWidget);
-    });
+        expect(stabilityFinder, findsOneWidget);
+      },
+    );
 
     testWidgets(
       "applies the stability description to the stability tooltip title",
@@ -213,13 +222,16 @@ void main() {
       },
     );
 
-    testWidgets("displays the coverage tooltip title", (tester) async {
-      await mockNetworkImagesFor(() {
-        return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
-      });
+    testWidgets(
+      "displays the coverage tooltip title",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(const _MetricsTableTitleHeaderTestbed());
+        });
 
-      expect(coverageFinder, findsOneWidget);
-    });
+        expect(coverageFinder, findsOneWidget);
+      },
+    );
 
     testWidgets(
       "applies the coverage description to the coverage tooltip title",
