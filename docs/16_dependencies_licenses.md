@@ -111,7 +111,8 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | rxdart | [pub.dev](https://pub.dev/packages/rxdart) | [Apache 2.0](https://github.com/ReactiveX/rxdart/blob/master/LICENSE) |
 | collection | [pub.dev](https://pub.dev/packages/collection) | [BSD](https://github.com/dart-lang/collection/blob/master/LICENSE) |	
 | meta | [pub.dev](https://pub.dev/packages/meta) | [BSD](https://github.com/dart-lang/sdk/blob/master/pkg/meta/LICENSE) |
-| firebase_auth | [pub.dev](https://pub.dev/packages/firebase_auth) | [BSD](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_auth/firebase_auth/LICENSE) | 
+| firebase_auth | [pub.dev](https://pub.dev/packages/firebase_auth) | [BSD](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_auth/firebase_auth/LICENSE) |
+| firebase_analytics | [pub.dev](https://pub.dev/packages/firebase_analytics) | [BSD](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_analytics/firebase_analytics/LICENSE) |
 | universal_html | [pub.dev](https://pub.dev/packages/universal_html) | [Apache 2.0](https://github.com/dint-dev/web_browser/blob/master/LICENSE) |
 | universal_io | [pub.dev](https://pub.dev/packages/universal_io) | [Apache 2.0](https://github.com/dint-dev/universal_io/blob/master/LICENSE) |
 | google_sign_in | [pub.dev](https://pub.dev/packages/google_sign_in) | [BSD](https://github.com/flutter/plugins/blob/master/packages/google_sign_in/google_sign_in/LICENSE) |	
