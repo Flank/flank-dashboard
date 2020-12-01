@@ -2,7 +2,7 @@ import 'package:ci_integration/cli/error/sync_error.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("description", () {
+  group("SyncError", () {
     const message = 'error message';
 
     test("creates an instance with the given parameters", () {
