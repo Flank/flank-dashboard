@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:metrics/auth/domain/entities/user_profile.dart';
-import 'package:metrics/auth/domain/usecases/parameters/user_id_param.dart';
 import 'package:metrics/auth/domain/usecases/receive_user_profile_updates.dart';
+import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 

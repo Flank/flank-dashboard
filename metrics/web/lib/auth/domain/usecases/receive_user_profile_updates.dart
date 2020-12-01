@@ -1,7 +1,7 @@
 import 'package:metrics/auth/domain/entities/user_profile.dart';
 import 'package:metrics/auth/domain/repositories/user_repository.dart';
-import 'package:metrics/auth/domain/usecases/parameters/user_id_param.dart';
 import 'package:metrics/base/domain/usecases/usecase.dart';
+import 'package:metrics/common/domain/usecases/parameters/user_id_param.dart';
 
 /// A [UseCase] that provides an ability to receive the user profile updates.
 class ReceiveUserProfileUpdates
