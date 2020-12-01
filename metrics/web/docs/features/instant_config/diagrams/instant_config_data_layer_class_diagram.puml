@@ -1,0 +1,33 @@
+@startuml instant_config_data_layer_class_diagram
+
+package common.domain.repository {
+    interface InstantConfigRepository {}
+}
+
+package common.domain.entities {
+    class InstantConfig {}
+}
+
+package common.data {
+    package repository {
+        class FirebaseInstantConfigRepository {}
+    }
+
+    package models {
+        class InstantConfigData {
+            + factory fromJson()
+        }
+    }
+}
+
+package core.src.data.model {
+    class DataModel {}
+}
+
+FirebaseInstantConfigRepository ..|> InstantConfigRepository
+FirebaseInstantConfigRepository --> InstantConfigData : uses
+
+InstantConfigData --> InstantConfig
+InstantConfigData ..|> DataModel
+
+@enduml

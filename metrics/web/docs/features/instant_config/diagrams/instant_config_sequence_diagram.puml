@@ -1,0 +1,57 @@
+@startuml instant_config_sequence_diagram
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+box "presentation"
+participant UI
+participant InstantConfigNotifier << (C,#ADD1B2) >>
+end box
+
+box "domain"
+participant FetchInstantConfigUseCase << (C,#ADD1B2) >>
+end box
+
+box "data"
+participant FirebaseInstantConfigRepository << (C,#ADD1B2) >>
+participant InstantConfigData << (C,#ADD1B2) >>
+end box
+
+database "Firestore" as FRC
+
+Bob -> UI : Enters the application
+activate UI
+
+UI -> InstantConfigNotifier : initializeInstantConfig()
+activate InstantConfigNotifier
+
+InstantConfigNotifier -> FetchInstantConfigUseCase : call(InstantConfigParam params)
+activate FetchInstantConfigUseCase
+
+FetchInstantConfigUseCase -> FirebaseInstantConfigRepository : fetch([isLoginFormEnabled, isFpsMonitorEnabled, isRendererDisplayEnabled])
+activate FirebaseInstantConfigRepository
+
+FirebaseInstantConfigRepository -> FRC : Fetch instant config
+
+FRC --> FirebaseInstantConfigRepository : Instant config json
+
+FirebaseInstantConfigRepository -> InstantConfigData : fromJson()
+activate InstantConfigData
+
+InstantConfigData --> FirebaseInstantConfigRepository : instantConfig
+deactivate InstantConfigData
+
+FirebaseInstantConfigRepository --> FetchInstantConfigUseCase : instantConfig
+deactivate FirebaseInstantConfigRepository
+
+FetchInstantConfigUseCase --> InstantConfigNotifier : instantConfig
+deactivate FetchInstantConfigUseCase
+
+InstantConfigNotifier --> UI : Notify about new config
+deactivate InstantConfigNotifier
+
+UI --> Bob : Dismiss the loading screen
+deactivate UI
+
+@enduml

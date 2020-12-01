@@ -1,0 +1,32 @@
+@startuml instant_config_presentation_layer_class_diagram
+
+package base.domain.usecases {
+    class FetchInstantConfigUseCase {}
+}
+
+package common.presentation.state {
+    class InstantConfigNotifier {
+        + isLoading : bool
+        + instantConfig : InstantConfig
+
+        - _fetchInstantConfigUseCase : FetchInstantConfigUseCase
+
+        + Future<void> initializeInstantConfig()
+    }
+}
+
+package widgets {
+    class CoolWidget {}
+}
+
+package pages {
+    class CoolPage {}
+}
+
+CoolWidget --> InstantConfigNotifier : uses
+
+CoolPage --> InstantConfigNotifier : uses
+
+InstantConfigNotifier --> FetchInstantConfigUseCase : uses
+
+@enduml

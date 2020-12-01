@@ -1,0 +1,48 @@
+@startuml instant_config_domain_layer_class_diagram.puml
+
+package base.domain.usecases {
+    interface UseCase<Type, Params> {
+        call: Type
+    }
+}
+
+package common.domain {
+    package repository {
+        interface InstantConfigRepository {
+            + Future<InstantConfig> fetch([bool isLoginFormEnabled, bool isFpsMonitorEnabled, bool isRendererDisplayEnabled]);
+        }
+    }
+
+    package entities {
+        class InstantConfig {
+            + isLoginFormEnabled: bool
+            + isFpsMonitorEnabled: bool
+            + isRendererDisplayEnabled: bool
+        }
+    }
+
+    package usecases {
+        class FetchInstantConfigUseCase {
+            + Future<InstantConfig> call(InstantConfigParam params)
+        }
+
+        package parameters {
+            class InstantConfigParam {
+                + isLoginFormEnabled : bool;
+                + isFpsMonitorEnabled : bool;
+                + isRendererDisplayEnabled : bool;
+            }
+        }
+
+    }
+}
+
+FetchInstantConfigUseCase ..|> UseCase
+
+FetchInstantConfigUseCase -up-> InstantConfigRepository : uses
+
+InstantConfigRepository --> InstantConfig: uses
+
+FetchInstantConfigUseCase --> InstantConfigParam : uses
+
+@enduml
