@@ -4,16 +4,35 @@ package base.domain.usecases {
     class FetchInstantConfigUseCase {}
 }
 
-package common.presentation.state {
-    class InstantConfigNotifier {
-        + isLoading : bool
-        + instantConfig : InstantConfig
+package common.presentation {
 
-        - _defaultInstantConfig : InstantConfig
-        - _fetchInstantConfigUseCase : FetchInstantConfigUseCase
+    package state {
+        class InstantConfigNotifier {
+            + isLoading : bool
 
-        + Future<void> initializeInstantConfig()
-        + void setDefaults(bool isLoginForEnabled, bool isFpsMonitorEnabled, bool isRendererDisplayEnabled)
+            + loginFormInstantConfig : LoginFormInstantConfigViewModel
+            + fpsMonitorInstantConfig : FpsMonitorInstantConfigViewModel
+            + rendererDisplayInstantConfig : RendererDisplayInstantConfigViewModel
+
+            - _instantConfig : InstantConfig
+            - _defaultInstantConfig : InstantConfig
+            - _fetchInstantConfigUseCase : FetchInstantConfigUseCase
+
+            + Future<void> initializeInstantConfig()
+            + void setDefaults(bool isLoginForEnabled, bool isFpsMonitorEnabled, bool isRendererDisplayEnabled)
+        }
+    }
+
+    package view_models {
+        abstract class InstantConfigViewModel {
+            + isEnabled: bool
+        }
+
+        class LoginFormInstantConfigViewModel {}
+
+        class FpsMonitorInstantConfigViewModel {}
+
+        class RendererDisplayInstantConfigViewModel {}
     }
 }
 
@@ -30,5 +49,13 @@ CoolWidget --> InstantConfigNotifier : uses
 CoolPage --> InstantConfigNotifier : uses
 
 InstantConfigNotifier --> FetchInstantConfigUseCase : uses
+
+InstantConfigNotifier --> LoginFormInstantConfigViewModel : uses
+InstantConfigNotifier --> FpsMonitorInstantConfigViewModel : uses
+InstantConfigNotifier --> RendererDisplayInstantConfigViewModel : uses
+
+LoginFormInstantConfigViewModel --|> InstantConfigViewModel
+FpsMonitorInstantConfigViewModel --|> InstantConfigViewModel
+RendererDisplayInstantConfigViewModel --|> InstantConfigViewModel
 
 @enduml

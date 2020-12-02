@@ -15,8 +15,8 @@ package common.data {
 
     package models {
         class InstantConfigData {
-            + toJson()
-            + factory fromJson()
+            + Map<String, dynamic> toJson()
+            + factory fromJson(Map<String, dynamic> json)
         }
     }
 }
