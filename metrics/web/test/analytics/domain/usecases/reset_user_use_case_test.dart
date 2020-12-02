@@ -1,0 +1,30 @@
+import 'package:metrics/analytics/domain/usecases/reset_user_use_case.dart';
+import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
+
+import '../../../test_utils/analytics_repository_mock.dart';
+
+void main() {
+  group("LogLoginUseCase", () {
+    final repository = AnalyticsRepositoryMock();
+
+    tearDown(() {
+      reset(repository);
+    });
+
+    test("throws an ArgumentError if the given repository is null", () {
+      expect(
+        () => ResetUserUseCase(null),
+        throwsArgumentError,
+      );
+    });
+
+    test("sets the user identifier to the null", () async {
+      final resetUserUseCase = ResetUserUseCase(repository);
+
+      await resetUserUseCase();
+
+      verify(repository.setUserId(null)).called(equals(1));
+    });
+  });
+}

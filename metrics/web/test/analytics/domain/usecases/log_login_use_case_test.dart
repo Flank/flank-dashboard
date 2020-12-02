@@ -13,7 +13,8 @@ void main() {
       reset(repository);
     });
 
-    final userIdParam = UserIdParam(id: "id");
+    const id = 'id';
+    final userIdParam = UserIdParam(id: id);
 
     test("throws an ArgumentError if the given repository is null", () {
       expect(
@@ -22,14 +23,20 @@ void main() {
       );
     });
 
-    test("delegates call to the given AnalyticsRepository", () async {
+    test("sets the user identifier to the given value", () async {
       final logLoginUseCase = LogLoginUseCase(repository);
 
       await logLoginUseCase(userIdParam);
 
-      verify(repository.logLogin(
-        userIdParam.id,
-      )).called(equals(1));
+      verify(repository.setUserId(id)).called(equals(1));
+    });
+
+    test("logs user logins", () async {
+      final logLoginUseCase = LogLoginUseCase(repository);
+
+      await logLoginUseCase(userIdParam);
+
+      verify(repository.logLogin()).called(equals(1));
     });
   });
 }

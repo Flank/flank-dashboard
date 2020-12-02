@@ -16,7 +16,9 @@ class LogLoginUseCase implements UseCase<Future<void>, UserIdParam> {
   }
 
   @override
-  Future<void> call(UserIdParam params) {
-    return _repository.logLogin(params.id);
+  Future<void> call(UserIdParam params) async {
+    await _repository.setUserId(params.id);
+
+    return _repository.logLogin();
   }
 }

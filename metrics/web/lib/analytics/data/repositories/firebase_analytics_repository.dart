@@ -6,14 +6,17 @@ class FirebaseAnalyticsRepository implements AnalyticsRepository {
   final FirebaseAnalytics _analytics = FirebaseAnalytics();
 
   @override
-  Future<void> logLogin(String id) async {
-    await _analytics.setUserId(id);
-
+  Future<void> logLogin() async {
     return _analytics.logLogin();
   }
 
   @override
   Future<void> logPageView(String pageName) {
     return _analytics.logEvent(name: pageName);
+  }
+
+  @override
+  Future<void> setUserId(String id) {
+    return _analytics.setUserId(id);
   }
 }
