@@ -1,6 +1,6 @@
 source:
   jenkins:
-    url: http://ec2-54-218-41-22.us-west-2.compute.amazonaws.com:8080/
+    url: $JENKIS_URL
     job_name: Metrics Web
     username: $JENKINS_USERNAME
     api_key: $JENKINS_API_KEY
