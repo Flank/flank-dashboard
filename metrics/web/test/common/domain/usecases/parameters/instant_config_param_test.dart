@@ -1,10 +1,6 @@
 import 'package:metrics/common/domain/usecases/parameters/instant_config_param.dart';
 import 'package:test/test.dart';
 
-import '../../../../test_utils/matcher_util.dart';
-
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("InstantConfigParam", () {
     const isFpsMonitorEnabled = true;
@@ -12,7 +8,7 @@ void main() {
     const isRendererDisplayEnabled = false;
 
     test(
-      "throws an AssertionError if the given is fps monitor enabled is null",
+      "throws an ArgumentError if the given is fps monitor enabled is null",
       () {
         expect(
           () => InstantConfigParam(
@@ -20,13 +16,13 @@ void main() {
             isLoginFormEnabled: isLoginFormEnabled,
             isRendererDisplayEnabled: isRendererDisplayEnabled,
           ),
-          MatcherUtil.throwsAssertionError,
+          throwsArgumentError,
         );
       },
     );
 
     test(
-      "throws an AssertionError if the given is login form Enabled is null",
+      "throws an ArgumentError if the given is login form Enabled is null",
       () {
         expect(
           () => InstantConfigParam(
@@ -34,13 +30,13 @@ void main() {
             isLoginFormEnabled: null,
             isRendererDisplayEnabled: isRendererDisplayEnabled,
           ),
-          MatcherUtil.throwsAssertionError,
+          throwsArgumentError,
         );
       },
     );
 
     test(
-      "throws an AssertionError if the given is renderer display enabled is null",
+      "throws an ArgumentError if the given is renderer display enabled is null",
       () {
         expect(
           () => InstantConfigParam(
@@ -48,7 +44,7 @@ void main() {
             isLoginFormEnabled: isLoginFormEnabled,
             isRendererDisplayEnabled: null,
           ),
-          MatcherUtil.throwsAssertionError,
+          throwsArgumentError,
         );
       },
     );

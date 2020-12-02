@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-/// An entity representing the instant config.
+/// An entity representing an instant config.
 @immutable
 class InstantConfig {
   /// Indicates whether to show the login form.

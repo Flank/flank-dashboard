@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// Represents the instant config parameter.
+/// Represents an instant config parameter.
 class InstantConfigParam extends Equatable {
   /// Indicates whether to show the login form.
   final bool isLoginFormEnabled;
@@ -25,11 +25,16 @@ class InstantConfigParam extends Equatable {
   ///
   /// Throws an [AssertionError] if either [isLoginFormEnabled],
   /// [isFpsMonitorEnabled] or [isRendererDisplayEnabled] is null.
-  const InstantConfigParam({
+  InstantConfigParam({
     @required this.isLoginFormEnabled,
     @required this.isFpsMonitorEnabled,
     @required this.isRendererDisplayEnabled,
-  })  : assert(isLoginFormEnabled != null),
-        assert(isFpsMonitorEnabled != null),
-        assert(isRendererDisplayEnabled != null);
+  }) {
+    ArgumentError.checkNotNull(isLoginFormEnabled, 'isLoginFormEnabled');
+    ArgumentError.checkNotNull(isFpsMonitorEnabled, 'isFpsMonitorEnabled');
+    ArgumentError.checkNotNull(
+      isRendererDisplayEnabled,
+      'isRendererDisplayEnabled',
+    );
+  }
 }
