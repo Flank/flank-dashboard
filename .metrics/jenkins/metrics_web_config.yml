@@ -1,6 +1,6 @@
 source:
   jenkins:
-    url: $JENKIS_URL
+    url: $JENKINS_URL
     job_name: Metrics Web
     username: $JENKINS_USERNAME
     api_key: $JENKINS_API_KEY
