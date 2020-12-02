@@ -9,7 +9,7 @@ package base.domain.usecases {
 package common.domain {
     package repository {
         interface InstantConfigRepository {
-            + Future<InstantConfig> fetch();
+            + Future<InstantConfig> fetch()
         }
     }
 
@@ -28,9 +28,9 @@ package common.domain {
 
         package parameters {
             class InstantConfigParam {
-                + isLoginFormEnabled : bool;
-                + isFpsMonitorEnabled : bool;
-                + isRendererDisplayEnabled : bool;
+                + isLoginFormEnabled : bool
+                + isFpsMonitorEnabled : bool
+                + isRendererDisplayEnabled : bool
             }
         }
 

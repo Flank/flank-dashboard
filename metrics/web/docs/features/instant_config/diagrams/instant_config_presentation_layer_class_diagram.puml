@@ -10,7 +10,6 @@ package common.presentation.state {
         + instantConfig : InstantConfig
 
         - _defaultInstantConfig : InstantConfig
-
         - _fetchInstantConfigUseCase : FetchInstantConfigUseCase
 
         + Future<void> initializeInstantConfig()
