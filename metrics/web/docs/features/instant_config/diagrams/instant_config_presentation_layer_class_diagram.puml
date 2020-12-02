@@ -1,0 +1,61 @@
+@startuml instant_config_presentation_layer_class_diagram
+
+package base.domain.usecases {
+    class FetchInstantConfigUseCase {}
+}
+
+package common.presentation {
+
+    package state {
+        class InstantConfigNotifier {
+            + isLoading : bool
+
+            + loginFormInstantConfig : LoginFormInstantConfigViewModel
+            + fpsMonitorInstantConfig : FpsMonitorInstantConfigViewModel
+            + rendererDisplayInstantConfig : RendererDisplayInstantConfigViewModel
+
+            - _instantConfig : InstantConfig
+            - _defaultInstantConfig : InstantConfig
+            - _fetchInstantConfigUseCase : FetchInstantConfigUseCase
+
+            + Future<void> initializeInstantConfig()
+            + void setDefaults(bool isLoginForEnabled, bool isFpsMonitorEnabled, bool isRendererDisplayEnabled)
+        }
+    }
+
+    package view_models {
+        abstract class InstantConfigViewModel {
+            + isEnabled: bool
+        }
+
+        class LoginFormInstantConfigViewModel {}
+
+        class FpsMonitorInstantConfigViewModel {}
+
+        class RendererDisplayInstantConfigViewModel {}
+    }
+}
+
+package widgets {
+    class CoolWidget {}
+}
+
+package pages {
+    class CoolPage {}
+}
+
+CoolWidget --> InstantConfigNotifier : uses
+
+CoolPage --> InstantConfigNotifier : uses
+
+InstantConfigNotifier --> FetchInstantConfigUseCase : uses
+
+InstantConfigNotifier --> LoginFormInstantConfigViewModel : uses
+InstantConfigNotifier --> FpsMonitorInstantConfigViewModel : uses
+InstantConfigNotifier --> RendererDisplayInstantConfigViewModel : uses
+
+LoginFormInstantConfigViewModel --|> InstantConfigViewModel
+FpsMonitorInstantConfigViewModel --|> InstantConfigViewModel
+RendererDisplayInstantConfigViewModel --|> InstantConfigViewModel
+
+@enduml
