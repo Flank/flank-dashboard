@@ -7,31 +7,31 @@ import 'package:flutter/material.dart';
 /// If no constraints are given by the parent widget, it will be as big as possible.
 /// Otherwise, it will match its parent's size.
 class CirclePercentage extends StatefulWidget {
-  /// The percent value.
+  /// A percent value.
   final double value;
 
-  /// The padding of the [value] text inside the circle graph.
+  /// A padding of the [value] text inside the circle graph.
   final EdgeInsets padding;
 
-  /// The wight of the graph's stroke.
+  /// A wight of the graph's stroke.
   final double strokeWidth;
 
-  /// The color of the part of the graph that represents the value.
+  /// A color of the part of the graph that represents the value.
   final Color valueColor;
 
-  /// The color of the graph's circle itself.
+  /// A color of the graph's circle itself.
   final Color strokeColor;
 
-  /// The color used to fill the graph.
+  /// A color used to fill the graph.
   final Color backgroundColor;
 
-  /// The [TextStyle] of the percent text.
+  /// A [TextStyle] of the percent text.
   final TextStyle valueStyle;
 
-  /// The width of the value (filled) stroke.
+  /// A width of the value (filled) stroke.
   final double valueStrokeWidth;
 
-  /// The [Widget] displayed instead of [value] if the [value] is `null`.
+  /// A [Widget] displayed instead of [value] if the [value] is `null`.
   final Widget placeholder;
 
   /// Creates the circle percentage graph.

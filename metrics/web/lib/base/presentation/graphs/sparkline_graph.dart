@@ -8,28 +8,28 @@ import 'package:flutter/material.dart';
 /// If no constraints are given by the parent of this widget,
 /// it fills all the available space.
 class SparklineGraph extends StatelessWidget {
-  /// The minimal length of this graph axis.
+  /// A minimal length of this graph axis.
   static const int _minChartAxisLength = 1;
 
   /// A default axes [TickGenerator] that generates empty tick list.
   static const _axisTickGenerator = FixedTickGenerator<num>(ticks: []);
 
-  /// The class to present the line of this graph.
+  /// A class to present the line of this graph.
   final List<Point> data;
 
-  /// The color of this graph's line.
+  /// A color of this graph's line.
   final Color strokeColor;
 
-  /// The color this graph is filled with.
+  /// A color this graph is filled with.
   final Color fillColor;
 
   /// A padding of this graph.
   final EdgeInsets graphPadding;
 
-  /// Defines the drawing type for the curve.
+  /// A [LineCurve] that defines the drawing type for the curve.
   final LineCurve curveType;
 
-  /// The width of this graph's stroke.
+  /// A width of this graph's stroke.
   final double strokeWidth;
 
   /// Creates the [SparklineGraph] widget.
