@@ -12,7 +12,7 @@ void main() {
 
     final repository = RemoteConfigurationRepositoryMock();
     final useCase = FetchInstantConfigUseCase(repository);
-    const param = InstantConfigParam(
+    final param = InstantConfigParam(
       isLoginFormEnabled: isLoginFormEnabled,
       isFpsMonitorEnabled: isFpsMonitorEnabled,
       isRendererDisplayEnabled: isRendererDisplayEnabled,
@@ -40,7 +40,7 @@ void main() {
     });
 
     test(
-      ".call() uses the fetch method of the instant config repository",
+      ".call() uses the .fetch() method of the instant config repository",
       () {
         useCase(param);
 
@@ -51,7 +51,9 @@ void main() {
     test(
       ".call() returns an instant config with the given param values if fetching instant config fails",
       () async {
-        when(repository.fetch()).thenThrow(Exception());
+        when(repository.fetch()).thenAnswer(
+          (_) => Future.error(Exception()),
+        );
 
         final config = await useCase(param);
 

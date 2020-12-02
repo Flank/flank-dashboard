@@ -23,7 +23,7 @@ class InstantConfigParam extends Equatable {
   /// with the given [isLoginFormEnabled], [isFpsMonitorEnabled],
   /// and [isRendererDisplayEnabled].
   ///
-  /// Throws an [AssertionError] if either [isLoginFormEnabled],
+  /// Throws an [ArgumentError] if either [isLoginFormEnabled],
   /// [isFpsMonitorEnabled] or [isRendererDisplayEnabled] is null.
   InstantConfigParam({
     @required this.isLoginFormEnabled,

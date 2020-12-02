@@ -23,7 +23,7 @@ class FetchInstantConfigUseCase
   @override
   FutureOr<InstantConfig> call(InstantConfigParam params) async {
     try {
-      return _repository.fetch();
+      return await _repository.fetch();
     } catch (_) {
       return InstantConfig(
         isLoginFormEnabled: params.isLoginFormEnabled,
