@@ -9,7 +9,7 @@ package base.domain.usecases {
 package common.domain {
     package repository {
         interface InstantConfigRepository {
-            + Future<InstantConfig> fetch([bool isLoginFormEnabled, bool isFpsMonitorEnabled, bool isRendererDisplayEnabled]);
+            + Future<InstantConfig> fetch();
         }
     }
 

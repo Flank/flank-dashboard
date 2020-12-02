@@ -1,4 +1,4 @@
-# Firebase Instant config design
+# Firestore Instant Config design
 
 ## TL;DR
 
@@ -10,31 +10,31 @@ This document lists steps and designs the `Instant Config` feature to introduce 
 
 ### Document structure
 
-To introduce this feature, we need to create a `instant_config` collection to the Firestore database. This collection will contain the `instant_config` document with the following structure:
+To introduce this feature, we need to create an `instant_config` collection in the Firestore database. This collection will contain the `instant_config` document with the following structure:
 
 ```json
-instant_config : {
-    isLoginFormEnabled: true,
-    isFpsMonitorEnabled: false,
-    isRendererDisplayEnabled: false
+{
+    "isLoginFormEnabled": true,
+    "isFpsMonitorEnabled": false,
+    "isRendererDisplayEnabled": false
 }
 ```
 
 ### Firestore security rules
 
-Once we have a new collection, we have to add security rules for this collection. So, we should set the following constraints to the `instant_config` collection: 
+Once we have a new collection, we have to add security rules for this collection. Everyone can read `instant_config` collection content but no one has access to create, update or delete collection documents. Thus, the following rules keep:
 
 - Access-related rules:
     - not authenticated users **can** read and **cannot** create, update, delete this document; 
-    - authenticated users **can** read and **cannot** create, update, delete this document; 
+    - authenticated users **can** read and **cannot** create, update, delete this document.
 
 ## Metrics application
 
-The following paragraph provides an implementation of instant config integration for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
+The following sub-sections provide an implementation of instant config integration for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
 
 ### Data layer
 
-The data layer provides the `FirebaseInstantConfigRepository` implementation of `InstantConfigRepository` and `InstantConfigData` that represents the `InstantConfig` entity.
+The data layer provides the `FirestoreInstantConfigRepository` implementation of `InstantConfigRepository` and `InstantConfigData` model that represents a `DataModel` implementation for the `InstantConfig` entity.
 
 The following class diagram states the structure of the data layer:
 
@@ -42,7 +42,7 @@ The following class diagram states the structure of the data layer:
 
 ### Domain layer
 
-The domain layer should provide an interface for the `FirebaseInstantConfigRepository` we need to interact with the `Firestore API`. Also, the layer provides all the use cases required to interact with the repository, and entities required for the `Instant Config` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
+The domain layer should provide an interface for the `FirestoreInstantConfigRepository` we need to interact with the `Firestore database`. Also, the layer provides all the use cases required to interact with the repository, and entities required for the `Instant Config` feature. Thus, the following list of classes should be implemented to fit the feature requirements:
 
 - Implement the `InstantConfigRepository` interface with appropriate methods.
 - Add the `InstantConfig` entity with fields that come from a remote API.
@@ -54,7 +54,7 @@ The following class diagram demonstrates the domain layer structure:
 
 ### Presentation layer
 
-Once we've added both the domain and data layers, it's time to add the feature to the presentation. `InstantConfigNotifier` maintains the state of the instant config and integrated to the `InjectionContainer` so it is available within the application.
+Once we've added both the domain and data layers, it's time to add the feature to the presentation. `InstantConfigNotifier` maintains the state of the instant config and is integrated into the `InjectionContainer` so it is available within the application.
 
 The following class diagram demonstrates the structure of the presentation layer:
 

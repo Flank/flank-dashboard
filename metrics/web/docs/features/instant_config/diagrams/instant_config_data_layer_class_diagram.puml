@@ -10,11 +10,12 @@ package common.domain.entities {
 
 package common.data {
     package repository {
-        class FirebaseInstantConfigRepository {}
+        class FirestoreInstantConfigRepository {}
     }
 
     package models {
         class InstantConfigData {
+            + toJson()
             + factory fromJson()
         }
     }
@@ -24,8 +25,8 @@ package core.src.data.model {
     class DataModel {}
 }
 
-FirebaseInstantConfigRepository ..|> InstantConfigRepository
-FirebaseInstantConfigRepository --> InstantConfigData : uses
+FirestoreInstantConfigRepository ..|> InstantConfigRepository
+FirestoreInstantConfigRepository --> InstantConfigData : uses
 
 InstantConfigData --> InstantConfig
 InstantConfigData ..|> DataModel

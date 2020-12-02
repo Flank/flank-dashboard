@@ -14,7 +14,7 @@ participant FetchInstantConfigUseCase << (C,#ADD1B2) >>
 end box
 
 box "data"
-participant FirebaseInstantConfigRepository << (C,#ADD1B2) >>
+participant FirestoreInstantConfigRepository << (C,#ADD1B2) >>
 participant InstantConfigData << (C,#ADD1B2) >>
 end box
 
@@ -23,27 +23,28 @@ database "Firestore" as FRC
 Bob -> UI : Enters the application
 activate UI
 
-UI -> InstantConfigNotifier : initializeInstantConfig()
+UI -> InstantConfigNotifier : setDefaults(bool isLoginForEnabled, bool isFpsMonitorEnabled, bool isRendererDisplayEnabled)
 activate InstantConfigNotifier
+UI -> InstantConfigNotifier : initializeInstantConfig()
 
 InstantConfigNotifier -> FetchInstantConfigUseCase : call(InstantConfigParam params)
 activate FetchInstantConfigUseCase
 
-FetchInstantConfigUseCase -> FirebaseInstantConfigRepository : fetch([isLoginFormEnabled, isFpsMonitorEnabled, isRendererDisplayEnabled])
-activate FirebaseInstantConfigRepository
+FetchInstantConfigUseCase -> FirestoreInstantConfigRepository : fetch()
+activate FirestoreInstantConfigRepository
 
-FirebaseInstantConfigRepository -> FRC : Fetch instant config
+FirestoreInstantConfigRepository -> FRC : Fetch instant config
 
-FRC --> FirebaseInstantConfigRepository : Instant config json
+FRC --> FirestoreInstantConfigRepository : Instant config json
 
-FirebaseInstantConfigRepository -> InstantConfigData : fromJson()
+FirestoreInstantConfigRepository -> InstantConfigData : fromJson()
 activate InstantConfigData
 
-InstantConfigData --> FirebaseInstantConfigRepository : instantConfig
+InstantConfigData --> FirestoreInstantConfigRepository : instantConfig
 deactivate InstantConfigData
 
-FirebaseInstantConfigRepository --> FetchInstantConfigUseCase : instantConfig
-deactivate FirebaseInstantConfigRepository
+FirestoreInstantConfigRepository --> FetchInstantConfigUseCase : instantConfig
+deactivate FirestoreInstantConfigRepository
 
 FetchInstantConfigUseCase --> InstantConfigNotifier : instantConfig
 deactivate FetchInstantConfigUseCase
