@@ -3,13 +3,13 @@ import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 
 /// Represents the placeholder bar of the [BarGraph].
 class PlaceholderBar extends StatelessWidget {
-  /// The width of this bar.
+  /// A width of this bar.
   final double width;
 
-  /// The height of this bar.
+  /// A height of this bar.
   final double height;
 
-  /// The color of this bar.
+  /// A color of this bar.
   final Color color;
 
   /// Creates the [PlaceholderBar].
