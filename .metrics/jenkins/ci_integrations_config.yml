@@ -1,7 +1,7 @@
 source:
   jenkins:
     url: $JENKINS_URL
-    job_name: Metrics Web
+    job_name: CI Integrations
     username: $JENKINS_USERNAME
     api_key: $JENKINS_API_KEY
 destination:
