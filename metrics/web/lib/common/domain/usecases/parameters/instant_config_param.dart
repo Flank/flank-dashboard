@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 /// Represents an instant config parameter.
 class InstantConfigParam extends Equatable {
-  /// Indicates whether to show the login form.
+  /// Indicates whether the login form with email and password is enabled.
   final bool isLoginFormEnabled;
 
   /// Indicates whether the FPS monitor feature is enabled.
@@ -20,8 +20,7 @@ class InstantConfigParam extends Equatable {
       ];
 
   /// Creates a new instance of the [InstantConfigParam]
-  /// with the given [isLoginFormEnabled], [isFpsMonitorEnabled],
-  /// and [isRendererDisplayEnabled].
+  /// with the given config parameters.
   ///
   /// Throws an [ArgumentError] if one of the required parameters is `null`.
   InstantConfigParam({

@@ -7,7 +7,7 @@ import 'package:metrics/common/domain/usecases/parameters/instant_config_param.d
 
 /// A [UseCase] that provides an ability to fetch the [InstantConfig].
 class FetchInstantConfigUseCase
-    extends UseCase<FutureOr<InstantConfig>, InstantConfigParam> {
+    extends UseCase<Future<InstantConfig>, InstantConfigParam> {
   /// An [InstantConfigRepository] that provides an ability to interact
   /// with the persistent store.
   final InstantConfigRepository _repository;
@@ -21,17 +21,17 @@ class FetchInstantConfigUseCase
   }
 
   @override
-  FutureOr<InstantConfig> call(InstantConfigParam params) async {
+  Future<InstantConfig> call(InstantConfigParam params) async {
     try {
       final config = await _repository.fetch();
 
       return InstantConfig(
         isLoginFormEnabled:
-            config.isLoginFormEnabled ?? params.isLoginFormEnabled,
+            config?.isLoginFormEnabled ?? params.isLoginFormEnabled,
         isFpsMonitorEnabled:
-            config.isFpsMonitorEnabled ?? params.isFpsMonitorEnabled,
+            config?.isFpsMonitorEnabled ?? params.isFpsMonitorEnabled,
         isRendererDisplayEnabled:
-            config.isRendererDisplayEnabled ?? params.isRendererDisplayEnabled,
+            config?.isRendererDisplayEnabled ?? params.isRendererDisplayEnabled,
       );
     } catch (_) {
       return InstantConfig(

@@ -74,6 +74,22 @@ void main() {
     );
 
     test(
+      ".call() returns an instant config with the given param values if the fetched instant config is null",
+      () async {
+        when(repository.fetch()).thenAnswer((_) => Future.value(null));
+
+        final config = await useCase(param);
+
+        expect(config.isLoginFormEnabled, equals(param.isLoginFormEnabled));
+        expect(config.isFpsMonitorEnabled, equals(param.isFpsMonitorEnabled));
+        expect(
+          config.isRendererDisplayEnabled,
+          equals(param.isRendererDisplayEnabled),
+        );
+      },
+    );
+
+    test(
       ".call() returns an instant config with the given param values if fetching instant config fails",
       () async {
         when(repository.fetch()).thenAnswer(
