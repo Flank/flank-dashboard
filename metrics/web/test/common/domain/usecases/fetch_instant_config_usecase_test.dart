@@ -1,8 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/common/domain/entities/instant_config.dart';
 import 'package:metrics/common/domain/repositories/instant_config_repository.dart';
 import 'package:metrics/common/domain/usecases/fetch_instant_config_usecase.dart';
 import 'package:metrics/common/domain/usecases/parameters/instant_config_param.dart';
 import 'package:mockito/mockito.dart';
+
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("FetchInstantConfigUseCase", () {
@@ -10,7 +13,7 @@ void main() {
     const isLoginFormEnabled = false;
     const isRendererDisplayEnabled = false;
 
-    final repository = RemoteConfigurationRepositoryMock();
+    final repository = _RemoteConfigurationRepositoryMock();
     final useCase = FetchInstantConfigUseCase(repository);
     final param = InstantConfigParam(
       isLoginFormEnabled: isLoginFormEnabled,
@@ -32,7 +35,7 @@ void main() {
       },
     );
 
-    test("successfully creates an instance on a valid input", () {
+    test("creates an instance with the given repository", () {
       expect(
         () => FetchInstantConfigUseCase(repository),
         returnsNormally,
@@ -45,6 +48,28 @@ void main() {
         useCase(param);
 
         verify(repository.fetch()).called(1);
+      },
+    );
+
+    test(
+      ".call() returns an instant config with the given param values if fetching instant config values are null",
+      () async {
+        const nullConfig = InstantConfig(
+          isFpsMonitorEnabled: null,
+          isLoginFormEnabled: null,
+          isRendererDisplayEnabled: null,
+        );
+
+        when(repository.fetch()).thenAnswer((_) => Future.value(nullConfig));
+
+        final config = await useCase(param);
+
+        expect(config.isLoginFormEnabled, equals(param.isLoginFormEnabled));
+        expect(config.isFpsMonitorEnabled, equals(param.isFpsMonitorEnabled));
+        expect(
+          config.isRendererDisplayEnabled,
+          equals(param.isRendererDisplayEnabled),
+        );
       },
     );
 
@@ -68,5 +93,5 @@ void main() {
   });
 }
 
-class RemoteConfigurationRepositoryMock extends Mock
+class _RemoteConfigurationRepositoryMock extends Mock
     implements InstantConfigRepository {}

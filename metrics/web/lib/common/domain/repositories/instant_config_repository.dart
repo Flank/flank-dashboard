@@ -4,7 +4,7 @@ import 'package:metrics/common/domain/entities/instant_config.dart';
 
 /// A base class for instant config repositories.
 ///
-/// Provides an ability to get the instant config data.
+/// Provides methods to work with the stored instant config data.
 abstract class InstantConfigRepository {
   /// Provides an ability to fetch the [InstantConfig].
   Future<InstantConfig> fetch();
