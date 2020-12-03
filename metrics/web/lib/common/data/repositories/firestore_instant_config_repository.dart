@@ -7,7 +7,6 @@ import 'package:metrics/common/domain/repositories/instant_config_repository.dar
 
 /// An implementation of the [InstantConfigRepository] for [Firestore].
 class FirestoreInstantConfigRepository extends InstantConfigRepository {
-  // An instance of Firestore.
   final Firestore _firestore = Firestore.instance;
 
   @override

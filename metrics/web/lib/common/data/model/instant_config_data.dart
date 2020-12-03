@@ -15,7 +15,7 @@ class InstantConfigData extends InstantConfig implements DataModel {
           isRendererDisplayEnabled: isRendererDisplayEnabled,
         );
 
-  /// Creates the [InstantConfigData] using the [json].
+  /// Creates the [InstantConfigData] from the given [json].
   ///
   /// Returns `null` if the given [json] is `null`.
   factory InstantConfigData.fromJson(Map<String, dynamic> json) {
