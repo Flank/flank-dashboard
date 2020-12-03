@@ -26,7 +26,7 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /instant_config/{instant_config} {
+    match /instant_config/{config} {
       allow get: if true;
       allow list: if false;
       allow write: if false;
