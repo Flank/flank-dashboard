@@ -52,7 +52,7 @@ void main() {
     );
 
     test(
-      ".call() returns an instant config with the given param values if fetching instant config values are null",
+      ".call() returns an instant config with the given param values if the fetched instant config contains null values",
       () async {
         const nullConfig = InstantConfig(
           isFpsMonitorEnabled: null,
