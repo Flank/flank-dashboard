@@ -190,7 +190,7 @@ As you can see above, the `Notify about building the Awesome project` uses some 
 
 Once we've figured out the workflows and jobs we need to sync the project's builds with the Metrics Web application, let's consider the sequence diagram that will explain the main relationships between the different workflows on the example with the `AwesomeProject`: 
 
-![GitHub Actions Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/github_actions_integrations_doc/docs/diagrams/github_actions_sequence_diagram.puml)
+![GitHub Actions Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/github_actions_integrations_doc/docs/diagrmas/github_actions_sequence_diagram.puml)
 
 # Dependencies
 
