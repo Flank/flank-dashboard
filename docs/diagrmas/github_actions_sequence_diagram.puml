@@ -38,5 +38,4 @@ return Sync command finished
 return Sync finished
 IntegrationsWorkflow --> Bob : Sync finished
 
-
 @enduml
