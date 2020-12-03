@@ -1,0 +1,59 @@
+@startuml buildkite_sequence_diagram
+    skinparam ParticipantPadding 20
+    skinparam BoxPadding 10
+
+    actor Bob
+
+    box Github
+        participant Repository
+    endbox
+
+    box Buildkite Awesome Pipeline
+        participant "Awesome pipeline"
+        participant Tests
+        Participant "Build and deploy"
+        Participant "Trigger sync pipeline"
+    endbox
+
+    box Buildkite Sync Pipeline
+        participant "Sync pipeline"
+        participant "CI Integrations Tool"
+    endbox
+
+    database "Firestore" as FS
+
+    Bob -> Repository : Push commit to master
+    activate Repository
+
+    Repository -> "Awesome pipeline" : Webhook triggers pipeline
+    deactivate Repository
+    activate "Awesome pipeline"
+
+    "Awesome pipeline" -> Tests : Run tests step
+    activate Tests
+
+    Tests -> "Build and deploy" : Run build and deploy step
+    deactivate Tests
+    activate "Build and deploy"
+
+    "Build and deploy" -> "Trigger sync pipeline" : Run trigger step
+    deactivate "Build and deploy"
+    activate "Trigger sync pipeline"
+
+    "Trigger sync pipeline" -> "Sync pipeline" : Trigger sync pipeline (async)
+    activate "Sync pipeline"
+    "Trigger sync pipeline" --> "Awesome pipeline" : Build finished
+    deactivate "Trigger sync pipeline"
+    deactivate "Awesome pipeline"
+
+    "Sync pipeline" -> "CI Integrations Tool" : Run sync command
+    activate "CI Integrations Tool"
+    "CI Integrations Tool" -> FS : Add new build data
+
+    "CI Integrations Tool" --> "Sync pipeline" : Sync command finished
+    deactivate "CI Integrations Tool"
+
+    "Sync pipeline" --> Bob : Sync finished
+    deactivate "Sync pipeline"
+
+@enduml
