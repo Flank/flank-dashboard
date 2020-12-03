@@ -1,0 +1,42 @@
+@startuml github_actions_sequence_diagram
+
+actor Bob
+
+participant "Awesome Project Actions workflow" as AwesomeWorkflow
+participant "Run tests job" as RunTests
+participant "Build and publish job" as BuildAndPublish
+participant "Notify about building the Awesome project" as NotifyBuilding
+
+participant "Metrics Integration Actions workflow" as IntegrationsWorkflow
+participant "Awesome project build data sync" as AwesomeSync
+participant "CI Integrations" as CiIntegrations
+
+database "Firestore Database" as Firestore
+
+
+Bob -> AwesomeWorkflow : push commit to master
+activate AwesomeWorkflow
+AwesomeWorkflow -> RunTests : run tests
+activate  RunTests
+return Test complete 
+AwesomeWorkflow  -> BuildAndPublish : run building and publishing job
+activate BuildAndPublish
+return Building and publishinng finished
+AwesomeWorkflow -> NotifyBuilding : run notify about building project
+activate NotifyBuilding
+NotifyBuilding -> IntegrationsWorkflow : notify about Awesome project is building
+return Notification sent 
+return Workflow run finished
+activate IntegrationsWorkflow
+IntegrationsWorkflow -> AwesomeSync : run sync job
+activate AwesomeSync
+AwesomeSync -> AwesomeSync : wait until Awesome Workflow got finished
+AwesomeSync -> CiIntegrations : run sync command
+activate CiIntegrations
+CiIntegrations -> Firestore : add new builds data
+return Sync command finished
+return Sync finished
+IntegrationsWorkflow --> Bob : Sync finished
+
+
+@enduml
