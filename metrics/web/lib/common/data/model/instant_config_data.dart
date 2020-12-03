@@ -31,9 +31,9 @@ class InstantConfigData extends InstantConfig implements DataModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'isLoginFormEnabled': isLoginFormEnabled.toString(),
-      'isFpsMonitorEnabled': isFpsMonitorEnabled.toString(),
-      'isRendererDisplayEnabled': isRendererDisplayEnabled.toString(),
+      'isLoginFormEnabled': isLoginFormEnabled,
+      'isFpsMonitorEnabled': isFpsMonitorEnabled,
+      'isRendererDisplayEnabled': isRendererDisplayEnabled,
     };
   }
 }

@@ -1,8 +1,7 @@
-import 'package:meta/meta.dart';
+import 'package:equatable/equatable.dart';
 
 /// An entity representing an instant config.
-@immutable
-class InstantConfig {
+class InstantConfig extends Equatable {
   /// Indicates whether the login form with email and password is enabled.
   final bool isLoginFormEnabled;
 
@@ -11,6 +10,13 @@ class InstantConfig {
 
   /// Indicates whether the renderer display feature is enabled.
   final bool isRendererDisplayEnabled;
+
+  @override
+  List<Object> get props => [
+        isLoginFormEnabled,
+        isFpsMonitorEnabled,
+        isRendererDisplayEnabled,
+      ];
 
   /// Creates a new instance of the [InstantConfig].
   const InstantConfig({
