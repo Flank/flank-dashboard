@@ -1,0 +1,37 @@
+@startuml
+package common.presentation.routes {
+
+    class MetricsRouteInformationParser{
+        Future parseRouteInformation()
+        RouteInformation restoreRouteInformation()
+    }
+
+    class MetricsRouterDelegate{
+        Widget build()
+        Future setNewRoutePath()
+    }
+
+    class MetricsPageGenerator{
+        static MaterialPage generatePage()
+    }
+}
+
+package common.presentation.state {
+    class RoutePageManager{
+        String get currentPath
+        List get pages
+        static RoutePageManager of()
+        Future setNewRoute()
+        void didPop()
+    }
+}
+
+MetricsRouterDelegate --|> ChangeNotifier : with
+MetricsRouterDelegate --|> PopNavigatorRouterDelegateMixin : with
+MetricsRouterDelegate --> RoutePageManager : uses
+RoutePageManager --> MetricsPageGenerator : uses
+RoutePageManager --|> ChangeNotifier : extends
+RoutePageManager --> MaterialApp.router : notifies
+MaterialApp.router --> MetricsRouterDelegate : uses
+MaterialApp.router --> MetricsRouteInformationParser :uses
+@enduml
