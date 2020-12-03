@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 import '../../../test_utils/analytics_repository_mock.dart';
 
 void main() {
-  group("LogLoginUseCase", () {
+  group("ResetUserUseCase", () {
     final repository = AnalyticsRepositoryMock();
 
     tearDown(() {

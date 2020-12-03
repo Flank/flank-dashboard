@@ -1,7 +1,7 @@
 import 'package:metrics/analytics/domain/repositories/analytics_repository.dart';
 import 'package:metrics/base/domain/usecases/usecase.dart';
 
-/// A [UseCase] that provides an ability to reset the user identifier.
+/// A [UseCase] that provides an ability to reset the analytics user identifier.
 class ResetUserUseCase implements UseCase<Future<void>, void> {
   /// An [AnalyticsRepository] that provides an ability to interact
   /// with the store.

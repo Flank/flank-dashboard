@@ -3,7 +3,8 @@ import 'package:metrics/analytics/domain/repositories/analytics_repository.dart'
 
 /// A class that provides methods for interaction with the [FirebaseAnalytics].
 class FirebaseAnalyticsRepository implements AnalyticsRepository {
-  /// A Firebase Analytics API.
+  /// An instance of the [FirebaseAnalytics] that provides an ability
+  /// to interact with the remote analytics service.
   final FirebaseAnalytics _analytics = FirebaseAnalytics();
 
   @override
