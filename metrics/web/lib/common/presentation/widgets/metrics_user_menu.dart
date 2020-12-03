@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
@@ -118,8 +119,11 @@ class MetricsUserMenu extends StatelessWidget {
   /// Signs out a user from the app.
   Future<void> _signOut(BuildContext context) async {
     final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    final analyticsNotifier =
+        Provider.of<AnalyticsNotifier>(context, listen: false);
 
     await authNotifier.signOut();
+    await analyticsNotifier.resetUser();
     await Navigator.pushNamedAndRemoveUntil(
       context,
       RouteName.login,
