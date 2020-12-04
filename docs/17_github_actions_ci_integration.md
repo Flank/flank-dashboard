@@ -2,7 +2,7 @@
 
 > Summary of the proposed change
 
-Describe the mechanism of integration of the CI Integrations component to the GitHub Actions to automatically push the build data.
+Describe the integration mechanism of the CI Integrations component to the GitHub Actions to automatically push the build data.
 
 # References
 
@@ -14,7 +14,7 @@ Describe the mechanism of integration of the CI Integrations component to the Gi
 
 > What problem is this project solving?
 
-This document describes the organization and structure of the GitHub Actions used in this repository to automatically integrate the data into the Metrics Web application.
+This document describes the configuration process of the CI Integrations to automatically synchronize the GitHub Actions build data to the Metrics Web application.
 
 # Goals
 
@@ -22,8 +22,8 @@ This document describes the organization and structure of the GitHub Actions use
 
 This document aims the following goals: 
 
-- Explain the structure of the GitHub Actions used to push the data to the Metrics Web app.
-- Explain the mechanism of adding actions for a new project in this repository.
+- Explain the CI Integrations configuration creation process.
+- Explain the mechanism of automation build imports using the GitHub Actions and CI Integrations tool.
 
 # Non-Goals
 
@@ -37,10 +37,12 @@ This document does not describe the configuration of building or publishing jobs
 >
 > Identify risks and edge cases
 
-To be able to track the state of the applications under development, we should create `YAML` configuration files for each project. Assume we have an `Awesome Project` and an `awesome_actions.yml` workflow file with `Awesome Project Actions` job used to run tests of the `Awesome Project`. If so, let's review the sample configuration file for this project. The configuration should consist of the following parts: 
+To be able to track the state of the applications under development, we should create `YAML` configuration files for each project that will be used by the CI Integrations tool to sync the build data with the Metrics Web application. Assume we have an `Awesome Project` and an `awesome_actions.yml` workflow file with `Awesome Project Actions` job used to run tests of the `Awesome Project`. If so, let's create a sample configuration file for this project. The configuration should consist of the following parts: 
 
 - [Source configuration](#Source-configuration)
 - [Destination configuration](#Destination-configuration) 
+
+Let's consider this parts separately: 
 
 ## Source configuration
 
@@ -59,12 +61,14 @@ source:
 
 So, the GitHub Actions configuration consists of the following properties: 
 
-- `workflow_identifier` - an identifier of the building workflow to export data from. Commonly is a workflow file name.
-- `repository_name` - a name of the repository that contains the specified workflow.
-- `repository_owner` - a username or an organization name that owns the repository 
-- `access_token` - a GitHub API access token. If you are using the GitHub actions to run the synchronization, you can use the default token from secrets `${{ secrets.GITHUB_TOKEN }}`, otherwise, you can create your personal access token using this [guide](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token). Your token should have the `repo` scope to be able to load the data from the GitHub Actions.
-- `job_name` - a name of the job inside of the workflow with the provided `workflow_identifier`.
-- `coverage_artifact_name` - a name of the coverage artifact exported from your building job.
+| Property name           | Type           | Description  |
+| ----------------------- |:--------------:| ----------------------------------|
+| workflow_identifier     | Public         | An identifier of the building workflow to export data from. Commonly is a workflow file name. |
+| repository_name         | Public         | A name of the repository that contains the specified workflow. |
+| repository_owner        | Public         | A username or an organization name that owns the repository. |
+| access_token            | Secret         | A GitHub API access token. If you are using the GitHub actions to run the synchronization, you can use the default token from secrets `${{ secrets.GITHUB_TOKEN }}`, otherwise, you can create your personal access token using this [guide](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token). Your token should have the `repo` scope to be able to load the data from the GitHub Actions API.|
+| job_name                | Public         | A name of the job inside of the workflow with the provided `workflow_identifier`. The build data of this job will be exported to the Metrics Web Application.|
+| coverage_artifact_name  | Public         |    a name of the coverage artifact exported from your building workflow. Notice, that the coverage artifact should be in the [CI Integrations format](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format). You can use the [Coverage Converter](https://github.com/platform-platform/monorepo/releases/tag/coverage-converter-snapshot) tool to convert the report generated by your coverage tool to the CI Integrations readable format. |
 
 
 ## Destination configuration
@@ -83,11 +87,15 @@ destination:
 
 So, the `firestore` configuration should contain the following keys: 
 
-- `firebase_project_id` - a firebase project identifier where to export the data.
-- `firebase_user_email` - a firebase user email used to log in to the Metrics Web Application.
-- `awesome_password` - a firebase user password used to log in to the Metrics Web Application.
-- `firebase_public_api_key` - a public API key that could be created using the Google Cloud Platform in the [API & Services credentials](https://console.cloud.google.com/apis/credentials?project=metrics-d9c67) section. This key should have access to the `Identity Toolkit API`.
-- `metrics_project_id` - a firestore document identifier of the project to import data to.
+| Property Name            | Type   | Description  |
+| ------------------------ |:------:| -------------|
+| firebase_project_id      | Public | A firebase project identifier where to export the data. |
+| firebase_user_email      | Secret | A firebase user email used to log in to the Metrics Web Application. |
+| firebase_user_pass       | Secret | A firebase user password used to log in to the Metrics Web Application. |
+| firebase_public_api_key  | Secret | A public API key that could be created using the Google Cloud Platform in the [API & Services credentials](https://console.cloud.google.com/apis/credentials?project=metrics-d9c67) section. This key should have access to the `Identity Toolkit API`. |
+| metrics_project_id       | Public | A firestore document identifier of the project to import data to. |
+
+__*Please, NOTE*__ that the `Secret` values must be stored as [GitHub Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets). The configuration file can contain this fields as a environment variables. To replace them in the GitHub actions workflow you can use `gettext`  or replace it using the `sed` tool. The example of using the `sed` command provided in the [Metrics Integration Actions](#Metrics-Integration-Actions) section.
 
 Once we've finished creating the configuration file, we should configure the GitHub Actions that will export the build data to the Metrics Web application. 
 
@@ -112,7 +120,7 @@ on:
     types: [ building_project ]
 
 jobs:
-  ci_integrations_sync:
+  awesome_project_sync:
     name: Awesome Project build data sync
     runs-on: macos-latest
     if: github.event.client_payload.building_awesome_project == 'true'
@@ -126,7 +134,7 @@ jobs:
         run: |
           curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos -L
           chmod a+x ci_integrations
-      - name: Wait For CI Integrations check finished
+      - name: Wait For Awesome Project check finished
         uses: fountainhead/action-wait-for-check@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -139,9 +147,9 @@ jobs:
           WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
           WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
           CI_INTEGRATIONS_FIREBASE_API_KEY: ${{ secrets.CI_INTEGRATIONS_FIREBASE_API_KEY }}
-        run: eval "echo \"$(sed 's/"/\\"/g' ci_integrations_config.yml)\"" >> integration.yml
-        working-directory: .metrics/
-      - name: CI integrations build data sync
+        run: eval "echo \"$(sed 's/"/\\"/g' awesome_config.yml)\"" >> integration.yml
+        working-directory: awesome_project/
+      - name: Awesome Project build data sync
         run: ./ci_integrations sync --config-file .metrics/integration.yml
 ```
 
@@ -153,7 +161,7 @@ __*Please, NOTE*__  that since we are using the [Wait For Check](https://github.
 
 The `Notify about the building project` step notifies the `Metrics Integration Actions` about some project's build started. As I've mentioned above, this job should emit a repository dispatch event containing `client_payload` with the data about the current building project. To send the repository dispatch event, we are using the [Repository Dispatch](https://github.com/marketplace/actions/repository-dispatch) action.
 
-Also, to reduce the amount of time taken for the `Metrics Integration Actions` workflow, we should run the `Notify about the building project` job after all jobs in the project building workflow. To do so, this job should depend on all jobs from the current workflow, defining the [needs](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idneeds) key in the configuration file. Moreover, the `Notify about the building project` job should run even if any of the other jobs canceled/failed, so it should include `if: "always()"` option in the configuration file.
+Also, to reduce the amount of time taken for the `Metrics Integration Actions` workflow, we should run the `Notify about the building project` job after all jobs in the project building workflow. To do so, this job should depend on all jobs from the current workflow, defining the [needs](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idneeds) key in the configuration file. Moreover, the `Notify about the building project` job should run even if any of the other jobs canceled/failed, so it should include `if: "always()"` option.
 
 Let's consider the example of the `Notify about the building project` job for `Awesome project` in our repository: 
 
