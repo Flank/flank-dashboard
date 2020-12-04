@@ -10,16 +10,18 @@ class FirestoreInstantConfigRepository extends InstantConfigRepository {
   final Firestore _firestore = Firestore.instance;
 
   @override
-  Future<InstantConfig> fetch() {
-    return _firestore
-        .collection('instant_config')
-        .document('instant_config')
-        .get()
-        .then((value) => InstantConfigData.fromJson(value.data))
-        .catchError(
-          (_) => throw const PersistentStoreException(
-            code: PersistentStoreErrorCode.unknown,
-          ),
-        );
+  Future<InstantConfig> fetch() async {
+    try {
+      final instantConfigSnapshot = await _firestore
+          .collection('instant_config')
+          .document('instant_config')
+          .get();
+
+      return InstantConfigData.fromJson(instantConfigSnapshot.data);
+    } catch (_) {
+      throw const PersistentStoreException(
+        code: PersistentStoreErrorCode.unknown,
+      );
+    }
   }
 }

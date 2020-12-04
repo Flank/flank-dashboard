@@ -13,13 +13,19 @@ void main() {
     const isLoginFormEnabled = false;
     const isRendererDisplayEnabled = false;
 
-    final repository = _RemoteConfigurationRepositoryMock();
-    final useCase = FetchInstantConfigUseCase(repository);
+    const instantConfig = InstantConfig(
+      isLoginFormEnabled: isLoginFormEnabled,
+      isFpsMonitorEnabled: isFpsMonitorEnabled,
+      isRendererDisplayEnabled: isRendererDisplayEnabled,
+    );
     final param = InstantConfigParam(
       isLoginFormEnabled: isLoginFormEnabled,
       isFpsMonitorEnabled: isFpsMonitorEnabled,
       isRendererDisplayEnabled: isRendererDisplayEnabled,
     );
+
+    final repository = _RemoteConfigurationRepositoryMock();
+    final useCase = FetchInstantConfigUseCase(repository);
 
     tearDown(() {
       reset(repository);
@@ -64,12 +70,7 @@ void main() {
 
         final config = await useCase(param);
 
-        expect(config.isLoginFormEnabled, equals(param.isLoginFormEnabled));
-        expect(config.isFpsMonitorEnabled, equals(param.isFpsMonitorEnabled));
-        expect(
-          config.isRendererDisplayEnabled,
-          equals(param.isRendererDisplayEnabled),
-        );
+        expect(config, equals(instantConfig));
       },
     );
 
@@ -80,12 +81,7 @@ void main() {
 
         final config = await useCase(param);
 
-        expect(config.isLoginFormEnabled, equals(param.isLoginFormEnabled));
-        expect(config.isFpsMonitorEnabled, equals(param.isFpsMonitorEnabled));
-        expect(
-          config.isRendererDisplayEnabled,
-          equals(param.isRendererDisplayEnabled),
-        );
+        expect(config, equals(instantConfig));
       },
     );
 
@@ -98,12 +94,7 @@ void main() {
 
         final config = await useCase(param);
 
-        expect(config.isLoginFormEnabled, equals(param.isLoginFormEnabled));
-        expect(config.isFpsMonitorEnabled, equals(param.isFpsMonitorEnabled));
-        expect(
-          config.isRendererDisplayEnabled,
-          equals(param.isRendererDisplayEnabled),
-        );
+        expect(config, equals(instantConfig));
       },
     );
   });
