@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 
-/// Stub implementation on the [AnalyticsNotifier].
+/// Stub implementation of the [AnalyticsNotifier].
 ///
 /// Provides test implementation of the [AnalyticsNotifier] methods.
 class AnalyticsNotifierStub extends ChangeNotifier

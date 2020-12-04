@@ -69,19 +69,16 @@ void main() {
       },
     );
 
-    test(
-      ".logLogin() delegates to the log login use case",
-      () async {
-        await analyticsNotifier.logLogin(userId);
+    test(".logLogin() delegates to the log login use case", () async {
+      await analyticsNotifier.logLogin(userId);
 
-        verify(logLoginUseCase(any)).called(1);
+      verify(logLoginUseCase(any)).called(1);
 
-        await analyticsNotifier.resetUser();
-      },
-    );
+      await analyticsNotifier.resetUser();
+    });
 
     test(
-      ".logPageView() does not call the use case if the given page name does not exist",
+      ".logPageView() does not call the use case if the given page name does not match the available page names",
       () async {
         const pageName = '/test';
 
@@ -91,25 +88,19 @@ void main() {
       },
     );
 
-    test(
-      ".logPageView() delegates to the log page view use case",
-      () async {
-        final pageName = PageName.dashboardPage.value;
+    test(".logPageView() delegates to the log page view use case", () async {
+      final pageName = PageName.values.first.value;
 
-        await analyticsNotifier.logPageView(pageName);
+      await analyticsNotifier.logPageView(pageName);
 
-        verify(logPageViewUseCase(any)).called(1);
-      },
-    );
+      verify(logPageViewUseCase(any)).called(1);
+    });
 
-    test(
-      ".resetUser() delegates to the reset user use case",
-      () async {
-        await analyticsNotifier.resetUser();
+    test(".resetUser() delegates to the reset user use case", () async {
+      await analyticsNotifier.resetUser();
 
-        verify(resetUserUseCase(any)).called(1);
-      },
-    );
+      verify(resetUserUseCase(any)).called(1);
+    });
 
     test(".resetUser() resets the notifier user id", () async {
       await analyticsNotifier.logLogin(userId);

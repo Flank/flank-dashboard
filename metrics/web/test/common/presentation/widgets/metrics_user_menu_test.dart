@@ -187,7 +187,7 @@ void main() {
 
         await tester.tap(find.text(CommonStrings.logOut));
         await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
+          return tester.pump();
         });
 
         verify(authNotifier.signOut()).called(equals(1));
@@ -198,18 +198,14 @@ void main() {
       "calls the AnalyticsNotifier.resetUser() on tap on 'Log out'",
       (tester) async {
         final analyticsNotifier = AnalyticsNotifierMock();
-        final authNotifier = AuthNotifierMock();
-
-        when(authNotifier.isLoggedIn).thenReturn(true);
 
         await tester.pumpWidget(_MetricsUserMenuTestbed(
-          authNotifier: authNotifier,
           analyticsNotifier: analyticsNotifier,
         ));
 
         await tester.tap(find.text(CommonStrings.logOut));
         await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
+          return tester.pump();
         });
 
         verify(analyticsNotifier.resetUser()).called(equals(1));

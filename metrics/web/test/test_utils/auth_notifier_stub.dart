@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 
-/// Stub implementation on the [AuthNotifier].
+/// Stub implementation of the [AuthNotifier].
 ///
 /// Provides test implementation of the [AuthNotifier] methods.
 class AuthNotifierStub extends ChangeNotifier implements AuthNotifier {

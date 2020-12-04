@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 
-/// A [NavigatorObserver] that logs page changes using [AnalyticsNotifier] when the
-/// currently active [PageRoute] changes.
-class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
+/// A [RouteObserver] that logs page changes using [AnalyticsNotifier] when
+/// the currently active [PageRoute] changes.
+class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>>  {
   /// An [AnalyticsNotifier] needed to able to log page changes.
   AnalyticsNotifier analyticsNotifier;
 
@@ -13,8 +13,8 @@ class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
   FirebaseAnalyticsObserver({@required this.analyticsNotifier})
       : assert(analyticsNotifier != null);
 
-  /// Extracts the page name from the [PageRoute] and
-  /// logs it using [AnalyticsNotifier].
+  /// Extracts the page name from the given [route] and
+  /// logs it using [analyticsNotifier].
   void _logPageView(PageRoute<dynamic> route) {
     final routeName = route?.settings?.name;
 

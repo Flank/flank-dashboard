@@ -14,7 +14,8 @@ class AnalyticsNotifier extends ChangeNotifier {
   /// A [UseCase] that provides an ability to log page changes.
   final LogPageViewUseCase _logPageViewUseCase;
 
-  /// A [UseCase] that provides an ability to reset the user.
+  /// A [UseCase] that provides an ability to reset
+  /// the analytics user identifier property.
   final ResetUserUseCase _resetUserUseCase;
 
   /// A unique identifier of the user.
@@ -32,6 +33,10 @@ class AnalyticsNotifier extends ChangeNotifier {
         assert(_resetUserUseCase != null);
 
   /// Logs the user login with the given [userId].
+  ///
+  /// Stores the given [userId] to the notifier state, if it's different
+  /// from the stored [_userId].
+  /// Does nothing if the given [userId] equals to the stored [_userId].
   Future<void> logLogin(String userId) async {
     if (_userId == userId) return;
 
@@ -42,7 +47,10 @@ class AnalyticsNotifier extends ChangeNotifier {
     return _logLoginUseCase(userIdParam);
   }
 
-  /// Logs the page view with the given [name].
+  /// Logs the page view with the given page [name].
+  ///
+  /// Does nothing if the given page [name] does not match
+  /// the available page names.
   Future<void> logPageView(String name) async {
     final pageName = PageName.values.firstWhere(
       (page) => page.value == name,
@@ -56,7 +64,9 @@ class AnalyticsNotifier extends ChangeNotifier {
     return _logPageViewUseCase(pageNameParam);
   }
 
-  /// Resets the user parameters.
+  /// Resets the analytics user identifier property.
+  ///
+  /// Resets the stored [_userId].
   Future<void> resetUser() {
     _userId = null;
 

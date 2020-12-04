@@ -5,7 +5,7 @@ import 'package:metrics/auth/presentation/models/auth_error_message.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 
-/// Stub implementation on the [AuthNotifier].
+/// Stub implementation of the [AuthNotifier].
 ///
 /// Provides test implementation of the [AuthNotifier] methods and
 /// ensures that a user is already logged in into the application.

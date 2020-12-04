@@ -92,7 +92,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// A use case needed to be able to log page changes.
   LogPageViewUseCase _logPageViewUseCase;
 
-  /// A use case needed to be able to reset the user identifier.
+  /// A use case needed to be able to reset the analytics user identifier.
   ResetUserUseCase _resetUserUseCase;
 
   /// Returns the current system's theme brightness.
