@@ -8,52 +8,33 @@
         participant Repository
     endbox
 
-    box Buildkite Awesome Pipeline
+    box Buildkite
         participant "Awesome pipeline"
-        participant Tests
-        Participant "Build and deploy"
-        Participant "Trigger sync pipeline"
-    endbox
-
-    box Buildkite Sync Pipeline
         participant "Sync pipeline"
-        participant "CI Integrations Tool"
+        participant "CI Integration tool"
     endbox
 
     database "Firestore" as FS
 
-    Bob -> Repository : Push commit to master
+    Bob -> Repository : Pushes commit to master
     activate Repository
 
     Repository -> "Awesome pipeline" : Webhook triggers pipeline
     deactivate Repository
     activate "Awesome pipeline"
 
-    "Awesome pipeline" -> Tests : Run tests step
-    activate Tests
-
-    Tests -> "Build and deploy" : Run build and deploy step
-    deactivate Tests
-    activate "Build and deploy"
-
-    "Build and deploy" -> "Trigger sync pipeline" : Run trigger step
-    deactivate "Build and deploy"
-    activate "Trigger sync pipeline"
-
-    "Trigger sync pipeline" -> "Sync pipeline" : Trigger sync pipeline (async)
-    activate "Sync pipeline"
-    "Trigger sync pipeline" --> "Awesome pipeline" : Build finished
-    deactivate "Trigger sync pipeline"
+    "Awesome pipeline" -> "Sync pipeline" : Triggers Sync pipeline
     deactivate "Awesome pipeline"
+    activate "Sync pipeline"
 
-    "Sync pipeline" -> "CI Integrations Tool" : Run sync command
-    activate "CI Integrations Tool"
-    "CI Integrations Tool" -> FS : Add new build data
+    "Sync pipeline" -> "CI Integration tool" : Runs sync command
+    activate "CI Integration tool"
 
-    "CI Integrations Tool" --> "Sync pipeline" : Sync command finished
-    deactivate "CI Integrations Tool"
+    "CI Integration tool" -> FS : Adds new build data
 
-    "Sync pipeline" --> Bob : Sync finished
+    "CI Integration tool" --> "Sync pipeline" : Sync command finishes
+    deactivate "CI Integration tool"
+
+    "Sync pipeline" --> Bob : Build data export finishes
     deactivate "Sync pipeline"
-
 @enduml

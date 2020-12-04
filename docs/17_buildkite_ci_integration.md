@@ -1,11 +1,9 @@
 # Metrics Buildkite integration
-
-> Summary of the proposed change
+> Summary of the proposed change.
 
 Describe the mechanism of exporting project build data from Buildkite to Metrics automatically.
 
 # References
-
 > Link to supporting documentation, GitHub tickets, etc.
 
  - [Buildkite agent setup](https://buildkite.com/docs/agent/v3/installation)
@@ -14,131 +12,129 @@ Describe the mechanism of exporting project build data from Buildkite to Metrics
  - [Connecting Buildkite and Github](https://buildkite.com/docs/integrations/github#connecting-buildkite-and-github)
 
 # Motivation
-
 > What problem is this project solving?
 
-This document describes how to configure Buildkite to export the build data automatically to the Metrics Web application.
+This document describes how to configure Buildkite CI to export the build data automatically to the Metrics project.
 
 # Goals
-
 > Identify success metrics and measurable goals.
 
-This document aims the following goals: 
-
-- Explain how to configure the `Sync Pipeline`.
-- Explain how to configure the `CI Integration config` file.
-- Explain how to trigger the `Sync Pipeline`.
-- Describe the overall process of the build data export.
+- Provide steps on how to create and configure a pipeline for exporting build data.
+- Provide CI integrations configurations to work with Buildkite.
+- Describe the overall process of the build data exporting.
 
 # Non-Goals
-
 > Identify what's not in scope.
 
-This document does not describe how to use the Buildkite CI and any related configurations.
+The Buildkite CI using and related configurations (agents, pipelines, etc.) are out of the scope.
 
 # Design
-
-> Explain and diagram the technical design
+> Explain and diagram the technical design.
 >
-> Identify risks and edge cases
+> Identify risks and edge cases.
 
-To be able to track the state of the applications under development, we should configure the Buildkite integration that will export the build data to the Metrics Web application.
+The Metrics Web Application provides the ability to review software project metrics. To make these metrics available in the application, and make these metrics relevant, one should export builds data to the database of the Metrics project. 
 
-To export the data, we should complete the following configurations:
+With the CI integrations tool, it is possible to automate build data exporting with Buildkite CI. To configure this automation the following steps are required: 
 
-1. [Sync pipeline configuration](#Sync-pipeline-configuration)
-2. [Integration config setup](#Integration-config-setup)
-3. [Triggering Sync pipeline](#Triggering-Sync-pipeline)
+1. [Create and configure a new **Sync Pipeline**](#Create-and-configure-the-Sync-Pipeline)
+2. [Create a configuration file for the CI integrations](#Create-CI-integrations-config)
+3. [Configure triggering **Sync Pipeline**](#Triggering-Sync-Pipeline)
 
-## Sync pipeline configuration
-First of all, we need to create a `Sync Pipeline` in the Buildkite dashboard. To do that, follow these steps:
-  - Browse to [Buildkite](https://buildkite.com/).
-  - In the navigation bar, click on a dropdown and select your organization.
-  - Click the `+` button to create a new pipeline.
-  - Type `Sync Pipeline` as the name of a new pipeline.
-  - Enter the Git repository URL you want to perform builds on.
-  - Click `Create pipeline` and skip the `Webhook setup`.
+## Create and configure the Sync Pipeline
 
-Now we need to add a step in Buildkite that uploads the `Sync Pipeline`:
-  - Proceed to your organization's web page in [Buildkite](https://buildkite.com/).
-  - Click on `Sync Pipeline`.
-  - In the pipeline navigation bar, click the `Edit Steps` button.
-  - Press `Convert to YAML Steps`.
-  - In the editor, replace the contents with the following:
-    ```yaml
-    steps:
-      - command: "buildkite-agent pipeline upload .buildkite/pipelines/sync_pipeline.yml"
-        label: "Upload Sync pipeline"
-    ```
+First, let's create a new **Sync Pipeline** in the Buildkite dashboard. Consider the following steps:
 
-After we've added the `upload step` in Buildkite, we need to define the `Sync pipeline`:
-  - In a connected repository, create or browse to `.buildkite/pipelines` folder.
-  - Create `sync_pipeline.yml` file.
-  - Add the following contents to the file:
+  1. Browse and log in to the [Buildkite](https://buildkite.com/).
+  2. Select your organization in the dropdown on the top bar.
+  3. Press the `New Pipeline` (a plus **+**) button above the list of organization pipelines.
+  4. Name a new pipeline as `Sync Pipeline` and enter the Git repository URL for a project you would like to export build data.
+  5. Press the `Create Pipeline` button and skip the `Webhook setup`.
+
+Once a new pipeline is created, let's configure it to use the pipeline YAML file from the remote. Consider the next steps:
+
+  1. Select a new `Sync Pipeline` on the same page with your organization's pipelines.
+  2. Press the `Edit Steps` button on the navigation bar at the top. 
+  3. Press the `Convert to YAML Steps` button.
+  4. Replace the contents of the opened editor with the following (**.buildkite/path/to/** is a path to the sync pipeline YAML file in your Git repository):
+  ```yaml
+  steps:
+    - command: "buildkite-agent pipeline upload .buildkite/path/to/sync_pipeline.yml"
+      label: "Upload Sync Pipeline"
+  ```
+
+Finally, let's create a pipeline YAML file for the **Sync Pipeline**. In the connected repository create a new file `.buildkite/path/to/sync_pipeline.yml` with the following contents:
+ 
+  1. In a connected repository, create or browse to `.buildkite/pipelines` folder.
+  2. Create `sync_pipeline.yml` file.
+  3. Add the following contents to the file:
   ```yaml
   steps:
     - label: "Sync builds"
       commands:
-        - cd .metrics/buildkite
+        - cd path/to/config/directory
         - curl -o ci_integrations -k https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_linux -L && chmod a+x ci_integrations
         - eval "echo \"$(sed 's/"/\\"/g' integration_config.yml)\"" >> integration.yml
         - ./ci_integrations sync --config-file integration.yml
   ```
 
-The given pipeline consist of four commands:
- - Navigating to the `.metrics/buildkite` folder in a repository, which contains the config file. Please consider [Integration config setup](#Integration-config-setup).
- - Downloading the `CI integration tool`.
- - Applying environment variables to the `integration.yml`.
- - Running the `sync` command of the `CI integration tool` with the prepared integration config to synchronize builds.
+Let's take a closer look at the pipeline commands:
 
-So, after we've created and defined this pipeline, we need to set up the integration config.
+ 1. Navigating to the directory with configuration file `path/to/config/directory` (consider the [Create CI integrations config](#Create-CI-integrations-config) section).
+ 2. Downloading the `CI integration` tool we need to use for exporting build data.
+ 3. Applying environment variables to the configuration file and saving results to the `integration.yml` file.
+ 4. Running the `sync` command of the `CI integration` tool with the prepared integration config.
 
-## Integration config setup
+Once all the above steps are completed, we're ready to proceed with builds data exporting. The next step is to create the configuration file required for the `CI integration` tool.
 
-An `integration config` is a YAML file, that the `CI integration tool` uses to export build data from the source to the destination.
+## Create CI integrations config
 
-Now let's create the integration config. Please follow these steps:
-- In your repository, create or navigate to the `.metrics/buildkite` folder.
-- Create `integration_config.yml`.
-- Add the following contents to the file:
+The configuration file is a YAML file that the `CI integration` tool uses to export build data from the source CI to the destination Metrics project database. As some of the values the tool requires shouldn't be public, consider familiarizing yourself with [managing secrets](https://buildkite.com/docs/pipelines/secrets) and [storing secrets in environment hooks](https://buildkite.com/docs/pipelines/secrets#storing-secrets-in-environment-hooks) in Buildkite.
+
+Please note that `Sync Pipeline` uses the configuration file and contains a path to the directory where this file is located. So we should create a config under the same directory as specified in the `Sync Pipeline`. Also, its name should match the name from the pipeline. 
+Once the file `path/to/config/directory/integration_config.yml` is created, add the following lines:
 ```yaml
 source:
   buildkite:
     access_token: $BUILDKITE_TOKEN
     pipeline_slug: $PIPELINE_SLUG
-    organization_slug: YOUR_ORGANIZATION_SLUG
+    organization_slug: <YOUR_ORGANIZATION_SLUG>
 destination:
   firestore:
-    firebase_project_id: YOUR_FIREBASE_PROJECT_ID
+    firebase_project_id: <YOUR_FIREBASE_PROJECT_ID>
     firebase_user_email: $WEB_APP_USER_EMAIL
     firebase_user_pass: $WEB_APP_USER_PASSWORD
     firebase_public_api_key: $CI_INTEGRATIONS_FIREBASE_API_KEY
     metrics_project_id: $METRICS_PROJECT_ID
 ```
 
-Here's an overview of each field in this config.
+First, let's consider these types of values in the config file:
 
 There are three types of config values depending on how they are exposed:
-  1. `Secret` must be stored securely and exposed in the `environment hooks`. These values have the`Secret` label. Please consider [this link about secrets management in Buildkite](https://buildkite.com/docs/pipelines/secrets#storing-secrets-in-environment-hooks).
-  2. `Pipeline parameter` is passed from the pipelines that trigger this `Sync pipeline`. These values have the `Pipeline parameter` label. They would be defined in the [Triggering Sync pipeline](#Triggering-Sync-pipeline) section.
-  3. `Replace` is defined directly in the config file and **must be substituted** with your specific value. These values have the `Replace` label.
+  -`Secret` is a value that must be stored securely using the [Buildkite secrets in environment hooks](https://buildkite.com/docs/pipelines/secrets#storing-secrets-in-environment-hooks).
+  - `Pipeline` is a pipeline environment variable value that is set from a trigger step environment. Read more about this in a [Triggering `Sync Pipeline` section](#Triggering-Sync-Pipeline).
+  - `Public` is a value that can be defined directly in the config file and is **specific to you**.
 
+  Using the above definitions, consider the following table with config variables:
 
-  - `access_token` - `Secret` - is a [Buildkite access token](https://buildkite.com/docs/apis/rest-api#authentication).
-  - `pipeline_slug` - `Pipeline parameter` - is a unique slug (identifier) of the pipeline in Buildkite the integration should work with. 
-  - `organization_slug` - `Replace` - is a unique slug (identifier) of the organization in Buildkite in the scope of which the integration should work and perform requests.
-  - `firebase_project_id` - `Replace` - is a Firebase project identifier, which you can see in the list of projects in the [Firebase console](https://console.firebase.google.com/).
-  - `firebase_user_email` - `Secret` - a Firebase user email.
-  - `firebase_user_pass` - `Secret` - a Firebase user password.
-  - `firebase_public_api_key` - `Replace` / `Secret` if you are using the `Firebase key protection` - a Firebase public API key.
-  - `metrics_project_id` - `Pipeline parameter` - a Firestore metrics project identifier.
+ | Key | Type | Description | 
+ | ---- | ---- | ---- |
+ | `access_token` | `Secret` | A [Buildkite access token](https://buildkite.com/docs/apis/rest-api#authentication) with the `read_artifacts` and `read_builds` access scopes |
+ | `pipeline_slug` | `Pipeline` | A unique slug of the Pipeline, which builds would be exported | 
+ | `organization_slug` | `Public` | A unique slug of your organization in Buildkite |
+ | `firebase_project_id` | `Public` |  A Firebase project identifier from the [Firebase console](https://console.firebase.google.com/) |
+ | `firebase_user_email` | `Secret` | A Firebase user email to authorize with Metrics |
+ | `firebase_user_pass` | `Secret` | A Firebase user password to authorize with Metrics | 
+ | `firebase_public_api_key` | `Public` / `Secret` (if `Firebase key protection` is enabled) | A Firebase API key |
+ | `metrics_project_id` | `Pipeline` | A Firestore Metrics project identifier |
 
-So after you've configured the `Integration config` let's configure the `Sync pipeline` that exports the build data to the Metrics Web application.
+As the Sync Pipeline is created and the configuration file for CI integration is ready to use, it's time to configure the pipeline, that we want to export build data for, to trigger synchronization.
 
-## Triggering Sync pipeline
+## Triggering Sync Pipeline
 
-To make build data exports we need to add a step that notifies the `Sync pipeline`.
-Now, to trigger the `Sync pipeline`, add the following step to the end of the pipeline you want to export the build data from.
+The main idea of auto-exporting build data is asynchronous triggering the `Sync Pipeline` from the pipeline we want to synchronize. Thus, when the pipeline finishes all of its general steps, it triggers a `Sync Pipeline` to start and provides variables with information about itself. After the async trigger, the pipeline completes, and its results are exported to the Metrics project. The trigger step must depend on the very last pipeline-related step. In other words, the trigger step must be the latest.
+
+Let's consider the step described:
 
 ```yaml
   - label: "Trigger sync pipeline"
@@ -152,35 +148,26 @@ Now, to trigger the `Sync pipeline`, add the following step to the end of the pi
         METRICS_PROJECT_ID: "metrics_project_id"
 ```
 
-It is very important to run this step regardless of the result of the previous steps. To do that, you need to add `depends_on` for each step to make sure the build continues running if previous steps fail.
 
-Here's an overview of each field in this step:
+The `allow_dependency_failure` flag allows running the trigger even if the step with the key `step_key` finishes with an error. We strongly recommend setting the `depends_on` value to the step key that finalizes your build (waits on any other steps to finish). 
 
-- `trigger` is a command that triggers another pipeline with the given `pipeline_slug`(in our case - `sync-pipeline`).
-- `depends_on` - is a command, that indicates that this step will not run until the `step_key` step has been completed. You need to replace the `step_key` with the previous step's key this step would depend on.
-- `allow_dependency_failure` - is a command, that forces this step to run even if the previous step fails.
-- `async` - is a command, that must be set to `true` and forces this step to finish before the triggered pipeline finishes.
+The `build` section provides the `Sync Pipeline` with environment variables containing the information about what pipeline triggers exporting (`PIPELINE_SLUG` variable with `BUILDKITE_PIPELINE_SLUG` value) and what project in the database matches this pipeline (`METRICS_PROJECT_ID` variable with the **specific to you** value).
 
-Also, you need to define the `environment variables` passed to the `Trigger sync pipeline` from the current pipeline:
- - `PIPELINE_SLUG` - is a unique identifier of the current pipeline. This variable is pre-defined in the pipeline, so you don't need to change it.
- - `METRICS_PROJECT_ID` - is a Firestore Metrics project identifier - you need to replace it with your id.
+Well done! Once the trigger step is configured, the auto-exports are configured and ready to use.
 
 # API
-
 > What will the proposed API look like?
 
-Once we've configured the Buildkite integration, let's consider the sequence diagram that will explain the main relationships between the different pipelines on the example with the `AwesomePipeline`:
+The algorithm for auto-exporting builds data in Buildkite uses three main components: the pipeline we want to export, the `CI integration` tool, and the `Sync Pipeline`. The following sequence diagram demonstrates how these components behave together and how the exporting happens (assume the pipeline to export as `Awesome Pipeline`):
 
 ![Buildkite Sync Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/buildkite_integration_docs/docs/diagrams/buildkite_sync_sequence_diagram.puml)
 
 # Dependencies
-
 > What is the project blocked on?
 
 This project has no dependencies.
 
 # Results
-
 > What was the outcome of the project?
 
-The process of configuring the automatic build data exports from Buildkite to Metrics.
+The document that describes the process of configuring the automatic build data exports from Buildkite to Metrics.
