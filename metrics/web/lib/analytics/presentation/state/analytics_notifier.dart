@@ -17,6 +17,7 @@ class AnalyticsNotifier extends ChangeNotifier {
   /// A [UseCase] that provides an ability to reset the user.
   final ResetUserUseCase _resetUserUseCase;
 
+  /// A unique identifier of the user.
   String _userId;
 
   /// Creates a new instance of the [AnalyticsNotifier].

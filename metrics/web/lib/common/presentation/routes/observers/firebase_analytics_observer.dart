@@ -17,33 +17,32 @@ class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
   /// logs it using [AnalyticsNotifier].
   ///
   /// ToDo
-  void _logPageView(PageRoute<dynamic> newRoute, PageRoute<dynamic> oldRoute) {
+  void _logPageView(PageRoute<dynamic> newRoute) {
     final newRouteName = newRoute?.settings?.name;
-    final oldRouteName = oldRoute?.settings?.name;
 
-    // if (newRouteName == null || newRouteName == oldRouteName) return;
+    print("log page view: ${newRoute?.settings?.name}");
 
     // analyticsNotifier.logPageView(newRouteName);
   }
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
-    if (route is PageRoute && previousRoute is PageRoute) {
-      _logPageView(route, previousRoute);
+    if (route is PageRoute) {
+      _logPageView(route);
     }
   }
 
   @override
   void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {
-    if (newRoute is PageRoute && oldRoute is PageRoute) {
-      _logPageView(newRoute, oldRoute);
+    if (newRoute is PageRoute) {
+      _logPageView(newRoute);
     }
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
-    if (previousRoute is PageRoute && route is PageRoute) {
-      _logPageView(previousRoute, route);
+    if (previousRoute is PageRoute) {
+      _logPageView(previousRoute);
     }
   }
 }
