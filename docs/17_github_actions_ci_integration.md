@@ -22,7 +22,7 @@ This document describes the configuration process of the CI Integrations to auto
 
 This document aims the following goals: 
 
-- Explain the CI Integrations configuration creation process.
+- Explain the CI Integrations configuration process.
 - Explain the mechanism of automation build imports using the GitHub Actions and CI Integrations tool.
 
 # Non-Goals
@@ -108,7 +108,7 @@ Let's consider each action in more detail.
 
 ## Metrics Integration Actions
 
-A `Metrics Integration Actions` is a workflow containing integration jobs for all projects we want to export to the Metrics Web application. This workflow triggers on repository dispatch event with `building_project` type. The `building_project` repository dispatch event, in its turn, should contain the information about which project build started as a `client_payload` JSON. Let's assume we have some project named `Awesome Project`. In this case, the `building_project` event should accept the `client_payload` with the `building_awesome_project` boolean field.
+A `Metrics Integration Actions` is a workflow used to export the build data to the Metrics Web application. This workflow triggers on repository dispatch event with `building_project` type. The `building_project` repository dispatch event, in its turn, should contain the information about which project build started as a `client_payload` JSON. Let's assume we have some project named `Awesome Project`. In this case, the `building_project` event should accept the `client_payload` with the `building_awesome_project` boolean field.
 
 Let's consider the sample `Metrics Integration Actions` workflow file: 
 
@@ -153,7 +153,7 @@ jobs:
         run: ./ci_integrations sync --config-file .metrics/integration.yml
 ```
 
-So, once the `Metrics Integration Actions` workflow receives the `building_project` repository dispatch event, it gets the project that is currently building from the `client_payload` and starts the job that corresponds to the building project to export the building data. The export job, in its turn, checkouts the repository, waits until the project's building job gets finished, downloads the `CI Integrations` tool, and runs the synchronization process.
+So, once the `Metrics Integration Actions` workflow receives the `building_project` repository dispatch event, it gets the project that is currently building from the `client_payload` and starts the job that corresponds to the building project to export the building data. The synchronization job, in its turn, checkouts the repository, waits until the project's building job gets finished, downloads the `CI Integrations` tool, and runs the synchronization process.
 
 __*Please, NOTE*__  that since we are using the [Wait For Check](https://github.com/marketplace/actions/wait-for-check) action that allows us to wait until the job gets finished, we should wait unlit the last workflow job gets finished. Usually, this job is a `Notify about the building project`. It is needed to be sure that the project's building workflow is finished and we can get the building artifacts from this workflow if there any.
 
@@ -208,7 +208,7 @@ This project has no dependencies.
 
 > What will be impacted by the project?
 
-The GitHub Actions structure will be impacted by this project.
+The GitHub actions configuration process will be impacted.
 
 # Testing
 

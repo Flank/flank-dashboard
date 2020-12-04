@@ -14,26 +14,32 @@ participant "CI Integrations" as CiIntegrations
 database "Firestore Database" as Firestore
 
 
-Bob -> AwesomeWorkflow : push commit to master
+Bob -> AwesomeWorkflow : Push commit to master
 activate AwesomeWorkflow
-AwesomeWorkflow -> RunTests : run tests
+AwesomeWorkflow -> RunTests : Run tests
 activate  RunTests
+alt 
+    RunTests --> AwesomeWorkflow : Tests failed
+end 
 return Test complete 
-AwesomeWorkflow  -> BuildAndPublish : run building and publishing job
+AwesomeWorkflow  -> BuildAndPublish : Run building and publishing job
 activate BuildAndPublish
+alt 
+    BuildAndPublish --> AwesomeWorkflow : Publishing failed
+end
 return Building and publishinng finished
-AwesomeWorkflow -> NotifyBuilding : run notify about building project
+AwesomeWorkflow -> NotifyBuilding : Run notify about building project
 activate NotifyBuilding
-NotifyBuilding -> IntegrationsWorkflow : notify about Awesome project is building
+NotifyBuilding -> IntegrationsWorkflow : Notify about Awesome project is building
 return Notification sent 
 return Workflow run finished
 activate IntegrationsWorkflow
-IntegrationsWorkflow -> AwesomeSync : run sync job
+IntegrationsWorkflow -> AwesomeSync : Run sync job
 activate AwesomeSync
-AwesomeSync -> AwesomeSync : wait until Awesome Workflow got finished
-AwesomeSync -> CiIntegrations : run sync command
+AwesomeSync -> AwesomeSync : Wait until Awesome Project Actions Workflow got finished
+AwesomeSync -> CiIntegrations : Run sync command
 activate CiIntegrations
-CiIntegrations -> Firestore : add new builds data
+CiIntegrations -> Firestore : Add new builds data
 return Sync command finished
 return Sync finished
 IntegrationsWorkflow --> Bob : Sync finished
