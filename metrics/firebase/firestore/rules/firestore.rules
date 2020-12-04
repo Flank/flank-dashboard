@@ -27,8 +27,7 @@ service cloud.firestore {
     }
 
     match /instant_config/{config} {
-      allow get: if true;
-      allow list: if false;
+      allow read: if true;
       allow write: if false;
     }
 

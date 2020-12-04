@@ -24,8 +24,7 @@ describe("", async () => {
       ),
       can: {
         create: false,
-        get: true,
-        list: false,
+        read: true,
         update: false,
         delete: false,
       },
@@ -35,8 +34,7 @@ describe("", async () => {
       app: await getApplicationWith(null),
       can: {
         create: false,
-        get: true,
-        list: false,
+        read: true,
         update: false,
         delete: false,
       },
@@ -53,12 +51,9 @@ describe("", async () => {
         let canCreateDescription = user.can.create
           ? "allows to create an instant config"
           : "does not allow creating an instant config";
-        let canGetDescription = user.can.get
+        let canReadDescription = user.can.read
           ? "allows reading an instant config"
           : "does not allow reading an instant configs";
-        let canListDescription = user.can.list
-          ? "allows reading a list of instant configs"
-          : "does not allow reading a list of instant configs";
         let canUpdateDescription = user.can.update
           ? "allows to update an instant config"
           : "does not allow updating an instant config";
@@ -76,26 +71,16 @@ describe("", async () => {
           }
         });
 
-        it(canGetDescription, async () => {
+        it(canReadDescription, async () => {
           const getPromise = user.app
             .collection(collection)
             .doc(collection)
             .get();
 
-          if (user.can.get) {
+          if (user.can.read) {
             await assertSucceeds(getPromise);
           } else {
             await assertFails(getPromise);
-          }
-        });
-
-        it(canListDescription, async () => {
-          const listPromise = user.app.collection(collection).get();
-
-          if (user.can.list) {
-            await assertSucceeds(listPromise);
-          } else {
-            await assertFails(listPromise);
           }
         });
 
