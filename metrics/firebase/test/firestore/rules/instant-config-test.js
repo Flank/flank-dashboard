@@ -8,6 +8,7 @@ const {
 
 const {
   instantConfig,
+  allowedEmailDomains,
   passwordSignInProviderId,
   googleSignInProviderId,
   getAllowedEmailUser,
@@ -129,7 +130,9 @@ describe("", async () => {
   ];
 
   before(async () => {
-    await setupTestDatabaseWith(instantConfig);
+    await setupTestDatabaseWith(
+      Object.assign({}, instantConfig, allowedEmailDomains)
+    );
   });
 
   describe("Instant config collection rules", () => {
