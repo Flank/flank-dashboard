@@ -52,7 +52,7 @@ const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
 };
 
-/** A list of test allowed email domains */
+/** A test data for the instant config collection */
 const instantConfig = {
   "instant_config/instant_config": {},
 };
