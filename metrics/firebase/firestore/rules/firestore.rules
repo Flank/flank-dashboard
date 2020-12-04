@@ -26,6 +26,11 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /instant_config/{config} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     match /allowed_email_domains/{domain} {
       allow read, write: if false;
     }
