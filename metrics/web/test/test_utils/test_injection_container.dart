@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
@@ -6,6 +7,7 @@ import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.da
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
 
+import 'analytics_notifier_stub.dart';
 import 'auth_notifier_stub.dart';
 import 'project_groups_notifier_stub.dart';
 import 'project_metrics_notifier_stub.dart';
@@ -22,6 +24,9 @@ class TestInjectionContainer extends StatelessWidget {
 
   /// An [AuthNotifier] to inject.
   final AuthNotifier authNotifier;
+
+  /// An [AnalyticsNotifier] to inject.
+  final AnalyticsNotifier analyticsNotifier;
 
   /// A [ThemeNotifier] to inject.
   final ThemeNotifier themeNotifier;
@@ -44,6 +49,7 @@ class TestInjectionContainer extends StatelessWidget {
     this.child,
     this.metricsNotifier,
     this.authNotifier,
+    this.analyticsNotifier,
     this.themeNotifier,
     this.projectsNotifier,
     this.projectGroupsNotifier,
@@ -55,6 +61,9 @@ class TestInjectionContainer extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AuthNotifier>(
           create: (_) => authNotifier ?? AuthNotifierStub(),
+        ),
+        ChangeNotifierProvider<AnalyticsNotifier>(
+          create: (_) => analyticsNotifier ?? AnalyticsNotifierStub(),
         ),
         ChangeNotifierProvider<ThemeNotifier>(
           create: (_) => themeNotifier ?? ThemeNotifier(),

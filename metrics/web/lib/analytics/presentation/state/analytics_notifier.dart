@@ -58,6 +58,8 @@ class AnalyticsNotifier extends ChangeNotifier {
 
   /// Resets the user parameters.
   Future<void> resetUser() {
+    _userId = null;
+
     return _resetUserUseCase();
   }
 }

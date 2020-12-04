@@ -15,14 +15,10 @@ class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
 
   /// Extracts the page name from the [PageRoute] and
   /// logs it using [AnalyticsNotifier].
-  ///
-  /// ToDo
-  void _logPageView(PageRoute<dynamic> newRoute) {
-    final newRouteName = newRoute?.settings?.name;
+  void _logPageView(PageRoute<dynamic> route) {
+    final routeName = route?.settings?.name;
 
-    print("log page view: ${newRoute?.settings?.name}");
-
-    // analyticsNotifier.logPageView(newRouteName);
+    analyticsNotifier.logPageView(routeName);
   }
 
   @override

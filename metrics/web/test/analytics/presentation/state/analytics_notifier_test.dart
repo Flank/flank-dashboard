@@ -1,3 +1,4 @@
+import 'package:metrics/analytics/domain/entities/page_name.dart';
 import 'package:metrics/analytics/domain/usecases/log_login_use_case.dart';
 import 'package:metrics/analytics/domain/usecases/log_page_view_use_case.dart';
 import 'package:metrics/analytics/domain/usecases/reset_user_use_case.dart';
@@ -9,6 +10,7 @@ import '../../../test_utils/matcher_util.dart';
 
 void main() {
   group("AnalyticsNotifier", () {
+    const userId = 'id';
     final logLoginUseCase = LogLoginUseCaseMock();
     final logPageViewUseCase = LogPageViewUseCaseMock();
     final resetUserUseCase = ResetUserUseCaseMock();
@@ -57,23 +59,32 @@ void main() {
 
     test(
       ".logLogin() does not call the use case if the given user id is the same as in the notifier",
-      () async {},
+      () async {
+        await analyticsNotifier.logLogin(userId);
+        await analyticsNotifier.logLogin(userId);
+
+        verify(logLoginUseCase(any)).called(1);
+
+        await analyticsNotifier.resetUser();
+      },
     );
 
     test(
       ".logLogin() delegates to the log login use case",
       () async {
-        const userId = 'id';
         await analyticsNotifier.logLogin(userId);
 
         verify(logLoginUseCase(any)).called(1);
+
+        await analyticsNotifier.resetUser();
       },
     );
 
     test(
-      ".logPageView() does not call the use case if the given page name is not from list",
+      ".logPageView() does not call the use case if the given page name does not exist",
       () async {
         const pageName = '/test';
+
         await analyticsNotifier.logPageView(pageName);
 
         verifyNever(logPageViewUseCase(any));
@@ -83,7 +94,8 @@ void main() {
     test(
       ".logPageView() delegates to the log page view use case",
       () async {
-        const pageName = '/dashboard';
+        final pageName = PageName.dashboardPage.value;
+
         await analyticsNotifier.logPageView(pageName);
 
         verify(logPageViewUseCase(any)).called(1);
@@ -98,6 +110,16 @@ void main() {
         verify(resetUserUseCase(any)).called(1);
       },
     );
+
+    test(".resetUser() resets the notifier user id", () async {
+      await analyticsNotifier.logLogin(userId);
+      await analyticsNotifier.resetUser();
+      await analyticsNotifier.logLogin(userId);
+
+      verify(logLoginUseCase(any)).called(2);
+
+      await analyticsNotifier.resetUser();
+    });
   });
 }
 

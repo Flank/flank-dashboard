@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
@@ -95,6 +96,20 @@ void main() {
 
         expect(
           () => Provider.of<ProjectGroupsNotifier>(context, listen: false),
+          returnsNormally,
+        );
+      },
+    );
+
+    testWidgets(
+      "injects a AnalyticsNotifier",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        expect(
+          () => Provider.of<AnalyticsNotifier>(context, listen: false),
           returnsNormally,
         );
       },
