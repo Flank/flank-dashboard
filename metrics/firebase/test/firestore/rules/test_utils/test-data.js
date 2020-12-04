@@ -52,6 +52,11 @@ const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
 };
 
+/** A list of test allowed email domains */
+const instantConfig = {
+  "instant_config/instant_config": {},
+};
+
 const allowedEmail = "test@gmail.com";
 const deniedEmail = "test@invalid.com";
 
@@ -86,6 +91,7 @@ exports.projectGroups = projectGroups;
 exports.builds = builds;
 exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
+exports.instantConfig = instantConfig;
 
 /** An email and password sign in provider identifier */
 exports.passwordSignInProviderId = "password";
