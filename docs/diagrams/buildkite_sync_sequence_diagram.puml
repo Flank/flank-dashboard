@@ -23,10 +23,12 @@
     deactivate Repository
     activate "Awesome pipeline"
 
+    "Awesome pipeline" -> "Awesome pipeline" : Performs build
     "Awesome pipeline" -> "Sync pipeline" : Triggers Sync pipeline
     deactivate "Awesome pipeline"
     activate "Sync pipeline"
 
+    "Sync pipeline" -> "Sync pipeline" : Creates integration_config.yml
     "Sync pipeline" -> "CI Integration tool" : Runs sync command
     activate "CI Integration tool"
 
