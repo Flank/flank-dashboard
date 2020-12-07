@@ -73,7 +73,7 @@ void main() {
     );
 
     test(
-      ".logLogin() calls the log login use case with the param containing the given user user id",
+      ".logLogin() calls the log login use case with the param containing the given user id",
       () async {
         await analyticsNotifier.logLogin(userId);
 

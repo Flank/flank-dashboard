@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// A class that represents the user identifier parameter.
-class UserIdParam extends Equatable{
+class UserIdParam extends Equatable {
   /// A unique identifier of the user.
   final String id;
 
@@ -15,6 +15,4 @@ class UserIdParam extends Equatable{
   UserIdParam({@required this.id}) {
     ArgumentError.checkNotNull(id, 'id');
   }
-
-
 }
