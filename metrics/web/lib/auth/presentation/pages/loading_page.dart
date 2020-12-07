@@ -24,17 +24,17 @@ class _LoadingPageState extends State<LoadingPage>
   AuthNotifier _authNotifier;
 
   /// An [InstantConfigNotifier] needed to initialize the [InstantConfig] and
-  /// to remove added listeners in the [dispose] method.
+  /// remove added listeners in the [dispose] method.
   InstantConfigNotifier _instantConfigNotifier;
 
   @override
   void initState() {
+    super.initState();
+
     _initAnimation();
 
     _subscribeToAuthUpdates();
     _subscribeToInstantConfigUpdates();
-
-    super.initState();
   }
 
   @override
@@ -94,17 +94,18 @@ class _LoadingPageState extends State<LoadingPage>
 
     _instantConfigNotifier.addListener(_initializationListener);
 
+    _instantConfigNotifier.setDefaults(
+      isLoginFormEnabled: true,
+      isFpsMonitorEnabled: false,
+      isRendererDisplayEnabled: false,
+    );
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _instantConfigNotifier.setDefaults(
-        isLoginFormEnabled: true,
-        isFpsMonitorEnabled: false,
-        isRendererDisplayEnabled: false,
-      );
       _instantConfigNotifier.initializeInstantConfig();
     });
   }
 
-  /// Navigates to either the dashboard or the login based on the 
+  /// Navigates to either the dashboard or the login page based on the
   /// instant config loading and a user logged-in statuses.
   void _initializationListener() {
     final isLoggedIn = _authNotifier.isLoggedIn;
