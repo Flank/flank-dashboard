@@ -4,6 +4,7 @@ import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
+import 'package:metrics/common/presentation/state/instant_config_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
@@ -110,6 +111,20 @@ void main() {
 
         expect(
           () => Provider.of<AnalyticsNotifier>(context, listen: false),
+          returnsNormally,
+        );
+      },
+    );
+
+    testWidgets(
+      "injects an InstantConfigNotifier",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        expect(
+          () => Provider.of<InstantConfigNotifier>(context, listen: false),
           returnsNormally,
         );
       },

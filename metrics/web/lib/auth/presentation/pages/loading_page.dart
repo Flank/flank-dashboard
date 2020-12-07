@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
+import 'package:metrics/common/presentation/state/instant_config_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
 import 'package:provider/provider.dart';
@@ -22,10 +23,16 @@ class _LoadingPageState extends State<LoadingPage>
   /// An [AuthNotifier] needed to remove added listeners in the [dispose] method.
   AuthNotifier _authNotifier;
 
+  /// An [InstantConfigNotifier] needed to initialize the [InstantConfig] and
+  /// to remove added listeners in the [dispose] method.
+  InstantConfigNotifier _instantConfigNotifier;
+
   @override
   void initState() {
     _initAnimation();
+
     _subscribeToAuthUpdates();
+    _subscribeToInstantConfigUpdates();
 
     super.initState();
   }
@@ -70,17 +77,40 @@ class _LoadingPageState extends State<LoadingPage>
   /// Subscribes to authentication updates.
   void _subscribeToAuthUpdates() {
     _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-    _authNotifier.addListener(_authNotifierListener);
+
+    _authNotifier.addListener(_initializationListener);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _authNotifier.subscribeToAuthenticationUpdates();
     });
   }
 
-  /// Navigates from loading page corresponding to authentication status.
-  void _authNotifierListener() {
-    final isLoggedIn = _authNotifier.isLoggedIn;
+  /// Subscribes to instant config updates.
+  void _subscribeToInstantConfigUpdates() {
+    _instantConfigNotifier = Provider.of<InstantConfigNotifier>(
+      context,
+      listen: false,
+    );
 
-    if (isLoggedIn == null) return;
+    _instantConfigNotifier.addListener(_initializationListener);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _instantConfigNotifier.setDefaults(
+        isLoginFormEnabled: true,
+        isFpsMonitorEnabled: false,
+        isRendererDisplayEnabled: false,
+      );
+      _instantConfigNotifier.initializeInstantConfig();
+    });
+  }
+
+  /// Navigates to either the dashboard or the login based on the 
+  /// instant config loading and a user logged-in statuses.
+  void _initializationListener() {
+    final isLoggedIn = _authNotifier.isLoggedIn;
+    final isRemoteConfigLoading = _instantConfigNotifier.isLoading;
+
+    if (isLoggedIn == null || isRemoteConfigLoading) return;
 
     if (isLoggedIn) {
       _navigateTo(RouteName.dashboard);
@@ -101,7 +131,8 @@ class _LoadingPageState extends State<LoadingPage>
   @override
   void dispose() {
     _animationController.dispose();
-    _authNotifier.removeListener(_authNotifierListener);
+    _authNotifier.removeListener(_initializationListener);
+    _instantConfigNotifier.removeListener(_initializationListener);
     super.dispose();
   }
 }
