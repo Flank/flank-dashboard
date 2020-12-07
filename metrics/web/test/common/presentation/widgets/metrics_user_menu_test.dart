@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
@@ -15,6 +16,7 @@ import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:provider/provider.dart';
 
+import '../../../test_utils/analytics_notifier_mock.dart';
 import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/signed_in_auth_notifier_stub.dart';
@@ -185,10 +187,28 @@ void main() {
 
         await tester.tap(find.text(CommonStrings.logOut));
         await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
+          return tester.pump();
         });
 
         verify(authNotifier.signOut()).called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "calls the AnalyticsNotifier.resetUser() on tap on the 'Log out'",
+      (tester) async {
+        final analyticsNotifier = AnalyticsNotifierMock();
+
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
+          analyticsNotifier: analyticsNotifier,
+        ));
+
+        await tester.tap(find.text(CommonStrings.logOut));
+        await mockNetworkImagesFor(() {
+          return tester.pump();
+        });
+
+        verify(analyticsNotifier.resetUser()).called(equals(1));
       },
     );
 
@@ -241,6 +261,9 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
   /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
 
+  /// An [AnalyticsNotifier] used in tests.
+  final AnalyticsNotifier analyticsNotifier;
+
   /// Creates the [_MetricsUserMenuTestbed] with the given [theme].
   ///
   /// The [theme] defaults to an empty [MetricsThemeData] instance.
@@ -249,6 +272,7 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
     this.theme = const MetricsThemeData(),
     this.themeNotifier,
     this.authNotifier,
+    this.analyticsNotifier,
   }) : super(key: key);
 
   @override
@@ -256,6 +280,7 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
     return TestInjectionContainer(
       themeNotifier: themeNotifier,
       authNotifier: authNotifier,
+      analyticsNotifier: analyticsNotifier,
       child: Builder(
         builder: (context) {
           return MetricsThemedTestbed(

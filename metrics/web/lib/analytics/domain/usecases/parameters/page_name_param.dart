@@ -1,11 +1,14 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:metrics/analytics/domain/entities/page_name.dart';
 
 /// A class that represents the page name parameter.
-@immutable
-class PageNameParam {
+class PageNameParam extends Equatable {
   /// A name of the page.
   final PageName pageName;
+
+  @override
+  List<Object> get props => [pageName];
 
   /// Creates a new instance of the [PageNameParam].
   ///

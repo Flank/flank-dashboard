@@ -1,10 +1,13 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 /// A class that represents the user identifier parameter.
-@immutable
-class UserIdParam {
+class UserIdParam extends Equatable {
   /// A unique identifier of the user.
   final String id;
+
+  @override
+  List<Object> get props => [id];
 
   /// Creates a new instance of the [UserIdParam].
   ///

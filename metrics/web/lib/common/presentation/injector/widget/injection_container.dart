@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/analytics/data/repositories/firebase_analytics_repository.dart';
+import 'package:metrics/analytics/domain/usecases/log_login_use_case.dart';
+import 'package:metrics/analytics/domain/usecases/log_page_view_use_case.dart';
+import 'package:metrics/analytics/domain/usecases/reset_user_use_case.dart';
+import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/auth/data/repositories/firebase_user_repository.dart';
 import 'package:metrics/auth/domain/usecases/create_user_profile_usecase.dart';
 import 'package:metrics/auth/domain/usecases/google_sign_in_usecase.dart';
@@ -81,6 +86,15 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// A use case needed to be able to delete a project group.
   DeleteProjectGroupUseCase _deleteProjectGroupUseCase;
 
+  /// A use case needed to be able to log user logins.
+  LogLoginUseCase _logLoginUseCase;
+
+  /// A use case needed to be able to log page changes.
+  LogPageViewUseCase _logPageViewUseCase;
+
+  /// A use case needed to be able to reset the analytics user identifier.
+  ResetUserUseCase _resetUserUseCase;
+
   /// Returns the current system's theme brightness.
   Brightness get platformBrightness {
     return WidgetsBinding.instance.window.platformBrightness;
@@ -99,6 +113,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     final _userRepository = FirebaseUserRepository();
     final _projectGroupRepository = FirestoreProjectGroupsRepository();
     final _projectRepository = FirestoreProjectRepository();
+    final _analyticsRepository = FirebaseAnalyticsRepository();
 
     _receiveProjectUpdates = ReceiveProjectUpdates(_projectRepository);
     _receiveProjectMetricsUpdates =
@@ -124,6 +139,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _projectGroupRepository,
     );
 
+    _logLoginUseCase = LogLoginUseCase(_analyticsRepository);
+    _logPageViewUseCase = LogPageViewUseCase(_analyticsRepository);
+    _resetUserUseCase = ResetUserUseCase(_analyticsRepository);
+
     _authNotifier = AuthNotifier(
       _receiveAuthUpdates,
       _signInUseCase,
@@ -146,6 +165,23 @@ class _InjectionContainerState extends State<InjectionContainer> {
       providers: [
         ChangeNotifierProvider.value(value: _authNotifier),
         ChangeNotifierProvider.value(value: _themeNotifier),
+        ChangeNotifierProxyProvider<AuthNotifier, AnalyticsNotifier>(
+          lazy: false,
+          create: (_) => AnalyticsNotifier(
+            _logLoginUseCase,
+            _logPageViewUseCase,
+            _resetUserUseCase,
+          ),
+          update: (_, authNotifier, analyticsNotifier) {
+            final user = authNotifier.userProfileModel;
+
+            if (user != null) {
+              analyticsNotifier.logLogin(user.id);
+            }
+
+            return analyticsNotifier;
+          },
+        ),
         ChangeNotifierProxyProvider<AuthNotifier, ProjectsNotifier>(
           lazy: false,
           create: (_) => ProjectsNotifier(_receiveProjectUpdates),

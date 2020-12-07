@@ -46,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
         RouteName.dashboard,
         (Route<dynamic> route) => false,
       );
+      _authNotifier.removeListener(_loggedInListener);
     }
   }
 
