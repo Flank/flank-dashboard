@@ -64,10 +64,6 @@ Once a new pipeline is created, let's configure it to use the pipeline YAML file
   ```
 
 Finally, let's create a pipeline YAML file for the **Sync Pipeline**. In the connected repository create a new file `.buildkite/path/to/sync_pipeline.yml` with the following contents:
- 
-  1. In a connected repository, create or browse to `.buildkite/pipelines` folder.
-  2. Create `sync_pipeline.yml` file.
-  3. Add the following contents to the file:
   ```yaml
   steps:
     - label: "Sync builds"
@@ -110,12 +106,11 @@ destination:
 
 First, let's consider these types of values in the config file:
 
-There are three types of config values depending on how they are exposed:
-  -`Secret` is a value that must be stored securely using the [Buildkite secrets in environment hooks](https://buildkite.com/docs/pipelines/secrets#storing-secrets-in-environment-hooks).
+  - `Secret` is a value that must be stored securely using the [Buildkite secrets in environment hooks](https://buildkite.com/docs/pipelines/secrets#storing-secrets-in-environment-hooks).
   - `Pipeline` is a pipeline environment variable value that is set from a trigger step environment. Read more about this in a [Triggering `Sync Pipeline` section](#Triggering-Sync-Pipeline).
   - `Public` is a value that can be defined directly in the config file and is **specific to you**.
 
-  Using the above definitions, consider the following table with config variables:
+  Using the above definitions, consider the following table with configuration keys:
 
  | Key | Type | Description | 
  | ---- | ---- | ---- |
@@ -135,7 +130,6 @@ As the Sync Pipeline is created and the configuration file for CI integration is
 The main idea of auto-exporting build data is asynchronous triggering the `Sync Pipeline` from the pipeline we want to synchronize. Thus, when the pipeline finishes all of its general steps, it triggers a `Sync Pipeline` to start and provides variables with information about itself. After the async trigger, the pipeline completes, and its results are exported to the Metrics project. The trigger step must depend on the very last pipeline-related step. In other words, the trigger step must be the latest.
 
 Let's consider the step described:
-
 ```yaml
   - label: "Trigger sync pipeline"
     trigger: sync-pipeline
@@ -149,11 +143,13 @@ Let's consider the step described:
 ```
 
 
-The `allow_dependency_failure` flag allows running the trigger even if the step with the key `step_key` finishes with an error. We strongly recommend setting the `depends_on` value to the step key that finalizes your build (waits on any other steps to finish). 
+The `allow_dependency_failure` flag allows running the trigger even if the step with the key `step_key` finishes with an error. We strongly recommend setting the `depends_on` value to the key of a step that finalizes your build (waits on any other steps to finish).
 
-The `build` section provides the `Sync Pipeline` with environment variables containing the information about what pipeline triggers exporting (`PIPELINE_SLUG` variable with `BUILDKITE_PIPELINE_SLUG` value) and what project in the database matches this pipeline (`METRICS_PROJECT_ID` variable with the **specific to you** value).
+The `build` section provides the `Sync Pipeline` with environment variables containing the information about what pipeline is triggering export (`PIPELINE_SLUG` variable with `BUILDKITE_PIPELINE_SLUG` value) and what project in the database matches this pipeline (`METRICS_PROJECT_ID` variable with the **specific to you** value).
 
-Well done! Once the trigger step is configured, the auto-exports are configured and ready to use.
+To read more about the `trigger` step, consider the Buildkite [Trigger Step](https://buildkite.com/docs/pipelines/trigger-step) documentation. Also, the [Managing Step Dependencies](https://buildkite.com/docs/pipelines/dependencies) documentation can help you to understand how to make your trigger step to be the latest.
+
+Well done! Once the trigger step is configured, the auto-exporting is ready to use.
 
 # API
 > What will the proposed API look like?
