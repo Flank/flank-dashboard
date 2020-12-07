@@ -156,7 +156,7 @@ Well done! Once the trigger step is configured, the auto-exporting is ready to u
 
 The algorithm for auto-exporting builds data in Buildkite uses three main components: the pipeline we want to export, the `CI integration` tool, and the `Sync Pipeline`. The following sequence diagram demonstrates how these components behave together and how the exporting happens (assume the pipeline to export as `Awesome Pipeline`):
 
-![Buildkite Sync Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/buildkite_integration_docs/docs/diagrams/buildkite_sync_sequence_diagram.puml)
+![Buildkite Sync Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/docs/diagrams/buildkite_sync_sequence_diagram.puml)
 
 # Dependencies
 > What is the project blocked on?
