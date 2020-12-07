@@ -13,7 +13,7 @@ void main() {
 
     final analyticsNotifier = AnalyticsNotifierMock();
 
-    final observer = FirebaseAnalyticsObserver(
+    final observer = FirebaseAnalyticsRouteObserver(
       analyticsNotifier: analyticsNotifier,
     );
 
@@ -23,13 +23,13 @@ void main() {
 
     test("throws an AssertionError if the given notifier is null", () {
       expect(
-        () => FirebaseAnalyticsObserver(analyticsNotifier: null),
+        () => FirebaseAnalyticsRouteObserver(analyticsNotifier: null),
         MatcherUtil.throwsAssertionError,
       );
     });
 
     test(
-      '.didPush() does not log the page change if the route is not a PageRoute',
+      ".didPush() does not log the page change if the route is not a PageRoute",
       () {
         final route = StubPopupRoute();
 
@@ -40,7 +40,7 @@ void main() {
     );
 
     test(
-      '.didPop() does not log the page change if the route is not a PageRoute',
+      ".didPop() does not log the page change if the route is not a PageRoute",
       () {
         final route = StubPopupRoute();
 
@@ -51,7 +51,7 @@ void main() {
     );
 
     test(
-      '.didReplace() does not log the page change if the route is not a PageRoute',
+      ".didReplace() does not log the page change if the route is not a PageRoute",
       () {
         final route = StubPopupRoute();
 
@@ -61,7 +61,7 @@ void main() {
       },
     );
 
-    test('.didPush() logs the page change', () {
+    test(".didPush() logs a new route name", () {
       final route = MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => testWidget,
@@ -69,10 +69,10 @@ void main() {
 
       observer.didPush(route, null);
 
-      verify(analyticsNotifier.logPageView(any)).called(1);
+      verify(analyticsNotifier.logPageView(routeSettings.name)).called(1);
     });
 
-    test('.didReplace() logs the page change', () {
+    test(".didReplace() logs a new route name", () {
       final route = MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => testWidget,
@@ -80,10 +80,10 @@ void main() {
 
       observer.didReplace(newRoute: route);
 
-      verify(analyticsNotifier.logPageView(any)).called(1);
+      verify(analyticsNotifier.logPageView(routeSettings.name)).called(1);
     });
 
-    test('.didPop() logs the page change', () {
+    test(".didPop() logs the previous route name as a new one", () {
       final route = MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => testWidget,
@@ -91,7 +91,7 @@ void main() {
 
       observer.didPop(null, route);
 
-      verify(analyticsNotifier.logPageView(any)).called(1);
+      verify(analyticsNotifier.logPageView(routeSettings.name)).called(1);
     });
   });
 }

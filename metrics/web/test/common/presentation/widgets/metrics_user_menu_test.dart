@@ -195,7 +195,7 @@ void main() {
     );
 
     testWidgets(
-      "calls the AnalyticsNotifier.resetUser() on tap on 'Log out'",
+      "calls the AnalyticsNotifier.resetUser() on tap on the 'Log out'",
       (tester) async {
         final analyticsNotifier = AnalyticsNotifierMock();
 

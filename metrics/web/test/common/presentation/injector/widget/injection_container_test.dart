@@ -102,7 +102,7 @@ void main() {
     );
 
     testWidgets(
-      "injects a AnalyticsNotifier",
+      "injects an AnalyticsNotifier",
       (tester) async {
         await tester.pumpWidget(InjectionContainerTestbed());
 

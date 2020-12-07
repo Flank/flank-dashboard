@@ -49,7 +49,7 @@ class _MetricsAppState extends State<MetricsApp> {
 
             return Consumer<AnalyticsNotifier>(
               builder: (context, analyticsNotifier, _) {
-                final _analyticsObserver = FirebaseAnalyticsObserver(
+                final _analyticsObserver = FirebaseAnalyticsRouteObserver(
                   analyticsNotifier: analyticsNotifier,
                 );
 
@@ -72,7 +72,7 @@ class _MetricsAppState extends State<MetricsApp> {
                   navigatorObservers: [
                     _toastRouteObserver,
                     _userMenuRouteObserver,
-                    _analyticsObserver
+                    _analyticsObserver,
                   ],
                   themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
                   theme: ThemeData(
