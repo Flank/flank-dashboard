@@ -87,9 +87,12 @@ class InstantConfigNotifier extends ChangeNotifier {
     final config = await _fetchInstantConfigUseCase(params);
 
     _setInstantConfig(config);
+
+    _isLoading = false;
+    notifyListeners();
   }
 
-  /// Sets the current [_instantConfig]'s value to the given [config] and updates
+  /// Sets the current [_instantConfig] value to the given [config] and updates
   /// the view models.
   void _setInstantConfig(InstantConfig config) {
     _instantConfig = config;
@@ -104,8 +107,5 @@ class InstantConfigNotifier extends ChangeNotifier {
         RendererDisplayInstantConfigViewModel(
       isEnabled: _instantConfig.isRendererDisplayEnabled,
     );
-
-    _isLoading = false;
-    notifyListeners();
   }
 }

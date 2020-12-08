@@ -142,7 +142,7 @@ void main() {
         authNotifier.notifyListeners();
 
         await mockNetworkImagesFor(() {
-          return tester.pump();
+          return tester.pumpAndSettle();
         });
 
         expect(find.byType(LoadingPage), findsOneWidget);

@@ -105,16 +105,28 @@ void main() {
           (_) => Future.value(instantConfig),
         );
 
+        notifier.setDefaults(isLoginFormEnabled: true);
+        final param = InstantConfigParam(
+          isLoginFormEnabled: true,
+          isFpsMonitorEnabled: false,
+          isRendererDisplayEnabled: false,
+        );
+
         notifier.initializeInstantConfig();
 
-        verify(_fetchInstantConfigUseCase(any)).called(1);
+        verify(_fetchInstantConfigUseCase(param)).called(1);
       },
     );
 
     test(
       ".initializeInstantConfig() uses the given default values when fetching the instant config",
       () {
-        when(_fetchInstantConfigUseCase(any)).thenAnswer(
+        final instantConfigParam = InstantConfigParam(
+          isLoginFormEnabled: isLoginFormEnabled,
+          isFpsMonitorEnabled: isFpsMonitorEnabled,
+          isRendererDisplayEnabled: isRendererDisplayEnabled,
+        );
+        when(_fetchInstantConfigUseCase(instantConfigParam)).thenAnswer(
           (_) => Future.value(instantConfig),
         );
 
@@ -123,13 +135,6 @@ void main() {
           isFpsMonitorEnabled: isFpsMonitorEnabled,
           isRendererDisplayEnabled: isRendererDisplayEnabled,
         );
-
-        final instantConfigParam = InstantConfigParam(
-          isLoginFormEnabled: isLoginFormEnabled,
-          isFpsMonitorEnabled: isFpsMonitorEnabled,
-          isRendererDisplayEnabled: isRendererDisplayEnabled,
-        );
-
         notifier.initializeInstantConfig();
 
         verify(_fetchInstantConfigUseCase(instantConfigParam)).called(1);
@@ -139,11 +144,11 @@ void main() {
     test(
       ".initializeInstantConfig() sets the login form instant config view model",
       () async {
-        when(_fetchInstantConfigUseCase(any)).thenAnswer(
-          (_) => Future.value(instantConfig),
-        );
         const expectedViewModel = LoginFormInstantConfigViewModel(
           isEnabled: isLoginFormEnabled,
+        );
+        when(_fetchInstantConfigUseCase(any)).thenAnswer(
+          (_) => Future.value(instantConfig),
         );
 
         await notifier.initializeInstantConfig();
@@ -158,15 +163,14 @@ void main() {
     test(
       ".initializeInstantConfig() sets the FPS monitor instant config view model",
       () async {
+        const expectedViewModel = FpsMonitorInstantConfigViewModel(
+          isEnabled: isFpsMonitorEnabled,
+        );
         when(_fetchInstantConfigUseCase(any)).thenAnswer(
           (_) => Future.value(instantConfig),
         );
 
         await notifier.initializeInstantConfig();
-
-        const expectedViewModel = FpsMonitorInstantConfigViewModel(
-          isEnabled: isFpsMonitorEnabled,
-        );
 
         expect(
           notifier.fpsMonitorInstantConfigViewModel,
@@ -178,11 +182,11 @@ void main() {
     test(
       ".initializeInstantConfig() sets the renderer display instant config view model",
       () async {
-        when(_fetchInstantConfigUseCase(any)).thenAnswer(
-          (_) => Future.value(instantConfig),
-        );
         const expectedViewModel = RendererDisplayInstantConfigViewModel(
           isEnabled: isRendererDisplayEnabled,
+        );
+        when(_fetchInstantConfigUseCase(any)).thenAnswer(
+          (_) => Future.value(instantConfig),
         );
 
         await notifier.initializeInstantConfig();

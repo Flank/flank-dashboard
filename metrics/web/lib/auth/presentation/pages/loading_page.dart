@@ -27,9 +27,15 @@ class _LoadingPageState extends State<LoadingPage>
   /// remove added listeners in the [dispose] method.
   InstantConfigNotifier _instantConfigNotifier;
 
-  /// Indicates whether the [_authNotifier] and [_instantConfigNotifier]
-  /// are loaded.
-  bool _isLoaded = false;
+  /// Indicates whether a user is logged in or not.
+  bool _isLoggedIn;
+
+  /// Indicates whether an instant config is initialized or not.
+  bool _isConfigInitialized = false;
+
+  /// Indicates whether the application is finished loading.
+  bool get _isLoaded =>
+      _isLoggedIn != null && _isLoggedIn && _isConfigInitialized;
 
   @override
   void initState() {
@@ -103,42 +109,28 @@ class _LoadingPageState extends State<LoadingPage>
     });
   }
 
-  /// Updates the [_isLoaded] and delegates navigating to [_navigateIfLoaded].
+  /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
   void _authNotifierListener() {
-    _updateIsLoaded();
+    _isLoggedIn = _authNotifier.isLoggedIn;
 
     _navigateIfLoaded();
   }
 
-  /// Updates the [_isLoaded] and delegates navigating to [_navigateIfLoaded].
+  /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
   void _instantConfigNotifierListener() {
-    _updateIsLoaded();
+    _isConfigInitialized = !_instantConfigNotifier.isLoading;
 
     _navigateIfLoaded();
   }
 
-  /// Sets the [_isLoaded] to `true` if the [_authNotifier] and
-  /// [_instantConfigNotifier] are loaded.
+  /// Navigates depending on the [_isLoaded] state.
   ///
-  /// Otherwise, sets the [_isLoaded] to `false`.
-  void _updateIsLoaded() {
-    final isAuthNotifierLoaded = _authNotifier.isLoggedIn != null;
-    final isInstantConfigNotifierLoaded = !_instantConfigNotifier.isLoading;
-
-    _isLoaded = isAuthNotifierLoaded && isInstantConfigNotifierLoaded;
-  }
-
-  /// Navigates to either the dashboard or the login page depending
-  /// on [_authNotifier.isLoggedIn] status.
-  ///
-  /// Does not navigate if [_authNotifier] or [_instantConfigNotifier]
-  /// is in loading state.
+  /// If [_isLoggedIn], navigates to the [RouteName.dashboard].
+  /// Otherwise, navigates to the [RouteName.login].
   void _navigateIfLoaded() {
     if (!_isLoaded) return;
 
-    final isLoggedIn = _authNotifier.isLoggedIn;
-
-    if (isLoggedIn) {
+    if (_isLoggedIn) {
       _navigateTo(RouteName.dashboard);
     } else {
       _navigateTo(RouteName.login);
