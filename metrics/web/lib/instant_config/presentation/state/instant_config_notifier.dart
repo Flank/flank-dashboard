@@ -89,7 +89,7 @@ class InstantConfigNotifier extends ChangeNotifier {
     _setInstantConfig(config);
   }
 
-  /// Sets the current [InstantConfig]'s value to the given [config] and updates
+  /// Sets the current [_instantConfig]'s value to the given [config] and updates
   /// the view models.
   void _setInstantConfig(InstantConfig config) {
     _instantConfig = config;
