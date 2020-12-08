@@ -58,8 +58,6 @@ class AnalyticsNotifier extends ChangeNotifier {
 
     if (pageName == null) return;
 
-    print('log pageView $name');
-
     final pageNameParam = PageNameParam(pageName: pageName);
 
     return _logPageViewUseCase(pageNameParam);

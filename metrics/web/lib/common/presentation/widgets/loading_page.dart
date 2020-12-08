@@ -141,6 +141,7 @@ class _LoadingPageState extends State<LoadingPage>
     } else {
       _navigateTo(RouteName.login);
     }
+    _authNotifier.removeListener(_authNotifierListener);
   }
 
   /// Navigates to [routeName] and removes all underlying routes.
