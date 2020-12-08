@@ -10,7 +10,9 @@ abstract class InstantConfigViewModel extends Equatable {
   List<Object> get props => [isEnabled];
 
   /// Creates a new instance of the [InstantConfigViewModel]
-  /// with the given [isEnabled].
+  /// with the given [isEnabled] value.
+  ///
+  /// The [isEnabled] must not be `null`.
   const InstantConfigViewModel({
     @required this.isEnabled,
   }) : assert(isEnabled != null);

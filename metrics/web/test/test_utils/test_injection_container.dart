@@ -44,13 +44,13 @@ class TestInjectionContainer extends StatelessWidget {
 
   /// Creates the [TestInjectionContainer] with the given notifiers.
   ///
-  /// If [metricsNotifier] not passed, the [ProjectMetricsNotifierStub] used.
-  /// If [authNotifier] not passed, the [SignedInAuthNotifierStub] used.
+  /// If [metricsNotifier] is `null`, the [ProjectMetricsNotifierStub] is used.
+  /// If [authNotifier] is `null`, the [SignedInAuthNotifierStub] is used.
   /// If the [analyticsNotifier] is `null`, the [AnalyticsNotifierStub] is used.
-  /// If [themeNotifier] not passed, the [ThemeNotifier] used.
-  /// If [projectsNotifier] not passed, the [ProjectsNotifierStub] used.
-  /// If [projectGroupsNotifier] not passed, the [ProjectGroupsNotifierStub] used.
-  /// If [instantConfigNotifier] not passed, the [InstantConfigNotifierStub] used.
+  /// If [themeNotifier] is `null`, the [ThemeNotifier] is used.
+  /// If [projectsNotifier] is `null`, the [ProjectsNotifierStub] is used.
+  /// If [projectGroupsNotifier] is `null`, the [ProjectGroupsNotifierStub] is used.
+  /// If [instantConfigNotifier] is `null`, the [InstantConfigNotifierStub] is used.
   const TestInjectionContainer({
     Key key,
     this.child,

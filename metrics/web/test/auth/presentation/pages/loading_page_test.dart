@@ -21,7 +21,7 @@ void main() {
     testWidgets(
       "displayed while the authentication status is unknown",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_LoadingPageTestbed());
+        await tester.pumpWidget(const _LoadingPageTestbed());
 
         expect(find.byType(LoadingPage), findsOneWidget);
       },
@@ -100,17 +100,13 @@ void main() {
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
         final instantConfigNotifier = InstantConfigNotifierMock();
-        final navigatorObserver = _NavigatorObserverMock();
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
             authNotifier: authNotifier,
             instantConfigNotifier: instantConfigNotifier,
-            navigatorObserver: navigatorObserver,
           ),
         );
-
-        reset(navigatorObserver);
 
         when(authNotifier.isLoggedIn).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
@@ -122,7 +118,7 @@ void main() {
           return tester.pump();
         });
 
-        verifyNever(navigatorObserver.didPush(any, any));
+        expect(find.byType(LoadingPage), findsOneWidget);
       },
     );
 
@@ -131,17 +127,13 @@ void main() {
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
         final instantConfigNotifier = InstantConfigNotifierMock();
-        final navigatorObserver = _NavigatorObserverMock();
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
             authNotifier: authNotifier,
             instantConfigNotifier: instantConfigNotifier,
-            navigatorObserver: navigatorObserver,
           ),
         );
-
-        reset(navigatorObserver);
 
         when(authNotifier.isLoggedIn).thenReturn(false);
         when(authNotifier.isLoading).thenReturn(false);
@@ -153,14 +145,14 @@ void main() {
           return tester.pump();
         });
 
-        verifyNever(navigatorObserver.didPush(any, any));
+        expect(find.byType(LoadingPage), findsOneWidget);
       },
     );
 
     testWidgets(
       "displays the PlatformBrightnessObserver widget",
       (tester) async {
-        await tester.pumpWidget(_LoadingPageTestbed());
+        await tester.pumpWidget(const _LoadingPageTestbed());
 
         expect(find.byType(PlatformBrightnessObserver), findsOneWidget);
       },
@@ -176,16 +168,12 @@ class _LoadingPageTestbed extends StatelessWidget {
   /// An [InstantConfigNotifier] used in tests.
   final InstantConfigNotifier instantConfigNotifier;
 
-  /// A [Navigator] observer used in tests.
-  final NavigatorObserver navigatorObserver;
-
   /// Creates the loading page testbed with the given [authNotifier]
   /// and [instantConfigNotifier].
-  _LoadingPageTestbed({
+  const _LoadingPageTestbed({
     this.authNotifier,
     this.instantConfigNotifier,
-    NavigatorObserver navigatorObserver,
-  }) : navigatorObserver = navigatorObserver ?? NavigatorObserver();
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -201,12 +189,9 @@ class _LoadingPageTestbed extends StatelessWidget {
               isLoggedIn:
                   Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
-            navigatorObservers: [navigatorObserver],
           );
         },
       ),
     );
   }
 }
-
-class _NavigatorObserverMock extends Mock implements NavigatorObserver {}

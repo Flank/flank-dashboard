@@ -27,6 +27,10 @@ class _LoadingPageState extends State<LoadingPage>
   /// remove added listeners in the [dispose] method.
   InstantConfigNotifier _instantConfigNotifier;
 
+  /// Indicates whether the [_authNotifier] and [_instantConfigNotifier]
+  /// are loaded.
+  bool _isLoaded = false;
+
   @override
   void initState() {
     super.initState();
@@ -78,7 +82,7 @@ class _LoadingPageState extends State<LoadingPage>
   void _subscribeToAuthUpdates() {
     _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
-    _authNotifier.addListener(_initializationListener);
+    _authNotifier.addListener(_authNotifierListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _authNotifier.subscribeToAuthenticationUpdates();
@@ -92,22 +96,47 @@ class _LoadingPageState extends State<LoadingPage>
       listen: false,
     );
 
-    _instantConfigNotifier.addListener(_initializationListener);
-
-    _instantConfigNotifier.setDefaults();
+    _instantConfigNotifier.addListener(_instantConfigNotifierListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _instantConfigNotifier.initializeInstantConfig();
     });
   }
 
-  /// Navigates to either the dashboard or the login page based on the
-  /// instant config loading and a user logged-in statuses.
-  void _initializationListener() {
-    final isLoggedIn = _authNotifier.isLoggedIn;
-    final isRemoteConfigLoading = _instantConfigNotifier.isLoading;
+  /// Updates the [_isLoaded] and delegates navigating to [_navigateIfLoaded].
+  void _authNotifierListener() {
+    _updateIsLoaded();
 
-    if (isLoggedIn == null || isRemoteConfigLoading) return;
+    _navigateIfLoaded();
+  }
+
+  /// Updates the [_isLoaded] and delegates navigating to [_navigateIfLoaded].
+  void _instantConfigNotifierListener() {
+    _updateIsLoaded();
+
+    _navigateIfLoaded();
+  }
+
+  /// Sets the [_isLoaded] to `true` if the [_authNotifier] and
+  /// [_instantConfigNotifier] are loaded.
+  ///
+  /// Otherwise, sets the [_isLoaded] to `false`.
+  void _updateIsLoaded() {
+    final isAuthNotifierLoaded = _authNotifier.isLoggedIn != null;
+    final isInstantConfigNotifierLoaded = !_instantConfigNotifier.isLoading;
+
+    _isLoaded = isAuthNotifierLoaded && isInstantConfigNotifierLoaded;
+  }
+
+  /// Navigates to either the dashboard or the login page depending
+  /// on [_authNotifier.isLoggedIn] status.
+  ///
+  /// Does not navigate if [_authNotifier] or [_instantConfigNotifier]
+  /// is in loading state.
+  void _navigateIfLoaded() {
+    if (!_isLoaded) return;
+
+    final isLoggedIn = _authNotifier.isLoggedIn;
 
     if (isLoggedIn) {
       _navigateTo(RouteName.dashboard);
@@ -128,8 +157,8 @@ class _LoadingPageState extends State<LoadingPage>
   @override
   void dispose() {
     _animationController.dispose();
-    _authNotifier.removeListener(_initializationListener);
-    _instantConfigNotifier.removeListener(_initializationListener);
+    _authNotifier.removeListener(_authNotifierListener);
+    _instantConfigNotifier.removeListener(_instantConfigNotifierListener);
     super.dispose();
   }
 }

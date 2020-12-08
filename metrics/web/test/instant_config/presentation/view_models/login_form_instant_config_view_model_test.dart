@@ -18,7 +18,7 @@ void main() {
     );
 
     test(
-      "creates an instance with the given is enabled",
+      "creates an instance with the given is enabled value",
       () {
         const isEnabled = true;
 

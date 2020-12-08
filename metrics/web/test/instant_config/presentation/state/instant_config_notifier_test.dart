@@ -2,6 +2,9 @@ import 'package:metrics/common/domain/entities/instant_config.dart';
 import 'package:metrics/common/domain/usecases/fetch_instant_config_usecase.dart';
 import 'package:metrics/common/domain/usecases/parameters/instant_config_param.dart';
 import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/instant_config/presentation/view_models/fps_monitor_instant_config_view_model.dart';
+import 'package:metrics/instant_config/presentation/view_models/login_form_instant_config_view_model.dart';
+import 'package:metrics/instant_config/presentation/view_models/renderer_display_instant_config_view_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -60,23 +63,11 @@ void main() {
     );
 
     test(
-      "creates an instance with the given fetch instant config use case",
-      () {
-        expect(
-          () => InstantConfigNotifier(_fetchInstantConfigUseCase),
-          returnsNormally,
-        );
-      },
-    );
-
-    test(
       ".setDefaults() throws an AssertionError if the given is login form enabled is null",
       () {
         expect(
           () => notifier.setDefaults(
             isLoginFormEnabled: null,
-            isFpsMonitorEnabled: isFpsMonitorEnabled,
-            isRendererDisplayEnabled: isRendererDisplayEnabled,
           ),
           MatcherUtil.throwsAssertionError,
         );
@@ -88,9 +79,7 @@ void main() {
       () {
         expect(
           () => notifier.setDefaults(
-            isLoginFormEnabled: isLoginFormEnabled,
             isFpsMonitorEnabled: null,
-            isRendererDisplayEnabled: isRendererDisplayEnabled,
           ),
           MatcherUtil.throwsAssertionError,
         );
@@ -102,8 +91,6 @@ void main() {
       () {
         expect(
           () => notifier.setDefaults(
-            isLoginFormEnabled: isLoginFormEnabled,
-            isFpsMonitorEnabled: isFpsMonitorEnabled,
             isRendererDisplayEnabled: null,
           ),
           MatcherUtil.throwsAssertionError,
@@ -131,6 +118,12 @@ void main() {
           (_) => Future.value(instantConfig),
         );
 
+        notifier.setDefaults(
+          isLoginFormEnabled: isLoginFormEnabled,
+          isFpsMonitorEnabled: isFpsMonitorEnabled,
+          isRendererDisplayEnabled: isRendererDisplayEnabled,
+        );
+
         final instantConfigParam = InstantConfigParam(
           isLoginFormEnabled: isLoginFormEnabled,
           isFpsMonitorEnabled: isFpsMonitorEnabled,
@@ -149,10 +142,16 @@ void main() {
         when(_fetchInstantConfigUseCase(any)).thenAnswer(
           (_) => Future.value(instantConfig),
         );
+        const expectedViewModel = LoginFormInstantConfigViewModel(
+          isEnabled: isLoginFormEnabled,
+        );
 
         await notifier.initializeInstantConfig();
 
-        expect(notifier.loginFormInstantConfigViewModel, isNotNull);
+        expect(
+          notifier.loginFormInstantConfigViewModel,
+          equals(expectedViewModel),
+        );
       },
     );
 
@@ -165,7 +164,14 @@ void main() {
 
         await notifier.initializeInstantConfig();
 
-        expect(notifier.fpsMonitorInstantConfigViewModel, isNotNull);
+        const expectedViewModel = FpsMonitorInstantConfigViewModel(
+          isEnabled: isFpsMonitorEnabled,
+        );
+
+        expect(
+          notifier.fpsMonitorInstantConfigViewModel,
+          equals(expectedViewModel),
+        );
       },
     );
 
@@ -175,15 +181,21 @@ void main() {
         when(_fetchInstantConfigUseCase(any)).thenAnswer(
           (_) => Future.value(instantConfig),
         );
+        const expectedViewModel = RendererDisplayInstantConfigViewModel(
+          isEnabled: isRendererDisplayEnabled,
+        );
 
         await notifier.initializeInstantConfig();
 
-        expect(notifier.rendererDisplayInstantConfigViewModel, isNotNull);
+        expect(
+          notifier.rendererDisplayInstantConfigViewModel,
+          equals(expectedViewModel),
+        );
       },
     );
 
     test(
-      ".initializeInstantConfig() sets the is loading value to false after initialization complete",
+      ".initializeInstantConfig() sets the is loading value to false when initialization is completed",
       () async {
         when(_fetchInstantConfigUseCase(any)).thenAnswer(
           (_) => Future.value(instantConfig),

@@ -30,8 +30,8 @@ class InstantConfigNotifier extends ChangeNotifier {
   /// A view model that holds the [InstantConfig] data for the renderer display.
   RendererDisplayInstantConfigViewModel _rendererDisplayInstantConfigViewModel;
 
-  /// Returns `true` if the [InstantConfig] is loading,
-  /// otherwise returns `false`.
+  /// Returns `true` if the [InstantConfig] is loading.
+  /// Otherwise, returns `false`.
   bool get isLoading => _isLoading;
 
   /// A view model that provides the [InstantConfig] data for the login form.
@@ -53,7 +53,28 @@ class InstantConfigNotifier extends ChangeNotifier {
   /// Throws an [AssertionError] if the given [FetchInstantConfigUseCase]
   /// is `null`.
   InstantConfigNotifier(this._fetchInstantConfigUseCase)
-      : assert(_fetchInstantConfigUseCase != null);
+      : assert(_fetchInstantConfigUseCase != null) {
+    setDefaults();
+  }
+
+  /// Sets the default [InstantConfig] from the given configuration values.
+  ///
+  /// Throws an [AssertionError] if one of the given parameters is `null`.
+  void setDefaults({
+    bool isLoginFormEnabled = false,
+    bool isFpsMonitorEnabled = false,
+    bool isRendererDisplayEnabled = false,
+  }) {
+    assert(isLoginFormEnabled != null);
+    assert(isFpsMonitorEnabled != null);
+    assert(isRendererDisplayEnabled != null);
+
+    _defaultInstantConfig = InstantConfig(
+      isLoginFormEnabled: isLoginFormEnabled,
+      isFpsMonitorEnabled: isFpsMonitorEnabled,
+      isRendererDisplayEnabled: isRendererDisplayEnabled,
+    );
+  }
 
   /// Initializes the [InstanceConfig].
   Future<void> initializeInstantConfig() async {
@@ -65,6 +86,12 @@ class InstantConfigNotifier extends ChangeNotifier {
 
     final config = await _fetchInstantConfigUseCase(params);
 
+    _setInstantConfig(config);
+  }
+
+  /// Sets the current [InstantConfig]'s value to the given [config] and updates
+  /// the view models.
+  void _setInstantConfig(InstantConfig config) {
     _instantConfig = config;
 
     _loginFormInstantConfigViewModel = LoginFormInstantConfigViewModel(
@@ -80,24 +107,5 @@ class InstantConfigNotifier extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
-  }
-
-  /// Sets the default [InstantConfig] from the given configuration values.
-  ///
-  /// Throws an [AssertionError] if one of the required parameters is `null`.
-  void setDefaults({
-    bool isLoginFormEnabled = false,
-    bool isFpsMonitorEnabled = false,
-    bool isRendererDisplayEnabled = false,
-  }) {
-    assert(isLoginFormEnabled != null);
-    assert(isFpsMonitorEnabled != null);
-    assert(isRendererDisplayEnabled != null);
-
-    _defaultInstantConfig = InstantConfig(
-      isLoginFormEnabled: isLoginFormEnabled,
-      isFpsMonitorEnabled: isFpsMonitorEnabled,
-      isRendererDisplayEnabled: isRendererDisplayEnabled,
-    );
   }
 }
