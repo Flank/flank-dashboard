@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/common/presentation/routes/observers/firebase_analytics_observer.dart';
+import 'package:metrics/common/presentation/routes/observers/firebase_analytics_route_observer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 

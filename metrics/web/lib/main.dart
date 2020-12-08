@@ -9,7 +9,7 @@ import 'package:metrics/common/presentation/metrics_theme/config/text_style_conf
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
-import 'package:metrics/common/presentation/routes/observers/firebase_analytics_observer.dart';
+import 'package:metrics/common/presentation/routes/observers/firebase_analytics_route_observer.dart';
 import 'package:metrics/common/presentation/routes/observers/overlay_entry_route_observer.dart';
 import 'package:metrics/common/presentation/routes/observers/toast_route_observer.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
