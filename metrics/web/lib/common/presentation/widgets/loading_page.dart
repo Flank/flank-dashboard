@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 /// A page that shows until the authentication status is unknown.
 class LoadingPage extends StatefulWidget {
-  /// A route name use to navigate.
+  /// A route name is used to navigate.
   final String routeName;
 
   /// Creates a new instance of the [LoadingPage].
