@@ -1,7 +1,7 @@
 import 'package:metrics/common/domain/entities/instant_config.dart';
 import 'package:metrics/common/domain/usecases/fetch_instant_config_usecase.dart';
 import 'package:metrics/common/domain/usecases/parameters/instant_config_param.dart';
-import 'package:metrics/common/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 

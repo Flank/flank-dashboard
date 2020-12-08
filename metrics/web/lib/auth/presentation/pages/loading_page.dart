@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
-import 'package:metrics/common/presentation/state/instant_config_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
+import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
 import 'package:provider/provider.dart';
 
 /// A page that shows until the authentication status is unknown.
@@ -94,11 +94,7 @@ class _LoadingPageState extends State<LoadingPage>
 
     _instantConfigNotifier.addListener(_initializationListener);
 
-    _instantConfigNotifier.setDefaults(
-      isLoginFormEnabled: true,
-      isFpsMonitorEnabled: false,
-      isRendererDisplayEnabled: false,
-    );
+    _instantConfigNotifier.setDefaults();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _instantConfigNotifier.initializeInstantConfig();

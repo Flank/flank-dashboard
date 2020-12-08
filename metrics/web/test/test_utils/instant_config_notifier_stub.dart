@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:metrics/common/presentation/state/instant_config_notifier.dart';
-import 'package:metrics/common/presentation/view_models/renderer_display_instant_config_view_model.dart';
-import 'package:metrics/common/presentation/view_models/login_form_instant_config_view_model.dart';
-import 'package:metrics/common/presentation/view_models/fps_monitor_instant_config_view_model.dart';
+import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/instant_config/presentation/view_models/fps_monitor_instant_config_view_model.dart';
+import 'package:metrics/instant_config/presentation/view_models/login_form_instant_config_view_model.dart';
+import 'package:metrics/instant_config/presentation/view_models/renderer_display_instant_config_view_model.dart';
 
 /// Stub implementation of the [InstantConfigNotifier].
 ///
@@ -14,8 +14,8 @@ class InstantConfigNotifierStub extends ChangeNotifier
       const LoginFormInstantConfigViewModel(isEnabled: true);
 
   @override
-  FPSMonitorInstantConfigViewModel get fpsMonitorInstantConfigViewModel =>
-      const FPSMonitorInstantConfigViewModel(isEnabled: true);
+  FpsMonitorInstantConfigViewModel get fpsMonitorInstantConfigViewModel =>
+      const FpsMonitorInstantConfigViewModel(isEnabled: true);
 
   @override
   RendererDisplayInstantConfigViewModel
@@ -30,8 +30,8 @@ class InstantConfigNotifierStub extends ChangeNotifier
 
   @override
   void setDefaults({
-    bool isLoginFormEnabled,
-    bool isFpsMonitorEnabled,
-    bool isRendererDisplayEnabled,
+    bool isLoginFormEnabled = false,
+    bool isFpsMonitorEnabled = false,
+    bool isRendererDisplayEnabled = false,
   }) {}
 }

@@ -1,4 +1,4 @@
-import 'package:metrics/common/presentation/view_models/fps_monitor_instant_config_view_model.dart';
+import 'package:metrics/instant_config/presentation/view_models/fps_monitor_instant_config_view_model.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
@@ -7,13 +7,13 @@ import '../../../test_utils/matcher_util.dart';
 
 void main() {
   group(
-    "FPSMonitorInstantConfigViewModel",
+    "FpsMonitorInstantConfigViewModel",
     () {
       test(
         "throws an AssertionError if the given is enabled is null",
         () {
           expect(
-            () => FPSMonitorInstantConfigViewModel(isEnabled: null),
+            () => FpsMonitorInstantConfigViewModel(isEnabled: null),
             MatcherUtil.throwsAssertionError,
           );
         },
@@ -24,7 +24,7 @@ void main() {
         () {
           const isEnabled = false;
 
-          final viewModel = FPSMonitorInstantConfigViewModel(
+          final viewModel = FpsMonitorInstantConfigViewModel(
             isEnabled: isEnabled,
           );
 

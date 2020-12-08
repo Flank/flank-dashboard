@@ -19,11 +19,11 @@ import 'package:metrics/common/data/repositories/firestore_project_repository.da
 import 'package:metrics/common/domain/usecases/fetch_instant_config_usecase.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/state/instant_config_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
 import 'package:metrics/project_groups/data/repositories/firestore_project_group_repository.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
 import 'package:metrics/project_groups/domain/usecases/delete_project_group_usecase.dart';

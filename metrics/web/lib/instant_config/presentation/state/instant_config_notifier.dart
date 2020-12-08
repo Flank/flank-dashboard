@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:metrics/common/domain/entities/instant_config.dart';
 import 'package:metrics/common/domain/usecases/fetch_instant_config_usecase.dart';
 import 'package:metrics/common/domain/usecases/parameters/instant_config_param.dart';
-import 'package:metrics/common/presentation/view_models/fps_monitor_instant_config_view_model.dart';
-import 'package:metrics/common/presentation/view_models/login_form_instant_config_view_model.dart';
-import 'package:metrics/common/presentation/view_models/renderer_display_instant_config_view_model.dart';
+import 'package:metrics/instant_config/presentation/view_models/fps_monitor_instant_config_view_model.dart';
+import 'package:metrics/instant_config/presentation/view_models/login_form_instant_config_view_model.dart';
+import 'package:metrics/instant_config/presentation/view_models/renderer_display_instant_config_view_model.dart';
 
 /// The [ChangeNotifier] that holds [InstantConfig]'s data.
 class InstantConfigNotifier extends ChangeNotifier {
@@ -25,7 +25,7 @@ class InstantConfigNotifier extends ChangeNotifier {
   LoginFormInstantConfigViewModel _loginFormInstantConfigViewModel;
 
   /// A view model that holds the [InstantConfig] data for the FPS monitor.
-  FPSMonitorInstantConfigViewModel _fpsMonitorInstantConfigViewModel;
+  FpsMonitorInstantConfigViewModel _fpsMonitorInstantConfigViewModel;
 
   /// A view model that holds the [InstantConfig] data for the renderer display.
   RendererDisplayInstantConfigViewModel _rendererDisplayInstantConfigViewModel;
@@ -39,7 +39,7 @@ class InstantConfigNotifier extends ChangeNotifier {
       _loginFormInstantConfigViewModel;
 
   /// A view model that provides the [InstantConfig] data for the FPS monitor.
-  FPSMonitorInstantConfigViewModel get fpsMonitorInstantConfigViewModel =>
+  FpsMonitorInstantConfigViewModel get fpsMonitorInstantConfigViewModel =>
       _fpsMonitorInstantConfigViewModel;
 
   /// A view model that provides the [InstantConfig] data for the renderer display.
@@ -70,7 +70,7 @@ class InstantConfigNotifier extends ChangeNotifier {
     _loginFormInstantConfigViewModel = LoginFormInstantConfigViewModel(
       isEnabled: _instantConfig.isLoginFormEnabled,
     );
-    _fpsMonitorInstantConfigViewModel = FPSMonitorInstantConfigViewModel(
+    _fpsMonitorInstantConfigViewModel = FpsMonitorInstantConfigViewModel(
       isEnabled: _instantConfig.isFpsMonitorEnabled,
     );
     _rendererDisplayInstantConfigViewModel =
@@ -86,9 +86,9 @@ class InstantConfigNotifier extends ChangeNotifier {
   ///
   /// Throws an [AssertionError] if one of the required parameters is `null`.
   void setDefaults({
-    @required bool isLoginFormEnabled,
-    @required bool isFpsMonitorEnabled,
-    @required bool isRendererDisplayEnabled,
+    bool isLoginFormEnabled = false,
+    bool isFpsMonitorEnabled = false,
+    bool isRendererDisplayEnabled = false,
   }) {
     assert(isLoginFormEnabled != null);
     assert(isFpsMonitorEnabled != null);
