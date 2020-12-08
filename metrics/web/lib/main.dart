@@ -63,6 +63,19 @@ class _MetricsAppState extends State<MetricsApp> {
                     );
                   },
                   initialRoute: '/',
+                  onGenerateInitialRoutes: (String initialRoute) {
+                    final isLoggedIn = Provider.of<AuthNotifier>(
+                      context,
+                      listen: false,
+                    ).isLoggedIn;
+
+                    return [
+                      RouteGenerator.generateRoute(
+                        settings: RouteSettings(name: initialRoute),
+                        isLoggedIn: isLoggedIn,
+                      ),
+                    ];
+                  },
                   onGenerateRoute: (settings) => RouteGenerator.generateRoute(
                     settings: settings,
                     isLoggedIn:
