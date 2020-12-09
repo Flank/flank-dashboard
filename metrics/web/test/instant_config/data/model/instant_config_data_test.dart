@@ -1,4 +1,4 @@
-import 'package:metrics/common/data/model/instant_config_data.dart';
+import 'package:metrics/instant_config/data/model/instant_config_data.dart';
 import 'package:test/test.dart';
 
 // ignore_for_file: prefer_const_constructors

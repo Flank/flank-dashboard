@@ -1,4 +1,4 @@
-import 'package:metrics/common/domain/usecases/parameters/instant_config_param.dart';
+import 'package:metrics/instant_config/domain/usecases/parameters/instant_config_param.dart';
 import 'package:test/test.dart';
 
 void main() {
