@@ -23,7 +23,8 @@ void main() {
 
     final dashboardRouteMatcher = MatcherUtil.namedRoute(RouteName.dashboard);
     final loginPageRouteMatcher = MatcherUtil.namedRoute(RouteName.login);
-    final loadingPageMatcher = MatcherUtil.namedRoute(RouteName.loadingPage);
+    final loadingPageRouteMatcher =
+        MatcherUtil.namedRoute(RouteName.loadingPage);
 
     setUp(() {
       authNotifier = AuthNotifierMock();
@@ -75,7 +76,7 @@ void main() {
 
         verify(observer.didPush(
           argThat(loginPageRouteMatcher),
-          argThat(loadingPageMatcher),
+          argThat(loadingPageRouteMatcher),
         )).called(1);
       },
     );
@@ -100,7 +101,7 @@ void main() {
 
         verify(observer.didPush(
           argThat(dashboardRouteMatcher),
-          argThat(loadingPageMatcher),
+          argThat(loadingPageRouteMatcher),
         )).called(1);
       },
     );
@@ -127,7 +128,7 @@ void main() {
 
         verifyNever(observer.didPush(
           any,
-          argThat(loadingPageMatcher),
+          argThat(loadingPageRouteMatcher),
         ));
       },
     );
@@ -154,7 +155,7 @@ void main() {
 
         verifyNever(observer.didPush(
           any,
-          argThat(loadingPageMatcher),
+          argThat(loadingPageRouteMatcher),
         ));
       },
     );
