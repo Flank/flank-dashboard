@@ -21,11 +21,13 @@ void main() {
     InstantConfigNotifier instantConfigNotifier;
     final observer = _NavigatorObserverMock();
 
-    final dashboardRouteMatcher =
-        MatcherUtil.namedRoute(equals(RouteName.dashboard));
-    final loginPageRouteMatcher =
-        MatcherUtil.namedRoute(equals(RouteName.login));
-    final loadingPageRouteMatcher = MatcherUtil.namedRoute(isNull);
+    final dashboardRoute = MatcherUtil.metricsNamedRoute(
+      equals(RouteName.dashboard),
+    );
+    final loginPageRoute = MatcherUtil.metricsNamedRoute(
+      equals(RouteName.login),
+    );
+    final loadingPageRoute = MatcherUtil.metricsNamedRoute(isNull);
 
     setUp(() {
       authNotifier = AuthNotifierMock();
@@ -58,6 +60,18 @@ void main() {
     );
 
     testWidgets(
+      "initializes instant config updates on init state",
+      (tester) async {
+        await tester.pumpWidget(_LoadingPageTestbed(
+          instantConfigNotifier: instantConfigNotifier,
+        ));
+
+        verify(instantConfigNotifier.initializeInstantConfig())
+            .called(equals(1));
+      },
+    );
+
+    testWidgets(
       "redirects to the login page if a user is not logged in and the remote config is initialized",
       (WidgetTester tester) async {
         await tester.pumpWidget(
@@ -71,13 +85,14 @@ void main() {
         when(authNotifier.isLoggedIn).thenReturn(false);
         when(authNotifier.isLoading).thenReturn(false);
         when(instantConfigNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isInitialized).thenReturn(true);
 
         authNotifier.notifyListeners();
         instantConfigNotifier.notifyListeners();
 
         verify(observer.didPush(
-          argThat(loginPageRouteMatcher),
-          argThat(loadingPageRouteMatcher),
+          argThat(loginPageRoute),
+          argThat(loadingPageRoute),
         )).called(1);
       },
     );
@@ -96,13 +111,14 @@ void main() {
         when(authNotifier.isLoggedIn).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
         when(instantConfigNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isInitialized).thenReturn(true);
 
         authNotifier.notifyListeners();
         instantConfigNotifier.notifyListeners();
 
         verify(observer.didPush(
-          argThat(dashboardRouteMatcher),
-          argThat(loadingPageRouteMatcher),
+          argThat(dashboardRoute),
+          argThat(loadingPageRoute),
         )).called(1);
       },
     );
@@ -118,18 +134,17 @@ void main() {
           ),
         );
 
-        clearInteractions(observer);
-
         when(authNotifier.isLoggedIn).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isLoading).thenReturn(true);
+        when(instantConfigNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isInitialized).thenReturn(false);
 
         authNotifier.notifyListeners();
         instantConfigNotifier.notifyListeners();
 
         verifyNever(observer.didPush(
           any,
-          argThat(loadingPageRouteMatcher),
+          argThat(loadingPageRoute),
         ));
       },
     );
@@ -145,18 +160,17 @@ void main() {
           ),
         );
 
-        clearInteractions(observer);
-
         when(authNotifier.isLoggedIn).thenReturn(false);
         when(authNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isLoading).thenReturn(true);
+        when(instantConfigNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isInitialized).thenReturn(false);
 
         authNotifier.notifyListeners();
         instantConfigNotifier.notifyListeners();
 
         verifyNever(observer.didPush(
           any,
-          argThat(loadingPageRouteMatcher),
+          argThat(loadingPageRoute),
         ));
       },
     );

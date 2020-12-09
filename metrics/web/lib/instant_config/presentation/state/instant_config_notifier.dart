@@ -9,7 +9,7 @@ import 'package:metrics/instant_config/presentation/view_models/renderer_display
 /// The [ChangeNotifier] that holds [InstantConfig]'s data.
 class InstantConfigNotifier extends ChangeNotifier {
   /// Indicates whether the [InstantConfig] is loading.
-  bool _isLoading = true;
+  bool _isLoading = false;
 
   /// A [FetchInstantConfigUseCase] that provides an ability to fetch
   /// the [InstantConfig].
@@ -33,6 +33,10 @@ class InstantConfigNotifier extends ChangeNotifier {
   /// Returns `true` if the [InstantConfig] is loading.
   /// Otherwise, returns `false`.
   bool get isLoading => _isLoading;
+
+  /// Returns `true` if current [InstantConfig] is not `null`.
+  /// Otherwise, returns `false`.
+  bool get isInitialized => _instantConfig != null;
 
   /// A view model that provides the [InstantConfig] data for the login form.
   LoginFormInstantConfigViewModel get loginFormInstantConfigViewModel =>
@@ -78,18 +82,17 @@ class InstantConfigNotifier extends ChangeNotifier {
 
   /// Initializes the [InstanceConfig].
   Future<void> initializeInstantConfig() async {
+    _setIsLoading(true);
+
     final params = InstantConfigParam(
       isLoginFormEnabled: _defaultInstantConfig.isLoginFormEnabled,
       isFpsMonitorEnabled: _defaultInstantConfig.isFpsMonitorEnabled,
       isRendererDisplayEnabled: _defaultInstantConfig.isRendererDisplayEnabled,
     );
-
     final config = await _fetchInstantConfigUseCase(params);
-
     _setInstantConfig(config);
 
-    _isLoading = false;
-    notifyListeners();
+    _setIsLoading(false);
   }
 
   /// Sets the current [_instantConfig] value to the given [config] and updates
@@ -107,5 +110,12 @@ class InstantConfigNotifier extends ChangeNotifier {
         RendererDisplayInstantConfigViewModel(
       isEnabled: _instantConfig.isRendererDisplayEnabled,
     );
+  }
+
+  /// Sets the current [_isLoading] value to the given [value]
+  /// and notifies listeners.
+  void _setIsLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
   }
 }

@@ -99,6 +99,48 @@ void main() {
     );
 
     test(
+      ".initializeInstantConfig() sets the .isLoading to true when called",
+      () {
+        when(_fetchInstantConfigUseCase(any)).thenAnswer(
+          (_) => Future.value(instantConfig),
+        );
+
+        notifier.setDefaults(isLoginFormEnabled: true);
+        final param = InstantConfigParam(
+          isLoginFormEnabled: true,
+          isFpsMonitorEnabled: false,
+          isRendererDisplayEnabled: false,
+        );
+
+        notifier.initializeInstantConfig();
+
+        verify(_fetchInstantConfigUseCase(param)).called(1);
+        expect(notifier.isLoading, isTrue);
+      },
+    );
+
+    test(
+      ".initializeInstantConfig() sets the .isLoading to false when finished",
+      () async {
+        when(_fetchInstantConfigUseCase(any)).thenAnswer(
+          (_) => Future.value(instantConfig),
+        );
+
+        notifier.setDefaults(isLoginFormEnabled: true);
+        final param = InstantConfigParam(
+          isLoginFormEnabled: true,
+          isFpsMonitorEnabled: false,
+          isRendererDisplayEnabled: false,
+        );
+
+        await notifier.initializeInstantConfig();
+
+        verify(_fetchInstantConfigUseCase(param)).called(1);
+        expect(notifier.isLoading, isFalse);
+      },
+    );
+
+    test(
       ".initializeInstantConfig() calls the fetch instant config use case",
       () {
         when(_fetchInstantConfigUseCase(any)).thenAnswer(
@@ -208,6 +250,26 @@ void main() {
         await notifier.initializeInstantConfig();
 
         expect(notifier.isLoading, isFalse);
+      },
+    );
+
+    test(
+      ".isInitialized returns true if the current config is initialized",
+      () async {
+        when(_fetchInstantConfigUseCase(any)).thenAnswer(
+          (_) => Future.value(instantConfig),
+        );
+
+        await notifier.initializeInstantConfig();
+
+        expect(notifier.isInitialized, isTrue);
+      },
+    );
+
+    test(
+      ".isInitialized returns false if the current config is not initialized",
+      () async {
+        expect(notifier.isInitialized, isFalse);
       },
     );
   });

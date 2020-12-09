@@ -29,6 +29,9 @@ class InstantConfigNotifierStub extends ChangeNotifier
   bool get isLoading => false;
 
   @override
+  bool get isInitialized => true;
+
+  @override
   void setDefaults({
     bool isLoginFormEnabled = false,
     bool isFpsMonitorEnabled = false,

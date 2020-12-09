@@ -117,7 +117,8 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
   void _instantConfigNotifierListener() {
-    _isConfigInitialized = !_instantConfigNotifier.isLoading;
+    _isConfigInitialized = _instantConfigNotifier.isInitialized &&
+        !_instantConfigNotifier.isLoading;
 
     _navigateIfLoaded();
   }
