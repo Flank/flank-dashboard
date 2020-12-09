@@ -145,6 +145,7 @@ class _LoadingPageState extends State<LoadingPage>
     } else {
       _navigateTo(RouteName.login);
     }
+
     _authNotifier.removeListener(_authNotifierListener);
   }
 
