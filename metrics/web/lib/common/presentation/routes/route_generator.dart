@@ -19,7 +19,10 @@ class RouteGenerator {
     assert(settings != null);
 
     if (isLoggedIn == null) {
-      return _createMetricsPageRoute(widget: LoadingPage());
+      return _createMetricsPageRoute(
+        name: RouteName.loadingPage,
+        widget: LoadingPage(),
+      );
     }
 
     if (!isLoggedIn) {

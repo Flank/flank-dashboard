@@ -34,8 +34,7 @@ class _LoadingPageState extends State<LoadingPage>
   bool _isConfigInitialized = false;
 
   /// Indicates whether the application is finished loading.
-  bool get _isLoaded =>
-      _isLoggedIn != null && _isLoggedIn && _isConfigInitialized;
+  bool get _isLoaded => _isLoggedIn != null && _isConfigInitialized;
 
   @override
   void initState() {
