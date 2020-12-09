@@ -13,10 +13,13 @@ class LoadingPage extends StatefulWidget {
   final String routeName;
 
   /// Creates a new instance of the [LoadingPage].
+  ///
+  /// If the given [routeName] is `null`, the [RouteName.dashboard] is used.
   const LoadingPage({
     Key key,
-    this.routeName,
-  }) : super(key: key);
+    String routeName,
+  })  : routeName = routeName ?? RouteName.dashboard,
+        super(key: key);
 
   @override
   _LoadingPageState createState() => _LoadingPageState();
@@ -135,18 +138,16 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Navigates depending on the [_isLoaded] state.
   ///
-  /// If [_isLoggedIn], navigates to the [RouteName.dashboard].
+  /// If [_isLoggedIn], navigates to the [LoadingPage.routeName].
   /// Otherwise, navigates to the [RouteName.login].
   void _navigateIfLoaded() {
     if (!_isLoaded) return;
 
     if (_isLoggedIn) {
-      _navigateTo(widget.routeName ?? RouteName.dashboard);
+      _navigateTo(widget.routeName);
     } else {
       _navigateTo(RouteName.login);
     }
-
-    _authNotifier.removeListener(_authNotifierListener);
   }
 
   /// Navigates to [routeName] and removes all underlying routes.
@@ -156,6 +157,7 @@ class _LoadingPageState extends State<LoadingPage>
       routeName,
       (_) => false,
     );
+    _authNotifier.removeListener(_authNotifierListener);
   }
 
   @override

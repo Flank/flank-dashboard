@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
-import 'package:metrics/common/presentation/widgets/loading_page.dart';
+import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 
