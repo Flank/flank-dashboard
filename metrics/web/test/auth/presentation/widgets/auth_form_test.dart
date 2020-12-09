@@ -21,7 +21,6 @@ void main() {
 
     setUp(() {
       instantConfigNotifier = InstantConfigNotifierMock();
-      when(instantConfigNotifier.isLoading).thenReturn(false);
     });
 
     testWidgets(
