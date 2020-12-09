@@ -14,9 +14,9 @@ class MatcherUtil {
       throwsA(isA<AuthenticationException>());
 
   /// A matcher that can be used to match named routes in test cases.
-  static Matcher namedRoute(String routeName) => isA<Route>().having(
+  static Matcher namedRoute(Matcher routeName) => isA<Route>().having(
         (route) => route?.settings?.name,
         'route name',
-        equals(routeName),
+        routeName,
       );
 }

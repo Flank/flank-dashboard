@@ -21,10 +21,11 @@ void main() {
     InstantConfigNotifier instantConfigNotifier;
     final observer = _NavigatorObserverMock();
 
-    final dashboardRouteMatcher = MatcherUtil.namedRoute(RouteName.dashboard);
-    final loginPageRouteMatcher = MatcherUtil.namedRoute(RouteName.login);
-    final loadingPageRouteMatcher =
-        MatcherUtil.namedRoute(RouteName.loadingPage);
+    final dashboardRouteMatcher =
+        MatcherUtil.namedRoute(equals(RouteName.dashboard));
+    final loginPageRouteMatcher =
+        MatcherUtil.namedRoute(equals(RouteName.login));
+    final loadingPageRouteMatcher = MatcherUtil.namedRoute(isNull);
 
     setUp(() {
       authNotifier = AuthNotifierMock();
