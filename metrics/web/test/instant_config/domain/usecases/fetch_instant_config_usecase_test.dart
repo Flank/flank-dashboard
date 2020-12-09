@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/domain/entities/instant_config.dart';
-import 'package:metrics/common/domain/repositories/instant_config_repository.dart';
-import 'package:metrics/common/domain/usecases/fetch_instant_config_usecase.dart';
-import 'package:metrics/common/domain/usecases/parameters/instant_config_param.dart';
+import 'package:metrics/instant_config/domain/entities/instant_config.dart';
+import 'package:metrics/instant_config/domain/repositories/instant_config_repository.dart';
+import 'package:metrics/instant_config/domain/usecases/fetch_instant_config_usecase.dart';
+import 'package:metrics/instant_config/domain/usecases/parameters/instant_config_param.dart';
 import 'package:mockito/mockito.dart';
 
 // ignore_for_file: avoid_redundant_argument_values

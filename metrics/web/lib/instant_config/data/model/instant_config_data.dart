@@ -1,4 +1,4 @@
-import 'package:metrics/common/domain/entities/instant_config.dart';
+import 'package:metrics/instant_config/domain/entities/instant_config.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// A [DataModel] that represents the [InstantConfig] entity.

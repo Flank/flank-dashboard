@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/common/domain/entities/instant_config.dart';
+import 'package:metrics/instant_config/domain/entities/instant_config.dart';
 
 // ignore_for_file: prefer_const_constructors
 

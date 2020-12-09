@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:metrics/common/domain/entities/instant_config.dart';
+import 'package:metrics/instant_config/domain/entities/instant_config.dart';
 
 /// A base class for instant config repositories.
 ///

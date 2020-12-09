@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:metrics/base/domain/usecases/usecase.dart';
-import 'package:metrics/common/domain/entities/instant_config.dart';
-import 'package:metrics/common/domain/repositories/instant_config_repository.dart';
-import 'package:metrics/common/domain/usecases/parameters/instant_config_param.dart';
+import 'package:metrics/instant_config/domain/entities/instant_config.dart';
+import 'package:metrics/instant_config/domain/repositories/instant_config_repository.dart';
+import 'package:metrics/instant_config/domain/usecases/parameters/instant_config_param.dart';
 
 /// A [UseCase] that provides an ability to fetch the [InstantConfig].
 class FetchInstantConfigUseCase
