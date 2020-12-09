@@ -3,6 +3,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
+import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
 import 'package:provider/provider.dart';
 
 /// A page that shows until the authentication status is unknown.
@@ -22,12 +23,27 @@ class _LoadingPageState extends State<LoadingPage>
   /// An [AuthNotifier] needed to remove added listeners in the [dispose] method.
   AuthNotifier _authNotifier;
 
+  /// An [InstantConfigNotifier] needed to initialize the [InstantConfig] and
+  /// remove added listeners in the [dispose] method.
+  InstantConfigNotifier _instantConfigNotifier;
+
+  /// Indicates whether a user is logged in or not.
+  bool _isLoggedIn;
+
+  /// Indicates whether an instant config is initialized or not.
+  bool _isConfigInitialized = false;
+
+  /// Indicates whether the application is finished loading.
+  bool get _isLoaded => _isLoggedIn != null && _isConfigInitialized;
+
   @override
   void initState() {
-    _initAnimation();
-    _subscribeToAuthUpdates();
-
     super.initState();
+
+    _initAnimation();
+
+    _subscribeToAuthUpdates();
+    _subscribeToInstantConfigUpdates();
   }
 
   @override
@@ -70,19 +86,51 @@ class _LoadingPageState extends State<LoadingPage>
   /// Subscribes to authentication updates.
   void _subscribeToAuthUpdates() {
     _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+
     _authNotifier.addListener(_authNotifierListener);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _authNotifier.subscribeToAuthenticationUpdates();
     });
   }
 
-  /// Navigates from loading page corresponding to authentication status.
+  /// Subscribes to instant config updates.
+  void _subscribeToInstantConfigUpdates() {
+    _instantConfigNotifier = Provider.of<InstantConfigNotifier>(
+      context,
+      listen: false,
+    );
+
+    _instantConfigNotifier.addListener(_instantConfigNotifierListener);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _instantConfigNotifier.initializeInstantConfig();
+    });
+  }
+
+  /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
   void _authNotifierListener() {
-    final isLoggedIn = _authNotifier.isLoggedIn;
+    _isLoggedIn = _authNotifier.isLoggedIn;
 
-    if (isLoggedIn == null) return;
+    _navigateIfLoaded();
+  }
 
-    if (isLoggedIn) {
+  /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
+  void _instantConfigNotifierListener() {
+    _isConfigInitialized = _instantConfigNotifier.isInitialized &&
+        !_instantConfigNotifier.isLoading;
+
+    _navigateIfLoaded();
+  }
+
+  /// Navigates depending on the [_isLoaded] state.
+  ///
+  /// If [_isLoggedIn], navigates to the [RouteName.dashboard].
+  /// Otherwise, navigates to the [RouteName.login].
+  void _navigateIfLoaded() {
+    if (!_isLoaded) return;
+
+    if (_isLoggedIn) {
       _navigateTo(RouteName.dashboard);
     } else {
       _navigateTo(RouteName.login);
@@ -102,6 +150,7 @@ class _LoadingPageState extends State<LoadingPage>
   void dispose() {
     _animationController.dispose();
     _authNotifier.removeListener(_authNotifierListener);
+    _instantConfigNotifier.removeListener(_instantConfigNotifierListener);
     super.dispose();
   }
 }

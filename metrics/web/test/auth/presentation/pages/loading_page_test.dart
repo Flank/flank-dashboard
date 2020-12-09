@@ -1,35 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/pages/loading_page.dart';
-import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
-import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
 import 'package:mockito/mockito.dart';
-import 'package:network_image_mock/network_image_mock.dart';
 import 'package:provider/provider.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
+import '../../../test_utils/instant_config_notifier_mock.dart';
+import '../../../test_utils/matcher_util.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("LoadingPage", () {
+    AuthNotifier authNotifier;
+    InstantConfigNotifier instantConfigNotifier;
+    final observer = _NavigatorObserverMock();
+
+    final dashboardRoute = MatcherUtil.metricsNamedRoute(
+      equals(RouteName.dashboard),
+    );
+    final loginPageRoute = MatcherUtil.metricsNamedRoute(
+      equals(RouteName.login),
+    );
+    final loadingPageRoute = MatcherUtil.metricsNamedRoute(isNull);
+
+    setUp(() {
+      authNotifier = AuthNotifierMock();
+      instantConfigNotifier = InstantConfigNotifierMock();
+    });
+
+    tearDown(() {
+      reset(observer);
+    });
+
     testWidgets(
       "displayed while the authentication status is unknown",
       (WidgetTester tester) async {
-        await tester.pumpWidget(const _LoadingPageTestbed());
+        await tester.pumpWidget(_LoadingPageTestbed());
 
         expect(find.byType(LoadingPage), findsOneWidget);
       },
     );
 
     testWidgets(
-      "subscribes to authentication updates on initState",
+      "subscribes to authentication updates on init state",
       (tester) async {
-        final authNotifier = AuthNotifierMock();
-
         await tester.pumpWidget(_LoadingPageTestbed(
           authNotifier: authNotifier,
         ));
@@ -40,52 +60,125 @@ void main() {
     );
 
     testWidgets(
-      "redirects to the LoginPage if a user is not logged in",
-      (WidgetTester tester) async {
-        final authNotifier = AuthNotifierMock();
+      "initializes instant config updates on init state",
+      (tester) async {
+        await tester.pumpWidget(_LoadingPageTestbed(
+          instantConfigNotifier: instantConfigNotifier,
+        ));
 
-        await tester
-            .pumpWidget(_LoadingPageTestbed(authNotifier: authNotifier));
-
-        when(authNotifier.isLoggedIn).thenReturn(false);
-        when(authNotifier.isLoading).thenReturn(false);
-        authNotifier.notifyListeners();
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
-        });
-
-        expect(find.byType(LoginPage), findsOneWidget);
+        verify(instantConfigNotifier.initializeInstantConfig())
+            .called(equals(1));
       },
     );
 
     testWidgets(
-      "redirects to the DashboardPage if a user is logged in",
+      "redirects to the login page if a user is not logged in and the remote config is initialized",
       (WidgetTester tester) async {
-        final authNotifier = AuthNotifierMock();
-
         await tester.pumpWidget(
-          _LoadingPageTestbed(authNotifier: authNotifier),
+          _LoadingPageTestbed(
+            authNotifier: authNotifier,
+            instantConfigNotifier: instantConfigNotifier,
+            navigatorObserver: observer,
+          ),
+        );
+
+        when(authNotifier.isLoggedIn).thenReturn(false);
+        when(authNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isInitialized).thenReturn(true);
+
+        authNotifier.notifyListeners();
+        instantConfigNotifier.notifyListeners();
+
+        verify(observer.didPush(
+          argThat(loginPageRoute),
+          argThat(loadingPageRoute),
+        )).called(1);
+      },
+    );
+
+    testWidgets(
+      "redirects to the dashboard page if a user is logged in and the remote config is initialized",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          _LoadingPageTestbed(
+            authNotifier: authNotifier,
+            instantConfigNotifier: instantConfigNotifier,
+            navigatorObserver: observer,
+          ),
         );
 
         when(authNotifier.isLoggedIn).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isInitialized).thenReturn(true);
+
         authNotifier.notifyListeners();
+        instantConfigNotifier.notifyListeners();
 
-        await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
-        });
+        verify(observer.didPush(
+          argThat(dashboardRoute),
+          argThat(loadingPageRoute),
+        )).called(1);
+      },
+    );
 
-        expect(find.byType(DashboardPage), findsOneWidget);
+    testWidgets(
+      "does not redirect from the loading page if a user is logged in and the remote config is not initialized",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          _LoadingPageTestbed(
+            authNotifier: authNotifier,
+            instantConfigNotifier: instantConfigNotifier,
+            navigatorObserver: observer,
+          ),
+        );
+
+        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isInitialized).thenReturn(false);
+
+        authNotifier.notifyListeners();
+        instantConfigNotifier.notifyListeners();
+
+        verifyNever(observer.didPush(
+          any,
+          argThat(loadingPageRoute),
+        ));
+      },
+    );
+
+    testWidgets(
+      "does not redirect from the loading page if a user is not logged in and the remote config is not initialized",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          _LoadingPageTestbed(
+            authNotifier: authNotifier,
+            instantConfigNotifier: instantConfigNotifier,
+            navigatorObserver: observer,
+          ),
+        );
+
+        when(authNotifier.isLoggedIn).thenReturn(false);
+        when(authNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isLoading).thenReturn(false);
+        when(instantConfigNotifier.isInitialized).thenReturn(false);
+
+        authNotifier.notifyListeners();
+        instantConfigNotifier.notifyListeners();
+
+        verifyNever(observer.didPush(
+          any,
+          argThat(loadingPageRoute),
+        ));
       },
     );
 
     testWidgets(
       "displays the PlatformBrightnessObserver widget",
       (tester) async {
-        await tester.pumpWidget(
-          const _LoadingPageTestbed(),
-        );
+        await tester.pumpWidget(_LoadingPageTestbed());
 
         expect(find.byType(PlatformBrightnessObserver), findsOneWidget);
       },
@@ -95,18 +188,30 @@ void main() {
 
 /// A testbed widget, used to test the [LoadingPage] widget.
 class _LoadingPageTestbed extends StatelessWidget {
-  /// An [AuthNotifier] used in tests.
+  /// An [AuthNotifier] to use in tests.
   final AuthNotifier authNotifier;
 
-  /// Creates the [_LoadingPageTestbed] with the given [authNotifier].
-  const _LoadingPageTestbed({
+  /// An [InstantConfigNotifier] to use in tests.
+  final InstantConfigNotifier instantConfigNotifier;
+
+  /// A [NavigatorObserver] to use in tests.
+  final NavigatorObserver navigatorObserver;
+
+  /// Creates the loading page testbed with the given parameters.
+  ///
+  /// If the given [navigatorObserver] is `null`,
+  /// an instance of [NavigatorObserver] is used.
+  _LoadingPageTestbed({
     this.authNotifier,
-  });
+    this.instantConfigNotifier,
+    NavigatorObserver navigatorObserver,
+  }) : navigatorObserver = navigatorObserver ?? NavigatorObserver();
 
   @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
       authNotifier: authNotifier,
+      instantConfigNotifier: instantConfigNotifier,
       child: Builder(
         builder: (context) {
           return MaterialApp(
@@ -116,9 +221,12 @@ class _LoadingPageTestbed extends StatelessWidget {
               isLoggedIn:
                   Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
+            navigatorObservers: [navigatorObserver],
           );
         },
       ),
     );
   }
 }
+
+class _NavigatorObserverMock extends Mock implements NavigatorObserver {}

@@ -4,11 +4,13 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'analytics_notifier_stub.dart';
 import 'auth_notifier_stub.dart';
+import 'instant_config_notifier_stub.dart';
 import 'project_groups_notifier_stub.dart';
 import 'project_metrics_notifier_stub.dart';
 import 'projects_notifier_stub.dart';
@@ -37,6 +39,9 @@ class TestInjectionContainer extends StatelessWidget {
   /// A [ProjectGroupsNotifier] to inject.
   final ProjectGroupsNotifier projectGroupsNotifier;
 
+  /// A [InstantConfigNotifier] to inject.
+  final InstantConfigNotifier instantConfigNotifier;
+
   /// Creates the [TestInjectionContainer] with the given notifiers.
   ///
   /// If the [metricsNotifier] is `null`, the [ProjectMetricsNotifierStub] is used.
@@ -45,6 +50,7 @@ class TestInjectionContainer extends StatelessWidget {
   /// If the [themeNotifier] is `null`, the [ThemeNotifier] is used.
   /// If the [projectsNotifier] is `null`, the [ProjectsNotifierStub] is used.
   /// If the [projectGroupsNotifier] is `null`, the [ProjectGroupsNotifierStub] is used.
+  /// If the [instantConfigNotifier] is `null`, the [InstantConfigNotifierStub] is used.
   const TestInjectionContainer({
     Key key,
     this.child,
@@ -54,6 +60,7 @@ class TestInjectionContainer extends StatelessWidget {
     this.themeNotifier,
     this.projectsNotifier,
     this.projectGroupsNotifier,
+    this.instantConfigNotifier,
   }) : super(key: key);
 
   @override
@@ -77,6 +84,9 @@ class TestInjectionContainer extends StatelessWidget {
         ),
         ChangeNotifierProvider<ProjectGroupsNotifier>(
           create: (_) => projectGroupsNotifier ?? ProjectGroupsNotifierStub(),
+        ),
+        ChangeNotifierProvider<InstantConfigNotifier>(
+          create: (_) => instantConfigNotifier ?? InstantConfigNotifierStub(),
         ),
       ],
       child: child,
