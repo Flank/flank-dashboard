@@ -84,12 +84,12 @@ void main() {
     testWidgets(
       "navigates back to the previous screen",
       (WidgetTester tester) async {
-        final previousScreen = _NavigationTestbed();
-        final previousScreenFinder = find.byWidget(previousScreen);
+        final initialPage = _NavigationTestbed();
+        final initialPageFinder = find.byWidget(initialPage);
 
-        await tester.pumpWidget(previousScreen);
+        await tester.pumpWidget(initialPage);
 
-        await tester.tap(previousScreenFinder);
+        await tester.tap(initialPageFinder);
         await mockNetworkImagesFor(() {
           return tester.pumpAndSettle();
         });
@@ -99,7 +99,8 @@ void main() {
         await tester.tap(find.byTooltip(CommonStrings.navigateBack));
         await tester.pumpAndSettle();
 
-        expect(previousScreenFinder, findsOneWidget);
+        expect(find.byType(MetricsPageTitle), findsNothing);
+        expect(initialPageFinder, findsOneWidget);
       },
     );
 

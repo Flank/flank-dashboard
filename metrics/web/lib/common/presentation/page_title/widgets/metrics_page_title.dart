@@ -50,15 +50,15 @@ class MetricsPageTitle extends StatelessWidget {
     );
   }
 
-  /// If the navigator can pop, navigates back to the previous page.
-  /// Otherwise, navigates to the dashboard page.
+  /// Navigates back to the previous page if [Navigator,canPop].
+  /// Otherwise, navigates to the [RouteName.dashboard] page.
   void _navigateBack(BuildContext context) {
     final _navigator = Navigator.of(context);
 
     if (_navigator.canPop()) {
       _navigator.pop();
     } else {
-      _navigator.pushNamedAndRemoveUntil(RouteName.dashboard, (route) => false);
+      _navigator.pushNamed(RouteName.dashboard);
     }
   }
 }
