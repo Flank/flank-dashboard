@@ -1,180 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
+import 'package:metrics/auth/presentation/widgets/password_sign_in_option.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_appearance_strategy.dart';
-import 'package:metrics/base/presentation/widgets/tappable_area.dart';
-import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
+import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/instant_config/presentation/view_models/login_form_instant_config_view_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
-import '../../../test_utils/auth_notifier_mock.dart';
+import '../../../test_utils/instant_config_notifier_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("AuthForm", () {
-    const passwordVisibilityIconColor = Colors.red;
-    const metricsThemeData = MetricsThemeData(
-      loginTheme: LoginThemeData(
-        passwordVisibilityIconColor: passwordVisibilityIconColor,
-      ),
-    );
-
-    final emailInputFinder =
-        find.widgetWithText(MetricsTextFormField, AuthStrings.email);
-    final passwordInputFinder =
-        find.widgetWithText(MetricsTextFormField, AuthStrings.password);
-    final submitButtonFinder =
-        find.widgetWithText(MetricsPositiveButton, AuthStrings.signIn);
-
-    const testEmail = 'test@email.com';
-    const testPassword = 'testPassword';
-    const errorMessage = 'Error Message';
-
-    AuthNotifier authNotifier;
-
-    Widget _getPasswordFieldSuffixIcon(WidgetTester tester) {
-      final passwordField = tester.widget<MetricsTextFormField>(
-        passwordInputFinder,
-      );
-
-      return passwordField.suffixIcon;
-    }
+    InstantConfigNotifier instantConfigNotifier;
 
     setUp(() {
-      authNotifier = AuthNotifierMock();
-      when(authNotifier.isLoading).thenReturn(false);
+      instantConfigNotifier = InstantConfigNotifierMock();
     });
-
-    testWidgets(
-      "email input shows an error message if a value is empty on submit",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _AuthFormTestbed(authNotifier: authNotifier),
-          );
-        });
-
-        await tester.tap(submitButtonFinder);
-        await tester.pumpAndSettle();
-
-        expect(
-          find.text(AuthStrings.emailRequiredErrorMessage),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets(
-      "email input shows an error message if a value is not a valid email on submit",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _AuthFormTestbed(authNotifier: authNotifier),
-          );
-        });
-
-        await tester.enterText(emailInputFinder, 'notAnEmail');
-
-        await tester.tap(submitButtonFinder);
-        await tester.pump();
-
-        expect(find.text(AuthStrings.invalidEmailErrorMessage), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "password input shows an error message if a value is empty on submit",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _AuthFormTestbed(authNotifier: authNotifier),
-          );
-        });
-
-        await tester.tap(submitButtonFinder);
-        await tester.pump();
-
-        expect(
-          find.text(AuthStrings.passwordRequiredErrorMessage),
-          findsOneWidget,
-        );
-      },
-    );
-
-    testWidgets(
-      "uses the AuthNotifier to sign in a user with login and password",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _AuthFormTestbed(authNotifier: authNotifier),
-          );
-        });
-
-        await tester.enterText(emailInputFinder, testEmail);
-        await tester.enterText(passwordInputFinder, testPassword);
-        await tester.tap(submitButtonFinder);
-
-        verify(authNotifier.signInWithEmailAndPassword(testEmail, testPassword))
-            .called(equals(1));
-      },
-    );
-
-    testWidgets(
-      "shows a progress indicator if the sign in process is in progress",
-      (WidgetTester tester) async {
-        when(authNotifier.authErrorMessage).thenReturn(null);
-        when(authNotifier.isLoading).thenReturn(true);
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_AuthFormTestbed(
-            authNotifier: authNotifier,
-          ));
-        });
-
-        final finder = find.byType(LinearProgressIndicator);
-
-        expect(finder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "disables the submit button if the sign in process is in progress",
-      (WidgetTester tester) async {
-        when(authNotifier.authErrorMessage).thenReturn(null);
-        when(authNotifier.isLoading).thenReturn(true);
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_AuthFormTestbed(
-            authNotifier: authNotifier,
-          ));
-        });
-
-        final button = tester.widget<RaisedButton>(
-          find.descendant(
-            of: submitButtonFinder,
-            matching: find.byType(RaisedButton),
-          ),
-        );
-
-        expect(button.enabled, isFalse);
-      },
-    );
 
     testWidgets(
       "displays the google sign in option button with google sign in strategy",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _AuthFormTestbed(authNotifier: authNotifier),
+            const _AuthFormTestbed(),
           );
         });
+
         final googleSignInButton = tester.widget<SignInOptionButton>(
           find.widgetWithText(SignInOptionButton, AuthStrings.signInWithGoogle),
         );
@@ -186,129 +43,36 @@ void main() {
     );
 
     testWidgets(
-      "applies the enabled eye icon to the password input field if the password is obscured",
+      "displays the password sign in option if the password sign in option is enabled in instant config",
       (WidgetTester tester) async {
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            const _AuthFormTestbed(),
-          ),
+        when(instantConfigNotifier.loginFormInstantConfigViewModel).thenReturn(
+          const LoginFormInstantConfigViewModel(isEnabled: true),
         );
-
-        final suffixIcon = _getPasswordFieldSuffixIcon(tester);
-        final imageWidget = tester.widget<Image>(find.descendant(
-          of: find.byWidget(suffixIcon),
-          matching: find.byType(Image),
-        ));
-        final networkImage = imageWidget.image as NetworkImage;
-
-        expect(networkImage.url, 'icons/eye_on.svg');
-      },
-    );
-
-    testWidgets(
-      "applies the disabled eye icon to the password input field if the password is not obscured",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            const _AuthFormTestbed(),
-          ),
-        );
-
-        final suffixIcon = _getPasswordFieldSuffixIcon(tester);
-
-        await tester.tap(find.byWidget(suffixIcon));
-        await tester.pump();
-
-        final suffixIconAfterTap = _getPasswordFieldSuffixIcon(tester);
-        final imageWidget = tester.widget<Image>(find.descendant(
-          of: find.byWidget(suffixIconAfterTap),
-          matching: find.byType(Image),
-        ));
-        final networkImage = imageWidget.image as NetworkImage;
-
-        expect(networkImage.url, 'icons/eye_off.svg');
-      },
-    );
-
-    testWidgets(
-      "applies the color from the metrics theme to the password visibility icon",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            const _AuthFormTestbed(
-              metricsThemeData: metricsThemeData,
-            ),
-          ),
-        );
-
-        final suffixIcon = _getPasswordFieldSuffixIcon(tester);
-        final image = tester.widget<Image>(find.descendant(
-          of: find.byWidget(suffixIcon),
-          matching: find.byType(Image),
-        ));
-
-        expect(image.color, equals(passwordVisibilityIconColor));
-      },
-    );
-
-    testWidgets(
-      "applies a tappable area to the suffix icon of the password field",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(
-          () => tester.pumpWidget(
-            const _AuthFormTestbed(),
-          ),
-        );
-
-        final suffixIcon = _getPasswordFieldSuffixIcon(tester);
-        final imageWidget = tester.widget<Image>(find.descendant(
-          of: find.byWidget(suffixIcon),
-          matching: find.byType(Image),
-        ));
-        final tappableAreaFinder = find.ancestor(
-          of: find.byWidget(imageWidget),
-          matching: find.byType(TappableArea),
-        );
-
-        expect(tappableAreaFinder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "applies the email error message to the email field",
-      (tester) async {
-        when(authNotifier.emailErrorMessage).thenReturn(errorMessage);
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _AuthFormTestbed(authNotifier: authNotifier),
+            _AuthFormTestbed(instantConfigNotifier: instantConfigNotifier),
           );
         });
 
-        final emailField = tester.widget<MetricsTextFormField>(
-          emailInputFinder,
-        );
-
-        expect(emailField.errorText, equals(errorMessage));
+        expect(find.byType(PasswordSignInOption), findsOneWidget);
       },
     );
 
     testWidgets(
-      "applies the password error message to the password field",
-      (tester) async {
-        when(authNotifier.passwordErrorMessage).thenReturn(errorMessage);
+      "does not display the password sign in option if the password sign in option is not enabled in instant config",
+      (WidgetTester tester) async {
+        when(instantConfigNotifier.loginFormInstantConfigViewModel).thenReturn(
+          const LoginFormInstantConfigViewModel(isEnabled: false),
+        );
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _AuthFormTestbed(authNotifier: authNotifier),
+            _AuthFormTestbed(instantConfigNotifier: instantConfigNotifier),
           );
         });
 
-        final passwordField = tester.widget<MetricsTextFormField>(
-          passwordInputFinder,
-        );
-
-        expect(passwordField.errorText, equals(errorMessage));
+        expect(find.byType(PasswordSignInOption), findsNothing);
       },
     );
   });
@@ -316,22 +80,22 @@ void main() {
 
 /// A testbed widget used to test the [AuthForm] widget.
 class _AuthFormTestbed extends StatelessWidget {
-  /// An [AuthNotifier] used in tests.
-  final AuthNotifier authNotifier;
+  /// An [InstantConfigNotifier] used in tests.
+  final InstantConfigNotifier instantConfigNotifier;
 
   /// A [MetricsThemeData] to use in tests.
   final MetricsThemeData metricsThemeData;
 
-  /// Creates the [_AuthFormTestbed] with the given [authNotifier].
+  /// Creates the [_AuthFormTestbed] with the given [instantConfigNotifier].
   const _AuthFormTestbed({
     this.metricsThemeData = const MetricsThemeData(),
-    this.authNotifier,
+    this.instantConfigNotifier,
   });
 
   @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
-      authNotifier: authNotifier,
+      instantConfigNotifier: instantConfigNotifier,
       child: MetricsThemedTestbed(
         metricsThemeData: metricsThemeData,
         body: AuthForm(),
