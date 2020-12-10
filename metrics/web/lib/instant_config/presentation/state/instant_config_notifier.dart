@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:metrics/instant_config/domain/entities/instant_config.dart';
 import 'package:metrics/instant_config/domain/usecases/fetch_instant_config_usecase.dart';
 import 'package:metrics/instant_config/domain/usecases/parameters/instant_config_param.dart';
+import 'package:metrics/instant_config/presentation/view_models/debug_menu_instant_config_view_model.dart';
 import 'package:metrics/instant_config/presentation/view_models/fps_monitor_instant_config_view_model.dart';
 import 'package:metrics/instant_config/presentation/view_models/login_form_instant_config_view_model.dart';
 import 'package:metrics/instant_config/presentation/view_models/renderer_display_instant_config_view_model.dart';
@@ -30,6 +31,9 @@ class InstantConfigNotifier extends ChangeNotifier {
   /// A view model that holds the [InstantConfig] data for the renderer display.
   RendererDisplayInstantConfigViewModel _rendererDisplayInstantConfigViewModel;
 
+  /// A view model that holds the [InstantConfig] data for the debug menu.
+  DebugMenuInstantConfigViewModel _debugMenuInstantConfigViewModel;
+
   /// Returns `true` if the [InstantConfig] is loading.
   /// Otherwise, returns `false`.
   bool get isLoading => _isLoading;
@@ -51,6 +55,10 @@ class InstantConfigNotifier extends ChangeNotifier {
       get rendererDisplayInstantConfigViewModel =>
           _rendererDisplayInstantConfigViewModel;
 
+  /// A view model that provides the [InstantConfig] data for the debug menu.
+  DebugMenuInstantConfigViewModel get debugMenuInstantConfigViewModel =>
+      _debugMenuInstantConfigViewModel;
+
   /// Creates an instance of the [InstantConfigNotifier]
   /// with the given [FetchInstantConfigUseCase].
   ///
@@ -68,15 +76,18 @@ class InstantConfigNotifier extends ChangeNotifier {
     bool isLoginFormEnabled = false,
     bool isFpsMonitorEnabled = false,
     bool isRendererDisplayEnabled = false,
+    bool isDebugMenuEnabled = false,
   }) {
     assert(isLoginFormEnabled != null);
     assert(isFpsMonitorEnabled != null);
     assert(isRendererDisplayEnabled != null);
+    assert(isDebugMenuEnabled != null);
 
     _defaultInstantConfig = InstantConfig(
       isLoginFormEnabled: isLoginFormEnabled,
       isFpsMonitorEnabled: isFpsMonitorEnabled,
       isRendererDisplayEnabled: isRendererDisplayEnabled,
+      isDebugMenuEnabled: isDebugMenuEnabled,
     );
   }
 
@@ -88,6 +99,7 @@ class InstantConfigNotifier extends ChangeNotifier {
       isLoginFormEnabled: _defaultInstantConfig.isLoginFormEnabled,
       isFpsMonitorEnabled: _defaultInstantConfig.isFpsMonitorEnabled,
       isRendererDisplayEnabled: _defaultInstantConfig.isRendererDisplayEnabled,
+      isDebugMenuEnabled: _defaultInstantConfig.isDebugMenuEnabled,
     );
     final config = await _fetchInstantConfigUseCase(params);
     _setInstantConfig(config);
@@ -109,6 +121,9 @@ class InstantConfigNotifier extends ChangeNotifier {
     _rendererDisplayInstantConfigViewModel =
         RendererDisplayInstantConfigViewModel(
       isEnabled: _instantConfig.isRendererDisplayEnabled,
+    );
+    _debugMenuInstantConfigViewModel = DebugMenuInstantConfigViewModel(
+      isEnabled: _instantConfig.isDebugMenuEnabled,
     );
   }
 

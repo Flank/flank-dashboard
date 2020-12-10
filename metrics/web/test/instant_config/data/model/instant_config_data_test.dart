@@ -8,11 +8,13 @@ void main() {
     const isLoginFormEnabled = true;
     const isFpsMonitorEnabled = true;
     const isRendererDisplayEnabled = true;
+    const isDebugMenuEnabled = true;
 
     const json = {
       'isLoginFormEnabled': isLoginFormEnabled,
       'isFpsMonitorEnabled': isFpsMonitorEnabled,
       'isRendererDisplayEnabled': isRendererDisplayEnabled,
+      'isDebugMenuEnabled': isDebugMenuEnabled,
     };
 
     test(
@@ -31,6 +33,7 @@ void main() {
           isLoginFormEnabled: isLoginFormEnabled,
           isFpsMonitorEnabled: isFpsMonitorEnabled,
           isRendererDisplayEnabled: isRendererDisplayEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
         );
 
         final config = InstantConfigData.fromJson(json);
@@ -46,6 +49,7 @@ void main() {
           isLoginFormEnabled: isLoginFormEnabled,
           isFpsMonitorEnabled: isFpsMonitorEnabled,
           isRendererDisplayEnabled: isRendererDisplayEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
         );
 
         expect(config.toJson(), equals(json));

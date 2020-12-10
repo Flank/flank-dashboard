@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/instant_config/presentation/view_models/debug_menu_instant_config_view_model.dart';
 import 'package:metrics/instant_config/presentation/view_models/fps_monitor_instant_config_view_model.dart';
 import 'package:metrics/instant_config/presentation/view_models/login_form_instant_config_view_model.dart';
 import 'package:metrics/instant_config/presentation/view_models/renderer_display_instant_config_view_model.dart';
@@ -23,6 +24,10 @@ class InstantConfigNotifierStub extends ChangeNotifier
           const RendererDisplayInstantConfigViewModel(isEnabled: true);
 
   @override
+  DebugMenuInstantConfigViewModel get debugMenuInstantConfigViewModel =>
+      const DebugMenuInstantConfigViewModel(isEnabled: true);
+
+  @override
   Future<void> initializeInstantConfig() async {}
 
   @override
@@ -36,5 +41,6 @@ class InstantConfigNotifierStub extends ChangeNotifier
     bool isLoginFormEnabled = false,
     bool isFpsMonitorEnabled = false,
     bool isRendererDisplayEnabled = false,
+    bool isDebugMenuEnabled = false,
   }) {}
 }

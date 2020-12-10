@@ -32,12 +32,15 @@ class FetchInstantConfigUseCase
             config?.isFpsMonitorEnabled ?? params.isFpsMonitorEnabled,
         isRendererDisplayEnabled:
             config?.isRendererDisplayEnabled ?? params.isRendererDisplayEnabled,
+        isDebugMenuEnabled:
+            config?.isDebugMenuEnabled ?? params.isDebugMenuEnabled,
       );
     } catch (_) {
       return InstantConfig(
         isLoginFormEnabled: params.isLoginFormEnabled,
         isFpsMonitorEnabled: params.isFpsMonitorEnabled,
         isRendererDisplayEnabled: params.isRendererDisplayEnabled,
+        isDebugMenuEnabled: params.isDebugMenuEnabled,
       );
     }
   }

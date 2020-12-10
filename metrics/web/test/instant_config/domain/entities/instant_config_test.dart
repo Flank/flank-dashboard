@@ -11,11 +11,13 @@ void main() {
         const isLoginFormEnabled = true;
         const isFpsMonitorEnabled = false;
         const isRendererDisplayEnabled = false;
+        const isDebugMenuEnabled = true;
 
         final config = InstantConfig(
           isLoginFormEnabled: isLoginFormEnabled,
           isFpsMonitorEnabled: isFpsMonitorEnabled,
           isRendererDisplayEnabled: isRendererDisplayEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
         );
 
         expect(config.isLoginFormEnabled, equals(isLoginFormEnabled));
@@ -24,6 +26,7 @@ void main() {
           config.isRendererDisplayEnabled,
           equals(isRendererDisplayEnabled),
         );
+        expect(config.isDebugMenuEnabled, equals(isDebugMenuEnabled));
       },
     );
   });
