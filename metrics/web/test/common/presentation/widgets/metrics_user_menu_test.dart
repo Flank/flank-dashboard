@@ -132,6 +132,21 @@ void main() {
     );
 
     testWidgets(
+      "applies the text style from the user menu theme to the debug menu Text widget",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _MetricsUserMenuTestbed(
+          theme: testTheme,
+        ));
+
+        final textWidget = tester.widget<Text>(
+          find.text(CommonStrings.debugMenu),
+        );
+
+        expect(textWidget.style, equals(testTextStyle));
+      },
+    );
+
+    testWidgets(
       "applies a tappable area to the project group text widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsUserMenuTestbed());
@@ -152,6 +167,20 @@ void main() {
 
         final finder = find.ancestor(
           of: find.text(CommonStrings.logOut),
+          matching: find.byType(TappableArea),
+        );
+
+        expect(finder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies a tappable area to the debug menu text widget",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _MetricsUserMenuTestbed());
+
+        final finder = find.ancestor(
+          of: find.text(CommonStrings.debugMenu),
           matching: find.byType(TappableArea),
         );
 

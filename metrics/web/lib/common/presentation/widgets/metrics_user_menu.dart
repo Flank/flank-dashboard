@@ -99,15 +99,21 @@ class MetricsUserMenu extends StatelessWidget {
                   return notifier.debugMenuInstantConfigViewModel.isEnabled;
                 },
                 builder: (_, isDebugMenuEnabled, __) {
-                  return isDebugMenuEnabled
-                      ? Padding(
+                  if (isDebugMenuEnabled) {
+                    return Padding(
                           padding: itemPadding,
-                          child: Text(
-                            CommonStrings.debugMenu,
-                            style: userMenuTextStyle,
+                          child: TappableArea(
+                            onTap: () {},
+                            builder: (context, isHovered, child) => child,
+                            child: Text(
+                              CommonStrings.debugMenu,
+                              style: userMenuTextStyle,
+                            ),
                           ),
-                        )
-                      : const SizedBox();
+                        );
+                  } else {
+                    return const SizedBox();
+                  }
                 },
               ),
               Divider(
