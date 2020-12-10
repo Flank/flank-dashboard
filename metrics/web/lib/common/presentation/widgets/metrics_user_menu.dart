@@ -101,16 +101,16 @@ class MetricsUserMenu extends StatelessWidget {
                 builder: (_, isDebugMenuEnabled, __) {
                   if (isDebugMenuEnabled) {
                     return Padding(
-                          padding: itemPadding,
-                          child: TappableArea(
-                            onTap: () {},
-                            builder: (context, isHovered, child) => child,
-                            child: Text(
-                              CommonStrings.debugMenu,
-                              style: userMenuTextStyle,
-                            ),
-                          ),
-                        );
+                      padding: itemPadding,
+                      child: TappableArea(
+                        onTap: () {},
+                        builder: (context, isHovered, child) => child,
+                        child: Text(
+                          CommonStrings.debugMenu,
+                          style: userMenuTextStyle,
+                        ),
+                      ),
+                    );
                   } else {
                     return const SizedBox();
                   }
