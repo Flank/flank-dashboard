@@ -4,10 +4,13 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
 import 'package:metrics/common/presentation/page_title/widgets/metrics_page_title.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
+import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
+import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
+import '../../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("MetricsPageTitle", () {
@@ -81,9 +84,12 @@ void main() {
     testWidgets(
       "navigates back to the previous screen",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_NavigationTestbed());
+        final initialPage = _NavigationTestbed();
+        final initialPageFinder = find.byWidget(initialPage);
 
-        await tester.tap(find.byType(_NavigationTestbed));
+        await tester.pumpWidget(initialPage);
+
+        await tester.tap(initialPageFinder);
         await mockNetworkImagesFor(() {
           return tester.pumpAndSettle();
         });
@@ -94,11 +100,12 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(MetricsPageTitle), findsNothing);
+        expect(initialPageFinder, findsOneWidget);
       },
     );
 
     testWidgets(
-      "doesn't navigate back if there is no previous page",
+      "navigates to the dashboard page if there is no previous page",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(const _MetricsPageTitleTestbed());
@@ -107,7 +114,7 @@ void main() {
         await tester.tap(find.byTooltip(CommonStrings.navigateBack));
         await tester.pumpAndSettle();
 
-        expect(find.byType(MetricsPageTitle), findsOneWidget);
+        expect(find.byType(DashboardPage), findsOneWidget);
       },
     );
 
@@ -199,10 +206,16 @@ class _MetricsPageTitleTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MetricsThemedTestbed(
-      metricsThemeData: theme,
-      body: MetricsPageTitle(
-        title: title,
+    return TestInjectionContainer(
+      child: MetricsThemedTestbed(
+        metricsThemeData: theme,
+        onGenerateRoute: (settings) => RouteGenerator.generateRoute(
+          settings: settings,
+          isLoggedIn: true,
+        ),
+        body: MetricsPageTitle(
+          title: title,
+        ),
       ),
     );
   }

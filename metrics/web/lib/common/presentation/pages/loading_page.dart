@@ -8,6 +8,19 @@ import 'package:provider/provider.dart';
 
 /// A page that shows until the authentication status is unknown.
 class LoadingPage extends StatefulWidget {
+  /// A route name to push when loading is completed and
+  /// the current user is logged in.
+  final String routeName;
+
+  /// Creates a new instance of the [LoadingPage].
+  ///
+  /// If the given [routeName] is `null`, the [RouteName.dashboard] is used.
+  const LoadingPage({
+    Key key,
+    String routeName,
+  })  : routeName = routeName ?? RouteName.dashboard,
+        super(key: key);
+
   @override
   _LoadingPageState createState() => _LoadingPageState();
 }
@@ -125,13 +138,13 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Navigates depending on the [_isLoaded] state.
   ///
-  /// If [_isLoggedIn], navigates to the [RouteName.dashboard].
+  /// If [_isLoggedIn], navigates to the [LoadingPage.routeName].
   /// Otherwise, navigates to the [RouteName.login].
   void _navigateIfLoaded() {
     if (!_isLoaded) return;
 
     if (_isLoggedIn) {
-      _navigateTo(RouteName.dashboard);
+      _navigateTo(widget.routeName);
     } else {
       _navigateTo(RouteName.login);
     }
@@ -144,6 +157,7 @@ class _LoadingPageState extends State<LoadingPage>
       routeName,
       (_) => false,
     );
+    _authNotifier.removeListener(_authNotifierListener);
   }
 
   @override
