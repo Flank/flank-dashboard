@@ -8,6 +8,7 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
+import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
 import 'package:provider/provider.dart';
 
 /// A widget that displays a metrics user menu with specific shape.
@@ -92,6 +93,28 @@ class MetricsUserMenu extends StatelessWidget {
                     style: userMenuTextStyle,
                   ),
                 ),
+              ),
+              Selector<InstantConfigNotifier, bool>(
+                selector: (_, notifier) {
+                  return notifier.debugMenuInstantConfigViewModel.isEnabled;
+                },
+                builder: (_, isDebugMenuEnabled, __) {
+                  if (isDebugMenuEnabled) {
+                    return Padding(
+                      padding: itemPadding,
+                      child: TappableArea(
+                        onTap: () {},
+                        builder: (context, isHovered, child) => child,
+                        child: Text(
+                          CommonStrings.debugMenu,
+                          style: userMenuTextStyle,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
               ),
               Divider(
                 color: userMenuTheme.dividerColor,

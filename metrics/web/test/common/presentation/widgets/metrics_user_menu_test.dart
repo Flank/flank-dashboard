@@ -11,6 +11,8 @@ import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/common/presentation/widgets/metrics_user_menu.dart';
+import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/instant_config/presentation/view_models/debug_menu_instant_config_view_model.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -18,6 +20,7 @@ import 'package:provider/provider.dart';
 
 import '../../../test_utils/analytics_notifier_mock.dart';
 import '../../../test_utils/auth_notifier_mock.dart';
+import '../../../test_utils/instant_config_notifier_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -129,6 +132,21 @@ void main() {
     );
 
     testWidgets(
+      "applies the text style from the user menu theme to the debug menu Text widget",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _MetricsUserMenuTestbed(
+          theme: testTheme,
+        ));
+
+        final textWidget = tester.widget<Text>(
+          find.text(CommonStrings.debugMenu),
+        );
+
+        expect(textWidget.style, equals(testTextStyle));
+      },
+    );
+
+    testWidgets(
       "applies a tappable area to the project group text widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(const _MetricsUserMenuTestbed());
@@ -153,6 +171,54 @@ void main() {
         );
 
         expect(finder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "applies a tappable area to the debug menu text widget",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(const _MetricsUserMenuTestbed());
+
+        final finder = find.ancestor(
+          of: find.text(CommonStrings.debugMenu),
+          matching: find.byType(TappableArea),
+        );
+
+        expect(finder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the 'Debug menu' menu item if the debug menu is enabled in instant config",
+      (WidgetTester tester) async {
+        final instantConfigNotifier = InstantConfigNotifierMock();
+
+        when(instantConfigNotifier.debugMenuInstantConfigViewModel).thenReturn(
+          const DebugMenuInstantConfigViewModel(isEnabled: true),
+        );
+
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
+          instantConfigNotifier: instantConfigNotifier,
+        ));
+
+        expect(find.text(CommonStrings.debugMenu), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "does not display the 'Debug menu' menu item if the debug menu is disabled in instant config",
+      (WidgetTester tester) async {
+        final instantConfigNotifier = InstantConfigNotifierMock();
+
+        when(instantConfigNotifier.debugMenuInstantConfigViewModel).thenReturn(
+          const DebugMenuInstantConfigViewModel(isEnabled: false),
+        );
+
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
+          instantConfigNotifier: instantConfigNotifier,
+        ));
+
+        expect(find.text(CommonStrings.debugMenu), findsNothing);
       },
     );
 
@@ -255,14 +321,17 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
   /// The [MetricsThemeData] used in testbed.
   final MetricsThemeData theme;
 
-  /// A [ThemeNotifier] used in tests.
+  /// A [ThemeNotifier] to use in tests.
   final ThemeNotifier themeNotifier;
 
-  /// An [AuthNotifier] used in tests.
+  /// An [AuthNotifier] to use in tests.
   final AuthNotifier authNotifier;
 
-  /// An [AnalyticsNotifier] used in tests.
+  /// An [AnalyticsNotifier] to use in tests.
   final AnalyticsNotifier analyticsNotifier;
+
+  /// An [InstantConfigNotifier] to use in tests.
+  final InstantConfigNotifier instantConfigNotifier;
 
   /// Creates the [_MetricsUserMenuTestbed] with the given [theme].
   ///
@@ -273,6 +342,7 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
     this.themeNotifier,
     this.authNotifier,
     this.analyticsNotifier,
+    this.instantConfigNotifier,
   }) : super(key: key);
 
   @override
@@ -281,6 +351,7 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
       themeNotifier: themeNotifier,
       authNotifier: authNotifier,
       analyticsNotifier: analyticsNotifier,
+      instantConfigNotifier: instantConfigNotifier,
       child: Builder(
         builder: (context) {
           return MetricsThemedTestbed(

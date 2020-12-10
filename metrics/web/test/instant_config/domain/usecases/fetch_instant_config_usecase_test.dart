@@ -12,16 +12,19 @@ void main() {
     const isFpsMonitorEnabled = true;
     const isLoginFormEnabled = false;
     const isRendererDisplayEnabled = false;
+    const isDebugMenuEnabled = true;
 
     const instantConfig = InstantConfig(
       isLoginFormEnabled: isLoginFormEnabled,
       isFpsMonitorEnabled: isFpsMonitorEnabled,
       isRendererDisplayEnabled: isRendererDisplayEnabled,
+      isDebugMenuEnabled: isDebugMenuEnabled,
     );
     final param = InstantConfigParam(
       isLoginFormEnabled: isLoginFormEnabled,
       isFpsMonitorEnabled: isFpsMonitorEnabled,
       isRendererDisplayEnabled: isRendererDisplayEnabled,
+      isDebugMenuEnabled: isDebugMenuEnabled,
     );
 
     final repository = _RemoteConfigurationRepositoryMock();
@@ -64,6 +67,7 @@ void main() {
           isFpsMonitorEnabled: null,
           isLoginFormEnabled: null,
           isRendererDisplayEnabled: null,
+          isDebugMenuEnabled: null,
         );
 
         when(repository.fetch()).thenAnswer((_) => Future.value(nullConfig));

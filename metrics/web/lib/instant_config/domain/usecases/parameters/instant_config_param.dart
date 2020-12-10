@@ -12,11 +12,15 @@ class InstantConfigParam extends Equatable {
   /// Indicates whether the renderer display feature is enabled.
   final bool isRendererDisplayEnabled;
 
+  /// Indicates whether the debug menu feature is enabled.
+  final bool isDebugMenuEnabled;
+
   @override
   List<Object> get props => [
         isLoginFormEnabled,
         isFpsMonitorEnabled,
         isRendererDisplayEnabled,
+        isDebugMenuEnabled,
       ];
 
   /// Creates a new instance of the [InstantConfigParam]
@@ -27,12 +31,17 @@ class InstantConfigParam extends Equatable {
     @required this.isLoginFormEnabled,
     @required this.isFpsMonitorEnabled,
     @required this.isRendererDisplayEnabled,
+    @required this.isDebugMenuEnabled,
   }) {
     ArgumentError.checkNotNull(isLoginFormEnabled, 'isLoginFormEnabled');
     ArgumentError.checkNotNull(isFpsMonitorEnabled, 'isFpsMonitorEnabled');
     ArgumentError.checkNotNull(
       isRendererDisplayEnabled,
       'isRendererDisplayEnabled',
+    );
+    ArgumentError.checkNotNull(
+      isDebugMenuEnabled,
+      'isDebugMenuEnabled',
     );
   }
 }

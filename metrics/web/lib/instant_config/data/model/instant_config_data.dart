@@ -9,10 +9,12 @@ class InstantConfigData extends InstantConfig implements DataModel {
     bool isLoginFormEnabled,
     bool isFpsMonitorEnabled,
     bool isRendererDisplayEnabled,
+    bool isDebugMenuEnabled,
   }) : super(
           isLoginFormEnabled: isLoginFormEnabled,
           isFpsMonitorEnabled: isFpsMonitorEnabled,
           isRendererDisplayEnabled: isRendererDisplayEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
         );
 
   /// Creates the [InstantConfigData] from the given [json].
@@ -25,6 +27,7 @@ class InstantConfigData extends InstantConfig implements DataModel {
       isLoginFormEnabled: json['isLoginFormEnabled'] as bool,
       isFpsMonitorEnabled: json['isFpsMonitorEnabled'] as bool,
       isRendererDisplayEnabled: json['isRendererDisplayEnabled'] as bool,
+      isDebugMenuEnabled: json['isDebugMenuEnabled'] as bool,
     );
   }
 
@@ -34,6 +37,7 @@ class InstantConfigData extends InstantConfig implements DataModel {
       'isLoginFormEnabled': isLoginFormEnabled,
       'isFpsMonitorEnabled': isFpsMonitorEnabled,
       'isRendererDisplayEnabled': isRendererDisplayEnabled,
+      'isDebugMenuEnabled': isDebugMenuEnabled,
     };
   }
 }

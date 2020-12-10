@@ -2,6 +2,7 @@ import 'package:metrics/instant_config/domain/entities/instant_config.dart';
 import 'package:metrics/instant_config/domain/usecases/fetch_instant_config_usecase.dart';
 import 'package:metrics/instant_config/domain/usecases/parameters/instant_config_param.dart';
 import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/instant_config/presentation/view_models/debug_menu_instant_config_view_model.dart';
 import 'package:metrics/instant_config/presentation/view_models/fps_monitor_instant_config_view_model.dart';
 import 'package:metrics/instant_config/presentation/view_models/login_form_instant_config_view_model.dart';
 import 'package:metrics/instant_config/presentation/view_models/renderer_display_instant_config_view_model.dart';
@@ -17,11 +18,13 @@ void main() {
     const isLoginFormEnabled = true;
     const isFpsMonitorEnabled = true;
     const isRendererDisplayEnabled = true;
+    const isDebugMenuEnabled = true;
 
     final instantConfig = InstantConfig(
       isLoginFormEnabled: isLoginFormEnabled,
       isFpsMonitorEnabled: isFpsMonitorEnabled,
       isRendererDisplayEnabled: isRendererDisplayEnabled,
+      isDebugMenuEnabled: isDebugMenuEnabled,
     );
 
     final _fetchInstantConfigUseCase = _FetchInstantConfigUseCaseMock();
@@ -99,6 +102,18 @@ void main() {
     );
 
     test(
+      ".setDefaults() throws an AssertionError if the given is debug menu enabled is null",
+      () {
+        expect(
+          () => notifier.setDefaults(
+            isDebugMenuEnabled: null,
+          ),
+          MatcherUtil.throwsAssertionError,
+        );
+      },
+    );
+
+    test(
       ".initializeInstantConfig() sets the .isLoading to true when called",
       () {
         when(_fetchInstantConfigUseCase(any)).thenAnswer(
@@ -110,6 +125,7 @@ void main() {
           isLoginFormEnabled: true,
           isFpsMonitorEnabled: false,
           isRendererDisplayEnabled: false,
+          isDebugMenuEnabled: false,
         );
 
         notifier.initializeInstantConfig();
@@ -131,6 +147,7 @@ void main() {
           isLoginFormEnabled: true,
           isFpsMonitorEnabled: false,
           isRendererDisplayEnabled: false,
+          isDebugMenuEnabled: false,
         );
 
         await notifier.initializeInstantConfig();
@@ -152,6 +169,7 @@ void main() {
           isLoginFormEnabled: true,
           isFpsMonitorEnabled: false,
           isRendererDisplayEnabled: false,
+          isDebugMenuEnabled: false,
         );
 
         notifier.initializeInstantConfig();
@@ -167,6 +185,7 @@ void main() {
           isLoginFormEnabled: isLoginFormEnabled,
           isFpsMonitorEnabled: isFpsMonitorEnabled,
           isRendererDisplayEnabled: isRendererDisplayEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
         );
         when(_fetchInstantConfigUseCase(instantConfigParam)).thenAnswer(
           (_) => Future.value(instantConfig),
@@ -176,6 +195,7 @@ void main() {
           isLoginFormEnabled: isLoginFormEnabled,
           isFpsMonitorEnabled: isFpsMonitorEnabled,
           isRendererDisplayEnabled: isRendererDisplayEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
         );
         notifier.initializeInstantConfig();
 
@@ -235,6 +255,25 @@ void main() {
 
         expect(
           notifier.rendererDisplayInstantConfigViewModel,
+          equals(expectedViewModel),
+        );
+      },
+    );
+
+    test(
+      ".initializeInstantConfig() sets the debug menu instant config view model",
+      () async {
+        const expectedViewModel = DebugMenuInstantConfigViewModel(
+          isEnabled: isRendererDisplayEnabled,
+        );
+        when(_fetchInstantConfigUseCase(any)).thenAnswer(
+          (_) => Future.value(instantConfig),
+        );
+
+        await notifier.initializeInstantConfig();
+
+        expect(
+          notifier.debugMenuInstantConfigViewModel,
           equals(expectedViewModel),
         );
       },

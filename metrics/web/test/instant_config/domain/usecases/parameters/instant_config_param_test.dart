@@ -6,6 +6,7 @@ void main() {
     const isFpsMonitorEnabled = true;
     const isLoginFormEnabled = false;
     const isRendererDisplayEnabled = false;
+    const isDebugMenuEnabled = true;
 
     test(
       "throws an ArgumentError if the given is fps monitor enabled is null",
@@ -15,6 +16,7 @@ void main() {
             isFpsMonitorEnabled: null,
             isLoginFormEnabled: isLoginFormEnabled,
             isRendererDisplayEnabled: isRendererDisplayEnabled,
+            isDebugMenuEnabled: isDebugMenuEnabled,
           ),
           throwsArgumentError,
         );
@@ -29,6 +31,7 @@ void main() {
             isFpsMonitorEnabled: isFpsMonitorEnabled,
             isLoginFormEnabled: null,
             isRendererDisplayEnabled: isRendererDisplayEnabled,
+            isDebugMenuEnabled: isDebugMenuEnabled,
           ),
           throwsArgumentError,
         );
@@ -43,6 +46,22 @@ void main() {
             isFpsMonitorEnabled: isFpsMonitorEnabled,
             isLoginFormEnabled: isLoginFormEnabled,
             isRendererDisplayEnabled: null,
+            isDebugMenuEnabled: isDebugMenuEnabled,
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      "throws an ArgumentError if the given is debug menu enabled is null",
+      () {
+        expect(
+          () => InstantConfigParam(
+            isFpsMonitorEnabled: isFpsMonitorEnabled,
+            isLoginFormEnabled: isLoginFormEnabled,
+            isRendererDisplayEnabled: null,
+            isDebugMenuEnabled: isDebugMenuEnabled,
           ),
           throwsArgumentError,
         );
@@ -56,6 +75,7 @@ void main() {
           isFpsMonitorEnabled: isFpsMonitorEnabled,
           isLoginFormEnabled: isLoginFormEnabled,
           isRendererDisplayEnabled: isRendererDisplayEnabled,
+          isDebugMenuEnabled: isDebugMenuEnabled,
         );
 
         expect(param.isFpsMonitorEnabled, equals(isFpsMonitorEnabled));
@@ -64,6 +84,7 @@ void main() {
           param.isRendererDisplayEnabled,
           equals(isRendererDisplayEnabled),
         );
+        expect(param.isDebugMenuEnabled, equals(isDebugMenuEnabled));
       },
     );
   });

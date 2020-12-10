@@ -21,6 +21,7 @@ class CommonStrings {
   static const String users = 'Users';
   static const String unknownErrorMessage =
       'An unknown error occurred, please try again.';
+  static const String debugMenu = 'Debug menu';
 
   static String duration(Duration duration) => prettyDuration(
         duration,
