@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metrics/auth/presentation/widgets/login_form.dart';
+import 'package:metrics/auth/presentation/widgets/password_sign_in_option.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_appearance_strategy.dart';
 import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
@@ -18,7 +18,7 @@ class AuthForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (isLoginFormEnabled) const LoginForm(),
+            if (isLoginFormEnabled) const PasswordSignInOption(),
             SignInOptionButton(
               strategy: GoogleSignInOptionAppearanceStrategy(),
             ),

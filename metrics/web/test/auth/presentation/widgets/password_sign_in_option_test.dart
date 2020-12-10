@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
-import 'package:metrics/auth/presentation/widgets/login_form.dart';
+import 'package:metrics/auth/presentation/widgets/password_sign_in_option.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
@@ -49,13 +49,13 @@ void main() {
     when(authNotifier.isLoading).thenReturn(false);
   });
 
-  group("LoginForm", () {
+  group("PasswordSignInOption", () {
     testWidgets(
       "email input shows an error message if a value is empty on submit",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _LoginFormTestbed(authNotifier: authNotifier),
+            _PasswordSignInOptionTestbed(authNotifier: authNotifier),
           );
         });
 
@@ -74,7 +74,7 @@ void main() {
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _LoginFormTestbed(authNotifier: authNotifier),
+            _PasswordSignInOptionTestbed(authNotifier: authNotifier),
           );
         });
 
@@ -92,7 +92,7 @@ void main() {
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _LoginFormTestbed(authNotifier: authNotifier),
+            _PasswordSignInOptionTestbed(authNotifier: authNotifier),
           );
         });
 
@@ -111,7 +111,7 @@ void main() {
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _LoginFormTestbed(authNotifier: authNotifier),
+            _PasswordSignInOptionTestbed(authNotifier: authNotifier),
           );
         });
 
@@ -131,7 +131,7 @@ void main() {
         when(authNotifier.isLoading).thenReturn(true);
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_LoginFormTestbed(
+          return tester.pumpWidget(_PasswordSignInOptionTestbed(
             authNotifier: authNotifier,
           ));
         });
@@ -149,7 +149,7 @@ void main() {
         when(authNotifier.isLoading).thenReturn(true);
 
         await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_LoginFormTestbed(
+          return tester.pumpWidget(_PasswordSignInOptionTestbed(
             authNotifier: authNotifier,
           ));
         });
@@ -170,7 +170,7 @@ void main() {
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
-            const _LoginFormTestbed(),
+            const _PasswordSignInOptionTestbed(),
           ),
         );
 
@@ -190,7 +190,7 @@ void main() {
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
-            const _LoginFormTestbed(),
+            const _PasswordSignInOptionTestbed(),
           ),
         );
 
@@ -215,7 +215,7 @@ void main() {
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
-            const _LoginFormTestbed(
+            const _PasswordSignInOptionTestbed(
               metricsThemeData: metricsThemeData,
             ),
           ),
@@ -236,7 +236,7 @@ void main() {
       (WidgetTester tester) async {
         await mockNetworkImagesFor(
           () => tester.pumpWidget(
-            const _LoginFormTestbed(),
+            const _PasswordSignInOptionTestbed(),
           ),
         );
 
@@ -261,7 +261,7 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _LoginFormTestbed(authNotifier: authNotifier),
+            _PasswordSignInOptionTestbed(authNotifier: authNotifier),
           );
         });
 
@@ -280,7 +280,7 @@ void main() {
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _LoginFormTestbed(authNotifier: authNotifier),
+            _PasswordSignInOptionTestbed(authNotifier: authNotifier),
           );
         });
 
@@ -294,16 +294,16 @@ void main() {
   });
 }
 
-/// A testbed widget used to test the [LoginForm] widget.
-class _LoginFormTestbed extends StatelessWidget {
+/// A testbed widget used to test the [PasswordSignInOption] widget.
+class _PasswordSignInOptionTestbed extends StatelessWidget {
   /// An [AuthNotifier] to use in tests.
   final AuthNotifier authNotifier;
 
   /// A [MetricsThemeData] to use in tests.
   final MetricsThemeData metricsThemeData;
 
-  /// Creates the [_LoginFormTestbed] with the given [authNotifier].
-  const _LoginFormTestbed({
+  /// Creates the [_PasswordSignInOptionTestbed] with the given [authNotifier].
+  const _PasswordSignInOptionTestbed({
     this.metricsThemeData = const MetricsThemeData(),
     this.authNotifier,
   });
@@ -314,7 +314,7 @@ class _LoginFormTestbed extends StatelessWidget {
       authNotifier: authNotifier,
       child: MetricsThemedTestbed(
         metricsThemeData: metricsThemeData,
-        body: const LoginForm(),
+        body: const PasswordSignInOption(),
       ),
     );
   }

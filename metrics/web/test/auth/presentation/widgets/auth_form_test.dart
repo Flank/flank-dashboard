@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
-import 'package:metrics/auth/presentation/widgets/login_form.dart';
+import 'package:metrics/auth/presentation/widgets/password_sign_in_option.dart';
 import 'package:metrics/auth/presentation/widgets/sign_in_option_button.dart';
 import 'package:metrics/auth/presentation/widgets/strategy/google_sign_in_option_appearance_strategy.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -43,7 +43,7 @@ void main() {
     );
 
     testWidgets(
-      "displays the login form if the login form is enabled in instant config",
+      "displays the password sign in option if the password sign in option is enabled in instant config",
       (WidgetTester tester) async {
         when(instantConfigNotifier.loginFormInstantConfigViewModel).thenReturn(
           const LoginFormInstantConfigViewModel(isEnabled: true),
@@ -55,12 +55,12 @@ void main() {
           );
         });
 
-        expect(find.byType(LoginForm), findsOneWidget);
+        expect(find.byType(PasswordSignInOption), findsOneWidget);
       },
     );
 
     testWidgets(
-      "does not display the login form if the login form is not enabled in instant config",
+      "does not display the password sign in option if the password sign in option is not enabled in instant config",
       (WidgetTester tester) async {
         when(instantConfigNotifier.loginFormInstantConfigViewModel).thenReturn(
           const LoginFormInstantConfigViewModel(isEnabled: false),
@@ -72,7 +72,7 @@ void main() {
           );
         });
 
-        expect(find.byType(LoginForm), findsNothing);
+        expect(find.byType(PasswordSignInOption), findsNothing);
       },
     );
   });

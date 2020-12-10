@@ -10,18 +10,18 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
 import 'package:provider/provider.dart';
 
-/// A widget that displays the email and password sign in form.
-class LoginForm extends StatefulWidget {
-  /// Creates a new instance of the [LoginForm].
-  const LoginForm({
+/// A widget that displays a form for email and password sign-in method.
+class PasswordSignInOption extends StatefulWidget {
+  /// Creates a new instance of the [PasswordSignInOption].
+  const PasswordSignInOption({
     Key key,
   }) : super(key: key);
 
   @override
-  _LoginFormState createState() => _LoginFormState();
+  _PasswordSignInOptionState createState() => _PasswordSignInOptionState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _PasswordSignInOptionState extends State<PasswordSignInOption> {
   /// Global key that uniquely identifies the [Form] widget and allows validation of the form.
   final _formKey = GlobalKey<FormState>();
 
