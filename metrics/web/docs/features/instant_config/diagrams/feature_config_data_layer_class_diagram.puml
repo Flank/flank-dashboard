@@ -1,0 +1,34 @@
+@startuml feature_config_data_layer_class_diagram
+
+package common.domain.repository {
+    interface FeatureConfigRepository {}
+}
+
+package common.domain.entities {
+    class FeatureConfig {}
+}
+
+package common.data {
+    package repository {
+        class FirestoreFeatureConfigRepository {}
+    }
+
+    package models {
+        class FeatureConfigData {
+            + Map<String, dynamic> toJson()
+            + factory fromJson(Map<String, dynamic> json)
+        }
+    }
+}
+
+package core.src.data.model {
+    class DataModel {}
+}
+
+FirestoreFeatureConfigRepository ..|> FeatureConfigRepository
+FirestoreFeatureConfigRepository --> FeatureConfigData : uses
+
+FeatureConfigData --> FeatureConfig
+FeatureConfigData ..|> DataModel
+
+@enduml

@@ -1,0 +1,58 @@
+@startuml feature_config_sequence_diagram
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+box "presentation"
+participant UI
+participant FeatureConfigNotifier << (C,#ADD1B2) >>
+end box
+
+box "domain"
+participant FetchFeatureConfigUseCase << (C,#ADD1B2) >>
+end box
+
+box "data"
+participant FirestoreFeatureConfigRepository << (C,#ADD1B2) >>
+participant FeatureConfigData << (C,#ADD1B2) >>
+end box
+
+database "Firestore" as FRC
+
+Bob -> UI : Enters the application
+activate UI
+
+UI -> FeatureConfigNotifier : setDefaults(bool isPasswordSignInOptionEnabled, bool isDebugMenuEnabled)
+activate FeatureConfigNotifier
+UI -> FeatureConfigNotifier : initializeFeatureConfig()
+
+FeatureConfigNotifier -> FetchFeatureConfigUseCase : call(FeatureConfigParam params)
+activate FetchFeatureConfigUseCase
+
+FetchFeatureConfigUseCase -> FirestoreFeatureConfigRepository : fetch()
+activate FirestoreFeatureConfigRepository
+
+FirestoreFeatureConfigRepository -> FRC : Fetch Feature config
+
+FRC --> FirestoreFeatureConfigRepository : Feature config json
+
+FirestoreFeatureConfigRepository -> FeatureConfigData : fromJson()
+activate FeatureConfigData
+
+FeatureConfigData --> FirestoreFeatureConfigRepository : FeatureConfig
+deactivate FeatureConfigData
+
+FirestoreFeatureConfigRepository --> FetchFeatureConfigUseCase : FeatureConfig
+deactivate FirestoreFeatureConfigRepository
+
+FetchFeatureConfigUseCase --> FeatureConfigNotifier : FeatureConfig
+deactivate FetchFeatureConfigUseCase
+
+FeatureConfigNotifier --> UI : Notify about new config
+deactivate FeatureConfigNotifier
+
+UI --> Bob : Dismiss the loading screen
+deactivate UI
+
+@enduml

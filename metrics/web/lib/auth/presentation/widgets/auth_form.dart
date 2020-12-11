@@ -13,12 +13,12 @@ class AuthForm extends StatelessWidget {
       selector: (_, notifier) {
         return notifier.passwordSignInOptionFeatureConfigViewModel.isEnabled;
       },
-      builder: (_, isLoginFormEnabled, __) {
+      builder: (_, isPasswordSignInOptionEnabled, __) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (isLoginFormEnabled) const PasswordSignInOption(),
+            if (isPasswordSignInOptionEnabled) const PasswordSignInOption(),
             SignInOptionButton(
               strategy: GoogleSignInOptionAppearanceStrategy(),
             ),
