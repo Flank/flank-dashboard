@@ -117,7 +117,7 @@ void main() {
     );
 
     testWidgets(
-      "injects an FeatureConfigNotifier",
+      "injects a FeatureConfigNotifier",
       (tester) async {
         await tester.pumpWidget(InjectionContainerTestbed());
 

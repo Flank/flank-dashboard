@@ -89,8 +89,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// A use case needed to be able to delete a project group.
   DeleteProjectGroupUseCase _deleteProjectGroupUseCase;
 
-  /// A use case needed to be able to fetch an instant config.
-  FetchFeatureConfigUseCase _fetchInstantConfigUseCase;
+  /// A use case needed to be able to fetch a feature config.
+  FetchFeatureConfigUseCase _fetchFeatureConfigUseCase;
 
   /// A use case needed to be able to log user logins.
   LogLoginUseCase _logLoginUseCase;
@@ -119,7 +119,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     final _userRepository = FirebaseUserRepository();
     final _projectGroupRepository = FirestoreProjectGroupsRepository();
     final _projectRepository = FirestoreProjectRepository();
-    final _instantConfigRepository = FirestoreFeatureConfigRepository();
+    final _featureConfigRepository = FirestoreFeatureConfigRepository();
     final _analyticsRepository = FirebaseAnalyticsRepository();
 
     _receiveProjectUpdates = ReceiveProjectUpdates(_projectRepository);
@@ -146,8 +146,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _projectGroupRepository,
     );
 
-    _fetchInstantConfigUseCase = FetchFeatureConfigUseCase(
-      _instantConfigRepository,
+    _fetchFeatureConfigUseCase = FetchFeatureConfigUseCase(
+      _featureConfigRepository,
     );
 
     _logLoginUseCase = LogLoginUseCase(_analyticsRepository);
@@ -175,7 +175,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => FeatureConfigNotifier(_fetchInstantConfigUseCase),
+          create: (_) => FeatureConfigNotifier(_fetchFeatureConfigUseCase),
         ),
         ChangeNotifierProvider.value(value: _authNotifier),
         ChangeNotifierProvider.value(value: _themeNotifier),
