@@ -6,12 +6,12 @@ import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
-import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
-import '../../../test_utils/instant_config_notifier_mock.dart';
+import '../../../test_utils/feature_config_notifier_mock.dart';
 import '../../../test_utils/matcher_util.dart';
 import '../../../test_utils/test_injection_container.dart';
 
@@ -20,7 +20,7 @@ import '../../../test_utils/test_injection_container.dart';
 void main() {
   group("LoadingPage", () {
     AuthNotifier authNotifier;
-    InstantConfigNotifier instantConfigNotifier;
+    FeatureConfigNotifier featureConfigNotifier;
     final observer = _NavigatorObserverMock();
 
     final dashboardRoute = MatcherUtil.metricsNamedRoute(
@@ -33,7 +33,7 @@ void main() {
 
     setUp(() {
       authNotifier = AuthNotifierMock();
-      instantConfigNotifier = InstantConfigNotifierMock();
+      featureConfigNotifier = FeatureConfigNotifierMock();
     });
 
     tearDown(() {
@@ -71,13 +71,13 @@ void main() {
     );
 
     testWidgets(
-      "initializes instant config updates on init state",
+      "initializes feature config updates on init state",
       (tester) async {
         await tester.pumpWidget(_LoadingPageTestbed(
-          instantConfigNotifier: instantConfigNotifier,
+          featureConfigNotifier: featureConfigNotifier,
         ));
 
-        verify(instantConfigNotifier.initializeInstantConfig())
+        verify(featureConfigNotifier.initializeFeatureConfig())
             .called(equals(1));
       },
     );
@@ -88,18 +88,18 @@ void main() {
         await tester.pumpWidget(
           _LoadingPageTestbed(
             authNotifier: authNotifier,
-            instantConfigNotifier: instantConfigNotifier,
+            featureConfigNotifier: featureConfigNotifier,
             navigatorObserver: observer,
           ),
         );
 
         when(authNotifier.isLoggedIn).thenReturn(false);
         when(authNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isInitialized).thenReturn(true);
+        when(featureConfigNotifier.isLoading).thenReturn(false);
+        when(featureConfigNotifier.isInitialized).thenReturn(true);
 
         authNotifier.notifyListeners();
-        instantConfigNotifier.notifyListeners();
+        featureConfigNotifier.notifyListeners();
 
         verify(observer.didPush(
           argThat(loginPageRoute),
@@ -120,18 +120,18 @@ void main() {
         await tester.pumpWidget(
           _LoadingPageTestbed(
             authNotifier: authNotifier,
-            instantConfigNotifier: instantConfigNotifier,
+            featureConfigNotifier: featureConfigNotifier,
             navigatorObserver: observer,
           ),
         );
 
         when(authNotifier.isLoggedIn).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isInitialized).thenReturn(true);
+        when(featureConfigNotifier.isLoading).thenReturn(false);
+        when(featureConfigNotifier.isInitialized).thenReturn(true);
 
         authNotifier.notifyListeners();
-        instantConfigNotifier.notifyListeners();
+        featureConfigNotifier.notifyListeners();
 
         verify(observer.didPush(
           argThat(projectGroupRoute),
@@ -147,18 +147,18 @@ void main() {
         await tester.pumpWidget(
           _LoadingPageTestbed(
             authNotifier: authNotifier,
-            instantConfigNotifier: instantConfigNotifier,
+            featureConfigNotifier: featureConfigNotifier,
             navigatorObserver: observer,
           ),
         );
 
         when(authNotifier.isLoggedIn).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isInitialized).thenReturn(true);
+        when(featureConfigNotifier.isLoading).thenReturn(false);
+        when(featureConfigNotifier.isInitialized).thenReturn(true);
 
         authNotifier.notifyListeners();
-        instantConfigNotifier.notifyListeners();
+        featureConfigNotifier.notifyListeners();
 
         verify(observer.didPush(
           argThat(dashboardRoute),
@@ -173,18 +173,18 @@ void main() {
         await tester.pumpWidget(
           _LoadingPageTestbed(
             authNotifier: authNotifier,
-            instantConfigNotifier: instantConfigNotifier,
+            featureConfigNotifier: featureConfigNotifier,
             navigatorObserver: observer,
           ),
         );
 
         when(authNotifier.isLoggedIn).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isInitialized).thenReturn(false);
+        when(featureConfigNotifier.isLoading).thenReturn(false);
+        when(featureConfigNotifier.isInitialized).thenReturn(false);
 
         authNotifier.notifyListeners();
-        instantConfigNotifier.notifyListeners();
+        featureConfigNotifier.notifyListeners();
 
         verifyNever(observer.didPush(
           any,
@@ -199,18 +199,18 @@ void main() {
         await tester.pumpWidget(
           _LoadingPageTestbed(
             authNotifier: authNotifier,
-            instantConfigNotifier: instantConfigNotifier,
+            featureConfigNotifier: featureConfigNotifier,
             navigatorObserver: observer,
           ),
         );
 
         when(authNotifier.isLoggedIn).thenReturn(false);
         when(authNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isLoading).thenReturn(false);
-        when(instantConfigNotifier.isInitialized).thenReturn(false);
+        when(featureConfigNotifier.isLoading).thenReturn(false);
+        when(featureConfigNotifier.isInitialized).thenReturn(false);
 
         authNotifier.notifyListeners();
-        instantConfigNotifier.notifyListeners();
+        featureConfigNotifier.notifyListeners();
 
         verifyNever(observer.didPush(
           any,
@@ -235,8 +235,8 @@ class _LoadingPageTestbed extends StatelessWidget {
   /// An [AuthNotifier] to use in tests.
   final AuthNotifier authNotifier;
 
-  /// An [InstantConfigNotifier] to use in tests.
-  final InstantConfigNotifier instantConfigNotifier;
+  /// A [FeatureConfigNotifier] to use in tests.
+  final FeatureConfigNotifier featureConfigNotifier;
 
   /// A [NavigatorObserver] to use in tests.
   final NavigatorObserver navigatorObserver;
@@ -248,14 +248,14 @@ class _LoadingPageTestbed extends StatelessWidget {
   _LoadingPageTestbed({
     NavigatorObserver navigatorObserver,
     this.authNotifier,
-    this.instantConfigNotifier,
+    this.featureConfigNotifier,
   }) : navigatorObserver = navigatorObserver ?? NavigatorObserver();
 
   @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
       authNotifier: authNotifier,
-      instantConfigNotifier: instantConfigNotifier,
+      featureConfigNotifier: featureConfigNotifier,
       child: Builder(
         builder: (context) {
           return MaterialApp(

@@ -11,8 +11,8 @@ import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/common/presentation/widgets/metrics_user_menu.dart';
-import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
-import 'package:metrics/instant_config/presentation/view_models/debug_menu_instant_config_view_model.dart';
+import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
+import 'package:metrics/feature_config/presentation/view_models/debug_menu_feature_config_view_model.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -20,7 +20,7 @@ import 'package:provider/provider.dart';
 
 import '../../../test_utils/analytics_notifier_mock.dart';
 import '../../../test_utils/auth_notifier_mock.dart';
-import '../../../test_utils/instant_config_notifier_mock.dart';
+import '../../../test_utils/feature_config_notifier_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -189,16 +189,16 @@ void main() {
     );
 
     testWidgets(
-      "displays the 'Debug menu' menu item if the debug menu is enabled in instant config",
+      "displays the 'Debug menu' menu item if the debug menu is enabled in feature config",
       (WidgetTester tester) async {
-        final instantConfigNotifier = InstantConfigNotifierMock();
+        final featureConfigNotifier = FeatureConfigNotifierMock();
 
-        when(instantConfigNotifier.debugMenuInstantConfigViewModel).thenReturn(
-          const DebugMenuInstantConfigViewModel(isEnabled: true),
+        when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
+          const DebugMenuFeatureConfigViewModel(isEnabled: true),
         );
 
         await tester.pumpWidget(_MetricsUserMenuTestbed(
-          instantConfigNotifier: instantConfigNotifier,
+          featureConfigNotifier: featureConfigNotifier,
         ));
 
         expect(find.text(CommonStrings.debugMenu), findsOneWidget);
@@ -206,16 +206,16 @@ void main() {
     );
 
     testWidgets(
-      "does not display the 'Debug menu' menu item if the debug menu is disabled in instant config",
+      "does not display the 'Debug menu' menu item if the debug menu is disabled in feature config",
       (WidgetTester tester) async {
-        final instantConfigNotifier = InstantConfigNotifierMock();
+        final featureConfigNotifier = FeatureConfigNotifierMock();
 
-        when(instantConfigNotifier.debugMenuInstantConfigViewModel).thenReturn(
-          const DebugMenuInstantConfigViewModel(isEnabled: false),
+        when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
+          const DebugMenuFeatureConfigViewModel(isEnabled: false),
         );
 
         await tester.pumpWidget(_MetricsUserMenuTestbed(
-          instantConfigNotifier: instantConfigNotifier,
+          featureConfigNotifier: featureConfigNotifier,
         ));
 
         expect(find.text(CommonStrings.debugMenu), findsNothing);
@@ -330,8 +330,8 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
   /// An [AnalyticsNotifier] to use in tests.
   final AnalyticsNotifier analyticsNotifier;
 
-  /// An [InstantConfigNotifier] to use in tests.
-  final InstantConfigNotifier instantConfigNotifier;
+  /// An [FeatureConfigNotifier] to use in tests.
+  final FeatureConfigNotifier featureConfigNotifier;
 
   /// Creates the [_MetricsUserMenuTestbed] with the given [theme].
   ///
@@ -342,7 +342,7 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
     this.themeNotifier,
     this.authNotifier,
     this.analyticsNotifier,
-    this.instantConfigNotifier,
+    this.featureConfigNotifier,
   }) : super(key: key);
 
   @override
@@ -351,7 +351,7 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
       themeNotifier: themeNotifier,
       authNotifier: authNotifier,
       analyticsNotifier: analyticsNotifier,
-      instantConfigNotifier: instantConfigNotifier,
+      featureConfigNotifier: featureConfigNotifier,
       child: Builder(
         builder: (context) {
           return MetricsThemedTestbed(

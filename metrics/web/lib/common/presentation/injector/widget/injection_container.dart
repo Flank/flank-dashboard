@@ -21,9 +21,9 @@ import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
-import 'package:metrics/instant_config/data/repositories/firestore_instant_config_repository.dart';
-import 'package:metrics/instant_config/domain/usecases/fetch_instant_config_usecase.dart';
-import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/feature_config/data/repositories/firestore_feature_config_repository.dart';
+import 'package:metrics/feature_config/domain/usecases/fetch_feature_config_usecase.dart';
+import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/project_groups/data/repositories/firestore_project_group_repository.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
 import 'package:metrics/project_groups/domain/usecases/delete_project_group_usecase.dart';
@@ -90,7 +90,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
   DeleteProjectGroupUseCase _deleteProjectGroupUseCase;
 
   /// A use case needed to be able to fetch an instant config.
-  FetchInstantConfigUseCase _fetchInstantConfigUseCase;
+  FetchFeatureConfigUseCase _fetchInstantConfigUseCase;
 
   /// A use case needed to be able to log user logins.
   LogLoginUseCase _logLoginUseCase;
@@ -119,7 +119,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     final _userRepository = FirebaseUserRepository();
     final _projectGroupRepository = FirestoreProjectGroupsRepository();
     final _projectRepository = FirestoreProjectRepository();
-    final _instantConfigRepository = FirestoreInstantConfigRepository();
+    final _instantConfigRepository = FirestoreFeatureConfigRepository();
     final _analyticsRepository = FirebaseAnalyticsRepository();
 
     _receiveProjectUpdates = ReceiveProjectUpdates(_projectRepository);
@@ -146,7 +146,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _projectGroupRepository,
     );
 
-    _fetchInstantConfigUseCase = FetchInstantConfigUseCase(
+    _fetchInstantConfigUseCase = FetchFeatureConfigUseCase(
       _instantConfigRepository,
     );
 
@@ -175,7 +175,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => InstantConfigNotifier(_fetchInstantConfigUseCase),
+          create: (_) => FeatureConfigNotifier(_fetchInstantConfigUseCase),
         ),
         ChangeNotifierProvider.value(value: _authNotifier),
         ChangeNotifierProvider.value(value: _themeNotifier),

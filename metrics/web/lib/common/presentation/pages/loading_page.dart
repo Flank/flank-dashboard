@@ -3,7 +3,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
-import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:provider/provider.dart';
 
 /// A page that shows until the authentication status is unknown.
@@ -36,14 +36,14 @@ class _LoadingPageState extends State<LoadingPage>
   /// An [AuthNotifier] needed to remove added listeners in the [dispose] method.
   AuthNotifier _authNotifier;
 
-  /// An [InstantConfigNotifier] needed to initialize the [InstantConfig] and
-  /// remove added listeners in the [dispose] method.
-  InstantConfigNotifier _instantConfigNotifier;
+  /// An [FeatureConfigNotifier] needed to initialize the [FeatureConfigNotifier]
+  /// and remove added listeners in the [dispose] method.
+  FeatureConfigNotifier _featureConfigNotifier;
 
   /// Indicates whether a user is logged in or not.
   bool _isLoggedIn;
 
-  /// Indicates whether an instant config is initialized or not.
+  /// Indicates whether a feature config is initialized or not.
   bool _isConfigInitialized = false;
 
   /// Indicates whether the application is finished loading.
@@ -56,7 +56,7 @@ class _LoadingPageState extends State<LoadingPage>
     _initAnimation();
 
     _subscribeToAuthUpdates();
-    _subscribeToInstantConfigUpdates();
+    _subscribeToFeatureConfigUpdates();
   }
 
   @override
@@ -107,17 +107,17 @@ class _LoadingPageState extends State<LoadingPage>
     });
   }
 
-  /// Subscribes to instant config updates.
-  void _subscribeToInstantConfigUpdates() {
-    _instantConfigNotifier = Provider.of<InstantConfigNotifier>(
+  /// Subscribes to feature config updates.
+  void _subscribeToFeatureConfigUpdates() {
+    _featureConfigNotifier = Provider.of<FeatureConfigNotifier>(
       context,
       listen: false,
     );
 
-    _instantConfigNotifier.addListener(_instantConfigNotifierListener);
+    _featureConfigNotifier.addListener(_featureConfigNotifierListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _instantConfigNotifier.initializeInstantConfig();
+      _featureConfigNotifier.initializeFeatureConfig();
     });
   }
 
@@ -129,9 +129,9 @@ class _LoadingPageState extends State<LoadingPage>
   }
 
   /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
-  void _instantConfigNotifierListener() {
-    _isConfigInitialized = _instantConfigNotifier.isInitialized &&
-        !_instantConfigNotifier.isLoading;
+  void _featureConfigNotifierListener() {
+    _isConfigInitialized = _featureConfigNotifier.isInitialized &&
+        !_featureConfigNotifier.isLoading;
 
     _navigateIfLoaded();
   }
@@ -164,7 +164,7 @@ class _LoadingPageState extends State<LoadingPage>
   void dispose() {
     _animationController.dispose();
     _authNotifier.removeListener(_authNotifierListener);
-    _instantConfigNotifier.removeListener(_instantConfigNotifierListener);
+    _featureConfigNotifier.removeListener(_featureConfigNotifierListener);
     super.dispose();
   }
 }
