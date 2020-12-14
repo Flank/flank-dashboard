@@ -57,16 +57,16 @@ class CiIntegration {
           newBuilds,
         );
         return const InteractionResult.success(
-          message: 'The project has been updated successfully!',
+          message: 'The data has been synced successfully!',
         );
       } else {
         return const InteractionResult.success(
-          message: 'The project is up-to-date!',
+          message: 'The project data is up-to-date!',
         );
       }
     } catch (error) {
       return InteractionResult.error(
-        message: 'Failed to update the project! Details: $error',
+        message: 'Failed to sync the data! Details: $error',
       );
     }
   }
