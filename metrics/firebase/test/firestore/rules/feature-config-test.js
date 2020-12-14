@@ -139,17 +139,17 @@ describe("", async () => {
     async.forEach(users, (user, callback) => {
       describe(user.describe, function () {
         let canCreateDescription = user.can.create
-          ? "allows to create an feature config"
-          : "does not allow creating an feature config";
+          ? "allows creating a feature config"
+          : "does not allow creating a feature config";
         let canReadDescription = user.can.read
-          ? "allows reading an feature config"
-          : "does not allow reading an feature configs";
+          ? "allows reading a feature config"
+          : "does not allow reading a feature configs";
         let canUpdateDescription = user.can.update
-          ? "allows to update an feature config"
-          : "does not allow updating an feature config";
+          ? "allows updating a feature config"
+          : "does not allow updating a feature config";
         let canDeleteDescription = user.can.delete
-          ? "allows to delete an feature config"
-          : "does not allow deleting an feature config";
+          ? "allows deleting a feature config"
+          : "does not allow deleting a feature config";
 
         it(canCreateDescription, async () => {
           const createPromise = user.app.collection(collection).add(config);
