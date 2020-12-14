@@ -9,6 +9,7 @@ package debug_menu {
             package model {
                 class LocalConfigData {
                     + factory fromJson(Map<String, dynamic> json)
+                    + Map<String, dynamic> toJson()
                 }
             }
         }
