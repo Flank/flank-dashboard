@@ -20,16 +20,16 @@ Introducing Flutter’s new navigation and routing system into the Metrics Web A
 ## Design
 > Explain and diagram the technical design
 
-Consider the following classes, that represents the architecture of the `Navigation 2.0`.
+Consider the following classes, that represent the architecture of the `Navigation 2.0`.
 
 ### Router
 
-The `Router` is a class, that listens for routing information from the operating system(e.g. browser), parses that information using the [Route Information Parser](#route-information-parser) into a user provided configuration([Route Configuration](#route-configuration)) and then [Router Delegate](#router-delegate) uses it to build the list of pages widget.
+The `Router` is a class, that listens for routing information from the operating system(e.g. browser), parses that information using the [Route Information Parser](#route-information-parser) into a user-provided configuration([Route Configuration](#route-configuration)) and then [Router Delegate](#router-delegate) uses it to build the list of pages widget.
 
 Consider the following parts of the `Router` class:
 
  - The [Route Information Provider](#route-information-provider) responsible for listening to the events from the operating system and send events back to it if the app state changes;
- - the [Route Information Parser](#route-information-parser) parses route information into user defined configuration and vice versa;
+ - the [Route Information Parser](#route-information-parser) parses route information into user-defined configuration and vice versa;
  - the [Router Delegate](#router-delegate) takes configuration from the `RouteInformationParser` and builds a list of pages.
 
 ### Route Information Provider
@@ -48,7 +48,7 @@ The Flutter framework provides the default `RouteInformationProvider` implementa
 
 A `Route information` is a class, that consists of a `location` string of the application and a `state` object that configures the application in that location.
 
-The `location` is multiple string identifiers with slashes in between(e.g. '/route'). In the Web application it is a URL.
+The `location` is multiple string identifiers with slashes in between(e.g. '/route'). In the Web application, it is a URL.
 
 The `state` is an object that stores data in the browser history entry(e.g. filled input forms, scroll position).
 
@@ -76,7 +76,7 @@ The `parseRouteInformation` method converts the [Route information](#route-infor
 
 The `restoreRouteInformation` method converts the [Route Configuration](#route-configuration) back into the [Route information](#route-information).
 
-These methods exist to keep the URL in the browser's location bar up to date with the application state, allowing its back and forward buttons to function as the user expects.
+These methods exist to keep the URL in the browser's location bar up to date with the application state, allowing it's back and forward buttons to function as the user expects.
 
 The class, that helps in parsing route information - [Route Configuration Factory](#route-configuration-factory).
 
@@ -93,7 +93,7 @@ The `RouteDelegate` uses to build the `Navigator` with a list of configured page
 It is a core part of the `Router` and it is responsible for:
  - react to push and pop route intents;
  - notifies the `Router` to rebuild;
- - act like a builder for the `Router`, that builds the `Navigator` widget.
+ - act as a builder for the `Router`, that builds the `Navigator` widget.
 
 To specify our own app-specific behavior we should extend the `RouteDelegate` with `ChangeNotifier` and `PopupNavigatorRouterDelegateMixin` mixins and must provide the following methods:
 
@@ -114,15 +114,15 @@ with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteDelegate> {
 }
 ```
 
-The `currentConfiguration` is a value, that `Router` uses to populate the browser history in order to support the back and forward buttons in the browser top bar.
+The `currentConfiguration` is a value, that `Router` uses to populate the browser history to support the back and forward buttons in the browser top bar.
 
 The `setInitialRoutePath` called by the [Router] at startup with the [RouteConfiguration](#route-configuration) from parsing the initial route.
 
-The `setNewRoutePath` method called by the `Router` when the [Route Information Provider](#route-information-provider) reports that a new route pushed to the application by the operating system. This method takes the [RouteConfiguration](#route-configuration) that comes from the [Route Information Parser]($route-information-parser) and change the list of pages accordingly.
+The `Router` calls the `setNewRoutePath` method when the [Route Information Provider](#route-information-provider) reports that the operating system pushes a new route to the application. This method takes the [RouteConfiguration](#route-configuration) that comes from the [Route Information Parser]($route-information-parser) and changes the list of pages accordingly.
 
 The `build` method builds the `Navigator` widget with a list of configured pages.
 
-The missing part of this is the injecting the [Navigation Notifier](#navigation-notifier) into the `Router Delegate` and add listener to it, so when the `Navigation Notifier` changes it state the `Router` rebuilds.
+The missing part of this is injecting the [Navigation Notifier](#navigation-notifier) into the `Router Delegate` and add a listener to it, so when the `Navigation Notifier` changes it state the `Router` rebuilds.
 
 ```dart
 class AppRouterDelegate extends RouterDelegate<RouteConfiguration>
@@ -138,9 +138,9 @@ class AppRouterDelegate extends RouterDelegate<RouteConfiguration>
 
 ### Navigation Notifier
 
-Is a `ChangeNotifier` that is a container that contains a list of pages of the application with methods to make an actual navigation. 
+Is a `ChangeNotifier` is a container that contains a list of pages of the application with methods to make actual navigation. 
 
-Also, this class holds an information about an authentication state, to restrict visiting specific pages only by the logged users.
+Also, this class holds information about an authentication state, to restrict visiting specific pages only by the logged users.
 
 The `Navigator Notifier` requires two parameters:
 
@@ -161,14 +161,14 @@ The following diagram describes the structure and relationship between the above
 
 ## Making things work
 
-The following section provide an implementation of a new navigation integration into the Metrics Web Application. As navigation is related to the UI of the application, the required changes affect only the presentation layer. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md). 
+The following section provides an implementation of a new navigation integration into the Metrics Web Application. As navigation is related to the UI of the application, the required changes affect only the presentation layer. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md). 
 
 To introduce this feature, we should follow the next steps:
 
 1. Replace the `MaterialApp` widget in the root `main.dart` file with the new `MaterialApp.router()` constructor.
 2. Create the `AppRouteInformationParser` and pass it to the `MaterialApp.router()`, as it is the first required parameter.
-3. Create the `RouteConfigurationFactory` class, that helps in parsing and mapping the `RouteInformation` in the created `AppRouteInformationParser`.
-4. To help with mapping an incoming `RouteInformation` to the application specific, we should define the `AppRoutes` class, that consist of pre-defined `RouteConfiguration`s that belongs to Metrics application pages.
+3. Create the `RouteConfigurationFactory` class, which helps in parsing and mapping the `RouteInformation` in the created `AppRouteInformationParser`.
+4. To help with mapping an incoming `RouteInformation` to the application-specific, we should define the `AppRoutes` class, which consists of pre-defined `RouteConfiguration`s that belongs to Metrics application pages.
 5. Create the `AppRouterDelegate` and pass it to the `MaterialApp.router()`, as it is the second required parameter.
 6. Create the `NavigationNotifier` and inject it to the application via `InjectorContainer` widget and connect it with the `AuthNotifier` to be able to update an authentication status of a user once the `AuthNotifier` changes.
 7. Provide methods that should have similar to the `Navigation 1.0` API, to make navigation in the application, such as: 
