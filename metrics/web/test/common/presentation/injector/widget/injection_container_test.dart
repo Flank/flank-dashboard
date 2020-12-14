@@ -6,7 +6,7 @@ import 'package:metrics/common/presentation/injector/widget/injection_container.
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
-import 'package:metrics/instant_config/presentation/state/instant_config_notifier.dart';
+import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -117,14 +117,14 @@ void main() {
     );
 
     testWidgets(
-      "injects an InstantConfigNotifier",
+      "injects a FeatureConfigNotifier",
       (tester) async {
         await tester.pumpWidget(InjectionContainerTestbed());
 
         final context = InjectionContainerTestbed.childKey.currentContext;
 
         expect(
-          () => Provider.of<InstantConfigNotifier>(context, listen: false),
+          () => Provider.of<FeatureConfigNotifier>(context, listen: false),
           returnsNormally,
         );
       },
