@@ -13,8 +13,8 @@ class FirestoreFeatureConfigRepository extends FeatureConfigRepository {
   Future<FeatureConfig> fetch() async {
     try {
       final featureConfigSnapshot = await _firestore
-          .collection('instant_config')
-          .document('instant_config')
+          .collection('feature_config')
+          .document('feature_config')
           .get();
 
       return FeatureConfigData.fromJson(featureConfigSnapshot.data);
