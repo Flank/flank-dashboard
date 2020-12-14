@@ -20,9 +20,11 @@ Bob -> Router : Opens the Metrics URL
 activate Router
 
 Router -> RouteInformationProvider : Notifies about the URL changes
+deactivate Router
 activate RouteInformationProvider
 
 RouteInformationProvider -> MetricsRouteInformationParser : parseRouteInformation(RouteInformation routeInformation)
+deactivate RouteInformationProvider
 activate MetricsRouteInformationParser
 
 MetricsRouteInformationParser -> RouteConfigurationFactory : create(Uri uri)
@@ -41,18 +43,21 @@ else Change the URL
 
     MetricsRouterDelegate -> NavigationNotifier : setNewRoutePath(routeConfiguration)
 end
+deactivate MetricsRouteInformationParser
 
 NavigationNotifier -> MetricsPageFactory : create(RouteConfiguration configuration)
 activate MetricsPageFactory
 
-MetricsPageFactory --> NavigationNotifier : actual page
+return actual page
 
-NavigationNotifier --> NavigationNotifier : add actual page to the page stack
+NavigationNotifier -> NavigationNotifier : add actual page to the page stack
 
 NavigationNotifier --> MetricsRouterDelegate: notifyListeners()
+deactivate NavigationNotifier
 
-MetricsRouterDelegate --> MetricsRouterDelegate: applies new page stack
+MetricsRouterDelegate -> MetricsRouterDelegate: applies new page stack
 
 MetricsRouterDelegate --> Bob : shows the actual page
+deactivate MetricsRouterDelegate
 
 @enduml

@@ -5,9 +5,9 @@ actor Bob
 participant Router
 
 box Configuring pages
-    participant NavigationNotifier
-    participant MetricsPageFactory
-    participant MetricsRouterDelegate
+participant NavigationNotifier
+participant MetricsPageFactory
+participant MetricsRouterDelegate
 endbox
 
 participant MetricsRouteInformationParser
@@ -17,33 +17,32 @@ participant RouteInformationProvider
 Bob -> NavigationNotifier : pushNamed('new page')
 activate NavigationNotifier
 
-NavigationNotifier -> MetricsPageFactory : create(RouteConfiguration configuration)
+NavigationNotifier -> MetricsPageFactory : create(configuration)
 activate MetricsPageFactory
 
-MetricsPageFactory --> NavigationNotifier : new page
+return updated page
 
-NavigationNotifier --> NavigationNotifier : add new page to the page stack
+NavigationNotifier -> NavigationNotifier : add updated page to the page stack
 
 NavigationNotifier -> MetricsRouterDelegate : notifyListeners()
+deactivate NavigationNotifier
 activate MetricsRouterDelegate
 
-MetricsRouterDelegate --> MetricsRouterDelegate: applies new page stack
+MetricsRouterDelegate -> MetricsRouterDelegate: applies new page stack
 
-MetricsRouterDelegate -> MetricsRouteInformationParser : restoreRouteInformation(RouteConfiguration configuration)
+MetricsRouterDelegate -> MetricsRouteInformationParser : restoreRouteInformation(configuration)
+deactivate MetricsRouterDelegate
 activate MetricsRouteInformationParser
 
-MetricsRouteInformationParser -> RouteInformationProvider : routerReportsNewRouteInformation(RouteInformation routeInformation)
+MetricsRouteInformationParser -> RouteInformationProvider : routerReportsNewRouteInformation(routeInformation)
+deactivate MetricsRouteInformationParser
 activate RouteInformationProvider
 
-RouteInformationProvider --> Router : notify
+RouteInformationProvider --> Router : notify about URL changed
 activate Router
 
-Router --> Bob : shows the updated page
-
+Router --> Bob : show updated URL
 deactivate Router
-deactivate RouteInformationProvider
-deactivate MetricsRouteInformationParser
-deactivate MetricsRouterDelegate
-deactivate MetricsPageFactory
-deactivate NavigationNotifier
+
+RouteInformationProvider --> Bob : show new page
 @enduml

@@ -23,46 +23,46 @@ Consider the following classes, that represent the architecture of the `Navigato
 
 ### Router
 
-The `Router` is a class, that listens for routing information from the operating system(e.g. browser), parses that information using the [Route Information Parser](#route-information-parser) into a user-provided configuration([Route Configuration](#route-configuration)) and then [Router Delegate](#router-delegate) uses it to build the `Navigator` widget with a list of pages.
+The `Router` is a class, that listens for routing information from the operating system(e.g. browser), parses that information using the [RouteInformationParser](#route-information-parser) into a user-provided configuration([RouteConfiguration](#route-configuration)), and then [RouterDelegate](#router-delegate) uses it to build the `Navigator` widget with a list of pages.
 
 Consider the following parts of the `Router` class:
 
- - The [Route Information Provider](#route-information-provider) responsible for listening to the events from the operating system and send events back to it if the app state changes;
- - the [Route Information Parser](#route-information-parser) parses route information into user-defined configuration and vice versa;
- - the [Router Delegate](#router-delegate) takes configuration from the `RouteInformationParser` and builds a list of pages.
+ - a [Route Information Provider](#route-information-provider) responsible for listening to the events from the operating system and send events back to it if the app state changes;
+ - a [Route Information Parser](#route-information-parser) parses route information into user-defined configuration and vice versa;
+ - a [Router Delegate](#router-delegate) takes configuration from the `RouteInformationParser` and builds a list of pages.
 
 ### Route Information Provider
 
-The `RouteInformationProvider` - a class that provides a [Route information](#route-information) for the [Route Information Parser](#route-information-parser).
+A `RouteInformationProvider` is a class that provides a [RouteInformation](#route-information) for the [RouteInformationParser](#route-information-parser).
 
 This class is a "bridge" between the browser and the `Router`. 
 
-When a user enters a URL in the browser, the `RouteInformationProvider` converts the URL into the [Route information](#route-information) and provides a result to the [Route Information Parser](#route-information-parser).
+When a user enters a URL in the browser, the `RouteInformationProvider` converts the URL into the [RouteInformation](#route-information) and provides a result to the [RouteInformationParser](#route-information-parser).
 
-Also, when the application changes its state, the `RouteInformationProvider` receives the updated [Route information](#route-information) and provides the change to the browser to make reflecting changes.
+Also, when the application changes its state, the `RouteInformationProvider` receives the updated [RouteInformation](#route-information) and provides the change to the browser to make reflecting changes.
 
 The Flutter framework provides the default `RouteInformationProvider` implementation, so there is no need to implement it for the `Metrics application`.
 
 ### Route information
 
-A `Route information` is a class, that consists of a `location` string of the application and a `state` object that configures the application in that location.
+A `RouteInformation` is a class, that consists of a `location` string of the application and a `state` object that configures the application in that location.
 
 The `location` is multiple string identifiers with slashes in between(e.g. '/route'). In the Web application, it is a URL.
 
-The `state` is an object that stores data in the browser history entry(e.g. filled input forms, scroll position).
+A `state` is an object that stores data in the browser history entry(e.g. filled input forms, scroll position).
 
 ### Route Information Parser
 
 The `RouteInformationParser` - is a class that acts in two ways:
 
- - Parses an incoming [Route information](#route-information), obtained from the [Route Information Provider](#route-information-provider) into a user-defined [Route Configuration](#route-configuration);
+ - Parses incoming [RouteInformation](#route-information), obtained from the [RouteInformationProvider](#route-information-provider) into a user-defined [RouteConfiguration](#route-configuration);
 
- - creates a new [Route information](#route-information) object from the [Route Configuration](#route-configuration) and passes it back to the [Route Information Provider](#route-information-provider).
+ - creates a new [RouteInformation](#route-information) object from the [RouteConfiguration](#route-configuration) and passes it back to the [RouteInformationProvider](#route-information-provider).
 
-To handle our specific routes, we should define our own parser - `MetricsRouteInformationParser` that extends the `RouteInformationParser` and provides two methods:
+To handle our specific routes, we should define our own parser - `MetricsRouteInformationParser` that implements the `RouteInformationParser` and provides two methods:
 
 ```dart
-class MetricsRouteInformationParser extends RouteInformationParser<RouteConfiguration> {
+class MetricsRouteInformationParser implements RouteInformationParser<RouteConfiguration> {
     @override
     Future<RouteConfiguration> parseRouteInformation(RouteInformation routeInformation);
 
@@ -71,13 +71,13 @@ class MetricsRouteInformationParser extends RouteInformationParser<RouteConfigur
 }
 ```
 
-The `parseRouteInformation` method converts the [Route information](#route-information) into the [Route Configuration](#route-configuration) and pass it to the [Route Delegate](#route-delegate) class.
+The `parseRouteInformation` method converts the [RouteInformation](#route-information) into the [RouteConfiguration](#route-configuration) and passes it to the [RouterDelegate](#router-delegate) class.
 
-The `restoreRouteInformation` method converts the [Route Configuration](#route-configuration) back into the [Route information](#route-information).
+The `restoreRouteInformation` method converts the [RouteConfiguration](#route-configuration) back into the [RouteInformation](#route-information).
 
 These methods exist to keep the URL in the browser's location bar up to date with the application state, allowing it's back and forward buttons to function as the user expects.
 
-The class, that helps in parsing route information - [Route Configuration Factory](#route-configuration-factory).
+The class, that helps in parsing route information is a [RouteConfigurationFactory](#route-configuration-factory).
 
 ### Route Configuration
 
@@ -85,20 +85,20 @@ The class, that holds the data that describes the route.
 
 It contains the route name, URL path, and the information about requiring authentication status of this route.
 
-### Route Delegate
+### Router Delegate
 
-The `RouteDelegate` uses to build the `Navigator` with a list of configured pages. It defines how the `Router` reacts to changes in the application state and operating system.
+The `RouterDelegate` uses to build the `Navigator` with a list of configured pages. It defines how the `Router` reacts to changes in the application state and operating system.
 
 It is a core part of the `Router` and it is responsible for:
  - react to push and pop route intents;
  - notifies the `Router` to rebuild;
  - act as a builder for the `Router`, that builds the `Navigator` widget.
 
-To specify our own app-specific behavior we should extend the `RouteDelegate` with `ChangeNotifier` and `PopupNavigatorRouterDelegateMixin` mixins and must provide the following methods:
+To specify our own app-specific behavior we should extend the `RouterDelegate` with `ChangeNotifier` and `PopupNavigatorRouterDelegateMixin` mixins and must provide the following methods:
 
 ```dart
-class MetricsRouterDelegate extends RouteDelegate<RouteDelegate> 
-with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteDelegate> {
+class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration> 
+with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteConfiguration> {
     @override
     RoutePath get currentConfiguration;
 
@@ -115,13 +115,13 @@ with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteDelegate> {
 
 The `currentConfiguration` is a value, that `Router` uses to populate the browser history to support the back and forward buttons in the browser top bar.
 
-The [Router] calls the `setInitialRoutePath` at startup with the [RouteConfiguration](#route-configuration) from parsing the initial route.
+The `Router` calls the `setInitialRoutePath` at startup with the [RouteConfiguration](#route-configuration) of the initial route.
 
 The `Router` calls the `setNewRoutePath` method when the [Route Information Provider](#route-information-provider) reports that the operating system pushes a new route to the application. This method takes the [RouteConfiguration](#route-configuration) that comes from the [Route Information Parser]($route-information-parser) and changes the list of pages accordingly.
 
-The `build` method builds the `Navigator` widget with a list of configured pages.
+The `build` method builds the `Navigator` widget with a current page history.
 
-The missing part of this is injecting the [Navigation Notifier](#navigation-notifier) into the `Router Delegate` and add a listener to it, so when the `Navigation Notifier` changes it state the `Router` rebuilds.
+The missing part of this is injecting the [NavigationNotifier](#navigation-notifier) into the `Router Delegate` and add a listener to it, so when the `NavigationNotifier` changes its state the `Router` rebuilds.
 
 ```dart
 class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
@@ -141,7 +141,7 @@ Is a `ChangeNotifier` that contains a list of pages of the application with meth
 
 Also, this class holds information about an authentication state, to restrict visiting specific pages only by the logged users.
 
-The `Navigation Notifier` requires two parameters:
+The `NavigationNotifier` requires two parameters:
 
  - [Metrics Pages Factory](#metrics-pages-factory)
  - [Route Configuration Factory](#route-configuration-factory)
@@ -156,13 +156,13 @@ The `RouteConfigurationFactory` is responsible for creating the [RouteConfigurat
 
 In fact, it uses the `MetricsAppRoutes` class that holds a list of pre-defined `RouteConfiguration`s and maps the incoming URI to the `RouteConfiguration` related to the specific application page.
 
-The following diagram describes the structure and relationship between the above classes.
+The following diagram describes the structure and relationship between the above classes:
 
 ![Route change diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/navigation2_design_docs/metrics/web/docs/features/navigation/diagrams/navigation_class_diagram.puml)
 
 ## Making things work
 
-The following section provides an implementation of a new navigation integration into the Metrics Web Application. As navigation is related to the UI of the application, the required changes affect only the presentation layer. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md). 
+The following section provides an implementation details of a new navigation integration into the Metrics Web Application. As navigation is related to the UI of the application, the required changes affect only the presentation layer. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md). 
 
 To introduce this feature, we should follow the next steps:
 
@@ -171,7 +171,7 @@ To introduce this feature, we should follow the next steps:
 3. Create the `RouteConfigurationFactory` class, which helps in parsing and mapping the `RouteInformation` in the created `MetricsRouteInformationParser`.
 4. To help with mapping an incoming `RouteInformation` to the application-specific, we should define the `MetricsRoutes` class, which consists of pre-defined `RouteConfiguration`s that belongs to Metrics application pages.
 5. Create the `MetricsRouterDelegate` and pass it to the `MaterialApp.router()`, as it is the second required parameter.
-6. Create the `NavigationNotifier` and inject it to the application via `InjectorContainer` widget and connect it with the `AuthNotifier` to be able to update an authentication status of a user once the `AuthNotifier` changes.
+6. Create the `NavigationNotifier` and inject it to the application via `InjectorContainer`. Also, we should connect it with the `AuthNotifier` to receive the authentication updates once the `AuthNotifier` changes.
 7. Provide methods that should have similar to the `Navigation 1.0` API, to make navigation in the application, such as: 
      - pushNamed()
      - popNamed()
@@ -180,9 +180,9 @@ To introduce this feature, we should follow the next steps:
      - pushAndRemoveWhere()
 8. Integrate the `NavigationNotifier` into the `AppRouterDelegate` as well, to extract methods for the actual navigation and a list of pages, specific to the Metrics app from the `AppRouterDelegate`.
 9. In the `AppRouterDelegate` provide the `setInitialRoutePath` and the `setNewRoutePath` methods to handle the navigation and `build` method to build the `Navigator` widget with the configured list of pages. Also, override the `currentConfiguration` getter to help the `Router` in updating the route information.
-10. As the `MaterialApp.router` constructor does not contain the `observers` field, we should pass the `List<NavigatorObserver>` to the `MetricsRouterDelegate` class, which pass it to the `Navigator` widget. The existing observers remain unchanged. 
+10. As the `MaterialApp.router` constructor does not contain the `observers` field, we should pass the `List<NavigatorObserver>` to the `MetricsRouterDelegate` class, which passes it to the `Navigator` widget. The existing observers remain unchanged. 
 
-With that in place we can use the provided methods from the `NavigationNotifier` to make navigation with the new navigation system.
+With that in place, we can use the provided methods from the `NavigationNotifier` to make navigation with the new navigation system.
 
 The following sequence diagrams display the process of navigation with the new `Navigation 2.0`.
 
@@ -203,11 +203,11 @@ Navigation using the application API:
 > How the existing test codebase is affected by the changes with Router class
 
 Required changes in the following code for the tests to work properly with the new navigation system:
-- Create `MetricsMaterialAppTestbed` and replace `MaterialApp` with it in those places where tests require navigation;
+- create `MetricsMaterialAppTestbed` and replace `MaterialApp` with it in those places where tests require navigation;
 - update the `MetricsThemedTestbed` class and places where tests use navigation from this class;
 - inject the `NavigationNotifier` into the `TestInjectionContainer` and update tests that require `NavigationNotifier`.
 
 ## Results
 > What was the outcome of the project?
 
-The document designs an integration of the new navigation system into the Metrics Web Application and related changes.
+The documented designs of the integration of the new navigation system into the Metrics Web Application and related changes.
