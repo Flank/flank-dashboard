@@ -26,11 +26,6 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /instant_config/{config} {
-      allow read: if true;
-      allow write: if false;
-    }
-
     match /feature_config/{config} {
       allow read: if true;
       allow write: if false;

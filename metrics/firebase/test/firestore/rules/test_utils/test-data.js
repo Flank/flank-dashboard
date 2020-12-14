@@ -52,11 +52,6 @@ const allowedEmailDomains = {
   "allowed_email_domains/gmail.com": {},
 };
 
-/** A test data for the instant config collection */
-const instantConfig = {
-  "instant_config/instant_config": {},
-};
-
 /** A test data for the feature config collection */
 const featureConfig = {
   "feature_config/feature_config": {},
@@ -96,7 +91,6 @@ exports.projectGroups = projectGroups;
 exports.builds = builds;
 exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
-exports.instantConfig = instantConfig;
 exports.featureConfig = featureConfig
 
 /** An email and password sign in provider identifier */
