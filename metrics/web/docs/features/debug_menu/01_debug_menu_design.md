@@ -2,12 +2,13 @@
 
 ## TL;DR
 
-Introducing the `Debug Menu` feature to the Metrics Web Application allows us to access the debug features of the application, such as the `FPS Monitor` and the `Renderer Display`, and store the `Debug Menu` local configuration.
+Introducing the `Debug Menu` feature to the Metrics Web Application allows us to access the debug features of the application, such as the `FPS Monitor` and the `Renderer Display`.
+The `Debug Menu` feature also allows us to store the local configuration needed to enable or disable some features locally and to load them on the application's start.
 
 ## Hive
 
-To introduce this feature, we need to store the local configuration values in the `IndexedDB` using the `Hive` package.
-We need to store the configuration values as following: 
+To introduce this feature, we need to store the local configuration values using the `Hive` package that uses the `IndexedDB`.
+We need to store the configuration values as following:  
 
 ```json
 {
@@ -55,7 +56,7 @@ The following sequence diagram describes how the application applies `Local Conf
 
 ![Read config sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/debug_menu_document/metrics/web/docs/features/debug_menu/diagrams/debug_menu_read_config_sequence_diagram.puml)
 
-Let's consider the mechanism of applying the `Local Config` values in the application (considering that the `Hive`'s `local_config` box is already open). 
+Let's consider the mechanism of applying the `Local Config` values in the application (considering that the `Hive`'s `local_config` box is already open using the `OpenLocalConfigStorageUseCase`). 
 When a user enters the application, he or she stays on the `LoadingPage` until the `Local Config` is initialized.
 
 Firstly, the application fetches the `Feature Config` that includes the `isDebugMenuEnabled` configuration value. 
@@ -81,7 +82,7 @@ The following sequence diagram describes how the application updates the `Local 
 
 ![Update config sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/debug_menu_document/metrics/web/docs/features/debug_menu/diagrams/debug_menu_update_config_sequence_diagram.puml)
 
-Let's consider the mechanism of updating the `Local Config` values in the application (considering that the `Hive`'s `local_config` box is already open).
+Let's consider the mechanism of updating the `Local Config` values in the application (considering that the `Hive`'s `local_config` box is already open using the `OpenLocalConfigStorageUseCase`).
 Please consider the following steps performed by the application when the user updates the `Local Config`, e.g. by toggling the FPS Monitor:
 
     1. The UI calls the `toggleFpsMonitor` method of the `DebugMenuNotifier`.
