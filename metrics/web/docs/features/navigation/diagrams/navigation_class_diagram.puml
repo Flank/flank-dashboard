@@ -1,40 +1,39 @@
-@startuml
-package widgets {
-    class InjectionContainer {}
+@startuml navigation_class_diagram
 
-    class MaterialApp {}
-}
+class MetricsApp {}
 
 package common.presentation.navigation {
-        package path_configuration{
-            class RouteConfiguration{
-               + routeEnum : AppRouteEnum
+        package path_configuration {
+            class RouteConfiguration {
+               + routeEnum : MetricsRouteEnum
                + name : String
                + path : String
                + authorizationRequired : bool
                + nestedRouteInformationFactory : RouteConfigurationFactory
             }
-           class AppRouteEnum{}
-           class RouteConfigurationFactory{
+            class MetricsRouteEnum {}
+            class RouteConfigurationFactory {
                + RouteConfiguration create()
                - RouteConfiguration _handleNested()
-           }
+            }
         }
-        class AppRouteInformationParser{
-            Future<RouteConfiguration> parseRouteInformation()
-            RouteInformation restoreRouteInformation()
+        class MetricsRouteInformationParser {
+            - RouteConfigurationFactory _routeConfigurationFactory
+            + Future<RouteConfiguration> parseRouteInformation()
+            + RouteInformation restoreRouteInformation()
         }
-        class AppRouterDelegate{
-            + navigationNotifier : NavigationNotifier
+        class MetricsRouterDelegate {
             + navigatorKey : GlobalKey<NavigatorState>
             + currentConfiguration : RouteConfiguration
+            + navigatorObservers : List<NavigatorObservers>
+            - navigationNotifier : NavigationNotifier
             + Future<void> setInitialRoutePath(RouteConfiguration routeConfiguration)
             + Future<void> setNewRoutePath(RouteConfiguration routeConfiguration)
         }
-        class NavigationNotifier{
+        class NavigationNotifier {
             + pages : List<Page> 
             + currentConfiguration : RouteConfiguration
-            - _appRoutePageFactory : AppRoutePageFactory
+            - _metricsRoutePageFactory : MetricsRoutePageFactory
             - _routeConfigurationFactory : RouteConfigurationFactory
             - _isUserLoggedIn : bool
             + void handleUserStateUpdates(bool isLoggedIn)
@@ -48,11 +47,10 @@ package common.presentation.navigation {
             + void setInitialRoutePath(RouteConfiguration routeConfiguration)
             + void setNewRoutePath(RouteConfiguration routeConfiguration)
         }
-        class AppRoutePageFactory{
-            + AppRoutePage<T> create<T>()
+        class MetricsRoutePageFactory{
+            + MetricsRoutePage<T> create<T>()
         }
-      
-        class AppRoutePage{
+        class MetricsRoutePage {
             + builder : WidgetBuilder
             + maintainState : bool
             + fullScreenDialog : bool
@@ -60,17 +58,15 @@ package common.presentation.navigation {
         } 
 }
 
-InjectionContainer --> MaterialApp : provides NavigationNotifier
-InjectionContainer --> AppRouterDelegate : provides NavigationNotifier
-MaterialApp --> AppRouteInformationParser :uses
-MaterialApp --> AppRouterDelegate : uses
-AppRouteInformationParser --> RouteConfiguration : provides
-AppRouteInformationParser --> RouteConfigurationFactory : uses
-RouteConfiguration --> AppRouteEnum : uses
-RouteConfiguration --> RouteConfigurationFactory : uses
-AppRouterDelegate --> NavigationNotifier : uses
+MetricsApp --> MetricsRouteInformationParser :uses
+MetricsApp --> MetricsRouterDelegate : uses
+MetricsRouteInformationParser --> RouteConfiguration : provides
+MetricsRouteInformationParser --> RouteConfigurationFactory : uses
+RouteConfiguration --> MetricsRouteEnum : uses
+RouteConfigurationFactory -> RouteConfiguration : uses
+MetricsRouterDelegate --> NavigationNotifier : uses
 NavigationNotifier --> RouteConfigurationFactory : uses
 NavigationNotifier --> RouteConfiguration : uses
-NavigationNotifier --> AppRoutePageFactory : uses
-AppRoutePageFactory --> AppRoutePage : uses
+NavigationNotifier --> MetricsRoutePageFactory : uses
+MetricsRoutePageFactory --> MetricsRoutePage : uses
 @enduml
