@@ -31,6 +31,7 @@ activate MetricsRouterDelegate
 MetricsRouterDelegate -> MetricsRouterDelegate: applies new page stack
 
 MetricsRouterDelegate -> MetricsRouteInformationParser : restoreRouteInformation(configuration)
+MetricsRouterDelegate --> Bob : show new page
 deactivate MetricsRouterDelegate
 activate MetricsRouteInformationParser
 
@@ -38,11 +39,9 @@ MetricsRouteInformationParser -> RouteInformationProvider : routerReportsNewRout
 deactivate MetricsRouteInformationParser
 activate RouteInformationProvider
 
-RouteInformationProvider --> Router : notify about URL changed
+RouteInformationProvider --> Router : notify about page changed
 activate Router
 
 Router --> Bob : show updated URL
 deactivate Router
-
-RouteInformationProvider --> Bob : show new page
 @enduml
