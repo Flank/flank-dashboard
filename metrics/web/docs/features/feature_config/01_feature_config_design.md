@@ -29,7 +29,7 @@ Once we have a new collection, we have to add security rules for this collection
 
 ## Metrics application
 
-The following sub-sections provide an implementation of Feature config integration for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/rename_instant_config_to_feature_config/metrics/web/docs/01_metrics_web_application_architecture.md).
+The following sub-sections provide an implementation of Feature config integration for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
 
 ### Data layer
 
