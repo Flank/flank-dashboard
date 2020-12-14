@@ -18,7 +18,7 @@ class FeatureConfigNotifierStub extends ChangeNotifier
       const DebugMenuFeatureConfigViewModel(isEnabled: true);
 
   @override
-  Future<void> initializeFeatureConfig() async {}
+  Future<void> initializeConfig() async {}
 
   @override
   bool get isLoading => false;

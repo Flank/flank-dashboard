@@ -17,7 +17,7 @@ package common.presentation {
             - _defaultFeatureConfig : FeatureConfig
             - _fetchFeatureConfigUseCase : FetchFeatureConfigUseCase
 
-            + Future<void> initializeFeatureConfig()
+            + Future<void> initializeConfig()
             + void setDefaults(bool isPasswordSignInOptionEnabled, bool isDebugMenuEnabled)
         }
     }

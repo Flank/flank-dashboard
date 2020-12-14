@@ -22,7 +22,7 @@ void main() {
       isDebugMenuEnabled: isDebugMenuEnabled,
     );
 
-    final repository = _RemoteConfigurationRepositoryMock();
+    final repository = _FeatureConfigRepositoryMock();
     final useCase = FetchFeatureConfigUseCase(repository);
 
     tearDown(() {
@@ -97,5 +97,5 @@ void main() {
   });
 }
 
-class _RemoteConfigurationRepositoryMock extends Mock
+class _FeatureConfigRepositoryMock extends Mock
     implements FeatureConfigRepository {}

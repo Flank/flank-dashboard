@@ -83,7 +83,7 @@ void main() {
     );
 
     test(
-      ".initializeFeatureConfig() sets the .isLoading to true when called",
+      ".initializeConfig() sets the .isLoading to true when called",
       () {
         when(_fetchFeatureConfigUseCase(any)).thenAnswer(
           (_) => Future.value(featureConfig),
@@ -95,7 +95,7 @@ void main() {
           isDebugMenuEnabled: false,
         );
 
-        notifier.initializeFeatureConfig();
+        notifier.initializeConfig();
 
         verify(_fetchFeatureConfigUseCase(param)).called(1);
         expect(notifier.isLoading, isTrue);
@@ -103,7 +103,7 @@ void main() {
     );
 
     test(
-      ".initializeFeatureConfig() sets the .isLoading to false when finished",
+      ".initializeConfig() sets the .isLoading to false when finished",
       () async {
         when(_fetchFeatureConfigUseCase(any)).thenAnswer(
           (_) => Future.value(featureConfig),
@@ -115,7 +115,7 @@ void main() {
           isDebugMenuEnabled: false,
         );
 
-        await notifier.initializeFeatureConfig();
+        await notifier.initializeConfig();
 
         verify(_fetchFeatureConfigUseCase(param)).called(1);
         expect(notifier.isLoading, isFalse);
@@ -123,7 +123,7 @@ void main() {
     );
 
     test(
-      ".initializeFeatureConfig() calls the fetch feature config use case",
+      ".initializeConfig() calls the fetch feature config use case",
       () {
         when(_fetchFeatureConfigUseCase(any)).thenAnswer(
           (_) => Future.value(featureConfig),
@@ -135,14 +135,14 @@ void main() {
           isDebugMenuEnabled: false,
         );
 
-        notifier.initializeFeatureConfig();
+        notifier.initializeConfig();
 
         verify(_fetchFeatureConfigUseCase(param)).called(1);
       },
     );
 
     test(
-      ".initializeFeatureConfig() uses the given default values when fetching the feature config",
+      ".initializeConfig() uses the given default values when fetching the feature config",
       () {
         final featureConfigParam = FeatureConfigParam(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
@@ -156,14 +156,14 @@ void main() {
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
         );
-        notifier.initializeFeatureConfig();
+        notifier.initializeConfig();
 
         verify(_fetchFeatureConfigUseCase(featureConfigParam)).called(1);
       },
     );
 
     test(
-      ".initializeFeatureConfig() sets the login form feature config view model",
+      ".initializeConfig() sets the login form feature config view model",
       () async {
         const expectedViewModel = PasswordSignInOptionFeatureConfigViewModel(
           isEnabled: isPasswordSignInOptionEnabled,
@@ -172,7 +172,7 @@ void main() {
           (_) => Future.value(featureConfig),
         );
 
-        await notifier.initializeFeatureConfig();
+        await notifier.initializeConfig();
 
         expect(
           notifier.passwordSignInOptionFeatureConfigViewModel,
@@ -182,7 +182,7 @@ void main() {
     );
 
     test(
-      ".initializeFeatureConfig() sets the debug menu feature config view model",
+      ".initializeConfig() sets the debug menu feature config view model",
       () async {
         const expectedViewModel = DebugMenuFeatureConfigViewModel(
           isEnabled: isDebugMenuEnabled,
@@ -191,7 +191,7 @@ void main() {
           (_) => Future.value(featureConfig),
         );
 
-        await notifier.initializeFeatureConfig();
+        await notifier.initializeConfig();
 
         expect(
           notifier.debugMenuFeatureConfigViewModel,
@@ -201,13 +201,13 @@ void main() {
     );
 
     test(
-      ".initializeFeatureConfig() sets the is loading value to false when initialization is completed",
+      ".initializeConfig() sets the is loading value to false when initialization is completed",
       () async {
         when(_fetchFeatureConfigUseCase(any)).thenAnswer(
           (_) => Future.value(featureConfig),
         );
 
-        await notifier.initializeFeatureConfig();
+        await notifier.initializeConfig();
 
         expect(notifier.isLoading, isFalse);
       },
@@ -220,7 +220,7 @@ void main() {
           (_) => Future.value(featureConfig),
         );
 
-        await notifier.initializeFeatureConfig();
+        await notifier.initializeConfig();
 
         expect(notifier.isInitialized, isTrue);
       },

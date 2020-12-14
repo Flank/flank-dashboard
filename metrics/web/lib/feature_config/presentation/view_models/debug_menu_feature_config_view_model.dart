@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:meta/meta.dart';
 import 'package:metrics/feature_config/presentation/view_models/feature_config_view_model.dart';
 
 /// A view model that represents a feature config for the debug menu feature.

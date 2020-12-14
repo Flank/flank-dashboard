@@ -117,7 +117,7 @@ class _LoadingPageState extends State<LoadingPage>
     _featureConfigNotifier.addListener(_featureConfigNotifierListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _featureConfigNotifier.initializeFeatureConfig();
+      _featureConfigNotifier.initializeConfig();
     });
   }
 

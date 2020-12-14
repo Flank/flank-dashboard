@@ -77,7 +77,7 @@ void main() {
           featureConfigNotifier: featureConfigNotifier,
         ));
 
-        verify(featureConfigNotifier.initializeFeatureConfig())
+        verify(featureConfigNotifier.initializeConfig())
             .called(equals(1));
       },
     );

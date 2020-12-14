@@ -25,7 +25,7 @@ activate UI
 
 UI -> FeatureConfigNotifier : setDefaults(bool isPasswordSignInOptionEnabled, bool isDebugMenuEnabled)
 activate FeatureConfigNotifier
-UI -> FeatureConfigNotifier : initializeFeatureConfig()
+UI -> FeatureConfigNotifier : initializeConfig()
 
 FeatureConfigNotifier -> FetchFeatureConfigUseCase : call(FeatureConfigParam params)
 activate FetchFeatureConfigUseCase

@@ -17,7 +17,7 @@ class FeatureConfigNotifier extends ChangeNotifier {
   /// A [FeatureConfig] containing the default configuration values.
   FeatureConfig _defaultFeatureConfig;
 
-  /// An [FeatureConfig] containing the current configuration values.
+  /// A [FeatureConfig] containing the current configuration values.
   FeatureConfig _featureConfig;
 
   /// A view model that holds the [FeatureConfig] data for the password
@@ -36,7 +36,7 @@ class FeatureConfigNotifier extends ChangeNotifier {
   /// Otherwise, returns `false`.
   bool get isInitialized => _featureConfig != null;
 
-  /// A view model that provides the [FeatureConfig] data for for the password
+  /// A view model that provides the [FeatureConfig] data for the password
   /// sign-in option.
   PasswordSignInOptionFeatureConfigViewModel
       get passwordSignInOptionFeatureConfigViewModel =>
@@ -72,8 +72,8 @@ class FeatureConfigNotifier extends ChangeNotifier {
     );
   }
 
-  /// Initializes the [InstanceConfig].
-  Future<void> initializeFeatureConfig() async {
+  /// Initializes the [FeatureConfig].
+  Future<void> initializeConfig() async {
     _setIsLoading(true);
 
     final params = FeatureConfigParam(
