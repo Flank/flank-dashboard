@@ -1,0 +1,50 @@
+
+@startuml navigation_sequence_diagram_2
+
+    actor Bob
+
+    participant Router
+
+    box Configuring pages
+        participant NavigationNotifier
+        participant MetricsPageFactory
+        participant MetricsRouterDelegate
+    endbox 
+
+    participant MetricsRouteInformationParser
+
+    participant RouteInformationProvider
+
+    Bob -> NavigationNotifier : pushNamed('new page')
+    activate NavigationNotifier
+
+    NavigationNotifier -> MetricsPageFactory : create(RouteConfiguration configuration)
+    activate MetricsPageFactory
+
+    MetricsPageFactory -> NavigationNotifier : updated page
+
+    NavigationNotifier --> NavigationNotifier : add updated page to the page stack
+
+    NavigationNotifier -> MetricsRouterDelegate : notifyListeners()
+    activate MetricsRouterDelegate
+
+    MetricsRouterDelegate --> MetricsRouterDelegate: applies new page stack
+
+    MetricsRouterDelegate -> MetricsRouteInformationParser : restoreRouteInformation(RouteConfiguration configuration)
+    activate MetricsRouteInformationParser
+
+    MetricsRouteInformationParser -> RouteInformationProvider : routerReportsNewRouteInformation(RouteInformation routeInformation)
+    activate RouteInformationProvider
+
+    RouteInformationProvider -> Router : notify
+    activate Router
+
+    Router -> Bob : shows the updated page
+    
+    deactivate Router
+    deactivate RouteInformationProvider
+    deactivate MetricsRouteInformationParser
+    deactivate MetricsRouterDelegate
+    deactivate MetricsPageFactory
+    deactivate NavigationNotifier
+@enduml

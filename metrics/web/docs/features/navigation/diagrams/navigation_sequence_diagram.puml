@@ -1,83 +1,59 @@
 
-@startuml routing_sequence_diagram
+@startuml navigation_sequence_diagram
 
-    actor Bob
+actor Bob
 
-    participant Browser
-    participant RouteInformationProvider
+participant Router
+participant RouteInformationProvider
 
-    box Parsing route information
-        participant AppRouteInformationParser
-        participant RouteConfigurationFactory
-    endbox
+box Parsing route information
+participant MetricsRouteInformationParser
+participant RouteConfigurationFactory
+endbox
 
-    box Configuring pages
-        participant AppRouterDelegate
-        participant NavigationNotifier
-        participant AppRoutePageFactory
-    endbox 
+box Configuring pages
+participant MetricsRouterDelegate
+participant NavigationNotifier
+participant MetricsPageFactory
+endbox
 
-    participant Application
+Bob -> Router : Opens the Metrics URL
+activate Router
 
-    alt Initial open page
-        Bob -> Browser : Initial page opening
-        activate Browser
-    else Change the URL
-        Bob -> Browser : Navigates back and forth through history
-    end
+Router -> RouteInformationProvider : Notifies about the URL changes
+activate RouteInformationProvider
 
-    Browser -> RouteInformationProvider : Notifies about the URL changes
-    activate RouteInformationProvider
+RouteInformationProvider -> MetricsRouteInformationParser : parseRouteInformation(RouteInformation routeInformation)
+activate MetricsRouteInformationParser
 
-    RouteInformationProvider -> AppRouteInformationParser : parseRouteInformation(RouteInformation routeInformation)
-    activate AppRouteInformationParser
+MetricsRouteInformationParser -> RouteConfigurationFactory : create(Uri uri)
+activate RouteConfigurationFactory
 
-    AppRouteInformationParser -> RouteConfigurationFactory : create(Uri uri)
-    activate RouteConfigurationFactory
+return RouteConfiguration
 
-    RouteConfigurationFactory -> AppRouteInformationParser : RouteConfiguration
+alt Initial open page
+    MetricsRouteInformationParser -> MetricsRouterDelegate : setInitialRoutePath(routeConfiguration)
+    activate MetricsRouterDelegate
 
-    alt Initial open page
-       AppRouteInformationParser -> AppRouterDelegate : setInitialRoutePath(routeConfiguration)
-        activate AppRouterDelegate
+    MetricsRouterDelegate -> NavigationNotifier : setInitialRoutePath(routeConfiguration)
+    activate NavigationNotifier
+else Change the URL
+    MetricsRouteInformationParser -> MetricsRouterDelegate : setNewRoutePath(routeConfiguration)
 
-        AppRouterDelegate -> NavigationNotifier : setInitialRoutePath(routeConfiguration)
-        activate NavigationNotifier
-    else Change the URL
-        AppRouteInformationParser -> AppRouterDelegate : setNewRoutePath(routeConfiguration)
+    MetricsRouterDelegate -> NavigationNotifier : setNewRoutePath(routeConfiguration)
+end
 
-        AppRouterDelegate -> NavigationNotifier : setNewRoutePath(routeConfiguration)
-    end
+NavigationNotifier -> MetricsPageFactory : create(RouteConfiguration configuration)
+activate MetricsPageFactory
 
-    NavigationNotifier -> AppRoutePageFactory : create(RouteConfiguration configuration)
-    activate AppRoutePageFactory
+MetricsPageFactory --> NavigationNotifier : actual page
 
-    AppRoutePageFactory -> NavigationNotifier : actual page
+NavigationNotifier --> NavigationNotifier : add actual page to the page stack
 
-    NavigationNotifier -> AppRouterDelegate: notifyListeners()
+NavigationNotifier --> MetricsRouterDelegate: notifyListeners()
 
-    AppRouterDelegate -> Application : shows the actual page
-    activate Application
+MetricsRouterDelegate --> MetricsRouterDelegate: applies new page stack
 
-    Application -> NavigationNotifier : pushNamed('cool page')
-    deactivate Application
+MetricsRouterDelegate --> Bob : shows the actual page
 
-    NavigationNotifier -> AppRoutePageFactory : create(RouteConfiguration configuration)
-
-    AppRoutePageFactory -> NavigationNotifier : Cool Page
-    deactivate AppRoutePageFactory
-
-    NavigationNotifier -> AppRouterDelegate : notifyListeners()
-    deactivate NavigationNotifier
-
-    AppRouterDelegate -> AppRouteInformationParser : restoreRouteInformation(RouteConfiguration routeConfiguration)
-    deactivate AppRouterDelegate
-
-    AppRouteInformationParser -> RouteInformationProvider : routerReportsNewRouteInformation(RouteInformation routeInformation)
-    deactivate AppRouteInformationParser
-
-    RouteInformationProvider -> Browser : notify to change the URL
-    deactivate RouteInformationProvider
-
-    Browser -> Bob : new page with updated URL
 @enduml

@@ -141,7 +141,7 @@ Is a `ChangeNotifier` that contains a list of pages of the application with meth
 
 Also, this class holds information about an authentication state, to restrict visiting specific pages only by the logged users.
 
-The `Navigator Notifier` requires two parameters:
+The `Navigation Notifier` requires two parameters:
 
  - [Metrics Pages Factory](#metrics-pages-factory)
  - [Route Configuration Factory](#route-configuration-factory)
@@ -169,7 +169,7 @@ To introduce this feature, we should follow the next steps:
 1. Replace the `MaterialApp` widget in the root `main.dart` file with the new `MaterialApp.router()` constructor.
 2. Create the `MetricsRouteInformationParser` and pass it to the `MaterialApp.router()`, as it is the first required parameter.
 3. Create the `RouteConfigurationFactory` class, which helps in parsing and mapping the `RouteInformation` in the created `MetricsRouteInformationParser`.
-4. To help with mapping an incoming `RouteInformation` to the application-specific, we should define the `AppRoutes` class, which consists of pre-defined `RouteConfiguration`s that belongs to Metrics application pages.
+4. To help with mapping an incoming `RouteInformation` to the application-specific, we should define the `MetricsRoutes` class, which consists of pre-defined `RouteConfiguration`s that belongs to Metrics application pages.
 5. Create the `MetricsRouterDelegate` and pass it to the `MaterialApp.router()`, as it is the second required parameter.
 6. Create the `NavigationNotifier` and inject it to the application via `InjectorContainer` widget and connect it with the `AuthNotifier` to be able to update an authentication status of a user once the `AuthNotifier` changes.
 7. Provide methods that should have similar to the `Navigation 1.0` API, to make navigation in the application, such as: 
@@ -180,13 +180,15 @@ To introduce this feature, we should follow the next steps:
      - pushAndRemoveWhere()
 8. Integrate the `NavigationNotifier` into the `AppRouterDelegate` as well, to extract methods for the actual navigation and a list of pages, specific to the Metrics app from the `AppRouterDelegate`.
 9. In the `AppRouterDelegate` provide the `setInitialRoutePath` and the `setNewRoutePath` methods to handle the navigation and `build` method to build the `Navigator` widget with the configured list of pages. Also, override the `currentConfiguration` getter to help the `Router` in updating the route information.
-10. As the `MaterialApp.router` constructor does not contain the `observers` field, we should pass the `List<NavigatorObserver>` to the `MetricsRouterDelegate` class, which pass it to the `Navigator`. The existing observers remain unchanged. 
+10. As the `MaterialApp.router` constructor does not contain the `observers` field, we should pass the `List<NavigatorObserver>` to the `MetricsRouterDelegate` class, which pass it to the `Navigator` widget. The existing observers remain unchanged. 
 
 With that in place we can use the provided methods from the `NavigationNotifier` to make navigation with the new navigation system.
 
-The following sequence diagram displays the process of navigation with the new `Navigation 2.0`.
+The following sequence diagrams display the process of navigation with the new `Navigation 2.0`.
 
 ![Navigation](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/navigation2_design_docs/metrics/web/docs/features/navigation/diagrams/navigation_sequence_diagram.puml)
+
+![Navigation 2](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/navigation2_design_docs/metrics/web/docs/features/navigation/diagrams/navigation_sequence_diagram_2.puml)
 
 ## Dependencies
 > What is the project blocked on?
@@ -197,7 +199,7 @@ The following sequence diagram displays the process of navigation with the new `
 > How the existing test codebase is affected by the changes with Router class
 
 Required changes in the following code for the tests to work properly with the new navigation system:
-- Create the `MetricsMaterialApp` for the routing test purposes and replace the `MaterialApp` with the `MetricsMaterialApp` where necessary;
+- Create `MetricsMaterialAppTestbed` and replace `MaterialApp` with it in those places where tests require navigation;
 - update the `MetricsThemedTestbed` class and places where tests use navigation from this class;
 - inject the `NavigationNotifier` into the `TestInjectionContainer` and update tests that require `NavigationNotifier`.
 

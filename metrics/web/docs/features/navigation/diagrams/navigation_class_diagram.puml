@@ -2,31 +2,29 @@
 
 class MetricsApp {}
 
-
-
-package common.domain.entity {
-    class RouteName {}
-}
-
 package common.presentation {
+
     package injector.widget {
         class InjectionContainer {}
     }
 
-package navigation {
-        package path_configuration {
+    package navigation {
+
+        package route_configration {
+            class RouteName {
+            }
+
             class RouteConfiguration {
-                + routeName : RouteName
-                + name : String
+                + name : RouteName
                 + path : String
                 + authorizationRequired : bool
                 + nestedRouteInformationFactory : RouteConfigurationFactory
             }
+
             class RouteConfigurationFactory {
                 + RouteConfiguration create()
                 - RouteConfiguration _handleNested()
             }
-            class MetricsAppRoutes {}
         }
         class MetricsRouteInformationParser {
             - RouteConfigurationFactory _routeConfigurationFactory
@@ -41,33 +39,45 @@ package navigation {
             + Future<void> setInitialRoutePath(RouteConfiguration routeConfiguration)
             + Future<void> setNewRoutePath(RouteConfiguration routeConfiguration)
         }
-        class NavigationNotifier {
-            + pages : List<Page>
-            + currentConfiguration : RouteConfiguration
-            - _metricsPageFactory : MetricsPageFactory
-            - _routeConfigurationFactory : RouteConfigurationFactory
-            - _isUserLoggedIn : bool
-            + void handleUserStateUpdates(bool isLoggedIn)
-            + void addNewPage(Page page)
-            + void popNamed(String path)
-            + void pushReplacement(Page page)
-            + void didPop(Page page)
-            + void pushNamed(String path)
-            + void pushReplacementNamed(String path)
-            + void pushAndRemoveWhere(String path, bool Function(Page) test)
-            + void setInitialRoutePath(RouteConfiguration routeConfiguration)
-            + void setNewRoutePath(RouteConfiguration routeConfiguration)
+
+        package constants {
+            class MetricsRoutes {}
         }
-        class MetricsPageFactory{
-            + MetricsPage<T> create<T>()
+
+        package state {
+            class NavigationNotifier {
+                + pages : List<Page>
+                + currentConfiguration : RouteConfiguration
+                - _metricsPageFactory : MetricsPageFactory
+                - _routeConfigurationFactory : RouteConfigurationFactory
+                - _isUserLoggedIn : bool
+                + void handleUserStateUpdates(bool isLoggedIn)
+                + void addNewPage(Page page)
+                + void popNamed(String path)
+                + void pushReplacement(Page page)
+                + void didPop(Page page)
+                + void pushNamed(String path)
+                + void pushReplacementNamed(String path)
+                + void pushAndRemoveWhere(String path, bool Function(Page) test)
+                + void setInitialRoutePath(RouteConfiguration routeConfiguration)
+                + void setNewRoutePath(RouteConfiguration routeConfiguration)
+            }
         }
-        class MetricsPage {
-            + builder : WidgetBuilder
-            + maintainState : bool
-            + fullScreenDialog : bool
-            + Route<T> createRoute()
+
+
+        package metrics_page {
+            class MetricsPageFactory {
+                + MetricsPage<T> create<T>()
+            }
+
+            class MetricsPage {
+                + builder : WidgetBuilder
+                + maintainState : bool
+                + fullScreenDialog : bool
+                + Route<T> createRoute()
+            }
         }
-        class MetricsPageRoute {} 
+
     }
 }
 
@@ -82,7 +92,7 @@ MetricsRouteInformationParser --> RouteConfigurationFactory : uses
 RouteConfiguration --> RouteName : uses
 
 RouteConfigurationFactory -> RouteConfiguration : uses
-RouteConfigurationFactory -> MetricsAppRoutes : uses
+RouteConfigurationFactory -> MetricsRoutes : uses
 
 MetricsRouterDelegate --> NavigationNotifier : uses
 
@@ -91,6 +101,5 @@ NavigationNotifier --> RouteConfiguration : uses
 NavigationNotifier --> MetricsPageFactory : uses
 
 MetricsPageFactory --> MetricsPage : uses
-MetricsPage --> MetricsPageRoute : uses
 
 @enduml
