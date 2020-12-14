@@ -186,7 +186,11 @@ With that in place we can use the provided methods from the `NavigationNotifier`
 
 The following sequence diagrams display the process of navigation with the new `Navigation 2.0`.
 
+Navigation using the browser history or the browser URL bar:
+
 ![Navigation](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/navigation2_design_docs/metrics/web/docs/features/navigation/diagrams/navigation_sequence_diagram.puml)
+
+Navigation using the application API:
 
 ![Navigation 2](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/navigation2_design_docs/metrics/web/docs/features/navigation/diagrams/navigation_sequence_diagram_2.puml)
 
