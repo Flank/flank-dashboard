@@ -2,19 +2,25 @@
 
 class MetricsApp {}
 
-package common.presentation.navigation {
+package common.presentation {
+    package injector.widget {
+        class InjectionContainer {}
+    }
+
+
+    package navigation {
         package path_configuration {
             class RouteConfiguration {
-               + routeEnum : MetricsRouteEnum
-               + name : String
-               + path : String
-               + authorizationRequired : bool
-               + nestedRouteInformationFactory : RouteConfigurationFactory
+                + routeEnum : MetricsRouteEnum
+                + name : String
+                + path : String
+                + authorizationRequired : bool
+                + nestedRouteInformationFactory : RouteConfigurationFactory
             }
             class MetricsRouteEnum {}
             class RouteConfigurationFactory {
-               + RouteConfiguration create()
-               - RouteConfiguration _handleNested()
+                + RouteConfiguration create()
+                - RouteConfiguration _handleNested()
             }
         }
         class MetricsRouteInformationParser {
@@ -31,7 +37,7 @@ package common.presentation.navigation {
             + Future<void> setNewRoutePath(RouteConfiguration routeConfiguration)
         }
         class NavigationNotifier {
-            + pages : List<Page> 
+            + pages : List<Page>
             + currentConfiguration : RouteConfiguration
             - _metricsRoutePageFactory : MetricsRoutePageFactory
             - _routeConfigurationFactory : RouteConfigurationFactory
@@ -55,13 +61,19 @@ package common.presentation.navigation {
             + maintainState : bool
             + fullScreenDialog : bool
             + Route<T> createRoute()
-        } 
+        }
+
+    }
 }
+
+InjectionContainer --> NavigationNotifier : provides
 
 MetricsApp --> MetricsRouteInformationParser :uses
 MetricsApp --> MetricsRouterDelegate : uses
+
 MetricsRouteInformationParser --> RouteConfiguration : provides
 MetricsRouteInformationParser --> RouteConfigurationFactory : uses
+
 RouteConfiguration --> MetricsRouteEnum : uses
 RouteConfigurationFactory -> RouteConfiguration : uses
 MetricsRouterDelegate --> NavigationNotifier : uses
@@ -69,4 +81,5 @@ NavigationNotifier --> RouteConfigurationFactory : uses
 NavigationNotifier --> RouteConfiguration : uses
 NavigationNotifier --> MetricsRoutePageFactory : uses
 MetricsRoutePageFactory --> MetricsRoutePage : uses
+
 @enduml

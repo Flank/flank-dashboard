@@ -171,12 +171,15 @@ To introduce this feature, we should follow the next steps:
 5. Create the `AppRouterDelegate` and pass it to the `MaterialApp.router()`, as it is the second required parameter.
 6. Create the `NavigationNotifier` and inject it to the application via `InjectorContainer` widget and connect it with the `AuthNotifier` to be able to update an authentication status of a user once the `AuthNotifier` changes.
 7. Provide methods that should have similar to the `Navigation 1.0` API, to make navigation in the application, such as: 
- - pushNamed() and popNamed()
- - pushReplacement() and pushReplacementNamed()
- - pushAndRemoveWhere()
+     - pushNamed()
+     - popNamed()
+     - pushReplacement()
+     - pushReplacementNamed()
+     - pushAndRemoveWhere()
 8. Integrate the `NavigationNotifier` into the `AppRouterDelegate` as well, to extract methods for the actual navigation and a list of pages, specific to the Metrics app from the `AppRouterDelegate`.
 9. In the `AppRouterDelegate` provide the `setInitialRoutePath` and the `setNewRoutePath` methods to handle the navigation and `build` method to build the `Navigator` widget with the configured list of pages. Also, override the `currentConfiguration` getter to help the `Router` in updating the route information.
-10. With that in place we can use the provided methods from the `NavigationNotifier` to make navigation with the new navigation system.
+
+With that in place we can use the provided methods from the `NavigationNotifier` to make navigation with the new navigation system.
 
 The following sequence diagram displays the process of navigation with the new `Navigation 2.0`.
 
