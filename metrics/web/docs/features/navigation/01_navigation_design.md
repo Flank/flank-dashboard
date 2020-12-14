@@ -157,7 +157,7 @@ The `RouteConfigurationFactory` is responsible for creating the [RouteConfigurat
 
 The following diagram describes the structure and relationship between the above classes.
 
-![Route change diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/navigation2_design_docs/metrics/web/docs/features/navigator/diagrams/navigation_class_diagram.puml)
+![Route change diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/navigation2_design_docs/metrics/web/docs/features/navigation/diagrams/navigation_class_diagram.puml)
 
 ## Making things work
 
@@ -181,7 +181,7 @@ To introduce this feature, we should follow the next steps:
 
 The following sequence diagram displays the process of navigation with the new `Navigation 2.0`.
 
-![Navigation](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/navigation2_design_docs/metrics/web/docs/features/navigator/diagrams/navigation_sequence_diagram.puml)
+![Navigation](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/navigation2_design_docs/metrics/web/docs/features/navigation/diagrams/navigation_sequence_diagram.puml)
 
 ## Dependencies
 > What is the project blocked on?
