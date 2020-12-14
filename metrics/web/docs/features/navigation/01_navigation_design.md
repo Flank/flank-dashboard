@@ -59,10 +59,10 @@ The `RouteInformationParser` - is a class that acts in two ways:
 
  - creates a new [Route information](#route-information) object from the [Route Configuration](#route-configuration) and passes it back to the [Route Information Provider](#route-information-provider).
 
-To handle our specific routes, we should define our own parser - `AppRouteInformationParser` that extends the `RouteInformationParser` and provides two methods:
+To handle our specific routes, we should define our own parser - `MetricsRouteInformationParser` that extends the `RouteInformationParser` and provides two methods:
 
 ```dart
-class AppRouteInformationParser extends RouteInformationParser<RouteConfiguration> {
+class MetricsRouteInformationParser extends RouteInformationParser<RouteConfiguration> {
     @override
     Future<RouteConfiguration> parseRouteInformation(RouteInformation routeInformation);
 
@@ -97,7 +97,7 @@ It is a core part of the `Router` and it is responsible for:
 To specify our own app-specific behavior we should extend the `RouteDelegate` with `ChangeNotifier` and `PopupNavigatorRouterDelegateMixin` mixins and must provide the following methods:
 
 ```dart
-class AppRouteDelegate extends RouteDelegate<RouteDelegate> 
+class MetricsRouterDelegate extends RouteDelegate<RouteDelegate> 
 with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteDelegate> {
     @override
     RoutePath get currentConfiguration;
@@ -115,7 +115,7 @@ with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteDelegate> {
 
 The `currentConfiguration` is a value, that `Router` uses to populate the browser history to support the back and forward buttons in the browser top bar.
 
-The `setInitialRoutePath` called by the [Router] at startup with the [RouteConfiguration](#route-configuration) from parsing the initial route.
+The [Router] calls the `setInitialRoutePath` at startup with the [RouteConfiguration](#route-configuration) from parsing the initial route.
 
 The `Router` calls the `setNewRoutePath` method when the [Route Information Provider](#route-information-provider) reports that the operating system pushes a new route to the application. This method takes the [RouteConfiguration](#route-configuration) that comes from the [Route Information Parser]($route-information-parser) and changes the list of pages accordingly.
 
@@ -124,11 +124,11 @@ The `build` method builds the `Navigator` widget with a list of configured pages
 The missing part of this is injecting the [Navigation Notifier](#navigation-notifier) into the `Router Delegate` and add a listener to it, so when the `Navigation Notifier` changes it state the `Router` rebuilds.
 
 ```dart
-class AppRouterDelegate extends RouterDelegate<RouteConfiguration>
+class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteConfiguration> {
   final NavigationNotifier navigationNotifier;
 
-  AppRouterDelegate({
+  MetricsRouterDelegate({
     this.navigationNotifier,
   }) {
     navigationNotifier.addListener(notifyListeners);
@@ -137,22 +137,24 @@ class AppRouterDelegate extends RouterDelegate<RouteConfiguration>
 
 ### Navigation Notifier
 
-Is a `ChangeNotifier` is a container that contains a list of pages of the application with methods to make actual navigation. 
+Is a `ChangeNotifier` that contains a list of pages of the application with methods to make actual navigation. 
 
 Also, this class holds information about an authentication state, to restrict visiting specific pages only by the logged users.
 
 The `Navigator Notifier` requires two parameters:
 
- - [App Pages Factory](#app-pages-factory)
+ - [Metrics Pages Factory](#metrics-pages-factory)
  - [Route Configuration Factory](#route-configuration-factory)
 
-### App Pages Factory
+### Metrics Pages Factory
 
-The `AppPagesFactory` is a class that stands for populating actual pages, by comparing the route information that comes from the browser with the pre-defined specific to the Metrics application route configurations.
+The `MetricsPagesFactory` is a class that stands for populating actual pages, by comparing the route information that comes from the browser with the pre-defined specific to the Metrics application route configurations and returns the actual `MetricsPage`.
 
 ### Route Configuration Factory
 
 The `RouteConfigurationFactory` is responsible for creating the [RouteConfiguration](#route-information) from the given `URI`.
+
+In fact, it uses the `MetricsAppRoutes` class that holds a list of pre-defined `RouteConfiguration`s and maps the incoming URI to the `RouteConfiguration` related to the specific application page.
 
 The following diagram describes the structure and relationship between the above classes.
 
@@ -165,10 +167,10 @@ The following section provides an implementation of a new navigation integration
 To introduce this feature, we should follow the next steps:
 
 1. Replace the `MaterialApp` widget in the root `main.dart` file with the new `MaterialApp.router()` constructor.
-2. Create the `AppRouteInformationParser` and pass it to the `MaterialApp.router()`, as it is the first required parameter.
-3. Create the `RouteConfigurationFactory` class, which helps in parsing and mapping the `RouteInformation` in the created `AppRouteInformationParser`.
+2. Create the `MetricsRouteInformationParser` and pass it to the `MaterialApp.router()`, as it is the first required parameter.
+3. Create the `RouteConfigurationFactory` class, which helps in parsing and mapping the `RouteInformation` in the created `MetricsRouteInformationParser`.
 4. To help with mapping an incoming `RouteInformation` to the application-specific, we should define the `AppRoutes` class, which consists of pre-defined `RouteConfiguration`s that belongs to Metrics application pages.
-5. Create the `AppRouterDelegate` and pass it to the `MaterialApp.router()`, as it is the second required parameter.
+5. Create the `MetricsRouterDelegate` and pass it to the `MaterialApp.router()`, as it is the second required parameter.
 6. Create the `NavigationNotifier` and inject it to the application via `InjectorContainer` widget and connect it with the `AuthNotifier` to be able to update an authentication status of a user once the `AuthNotifier` changes.
 7. Provide methods that should have similar to the `Navigation 1.0` API, to make navigation in the application, such as: 
      - pushNamed()
@@ -178,6 +180,7 @@ To introduce this feature, we should follow the next steps:
      - pushAndRemoveWhere()
 8. Integrate the `NavigationNotifier` into the `AppRouterDelegate` as well, to extract methods for the actual navigation and a list of pages, specific to the Metrics app from the `AppRouterDelegate`.
 9. In the `AppRouterDelegate` provide the `setInitialRoutePath` and the `setNewRoutePath` methods to handle the navigation and `build` method to build the `Navigator` widget with the configured list of pages. Also, override the `currentConfiguration` getter to help the `Router` in updating the route information.
+10. As the `MaterialApp.router` constructor does not contain the `observers` field, we should pass the `List<NavigatorObserver>` to the `MetricsRouterDelegate` class, which pass it to the `Navigator`. The existing observers remain unchanged. 
 
 With that in place we can use the provided methods from the `NavigationNotifier` to make navigation with the new navigation system.
 
@@ -189,6 +192,14 @@ The following sequence diagram displays the process of navigation with the new `
 > What is the project blocked on?
 
 - The new navigation system requires Flutter to be of version `1.23.0` or higher.
+
+## Testing
+> How the existing test codebase is affected by the changes with Router class
+
+Required changes in the following code for the tests to work properly with the new navigation system:
+- Create the `MetricsMaterialApp` for the routing test purposes and replace the `MaterialApp` with the `MetricsMaterialApp` where necessary;
+- update the `MetricsThemedTestbed` class and places where tests use navigation from this class;
+- inject the `NavigationNotifier` into the `TestInjectionContainer` and update tests that require `NavigationNotifier`.
 
 ## Results
 > What was the outcome of the project?

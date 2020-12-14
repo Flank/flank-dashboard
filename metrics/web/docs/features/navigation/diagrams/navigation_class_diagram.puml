@@ -2,26 +2,31 @@
 
 class MetricsApp {}
 
+
+
+package common.domain.entity {
+    class RouteName {}
+}
+
 package common.presentation {
     package injector.widget {
         class InjectionContainer {}
     }
 
-
-    package navigation {
+package navigation {
         package path_configuration {
             class RouteConfiguration {
-                + routeEnum : MetricsRouteEnum
+                + routeName : RouteName
                 + name : String
                 + path : String
                 + authorizationRequired : bool
                 + nestedRouteInformationFactory : RouteConfigurationFactory
             }
-            class MetricsRouteEnum {}
             class RouteConfigurationFactory {
                 + RouteConfiguration create()
                 - RouteConfiguration _handleNested()
             }
+            class MetricsAppRoutes {}
         }
         class MetricsRouteInformationParser {
             - RouteConfigurationFactory _routeConfigurationFactory
@@ -39,7 +44,7 @@ package common.presentation {
         class NavigationNotifier {
             + pages : List<Page>
             + currentConfiguration : RouteConfiguration
-            - _metricsRoutePageFactory : MetricsRoutePageFactory
+            - _metricsPageFactory : MetricsPageFactory
             - _routeConfigurationFactory : RouteConfigurationFactory
             - _isUserLoggedIn : bool
             + void handleUserStateUpdates(bool isLoggedIn)
@@ -53,16 +58,16 @@ package common.presentation {
             + void setInitialRoutePath(RouteConfiguration routeConfiguration)
             + void setNewRoutePath(RouteConfiguration routeConfiguration)
         }
-        class MetricsRoutePageFactory{
-            + MetricsRoutePage<T> create<T>()
+        class MetricsPageFactory{
+            + MetricsPage<T> create<T>()
         }
-        class MetricsRoutePage {
+        class MetricsPage {
             + builder : WidgetBuilder
             + maintainState : bool
             + fullScreenDialog : bool
             + Route<T> createRoute()
         }
-
+        class MetricsPageRoute {} 
     }
 }
 
@@ -74,12 +79,18 @@ MetricsApp --> MetricsRouterDelegate : uses
 MetricsRouteInformationParser --> RouteConfiguration : provides
 MetricsRouteInformationParser --> RouteConfigurationFactory : uses
 
-RouteConfiguration --> MetricsRouteEnum : uses
+RouteConfiguration --> RouteName : uses
+
 RouteConfigurationFactory -> RouteConfiguration : uses
+RouteConfigurationFactory -> MetricsAppRoutes : uses
+
 MetricsRouterDelegate --> NavigationNotifier : uses
+
 NavigationNotifier --> RouteConfigurationFactory : uses
 NavigationNotifier --> RouteConfiguration : uses
-NavigationNotifier --> MetricsRoutePageFactory : uses
-MetricsRoutePageFactory --> MetricsRoutePage : uses
+NavigationNotifier --> MetricsPageFactory : uses
+
+MetricsPageFactory --> MetricsPage : uses
+MetricsPage --> MetricsPageRoute : uses
 
 @enduml
