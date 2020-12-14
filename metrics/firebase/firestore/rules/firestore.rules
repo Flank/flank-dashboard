@@ -31,6 +31,11 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /feature_config/{config} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     match /allowed_email_domains/{domain} {
       allow read, write: if false;
     }

@@ -57,6 +57,11 @@ const instantConfig = {
   "instant_config/instant_config": {},
 };
 
+/** A test data for the feature config collection */
+const featureConfig = {
+  "feature_config/feature_config": {},
+};
+
 const allowedEmail = "test@gmail.com";
 const deniedEmail = "test@invalid.com";
 
@@ -92,6 +97,7 @@ exports.builds = builds;
 exports.userProfiles = userProfiles;
 exports.allowedEmailDomains = allowedEmailDomains;
 exports.instantConfig = instantConfig;
+exports.featureConfig = featureConfig
 
 /** An email and password sign in provider identifier */
 exports.passwordSignInProviderId = "password";
