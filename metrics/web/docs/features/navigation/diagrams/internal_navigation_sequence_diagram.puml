@@ -1,5 +1,4 @@
-
-@startuml navigation_sequence_diagram_2
+@startuml internal_navigation_sequence_diagram
 
     actor Bob
 
