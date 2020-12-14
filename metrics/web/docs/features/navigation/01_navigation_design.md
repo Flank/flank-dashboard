@@ -16,15 +16,14 @@ Introducing Flutter’s new navigation and routing system into the Metrics Web A
 * Browser back and forward navigation behaves as expected. 
 * A clear design of the new navigation system integration.
 
-
 ## Design
 > Explain and diagram the technical design
 
-Consider the following classes, that represent the architecture of the `Navigation 2.0`.
+Consider the following classes, that represent the architecture of the `Navigator 2.0`.
 
 ### Router
 
-The `Router` is a class, that listens for routing information from the operating system(e.g. browser), parses that information using the [Route Information Parser](#route-information-parser) into a user-provided configuration([Route Configuration](#route-configuration)) and then [Router Delegate](#router-delegate) uses it to build the list of pages widget.
+The `Router` is a class, that listens for routing information from the operating system(e.g. browser), parses that information using the [Route Information Parser](#route-information-parser) into a user-provided configuration([Route Configuration](#route-configuration)) and then [Router Delegate](#router-delegate) uses it to build the `Navigator` widget with a list of pages.
 
 Consider the following parts of the `Router` class:
 
@@ -44,7 +43,7 @@ Also, when the application changes its state, the `RouteInformationProvider` rec
 
 The Flutter framework provides the default `RouteInformationProvider` implementation, so there is no need to implement it for the `Metrics application`.
 
-#### Route information
+### Route information
 
 A `Route information` is a class, that consists of a `location` string of the application and a `state` object that configures the application in that location.
 
@@ -80,7 +79,7 @@ These methods exist to keep the URL in the browser's location bar up to date wit
 
 The class, that helps in parsing route information - [Route Configuration Factory](#route-configuration-factory).
 
-#### Route Configuration
+### Route Configuration
 
 The class, that holds the data that describes the route. 
 
