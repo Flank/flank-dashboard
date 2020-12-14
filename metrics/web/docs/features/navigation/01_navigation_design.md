@@ -32,7 +32,7 @@ Consider the following parts of the `Router` class:
  - the [Route Information Parser](#route-information-parser) parses route information into user defined configuration and vice versa;
  - the [Router Delegate](#router-delegate) takes configuration from the `RouteInformationParser` and builds a list of pages.
 
-#### Route Information Provider
+### Route Information Provider
 
 The `RouteInformationProvider` - a class that provides a [Route information](#route-information) for the [Route Information Parser](#route-information-parser).
 
@@ -44,7 +44,7 @@ Also, when the application changes its state, the `RouteInformationProvider` rec
 
 The Flutter framework provides the default `RouteInformationProvider` implementation, so there is no need to implement it for the `Metrics application`.
 
-##### Route information
+#### Route information
 
 A `Route information` is a class, that consists of a `location` string of the application and a `state` object that configures the application in that location.
 
@@ -52,7 +52,7 @@ The `location` is multiple string identifiers with slashes in between(e.g. '/rou
 
 The `state` is an object that stores data in the browser history entry(e.g. filled input forms, scroll position).
 
-#### Route Information Parser
+### Route Information Parser
 
 The `RouteInformationParser` - is a class that acts in two ways:
 
@@ -86,7 +86,7 @@ The class, that holds the data that describes the route.
 
 It contains the route name, URL path, and the information about requiring authentication status of this route.
 
-#### Route Delegate
+### Route Delegate
 
 The `RouteDelegate` uses to build the `Navigator` with a list of configured pages. It defines how the `Router` reacts to changes in the application state and operating system.
 
