@@ -1,49 +1,49 @@
 @startuml internal_navigation_sequence_diagram
 
-    actor Bob
+actor Bob
 
-    participant Router
+participant Router
 
-    box Configuring pages
-        participant NavigationNotifier
-        participant MetricsPageFactory
-        participant MetricsRouterDelegate
-    endbox 
+box Configuring pages
+    participant NavigationNotifier
+    participant MetricsPageFactory
+    participant MetricsRouterDelegate
+endbox
 
-    participant MetricsRouteInformationParser
+participant MetricsRouteInformationParser
 
-    participant RouteInformationProvider
+participant RouteInformationProvider
 
-    Bob -> NavigationNotifier : pushNamed('new page')
-    activate NavigationNotifier
+Bob -> NavigationNotifier : pushNamed('new page')
+activate NavigationNotifier
 
-    NavigationNotifier -> MetricsPageFactory : create(RouteConfiguration configuration)
-    activate MetricsPageFactory
+NavigationNotifier -> MetricsPageFactory : create(RouteConfiguration configuration)
+activate MetricsPageFactory
 
-    MetricsPageFactory -> NavigationNotifier : updated page
+MetricsPageFactory --> NavigationNotifier : new page
 
-    NavigationNotifier --> NavigationNotifier : add updated page to the page stack
+NavigationNotifier --> NavigationNotifier : add new page to the page stack
 
-    NavigationNotifier -> MetricsRouterDelegate : notifyListeners()
-    activate MetricsRouterDelegate
+NavigationNotifier -> MetricsRouterDelegate : notifyListeners()
+activate MetricsRouterDelegate
 
-    MetricsRouterDelegate --> MetricsRouterDelegate: applies new page stack
+MetricsRouterDelegate --> MetricsRouterDelegate: applies new page stack
 
-    MetricsRouterDelegate -> MetricsRouteInformationParser : restoreRouteInformation(RouteConfiguration configuration)
-    activate MetricsRouteInformationParser
+MetricsRouterDelegate -> MetricsRouteInformationParser : restoreRouteInformation(RouteConfiguration configuration)
+activate MetricsRouteInformationParser
 
-    MetricsRouteInformationParser -> RouteInformationProvider : routerReportsNewRouteInformation(RouteInformation routeInformation)
-    activate RouteInformationProvider
+MetricsRouteInformationParser -> RouteInformationProvider : routerReportsNewRouteInformation(RouteInformation routeInformation)
+activate RouteInformationProvider
 
-    RouteInformationProvider -> Router : notify
-    activate Router
+RouteInformationProvider --> Router : notify
+activate Router
 
-    Router -> Bob : shows the updated page
-    
-    deactivate Router
-    deactivate RouteInformationProvider
-    deactivate MetricsRouteInformationParser
-    deactivate MetricsRouterDelegate
-    deactivate MetricsPageFactory
-    deactivate NavigationNotifier
+Router --> Bob : shows the updated page
+
+deactivate Router
+deactivate RouteInformationProvider
+deactivate MetricsRouteInformationParser
+deactivate MetricsRouterDelegate
+deactivate MetricsPageFactory
+deactivate NavigationNotifier
 @enduml
