@@ -1,20 +1,7 @@
 @startuml debug_menu_domain_layer_class_diagram
 
-package debug_menu {
-    package debug_menu.data {
-        package debug_menu.data.repositories {
-            class HiveLocalConfigRepository {}
-        }
-
-        package debug_menu.data.model {
-            class LocalConfigData {
-                + factory fromJson(Map<String, dynamic> json)
-            }
-        }
-    }
-
-    package debug_menu.domain {
-        package debug_menu.domain.repositories {
+package debug_menu.domain {
+        package repositories {
             interface LocalConfigRepository {
                 + Future<void> open()
                 + LocalConfig readConfig()
@@ -23,14 +10,14 @@ package debug_menu {
             }
         }
 
-        package debug_menu.domain.usecases {
-            package debug_menu.domain.usecases.parameters {
+        package usecases {
+            package parameters {
                 class LocalConfigParam {
                     + isFpsMonitorEnabled : bool
                 }
             }
 
-            class OpenLocalConfigRepositoryUseCase {
+            class OpenLocalConfigStorageUseCase {
                 + Future<void> call()
             }
 
@@ -42,38 +29,16 @@ package debug_menu {
                 + Future<void> call(LocalConfigParam param)
             }
 
-            class CloseLocalConfigRepositoryUseCase {
+            class CloseLocalConfigStorageUseCase {
                 + Future<void> call()
             }
         }
 
-        package debug_menu.domain.entities {
+        package entities {
             class LocalConfig {
                 + isFpsMonitorEnabled : bool
             }
         }
-    }
-
-    package debug_menu.presentation {
-        package debug_menu.presentation.state {
-            class LocalConfigNotifier {
-                - _localConfig: LocalConfig
-                - _fpsMonitorLocalConfigViewModel: FpsMonitorLocalConfigViewModel
-                - _updateLocalConfigUseCase : UpdateLocalConfigUseCase
-                - _readLocalConfigUseCase : ReadLocalConfigUseCase
-                - _closeLocalConfigRepositoryUseCase : CloseLocalConfigRepositoryUseCase
-                - _openLocalConfigRepositoryUseCase : OpenLocalConfigRepositoryUseCase
-
-                + Future<void> initializeLocalConfig()
-                + void toggleFpsMonitor(bool isEnabled)
-            }
-        }
-
-        package debug_menu.presentation.view_models {
-            class FpsMonitorLocalConfigViewModel {}
-        }
-    }
-
 }
 
 package base.domain.usecases {
@@ -82,42 +47,19 @@ package base.domain.usecases {
     }
 }
 
-package core.data.model {
-    abstract class DataModel {
-        + Map<String, dynamic> toJson()
-    }
-}
-
-package common.presentation.view_models {
-    abstract class ConfigViewModel {
-        + isEnabled : bool
-    }
-}
-
 LocalConfigRepository --> LocalConfig : uses
 
-OpenLocalConfigRepositoryUseCase -up-> LocalConfigRepository : uses
+OpenLocalConfigStorageUseCase -up-> LocalConfigRepository : uses
+OpenLocalConfigStorageUseCase ..|> UseCase
 
 ReadLocalConfigUseCase -up-> LocalConfigRepository : uses
 ReadLocalConfigUseCase ..|> UseCase
 
-UpdateLocalConfigUseCase --> LocalConfigParam : uses
 UpdateLocalConfigUseCase -up-> LocalConfigRepository : uses
+UpdateLocalConfigUseCase --> LocalConfigParam : uses
 UpdateLocalConfigUseCase ..|> UseCase
 
-CloseLocalConfigRepositoryUseCase -up-> LocalConfigRepository : uses
-
-HiveLocalConfigRepository ..|> LocalConfigRepository
-HiveLocalConfigRepository --> LocalConfigData : uses
-
-LocalConfigData --|> DataModel
-
-LocalConfigNotifier --> OpenLocalConfigRepositoryUseCase : uses
-LocalConfigNotifier --> ReadLocalConfigUseCase : uses
-LocalConfigNotifier --> UpdateLocalConfigUseCase : uses
-LocalConfigNotifier --> CloseLocalConfigRepositoryUseCase : uses
-LocalConfigNotifier --> LocalConfigParam : uses
-
-FpsMonitorLocalConfigViewModel -left-|> ConfigViewModel
+CloseLocalConfigStorageUseCase -up-> LocalConfigRepository : uses
+CloseLocalConfigStorageUseCase ..|> UseCase
 
 @enduml

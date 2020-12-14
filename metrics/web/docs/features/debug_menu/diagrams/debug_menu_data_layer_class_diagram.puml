@@ -1,0 +1,32 @@
+@startuml debug_menu_data_layer_class_diagram
+
+package debug_menu {
+        package data {
+            package repositories {
+                class HiveLocalConfigRepository {}
+            }
+
+            package model {
+                class LocalConfigData {
+                    + factory fromJson(Map<String, dynamic> json)
+                }
+            }
+        }
+
+        package domain {
+            interface LocalConfigRepository {}
+        }
+}
+
+package core.data.model {
+    abstract class DataModel {
+        + Map<String, dynamic> toJson()
+    }
+}
+
+HiveLocalConfigRepository --> LocalConfigData : uses
+HiveLocalConfigRepository ..|> LocalConfigRepository
+
+LocalConfigData --|> DataModel
+
+@enduml

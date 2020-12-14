@@ -1,0 +1,47 @@
+@startuml debug_menu_update_config_sequence_diagram.puml
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+box "presentation"
+    participant UI
+    participant DebugMenuNotifier << (C,#ADD1B2) >>
+end box
+
+box "domain"
+    participant UpdateLocalConfigUseCase << (C,#ADD1B2) >>
+end box
+
+box "data"
+    participant HiveLocalConfigRepository << (C,#ADD1B2) >>
+end box
+
+database "IndexedDB" as DB
+
+Bob -> UI : Toggles FPS Monitor
+
+UI -> DebugMenuNotifier : toggleFpsMonitor(bool isEnabled)
+activate DebugMenuNotifier
+
+DebugMenuNotifier -> UpdateLocalConfigUseCase : call(LocalConfigParam param)
+activate UpdateLocalConfigUseCase
+
+UpdateLocalConfigUseCase -> HiveLocalConfigRepository : updateConfig(Map<String, dynamic> config)
+activate HiveLocalConfigRepository
+
+HiveLocalConfigRepository -> DB : Update 'local_config' box
+
+HiveLocalConfigRepository --> UpdateLocalConfigUseCase : Updated Local config
+deactivate HiveLocalConfigRepository
+
+UpdateLocalConfigUseCase --> DebugMenuNotifier : Updated Local config
+deactivate UpdateLocalConfigUseCase
+
+DebugMenuNotifier --> UI : Notify about config updates
+deactivate DebugMenuNotifier
+
+UI --> Bob : Updates UI
+
+@enduml

@@ -1,0 +1,67 @@
+@startuml debug_menu_read_config_sequence_diagram
+
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+box "presentation"
+    participant UI
+    participant DebugMenuNotifier << (C,#ADD1B2) >>
+    participant FeatureConfigNotifier << (C,#ADD1B2) >>
+end box
+
+box "domain"
+    participant ReadLocalConfigUseCase << (C,#ADD1B2) >>
+end box
+
+box "data"
+    participant HiveLocalConfigRepository << (C,#ADD1B2) >>
+    participant LocalConfigData << (C,#ADD1B2) >>
+end box
+
+database "IndexedDB" as DB
+
+Bob -> UI : Enters the application
+UI -> FeatureConfigNotifier : initializeFeatureConfig()
+activate FeatureConfigNotifier
+
+FeatureConfigNotifier --> UI : Feature config
+deactivate FeatureConfigNotifier
+
+alt DebugMenuFeatureConfigViewModel.isEnabled == true
+    UI -> DebugMenuNotifier : initializeLocalConfig()
+    activate DebugMenuNotifier
+else DebugMenuFeatureConfigViewModel.isEnabled == false
+    UI -> UI : Do nothing
+    UI --> Bob : Dismiss the Loading screen
+end
+
+DebugMenuNotifier -> ReadLocalConfigUseCase : call()
+activate ReadLocalConfigUseCase
+
+ReadLocalConfigUseCase -> HiveLocalConfigRepository : readConfig()
+activate HiveLocalConfigRepository
+
+HiveLocalConfigRepository -> DB : Read 'local_config' box
+
+DB --> HiveLocalConfigRepository : Local config json
+
+HiveLocalConfigRepository -> LocalConfigData : .fromJson(Map<String, dynamic> json)
+activate LocalConfigData
+
+LocalConfigData --> HiveLocalConfigRepository : LocalConfig
+deactivate LocalConfigData
+
+HiveLocalConfigRepository --> ReadLocalConfigUseCase : LocalConfig
+deactivate HiveLocalConfigRepository
+
+ReadLocalConfigUseCase --> DebugMenuNotifier : LocalConfig
+deactivate ReadLocalConfigUseCase
+
+DebugMenuNotifier --> UI : Notify about new local config
+deactivate DebugMenuNotifier
+
+UI --> Bob : Dismiss the Loading screen
+
+@enduml
