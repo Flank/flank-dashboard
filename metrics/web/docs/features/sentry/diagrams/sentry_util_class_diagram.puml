@@ -1,0 +1,20 @@
+@startuml sentry_util_class_diagram
+package metrics {
+    class MetricsApp {}
+
+package util {
+    class SentryUtil {
+      + Future<void> init(String dsn, String releaseName, AppRunner appRunner, bool isFlutterErrorsEnabled)
+      + Future<void> captureException(dynamic throwable, dynamic stackTrace)
+      + void addContext(String key, Map<String, dynamic> json)
+      - void configureDefaultContexts()
+    }
+}
+}
+
+package sentry{}
+
+MetricsApp --> SentryUtil : uses
+SentryUtil --> sentry : uses
+
+@enduml
