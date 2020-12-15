@@ -5,7 +5,7 @@ package debug_menu.domain {
             interface LocalConfigRepository {
                 + Future<void> open()
                 + LocalConfig readConfig()
-                + Future<void> updateConfig(Map<String, dynamic> config)
+                + Future<void> updateConfig(bool isFpsMonitorEnabled)
                 + Future<void> close()
             }
         }
