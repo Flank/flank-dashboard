@@ -33,7 +33,7 @@ alt DebugMenuFeatureConfigViewModel.isEnabled == true
     UI -> DebugMenuNotifier : initializeLocalConfig()
     activate DebugMenuNotifier
 else DebugMenuFeatureConfigViewModel.isEnabled == false
-    UI -> UI : Do nothing
+    UI -> UI : initializeDefaults()
     UI --> Bob : Dismiss the Loading screen
 end
 

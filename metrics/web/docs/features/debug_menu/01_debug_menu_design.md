@@ -2,14 +2,13 @@
 
 ## TL;DR
 
-Introducing the `Debug Menu` feature to the Metrics Web Application allows us to access the debug features of the application, such as the `FPS Monitor` and the `Renderer Display`.
-The `Debug Menu` feature also allows us to store the local configuration needed to enable or disable some features locally and to load them on the application's start.
+Introducing the `Debug Menu` feature to the Metrics Web Application allows us to access the debug features of the application, such as the `FPS Monitor`. The `Debug Menu` stores configurations locally and uses them to enable or disable some features.
 
 ## Hive
 
-To introduce this feature, we need to store the local configuration values using the `Hive` package that uses the `IndexedDB`.
-We need to store the configuration values as following:  
-
+One of the main ideas of the `Debug Menu` feature is to store the configurations locally. That means that we are to use local persistent storage that would provide the application with the current debug configurations if they are enabled and keep these configurations for different sessions.
+For the current implementation, we suggest using the [`Hive` package](https://pub.dev/packages/hive) that uses the [`IndexedDB`](https://developers.google.com/web/ilt/pwa/working-with-indexeddb) to store key-value pairs in [boxes](https://docs.hivedb.dev/#/basics/boxes). Read more about Hive in their [documentation](https://docs.hivedb.dev/#/).
+The local configurations are to be stored using the following document structure that matches one for the [`Firestore Feature Config`](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) feature:
 ```json
 {
   "local_config" : {
@@ -18,11 +17,9 @@ We need to store the configuration values as following:
 }
 ```
 
-Read more about the `Hive` package using the following [link](https://pub.dev/packages/hive).
+## Metrics Web Application
 
-## Metrics application
-
-The following sub-sections provide an implementation of `Debug Menu` integration for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
+The following sub-sections provide an implementation of `Debug Menu` feature for the Metrics Web Application by layers. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
 
 ### Data layer
 
@@ -56,40 +53,33 @@ The following sequence diagram describes how the application applies `Local Conf
 
 ![Read config sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/debug_menu_document/metrics/web/docs/features/debug_menu/diagrams/debug_menu_read_config_sequence_diagram.puml)
 
-Let's consider the mechanism of applying the `Local Config` values in the application (considering that the `Hive`'s `local_config` box is already open using the `OpenLocalConfigStorageUseCase`). 
-When a user enters the application, he or she stays on the `LoadingPage` until the `Local Config` is initialized.
+Let's consider the mechanism of applying the `Local Config` values. When a user enters the application, he or she stays on the `LoadingPage` until the `Local Config` is initialized.
 
-Firstly, the application fetches the `Feature Config` that includes the `isDebugMenuEnabled` configuration value. 
-Please consider the following steps performed by the application depending on the `isDebugMenuEnabled` configuration value:
+First, the application fetches the `Feature Config` that includes the `isDebugMenuEnabled` configuration value. If the `Debug Menu` feature is disabled from the remote, all debug features are disabled by default, and no interaction with local persistent storage happens. It is important to remember that disabling `Debug Menu` disables **all debug configurations for all users starting new sessions but not for currently running sessions**.
 
-If the `Debug Menu` feature **is enabled**:
+After the application fetches the `Feature Config` values and ensures the `Debug Menu` feature **is enabled**, the application calls the `initializeLocalConfig` method of the `DebugMenuNotifier`. Then the notifier follows the following steps:
+1. Opens the `local_config` storage box.
+2. Sets the `isLoading` status to `false` indicating that the config is loading.
+3. Fetches the key-value configuration pairs for debug features within the application.
+4. Sets the `isInitialized` status to `true` indicating that configurations are ready to use.
+5. Sets the `isLoading` status to `false` indicating that the config is loaded.
+6. Notifies the UI about configurations initialized.
 
-    1. The application calls the `initializeLocalConfig` method of the `DebugMenuNotifier`.
-    2. The `DebugMenuNotifier` waits until the initialization completes.
-    3. The `DebugMenuNotifier` sets the `isLoading` status to `false`.
-    4. The application reacts on the `DebugMenuNotifier.isLoading` changes and dismisses the `LoadingPage`. 
-    5. The user proceeds to the application.
+The application then dismisses the loading page so the user can proceed.
 
-If the `Debug Menu` feature **is not enabled**:
+The only difference for the disabled `Debug Menu` feature is that the application calls the `initializeDefaults` method of the `DebugMenuNotifier`. Notifier then uses default values for the debug configurations and doesn't perform any calls to the local storage.
 
-    1. The application calls the `initializeLocalConfigWithDefaults` method of the `DebugMenuNotifier`. 
-    2. The `DebugMenuNotifier` applies the default configuration values set in the constructor.
-    3. The `DebugMenuNotifier` sets the `isLoading` status to `false`. 
-    4. The application reacts on the `DebugMenuNotifier.isLoading` changes and dismisses the `LoadingPage`.
-    5. The user proceeds to the application. 
-    
 The following sequence diagram describes how the application updates the `Local Config` values:
 
 ![Update config sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/debug_menu_document/metrics/web/docs/features/debug_menu/diagrams/debug_menu_update_config_sequence_diagram.puml)
 
-Let's consider the mechanism of updating the `Local Config` values in the application (considering that the `Hive`'s `local_config` box is already open using the `OpenLocalConfigStorageUseCase`).
-Please consider the following steps performed by the application when the user updates the `Local Config`, e.g. by toggling the FPS Monitor:
+Let's consider the mechanism of updating the `Local Config` values in the application. Assume that the `local_config` box has been opened already using the `OpenLocalConfigStorageUseCase` within the initialize method. The following steps describe how the application acts when the user updates the `Local Config`, e.g. by toggling the FPS Monitor:
+1. The UI calls the `toggleFpsMonitor` method of the `DebugMenuNotifier`.
+2. The `DebugMenuNotifier` updates the `Local Config` in the `IndexedDB`.
+3. The `DebugMenuNotifier` updates the `FpsMonitorLocalConfigViewModel` and notifies the application.
 
-    1. The UI calls the `toggleFpsMonitor` method of the `DebugMenuNotifier`.
-    2. The `DebugMenuNotifier` updates the `Local Config` in the `IndexedDB`.
-    3. The `DebugMenuNotifier` updates the `FpsMonitorLocalConfigViewModel` and notifies the application.
-    4. The user sees the updated UI with the toggled FPS monitor.
+Now, the user sees the updated UI with the toggled FPS monitor.
 
 The application does not change the UI until the `local_config` box update succeeds.
 
-When the user exits the application, the application calls the `dispose` method of the `DebugMenuNotifier`. The `dispose` method, in its turn, calls the `CloseLocalConfigStorage` usecase, that closes the `local_config` box.
+The `DebugMenuNotifier` is implemented to close all the opened boxes when the notifier is disposed (not in the widget tree). Currently, the notifier calls the `CloseLocalConfigStorageUseCase` usecase when the user exits the application.

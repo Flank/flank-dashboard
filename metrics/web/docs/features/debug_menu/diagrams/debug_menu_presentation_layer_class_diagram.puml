@@ -31,7 +31,7 @@ package debug_menu {
                     - _openLocalConfigStorageUseCase : OpenLocalConfigStorageUseCase
 
                     + Future<void> initializeLocalConfig()
-                    + void initializeLocalConfigWithDefaults()
+                    + void initializeDefaults()
                     + void toggleFpsMonitor(bool isEnabled)
                     - void _setIsLoading(bool isLoading)
                     - void _setLocalConfig(LocalConfig config)
