@@ -21,9 +21,9 @@ package debug_menu {
             package state {
                 class DebugMenuNotifier {
                     + isLoading : bool
+                    + isInitialized: bool
 
                     - _localConfig : LocalConfig
-                    - _defaultLocalConfig : LocalConfig
                     - _fpsMonitorLocalConfigViewModel : FpsMonitorLocalConfigViewModel
                     - _updateLocalConfigUseCase : UpdateLocalConfigUseCase
                     - _readLocalConfigUseCase : ReadLocalConfigUseCase
@@ -32,7 +32,7 @@ package debug_menu {
 
                     + Future<void> initializeLocalConfig()
                     + void initializeDefaults()
-                    + void toggleFpsMonitor(bool isEnabled)
+                    + void toggleFpsMonitor()
                     - void _setIsLoading(bool isLoading)
                     - void _setLocalConfig(LocalConfig config)
                 }
@@ -50,12 +50,16 @@ package debug_menu {
         }
 }
 
-DebugMenuNotifier --> FpsMonitorLocalConfigViewModel : uses
-DebugMenuNotifier --> OpenLocalConfigStorageUseCase : uses
-DebugMenuNotifier --> ReadLocalConfigUseCase : uses
-DebugMenuNotifier --> UpdateLocalConfigUseCase : uses
-DebugMenuNotifier --> CloseLocalConfigStorageUseCase : uses
-DebugMenuNotifier --> LocalConfigParam : uses
+DebugMenuNotifier -right-> FpsMonitorLocalConfigViewModel : uses
+DebugMenuNotifier -down-> OpenLocalConfigStorageUseCase : uses
+DebugMenuNotifier -down-> ReadLocalConfigUseCase : uses
+DebugMenuNotifier -down-> UpdateLocalConfigUseCase : uses
+DebugMenuNotifier -down-> CloseLocalConfigStorageUseCase : uses
+DebugMenuNotifier -down-> LocalConfigParam : uses
+OpenLocalConfigStorageUseCase -right[hidden]-> ReadLocalConfigUseCase
+ReadLocalConfigUseCase -right[hidden]-> UpdateLocalConfigUseCase
+UpdateLocalConfigUseCase -right[hidden]-> CloseLocalConfigStorageUseCase
+CloseLocalConfigStorageUseCase -right[hidden]-> LocalConfigParam : uses
 
 CoolWidget -down-> DebugMenuNotifier : uses
 DebugMenuNotifier -up-> CoolWidget : notifies

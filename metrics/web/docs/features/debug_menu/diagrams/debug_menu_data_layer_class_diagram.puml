@@ -14,9 +14,14 @@ package debug_menu {
             }
         }
 
-        package domain {
+        package domain.repositories {
             interface LocalConfigRepository {}
         }
+
+        package domain.entities {
+            class LocalConfig {}
+        }
+
 }
 
 package core.data.model {
@@ -28,6 +33,7 @@ package core.data.model {
 HiveLocalConfigRepository --> LocalConfigData : uses
 HiveLocalConfigRepository ..|> LocalConfigRepository
 
-LocalConfigData --|> DataModel
+LocalConfigData ..|> DataModel
+LocalConfigData --|> LocalConfig
 
 @enduml

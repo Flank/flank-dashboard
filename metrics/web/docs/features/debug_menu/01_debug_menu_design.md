@@ -7,7 +7,9 @@ Introducing the `Debug Menu` feature to the Metrics Web Application allows us to
 ## Hive
 
 One of the main ideas of the `Debug Menu` feature is to store the configurations locally. That means that we are to use local persistent storage that would provide the application with the current debug configurations if they are enabled and keep these configurations for different sessions.
+
 For the current implementation, we suggest using the [`Hive` package](https://pub.dev/packages/hive) that uses the [`IndexedDB`](https://developers.google.com/web/ilt/pwa/working-with-indexeddb) to store key-value pairs in [boxes](https://docs.hivedb.dev/#/basics/boxes). Read more about Hive in their [documentation](https://docs.hivedb.dev/#/).
+
 The local configurations are to be stored using the following document structure that matches one for the [`Firestore Feature Config`](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) feature:
 ```json
 {
@@ -57,9 +59,9 @@ Let's consider the mechanism of applying the `Local Config` values. When a user 
 
 First, the application fetches the `Feature Config` that includes the `isDebugMenuEnabled` configuration value. If the `Debug Menu` feature is disabled from the remote, all debug features are disabled by default, and no interaction with local persistent storage happens. It is important to remember that disabling `Debug Menu` disables **all debug configurations for all users starting new sessions but not for currently running sessions**.
 
-After the application fetches the `Feature Config` values and ensures the `Debug Menu` feature **is enabled**, the application calls the `initializeLocalConfig` method of the `DebugMenuNotifier`. Then the notifier follows the following steps:
+After the application fetches the `Feature Config` values and ensures the `Debug Menu` feature **is enabled**, the application calls the `initializeLocalConfig` method of the `DebugMenuNotifier`. Then the notifier follows the below steps:
 1. Opens the `local_config` storage box.
-2. Sets the `isLoading` status to `false` indicating that the config is loading.
+2. Sets the `isLoading` status to `true` indicating that the config is loading.
 3. Fetches the key-value configuration pairs for debug features within the application.
 4. Sets the `isInitialized` status to `true` indicating that configurations are ready to use.
 5. Sets the `isLoading` status to `false` indicating that the config is loaded.
@@ -78,8 +80,6 @@ Let's consider the mechanism of updating the `Local Config` values in the applic
 2. The `DebugMenuNotifier` updates the `Local Config` in the `IndexedDB`.
 3. The `DebugMenuNotifier` updates the `FpsMonitorLocalConfigViewModel` and notifies the application.
 
-Now, the user sees the updated UI with the toggled FPS monitor.
-
-The application does not change the UI until the `local_config` box update succeeds.
+Now, the user sees the updated UI with the toggled FPS monitor. The application does not change the UI until the `local_config` box update succeeds.
 
 The `DebugMenuNotifier` is implemented to close all the opened boxes when the notifier is disposed (not in the widget tree). Currently, the notifier calls the `CloseLocalConfigStorageUseCase` usecase when the user exits the application.

@@ -22,26 +22,21 @@ database "IndexedDB" as DB
 
 Bob -> UI : Toggles FPS Monitor
 
-UI -> DebugMenuNotifier : toggleFpsMonitor(bool isEnabled)
+UI -> DebugMenuNotifier : toggleFpsMonitor()
 activate DebugMenuNotifier
 
-DebugMenuNotifier -> UpdateLocalConfigUseCase : call(LocalConfigParam param)
+DebugMenuNotifier -> UpdateLocalConfigUseCase : call(localConfigParam)
 activate UpdateLocalConfigUseCase
 
-UpdateLocalConfigUseCase -> HiveLocalConfigRepository : updateConfig(Map<String, dynamic> config)
+UpdateLocalConfigUseCase -> HiveLocalConfigRepository : updateConfig(//expose localConfigParam//)
 activate HiveLocalConfigRepository
 
 HiveLocalConfigRepository -> DB : Update 'local_config' box
 
-HiveLocalConfigRepository --> UpdateLocalConfigUseCase : Updated Local config
-deactivate HiveLocalConfigRepository
+return newLocalConfig
+return newLocalConfig
+return "Notify about config updates"
 
-UpdateLocalConfigUseCase --> DebugMenuNotifier : Updated Local config
-deactivate UpdateLocalConfigUseCase
-
-DebugMenuNotifier --> UI : Notify about config updates
-deactivate DebugMenuNotifier
-
-UI --> Bob : Updates UI
+UI --> Bob : UI changes
 
 @enduml

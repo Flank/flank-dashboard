@@ -43,7 +43,7 @@ package debug_menu.domain {
 
 package base.domain.usecases {
     interface UseCase<Type, Params> {
-        call: Type
+        + Type call(Params)
     }
 }
 

@@ -26,41 +26,34 @@ Bob -> UI : Enters the application
 UI -> FeatureConfigNotifier : initializeFeatureConfig()
 activate FeatureConfigNotifier
 
-FeatureConfigNotifier --> UI : Feature config
+FeatureConfigNotifier --> UI : debugMenuFeatureConfig
 deactivate FeatureConfigNotifier
 
-alt DebugMenuFeatureConfigViewModel.isEnabled == true
+alt debugMenuFeatureConfig.isEnabled
     UI -> DebugMenuNotifier : initializeLocalConfig()
     activate DebugMenuNotifier
-else DebugMenuFeatureConfigViewModel.isEnabled == false
-    UI -> UI : initializeDefaults()
-    UI --> Bob : Dismiss the Loading screen
+    DebugMenuNotifier -> ReadLocalConfigUseCase : call()
+    activate ReadLocalConfigUseCase
+
+    ReadLocalConfigUseCase -> HiveLocalConfigRepository : readConfig()
+    activate HiveLocalConfigRepository
+
+    HiveLocalConfigRepository -> DB : Read 'local_config' box
+    DB --> HiveLocalConfigRepository : localConfigJson
+
+    HiveLocalConfigRepository -> LocalConfigData : .fromJson(localConfigJson)
+    activate LocalConfigData
+
+    return localConfig
+    return localConfig
+    return localConfig
+    return "Notify about new localConfig"
+
+else !debugMenuFeatureConfig.isEnabled
+    UI -> DebugMenuNotifier : initializeDefaults()
+    activate DebugMenuNotifier
+    return "Notify about new localConfig"
 end
-
-DebugMenuNotifier -> ReadLocalConfigUseCase : call()
-activate ReadLocalConfigUseCase
-
-ReadLocalConfigUseCase -> HiveLocalConfigRepository : readConfig()
-activate HiveLocalConfigRepository
-
-HiveLocalConfigRepository -> DB : Read 'local_config' box
-
-DB --> HiveLocalConfigRepository : Local config json
-
-HiveLocalConfigRepository -> LocalConfigData : .fromJson(Map<String, dynamic> json)
-activate LocalConfigData
-
-LocalConfigData --> HiveLocalConfigRepository : LocalConfig
-deactivate LocalConfigData
-
-HiveLocalConfigRepository --> ReadLocalConfigUseCase : LocalConfig
-deactivate HiveLocalConfigRepository
-
-ReadLocalConfigUseCase --> DebugMenuNotifier : LocalConfig
-deactivate ReadLocalConfigUseCase
-
-DebugMenuNotifier --> UI : Notify about new local config
-deactivate DebugMenuNotifier
 
 UI --> Bob : Dismiss the Loading screen
 
