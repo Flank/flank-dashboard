@@ -1,0 +1,65 @@
+@startuml debug_menu_domain_layer_class_diagram
+
+package debug_menu.domain {
+        package repositories {
+            interface LocalConfigRepository {
+                + Future<void> open()
+                + LocalConfig readConfig()
+                + Future<void> updateConfig(bool isFpsMonitorEnabled)
+                + Future<void> close()
+            }
+        }
+
+        package usecases {
+            package parameters {
+                class LocalConfigParam {
+                    + isFpsMonitorEnabled : bool
+                }
+            }
+
+            class OpenLocalConfigStorageUseCase {
+                + Future<void> call()
+            }
+
+            class ReadLocalConfigUseCase {
+                + Future<LocalConfig> call()
+            }
+
+            class UpdateLocalConfigUseCase {
+                + Future<void> call(LocalConfigParam param)
+            }
+
+            class CloseLocalConfigStorageUseCase {
+                + Future<void> call()
+            }
+        }
+
+        package entities {
+            class LocalConfig {
+                + isFpsMonitorEnabled : bool
+            }
+        }
+}
+
+package base.domain.usecases {
+    interface UseCase<Type, Params> {
+        + Type call(Params)
+    }
+}
+
+LocalConfigRepository --> LocalConfig : uses
+
+OpenLocalConfigStorageUseCase -up-> LocalConfigRepository : uses
+OpenLocalConfigStorageUseCase ..|> UseCase
+
+ReadLocalConfigUseCase -up-> LocalConfigRepository : uses
+ReadLocalConfigUseCase ..|> UseCase
+
+UpdateLocalConfigUseCase -up-> LocalConfigRepository : uses
+UpdateLocalConfigUseCase --> LocalConfigParam : uses
+UpdateLocalConfigUseCase ..|> UseCase
+
+CloseLocalConfigStorageUseCase -up-> LocalConfigRepository : uses
+CloseLocalConfigStorageUseCase ..|> UseCase
+
+@enduml

@@ -1,0 +1,67 @@
+@startuml debug_menu_presentation_layer_class_diagram
+
+package debug_menu {
+        package domain {
+            package usecases {
+                class OpenLocalConfigStorageUseCase {}
+
+                class ReadLocalConfigUseCase {}
+
+                class UpdateLocalConfigUseCase {}
+
+                class CloseLocalConfigStorageUseCase {}
+            }
+
+            package parameters {
+                class LocalConfigParam {}
+            }
+        }
+
+        package presentation {
+            package state {
+                class DebugMenuNotifier {
+                    + isLoading : bool
+                    + isInitialized: bool
+
+                    - _localConfig : LocalConfig
+                    - _fpsMonitorLocalConfigViewModel : FpsMonitorLocalConfigViewModel
+                    - _updateLocalConfigUseCase : UpdateLocalConfigUseCase
+                    - _readLocalConfigUseCase : ReadLocalConfigUseCase
+                    - _closeLocalConfigStorageUseCase : CloseLocalConfigStorageUseCase
+                    - _openLocalConfigStorageUseCase : OpenLocalConfigStorageUseCase
+
+                    + Future<void> initializeLocalConfig()
+                    + void initializeDefaults()
+                    + void toggleFpsMonitor()
+                    - void _setIsLoading(bool isLoading)
+                    - void _setLocalConfig(LocalConfig config)
+                }
+            }
+
+            package view_models {
+                class FpsMonitorLocalConfigViewModel {
+                    + isEnabled : bool
+                }
+            }
+
+            package widgets {
+                class CoolWidget {}
+            }
+        }
+}
+
+DebugMenuNotifier -right-> FpsMonitorLocalConfigViewModel : uses
+DebugMenuNotifier -down-> OpenLocalConfigStorageUseCase : uses
+DebugMenuNotifier -down-> ReadLocalConfigUseCase : uses
+DebugMenuNotifier -down-> UpdateLocalConfigUseCase : uses
+DebugMenuNotifier -down-> CloseLocalConfigStorageUseCase : uses
+DebugMenuNotifier -down-> LocalConfigParam : uses
+OpenLocalConfigStorageUseCase -right[hidden]-> ReadLocalConfigUseCase
+ReadLocalConfigUseCase -right[hidden]-> UpdateLocalConfigUseCase
+UpdateLocalConfigUseCase -right[hidden]-> CloseLocalConfigStorageUseCase
+CloseLocalConfigStorageUseCase -right[hidden]-> LocalConfigParam : uses
+
+CoolWidget -down-> DebugMenuNotifier : uses
+DebugMenuNotifier -up-> CoolWidget : notifies
+
+@enduml
