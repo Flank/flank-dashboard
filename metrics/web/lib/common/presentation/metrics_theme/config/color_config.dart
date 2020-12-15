@@ -23,4 +23,5 @@ class ColorConfig {
   static const Color yellowTranslucent = Color(0xFF292618);
   static const Color inputSecondaryTextColor = Color(0xFF545459);
   static const Color inkResponseColor = Colors.transparent;
+  static const Color tooltipIconHoverColor = Color(0xFF4F4F56);
 }

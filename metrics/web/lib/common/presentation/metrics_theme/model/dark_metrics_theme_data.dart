@@ -55,7 +55,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color scaffoldColor = Color(0xFF1b1b1d);
   static const Color inputColor = Color(0xFF0d0d0d);
   static const inputFocusedBorder = OutlineInputBorder(
-    borderSide: BorderSide(color: _focusedBorderColor),
+    borderSide: BorderSide(color: ColorConfig.shimmerColor),
   );
 
   static const TextStyle hintStyle = MetricsTextStyle(
@@ -64,10 +64,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
     lineHeightInPixels: 20,
   );
 
-  static const Color _dropdownBorderColor = Color(0xFF878799);
   static const Color _dropdownHoverColor = Color(0xFF1d1d20);
   static const Color _dropdownHoverBorderColor = Color(0xFF37373f);
-  static const Color _focusedBorderColor = Color(0xFF878799);
   static const Color _inactiveBackgroundColor = Color(0xFF242729);
   static const Color _inactiveColor = Color(0xFF43494d);
   static const Color _cardHoverColor = Color(0xFF212124);
@@ -92,7 +90,6 @@ class DarkMetricsThemeData extends MetricsThemeData {
   static const Color _barrierColor = Color.fromRGBO(11, 11, 12, 0.8);
   static const Color _pageTitleIconColor = Color(0xFF4f4f56);
   static const Color _popupColor = Color(0xFFf5f8fa);
-  static const Color _tooltipIconColor = Color(0xFF3B3B41);
 
   /// The default [TextStyle] for dropdown within the application.
   static const _defaultDropdownTextStyle = MetricsTextStyle(
@@ -132,8 +129,8 @@ class DarkMetricsThemeData extends MetricsThemeData {
             textStyle: TextStyleConfig.tooltipPopupStyle,
           ),
           tooltipIconTheme: const TooltipIconThemeData(
-            color: _tooltipIconColor,
-            hoverColor: ColorConfig.shimmerColor,
+            color: ColorConfig.shimmerColor,
+            hoverColor: ColorConfig.tooltipIconHoverColor,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,
@@ -280,7 +277,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
             openedButtonBackgroundColor: Colors.black,
             hoverBackgroundColor: Colors.black,
             hoverBorderColor: _dropdownHoverBorderColor,
-            openedButtonBorderColor: _dropdownBorderColor,
+            openedButtonBorderColor: ColorConfig.shimmerColor,
             closedButtonBackgroundColor: inputColor,
             closedButtonBorderColor: inputColor,
             textStyle: _defaultDropdownTextStyle,
@@ -420,7 +417,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
               inactive: CirclePercentageStyle(
                 strokeColor: _inactiveBackgroundColor,
                 backgroundColor: _inactiveBackgroundColor,
-                valueColor: _focusedBorderColor,
+                valueColor: ColorConfig.shimmerColor,
                 valueStyle: TextStyle(
                   color: _inactiveColor,
                   fontWeight: FontWeight.bold,

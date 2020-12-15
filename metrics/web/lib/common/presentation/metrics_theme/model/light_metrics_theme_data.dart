@@ -131,8 +131,8 @@ class LightMetricsThemeData extends MetricsThemeData {
             textStyle: TextStyleConfig.tooltipPopupStyle,
           ),
           tooltipIconTheme: const TooltipIconThemeData(
-            color: _textPlaceholderColor,
-            hoverColor: ColorConfig.shimmerColor,
+            color: ColorConfig.shimmerColor,
+            hoverColor: ColorConfig.tooltipIconHoverColor,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,
