@@ -55,7 +55,7 @@ A `state` is an object that stores data in the browser history entry(e.g. filled
 
 The `RouteInformationParser` - is a class that acts in two ways:
 
- - Parses incoming [RouteInformation](#route-information), obtained from the [RouteInformationProvider](#route-information-provider) into a user-defined [RouteConfiguration](#route-configuration);
+ - parses incoming [RouteInformation](#route-information), obtained from the [RouteInformationProvider](#route-information-provider) into a user-defined [RouteConfiguration](#route-configuration);
 
  - creates a new [RouteInformation](#route-information) object from the [RouteConfiguration](#route-configuration) and passes it back to the [RouteInformationProvider](#route-information-provider).
 
@@ -100,7 +100,7 @@ To specify our own app-specific behavior we should extend the `RouterDelegate` w
 class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration> 
 with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteConfiguration> {
     @override
-    RoutePath get currentConfiguration;
+    RouteConfiguration get currentConfiguration;
 
     @override
     Widget build(BuildContext context);
