@@ -33,12 +33,13 @@ activate MetricsRouterDelegate
 MetricsRouterDelegate -> MetricsRouterDelegate: applies the updated pages
 
 MetricsRouterDelegate -> MetricsRouteInformationParser : restoreRouteInformation(configuration)
-deactivate MetricsRouterDelegate
 activate MetricsRouteInformationParser
 
-MetricsRouteInformationParser -> Router : notifies about page changed
-activate Router
+MetricsRouterDelegate --> Bob : shows a new metricsPage
+deactivate MetricsRouterDelegate
 
-Router --> Bob : shows the updated metricsPage
-deactivate Router
+MetricsRouteInformationParser -> Router : notifies about page changed
+
+deactivate MetricsRouteInformationParser
+
 @enduml
