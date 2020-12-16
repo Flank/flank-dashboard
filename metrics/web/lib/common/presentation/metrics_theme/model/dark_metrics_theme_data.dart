@@ -419,7 +419,7 @@ class DarkMetricsThemeData extends MetricsThemeData {
                 backgroundColor: _inactiveBackgroundColor,
                 valueColor: ColorConfig.shimmerColor,
                 valueStyle: TextStyle(
-                  color: _inactiveColor,
+                  color: _pageTitleIconColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),

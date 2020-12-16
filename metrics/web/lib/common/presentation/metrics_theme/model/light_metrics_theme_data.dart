@@ -489,7 +489,7 @@ class LightMetricsThemeData extends MetricsThemeData {
                 backgroundColor: inputColor,
                 valueColor: _inactiveStatusColor,
                 valueStyle: TextStyle(
-                  color: _inactiveStatusColor,
+                  color: _userMenuTextColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),
