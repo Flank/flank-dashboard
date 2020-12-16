@@ -18,12 +18,10 @@ package common.presentation {
                 + name : RouteName
                 + path : String
                 + authorizationRequired : bool
-                + nestedRouteInformationFactory : RouteConfigurationFactory
             }
 
             class RouteConfigurationFactory {
                 + RouteConfiguration create()
-                - RouteConfiguration _handleNested()
             }
         }
         class MetricsRouteInformationParser {
@@ -46,19 +44,20 @@ package common.presentation {
 
         package state {
             class NavigationNotifier {
-                + pages : List<Page>
+                + pages : List<MetricsPage>
                 + currentConfiguration : RouteConfiguration
                 - _metricsPageFactory : MetricsPageFactory
                 - _routeConfigurationFactory : RouteConfigurationFactory
                 - _isUserLoggedIn : bool
                 + void handleUserStateUpdates(bool isLoggedIn)
-                + void addNewPage(Page page)
-                + void popNamed(String path)
-                + void pushReplacement(Page page)
-                + void didPop(Page page)
-                + void pushNamed(String path)
-                + void pushReplacementNamed(String path)
-                + void pushAndRemoveWhere(String path, bool Function(Page) test)
+                + Future<void> pop(MetricsPage page)
+                + Future<void> push(MetricsPage page)
+                + Future<void> pushNamed(String path)
+                + Future<void> pushReplacement(MetricsPage page)
+                + Future<void> pushReplacementNamed(String path)
+                + Future<void> pushAndRemoveUntil (MetricsPage page, bool Function(Page) test)
+                + Future<void> pushNamedAndRemoveUntil (MetricsPage page, bool Function(Page) test)
+                + void didPop(MetricsPage page)
                 + void setInitialRoutePath(RouteConfiguration routeConfiguration)
                 + void setNewRoutePath(RouteConfiguration routeConfiguration)
             }

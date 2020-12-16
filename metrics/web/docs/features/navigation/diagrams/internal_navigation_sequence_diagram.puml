@@ -1,10 +1,12 @@
 @startuml internal_navigation_sequence_diagram
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
 
 actor Bob
 
-participant Router
 
-box Configuring pages
+
+box Managing Pages
 participant NavigationNotifier
 participant MetricsPageFactory
 participant MetricsRouterDelegate
@@ -12,36 +14,31 @@ endbox
 
 participant MetricsRouteInformationParser
 
-participant RouteInformationProvider
+participant Router
 
-Bob -> NavigationNotifier : pushNamed('new page')
+Bob -> NavigationNotifier : pushNamed('newPage')
 activate NavigationNotifier
 
 NavigationNotifier -> MetricsPageFactory : create(configuration)
 activate MetricsPageFactory
 
-return updated page
+return updated metricsPage
 
-NavigationNotifier -> NavigationNotifier : add updated page to the page stack
+NavigationNotifier -> NavigationNotifier : add metricsPage to the pages
 
 NavigationNotifier -> MetricsRouterDelegate : notifyListeners()
 deactivate NavigationNotifier
 activate MetricsRouterDelegate
 
-MetricsRouterDelegate -> MetricsRouterDelegate: applies new page stack
+MetricsRouterDelegate -> MetricsRouterDelegate: applies the updated pages
 
 MetricsRouterDelegate -> MetricsRouteInformationParser : restoreRouteInformation(configuration)
-MetricsRouterDelegate --> Bob : show new page
 deactivate MetricsRouterDelegate
 activate MetricsRouteInformationParser
 
-MetricsRouteInformationParser -> RouteInformationProvider : routerReportsNewRouteInformation(routeInformation)
-deactivate MetricsRouteInformationParser
-activate RouteInformationProvider
-
-RouteInformationProvider --> Router : notify about page changed
+MetricsRouteInformationParser -> Router : notifies about page changed
 activate Router
 
-Router --> Bob : show updated URL
+Router --> Bob : shows the updated metricsPage
 deactivate Router
 @enduml

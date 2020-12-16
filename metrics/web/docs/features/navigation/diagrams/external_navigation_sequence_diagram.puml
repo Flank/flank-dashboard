@@ -1,16 +1,18 @@
 @startuml external_navigation_sequence_diagram.puml
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
 
 actor Bob
 
 participant Router
 participant RouteInformationProvider
 
-box Parsing route information
+box Parsing Route Information
 participant MetricsRouteInformationParser
 participant RouteConfigurationFactory
 endbox
 
-box Configuring pages
+box Managing Pages
 participant MetricsRouterDelegate
 participant NavigationNotifier
 participant MetricsPageFactory
@@ -23,41 +25,41 @@ Router -> RouteInformationProvider : Notifies about the URL changes
 deactivate Router
 activate RouteInformationProvider
 
-RouteInformationProvider -> MetricsRouteInformationParser : parseRouteInformation(RouteInformation routeInformation)
+RouteInformationProvider -> MetricsRouteInformationParser : parseRouteInformation(routeInformation)
 deactivate RouteInformationProvider
 activate MetricsRouteInformationParser
 
-MetricsRouteInformationParser -> RouteConfigurationFactory : create(Uri uri)
+MetricsRouteInformationParser -> RouteConfigurationFactory : create(uri)
 activate RouteConfigurationFactory
 
-return RouteConfiguration
+return routeConfiguration
 
-alt Initial open page
+alt Initial page route
     MetricsRouteInformationParser -> MetricsRouterDelegate : setInitialRoutePath(routeConfiguration)
     activate MetricsRouterDelegate
 
     MetricsRouterDelegate -> NavigationNotifier : setInitialRoutePath(routeConfiguration)
     activate NavigationNotifier
-else Change the URL
+else Set new page route
     MetricsRouteInformationParser -> MetricsRouterDelegate : setNewRoutePath(routeConfiguration)
 
     MetricsRouterDelegate -> NavigationNotifier : setNewRoutePath(routeConfiguration)
 end
 deactivate MetricsRouteInformationParser
 
-NavigationNotifier -> MetricsPageFactory : create(RouteConfiguration configuration)
+NavigationNotifier -> MetricsPageFactory : create(configuration)
 activate MetricsPageFactory
 
-return actual page
+return metricsPage
 
-NavigationNotifier -> NavigationNotifier : add actual page to the page stack
+NavigationNotifier -> NavigationNotifier : add metricsPage to the pages
 
 NavigationNotifier --> MetricsRouterDelegate: notifyListeners()
 deactivate NavigationNotifier
 
-MetricsRouterDelegate -> MetricsRouterDelegate: applies new page stack
+MetricsRouterDelegate -> MetricsRouterDelegate: applies the updated pages
 
-MetricsRouterDelegate --> Bob : shows the actual page
+MetricsRouterDelegate --> Bob : shows a new metricsPage
 deactivate MetricsRouterDelegate
 
 @enduml
