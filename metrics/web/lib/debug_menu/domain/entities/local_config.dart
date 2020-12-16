@@ -10,5 +10,7 @@ class LocalConfig extends Equatable {
 
   /// Creates a new instance of the [LocalConfig]
   /// with the given [isFpsMonitorEnabled].
-  const LocalConfig({this.isFpsMonitorEnabled});
+  const LocalConfig({
+    this.isFpsMonitorEnabled,
+  });
 }

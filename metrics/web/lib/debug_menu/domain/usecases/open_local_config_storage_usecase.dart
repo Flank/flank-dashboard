@@ -3,14 +3,14 @@ import 'package:metrics/debug_menu/domain/repositories/local_config_repository.d
 
 /// A [UseCase] that provides an ability to open the local config storage.
 class OpenLocalConfigStorageUseCase extends UseCase<Future<void>, void> {
-  /// A [LocalConfigRepository] that provides an ability to interact
-  /// with the persistent storage.
+  /// A [LocalConfigRepository] this usecase uses to interact with the
+  /// persistent storage.
   final LocalConfigRepository _repository;
 
   /// Creates a new instance of the [OpenLocalConfigStorageUseCase]
   /// with the given [LocalConfigRepository].
   ///
-  /// Throws an [ArgumenError] if the given [LocalConfigRepository] is `null`.
+  /// Throws an [ArgumentError] if the given [LocalConfigRepository] is `null`.
   OpenLocalConfigStorageUseCase(this._repository) {
     ArgumentError.checkNotNull(_repository, 'repository');
   }

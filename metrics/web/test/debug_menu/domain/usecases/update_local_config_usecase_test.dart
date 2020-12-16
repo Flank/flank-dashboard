@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/debug_menu/domain/entities/local_config.dart';
 import 'package:metrics/debug_menu/domain/usecases/parameters/local_config_param.dart';
 import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.dart';
 import 'package:mockito/mockito.dart';
@@ -49,6 +50,23 @@ void main() {
         verify(
           repository.updateConfig(isFpsMonitorEnabled: isFpsMonitorEnabled),
         ).called(1);
+      },
+    );
+
+    test(
+      ".call() returns the updated local config",
+      () async {
+        const isFpsMonitorEnabled = false;
+        final param = LocalConfigParam(
+          isFpsMonitorEnabled: isFpsMonitorEnabled,
+        );
+        final expectedConfig = LocalConfig(
+          isFpsMonitorEnabled: param.isFpsMonitorEnabled,
+        );
+
+        final config = await useCase(param);
+
+        expect(config, equals(expectedConfig));
       },
     );
   });

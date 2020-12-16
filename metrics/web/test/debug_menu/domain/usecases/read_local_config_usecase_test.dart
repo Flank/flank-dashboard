@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/debug_menu/domain/entities/local_config.dart';
 import 'package:metrics/debug_menu/domain/usecases/read_local_config_usecase.dart';
 import 'package:mockito/mockito.dart';
@@ -64,6 +65,19 @@ void main() {
       ".call() returns a local config with the default values if the read local config is null",
       () {
         when(repository.readConfig()).thenReturn(null);
+
+        final actualConfig = useCase();
+
+        expect(actualConfig, equals(config));
+      },
+    );
+
+    test(
+      ".call() returns a local config with the default values if reading the local config fails",
+      () {
+        when(
+          repository.readConfig(),
+        ).thenThrow(const PersistentStoreException());
 
         final actualConfig = useCase();
 

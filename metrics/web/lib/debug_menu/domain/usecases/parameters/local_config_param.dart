@@ -10,11 +10,15 @@ class LocalConfigParam extends Equatable {
   List<Object> get props => [isFpsMonitorEnabled];
 
   /// Creates a new instance of the [LocalConfigParam]
-  /// with the given [isFprsMonitorEnabled].
+  /// with the given parameters.
   ///
-  /// Throws an [ArgumentError] if the given [isFpsMonitorEnabled] is `null`.
-  LocalConfigParam({@required this.isFpsMonitorEnabled}) {
+  /// Throws an [ArgumentError] if one of the required parameters is `null`.
+  LocalConfigParam({
+    @required this.isFpsMonitorEnabled,
+  }) {
     ArgumentError.checkNotNull(
-        isFpsMonitorEnabled, 'isPasswordSignInOptionEnabled');
+      isFpsMonitorEnabled,
+      'isPasswordSignInOptionEnabled',
+    );
   }
 }

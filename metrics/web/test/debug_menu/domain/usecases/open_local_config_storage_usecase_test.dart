@@ -31,6 +31,7 @@ void main() {
         );
       },
     );
+
     test(
       ".call() uses the .open() method of the local config repository",
       () {

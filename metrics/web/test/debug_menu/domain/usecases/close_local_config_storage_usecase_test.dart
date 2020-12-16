@@ -31,6 +31,7 @@ void main() {
         );
       },
     );
+
     test(
       ".call() uses the .close() method of the local config repository",
       () {

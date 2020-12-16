@@ -6,7 +6,7 @@ import 'package:metrics/debug_menu/domain/entities/local_config.dart';
 void main() {
   group("LocalConfig", () {
     test(
-      "creates an instance with the given is fps monitor enabled",
+      "creates an instance with the given parameters",
       () {
         const isFpsMonitorEnabled = true;
 
