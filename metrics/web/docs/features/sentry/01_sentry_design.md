@@ -129,7 +129,7 @@ Then in the app code we can take the `DSN` using `String.fromEnviroment()` metho
 const dsn = const String.fromEnvironment('SENTRY_DSN');
 ```
 
-## Updating the source map
+## Updating source maps
 
 Due to flutter minifying, the release app errors are not readable in the Sentry. To resolve the problem we should [update the js sourcemaps](https://docs.sentry.io/platforms/javascript/sourcemaps). 
 
