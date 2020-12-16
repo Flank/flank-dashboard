@@ -50,13 +50,13 @@ package common.presentation {
                 - _routeConfigurationFactory : RouteConfigurationFactory
                 - _isUserLoggedIn : bool
                 + void handleUserStateUpdates(bool isLoggedIn)
-                + Future<void> pop(MetricsPage page)
-                + Future<void> push(MetricsPage page)
-                + Future<void> pushNamed(String path)
-                + Future<void> pushReplacement(MetricsPage page)
-                + Future<void> pushReplacementNamed(String path)
-                + Future<void> pushAndRemoveUntil (MetricsPage page, bool Function(Page) test)
-                + Future<void> pushNamedAndRemoveUntil (MetricsPage page, bool Function(Page) test)
+                + void pop(MetricsPage page)
+                + void push(MetricsPage page)
+                + void pushNamed(String path)
+                + void pushReplacement(MetricsPage page)
+                + void pushReplacementNamed(String path)
+                + void pushAndRemoveUntil (MetricsPage page, bool Function(Page) test)
+                + void pushNamedAndRemoveUntil (MetricsPage page, bool Function(Page) test)
                 + void didPop(MetricsPage page)
                 + void setInitialRoutePath(RouteConfiguration routeConfiguration)
                 + void setNewRoutePath(RouteConfiguration routeConfiguration)
@@ -74,6 +74,14 @@ package common.presentation {
                 + maintainState : bool
                 + fullScreenDialog : bool
                 + Route<T> createRoute()
+            }
+
+            class MetricsPageRoute {
+                + builder : WidgetBuilder
+                + settings : RouteSettings
+                + maintainState : bool
+                + fullscreenDialog : bool
+                + Widget buildTransitions()
             }
         }
 
@@ -100,5 +108,7 @@ NavigationNotifier --> RouteConfiguration : uses
 NavigationNotifier --> MetricsPageFactory : uses
 
 MetricsPageFactory --> MetricsPage : uses
+
+MetricsPage --> MetricsPageRoute : uses
 
 @enduml

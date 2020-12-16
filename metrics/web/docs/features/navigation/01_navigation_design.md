@@ -129,6 +129,12 @@ The `NavigationNotifier` requires two classes to be injected:
  - [Metrics Pages Factory](#metrics-pages-factory)
  - [Route Configuration Factory](#route-configuration-factory)
 
+The `NavigationNotifier` contains several navigation methods, similar to the` Navigator` widget. But these methods do not return `Future` like the Navigator methods do because according to the [Metrics Web presentation layer architecture] (https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/ 02_presentation_layer_architecture.md) the interaction between pages and the UI logic should be in the presenter (Navigation Notifier in our case) and using `View Models`.
+
+Using the MetricsPage's data directly in the UI(in some widget to be precise) or add logic to the widget itself will break the principle of separation between the presentation layer components and makes it hard to test the application logic.
+
+That's why using the MetricsPage's values is out of Metrics Web Architecture.
+
 ### Metrics Page Factory
 
 The `MetricsPagesFactory` is a class that is responsible for creating a new [MetricsPage](#metrics-page) by the given `RouteConfiguration`. If the given `RouteConfiguration` matches with one of the predefined configurations, the factory creates a new `MetricsPage` to add it then to the current pages.
