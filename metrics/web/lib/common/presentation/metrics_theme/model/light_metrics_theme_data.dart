@@ -131,8 +131,8 @@ class LightMetricsThemeData extends MetricsThemeData {
             textStyle: TextStyleConfig.tooltipPopupStyle,
           ),
           tooltipIconTheme: const TooltipIconThemeData(
-            color: _textPlaceholderColor,
-            hoverColor: ColorConfig.shimmerColor,
+            color: ColorConfig.shimmerColor,
+            hoverColor: ColorConfig.tooltipIconHoverColor,
           ),
           projectGroupCardTheme: const ProjectGroupCardThemeData(
             borderColor: _borderColor,
@@ -489,7 +489,7 @@ class LightMetricsThemeData extends MetricsThemeData {
                 backgroundColor: inputColor,
                 valueColor: _inactiveStatusColor,
                 valueStyle: TextStyle(
-                  color: _inactiveStatusColor,
+                  color: _userMenuTextColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,
                 ),
