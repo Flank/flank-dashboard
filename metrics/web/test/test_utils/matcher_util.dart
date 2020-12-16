@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
 import 'package:test/test.dart';
@@ -7,6 +8,10 @@ class MatcherUtil {
   /// A matcher that can be used to detect that test case throws
   /// an [AssertionError].
   static final Matcher throwsAssertionError = throwsA(isA<AssertionError>());
+
+  /// A matcher that can be used to detect that test case throws
+  /// a [FlutterError].
+  static final Matcher throwsFlutterError = throwsA(isA<FlutterError>());
 
   /// A matcher that can be used to detect that test case throws
   /// an [AuthenticationException].

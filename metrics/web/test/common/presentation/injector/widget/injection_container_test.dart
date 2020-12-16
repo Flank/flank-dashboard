@@ -10,8 +10,15 @@ import 'package:metrics/feature_config/presentation/state/feature_config_notifie
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../test_utils/matcher_util.dart';
+
 void main() {
   group("InjectionContainer", () {
+    Future<void> changePage(WidgetTester tester) async {
+      await tester.tap(find.byType(RaisedButton));
+      await tester.pumpAndSettle();
+    }
+
     testWidgets(
       "injects an AuthNotifier",
       (tester) async {
@@ -129,6 +136,151 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      "disposes an AuthNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final authNotifier = Provider.of<AuthNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(() => authNotifier.notifyListeners(),
+            MatcherUtil.throwsFlutterError);
+      },
+    );
+
+    testWidgets(
+      "disposes a ThemeNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final themeNotifier = Provider.of<ThemeNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(
+          () => themeNotifier.notifyListeners(),
+          MatcherUtil.throwsFlutterError,
+        );
+      },
+    );
+
+    testWidgets(
+      "disposes a ProjectsNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final projectsNotifier = Provider.of<ProjectsNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(
+          () => projectsNotifier.notifyListeners(),
+          MatcherUtil.throwsFlutterError,
+        );
+      },
+    );
+
+    testWidgets(
+      "disposes a ProjectMetricsNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final projectMetricsNotifier = Provider.of<ProjectMetricsNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(
+          () => projectMetricsNotifier.notifyListeners(),
+          MatcherUtil.throwsFlutterError,
+        );
+      },
+    );
+
+    testWidgets(
+      "disposes a ProjectGroupsNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(
+          () => projectGroupsNotifier.notifyListeners(),
+          MatcherUtil.throwsFlutterError,
+        );
+      },
+    );
+
+    testWidgets(
+      "disposes an AnalyticsNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final analyticsNotifier = Provider.of<AnalyticsNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(
+          () => analyticsNotifier.notifyListeners(),
+          MatcherUtil.throwsFlutterError,
+        );
+      },
+    );
+
+    testWidgets(
+      "disposes a FeatureConfigNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final featureConfigNotifier = Provider.of<FeatureConfigNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(
+          () => featureConfigNotifier.notifyListeners(),
+          MatcherUtil.throwsFlutterError,
+        );
+      },
+    );
   });
 }
 
@@ -139,9 +291,22 @@ class InjectionContainerTestbed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InjectionContainer(
-      child: Container(
-        key: childKey,
+    return MaterialApp(
+      home: InjectionContainer(
+        child: Builder(
+          builder: (context) {
+            return Container(
+              key: childKey,
+              child: RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (_) => const SizedBox()),
+                  );
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }
