@@ -40,6 +40,7 @@ deactivate MetricsRouterDelegate
 
 MetricsRouteInformationParser -> Router : notifies about page changed
 deactivate MetricsRouteInformationParser
+activate Router
 
 Router -->  Bob : shows the updated URL
 deactivate Router
