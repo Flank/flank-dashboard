@@ -288,6 +288,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
   void dispose() {
     _authNotifier.removeListener(_authNotifierListener);
     _themeNotifier.removeListener(_themeNotifierListener);
+    _authNotifier.dispose();
+    _themeNotifier.dispose();
     super.dispose();
   }
 }
