@@ -39,7 +39,9 @@ MetricsRouterDelegate --> Bob : shows a new metricsPage
 deactivate MetricsRouterDelegate
 
 MetricsRouteInformationParser -> Router : notifies about page changed
-
 deactivate MetricsRouteInformationParser
+
+Router -->  Bob : shows the updated URL
+deactivate Router
 
 @enduml
