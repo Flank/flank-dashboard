@@ -111,6 +111,7 @@ The following class diagram represents the classes required for Sentry integrati
 ![Sentry class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_design/metrics/web/docs/features/sentry/diagrams/sentry_util_class_diagram.puml)
 
 ## Data Source Name (DSN)
+
 The [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/) tells the SDK where to send the events. If this value is not provided, the SDK will try to read it from the `SENTRY_DSN` environment variable. If that variable also does not exist, the SDK will just not send any events.
 
 The `DSN` is not a secret, worst thing someone could do is sending events to your account. If that ever happens we have a few options tackling this, we can either [block off certain request](https://docs.sentry.io/product/accounts/quotas/#inbound-data-filters) or cycle the `DSN`.
