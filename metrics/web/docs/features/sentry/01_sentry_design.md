@@ -106,7 +106,6 @@ The wrapper should contain methods, that meet our requirements described in the 
 - a `captureException` method, that delegates to the `Sentry` method described in the [Capturing exceptions](#capturing-exceptions);
 - an `addContext` method, that delegates to the `Sentry` method described in the [Adding Contexts](#adding-contexts).
 
-
 The following class diagram represents the classes required for Sentry integration: 
 
 ![Sentry class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_design/metrics/web/docs/features/sentry/diagrams/sentry_util_class_diagram.puml)
@@ -116,7 +115,7 @@ The [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/) tells the
 
 The `DSN` is not a secret, worst thing someone could do is sending events to your account. If that ever happens we have a few options tackling this, we can either [block off certain request](https://docs.sentry.io/product/accounts/quotas/#inbound-data-filters) or cycle the `DSN`.
 
-Despite on the previous step, we still should to improve our security in using the `DSN`, so we should build the Flutter app providing the `DNS` enviroment variable.
+Despite the above, we still should to improve our security in using the `DSN`, so we should build the Flutter app providing the `DNS` enviroment variable. Also, the environment variable save us from the hard-coding the `DSN`.
 
 ```bash
 export SENTRY_DSN=`your_dsn_here`
@@ -129,7 +128,7 @@ Then in the app code we can take the `DSN` using `String.fromEnviroment()` metho
 const dsn = const String.fromEnvironment('SENTRY_DSN');
 ```
 
-## Minifying and update the source map
+## Updating the source map
 
 Due to flutter minifying, the release app errors are not readable in the Sentry. To resolve the problem we should [update the js sourcemaps](https://docs.sentry.io/platforms/javascript/sourcemaps). 
 

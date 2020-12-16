@@ -1,166 +1,94 @@
-# Sentry design
+# User profile theme design
 
-## TL;DR
+## Firestore
 
-Introducing Sentry plugin into the Metrics Web Application allows us to identify and fix production errors.
+### Document structure
 
-## References
-> Link to supporting documentation, GitHub tickets, etc.
+We want to add a `user_profiles` collection to the Firestore database. This collection will contain the documents of the user profiles with the following structure: 
 
-* [Sentry Dart documentation](https://docs.sentry.io/platforms/dart/)
-* [Sentry SDK for Dart](https://pub.dev/packages/sentry)
-
-## Goals
-> Identify success metrics and measurable goals.
-
-* A clear design of the Sentry integration.
-
-## Design
-> Explain and diagram the technical design.
-
-The following sections provide an implementation of a Sentry integration into the Metrics Web Application.
-
-To integrate the Sentry into the Metrics Web Application, we should provide the following functionality:
-- initializing the Sentry SDK;
-- capturing uncaught Flutter and Dart errors;
-- capturing specific exceptions in the try-catch block;
-- adding contexts.
-
-### Initializing the Sentry
-
-To start identifying errors we should initialize the Sentry SDK using the DSN issued by Sentry.io and the release name:
-
-```dart
-await Sentry.init((options) => options
- ..dsn = 'https://example@sentry.io/add-your-dsn-here'
- ..release = 'release',
-);
-```
-
-### Capturing uncaught Flutter and Dart errors
-
-Also, we should add an ability to capture uncaught Flutter and Dart errors:
-
-- To capture uncaught Dart errors, we should pass the app runner callback to the `Sentry.init` method, if it's not null the Sentry SDK runs a guarded `Zone` over the app runner, or run the app inside your own guarded `Zone` and handle errors inside using the `Sentry.captureException` method. Zones establish an execution context for the code. This provides a convenient way to capture all errors that occur within that context.
-- To capture uncaught Flutter errors, we should override the `FlutterError.onError` property and send the error to the callback defined in the previous step.
-
-Example of the overriding the `FlutterError.onError` property:
-
-```dart
-FlutterError.onError = (details, {bool forceReport = false}) {
-    Zone.current.handleUncaughtError(details.exception, details.stack);
-};
-```
-
-### Capturing exceptions
-
-As described in the [previous step](#capturing-uncaught-flutter-and-dart-errors), we have an ability to catch uncaught Flutter and Dart errors, but we still need to catch specific errors in the try-catch block. To do that we have to use a Sentry SDK `captureException` method.
-
-Example: 
-
-```dart
-try {
-  aMethodThatMightFail();
-} catch (exception, stackTrace) {
-  await Sentry.captureException(
-    exception,
-    stackTrace: stackTrace,
-  );
+```json
+firebaseAuthUserId : {
+  selectedTheme: String
 }
-```
+``` 
 
-### Adding contexts
 
-The Contexts interface provides an additional context data. For example, the device or browser version. The contexts type can be used to define arbitrary contextual data on the event. To do that we have to use a Sentry SDK `configureScope` method.
+So, the identifier of the document will be the unique identifier of the Firebase user, and the document will contain the data about the user's selected theme. We will store the selected theme as a `String` representation of the dart `enum` value.
 
-To add a new custom context, we should give it a name and related key/value pairs:
+### Firestore security rules
 
-```dart
-final projectName = {'name' : 'test'};
-Sentry.configureScope((scope) => scope.setContexts('project', projectName));
-```
+Once we have a new collection, we have to add security rules for this collection. So, we should set the following constraints to the `user_profiles` collection: 
 
-Also, the Sentry SDK contains specific classes to facilitate adding a [common context](https://develop.sentry.dev/sdk/event-payloads/contexts/):
-- To create an app context, we should use an `App` class.
-- To create a browser context, we should use a `Browser` class.
-- To create a device context, we should use a `Device` class.
-- To create an operation system context, we should use an `OperationSystem` class.
-- To create a GPU context, we should use a `GPU` class.
-- To create a runtime context, we should use a `Runtime` class.
 
-Example of adding a common context using the Sentry SDK built-in classes:
+- Access-related rules: 
+  - not authenticated users **cannot** read, create, update, and delete any document in this collection;
+  - authenticated users have the following permissions: 
+    - **can** create, update, and read the user profile if **the Firebase Auth identifier of the user equals to document identifier**. In other words, the user can create, update, and read their user profile;
+    - **cannot** create, update, delete or read the documents with the identifier different from their Firebase Auth identifier;
+  - authenticated and not authenticated users **cannot** delete any user profiles;
 
-```dart
-final browser = Browser(name: 'chrome', version: '87.0.4280.88');
-Sentry.configureScope((scope) => scope.setContexts(Browser.type, browser));
-```
+- Data validation related rules: 
+  - the `selectedTheme` field should be the valid `String` representation of the dart `enum` or `null`;
+  - the `user_profile` document should not contain any additional field except `selectedTheme`;
 
-## Sentry Util
 
-To provide an easy way to use the Sentry SDK, we should create a wrapper named `SentryUtil`. 
+## Metrics application
 
-The wrapper should contain methods, that meet our requirements described in the [design steps](#design):
+### Domain layer
 
-- a `configureDefaultContexts` private method that configures default contextual data on the error event. It should add context about the current user `operation system`, and depending on running the application on the `web` or `mobile` - about the current user `browser` or `device`;
-- an `initialize` method , that simplify [initializing the Sentry](#initializing-the-sentry) with an ability to [capture uncaught Dart and Flutter errors](#capturing-uncaught-flutter-and-dart-errors), set the DSN and release name;
-- a `captureException` method, that delegates to the `Sentry` method described in the [Capturing exceptions](#capturing-exceptions);
-- an `addContext` method, that delegates to the `Sentry` method described in the [Adding Contexts](#adding-contexts).
+In the application domain layer, we should add an ability to create, update, and read the user profile. For this purpose, we should: 
 
-The following class diagram represents the classes required for Sentry integration: 
+1. Create an `UserProfile` entity.
+2. Add the `createUserProfile`, `userProfileStream`, and `updateUserProfile` methods to the `UserRepository`.
+3. Implement the `ReceiveUserProfileUpdates`, `CreateUserProfileUseCase`, and `UpdateUserProfileUseCase` classes.
+4. Add the needed `parameter` classes.
 
-![Sentry class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_design/metrics/web/docs/features/sentry/diagrams/sentry_util_class_diagram.puml)
 
-## Data Source Name (DSN)
-The [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/) tells the SDK where to send the events. If this value is not provided, the SDK will try to read it from the `SENTRY_DSN` environment variable. If that variable also does not exist, the SDK will just not send any events.
+So, the domain layer should look like this: 
 
-The `DSN` is not a secret, worst thing someone could do is sending events to your account. If that ever happens we have a few options tackling this, we can either [block off certain request](https://docs.sentry.io/product/accounts/quotas/#inbound-data-filters) or cycle the `DSN`.
+![Domain layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_domain_class.puml)
 
-Despite the above, we still should to improve our security in using the `DSN`, so we should build the Flutter app providing the `DNS` enviroment variable. Also, the environment variable save us from the hard-coding the `DSN`.
+### Data layer
 
-```bash
-export SENTRY_DSN=`your_dsn_here`
-flutter build web --dart-define=SENTRY_DSN=$SENTRY_DSN
-```
+The `FirestoreUserRepository` of the data layer should implement new methods from the `UserRepository` interface. To do that, we should create an `UserProfileData` class implementing the `DataModel` class and containing the `fromJson` factory and `toJson` method.
 
-Then in the app code we can take the `DSN` using `String.fromEnviroment()` method:
+The following class diagram represents the classes of the data layer required for this feature: 
 
-```dart
-const dsn = const String.fromEnvironment('SENTRY_DSN');
-```
+![Data layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_data_class.puml)
 
-## Updating the source map
+### Presentation layer
 
-Due to flutter minifying, the release app errors are not readable in the Sentry. To resolve the problem we should [update the js sourcemaps](https://docs.sentry.io/platforms/javascript/sourcemaps). 
+Once we've created a `domain` and `data` layers, it's time to create a `presentation` layer. This layer contains the `AuthNotifier` - the class that manages the authentication state and will load/save the changes in the user profile. Also, the `presentation` layer contains the `ThemeNotifier` responsible for managing the theme state and will provide information about the currently selected theme type. To introduce this feature, we should follow the next steps: 
 
-To get it work in the `Dart` we should build the Flutter app providing the `release name` and updating the source maps:
+1. Create a method in the `AuthNotifier` to be able to update the user profile.
+2. Create a `userProfileSavingErrorMessage` getter that will return the error message that occurred during saving the user profile.
+3. Integrate created use cases to the `AuthNotifier`. 
+4. Create a `UserProfileModel` class for notifiers communication.
+5. Connect the `AuthNotifier` with the `ThemeNotifier` to be able to update the currently selected theme type once it is updated in the database or by the user.
 
-```bash
-export SENTRY_RELEASE=release-name
-flutter build web --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE
 
-# Upload source maps
-sentry-cli releases new $SENTRY_RELEASE
+The structure of the presentation layer shown in the following diagram: 
 
-sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps . \
-    --ext dart \
-    --rewrite
+![Presentation layer diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_presentation_class.puml)
 
-cd ./build/web/
-sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps . \
-    --ext map \
-    --ext js \
-    --rewrite
+Also, we should create a user profile record once we receive a new user. The following sequence diagram displays the logic of logging in the user.
 
-sentry-cli releases finalize $SENTRY_RELEASE
-```
+![User creation diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_creation_sequence.puml)
 
-Then in the app code, we should take the `release name` using `String.fromEnviroment()` method and pass it to the `SentryUtil.init` method:
+So, the `isLoggedIn` value of the `AuthNotifier` should depend on the `UserProfile` now, but not on the `FirebaseUser`. In other words, we can say that the user is logged in only when the `UserProfile` is not null in the `AuthNotifier`.
 
-```dart
-const release = const String.fromEnvironment('SENTRY_RELEASE');
-```
+Let's consider the mechanism of changing the selected theme. To change the selected theme, the UI should trigger the `changeTheme` method from the `ThemeNotifier` once the user toggles the `dark`/`light` theme. Also, the `AuthNotifier` should call the `changeTheme` method once the user selected theme changed in the database. The `ThemeNotifier`, in its turn, should call the `updateUserProfile` method from the `AuthNotifier` to update the selected theme in the database.
 
-## Results
-> What was the outcome of the project?
+The following sequence diagram shows the process of changing the application theme: 
 
-The document describing the integration of the Sentry into the Metrics Web Application.
+![Theme change diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/user_profile_theme/diagrams/user_profile_theme_presentation_sequence.puml)
+
+As we can see in the sequence diagram above, the `ThemeNotifier` should, in some way, communicate with the `AuthNotifier` and vise versa. Let's consider the way of communication between these two provides. 
+
+To make the `AuthNotifier` and `ThemeNotifier` communicate, we should: 
+
+1. Create instances of these notifiers in the `initState` of the `InjectionContainer`.
+2. Add listeners to the `AuthNotifier` and the `ThemeNotifier` to make the `AuthNotifier` trigger the `ThemeNotifier` once it changes and vise versa. 
+3. Create a `ChangeNotifierProvider.value` provider for each of these notifiers to make them available across the project. 
+
+So, after we've finished with these steps, the `AuthNotifier` will notify the `ThemeNotifier` about the theme type changes in the persistent store, and the `ThemeNotifier` will notify the `AuthNotifier` that the user changed the theme type on the UI.
