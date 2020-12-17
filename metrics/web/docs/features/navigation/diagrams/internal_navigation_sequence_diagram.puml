@@ -33,6 +33,7 @@ activate MetricsRouterDelegate
 MetricsRouterDelegate -> MetricsRouterDelegate: applies the updated pages
 
 MetricsRouterDelegate -> Router: notify
+activate Router
 
 Router -> MetricsRouteInformationParser : restoreRouteInformation(configuration)
 activate MetricsRouteInformationParser
@@ -42,7 +43,6 @@ deactivate MetricsRouterDelegate
 
 MetricsRouteInformationParser -> Router : routeInformation
 deactivate MetricsRouteInformationParser
-activate Router
 
 Router -->  Bob : shows the updated URL
 deactivate Router

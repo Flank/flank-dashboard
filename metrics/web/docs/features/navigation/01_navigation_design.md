@@ -162,6 +162,7 @@ According to the above class diagram, we should implement several classes to int
 - `MetricsRouterDelegate`as the app-specific [`RouterDelegate`](#router-delegate).
 - `NavigationNotifier` to manage pages and rebuild the `Navigator`.
 - `MetricsPageFactory` to simplify creating pages within the `NavigationNotifier`.
+
 Once the required classes are implemented and ready to use, we can migrate the application to the new navigation. In the `MetricsApp` we should replace the `MaterialApp` constructor with the `MaterialApp.router()` and inject the required fields. Follow the design examined in the class diagram to integrate all implemented classes. After all classes are in place and configured, the new navigation is integrated!
 
 The following sequence diagrams describe the navigation process using the new `Navigation 2.0` integrated.

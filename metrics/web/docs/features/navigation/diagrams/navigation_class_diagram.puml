@@ -27,7 +27,7 @@ package common.presentation {
         class MetricsRouteInformationParser {
             - RouteConfigurationFactory _routeConfigurationFactory
             + Future<RouteConfiguration> parseRouteInformation(RouteInformation)
-            + RouteInformation restoreRouteInformation(RouteInformation)
+            + RouteInformation restoreRouteInformation(RouteConfiguration)
         }
         class MetricsRouterDelegate {
             + navigatorKey : GlobalKey<NavigatorState>
