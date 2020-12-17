@@ -2,61 +2,52 @@
 
 ## TL;DR
 
-Introducing Sentry plugin into the Metrics Web Application allows us to identify and fix production errors.
+Introducing Sentry into the Metrics Web Application allows us to track errors that occurred within the application. Then, using Sentry logs we can identify errors and fix them. This integration simplifies maintenance of the Metrics Web Application and increases the velocity of bug fixing.
 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
 
 * [Sentry Dart documentation](https://docs.sentry.io/platforms/dart/)
-* [Sentry SDK for Dart](https://pub.dev/packages/sentry)
+* [Sentry SDK](https://pub.dev/packages/sentry)
 
 ## Goals
 > Identify success metrics and measurable goals.
 
 * A clear design of the Sentry integration.
+* A review of additional steps the Sentry integration requires.
 
 ## Design
 > Explain and diagram the technical design.
 
-The following sections provide an implementation of a Sentry integration into the Metrics Web Application.
+The following sections provide an implementation of Sentry integration into the Metrics Web Application. 
+As Sentry is used for tracking errors, we can avoid implementing different layers to make Sentry using more clear and simple. 
+Instead, we should think about Sentry as a logger and provide a utility class that would simplify working with Sentry.
 
-To integrate the Sentry into the Metrics Web Application, we should provide the following functionality:
-- initializing the Sentry SDK;
-- capturing uncaught Flutter and Dart errors;
-- capturing specific exceptions in the try-catch block;
+Here is a list of functionality points we should provide to the utility class working with Sentry:
+- initializing Sentry SDK;
+- capturing errors;
 - adding contexts.
 
-### Initializing the Sentry
+Let's proceed to the below sections that cover the implementation points.
 
-To start identifying errors we should initialize the Sentry SDK using the DSN issued by Sentry.io and the release name:
+### Initializing Sentry
+
+The very first step is to initialize Sentry. Its SDK requires the DSN ([Data Source Name](#data-source-name)) to be set. 
+Also, for the web applications, we are to set the [release](https://docs.sentry.io/platforms/flutter/configuration/releases/) to make Sentry know what version of the app caused the error. 
+Consider the following code:
 
 ```dart
 await Sentry.init((options) => options
  ..dsn = 'https://example@sentry.io/add-your-dsn-here'
- ..release = 'release',
+ ..release = 'your-app-version',
 );
 ```
 
-### Capturing uncaught Flutter and Dart errors
+About how to automate DSN and release binding, consider the [Sentry Options Binding](#sentry-options-binding) section.
 
-Also, we should add an ability to capture uncaught Flutter and Dart errors:
+### Capturing errors
 
-- To capture uncaught Dart errors, we should pass the app runner callback to the `Sentry.init` method, if it's not null the Sentry SDK runs a guarded `Zone` over the app runner, or run the app inside your own guarded `Zone` and handle errors inside using the `Sentry.captureException` method. Zones establish an execution context for the code. This provides a convenient way to capture all errors that occur within that context.
-- To capture uncaught Flutter errors, we should override the `FlutterError.onError` property and send the error to the callback defined in the previous step.
-
-Example of the overriding the `FlutterError.onError` property:
-
-```dart
-FlutterError.onError = (details, {bool forceReport = false}) {
-    Zone.current.handleUncaughtError(details.exception, details.stack);
-};
-```
-
-### Capturing exceptions
-
-As described in the [previous step](#capturing-uncaught-flutter-and-dart-errors), we have an ability to catch uncaught Flutter and Dart errors, but we still need to catch specific errors in the try-catch block. To do that we have to use a Sentry SDK `captureException` method.
-
-Example: 
+To manually capture the error using Sentry, we should call the appropriate method that Sentry SDK provides. The [`Sentry.captureException`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/captureException.html) method takes the exception and its optionally stack trace and reports to the `Sentry.io`. Consider the following example:
 
 ```dart
 try {
@@ -69,26 +60,49 @@ try {
 }
 ```
 
-### Adding contexts
+We can also configure the application to capture uncaught errors both of Flutter and Dart. Consider the following options to capture uncaught Dart errors:
+- Pass the app runner callback to the [`Sentry.init`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/init.html) method as the `appRunner` parameter. Sentry then runs your application within a [guarded zone](https://api.dart.dev/stable/2.10.4/dart-async/runZonedGuarded.html).
+- Run the app within your own guarded zone providing the `onError` callback that would `Sentry.captureException`.
 
-The Contexts interface provides an additional context data. For example, the device or browser version. The contexts type can be used to define arbitrary contextual data on the event. To do that we have to use a Sentry SDK `configureScope` method.
+The main idea is using zones as they establish an execution context for the code. This provides a convenient way to capture all errors that occur within that context.
 
-To add a new custom context, we should give it a name and related key/value pairs:
+To capture uncaught Flutter errors, we should override the [`FlutterError.onError`](https://api.flutter.dev/flutter/foundation/FlutterError/onError.html) property. Then we can either `Sentry.captureException` or send an error to the zone error handler defined. Here are examples for both cases respectively: 
+- Capture exception within the `onError` handler.
+
+```dart
+FlutterError.onError = (details, {bool forceReport = false}) {
+    Sentry.captureException(details.exception, stackTrace: details.stack);
+};
+```
+
+- Send exception to the zone handler.
+
+```dart
+FlutterError.onError = (details, {bool forceReport = false}) {
+    Zone.current.handleUncaughtError(details.exception, details.stack);
+};
+```
+
+Once we know how to capture exceptions, it's time to discover how to provide Sentry with an app execution context.
+
+### Adding Contexts
+
+Contexts allow you to attach arbitrary data to an event you report to Sentry. These could be anything useful data that can help identify an error as they are actually the contexts of this error. For example, the contexts could be browser data with version, device information, etc. To add contexts, you should use the [`Sentry.configureScope`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/configureScope.html) method. For example:
 
 ```dart
 final projectName = {'name' : 'test'};
 Sentry.configureScope((scope) => scope.setContexts('project', projectName));
 ```
 
-Also, the Sentry SDK contains specific classes to facilitate adding a [common context](https://develop.sentry.dev/sdk/event-payloads/contexts/):
-- To create an app context, we should use an `App` class.
-- To create a browser context, we should use a `Browser` class.
-- To create a device context, we should use a `Device` class.
-- To create an operation system context, we should use an `OperationSystem` class.
-- To create a GPU context, we should use a `GPU` class.
-- To create a runtime context, we should use a `Runtime` class.
+The Sentry SDK provides several specific classes to facilitate adding a [common context](https://develop.sentry.dev/sdk/event-payloads/contexts/):
+- `App` class with application-related information.
+- `Browser` class with browser-related information.
+- `Device` class with device-related information.
+- `OperationSystem` class with OS-related information.
+- `GPU` class with GPU-related information.
+- `Runtime` class with runtime-related information.
 
-Example of adding a common context using the Sentry SDK built-in classes:
+Consider an example of using the `Browser` class to set the browser common context:
 
 ```dart
 final browser = Browser(name: 'chrome', version: '87.0.4280.88');
@@ -97,43 +111,77 @@ Sentry.configureScope((scope) => scope.setContexts(Browser.type, browser));
 
 ## Sentry Util
 
-To provide an easy way to use the Sentry SDK, we should create a wrapper named `SentryUtil`. 
+To simplify working with Sentry SDK, we are to implement a utility class that would wrap Sentry calling. This wrapper has to contain methods that meet the requirements described in the [Design section](#design). Here is a list of these methods:
 
-The wrapper should contain methods, that meet our requirements described in the [design steps](#design):
+- a `configureDefaultContexts` method that configures default contextual data on the error event. This method adds all common contexts as user's `operation system`, `browser` information, and so on;
+- an `initialize` method that simplifies [initializing the Sentry](#initializing-the-sentry) process;
+- a `captureException` method that delegates to the `Sentry` capture exceptions;
+- an `addContext` method that simplifies adding contexts to the `Sentry`;
 
-- a `configureDefaultContexts` private method that configures default contextual data on the error event. It should add context about the current user `operation system`, and depending on running the application on the `web` or `mobile` - about the current user `browser` or `device`;
-- an `initialize` method , that simplify [initializing the Sentry](#initializing-the-sentry) with an ability to [capture uncaught Dart and Flutter errors](#capturing-uncaught-flutter-and-dart-errors), set the DSN and release name;
-- a `captureException` method, that delegates to the `Sentry` method described in the [Capturing exceptions](#capturing-exceptions);
-- an `addContext` method, that delegates to the `Sentry` method described in the [Adding Contexts](#adding-contexts).
-
-The following class diagram represents the classes required for Sentry integration: 
+The following class diagram describes the structure of Sentry integration:
 
 ![Sentry class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_design/metrics/web/docs/features/sentry/diagrams/sentry_util_class_diagram.puml)
 
-## Data Source Name (DSN)
+## Sentry Options Binding
+
+The following subsections describe how to bind `DSN` and `release` options to the Sentry SDK using your build environment.
+
+### Data Source Name (DSN)
 
 The [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/) tells the SDK where to send the events. If this value is not provided, the SDK will try to read it from the `SENTRY_DSN` environment variable. If that variable also does not exist, the SDK will just not send any events.
 
-The `DSN` is not a secret, worst thing someone could do is sending events to your account. If that ever happens we have a few options tackling this, we can either [block off certain request](https://docs.sentry.io/product/accounts/quotas/#inbound-data-filters) or cycle the `DSN`.
+The `DSN` can be public as it does not contain any secret data. Despite this fact, someone can use it to send events to your project. There are a few options to tackle this:
 
-Despite the above, we still should to improve our security in using the `DSN`, so we should build the Flutter app providing the `DNS` enviroment variable. Also, the environment variable save us from the hard-coding the `DSN`.
+- block off certain requests using [inbound data filters](https://docs.sentry.io/product/accounts/quotas/#inbound-data-filters);
+- secure your `DSN`.
+
+Let's focus on how to secure your `DNS` and prevent someone from using it. The main idea is to use the `SENTRY_DSN` environment variable while building your app. Consider the following example:
 
 ```bash
 export SENTRY_DSN=`your_dsn_here`
 flutter build web --dart-define=SENTRY_DSN=$SENTRY_DSN
 ```
 
-Then in the app code we can take the `DSN` using `String.fromEnviroment()` method:
+Then within the application, you can access the variable value using the [`String.fromEnviroment`](https://api.dart.dev/stable/2.10.4/dart-core/String/String.fromEnvironment.html) method:
 
 ```dart
-const dsn = const String.fromEnvironment('SENTRY_DSN');
+const sentryDsn = String.fromEnvironment('SENTRY_DSN');
 ```
 
-## Updating source maps
+### Release
 
-Due to flutter minifying, the release app errors are not readable in the Sentry. To resolve the problem we should [update the js sourcemaps](https://docs.sentry.io/platforms/javascript/sourcemaps). 
+A release is a version of your code that is deployed to an environment. Specifying the release version gives you the following opportunities:
 
-To get it work in the `Dart` we should build the Flutter app providing the `release name` and updating the source maps:
+- determine issues and regressions introduced in a new release;
+- predict which commit caused an issue and who is likely responsible;
+- resolve issues by including the issue number in your commit message;
+- receive email notifications when your code gets deployed.
+
+The release is commonly a git SHA or a custom version number, it's also followed the listed limitations:
+
+- can't contain newlines or spaces;
+- can't use a forward slash (/), back slash (\), period (.), or double period (..);
+- can't exceed 200 characters.
+
+The best practice to set up the release is to set up the environment variable during the build process, which gives you the ability to initialize it depending on the other build environment variables like build number and so on. 
+Consider the following example: 
+
+```bash
+export SENTRY_RELEASE=`your_release_here`
+flutter build web --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE
+```
+
+Then within the application, you can access the variable value using the [`String.fromEnviroment`](https://api.dart.dev/stable/2.10.4/dart-core/String/String.fromEnvironment.html) method:
+
+```dart
+const release = const String.fromEnvironment('SENTRY_RELEASE');
+```
+
+## Updating Source Maps
+
+Flutter minifies JavaScript code building the web application. This makes applications faster but also results in not readable errors and their stack traces. To resolve this problem we should [update the JS sourcemaps](https://docs.sentry.io/platforms/javascript/sourcemaps) each time we build a new application release.
+
+Updating source maps requires the [`Sentry CLI`](https://docs.sentry.io/product/cli/) to be installed. Also, it requires the [release binding](#release) described in the previous section. Consider the following example:
 
 ```bash
 export SENTRY_RELEASE=release-name
@@ -155,11 +203,8 @@ sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps . \
 sentry-cli releases finalize $SENTRY_RELEASE
 ```
 
-Then in the app code, we should take the `release name` using `String.fromEnviroment()` method and pass it to the `SentryUtil.init` method:
+## Testing
 
-```dart
-const release = const String.fromEnvironment('SENTRY_RELEASE');
-```
 
 ## Results
 > What was the outcome of the project?
