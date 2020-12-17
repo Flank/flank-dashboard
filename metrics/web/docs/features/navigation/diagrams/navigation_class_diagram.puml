@@ -51,13 +51,9 @@ package common.presentation {
                 - _isUserLoggedIn : bool
                 + void handleAuthenticationUpdates(bool isLoggedIn)
                 + void pop()
-                + void pop(MetricsPage page)
-                + void push(MetricsPage page)
                 + void pushNamed(RouteName)
-                + void pushReplacement(MetricsPage page)
                 + void pushReplacementNamed(RouteName)
-                + void pushAndRemoveUntil(MetricsPage page, bool Function(MetricsPage) test)
-                + void pushNamedAndRemoveUntil(MetricsPage page, bool Function(MetricsPage) test)
+                + void pushNamedAndRemoveUntil(RouteName, bool Function(MetricsPage) test)
                 + void handleInitialRoutePath(RouteConfiguration routeConfiguration)
                 + void handleNewRoutePath(RouteConfiguration routeConfiguration)
             }
