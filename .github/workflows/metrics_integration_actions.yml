@@ -102,7 +102,7 @@ jobs:
         run: ./ci_integrations sync --config-file .metrics/integration.yml
 
   send-notification:
-    name: Send notification
+    name: Send notification to Slack
     runs-on: ubuntu-latest
     needs: [ ci_integrations_sync, coverage_converter_sync, metrics_web_sync ]
     if: ${{ failure() }} || ${{ cancelled() }}
