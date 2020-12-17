@@ -95,7 +95,7 @@ jobs:
         working-directory: metrics/web/
 
   notify-actions:
-    name: Notify about building the Web
+    name: Notify about building finished
     runs-on: macos-latest
     needs: [ metrics-actions ]
     if: "always()"
@@ -107,3 +107,11 @@ jobs:
           repository: platform-platform/monorepo
           event-type: building_project
           client-payload: '{"building_metrics_web": "true"}'
+      - name: Send notification to Slack
+        if: needs.metrics-actions.result == 'failure' || needs.metrics-actions.result == 'cancelled'
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: send_slack_notification
+          client-payload: '{"workflow_name": "${{ github.workflow }}", "run_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'

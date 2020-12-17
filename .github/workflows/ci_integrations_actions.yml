@@ -151,15 +151,23 @@ jobs:
           asset_content_type: application/octet-stream
 
   notify-actions:
-    name: Notify about building the CI integrations
+    name: Notify about building finished
     runs-on: macos-latest
-    needs: [ ci-integrations-publish-actions ]
+    needs: [ ci-integrations-publish-actions, ci-integrations-actions, ci-integrations-build-actions ]
     if: "always()"
     steps:
       - name: Notify about building the CI integrations
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
-          repository: platform-platform/monorepo
+          repository: ${{ github.repository }}
           event-type: building_project
           client-payload: '{"building_ci_integrations": "true"}'
+      - name: Send notification to Slack
+        if: needs.ci-integrations-publish-actions.result == 'failure' || needs.ci-integrations-actions.result == 'failure' || needs.ci-integrations-build-actions.result == 'failure' || needs.ci-integrations-publish-actions.result == 'cancelled' || needs.ci-integrations-actions.result == 'cancelled' || needs.ci-integrations-build-actions.result == 'cancelled'
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: send_slack_notification
+          client-payload: '{"workflow_name": "${{ github.workflow }}", "run_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
