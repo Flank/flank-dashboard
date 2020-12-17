@@ -129,13 +129,11 @@ The `NavigationNotifier` requires two classes to be injected:
  - [Metrics Pages Factory](#metrics-pages-factory)
  - [Route Configuration Factory](#route-configuration-factory)
 
-The `NavigationNotifier` contains several navigation methods, similar to the` Navigator` widget. But these methods do not return `Future` like the Navigator methods do because according to the [Metrics Web presentation layer architecture](#https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) the interaction between pages and the UI logic should be in the presenter (ChangeNotifier in our case) and using `View Models`.
+The `NavigationNotifier` provides several navigation methods that are similar to methods the `Navigator` widget provides. But unlike the `Navigator` methods, the ones of `NavigationNotifier` do not return a `Future`. The main reason is that the [Metrics Web presentation layer architecture](#https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) declares the interactions between pages and the UI logic to be in a presenter (`ChangeNotifier`, in our case) and performed using `View Models`. Thus, the following statements hold:
+- using the `MetricsPage` data directly in the UI (for example, in a page widget) or adding such logic to the widget itself - breaks the principle of separation between the presentation layer components and complexifies testing;
+- implementing the data flow (using `View Model`s) between pages/widgets using the result param of the `.pop()` method - breaks the principle of separation between the presentation layer components and complexifies testing.
 
-Using the MetricsPage’s data directly in the UI(in some widget to be precise) or add logic to the widget itself will break the principle of separation between the presentation layer components and makes it hard to test the application logic.
-
-Implementing the data (ViewModels) flow between pages/widgets using the result param of the pop method will break the principle of separation between the presentation layer components and makes it hard to test the application logic.
-
-That's why using the MetricsPage's values is out of Metrics Web Architecture.
+According to the above, we **do not** pass parameters using internal navigation and **do not** implement similar logic for the new navigation system within the Metrics Web Application.
 
 ### Metrics Page Factory
 
@@ -143,7 +141,9 @@ The `MetricsPagesFactory` is a class that is responsible for creating a new [Met
 
 ### Metrics Page
 
-The `MetricsPage` is an app-specific class that describes a configuration of the `Route` and uses in the `Navigator` page's argument. It configured to disable transition animation when replacing the entire screen.
+The `MetricsPage` is an app-specific implementation for the `Page` class that holds a configuration for the `Route`. The `MetricsPage` creates the `MetricsPageRoute` that disables transition animation on route changes.
+
+The `NavigationNotifier` holds and manages the list of current `MetricsPage`s to use them in the `Navigator` constructor within the `MetricsRouterDelegate`.
 
 ### Route Configuration Factory
 
@@ -157,12 +157,12 @@ The following diagram describes the structure and relationship between the above
 
 The following section provides implementation details of a new navigation system for the Metrics Web Application. As navigation is related to the UI of the application, the required changes affect only the presentation layer. Read more about layers and their responsibilities in the [Metrics Web Application architecture document](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/01_metrics_web_application_architecture.md).
 
-According to the above class diagram, we should implement several classes to integrate the Router class into the application. Here is a list of them providing short descriptions for each class: 
+According to the above class diagram, we should implement several classes to integrate the Router class into the application. Here is a list of them providing a short description for each class: 
 - `MetricsRouteInformationParser` as the app-specific [`RouteInformationParser`](#route-information-parser) with the `RouteConfigurationFactory` to simplify parsing.
 - `MetricsRouterDelegate`as the app-specific [`RouterDelegate`](#router-delegate).
 - `NavigationNotifier` to manage pages and rebuild the `Navigator`.
 - `MetricsPageFactory` to simplify creating pages within the `NavigationNotifier`.
-Once the required classes are implemented and ready to use, we can migrate the application to the new navigation. In the `MetricsApp` we should replace the `MaterialApp` constructor with the `MaterialApp.router()` and inject the required fields. Follow the design examined in the class diagram to integrate all implemented classes. After all classes in place and configured, the new navigation is integrated!
+Once the required classes are implemented and ready to use, we can migrate the application to the new navigation. In the `MetricsApp` we should replace the `MaterialApp` constructor with the `MaterialApp.router()` and inject the required fields. Follow the design examined in the class diagram to integrate all implemented classes. After all classes are in place and configured, the new navigation is integrated!
 
 The following sequence diagrams describe the navigation process using the new `Navigation 2.0` integrated.
 

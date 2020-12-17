@@ -12,9 +12,9 @@ participant MetricsPageFactory
 participant MetricsRouterDelegate
 endbox
 
-participant MetricsRouteInformationParser
-
 participant Router
+
+participant MetricsRouteInformationParser
 
 Bob -> NavigationNotifier : pushNamed('newPage')
 activate NavigationNotifier
@@ -32,13 +32,15 @@ activate MetricsRouterDelegate
 
 MetricsRouterDelegate -> MetricsRouterDelegate: applies the updated pages
 
-MetricsRouterDelegate -> MetricsRouteInformationParser : restoreRouteInformation(configuration)
+MetricsRouterDelegate -> Router: notify
+
+Router -> MetricsRouteInformationParser : restoreRouteInformation(configuration)
 activate MetricsRouteInformationParser
 
 MetricsRouterDelegate --> Bob : shows a new metricsPage
 deactivate MetricsRouterDelegate
 
-MetricsRouteInformationParser -> Router : notifies about page changed
+MetricsRouteInformationParser -> Router : routeInformation
 deactivate MetricsRouteInformationParser
 activate Router
 

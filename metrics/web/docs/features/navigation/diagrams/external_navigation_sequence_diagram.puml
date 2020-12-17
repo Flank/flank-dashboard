@@ -25,8 +25,10 @@ Router -> RouteInformationProvider : Notifies about the URL changes
 deactivate Router
 activate RouteInformationProvider
 
-RouteInformationProvider -> MetricsRouteInformationParser : parseRouteInformation(routeInformation)
+RouteInformationProvider -> Router : Route Information
 deactivate RouteInformationProvider
+
+Router -> MetricsRouteInformationParser : parseRouteInformation(routeInformation)
 activate MetricsRouteInformationParser
 
 MetricsRouteInformationParser -> RouteConfigurationFactory : create(uri)
@@ -34,18 +36,21 @@ activate RouteConfigurationFactory
 
 return routeConfiguration
 
+MetricsRouteInformationParser -> Router : routeConfiguration
+deactivate MetricsRouteInformationParser
+
 alt Initial page route
-    MetricsRouteInformationParser -> MetricsRouterDelegate : setInitialRoutePath(routeConfiguration)
+    Router -> MetricsRouterDelegate : setInitialRoutePath(routeConfiguration)
     activate MetricsRouterDelegate
 
-    MetricsRouterDelegate -> NavigationNotifier : setInitialRoutePath(routeConfiguration)
+    MetricsRouterDelegate -> NavigationNotifier : handleInitialRoutePath(routeConfiguration)
     activate NavigationNotifier
 else Set new page route
-    MetricsRouteInformationParser -> MetricsRouterDelegate : setNewRoutePath(routeConfiguration)
+    Router -> MetricsRouterDelegate : setNewRoutePath(routeConfiguration)
 
-    MetricsRouterDelegate -> NavigationNotifier : setNewRoutePath(routeConfiguration)
+    MetricsRouterDelegate -> NavigationNotifier : handleNewRoutePath(routeConfiguration)
 end
-deactivate MetricsRouteInformationParser
+
 
 NavigationNotifier -> MetricsPageFactory : create(configuration)
 activate MetricsPageFactory

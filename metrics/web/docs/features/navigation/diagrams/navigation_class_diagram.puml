@@ -21,19 +21,19 @@ package common.presentation {
             }
 
             class RouteConfigurationFactory {
-                + RouteConfiguration create()
+                + RouteConfiguration create(Uri)
             }
         }
         class MetricsRouteInformationParser {
             - RouteConfigurationFactory _routeConfigurationFactory
-            + Future<RouteConfiguration> parseRouteInformation()
-            + RouteInformation restoreRouteInformation()
+            + Future<RouteConfiguration> parseRouteInformation(RouteInformation)
+            + RouteInformation restoreRouteInformation(RouteInformation)
         }
         class MetricsRouterDelegate {
             + navigatorKey : GlobalKey<NavigatorState>
             + currentConfiguration : RouteConfiguration
             + navigatorObservers : List<NavigatorObservers>
-            - navigationNotifier : NavigationNotifier
+            - _navigationNotifier : NavigationNotifier
             + Future<void> setInitialRoutePath(RouteConfiguration routeConfiguration)
             + Future<void> setNewRoutePath(RouteConfiguration routeConfiguration)
         }
@@ -49,24 +49,24 @@ package common.presentation {
                 - _metricsPageFactory : MetricsPageFactory
                 - _routeConfigurationFactory : RouteConfigurationFactory
                 - _isUserLoggedIn : bool
-                + void handleUserStateUpdates(bool isLoggedIn)
+                + void handleAuthenticationUpdates(bool isLoggedIn)
+                + void pop()
                 + void pop(MetricsPage page)
                 + void push(MetricsPage page)
-                + void pushNamed(String path)
+                + void pushNamed(RouteName)
                 + void pushReplacement(MetricsPage page)
-                + void pushReplacementNamed(String path)
-                + void pushAndRemoveUntil (MetricsPage page, bool Function(Page) test)
-                + void pushNamedAndRemoveUntil (MetricsPage page, bool Function(Page) test)
-                + void didPop(MetricsPage page)
-                + void setInitialRoutePath(RouteConfiguration routeConfiguration)
-                + void setNewRoutePath(RouteConfiguration routeConfiguration)
+                + void pushReplacementNamed(RouteName)
+                + void pushAndRemoveUntil(MetricsPage page, bool Function(MetricsPage) test)
+                + void pushNamedAndRemoveUntil(MetricsPage page, bool Function(MetricsPage) test)
+                + void handleInitialRoutePath(RouteConfiguration routeConfiguration)
+                + void handleNewRoutePath(RouteConfiguration routeConfiguration)
             }
         }
 
 
         package metrics_page {
             class MetricsPageFactory {
-                + MetricsPage<T> create<T>()
+                + MetricsPage create(RouteConfiguration)
             }
 
             class MetricsPage {
