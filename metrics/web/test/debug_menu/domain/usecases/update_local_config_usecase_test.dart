@@ -57,10 +57,10 @@ void main() {
       ".call() returns the updated local config",
       () async {
         const isFpsMonitorEnabled = false;
-        final param = LocalConfigParam(
+        const expectedConfig = LocalConfig(
           isFpsMonitorEnabled: isFpsMonitorEnabled,
         );
-        const expectedConfig = LocalConfig(
+        final param = LocalConfigParam(
           isFpsMonitorEnabled: isFpsMonitorEnabled,
         );
 
