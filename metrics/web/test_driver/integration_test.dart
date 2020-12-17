@@ -17,6 +17,7 @@ import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart
 import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
 import 'package:metrics/main.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
+
 import 'arguments/model/user_credentials.dart';
 
 void main() {
@@ -30,13 +31,13 @@ void main() {
     });
 
     testWidgets("can authenticate in the app using an email and a password",
-            (WidgetTester tester) async {
-          await _pumpApp(tester);
+        (WidgetTester tester) async {
+      await _pumpApp(tester);
 
-          await _login(tester);
+      await _login(tester);
 
-          expect(find.byType(DashboardPage), findsOneWidget);
-        });
+      expect(find.byType(DashboardPage), findsOneWidget);
+    });
 
     testWidgets("can log out from the app", (WidgetTester tester) async {
       await _pumpApp(tester);
@@ -61,7 +62,7 @@ void main() {
 
     testWidgets(
       "loads and displays coverage metric",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await _pumpApp(tester);
 
         expect(find.text(DashboardStrings.coverage), findsWidgets);
@@ -71,7 +72,7 @@ void main() {
 
     testWidgets(
       "loads and displays the performance metric",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await _pumpApp(tester);
 
         expect(find.text(DashboardStrings.performance), findsWidgets);
@@ -81,7 +82,7 @@ void main() {
 
     testWidgets(
       "loads and shows the build number metric",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await _pumpApp(tester);
 
         expect(find.text(DashboardStrings.builds), findsWidgets);
@@ -91,7 +92,7 @@ void main() {
 
     testWidgets(
       "loads and shows the build result metrics",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await _pumpApp(tester);
 
         expect(find.byType(BuildResultBarGraph), findsWidgets);
@@ -106,14 +107,14 @@ void main() {
 
     testWidgets(
       "project search input filters list of projects",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await _pumpApp(tester);
 
         final noProjectsTextFinder =
-        find.text(DashboardStrings.noConfiguredProjects);
+            find.text(DashboardStrings.noConfiguredProjects);
         final searchInputFinder = find.byType(ProjectSearchInput);
         final noSearchResultsTextFinder =
-        find.text(DashboardStrings.noSearchResults);
+            find.text(DashboardStrings.noSearchResults);
         final projectsFinder = find.byType(ProjectMetricsTile);
 
         expect(noProjectsTextFinder, findsNothing);
@@ -134,7 +135,7 @@ void main() {
   group("ProjectGroup page", () {
     testWidgets(
       "shows add project group card button",
-          (WidgetTester tester) async {
+      (WidgetTester tester) async {
         await _pumpApp(tester);
 
         await _openProjectGroupPage(tester);
