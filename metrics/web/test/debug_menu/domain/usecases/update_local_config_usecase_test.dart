@@ -60,9 +60,13 @@ void main() {
         final param = LocalConfigParam(
           isFpsMonitorEnabled: isFpsMonitorEnabled,
         );
-        final expectedConfig = LocalConfig(
-          isFpsMonitorEnabled: param.isFpsMonitorEnabled,
+        const expectedConfig = LocalConfig(
+          isFpsMonitorEnabled: isFpsMonitorEnabled,
         );
+
+        when(
+          repository.updateConfig(isFpsMonitorEnabled: isFpsMonitorEnabled),
+        ).thenAnswer((_) => Future.value(expectedConfig));
 
         final config = await useCase(param);
 

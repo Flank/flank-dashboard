@@ -23,8 +23,6 @@ class UpdateLocalConfigUseCase extends UseCase<Future<void>, LocalConfigParam> {
       isFpsMonitorEnabled: param.isFpsMonitorEnabled,
     );
 
-    return LocalConfig(
-      isFpsMonitorEnabled: config?.isFpsMonitorEnabled ?? false,
-    );
+    return config;
   }
 }

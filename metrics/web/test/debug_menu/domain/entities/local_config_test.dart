@@ -10,8 +10,9 @@ void main() {
       () {
         const isFpsMonitorEnabled = true;
 
-        final localConfig =
-            LocalConfig(isFpsMonitorEnabled: isFpsMonitorEnabled);
+        final localConfig = LocalConfig(
+          isFpsMonitorEnabled: isFpsMonitorEnabled,
+        );
 
         expect(localConfig.isFpsMonitorEnabled, equals(isFpsMonitorEnabled));
       },
