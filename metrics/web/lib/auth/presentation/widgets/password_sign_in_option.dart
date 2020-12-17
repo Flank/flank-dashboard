@@ -49,6 +49,7 @@ class _PasswordSignInOptionState extends State<PasswordSignInOption> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               MetricsTextFormField(
+                key: const Key(AuthStrings.email),
                 controller: _emailController,
                 validator: EmailValidator.validate,
                 errorText: notifier.emailErrorMessage,
@@ -58,6 +59,7 @@ class _PasswordSignInOptionState extends State<PasswordSignInOption> {
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: MetricsTextFormField(
+                  key: const Key(AuthStrings.password),
                   controller: _passwordController,
                   validator: PasswordValidator.validate,
                   errorText: notifier.passwordErrorMessage,
@@ -81,6 +83,7 @@ class _PasswordSignInOptionState extends State<PasswordSignInOption> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0, top: 72.0),
                 child: MetricsPositiveButton(
+                  key: const Key(AuthStrings.signIn),
                   onPressed: notifier.isLoading ? null : () => _submit(),
                   label: AuthStrings.signIn,
                 ),
