@@ -72,6 +72,7 @@ dev_dependencies:
   args: ^1.5.2
   mockito: ^4.1.1
   network_image_mock: ^1.0.1
+  integration_test: ^1.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
