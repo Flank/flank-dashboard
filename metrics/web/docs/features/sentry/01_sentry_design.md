@@ -119,7 +119,7 @@ To simplify working with Sentry SDK, we are to implement a utility class that wo
 
 The following class diagram describes the structure of Sentry integration:
 
-![Sentry class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_design/metrics/web/docs/features/sentry/diagrams/sentry_util_class_diagram.puml)
+![Sentry class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/sentry/diagrams/sentry_util_class_diagram.puml)
 
 ## Sentry Options Binding
 
