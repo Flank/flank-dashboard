@@ -7,7 +7,8 @@ enum PersistentStoreErrorCode {
   /// Indicates that an error occurred while reading from the persistent store.
   readError,
 
-  /// Indicates that an error occurred while updating the persistent store.
+  /// Indicates that an error occurred while updating value in the
+  /// persistent store.
   updateError,
 
   /// Indicates that an error occurred while closing connection
