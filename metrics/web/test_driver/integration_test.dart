@@ -45,7 +45,8 @@ void main() {
       await _openUserMenu(tester);
 
       await tester.tap(find.text(CommonStrings.logOut));
-      await tester.pumpAndSettle();
+
+      await tester.pumpAndSettle(const Duration(seconds: 2));
 
       expect(find.byType(AuthForm), findsOneWidget);
     });
