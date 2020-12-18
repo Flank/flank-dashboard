@@ -111,10 +111,7 @@ jobs:
           sudo apt install gh
 
       - name: Configure GitHub CLI
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" > token.txt
-          gh config set prompt disabled
-          gh auth login --with-token < token.txt
+        run: gh auth login --with-token <<< ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download MacOS Build
         uses: actions/download-artifact@v2
