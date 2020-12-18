@@ -150,11 +150,14 @@ class DebugMenuNotifier extends ChangeNotifier {
 
   @override
   void dispose() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        await _closeLocalConfigStorageUseCase();
-      } catch (_) {}
-    });
+    _closeLocalConfigStorage();
     super.dispose();
+  }
+
+  /// Closes the [LocalConfig] storage connection.
+  Future<void> _closeLocalConfigStorage() async {
+    try {
+      await _closeLocalConfigStorageUseCase();
+    } catch (_) {}
   }
 }
