@@ -106,6 +106,25 @@ jobs:
     needs: [ macos-actions, linux-actions ]
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh
+
+      - name: Configure GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" > token.txt
+          gh config set prompt disabled
+          gh auth login --with-token < token.txt
+
       - name: Download MacOS Build
         uses: actions/download-artifact@v2
         with:
@@ -118,46 +137,13 @@ jobs:
           name: coverage_converter_linux
           path: metrics/coverage_converter/
 
-      - name: Delete Old Release
-        uses: dev-drprasad/delete-tag-and-release@v0.1.2
-        with:
-          delete_release: true
-          tag_name: coverage-converter-snapshot
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete release
+        run: |
+          gh release delete coverage-converter-snapshot -y
+          git push --delete origin coverage-converter-snapshot
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: coverage-converter-snapshot
-          release_name: Coverage converter snapshot
-          draft: false
-          prerelease: true
-
-      - name: Upload Release Asset
-        id: upload-macos-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: metrics/coverage_converter/coverage_converter_macos
-          asset_name: coverage_converter_macos
-          asset_content_type: application/octet-stream
-
-      - name: Upload Release Asset
-        id: upload-linux-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: metrics/coverage_converter/coverage_converter_linux
-          asset_name: coverage_converter_linux
-          asset_content_type: application/octet-stream
+      - name: Create release
+        run: gh release create coverage-converter-snapshot metrics/coverage_converter/coverage_converter_macos metrics/coverage_converter/coverage_converter_linux --prerelease --title 'Coverage converter snapshot'
 
   notify-actions:
     name: Notify about building finished

@@ -97,6 +97,25 @@ jobs:
     needs: [ ci-integrations-build-actions ]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          ref: ${{ github.ref }}
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh
+
+      - name: Configure GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" > token.txt
+          gh config set prompt disabled
+          gh auth login --with-token < token.txt
+
       - name: Download MacOS Build
         uses: actions/download-artifact@v2
         with:
@@ -109,46 +128,13 @@ jobs:
           name: ci_integrations_linux
           path: metrics/ci_integrations/
 
-      - name: Delete Old Release
-        uses: dev-drprasad/delete-tag-and-release@v0.1.2
-        with:
-          delete_release: true
-          tag_name: ci_integrations-snapshot
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete release
+        run: |
+          gh release delete ci_integrations-snapshot -y
+          git push --delete origin ci_integrations-snapshot
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ci_integrations-snapshot
-          release_name: CI Integrations snapshot
-          draft: false
-          prerelease: true
-
-      - name: Upload MacOS Release Asset
-        id: upload-macos-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: metrics/ci_integrations/ci_integrations_macos
-          asset_name: ci_integrations_macos
-          asset_content_type: application/octet-stream
-
-      - name: Upload Linux Release Asset
-        id: upload-linux-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: metrics/ci_integrations/ci_integrations_linux
-          asset_name: ci_integrations_linux
-          asset_content_type: application/octet-stream
+      - name: Create release
+        run: gh release create ci_integrations-snapshot metrics/ci_integrations/ci_integrations_macos metrics/ci_integrations/ci_integrations_linux --prerelease --title 'CI Integrations snapshot'
 
   notify-actions:
     name: Notify about building finished
