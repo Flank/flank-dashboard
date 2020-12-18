@@ -133,8 +133,9 @@ The `DSN` can be public as it does not contain any secret data. Despite this fac
 - block off certain requests using [inbound data filters](https://docs.sentry.io/product/accounts/quotas/#inbound-data-filters);
 - secure your `DSN`.
 
-Let's focus on how to secure your `DNS` and prevent someone from using it. The main idea is to use the `SENTRY_DSN` environment variable while building your app. Consider the following example:
+Let's focus on how to secure your `DNS` and prevent someone from using it. The main idea is to use the `SENTRY_DSN` environment variable while building your app. As your build steps can be also public, you can introduce the `SENTRY_DSN` to the secrets of your project and then use it during the build. Secrets managing depends on the CI tool you are using, so please consider the documentation of this tool on how to introduce secrets. 
 
+The following example demonstrates how to pass the environment variable to the Flutter build:
 ```bash
 export SENTRY_DSN=`your_dsn_here`
 flutter build web --dart-define=SENTRY_DSN=$SENTRY_DSN
@@ -154,7 +155,7 @@ A release is a version of your code that is deployed to an environment. Specifyi
 - resolve issues by including the issue number in your commit message;
 - receive email notifications when your code gets deployed.
 
-The release is commonly a git SHA or a custom version number, it's also followed the listed limitations:
+The release is commonly a git SHA or a custom version number, it also must follow the listed limitations:
 - can't contain newlines or spaces;
 - can't use a forward slash (/), backslash (\\), period (.), or double period (..);
 - can't exceed 200 characters.
@@ -201,8 +202,10 @@ sentry-cli releases finalize $SENTRY_RELEASE
 
 ## Testing
 
-The Sentry should be tested using a [mockito](https://pub.dev/packages/mockito) package, which allows replacing a [`SentryClient`](https://pub.dev/documentation/sentry/latest/sentry/SentryClient-class.html) with a mock one using a [`Sentry.bindClient`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/bindClient.html) method. 
-Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing a Sentry client direct HTTP calls. 
+The main idea in testing Sentry integration is to use the [`Sentry.bindClient`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/bindClient.html) method and bind a test client to use in test cases. 
+
+As Sentry is a third-party integration it should be tested using the [third-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) approach that uses the [mock server](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md). 
+Also, it is possible to mock the client using a [mockito](https://pub.dev/packages/mockito) package.
 
 ## Results
 > What was the outcome of the project?
