@@ -105,10 +105,11 @@ jobs:
     name: Send notification to Slack
     runs-on: ubuntu-latest
     needs: [ ci_integrations_sync, coverage_converter_sync, metrics_web_sync ]
-    if: ${{ failure() }} || ${{ cancelled() }}
+    if: ${{ always() }}
     steps:
       - name: Send notification to Slack
         uses: peter-evans/repository-dispatch@v1
+        if: needs.ci_integrations_sync.result == 'failure' || needs.coverage_converter_sync.result == 'failure' || needs.metrics_web_sync.result == 'failure' || needs.ci_integrations_sync.result == 'cancelled' || needs.coverage_converter_sync.result == 'cancelled' || needs.metrics_web_sync.result == 'cancelled'
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           repository: ${{ github.repository }}
