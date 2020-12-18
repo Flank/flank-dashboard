@@ -13,6 +13,14 @@ class PersistentStoreErrorMessage {
   /// Provides the error message based on the [PersistentStoreErrorCode].
   String get message {
     switch (_code) {
+      case PersistentStoreErrorCode.openConnectionFailed:
+        return CommonStrings.openConnectionFailedErrorMessage;
+      case PersistentStoreErrorCode.readError:
+        return CommonStrings.readErrorMessage;
+      case PersistentStoreErrorCode.updateError:
+        return CommonStrings.updateErrorMessage;
+      case PersistentStoreErrorCode.closeConnectionFailed:
+        return CommonStrings.closeConnectionFailedErrorMessage;
       case PersistentStoreErrorCode.unknown:
         return CommonStrings.unknownErrorMessage;
       default:

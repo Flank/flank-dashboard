@@ -21,6 +21,14 @@ class CommonStrings {
   static const String users = 'Users';
   static const String unknownErrorMessage =
       'An unknown error occurred, please try again.';
+  static const String openConnectionFailedErrorMessage =
+      'An error occurred while opening a connection with the persistent store, please try again.';
+  static const String readErrorMessage =
+      'An error occurred while reading from the persistent store, please try again.';
+  static const String updateErrorMessage =
+      'An error occurred while updating the persistent store, please try again.';
+  static const String closeConnectionFailedErrorMessage =
+      'An error occurred while closing a connection with the persistent store, please try again.';
   static const String debugMenu = 'Debug menu';
 
   static String duration(Duration duration) => prettyDuration(

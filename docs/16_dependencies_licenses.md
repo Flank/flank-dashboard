@@ -123,6 +123,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | flutter_styled_toast | [pub.dev](https://pub.dev/packages/flutter_styled_toast) | [Apache 2.0](https://github.com/JackJonson/flutter_styled_toast/blob/master/LICENSE) | 
 | statsfl | [pub.dev](https://pub.dev/packages/statsfl) | [MIT](https://github.com/gskinnerTeam/flutter-stats-fl/blob/master/LICENSE) | 
 | flutter_svg | [pub.dev](https://pub.dev/packages/flutter_svg) | [MIT](https://github.com/dnfield/flutter_svg/blob/master/LICENSE) |
+| hive | [pub.dev](https://pub.dev/packages/hive) | [Apache 2.0](https://github.com/hivedb/hive/blob/master/hive/LICENSE) |
 
 ### Dev dependencies
 | Name | Source | License |
