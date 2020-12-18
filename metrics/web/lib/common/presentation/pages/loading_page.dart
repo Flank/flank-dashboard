@@ -3,6 +3,9 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
+import 'package:metrics/debug_menu/domain/entities/local_config.dart';
+import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
+import 'package:metrics/feature_config/domain/entities/feature_config.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -36,18 +39,28 @@ class _LoadingPageState extends State<LoadingPage>
   /// An [AuthNotifier] needed to remove added listeners in the [dispose] method.
   AuthNotifier _authNotifier;
 
-  /// An [FeatureConfigNotifier] needed to initialize the [FeatureConfigNotifier]
+  /// A [FeatureConfigNotifier] needed to initialize the [FeatureConfig]
   /// and remove added listeners in the [dispose] method.
   FeatureConfigNotifier _featureConfigNotifier;
+
+  /// A [DebugMenuNotifier] needed to initialize the [LocalConfig] and remove
+  /// added listeners in the [dispose] method.
+  DebugMenuNotifier _debugMenuNotifier;
 
   /// Indicates whether a user is logged in or not.
   bool _isLoggedIn;
 
   /// Indicates whether a feature config is initialized or not.
-  bool _isConfigInitialized = false;
+  bool _isFeatureConfigInitialized = false;
+
+  /// Indicates whether a local config is initialized or not.
+  bool _isLocalConfigInitialized = false;
 
   /// Indicates whether the application is finished loading.
-  bool get _isLoaded => _isLoggedIn != null && _isConfigInitialized;
+  bool get _isLoaded =>
+      _isLoggedIn != null &&
+      _isFeatureConfigInitialized &&
+      _isLocalConfigInitialized;
 
   @override
   void initState() {
@@ -57,6 +70,7 @@ class _LoadingPageState extends State<LoadingPage>
 
     _subscribeToAuthUpdates();
     _subscribeToFeatureConfigUpdates();
+    _subscribeToDebugMenuNotifierUpdates();
   }
 
   @override
@@ -121,6 +135,13 @@ class _LoadingPageState extends State<LoadingPage>
     });
   }
 
+  /// Subscribes to [DebugMenuNotifier] updates.
+  void _subscribeToDebugMenuNotifierUpdates() {
+    _debugMenuNotifier = Provider.of<DebugMenuNotifier>(context, listen: false);
+
+    _debugMenuNotifier.addListener(_debugMenuNotifierListener);
+  }
+
   /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
   void _authNotifierListener() {
     _isLoggedIn = _authNotifier.isLoggedIn;
@@ -129,9 +150,38 @@ class _LoadingPageState extends State<LoadingPage>
   }
 
   /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
+  ///
+  /// Calls [_initializeLocalConfig] when the [FeatureConfig] is initialized.
   void _featureConfigNotifierListener() {
-    _isConfigInitialized = _featureConfigNotifier.isInitialized &&
+    _isFeatureConfigInitialized = _featureConfigNotifier.isInitialized &&
         !_featureConfigNotifier.isLoading;
+
+    if (_isFeatureConfigInitialized) {
+      _initializeLocalConfig();
+    }
+
+    _navigateIfLoaded();
+  }
+
+  /// Initializes the [LocalConfig] with the local storage values if
+  /// the Debug Menu feature is enabled.
+  ///
+  /// Otherwise, initializes the [LocalConfig] with defaults.
+  void _initializeLocalConfig() {
+    final isDebugMenuEnabled =
+        _featureConfigNotifier.debugMenuFeatureConfigViewModel.isEnabled;
+
+    if (isDebugMenuEnabled) {
+      _debugMenuNotifier.initializeLocalConfig();
+    } else {
+      _debugMenuNotifier.initializeDefaults();
+    }
+  }
+
+  /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
+  void _debugMenuNotifierListener() {
+    _isLocalConfigInitialized =
+        _debugMenuNotifier.isInitialized && !_debugMenuNotifier.isLoading;
 
     _navigateIfLoaded();
   }
@@ -165,6 +215,7 @@ class _LoadingPageState extends State<LoadingPage>
     _animationController.dispose();
     _authNotifier.removeListener(_authNotifierListener);
     _featureConfigNotifier.removeListener(_featureConfigNotifierListener);
+    _debugMenuNotifier.removeListener(_debugMenuNotifierListener);
     super.dispose();
   }
 }

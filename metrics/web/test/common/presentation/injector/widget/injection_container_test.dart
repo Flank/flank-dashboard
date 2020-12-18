@@ -6,6 +6,7 @@ import 'package:metrics/common/presentation/injector/widget/injection_container.
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
@@ -277,6 +278,27 @@ void main() {
 
         expect(
           () => featureConfigNotifier.notifyListeners(),
+          MatcherUtil.throwsFlutterError,
+        );
+      },
+    );
+
+    testWidgets(
+      "disposes a DebugMenuNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final debugMenuNotifier = Provider.of<DebugMenuNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(
+          () => debugMenuNotifier.notifyListeners(),
           MatcherUtil.throwsFlutterError,
         );
       },
