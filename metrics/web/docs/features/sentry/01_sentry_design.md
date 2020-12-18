@@ -112,11 +112,10 @@ Sentry.configureScope((scope) => scope.setContexts(Browser.type, browser));
 ## Sentry Util
 
 To simplify working with Sentry SDK, we are to implement a utility class that would wrap Sentry calling. This wrapper has to contain methods that meet the requirements described in the [Design section](#design). Here is a list of these methods:
-
 - a `configureDefaultContexts` method that configures default contextual data on the error event. This method adds all common contexts as user's `operation system`, `browser` information, and so on;
 - an `initialize` method that simplifies [initializing the Sentry](#initializing-the-sentry) process;
 - a `captureException` method that delegates to the `Sentry` capture exceptions;
-- an `addContext` method that simplifies adding contexts to the `Sentry`;
+- an `addContext` method that simplifies adding contexts to the `Sentry`.
 
 The following class diagram describes the structure of Sentry integration:
 
@@ -131,7 +130,6 @@ The following subsections describe how to bind `DSN` and `release` options to th
 The [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/) tells the SDK where to send the events. If this value is not provided, the SDK will try to read it from the `SENTRY_DSN` environment variable. If that variable also does not exist, the SDK will just not send any events.
 
 The `DSN` can be public as it does not contain any secret data. Despite this fact, someone can use it to send events to your project. There are a few options to tackle this:
-
 - block off certain requests using [inbound data filters](https://docs.sentry.io/product/accounts/quotas/#inbound-data-filters);
 - secure your `DSN`.
 
@@ -150,20 +148,18 @@ const sentryDsn = String.fromEnvironment('SENTRY_DSN');
 
 ### Release
 
-A release is a version of your code that is deployed to an environment. Specifying the release version gives you the following opportunities:
-
+A release is a version of your code that is deployed to an environment. Specifying the release version gives the following opportunities:
 - determine issues and regressions introduced in a new release;
 - predict which commit caused an issue and who is likely responsible;
 - resolve issues by including the issue number in your commit message;
 - receive email notifications when your code gets deployed.
 
 The release is commonly a git SHA or a custom version number, it's also followed the listed limitations:
-
 - can't contain newlines or spaces;
 - can't use a forward slash (/), back slash (\), period (.), or double period (..);
 - can't exceed 200 characters.
 
-The best practice to set up the release is to set up the environment variable during the build process, which gives you the ability to initialize it depending on the other build environment variables like build number and so on. 
+The best practice to set up the release is to set up the environment variable during the build process, which gives the ability to initialize it depending on the other build environment variables like build number and so on. 
 Consider the following example: 
 
 ```bash
@@ -205,6 +201,8 @@ sentry-cli releases finalize $SENTRY_RELEASE
 
 ## Testing
 
+The Sentry should be tested using a [mockito](https://pub.dev/packages/mockito) package, which allows replacing a [`SentryClient`](https://pub.dev/documentation/sentry/latest/sentry/SentryClient-class.html) with a mock one using a [`Sentry.bindClient()`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/bindClient.html) method. 
+Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing a Sentry client direct HTTP calls. 
 
 ## Results
 > What was the outcome of the project?
