@@ -17,6 +17,56 @@ void main() {
     );
 
     test(
+      ".message returns an open connection failed error message if the given error code is the open connection failed error code",
+      () {
+        final errorMessage = PersistentStoreErrorMessage(
+          PersistentStoreErrorCode.openConnectionFailed,
+        );
+
+        expect(
+          errorMessage.message,
+          CommonStrings.openConnectionFailedErrorMessage,
+        );
+      },
+    );
+
+    test(
+      ".message returns a read failed error message if the given error code is the read error code",
+      () {
+        final errorMessage = PersistentStoreErrorMessage(
+          PersistentStoreErrorCode.readError,
+        );
+
+        expect(errorMessage.message, CommonStrings.readErrorMessage);
+      },
+    );
+
+    test(
+      ".message returns an update failed error message if the given error code is the update error code",
+      () {
+        final errorMessage = PersistentStoreErrorMessage(
+          PersistentStoreErrorCode.updateError,
+        );
+
+        expect(errorMessage.message, CommonStrings.updateErrorMessage);
+      },
+    );
+
+    test(
+      ".message returns a close connection failed error message if the given error code is the close connection failed error code",
+      () {
+        final errorMessage = PersistentStoreErrorMessage(
+          PersistentStoreErrorCode.closeConnectionFailed,
+        );
+
+        expect(
+          errorMessage.message,
+          CommonStrings.closeConnectionFailedErrorMessage,
+        );
+      },
+    );
+
+    test(
       ".message returns an unknown error message if the given error code is the unknown error code",
       () {
         final errorMessage = PersistentStoreErrorMessage(

@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/debug_menu/domain/entities/local_config.dart';
 
@@ -19,9 +20,11 @@ abstract class LocalConfigRepository {
 
   /// Provides an ability to update the local config.
   ///
+  /// The [isFpsMonitorEnabled] is a required parameter.
+  ///
   /// Throws a [PersistentStoreException] if updating a [LocalConfig] fails.
   Future<LocalConfig> updateConfig({
-    bool isFpsMonitorEnabled,
+    @required bool isFpsMonitorEnabled,
   });
 
   /// Provides an ability to close the local config storage.

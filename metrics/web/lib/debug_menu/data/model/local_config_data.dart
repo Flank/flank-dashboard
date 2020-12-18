@@ -5,8 +5,9 @@ import 'package:metrics_core/metrics_core.dart';
 class LocalConfigData extends LocalConfig implements DataModel {
   /// Creates a new instance of the [LocalConfigData]
   /// with the given [isFpsMonitorEnabled].
-  const LocalConfigData({bool isFpsMonitorEnabled})
-      : super(isFpsMonitorEnabled: isFpsMonitorEnabled);
+  const LocalConfigData({
+    bool isFpsMonitorEnabled,
+  }) : super(isFpsMonitorEnabled: isFpsMonitorEnabled);
 
   /// Creates the [LocalConfigData] from the given [json].
   ///
