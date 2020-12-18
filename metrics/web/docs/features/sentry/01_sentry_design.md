@@ -156,7 +156,7 @@ A release is a version of your code that is deployed to an environment. Specifyi
 
 The release is commonly a git SHA or a custom version number, it's also followed the listed limitations:
 - can't contain newlines or spaces;
-- can't use a forward slash (/), back slash (\), period (.), or double period (..);
+- can't use a forward slash (/), backslash (\\), period (.), or double period (..);
 - can't exceed 200 characters.
 
 The best practice to set up the release is to set up the environment variable during the build process, which gives the ability to initialize it depending on the other build environment variables like build number and so on. 
@@ -201,7 +201,7 @@ sentry-cli releases finalize $SENTRY_RELEASE
 
 ## Testing
 
-The Sentry should be tested using a [mockito](https://pub.dev/packages/mockito) package, which allows replacing a [`SentryClient`](https://pub.dev/documentation/sentry/latest/sentry/SentryClient-class.html) with a mock one using a [`Sentry.bindClient()`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/bindClient.html) method. 
+The Sentry should be tested using a [mockito](https://pub.dev/packages/mockito) package, which allows replacing a [`SentryClient`](https://pub.dev/documentation/sentry/latest/sentry/SentryClient-class.html) with a mock one using a [`Sentry.bindClient`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/bindClient.html) method. 
 Also, the approaches discussed in [3rd-party API testing](https://github.com/platform-platform/monorepo/blob/master/docs/03_third_party_api_testing.md) and [here](https://github.com/platform-platform/monorepo/blob/master/docs/04_mock_server.md) should be used testing a Sentry client direct HTTP calls. 
 
 ## Results
