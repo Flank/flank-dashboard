@@ -28,9 +28,4 @@ class DebugMenuNotifierStub extends ChangeNotifier
 
   @override
   Future<void> toggleFpsMonitor() async {}
-
-  @override
-  Future<void> dispose() async {
-    super.dispose();
-  }
 }

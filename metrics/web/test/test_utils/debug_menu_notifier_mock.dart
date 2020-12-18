@@ -4,9 +4,4 @@ import 'package:mockito/mockito.dart';
 
 class DebugMenuNotifierMock extends Mock
     with ChangeNotifier
-    implements DebugMenuNotifier {
-  @override
-  Future<void> dispose() async {
-    super.dispose();
-  }
-}
+    implements DebugMenuNotifier {}
