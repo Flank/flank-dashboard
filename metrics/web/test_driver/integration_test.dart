@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
-import 'package:metrics/base/presentation/graphs/circle_percentage.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_text_form_field.dart';
@@ -12,11 +9,13 @@ import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/strings/dashboard_strings.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.dart';
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
 import 'package:metrics/main.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
+import 'package:universal_io/io.dart';
 
 import 'arguments/model/user_credentials.dart';
 
@@ -45,7 +44,6 @@ void main() {
       await _openUserMenu(tester);
 
       await tester.tap(find.text(CommonStrings.logOut));
-
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       expect(find.byType(AuthForm), findsOneWidget);
@@ -53,7 +51,8 @@ void main() {
   });
 
   group("DashboardPage", () {
-    testWidgets("loads and shows the projects", (WidgetTester tester) async {
+    testWidgets("loads projects and shows the project tiles",
+        (WidgetTester tester) async {
       await _pumpApp(tester);
 
       await _login(tester);
@@ -66,8 +65,7 @@ void main() {
       (WidgetTester tester) async {
         await _pumpApp(tester);
 
-        expect(find.text(DashboardStrings.coverage), findsWidgets);
-        expect(find.byType(CirclePercentage), findsWidgets);
+        expect(find.byType(CoverageCirclePercentage), findsWidgets);
       },
     );
 
@@ -76,7 +74,6 @@ void main() {
       (WidgetTester tester) async {
         await _pumpApp(tester);
 
-        expect(find.text(DashboardStrings.performance), findsWidgets);
         expect(find.byType(PerformanceSparklineGraph), findsWidgets);
       },
     );
@@ -86,7 +83,6 @@ void main() {
       (WidgetTester tester) async {
         await _pumpApp(tester);
 
-        expect(find.text(DashboardStrings.builds), findsWidgets);
         expect(find.byType(BuildNumberScorecard), findsWidgets);
       },
     );
@@ -100,27 +96,14 @@ void main() {
       },
     );
 
-    testWidgets("shows a search project input", (WidgetTester tester) async {
-      await _pumpApp(tester);
-
-      expect(find.byType(ProjectSearchInput), findsWidgets);
-    });
-
     testWidgets(
       "project search input filters list of projects",
       (WidgetTester tester) async {
         await _pumpApp(tester);
 
-        final noProjectsTextFinder =
-            find.text(DashboardStrings.noConfiguredProjects);
         final searchInputFinder = find.byType(ProjectSearchInput);
         final noSearchResultsTextFinder =
             find.text(DashboardStrings.noSearchResults);
-        final projectsFinder = find.byType(ProjectMetricsTile);
-
-        expect(noProjectsTextFinder, findsNothing);
-        expect(noSearchResultsTextFinder, findsNothing);
-        expect(projectsFinder, findsWidgets);
 
         await tester.enterText(
           searchInputFinder,
@@ -160,14 +143,14 @@ Future<void> _login(WidgetTester tester) async {
     MetricsTextFormField,
     AuthStrings.password,
   );
-  final signButtonFinder = find.widgetWithText(
+  final signInButtonFinder = find.widgetWithText(
     MetricsPositiveButton,
     AuthStrings.signIn,
   );
 
   await tester.enterText(emailFinder, credentials.email);
   await tester.enterText(passwordFinder, credentials.password);
-  await tester.tap(signButtonFinder);
+  await tester.tap(signInButtonFinder);
   await tester.pumpAndSettle();
 }
 
