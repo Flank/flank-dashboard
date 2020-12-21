@@ -130,9 +130,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// The [ChangeNotifier] of the theme type.
   ThemeNotifier _themeNotifier;
 
-  /// The [ChangeNotifier] of the debug menu and local config.
-  DebugMenuNotifier _debugMenuNotifier;
-
   @override
   void initState() {
     super.initState();
@@ -199,13 +196,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
       _updateUserProfileUseCase,
     );
 
-    _debugMenuNotifier = DebugMenuNotifier(
-      _openLocalConfigStorageUseCase,
-      _readLocalConfigUseCase,
-      _updateLocalConfigUseCase,
-      _closeLocalConfigStorageUseCase,
-    );
-
     _themeNotifier = ThemeNotifier(brightness: platformBrightness);
 
     _authNotifier.addListener(_authNotifierListener);
@@ -221,7 +211,14 @@ class _InjectionContainerState extends State<InjectionContainer> {
         ),
         ChangeNotifierProvider.value(value: _authNotifier),
         ChangeNotifierProvider.value(value: _themeNotifier),
-        ChangeNotifierProvider.value(value: _debugMenuNotifier),
+        ChangeNotifierProvider<DebugMenuNotifier>(
+          create: (_) => DebugMenuNotifier(
+            _openLocalConfigStorageUseCase,
+            _readLocalConfigUseCase,
+            _updateLocalConfigUseCase,
+            _closeLocalConfigStorageUseCase,
+          ),
+        ),
         ChangeNotifierProxyProvider<AuthNotifier, AnalyticsNotifier>(
           lazy: false,
           create: (_) => AnalyticsNotifier(
@@ -333,7 +330,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _themeNotifier.removeListener(_themeNotifierListener);
     _authNotifier.dispose();
     _themeNotifier.dispose();
-    _debugMenuNotifier.dispose();
     super.dispose();
   }
 }

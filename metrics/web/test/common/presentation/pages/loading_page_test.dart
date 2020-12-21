@@ -90,7 +90,7 @@ void main() {
     );
 
     testWidgets(
-      "initializes local config on init state if the debug menu is enabled in the feature config",
+      "initializes local config if the debug menu is enabled",
       (tester) async {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel)
             .thenReturn(const DebugMenuFeatureConfigViewModel(isEnabled: true));
@@ -106,11 +106,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
 
         verify(debugMenuNotifier.initializeLocalConfig()).called(1);
+        verifyNever(debugMenuNotifier.initializeDefaults());
       },
     );
 
     testWidgets(
-      "initializes local config with defaults on init state if the debug menu is not enabled in the feature config",
+      "initializes local config with defaults if the debug menu is not enabled",
       (tester) async {
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
             const DebugMenuFeatureConfigViewModel(isEnabled: false));
@@ -126,11 +127,12 @@ void main() {
         featureConfigNotifier.notifyListeners();
 
         verify(debugMenuNotifier.initializeDefaults()).called(1);
+        verifyNever(debugMenuNotifier.initializeLocalConfig());
       },
     );
 
     testWidgets(
-      "redirects to the login page if a user is not logged and all notifiers finished loading",
+      "redirects to the login page if a user is not logged in and all notifiers finished loading",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -204,7 +206,7 @@ void main() {
     );
 
     testWidgets(
-      "redirects to the dashboard page if a user is logged in, all notifiers finished loading and the route name is null",
+      "redirects to the dashboard page if a user is logged in, all notifiers finished loading, and the route name is null",
       (WidgetTester tester) async {
         setInitialRoute(tester, null);
         await tester.pumpWidget(
@@ -305,7 +307,7 @@ void main() {
     );
 
     testWidgets(
-      "does not redirect from the loading page if the debug menu notifier is loading",
+      "does not redirect from the loading page if the local config is loading",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _LoadingPageTestbed(

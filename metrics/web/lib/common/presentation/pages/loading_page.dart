@@ -36,15 +36,16 @@ class _LoadingPageState extends State<LoadingPage>
   /// Animation controller of the `metrics` text.
   AnimationController _animationController;
 
-  /// An [AuthNotifier] needed to remove added listeners in the [dispose] method.
+  /// An [AuthNotifier] this page uses to remove added listeners
+  /// in the [dispose] method.
   AuthNotifier _authNotifier;
 
-  /// A [FeatureConfigNotifier] needed to initialize the [FeatureConfig]
+  /// A [FeatureConfigNotifier] this page uses to initialize the [FeatureConfig]
   /// and remove added listeners in the [dispose] method.
   FeatureConfigNotifier _featureConfigNotifier;
 
-  /// A [DebugMenuNotifier] needed to initialize the [LocalConfig] and remove
-  /// added listeners in the [dispose] method.
+  /// A [DebugMenuNotifier] this page uses to initialize
+  /// the [LocalConfig] and remove added listeners in the [dispose] method.
   DebugMenuNotifier _debugMenuNotifier;
 
   /// Indicates whether a user is logged in or not.
@@ -142,14 +143,15 @@ class _LoadingPageState extends State<LoadingPage>
     _debugMenuNotifier.addListener(_debugMenuNotifierListener);
   }
 
-  /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
+  /// Updates the [_isLoggedIn] value depending on the [AuthNotifier] state.
   void _authNotifierListener() {
     _isLoggedIn = _authNotifier.isLoggedIn;
 
     _navigateIfLoaded();
   }
 
-  /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
+  /// Updates the [_isFeatureConfigInitialized] value depending
+  /// on the [FeatureConfigNotifier] state.
   ///
   /// Calls [_initializeLocalConfig] when the [FeatureConfig] is initialized.
   void _featureConfigNotifierListener() {
@@ -163,10 +165,12 @@ class _LoadingPageState extends State<LoadingPage>
     _navigateIfLoaded();
   }
 
-  /// Initializes the [LocalConfig] with the local storage values if
-  /// the Debug Menu feature is enabled.
+  /// Initializes the [LocalConfig] using the [DebugMenuNotifier].
   ///
-  /// Otherwise, initializes the [LocalConfig] with defaults.
+  /// If the Debug Menu feature is enabled, delegates
+  /// to the [DebugMenuNotifier.initializeLocalConfig] method.
+  ///
+  /// Otherwise, delegates to the [DebugMenuNotifier.initializeDefaults].
   void _initializeLocalConfig() {
     final isDebugMenuEnabled =
         _featureConfigNotifier.debugMenuFeatureConfigViewModel.isEnabled;
@@ -178,7 +182,8 @@ class _LoadingPageState extends State<LoadingPage>
     }
   }
 
-  /// Updates the [_isLoaded] and calls the [_navigateIfLoaded].
+  /// Updates the [_isLocalConfigInitialized] value
+  /// depending on the [DebugMenuNotifier] state.
   void _debugMenuNotifierListener() {
     _isLocalConfigInitialized =
         _debugMenuNotifier.isInitialized && !_debugMenuNotifier.isLoading;

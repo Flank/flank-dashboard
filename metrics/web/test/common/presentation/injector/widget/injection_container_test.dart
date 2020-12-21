@@ -139,6 +139,20 @@ void main() {
     );
 
     testWidgets(
+      "injects a DebugMenuNotifier",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        expect(
+          () => Provider.of<DebugMenuNotifier>(context, listen: false),
+          returnsNormally,
+        );
+      },
+    );
+
+    testWidgets(
       "disposes an AuthNotifier on dispose",
       (tester) async {
         await tester.pumpWidget(InjectionContainerTestbed());

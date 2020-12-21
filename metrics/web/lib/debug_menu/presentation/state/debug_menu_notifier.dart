@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/domain/usecases/usecase.dart';
-import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
 import 'package:metrics/debug_menu/domain/entities/local_config.dart';
@@ -11,8 +10,7 @@ import 'package:metrics/debug_menu/domain/usecases/read_local_config_usecase.dar
 import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.dart';
 import 'package:metrics/debug_menu/presentation/view_models/fps_monitor_local_config_view_model.dart';
 
-/// The [ChangeNotifier] that holds [LocalConfig]'s data and manages
-/// debug menu's features.
+/// The [ChangeNotifier] that holds and manages [LocalConfig]'s data.
 class DebugMenuNotifier extends ChangeNotifier {
   /// A [UseCase] that provides an ability to open the [LocalConfig] storage.
   final OpenLocalConfigStorageUseCase _openLocalConfigStorageUseCase;
@@ -73,6 +71,9 @@ class DebugMenuNotifier extends ChangeNotifier {
         assert(_closeLocalConfigStorageUseCase != null);
 
   /// Initializes the [LocalConfig].
+  ///
+  /// If [OpenLocalConfigStorageUseCase] throws, delegates initializing
+  /// to the [initializeDefaults] method.
   Future<void> initializeLocalConfig() async {
     try {
       _setIsLoading(true);
@@ -86,6 +87,8 @@ class DebugMenuNotifier extends ChangeNotifier {
       _setIsLoading(false);
     } catch (_) {
       initializeDefaults();
+    } finally {
+      _setIsLoading(false);
     }
   }
 
@@ -94,12 +97,12 @@ class DebugMenuNotifier extends ChangeNotifier {
     _setLocalConfig(
       const LocalConfig(isFpsMonitorEnabled: false),
     );
-
-    _setIsLoading(false);
   }
 
   /// Toggles the fps monitor feature and updates the [LocalConfig].
   Future<void> toggleFpsMonitor() async {
+    _setIsLoading(true);
+
     final isFpsMonitorEnabled = _fpsMonitorLocalConfigViewModel.isEnabled;
 
     final configParam = LocalConfigParam(
@@ -112,15 +115,15 @@ class DebugMenuNotifier extends ChangeNotifier {
       final newConfig = await _updateLocalConfigUseCase(configParam);
 
       _setLocalConfig(newConfig);
-
-      notifyListeners();
     } on PersistentStoreException catch (exception) {
-      _localConfigUpdatingErrorHandler(exception.code);
+      _localConfigUpdatingErrorHandler(exception);
+    } finally {
+      _setIsLoading(false);
     }
   }
 
   /// Sets the current [_localConfig] value to the given [config] and updates
-  /// the [_fpsMonitorLocalConfigViewModel].
+  /// appropriate view models.
   void _setLocalConfig(LocalConfig config) {
     _localConfig = config;
 
@@ -137,7 +140,9 @@ class DebugMenuNotifier extends ChangeNotifier {
   }
 
   /// Handles an error occurred during updating the [LocalConfig].
-  void _localConfigUpdatingErrorHandler(PersistentStoreErrorCode code) {
+  void _localConfigUpdatingErrorHandler(PersistentStoreException exception) {
+    final code = exception.code;
+
     _localConfigUpdatingError = PersistentStoreErrorMessage(code);
     notifyListeners();
   }

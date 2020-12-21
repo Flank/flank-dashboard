@@ -12,10 +12,10 @@ import 'package:mockito/mockito.dart';
 
 void main() {
   group("DebugMenuNotifier", () {
-    final openUseCase = _OpenLocalConfigStorageUseCase();
-    final readUseCase = _ReadLocalConfigUseCase();
-    final updateUseCase = _UpdateLocalConfigUseCase();
-    final closeUseCase = _CloseLocalConfigStorageUseCase();
+    final openUseCase = _OpenLocalConfigStorageUseCaseMock();
+    final readUseCase = _ReadLocalConfigUseCaseMock();
+    final updateUseCase = _UpdateLocalConfigUseCaseMock();
+    final closeUseCase = _CloseLocalConfigStorageUseCaseMock();
 
     const isFpsMonitorEnabled = false;
     const localConfig = LocalConfig(
@@ -177,28 +177,25 @@ void main() {
     );
 
     test(
-      ".initializeLocalConfig() initializes the local config with defaults if initialialing local config fails when opening the local config persistent storage",
+      ".initializeLocalConfig() initializes the local config with defaults if open local config storage use case throws",
       () async {
         const expectedViewModel = FpsMonitorLocalConfigViewModel(
           isEnabled: false,
         );
         when(openUseCase()).thenAnswer(
-          (_) => throw const PersistentStoreException(),
+          (_) => Future.error(const PersistentStoreException()),
         );
 
         await notifier.initializeLocalConfig();
 
         final actualModel = notifier.fpsMonitorLocalConfigViewModel;
 
-        expect(
-          actualModel,
-          equals(expectedViewModel),
-        );
+        expect(actualModel, equals(expectedViewModel));
       },
     );
 
     test(
-      ".initializeLocalConfig() initializes the local config with defaults if initialialing local config fails when reading the local config from the persistent storage",
+      ".initializeLocalConfig() initializes the local config with defaults if read local config use case throws",
       () async {
         const expectedViewModel = FpsMonitorLocalConfigViewModel(
           isEnabled: false,
@@ -254,6 +251,54 @@ void main() {
         notifier.initializeDefaults();
 
         expect(notifier.isInitialized, isTrue);
+      },
+    );
+
+    test(
+      ".toggleFpsMonitor() sets the is loading to true when called",
+      () {
+        notifier.initializeDefaults();
+
+        final isFpsMonitorEnabled =
+            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+
+        final expectedParam = LocalConfigParam(
+          isFpsMonitorEnabled: !isFpsMonitorEnabled,
+        );
+
+        when(updateUseCase(expectedParam)).thenAnswer(
+          (_) => Future.value(
+            LocalConfig(isFpsMonitorEnabled: !isFpsMonitorEnabled),
+          ),
+        );
+
+        notifier.toggleFpsMonitor();
+
+        expect(notifier.isLoading, isTrue);
+      },
+    );
+
+    test(
+      ".toggleFpsMonitor() sets the is loading to true when finished",
+      () async {
+        notifier.initializeDefaults();
+
+        final isFpsMonitorEnabled =
+            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+
+        final expectedParam = LocalConfigParam(
+          isFpsMonitorEnabled: !isFpsMonitorEnabled,
+        );
+
+        when(updateUseCase(expectedParam)).thenAnswer(
+          (_) => Future.value(
+            LocalConfig(isFpsMonitorEnabled: !isFpsMonitorEnabled),
+          ),
+        );
+
+        await notifier.toggleFpsMonitor();
+
+        expect(notifier.isLoading, isFalse);
       },
     );
 
@@ -340,8 +385,8 @@ void main() {
     );
 
     test(
-      ".toggleFpsMonitor() sets the .localConfigUpdatingErrorMessage if an error occured when updating the local config persistent store",
-      () {
+      ".toggleFpsMonitor() sets the .localConfigUpdatingErrorMessage if the updating the local config throws",
+      () async {
         notifier.initializeDefaults();
 
         final isFpsMonitorEnabled =
@@ -351,10 +396,10 @@ void main() {
         );
 
         when(updateUseCase(expectedParam)).thenAnswer(
-          (_) => throw const PersistentStoreException(),
+          (_) => Future.error(const PersistentStoreException()),
         );
 
-        notifier.toggleFpsMonitor();
+        await notifier.toggleFpsMonitor();
 
         expect(
           notifier.localConfigUpdatingErrorMessage,
@@ -407,13 +452,14 @@ void main() {
   });
 }
 
-class _OpenLocalConfigStorageUseCase extends Mock
+class _OpenLocalConfigStorageUseCaseMock extends Mock
     implements OpenLocalConfigStorageUseCase {}
 
-class _ReadLocalConfigUseCase extends Mock implements ReadLocalConfigUseCase {}
+class _ReadLocalConfigUseCaseMock extends Mock
+    implements ReadLocalConfigUseCase {}
 
-class _UpdateLocalConfigUseCase extends Mock
+class _UpdateLocalConfigUseCaseMock extends Mock
     implements UpdateLocalConfigUseCase {}
 
-class _CloseLocalConfigStorageUseCase extends Mock
+class _CloseLocalConfigStorageUseCaseMock extends Mock
     implements CloseLocalConfigStorageUseCase {}
