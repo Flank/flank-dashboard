@@ -176,14 +176,18 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _logPageViewUseCase = LogPageViewUseCase(_analyticsRepository);
     _resetUserUseCase = ResetUserUseCase(_analyticsRepository);
 
-    _openLocalConfigStorageUseCase =
-        OpenLocalConfigStorageUseCase(_hiveLocalConfigRepository);
-    _readLocalConfigUseCase =
-        ReadLocalConfigUseCase(_hiveLocalConfigRepository);
-    _updateLocalConfigUseCase =
-        UpdateLocalConfigUseCase(_hiveLocalConfigRepository);
-    _closeLocalConfigStorageUseCase =
-        CloseLocalConfigStorageUseCase(_hiveLocalConfigRepository);
+    _openLocalConfigStorageUseCase = OpenLocalConfigStorageUseCase(
+      _hiveLocalConfigRepository,
+    );
+    _readLocalConfigUseCase = ReadLocalConfigUseCase(
+      _hiveLocalConfigRepository,
+    );
+    _updateLocalConfigUseCase = UpdateLocalConfigUseCase(
+      _hiveLocalConfigRepository,
+    );
+    _closeLocalConfigStorageUseCase = CloseLocalConfigStorageUseCase(
+      _hiveLocalConfigRepository,
+    );
 
     _authNotifier = AuthNotifier(
       _receiveAuthUpdates,

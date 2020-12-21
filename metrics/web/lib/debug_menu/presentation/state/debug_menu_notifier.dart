@@ -119,7 +119,7 @@ class DebugMenuNotifier extends ChangeNotifier {
     }
   }
 
-  /// Set the current [_localConfig] value to the given [config] and updates
+  /// Sets the current [_localConfig] value to the given [config] and updates
   /// the [_fpsMonitorLocalConfigViewModel].
   void _setLocalConfig(LocalConfig config) {
     _localConfig = config;
