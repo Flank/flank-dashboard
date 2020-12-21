@@ -34,7 +34,7 @@ class DebugMenuNotifier extends ChangeNotifier {
   /// A [LocalConfig] containing the current configuration values.
   LocalConfig _localConfig;
 
-  /// Holds the [PersistentStoreErrorMessage] that occured
+  /// Holds the [PersistentStoreErrorMessage] that occurred
   /// during updating the [LocalConfig].
   PersistentStoreErrorMessage _localConfigUpdatingError;
 
