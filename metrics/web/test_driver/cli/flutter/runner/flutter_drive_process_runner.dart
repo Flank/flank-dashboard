@@ -1,3 +1,4 @@
+import '../../../arguments/model/user_credentials.dart';
 import '../../../common/config/browser_name.dart';
 import '../../../common/model/device.dart';
 import '../../common/runner/process_runner.dart';
@@ -8,15 +9,13 @@ import '../process/flutter_process.dart';
 
 /// Runs the flutter driver tests.
 class FlutterDriveProcessRunner implements ProcessRunner {
-  /// The [environment] contains relevant to driver tests information.
-  final FlutterDriveEnvironment environment;
-
   /// A [DriveCommand] which defines the parameters to run the driver tests with.
   final _driveCommand = DriveCommand()
-    ..target('test_driver/app.dart')
-    ..driver('test_driver/app_test.dart')
+    ..target('test_driver/app_test.dart')
+    ..driver('test_driver/app.dart')
     ..device(Device.webServer)
     ..profile()
+    ..noPub()
     ..noKeepAppRunning();
 
   /// Creates the [FlutterDriveProcessRunner].
@@ -30,14 +29,24 @@ class FlutterDriveProcessRunner implements ProcessRunner {
   /// [verbose] specifies whether print the detailed logs from
   /// the 'flutter drive' command or not.
   FlutterDriveProcessRunner({
-    this.environment,
+    FlutterDriveEnvironment environment,
     BrowserName browserName,
     bool useSkia = false,
     bool verbose = true,
   }) {
+    final credentials = environment.userCredentials;
+
     _driveCommand
       ..browserName(browserName)
-      ..useSkia(value: useSkia);
+      ..useSkia(value: useSkia)
+      ..dartDefine(
+        key: UserCredentials.emailEnvVariableName,
+        value: credentials.email,
+      )
+      ..dartDefine(
+        key: UserCredentials.passwordEnvVariableName,
+        value: credentials.password,
+      );
 
     if (verbose) {
       _driveCommand.verbose();
@@ -51,7 +60,6 @@ class FlutterDriveProcessRunner implements ProcessRunner {
     return FlutterProcess.start(
       _driveCommand,
       workingDir: workingDir,
-      environment: environment,
     );
   }
 

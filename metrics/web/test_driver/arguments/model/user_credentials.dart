@@ -6,7 +6,10 @@ class UserCredentials {
   /// A user password environment variable name.
   static const String passwordEnvVariableName = 'USER_PASSWORD';
 
+  /// An email used to log in to the app.
   final String email;
+
+  /// A password used to log in to the app.
   final String password;
 
   /// Creates the [UserCredentials].
@@ -25,6 +28,17 @@ class UserCredentials {
     return UserCredentials(
       email: map[emailEnvVariableName],
       password: map[passwordEnvVariableName],
+    );
+  }
+
+  /// Creates the [UserCredentials] from the dart environment.
+  factory UserCredentials.fromEnvironment() {
+    const email = String.fromEnvironment(emailEnvVariableName);
+    const password = String.fromEnvironment(passwordEnvVariableName);
+
+    return UserCredentials(
+      email: email,
+      password: password,
     );
   }
 
