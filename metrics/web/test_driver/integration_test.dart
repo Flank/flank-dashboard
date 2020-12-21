@@ -11,8 +11,10 @@ import 'package:metrics/dashboard/presentation/widgets/build_number_scorecard.da
 import 'package:metrics/dashboard/presentation/widgets/build_result_bar_graph.dart';
 import 'package:metrics/dashboard/presentation/widgets/coverage_circle_percentage.dart';
 import 'package:metrics/dashboard/presentation/widgets/performance_sparkline_graph.dart';
+import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart';
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
+import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
 import 'package:metrics/main.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:universal_io/io.dart';
@@ -23,42 +25,70 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group("LoginPage", () {
-    testWidgets("shows an authentication form", (WidgetTester tester) async {
-      await _pumpApp(tester);
+    testWidgets(
+      "shows an authentication form",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
 
-      expect(find.byType(AuthForm), findsOneWidget);
-    });
+        expect(find.byType(AuthForm), findsOneWidget);
+      },
+    );
 
-    testWidgets("can authenticate in the app using an email and a password",
-        (WidgetTester tester) async {
-      await _pumpApp(tester);
+    testWidgets(
+      "can authenticate in the app using an email and a password",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
 
-      await _login(tester);
+        await _login(tester);
 
-      expect(find.byType(DashboardPage), findsOneWidget);
-    });
+        expect(find.byType(DashboardPage), findsOneWidget);
+      },
+    );
 
-    testWidgets("can log out from the app", (WidgetTester tester) async {
-      await _pumpApp(tester);
+    testWidgets(
+      "can log out from the app",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
 
-      await _openUserMenu(tester);
+        await _openUserMenu(tester);
 
-      await tester.tap(find.text(CommonStrings.logOut));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+        await tester.tap(find.text(CommonStrings.logOut));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      expect(find.byType(AuthForm), findsOneWidget);
-    });
+        expect(find.byType(AuthForm), findsOneWidget);
+      },
+    );
   });
 
   group("DashboardPage", () {
-    testWidgets("loads projects and shows the project tiles",
-        (WidgetTester tester) async {
-      await _pumpApp(tester);
+    testWidgets(
+      "loads projects and shows the project tiles",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
 
-      await _login(tester);
+        await _login(tester);
 
-      expect(find.byType(ProjectMetricsTile), findsWidgets);
-    });
+        expect(find.byType(ProjectMetricsTile), findsWidgets);
+      },
+    );
+
+    testWidgets(
+      "loads and displays stability metric",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
+
+        expect(find.byType(StabilityCirclePercentage), findsWidgets);
+      },
+    );
+
+    testWidgets(
+      "loads and displays project status metric",
+      (WidgetTester tester) async {
+        await _pumpApp(tester);
+
+        expect(find.byType(ProjectBuildStatus), findsWidgets);
+      },
+    );
 
     testWidgets(
       "loads and displays coverage metric",
