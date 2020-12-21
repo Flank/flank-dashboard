@@ -239,69 +239,7 @@ void main() {
     );
 
     testWidgets(
-      "does not redirect from the loading page if a user is logged in, local config is initialized, but the feature config is not initialized",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          _LoadingPageTestbed(
-            authNotifier: authNotifier,
-            featureConfigNotifier: featureConfigNotifier,
-            debugMenuNotifier: debugMenuNotifier,
-            navigatorObserver: observer,
-          ),
-        );
-
-        when(authNotifier.isLoggedIn).thenReturn(true);
-        when(authNotifier.isLoading).thenReturn(false);
-        when(debugMenuNotifier.isLoading).thenReturn(false);
-        when(debugMenuNotifier.isInitialized).thenReturn(true);
-
-        when(featureConfigNotifier.isLoading).thenReturn(false);
-        when(featureConfigNotifier.isInitialized).thenReturn(false);
-
-        authNotifier.notifyListeners();
-        featureConfigNotifier.notifyListeners();
-        debugMenuNotifier.notifyListeners();
-
-        verifyNever(observer.didPush(
-          any,
-          argThat(loadingPageRoute),
-        ));
-      },
-    );
-
-    testWidgets(
-      "does not redirect from the loading page if a user is not logged in, local config is initialized, but the feature config is not initialized",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          _LoadingPageTestbed(
-            authNotifier: authNotifier,
-            featureConfigNotifier: featureConfigNotifier,
-            debugMenuNotifier: debugMenuNotifier,
-            navigatorObserver: observer,
-          ),
-        );
-
-        when(authNotifier.isLoggedIn).thenReturn(false);
-        when(authNotifier.isLoading).thenReturn(false);
-        when(debugMenuNotifier.isLoading).thenReturn(false);
-        when(debugMenuNotifier.isInitialized).thenReturn(true);
-
-        when(featureConfigNotifier.isLoading).thenReturn(false);
-        when(featureConfigNotifier.isInitialized).thenReturn(false);
-
-        authNotifier.notifyListeners();
-        featureConfigNotifier.notifyListeners();
-        debugMenuNotifier.notifyListeners();
-
-        verifyNever(observer.didPush(
-          any,
-          argThat(loadingPageRoute),
-        ));
-      },
-    );
-
-    testWidgets(
-      "does not redirect from the loading page if a user is logged in, feature config is initialized, but the local config is not initialized",
+      "does not redirect from the loading page if the auth notifier is loading",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -316,13 +254,13 @@ void main() {
           debugMenuViewModel,
         );
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
-        when(authNotifier.isLoading).thenReturn(false);
-        when(featureConfigNotifier.isLoading).thenReturn(false);
-        when(featureConfigNotifier.isInitialized).thenReturn(true);
+        when(authNotifier.isLoggedIn).thenReturn(null);
+        when(authNotifier.isLoading).thenReturn(true);
 
         when(debugMenuNotifier.isLoading).thenReturn(false);
-        when(debugMenuNotifier.isInitialized).thenReturn(false);
+        when(debugMenuNotifier.isInitialized).thenReturn(true);
+        when(featureConfigNotifier.isLoading).thenReturn(false);
+        when(featureConfigNotifier.isInitialized).thenReturn(true);
 
         authNotifier.notifyListeners();
         featureConfigNotifier.notifyListeners();
@@ -336,7 +274,38 @@ void main() {
     );
 
     testWidgets(
-      "does not redirect from the loading page if a user is not logged in, feature config is initialized, but the local config is not initialized",
+      "does not redirect from the loading page if the feature config is loading",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          _LoadingPageTestbed(
+            authNotifier: authNotifier,
+            featureConfigNotifier: featureConfigNotifier,
+            debugMenuNotifier: debugMenuNotifier,
+            navigatorObserver: observer,
+          ),
+        );
+
+        when(featureConfigNotifier.isLoading).thenReturn(true);
+        when(featureConfigNotifier.isInitialized).thenReturn(false);
+
+        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(authNotifier.isLoading).thenReturn(false);
+        when(debugMenuNotifier.isLoading).thenReturn(false);
+        when(debugMenuNotifier.isInitialized).thenReturn(true);
+
+        authNotifier.notifyListeners();
+        featureConfigNotifier.notifyListeners();
+        debugMenuNotifier.notifyListeners();
+
+        verifyNever(observer.didPush(
+          any,
+          argThat(loadingPageRoute),
+        ));
+      },
+    );
+
+    testWidgets(
+      "does not redirect from the loading page if the debug menu notifier is loading",
       (WidgetTester tester) async {
         await tester.pumpWidget(
           _LoadingPageTestbed(
@@ -351,13 +320,43 @@ void main() {
           debugMenuViewModel,
         );
 
+        when(debugMenuNotifier.isLoading).thenReturn(true);
+        when(debugMenuNotifier.isInitialized).thenReturn(false);
+
         when(authNotifier.isLoggedIn).thenReturn(false);
         when(authNotifier.isLoading).thenReturn(false);
         when(featureConfigNotifier.isLoading).thenReturn(false);
         when(featureConfigNotifier.isInitialized).thenReturn(true);
 
-        when(debugMenuNotifier.isLoading).thenReturn(false);
+        authNotifier.notifyListeners();
+        featureConfigNotifier.notifyListeners();
+        debugMenuNotifier.notifyListeners();
+
+        verifyNever(observer.didPush(
+          any,
+          argThat(loadingPageRoute),
+        ));
+      },
+    );
+
+    testWidgets(
+      "does not redirect from the loading page if all notifiers are loading",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          _LoadingPageTestbed(
+            authNotifier: authNotifier,
+            featureConfigNotifier: featureConfigNotifier,
+            debugMenuNotifier: debugMenuNotifier,
+            navigatorObserver: observer,
+          ),
+        );
+
+        when(debugMenuNotifier.isLoading).thenReturn(true);
         when(debugMenuNotifier.isInitialized).thenReturn(false);
+        when(authNotifier.isLoggedIn).thenReturn(null);
+        when(authNotifier.isLoading).thenReturn(true);
+        when(featureConfigNotifier.isLoading).thenReturn(true);
+        when(featureConfigNotifier.isInitialized).thenReturn(false);
 
         authNotifier.notifyListeners();
         featureConfigNotifier.notifyListeners();
