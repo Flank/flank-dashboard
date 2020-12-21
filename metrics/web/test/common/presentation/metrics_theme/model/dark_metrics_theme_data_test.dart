@@ -39,6 +39,7 @@ void main() {
         expect(darkMetricsThemeData.barGraphPopupTheme, isNotNull);
         expect(darkMetricsThemeData.tooltipPopupTheme, isNotNull);
         expect(darkMetricsThemeData.tooltipIconTheme, isNotNull);
+        expect(darkMetricsThemeData.debugMenuTheme, isNotNull);
       },
     );
   });
