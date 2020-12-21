@@ -36,7 +36,7 @@ class DebugMenuNotifier extends ChangeNotifier {
 
   /// Holds the [PersistentStoreErrorMessage] that occurred
   /// during updating the [LocalConfig].
-  PersistentStoreErrorMessage _localConfigUpdatingError;
+  PersistentStoreErrorMessage _updateConfigError;
 
   /// Returns `true` if the [LocalConfig] is loading.
   /// Otherwise, returns `false`.
@@ -53,8 +53,7 @@ class DebugMenuNotifier extends ChangeNotifier {
 
   /// Provides an error description that occurred
   /// during updating the [LocalConfig].
-  String get localConfigUpdatingErrorMessage =>
-      _localConfigUpdatingError?.message;
+  String get updateConfigError => _updateConfigError?.message;
 
   /// Creates a new instance of the [DebugMenuNotifier]
   /// with the given parameters.
@@ -83,8 +82,6 @@ class DebugMenuNotifier extends ChangeNotifier {
       final config = _readLocalConfigUseCase();
 
       _setLocalConfig(config);
-
-      _setIsLoading(false);
     } catch (_) {
       initializeDefaults();
     } finally {
@@ -143,13 +140,13 @@ class DebugMenuNotifier extends ChangeNotifier {
   void _localConfigUpdatingErrorHandler(PersistentStoreException exception) {
     final code = exception.code;
 
-    _localConfigUpdatingError = PersistentStoreErrorMessage(code);
+    _updateConfigError = PersistentStoreErrorMessage(code);
     notifyListeners();
   }
 
-  /// Resets the [localConfigUpdatingErrorMessage].
+  /// Resets the [updateConfigError].
   void _resetLocalConfigUpdatingError() {
-    _localConfigUpdatingError = null;
+    _updateConfigError = null;
     notifyListeners();
   }
 

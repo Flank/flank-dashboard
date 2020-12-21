@@ -18,7 +18,7 @@ class DebugMenuNotifierStub extends ChangeNotifier
   bool get isInitialized => true;
 
   @override
-  String get localConfigUpdatingErrorMessage => null;
+  String get updateConfigError => null;
 
   @override
   Future<void> initializeLocalConfig() async {}

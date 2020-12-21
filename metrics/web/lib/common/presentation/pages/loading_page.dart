@@ -169,7 +169,6 @@ class _LoadingPageState extends State<LoadingPage>
   ///
   /// If the Debug Menu feature is enabled, delegates
   /// to the [DebugMenuNotifier.initializeLocalConfig] method.
-  ///
   /// Otherwise, delegates to the [DebugMenuNotifier.initializeDefaults].
   void _initializeLocalConfig() {
     final isDebugMenuEnabled =

@@ -200,8 +200,8 @@ void main() {
         const expectedViewModel = FpsMonitorLocalConfigViewModel(
           isEnabled: false,
         );
-        when(readUseCase()).thenAnswer(
-          (_) => throw const PersistentStoreException(),
+        when(readUseCase()).thenThrow(
+          const PersistentStoreException(),
         );
 
         await notifier.initializeLocalConfig();
@@ -357,35 +357,7 @@ void main() {
     );
 
     test(
-      ".toggleFpsMonitor() does not update the fps monitor local config view model until the update local config use case finishes",
-      () {
-        notifier.initializeDefaults();
-
-        final initialViewModel = notifier.fpsMonitorLocalConfigViewModel;
-
-        final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
-        final expectedParam = LocalConfigParam(
-          isFpsMonitorEnabled: !isFpsMonitorEnabled,
-        );
-
-        when(updateUseCase(expectedParam)).thenAnswer(
-          (_) => Future.value(
-            LocalConfig(isFpsMonitorEnabled: !isFpsMonitorEnabled),
-          ),
-        );
-
-        notifier.toggleFpsMonitor();
-
-        expect(
-          notifier.fpsMonitorLocalConfigViewModel,
-          equals(initialViewModel),
-        );
-      },
-    );
-
-    test(
-      ".toggleFpsMonitor() sets the .localConfigUpdatingErrorMessage if the updating the local config throws",
+      ".toggleFpsMonitor() sets the .updateConfigError if the updating the local config throws",
       () async {
         notifier.initializeDefaults();
 
@@ -402,14 +374,14 @@ void main() {
         await notifier.toggleFpsMonitor();
 
         expect(
-          notifier.localConfigUpdatingErrorMessage,
+          notifier.updateConfigError,
           isNotNull,
         );
       },
     );
 
     test(
-      ".toggleFpsMonitor() resets the .localConfigUpdatingErrorMessage",
+      ".toggleFpsMonitor() resets the .updateConfigError",
       () {
         notifier.initializeDefaults();
 
@@ -435,7 +407,7 @@ void main() {
         notifier.toggleFpsMonitor();
 
         expect(
-          notifier.localConfigUpdatingErrorMessage,
+          notifier.updateConfigError,
           isNull,
         );
       },
