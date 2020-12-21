@@ -74,49 +74,47 @@ class DebugMenuNotifier extends ChangeNotifier {
   /// If [OpenLocalConfigStorageUseCase] throws, delegates initializing
   /// to the [initializeDefaults] method.
   Future<void> initializeLocalConfig() async {
+    _setIsLoading(true);
+
     try {
-      _setIsLoading(true);
-
       await _openLocalConfigStorageUseCase();
-
       final config = _readLocalConfigUseCase();
 
       _setLocalConfig(config);
     } catch (_) {
       initializeDefaults();
-    } finally {
-      _setIsLoading(false);
     }
+
+    _setIsLoading(false);
   }
 
   /// Initializes the [LocalConfig] with default values.
   void initializeDefaults() {
-    _setLocalConfig(
-      const LocalConfig(isFpsMonitorEnabled: false),
-    );
+    _setLocalConfig(const LocalConfig(
+      isFpsMonitorEnabled: false,
+    ));
+    notifyListeners();
   }
 
-  /// Toggles the fps monitor feature and updates the [LocalConfig].
+  /// Toggles the FPS monitor feature and updates the [LocalConfig].
   Future<void> toggleFpsMonitor() async {
+    _resetUpdateConfigError();
     _setIsLoading(true);
 
-    final isFpsMonitorEnabled = _fpsMonitorLocalConfigViewModel.isEnabled;
-
+    final isFpsMonitorEnabled = _localConfig.isFpsMonitorEnabled;
     final configParam = LocalConfigParam(
       isFpsMonitorEnabled: !isFpsMonitorEnabled,
     );
-
-    _resetLocalConfigUpdatingError();
 
     try {
       final newConfig = await _updateLocalConfigUseCase(configParam);
 
       _setLocalConfig(newConfig);
     } on PersistentStoreException catch (exception) {
-      _localConfigUpdatingErrorHandler(exception);
-    } finally {
-      _setIsLoading(false);
+      _handleUpdateConfigError(exception);
     }
+
+    _setIsLoading(false);
   }
 
   /// Sets the current [_localConfig] value to the given [config] and updates
@@ -125,7 +123,7 @@ class DebugMenuNotifier extends ChangeNotifier {
     _localConfig = config;
 
     _fpsMonitorLocalConfigViewModel = FpsMonitorLocalConfigViewModel(
-      isEnabled: config.isFpsMonitorEnabled,
+      isEnabled: _localConfig.isFpsMonitorEnabled,
     );
   }
 
@@ -136,16 +134,15 @@ class DebugMenuNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Handles an error occurred during updating the [LocalConfig].
-  void _localConfigUpdatingErrorHandler(PersistentStoreException exception) {
+  /// Handles an error occurred while updating the [LocalConfig].
+  void _handleUpdateConfigError(PersistentStoreException exception) {
     final code = exception.code;
-
     _updateConfigError = PersistentStoreErrorMessage(code);
     notifyListeners();
   }
 
   /// Resets the [updateConfigError].
-  void _resetLocalConfigUpdatingError() {
+  void _resetUpdateConfigError() {
     _updateConfigError = null;
     notifyListeners();
   }
