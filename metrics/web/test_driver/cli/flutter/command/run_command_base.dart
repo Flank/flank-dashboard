@@ -102,4 +102,12 @@ abstract class RunCommandBase extends FlutterCommand {
   /// Specifies whether to use Skia for rendering or not.
   void useSkia({bool value = true}) =>
       add('--dart-define=FLUTTER_WEB_USE_SKIA=$value');
+
+  /// --dart-define
+  ///
+  /// Additional key-value pairs that will be available as constants from the
+  /// String.fromEnvironment, bool.fromEnvironment, int.fromEnvironment,
+  /// and double.fromEnvironment constructors.
+  void dartDefine({String key, Object value}) =>
+      add('--dart-define=$key=$value');
 }
