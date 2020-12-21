@@ -1,0 +1,20 @@
+# A template for ci_integrations config
+# with the Jenkins CI integration as a `source`.
+
+source:
+  jenkins:
+    # A URL to the Jenkins instance.
+    url: ...
+
+    # A Jenkins building job name.
+    job_name: ...
+
+    # A Jenkins account username.
+    username: ...
+
+    # The Jenkins account API key.
+    api_key: ...
+
+destination:
+
+# Add your destination config here.

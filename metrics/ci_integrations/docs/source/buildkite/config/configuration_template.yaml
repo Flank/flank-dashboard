@@ -1,0 +1,17 @@
+# A template for ci_integrations config
+# with the Buildkite CI integration as a `source`.
+
+source:
+  buildkite:
+    # A Buildkite access token.
+    access_token: ...
+
+    # A unique slug (identifier) of the pipeline on Buildkite.
+    pipeline_slug: ...
+
+    # A unique slug (identifier) of the organization on Buildkite
+    organization_slug: ...
+
+destination:
+
+# Add your destination config here.

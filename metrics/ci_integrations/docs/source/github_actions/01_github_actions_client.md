@@ -20,7 +20,7 @@ We should implement the GithubActionsClient and related models in a way they wil
  requirements. The main idea is that client performs granular API calls, so the developers can use different methods on demand. Consider the following class diagram that demonstrates a suggested structure.
 
 * Class diagram
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/github_actions/diagrams/github_actions_client_class_diagram.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/source/github_actions/diagrams/github_actions_client_class_diagram.puml)
 
 * Package structure
 

@@ -1,0 +1,26 @@
+# A template for ci_integrations config with the Firestore integration as a `destination`.
+
+source:
+
+# Add your source config here.
+
+destination:
+  firestore:
+
+    # Consider using this link to become familiar with Firebase projects.
+    # https://firebase.google.com/docs/projects/learn-more.
+
+    # An id of the Firebase project.
+    firebase_project_id: ...
+
+    # An email of the Firebase user.
+    firebase_user_email: ...
+
+    # A password of the Firebase user.
+    firebase_user_pass: ...
+
+    # A Firebase API key.
+    firebase_web_api_key: ...
+
+    # An id of the Metrics Project.
+    metrics_project_id: ...

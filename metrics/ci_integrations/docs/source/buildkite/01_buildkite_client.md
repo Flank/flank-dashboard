@@ -19,7 +19,7 @@ Details of the client integration is out of scope of this document.
 We should implement the BuildkiteClient and related models in a way they will fit the Metrics and CI integration requirements. The main idea is that client performs granular API calls, so the developers can use different methods on demand. Consider the following class diagram that demonstrates a suggested structure.
 
 * Class diagram
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/buildkite/diagrams/buildkite_client_class_diagram.puml)
+![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/metrics/ci_integrations/docs/source/buildkite/diagrams/buildkite_client_class_diagram.puml)
 
 * Package structure
 

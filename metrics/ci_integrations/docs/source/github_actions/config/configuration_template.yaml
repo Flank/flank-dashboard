@@ -1,0 +1,22 @@
+# A template for ci_integrations config
+# with the Github Actions CI integration as a `source`.
+
+source:
+  github_actions:
+    # A unique identifier of the Github Actions workflow to integrate.
+    workflow_identifier: ...
+
+    # A name of the project's repository.
+    repository_name: ...
+
+    # An owner of the project's repository.
+    repository_owner: ...
+
+    # A Github access token.
+    access_token: ...
+
+destination:
+
+# Add your destination config here.
+
+
