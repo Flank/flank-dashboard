@@ -4,12 +4,14 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'analytics_notifier_stub.dart';
 import 'auth_notifier_stub.dart';
+import 'debug_menu_notifier_stub.dart';
 import 'feature_config_notifier_stub.dart';
 import 'project_groups_notifier_stub.dart';
 import 'project_metrics_notifier_stub.dart';
@@ -42,6 +44,9 @@ class TestInjectionContainer extends StatelessWidget {
   /// A [FeatureConfigNotifier] to inject.
   final FeatureConfigNotifier featureConfigNotifier;
 
+  /// A [DebugMenuNotifier] to inject.
+  final DebugMenuNotifier debugMenuNotifier;
+
   /// Creates the [TestInjectionContainer] with the given notifiers.
   ///
   /// If the [metricsNotifier] is `null`, the [ProjectMetricsNotifierStub] is used.
@@ -51,6 +56,7 @@ class TestInjectionContainer extends StatelessWidget {
   /// If the [projectsNotifier] is `null`, the [ProjectsNotifierStub] is used.
   /// If the [projectGroupsNotifier] is `null`, the [ProjectGroupsNotifierStub] is used.
   /// If the [featureConfigNotifier] is `null`, the [FeatureConfigNotifierStub] is used.
+  /// If the [debugMenuNotifier] is `null`, the [DebugMenuNotifierStub] is used.
   const TestInjectionContainer({
     Key key,
     this.child,
@@ -61,6 +67,7 @@ class TestInjectionContainer extends StatelessWidget {
     this.projectsNotifier,
     this.projectGroupsNotifier,
     this.featureConfigNotifier,
+    this.debugMenuNotifier,
   }) : super(key: key);
 
   @override
@@ -88,6 +95,9 @@ class TestInjectionContainer extends StatelessWidget {
         ChangeNotifierProvider<FeatureConfigNotifier>(
           create: (_) => featureConfigNotifier ?? FeatureConfigNotifierStub(),
         ),
+        ChangeNotifierProvider<DebugMenuNotifier>(
+          create: (_) => debugMenuNotifier ?? DebugMenuNotifierStub(),
+        )
       ],
       child: child,
     );

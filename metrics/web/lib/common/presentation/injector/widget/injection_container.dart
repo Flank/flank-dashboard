@@ -21,6 +21,12 @@ import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
+import 'package:metrics/debug_menu/data/repositories/hive_local_config_repository.dart';
+import 'package:metrics/debug_menu/domain/usecases/close_local_config_storage_usecase.dart';
+import 'package:metrics/debug_menu/domain/usecases/open_local_config_storage_usecase.dart';
+import 'package:metrics/debug_menu/domain/usecases/read_local_config_usecase.dart';
+import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.dart';
+import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/feature_config/data/repositories/firestore_feature_config_repository.dart';
 import 'package:metrics/feature_config/domain/usecases/fetch_feature_config_usecase.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
@@ -101,6 +107,18 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// A use case needed to be able to reset the analytics user identifier.
   ResetUserUseCase _resetUserUseCase;
 
+  /// A use case needed to be able to open the local config storage.
+  OpenLocalConfigStorageUseCase _openLocalConfigStorageUseCase;
+
+  /// A use case needed to be able to read the local config.
+  ReadLocalConfigUseCase _readLocalConfigUseCase;
+
+  /// A use case needed to be able to update the local config.
+  UpdateLocalConfigUseCase _updateLocalConfigUseCase;
+
+  /// A use case needed to be able to close the local config storage.
+  CloseLocalConfigStorageUseCase _closeLocalConfigStorageUseCase;
+
   /// Returns the current system's theme brightness.
   Brightness get platformBrightness {
     return WidgetsBinding.instance.window.platformBrightness;
@@ -121,6 +139,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     final _projectRepository = FirestoreProjectRepository();
     final _featureConfigRepository = FirestoreFeatureConfigRepository();
     final _analyticsRepository = FirebaseAnalyticsRepository();
+    final _hiveLocalConfigRepository = HiveLocalConfigRepository();
 
     _receiveProjectUpdates = ReceiveProjectUpdates(_projectRepository);
     _receiveProjectMetricsUpdates =
@@ -154,6 +173,19 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _logPageViewUseCase = LogPageViewUseCase(_analyticsRepository);
     _resetUserUseCase = ResetUserUseCase(_analyticsRepository);
 
+    _openLocalConfigStorageUseCase = OpenLocalConfigStorageUseCase(
+      _hiveLocalConfigRepository,
+    );
+    _readLocalConfigUseCase = ReadLocalConfigUseCase(
+      _hiveLocalConfigRepository,
+    );
+    _updateLocalConfigUseCase = UpdateLocalConfigUseCase(
+      _hiveLocalConfigRepository,
+    );
+    _closeLocalConfigStorageUseCase = CloseLocalConfigStorageUseCase(
+      _hiveLocalConfigRepository,
+    );
+
     _authNotifier = AuthNotifier(
       _receiveAuthUpdates,
       _signInUseCase,
@@ -179,6 +211,14 @@ class _InjectionContainerState extends State<InjectionContainer> {
         ),
         ChangeNotifierProvider.value(value: _authNotifier),
         ChangeNotifierProvider.value(value: _themeNotifier),
+        ChangeNotifierProvider<DebugMenuNotifier>(
+          create: (_) => DebugMenuNotifier(
+            _openLocalConfigStorageUseCase,
+            _readLocalConfigUseCase,
+            _updateLocalConfigUseCase,
+            _closeLocalConfigStorageUseCase,
+          ),
+        ),
         ChangeNotifierProxyProvider<AuthNotifier, AnalyticsNotifier>(
           lazy: false,
           create: (_) => AnalyticsNotifier(
