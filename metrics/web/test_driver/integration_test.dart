@@ -82,7 +82,7 @@ void main() {
     );
 
     testWidgets(
-      "loads and displays project status metric",
+      "loads and displays project build status metric",
       (WidgetTester tester) async {
         await _pumpApp(tester);
 
@@ -132,8 +132,9 @@ void main() {
         await _pumpApp(tester);
 
         final searchInputFinder = find.byType(ProjectSearchInput);
-        final noSearchResultsTextFinder =
-            find.text(DashboardStrings.noSearchResults);
+        final noSearchResultsTextFinder = find.text(
+          DashboardStrings.noSearchResults,
+        );
 
         await tester.enterText(
           searchInputFinder,
