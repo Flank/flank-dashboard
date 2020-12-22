@@ -3,7 +3,6 @@ import 'package:metrics/base/presentation/widgets/svg_image.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
-import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 
 /// A widget that displays the metrics page title with the navigate back arrow.
@@ -52,7 +51,7 @@ class MetricsPageTitle extends StatelessWidget {
   }
 
   /// Navigates back to the previous page if [Navigator.canPop].
-  /// Otherwise, navigates to the [RouteName.dashboard] page.
+  /// Otherwise, navigates to the [MetricsRoutes.dashboard] page.
   void _navigateBack(BuildContext context) {
     final _navigator = Navigator.of(context);
 

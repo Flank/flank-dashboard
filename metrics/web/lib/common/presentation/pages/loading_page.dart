@@ -194,7 +194,7 @@ class _LoadingPageState extends State<LoadingPage>
   /// Navigates depending on the [_isLoaded] state.
   ///
   /// If [_isLoggedIn], navigates to the [LoadingPage.routeName].
-  /// Otherwise, navigates to the [RouteName.login].
+  /// Otherwise, navigates to the [MetricsRoutes.login].
   void _navigateIfLoaded() {
     if (!_isLoaded) return;
 

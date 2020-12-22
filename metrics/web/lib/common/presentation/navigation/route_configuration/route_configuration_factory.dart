@@ -6,6 +6,10 @@ import 'package:metrics/common/presentation/navigation/route_configuration/route
 /// based on the [Uri].
 class RouteConfigurationFactory {
   /// Creates a [RouteConfiguration] from the given [uri].
+  ///
+  /// If the given [Uri] does not contain any path segments returns [MetricsRoutes.loading].
+  /// If the given [Uri] contains the route name that does not match to any of
+  /// [RouteName]s returns [MetricsRoutes.dashboard].
   RouteConfiguration create(Uri uri) {
     final pathSegments = uri.pathSegments;
 
@@ -15,8 +19,6 @@ class RouteConfigurationFactory {
 
     if (routeName == RouteName.login.value) {
       return MetricsRoutes.login;
-    } else if (routeName == RouteName.loading.value) {
-      return MetricsRoutes.loading;
     } else if (routeName == RouteName.dashboard.value) {
       return MetricsRoutes.dashboard;
     } else if (routeName == RouteName.projectGroups.value) {
