@@ -18,7 +18,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
-import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/debug_menu_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/theme_data/debug_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
@@ -539,14 +539,18 @@ class LightMetricsThemeData extends MetricsThemeData {
             ),
           ),
           debugMenuTheme: const DebugMenuThemeData(
-            sectionHeaderTextStyle: TextStyle(
-              fontSize: 30,
-              color: Colors.black,
+            sectionHeaderTextStyle: MetricsTextStyle(
+              color: _inactiveTextColor,
+              lineHeightInPixels: 26.0,
+              fontSize: 22.0,
+              fontWeight: FontWeight.w500,
             ),
-            sectionContentTextStyle: TextStyle(
-              fontSize: 18,
-              color: Colors.black,
+            sectionContentTextStyle: MetricsTextStyle(
+              color: _userMenuTextColor,
+              lineHeightInPixels: 20.0,
+              fontSize: 16.0,
             ),
+            sectionDividerColor: _borderColor,
           ),
         );
 }
