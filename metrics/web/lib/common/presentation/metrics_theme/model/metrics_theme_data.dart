@@ -5,6 +5,7 @@ import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_i
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/bar_graph_popup/theme_data/bar_graph_popup_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/theme_data/circle_percentage_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/theme_data/debug_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
@@ -117,6 +118,9 @@ class MetricsThemeData {
   /// A theme for the graph indicator.
   final GraphIndicatorThemeData graphIndicatorTheme;
 
+  /// A theme for the debug menu.
+  final DebugMenuThemeData debugMenuTheme;
+
   /// Creates the [MetricsThemeData].
   const MetricsThemeData({
     MetricsWidgetThemeData metricsWidgetTheme,
@@ -147,6 +151,7 @@ class MetricsThemeData {
     TooltipIconThemeData tooltipIconTheme,
     PageTitleThemeData pageTitleTheme,
     GraphIndicatorThemeData graphIndicatorTheme,
+    DebugMenuThemeData debugMenuTheme,
   })  : inactiveWidgetTheme = inactiveWidgetTheme ?? _defaultWidgetThemeData,
         metricsWidgetTheme = metricsWidgetTheme ?? _defaultWidgetThemeData,
         metricsColoredBarTheme =
@@ -189,7 +194,8 @@ class MetricsThemeData {
         tooltipIconTheme = tooltipIconTheme ?? const TooltipIconThemeData(),
         pageTitleTheme = pageTitleTheme ?? const PageTitleThemeData(),
         graphIndicatorTheme =
-            graphIndicatorTheme ?? const GraphIndicatorThemeData();
+            graphIndicatorTheme ?? const GraphIndicatorThemeData(),
+        debugMenuTheme = debugMenuTheme ?? const DebugMenuThemeData();
 
   /// Creates the new instance of the [MetricsThemeData] based on current instance.
   ///
@@ -224,6 +230,7 @@ class MetricsThemeData {
     TooltipIconThemeData tooltipIconTheme,
     PageTitleThemeData pageTitleTheme,
     GraphIndicatorThemeData graphIndicatorTheme,
+    DebugMenuThemeData debugMenuTheme,
   }) {
     return MetricsThemeData(
       metricsWidgetTheme: metricsWidgetTheme ?? this.metricsWidgetTheme,
@@ -264,6 +271,7 @@ class MetricsThemeData {
       tooltipPopupTheme: tooltipPopupTheme ?? this.tooltipPopupTheme,
       tooltipIconTheme: tooltipIconTheme ?? this.tooltipIconTheme,
       graphIndicatorTheme: graphIndicatorTheme ?? this.graphIndicatorTheme,
+      debugMenuTheme: debugMenuTheme ?? this.debugMenuTheme,
     );
   }
 }

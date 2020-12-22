@@ -39,6 +39,7 @@ void main() {
         expect(lightMetricsThemeData.barGraphPopupTheme, isNotNull);
         expect(lightMetricsThemeData.tooltipPopupTheme, isNotNull);
         expect(lightMetricsThemeData.tooltipIconTheme, isNotNull);
+        expect(lightMetricsThemeData.debugMenuTheme, isNotNull);
       },
     );
   });
