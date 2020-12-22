@@ -55,7 +55,7 @@ Deployment to other platforms is out of scope.
 
 Before you start, you should have the following installed:
 
-1. [Flutter](https://flutter.dev/docs/get-started/install) v1.22.0-12.1.pre.
+1. [Flutter](https://flutter.dev/docs/get-started/install) v1.24.0-10.2.pre.
 2. [npm](https://www.npmjs.com/get-npm).
 
 ## Creating a new Firebase project.
@@ -164,8 +164,8 @@ After that, update the CI Integration configurations to use the previously creat
 
 ### Preparing your environment
 Before deploying metrics application, make sure you have the correct Flutter version installed,
- by running the `flutter --version` command. You should have `v1.22.0-12.1.pre` installed.
-If the version is different you should run the `flutter version 1.22.0-12.1.pre` command.
+ by running the `flutter --version` command. You should have `v1.24.0-10.2.pre` installed.
+If the version is different you should run the `flutter version 1.24.0-10.2.pre` command.
 
 Also, you should enable flutter web support by running the `flutter config --enable-web` command.
 

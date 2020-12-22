@@ -89,7 +89,7 @@ class AddProjectGroupCard extends StatelessWidget {
     await showDialog(
       barrierColor: barrierColor,
       context: context,
-      child: AddProjectGroupDialog(),
+      builder: (context) => AddProjectGroupDialog(),
     );
 
     projectGroupsNotifier.resetProjectGroupDialogViewModel();
