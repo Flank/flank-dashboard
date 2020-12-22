@@ -1,16 +1,15 @@
-import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics_core/metrics_core.dart';
 
 /// An [Enum] that represents the page names.
 class PageName extends Enum<String> {
   /// A [PageName] that represents the login page name.
-  static const PageName loginPage = PageName._(RouteName.login);
+  static const PageName loginPage = PageName._('/login');
 
   /// A [PageName] that represents the dashboard page name.
-  static const PageName dashboardPage = PageName._(RouteName.dashboard);
+  static const PageName dashboardPage = PageName._('/dashboard');
 
   /// A [PageName] that represents the project groups page name.
-  static const PageName projectGroupsPage = PageName._(RouteName.projectGroup);
+  static const PageName projectGroupsPage = PageName._('/projectGroups');
 
   /// A [PageName] that represents the debug menu page name.
   static const PageName debugMenuPage = PageName._(RouteName.debugMenu);

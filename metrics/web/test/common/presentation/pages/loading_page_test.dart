@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
-import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
@@ -29,10 +29,10 @@ void main() {
     final observer = _NavigatorObserverMock();
 
     final dashboardRoute = MatcherUtil.metricsNamedRoute(
-      equals(RouteName.dashboard),
+      equals(MetricsRoutes.dashboard.path),
     );
     final loginPageRoute = MatcherUtil.metricsNamedRoute(
-      equals(RouteName.login),
+      equals(MetricsRoutes.login.path),
     );
     final loadingPageRoute = MatcherUtil.metricsNamedRoute(isNull);
 
@@ -168,7 +168,7 @@ void main() {
     testWidgets(
       "redirects to the page with the given route name if a user is logged in and all notifiers finished loading",
       (WidgetTester tester) async {
-        const routeName = RouteName.projectGroup;
+        final routeName = MetricsRoutes.projectGroups.path;
         final projectGroupRoute = MatcherUtil.metricsNamedRoute(
           equals(routeName),
         );

@@ -5,7 +5,7 @@ import 'package:metrics/base/presentation/decoration/bubble_shape_border.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/routes/route_name.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
@@ -85,7 +85,7 @@ class MetricsUserMenu extends StatelessWidget {
                 child: TappableArea(
                   onTap: () => Navigator.pushNamed(
                     context,
-                    RouteName.projectGroup,
+                    MetricsRoutes.projectGroups.path,
                   ),
                   builder: (context, isHovered, child) => child,
                   child: Text(
@@ -154,7 +154,7 @@ class MetricsUserMenu extends StatelessWidget {
     await analyticsNotifier.resetUser();
     await Navigator.pushNamedAndRemoveUntil(
       context,
-      RouteName.login,
+      MetricsRoutes.login.path,
       (Route<dynamic> route) => false,
     );
   }
