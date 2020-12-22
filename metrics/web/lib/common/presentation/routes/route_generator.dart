@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
+import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
 import 'package:metrics/common/presentation/routes/route_name.dart';
-import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 
 /// Responsible for generating routes.
 class RouteGenerator {
   /// Generates a route for the given route [settings]
-  /// based on the [isLoggedIn] authentication status.
+  /// based on the [isLoggedIn] authentication status and [isDebugMenuEnabled]
+  /// feature status.
   ///
   /// Throws an [AssertionError] if [settings] is null.
   static MetricsPageRoute generateRoute({
     @required RouteSettings settings,
     bool isLoggedIn,
+    bool isDebugMenuEnabled,
   }) {
     assert(settings != null);
 
@@ -28,6 +31,13 @@ class RouteGenerator {
       return _createMetricsPageRoute(
         name: RouteName.login,
         widget: const LoginPage(),
+      );
+    }
+
+    if (settings.name == RouteName.debugMenu && isDebugMenuEnabled) {
+      return _createMetricsPageRoute(
+        name: RouteName.debugMenu,
+        widget: const DebugMenuPage(),
       );
     }
 

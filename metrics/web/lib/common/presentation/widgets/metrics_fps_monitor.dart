@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:metrics/base/presentation/widgets/keyboard_shortcuts.dart';
+import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
+import 'package:provider/provider.dart';
 import 'package:statsfl/statsfl.dart';
 
 /// A widget that displays the FPS counter.
@@ -25,25 +25,19 @@ class MetricsFPSMonitor extends StatefulWidget {
 }
 
 class _MetricsFPSMonitorState extends State<MetricsFPSMonitor> {
-  /// A combination of the keyboard keys to toggle the enabled status of the [StatsFl].
-  final _keysToPress = LogicalKeySet(
-    LogicalKeyboardKey.alt,
-    LogicalKeyboardKey.keyF,
-  );
-
-  /// Indicates whether the [StatsFl] is enabled or not.
-  bool _isEnabled = false;
-
   @override
   Widget build(BuildContext context) {
-    return KeyboardShortcuts(
-      keysToPress: _keysToPress,
-      onKeysPressed: () => setState(() => _isEnabled = !_isEnabled),
-      child: StatsFl(
-        maxFps: 90,
-        isEnabled: _isEnabled,
-        child: widget.child,
-      ),
+    return Selector<DebugMenuNotifier, bool>(
+      selector: (_, notifier) {
+        return notifier.fpsMonitorLocalConfigViewModel?.isEnabled ?? false;
+      },
+      builder: (_, isEnabled, __) {
+        return StatsFl(
+          maxFps: 90,
+          isEnabled: isEnabled,
+          child: widget.child,
+        );
+      },
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/common/presentation/widgets/metrics_user_menu.dart';
+import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/feature_config/presentation/view_models/debug_menu_feature_config_view_model.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
@@ -313,6 +314,31 @@ void main() {
         expect(find.byType(ProjectGroupPage), findsOneWidget);
       },
     );
+
+    testWidgets(
+      "after a user taps on 'Debug menu' - application navigates to the debug menu screen",
+      (WidgetTester tester) async {
+        final featureConfigNotifier = FeatureConfigNotifierMock();
+        final authNotifier = AuthNotifierMock();
+
+        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
+          const DebugMenuFeatureConfigViewModel(isEnabled: true),
+        );
+
+        await tester.pumpWidget(_MetricsUserMenuTestbed(
+          featureConfigNotifier: featureConfigNotifier,
+          authNotifier: authNotifier,
+        ));
+
+        await tester.tap(find.text(CommonStrings.debugMenu));
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
+
+        expect(find.byType(DebugMenuPage), findsOneWidget);
+      },
+    );
   });
 }
 
@@ -330,7 +356,7 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
   /// An [AnalyticsNotifier] to use in tests.
   final AnalyticsNotifier analyticsNotifier;
 
-  /// An [FeatureConfigNotifier] to use in tests.
+  /// A [FeatureConfigNotifier] to use in tests.
   final FeatureConfigNotifier featureConfigNotifier;
 
   /// Creates the [_MetricsUserMenuTestbed] with the given [theme].
@@ -361,6 +387,10 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
               settings: settings,
               isLoggedIn:
                   Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
+              isDebugMenuEnabled:
+                  Provider.of<FeatureConfigNotifier>(context, listen: false)
+                      .debugMenuFeatureConfigViewModel
+                      .isEnabled,
             ),
           );
         },

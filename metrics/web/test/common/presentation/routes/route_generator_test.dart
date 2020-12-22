@@ -17,6 +17,7 @@ void main() {
         );
       },
     );
+
     test(
       ".generateRoute() generates a route to the login page if a user is not logged in",
       () {
@@ -26,6 +27,32 @@ void main() {
         );
 
         expect(route.settings.name, equals(RouteName.login));
+      },
+    );
+
+    test(
+      ".generateRoute() generates a route to the debug menu page if a user is logged in and debug menu is enabled",
+      () {
+        final MetricsPageRoute route = RouteGenerator.generateRoute(
+          settings: const RouteSettings(name: RouteName.debugMenu),
+          isLoggedIn: true,
+          isDebugMenuEnabled: true,
+        );
+
+        expect(route.settings.name, equals(RouteName.debugMenu));
+      },
+    );
+
+    test(
+      ".generateRoute() does not generate a route to the debug menu page if a user is logged in and debug menu is not enabled",
+      () {
+        final MetricsPageRoute route = RouteGenerator.generateRoute(
+          settings: const RouteSettings(name: RouteName.debugMenu),
+          isLoggedIn: true,
+          isDebugMenuEnabled: false,
+        );
+
+        expect(route.settings.name, isNot(RouteName.debugMenu));
       },
     );
 
