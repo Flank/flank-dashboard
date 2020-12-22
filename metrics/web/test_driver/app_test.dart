@@ -216,15 +216,7 @@ void main() {
 
         await tester.ensureVisible(projectGroupCardFinder);
 
-        final mouseRegion = tester.firstWidget<MouseRegion>(
-          find.descendant(
-            of: projectGroupCardFinder,
-            matching: find.byType(MouseRegion),
-          ),
-        );
-        const pointerEvent = PointerEnterEvent();
-        mouseRegion.onEnter(pointerEvent);
-        await tester.pumpAndSettle();
+        await _hoverWidget(tester, projectGroupCardFinder);
 
         final editButtonFinder = find.descendant(
           of: projectGroupCardFinder,
@@ -273,15 +265,7 @@ void main() {
 
         await tester.ensureVisible(projectGroupCardFinder);
 
-        final mouseRegion = tester.firstWidget<MouseRegion>(
-          find.descendant(
-            of: projectGroupCardFinder,
-            matching: find.byType(MouseRegion),
-          ),
-        );
-        const pointerEvent = PointerEnterEvent();
-        mouseRegion.onEnter(pointerEvent);
-        await tester.pumpAndSettle();
+        await _hoverWidget(tester, projectGroupCardFinder);
 
         final deleteButtonFinder = find.descendant(
           of: projectGroupCardFinder,
@@ -339,5 +323,17 @@ Future<void> _openProjectGroupPage(WidgetTester tester) async {
 
 Future<void> _openUserMenu(WidgetTester tester) async {
   await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _hoverWidget(WidgetTester tester, Finder widgetFinder) async {
+  final mouseRegion = tester.firstWidget<MouseRegion>(
+    find.descendant(
+      of: widgetFinder,
+      matching: find.byType(MouseRegion),
+    ),
+  );
+  const pointerEvent = PointerEnterEvent();
+  mouseRegion.onEnter(pointerEvent);
   await tester.pumpAndSettle();
 }
