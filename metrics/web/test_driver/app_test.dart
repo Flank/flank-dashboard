@@ -222,6 +222,7 @@ void main() {
           of: projectGroupCardFinder,
           matching: find.widgetWithText(IconLabelButton, CommonStrings.edit),
         );
+
         await tester.tap(editButtonFinder);
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
@@ -234,14 +235,14 @@ void main() {
           projectGroupNameInputFinder,
           updatedProjectGroupName,
         );
-        await tester.pumpAndSettle(const Duration(seconds: 2));
+        await tester.pumpAndSettle();
 
         final saveButtonFinder = find.widgetWithText(
           MetricsPositiveButton,
           ProjectGroupsStrings.saveChanges,
         );
         await tester.tap(saveButtonFinder);
-        await tester.pumpAndSettle(const Duration(seconds: 2));
+        await tester.pumpAndSettle();
 
         final updatedProjectGroupCardFinder = find.widgetWithText(
           ProjectGroupCard,
