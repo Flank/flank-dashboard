@@ -5,7 +5,7 @@
 # - https://firebase.google.com/docs/firestore
 
 source:
-  # Add your source config here.
+# Add your source config here.
 
 destination:
   # The `firestore` key defines that the following destination config stands for Firestore integration.
@@ -36,8 +36,8 @@ destination:
     #
     # Together with the given email, this password is used to authorize
     # within the Firebase project defined using Firebase Authorization with password sign-in method.
-
     firebase_user_pass: ...
+
     # A Firebase API key that is used to access your project using Firebase API.
     #
     # You can obtain the web API key on the `Settings` page of your Firebase project.

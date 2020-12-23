@@ -1,20 +1,30 @@
-# A template for ci_integrations config
-# with the Jenkins CI integration as a `source`.
+# A template for ci_integrations config with the Jenkins integration as a `source`.
+# Consider the following links to familiarize yourself with Jenkins:
+# - https://www.jenkins.io/doc/
 
 source:
+  # The `jenkins` key defines that the following source config stands for Jenkins integration.
   jenkins:
     # A URL to the Jenkins instance.
+    #
+    # The field is used to determine a URL where is your Jenkins instance is run.
     url: ...
 
     # A Jenkins building job name.
+    #
+    # This name is used to determine a job from where we will get new builds.
+    # All builds will be related to the job with the name specified using this field.
     job_name: ...
 
-    # A Jenkins account username.
+    # A Jenkins account username used in `basic` authentication.
+    #
+    # Here is an info about user credentials - https://www.jenkins.io/doc/book/using/using-credentials/
     username: ...
 
-    # The Jenkins account API key.
+    # The Jenkins account API key used in `basic` authentication.
+    #
+    # Here is an info about user credentials - https://www.jenkins.io/doc/book/using/using-credentials/
     api_key: ...
 
 destination:
-
 # Add your destination config here.

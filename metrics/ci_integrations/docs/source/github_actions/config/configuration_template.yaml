@@ -1,20 +1,33 @@
-# A template for ci_integrations config
-# with the Github Actions CI integration as a `source`.
+# A template for ci_integrations config with the Github Actions integration as a `source`.
+# Consider the following links to familiarize yourself with Github Actions:
+# - https://docs.github.com/en/free-pro-team@latest/rest/reference/actions
+# - https://docs.github.com/en/free-pro-team@latest/actions/reference/authentication-in-a-workflow
 
 source:
+  # The `github_actions` key defines that the following source config stands for Github Actions integration.
   github_actions:
     # A unique identifier of the Github Actions workflow to integrate.
+    #
+    # This identifier is used to determine a workflow from where we will get new builds.
+    # All builds will be related to the workflow with the identifier specified using this field.
     workflow_identifier: ...
 
     # A name of the project's repository.
+    #
+    # The name is used to associate a repository with the workflows.
+    # All workflows will be related to the repository with the name specified using this field.
     repository_name: ...
 
     # An owner of the project's repository.
+    #
+    # The field is used to associate an owner with the repository described above.
+    # A repository will be related to the owner using this field value.
     repository_owner: ...
 
-    # A Github access token.
+    # A Github access token using to authenticate you.
+    #
+    # Here is a guide how to create one - https://docs.github.com/en/enterprise/2.17/user/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
     access_token: ...
 
 destination:
-
 # Add your destination config here.

@@ -1,17 +1,35 @@
-# A template for ci_integrations config
-# with the Buildkite CI integration as a `source`.
+# A template for ci_integrations config with the Buildkite integration as a `source`.
+# Consider the following links to familiarize yourself with Buildkite:
+# - https://buildkite.com/docs/apis
+# - https://buildkite.com/docs/apis/rest-api/access-token
 
 source:
+  # The `buildkite` key defines that the following source config stands for Buildkite integration.
   buildkite:
-    # A Buildkite access token.
+    # A Buildkite access token using to authenticate you.
+
+    # You can create one on your API Access Tokens page - https://buildkite.com/user/api-access-tokens.
     access_token: ...
 
     # A unique slug (identifier) of the pipeline on Buildkite.
+    #
+    # This slug is used to determine a pipeline from where we will get new builds.
+    # All builds will be related to the pipeline with the slug specified using this field.
+    #
+    # Your buildkite account link contains it. For example: `https://buildkite.com/{org.slug}/{pipeline.slug}/`
+    # Also you can get it using an endpoint - https://api.buildkite.com/v2/organizations/{org.slug}/pipelines,
+    # then check a response field named `slug`
     pipeline_slug: ...
 
     # A unique slug (identifier) of the organization on Buildkite
+    #
+    # This slug is used to associate an organization with the pipeline described above.
+    # A pipeline will be related to the organization with the slug specified using this field.
+    #
+    # Your buildkite account link contains it. For example: `https://buildkite.com/{org.slug}/`
+    # Also you can get it using an endpoint - https://api.buildkite.com/v2/organizations/,
+    # then check a response field named `slug`
     organization_slug: ...
 
 destination:
-
 # Add your destination config here.
