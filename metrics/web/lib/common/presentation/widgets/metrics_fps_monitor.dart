@@ -29,7 +29,7 @@ class _MetricsFPSMonitorState extends State<MetricsFPSMonitor> {
   Widget build(BuildContext context) {
     return Selector<DebugMenuNotifier, bool>(
       selector: (_, notifier) {
-        return notifier.fpsMonitorLocalConfigViewModel?.isEnabled ?? false;
+        return notifier.localConfigFpsMonitorViewModel?.isEnabled ?? false;
       },
       builder: (_, isEnabled, __) {
         return StatsFl(

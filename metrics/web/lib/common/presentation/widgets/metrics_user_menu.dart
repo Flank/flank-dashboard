@@ -103,10 +103,12 @@ class MetricsUserMenu extends StatelessWidget {
                     return Padding(
                       padding: itemPadding,
                       child: TappableArea(
-                        onTap: () => Navigator.pushNamed(
-                          context,
-                          RouteName.debugMenu,
-                        ),
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            RouteName.debugMenu,
+                          );
+                        },
                         builder: (context, isHovered, child) => child,
                         child: Text(
                           CommonStrings.debugMenu,

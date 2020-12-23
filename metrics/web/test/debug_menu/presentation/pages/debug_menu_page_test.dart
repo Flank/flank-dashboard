@@ -7,7 +7,8 @@ import 'package:metrics/common/presentation/page_title/widgets/metrics_page_titl
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
-import 'package:metrics/debug_menu/presentation/view_models/fps_monitor_local_config_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/rendered_display_view_model.dart';
 import 'package:metrics/debug_menu/presentation/widgets/metrics_fps_monitor_toggle.dart';
 import 'package:metrics/debug_menu/presentation/widgets/metrics_renderer_display.dart';
 import 'package:mockito/mockito.dart';
@@ -28,6 +29,11 @@ void main() {
       ),
     );
 
+    const fpsMonitorViewModel = LocalConfigFpsMonitorViewModel(isEnabled: true);
+    const rendererDisplayViewModel = RendererDisplayViewModel(
+      currentRenderer: CommonStrings.skia,
+    );
+
     DebugMenuNotifier debugMenuNotifier;
 
     setUp(() {
@@ -37,8 +43,11 @@ void main() {
     testWidgets(
       "displays the metrics page title widget with the debug menu page text",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: true),
+        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
+          fpsMonitorViewModel,
+        );
+        when(debugMenuNotifier.rendererDisplayViewModel).thenReturn(
+          rendererDisplayViewModel,
         );
 
         await mockNetworkImagesFor(() {
@@ -49,18 +58,21 @@ void main() {
           );
         });
 
-        expect(
-          find.widgetWithText(MetricsPageTitle, CommonStrings.debugMenu),
-          findsOneWidget,
-        );
+        final finder =
+            find.widgetWithText(MetricsPageTitle, CommonStrings.debugMenu);
+
+        expect(finder, findsOneWidget);
       },
     );
 
     testWidgets(
       "displays the metrics fps monitor toggle widget",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: true),
+        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
+          fpsMonitorViewModel,
+        );
+        when(debugMenuNotifier.rendererDisplayViewModel).thenReturn(
+          rendererDisplayViewModel,
         );
 
         await mockNetworkImagesFor(() {
@@ -78,8 +90,11 @@ void main() {
     testWidgets(
       "displays the metrics renderer display widget",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: true),
+        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
+          fpsMonitorViewModel,
+        );
+        when(debugMenuNotifier.rendererDisplayViewModel).thenReturn(
+          rendererDisplayViewModel,
         );
 
         await mockNetworkImagesFor(() {
@@ -97,9 +112,14 @@ void main() {
     testWidgets(
       "applies the section header text style from the metrics theme",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: true),
+        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
+          fpsMonitorViewModel,
         );
+        when(debugMenuNotifier.rendererDisplayViewModel).thenReturn(
+          rendererDisplayViewModel,
+        );
+        final expectedTextStyle =
+            metricsThemeData.debugMenuTheme.sectionHeaderTextStyle;
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -114,9 +134,6 @@ void main() {
           find.text(CommonStrings.performance),
         );
 
-        final expectedTextStyle =
-            metricsThemeData.debugMenuTheme.sectionHeaderTextStyle;
-
         expect(header.style, equals(expectedTextStyle));
       },
     );
@@ -124,9 +141,14 @@ void main() {
     testWidgets(
       "applies the divider color from the metrics theme",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: true),
+        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
+          fpsMonitorViewModel,
         );
+        when(debugMenuNotifier.rendererDisplayViewModel).thenReturn(
+          rendererDisplayViewModel,
+        );
+        final expectedColor =
+            metricsThemeData.debugMenuTheme.sectionDividerColor;
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -138,9 +160,6 @@ void main() {
         });
 
         final divider = tester.widget<Divider>(find.byType(Divider));
-
-        final expectedColor =
-            metricsThemeData.debugMenuTheme.sectionDividerColor;
 
         expect(divider.color, equals(expectedColor));
       },

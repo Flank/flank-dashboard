@@ -6,13 +6,15 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
-import 'package:metrics/debug_menu/presentation/view_models/fps_monitor_local_config_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:metrics/debug_menu/presentation/widgets/metrics_fps_monitor_toggle.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/debug_menu_notifier_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
+
+// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
   group("MetricsFpsMonitorToggle", () {
@@ -24,24 +26,13 @@ void main() {
       ),
     );
 
-    DebugMenuNotifierMock debugMenuNotifier;
     final toggleFinder = find.byType(Toggle);
-
-    setUp(() {
-      debugMenuNotifier = DebugMenuNotifierMock();
-    });
 
     testWidgets(
       "displays the fps monitor text",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: true),
-        );
-
         await tester.pumpWidget(
-          _MetricsFpsMonitorToggleTestbed(
-            debugMenuNotifier: debugMenuNotifier,
-          ),
+          _MetricsFpsMonitorToggleTestbed(),
         );
 
         expect(find.text(CommonStrings.fpsMonitor), findsOneWidget);
@@ -51,14 +42,8 @@ void main() {
     testWidgets(
       "displays the toggle widget",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: true),
-        );
-
         await tester.pumpWidget(
-          _MetricsFpsMonitorToggleTestbed(
-            debugMenuNotifier: debugMenuNotifier,
-          ),
+          _MetricsFpsMonitorToggleTestbed(),
         );
 
         expect(toggleFinder, findsOneWidget);
@@ -68,23 +53,16 @@ void main() {
     testWidgets(
       "applies the section content text style from the metrics theme",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: true),
-        );
+        final expectedStyle =
+            metricsThemeData.debugMenuTheme.sectionContentTextStyle;
 
         await tester.pumpWidget(
-          _MetricsFpsMonitorToggleTestbed(
-            debugMenuNotifier: debugMenuNotifier,
-            metricsThemeData: metricsThemeData,
-          ),
+          _MetricsFpsMonitorToggleTestbed(metricsThemeData: metricsThemeData),
         );
 
         final content = tester.widget<Text>(
           find.text(CommonStrings.fpsMonitor),
         );
-
-        final expectedStyle =
-            metricsThemeData.debugMenuTheme.sectionContentTextStyle;
 
         expect(content.style, equals(expectedStyle));
       },
@@ -94,13 +72,13 @@ void main() {
       "displays the toggle widget with the false value if the fps monitor is disabled in debug menu notifier",
       (WidgetTester tester) async {
         const isFpsMonitorEnabled = false;
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: isFpsMonitorEnabled),
+        const fpsMonitorViewModel = LocalConfigFpsMonitorViewModel(
+          isEnabled: isFpsMonitorEnabled,
         );
 
         await tester.pumpWidget(
           _MetricsFpsMonitorToggleTestbed(
-            debugMenuNotifier: debugMenuNotifier,
+            fpsMonitorViewModel: fpsMonitorViewModel,
           ),
         );
 
@@ -114,13 +92,13 @@ void main() {
       "displays the toggle widget with the true value if the fps monitor is enabled in debug menu notifier",
       (WidgetTester tester) async {
         const isFpsMonitorEnabled = true;
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: isFpsMonitorEnabled),
+        const fpsMonitorViewModel = LocalConfigFpsMonitorViewModel(
+          isEnabled: isFpsMonitorEnabled,
         );
 
         await tester.pumpWidget(
           _MetricsFpsMonitorToggleTestbed(
-            debugMenuNotifier: debugMenuNotifier,
+            fpsMonitorViewModel: fpsMonitorViewModel,
           ),
         );
 
@@ -133,15 +111,10 @@ void main() {
     testWidgets(
       "calls the .toggleFpsMonitor() method of the debug menu notifier on tap",
       (WidgetTester tester) async {
-        const isFpsMonitorEnabled = true;
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: isFpsMonitorEnabled),
-        );
+        final debugMenuNotifier = DebugMenuNotifierMock();
 
         await tester.pumpWidget(
-          _MetricsFpsMonitorToggleTestbed(
-            debugMenuNotifier: debugMenuNotifier,
-          ),
+          _MetricsFpsMonitorToggleTestbed(debugMenuNotifier: debugMenuNotifier),
         );
 
         await tester.tap(toggleFinder);
@@ -154,16 +127,25 @@ void main() {
 
 /// A testbed class needed to test the [MetricsFpsMonitorToggle] widget.
 class _MetricsFpsMonitorToggleTestbed extends StatelessWidget {
+  /// A default [LocalConfigFpsMonitorViewModel] to use under tests.
+  static const _defaultFpsMonitorViewModel = LocalConfigFpsMonitorViewModel(
+    isEnabled: false,
+  );
+
   /// A [DebugMenuNotifier] to use under tests.
   final DebugMenuNotifier debugMenuNotifier;
 
   /// A [MetricsThemeData] to use under tests.
   final MetricsThemeData metricsThemeData;
 
+  /// A [LocalConfigFpsMonitorViewModel] to use in tests.
+  final LocalConfigFpsMonitorViewModel fpsMonitorViewModel;
+
   /// Creates a new instance of this testbed with the given [debugMenuNotifier].
   const _MetricsFpsMonitorToggleTestbed({
     Key key,
     this.debugMenuNotifier,
+    this.fpsMonitorViewModel = _defaultFpsMonitorViewModel,
     this.metricsThemeData = const MetricsThemeData(),
   }) : super(key: key);
 
@@ -173,7 +155,9 @@ class _MetricsFpsMonitorToggleTestbed extends StatelessWidget {
       debugMenuNotifier: debugMenuNotifier,
       child: MetricsThemedTestbed(
         metricsThemeData: metricsThemeData,
-        body: const MetricsFpsMonitorToggle(),
+        body: MetricsFpsMonitorToggle(
+          fpsMonitorViewModel: fpsMonitorViewModel,
+        ),
       ),
     );
   }

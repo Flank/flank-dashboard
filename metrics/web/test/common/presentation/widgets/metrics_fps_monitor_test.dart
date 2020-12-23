@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
-import 'package:metrics/debug_menu/presentation/view_models/fps_monitor_local_config_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:statsfl/statsfl.dart';
 
@@ -46,7 +46,7 @@ void main() {
     testWidgets(
       "displays the disabled FPS monitor if the fps monitor view model is not initialized",
       (tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(null);
+        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(null);
 
         await tester.pumpWidget(
           _MetricsFPSMonitorTestbed(
@@ -63,8 +63,8 @@ void main() {
     testWidgets(
       "displays the enabled FPS monitor if it is enabled in the debug menu notifier",
       (tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: true),
+        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
+          const LocalConfigFpsMonitorViewModel(isEnabled: true),
         );
 
         await tester.pumpWidget(
@@ -82,8 +82,8 @@ void main() {
     testWidgets(
       "displays the disabled FPS monitor if it is disabled in the debug menu notifier",
       (tester) async {
-        when(debugMenuNotifier.fpsMonitorLocalConfigViewModel).thenReturn(
-          const FpsMonitorLocalConfigViewModel(isEnabled: false),
+        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
+          const LocalConfigFpsMonitorViewModel(isEnabled: false),
         );
 
         await tester.pumpWidget(

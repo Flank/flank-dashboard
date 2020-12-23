@@ -7,7 +7,7 @@ import 'package:metrics/debug_menu/domain/usecases/parameters/local_config_param
 import 'package:metrics/debug_menu/domain/usecases/read_local_config_usecase.dart';
 import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
-import 'package:metrics/debug_menu/presentation/view_models/fps_monitor_local_config_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:mockito/mockito.dart';
 
 void main() {
@@ -21,7 +21,7 @@ void main() {
     const localConfig = LocalConfig(
       isFpsMonitorEnabled: isFpsMonitorEnabled,
     );
-    const fpsMonitorViewModel = FpsMonitorLocalConfigViewModel(
+    const fpsMonitorViewModel = LocalConfigFpsMonitorViewModel(
       isEnabled: isFpsMonitorEnabled,
     );
 
@@ -163,12 +163,12 @@ void main() {
     );
 
     test(
-      ".initializeLocalConfig() sets the fps monitor local config view model",
+      ".initializeLocalConfig() sets the local config fps monitor view model",
       () async {
         when(readUseCase()).thenReturn(localConfig);
 
         await notifier.initializeLocalConfig();
-        final viewModel = notifier.fpsMonitorLocalConfigViewModel;
+        final viewModel = notifier.localConfigFpsMonitorViewModel;
 
         expect(viewModel, equals(fpsMonitorViewModel));
       },
@@ -177,7 +177,7 @@ void main() {
     test(
       ".initializeLocalConfig() initializes the local config with defaults if open local config storage use case throws",
       () async {
-        const expectedViewModel = FpsMonitorLocalConfigViewModel(
+        const expectedViewModel = LocalConfigFpsMonitorViewModel(
           isEnabled: false,
         );
         when(openUseCase()).thenAnswer(
@@ -185,7 +185,7 @@ void main() {
         );
 
         await notifier.initializeLocalConfig();
-        final actualModel = notifier.fpsMonitorLocalConfigViewModel;
+        final actualModel = notifier.localConfigFpsMonitorViewModel;
 
         expect(actualModel, equals(expectedViewModel));
       },
@@ -194,24 +194,24 @@ void main() {
     test(
       ".initializeLocalConfig() initializes the local config with defaults if read local config use case throws",
       () async {
-        const expectedViewModel = FpsMonitorLocalConfigViewModel(
+        const expectedViewModel = LocalConfigFpsMonitorViewModel(
           isEnabled: false,
         );
         when(readUseCase()).thenThrow(const PersistentStoreException());
 
         await notifier.initializeLocalConfig();
-        final actualModel = notifier.fpsMonitorLocalConfigViewModel;
+        final actualModel = notifier.localConfigFpsMonitorViewModel;
 
         expect(actualModel, equals(expectedViewModel));
       },
     );
 
     test(
-      ".initializeDefaults() sets the fps monitor local config view model with the default is enabled value",
+      ".initializeDefaults() sets the local config fps monitor view model with the default is enabled value",
       () {
         notifier.initializeDefaults();
 
-        final viewModel = notifier.fpsMonitorLocalConfigViewModel;
+        final viewModel = notifier.localConfigFpsMonitorViewModel;
 
         expect(viewModel.isEnabled, isFalse);
       },
@@ -250,7 +250,7 @@ void main() {
         notifier.initializeDefaults();
 
         final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+            notifier.localConfigFpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -273,7 +273,7 @@ void main() {
         notifier.initializeDefaults();
 
         final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+            notifier.localConfigFpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -296,7 +296,7 @@ void main() {
         notifier.initializeDefaults();
 
         final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+            notifier.localConfigFpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -314,16 +314,16 @@ void main() {
     );
 
     test(
-      ".toggleFpsMonitor() updates the fps monitor local config view model",
+      ".toggleFpsMonitor() updates the local config fps monitor view model",
       () async {
         notifier.initializeDefaults();
 
         final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+            notifier.localConfigFpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
-        final expectedViewModel = FpsMonitorLocalConfigViewModel(
+        final expectedViewModel = LocalConfigFpsMonitorViewModel(
           isEnabled: !isFpsMonitorEnabled,
         );
 
@@ -334,7 +334,7 @@ void main() {
         );
 
         await notifier.toggleFpsMonitor();
-        final viewModel = notifier.fpsMonitorLocalConfigViewModel;
+        final viewModel = notifier.localConfigFpsMonitorViewModel;
 
         expect(viewModel, equals(expectedViewModel));
       },
@@ -346,7 +346,7 @@ void main() {
         notifier.initializeDefaults();
 
         final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+            notifier.localConfigFpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -367,7 +367,7 @@ void main() {
         notifier.initializeDefaults();
 
         final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+            notifier.localConfigFpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );

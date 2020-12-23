@@ -35,11 +35,8 @@ class CommonStrings {
       'An error occurred while closing a connection with the persistent store, please try again.';
   static const String debugMenu = 'Debug menu';
 
-  static String currentRenderer({bool isSkia}) {
-    final renderer = isSkia ? skia : html;
-
-    return 'Current renderer: $renderer';
-  }
+  static String getCurrentRenderer(String renderer) =>
+      'Current renderer: $renderer';
 
   static String duration(Duration duration) => prettyDuration(
         duration,
