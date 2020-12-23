@@ -222,9 +222,8 @@ void main() {
           of: projectGroupCardFinder,
           matching: find.widgetWithText(IconLabelButton, CommonStrings.edit),
         );
-
         await tester.tap(editButtonFinder);
-        await tester.pumpAndSettle(const Duration(seconds: 2));
+        await tester.pumpAndSettle();
 
         final projectGroupNameInputFinder = find.widgetWithText(
           MetricsTextFormField,
@@ -248,6 +247,10 @@ void main() {
           ProjectGroupCard,
           updatedProjectGroupName,
         );
+
+        await Future.delayed(const Duration(seconds: 2));
+
+        tester.takeException();
 
         expect(updatedProjectGroupCardFinder, findsOneWidget);
       },
@@ -276,7 +279,11 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.tap(find.byType(MetricsNegativeButton));
-        await tester.pumpAndSettle(const Duration(seconds: 2));
+        await tester.pumpAndSettle();
+
+        await Future.delayed(const Duration(seconds: 2));
+
+        tester.takeException();
 
         expect(
           find.widgetWithText(ProjectGroupCard, projectGroupName),
