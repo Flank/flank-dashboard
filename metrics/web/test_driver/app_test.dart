@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,6 +24,7 @@ import 'package:metrics/main.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
+import 'package:random_string/random_string.dart';
 
 import 'arguments/model/user_credentials.dart';
 
@@ -349,12 +348,8 @@ Future<void> _hoverWidget(WidgetTester tester, Finder widgetFinder) async {
 
 String _generateRandomString(int length) {
   const prefix = 'integration_test';
-  final random = Random();
   final timestamp = DateTime.now().microsecondsSinceEpoch;
+  final string = randomAlpha(length);
 
-  final string = String.fromCharCodes(
-    List.generate(length, (index) => random.nextInt(10)),
-  );
-
-  return "{$prefix}_{$string}_$timestamp";
+  return "${prefix}_${string}_$timestamp";
 }
