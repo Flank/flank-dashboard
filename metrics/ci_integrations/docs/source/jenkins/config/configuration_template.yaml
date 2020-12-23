@@ -13,7 +13,6 @@ source:
     # A Jenkins building job name.
     #
     # This name is used to determine a job from where we will get new builds.
-    # All builds will be related to the job with the name specified using this field.
     job_name: ...
 
     # A Jenkins account username used in `basic` authentication.

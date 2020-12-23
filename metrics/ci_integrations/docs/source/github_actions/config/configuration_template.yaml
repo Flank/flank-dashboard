@@ -6,22 +6,22 @@
 source:
   # The `github_actions` key defines that the following source config stands for Github Actions integration.
   github_actions:
+
     # A unique identifier of the Github Actions workflow to integrate.
     #
     # This identifier is used to determine a workflow from where we will get new builds.
-    # All builds will be related to the workflow with the identifier specified using this field.
+    #
+    # You can get it from your Github link. For example: `https://github.com/{repository_owner}/{repository_name}/actions/runs/{workflow_id}`
     workflow_identifier: ...
 
     # A name of the project's repository.
     #
     # The name is used to associate a repository with the workflows.
-    # All workflows will be related to the repository with the name specified using this field.
     repository_name: ...
 
     # An owner of the project's repository.
     #
     # The field is used to associate an owner with the repository described above.
-    # A repository will be related to the owner using this field value.
     repository_owner: ...
 
     # A Github access token using to authenticate you.

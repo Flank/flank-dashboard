@@ -8,6 +8,7 @@ This document clarifies using and configuring the `CI Integrations` tool to make
 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
+
 * [CI Integrations Tool Architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
 * [Buildkite CI Integration](https://github.com/platform-platform/monorepo/blob/master/docs/17_buildkite_ci_integration.md)
 
@@ -46,7 +47,7 @@ After marking the tool file as executable, now you can add the tool `file_path` 
 For updating the `PATH` variable, follow the listed steps:
 
 1. Determine the `[PATH_TO_CI_INTEGRATIONS]`, you can check this by running `echo $PWD/ci_integrations`, while in the directory with the tool.
-2. Open (or create) the `rc file` for your shell. Typing `echo $SHELL` in your Terminal tells you which shell you’re using. If you’re using Bash, edit `$HOME/.bash_profile` or `$HOME/.bashrc`. If you’re using Z shell, edit `$HOME/.zshrc`. If you’re using a different shell, the file path and filename will be different on your machine.
+2. Open (or create) the `rc file` for your shell. Typing `echo $SHELL` in your terminal tells you which shell you’re using. If you’re using Bash, edit `$HOME/.bash_profile` or `$HOME/.bashrc`. If you’re using Z shell, edit `$HOME/.zshrc`. If you’re using a different shell, the file path and filename will be different on your machine.
 3. Add `export PATH="[PATH_TO_CI_INTEGRATIONS]:$PATH"` to the last line of the `rc file`, where `[PATH_TO_CI_INTEGRATIONS]` is the path where you placed CI Integrations tool.
 4. Run source `$HOME/.<rc file>` to refresh the current terminal window, or open a new terminal window to automatically source the file.
 5. Verify that the `PATH_TO_CI_INTEGRATIONS` is now in your PATH by running `echo $PATH` or `which ci_integrations`.
@@ -54,7 +55,7 @@ For updating the `PATH` variable, follow the listed steps:
 ### Creating Configuration File
 
 Each CI integration requires configuration file, which represents a `YAML` file the tool uses to define a `source` and `destination` to perform synchronization and builds data importing.
-The general structure of the file contains the necessary source or destination-related data, such as access tokens keys, project names, workflow identifiers, etc.
+The general structure of the file contains the `source` and `destination` keys,  whose value is key-value pairs with the necessary source and destination-related data, such as access tokens keys, project names, workflow identifiers, etc.
 
 #### Configuration Templates
 
@@ -80,18 +81,19 @@ Creating new configuration file requires following these steps:
 ### Making Things Work
 
 Finally, after [CLI configuration](#ci-integrations-cli) and [creating a new configuration file](#creating-configuration-file), we can proceed to perform synchronization using a main `sync` command.
-All we need to do additionally is to specify the path to the previously created `configuration file` using the `--config-yaml=` flag.
+All we need to do additionally is to specify the path to the previously created `configuration file` using the `--config-file=` flag.
 Here is a usage example:
 
 ```bash
-ci_integrations sync --config-yaml=`your_config_file`
+ci_integrations sync --config-file=`your_config_file`
 ```
 
 #### Automate CI Integrations
 
 The synchronization process described above can be automated within your CI tool, so the `sync` command will be run every time the builds are finished.
-[Here](https://github.com/platform-platform/monorepo/blob/master/docs/17_buildkite_ci_integration.md) is an example how to do it for Buildkite.
+[Here](https://github.com/platform-platform/monorepo/blob/master/docs/17_buildkite_ci_integration.md) is an example how to do it for `Buildkite`.
 
 ## Results
 > What was the outcome of the project?
+
 A guide for users that clarifies the CI Integrations tool using.
