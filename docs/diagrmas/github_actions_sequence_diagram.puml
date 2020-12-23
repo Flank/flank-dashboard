@@ -2,13 +2,13 @@
 
 actor Bob
 
-participant "Awesome Project Actions workflow" as AwesomeWorkflow
-participant "Run tests job" as RunTests
-participant "Build and publish job" as BuildAndPublish
-participant "Notify about building the Awesome project" as NotifyBuilding
+participant "Awesome Project Actions\n workflow" as AwesomeWorkflow
+' participant "Run tests job" as RunTests
+' participant "Build and publish job" as BuildAndPublish
+participant "Notify about building \nthe Awesome project" as NotifyBuilding
 
-participant "Metrics Integration Actions workflow" as IntegrationsWorkflow
-participant "Awesome project build data sync" as AwesomeSync
+participant "Metrics Integration Actions\n workflow" as IntegrationsWorkflow
+participant "Awesome project build\n data sync" as AwesomeSync
 participant "CI Integrations" as CiIntegrations
 
 database "Firestore Database" as Firestore
@@ -16,32 +16,43 @@ database "Firestore Database" as Firestore
 
 Bob -> AwesomeWorkflow : Push commit to master
 activate AwesomeWorkflow
-AwesomeWorkflow -> RunTests : Run tests
-activate  RunTests
-alt 
-    RunTests --> AwesomeWorkflow : Tests failed
-end 
-return Test complete 
-AwesomeWorkflow  -> BuildAndPublish : Run building and publishing job
-activate BuildAndPublish
-alt 
-    BuildAndPublish --> AwesomeWorkflow : Publishing failed
-end
-return Building and publishinng finished
+AwesomeWorkflow -> AwesomeWorkflow : Perform build
+' activate  RunTests
+' alt
+'     RunTests --> AwesomeWorkflow : Tests failed
+' end
+' return Test complete
+
+' AwesomeWorkflow  -> BuildAndPublish : Run building and publishing job
+' activate BuildAndPublish
+' alt
+'     BuildAndPublish --> AwesomeWorkflow : Publishing failed
+' end
+' return Building and publishinng finished
+
 AwesomeWorkflow -> NotifyBuilding : Run notify about building project
 activate NotifyBuilding
+
 NotifyBuilding -> IntegrationsWorkflow : Notify about Awesome project is building
-return Notification sent 
-return Workflow run finished
 activate IntegrationsWorkflow
+
 IntegrationsWorkflow -> AwesomeSync : Run sync job
 activate AwesomeSync
+
+NotifyBuilding --> AwesomeWorkflow : Notification sent
+deactivate NotifyBuilding
+
+AwesomeWorkflow --> Bob : Workflow run finished
+deactivate AwesomeWorkflow
+
 AwesomeSync -> AwesomeSync : Wait until Awesome Project Actions Workflow got finished
+
 AwesomeSync -> CiIntegrations : Run sync command
 activate CiIntegrations
-CiIntegrations -> Firestore : Add new builds data
+
+CiIntegrations -> Firestore : Sync build data
 return Sync command finished
-return Sync finished
+AwesomeSync --> IntegrationsWorkflow : Sync finished
 IntegrationsWorkflow --> Bob : Sync finished
 
 @enduml
