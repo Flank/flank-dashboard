@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -21,7 +23,6 @@ import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart
 import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
 import 'package:metrics/main.dart';
-import 'package:metrics/project_groups/domain/value_objects/project_group_name.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
@@ -155,8 +156,8 @@ void main() {
   });
 
   group("ProjectGroup page", () {
-    final projectGroupName = 'x' * ProjectGroupName.charactersLimit;
-    final updatedProjectGroupName = projectGroupName.replaceFirst('x', 'y');
+    final projectGroupName = _generateRandomString(200);
+    final updatedProjectGroupName = projectGroupName.replaceFirst('i', 'x');
 
     testWidgets(
       "shows add project group card button",
@@ -344,4 +345,16 @@ Future<void> _hoverWidget(WidgetTester tester, Finder widgetFinder) async {
   const pointerEvent = PointerEnterEvent();
   mouseRegion.onEnter(pointerEvent);
   await tester.pumpAndSettle();
+}
+
+String _generateRandomString(int length) {
+  const prefix = 'integration_test';
+  final random = Random();
+  final timestamp = DateTime.now().microsecondsSinceEpoch;
+
+  final string = String.fromCharCodes(
+    List.generate(length, (index) => random.nextInt(10)),
+  );
+
+  return "{$prefix}_{$string}_$timestamp";
 }
