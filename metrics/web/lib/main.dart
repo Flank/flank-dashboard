@@ -16,7 +16,6 @@ import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
 import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart';
-import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/util/favicon.dart';
 import 'package:provider/provider.dart';
 
@@ -70,18 +69,10 @@ class _MetricsAppState extends State<MetricsApp> {
                       listen: false,
                     ).isLoggedIn;
 
-                    final isDebugMenuEnabled =
-                        Provider.of<FeatureConfigNotifier>(
-                              context,
-                              listen: false,
-                            ).debugMenuFeatureConfigViewModel?.isEnabled ??
-                            false;
-
                     return [
                       RouteGenerator.generateRoute(
                         settings: RouteSettings(name: initialRoute),
                         isLoggedIn: isLoggedIn,
-                        isDebugMenuEnabled: isDebugMenuEnabled,
                       ),
                     ];
                   },
@@ -91,17 +82,9 @@ class _MetricsAppState extends State<MetricsApp> {
                       listen: false,
                     ).isLoggedIn;
 
-                    final isDebugMenuEnabled =
-                        Provider.of<FeatureConfigNotifier>(
-                              context,
-                              listen: false,
-                            ).debugMenuFeatureConfigViewModel?.isEnabled ??
-                            false;
-
                     return RouteGenerator.generateRoute(
                       settings: settings,
                       isLoggedIn: isLoggedIn,
-                      isDebugMenuEnabled: isDebugMenuEnabled,
                     );
                   },
                   navigatorObservers: [

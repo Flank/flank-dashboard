@@ -3,8 +3,9 @@ import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
-import 'package:metrics/debug_menu/presentation/widgets/metrics_fps_monitor_toggle.dart';
-import 'package:metrics/debug_menu/presentation/widgets/metrics_renderer_display.dart';
+import 'package:metrics/debug_menu/presentation/widgets/debug_menu_fps_monitor_toggle.dart';
+import 'package:metrics/debug_menu/presentation/widgets/debug_menu_renderer_display.dart';
+import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:provider/provider.dart';
 
 /// A page that displays settings for debug features of the debug menu.
@@ -20,6 +21,11 @@ class DebugMenuPage extends StatelessWidget {
     final headerTextStyle = theme.sectionHeaderTextStyle;
     final dividerColor = theme.sectionDividerColor;
 
+    final isDebugMenuEnabled =
+        Provider.of<FeatureConfigNotifier>(context, listen: false)
+            .debugMenuFeatureConfigViewModel
+            .isEnabled;
+
     return MetricsScaffold(
       title: CommonStrings.debugMenu,
       padding: const EdgeInsets.only(left: 48.0),
@@ -27,6 +33,13 @@ class DebugMenuPage extends StatelessWidget {
         builder: (_, notifier, __) {
           final fpsMonitorViewModel = notifier.localConfigFpsMonitorViewModel;
           final rendererDisplayViewModel = notifier.rendererDisplayViewModel;
+
+          if (!isDebugMenuEnabled) {
+            return Text(
+              CommonStrings.debugMenuDisabled,
+              style: headerTextStyle,
+            );
+          }
 
           return Column(
             mainAxisSize: MainAxisSize.min,
@@ -39,12 +52,12 @@ class DebugMenuPage extends StatelessWidget {
                   color: dividerColor,
                 ),
               ),
-              MetricsRendererDisplay(
+              DebugMenuRendererDisplay(
                 rendererDisplayViewModel: rendererDisplayViewModel,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
-                child: MetricsFpsMonitorToggle(
+                child: DebugMenuFpsMonitorToggle(
                   fpsMonitorViewModel: fpsMonitorViewModel,
                 ),
               ),

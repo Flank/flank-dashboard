@@ -5,14 +5,14 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_text/sty
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/presentation/view_models/rendered_display_view_model.dart';
-import 'package:metrics/debug_menu/presentation/widgets/metrics_renderer_display.dart';
+import 'package:metrics/debug_menu/presentation/widgets/debug_menu_renderer_display.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
-  group("MetricsRendererDisplay", () {
+  group("DebugMenuRendererDisplay", () {
     const metricsTheme = MetricsThemeData(
       debugMenuTheme: DebugMenuThemeData(
         sectionContentTextStyle: MetricsTextStyle(
@@ -34,7 +34,7 @@ void main() {
             metricsTheme.debugMenuTheme.sectionContentTextStyle;
 
         await tester.pumpWidget(
-          _MetricsRendererDisplayTestbed(
+          _DebugMenuRendererDisplayTestbed(
             metricsThemeData: metricsTheme,
             rendererDisplayViewModel: rendererDisplayViewModel,
           ),
@@ -52,13 +52,14 @@ void main() {
       "displays the SKIA renderer text if the application uses the Skia renderer",
       (WidgetTester tester) async {
         const renderer = CommonStrings.skia;
+        final rendererViewModel = RendererDisplayViewModel(
+          currentRenderer: renderer,
+        );
         final expectedText = CommonStrings.getCurrentRenderer(renderer);
 
         await tester.pumpWidget(
-          _MetricsRendererDisplayTestbed(
-            rendererDisplayViewModel: RendererDisplayViewModel(
-              currentRenderer: CommonStrings.skia,
-            ),
+          _DebugMenuRendererDisplayTestbed(
+            rendererDisplayViewModel: rendererViewModel,
           ),
         );
 
@@ -70,13 +71,14 @@ void main() {
       "displays the HTML renderer text if the application uses the HTML renderer",
       (WidgetTester tester) async {
         const renderer = CommonStrings.html;
+        final rendererViewModel = RendererDisplayViewModel(
+          currentRenderer: renderer,
+        );
         final expectedText = CommonStrings.getCurrentRenderer(renderer);
 
         await tester.pumpWidget(
-          _MetricsRendererDisplayTestbed(
-            rendererDisplayViewModel: RendererDisplayViewModel(
-              currentRenderer: renderer,
-            ),
+          _DebugMenuRendererDisplayTestbed(
+            rendererDisplayViewModel: rendererViewModel,
           ),
         );
 
@@ -86,8 +88,8 @@ void main() {
   });
 }
 
-/// A testbed class needed to test the [MetricsRendererDisplay] widget.
-class _MetricsRendererDisplayTestbed extends StatelessWidget {
+/// A testbed class needed to test the [DebugMenuRendererDisplay] widget.
+class _DebugMenuRendererDisplayTestbed extends StatelessWidget {
   /// A [RendererDisplayViewModel] to use under tests.
   final RendererDisplayViewModel rendererDisplayViewModel;
 
@@ -95,7 +97,9 @@ class _MetricsRendererDisplayTestbed extends StatelessWidget {
   final MetricsThemeData metricsThemeData;
 
   /// Creates a new instance of this testbed with the given [platform].
-  const _MetricsRendererDisplayTestbed({
+  ///
+  /// A [metricsThemeData] defaults to the [MetricsThemeData] instance.
+  const _DebugMenuRendererDisplayTestbed({
     Key key,
     this.rendererDisplayViewModel,
     this.metricsThemeData = const MetricsThemeData(),
@@ -105,7 +109,7 @@ class _MetricsRendererDisplayTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return MetricsThemedTestbed(
       metricsThemeData: metricsThemeData,
-      body: MetricsRendererDisplay(
+      body: DebugMenuRendererDisplay(
         rendererDisplayViewModel: rendererDisplayViewModel,
       ),
     );

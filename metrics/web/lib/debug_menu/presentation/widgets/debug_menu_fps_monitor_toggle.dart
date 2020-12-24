@@ -7,13 +7,13 @@ import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_mon
 import 'package:provider/provider.dart';
 
 /// A widget that displays the FPS monitor toggle.
-class MetricsFpsMonitorToggle extends StatelessWidget {
+class DebugMenuFpsMonitorToggle extends StatelessWidget {
   /// A [LocalConfigFpsMonitorViewModel] with the current FPS monitor toggle
   /// value to display.
   final LocalConfigFpsMonitorViewModel fpsMonitorViewModel;
 
-  /// Creates a new instance of the [MetricsFpsMonitorToggle].
-  const MetricsFpsMonitorToggle({
+  /// Creates a new instance of the [DebugMenuFpsMonitorToggle].
+  const DebugMenuFpsMonitorToggle({
     Key key,
     this.fpsMonitorViewModel,
   }) : super(key: key);
@@ -23,6 +23,8 @@ class MetricsFpsMonitorToggle extends StatelessWidget {
     final theme = MetricsTheme.of(context).debugMenuTheme;
     final contentTextStyle = theme.sectionContentTextStyle;
 
+    final isFpsMonitorEnabled = fpsMonitorViewModel.isEnabled;
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -30,14 +32,21 @@ class MetricsFpsMonitorToggle extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Toggle(
-            value: fpsMonitorViewModel.isEnabled,
-            onToggle: (_) {
-              Provider.of<DebugMenuNotifier>(context, listen: false)
-                  .toggleFpsMonitor();
-            },
+            value: isFpsMonitorEnabled,
+            onToggle: (_) => _toggleFpsMonitor(context),
           ),
         ),
       ],
     );
+  }
+
+  /// Toggles the FPS Monitor feature.
+  void _toggleFpsMonitor(BuildContext context) {
+    final debugMenuNotifier = Provider.of<DebugMenuNotifier>(
+      context,
+      listen: false,
+    );
+
+    debugMenuNotifier.toggleFpsMonitor();
   }
 }

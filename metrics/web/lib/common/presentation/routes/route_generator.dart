@@ -10,14 +10,12 @@ import 'package:metrics/project_groups/presentation/pages/project_group_page.dar
 /// Responsible for generating routes.
 class RouteGenerator {
   /// Generates a route for the given route [settings]
-  /// based on the [isLoggedIn] authentication status and [isDebugMenuEnabled]
-  /// feature status.
+  /// based on the [isLoggedIn] authentication status.
   ///
   /// Throws an [AssertionError] if [settings] is null.
   static MetricsPageRoute generateRoute({
     @required RouteSettings settings,
     bool isLoggedIn,
-    bool isDebugMenuEnabled,
   }) {
     assert(settings != null);
 
@@ -34,7 +32,7 @@ class RouteGenerator {
       );
     }
 
-    if (settings.name == RouteName.debugMenu && isDebugMenuEnabled) {
+    if (settings.name == RouteName.debugMenu) {
       return _createMetricsPageRoute(
         name: RouteName.debugMenu,
         widget: const DebugMenuPage(),

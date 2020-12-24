@@ -387,10 +387,6 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
               settings: settings,
               isLoggedIn:
                   Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
-              isDebugMenuEnabled:
-                  Provider.of<FeatureConfigNotifier>(context, listen: false)
-                      .debugMenuFeatureConfigViewModel
-                      .isEnabled,
             ),
           );
         },

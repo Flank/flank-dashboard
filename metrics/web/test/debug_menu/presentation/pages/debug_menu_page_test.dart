@@ -7,54 +7,37 @@ import 'package:metrics/common/presentation/page_title/widgets/metrics_page_titl
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
-import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
-import 'package:metrics/debug_menu/presentation/view_models/rendered_display_view_model.dart';
-import 'package:metrics/debug_menu/presentation/widgets/metrics_fps_monitor_toggle.dart';
-import 'package:metrics/debug_menu/presentation/widgets/metrics_renderer_display.dart';
+import 'package:metrics/debug_menu/presentation/widgets/debug_menu_fps_monitor_toggle.dart';
+import 'package:metrics/debug_menu/presentation/widgets/debug_menu_renderer_display.dart';
+import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
+import 'package:metrics/feature_config/presentation/view_models/debug_menu_feature_config_view_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
-import '../../../test_utils/debug_menu_notifier_mock.dart';
+import '../../../test_utils/feature_config_notifier_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("DebugMenuPage", () {
+    const headerStyle = MetricsTextStyle(lineHeightInPixels: 10);
+    const dividerColor = Colors.grey;
+
     const metricsThemeData = MetricsThemeData(
       debugMenuTheme: DebugMenuThemeData(
-        sectionHeaderTextStyle: MetricsTextStyle(
-          lineHeightInPixels: 10,
-        ),
-        sectionDividerColor: Colors.grey,
+        sectionHeaderTextStyle: headerStyle,
+        sectionDividerColor: dividerColor,
       ),
     );
 
-    const fpsMonitorViewModel = LocalConfigFpsMonitorViewModel(isEnabled: true);
-    const rendererDisplayViewModel = RendererDisplayViewModel(
-      currentRenderer: CommonStrings.skia,
-    );
-
-    DebugMenuNotifier debugMenuNotifier;
-
-    setUp(() {
-      debugMenuNotifier = DebugMenuNotifierMock();
-    });
+    const disabledDebugMenu = DebugMenuFeatureConfigViewModel(isEnabled: false);
 
     testWidgets(
       "displays the metrics page title widget with the debug menu page text",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
-          fpsMonitorViewModel,
-        );
-        when(debugMenuNotifier.rendererDisplayViewModel).thenReturn(
-          rendererDisplayViewModel,
-        );
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _DebugMenuPageTestbed(
-              debugMenuNotifier: debugMenuNotifier,
-            ),
+            const _DebugMenuPageTestbed(),
           );
         });
 
@@ -66,65 +49,82 @@ void main() {
     );
 
     testWidgets(
-      "displays the metrics fps monitor toggle widget",
+      "displays the debug menu is disabled text if the debug menu is disabled",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
-          fpsMonitorViewModel,
-        );
-        when(debugMenuNotifier.rendererDisplayViewModel).thenReturn(
-          rendererDisplayViewModel,
+        final featureConfigNotifier = FeatureConfigNotifierMock();
+        when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
+          disabledDebugMenu,
         );
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _DebugMenuPageTestbed(
-              debugMenuNotifier: debugMenuNotifier,
+              featureConfigNotifier: featureConfigNotifier,
             ),
           );
         });
 
-        expect(find.byType(MetricsFpsMonitorToggle), findsOneWidget);
+        expect(find.text(CommonStrings.debugMenuDisabled), findsOneWidget);
       },
     );
 
     testWidgets(
-      "displays the metrics renderer display widget",
+      "debug menu is disabled text applies the content header text style from the metrics theme",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
-          fpsMonitorViewModel,
-        );
-        when(debugMenuNotifier.rendererDisplayViewModel).thenReturn(
-          rendererDisplayViewModel,
+        final featureConfigNotifier = FeatureConfigNotifierMock();
+        when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
+          disabledDebugMenu,
         );
 
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
             _DebugMenuPageTestbed(
-              debugMenuNotifier: debugMenuNotifier,
+              featureConfigNotifier: featureConfigNotifier,
+              metricsThemeData: metricsThemeData,
             ),
           );
         });
 
-        expect(find.byType(MetricsRendererDisplay), findsOneWidget);
+        final disabledDebugMenuText = tester.widget<Text>(
+          find.text(CommonStrings.debugMenuDisabled),
+        );
+
+        expect(disabledDebugMenuText.style, equals(headerStyle));
+      },
+    );
+
+    testWidgets(
+      "displays the fps monitor toggle widget",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _DebugMenuPageTestbed(),
+          );
+        });
+
+        expect(find.byType(DebugMenuFpsMonitorToggle), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "displays the renderer display widget",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _DebugMenuPageTestbed(),
+          );
+        });
+
+        expect(find.byType(DebugMenuRendererDisplay), findsOneWidget);
       },
     );
 
     testWidgets(
       "applies the section header text style from the metrics theme",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
-          fpsMonitorViewModel,
-        );
-        when(debugMenuNotifier.rendererDisplayViewModel).thenReturn(
-          rendererDisplayViewModel,
-        );
-        final expectedTextStyle =
-            metricsThemeData.debugMenuTheme.sectionHeaderTextStyle;
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _DebugMenuPageTestbed(
-              debugMenuNotifier: debugMenuNotifier,
+            const _DebugMenuPageTestbed(
               metricsThemeData: metricsThemeData,
             ),
           );
@@ -134,26 +134,16 @@ void main() {
           find.text(CommonStrings.performance),
         );
 
-        expect(header.style, equals(expectedTextStyle));
+        expect(header.style, equals(headerStyle));
       },
     );
 
     testWidgets(
       "applies the divider color from the metrics theme",
       (WidgetTester tester) async {
-        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
-          fpsMonitorViewModel,
-        );
-        when(debugMenuNotifier.rendererDisplayViewModel).thenReturn(
-          rendererDisplayViewModel,
-        );
-        final expectedColor =
-            metricsThemeData.debugMenuTheme.sectionDividerColor;
-
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
-            _DebugMenuPageTestbed(
-              debugMenuNotifier: debugMenuNotifier,
+            const _DebugMenuPageTestbed(
               metricsThemeData: metricsThemeData,
             ),
           );
@@ -161,7 +151,7 @@ void main() {
 
         final divider = tester.widget<Divider>(find.byType(Divider));
 
-        expect(divider.color, equals(expectedColor));
+        expect(divider.color, equals(dividerColor));
       },
     );
   });
@@ -172,13 +162,19 @@ class _DebugMenuPageTestbed extends StatelessWidget {
   /// A [DebugMenuNotifier] to use under tests.
   final DebugMenuNotifier debugMenuNotifier;
 
+  /// A [FeatureConfigNotifier] to use under tests.
+  final FeatureConfigNotifier featureConfigNotifier;
+
   /// A [MetricsThemeData] to use under tests.
   final MetricsThemeData metricsThemeData;
 
-  /// Creates a new instance of this testbed with the given [debugMenuNotifier].
+  /// Creates a new instance of this testbed with the given parameters.
+  ///
+  /// A [metricsThemeData] defaults to the [MetricsThemeData] instance.
   const _DebugMenuPageTestbed({
     Key key,
     this.debugMenuNotifier,
+    this.featureConfigNotifier,
     this.metricsThemeData = const MetricsThemeData(),
   }) : super(key: key);
 
@@ -186,6 +182,7 @@ class _DebugMenuPageTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return TestInjectionContainer(
       debugMenuNotifier: debugMenuNotifier,
+      featureConfigNotifier: featureConfigNotifier,
       child: MetricsThemedTestbed(
         metricsThemeData: metricsThemeData,
         body: const DebugMenuPage(),

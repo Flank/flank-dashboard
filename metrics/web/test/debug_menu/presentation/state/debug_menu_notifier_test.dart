@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
+import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/domain/entities/local_config.dart';
 import 'package:metrics/debug_menu/domain/usecases/close_local_config_storage_usecase.dart';
 import 'package:metrics/debug_menu/domain/usecases/open_local_config_storage_usecase.dart';
@@ -8,7 +9,11 @@ import 'package:metrics/debug_menu/domain/usecases/read_local_config_usecase.dar
 import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/rendered_display_view_model.dart';
+import 'package:metrics/util/web_platform.dart';
 import 'package:mockito/mockito.dart';
+
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("DebugMenuNotifier", () {
@@ -16,6 +21,7 @@ void main() {
     final readUseCase = _ReadLocalConfigUseCaseMock();
     final updateUseCase = _UpdateLocalConfigUseCaseMock();
     final closeUseCase = _CloseLocalConfigStorageUseCaseMock();
+    final webPlatform = _WebPlatformMock();
 
     const isFpsMonitorEnabled = true;
     const localConfig = LocalConfig(
@@ -33,6 +39,7 @@ void main() {
         readUseCase,
         updateUseCase,
         closeUseCase,
+        webPlatform,
       );
     });
 
@@ -41,6 +48,7 @@ void main() {
       reset(readUseCase);
       reset(updateUseCase);
       reset(closeUseCase);
+      reset(webPlatform);
     });
 
     test(
@@ -112,6 +120,23 @@ void main() {
             readUseCase,
             updateUseCase,
             closeUseCase,
+            webPlatform,
+          ),
+          returnsNormally,
+        );
+      },
+    );
+
+    test(
+      "creates an instance with the given parameters if the given web platform is null",
+      () {
+        expect(
+          () => DebugMenuNotifier(
+            openUseCase,
+            readUseCase,
+            updateUseCase,
+            closeUseCase,
+            null,
           ),
           returnsNormally,
         );
@@ -392,6 +417,45 @@ void main() {
     );
 
     test(
+      ".rendererDisplayViewModel calls .isSkia of the given web platform",
+      () async {
+        when(webPlatform.isSkia).thenReturn(true);
+
+        notifier.rendererDisplayViewModel;
+
+        verify(webPlatform.isSkia).called(1);
+      },
+    );
+
+    test(
+      ".rendererDisplayViewModel returns a view model with skia value if the application uses skia renderer",
+      () async {
+        when(webPlatform.isSkia).thenReturn(true);
+        const expectedViewModel = RendererDisplayViewModel(
+          currentRenderer: CommonStrings.skia,
+        );
+
+        final viewModel = notifier.rendererDisplayViewModel;
+
+        expect(viewModel, equals(expectedViewModel));
+      },
+    );
+
+    test(
+      ".rendererDisplayViewModel returns a view model with html value if the application uses html renderer",
+      () async {
+        when(webPlatform.isSkia).thenReturn(true);
+        const expectedViewModel = RendererDisplayViewModel(
+          currentRenderer: CommonStrings.skia,
+        );
+
+        final viewModel = notifier.rendererDisplayViewModel;
+
+        expect(viewModel, equals(expectedViewModel));
+      },
+    );
+
+    test(
       ".dispose() calls the close local config storage use case",
       () {
         notifier.dispose();
@@ -413,3 +477,5 @@ class _UpdateLocalConfigUseCaseMock extends Mock
 
 class _CloseLocalConfigStorageUseCaseMock extends Mock
     implements CloseLocalConfigStorageUseCase {}
+
+class _WebPlatformMock extends Mock implements WebPlatform {}

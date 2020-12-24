@@ -4,13 +4,13 @@ import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/presentation/view_models/rendered_display_view_model.dart';
 
 /// A widget that displays the current renderer.
-class MetricsRendererDisplay extends StatelessWidget {
+class DebugMenuRendererDisplay extends StatelessWidget {
   /// A [RendererDisplayViewModel] with the current renderer to display.
   final RendererDisplayViewModel rendererDisplayViewModel;
 
-  /// Creates a new instance of the [MetricsRendererDisplay]
+  /// Creates a new instance of the [DebugMenuRendererDisplay]
   /// with the given [rendererDisplayViewModel].
-  const MetricsRendererDisplay({
+  const DebugMenuRendererDisplay({
     Key key,
     this.rendererDisplayViewModel,
   }) : super(key: key);
