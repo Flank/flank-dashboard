@@ -24,7 +24,7 @@ package debug_menu {
                     + isInitialized: bool
 
                     - _localConfig : LocalConfig
-                    - _fpsMonitorLocalConfigViewModel : FpsMonitorLocalConfigViewModel
+                    - _localConfigFpsMonitorViewModel : LocalConfigFpsMonitorViewModel
                     - _updateLocalConfigUseCase : UpdateLocalConfigUseCase
                     - _readLocalConfigUseCase : ReadLocalConfigUseCase
                     - _closeLocalConfigStorageUseCase : CloseLocalConfigStorageUseCase
@@ -39,7 +39,7 @@ package debug_menu {
             }
 
             package view_models {
-                class FpsMonitorLocalConfigViewModel {
+                class LocalConfigFpsMonitorViewModel {
                     + isEnabled : bool
                 }
             }
@@ -50,7 +50,7 @@ package debug_menu {
         }
 }
 
-DebugMenuNotifier -right-> FpsMonitorLocalConfigViewModel : uses
+DebugMenuNotifier -right-> LocalConfigFpsMonitorViewModel : uses
 DebugMenuNotifier -down-> OpenLocalConfigStorageUseCase : uses
 DebugMenuNotifier -down-> ReadLocalConfigUseCase : uses
 DebugMenuNotifier -down-> UpdateLocalConfigUseCase : uses

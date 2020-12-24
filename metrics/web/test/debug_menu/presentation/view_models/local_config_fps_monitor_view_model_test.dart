@@ -1,15 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/debug_menu/presentation/view_models/fps_monitor_local_config_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 
 void main() {
-  group("FpsMonitorLocalConfigViewModel", () {
+  group("LocalConfigFpsMonitorViewModel", () {
     test(
       "throws an AssertionError if the given is enabled is null",
       () {
         expect(
-          () => FpsMonitorLocalConfigViewModel(isEnabled: null),
+          () => LocalConfigFpsMonitorViewModel(isEnabled: null),
           throwsAssertionError,
         );
       },
@@ -20,7 +20,7 @@ void main() {
       () {
         const isEnabled = false;
 
-        final viewModel = FpsMonitorLocalConfigViewModel(isEnabled: isEnabled);
+        final viewModel = LocalConfigFpsMonitorViewModel(isEnabled: isEnabled);
 
         expect(viewModel.isEnabled, equals(isEnabled));
       },

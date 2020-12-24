@@ -1,19 +1,19 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// A view model that represents a FPS monitor local config feature.
-class FpsMonitorLocalConfigViewModel extends Equatable {
+/// A view model that represents a local config FPS monitor feature.
+class LocalConfigFpsMonitorViewModel extends Equatable {
   /// Indicates whether this fps monitor is enabled.
   final bool isEnabled;
 
   @override
   List<Object> get props => [isEnabled];
 
-  /// Creates a new instance of the [FpsMonitorLocalConfigViewModel]
+  /// Creates a new instance of the [LocalConfigFpsMonitorViewModel]
   /// with the given [isEnabled] value.
   ///
   /// Throws an [AssertionError] if the given [isEnabled] is null.
-  const FpsMonitorLocalConfigViewModel({
+  const LocalConfigFpsMonitorViewModel({
     @required this.isEnabled,
   }) : assert(isEnabled != null);
 }

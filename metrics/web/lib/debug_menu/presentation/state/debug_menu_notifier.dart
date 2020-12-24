@@ -8,7 +8,10 @@ import 'package:metrics/debug_menu/domain/usecases/open_local_config_storage_use
 import 'package:metrics/debug_menu/domain/usecases/parameters/local_config_param.dart';
 import 'package:metrics/debug_menu/domain/usecases/read_local_config_usecase.dart';
 import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.dart';
-import 'package:metrics/debug_menu/presentation/view_models/fps_monitor_local_config_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
+import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
+import 'package:metrics/util/web_platform.dart';
 
 /// The [ChangeNotifier] that holds and manages [LocalConfig]'s data.
 class DebugMenuNotifier extends ChangeNotifier {
@@ -24,12 +27,15 @@ class DebugMenuNotifier extends ChangeNotifier {
   /// A [UseCase] that provides an ability to close the [LocalConfig] storage.
   final CloseLocalConfigStorageUseCase _closeLocalConfigStorageUseCase;
 
+  /// A [WebPlatform] that provides an ability to detect the current renderer.
+  final WebPlatform _webPlatform;
+
   /// Indicates whether the [LocalConfig] is loading.
   bool _isLoading = false;
 
   /// A view model that holds the [LocalConfig] data
   /// for the FPS monitor feature.
-  FpsMonitorLocalConfigViewModel _fpsMonitorLocalConfigViewModel;
+  LocalConfigFpsMonitorViewModel _fpsMonitorViewModel;
 
   /// A [LocalConfig] containing the current configuration values.
   LocalConfig _localConfig;
@@ -48,12 +54,22 @@ class DebugMenuNotifier extends ChangeNotifier {
 
   /// A view model that provides the [LocalConfig] data
   /// for the FPS monitor feature.
-  FpsMonitorLocalConfigViewModel get fpsMonitorLocalConfigViewModel =>
-      _fpsMonitorLocalConfigViewModel;
+  LocalConfigFpsMonitorViewModel get fpsMonitorViewModel =>
+      _fpsMonitorViewModel;
 
   /// Provides an error description that occurred
   /// during updating the [LocalConfig].
   String get updateConfigError => _updateConfigError?.message;
+
+  /// A view model that provides the current renderer's name.
+  RendererDisplayViewModel get rendererDisplayViewModel {
+    final isSkia = _webPlatform.isSkia;
+
+    final currentRenderer =
+        isSkia ? DebugMenuStrings.skia : DebugMenuStrings.html;
+
+    return RendererDisplayViewModel(currentRenderer: currentRenderer);
+  }
 
   /// Creates a new instance of the [DebugMenuNotifier]
   /// with the given parameters.
@@ -63,11 +79,13 @@ class DebugMenuNotifier extends ChangeNotifier {
     this._openLocalConfigStorageUseCase,
     this._readLocalConfigUseCase,
     this._updateLocalConfigUseCase,
-    this._closeLocalConfigStorageUseCase,
-  )   : assert(_openLocalConfigStorageUseCase != null),
+    this._closeLocalConfigStorageUseCase, [
+    WebPlatform webPlatform,
+  ])  : assert(_openLocalConfigStorageUseCase != null),
         assert(_readLocalConfigUseCase != null),
         assert(_updateLocalConfigUseCase != null),
-        assert(_closeLocalConfigStorageUseCase != null);
+        assert(_closeLocalConfigStorageUseCase != null),
+        _webPlatform = webPlatform ?? const WebPlatform();
 
   /// Initializes the [LocalConfig].
   ///
@@ -122,7 +140,7 @@ class DebugMenuNotifier extends ChangeNotifier {
   void _setLocalConfig(LocalConfig config) {
     _localConfig = config;
 
-    _fpsMonitorLocalConfigViewModel = FpsMonitorLocalConfigViewModel(
+    _fpsMonitorViewModel = LocalConfigFpsMonitorViewModel(
       isEnabled: _localConfig.isFpsMonitorEnabled,
     );
   }

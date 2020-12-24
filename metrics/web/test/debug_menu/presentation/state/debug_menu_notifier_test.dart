@@ -7,8 +7,13 @@ import 'package:metrics/debug_menu/domain/usecases/parameters/local_config_param
 import 'package:metrics/debug_menu/domain/usecases/read_local_config_usecase.dart';
 import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
-import 'package:metrics/debug_menu/presentation/view_models/fps_monitor_local_config_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
+import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
+import 'package:metrics/util/web_platform.dart';
 import 'package:mockito/mockito.dart';
+
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("DebugMenuNotifier", () {
@@ -16,12 +21,13 @@ void main() {
     final readUseCase = _ReadLocalConfigUseCaseMock();
     final updateUseCase = _UpdateLocalConfigUseCaseMock();
     final closeUseCase = _CloseLocalConfigStorageUseCaseMock();
+    final webPlatform = _WebPlatformMock();
 
     const isFpsMonitorEnabled = true;
     const localConfig = LocalConfig(
       isFpsMonitorEnabled: isFpsMonitorEnabled,
     );
-    const fpsMonitorViewModel = FpsMonitorLocalConfigViewModel(
+    const fpsMonitorViewModel = LocalConfigFpsMonitorViewModel(
       isEnabled: isFpsMonitorEnabled,
     );
 
@@ -33,6 +39,7 @@ void main() {
         readUseCase,
         updateUseCase,
         closeUseCase,
+        webPlatform,
       );
     });
 
@@ -41,6 +48,7 @@ void main() {
       reset(readUseCase);
       reset(updateUseCase);
       reset(closeUseCase);
+      reset(webPlatform);
     });
 
     test(
@@ -112,6 +120,23 @@ void main() {
             readUseCase,
             updateUseCase,
             closeUseCase,
+            webPlatform,
+          ),
+          returnsNormally,
+        );
+      },
+    );
+
+    test(
+      "creates an instance with the given parameters if the given web platform is null",
+      () {
+        expect(
+          () => DebugMenuNotifier(
+            openUseCase,
+            readUseCase,
+            updateUseCase,
+            closeUseCase,
+            null,
           ),
           returnsNormally,
         );
@@ -163,12 +188,12 @@ void main() {
     );
 
     test(
-      ".initializeLocalConfig() sets the fps monitor local config view model",
+      ".initializeLocalConfig() sets the local config fps monitor view model",
       () async {
         when(readUseCase()).thenReturn(localConfig);
 
         await notifier.initializeLocalConfig();
-        final viewModel = notifier.fpsMonitorLocalConfigViewModel;
+        final viewModel = notifier.fpsMonitorViewModel;
 
         expect(viewModel, equals(fpsMonitorViewModel));
       },
@@ -177,7 +202,7 @@ void main() {
     test(
       ".initializeLocalConfig() initializes the local config with defaults if open local config storage use case throws",
       () async {
-        const expectedViewModel = FpsMonitorLocalConfigViewModel(
+        const expectedViewModel = LocalConfigFpsMonitorViewModel(
           isEnabled: false,
         );
         when(openUseCase()).thenAnswer(
@@ -185,7 +210,7 @@ void main() {
         );
 
         await notifier.initializeLocalConfig();
-        final actualModel = notifier.fpsMonitorLocalConfigViewModel;
+        final actualModel = notifier.fpsMonitorViewModel;
 
         expect(actualModel, equals(expectedViewModel));
       },
@@ -194,24 +219,24 @@ void main() {
     test(
       ".initializeLocalConfig() initializes the local config with defaults if read local config use case throws",
       () async {
-        const expectedViewModel = FpsMonitorLocalConfigViewModel(
+        const expectedViewModel = LocalConfigFpsMonitorViewModel(
           isEnabled: false,
         );
         when(readUseCase()).thenThrow(const PersistentStoreException());
 
         await notifier.initializeLocalConfig();
-        final actualModel = notifier.fpsMonitorLocalConfigViewModel;
+        final actualModel = notifier.fpsMonitorViewModel;
 
         expect(actualModel, equals(expectedViewModel));
       },
     );
 
     test(
-      ".initializeDefaults() sets the fps monitor local config view model with the default is enabled value",
+      ".initializeDefaults() sets the local config fps monitor view model with the default is enabled value",
       () {
         notifier.initializeDefaults();
 
-        final viewModel = notifier.fpsMonitorLocalConfigViewModel;
+        final viewModel = notifier.fpsMonitorViewModel;
 
         expect(viewModel.isEnabled, isFalse);
       },
@@ -249,8 +274,7 @@ void main() {
       () {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -272,8 +296,7 @@ void main() {
       () async {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -295,8 +318,7 @@ void main() {
       () {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -314,16 +336,15 @@ void main() {
     );
 
     test(
-      ".toggleFpsMonitor() updates the fps monitor local config view model",
+      ".toggleFpsMonitor() updates the fps monitor view model",
       () async {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
-        final expectedViewModel = FpsMonitorLocalConfigViewModel(
+        final expectedViewModel = LocalConfigFpsMonitorViewModel(
           isEnabled: !isFpsMonitorEnabled,
         );
 
@@ -334,7 +355,7 @@ void main() {
         );
 
         await notifier.toggleFpsMonitor();
-        final viewModel = notifier.fpsMonitorLocalConfigViewModel;
+        final viewModel = notifier.fpsMonitorViewModel;
 
         expect(viewModel, equals(expectedViewModel));
       },
@@ -345,8 +366,7 @@ void main() {
       () async {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -366,8 +386,7 @@ void main() {
       () async {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.fpsMonitorLocalConfigViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -388,6 +407,45 @@ void main() {
         await notifier.toggleFpsMonitor();
 
         expect(notifier.updateConfigError, isNull);
+      },
+    );
+
+    test(
+      ".rendererDisplayViewModel calls .isSkia of the given web platform",
+      () async {
+        when(webPlatform.isSkia).thenReturn(true);
+
+        notifier.rendererDisplayViewModel;
+
+        verify(webPlatform.isSkia).called(1);
+      },
+    );
+
+    test(
+      ".rendererDisplayViewModel returns a view model with skia value if the application uses skia renderer",
+      () async {
+        when(webPlatform.isSkia).thenReturn(true);
+        const expectedViewModel = RendererDisplayViewModel(
+          currentRenderer: DebugMenuStrings.skia,
+        );
+
+        final viewModel = notifier.rendererDisplayViewModel;
+
+        expect(viewModel, equals(expectedViewModel));
+      },
+    );
+
+    test(
+      ".rendererDisplayViewModel returns a view model with html value if the application uses html renderer",
+      () async {
+        when(webPlatform.isSkia).thenReturn(false);
+        const expectedViewModel = RendererDisplayViewModel(
+          currentRenderer: DebugMenuStrings.html,
+        );
+
+        final viewModel = notifier.rendererDisplayViewModel;
+
+        expect(viewModel, equals(expectedViewModel));
       },
     );
 
@@ -413,3 +471,5 @@ class _UpdateLocalConfigUseCaseMock extends Mock
 
 class _CloseLocalConfigStorageUseCaseMock extends Mock
     implements CloseLocalConfigStorageUseCase {}
+
+class _WebPlatformMock extends Mock implements WebPlatform {}

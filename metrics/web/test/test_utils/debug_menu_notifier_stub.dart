@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
-import 'package:metrics/debug_menu/presentation/view_models/fps_monitor_local_config_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
+import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 
 /// Stub implementation of the [DebugMenuNotifier].
 ///
@@ -8,8 +10,8 @@ import 'package:metrics/debug_menu/presentation/view_models/fps_monitor_local_co
 class DebugMenuNotifierStub extends ChangeNotifier
     implements DebugMenuNotifier {
   @override
-  FpsMonitorLocalConfigViewModel get fpsMonitorLocalConfigViewModel =>
-      const FpsMonitorLocalConfigViewModel(isEnabled: true);
+  LocalConfigFpsMonitorViewModel get fpsMonitorViewModel =>
+      const LocalConfigFpsMonitorViewModel(isEnabled: true);
 
   @override
   bool get isLoading => false;
@@ -19,6 +21,10 @@ class DebugMenuNotifierStub extends ChangeNotifier
 
   @override
   String get updateConfigError => null;
+
+  @override
+  RendererDisplayViewModel get rendererDisplayViewModel =>
+      const RendererDisplayViewModel(currentRenderer: DebugMenuStrings.skia);
 
   @override
   Future<void> initializeLocalConfig() async {}

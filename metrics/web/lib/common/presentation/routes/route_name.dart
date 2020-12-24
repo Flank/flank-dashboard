@@ -8,4 +8,7 @@ class RouteName {
 
   /// The route name of the project groups page.
   static const String projectGroup = '/projectGroups';
+
+  /// The route name of the debug menu page.
+  static const String debugMenu = '/debugMenu';
 }

@@ -78,7 +78,7 @@ The following sequence diagram describes how the application updates the `Local 
 Let's consider the mechanism of updating the `Local Config` values in the application. Assume that the `local_config` box has been opened already using the `OpenLocalConfigStorageUseCase` within the initialize method. The following steps describe how the application acts when the user updates the `Local Config`, e.g. by toggling the FPS Monitor:
 1. The UI calls the `toggleFpsMonitor` method of the `DebugMenuNotifier`.
 2. The `DebugMenuNotifier` updates the `Local Config` in the `IndexedDB`.
-3. The `DebugMenuNotifier` updates the `FpsMonitorLocalConfigViewModel` and notifies the application.
+3. The `DebugMenuNotifier` updates the `LocalConfigFpsMonitorViewModel` and notifies the application.
 
 Now, the user sees the updated UI with the toggled FPS monitor. The application does not change the UI until the `local_config` box update succeeds.
 

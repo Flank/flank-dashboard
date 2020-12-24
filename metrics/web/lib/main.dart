@@ -41,8 +41,8 @@ class _MetricsAppState extends State<MetricsApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MetricsFPSMonitor(
-      child: InjectionContainer(
+    return InjectionContainer(
+      child: MetricsFPSMonitor(
         child: MetricsThemeBuilder(
           builder: (context, themeNotifier) {
             final isDark = themeNotifier?.isDark ?? true;
@@ -76,12 +76,17 @@ class _MetricsAppState extends State<MetricsApp> {
                       ),
                     ];
                   },
-                  onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-                    settings: settings,
-                    isLoggedIn:
-                        Provider.of<AuthNotifier>(context, listen: false)
-                            .isLoggedIn,
-                  ),
+                  onGenerateRoute: (settings) {
+                    final isLoggedIn = Provider.of<AuthNotifier>(
+                      context,
+                      listen: false,
+                    ).isLoggedIn;
+
+                    return RouteGenerator.generateRoute(
+                      settings: settings,
+                      isLoggedIn: isLoggedIn,
+                    );
+                  },
                   navigatorObservers: [
                     _toastRouteObserver,
                     _userMenuRouteObserver,

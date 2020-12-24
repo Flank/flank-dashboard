@@ -22,11 +22,18 @@ void main() {
       expect(projectGroupPage.value, equals(RouteName.projectGroup));
     });
 
+    test(".debugMenuPage value equals to the debug menu route name", () {
+      const debugMenuPage = PageName.debugMenuPage;
+
+      expect(debugMenuPage.value, equals(RouteName.debugMenu));
+    });
+
     test(".values contains all page names", () {
       const expectedValues = {
         PageName.loginPage,
         PageName.dashboardPage,
         PageName.projectGroupsPage,
+        PageName.debugMenuPage,
       };
 
       const values = PageName.values;
