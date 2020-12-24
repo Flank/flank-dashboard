@@ -65,5 +65,17 @@ void main() {
         expect(route.settings.name, equals(RouteName.projectGroup));
       },
     );
+
+    test(
+      ".generateRoute() generates a route to the debug menu page if a route name is debugMenu",
+      () {
+        final MetricsPageRoute route = RouteGenerator.generateRoute(
+          settings: const RouteSettings(name: RouteName.debugMenu),
+          isLoggedIn: true,
+        );
+
+        expect(route.settings.name, equals(RouteName.debugMenu));
+      },
+    );
   });
 }
