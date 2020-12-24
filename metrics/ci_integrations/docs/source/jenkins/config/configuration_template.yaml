@@ -1,28 +1,41 @@
 # A template for ci_integrations config with the Jenkins integration as a `source`.
 # Consider the following links to familiarize yourself with Jenkins:
 # - https://www.jenkins.io/doc/
+#
+# Also, consider the following links to know how Jenkins API is used 
+# in the scope of CI Integrations:
+# - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md
 
 source:
   # The `jenkins` key defines that the following source config stands for Jenkins integration.
   jenkins:
     # A URL to the Jenkins instance.
     #
-    # The field is used to determine a URL where is your Jenkins instance is run.
+    # This field defines a URL where is your Jenkins instance is running.
+    # The tool uses this URL to perform HTTP requests to the instance.
     url: ...
 
     # A Jenkins building job name.
     #
-    # This name is used to determine a job from where we will get new builds.
+    # The tool uses this name to perform HTTP calls and fetch builds in the scope of the specified job.
+    # This must be the full name of the job that performs builds. For example, if you are using 
+    # multibranch pipelines, the job full name consists of multiple segments: <top-level-job>/<the-desired-job>.
     job_name: ...
 
-    # A Jenkins account username used in `basic` authentication.
-    #
-    # Here is an info about user credentials - https://www.jenkins.io/doc/book/using/using-credentials/
+    # A Jenkins account username.
+    # 
+    # The tool uses this username as a part of HTTP Basic Authorization to authorize
+    # HTTP requests to the Jenkins API.
+    # Consider the following link for more information about using Jenkins credentials: 
+    # - https://www.jenkins.io/doc/book/using/using-credentials/
     username: ...
 
-    # The Jenkins account API key used in `basic` authentication.
-    #
-    # Here is an info about user credentials - https://www.jenkins.io/doc/book/using/using-credentials/
+    # The Jenkins account API key.
+    # 
+    # The API key is similar to the access token and the tool uses it as a part of HTTP Basic Authorization 
+    # to authorize HTTP requests to the Jenkins API.
+    # Consider the following link for more information about using Jenkins credentials: 
+    # - https://www.jenkins.io/doc/book/using/using-credentials/
     api_key: ...
 
 destination:

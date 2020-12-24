@@ -32,9 +32,9 @@ First, let's consider a couple of terms the CI Integration tool uses and what th
 
 ### Downloading The CI Integrations Tool
 
-To download the CI integrations, follow the listed steps:
-1. Checkout the [CI integrations releases](https://github.com/platform-platform/monorepo/releases/tag/ci_integrations-snapshot).
-2. Download CI integration snapshot depending on your operation system (`macOS` or `Linux`).
+You can download the built CI Integration tool from the [CI Integrations releases](https://github.com/platform-platform/monorepo/releases/tag/ci_integrations-snapshot) page. Select a release depending on your operation system (at the moment, it can be either `Linux` or `macOS`) and download a binary file. You can also use the following links: 
+- [`CI Integrations for Linux`](https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_linux);
+- [`CI Integrations for macOS`](https://github.com/platform-platform/monorepo/releases/download/ci_integrations-snapshot/ci_integrations_macos).
 
 #### CI Integrations CLI
 
@@ -43,55 +43,97 @@ To get help information about commands usage, run `ci_integrations help <command
 
 #### Advanced Configurations
 
-After marking the tool file as executable, now you can add the tool `file_path` to your `PATH` variable, which allows you to run the tool in any terminal session just by the filename.
-For updating the `PATH` variable, follow the listed steps:
+If you want to be able to use the tool from any place, you can add the `/path/to/ci_integrations` to the `PATH` environment variable. By running the following command from the directory where you've downloaded the `ci_integration`, you can know the full path to the tool:
 
-1. Determine the `[PATH_TO_CI_INTEGRATIONS]`, you can check this by running `echo $PWD/ci_integrations`, while in the directory with the tool.
-2. Open (or create) the `rc file` for your shell. Typing `echo $SHELL` in your terminal tells you which shell you’re using. If you’re using Bash, edit `$HOME/.bash_profile` or `$HOME/.bashrc`. If you’re using Z shell, edit `$HOME/.zshrc`. If you’re using a different shell, the file path and filename will be different on your machine.
-3. Add `export PATH="[PATH_TO_CI_INTEGRATIONS]:$PATH"` to the last line of the `rc file`, where `[PATH_TO_CI_INTEGRATIONS]` is the path where you placed CI Integrations tool.
-4. Run source `$HOME/.<rc file>` to refresh the current terminal window, or open a new terminal window to automatically source the file.
-5. Verify that the `PATH_TO_CI_INTEGRATIONS` is now in your PATH by running `echo $PATH` or `which ci_integrations`.
+```
+echo $PWD/ci_integrations
+```
+
+Then use appropriate instructions for your platform on how to add executable to the `PATH` variable. For example, if you're using `bash_profile`:
+
+```
+echo 'export PATH="$PATH:/path/to/ci_integrations"' >> ~/.bash_profile
+```
 
 ### Creating Configuration File
 
-Each CI integration requires configuration file, which represents a `YAML` file the tool uses to define a `source` and `destination` to perform synchronization and builds data importing.
-The general structure of the file contains the `source` and `destination` keys,  whose value is key-value pairs with the necessary source and destination-related data, such as access tokens keys, project names, workflow identifiers, etc.
+The CI Integration tool uses the configuration file to perform the `sync` command that imports builds data from the specified `source` to the specified `destination`. 
+The configuration file itself is a `YAML` file with key-value pairs that contain settings required for `source` and `destination` integrations. This file has the following structure:
 
-#### Configuration Templates
+```
+# The `source` key indicates that the nested key-value pairs are related to source integration.
+source:
+    # This key is an identifier that uniquely defines a source integration that 
+    # the CI Integrations tool should use to perform synchronization. 
+    <source_integration_indentifier>:
+        # Key-value pairs with integration configurations
 
-For all available integrations we have configuration templates that explain all the fields they require and how to fill them with correct values.
-Here is a list of the templates: 
-- `source` clients:
-    * [Github Actions Configuration Template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml)
-    * [Jenkins Configuration Template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/source/jenkins/config/configuration_template.yaml)
-    * [Buildkite Configuration Template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/source/buildkite/config/configuration_template.yaml)
+# The `destination` key indicates that the nested key-value pairs are related to destination integration.
+destination:
+    # This key is an identifier that uniquely defines a destination integration that 
+    # the CI Integrations tool should use to perform synchronization. 
+    <destination_integration_indentifier>:
+        # Key-value pairs with integration configurations
+```
 
-- `destination` clients:
-    * [Firestore Configuration Template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml)
+Both the `source_integration_indentifier` and `destination_integration_indentifier` stands for the specific implementation of clients used to perform builds importing. 
+Each such client has its own specific list of configuration items it requires. The following table provides you with available integrations, their identifiers, and a link to the configuration template (a template for a configuration file that contains this integration):
+
+| Integration | Type | Key | Template | 
+| --- | --- | --- | --- |
+| GitHub Actions | `source` | `github_actions` | [Configuration template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) |
+| Jenkins | `source` | `jenkins` | [Configuration template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/source/jenkins/config/configuration_template.yaml) |
+| Buildkite | `source` | `buildkite` | [Configuration template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/source/builkite/config/configuration_template.yaml) |
+| Firestore | `destination` | `firestore` | [Configuration template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) |
 
 #### Example
 
-Creating new configuration file requires following these steps:
-1. Select one of the templates from the [Configuration templates section](#configuration-templates) that matches your desired source or destination.
-2. Create a new configuration file with `.yaml` extension and copy-and-paste the template content in it.
-3. Each template has some parameters that you have to fill. A typical template parameter appears like this: `param_name: ...`. Replace each `...` with the required value.
-4. Fill in the destination config.
-5. Save the newly created template and give it a self-speaking name.
+Imagine that you want to expose your GitHub Actions builds to the `Metrics Web Application`. In this case, your `source` integration is GitHub Actions and `destination` is Firestore. Assume that you've already downloaded and configured the CI Integrations tool. The next stage is creating a configuration file for the integrations you require. Let's consider the following steps:
+1. Create a new YAML file with a clear, self-speaking name. Let this file be `github_actions_firestore.yaml`.
+2. Open the [GitHub Actions configuration template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) and copy the `source` part from it. Paste the copied code to the `github_actions_firestore.yaml`. 
+3. Open the [Firestore configuration template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) and copy the `destination` part from it. Paste the copied code to the `github_actions_firestore.yaml`. __**Note**: The order of source and destination parts doesn't matter - the first part can be `destination` and the second can be `source`. But both parts are required and must be presented in the configuration part.__
+4. Fill the configuration file with your values by replacing the `...` for each key. Each configuration template contains the information about how the CI Integration tool uses the values you provide and how you can obtain them. Follow the comments in configuration templates to fill your configuration file with appropriate data.
+5. Save your configuration file and keep it private as most of the values you provide should be kept safe.
+The following example demonstrates the resulting configuration file:
+
+```yaml
+source:
+  github_actions:
+    workflow_identifier: <GITHUB_WORKFLOW_IDENTIFIER>
+    repository_name: <GITHUB_REPOSITORY_NAME>
+    repository_owner: <GITHUB_REPOSITORY_OWNER>
+    access_token: <GITHUB_ACCESS_TOKEN>
+destination:
+  firestore:
+    firebase_project_id: <FIREBASE_PROJECT_ID>    
+    firebase_user_email: <FIREBASE_USER_EMAIL>
+    firebase_user_pass: <FIREBASE_USER_PASS>
+    firebase_web_api_key: <FIREBASE_WEB_API_KEY>
+    metrics_project_id: <METRICS_PROJECT_ID>
+```
+Well done! Your configuration file is ready to use within the `ci_integrations sync` command. To use it, pass the configuration file path as follows: 
+
+```bash
+ci_integrations sync --config-file="path/to/github_actions_firestore.yaml"
+```
 
 ### Making Things Work
 
-Finally, after [CLI configuration](#ci-integrations-cli) and [creating a new configuration file](#creating-configuration-file), we can proceed to perform synchronization using a main `sync` command.
-All we need to do additionally is to specify the path to the previously created `configuration file` using the `--config-file=` flag.
-Here is a usage example:
+Once you've [downloaded and configured](#downloading-the-ci-integrations-tool) the CI Integration tool and [created](#creating-configuration-file) a configuration file, you're ready to synchronize your builds and make it available in the Metrics Web Application. 
+The main idea is to use the `sync` command the tool provides and specify a path to the configuration file. The tool then creates appropriate clients and uses them to import builds data from the `source` to `destination`. 
+For example:
 
 ```bash
-ci_integrations sync --config-file=`your_config_file`
+ci_integrations sync --config-file="path/to/config_file.yaml"
 ```
 
 #### Automate CI Integrations
 
-The synchronization process described above can be automated within your CI tool, so the `sync` command will be run every time the builds are finished.
-[Here](https://github.com/platform-platform/monorepo/blob/master/docs/17_buildkite_ci_integration.md) is an example how to do it for `Buildkite`.
+Obviously, it is not very handy to manually run the CI Integrations tool every time you have a new build. You should wait for a new build to finish, then check your configuration file is up-to-date, run a sync command with this configuration file, and then wait for a sync process to complete. 
+Moreover, storing a configuration file on your machine maybe not as safe as it would like to be. 
+
+The solution is to automate builds data importing within the CI tool you are using. 
+The implementation of such automation is out of the scope for this user guide and can be tricky, but the result worth all the efforts. For more information, consider the [Buildkite CI Integration](https://github.com/platform-platform/monorepo/blob/master/docs/17_buildkite_ci_integration.md) document that provides an example of how to configure automatic builds importing for `Buildkite` CI.
 
 ## Results
 > What was the outcome of the project?

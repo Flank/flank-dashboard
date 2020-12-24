@@ -2,31 +2,61 @@
 # Consider the following links to familiarize yourself with Github Actions:
 # - https://docs.github.com/en/free-pro-team@latest/rest/reference/actions
 # - https://docs.github.com/en/free-pro-team@latest/actions/reference/authentication-in-a-workflow
+#
+# Also, consider the following links to know how GitHub Actions API is used 
+# in the scope of CI Integrations:
+# - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md
+# - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/github_actions/01_github_actions_client.md
+
 
 source:
   # The `github_actions` key defines that the following source config stands for Github Actions integration.
   github_actions:
 
-    # A unique identifier of the Github Actions workflow to integrate.
-    #
-    # This identifier is used to determine a workflow from where we will get new builds.
-    #
-    # You can get it from your Github link. For example: `https://github.com/{repository_owner}/{repository_name}/actions/runs/{workflow_id}`
+    # A unique identifier of the Github Actions workflow.
+    # 
+    # The tool uses this identifier to fetch builds. 
+    # This can be either the workflow ID or a name of the file that defines this workflow 
+    # (for example, `web_actions.yaml`). You can surely use the name of your file as it is 
+    # handier and clearer. To obtain the ID of the desired workflow, consider using the 
+    # GitHub Actions REST API and list your repository workflows: 
+    # - https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#list-repository-workflows.
     workflow_identifier: ...
 
     # A name of the project's repository.
     #
-    # The name is used to associate a repository with the workflows.
+    # The tool uses this name to perform HTTP calls in the scope of the defined repository.
+    # 
+    # You can obtain the repository name from GitHub. 
+    # Browse to your repository and copy the repository name from the top bar. 
+    # The name is the second part of the string the top bar contains: 
+    # - <repository-owner>/<repository-name>.
+    # You can also use the link that leads to your repository. For example: 
+    # - https://github.com/<repository-owner>/<repository-name>
     repository_name: ...
 
     # An owner of the project's repository.
     #
-    # The field is used to associate an owner with the repository described above.
+    # The tool uses this value to perform HTTP calls in the scope of the defined owner.
+    # 
+    # You can obtain the repository owner from GitHub. 
+    # Browse to your repository and copy the repository owner from the top bar. 
+    # This value is the first part of the string the top bar contains: 
+    # - <repository-owner>/<repository-name>.
+    # You can also use the link that leads to your repository. For example: 
+    # - https://github.com/<repository-owner>/<repository-name>
     repository_owner: ...
 
-    # A Github access token using to authenticate you.
-    #
-    # Here is a guide how to create one - https://docs.github.com/en/enterprise/2.17/user/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
+    # A GitHub API Access Token that is used to authenticate HTTP requests.
+    # 
+    # You can create an access token on the Developer Settings page on GitHub. 
+    # The following link leads to the required page: https://github.com/settings/tokens.
+    # This token requires the `repo` scope for private repos and `public_repo` scope for public repos:
+    # - https://docs.github.com/en/free-pro-team@latest/developers/apps/scopes-for-oauth-apps#available-scopes
+    # 
+    # Consider the following links for more information:
+    # - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/github_actions/01_github_actions_client.md#authorization
+    # - https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token
     access_token: ...
 
 destination:
