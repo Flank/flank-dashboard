@@ -100,17 +100,17 @@ Each such client has its own specific list of configuration items it requires. T
 
 | Integration | Type | Key | Template | 
 | --- | --- | --- | --- |
-| GitHub Actions | `source` | `github_actions` | [Configuration template](https://github.com/platform-platform/monorepo/blob/ci_user_guide_design/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) |
-| Jenkins | `source` | `jenkins` | [Configuration template](https://github.com/platform-platform/monorepo/blob/ci_user_guide_design/metrics/ci_integrations/docs/source/jenkins/config/configuration_template.yaml) |
-| Buildkite | `source` | `buildkite` | [Configuration template](https://github.com/platform-platform/monorepo/blob/ci_user_guide_design/metrics/ci_integrations/docs/source/buildkite/config/configuration_template.yaml) |
-| Firestore | `destination` | `firestore` | [Configuration template](https://github.com/platform-platform/monorepo/blob/ci_user_guide_design/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) |
+| GitHub Actions | `source` | `github_actions` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) |
+| Jenkins | `source` | `jenkins` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/jenkins/config/configuration_template.yaml) |
+| Buildkite | `source` | `buildkite` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/buildkite/config/configuration_template.yaml) |
+| Firestore | `destination` | `firestore` | [Configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) |
 
 #### Example
 
 Imagine that you want to expose your GitHub Actions builds to the `Metrics Web Application`. In this case, your `source` integration is GitHub Actions and `destination` is Firestore. Assume that you've already downloaded and configured the CI Integrations tool. The next stage is creating a configuration file for the integrations you require. Let's consider the following steps:
 1. Create a new YAML file with a clear, self-speaking name. Let this file be `github_actions_firestore.yaml`.
-2. Open the [GitHub Actions configuration template](https://github.com/platform-platform/monorepo/blob/ci_user_guide_design/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) and copy the `source` part from it. Paste the copied code to the `github_actions_firestore.yaml`. 
-3. Open the [Firestore configuration template](https://github.com/platform-platform/monorepo/blob/ci_user_guide_design/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) and copy the `destination` part from it. Paste the copied code to the `github_actions_firestore.yaml`.
+2. Open the [GitHub Actions configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) and copy the `source` part from it. Paste the copied code to the `github_actions_firestore.yaml`.
+3. Open the [Firestore configuration template](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) and copy the `destination` part from it. Paste the copied code to the `github_actions_firestore.yaml`.
 4. Fill the configuration file with your values by replacing the `...` for each key. Each configuration template contains the information about how the CI Integration tool uses the values you provide and how you can obtain them. Follow the comments in configuration templates to fill your configuration file with appropriate data.
 5. Save your configuration file and keep it private as most of the values you provide should be kept safe.
 
