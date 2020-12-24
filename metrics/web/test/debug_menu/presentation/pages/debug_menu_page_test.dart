@@ -69,7 +69,7 @@ void main() {
     );
 
     testWidgets(
-      "debug menu is disabled text applies the content header text style from the metrics theme",
+      "applies the content header text style from the metrics theme to the debug menu is disabled text",
       (WidgetTester tester) async {
         final featureConfigNotifier = FeatureConfigNotifierMock();
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
@@ -120,7 +120,7 @@ void main() {
     );
 
     testWidgets(
-      "applies the section header text style from the metrics theme",
+      "applies the section header text style from the metrics theme to performance section header",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(
@@ -149,9 +149,10 @@ void main() {
           );
         });
 
-        final divider = tester.widget<Divider>(find.byType(Divider));
+        final dividers = tester.widgetList<Divider>(find.byType(Divider));
+        final colors = dividers.map((divider) => divider.color);
 
-        expect(divider.color, equals(dividerColor));
+        expect(colors, everyElement(equals(dividerColor)));
       },
     );
   });
