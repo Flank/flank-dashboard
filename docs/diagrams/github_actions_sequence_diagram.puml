@@ -3,8 +3,6 @@
 actor Bob
 
 participant "Awesome Project Actions\n workflow" as AwesomeWorkflow
-' participant "Run tests job" as RunTests
-' participant "Build and publish job" as BuildAndPublish
 participant "Notify about building \nthe Awesome project" as NotifyBuilding
 
 participant "Metrics Integration Actions\n workflow" as IntegrationsWorkflow
