@@ -111,6 +111,7 @@ destination:
     firebase_web_api_key: <FIREBASE_WEB_API_KEY>
     metrics_project_id: <METRICS_PROJECT_ID>
 ```
+
 Well done! Your configuration file is ready to use within the `ci_integrations sync` command. To use it, pass the configuration file path as follows: 
 
 ```bash
