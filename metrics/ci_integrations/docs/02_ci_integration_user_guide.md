@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-Importing builds data to the Metrics project requires using the [`CI Integrations`](https://github.com/platform-platform/monorepo/tree/ci_integrations-snapshot/metrics/ci_integrations) tool. This tool requires configurations to be set up to perform synchronization correctly and make builds data available in the `Metrics Web Application`. This document clarifies using and configuring the `CI Integrations` tool to make it more clear for a user.
+Importing builds data to the Metrics project requires using the [`CI Integrations`](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations) tool. This tool requires configurations to be set up to perform synchronization correctly and make builds data available in the `Metrics Web Application`. This document clarifies using and configuring the `CI Integrations` tool to make it more clear for a user.
 
 ## References
 > Link to supporting documentation, GitHub tickets, etc.
