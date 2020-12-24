@@ -1,0 +1,46 @@
+# A template for ci_integrations config with the Buildkite integration as a `source`.
+# Consider the following links to familiarize yourself with Buildkite:
+# - https://buildkite.com/docs/apis
+# - https://buildkite.com/docs/apis/rest-api/access-token
+#
+# Also, consider the following links to know how Buildkite API is used
+# in the scope of CI Integrations:
+# - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/01_ci_integration_module_architecture.md
+# - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/buildkite/01_buildkite_client.md
+
+source:
+  # The `buildkite` key defines that the following source config stands for Buildkite integration.
+  buildkite:
+    # A Buildkite API Access Token that is used to authenticate HTTP requests.
+    #
+    # You can create an access token on the API Access Tokens page in Personal Settings on Buildkite.
+    # The following link leads to the required page: https://buildkite.com/user/api-access-tokens.
+    # Consider the following link for more information on what REST scopes the CI Integration requires:
+    # - https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/buildkite/01_buildkite_client.md#authorization
+    access_token: ...
+
+    # A unique slug (identifier) of the pipeline on Buildkite.
+    #
+    # This slug is used to define a pipeline, which builds the tool is going to import.
+    # The tool uses this slug to perform HTTP calls in the scope of the defined pipeline
+    # and fetch data of the builds performed by this pipeline.
+    #
+    # You can obtain the pipeline slug using a link that leads to this pipeline on Buildkite.
+    # Browse to Buildkite (https://buildkite.com/) and open the pipelines of your organization.
+    # Then select a pipeline and open its details page. The link of the current page contains the pipeline slug.
+    # For example, `https://buildkite.com/<organization-slug>/<pipeline-slug>`.
+    pipeline_slug: ...
+
+    # A unique slug (identifier) of the organization on Buildkite.
+    #
+    # The tool uses this slug to perform HTTP calls in the scope of the defined organization.
+    # The defined pipeline must belong to the organization with the defined slug.
+    #
+    # Similar to the pipeline slug, you can obtain the organization one using a link.
+    # Browse to Buildkite (https://buildkite.com/) and open the pipelines of your organization.
+    # The link of the current page contains the organization slug.
+    # For example, `https://buildkite.com/<organization-slug>`.
+    organization_slug: ...
+
+destination:
+# Add your destination config here.
