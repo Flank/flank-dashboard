@@ -240,14 +240,12 @@ void main() {
           ProjectGroupsStrings.saveChanges,
         );
         await tester.tap(saveButtonFinder);
-        await tester.pumpAndSettle();
+        await tester.pumpAndSettle(const Duration(seconds: 2));
 
         final updatedProjectGroupCardFinder = find.widgetWithText(
           ProjectGroupCard,
           updatedProjectGroupName,
         );
-
-        await Future.delayed(const Duration(seconds: 2));
 
         tester.takeException();
 
@@ -278,9 +276,7 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.tap(find.byType(MetricsNegativeButton));
-        await tester.pumpAndSettle();
-
-        await Future.delayed(const Duration(seconds: 2));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
 
         tester.takeException();
 
