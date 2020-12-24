@@ -9,7 +9,7 @@ import 'package:metrics/debug_menu/domain/usecases/read_local_config_usecase.dar
 import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
-import 'package:metrics/debug_menu/presentation/view_models/rendered_display_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 import 'package:metrics/util/web_platform.dart';
 import 'package:mockito/mockito.dart';
 

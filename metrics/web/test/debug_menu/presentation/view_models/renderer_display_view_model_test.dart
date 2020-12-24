@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/debug_menu/presentation/view_models/rendered_display_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 
 // ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
 

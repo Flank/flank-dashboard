@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/theme
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_text/style/metrics_text_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/debug_menu/presentation/view_models/rendered_display_view_model.dart';
+import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 import 'package:metrics/debug_menu/presentation/widgets/debug_menu_renderer_display.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';

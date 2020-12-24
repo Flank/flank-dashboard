@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// A view model that represents a current renderer.
+/// A view model that represents data of the current renderer.
 class RendererDisplayViewModel extends Equatable {
-  /// A current renderer's name.
+  /// A name of the current renderer.
   final String currentRenderer;
 
   @override
