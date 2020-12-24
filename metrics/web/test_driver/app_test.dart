@@ -1,5 +1,3 @@
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:metrics/auth/presentation/strings/auth_strings.dart';
@@ -24,9 +22,10 @@ import 'package:metrics/main.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
-import 'package:random_string/random_string.dart';
+import 'package:uuid/uuid.dart';
 
 import 'arguments/model/user_credentials.dart';
+import 'util/test_utils.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -155,25 +154,26 @@ void main() {
   });
 
   group("ProjectGroup page", () {
-    final projectGroupName = _generateRandomString(200);
-    final updatedProjectGroupName = projectGroupName.replaceFirst('i', 'x');
+    final uuid = Uuid();
+    final projectGroupName = uuid.v1();
+    final updatedProjectGroupName = uuid.v1();
 
     testWidgets(
       "shows add project group card button",
       (WidgetTester tester) async {
         await _pumpApp(tester);
 
-        await _openProjectGroupPage(tester);
+        await _openProjectGroupsPage(tester);
 
         expect(find.byType(AddProjectGroupCard), findsOneWidget);
       },
     );
 
     testWidgets(
-      "creates a project group",
+      "allows creating a project group",
       (WidgetTester tester) async {
         await _pumpApp(tester);
-        await _openProjectGroupPage(tester);
+        await _openProjectGroupsPage(tester);
 
         await tester.tap(find.byType(AddProjectGroupCard));
         await tester.pumpAndSettle();
@@ -204,10 +204,10 @@ void main() {
     );
 
     testWidgets(
-      "updates a project group",
+      "allows updating a project group",
       (WidgetTester tester) async {
         await _pumpApp(tester);
-        await _openProjectGroupPage(tester);
+        await _openProjectGroupsPage(tester);
 
         final projectGroupCardFinder = find.widgetWithText(
           ProjectGroupCard,
@@ -215,8 +215,7 @@ void main() {
         );
 
         await tester.ensureVisible(projectGroupCardFinder);
-
-        await _hoverWidget(tester, projectGroupCardFinder);
+        await TestUtils.hoverWidget(tester, projectGroupCardFinder);
 
         final editButtonFinder = find.descendant(
           of: projectGroupCardFinder,
@@ -257,10 +256,10 @@ void main() {
     );
 
     testWidgets(
-      "deletes a project group",
+      "allows deleting a project group",
       (WidgetTester tester) async {
         await _pumpApp(tester);
-        await _openProjectGroupPage(tester);
+        await _openProjectGroupsPage(tester);
 
         final projectGroupCardFinder = find.widgetWithText(
           ProjectGroupCard,
@@ -269,7 +268,7 @@ void main() {
 
         await tester.ensureVisible(projectGroupCardFinder);
 
-        await _hoverWidget(tester, projectGroupCardFinder);
+        await TestUtils.hoverWidget(tester, projectGroupCardFinder);
 
         final deleteButtonFinder = find.descendant(
           of: projectGroupCardFinder,
@@ -322,7 +321,7 @@ Future<void> _pumpApp(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> _openProjectGroupPage(WidgetTester tester) async {
+Future<void> _openProjectGroupsPage(WidgetTester tester) async {
   await _openUserMenu(tester);
 
   await tester.tap(find.text(CommonStrings.projectGroups));
@@ -332,24 +331,4 @@ Future<void> _openProjectGroupPage(WidgetTester tester) async {
 Future<void> _openUserMenu(WidgetTester tester) async {
   await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
   await tester.pumpAndSettle();
-}
-
-Future<void> _hoverWidget(WidgetTester tester, Finder widgetFinder) async {
-  final mouseRegion = tester.firstWidget<MouseRegion>(
-    find.descendant(
-      of: widgetFinder,
-      matching: find.byType(MouseRegion),
-    ),
-  );
-  const pointerEvent = PointerEnterEvent();
-  mouseRegion.onEnter(pointerEvent);
-  await tester.pumpAndSettle();
-}
-
-String _generateRandomString(int length) {
-  const prefix = 'integration_test';
-  final timestamp = DateTime.now().microsecondsSinceEpoch;
-  final string = randomAlpha(length);
-
-  return "${prefix}_${string}_$timestamp";
 }
