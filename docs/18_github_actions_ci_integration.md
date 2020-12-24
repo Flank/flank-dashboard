@@ -31,6 +31,31 @@ This document aims the following goals:
 
 This document does not describe the configuration of building or publishing jobs.
 
+# Coverage artifact uploading
+
+> Explain the process of publishing build artifacts
+
+The `CI Integrations` tool provides an ability to sync the build data with the coverage reports to the Metrics Application. Once you want to include the coverage info in the data imports, you should upload the coverage artifact from the project building job. To export the artifact from the GitHub Actions workflow you can use an [Upload a Build Artifact](https://github.com/marketplace/actions/upload-a-build-artifact) from GitHub Actions Marketplace.
+
+Let's consider the example step that will upload the `coverage-summary.json` artifact: 
+
+```yaml
+- name: Upload coverage report
+  uses: actions/upload-artifact@v2
+  with:
+    name: coverage_report
+    path: directory/coverage/coverage-summary.json
+    if-no-files-found: error
+```
+
+Let's consider the main parameters of this action: 
+
+- `name` is a name of the artifact available in workflow outputs;
+- `path` is a path to the artifact that will be exported;
+- `if-no-files-found` specifies whether this job will fail your workflow if no files found by specified `path`.
+
+For more detailed description of all properties see an [Upload a Build Artifact](https://github.com/marketplace/actions/upload-a-build-artifact) marketplace page.
+
 # CI Integrations tool configuration
 
 > Explain the process of creating the CI Integrations tool configuration
@@ -72,7 +97,7 @@ So, the configuration consists of the following prperties:
 | metrics_project_id       | Public | A firestore document identifier of the project to import data to. |
 
 
-__*Please, NOTE*__ that the `Secret` values must be stored as [GitHub Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets). The configuration file can contain these fields as environment variables. To replace them in the GitHub actions workflow, you can use `gettext` or replace it using the `sed` tool. An example of the step which replaces the environment variables in the configuration file provided below:  
+__*Please, NOTE*__ that the `Secret` values must be stored as [GitHub Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets). The configuration file can contain these fields as environment variables. To replace them in the GitHub actions workflow, you can use `envsubst` command from the `gettext` package or replace it using the `sed` tool. An example of the step which replaces the environment variables in the configuration file provided below:  
 
 ```yaml
       - name: Apply environment variables
@@ -84,7 +109,7 @@ __*Please, NOTE*__ that the `Secret` values must be stored as [GitHub Secrets](h
         run: eval "echo \"$(sed 's/"/\\"/g' awesome_config.yml)\"" >> integration.yml
 ```
 
-As you can see, you should specify all the environment variables used in the configuration file in the `env` section of the step. To get access to the `GitHub Secrets` in the `GitHub Actions`, you can use the following notation `${{ secrets.YOUR_SECRET_NAME }}`, where the `YOUR_SECRET_NAME` is a name of the secret configured in your GitHub Repository. Then you should specify the command used to replace the environment variables in the file. You can use the command from the example that does not require any additional packages installed for macOS and Linux platforms but can be less readable, or use the `gettext` command-line tool to make it more human-readable. The example of using the `gettext` provided below: 
+As you can see, you should specify all the environment variables used in the configuration file in the `env` section of the step. To get access to the `GitHub Secrets` in the `GitHub Actions`, you can use the following notation `${{ secrets.YOUR_SECRET_NAME }}`, where the `YOUR_SECRET_NAME` is a name of the secret configured in your GitHub Repository. Then you should specify the command used to replace the environment variables in the file. You can use the command from the example that does not require any additional packages installed for macOS and Linux platforms but can be less readable, or use the `envsubst` command from the `gettext` command-line tool to make it more human-readable. The example of using the `envsubst` provided below: 
 
 `envsubst < awesome_config.yml > integration.yml`
 
