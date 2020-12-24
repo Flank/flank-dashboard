@@ -100,10 +100,10 @@ Each such client has its own specific list of configuration items it requires. T
 
 | Integration | Type | Key | Template | 
 | --- | --- | --- | --- |
-| GitHub Actions | `source` | `github_actions` | [Configuration template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) |
-| Jenkins | `source` | `jenkins` | [Configuration template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/source/jenkins/config/configuration_template.yaml) |
-| Buildkite | `source` | `buildkite` | [Configuration template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/source/builkite/config/configuration_template.yaml) |
-| Firestore | `destination` | `firestore` | [Configuration template](https://github.com/platform-platform/monorepo/raw/ci_user_guide_design/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) |
+| GitHub Actions | `source` | `github_actions` | [Configuration template](https://github.com/platform-platform/monorepo/blob/ci_user_guide_design/metrics/ci_integrations/docs/source/github_actions/config/configuration_template.yaml) |
+| Jenkins | `source` | `jenkins` | [Configuration template](https://github.com/platform-platform/monorepo/blob/ci_user_guide_design/metrics/ci_integrations/docs/source/jenkins/config/configuration_template.yaml) |
+| Buildkite | `source` | `buildkite` | [Configuration template](https://github.com/platform-platform/monorepo/blob/ci_user_guide_design/metrics/ci_integrations/docs/source/buildkite/config/configuration_template.yaml) |
+| Firestore | `destination` | `firestore` | [Configuration template](https://github.com/platform-platform/monorepo/blob/ci_user_guide_design/metrics/ci_integrations/docs/destination/firestore/config/configuration_template.yaml) |
 
 #### Example
 
