@@ -17,18 +17,6 @@ database "Firestore Database" as Firestore
 Bob -> AwesomeWorkflow : Push commit to master
 activate AwesomeWorkflow
 AwesomeWorkflow -> AwesomeWorkflow : Perform build
-' activate  RunTests
-' alt
-'     RunTests --> AwesomeWorkflow : Tests failed
-' end
-' return Test complete
-
-' AwesomeWorkflow  -> BuildAndPublish : Run building and publishing job
-' activate BuildAndPublish
-' alt
-'     BuildAndPublish --> AwesomeWorkflow : Publishing failed
-' end
-' return Building and publishinng finished
 
 AwesomeWorkflow -> NotifyBuilding : Run notify about building project
 activate NotifyBuilding
