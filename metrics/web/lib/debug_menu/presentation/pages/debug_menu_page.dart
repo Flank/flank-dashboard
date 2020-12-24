@@ -47,7 +47,7 @@ class DebugMenuPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                CommonStrings.performance,
+                DebugMenuStrings.performance,
                 style: headerTextStyle,
               ),
               Padding(

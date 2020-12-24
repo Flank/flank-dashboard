@@ -19,10 +19,6 @@ class CommonStrings {
   static const String delete = 'Delete';
   static const String cancel = 'Cancel';
   static const String users = 'Users';
-  static const String performance = 'Performance';
-  static const String skia = 'SKIA';
-  static const String html = 'HTML';
-  static const String fpsMonitor = 'FPS monitor';
   static const String unknownErrorMessage =
       'An unknown error occurred, please try again.';
   static const String openConnectionFailedErrorMessage =

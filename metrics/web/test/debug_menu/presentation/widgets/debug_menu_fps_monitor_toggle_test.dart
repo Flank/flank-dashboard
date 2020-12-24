@@ -3,11 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/theme_data/debug_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_text/style/metrics_text_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:metrics/debug_menu/presentation/widgets/debug_menu_fps_monitor_toggle.dart';
+import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../test_utils/debug_menu_notifier_mock.dart';
@@ -35,7 +35,7 @@ void main() {
           _DebugMenuFpsMonitorToggleTestbed(),
         );
 
-        expect(find.text(CommonStrings.fpsMonitor), findsOneWidget);
+        expect(find.text(DebugMenuStrings.fpsMonitor), findsOneWidget);
       },
     );
 
@@ -58,7 +58,7 @@ void main() {
         );
 
         final content = tester.widget<Text>(
-          find.text(CommonStrings.fpsMonitor),
+          find.text(DebugMenuStrings.fpsMonitor),
         );
 
         expect(content.style, equals(contentTextStyle));

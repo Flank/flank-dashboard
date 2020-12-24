@@ -132,7 +132,7 @@ void main() {
         });
 
         final header = tester.widget<Text>(
-          find.text(CommonStrings.performance),
+          find.text(DebugMenuStrings.performance),
         );
 
         expect(header.style, equals(headerStyle));

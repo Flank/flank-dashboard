@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/domain/entities/local_config.dart';
 import 'package:metrics/debug_menu/domain/usecases/close_local_config_storage_usecase.dart';
 import 'package:metrics/debug_menu/domain/usecases/open_local_config_storage_usecase.dart';
@@ -10,6 +9,7 @@ import 'package:metrics/debug_menu/domain/usecases/update_local_config_usecase.d
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
+import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 import 'package:metrics/util/web_platform.dart';
 import 'package:mockito/mockito.dart';
 
@@ -426,7 +426,7 @@ void main() {
       () async {
         when(webPlatform.isSkia).thenReturn(true);
         const expectedViewModel = RendererDisplayViewModel(
-          currentRenderer: CommonStrings.skia,
+          currentRenderer: DebugMenuStrings.skia,
         );
 
         final viewModel = notifier.rendererDisplayViewModel;
@@ -440,7 +440,7 @@ void main() {
       () async {
         when(webPlatform.isSkia).thenReturn(false);
         const expectedViewModel = RendererDisplayViewModel(
-          currentRenderer: CommonStrings.html,
+          currentRenderer: DebugMenuStrings.html,
         );
 
         final viewModel = notifier.rendererDisplayViewModel;

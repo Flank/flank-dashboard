@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
+import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 import 'package:provider/provider.dart';
 
 /// A widget that displays the FPS monitor toggle.
@@ -29,7 +29,7 @@ class DebugMenuFpsMonitorToggle extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          CommonStrings.fpsMonitor,
+          DebugMenuStrings.fpsMonitor,
           style: contentTextStyle,
         ),
         Padding(

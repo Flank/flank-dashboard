@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/theme_data/debug_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_text/style/metrics_text_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 import 'package:metrics/debug_menu/presentation/widgets/debug_menu_renderer_display.dart';
 import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
@@ -22,7 +21,7 @@ void main() {
       ),
     );
 
-    const renderer = CommonStrings.skia;
+    const renderer = DebugMenuStrings.skia;
     const rendererDisplayViewModel = RendererDisplayViewModel(
       currentRenderer: renderer,
     );
@@ -50,7 +49,7 @@ void main() {
     testWidgets(
       "displays the renderer text from the given view model",
       (WidgetTester tester) async {
-        const renderer = CommonStrings.skia;
+        const renderer = DebugMenuStrings.skia;
         final rendererViewModel = RendererDisplayViewModel(
           currentRenderer: renderer,
         );
