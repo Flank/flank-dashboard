@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
+import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 
 /// A widget that displays the current renderer.
 class DebugMenuRendererDisplay extends StatelessWidget {
@@ -22,7 +22,7 @@ class DebugMenuRendererDisplay extends StatelessWidget {
     final currentRenderer = rendererDisplayViewModel.currentRenderer;
 
     return Text(
-      CommonStrings.getCurrentRenderer(
+      DebugMenuStrings.getCurrentRenderer(
         currentRenderer,
       ),
       style: contentTextStyle,

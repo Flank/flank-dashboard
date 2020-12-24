@@ -438,9 +438,9 @@ void main() {
     test(
       ".rendererDisplayViewModel returns a view model with html value if the application uses html renderer",
       () async {
-        when(webPlatform.isSkia).thenReturn(true);
+        when(webPlatform.isSkia).thenReturn(false);
         const expectedViewModel = RendererDisplayViewModel(
-          currentRenderer: CommonStrings.skia,
+          currentRenderer: CommonStrings.html,
         );
 
         final viewModel = notifier.rendererDisplayViewModel;

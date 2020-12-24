@@ -34,10 +34,6 @@ class CommonStrings {
   static const String closeConnectionFailedErrorMessage =
       'An error occurred while closing a connection with the persistent store, please try again.';
   static const String debugMenu = 'Debug menu';
-  static const String debugMenuDisabled = 'The Debug Menu feature is disabled.';
-
-  static String getCurrentRenderer(String renderer) =>
-      'Current renderer: $renderer';
 
   static String duration(Duration duration) => prettyDuration(
         duration,

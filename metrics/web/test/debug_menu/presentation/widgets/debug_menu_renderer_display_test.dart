@@ -6,6 +6,7 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_da
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/debug_menu/presentation/view_models/renderer_display_view_model.dart';
 import 'package:metrics/debug_menu/presentation/widgets/debug_menu_renderer_display.dart';
+import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
@@ -13,11 +14,11 @@ import '../../../test_utils/metrics_themed_testbed.dart';
 
 void main() {
   group("DebugMenuRendererDisplay", () {
+    const contentTextStyle = MetricsTextStyle(lineHeightInPixels: 10);
+
     const metricsTheme = MetricsThemeData(
       debugMenuTheme: DebugMenuThemeData(
-        sectionContentTextStyle: MetricsTextStyle(
-          lineHeightInPixels: 10,
-        ),
+        sectionContentTextStyle: contentTextStyle,
       ),
     );
 
@@ -29,9 +30,7 @@ void main() {
     testWidgets(
       "applies the section content text style from the metrics theme",
       (WidgetTester tester) async {
-        final expectedText = CommonStrings.getCurrentRenderer(renderer);
-        final expectedStyle =
-            metricsTheme.debugMenuTheme.sectionContentTextStyle;
+        final expectedText = DebugMenuStrings.getCurrentRenderer(renderer);
 
         await tester.pumpWidget(
           _DebugMenuRendererDisplayTestbed(
@@ -44,37 +43,18 @@ void main() {
           find.text(expectedText),
         );
 
-        expect(content.style, equals(expectedStyle));
+        expect(content.style, equals(contentTextStyle));
       },
     );
 
     testWidgets(
-      "displays the SKIA renderer text if the application uses the Skia renderer",
+      "displays the renderer text from the given view model",
       (WidgetTester tester) async {
         const renderer = CommonStrings.skia;
         final rendererViewModel = RendererDisplayViewModel(
           currentRenderer: renderer,
         );
-        final expectedText = CommonStrings.getCurrentRenderer(renderer);
-
-        await tester.pumpWidget(
-          _DebugMenuRendererDisplayTestbed(
-            rendererDisplayViewModel: rendererViewModel,
-          ),
-        );
-
-        expect(find.text(expectedText), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "displays the HTML renderer text if the application uses the HTML renderer",
-      (WidgetTester tester) async {
-        const renderer = CommonStrings.html;
-        final rendererViewModel = RendererDisplayViewModel(
-          currentRenderer: renderer,
-        );
-        final expectedText = CommonStrings.getCurrentRenderer(renderer);
+        final expectedText = DebugMenuStrings.getCurrentRenderer(renderer);
 
         await tester.pumpWidget(
           _DebugMenuRendererDisplayTestbed(

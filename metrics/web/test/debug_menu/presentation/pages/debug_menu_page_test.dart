@@ -9,6 +9,7 @@ import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/debug_menu/presentation/widgets/debug_menu_fps_monitor_toggle.dart';
 import 'package:metrics/debug_menu/presentation/widgets/debug_menu_renderer_display.dart';
+import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/feature_config/presentation/view_models/debug_menu_feature_config_view_model.dart';
 import 'package:mockito/mockito.dart';
@@ -64,7 +65,7 @@ void main() {
           );
         });
 
-        expect(find.text(CommonStrings.debugMenuDisabled), findsOneWidget);
+        expect(find.text(DebugMenuStrings.debugMenuDisabled), findsOneWidget);
       },
     );
 
@@ -86,7 +87,7 @@ void main() {
         });
 
         final disabledDebugMenuText = tester.widget<Text>(
-          find.text(CommonStrings.debugMenuDisabled),
+          find.text(DebugMenuStrings.debugMenuDisabled),
         );
 
         expect(disabledDebugMenuText.style, equals(headerStyle));

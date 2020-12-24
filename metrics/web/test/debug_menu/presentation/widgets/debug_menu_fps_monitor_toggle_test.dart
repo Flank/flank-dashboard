@@ -18,12 +18,13 @@ import '../../../test_utils/test_injection_container.dart';
 
 void main() {
   group("DebugMenuFpsMonitorToggle", () {
-    const sectionTextStyle = MetricsTextStyle(lineHeightInPixels: 10);
+    const contentTextStyle = MetricsTextStyle(lineHeightInPixels: 10);
 
     const metricsThemeData = MetricsThemeData(
-        debugMenuTheme: DebugMenuThemeData(
-      sectionContentTextStyle: sectionTextStyle,
-    ));
+      debugMenuTheme: DebugMenuThemeData(
+        sectionContentTextStyle: contentTextStyle,
+      ),
+    );
 
     final toggleFinder = find.byType(Toggle);
 
@@ -60,7 +61,7 @@ void main() {
           find.text(CommonStrings.fpsMonitor),
         );
 
-        expect(content.style, equals(sectionTextStyle));
+        expect(content.style, equals(contentTextStyle));
       },
     );
 
