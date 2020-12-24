@@ -2,7 +2,7 @@
 
 > Summary of the proposed change
 
-Describe the integration mechanism of the CI Integrations component to the GitHub Actions to automatically push the build data.
+Describe the integration mechanism of the CI Integrations component to the GitHub Actions to automatically push the build data to Metrics.
 
 # References
 
@@ -191,7 +191,7 @@ jobs:
 
 So, once the `Metrics Integration Actions` workflow receives the `building_project` repository dispatch event, it gets the project that is currently building from the `client_payload` and starts the synchronization job that corresponds to the building project to export the building data. The synchronization job, in its turn, checkouts the repository, waits until the project's building job gets finished, downloads the `CI Integrations` tool, and runs the synchronization process.
 
-__*Please, NOTE*__  that since we are using the [Wait For Check](https://github.com/marketplace/actions/wait-for-check) action that allows us to wait until the job gets finished, we should wait unlit the last workflow job gets finished. Usually, this job is a `Notify about the finishing awesome project build`. It is needed to be sure that the project's building workflow is finished and we can get the building artifacts from this workflow if there any.
+__*Please, NOTE*__  that since we are using the [Wait For Check](https://github.com/marketplace/actions/wait-for-check) action that allows us to wait until the job gets finished, we should wait until the last workflow job gets finished. Usually, this job is a `Notify about the finishing awesome project build`. It is needed to be sure that the project's building workflow is finished and we can get the building artifacts from this workflow if there any.
 
 
 # Dependencies
