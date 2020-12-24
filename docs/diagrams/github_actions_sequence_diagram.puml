@@ -2,11 +2,11 @@
 
 actor Bob
 
-participant "Awesome Project Actions\n workflow" as AwesomeWorkflow
-participant "Notify about building \nthe Awesome project" as NotifyBuilding
+participant "Awesome Project Actions\n **workflow**" as AwesomeWorkflow
+participant "Notify about building \nthe Awesome project\n **job**" as NotifyBuilding
 
-participant "Metrics Integration Actions\n workflow" as IntegrationsWorkflow
-participant "Awesome project build\n data sync" as AwesomeSync
+participant "Metrics Integration Actions\n **workflow**" as IntegrationsWorkflow
+participant "Awesome project build data sync\n **job**" as AwesomeSync
 participant "CI Integrations" as CiIntegrations
 
 database "Firestore Database" as Firestore
