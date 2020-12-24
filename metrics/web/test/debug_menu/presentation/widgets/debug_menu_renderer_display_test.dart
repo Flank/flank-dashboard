@@ -27,6 +27,16 @@ void main() {
     );
 
     testWidgets(
+      "throws an AssertionError if the given renderer display view model is null",
+      (WidgetTester tester) async {
+        expect(
+          () => DebugMenuRendererDisplay(rendererDisplayViewModel: null),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    testWidgets(
       "applies the section content text style from the metrics theme",
       (WidgetTester tester) async {
         final expectedText = DebugMenuStrings.getCurrentRenderer(renderer);

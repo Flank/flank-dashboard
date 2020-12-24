@@ -12,8 +12,9 @@ class DebugMenuRendererDisplay extends StatelessWidget {
   /// with the given [rendererDisplayViewModel].
   const DebugMenuRendererDisplay({
     Key key,
-    this.rendererDisplayViewModel,
-  }) : super(key: key);
+    @required this.rendererDisplayViewModel,
+  }) : assert(rendererDisplayViewModel != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

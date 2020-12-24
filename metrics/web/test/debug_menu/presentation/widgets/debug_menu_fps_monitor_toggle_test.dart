@@ -29,6 +29,16 @@ void main() {
     final toggleFinder = find.byType(Toggle);
 
     testWidgets(
+      "throws an AssertionError if the given fps monitor view model is null",
+      (WidgetTester tester) async {
+        expect(
+          () => DebugMenuFpsMonitorToggle(fpsMonitorViewModel: null),
+          throwsAssertionError,
+        );
+      },
+    );
+
+    testWidgets(
       "displays the fps monitor text",
       (WidgetTester tester) async {
         await tester.pumpWidget(

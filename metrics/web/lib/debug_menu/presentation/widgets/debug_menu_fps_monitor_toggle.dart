@@ -15,8 +15,9 @@ class DebugMenuFpsMonitorToggle extends StatelessWidget {
   /// Creates a new instance of the [DebugMenuFpsMonitorToggle].
   const DebugMenuFpsMonitorToggle({
     Key key,
-    this.fpsMonitorViewModel,
-  }) : super(key: key);
+    @required this.fpsMonitorViewModel,
+  })  : assert(fpsMonitorViewModel != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
