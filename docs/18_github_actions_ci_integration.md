@@ -125,14 +125,14 @@ Once we've finished creating the configuration file, we should configure the Git
 
 As we see in the diagram above, we should configure the following actions for synchronization: 
 
-- [`Notify about the finishing awesome project build`](#Notify-about-the-finishing-awesome-project-build) - the job needed to notify the `Metrics Integration Actions` that some project build was started.
+- [`Notify about the finishing awesome project build`](#Notify-about-the-finishing-awesome-project-build) - the job needed to notify the `Metrics Integration Actions` that some project build is about to finish.
 - [`Metrics Integration Actions`](#Metrics-Integration-Actions) - the workflow needed to export the data to the Metrics Web application using the CI Integrations component.
 
 Let's consider each action in more detail.
 
 ## Notify about the finishing awesome project build
 
-The `Notify about the finishing awesome project build` step notifies the `Metrics Integration Actions` about some project's build finishing. This job should emit a repository dispatch event containing `client_payload` with the `building_awesome_project` boolean field in the `client_payload`. To send the repository dispatch event, we are using the [Repository Dispatch](https://github.com/marketplace/actions/repository-dispatch) action.
+The `Notify about the finishing awesome project build` step notifies the `Metrics Integration Actions` about some project's build is about to finish. This job should emit a repository dispatch event containing `client_payload` with the `building_awesome_project` boolean field in the `client_payload`. To send the repository dispatch event, we are using the [Repository Dispatch](https://github.com/marketplace/actions/repository-dispatch) action.
 
 This job is required because the `CI Integrations` tool only synchronizes the build data, and we should ensure that the build is finished before running the synchronization. It is needed because we should be sure that the `CI Integrations` tool will import the real build status and build duration to the Metrics Application.  Also, the `CI Integrations` tool collects the coverage information for the build assets, and the GitHub Actions exposes the assets only when the workflow finishes.
 
@@ -164,7 +164,7 @@ So, the `Notify about the finishing awesome project build` for this project will
           client-payload: '{"building_awesome_project": "true"}'
 ```
 
-As you can see above, the `Notify about building the Awesome project` uses some `ACTIONS_TOKEN` secret environment variable. This secret is a [GitHub personal access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) configured to have access to all public and private repositories of the user.
+As you can see above, the `Notify about building the Awesome project` uses `ACTIONS_TOKEN` secret environment variable. This secret is a [GitHub personal access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) configured to have access to all public and private repositories of the user.
 
 
 ## Metrics Integration Actions
