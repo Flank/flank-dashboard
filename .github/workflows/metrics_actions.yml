@@ -104,8 +104,8 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          channel: "beta"
-          flutter-version: "1.24.0-10.2.pre"
+          channel: beta
+          flutter-version: 1.24.0-10.2.pre
 
       - uses: cedx/setup-dart@v2
         with:
