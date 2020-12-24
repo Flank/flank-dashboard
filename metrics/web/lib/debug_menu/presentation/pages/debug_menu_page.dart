@@ -31,7 +31,7 @@ class DebugMenuPage extends StatelessWidget {
       padding: const EdgeInsets.only(left: 48.0),
       body: Consumer<DebugMenuNotifier>(
         builder: (_, notifier, __) {
-          final fpsMonitorViewModel = notifier.localConfigFpsMonitorViewModel;
+          final fpsMonitorViewModel = notifier.fpsMonitorViewModel;
           final rendererDisplayViewModel = notifier.rendererDisplayViewModel;
 
           if (!isDebugMenuEnabled) {
@@ -45,7 +45,10 @@ class DebugMenuPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(CommonStrings.performance, style: headerTextStyle),
+              Text(
+                CommonStrings.performance,
+                style: headerTextStyle,
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Divider(

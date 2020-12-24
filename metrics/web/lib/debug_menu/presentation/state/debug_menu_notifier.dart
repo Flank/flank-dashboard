@@ -35,7 +35,7 @@ class DebugMenuNotifier extends ChangeNotifier {
 
   /// A view model that holds the [LocalConfig] data
   /// for the FPS monitor feature.
-  LocalConfigFpsMonitorViewModel _localConfigFpsMonitorViewModel;
+  LocalConfigFpsMonitorViewModel _fpsMonitorViewModel;
 
   /// A [LocalConfig] containing the current configuration values.
   LocalConfig _localConfig;
@@ -54,8 +54,8 @@ class DebugMenuNotifier extends ChangeNotifier {
 
   /// A view model that provides the [LocalConfig] data
   /// for the FPS monitor feature.
-  LocalConfigFpsMonitorViewModel get localConfigFpsMonitorViewModel =>
-      _localConfigFpsMonitorViewModel;
+  LocalConfigFpsMonitorViewModel get fpsMonitorViewModel =>
+      _fpsMonitorViewModel;
 
   /// Provides an error description that occurred
   /// during updating the [LocalConfig].
@@ -139,7 +139,7 @@ class DebugMenuNotifier extends ChangeNotifier {
   void _setLocalConfig(LocalConfig config) {
     _localConfig = config;
 
-    _localConfigFpsMonitorViewModel = LocalConfigFpsMonitorViewModel(
+    _fpsMonitorViewModel = LocalConfigFpsMonitorViewModel(
       isEnabled: _localConfig.isFpsMonitorEnabled,
     );
   }

@@ -10,7 +10,7 @@ import 'package:metrics/debug_menu/presentation/view_models/rendered_display_vie
 class DebugMenuNotifierStub extends ChangeNotifier
     implements DebugMenuNotifier {
   @override
-  LocalConfigFpsMonitorViewModel get localConfigFpsMonitorViewModel =>
+  LocalConfigFpsMonitorViewModel get fpsMonitorViewModel =>
       const LocalConfigFpsMonitorViewModel(isEnabled: true);
 
   @override

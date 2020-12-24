@@ -22,7 +22,9 @@ class DebugMenuRendererDisplay extends StatelessWidget {
     final currentRenderer = rendererDisplayViewModel.currentRenderer;
 
     return Text(
-      CommonStrings.getCurrentRenderer(currentRenderer),
+      CommonStrings.getCurrentRenderer(
+        currentRenderer,
+      ),
       style: contentTextStyle,
     );
   }

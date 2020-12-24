@@ -193,7 +193,7 @@ void main() {
         when(readUseCase()).thenReturn(localConfig);
 
         await notifier.initializeLocalConfig();
-        final viewModel = notifier.localConfigFpsMonitorViewModel;
+        final viewModel = notifier.fpsMonitorViewModel;
 
         expect(viewModel, equals(fpsMonitorViewModel));
       },
@@ -210,7 +210,7 @@ void main() {
         );
 
         await notifier.initializeLocalConfig();
-        final actualModel = notifier.localConfigFpsMonitorViewModel;
+        final actualModel = notifier.fpsMonitorViewModel;
 
         expect(actualModel, equals(expectedViewModel));
       },
@@ -225,7 +225,7 @@ void main() {
         when(readUseCase()).thenThrow(const PersistentStoreException());
 
         await notifier.initializeLocalConfig();
-        final actualModel = notifier.localConfigFpsMonitorViewModel;
+        final actualModel = notifier.fpsMonitorViewModel;
 
         expect(actualModel, equals(expectedViewModel));
       },
@@ -236,7 +236,7 @@ void main() {
       () {
         notifier.initializeDefaults();
 
-        final viewModel = notifier.localConfigFpsMonitorViewModel;
+        final viewModel = notifier.fpsMonitorViewModel;
 
         expect(viewModel.isEnabled, isFalse);
       },
@@ -274,8 +274,7 @@ void main() {
       () {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.localConfigFpsMonitorViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -297,8 +296,7 @@ void main() {
       () async {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.localConfigFpsMonitorViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -320,8 +318,7 @@ void main() {
       () {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.localConfigFpsMonitorViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -339,12 +336,11 @@ void main() {
     );
 
     test(
-      ".toggleFpsMonitor() updates the local config fps monitor view model",
+      ".toggleFpsMonitor() updates the fps monitor view model",
       () async {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.localConfigFpsMonitorViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -359,7 +355,7 @@ void main() {
         );
 
         await notifier.toggleFpsMonitor();
-        final viewModel = notifier.localConfigFpsMonitorViewModel;
+        final viewModel = notifier.fpsMonitorViewModel;
 
         expect(viewModel, equals(expectedViewModel));
       },
@@ -370,8 +366,7 @@ void main() {
       () async {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.localConfigFpsMonitorViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );
@@ -391,8 +386,7 @@ void main() {
       () async {
         notifier.initializeDefaults();
 
-        final isFpsMonitorEnabled =
-            notifier.localConfigFpsMonitorViewModel.isEnabled;
+        final isFpsMonitorEnabled = notifier.fpsMonitorViewModel.isEnabled;
         final expectedParam = LocalConfigParam(
           isFpsMonitorEnabled: !isFpsMonitorEnabled,
         );

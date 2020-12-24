@@ -28,7 +28,10 @@ class DebugMenuFpsMonitorToggle extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(CommonStrings.fpsMonitor, style: contentTextStyle),
+        Text(
+          CommonStrings.fpsMonitor,
+          style: contentTextStyle,
+        ),
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Toggle(

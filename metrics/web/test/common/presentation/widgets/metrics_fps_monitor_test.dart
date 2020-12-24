@@ -46,7 +46,7 @@ void main() {
     testWidgets(
       "displays the disabled FPS monitor if the fps monitor view model is not initialized",
       (tester) async {
-        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(null);
+        when(debugMenuNotifier.fpsMonitorViewModel).thenReturn(null);
 
         await tester.pumpWidget(
           _MetricsFPSMonitorTestbed(
@@ -63,7 +63,7 @@ void main() {
     testWidgets(
       "displays the enabled FPS monitor if it is enabled in the debug menu notifier",
       (tester) async {
-        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
+        when(debugMenuNotifier.fpsMonitorViewModel).thenReturn(
           const LocalConfigFpsMonitorViewModel(isEnabled: true),
         );
 
@@ -82,7 +82,7 @@ void main() {
     testWidgets(
       "displays the disabled FPS monitor if it is disabled in the debug menu notifier",
       (tester) async {
-        when(debugMenuNotifier.localConfigFpsMonitorViewModel).thenReturn(
+        when(debugMenuNotifier.fpsMonitorViewModel).thenReturn(
           const LocalConfigFpsMonitorViewModel(isEnabled: false),
         );
 
