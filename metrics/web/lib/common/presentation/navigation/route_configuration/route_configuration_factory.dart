@@ -12,11 +12,11 @@ class RouteConfigurationFactory {
   /// If the given [Uri] contains the route name that does not match any of
   /// [RouteName]s, returns [MetricsRoutes.dashboard].
   RouteConfiguration create(Uri uri) {
-    if (uri == null) return MetricsRoutes.loading;
+    final pathSegments = uri?.pathSegments;
 
-    final pathSegments = uri.pathSegments;
-
-    if (pathSegments.isEmpty) return MetricsRoutes.loading;
+    if (pathSegments == null || pathSegments.isEmpty) {
+      return MetricsRoutes.loading;
+    }
 
     final routeName = pathSegments.first;
 
