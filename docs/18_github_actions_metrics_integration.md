@@ -1,20 +1,21 @@
-# CI Integrations GitHub Actions integration.
+# Metrics GitHub Actions integration.
 
 > Summary of the proposed change
 
-Describe the integration mechanism of the CI Integrations component to the GitHub Actions to automatically push the build data to Metrics.
+Describe Metrics integration for projects that use GitHub Actions.
 
 # References
 
 > Link to supporting documentation, GitHub tickets, etc.
-
+>
+- [Coverage converter](metrics/coverage_converter/docs/01_coverage_converter_design.md)
 - [CI integrations](metrics/ci_integrations/docs/01_ci_integration_module_architecture.md)
 
 # Motivation
 
 > What problem is this project solving?
 
-This document describes the configuration process of the CI Integrations to automatically synchronize the GitHub Actions build data to the Metrics Web application.
+This document describes the configuration process of GitHub Actions to syncronize build data with Metrics application.
 
 # Goals
 
@@ -22,6 +23,7 @@ This document describes the configuration process of the CI Integrations to auto
 
 This document aims the following goals: 
 
+- Code coverage data export configuration.
 - Explain the CI Integrations configuration process.
 - Explain the mechanism of automation build imports using the GitHub Actions and CI Integrations tool.
 
@@ -36,6 +38,8 @@ This document does not describe the configuration of building or publishing jobs
 > Explain the process of publishing build artifacts
 
 The `CI Integrations` tool provides an ability to sync the build data with the coverage reports to the Metrics Application. Once you want to include the coverage info in the data imports, you should upload the coverage artifact from the project building job. To export the artifact from the GitHub Actions workflow you can use an [Upload a Build Artifact](https://github.com/marketplace/actions/upload-a-build-artifact) from GitHub Actions Marketplace.
+
+Exported artifact should be in a [specific format](metrics/ci_integrations/docs/01_ci_integration_module_architecture.md#coverage-report-format). To help with coverage format conversions you can use [Coverage converter](metrics/coverage_converter) tool if your source format is supported by the tool.
 
 Let's consider the example step that will upload the `coverage-summary.json` artifact: 
 
@@ -93,7 +97,7 @@ So, the configuration consists of the following prperties:
 | firebase_project_id      | Public | A firebase project identifier where to export the data. |
 | firebase_user_email      | Secret | A firebase user email used to log in to the Metrics Web Application. |
 | firebase_user_pass       | Secret | A firebase user password used to log in to the Metrics Web Application. |
-| firebase_public_api_key  | Public/Secret |  A public API key that could be created using the Google Cloud Platform in the [API & Services credentials](https://console.cloud.google.com/apis/credentials?project=metrics-d9c67) section. This key should have access to the `Identity Toolkit API`. For more information about Firebase API Keys check [this article](https://firebase.google.com/docs/projects/api-keys). <br /> This value can be stored both as a secret and as a public one, bet we suggest storing it as a secret to be a bit safer. |
+| firebase_public_api_key  | Public/Secret |  A public API key that could be created using the Google Cloud Platform in the [API & Services credentials](https://console.cloud.google.com/apis/credentials?project=metrics-d9c67) section. This key should have access to the `Identity Toolkit API`. For more information about Firebase API Keys check [this article](https://firebase.google.com/docs/projects/api-keys). <br /> This value can be stored both as a secret and as a public one, bet we suggest storing it as a secret as it's hard to place proper restrictions on it (GitHub Actions builders pool of IP addresses is large, etc.). |
 | metrics_project_id       | Public | A firestore document identifier of the project to import data to. |
 
 __*Please, NOTE*__ that the `Secret` values must be stored as [GitHub Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets). The configuration file can contain these fields as environment variables. To replace them in the GitHub actions workflow, you can use `envsubst` command from the `gettext` package or replace it using the `sed` tool. An example of the step which replaces the environment variables in the configuration file provided below:  
@@ -108,7 +112,9 @@ __*Please, NOTE*__ that the `Secret` values must be stored as [GitHub Secrets](h
         run: eval "echo \"$(sed 's/"/\\"/g' awesome_config.yml)\"" >> integration.yml
 ```
 
-As you can see, you should specify all the environment variables used in the configuration file in the `env` section of the step. To get access to the `GitHub Secrets` in the `GitHub Actions`, you can use the following notation `${{ secrets.YOUR_SECRET_NAME }}`, where the `YOUR_SECRET_NAME` is a name of the secret configured in your GitHub Repository. Then you should specify the command used to replace the environment variables in the file. You can use the command from the example that does not require any additional packages installed for macOS and Linux platforms but can be less readable, or use the `envsubst` command from the `gettext` command-line tool to make it more human-readable. The example of using the `envsubst` provided below: 
+As you can see, you should specify all the environment variables used in the configuration file in the `env` section of the step. To get access to the `GitHub Secrets` in the `GitHub Actions`, you can use the following notation `${{ secrets.YOUR_SECRET_NAME }}`, where the `YOUR_SECRET_NAME` is a name of the secret configured in your GitHub Repository.
+
+Then you should specify the command used to replace the environment variables in the file. You can use the command from the example that does not require any additional packages installed for macOS and Linux platforms but can be less readable, or use the `envsubst` command from the `gettext` command-line tool to make it more human-readable. The example of using the `envsubst` provided below: 
 
 `envsubst < awesome_config.yml > integration.yml`
 

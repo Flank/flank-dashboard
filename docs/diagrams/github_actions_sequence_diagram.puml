@@ -16,6 +16,11 @@ Bob -> AwesomeWorkflow : Push commit to master
 activate AwesomeWorkflow
 AwesomeWorkflow -> AwesomeWorkflow : Perform build
 
+opt coverage export configured
+    AwesomeWorkflow -> AwesomeWorkflow : Convert coverage to CI Integrations format
+    AwesomeWorkflow -> AwesomeWorkflow : Export coverage artifact
+end
+
 AwesomeWorkflow -> NotifyBuilding : Run notify about building project
 activate NotifyBuilding
 
