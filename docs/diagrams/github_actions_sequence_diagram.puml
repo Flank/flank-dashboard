@@ -3,7 +3,7 @@
 actor Bob
 
 participant "Awesome Project Actions\n **workflow**" as AwesomeWorkflow
-participant "Notify about building \nthe Awesome project\n **job**" as NotifyBuilding
+participant "Notify about finishing \nthe Awesome project build\n **job**" as NotifyBuilding
 
 participant "Metrics Integration Actions\n **workflow**" as IntegrationsWorkflow
 participant "Awesome project build data sync\n **job**" as AwesomeSync
@@ -21,10 +21,10 @@ opt coverage export configured
     AwesomeWorkflow -> AwesomeWorkflow : Export coverage artifact
 end
 
-AwesomeWorkflow -> NotifyBuilding : Run notify about building project
+AwesomeWorkflow -> NotifyBuilding : Run notify about finishing project build
 activate NotifyBuilding
 
-NotifyBuilding -> IntegrationsWorkflow : Notify about Awesome project is building
+NotifyBuilding -> IntegrationsWorkflow : Notify about finishing Awesome project build
 activate IntegrationsWorkflow
 
 IntegrationsWorkflow -> AwesomeSync : Run sync job
