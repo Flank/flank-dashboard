@@ -3,10 +3,8 @@
 actor Bob
 
 participant "Awesome Project Actions\n **workflow**" as AwesomeWorkflow
-participant "Notify about finishing \nthe Awesome project build\n **job**" as NotifyBuilding
 
 participant "Metrics Integration Actions\n **workflow**" as IntegrationsWorkflow
-participant "Awesome project build data sync\n **job**" as AwesomeSync
 participant "CI Integrations" as CiIntegrations
 
 database "Firestore Database" as Firestore
@@ -14,36 +12,51 @@ database "Firestore Database" as Firestore
 
 Bob -> AwesomeWorkflow : Push commit to master
 activate AwesomeWorkflow
-AwesomeWorkflow -> AwesomeWorkflow : Perform build
+
+activate AwesomeWorkflow
+AwesomeWorkflow -> AwesomeWorkflow : Start build job
+activate AwesomeWorkflow #DarkSalmon
+
 
 opt coverage export configured
     AwesomeWorkflow -> AwesomeWorkflow : Convert coverage to CI Integrations format
     AwesomeWorkflow -> AwesomeWorkflow : Export coverage artifact
 end
+deactivate AwesomeWorkflow
 
-AwesomeWorkflow -> NotifyBuilding : Run notify about finishing project build
-activate NotifyBuilding
+AwesomeWorkflow -[hidden]> IntegrationsWorkflow
 
-NotifyBuilding -> IntegrationsWorkflow : Notify about finishing Awesome project build
+opt other jobs configured
+AwesomeWorkflow -> AwesomeWorkflow : Start publish (or any other) job
+activate AwesomeWorkflow #DarkSalmon
+
+deactivate AwesomeWorkflow
+end
+
+AwesomeWorkflow -[hidden]> IntegrationsWorkflow
+AwesomeWorkflow -> AwesomeWorkflow : Run notify about finishing project job
+activate AwesomeWorkflow #DarkSalmon
+
+AwesomeWorkflow -> IntegrationsWorkflow : Notify about finishing Awesome project workflow
 activate IntegrationsWorkflow
-
-IntegrationsWorkflow -> AwesomeSync : Run sync job
-activate AwesomeSync
-
-NotifyBuilding --> AwesomeWorkflow : Notification sent
-deactivate NotifyBuilding
 
 AwesomeWorkflow --> Bob : Workflow run finished
 deactivate AwesomeWorkflow
+deactivate AwesomeWorkflow
+deactivate AwesomeWorkflow
 
-AwesomeSync -> AwesomeSync : Wait until Awesome Project Actions Workflow got finished
+IntegrationsWorkflow -> IntegrationsWorkflow : Run sync job
+activate IntegrationsWorkflow #DarkSalmon
 
-AwesomeSync -> CiIntegrations : Run sync command
+IntegrationsWorkflow -> IntegrationsWorkflow : Wait until Awesome Project Actions Workflow got finished
+IntegrationsWorkflow -> CiIntegrations : Run sync command
 activate CiIntegrations
 
-CiIntegrations -> Firestore : Sync build data
+CiIntegrations <-> Firestore : Sync build data
 return Sync command finished
-AwesomeSync --> IntegrationsWorkflow : Sync finished
+
 IntegrationsWorkflow --> Bob : Sync finished
+deactivate IntegrationsWorkflow
+deactivate IntegrationsWorkflow
 
 @enduml
