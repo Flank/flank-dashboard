@@ -149,10 +149,10 @@ Also, to reduce the amount of time taken for the `Metrics Integration Actions` w
 
 Let's consider the example of the `Notify about the finishing awesome project build` job for `Awesome project` in our repository: 
 
-Assume we have a workflow containing the following jobs: 
+Assume we have a workflow containing the following jobs (note that this is an imaginary setup, your real configuration most likely be different): 
 
-- `Run tests` with `run_awesome_tests` identifier.
-- `Build and publish` with `build_and_publish_app` identifier.
+- `Build Awesome Project` with `build_awesome_project` identifier.
+- `Publish Awesome Project` with `publish_awesome_project` identifier.
 
 
 So, the `Notify about the finishing awesome project build` for this project will look like this: 
@@ -161,7 +161,7 @@ So, the `Notify about the finishing awesome project build` for this project will
   notify-actions:
     name: Notify about finishing the Awesome project build
     runs-on: macos-latest
-    needs: [ run_awesome_tests, build_and_publish_app ]
+    needs: [ build_awesome_project, publish_awesome_project ]
     if: "always()"
     steps:
       - name: Notify about finishing the Awesome project build
@@ -169,7 +169,7 @@ So, the `Notify about the finishing awesome project build` for this project will
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           repository: platform-platform/monorepo
-          event-type: building_project
+          event-type: finish_building_project
           client-payload: '{"finishing_awesome_project_build": "true"}'
 ```
 
@@ -178,7 +178,7 @@ As you can see above, the `Notify about finishing the Awesome project build` use
 
 ## Metrics Integration Actions
 
-A `Metrics Integration Actions` is a workflow used to export the build data to the Metrics Web application. This workflow triggers on repository dispatch event with `building_project` type sent by `Notify about the finishing awesome project build` job. The `building_project` repository dispatch event, in its turn, should contain the information about which project build finishes as a `client_payload` JSON. 
+A `Metrics Integration Actions` is a workflow used to export the build data to the Metrics Web application. This workflow triggers on repository dispatch event with `finish_building_project` type sent by `Notify about the finishing awesome project build` job. The `finish_building_project` repository dispatch event, in its turn, should contain the information about which project build finishes as a `client_payload` JSON. 
 
 Let's consider the sample `Metrics Integration Actions` workflow file: 
 
@@ -187,7 +187,7 @@ name: Metrics Integration Actions
 
 on:
   repository_dispatch:
-    types: [ building_project ]
+    types: [ finish_building_project ]
 
 jobs:
   awesome_project_sync:
@@ -223,7 +223,7 @@ jobs:
         run: ./ci_integrations sync --config-file .metrics/integration.yml
 ```
 
-So, once the `Metrics Integration Actions` workflow receives the `building_project` repository dispatch event, it gets the project that is currently building from the `client_payload` and starts the synchronization job that corresponds to the building project to export the building data. The synchronization job, in its turn, checkouts the repository, waits until the project's building job gets finished, downloads the `CI Integrations` tool, and runs the synchronization process.
+So, once the `Metrics Integration Actions` workflow receives the `finish_building_project` repository dispatch event, it gets the project that is currently building from the `client_payload` and starts the synchronization job that corresponds to the building project to export the building data. The synchronization job, in its turn, checkouts the repository, waits until the project's building job gets finished, downloads the `CI Integrations` tool, and runs the synchronization process.
 
 
 # Dependencies
