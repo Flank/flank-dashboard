@@ -27,7 +27,7 @@ deactivate AwesomeWorkflow
 AwesomeWorkflow -[hidden]> IntegrationsWorkflow
 
 opt other jobs configured
-AwesomeWorkflow -> AwesomeWorkflow : Start publish (or any other) job
+AwesomeWorkflow -> AwesomeWorkflow : Start other job (ex: publish build)
 activate AwesomeWorkflow #DarkSalmon
 
 deactivate AwesomeWorkflow
