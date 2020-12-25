@@ -93,9 +93,8 @@ So, the configuration consists of the following prperties:
 | firebase_project_id      | Public | A firebase project identifier where to export the data. |
 | firebase_user_email      | Secret | A firebase user email used to log in to the Metrics Web Application. |
 | firebase_user_pass       | Secret | A firebase user password used to log in to the Metrics Web Application. |
-| firebase_public_api_key  | Secret | A public API key that could be created using the Google Cloud Platform in the [API & Services credentials](https://console.cloud.google.com/apis/credentials?project=metrics-d9c67) section. This key should have access to the `Identity Toolkit API`. For more information about Firebase API Keys check [this article](https://firebase.google.com/docs/projects/api-keys). |
+| firebase_public_api_key  | Public/Secret |  A public API key that could be created using the Google Cloud Platform in the [API & Services credentials](https://console.cloud.google.com/apis/credentials?project=metrics-d9c67) section. This key should have access to the `Identity Toolkit API`. For more information about Firebase API Keys check [this article](https://firebase.google.com/docs/projects/api-keys). <br /> This value can be stored both as a secret and as a public one, bet we suggest storing it as a secret to be a bit safer. |
 | metrics_project_id       | Public | A firestore document identifier of the project to import data to. |
-
 
 __*Please, NOTE*__ that the `Secret` values must be stored as [GitHub Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets). The configuration file can contain these fields as environment variables. To replace them in the GitHub actions workflow, you can use `envsubst` command from the `gettext` package or replace it using the `sed` tool. An example of the step which replaces the environment variables in the configuration file provided below:  
 
