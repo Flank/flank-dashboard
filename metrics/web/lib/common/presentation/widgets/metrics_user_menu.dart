@@ -106,7 +106,7 @@ class MetricsUserMenu extends StatelessWidget {
                         onTap: () {
                           Navigator.pushNamed(
                             context,
-                            RouteName.debugMenu,
+                            MetricsRoutes.debugMenu.path,
                           );
                         },
                         builder: (context, isHovered, child) => child,

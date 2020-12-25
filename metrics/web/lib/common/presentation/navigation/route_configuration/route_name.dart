@@ -14,6 +14,9 @@ class RouteName extends Enum<String> {
   /// A route name of the loading page.
   static const loading = RouteName._('loading');
 
+  /// A route name of the debug menu page.
+  static const debugMenu = RouteName._('debugMenu');
+
   /// Creates a new instance of the [RouteName].
   const RouteName._(String value) : super(value);
 

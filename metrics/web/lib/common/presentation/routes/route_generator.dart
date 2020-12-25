@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
-import 'package:metrics/common/presentation/pages/loading_page.dart';
-import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
-import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
@@ -35,15 +32,14 @@ class RouteGenerator {
       );
     }
 
-    if (settings.name == MetricsRoutes.dashboard.path) {
-    if (settings.name == RouteName.debugMenu) {
+    if (settings.name == MetricsRoutes.debugMenu.path) {
       return _createMetricsPageRoute(
-        name: RouteName.debugMenu,
+        name: MetricsRoutes.debugMenu.path,
         widget: const DebugMenuPage(),
       );
     }
 
-    if (settings.name == RouteName.dashboard) {
+    if (settings.name == MetricsRoutes.dashboard.path) {
       return _createMetricsPageRoute(
         name: MetricsRoutes.dashboard.path,
         widget: DashboardPage(),

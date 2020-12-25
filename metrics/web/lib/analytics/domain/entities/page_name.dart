@@ -12,7 +12,7 @@ class PageName extends Enum<String> {
   static const PageName projectGroupsPage = PageName._('/projectGroups');
 
   /// A [PageName] that represents the debug menu page name.
-  static const PageName debugMenuPage = PageName._(RouteName.debugMenu);
+  static const PageName debugMenuPage = PageName._('/debugMenu');
 
   /// A [Set] that contains all available [PageName]s.
   static const Set<PageName> values = {

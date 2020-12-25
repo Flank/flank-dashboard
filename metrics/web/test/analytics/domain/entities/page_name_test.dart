@@ -22,10 +22,10 @@ void main() {
       expect(projectGroupPage.value, equals(MetricsRoutes.projectGroups.path));
     });
 
-    test(".debugMenuPage value equals to the debug menu route name", () {
+    test(".debugMenuPage value equals to the debug menu route path", () {
       const debugMenuPage = PageName.debugMenuPage;
 
-      expect(debugMenuPage.value, equals(RouteName.debugMenu));
+      expect(debugMenuPage.value, equals(MetricsRoutes.debugMenu.path));
     });
 
     test(".values contains all page names", () {

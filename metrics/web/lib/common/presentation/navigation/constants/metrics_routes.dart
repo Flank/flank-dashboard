@@ -29,4 +29,11 @@ class MetricsRoutes {
     path: '/${RouteName.projectGroups}',
     authorizationRequired: true,
   );
+
+  /// A [RouteConfiguration] for the debug menu page.
+  static final RouteConfiguration debugMenu = RouteConfiguration(
+    name: RouteName.debugMenu,
+    path: '/${RouteName.debugMenu}',
+    authorizationRequired: true,
+  );
 }

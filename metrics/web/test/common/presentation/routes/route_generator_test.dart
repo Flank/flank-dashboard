@@ -70,11 +70,11 @@ void main() {
       ".generateRoute() generates a route to the debug menu page if a route name is debugMenu",
       () {
         final MetricsPageRoute route = RouteGenerator.generateRoute(
-          settings: const RouteSettings(name: RouteName.debugMenu),
+          settings: RouteSettings(name: MetricsRoutes.debugMenu.path),
           isLoggedIn: true,
         );
 
-        expect(route.settings.name, equals(RouteName.debugMenu));
+        expect(route.settings.name, equals(MetricsRoutes.debugMenu.path));
       },
     );
   });
