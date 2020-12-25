@@ -36,11 +36,11 @@ This document does not describe the configuration of building or publishing jobs
 
 > Explain the process of creating the GitHub Actions used to synchronize the build data
 
-Once we've finished creating the configuration file, we should configure the GitHub Actions, which will export the build data to the Metrics Web application. Let's review a sequence diagram that will show the main actions and explain the relationships between them:
+Let's review a sequence diagram that will show the main aspects of GitHub Actions configuration and explain the relationships between them:
 
 ![GitHub Actions Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/github_actions_integrations_doc/docs/diagrams/github_actions_sequence_diagram.puml)
 
-As we see in the diagram above, we should configure the following actions for synchronization: 
+As we see in the diagram above, we should perform the following actions: 
 
 - [Coverage artifact uploading](#Coverage-artifact-uploading) - Optional step to upload build coverage data.
 - [Notify about the finishing awesome project build](#Notify-about-the-finishing-awesome-project-build) - the job needed to notify the `Metrics Integration Actions` that Awesome project build is about to finish.
