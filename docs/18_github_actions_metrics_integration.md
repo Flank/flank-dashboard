@@ -38,7 +38,7 @@ This document does not describe the configuration of building or publishing jobs
 
 Let's review a sequence diagram that will show the main aspects of GitHub Actions configuration and explain the relationships between them:
 
-![GitHub Actions Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/github_actions_integrations_doc/docs/diagrams/github_actions_sequence_diagram.puml)
+![GitHub Actions Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://raw.githubusercontent.com/platform-platform/monorepo/master/docs/diagrams/github_actions_sequence_diagram.puml)
 
 As we see in the diagram above, we should perform the following actions: 
 
