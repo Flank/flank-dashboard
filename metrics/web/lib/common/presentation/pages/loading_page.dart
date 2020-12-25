@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/common/presentation/routes/route_name.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
 import 'package:metrics/debug_menu/domain/entities/local_config.dart';
@@ -21,7 +22,7 @@ class LoadingPage extends StatefulWidget {
   const LoadingPage({
     Key key,
     String routeName,
-  })  : routeName = routeName ?? RouteName.dashboard,
+  })  : routeName = routeName ?? "/${RouteName.dashboard}",
         super(key: key);
 
   @override
@@ -193,14 +194,14 @@ class _LoadingPageState extends State<LoadingPage>
   /// Navigates depending on the [_isLoaded] state.
   ///
   /// If [_isLoggedIn], navigates to the [LoadingPage.routeName].
-  /// Otherwise, navigates to the [RouteName.login].
+  /// Otherwise, navigates to the [MetricsRoutes.login].
   void _navigateIfLoaded() {
     if (!_isLoaded) return;
 
     if (_isLoggedIn) {
       _navigateTo(widget.routeName);
     } else {
-      _navigateTo(RouteName.login);
+      _navigateTo(MetricsRoutes.login.path);
     }
   }
 

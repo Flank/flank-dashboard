@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
 import 'package:metrics/common/presentation/routes/route_generator.dart';
-import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
@@ -22,11 +22,11 @@ void main() {
       ".generateRoute() generates a route to the login page if a user is not logged in",
       () {
         final MetricsPageRoute route = RouteGenerator.generateRoute(
-          settings: const RouteSettings(name: RouteName.login),
+          settings: RouteSettings(name: MetricsRoutes.login.path),
           isLoggedIn: false,
         );
 
-        expect(route.settings.name, equals(RouteName.login));
+        expect(route.settings.name, equals(MetricsRoutes.login.path));
       },
     );
 
@@ -34,11 +34,11 @@ void main() {
       ".generateRoute() generates a route to the dashboard page if a user is logged in",
       () {
         final MetricsPageRoute route = RouteGenerator.generateRoute(
-          settings: const RouteSettings(name: RouteName.login),
+          settings: RouteSettings(name: MetricsRoutes.login.path),
           isLoggedIn: true,
         );
 
-        expect(route.settings.name, equals(RouteName.dashboard));
+        expect(route.settings.name, equals(MetricsRoutes.dashboard.path));
       },
     );
 
@@ -50,7 +50,7 @@ void main() {
           isLoggedIn: true,
         );
 
-        expect(route.settings.name, equals(RouteName.dashboard));
+        expect(route.settings.name, equals(MetricsRoutes.dashboard.path));
       },
     );
 
@@ -58,11 +58,11 @@ void main() {
       ".generateRoute() generates a route to the project groups page if a route name is projectGroups",
       () {
         final MetricsPageRoute route = RouteGenerator.generateRoute(
-          settings: const RouteSettings(name: RouteName.projectGroup),
+          settings: RouteSettings(name: MetricsRoutes.projectGroups.path),
           isLoggedIn: true,
         );
 
-        expect(route.settings.name, equals(RouteName.projectGroup));
+        expect(route.settings.name, equals(MetricsRoutes.projectGroups.path));
       },
     );
 
@@ -70,11 +70,11 @@ void main() {
       ".generateRoute() generates a route to the debug menu page if a route name is debugMenu",
       () {
         final MetricsPageRoute route = RouteGenerator.generateRoute(
-          settings: const RouteSettings(name: RouteName.debugMenu),
+          settings: RouteSettings(name: MetricsRoutes.debugMenu.path),
           isLoggedIn: true,
         );
 
-        expect(route.settings.name, equals(RouteName.debugMenu));
+        expect(route.settings.name, equals(MetricsRoutes.debugMenu.path));
       },
     );
   });

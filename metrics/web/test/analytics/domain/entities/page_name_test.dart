@@ -1,31 +1,31 @@
 import 'package:metrics/analytics/domain/entities/page_name.dart';
-import 'package:metrics/common/presentation/routes/route_name.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("PageName", () {
-    test(".loginPage value equals to the login route name", () {
+    test(".loginPage value equals to the login route path", () {
       const loginPage = PageName.loginPage;
 
-      expect(loginPage.value, equals(RouteName.login));
+      expect(loginPage.value, equals(MetricsRoutes.login.path));
     });
 
-    test(".dashboardPage value equals to the dashboard route name", () {
+    test(".dashboardPage value equals to the dashboard route path", () {
       const dashboardPage = PageName.dashboardPage;
 
-      expect(dashboardPage.value, equals(RouteName.dashboard));
+      expect(dashboardPage.value, equals(MetricsRoutes.dashboard.path));
     });
 
-    test(".projectGroupPage value equals to the project groups route name", () {
+    test(".projectGroupPage value equals to the project groups route path", () {
       const projectGroupPage = PageName.projectGroupsPage;
 
-      expect(projectGroupPage.value, equals(RouteName.projectGroup));
+      expect(projectGroupPage.value, equals(MetricsRoutes.projectGroups.path));
     });
 
-    test(".debugMenuPage value equals to the debug menu route name", () {
+    test(".debugMenuPage value equals to the debug menu route path", () {
       const debugMenuPage = PageName.debugMenuPage;
 
-      expect(debugMenuPage.value, equals(RouteName.debugMenu));
+      expect(debugMenuPage.value, equals(MetricsRoutes.debugMenu.path));
     });
 
     test(".values contains all page names", () {

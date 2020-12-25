@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/routes/route_name.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +35,7 @@ class MetricsDrawer extends StatelessWidget {
             title: const Text(CommonStrings.projectGroups),
             onTap: () => Navigator.popAndPushNamed(
               context,
-              RouteName.projectGroup,
+              MetricsRoutes.projectGroups.path,
             ),
           ),
           ListTile(
@@ -53,6 +53,6 @@ class MetricsDrawer extends StatelessWidget {
 
     await authNotifier.signOut();
     await Navigator.pushNamedAndRemoveUntil(
-        context, RouteName.login, (Route<dynamic> route) => false);
+        context, MetricsRoutes.login.path, (Route<dynamic> route) => false);
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
-import 'package:metrics/common/presentation/routes/route_name.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/common/presentation/toast/widgets/toast.dart';
@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
     if (isLoggedIn != null && isLoggedIn) {
       Navigator.pushNamedAndRemoveUntil(
         context,
-        RouteName.dashboard,
+        MetricsRoutes.dashboard.path,
         (Route<dynamic> route) => false,
       );
       _authNotifier.removeListener(_loggedInListener);

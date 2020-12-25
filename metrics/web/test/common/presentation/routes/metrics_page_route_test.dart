@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
-import 'package:metrics/common/presentation/routes/route_name.dart';
 import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
@@ -13,7 +13,7 @@ void main() {
         expect(
           () => MetricsPageRoute(
             builder: null,
-            settings: const RouteSettings(name: RouteName.login),
+            settings: RouteSettings(name: MetricsRoutes.login.path),
           ),
           MatcherUtil.throwsAssertionError,
         );
@@ -26,7 +26,7 @@ void main() {
         expect(
           () => MetricsPageRoute(
             builder: (_) => Container(),
-            settings: const RouteSettings(name: RouteName.login),
+            settings: RouteSettings(name: MetricsRoutes.login.path),
             maintainState: null,
           ),
           MatcherUtil.throwsAssertionError,
@@ -40,7 +40,7 @@ void main() {
         expect(
           () => MetricsPageRoute(
             builder: (_) => Container(),
-            settings: const RouteSettings(name: RouteName.login),
+            settings: RouteSettings(name: MetricsRoutes.login.path),
             fullscreenDialog: null,
           ),
           MatcherUtil.throwsAssertionError,

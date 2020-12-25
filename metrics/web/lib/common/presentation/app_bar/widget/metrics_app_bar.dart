@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
-import 'package:metrics/common/presentation/routes/route_name.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/common/presentation/widgets/metrics_theme_image.dart';
 import 'package:metrics/common/presentation/user_menu_button/widgets/metrics_user_menu_button.dart';
+import 'package:metrics/common/presentation/widgets/metrics_theme_image.dart';
 
 /// A common for the metrics application [AppBar] widget.
 class MetricsAppBar extends StatelessWidget {
@@ -45,7 +45,7 @@ class MetricsAppBar extends StatelessWidget {
     final _navigator = Navigator.of(context);
 
     _navigator.pushNamedAndRemoveUntil(
-      RouteName.dashboard,
+      MetricsRoutes.dashboard.path,
       ModalRoute.withName(Navigator.defaultRouteName),
     );
   }
