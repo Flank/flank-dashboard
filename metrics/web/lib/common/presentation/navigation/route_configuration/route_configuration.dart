@@ -7,10 +7,10 @@ class RouteConfiguration extends Equatable {
   /// A name of this route.
   final RouteName name;
 
-  /// A route path used to create the application URL.
+  /// A path of this route that is used to create the application URL.
   final String path;
 
-  /// A flag that detects whether the authorization is required for this route.
+  /// A flag that indicates whether the authorization is required for this route.
   final bool authorizationRequired;
 
   @override

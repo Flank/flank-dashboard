@@ -5,14 +5,23 @@ import 'package:test/test.dart';
 void main() {
   group("RouteConfigurationFactory", () {
     const baseUrl = 'https://test.uri';
-    final factory = RouteConfigurationFactory();
+    final routeConfigurationFactory = RouteConfigurationFactory();
+
+    test(
+      ".create() returns a loading route configuration if the given uri is null",
+      () {
+        final configuration = routeConfigurationFactory.create(null);
+
+        expect(configuration, equals(MetricsRoutes.loading));
+      },
+    );
 
     test(
       ".create() returns a loading route configuration if the given uri does not contain the path",
       () {
         final uri = Uri.parse(baseUrl);
 
-        final configuration = factory.create(uri);
+        final configuration = routeConfigurationFactory.create(uri);
 
         expect(configuration, equals(MetricsRoutes.loading));
       },
@@ -23,7 +32,7 @@ void main() {
       () {
         final uri = Uri.parse('$baseUrl${MetricsRoutes.login.path}');
 
-        final configuration = factory.create(uri);
+        final configuration = routeConfigurationFactory.create(uri);
 
         expect(configuration, equals(MetricsRoutes.login));
       },
@@ -34,7 +43,7 @@ void main() {
       () {
         final uri = Uri.parse('$baseUrl${MetricsRoutes.dashboard.path}');
 
-        final configuration = factory.create(uri);
+        final configuration = routeConfigurationFactory.create(uri);
 
         expect(configuration, equals(MetricsRoutes.dashboard));
       },
@@ -45,18 +54,18 @@ void main() {
       () {
         final uri = Uri.parse('$baseUrl${MetricsRoutes.projectGroups.path}');
 
-        final configuration = factory.create(uri);
+        final configuration = routeConfigurationFactory.create(uri);
 
         expect(configuration, equals(MetricsRoutes.projectGroups));
       },
     );
 
     test(
-      ".create() returns a dashboard route configuration if the given uri contains not valid path",
+      ".create() returns a dashboard route configuration if the given uri contains an unknown path",
       () {
         final uri = Uri.parse('$baseUrl/path');
 
-        final configuration = factory.create(uri);
+        final configuration = routeConfigurationFactory.create(uri);
 
         expect(configuration, equals(MetricsRoutes.dashboard));
       },
