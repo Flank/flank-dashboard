@@ -169,7 +169,7 @@ So, the `Notify about the finishing awesome project build` for this project will
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
           repository: platform-platform/monorepo
-          event-type: finish_building_project
+          event-type: finishing_project_workflow
           client-payload: '{"finishing_awesome_project_build": "true"}'
 ```
 
@@ -178,7 +178,7 @@ As you can see above, the `Notify about finishing the Awesome project build` use
 
 ## Metrics Integration Actions
 
-A `Metrics Integration Actions` is a workflow used to export the build data to the Metrics Web application. This workflow triggers on repository dispatch event with `finish_building_project` type sent by `Notify about the finishing awesome project build` job. The `finish_building_project` repository dispatch event, in its turn, should contain the information about which project build finishes as a `client_payload` JSON. 
+A `Metrics Integration Actions` is a workflow used to export the build data to the Metrics Web application. This workflow triggers on repository dispatch event with `finishing_project_workflow` type sent by `Notify about the finishing awesome project build` job. The `finishing_project_workflow` repository dispatch event, in its turn, should contain the information about which project build finishes as a `client_payload` JSON. 
 
 Let's consider the sample `Metrics Integration Actions` workflow file: 
 
@@ -187,7 +187,7 @@ name: Metrics Integration Actions
 
 on:
   repository_dispatch:
-    types: [ finish_building_project ]
+    types: [ finishing_project_workflow ]
 
 jobs:
   awesome_project_sync:
@@ -223,7 +223,7 @@ jobs:
         run: ./ci_integrations sync --config-file .metrics/integration.yml
 ```
 
-So, once the `Metrics Integration Actions` workflow receives the `finish_building_project` repository dispatch event, it gets the project that is currently building from the `client_payload` and starts the synchronization job that corresponds to the building project to export the building data. The synchronization job, in its turn, checkouts the repository, waits until the project's building job gets finished, downloads the `CI Integrations` tool, and runs the synchronization process.
+So, once the `Metrics Integration Actions` workflow receives the `finishing_project_workflow` repository dispatch event, it gets the project that is currently building from the `client_payload` and starts the synchronization job that corresponds to the building project to export the building data. The synchronization job, in its turn, checkouts the repository, waits until the project's building job gets finished, downloads the `CI Integrations` tool, and runs the synchronization process.
 
 
 # Dependencies
