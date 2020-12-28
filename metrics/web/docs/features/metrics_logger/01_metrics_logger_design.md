@@ -14,8 +14,8 @@ Introducing Metrics Logger into the Metrics Web Application allows us to track e
 > Identify success metrics and measurable goals.
 
 * A clear design of the Metrics Logger integration.
-* ... 
-* A overview of additional steps the Sentry integration requires.
+* An overview of logger integration into the application. 
+* An overview of additional steps the Sentry integration requires.
 
 ## Design
 > Explain and diagram the technical design.
@@ -35,7 +35,8 @@ The next table lists the definitions used in the scope of Metrics Logger integra
 
 | Term | Description |
 | --- | --- |
-| **context** | Contexts allow you to attach arbitrary data to an error you report. They could be anything useful data that can help identify an error as they are actually the contexts of this error. |
+| **context** | Contexts allow you to attach arbitrary data to an error you report. They could be anything useful data that can help identify an error as they are actually the contexts of this error. | 
+| **logs storage** | Is the destination point for logs. This can be a persistent storage, tool that manages logs, file, or even a console. |
 
 ### LoggerWriter
 
@@ -250,7 +251,7 @@ The release is commonly a git SHA or a custom version number, it also must follo
 - can't use a forward slash (/), backslash (\\), period (.), or double period (..);
 - can't exceed 200 characters.
 
-The best practice to set up the release is to set up the environment variable during the build process, which gives the ability to initialize it depending on the other build environment variables like build number and so on. 
+The best practice to set up the release is to set up the environment variable during the build process, which gives the ability to initialize it depending on the other build environment variables like build number and so on.
 Consider the following example: 
 
 ```bash
@@ -268,7 +269,7 @@ const release = const String.fromEnvironment('SENTRY_RELEASE');
 
 Flutter minifies JavaScript code building the web application. This makes applications faster but also results in not readable errors and their stack traces. To resolve this problem we should [update the JS sourcemaps](https://docs.sentry.io/platforms/javascript/sourcemaps) each time we build a new application release.
 
-Updating source maps requires the [`Sentry CLI`](https://docs.sentry.io/product/cli/) to be installed. Also, it requires the [release binding](#release) described in the previous section. Consider the following example:
+Updating source maps requires the [`Sentry CLI`](https://docs.sentry.io/product/cli/) to be installed and [configured](https://docs.sentry.io/product/cli/configuration/) (the organization slug, project and auth token configurations are required). Also, it requires the [release binding](#release) described in the previous section. Consider the following example:
 
 ```bash
 export SENTRY_RELEASE=release-name
