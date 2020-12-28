@@ -14,7 +14,7 @@ class MetricsPageFactory {
   ///
   /// If the given [RouteConfiguration] is `null` or contains the route name that
   /// does not match to any of [RouteName]s returns the [DashboardPage].
-  static MetricsPage create(RouteConfiguration configuration) {
+  MetricsPage create(RouteConfiguration configuration) {
     final routeName = configuration?.name;
     final routePath = configuration?.path;
 

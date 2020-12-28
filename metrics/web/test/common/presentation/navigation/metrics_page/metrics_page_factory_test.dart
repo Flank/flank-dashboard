@@ -12,10 +12,11 @@ import 'package:test/test.dart';
 
 void main() {
   group("MetricsPageFactory", () {
+    final metricsPageFactory = MetricsPageFactory();
     test(
       ".create() returns the metrics page having the dashboard page widget as a child if the route configuration is null",
       () {
-        final page = MetricsPageFactory.create(null);
+        final page = metricsPageFactory.create(null);
 
         expect(
           page,
@@ -36,7 +37,7 @@ void main() {
           authorizationRequired: false,
         );
 
-        final page = MetricsPageFactory.create(routeConfiguration);
+        final page = metricsPageFactory.create(routeConfiguration);
 
         expect(
           page,
@@ -57,7 +58,7 @@ void main() {
           authorizationRequired: false,
         );
 
-        final page = MetricsPageFactory.create(routeConfiguration);
+        final page = metricsPageFactory.create(routeConfiguration);
 
         expect(
           page,
@@ -78,7 +79,7 @@ void main() {
           authorizationRequired: false,
         );
 
-        final page = MetricsPageFactory.create(routeConfiguration);
+        final page = metricsPageFactory.create(routeConfiguration);
 
         expect(
           page,
@@ -99,7 +100,7 @@ void main() {
           authorizationRequired: false,
         );
 
-        final page = MetricsPageFactory.create(routeConfiguration);
+        final page = metricsPageFactory.create(routeConfiguration);
 
         expect(
           page,
@@ -120,7 +121,7 @@ void main() {
           authorizationRequired: false,
         );
 
-        final page = MetricsPageFactory.create(routeConfiguration);
+        final page = metricsPageFactory.create(routeConfiguration);
 
         expect(
           page,
@@ -144,7 +145,7 @@ void main() {
           authorizationRequired: false,
         );
 
-        final page = MetricsPageFactory.create(routeConfiguration);
+        final page = metricsPageFactory.create(routeConfiguration);
 
         expect(
           page,
