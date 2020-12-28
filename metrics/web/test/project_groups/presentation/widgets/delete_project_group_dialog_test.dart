@@ -380,7 +380,7 @@ void main() {
     );
 
     testWidgets(
-      "reset a delete project group dialog view model on dispose",
+      "resets a delete project group dialog view model on dispose",
       (tester) async {
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(

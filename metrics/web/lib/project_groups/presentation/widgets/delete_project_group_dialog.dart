@@ -24,7 +24,7 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
   /// Indicates whether this widget is in the loading state or not.
   bool _isDeleting = false;
 
-  /// A [ProjectGroupsNotifier] needed to be able to reset delete project
+  /// A [ProjectGroupsNotifier] needed to reset the delete project
   /// group dialog view model on dispose.
   ProjectGroupsNotifier _projectGroupsNotifier;
 
