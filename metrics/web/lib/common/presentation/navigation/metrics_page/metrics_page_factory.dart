@@ -29,8 +29,8 @@ class MetricsPageFactory {
         return MetricsPage(child: ProjectGroupPage(), name: routePath);
       case RouteName.debugMenu:
         return MetricsPage(child: const DebugMenuPage(), name: routePath);
-      default:
-        return MetricsPage(child: DashboardPage(), name: routePath);
     }
+
+    return MetricsPage(child: DashboardPage(), name: routePath);
   }
 }
