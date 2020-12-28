@@ -15,7 +15,12 @@ jobs:
     env:
       WEB_APP_USER_EMAIL: ${{ secrets.WEB_APP_USER_EMAIL }}
       WEB_APP_USER_PASSWORD: ${{ secrets.WEB_APP_USER_PASSWORD }}
-      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_RELEASE_AUTORENDERER: ${SENTRY_RELEASE}_autorenderer
+      SENTRY_RELEASE: ${{ github.run_number }}
       PROJECT_PATH: metrics/web/
     steps:
       - name: Checkout
@@ -71,28 +76,34 @@ jobs:
           path: metrics/web/coverage-summary.json
           if-no-files-found: error
 
-      - name: Install Firebase CLI
-        run: curl -sL https://firebase.tools | bash
+      - name: Install Sentry CLI
+        run: brew install getsentry/tools/sentry-cli
 
       - name: Build release app
-        run: flutter clean && flutter build web --release
+        run: flutter clean && flutter build web --release --dart-define=SENTRY_DSN=$SENTRY_DSN --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE
         working-directory: metrics/web/
 
-      - name: Deploy HTML version to Firebase
-        run: firebase deploy --only hosting:metrics-d9c67
-        working-directory: metrics/web/
+      - name: Update Source Maps for HTML app version
+        run: |
+          sentry-cli releases new $SENTRY_RELEASE
+          sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps . --ext dart --rewrite
+          cd ./build/web/
+          sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps . --ext map --ext js --rewrite
 
       - name: Switch to Flutter latest master version
         run: flutter channel master && flutter upgrade
         working-directory: metrics/web/
 
       - name: Build release app using auto renderer
-        run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true
+        run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true --dart-define=SENTRY_DSN=$SENTRY_DSN --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE_AUTORENDERER
         working-directory: metrics/web/
 
-      - name: Deploy auto renderer version to Firebase
-        run: firebase deploy --only hosting:metrics-skia
-        working-directory: metrics/web/
+      - name: Update Source Maps for Autorenderer app version
+        run: |
+          sentry-cli releases new $SENTRY_RELEASE_AUTORENDERER
+          sentry-cli releases files $SENTRY_RELEASE_AUTORENDERER upload-sourcemaps . --ext dart --rewrite
+          cd ./build/web/
+          sentry-cli releases files $SENTRY_RELEASE_AUTORENDERER upload-sourcemaps . --ext map --ext js --rewrite
 
   notify-actions:
     name: Notify about building finished
@@ -107,11 +118,3 @@ jobs:
           repository: platform-platform/monorepo
           event-type: building_project
           client-payload: '{"building_metrics_web": "true"}'
-      - name: Send notification to Slack
-        if: needs.metrics-actions.result == 'failure' || needs.metrics-actions.result == 'cancelled'
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.ACTIONS_TOKEN }}
-          repository: ${{ github.repository }}
-          event-type: send_slack_notification
-          client-payload: '{"workflow_name": "${{ github.workflow }}", "run_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
