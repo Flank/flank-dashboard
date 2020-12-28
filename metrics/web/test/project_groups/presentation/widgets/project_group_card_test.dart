@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/decorated_container.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
-import 'package:metrics/base/presentation/widgets/info_dialog.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_card_theme_data.dart';
@@ -424,48 +423,6 @@ void main() {
     );
 
     testWidgets(
-      "resets the project group dialog view model after closing the edit project group dialog",
-      (WidgetTester tester) async {
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-
-        when(
-          projectGroupsNotifier.projectGroupDialogViewModel,
-        ).thenReturn(
-          ProjectGroupDialogViewModel(
-            id: 'id1',
-            name: 'name',
-            selectedProjectIds: UnmodifiableListView([]),
-          ),
-        );
-
-        await tester.pumpWidget(_ProjectGroupCardTestbed(
-          projectGroupCardViewModel: projectGroupCardViewModel,
-          projectGroupsNotifier: projectGroupsNotifier,
-        ));
-
-        await mockNetworkImagesFor(() async {
-          await _enterProjectGroupCard(tester);
-        });
-
-        await tester.tap(
-          find.widgetWithText(IconLabelButton, CommonStrings.edit),
-        );
-        await tester.pump();
-
-        expect(find.byType(EditProjectGroupDialog), findsOneWidget);
-
-        final dialog = tester.widget<InfoDialog>(find.byType(InfoDialog));
-        final closeIcon = dialog.closeIcon;
-
-        await tester.tap(find.byWidget(closeIcon));
-        await tester.pump();
-
-        verify(projectGroupsNotifier.resetProjectGroupDialogViewModel())
-            .called(equals(1));
-      },
-    );
-
-    testWidgets(
       "does not open the edit project group dialog if the project group dialog view model is null",
       (WidgetTester tester) async {
         final projectGroupsNotifier = ProjectGroupsNotifierMock();
@@ -584,42 +541,6 @@ void main() {
         );
 
         verify(projectGroupsNotifier.initDeleteProjectGroupDialogViewModel(any))
-            .called(equals(1));
-      },
-    );
-
-    testWidgets(
-      "resets the delete project group dialog view model after closing the delete project group dialog",
-      (WidgetTester tester) async {
-        final projectGroupsNotifier = ProjectGroupsNotifierMock();
-
-        when(
-          projectGroupsNotifier.deleteProjectGroupDialogViewModel,
-        ).thenReturn(
-          const DeleteProjectGroupDialogViewModel(id: 'id1', name: 'name'),
-        );
-
-        await tester.pumpWidget(_ProjectGroupCardTestbed(
-          projectGroupCardViewModel: projectGroupCardViewModel,
-          projectGroupsNotifier: projectGroupsNotifier,
-        ));
-
-        await mockNetworkImagesFor(() async {
-          await _enterProjectGroupCard(tester);
-        });
-
-        await tester.tap(
-          find.widgetWithText(IconLabelButton, CommonStrings.delete),
-        );
-
-        await tester.pump();
-
-        expect(find.byType(DeleteProjectGroupDialog), findsOneWidget);
-
-        await tester.tap(find.text(CommonStrings.cancel));
-        await tester.pump();
-
-        verify(projectGroupsNotifier.resetDeleteProjectGroupDialogViewModel())
             .called(equals(1));
       },
     );

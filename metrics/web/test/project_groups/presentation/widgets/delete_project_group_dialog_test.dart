@@ -58,7 +58,7 @@ void main() {
       ProjectGroupsStrings.delete,
     );
 
-    List<TextSpan> _getContentTextSpans(WidgetTester tester) {
+    List<TextSpan> getContentTextSpans(WidgetTester tester) {
       final infoDialog = FinderUtil.findInfoDialog(tester);
 
       final content = infoDialog.content as RichText;
@@ -179,7 +179,7 @@ void main() {
           return tester.pumpWidget(const _DeleteProjectGroupDialogTestbed());
         });
 
-        final contentTextSpan = _getContentTextSpans(tester);
+        final contentTextSpan = getContentTextSpans(tester);
 
         final confirmationTextFinder = contentTextSpan.any(
           (span) =>
@@ -199,7 +199,7 @@ void main() {
           ));
         });
 
-        final contentTextSpans = _getContentTextSpans(tester);
+        final contentTextSpans = getContentTextSpans(tester);
 
         final isGroupNameDisplayed = contentTextSpans.any(
           (span) => span.text == ' ${deleteProjectGroupDialogViewModel.name} ',
@@ -223,7 +223,7 @@ void main() {
           fontWeight: FontWeight.bold,
         );
 
-        final contentTextSpans = _getContentTextSpans(tester);
+        final contentTextSpans = getContentTextSpans(tester);
 
         final groupNameSpan = contentTextSpans.firstWhere(
           (span) => span.text == ' ${deleteProjectGroupDialogViewModel.name} ',
@@ -376,6 +376,23 @@ void main() {
         await tester.pump();
 
         expect(find.widgetWithText(NegativeToast, message), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "reset a delete project group dialog view model on dispose",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_DeleteProjectGroupDialogTestbed(
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await tester.tap(cancelButtonFinder);
+        await tester.pumpAndSettle();
+
+        verify(projectGroupsNotifier.resetDeleteProjectGroupDialogViewModel())
+            .called(equals(1));
       },
     );
 
