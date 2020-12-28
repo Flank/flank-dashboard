@@ -1,0 +1,29 @@
+@startuml metrics_logger_log_error_sequence_diagram
+    skinparam ParticipantPadding 20
+    skinparam BoxPadding 10
+    
+    participant CoolClass << (C,#ADD1B2) >>
+    participant MetricsLogger << (C,#ADD1B2) >>
+    participant CoolLoggerWriter << (C,#ADD1B2) >>
+    database "Logger Output" as Logs
+
+    CoolClass -> MetricsLogger : setContext(key, context)
+    activate MetricsLogger
+    
+    MetricsLogger -> CoolLoggerWriter : setContext(key, context)
+    activate CoolLoggerWriter
+
+    return void 
+    return void
+
+    CoolClass -> MetricsLogger : logError(error, stackTrace)
+    activate MetricsLogger
+    
+    MetricsLogger -> CoolLoggerWriter : logError(error, stackTrace)
+    activate CoolLoggerWriter
+
+    CoolLoggerWriter -> Logs : report **error** with **stackTrace** \nand **context**
+
+    return void 
+    return void
+@enduml
