@@ -16,27 +16,28 @@ class MetricsPageFactory {
   /// does not match to any of [RouteName]s returns the [DashboardPage].
   static MetricsPage create(RouteConfiguration configuration) {
     final routeName = configuration?.name;
+    final routePath = configuration?.path;
 
     if (routeName == RouteName.loading) {
-      return MetricsPage(child: LoadingPage());
+      return MetricsPage(child: LoadingPage(), name: routePath);
     }
 
     if (routeName == RouteName.login) {
-      return const MetricsPage(child: LoginPage());
+      return MetricsPage(child: const LoginPage(), name: routePath);
     }
 
     if (routeName == RouteName.dashboard) {
-      return MetricsPage(child: DashboardPage());
+      return MetricsPage(child: DashboardPage(), name: routePath);
     }
 
     if (routeName == RouteName.projectGroups) {
-      return MetricsPage(child: ProjectGroupPage());
+      return MetricsPage(child: ProjectGroupPage(), name: routePath);
     }
 
     if (routeName == RouteName.debugMenu) {
-      return const MetricsPage(child: DebugMenuPage());
+      return MetricsPage(child: const DebugMenuPage(), name: routePath);
     }
 
-    return MetricsPage(child: DashboardPage());
+    return MetricsPage(child: DashboardPage(), name: routePath);
   }
 }

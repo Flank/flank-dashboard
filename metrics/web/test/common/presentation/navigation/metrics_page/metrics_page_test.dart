@@ -58,6 +58,44 @@ void main() {
     );
 
     test(
+      ".createRoute() applies the given name to the route settings' name",
+      () {
+        const expectedName = 'test';
+        final context = _MockBuildContext();
+        const metricsPage = MetricsPage(child: child, name: expectedName);
+        final actualRoute = metricsPage.createRoute(context);
+
+        expect(
+          actualRoute,
+          isA<MetricsPageRoute>().having(
+            (metricsPageRoute) => metricsPageRoute.settings.name,
+            'route settings name',
+            expectedName,
+          ),
+        );
+      },
+    );
+
+    test(
+      ".createRoute() applies the given arguments to the route settings' arguments",
+      () {
+        const arguments = 'test arguments';
+        final context = _MockBuildContext();
+        const metricsPage = MetricsPage(child: child, arguments: arguments);
+        final actualRoute = metricsPage.createRoute(context);
+
+        expect(
+          actualRoute,
+          isA<MetricsPageRoute>().having(
+            (metricsPageRoute) => metricsPageRoute.settings.arguments,
+            'route settings arguments',
+            arguments,
+          ),
+        );
+      },
+    );
+
+    test(
       ".createRoute() returns the metrics page route that builds the given child widget",
       () {
         final context = _MockBuildContext();
