@@ -17,18 +17,14 @@ class MetricsPage<T> extends Page {
   /// The [maintainState] default value is `true`.
   /// The [fullscreenDialog] default value is `false`.
   ///
-  /// The [child], [fullscreenDialog], and [maintainState] must not be null.
+  /// All the parameters must not be null.
   const MetricsPage({
     @required this.child,
     this.maintainState = true,
     this.fullscreenDialog = false,
-    LocalKey key,
-    String name,
-    Object arguments,
   })  : assert(child != null),
         assert(maintainState != null),
-        assert(fullscreenDialog != null),
-        super(key: key, name: name, arguments: arguments);
+        assert(fullscreenDialog != null);
 
   @override
   Route<T> createRoute(BuildContext context) {

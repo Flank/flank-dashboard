@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_route.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../../../test_utils/matcher_util.dart';
 
@@ -10,7 +11,6 @@ import '../../../../test_utils/matcher_util.dart';
 void main() {
   group("MetricsPage", () {
     const child = Text('child');
-    const metricsPage = MetricsPage(child: child);
 
     test("throws an AssertionError if the child is null", () {
       expect(
@@ -28,6 +28,7 @@ void main() {
         MatcherUtil.throwsAssertionError,
       );
     });
+
     test("throws an AssertionError if the fullscreen dialog is null", () {
       expect(
         () => MetricsPage(
@@ -56,40 +57,24 @@ void main() {
       },
     );
 
-    testWidgets(
-      "displays the given child",
-      (WidgetTester tester) async {
-        final key = GlobalKey();
+    test(
+      ".createRoute() returns the metrics page route that builds the given child widget",
+      () {
+        final context = _MockBuildContext();
+        const metricsPage = MetricsPage(child: child);
+        final actualRoute = metricsPage.createRoute(context);
 
-        await tester.pumpWidget(
-          _MetricsPageTestbed(
-            pages: const [metricsPage],
-            key: key,
+        expect(
+          actualRoute,
+          isA<MetricsPageRoute>().having(
+            (metricsPageRoute) => metricsPageRoute.builder(context),
+            'builds child widget',
+            child,
           ),
         );
-
-        expect(find.byWidget(child), findsOneWidget);
       },
     );
   });
 }
 
-class _MetricsPageTestbed extends StatelessWidget {
-  final List<Page> pages;
-
-  const _MetricsPageTestbed({
-    Key key,
-    this.pages,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Navigator(
-        pages: pages,
-        onPopPage: (route, result) => true,
-      ),
-    );
-  }
-}
+class _MockBuildContext extends Mock implements BuildContext {}
