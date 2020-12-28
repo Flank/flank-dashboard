@@ -112,7 +112,8 @@ class FlutterWebDriver {
       logFileName: logsFileName,
     );
 
-    await driverProcess.exitCode;
+    final driverExitCode = await driverProcess.exitCode;
+    exitCode = driverExitCode;
   }
 
   /// Disposes the [_processManager] and exits the app

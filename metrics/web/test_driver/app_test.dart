@@ -247,8 +247,6 @@ void main() {
           updatedProjectGroupName,
         );
 
-        tester.takeException();
-
         expect(updatedProjectGroupCardFinder, findsOneWidget);
       },
     );
@@ -277,8 +275,6 @@ void main() {
 
         await tester.tap(find.byType(MetricsNegativeButton));
         await tester.pumpAndSettle(const Duration(seconds: 2));
-
-        tester.takeException();
 
         expect(
           find.widgetWithText(ProjectGroupCard, projectGroupName),
