@@ -19,8 +19,8 @@ jobs:
       SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
       SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      SENTRY_RELEASE: ${{ github.run_number }}
       SENTRY_RELEASE_AUTORENDERER: ${SENTRY_RELEASE}_autorenderer
+      SENTRY_RELEASE: ${{ github.run_number }}
       PROJECT_PATH: metrics/web/
     steps:
       - name: Checkout
