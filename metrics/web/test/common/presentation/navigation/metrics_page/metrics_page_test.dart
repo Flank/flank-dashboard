@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_route.dart';
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
@@ -58,21 +57,13 @@ void main() {
     );
 
     test(
-      ".createRoute() applies the given name to the route settings' name",
+      ".createRoute() returns a metrics page with the given route name",
       () {
         const expectedName = 'test';
-        final context = _MockBuildContext();
         const metricsPage = MetricsPage(child: child, name: expectedName);
-        final actualRoute = metricsPage.createRoute(context);
+        final actualRoute = metricsPage.createRoute(null);
 
-        expect(
-          actualRoute,
-          isA<MetricsPageRoute>().having(
-            (metricsPageRoute) => metricsPageRoute.settings.name,
-            'route settings name',
-            expectedName,
-          ),
-        );
+        expect(actualRoute.settings.name, equals(expectedName));
       },
     );
 
@@ -80,9 +71,8 @@ void main() {
       ".createRoute() applies the given arguments to the route settings' arguments",
       () {
         const arguments = 'test arguments';
-        final context = _MockBuildContext();
         const metricsPage = MetricsPage(child: child, arguments: arguments);
-        final actualRoute = metricsPage.createRoute(context);
+        final actualRoute = metricsPage.createRoute(null);
 
         expect(
           actualRoute,
@@ -98,14 +88,13 @@ void main() {
     test(
       ".createRoute() returns the metrics page route that builds the given child widget",
       () {
-        final context = _MockBuildContext();
         const metricsPage = MetricsPage(child: child);
-        final actualRoute = metricsPage.createRoute(context);
+        final actualRoute = metricsPage.createRoute(null);
 
         expect(
           actualRoute,
           isA<MetricsPageRoute>().having(
-            (metricsPageRoute) => metricsPageRoute.builder(context),
+            (metricsPageRoute) => metricsPageRoute.builder(null),
             'builds child widget',
             child,
           ),
@@ -114,5 +103,3 @@ void main() {
     );
   });
 }
-
-class _MockBuildContext extends Mock implements BuildContext {}

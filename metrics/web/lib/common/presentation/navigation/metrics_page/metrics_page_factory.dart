@@ -18,26 +18,19 @@ class MetricsPageFactory {
     final routeName = configuration?.name;
     final routePath = configuration?.path;
 
-    if (routeName == RouteName.loading) {
-      return MetricsPage(child: LoadingPage(), name: routePath);
+    switch (routeName) {
+      case RouteName.loading:
+        return MetricsPage(child: LoadingPage(), name: routePath);
+      case RouteName.login:
+        return MetricsPage(child: const LoginPage(), name: routePath);
+      case RouteName.dashboard:
+        return MetricsPage(child: DashboardPage(), name: routePath);
+      case RouteName.projectGroups:
+        return MetricsPage(child: ProjectGroupPage(), name: routePath);
+      case RouteName.debugMenu:
+        return MetricsPage(child: const DebugMenuPage(), name: routePath);
+      default:
+        return MetricsPage(child: DashboardPage(), name: routePath);
     }
-
-    if (routeName == RouteName.login) {
-      return MetricsPage(child: const LoginPage(), name: routePath);
-    }
-
-    if (routeName == RouteName.dashboard) {
-      return MetricsPage(child: DashboardPage(), name: routePath);
-    }
-
-    if (routeName == RouteName.projectGroups) {
-      return MetricsPage(child: ProjectGroupPage(), name: routePath);
-    }
-
-    if (routeName == RouteName.debugMenu) {
-      return MetricsPage(child: const DebugMenuPage(), name: routePath);
-    }
-
-    return MetricsPage(child: DashboardPage(), name: routePath);
   }
 }
