@@ -25,16 +25,47 @@ import 'package:metrics/project_groups/presentation/widgets/project_group_card.d
 import 'package:uuid/uuid.dart';
 
 import 'arguments/model/user_credentials.dart';
-import 'util/test_utils.dart';
+import 'test_utils/tester_util.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  Future<void> login(WidgetTester tester) async {
+    final credentials = UserCredentials.fromEnvironment();
+
+    final emailFinder = find.widgetWithText(
+      MetricsTextFormField,
+      AuthStrings.email,
+    );
+
+    final passwordFinder = find.widgetWithText(
+      MetricsTextFormField,
+      AuthStrings.password,
+    );
+    final signInButtonFinder = find.widgetWithText(
+      MetricsPositiveButton,
+      AuthStrings.signIn,
+    );
+
+    await tester.enterText(emailFinder, credentials.email);
+    await tester.enterText(passwordFinder, credentials.password);
+    await tester.tap(signInButtonFinder);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> openProjectGroupsPage(WidgetTester tester) async {
+    await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(CommonStrings.projectGroups));
+    await tester.pumpAndSettle();
+  }
 
   group("LoginPage", () {
     testWidgets(
       "shows an authentication form",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
         expect(find.byType(AuthForm), findsOneWidget);
       },
@@ -43,9 +74,9 @@ void main() {
     testWidgets(
       "can authenticate in the app using an email and a password",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
-        await _login(tester);
+        await login(tester);
 
         expect(find.byType(DashboardPage), findsOneWidget);
       },
@@ -54,9 +85,12 @@ void main() {
     testWidgets(
       "can log out from the app",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
-        await _openUserMenu(tester);
+        await (WidgetTester tester) async {
+          await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
+          await tester.pumpAndSettle();
+        }(tester);
 
         await tester.tap(find.text(CommonStrings.logOut));
         await tester.pumpAndSettle(const Duration(seconds: 2));
@@ -70,9 +104,9 @@ void main() {
     testWidgets(
       "loads projects and shows the project tiles",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
-        await _login(tester);
+        await login(tester);
 
         expect(find.byType(ProjectMetricsTile), findsWidgets);
       },
@@ -81,7 +115,7 @@ void main() {
     testWidgets(
       "loads and displays stability metric",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
         expect(find.byType(StabilityCirclePercentage), findsWidgets);
       },
@@ -90,7 +124,7 @@ void main() {
     testWidgets(
       "loads and displays project build status metric",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
         expect(find.byType(ProjectBuildStatus), findsWidgets);
       },
@@ -99,7 +133,7 @@ void main() {
     testWidgets(
       "loads and displays coverage metric",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
         expect(find.byType(CoverageCirclePercentage), findsWidgets);
       },
@@ -108,7 +142,7 @@ void main() {
     testWidgets(
       "loads and displays the performance metric",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
         expect(find.byType(PerformanceSparklineGraph), findsWidgets);
       },
@@ -117,7 +151,7 @@ void main() {
     testWidgets(
       "loads and shows the build number metric",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
         expect(find.byType(BuildNumberScorecard), findsWidgets);
       },
@@ -126,7 +160,7 @@ void main() {
     testWidgets(
       "loads and shows the build result metrics",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
         expect(find.byType(BuildResultBarGraph), findsWidgets);
       },
@@ -135,7 +169,7 @@ void main() {
     testWidgets(
       "project search input filters list of projects",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
         final searchInputFinder = find.byType(ProjectSearchInput);
         final noSearchResultsTextFinder = find.text(
@@ -161,9 +195,9 @@ void main() {
     testWidgets(
       "shows add project group card button",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
 
-        await _openProjectGroupsPage(tester);
+        await openProjectGroupsPage(tester);
 
         expect(find.byType(AddProjectGroupCard), findsOneWidget);
       },
@@ -172,8 +206,8 @@ void main() {
     testWidgets(
       "allows creating a project group",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
-        await _openProjectGroupsPage(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
+        await openProjectGroupsPage(tester);
 
         await tester.tap(find.byType(AddProjectGroupCard));
         await tester.pumpAndSettle();
@@ -206,8 +240,8 @@ void main() {
     testWidgets(
       "allows updating a project group",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
-        await _openProjectGroupsPage(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
+        await openProjectGroupsPage(tester);
 
         final projectGroupCardFinder = find.widgetWithText(
           ProjectGroupCard,
@@ -215,7 +249,7 @@ void main() {
         );
 
         await tester.ensureVisible(projectGroupCardFinder);
-        await TestUtils.hoverWidget(tester, projectGroupCardFinder);
+        await TesterUtil.hoverWidget(tester, projectGroupCardFinder);
 
         final editButtonFinder = find.descendant(
           of: projectGroupCardFinder,
@@ -254,8 +288,8 @@ void main() {
     testWidgets(
       "allows deleting a project group",
       (WidgetTester tester) async {
-        await _pumpApp(tester);
-        await _openProjectGroupsPage(tester);
+        await TesterUtil.pumpAndSettleWidget(tester, MetricsApp());
+        await openProjectGroupsPage(tester);
 
         final projectGroupCardFinder = find.widgetWithText(
           ProjectGroupCard,
@@ -264,7 +298,7 @@ void main() {
 
         await tester.ensureVisible(projectGroupCardFinder);
 
-        await TestUtils.hoverWidget(tester, projectGroupCardFinder);
+        await TesterUtil.hoverWidget(tester, projectGroupCardFinder);
 
         final deleteButtonFinder = find.descendant(
           of: projectGroupCardFinder,
@@ -283,44 +317,4 @@ void main() {
       },
     );
   });
-}
-
-Future<void> _login(WidgetTester tester) async {
-  final credentials = UserCredentials.fromEnvironment();
-
-  final emailFinder = find.widgetWithText(
-    MetricsTextFormField,
-    AuthStrings.email,
-  );
-
-  final passwordFinder = find.widgetWithText(
-    MetricsTextFormField,
-    AuthStrings.password,
-  );
-  final signInButtonFinder = find.widgetWithText(
-    MetricsPositiveButton,
-    AuthStrings.signIn,
-  );
-
-  await tester.enterText(emailFinder, credentials.email);
-  await tester.enterText(passwordFinder, credentials.password);
-  await tester.tap(signInButtonFinder);
-  await tester.pumpAndSettle();
-}
-
-Future<void> _pumpApp(WidgetTester tester) async {
-  await tester.pumpWidget(MetricsApp());
-  await tester.pumpAndSettle();
-}
-
-Future<void> _openProjectGroupsPage(WidgetTester tester) async {
-  await _openUserMenu(tester);
-
-  await tester.tap(find.text(CommonStrings.projectGroups));
-  await tester.pumpAndSettle();
-}
-
-Future<void> _openUserMenu(WidgetTester tester) async {
-  await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
-  await tester.pumpAndSettle();
 }
