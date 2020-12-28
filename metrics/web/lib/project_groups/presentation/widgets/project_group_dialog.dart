@@ -330,5 +330,6 @@ class _ProjectGroupDialogState extends State<ProjectGroupDialog> {
     _projectGroupsNotifier.removeListener(_projectsErrorListener);
     _isActionButtonActive.dispose();
     super.dispose();
+    _projectGroupsNotifier.resetProjectGroupDialogViewModel();
   }
 }

@@ -165,8 +165,6 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     if (projectGroupsNotifier.deleteProjectGroupDialogViewModel == null) return;
 
     await _showProjectGroupDialog(DeleteProjectGroupDialog());
-
-    projectGroupsNotifier.resetDeleteProjectGroupDialogViewModel();
   }
 
   /// Shows an [EditProjectGroupDialog] with an active project group.
@@ -183,8 +181,6 @@ class _ProjectGroupCardState extends State<ProjectGroupCard> {
     if (projectGroupsNotifier.projectGroupDialogViewModel == null) return;
 
     await _showProjectGroupDialog(EditProjectGroupDialog());
-
-    projectGroupsNotifier.resetProjectGroupDialogViewModel();
   }
 
   /// Shows the given [dialog] with the barrier color from the metrics theme.

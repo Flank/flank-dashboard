@@ -921,6 +921,24 @@ void main() {
     );
 
     testWidgets(
+      "resets a project group dialog view model on dispose",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await closeDialog(tester);
+        await tester.pumpAndSettle();
+
+        verify(projectGroupsNotifier.resetProjectGroupDialogViewModel())
+            .called(equals(1));
+      },
+    );
+
+    testWidgets(
       "closes normally after the view model's reset",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
@@ -969,11 +987,11 @@ class _ProjectGroupDialogTestbed extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  __ProjectGroupDialogTestbedState createState() =>
-      __ProjectGroupDialogTestbedState();
+  _ProjectGroupDialogTestbedState createState() =>
+      _ProjectGroupDialogTestbedState();
 }
 
-class __ProjectGroupDialogTestbedState
+class _ProjectGroupDialogTestbedState
     extends State<_ProjectGroupDialogTestbed> {
   @override
   Widget build(BuildContext context) {

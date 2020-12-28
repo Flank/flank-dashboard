@@ -24,6 +24,20 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
   /// Indicates whether this widget is in the loading state or not.
   bool _isDeleting = false;
 
+  /// A [ProjectGroupsNotifier] needed to reset the delete project
+  /// group dialog view model on dispose.
+  ProjectGroupsNotifier _projectGroupsNotifier;
+
+  @override
+  void initState() {
+    _projectGroupsNotifier = Provider.of<ProjectGroupsNotifier>(
+      context,
+      listen: false,
+    );
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final dialogTheme = MetricsTheme.of(context).deleteDialogTheme;
@@ -134,5 +148,11 @@ class _DeleteProjectGroupDialogState extends State<DeleteProjectGroupDialog> {
   /// Changes the [_isDeleting] state to the given [value].
   void _setLoading(bool value) {
     setState(() => _isDeleting = value);
+  }
+
+  @override
+  void dispose() {
+    _projectGroupsNotifier.resetDeleteProjectGroupDialogViewModel();
+    super.dispose();
   }
 }
