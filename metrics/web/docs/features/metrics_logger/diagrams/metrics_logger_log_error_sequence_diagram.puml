@@ -5,7 +5,7 @@
     participant CoolClass << (C,#ADD1B2) >>
     participant MetricsLogger << (C,#ADD1B2) >>
     participant CoolLoggerWriter << (C,#ADD1B2) >>
-    database "Logger Output" as Logs
+    database "Logs Output" as Logs
 
     CoolClass -> MetricsLogger : setContext(key, context)
     activate MetricsLogger
@@ -19,7 +19,7 @@
     CoolClass -> MetricsLogger : logError(error, stackTrace)
     activate MetricsLogger
     
-    MetricsLogger -> CoolLoggerWriter : logError(error, stackTrace)
+    MetricsLogger -> CoolLoggerWriter : writeError(error, stackTrace)
     activate CoolLoggerWriter
 
     CoolLoggerWriter -> Logs : report **error** with **stackTrace** \nand **context**

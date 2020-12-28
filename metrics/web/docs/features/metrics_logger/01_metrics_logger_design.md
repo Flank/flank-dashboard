@@ -31,16 +31,16 @@ Let's take a look on the classes the Metrics Logger integration requires. But fi
 
 ### Glossary
 
-The next table lists the definitions used in the scope of Metrics Logger integration.
+The next table lists the definitions used in the scope of Metrics Logger integration design.
 
 | Term | Description |
 | --- | --- |
 | **context** | Contexts allow you to attach arbitrary data to an error you report. They could be anything useful data that can help identify an error as they are actually the contexts of this error. | 
-| **logs storage** | Is the destination point for logs. This can be a persistent storage, tool that manages logs, file, or even a console. |
+| **logs output** | Is the destination point for logs. This can be a persistent storage, tool that manages logs, file, or even a console. |
 
 ### LoggerWriter
 
-The `LoggerWriter` is an interface that provides methods for writing captured errors and their context. The writer is used to report captured errors to the logs storage and save them. Generally speaking, the writer is a bridge between the [Metrics Logger](#metricslogger) within the application and logs storage the concrete writer uses.
+The `LoggerWriter` is an interface that provides methods for writing captured errors and their context. The writer is used to report captured errors to the logs output and save them. Generally speaking, the writer is a bridge between the [Metrics Logger](#metricslogger) within the application and logs output the concrete writer uses.
 
 ### WebContextProvider
 
@@ -48,7 +48,7 @@ The `WebContextProvider` is a class that provides methods for receiving contexts
 
 ### MetricsLogger
 
-The `MetricsLogger` is a main part of the logger integration. The application uses `MetricsLogger` to log errors and their contexts. The logger then uses the [`LoggerWriter`](#loggerwriter) to report these errors. This class provides only static methods to simplify the logging process. However it must be initialized with the writer using the `initilize` method before logging errors.
+The `MetricsLogger` is a main part of the logger integration. The application uses `MetricsLogger` to log errors and their contexts. The logger then uses the [`LoggerWriter`](#loggerwriter) to report these errors. This class provides only static methods to simplify the logging process. However, it must be initialized with the writer using the `initilize` method before logging errors.
 
 The following class diagram demonstrates the structure of the logger integration and the relationships of classes this integration requires.
 
@@ -113,7 +113,7 @@ FlutterError.onError = (details, {bool forceReport = false}) {
 
 ### Notes To Error Capturing
 
-If you're setting up the `MetricsLogger` in your `main` function, overriding the `FlutterError.onError` property requires calling the [`WidgetsFlutterBinding.ensureInitialized`](https://api.flutter.dev/flutter/widgets/WidgetsFlutterBinding/ensureInitialized.html) method before. Moreover, in case of using guarded zone, the move the `WidgetsFlutterBinding.ensureInitialized` method and related features into zone callback.
+If you're setting up the `MetricsLogger` in your `main` function, overriding the `FlutterError.onError` property requires calling the [`WidgetsFlutterBinding.ensureInitialized`](https://api.flutter.dev/flutter/widgets/WidgetsFlutterBinding/ensureInitialized.html) method before. Moreover, in case of using guarded zone, move the `WidgetsFlutterBinding.ensureInitialized` method and related features into zone callback.
 
 For example, the following code is incorrect as `FlutterError.onError` is set without `WidgetsFlutterBinding.ensureInitialized`:
 
@@ -125,7 +125,7 @@ Future<void> main() async {
     MetricsLogger.logError(details.exception, stackTrace: details.stack);
   };
 
-  runApp(MetricsApp());
+  // run the app here
 }
 ```
 
@@ -143,7 +143,7 @@ Future<void> main() async {
         Zone.current.handleUncaughtError(details.exception, details.stack);
       };
       
-      runApp(MetricsApp());
+      // run the app here
     },
     (Object error, StackTrace stackTrace) {
       MetricsLogger.logError(error, stackTrace: stackTrace);
@@ -251,8 +251,7 @@ The release is commonly a git SHA or a custom version number, it also must follo
 - can't use a forward slash (/), backslash (\\), period (.), or double period (..);
 - can't exceed 200 characters.
 
-The best practice to set up the release is to set up the environment variable during the build process, which gives the ability to initialize it depending on the other build environment variables like build number and so on.
-Consider the following example: 
+The best practice to set up the release is to set up the environment variable during the build process, which gives the ability to initialize it depending on the other build environment variables like build number and so on. Consider the following example: 
 
 ```bash
 export SENTRY_RELEASE=`your_release_here`
