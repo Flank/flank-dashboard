@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:test/test.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_route.dart';
 import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
 
 import '../../../../test_utils/matcher_util.dart';
 

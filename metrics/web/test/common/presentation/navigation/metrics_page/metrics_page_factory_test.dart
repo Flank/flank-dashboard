@@ -13,6 +13,7 @@ import 'package:test/test.dart';
 void main() {
   group("MetricsPageFactory", () {
     final metricsPageFactory = MetricsPageFactory();
+
     test(
       ".create() returns the metrics page having the dashboard page widget as a child if the route configuration is null",
       () {
