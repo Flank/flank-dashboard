@@ -1,0 +1,180 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
+import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
+
+/// A signature for the function that tests the given [MetricsPage] for certain
+/// conditions.
+typedef MetricsPagePredicate = bool Function(MetricsPage);
+
+/// A [ChangeNotifier] that manages navigation.
+class NavigationNotifier extends ChangeNotifier {
+  /// A [MetricsPageFactory] that provides an ability to create a [MetricsPage]
+  /// from [RouteConfiguration].
+  final MetricsPageFactory _pageFactory;
+
+  /// A [List] of [MetricsPage]s to use in navigation.
+  final List<MetricsPage> _pages = [];
+
+  /// A [RouteConfiguration] that represents the navigation state.
+  RouteConfiguration _currentConfiguration;
+
+  /// Indicates whether the user is logged in.
+  bool _isUserLoggedIn = false;
+
+  /// Provides an [UnmodifiableListView] of [MetricsPage]s to use in navigation.
+  UnmodifiableListView<MetricsPage> get pages => UnmodifiableListView(_pages);
+
+  /// Provides a [RouteConfiguration] that describes the navigation state.
+  RouteConfiguration get currentConfiguration => _currentConfiguration;
+
+  /// Creates a new instance of the [NavigationNotifier]
+  /// with the given [MetricsPageFactory].
+  ///
+  /// Throws an [AssertionError] if the given [MetricsPageFactory] is `null`.
+  NavigationNotifier(
+    this._pageFactory,
+  ) : assert(_pageFactory != null);
+
+  /// Handles the authentication update represented by the given [isLoggedIn].
+  ///
+  /// Clears the pages stack after the user logs out.
+  ///
+  /// Throws an [ArgumentError] if the given [isLoggedIn] is `null`.
+  void handleAuthenticationUpdates({
+    @required bool isLoggedIn,
+  }) {
+    ArgumentError.checkNotNull(isLoggedIn, 'isLoggedIn');
+
+    _isUserLoggedIn = isLoggedIn;
+
+    if (!isLoggedIn) _pages.clear();
+  }
+
+  /// Pops the current route.
+  void pop() {
+    if (_pages.length <= 1) return;
+
+    _pages.removeLast();
+
+    final currentPage = _pages.last;
+
+    final newConfiguration = _getConfigurationFromPage(currentPage);
+
+    _currentConfiguration = newConfiguration;
+
+    notifyListeners();
+  }
+
+  /// Pushes the route created from the given [configuration].
+  void pushNamed(RouteConfiguration configuration) {
+    final newConfiguration = _processConfiguration(configuration);
+
+    _currentConfiguration = newConfiguration;
+
+    final newPage = _pageFactory.create(_currentConfiguration);
+
+    _pages.add(newPage);
+
+    notifyListeners();
+  }
+
+  /// Replaces the current route
+  /// with the route created from the given [configuration].
+  void pushReplacementNamed(RouteConfiguration configuration) {
+    if (_pages.isNotEmpty) _pages.removeLast();
+
+    final newConfiguration = _processConfiguration(configuration);
+
+    _currentConfiguration = newConfiguration;
+
+    final newPage = _pageFactory.create(_currentConfiguration);
+
+    _pages.add(newPage);
+
+    notifyListeners();
+  }
+
+  /// Removes all underlying pages until the [predicate] returns `true`
+  /// or the [_pages] is empty.
+  ///
+  /// Then pushes the route created from the given [configuration].
+  void pushNamedAndRemoveUntil(
+    RouteConfiguration configuration,
+    MetricsPagePredicate predicate,
+  ) {
+    while (_pages.isNotEmpty) {
+      final page = _pages.last;
+
+      if (predicate(page)) break;
+
+      _pages.removeLast();
+    }
+
+    final newConfiguration = _processConfiguration(configuration);
+
+    _currentConfiguration = newConfiguration;
+
+    final newPage = _pageFactory.create(_currentConfiguration);
+
+    _pages.add(newPage);
+
+    notifyListeners();
+  }
+
+  /// Handles the initial route.
+  void handleInitialRoutePath(RouteConfiguration configuration) {
+    final newConfiguration = _processConfiguration(configuration);
+
+    _currentConfiguration = newConfiguration;
+
+    final newPage = _pageFactory.create(_currentConfiguration);
+
+    _pages.add(newPage);
+
+    notifyListeners();
+  }
+
+  /// Handles the new route.
+  void handleNewRoutePath(RouteConfiguration configuration) {
+    final newConfiguration = _processConfiguration(configuration);
+
+    _currentConfiguration = newConfiguration;
+
+    final newPage = _pageFactory.create(_currentConfiguration);
+
+    _pages.add(newPage);
+
+    notifyListeners();
+  }
+
+  /// Creates a [RouteConfiguration] using the given [page].
+  RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
+    final name = page?.name;
+
+    final configuration = MetricsRoutes.values.singleWhere(
+      (route) => route.name.value == name,
+      orElse: () => MetricsRoutes.dashboard,
+    );
+
+    return configuration;
+  }
+
+  /// Processes the given [configuration] depending on its authorization
+  /// requirements and the [_isUserLoggedIn] state.
+  ///
+  /// Returns the given [configuration] if the user is logged in
+  /// or the given route configuration does not require authorization.
+  /// Otherwise, returns the login page route configuration.
+  RouteConfiguration _processConfiguration(
+    RouteConfiguration configuration,
+  ) {
+    final noAuthorizationRequired = !configuration.authorizationRequired;
+
+    if (_isUserLoggedIn || noAuthorizationRequired) return configuration;
+
+    return MetricsRoutes.login;
+  }
+}
