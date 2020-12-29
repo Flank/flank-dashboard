@@ -114,7 +114,7 @@ jobs:
           sentry-cli releases files $SENTRY_RELEASE_AUTORENDERER upload-sourcemaps . --ext dart --rewrite
           cd ./build/web/
           sentry-cli releases files $SENTRY_RELEASE_AUTORENDERER upload-sourcemaps . --ext map --ext js --rewrite
-          sentry-cli releases finalize $SENTRY_RELEASE
+          sentry-cli releases finalize $SENTRY_RELEASE_AUTORENDERER
         working-directory: metrics/web/
 
       - name: Deploy auto renderer version to Firebase
