@@ -72,7 +72,7 @@ void main() {
     );
 
     test(
-      ".create() returns the project groups metrics page with a name equals to the given route configuration path",
+      ".create() returns the debug menu metrics page with a name equals to the given route configuration path",
       () {
         final routeConfiguration = MetricsRoutes.debugMenu;
         final expectedName = routeConfiguration.path;
@@ -116,7 +116,7 @@ void main() {
       () {
         final page = metricsPageFactory.create(MetricsRoutes.login);
 
-        expect(page, isA<LoginPage>());
+        expect(page.child, isA<LoginPage>());
       },
     );
 
@@ -125,7 +125,7 @@ void main() {
       () {
         final page = metricsPageFactory.create(MetricsRoutes.dashboard);
 
-        expect(page, isA<DashboardPage>());
+        expect(page.child, isA<DashboardPage>());
       },
     );
 
@@ -134,7 +134,7 @@ void main() {
       () {
         final page = metricsPageFactory.create(MetricsRoutes.projectGroups);
 
-        expect(page, isA<ProjectGroupPage>());
+        expect(page.child, isA<ProjectGroupPage>());
       },
     );
 
@@ -143,7 +143,7 @@ void main() {
       () {
         final page = metricsPageFactory.create(MetricsRoutes.debugMenu);
 
-        expect(page, isA<DebugMenuPage>());
+        expect(page.child, isA<DebugMenuPage>());
       },
     );
 
@@ -156,7 +156,7 @@ void main() {
         final routeConfiguration = _RouteConfigurationStub(name: unknown);
         final page = metricsPageFactory.create(routeConfiguration);
 
-        expect(page, isA<DashboardPage>());
+        expect(page.child, isA<DashboardPage>());
       },
     );
   });
