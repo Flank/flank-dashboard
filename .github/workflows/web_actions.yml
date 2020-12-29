@@ -20,6 +20,7 @@ jobs:
       SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       SENTRY_RELEASE: ${{ github.run_number }}
+      SENTRY_RELEASE_AUTORENDERER: ${{ github.run_number }}_autorenderer
       FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       PROJECT_PATH: metrics/web/
     steps:
@@ -92,6 +93,7 @@ jobs:
           sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps . --ext dart --rewrite
           cd ./build/web/
           sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps . --ext map --ext js --rewrite
+        working-directory: metrics/web/
 
       - name: Deploy HTML version to Firebase
         run: firebase deploy --only hosting:metrics-d9c67
@@ -102,15 +104,16 @@ jobs:
         working-directory: metrics/web/
 
       - name: Build release app using auto renderer
-        run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true --dart-define=SENTRY_DSN=$SENTRY_DSN --dart-define=SENTRY_RELEASE=${SENTRY_RELEASE}_skia
+        run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true --dart-define=SENTRY_DSN=$SENTRY_DSN --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE_AUTORENDERER
         working-directory: metrics/web/
 
-      - name: Update Source Maps for Autorenderer app version
+      - name: Update Source Maps for auto renderer app version
         run: |
-          sentry-cli releases new ${SENTRY_RELEASE}_skia
-          sentry-cli releases files ${SENTRY_RELEASE}_skia upload-sourcemaps . --ext dart --rewrite
+          sentry-cli releases new $SENTRY_RELEASE_AUTORENDERER
+          sentry-cli releases files $SENTRY_RELEASE_AUTORENDERER upload-sourcemaps . --ext dart --rewrite
           cd ./build/web/
-          sentry-cli releases files ${SENTRY_RELEASE}_skia upload-sourcemaps . --ext map --ext js --rewrite
+          sentry-cli releases files $SENTRY_RELEASE_AUTORENDERER upload-sourcemaps . --ext map --ext js --rewrite
+        working-directory: metrics/web/
 
       - name: Deploy auto renderer version to Firebase
         run: firebase deploy --only hosting:metrics-skia
