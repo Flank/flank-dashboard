@@ -224,7 +224,7 @@ The [DSN](https://docs.sentry.io/product/sentry-basics/dsn-explainer/) tells the
 
 The `DSN` can be public as it does not contain any secret data. Despite this fact, someone can use it to send events to your project. To tackle this you can block off certain requests using [inbound data filters](https://docs.sentry.io/product/accounts/quotas/#inbound-data-filters).
 
-Let's focus on how to bind your `DSN` to the Sentry SDK. The main idea is to use the `SENTRY_DSN` environment variable while building your app. Then, you should pass it to the `flutter build` command using the `--dart-define` option with argument that stands for environment variable. For example, consider the following code:
+Let's focus on how to bind your `DSN` to the Sentry SDK. The main idea is to use the `SENTRY_DSN` environment variable while building your app. You should pass it to the `flutter build` command using the `--dart-define` option with argument that stands for environment variable. For example, consider the following code:
 
 ```bash
 # Declare the SENTRY_DSN variable
@@ -269,12 +269,12 @@ const release = const String.fromEnvironment('SENTRY_RELEASE');
 
 Flutter minifies JavaScript code building the web application. This makes applications faster but also results in not readable errors and their stack traces. To resolve this problem we should [update the JS sourcemaps](https://docs.sentry.io/platforms/javascript/sourcemaps) each time we build a new application release.
 
-Updating source maps requires the [`Sentry CLI`](https://docs.sentry.io/product/cli/) to be installed and [configured](https://docs.sentry.io/product/cli/configuration/) (the organization slug, project and auth token configurations are required). Also, it requires the [release binding](#release) described in the previous section. Consider the following example:
+Updating source maps requires the [`Sentry CLI`](https://docs.sentry.io/product/cli/) to be installed and [configured](https://docs.sentry.io/product/cli/configuration/) (the organization slug, project and auth token configurations are required). Also, it requires the [release binding](#release) described in the previous section. Finally, we should pass the `--source-maps` flag to the `flutter build web` command to indicate that we need source maps to be generated. Consider the following example:
 
 ```bash
 # Declare the SENTRY_RELEASE variable
 
-flutter build web --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE
+flutter build web --source-maps --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE
 
 # Upload source maps
 sentry-cli releases new $SENTRY_RELEASE
