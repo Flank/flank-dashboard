@@ -11,32 +11,35 @@ void main() {
   group("MetricsPage", () {
     const child = Text('child');
 
-    test("throws an AssertionError if the child is null", () {
-      expect(
-        () => MetricsPage(child: null),
-        MatcherUtil.throwsAssertionError,
-      );
-    });
+    test(
+      "throws an AssertionError if the given child is null",
+      () {
+        expect(
+          () => MetricsPage(child: null),
+          MatcherUtil.throwsAssertionError,
+        );
+      },
+    );
 
-    test("throws an AssertionError if the maintain state is null", () {
-      expect(
-        () => MetricsPage(
-          child: child,
-          maintainState: null,
-        ),
-        MatcherUtil.throwsAssertionError,
-      );
-    });
+    test(
+      "throws an AssertionError if the given maintain state is null",
+      () {
+        expect(
+          () => MetricsPage(child: child, maintainState: null),
+          MatcherUtil.throwsAssertionError,
+        );
+      },
+    );
 
-    test("throws an AssertionError if the fullscreen dialog is null", () {
-      expect(
-        () => MetricsPage(
-          child: child,
-          fullscreenDialog: null,
-        ),
-        MatcherUtil.throwsAssertionError,
-      );
-    });
+    test(
+      "throws an AssertionError if the given fullscreen dialog is null",
+      () {
+        expect(
+          () => MetricsPage(child: child, fullscreenDialog: null),
+          MatcherUtil.throwsAssertionError,
+        );
+      },
+    );
 
     test(
       "uses the default maintain state value if the given parameter is not specified",
@@ -68,20 +71,13 @@ void main() {
     );
 
     test(
-      ".createRoute() applies the given arguments to the route settings' arguments",
+      ".createRoute() returns a metrics page with the given route arguments",
       () {
         const arguments = 'test arguments';
         const metricsPage = MetricsPage(child: child, arguments: arguments);
         final actualRoute = metricsPage.createRoute(null);
 
-        expect(
-          actualRoute,
-          isA<MetricsPageRoute>().having(
-            (metricsPageRoute) => metricsPageRoute.settings.arguments,
-            'route settings arguments',
-            arguments,
-          ),
-        );
+        expect(actualRoute.settings.arguments, arguments);
       },
     );
 
@@ -89,16 +85,10 @@ void main() {
       ".createRoute() returns the metrics page route that builds the given child widget",
       () {
         const metricsPage = MetricsPage(child: child);
-        final actualRoute = metricsPage.createRoute(null);
+        final actualRoute = metricsPage.createRoute(null) as MetricsPageRoute;
+        final actualChild = actualRoute.builder(null);
 
-        expect(
-          actualRoute,
-          isA<MetricsPageRoute>().having(
-            (metricsPageRoute) => metricsPageRoute.builder(null),
-            'builds child widget',
-            child,
-          ),
-        );
+        expect(actualChild, equals(child));
       },
     );
   });

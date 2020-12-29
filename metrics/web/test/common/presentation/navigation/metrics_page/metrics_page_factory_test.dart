@@ -1,5 +1,5 @@
 import 'package:metrics/auth/presentation/pages/login_page.dart';
-import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
@@ -24,13 +24,10 @@ void main() {
     );
 
     test(
-      ".create() returns the metrics page with a name equals to the given route configuration's path",
+      ".create() returns the loading metrics page with a name equals to the given route configuration path",
       () {
-        const expectedName = 'test';
-        const routeConfiguration = _RouteConfigurationStub(
-          name: RouteName.loading,
-          path: expectedName,
-        );
+        const routeConfiguration = MetricsRoutes.loading;
+        final expectedName = routeConfiguration.path;
 
         final actualName = metricsPageFactory.create(routeConfiguration).name;
 
@@ -39,107 +36,119 @@ void main() {
     );
 
     test(
-      ".create() returns the metrics page having the loading page widget as a child if the route configuration name is a loading",
+      ".create() returns the login metrics page with a name equals to the given route configuration path",
       () {
-        const routeConfiguration = _RouteConfigurationStub(
-          name: RouteName.loading,
-        );
+        final routeConfiguration = MetricsRoutes.login;
+        final expectedName = routeConfiguration.path;
 
-        final page = metricsPageFactory.create(routeConfiguration);
+        final actualName = metricsPageFactory.create(routeConfiguration).name;
 
-        expect(
-          page,
-          isA<MetricsPage>().having(
-            (metricsPage) => metricsPage.child,
-            'LoadingPage',
-            isA<LoadingPage>(),
-          ),
-        );
+        expect(actualName, equals(expectedName));
       },
     );
 
     test(
-      ".create() returns the metrics page having the login page widget as a child if the route configuration name is a login",
+      ".create() returns the dashboard metrics page with a name equals to the given route configuration path",
       () {
-        const routeConfiguration = _RouteConfigurationStub(
-          name: RouteName.login,
-        );
+        final routeConfiguration = MetricsRoutes.dashboard;
+        final expectedName = routeConfiguration.path;
 
-        final page = metricsPageFactory.create(routeConfiguration);
+        final actualName = metricsPageFactory.create(routeConfiguration).name;
 
-        expect(
-          page,
-          isA<MetricsPage>().having(
-            (metricsPage) => metricsPage.child,
-            'LoginPage',
-            isA<LoginPage>(),
-          ),
-        );
+        expect(actualName, equals(expectedName));
       },
     );
 
     test(
-      ".create() returns the metrics page having the dashboard page widget as a child if the route configuration name is a dashboard",
+      ".create() returns the project groups metrics page with a name equals to the given route configuration path",
       () {
-        const routeConfiguration = _RouteConfigurationStub(
-          name: RouteName.dashboard,
-        );
+        final routeConfiguration = MetricsRoutes.projectGroups;
+        final expectedName = routeConfiguration.path;
 
-        final page = metricsPageFactory.create(routeConfiguration);
+        final actualName = metricsPageFactory.create(routeConfiguration).name;
 
-        expect(
-          page,
-          isA<MetricsPage>().having(
-            (metricsPage) => metricsPage.child,
-            'DashboardPage',
-            isA<DashboardPage>(),
-          ),
-        );
+        expect(actualName, equals(expectedName));
       },
     );
 
     test(
-      ".create() returns the metrics page having the debug menu page widget as a child if the route configuration name is a debug menu",
+      ".create() returns the project groups metrics page with a name equals to the given route configuration path",
       () {
-        const routeConfiguration = _RouteConfigurationStub(
-          name: RouteName.debugMenu,
-        );
+        final routeConfiguration = MetricsRoutes.debugMenu;
+        final expectedName = routeConfiguration.path;
 
-        final page = metricsPageFactory.create(routeConfiguration);
+        final actualName = metricsPageFactory.create(routeConfiguration).name;
 
-        expect(
-          page,
-          isA<MetricsPage>().having(
-            (metricsPage) => metricsPage.child,
-            'DebugMenuPage',
-            isA<DebugMenuPage>(),
-          ),
-        );
+        expect(actualName, equals(expectedName));
       },
     );
 
     test(
-      ".create() returns the metrics page having the project group page widget as a child if the route configuration name is project groups",
+      ".create() returns the dashboard metrics page with a name equals to the given route configuration path if the configuration name is unknown",
       () {
-        const routeConfiguration = _RouteConfigurationStub(
-          name: RouteName.projectGroups,
+        const testName = 'test';
+
+        final unknown = _RouteNameMock();
+        when(unknown.value).thenReturn('unknown');
+
+        final routeConfiguration = _RouteConfigurationStub(
+          name: unknown,
+          path: testName,
         );
 
-        final page = metricsPageFactory.create(routeConfiguration);
+        final actualName = metricsPageFactory.create(routeConfiguration).name;
 
-        expect(
-          page,
-          isA<MetricsPage>().having(
-            (metricsPage) => metricsPage.child,
-            'ProjectGroupPage',
-            isA<ProjectGroupPage>(),
-          ),
-        );
+        expect(actualName, equals(testName));
       },
     );
 
     test(
-      ".create() returns the metrics page having the dashboard page widget as a child if the route configuration name is unknown",
+      ".create() returns the loading metrics page if the given route configuration name is a loading",
+      () {
+        final page = metricsPageFactory.create(MetricsRoutes.loading);
+
+        expect(page.child, isA<LoadingPage>());
+      },
+    );
+
+    test(
+      ".create() returns the login metrics page if the given route configuration name is a login",
+      () {
+        final page = metricsPageFactory.create(MetricsRoutes.login);
+
+        expect(page, isA<LoginPage>());
+      },
+    );
+
+    test(
+      ".create() returns the dashboard metrics page if the given route configuration name is a dashboard",
+      () {
+        final page = metricsPageFactory.create(MetricsRoutes.dashboard);
+
+        expect(page, isA<DashboardPage>());
+      },
+    );
+
+    test(
+      ".create() returns the project group metrics page if the given route configuration name is project groups",
+      () {
+        final page = metricsPageFactory.create(MetricsRoutes.projectGroups);
+
+        expect(page, isA<ProjectGroupPage>());
+      },
+    );
+
+    test(
+      ".create() returns the debug menu metrics page if the given route configuration name is a debug menu",
+      () {
+        final page = metricsPageFactory.create(MetricsRoutes.debugMenu);
+
+        expect(page, isA<DebugMenuPage>());
+      },
+    );
+
+    test(
+      ".create() returns the project group metrics page if the given route configuration name is unknown",
       () {
         final unknown = _RouteNameMock();
         when(unknown.value).thenReturn('unknown');
@@ -147,21 +156,17 @@ void main() {
         final routeConfiguration = _RouteConfigurationStub(name: unknown);
         final page = metricsPageFactory.create(routeConfiguration);
 
-        expect(
-          page,
-          isA<MetricsPage>().having(
-            (metricsPage) => metricsPage.child,
-            'DashboardPage',
-            isA<DashboardPage>(),
-          ),
-        );
+        expect(page, isA<DashboardPage>());
       },
     );
   });
 }
 
-/// Stub implementation of the [RouteConfiguration].
+/// A stub implementation of the [RouteConfiguration] used in tests.
 class _RouteConfigurationStub extends RouteConfiguration {
+  /// Creates a new instance of the route configuration stub.
+  /// 
+  /// Provides the default value for the [authorizationRequired].
   const _RouteConfigurationStub({
     RouteName name,
     String path,
