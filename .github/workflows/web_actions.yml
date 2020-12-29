@@ -84,7 +84,7 @@ jobs:
         run: brew install getsentry/tools/sentry-cli
 
       - name: Build release app
-        run: flutter clean && flutter build web --release --dart-define=SENTRY_DSN=$SENTRY_DSN --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE
+        run: flutter clean && flutter build web --release --source-maps --dart-define=SENTRY_DSN=$SENTRY_DSN --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE
         working-directory: metrics/web/
 
       - name: Update Source Maps for HTML app version
@@ -93,6 +93,7 @@ jobs:
           sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps . --ext dart --rewrite
           cd ./build/web/
           sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps . --ext map --ext js --rewrite
+          sentry-cli releases finalize $SENTRY_RELEASE
         working-directory: metrics/web/
 
       - name: Deploy HTML version to Firebase
@@ -104,7 +105,7 @@ jobs:
         working-directory: metrics/web/
 
       - name: Build release app using auto renderer
-        run: flutter clean && flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true --dart-define=SENTRY_DSN=$SENTRY_DSN --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE_AUTORENDERER
+        run: flutter clean && flutter build web --release --source-maps --dart-define=FLUTTER_WEB_AUTO_DETECT=true --dart-define=SENTRY_DSN=$SENTRY_DSN --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE_AUTORENDERER
         working-directory: metrics/web/
 
       - name: Update Source Maps for auto renderer app version
@@ -113,6 +114,7 @@ jobs:
           sentry-cli releases files $SENTRY_RELEASE_AUTORENDERER upload-sourcemaps . --ext dart --rewrite
           cd ./build/web/
           sentry-cli releases files $SENTRY_RELEASE_AUTORENDERER upload-sourcemaps . --ext map --ext js --rewrite
+          sentry-cli releases finalize $SENTRY_RELEASE
         working-directory: metrics/web/
 
       - name: Deploy auto renderer version to Firebase
