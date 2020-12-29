@@ -52,7 +52,7 @@ The `MetricsLogger` is a main part of the logger integration. The application us
 
 The following class diagram demonstrates the structure of the logger integration and the relationships of classes this integration requires.
 
-![Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/change_sentry_design/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_class_diagram.puml)
+![Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_class_diagram.puml)
 
 ### Making Things Work
 
@@ -60,11 +60,11 @@ The main idea of the `Metrics Logger` integration is to initilize it with the `L
 
 The following sequence diagram describes the process of `Metrics Logger` innitializing with the `CoolLoggerWriter` implementation:
 
-![Metrics Logger init sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/change_sentry_design/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_initialize_sequence_diagram.puml)
+![Metrics Logger init sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_initialize_sequence_diagram.puml)
 
 And the following sequence diagram describes the logging process:
 
-![Metrics Logger log sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/change_sentry_design/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_log_error_sequence_diagram.puml)
+![Metrics Logger log sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_log_error_sequence_diagram.puml)
 
 To know more about the concrete writer integration, consider the [Sentry Integration](#sentry-integration) section.
 
@@ -210,14 +210,13 @@ _**Note**: Using the above classes to set the contexts with the same key is requ
 
 The following class diagram demonstreates the complete structure of the Metrics Logger that uses the `SentryLoggerWriter`:
 
-![Complete Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/change_sentry_design/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_sentry_class_diagram.puml)
+![Complete Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_sentry_class_diagram.puml)
 
 ### Sentry Options Binding
 
 The following subsections describe how to bind `DSN` and `release` options to the Sentry SDK using your build environment.
 
-_**Note**: The next sections operate environment variables and pass them to the `flutter build` command. This is required to
- use the `--dart-define` option to pass the environment variable. Otherwise, it won't be available in the application code._
+_**Note**: The next sections operate environment variables and pass them to the `flutter build` command. This is required to use the `--dart-define` option to pass the environment variable. Otherwise, it won't be available in the application code._
 
 #### Data Source Name (DSN)
 
