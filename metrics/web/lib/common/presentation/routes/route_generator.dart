@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_route.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
-import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';

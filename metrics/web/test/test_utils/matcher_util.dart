@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
-import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
+import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_route.dart';
 import 'package:test/test.dart';
 
 /// A utility class providing base matchers for tests.
