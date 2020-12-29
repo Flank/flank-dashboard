@@ -58,7 +58,7 @@ package common.presentation {
                 + void pushAndRemoveUntil(RouteConfiguration, MetricsPredicate)
                 + void handleInitialRoutePath(RouteConfiguration routeConfiguration)
                 + void handleNewRoutePath(RouteConfiguration routeConfiguration)
-                - void _redirectIfInitialized()
+                - void _redirect()
                 - RouteConfiguration _processConfiguration(RouteConfiguration routeConfiguration)
             }
         }
