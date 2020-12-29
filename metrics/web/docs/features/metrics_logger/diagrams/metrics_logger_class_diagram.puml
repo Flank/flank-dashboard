@@ -5,14 +5,14 @@ package metrics {
 
   class LoggerWriter {
     + writeError(Object error, [StackTrace stackTrace]) : FutureOr<void>
-    + setContext(String key, Map<String, dynamic> context) : FutureOr<void>
+    + setContext(String key, dynamic context) : FutureOr<void>
   }
 
   class MetricsLogger {
     - _loggerWriter : LoggerWriter
     + static initialize(LoggerWriter loggerWriter,  Map<String, dynamic> contexts) : Future<void>
     + static logError(Object error, [StackTrace stackTrace]) : Future<void>
-    + static setContext(String key, Map<String, dynamic> context) : Future<void>
+    + static setContext(String key, dynamic context) : Future<void>
   }
 
   class WebContextProvider {
