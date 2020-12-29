@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
-import 'package:metrics/common/presentation/routes/metrics_page_route.dart';
+import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_route.dart';
 import 'package:test/test.dart';
 
-import '../../../test_utils/matcher_util.dart';
+import '../../../../test_utils/matcher_util.dart';
 
 void main() {
   group("MetricsPageRoute", () {
