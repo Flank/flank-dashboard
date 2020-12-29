@@ -3,8 +3,8 @@ import 'package:metrics/metrics_logger/writer/logger_writer.dart';
 /// A class that provides methods for logging errors together with
 /// their contexts using the [LoggerWriter].
 class MetricsLogger {
-  /// The [LoggerWriter] this logger uses to write errors and contexts
-  /// to logger output.
+  /// The [LoggerWriter] this logger uses to write errors and their contexts
+  /// to the logger output.
   static LoggerWriter _writer;
 
   /// Initializes this logger with the given [writer] and
@@ -31,7 +31,7 @@ class MetricsLogger {
 
   /// Sets the context with the given [key] to the given [context] value.
   ///
-  /// Throws an [AssertionError], if the current
+  /// Throws an [AssertionError] if the current
   /// [LoggerWriter] instance is `null`.
   static Future<void> setContext(String key, dynamic context) async {
     assert(_writer != null);
@@ -41,7 +41,7 @@ class MetricsLogger {
 
   /// Logs the given [error] and its optionally [stackTrace].
   ///
-  /// Throws an [AssertionError], if the current
+  /// Throws an [AssertionError] if the current
   /// [LoggerWriter] instance is `null`.
   static Future<void> logError(Object error, [StackTrace stackTrace]) async {
     assert(_writer != null);
