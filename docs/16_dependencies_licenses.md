@@ -134,6 +134,7 @@ Each Metrics component contains a list of dependencies like plugins, packages, e
 | args | [pub.dev](https://pub.dev/packages/args) | [BSD](https://github.com/dart-lang/args/blob/master/LICENSE) |	
 | mockito | [pub.dev](https://pub.dev/packages/mockito) | [Apache 2.0](https://github.com/dart-lang/mockito/blob/master/LICENSE) |
 | network_image_mock | [pub.dev](https://pub.dev/packages/network_image_mock) | [BSD](https://github.com/stelynx/network_image_mock/blob/master/LICENSE) |
+| uuid | [pub.dev](https://pub.dev/packages/uuid) | [MIT](https://github.com/Daegalus/dart-uuid/blob/master/LICENSE) |
 
 
 ## [API Mock Server](https://github.com/platform-platform/monorepo/tree/master/api_mock_server)			
