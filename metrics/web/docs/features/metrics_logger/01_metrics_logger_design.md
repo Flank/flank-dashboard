@@ -216,7 +216,8 @@ The following class diagram demonstreates the complete structure of the Metrics 
 
 The following subsections describe how to bind `DSN` and `release` options to the Sentry SDK using your build environment.
 
-_**Note**: The next sections operate environment variables and pass them to the `flutter build` command. This is required to use the `--dart-define` option to pass environment variable. Otherwise, it won't be available in application code._
+_**Note**: The next sections operate environment variables and pass them to the `flutter build` command. This is required to
+ use the `--dart-define` option to pass the environment variable. Otherwise, it won't be available in the application code._
 
 #### Data Source Name (DSN)
 
@@ -244,7 +245,8 @@ A release is a version of your code that is deployed to an environment. Specifyi
 - determine issues and regressions introduced in a new release;
 - predict which commit caused an issue and who is likely responsible;
 - resolve issues by including the issue number in your commit message;
-- receive email notifications when your code gets deployed.
+- receive email notifications when your code gets deployed;
+- manage code source maps to make errors and their stack traces more readable.
 
 The release is commonly a git SHA or a custom version number, it also must follow the listed limitations:
 - can't contain newlines or spaces;
