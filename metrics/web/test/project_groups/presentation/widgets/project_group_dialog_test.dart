@@ -25,6 +25,7 @@ import 'package:metrics/project_groups/presentation/widgets/strategy/project_gro
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../test_utils/matcher_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -39,6 +40,14 @@ void main() {
     const backgroundColor = Colors.red;
     const contentBorderColor = Colors.yellow;
     const testText = "test";
+    const toastMessage = 'toast message';
+    const projectGroupName = "name";
+    const titleTextStyle = TextStyle(
+      color: Colors.grey,
+    );
+    const counterTextStyle = TextStyle(
+      color: Colors.blue,
+    );
 
     final searchFieldFinder = find.byWidgetPredicate(
       (widget) {
@@ -47,12 +56,6 @@ void main() {
       },
     );
 
-    Future<void> closeDialog(WidgetTester tester) async {
-      final infoDialog = tester.widget<InfoDialog>(find.byType(InfoDialog));
-      final closeIcon = infoDialog.closeIcon;
-      await tester.tap(find.byWidget(closeIcon));
-    }
-
     final groupNameFieldFinder = find.byWidgetPredicate(
       (widget) {
         return widget is MetricsTextFormField &&
@@ -60,19 +63,17 @@ void main() {
       },
     );
 
-    const titleTextStyle = TextStyle(
-      color: Colors.grey,
-    );
-    const counterTextStyle = TextStyle(
-      color: Colors.blue,
-    );
-    const toastMessage = 'toast message';
-
     final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
       id: "id",
-      name: "name",
+      name: projectGroupName,
       selectedProjectIds: UnmodifiableListView<String>(["id"]),
     );
+
+    Future<void> closeDialog(WidgetTester tester) async {
+      final infoDialog = tester.widget<InfoDialog>(find.byType(InfoDialog));
+      final closeIcon = infoDialog.closeIcon;
+      await tester.tap(find.byWidget(closeIcon));
+    }
 
     const theme = MetricsThemeData(
       projectGroupDialogTheme: ProjectGroupDialogThemeData(
@@ -83,7 +84,7 @@ void main() {
       ),
     );
 
-    final strategy = ProjectGroupDialogStrategyMock();
+    final strategy = _ProjectGroupDialogStrategyMock();
 
     ProjectGroupsNotifier projectGroupsNotifier;
 
@@ -293,7 +294,7 @@ void main() {
         }
         final projectDialogViewModel = ProjectGroupDialogViewModel(
           id: "id",
-          name: "name",
+          name: projectGroupName,
           selectedProjectIds: UnmodifiableListView<String>(selectedIds),
         );
 
@@ -316,7 +317,7 @@ void main() {
       (tester) async {
         final projectDialogViewModel = ProjectGroupDialogViewModel(
           id: "id",
-          name: "name",
+          name: projectGroupName,
           selectedProjectIds: UnmodifiableListView<String>([]),
         );
 
@@ -358,7 +359,7 @@ void main() {
       (tester) async {
         final projectDialogViewModel = ProjectGroupDialogViewModel(
           id: "id",
-          name: "name",
+          name: projectGroupName,
           selectedProjectIds: UnmodifiableListView<String>([]),
         );
         when(projectGroupsNotifier.projectGroupDialogViewModel)
@@ -406,7 +407,7 @@ void main() {
       "calls the action of the given strategy on tap on the action button",
       (WidgetTester tester) async {
         const groupId = "id";
-        const groupName = "name";
+        const groupName = projectGroupName;
         final projectIds = UnmodifiableListView<String>(["id"]);
 
         final projectGroupDialogViewModel = ProjectGroupDialogViewModel(
@@ -939,6 +940,73 @@ void main() {
     );
 
     testWidgets(
+      "resets a filter name on dispose",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        await closeDialog(tester);
+        await tester.pumpAndSettle();
+
+        verify(projectGroupsNotifier.resetFilterName()).called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "dispose a filter name controller on dispose",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        final filterNameTextField = tester.widget<MetricsTextFormField>(
+          find.widgetWithText(MetricsTextFormField, projectGroupName),
+        );
+        final filterNameController = filterNameTextField.controller;
+
+        await closeDialog(tester);
+        await tester.pumpAndSettle();
+
+        expect(filterNameController.dispose, MatcherUtil.throwsFlutterError);
+      },
+    );
+
+    testWidgets(
+      "dispose an active button active value notifier on dispose",
+      (tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_ProjectGroupDialogTestbed(
+            strategy: strategy,
+            projectGroupsNotifier: projectGroupsNotifier,
+          ));
+        });
+
+        final valueListenableBuilder = tester.widget<ValueListenableBuilder>(
+          find.byWidgetPredicate(
+            (widget) => widget is ValueListenableBuilder<bool>,
+          ),
+        );
+        final isActiveButtonActiveNotifier =
+            valueListenableBuilder.valueListenable as ValueNotifier;
+
+        await closeDialog(tester);
+        await tester.pumpAndSettle();
+
+        expect(
+          isActiveButtonActiveNotifier.dispose,
+          MatcherUtil.throwsFlutterError,
+        );
+      },
+    );
+
+    testWidgets(
       "closes normally after the view model's reset",
       (WidgetTester tester) async {
         await mockNetworkImagesFor(() {
@@ -1013,5 +1081,5 @@ class _ProjectGroupDialogTestbedState
   }
 }
 
-class ProjectGroupDialogStrategyMock extends Mock
+class _ProjectGroupDialogStrategyMock extends Mock
     implements ProjectGroupDialogStrategy {}
