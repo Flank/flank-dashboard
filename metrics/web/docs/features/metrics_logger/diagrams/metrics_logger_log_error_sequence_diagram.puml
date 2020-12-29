@@ -7,14 +7,15 @@
     participant CoolLoggerWriter << (C,#ADD1B2) >>
     database "Logs Output" as Logs
 
-    CoolClass -> MetricsLogger : setContext(key, context)
-    activate MetricsLogger
-    
-    MetricsLogger -> CoolLoggerWriter : setContext(key, context)
-    activate CoolLoggerWriter
+    opt setting additional context
+        CoolClass -> MetricsLogger : setContext(key, context)
+        activate MetricsLogger
+        MetricsLogger -> CoolLoggerWriter : setContext(key, context)
+        activate CoolLoggerWriter
 
-    return void 
-    return void
+        return void 
+        return void
+    end
 
     CoolClass -> MetricsLogger : logError(error, stackTrace)
     activate MetricsLogger

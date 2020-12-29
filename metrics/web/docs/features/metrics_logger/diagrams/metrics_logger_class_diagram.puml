@@ -4,14 +4,14 @@ package metrics {
   class MetricsApp {}
 
   class LoggerWriter {
-    + writeError(Object error, [Object stackTrace]) : FutureOr<void>
+    + writeError(Object error, [StackTrace stackTrace]) : FutureOr<void>
     + setContext(String key, Map<String, dynamic> context) : FutureOr<void>
   }
 
   class MetricsLogger {
     - _loggerWriter : LoggerWriter
     + static initialize(LoggerWriter loggerWriter,  Map<String, dynamic> contexts) : Future<void>
-    + static logError(Object error, [Object stackTrace]) : Future<void>
+    + static logError(Object error, [StackTrace stackTrace]) : Future<void>
     + static setContext(String key, Map<String, dynamic> context) : Future<void>
   }
 
