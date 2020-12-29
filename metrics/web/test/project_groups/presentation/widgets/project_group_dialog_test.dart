@@ -25,6 +25,7 @@ import 'package:metrics/project_groups/presentation/widgets/strategy/project_gro
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
+import '../../../test_utils/matcher_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/project_groups_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -973,7 +974,7 @@ void main() {
         await closeDialog(tester);
         await tester.pumpAndSettle();
 
-        expect(filterNameController.dispose, throwsA(isA<FlutterError>()));
+        expect(filterNameController.dispose, MatcherUtil.throwsFlutterError);
       },
     );
 
@@ -1000,7 +1001,7 @@ void main() {
 
         expect(
           isActiveButtonActiveNotifier.dispose,
-          throwsA(isA<FlutterError>()),
+          MatcherUtil.throwsFlutterError,
         );
       },
     );
