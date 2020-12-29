@@ -15,7 +15,7 @@ void main() {
       notifier = NavigationNotifier(pageFactory);
     });
 
-    Matcher pageMatcher(RouteName name) => contains(name?.value);
+    Matcher pageMatcher(RouteName name) => contains(name.value);
 
     final loginPageMatcher = pageMatcher(RouteName.login);
     final dashboardPageMatcher = pageMatcher(RouteName.dashboard);

@@ -36,4 +36,13 @@ class MetricsRoutes {
     path: '/${RouteName.debugMenu}',
     authorizationRequired: true,
   );
+
+  /// A [Set] that contains all available [RouteConfiguration]s.
+  static final Set<RouteConfiguration> values = {
+    loading,
+    login,
+    dashboard,
+    projectGroups,
+    debugMenu,
+  };
 }
