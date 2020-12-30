@@ -11,7 +11,7 @@ void main() {
 
     NavigationNotifier notifier;
 
-    void _prepareNotifier() {
+    void prepareNotifier() {
       notifier.handleAppInitialized(isAppInitialized: true);
 
       notifier.handleAuthenticationUpdates(isLoggedIn: false);
@@ -19,14 +19,12 @@ void main() {
 
     setUp(() {
       notifier = NavigationNotifier(pageFactory);
-      _prepareNotifier();
+      prepareNotifier();
     });
 
-    Matcher pageMatcher(RouteName name) => contains(name.value);
-
-    final isLoginPageName = pageMatcher(RouteName.login);
-    final isDashboardPageName = pageMatcher(RouteName.dashboard);
-    final isProjectGroupsPageName = pageMatcher(RouteName.projectGroups);
+    final isLoginPageName = equals(MetricsRoutes.login.path);
+    final isDashboardPageName = equals(MetricsRoutes.dashboard.path);
+    final isProjectGroupsPageName = equals(MetricsRoutes.projectGroups.path);
     final isLoadingPageName = isNull;
 
     test(
@@ -88,15 +86,11 @@ void main() {
 
         notifier.handleInitialRoutePath(MetricsRoutes.loading);
 
-        final currentPage = notifier.pages.last;
-
-        expect(currentPage.name, isLoadingPageName);
-
         notifier.handleAppInitialized(isAppInitialized: true);
 
-        final newPage = notifier.pages.last;
+        final currentPage = notifier.pages.last;
 
-        expect(newPage.name, isDashboardPageName);
+        expect(currentPage.name, isDashboardPageName);
       },
     );
 
@@ -121,15 +115,11 @@ void main() {
 
         notifier.handleInitialRoutePath(MetricsRoutes.projectGroups);
 
-        final currentPage = notifier.pages.last;
-
-        expect(currentPage.name, isLoadingPageName);
-
         notifier.handleAppInitialized(isAppInitialized: true);
 
-        final newPage = notifier.pages.last;
+        final currentPage = notifier.pages.last;
 
-        expect(newPage.name, isProjectGroupsPageName);
+        expect(currentPage.name, isProjectGroupsPageName);
       },
     );
 
@@ -142,16 +132,11 @@ void main() {
         notifier.handleInitialRoutePath(MetricsRoutes.projectGroups);
 
         notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAppInitialized(isAppInitialized: true);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isProjectGroupsPageName);
-
-        notifier.handleAppInitialized(isAppInitialized: true);
-
-        final newPage = notifier.pages.last;
-
-        expect(newPage.name, isDashboardPageName);
+        expect(currentPage.name, isDashboardPageName);
       },
     );
 

@@ -60,6 +60,8 @@ class NavigationNotifier extends ChangeNotifier {
   /// given [isAppInitialized].
   ///
   /// Redirects to the redirect route if the [isAppInitialized] is `true`.
+  ///
+  /// Throws an [ArgumentError] if the given [isAppInitialized] is `null`.
   void handleAppInitialized({
     @required bool isAppInitialized,
   }) {
@@ -70,23 +72,15 @@ class NavigationNotifier extends ChangeNotifier {
     if (_isAppInitialized) _redirect();
   }
 
-  /// Redirects to [MetricsRoutes.dashboard] and clears the [_redirectRoute]
-  /// if the [_redirectRoute] is [MetricsRoutes.loading].
+  /// Redirects to the redirect route and clears it.
   ///
-  /// Redirects to the [MetricsRoutes.dashboard]
-  /// if the [_redirectRoute] is `null`.
+  /// If the redirect route is [MetricsRoutes.loading] or `null`,
+  /// redirects to the [MetricsRoutes.loading].
   ///
   /// Otherwise, redirects to the [_redirectRoute] and clears it.
   void _redirect() {
-    if (_redirectRoute == MetricsRoutes.loading) {
-      push(MetricsRoutes.dashboard);
-      _redirectRoute = null;
-      return;
-    }
-
-    if (_redirectRoute == null) {
-      push(MetricsRoutes.dashboard);
-      return;
+    if (_redirectRoute == null || _redirectRoute == MetricsRoutes.loading) {
+      _redirectRoute = MetricsRoutes.dashboard;
     }
 
     push(_redirectRoute);
@@ -160,12 +154,10 @@ class NavigationNotifier extends ChangeNotifier {
   RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
     final name = page?.name;
 
-    final configuration = MetricsRoutes.values.firstWhere(
+    return MetricsRoutes.values.firstWhere(
       (route) => route.name.value == name,
       orElse: () => MetricsRoutes.dashboard,
     );
-
-    return configuration;
   }
 
   /// Processes the given [configuration] depending on [_isAppInitialized] state,
@@ -175,9 +167,7 @@ class NavigationNotifier extends ChangeNotifier {
   /// Returns [MetricsRoutes.loading] and saves the [_redirectRoute]
   /// if the application is not initialized.
   ///
-  /// Returns [configuration] if the user is logged in.
-  ///
-  /// Returns [configuration] if the user is not logged in and the given
+  /// Returns [configuration] if the user is logged in or the given
   /// [configuration] does not require authorization.
   ///
   /// Otherwise, returns [MetricsRoutes.login].
@@ -190,10 +180,10 @@ class NavigationNotifier extends ChangeNotifier {
       return MetricsRoutes.loading;
     }
 
-    final noAuthorizationRequired = !configuration.authorizationRequired;
+    final authorizationRequired = configuration.authorizationRequired;
 
-    if (_isUserLoggedIn || noAuthorizationRequired) return configuration;
+    if (!_isUserLoggedIn && authorizationRequired) return MetricsRoutes.login;
 
-    return MetricsRoutes.login;
+    return configuration;
   }
 }
