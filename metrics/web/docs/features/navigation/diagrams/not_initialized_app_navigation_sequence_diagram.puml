@@ -4,6 +4,8 @@ actor Bob
 
 participant Application
 
+participant LoadingPage
+
 participant NavigationNotifier
 
 Bob -> Application : opens the Metrics URL
@@ -18,17 +20,29 @@ NavigationNotifier --> Application : redirects to the Loading Page
 
 Application --> Bob : shows Loading Page
 
-Application -> Application : initialize all components
+Application -> LoadingPage : initialize all components
 
-Application -> NavigationNotifier : handleAppInitializationUpdates(isAppInitialized: true)
+activate LoadingPage
+
+LoadingPage -> LoadingPage : initialize all components
+
+LoadingPage -> NavigationNotifier : handleAppInitializationUpdates(isAppInitialized)
+
+deactivate LoadingPage
 
 NavigationNotifier -> NavigationNotifier : update isAppInitialized value
 
-NavigationNotifier -> NavigationNotifier : _redirect()
+alt isAppInitialized == true
+    NavigationNotifier -> NavigationNotifier : _redirect()
 
-NavigationNotifier --> Application : redirects to the initial route
-
-Application --> Bob : shows page with the given URL
+    alt redirectRoute == Loading Page or redirectRoute == null
+        NavigationNotifier --> Application : redirects to the Dashboard
+        Application --> Bob : shows Dashboard page
+    else
+        NavigationNotifier --> Application : redirects to the initial route
+        Application --> Bob : shows page with the given URL
+    end
+end
 
 deactivate NavigationNotifier
 deactivate Application

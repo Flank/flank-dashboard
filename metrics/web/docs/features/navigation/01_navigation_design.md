@@ -135,14 +135,10 @@ The `NavigationNotifier` provides several navigation methods that are similar to
 
 According to the above, we **do not** pass parameters using internal navigation and **do not** implement similar logic for the new navigation system within the Metrics Web Application.
 
-To use the application correctly, all of its components, such as `Feature Config` or `Local Config`, must be initialized. The application must show the `Loading Page` when the initialization is in progress. Consider the following sequence diagram that describes the strategy to use in navigation when the application is not initialized.
+To be sure that the application will work correctly, we should ensure that all of its components, such as `Feature Config` or `Local Config` initialized before the user gets access to the application. Thus, the application must show the `Loading Page` when the initialization is in progress. Once the initialization process finishes, the application should redirect the user to the route user tried to open.
+Consider the following sequence diagram that will describe this process in more details:
 
 ![Not Initialized App Navigation Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_navigator_designs/metrics/web/docs/features/navigation/diagrams/not_initialized_app_navigation_sequence_diagram.puml)
-
-1. When the user enters the application, the `_isAppInitialized` variable of the `NavigationNotifier` is `false`.
-2. The `handleInitialRoutePath` saves the given initial route configuration in the `_redirectRoute` variable and pushes the `LoadingPage`.
-3. When the initialization finishes, the application calls `handleAppInitializationUpdates(isAppInitialized: true)`.
-4. `NavigationNotifier` sets the `_isAppInitialized` value to `true` and redirects user to the `_redirectRoute`.
 
 ### Metrics Page Factory
 
