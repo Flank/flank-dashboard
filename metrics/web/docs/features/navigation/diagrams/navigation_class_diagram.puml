@@ -47,15 +47,19 @@ package common.presentation {
                 + pages : List<MetricsPage>
                 + currentConfiguration : RouteConfiguration
                 - _metricsPageFactory : MetricsPageFactory
-                - _routeConfigurationFactory : RouteConfigurationFactory
                 - _isUserLoggedIn : bool
+                - _isAppInitialized : bool
+                - _redirectRoute : RouteConfiguration
                 + void handleAuthenticationUpdates(bool isLoggedIn)
+                + void handleAppInitialized(bool isAppInitialized)
                 + void pop()
-                + void pushNamed(RouteName)
-                + void pushReplacementNamed(RouteName)
-                + void pushNamedAndRemoveUntil(RouteName, bool Function(MetricsPage) test)
+                + void push(RouteConfiguration)
+                + void pushReplacement(RouteConfiguration)
+                + void pushAndRemoveUntil(RouteConfiguration, MetricsPredicate)
                 + void handleInitialRoutePath(RouteConfiguration routeConfiguration)
                 + void handleNewRoutePath(RouteConfiguration routeConfiguration)
+                - void _redirect()
+                - RouteConfiguration _processConfiguration(RouteConfiguration routeConfiguration)
             }
         }
 

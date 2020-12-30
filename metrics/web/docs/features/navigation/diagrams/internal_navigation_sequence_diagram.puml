@@ -16,7 +16,7 @@ participant Router
 
 participant MetricsRouteInformationParser
 
-Bob -> NavigationNotifier : pushNamed('newPage')
+Bob -> NavigationNotifier : push(RouteConfiguration route)
 activate NavigationNotifier
 
 NavigationNotifier -> MetricsPageFactory : create(configuration)
