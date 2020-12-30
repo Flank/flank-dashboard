@@ -47,13 +47,18 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Handles the authentication update represented by the given [isLoggedIn].
   ///
-  /// Clears the pages stack after the user logs out.
+  /// Clears the pages stack and pushes the [MetricsRoutes.login]
+  /// after the user logs out.
   void handleAuthenticationUpdates({
     bool isLoggedIn,
   }) {
     _isUserLoggedIn = isLoggedIn ?? false;
 
-    if (!_isUserLoggedIn) _pages.clear();
+    if (!_isUserLoggedIn) {
+      _pages.clear();
+
+      push(MetricsRoutes.login);
+    }
   }
 
   /// Handles the application's initialization state update represented by the
@@ -76,8 +81,6 @@ class NavigationNotifier extends ChangeNotifier {
   ///
   /// If the redirect route is [MetricsRoutes.loading] or `null`,
   /// redirects to the [MetricsRoutes.loading].
-  ///
-  /// Otherwise, redirects to the [_redirectRoute] and clears it.
   void _redirect() {
     if (_redirectRoute == null || _redirectRoute == MetricsRoutes.loading) {
       _redirectRoute = MetricsRoutes.dashboard;
@@ -167,10 +170,10 @@ class NavigationNotifier extends ChangeNotifier {
   /// Returns [MetricsRoutes.loading] and saves the [_redirectRoute]
   /// if the application is not initialized.
   ///
-  /// Returns [configuration] if the user is logged in or the given
-  /// [configuration] does not require authorization.
+  /// Returns [MetricsRoutes.login] if the user is not logged in and the given
+  /// [configuration] requires authorization.
   ///
-  /// Otherwise, returns [MetricsRoutes.login].
+  /// Otherwise, returns [configuration].
   RouteConfiguration _processConfiguration(
     RouteConfiguration configuration,
   ) {

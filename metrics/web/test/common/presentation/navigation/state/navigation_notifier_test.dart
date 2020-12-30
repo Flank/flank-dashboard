@@ -55,7 +55,7 @@ void main() {
     );
 
     test(
-      ".handleAuthenticationUpdates() clears pages when the user logs out",
+      ".handleAuthenticationUpdates() clears pages and pushes to the login page when the user logs out",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
         notifier.push(MetricsRoutes.dashboard);
@@ -63,8 +63,10 @@ void main() {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
 
         final pages = notifier.pages;
+        final currentPage = pages.last;
 
-        expect(pages, isEmpty);
+        expect(pages, hasLength(1));
+        expect(currentPage.name, isLoginPageName);
       },
     );
 
@@ -293,6 +295,7 @@ void main() {
     test(
       ".pushReplacement() adds the new page if pages are empty",
       () {
+        final notifier = NavigationNotifier(pageFactory);
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
         final expectedLength = notifier.pages.length + 1;
@@ -306,7 +309,7 @@ void main() {
     );
 
     test(
-      ".pushReplacement() replaces the current page with the given one if the user is logged in, and the app is initialized",
+      ".pushReplacement() replaces the current page with the given one if the user is logged in and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
         notifier.push(MetricsRoutes.dashboard);
@@ -334,7 +337,7 @@ void main() {
     );
 
     test(
-      ".pushReplacement() replaces the current page with the given page if the user is not logged in, the given page does not require authorization and the app is initialized",
+      ".pushReplacement() replaces the current page with the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(MetricsRoutes.login);
@@ -468,7 +471,7 @@ void main() {
     );
 
     test(
-      ".pushAndRemoveUntil() pushes the login page if the user is not logged in, the given page requires authorization and the app is initialized",
+      ".pushAndRemoveUntil() pushes the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(MetricsRoutes.loading);
@@ -485,7 +488,7 @@ void main() {
     );
 
     test(
-      ".pushAndRemoveUntil() pushes the given page if the user is not logged in, the given page does not require authorization and the app is initialized",
+      ".pushAndRemoveUntil() pushes the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(MetricsRoutes.login);
