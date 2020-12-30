@@ -170,8 +170,8 @@ class NavigationNotifier extends ChangeNotifier {
   /// If the application is not initialized, returns [MetricsRoutes.loading]
   /// and saves the [_redirectRoute].
   ///
-  /// Returns [MetricsRoutes.login] if the user is not logged in and the given
-  /// [configuration] requires authorization.
+  /// If the user is not logged in and the given [configuration]
+  /// requires authorization, returns [MetricsRoutes.login]
   ///
   /// Otherwise, returns [configuration].
   RouteConfiguration _processConfiguration(
