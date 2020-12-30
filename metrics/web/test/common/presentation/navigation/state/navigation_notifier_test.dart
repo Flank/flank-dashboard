@@ -134,6 +134,28 @@ void main() {
     );
 
     test(
+      ".handleAppInitialized() clears the redirect route after redirect",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        notifier.handleInitialRoutePath(MetricsRoutes.projectGroups);
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isProjectGroupsPageName);
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        final newPage = notifier.pages.last;
+
+        expect(newPage.name, isDashboardPageName);
+      },
+    );
+
+    test(
       ".pop() does nothing if pages are empty",
       () {
         final expectedPages = notifier.pages;
