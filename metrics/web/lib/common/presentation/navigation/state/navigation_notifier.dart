@@ -64,7 +64,7 @@ class NavigationNotifier extends ChangeNotifier {
   /// Handles the application's initialization state update represented by the
   /// given [isAppInitialized].
   ///
-  /// Redirects to the redirect route if the [isAppInitialized] is `true`.
+  /// If the [isAppInitialized] is `true`, redirects to the redirect route.
   ///
   /// Throws an [ArgumentError] if the given [isAppInitialized] is `null`.
   void handleAppInitialized({
@@ -75,19 +75,6 @@ class NavigationNotifier extends ChangeNotifier {
     _isAppInitialized = isAppInitialized;
 
     if (_isAppInitialized) _redirect();
-  }
-
-  /// Redirects to the redirect route and clears it.
-  ///
-  /// If the redirect route is [MetricsRoutes.loading] or `null`,
-  /// redirects to the [MetricsRoutes.loading].
-  void _redirect() {
-    if (_redirectRoute == null || _redirectRoute == MetricsRoutes.loading) {
-      _redirectRoute = MetricsRoutes.dashboard;
-    }
-
-    push(_redirectRoute);
-    _redirectRoute = null;
   }
 
   /// Removes the current page and navigates to the previous one.
@@ -153,6 +140,19 @@ class NavigationNotifier extends ChangeNotifier {
     push(configuration);
   }
 
+  /// Redirects to the redirect route and clears it.
+  ///
+  /// If the redirect route is [MetricsRoutes.loading] or `null`,
+  /// redirects to the [MetricsRoutes.loading].
+  void _redirect() {
+    if (_redirectRoute == null || _redirectRoute == MetricsRoutes.loading) {
+      _redirectRoute = MetricsRoutes.dashboard;
+    }
+
+    push(_redirectRoute);
+    _redirectRoute = null;
+  }
+
   /// Creates a [RouteConfiguration] using the given [page].
   RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
     final name = page?.name;
@@ -167,8 +167,8 @@ class NavigationNotifier extends ChangeNotifier {
   /// [configuration]'s authorization requirements and current
   /// [_isUserLoggedIn] state.
   ///
-  /// Returns [MetricsRoutes.loading] and saves the [_redirectRoute]
-  /// if the application is not initialized.
+  /// If the application is not initialized, returns [MetricsRoutes.loading]
+  /// and saves the [_redirectRoute].
   ///
   /// Returns [MetricsRoutes.login] if the user is not logged in and the given
   /// [configuration] requires authorization.
