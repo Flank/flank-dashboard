@@ -136,6 +136,7 @@ The `NavigationNotifier` provides several navigation methods that are similar to
 According to the above, we **do not** pass parameters using internal navigation and **do not** implement similar logic for the new navigation system within the Metrics Web Application.
 
 To be sure that the application will work correctly, we should ensure that all of its components, such as `Feature Config` or `Local Config` initialized before the user gets access to the application. Thus, the application must show the `Loading Page` when the initialization is in progress. Once the initialization process finishes, the application should redirect the user to the route user tried to open.
+
 Consider the following sequence diagram that will describe this process in more details:
 
 ![Not Initialized App Navigation Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_navigator_designs/metrics/web/docs/features/navigation/diagrams/not_initialized_app_navigation_sequence_diagram.puml)
