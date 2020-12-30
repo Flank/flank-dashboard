@@ -3,7 +3,7 @@ import 'package:metrics/metrics_logger/writer/logger_writer.dart';
 /// A class that provides methods for logging errors together with
 /// their contexts using a [LoggerWriter].
 ///
-/// Before using any methods, it is needed to initialize the [LoggerWriter]
+/// Before using any methods, it should initialize the [LoggerWriter]
 /// using the [MetricsLogger.initialize] method.
 class MetricsLogger {
   /// A [LoggerWriter] this logger uses to write errors and their contexts
