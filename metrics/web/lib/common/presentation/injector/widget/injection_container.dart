@@ -17,6 +17,8 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/data/repositories/firestore_project_repository.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
+import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/data/repositories/firestore_metrics_repository.dart';
 import 'package:metrics/dashboard/domain/usecases/receive_project_metrics_updates.dart';
@@ -217,6 +219,11 @@ class _InjectionContainerState extends State<InjectionContainer> {
             _readLocalConfigUseCase,
             _updateLocalConfigUseCase,
             _closeLocalConfigStorageUseCase,
+          ),
+        ),
+        ChangeNotifierProvider<NavigationNotifier>(
+          create: (_) => NavigationNotifier(
+            MetricsPageFactory(),
           ),
         ),
         ChangeNotifierProxyProvider<AuthNotifier, AnalyticsNotifier>(
