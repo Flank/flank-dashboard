@@ -139,7 +139,7 @@ To be sure that the application will work correctly, we should ensure that all o
 
 Consider the following sequence diagram that will describe this process in more details:
 
-![Not Initialized App Navigation Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/update_navigator_designs/metrics/web/docs/features/navigation/diagrams/not_initialized_app_navigation_sequence_diagram.puml)
+![Not Initialized App Navigation Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/navigation/diagrams/not_initialized_app_navigation_sequence_diagram.puml)
 
 ### Metrics Page Factory
 
