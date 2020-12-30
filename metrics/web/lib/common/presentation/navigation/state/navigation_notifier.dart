@@ -15,13 +15,13 @@ class NavigationNotifier extends ChangeNotifier {
   /// from [RouteConfiguration].
   final MetricsPageFactory _pageFactory;
 
-  /// A stack of [MetricsPage]s to use in navigation.
+  /// A stack of [MetricsPage]s to use by navigator.
   final List<MetricsPage> _pages = [];
 
   /// A [RouteConfiguration] that represents the current page route.
   RouteConfiguration _currentConfiguration;
 
-  /// Indicates whether the user is logged in.
+  /// A flag that indicates whether the user is logged in.
   bool _isUserLoggedIn = false;
 
   /// Provides an [UnmodifiableListView] of [MetricsPage]s to use in navigation.
