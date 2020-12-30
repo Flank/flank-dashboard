@@ -11,15 +11,22 @@ void main() {
 
     NavigationNotifier notifier;
 
+    void _prepareNotifier() {
+      notifier.handleAppInitialized(isAppInitialized: true);
+
+      notifier.handleAuthenticationUpdates(isLoggedIn: false);
+    }
+
     setUp(() {
       notifier = NavigationNotifier(pageFactory);
+      _prepareNotifier();
     });
 
     Matcher pageMatcher(RouteName name) => contains(name.value);
 
     final isLoginPageName = pageMatcher(RouteName.login);
     final isDashboardPageName = pageMatcher(RouteName.dashboard);
-    final isProjectGroupsName = pageMatcher(RouteName.projectGroups);
+    final isProjectGroupsPageName = pageMatcher(RouteName.projectGroups);
     final isLoadingPageName = isNull;
 
     test(
@@ -50,7 +57,7 @@ void main() {
     );
 
     test(
-      ".handleAuthenticationUpdates clears pages when the user logs out",
+      ".handleAuthenticationUpdates() clears pages when the user logs out",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
         notifier.push(MetricsRoutes.dashboard);
@@ -60,6 +67,69 @@ void main() {
         final pages = notifier.pages;
 
         expect(pages, isEmpty);
+      },
+    );
+
+    test(
+      ".handleAppInitialized() throws an argument error if the given is app initialized is null",
+      () {
+        expect(
+          () => notifier.handleAppInitialized(isAppInitialized: null),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      ".handleAppInitialized() redirects to the dashboard page when the app is initialized and the redirect route is loading page",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        notifier.handleInitialRoutePath(MetricsRoutes.loading);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoadingPageName);
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        final newPage = notifier.pages.last;
+
+        expect(newPage.name, isDashboardPageName);
+      },
+    );
+
+    test(
+      ".handleAppInitialized() redirects to the dashboard page when the app is initialized and the redirect route is null",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isDashboardPageName);
+      },
+    );
+
+    test(
+      ".handleAppInitialized() redirects to the redirect route when the app is initialized",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        notifier.handleInitialRoutePath(MetricsRoutes.projectGroups);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoadingPageName);
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        final newPage = notifier.pages.last;
+
+        expect(newPage.name, isProjectGroupsPageName);
       },
     );
 
@@ -124,7 +194,20 @@ void main() {
     );
 
     test(
-      ".push() pushes the given page if the user is logged in",
+      ".push() pushes the loading page if the app is not initialized",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.push(MetricsRoutes.dashboard);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoadingPageName);
+      },
+    );
+
+    test(
+      ".push() pushes the given page if the user is logged in and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
         notifier.push(MetricsRoutes.dashboard);
@@ -136,7 +219,7 @@ void main() {
     );
 
     test(
-      ".push() pushes the login page if the user is not logged in and the given page requires authorization",
+      ".push() pushes the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(MetricsRoutes.dashboard);
@@ -148,7 +231,7 @@ void main() {
     );
 
     test(
-      ".push() pushes the given page if the user is not logged in and the given page does not require authorization",
+      ".push() pushes the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(MetricsRoutes.loading);
@@ -168,6 +251,19 @@ void main() {
         notifier.push(expectedConfiguration);
 
         expect(notifier.currentConfiguration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".pushReplacement() pushes the loading page if the app is not initialized",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.pushReplacement(MetricsRoutes.dashboard);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoadingPageName);
       },
     );
 
@@ -203,7 +299,7 @@ void main() {
     );
 
     test(
-      ".pushReplacement() replaces the current page with the given one if the user is logged in",
+      ".pushReplacement() replaces the current page with the given one if the user is logged in, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
         notifier.push(MetricsRoutes.dashboard);
@@ -212,12 +308,12 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isProjectGroupsName);
+        expect(currentPage.name, isProjectGroupsPageName);
       },
     );
 
     test(
-      ".pushReplacement() replaces the current page with the login page if the user is not logged in and the given page requires authorization",
+      ".pushReplacement() replaces the current page with the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(MetricsRoutes.loading);
@@ -231,7 +327,7 @@ void main() {
     );
 
     test(
-      ".pushReplacement() replaces the current page with the given page if the user is not logged in and the given page does not require authorization",
+      ".pushReplacement() replaces the current page with the given page if the user is not logged in, the given page does not require authorization and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(MetricsRoutes.login);
@@ -247,13 +343,29 @@ void main() {
     test(
       ".pushReplacement() updates the current configuration",
       () {
-        final expectedConfiguration = MetricsRoutes.loading;
+        const expectedConfiguration = MetricsRoutes.loading;
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(MetricsRoutes.login);
 
         notifier.pushReplacement(expectedConfiguration);
 
         expect(notifier.currentConfiguration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".pushAndRemoveUntil() pushes the loading page if the app is not initialized",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.pushAndRemoveUntil(
+          MetricsRoutes.dashboard,
+          (page) => true,
+        );
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoadingPageName);
       },
     );
 
@@ -332,7 +444,7 @@ void main() {
     );
 
     test(
-      ".pushAndRemoveUntil() pushes the given page if the user is logged in",
+      ".pushAndRemoveUntil() pushes the given page if the user is logged in and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
         notifier.push(MetricsRoutes.projectGroups);
@@ -349,7 +461,7 @@ void main() {
     );
 
     test(
-      ".pushAndRemoveUntil() pushes the login page if the user is not logged in and the given page requires authorization",
+      ".pushAndRemoveUntil() pushes the login page if the user is not logged in, the given page requires authorization and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(MetricsRoutes.loading);
@@ -366,7 +478,7 @@ void main() {
     );
 
     test(
-      ".pushAndRemoveUntil() pushes the given page if the user is not logged in and the given page does not require authorization",
+      ".pushAndRemoveUntil() pushes the given page if the user is not logged in, the given page does not require authorization and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
         notifier.push(MetricsRoutes.login);
@@ -399,7 +511,20 @@ void main() {
     );
 
     test(
-      ".handleInitialRoutePath() pushes the given page if the user is logged in",
+      ".handleInitialRoutePath() pushes the loading page if the app is not initialized",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.handleInitialRoutePath(MetricsRoutes.dashboard);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoadingPageName);
+      },
+    );
+
+    test(
+      ".handleInitialRoutePath() pushes the given page if the user is logged in and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
@@ -407,12 +532,12 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isProjectGroupsName);
+        expect(currentPage.name, isProjectGroupsPageName);
       },
     );
 
     test(
-      ".handleInitialRoutePath() pushes the login page if the user is not logged in and the given page requires authorization",
+      ".handleInitialRoutePath() pushes the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
 
@@ -425,7 +550,7 @@ void main() {
     );
 
     test(
-      ".handleInitialRoutePath() pushes the given page if the user is not logged in and the given page does not require authorization",
+      ".handleInitialRoutePath() pushes the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
 
@@ -451,7 +576,20 @@ void main() {
     );
 
     test(
-      ".handleNewRoutePath() pushes the given page if the user is logged in",
+      ".handleNewRoutePath() pushes the loading page if the app is not initialized",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.handleNewRoutePath(MetricsRoutes.dashboard);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoadingPageName);
+      },
+    );
+
+    test(
+      ".handleNewRoutePath() pushes the given page if the user is logged in and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
@@ -459,12 +597,12 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isProjectGroupsName);
+        expect(currentPage.name, isProjectGroupsPageName);
       },
     );
 
     test(
-      ".handleNewRoutePath() pushes the login page if the user is not logged in and the given page requires authorization",
+      ".handleNewRoutePath() pushes the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
 
@@ -477,7 +615,7 @@ void main() {
     );
 
     test(
-      ".handleNewRoutePath() pushes the given page if the user is not logged in and the given page does not require authorization",
+      ".handleNewRoutePath() pushes the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
 

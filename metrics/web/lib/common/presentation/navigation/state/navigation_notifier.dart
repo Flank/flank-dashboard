@@ -21,8 +21,15 @@ class NavigationNotifier extends ChangeNotifier {
   /// A [RouteConfiguration] that represents the current page route.
   RouteConfiguration _currentConfiguration;
 
+  /// A [RouteConfiguration] redirect to when the application finishes
+  /// initialization.
+  RouteConfiguration _redirectRoute;
+
   /// A flag that indicates whether the user is logged in.
   bool _isUserLoggedIn = false;
+
+  /// A flag that indicates whether the application is finished loading.
+  bool _isAppInitialized = false;
 
   /// Provides an [UnmodifiableListView] of [MetricsPage]s to use in navigation.
   UnmodifiableListView<MetricsPage> get pages => UnmodifiableListView(_pages);
@@ -44,9 +51,46 @@ class NavigationNotifier extends ChangeNotifier {
   void handleAuthenticationUpdates({
     bool isLoggedIn,
   }) {
-    _isUserLoggedIn = isLoggedIn;
+    _isUserLoggedIn = isLoggedIn ?? false;
 
     if (!isLoggedIn) _pages.clear();
+  }
+
+  /// Handles the application's initialization state update represented by the
+  /// given [isAppInitialized].
+  ///
+  /// Redirects to the redirect route if the [isAppInitialized] is `true`.
+  void handleAppInitialized({
+    @required bool isAppInitialized,
+  }) {
+    ArgumentError.checkNotNull(isAppInitialized, 'isAppInitialized');
+
+    _isAppInitialized = isAppInitialized;
+
+    if (_isAppInitialized) _redirect();
+  }
+
+  /// Redirects to [MetricsRoutes.dashboard] and clears the [_redirectRoute]
+  /// if the [_redirectRoute] is [MetricsRoutes.loading].
+  ///
+  /// Redirects to the [MetricsRoutes.dashboard]
+  /// if the [_redirectRoute] is `null`.
+  ///
+  /// Otherwise, redirects to the [_redirectRoute] and clears it.
+  void _redirect() {
+    if (_redirectRoute == MetricsRoutes.loading) {
+      push(MetricsRoutes.dashboard);
+      _redirectRoute = null;
+      return;
+    }
+
+    if (_redirectRoute == null) {
+      push(MetricsRoutes.dashboard);
+      return;
+    }
+
+    push(_redirectRoute);
+    _redirectRoute = null;
   }
 
   /// Removes the current page and navigates to the previous one.
@@ -124,15 +168,28 @@ class NavigationNotifier extends ChangeNotifier {
     return configuration;
   }
 
-  /// Processes the given [configuration] depending on its authorization
-  /// requirements and the [_isUserLoggedIn] state.
+  /// Processes the given [configuration] depending on [_isAppInitialized] state,
+  /// [configuration]'s authorization requirements and current
+  /// [_isUserLoggedIn] state.
   ///
-  /// Returns the given [configuration] if the user is logged in
-  /// or the given route configuration does not require authorization.
-  /// Otherwise, returns the login page route configuration.
+  /// Returns [MetricsRoutes.loading] and saves the [_redirectRoute]
+  /// if the application is not initialized.
+  ///
+  /// Returns [configuration] if the user is logged in.
+  ///
+  /// Returns [configuration] if the user is not logged in and the given
+  /// [configuration] does not require authorization.
+  ///
+  /// Otherwise, returns [MetricsRoutes.login].
   RouteConfiguration _processConfiguration(
     RouteConfiguration configuration,
   ) {
+    if (!_isAppInitialized) {
+      _redirectRoute = configuration;
+
+      return MetricsRoutes.loading;
+    }
+
     final noAuthorizationRequired = !configuration.authorizationRequired;
 
     if (_isUserLoggedIn || noAuthorizationRequired) return configuration;
