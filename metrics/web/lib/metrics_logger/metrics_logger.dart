@@ -1,9 +1,12 @@
 import 'package:metrics/metrics_logger/writer/logger_writer.dart';
 
 /// A class that provides methods for logging errors together with
-/// their contexts using the [LoggerWriter].
+/// their contexts using a [LoggerWriter].
+///
+/// Before using any methods, it is needed to initialize the [LoggerWriter]
+/// using the [MetricsLogger.initialize] method.
 class MetricsLogger {
-  /// The [LoggerWriter] this logger uses to write errors and their contexts
+  /// A [LoggerWriter] this logger uses to write errors and their contexts
   /// to the logger output.
   static LoggerWriter _writer;
 
@@ -18,9 +21,9 @@ class MetricsLogger {
     assert(writer != null);
     _writer = writer;
 
-    final futures = <Future>[];
-
     if (contexts == null) return;
+
+    final futures = <Future>[];
 
     for (final entry in contexts.entries) {
       futures.add(setContext(entry.key, entry.value));

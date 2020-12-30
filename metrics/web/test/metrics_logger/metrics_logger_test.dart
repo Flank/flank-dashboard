@@ -30,7 +30,7 @@ void main() {
     );
 
     test(
-      ".logError() throws an AssertionError if the current writer is null",
+      ".logError() throws an AssertionError if logger is not initialized",
       () {
         expect(
           () => MetricsLogger.logError(error),
@@ -40,7 +40,7 @@ void main() {
     );
 
     test(
-      ".setContext() throws an AssertionError if the current writer is null",
+      ".setContext() throws an AssertionError if logger is not initialized",
       () {
         expect(
           () => MetricsLogger.setContext(contextKey, contextValue),
@@ -50,7 +50,7 @@ void main() {
     );
 
     test(
-      ".initialize() sets the current logger writer to the given one",
+      ".initialize() initializes the logger with the given writer",
       () async {
         await MetricsLogger.initialize(writerMock);
 
@@ -62,7 +62,7 @@ void main() {
     );
 
     test(
-      ".initialize() set contexts from the given map entries for the current writer",
+      ".initialize() sets contexts from the given map entries for the logger",
       () async {
         final contexts = {
           contextKey: contextValue,
@@ -79,7 +79,7 @@ void main() {
     );
 
     test(
-      ".initialize() does not set contexts for the current writer if the given map is null",
+      ".initialize() does not set contexts for the logger if the given map is null",
       () async {
         await MetricsLogger.initialize(writerMock, contexts: null);
 
@@ -88,7 +88,7 @@ void main() {
     );
 
     test(
-      ".logError() uses the current writer to write the given error",
+      ".logError() logs the given error",
       () async {
         await MetricsLogger.logError(error);
 
@@ -96,7 +96,7 @@ void main() {
       },
     );
     test(
-      ".setContext() uses the current writer to set the given context",
+      ".setContext() sets context to the given one for the logger",
       () async {
         await MetricsLogger.setContext(contextKey, contextValue);
 
