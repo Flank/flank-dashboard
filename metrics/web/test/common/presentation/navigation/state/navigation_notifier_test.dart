@@ -17,10 +17,10 @@ void main() {
 
     Matcher pageMatcher(RouteName name) => contains(name.value);
 
-    final loginPageMatcher = pageMatcher(RouteName.login);
-    final dashboardPageMatcher = pageMatcher(RouteName.dashboard);
-    final projectGroupsPageMatcher = pageMatcher(RouteName.projectGroups);
-    final loadingPageMatcher = isNull;
+    final isLoginPageName = pageMatcher(RouteName.login);
+    final isDashboardPageName = pageMatcher(RouteName.dashboard);
+    final isProjectGroupsName = pageMatcher(RouteName.projectGroups);
+    final isLoadingPageName = isNull;
 
     test(
       "throws an AssertionError if the given page factory is null",
@@ -50,21 +50,10 @@ void main() {
     );
 
     test(
-      ".handleAuthenticationUpdates throws an ArgumentError if the given is logged in is null",
-      () {
-        expect(
-          () => notifier.handleAuthenticationUpdates(isLoggedIn: null),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
       ".handleAuthenticationUpdates clears pages when the user logs out",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
-
-        notifier.pushNamed(MetricsRoutes.dashboard);
+        notifier.push(MetricsRoutes.dashboard);
 
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
 
@@ -77,13 +66,13 @@ void main() {
     test(
       ".pop() does nothing if pages are empty",
       () {
-        final initialPages = notifier.pages;
+        final expectedPages = notifier.pages;
 
         notifier.pop();
 
         final actualPages = notifier.pages;
 
-        expect(initialPages, equals(actualPages));
+        expect(actualPages, equals(expectedPages));
       },
     );
 
@@ -91,44 +80,42 @@ void main() {
       ".pop() does nothing if pages contain one page",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(MetricsRoutes.dashboard);
 
-        notifier.pushNamed(MetricsRoutes.dashboard);
-
-        final initialPages = notifier.pages;
+        final expectedPages = notifier.pages;
 
         notifier.pop();
 
         final actualPages = notifier.pages;
 
-        expect(initialPages, equals(actualPages));
+        expect(actualPages, equals(expectedPages));
       },
     );
 
     test(
-      ".pop() pops the last page",
+      ".pop() removes the current page",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
-        notifier.pushNamed(MetricsRoutes.dashboard);
-        notifier.pushNamed(MetricsRoutes.projectGroups);
+        notifier.push(MetricsRoutes.dashboard);
+        notifier.push(MetricsRoutes.projectGroups);
 
         notifier.pop();
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, dashboardPageMatcher);
+        expect(currentPage.name, isDashboardPageName);
       },
     );
 
     test(
-      ".pop() updates the current configuration",
+      ".pop() sets the previous rote configuration to current configuration",
       () {
         final expectedConfiguration = MetricsRoutes.dashboard;
-
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
-        notifier.pushNamed(MetricsRoutes.dashboard);
-        notifier.pushNamed(MetricsRoutes.projectGroups);
+        notifier.push(expectedConfiguration);
+        notifier.push(MetricsRoutes.projectGroups);
 
         notifier.pop();
 
@@ -137,167 +124,157 @@ void main() {
     );
 
     test(
-      ".pushNamed() pushes the given page if the user is logged in",
+      ".push() pushes the given page if the user is logged in",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
-
-        notifier.pushNamed(MetricsRoutes.dashboard);
+        notifier.push(MetricsRoutes.dashboard);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, dashboardPageMatcher);
+        expect(currentPage.name, isDashboardPageName);
       },
     );
 
     test(
-      ".pushNamed() pushes the login page if the user is not logged in and the given page requires authorization",
+      ".push() pushes the login page if the user is not logged in and the given page requires authorization",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
-
-        notifier.pushNamed(MetricsRoutes.dashboard);
+        notifier.push(MetricsRoutes.dashboard);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, loginPageMatcher);
+        expect(currentPage.name, isLoginPageName);
       },
     );
 
     test(
-      ".pushNamed() pushes the login page if the user is not logged in and the given page does not require authorization",
+      ".push() pushes the given page if the user is not logged in and the given page does not require authorization",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
-
-        notifier.pushNamed(MetricsRoutes.loading);
+        notifier.push(MetricsRoutes.loading);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, loadingPageMatcher);
+        expect(currentPage.name, isLoadingPageName);
       },
     );
 
     test(
-      ".pushNamed() updates the current configuration",
+      ".push() updates the current configuration",
       () {
         final expectedConfiguration = MetricsRoutes.dashboard;
-
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
-        notifier.pushNamed(MetricsRoutes.dashboard);
+        notifier.push(expectedConfiguration);
 
         expect(notifier.currentConfiguration, equals(expectedConfiguration));
       },
     );
 
     test(
-      ".pushReplacementNamed() replaces the current page if pages are not empty",
+      ".pushReplacement() replaces the current page if pages are not empty",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(MetricsRoutes.dashboard);
 
-        notifier.pushNamed(MetricsRoutes.dashboard);
+        final expectedLength = notifier.pages.length;
 
-        final initialLength = notifier.pages.length;
-
-        notifier.pushReplacementNamed(MetricsRoutes.projectGroups);
+        notifier.pushReplacement(MetricsRoutes.projectGroups);
 
         final actualLength = notifier.pages.length;
 
-        expect(actualLength, equals(initialLength));
+        expect(actualLength, equals(expectedLength));
       },
     );
 
     test(
-      ".pushReplacementNamed() adds the new page if pages are empty",
+      ".pushReplacement() adds the new page if pages are empty",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
-        final initialLength = notifier.pages.length;
+        final expectedLength = notifier.pages.length + 1;
 
-        notifier.pushReplacementNamed(MetricsRoutes.projectGroups);
+        notifier.pushReplacement(MetricsRoutes.projectGroups);
 
         final actualLength = notifier.pages.length;
 
-        expect(actualLength, equals(initialLength + 1));
+        expect(actualLength, equals(expectedLength));
       },
     );
 
     test(
-      ".pushReplacementNamed() replaces the current page with the given one if the user is logged in",
+      ".pushReplacement() replaces the current page with the given one if the user is logged in",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(MetricsRoutes.dashboard);
 
-        notifier.pushNamed(MetricsRoutes.dashboard);
-
-        notifier.pushReplacementNamed(MetricsRoutes.projectGroups);
+        notifier.pushReplacement(MetricsRoutes.projectGroups);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, projectGroupsPageMatcher);
+        expect(currentPage.name, isProjectGroupsName);
       },
     );
 
     test(
-      ".pushReplacementNamed() replaces the current page with the login page if the user is not logged in the given page requires authorization",
+      ".pushReplacement() replaces the current page with the login page if the user is not logged in and the given page requires authorization",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.loading);
 
-        notifier.pushNamed(MetricsRoutes.loading);
-
-        notifier.pushReplacementNamed(MetricsRoutes.projectGroups);
+        notifier.pushReplacement(MetricsRoutes.projectGroups);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, loginPageMatcher);
+        expect(currentPage.name, isLoginPageName);
       },
     );
 
     test(
-      ".pushReplacementNamed() replaces the current page with the given page if the user is not logged in the given page does not require authorization",
+      ".pushReplacement() replaces the current page with the given page if the user is not logged in and the given page does not require authorization",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.login);
 
-        notifier.pushNamed(MetricsRoutes.login);
-
-        notifier.pushReplacementNamed(MetricsRoutes.loading);
+        notifier.pushReplacement(MetricsRoutes.loading);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, loadingPageMatcher);
+        expect(currentPage.name, isLoadingPageName);
       },
     );
 
     test(
-      ".pushReplacementNamed() updates the current configuration",
+      ".pushReplacement() updates the current configuration",
       () {
         final expectedConfiguration = MetricsRoutes.loading;
-
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.login);
 
-        notifier.pushNamed(MetricsRoutes.login);
-
-        notifier.pushReplacementNamed(MetricsRoutes.loading);
+        notifier.pushReplacement(expectedConfiguration);
 
         expect(notifier.currentConfiguration, equals(expectedConfiguration));
       },
     );
 
     test(
-      ".pushNamedAndRemoveUntil() removes all underlying routes that don't satisfy the given predicate",
+      ".pushAndRemoveUntil() removes all underlying routes that don't satisfy the given predicate",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
-        notifier.pushNamed(MetricsRoutes.projectGroups);
-        notifier.pushNamed(MetricsRoutes.login);
-        notifier.pushNamed(MetricsRoutes.debugMenu);
+        notifier.push(MetricsRoutes.projectGroups);
+        notifier.push(MetricsRoutes.login);
+        notifier.push(MetricsRoutes.debugMenu);
 
-        notifier.pushNamedAndRemoveUntil(
+        notifier.pushAndRemoveUntil(
           MetricsRoutes.dashboard,
-          (page) => page.name.contains(RouteName.dashboard.value),
+          (page) => page.name == MetricsRoutes.dashboard.path,
         );
 
         final pages = notifier.pages;
 
         final containsNotDashboard = pages.any(
-          (page) => !page.name.contains(RouteName.dashboard.value),
+          (page) => page.name != MetricsRoutes.dashboard.path,
         );
 
         expect(containsNotDashboard, isFalse);
@@ -305,23 +282,24 @@ void main() {
     );
 
     test(
-      ".pushNamedAndRemoveUntil() does not remove the underlying routes after the predicate meets satisfying route",
+      ".pushAndRemoveUntil() does not remove the underlying routes after the predicate meets satisfying route",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
-        notifier.pushNamed(MetricsRoutes.projectGroups);
-        notifier.pushNamed(MetricsRoutes.dashboard);
-        notifier.pushNamed(MetricsRoutes.login);
-        notifier.pushNamed(MetricsRoutes.debugMenu);
+        notifier.push(MetricsRoutes.projectGroups);
+        notifier.push(MetricsRoutes.dashboard);
+        notifier.push(MetricsRoutes.login);
+        notifier.push(MetricsRoutes.debugMenu);
 
-        notifier.pushNamedAndRemoveUntil(
+        notifier.pushAndRemoveUntil(
           MetricsRoutes.dashboard,
           (page) => page.name.contains(RouteName.dashboard.value),
         );
 
         final pages = notifier.pages;
+
         final containsProjectGroups = pages.any(
-          (page) => page.name.contains(RouteName.projectGroups.value),
+          (page) => page.name == MetricsRoutes.projectGroups.path,
         );
 
         expect(containsProjectGroups, isTrue);
@@ -329,70 +307,90 @@ void main() {
     );
 
     test(
-      ".pushNamedAndRemoveUntil() pushes the given page if the user is logged in",
+      ".pushAndRemoveUntil() does not remove the route that satisfies predicate",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
-        notifier.pushNamed(MetricsRoutes.projectGroups);
+        notifier.push(MetricsRoutes.projectGroups);
+        notifier.push(MetricsRoutes.dashboard);
+        notifier.push(MetricsRoutes.login);
+        notifier.push(MetricsRoutes.debugMenu);
 
-        notifier.pushNamedAndRemoveUntil(
+        notifier.pushAndRemoveUntil(
+          MetricsRoutes.dashboard,
+          (page) => page.name.contains(RouteName.dashboard.value),
+        );
+
+        final pages = notifier.pages;
+
+        final containsDashboardPage = pages.any(
+          (page) => page.name == MetricsRoutes.dashboard.path,
+        );
+
+        expect(containsDashboardPage, isTrue);
+      },
+    );
+
+    test(
+      ".pushAndRemoveUntil() pushes the given page if the user is logged in",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(MetricsRoutes.projectGroups);
+
+        notifier.pushAndRemoveUntil(
           MetricsRoutes.dashboard,
           (page) => true,
         );
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, dashboardPageMatcher);
+        expect(currentPage.name, isDashboardPageName);
       },
     );
 
     test(
-      ".pushNamedAndRemoveUntil() pushes the login page if the user is not logged in and the given page requires authorization",
+      ".pushAndRemoveUntil() pushes the login page if the user is not logged in and the given page requires authorization",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.loading);
 
-        notifier.pushNamed(MetricsRoutes.loading);
-
-        notifier.pushNamedAndRemoveUntil(
+        notifier.pushAndRemoveUntil(
           MetricsRoutes.dashboard,
           (page) => true,
         );
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, loginPageMatcher);
+        expect(currentPage.name, isLoginPageName);
       },
     );
 
     test(
-      ".pushNamedAndRemoveUntil() pushes the login page if the user is not logged in and the given page does not require authorization",
+      ".pushAndRemoveUntil() pushes the given page if the user is not logged in and the given page does not require authorization",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.login);
 
-        notifier.pushNamed(MetricsRoutes.login);
-
-        notifier.pushNamedAndRemoveUntil(
+        notifier.pushAndRemoveUntil(
           MetricsRoutes.loading,
           (page) => true,
         );
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, loadingPageMatcher);
+        expect(currentPage.name, isLoadingPageName);
       },
     );
 
     test(
-      ".pushNamedAndRemoveUntil() updates the current configuration",
+      ".pushAndRemoveUntil() updates the current configuration",
       () {
         final expectedConfiguration = MetricsRoutes.dashboard;
-
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(MetricsRoutes.projectGroups);
 
-        notifier.pushNamed(MetricsRoutes.projectGroups);
-
-        notifier.pushNamedAndRemoveUntil(
-          MetricsRoutes.dashboard,
+        notifier.pushAndRemoveUntil(
+          expectedConfiguration,
           (page) => true,
         );
 
@@ -409,7 +407,7 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, projectGroupsPageMatcher);
+        expect(currentPage.name, isProjectGroupsName);
       },
     );
 
@@ -422,12 +420,12 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, loginPageMatcher);
+        expect(currentPage.name, isLoginPageName);
       },
     );
 
     test(
-      ".handleInitialRoutePath() pushes the login page if the user is not logged in and the given page does not require authorization",
+      ".handleInitialRoutePath() pushes the given page if the user is not logged in and the given page does not require authorization",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
 
@@ -435,7 +433,7 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, loadingPageMatcher);
+        expect(currentPage.name, isLoadingPageName);
       },
     );
 
@@ -446,7 +444,7 @@ void main() {
 
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
-        notifier.handleInitialRoutePath(MetricsRoutes.projectGroups);
+        notifier.handleInitialRoutePath(expectedConfiguration);
 
         expect(notifier.currentConfiguration, equals(expectedConfiguration));
       },
@@ -461,7 +459,7 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, projectGroupsPageMatcher);
+        expect(currentPage.name, isProjectGroupsName);
       },
     );
 
@@ -474,12 +472,12 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, loginPageMatcher);
+        expect(currentPage.name, isLoginPageName);
       },
     );
 
     test(
-      ".handleNewRoutePath() pushes the login page if the user is not logged in and the given page does not require authorization",
+      ".handleNewRoutePath() pushes the given page if the user is not logged in and the given page does not require authorization",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
 
@@ -487,7 +485,7 @@ void main() {
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, loadingPageMatcher);
+        expect(currentPage.name, isLoadingPageName);
       },
     );
 
@@ -498,7 +496,7 @@ void main() {
 
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
-        notifier.handleNewRoutePath(MetricsRoutes.projectGroups);
+        notifier.handleNewRoutePath(expectedConfiguration);
 
         expect(notifier.currentConfiguration, equals(expectedConfiguration));
       },

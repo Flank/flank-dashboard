@@ -15,10 +15,10 @@ class NavigationNotifier extends ChangeNotifier {
   /// from [RouteConfiguration].
   final MetricsPageFactory _pageFactory;
 
-  /// A [List] of [MetricsPage]s to use in navigation.
+  /// A stack of [MetricsPage]s to use in navigation.
   final List<MetricsPage> _pages = [];
 
-  /// A [RouteConfiguration] that represents the navigation state.
+  /// A [RouteConfiguration] that represents the current page route.
   RouteConfiguration _currentConfiguration;
 
   /// Indicates whether the user is logged in.
@@ -41,26 +41,21 @@ class NavigationNotifier extends ChangeNotifier {
   /// Handles the authentication update represented by the given [isLoggedIn].
   ///
   /// Clears the pages stack after the user logs out.
-  ///
-  /// Throws an [ArgumentError] if the given [isLoggedIn] is `null`.
   void handleAuthenticationUpdates({
-    @required bool isLoggedIn,
+    bool isLoggedIn,
   }) {
-    ArgumentError.checkNotNull(isLoggedIn, 'isLoggedIn');
-
     _isUserLoggedIn = isLoggedIn;
 
     if (!isLoggedIn) _pages.clear();
   }
 
-  /// Pops the current route.
+  /// Removes the current page and navigates to the previous one.
   void pop() {
     if (_pages.length <= 1) return;
 
     _pages.removeLast();
 
     final currentPage = _pages.last;
-
     final newConfiguration = _getConfigurationFromPage(currentPage);
 
     _currentConfiguration = newConfiguration;
@@ -69,7 +64,7 @@ class NavigationNotifier extends ChangeNotifier {
   }
 
   /// Pushes the route created from the given [configuration].
-  void pushNamed(RouteConfiguration configuration) {
+  void push(RouteConfiguration configuration) {
     final newConfiguration = _processConfiguration(configuration);
 
     _currentConfiguration = newConfiguration;
@@ -81,27 +76,18 @@ class NavigationNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Replaces the current route
-  /// with the route created from the given [configuration].
-  void pushReplacementNamed(RouteConfiguration configuration) {
+  /// Replaces the current route with the route created from the given
+  /// [configuration].
+  void pushReplacement(RouteConfiguration configuration) {
     if (_pages.isNotEmpty) _pages.removeLast();
 
-    final newConfiguration = _processConfiguration(configuration);
-
-    _currentConfiguration = newConfiguration;
-
-    final newPage = _pageFactory.create(_currentConfiguration);
-
-    _pages.add(newPage);
-
-    notifyListeners();
+    push(configuration);
   }
 
   /// Removes all underlying pages until the [predicate] returns `true`
-  /// or the [_pages] is empty.
-  ///
-  /// Then pushes the route created from the given [configuration].
-  void pushNamedAndRemoveUntil(
+  /// or the stack of pages is empty and pushes the route created from the given
+  /// [configuration].
+  void pushAndRemoveUntil(
     RouteConfiguration configuration,
     MetricsPagePredicate predicate,
   ) {
@@ -113,48 +99,24 @@ class NavigationNotifier extends ChangeNotifier {
       _pages.removeLast();
     }
 
-    final newConfiguration = _processConfiguration(configuration);
-
-    _currentConfiguration = newConfiguration;
-
-    final newPage = _pageFactory.create(_currentConfiguration);
-
-    _pages.add(newPage);
-
-    notifyListeners();
+    push(configuration);
   }
 
   /// Handles the initial route.
   void handleInitialRoutePath(RouteConfiguration configuration) {
-    final newConfiguration = _processConfiguration(configuration);
-
-    _currentConfiguration = newConfiguration;
-
-    final newPage = _pageFactory.create(_currentConfiguration);
-
-    _pages.add(newPage);
-
-    notifyListeners();
+    push(configuration);
   }
 
   /// Handles the new route.
   void handleNewRoutePath(RouteConfiguration configuration) {
-    final newConfiguration = _processConfiguration(configuration);
-
-    _currentConfiguration = newConfiguration;
-
-    final newPage = _pageFactory.create(_currentConfiguration);
-
-    _pages.add(newPage);
-
-    notifyListeners();
+    push(configuration);
   }
 
   /// Creates a [RouteConfiguration] using the given [page].
   RouteConfiguration _getConfigurationFromPage(MetricsPage page) {
     final name = page?.name;
 
-    final configuration = MetricsRoutes.values.singleWhere(
+    final configuration = MetricsRoutes.values.firstWhere(
       (route) => route.name.value == name,
       orElse: () => MetricsRoutes.dashboard,
     );
