@@ -53,7 +53,7 @@ class NavigationNotifier extends ChangeNotifier {
   }) {
     _isUserLoggedIn = isLoggedIn ?? false;
 
-    if (!isLoggedIn) _pages.clear();
+    if (!_isUserLoggedIn) _pages.clear();
   }
 
   /// Handles the application's initialization state update represented by the
