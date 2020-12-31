@@ -22,7 +22,9 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
       _navigationNotifier.currentConfiguration;
 
   @override
-  GlobalKey<NavigatorState> get navigatorKey => GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState> get navigatorKey => GlobalObjectKey<NavigatorState>(
+        _navigationNotifier,
+      );
 
   /// Creates a new instance of the [MetricsRouterDelegate].
   ///

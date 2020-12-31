@@ -69,12 +69,11 @@ void main() {
     );
 
     test(
-      ".navigatorKey provides the global key for the navigator state",
+      ".navigatorKey provides the global object key with a value equals to the navigator notifier",
       () {
-        expect(
-          metricsRouterDelegate.navigatorKey,
-          isA<GlobalKey<NavigatorState>>(),
-        );
+        final key = metricsRouterDelegate.navigatorKey as GlobalObjectKey;
+
+        expect(key.value, isA<NavigationNotifier>());
       },
     );
 
