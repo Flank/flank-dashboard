@@ -1,7 +1,6 @@
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
-import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
@@ -9,6 +8,8 @@ import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+
+import '../../../../test_utils/route_configuration_stub.dart';
 
 void main() {
   group("MetricsPageFactory", () {
@@ -91,7 +92,7 @@ void main() {
         final unknown = _RouteNameMock();
         when(unknown.value).thenReturn('unknown');
 
-        final routeConfiguration = _RouteConfigurationStub(
+        final routeConfiguration = RouteConfigurationStub(
           name: unknown,
           path: testName,
         );
@@ -153,24 +154,13 @@ void main() {
         final unknown = _RouteNameMock();
         when(unknown.value).thenReturn('unknown');
 
-        final routeConfiguration = _RouteConfigurationStub(name: unknown);
+        final routeConfiguration = RouteConfigurationStub(name: unknown);
         final page = metricsPageFactory.create(routeConfiguration);
 
         expect(page.child, isA<DashboardPage>());
       },
     );
   });
-}
-
-/// A stub implementation of the [RouteConfiguration] used in tests.
-class _RouteConfigurationStub extends RouteConfiguration {
-  /// Creates a new instance of the route configuration stub.
-  /// 
-  /// Provides the default value for the [authorizationRequired].
-  const _RouteConfigurationStub({
-    RouteName name,
-    String path,
-  }) : super(name: name, path: path, authorizationRequired: false);
 }
 
 class _RouteNameMock extends Mock implements RouteName {}

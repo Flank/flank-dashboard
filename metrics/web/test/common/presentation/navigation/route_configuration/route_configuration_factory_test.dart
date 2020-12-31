@@ -61,6 +61,18 @@ void main() {
     );
 
     test(
+      ".create() returns a debug menu route configuration if the given uri contains debug menu path",
+      () {
+        final uri = Uri.parse('$baseUrl${MetricsRoutes.debugMenu.path}');
+
+        final configuration = routeConfigurationFactory.create(uri);
+
+        expect(configuration, equals(MetricsRoutes.debugMenu));
+      },
+    );
+
+
+    test(
       ".create() returns a dashboard route configuration if the given uri contains an unknown path",
       () {
         final uri = Uri.parse('$baseUrl/path');
