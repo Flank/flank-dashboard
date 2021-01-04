@@ -15,6 +15,7 @@ void main() {
     final navigationNotifierMock = _NavigationNotifierMock();
     const configuration = RouteConfigurationStub(name: RouteName.dashboard);
     final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifierMock);
+    final pages = UnmodifiableListView<MetricsPage>([]);
 
     tearDown(() {
       reset(navigationNotifierMock);
@@ -71,14 +72,18 @@ void main() {
     test(
       ".navigatorKey provides the global object key with a value equals to the navigator notifier",
       () {
-        final key = metricsRouterDelegate.navigatorKey as GlobalObjectKey;
+        final navigationNotifier = NavigationNotifier(MetricsPageFactory());
+        final routerDelegate = MetricsRouterDelegate(navigationNotifier);
 
-        expect(key.value, isA<NavigationNotifier>());
+        final expectedKey = GlobalObjectKey<NavigatorState>(navigationNotifier);
+        final actualKey = routerDelegate.navigatorKey;
+
+        expect(actualKey, equals(expectedKey));
       },
     );
 
     test(
-      "calls the .notifyListeners() when the navigation notifier calls .notifyListeners()",
+      "notifies listeners once the given navigation notifier notifies listeners",
       () {
         final metricsPageFactory = MetricsPageFactory();
         final navigationNotifier = NavigationNotifier(metricsPageFactory);
@@ -94,7 +99,7 @@ void main() {
     );
 
     test(
-      ".setInitialRoutePath() delegates call to the .handleInitialRoutePath() method of the navigation notifier",
+      ".setInitialRoutePath() delegates call to the navigation notifier",
       () async {
         await metricsRouterDelegate.setInitialRoutePath(configuration);
 
@@ -104,7 +109,7 @@ void main() {
     );
 
     test(
-      ".setNewRoutePath() delegates call to the .handleNewRoutePath() method of the navigation notifier",
+      ".setNewRoutePath() delegates call to the navigation notifier",
       () async {
         await metricsRouterDelegate.setNewRoutePath(configuration);
 
@@ -116,9 +121,6 @@ void main() {
     test(
       ".build() returns the navigator widget",
       () {
-        const page = MetricsPage(child: Text('test'));
-        final pages = UnmodifiableListView([page]);
-
         when(navigationNotifierMock.pages).thenReturn(pages);
 
         final actualWidget = metricsRouterDelegate.build(null);
@@ -128,14 +130,46 @@ void main() {
     );
 
     test(
+      "applies the navigator key to the navigator widget",
+      () {
+        when(navigationNotifierMock.pages).thenReturn(pages);
+
+        final expectedKey = metricsRouterDelegate.navigatorKey;
+
+        final navigatorWidget = metricsRouterDelegate.build(null) as Navigator;
+
+        final actualKey = navigatorWidget.key;
+
+        expect(actualKey, equals(expectedKey));
+      },
+    );
+
+    test(
+      "applies a list of pages from the navigation notifier to the navigator widget",
+      () {
+        final expectedPages = UnmodifiableListView(
+          const [MetricsPage(child: Text('test'))],
+        );
+        when(navigationNotifierMock.pages).thenReturn(expectedPages);
+
+        final metricsRouterDelegate = MetricsRouterDelegate(
+          navigationNotifierMock,
+        );
+
+        final navigatorWidget = metricsRouterDelegate.build(null) as Navigator;
+
+        final actualPages = navigatorWidget.pages;
+
+        expect(actualPages, equals(expectedPages));
+      },
+    );
+
+    test(
       "applies the given navigator observers to the navigator widget",
       () {
-        const page = MetricsPage(child: Text('test'));
-        final pages = UnmodifiableListView([page]);
+        when(navigationNotifierMock.pages).thenReturn(pages);
 
         final expectedNavigatorObservers = [NavigatorObserver()];
-
-        when(navigationNotifierMock.pages).thenReturn(pages);
 
         final metricsRouterDelegate = MetricsRouterDelegate(
           navigationNotifierMock,

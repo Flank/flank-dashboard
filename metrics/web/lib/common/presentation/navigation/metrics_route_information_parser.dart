@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_factory.dart';
 
-/// A class that parses the [RouteInformation] into the [RouteConfiguration]
-/// and vice versa.
+/// A [RouteInformationParser] that parses the [RouteInformation]
+/// into the [RouteConfiguration] and vice versa.
 class MetricsRouteInformationParser
     extends RouteInformationParser<RouteConfiguration> {
   /// A factory that is responsible for creating the [RouteConfiguration]
@@ -21,11 +21,7 @@ class MetricsRouteInformationParser
   Future<RouteConfiguration> parseRouteInformation(
     RouteInformation routeInformation,
   ) {
-    Uri uri;
-
-    if (routeInformation?.location != null) {
-      uri = Uri.parse(routeInformation.location);
-    }
+    final uri = Uri.tryParse(routeInformation?.location);
 
     return SynchronousFuture(_routeConfigurationFactory.create(uri));
   }

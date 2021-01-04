@@ -10,7 +10,7 @@ import 'package:metrics/common/presentation/navigation/state/navigation_notifier
 /// in both the application state and operating system.
 class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
-  /// The [ChangeNotifier] that manages a list of pages
+  /// A [ChangeNotifier] that manages a list of pages
   /// and provides methods to perform navigation.
   final NavigationNotifier _navigationNotifier;
 
@@ -45,15 +45,7 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
       key: navigatorKey,
       pages: _navigationNotifier.pages,
       observers: navigatorObservers,
-      onPopPage: (Route<dynamic> route, dynamic result) {
-        final bool success = route.didPop(result);
-
-        if (success) {
-          _navigationNotifier.pop();
-        }
-
-        return success;
-      },
+      onPopPage: _onPopPage,
     );
   }
 
@@ -65,5 +57,26 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
   @override
   Future<void> setNewRoutePath(RouteConfiguration configuration) async {
     _navigationNotifier.handleNewRoutePath(configuration);
+  }
+
+  /// A callback that invokes when the [Navigator] pops.
+  ///
+  /// If the [route.didPop] method returns `true`, the [_navigationNotifier.pop]
+  /// is called.
+  bool _onPopPage(Route<dynamic> route, dynamic result) {
+    final didPop = route.didPop(result);
+
+    if (didPop) {
+      _navigationNotifier.pop();
+    }
+
+    return didPop;
+  }
+
+  @override
+  void dispose() {
+    _navigationNotifier.removeListener(notifyListeners);
+
+    super.dispose();
   }
 }
