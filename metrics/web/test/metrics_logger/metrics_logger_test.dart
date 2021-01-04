@@ -1,5 +1,5 @@
 import 'package:metrics/metrics_logger/metrics_logger.dart';
-import 'package:metrics/metrics_logger/writer/logger_writer.dart';
+import 'package:metrics/metrics_logger/writers/logger_writer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
