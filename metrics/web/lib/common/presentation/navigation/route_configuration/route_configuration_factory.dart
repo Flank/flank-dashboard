@@ -26,6 +26,8 @@ class RouteConfigurationFactory {
       return MetricsRoutes.dashboard;
     } else if (routeName == RouteName.projectGroups.value) {
       return MetricsRoutes.projectGroups;
+    } else if (routeName == RouteName.debugMenu.value) {
+      return MetricsRoutes.debugMenu;
     }
 
     return MetricsRoutes.dashboard;
