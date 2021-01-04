@@ -101,7 +101,7 @@ destination:
     metrics_project_id: awesome_project
 ```
 
-So, the configuration consists of the following prperties: 
+So, the configuration consists of the following properties: 
 
 | Property name           | Type           | Description  |
 | ----------------------- |:--------------:| ----------------------------------|
