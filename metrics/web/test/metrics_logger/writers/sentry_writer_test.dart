@@ -49,7 +49,7 @@ void main() {
     );
 
     test(
-      ".setContext() sets the context by the given key to the given value in map if the given value is not a map",
+      ".setContext() sets the context by the given key to the given value in a map if the given value is not a map",
       () async {
         const key = 'contextKey';
         const value = 'contextValue';
@@ -65,7 +65,7 @@ void main() {
     );
 
     test(
-      ".writeError() writes the given error if the given stack trace is not given",
+      ".writeError() writes the given error if the given stack trace is not passed",
       () async {
         final error = Error();
 
@@ -74,8 +74,8 @@ void main() {
         verify(sentryClientMock.captureException(
           error,
           stackTrace: argThat(isNull, named: 'stackTrace'),
-          scope: anyNamed('scope'),
           hint: argThat(isNull, named: 'hint'),
+          scope: anyNamed('scope'),
         )).called(1);
       },
     );
@@ -90,8 +90,8 @@ void main() {
         verify(sentryClientMock.captureException(
           error,
           stackTrace: argThat(isNull, named: 'stackTrace'),
-          scope: anyNamed('scope'),
           hint: argThat(isNull, named: 'hint'),
+          scope: anyNamed('scope'),
         )).called(1);
       },
     );
@@ -107,8 +107,8 @@ void main() {
         verify(sentryClientMock.captureException(
           error,
           stackTrace: stackTrace,
-          scope: anyNamed('scope'),
           hint: argThat(isNull, named: 'hint'),
+          scope: anyNamed('scope'),
         )).called(1);
       },
     );
@@ -127,11 +127,11 @@ void main() {
         verify(sentryClientMock.captureException(
           error,
           stackTrace: stackTrace,
+          hint: argThat(isNull, named: 'hint'),
           scope: argThat(
             predicate<Scope>((scope) => scope.contexts[key] == value),
             named: 'scope',
           ),
-          hint: argThat(isNull, named: 'hint'),
         )).called(1);
       },
     );
