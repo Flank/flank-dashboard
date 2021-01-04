@@ -28,7 +28,7 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
 
   /// Creates a new instance of the [MetricsRouterDelegate].
   ///
-  /// The [navigatorObservers] defaults to empty list.
+  /// The [navigatorObservers] defaults to an empty list.
   ///
   /// The navigation notifier and [navigatorObservers] must not be `null`.
   MetricsRouterDelegate(

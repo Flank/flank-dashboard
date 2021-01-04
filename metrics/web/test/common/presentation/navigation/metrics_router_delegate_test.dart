@@ -78,7 +78,7 @@ void main() {
     );
 
     test(
-      "calls the notifyListeners when the navigation notifier calls notifyListeners",
+      "calls the .notifyListeners() when the navigation notifier calls .notifyListeners()",
       () {
         final metricsPageFactory = MetricsPageFactory();
         final navigationNotifier = NavigationNotifier(metricsPageFactory);
@@ -94,7 +94,7 @@ void main() {
     );
 
     test(
-      ".setInitialRoutePath() delegates call to the handleInitialRoutePath method of the navigation notifier",
+      ".setInitialRoutePath() delegates call to the .handleInitialRoutePath() method of the navigation notifier",
       () async {
         await metricsRouterDelegate.setInitialRoutePath(configuration);
 
@@ -104,7 +104,7 @@ void main() {
     );
 
     test(
-      ".setNewRoutePath() delegates call to the handleNewRoutePath method of the navigation notifier",
+      ".setNewRoutePath() delegates call to the .handleNewRoutePath() method of the navigation notifier",
       () async {
         await metricsRouterDelegate.setNewRoutePath(configuration);
 
