@@ -1,10 +1,10 @@
-import 'package:metrics/metrics_logger/writer/logger_writer.dart';
+import 'package:metrics/metrics_logger/writers/logger_writer.dart';
 
 /// A class that provides methods for logging errors together with
 /// their contexts using a [LoggerWriter].
 ///
-/// Before using any methods, it should initialize the [LoggerWriter]
-/// using the [MetricsLogger.initialize] method.
+/// Before calling any methods, this should be initialized with the
+/// [LoggerWriter] using the [MetricsLogger.initialize] method.
 class MetricsLogger {
   /// A [LoggerWriter] this logger uses to write errors and their contexts
   /// to the logger output.
