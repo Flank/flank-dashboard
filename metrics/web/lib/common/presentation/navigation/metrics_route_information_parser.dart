@@ -7,8 +7,7 @@ import 'package:metrics/common/presentation/navigation/route_configuration/route
 /// into the [RouteConfiguration] and vice versa.
 class MetricsRouteInformationParser
     extends RouteInformationParser<RouteConfiguration> {
-  /// A factory that is responsible for creating the [RouteConfiguration]
-  /// depending on the [Uri].
+  /// A factory needed to create a [RouteConfiguration] depending on the [Uri].
   final RouteConfigurationFactory _routeConfigurationFactory;
 
   /// Creates a new instance of the [MetricsRouteInformationParser].

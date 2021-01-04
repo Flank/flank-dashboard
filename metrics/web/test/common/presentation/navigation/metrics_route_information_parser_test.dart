@@ -11,10 +11,14 @@ import '../../../test_utils/matcher_util.dart';
 
 void main() {
   group("MetricsRouteInformationParser", () {
-    final routeConfigurationFactoryMock = _RouteConfigurationFactoryMock();
-    final metricsRouteInformationParser = MetricsRouteInformationParser(
+    final routeConfigurationFactory = _RouteConfigurationFactoryMock();
+    final routeInformationParser = MetricsRouteInformationParser(
       RouteConfigurationFactory(),
     );
+
+    tearDown(() {
+      reset(routeConfigurationFactory);
+    });
 
     test(
       "throws an AssertionError if the given route configuration factory is null",
@@ -27,19 +31,45 @@ void main() {
     );
 
     test(
-      ".parseRouteInformation() uses the route configuration factory to create a route configuration",
+      ".parseRouteInformation() delegates to the route configuration factory if the given route information is null",
       () async {
-        final metricsRouteInformationParser = MetricsRouteInformationParser(
-          routeConfigurationFactoryMock,
+        final routeInformationParser = MetricsRouteInformationParser(
+          routeConfigurationFactory,
         );
 
-        final routeInformation = RouteInformation(location: 'test');
+        await routeInformationParser.parseRouteInformation(null);
 
-        await metricsRouteInformationParser.parseRouteInformation(
-          routeInformation,
+        verify(routeConfigurationFactory.create(null)).called(equals(1));
+      },
+    );
+
+    test(
+      ".parseRouteInformation() delegates to the route configuration factory if the location of the given route information is null",
+      () async {
+        final routeInformationParser = MetricsRouteInformationParser(
+          routeConfigurationFactory,
         );
 
-        verify(routeConfigurationFactoryMock.create(any)).called(equals(1));
+        await routeInformationParser.parseRouteInformation(
+          RouteInformation(location: null),
+        );
+
+        verify(routeConfigurationFactory.create(null)).called(equals(1));
+      },
+    );
+
+    test(
+      ".parseRouteInformation() returns the route configuration created by the given route configuration factory",
+      () async {
+        final expectedConfiguration = MetricsRoutes.dashboard;
+
+        when(routeConfigurationFactory.create(any))
+            .thenReturn(expectedConfiguration);
+
+        final actualConfiguration = await routeInformationParser
+            .parseRouteInformation(RouteInformation(location: 'test'));
+
+        expect(actualConfiguration, equals(expectedConfiguration));
       },
     );
 
@@ -47,19 +77,19 @@ void main() {
       ".restoreRouteInformation() returns null if the the given route configuration is null",
       () {
         expect(
-          metricsRouteInformationParser.restoreRouteInformation(null),
+          routeInformationParser.restoreRouteInformation(null),
           isNull,
         );
       },
     );
 
     test(
-      ".restoreRouteInformation() returns the route information with the location equals to the given login route configuration path",
+      ".restoreRouteInformation() returns the route information with the location equals to the given route configuration path",
       () {
         final routeConfiguration = MetricsRoutes.login;
         final expectedLocation = routeConfiguration.path;
 
-        final actualLocation = metricsRouteInformationParser
+        final actualLocation = routeInformationParser
             .restoreRouteInformation(routeConfiguration)
             .location;
 

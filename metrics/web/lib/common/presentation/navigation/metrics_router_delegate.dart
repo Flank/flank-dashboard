@@ -28,14 +28,15 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
 
   /// Creates a new instance of the [MetricsRouterDelegate].
   ///
-  /// If the navigation observers are `null`, an empty list is used.
+  /// The [navigatorObservers] defaults to an empty list.
   ///
-  /// The navigation notifier and navigation observers must not be `null`.
+  /// The navigation notifier and [navigatorObservers] must not be `null`.
   MetricsRouterDelegate(
-    this._navigationNotifier, [
-    this._navigatorObservers = const <NavigatorObserver>[],
-  ])  : assert(_navigationNotifier != null),
-        assert(_navigatorObservers != null) {
+    this._navigationNotifier, {
+    List<NavigatorObserver> navigatorObservers = const <NavigatorObserver>[],
+  })  : assert(_navigationNotifier != null),
+        assert(navigatorObservers != null),
+        _navigatorObservers = navigatorObservers {
     _navigationNotifier.addListener(notifyListeners);
   }
 
@@ -50,13 +51,17 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
   }
 
   @override
-  Future<void> setInitialRoutePath(RouteConfiguration configuration) async {
-    _navigationNotifier.handleInitialRoutePath(configuration);
+  Future<void> setInitialRoutePath(RouteConfiguration configuration) {
+    return SynchronousFuture(
+      _navigationNotifier.handleInitialRoutePath(configuration),
+    );
   }
 
   @override
-  Future<void> setNewRoutePath(RouteConfiguration configuration) async {
-    _navigationNotifier.handleNewRoutePath(configuration);
+  Future<void> setNewRoutePath(RouteConfiguration configuration) {
+    return SynchronousFuture(
+      _navigationNotifier.handleNewRoutePath(configuration),
+    );
   }
 
   /// A callback that invokes when the [Navigator] pops.
