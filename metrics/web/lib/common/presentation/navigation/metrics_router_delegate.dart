@@ -6,7 +6,7 @@ import 'package:metrics/common/presentation/navigation/state/navigation_notifier
 /// A class that builds the [Navigator] widget with a
 /// list of configured pages.
 ///
-/// It defines how the [Router] reacts to changes
+/// This class defines how the [Router] reacts to changes
 /// in both the application state and operating system.
 class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -15,7 +15,7 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
   final NavigationNotifier _navigationNotifier;
 
   /// A list of observers for the [Navigator] widget.
-  final List<NavigatorObserver> navigatorObservers;
+  final List<NavigatorObserver> _navigatorObservers;
 
   @override
   RouteConfiguration get currentConfiguration =>
@@ -28,14 +28,14 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
 
   /// Creates a new instance of the [MetricsRouterDelegate].
   ///
-  /// The [navigatorObservers] defaults to an empty list.
+  /// If the navigation observers are `null`, an empty list is used.
   ///
-  /// The navigation notifier and [navigatorObservers] must not be `null`.
+  /// The navigation notifier and navigation observers must not be `null`.
   MetricsRouterDelegate(
-    this._navigationNotifier, {
-    this.navigatorObservers = const <NavigatorObserver>[],
-  })  : assert(_navigationNotifier != null),
-        assert(navigatorObservers != null) {
+    this._navigationNotifier, [
+    this._navigatorObservers = const <NavigatorObserver>[],
+  ])  : assert(_navigationNotifier != null),
+        assert(_navigatorObservers != null) {
     _navigationNotifier.addListener(notifyListeners);
   }
 
@@ -44,7 +44,7 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
     return Navigator(
       key: navigatorKey,
       pages: _navigationNotifier.pages,
-      observers: navigatorObservers,
+      observers: _navigatorObservers,
       onPopPage: _onPopPage,
     );
   }
@@ -61,7 +61,7 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
 
   /// A callback that invokes when the [Navigator] pops.
   ///
-  /// If the [route.didPop] method returns `true`, the [_navigationNotifier.pop]
+  /// If the [Route.didPop] method returns `true`, the [NavigationNotifier.pop]
   /// is called.
   bool _onPopPage(Route<dynamic> route, dynamic result) {
     final didPop = route.didPop(result);

@@ -27,7 +27,7 @@ void main() {
     );
 
     test(
-      ".parseRouteInformation() calls the .create() method of the route configuration factory",
+      ".parseRouteInformation() uses the route configuration factory to create a route configuration",
       () async {
         final metricsRouteInformationParser = MetricsRouteInformationParser(
           routeConfigurationFactoryMock,
@@ -57,48 +57,6 @@ void main() {
       ".restoreRouteInformation() returns the route information with the location equals to the given login route configuration path",
       () {
         final routeConfiguration = MetricsRoutes.login;
-        final expectedLocation = routeConfiguration.path;
-
-        final actualLocation = metricsRouteInformationParser
-            .restoreRouteInformation(routeConfiguration)
-            .location;
-
-        expect(actualLocation, equals(expectedLocation));
-      },
-    );
-
-    test(
-      ".restoreRouteInformation() returns the route information with the location equals to the given dashboard route configuration path",
-      () {
-        final routeConfiguration = MetricsRoutes.dashboard;
-        final expectedLocation = routeConfiguration.path;
-
-        final actualLocation = metricsRouteInformationParser
-            .restoreRouteInformation(routeConfiguration)
-            .location;
-
-        expect(actualLocation, equals(expectedLocation));
-      },
-    );
-
-    test(
-      ".restoreRouteInformation() returns the route information with the location equals to the given project groups route configuration path",
-      () {
-        final routeConfiguration = MetricsRoutes.projectGroups;
-        final expectedLocation = routeConfiguration.path;
-
-        final actualLocation = metricsRouteInformationParser
-            .restoreRouteInformation(routeConfiguration)
-            .location;
-
-        expect(actualLocation, equals(expectedLocation));
-      },
-    );
-
-    test(
-      ".restoreRouteInformation() returns the route information with the location equals to the given debug menu route configuration path",
-      () {
-        final routeConfiguration = MetricsRoutes.debugMenu;
         final expectedLocation = routeConfiguration.path;
 
         final actualLocation = metricsRouteInformationParser

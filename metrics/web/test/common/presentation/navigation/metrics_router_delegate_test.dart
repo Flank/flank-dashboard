@@ -35,23 +35,9 @@ void main() {
       "throws an AssertionError if the given navigation observers are null",
       () {
         expect(
-          () => MetricsRouterDelegate(
-            navigationNotifierMock,
-            navigatorObservers: null,
-          ),
+          () => MetricsRouterDelegate(navigationNotifierMock, null),
           MatcherUtil.throwsAssertionError,
         );
-      },
-    );
-
-    test(
-      "applies an empty list to the navigator observers if the parameter is not specified",
-      () {
-        final metricsRouterDelegate = MetricsRouterDelegate(
-          navigationNotifierMock,
-        );
-
-        expect(metricsRouterDelegate.navigatorObservers, equals([]));
       },
     );
 
@@ -70,7 +56,7 @@ void main() {
     );
 
     test(
-      ".navigatorKey provides the global object key with a value equals to the navigator notifier",
+      ".navigatorKey provides the global object key with a value equals to the given navigator notifier",
       () {
         final navigationNotifier = NavigationNotifier(MetricsPageFactory());
         final routerDelegate = MetricsRouterDelegate(navigationNotifier);
@@ -145,7 +131,7 @@ void main() {
     );
 
     test(
-      "applies a list of pages from the navigation notifier to the navigator widget",
+      "applies a list of pages from the given navigation notifier to the navigator widget",
       () {
         final expectedPages = UnmodifiableListView(
           const [MetricsPage(child: Text('test'))],
@@ -165,6 +151,21 @@ void main() {
     );
 
     test(
+      "applies an empty list to the navigator widget's observers if the given parameter is not specified",
+      () {
+        when(navigationNotifierMock.pages).thenReturn(pages);
+
+        final metricsRouterDelegate = MetricsRouterDelegate(
+          navigationNotifierMock,
+        );
+
+        final navigator = metricsRouterDelegate.build(null) as Navigator;
+
+        expect(navigator.observers, equals([]));
+      },
+    );
+
+    test(
       "applies the given navigator observers to the navigator widget",
       () {
         when(navigationNotifierMock.pages).thenReturn(pages);
@@ -173,7 +174,7 @@ void main() {
 
         final metricsRouterDelegate = MetricsRouterDelegate(
           navigationNotifierMock,
-          navigatorObservers: expectedNavigatorObservers,
+          expectedNavigatorObservers,
         );
 
         final navigator = metricsRouterDelegate.build(null) as Navigator;
@@ -181,7 +182,49 @@ void main() {
         expect(navigator.observers, equals(expectedNavigatorObservers));
       },
     );
+
+    test(
+      "on pop page callback returns true if the navigator widget successfully pops a route",
+      () {
+        when(navigationNotifierMock.pages).thenReturn(pages);
+
+        final metricsRouterDelegate = MetricsRouterDelegate(
+          navigationNotifierMock,
+        );
+
+        final navigator = metricsRouterDelegate.build(null) as Navigator;
+
+        final routeMock = _MaterialPageRouteMock();
+        when(routeMock.didPop(any)).thenReturn(true);
+
+        final actualResult = navigator.onPopPage(routeMock, () => {});
+
+        expect(actualResult, isTrue);
+      },
+    );
+
+    test(
+      "pops the last page of the navigation notifier if the navigator widget successfully pops a route",
+      () {
+        when(navigationNotifierMock.pages).thenReturn(pages);
+
+        final metricsRouterDelegate = MetricsRouterDelegate(
+          navigationNotifierMock,
+        );
+
+        final navigator = metricsRouterDelegate.build(null) as Navigator;
+
+        final routeMock = _MaterialPageRouteMock();
+        when(routeMock.didPop(any)).thenReturn(true);
+
+        navigator.onPopPage(routeMock, () => {});
+
+        verify(navigationNotifierMock.pop()).called(equals(1));
+      },
+    );
   });
 }
 
 class _NavigationNotifierMock extends Mock implements NavigationNotifier {}
+
+class _MaterialPageRouteMock extends Mock implements MaterialPageRoute {}

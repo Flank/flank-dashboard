@@ -21,7 +21,11 @@ class MetricsRouteInformationParser
   Future<RouteConfiguration> parseRouteInformation(
     RouteInformation routeInformation,
   ) {
-    final uri = Uri.tryParse(routeInformation?.location);
+    Uri uri;
+
+    if (routeInformation?.location != null) {
+      uri = Uri.tryParse(routeInformation.location);
+    }
 
     return SynchronousFuture(_routeConfigurationFactory.create(uri));
   }
