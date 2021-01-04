@@ -1,0 +1,50 @@
+@startuml not_initialized_app_navigation_sequence_diagram.puml
+
+actor Bob
+
+participant Application
+
+participant LoadingPage
+
+participant NavigationNotifier
+
+Bob -> Application : opens the Metrics URL
+activate Application
+
+Application -> NavigationNotifier : handleInitialRoutePath(routeConfiguration)
+activate NavigationNotifier
+
+NavigationNotifier -> NavigationNotifier : save redirectRoute
+
+NavigationNotifier --> Application : redirects to the Loading Page
+
+Application --> Bob : shows Loading Page
+
+Application -> LoadingPage : initialize all components
+
+activate LoadingPage
+
+LoadingPage -> LoadingPage : initialize all components
+
+LoadingPage -> NavigationNotifier : handleAppInitializationUpdates(isAppInitialized)
+
+deactivate LoadingPage
+
+NavigationNotifier -> NavigationNotifier : update isAppInitialized value
+
+alt isAppInitialized == true
+    NavigationNotifier -> NavigationNotifier : _redirect()
+
+    alt redirectRoute == Loading Page or redirectRoute == null
+        NavigationNotifier --> Application : redirects to the Dashboard
+        Application --> Bob : shows Dashboard page
+    else
+        NavigationNotifier --> Application : redirects to the initial route
+        Application --> Bob : shows page with the given URL
+    end
+end
+
+deactivate NavigationNotifier
+deactivate Application
+
+@enduml

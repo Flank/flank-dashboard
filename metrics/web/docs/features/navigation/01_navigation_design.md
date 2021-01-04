@@ -104,7 +104,7 @@ with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteConfiguration> {
 Let's take a closer look at the `MetricsRouterDelegate` members:
 - The `currentConfiguration` is a value that `Router` uses to populate the browser history to support the back and forward buttons in the browser top bar.
 - The `setInitialRoutePath` method is called at startup with the [RouteConfiguration](#route-configuration) of the initial route.
-- The `setNewRoutePath` method is called when the [Route Information Provider](#route-information-provider) reports that the operating system pushes a new route to the application. This method takes the [RouteConfiguration](#route-configuration) that comes from the [Route Information Parser]($route-information-parser) and changes the list of pages accordingly.
+- The `setNewRoutePath` method is called when the [Route Information Provider](#route-information-provider) reports that the operating system pushes a new route to the application. This method takes the [RouteConfiguration](#route-configuration) that comes from the [Route Information Parser](#route-information-parser) and changes the list of pages accordingly.
 - The `build` method builds the `Navigator` widget with the current list of pages.
 
 A [`NavigationNotifier`](#navigation-notifier) simplifies routes managing and should be injected into the `Router Delegate`. The delegate then subscribes to the navigation notifier state. When this state changes, the router rebuilds. Consider the following code:
@@ -126,14 +126,20 @@ class MetricsRouterDelegate extends RouterDelegate<RouteConfiguration>
 A `NavigationNotifier` is a `ChangeNotifier` that manages a list of current pages of the application and provides methods to perform navigation. Also, this class holds information about an authentication state of the current user to restrict visiting specific pages that require a user to be logged in.
 
 The `NavigationNotifier` requires two classes to be injected:
- - [Metrics Pages Factory](#metrics-pages-factory)
+ - [Metrics Pages Factory](#metrics-page-factory)
  - [Route Configuration Factory](#route-configuration-factory)
 
-The `NavigationNotifier` provides several navigation methods that are similar to methods the `Navigator` widget provides. But unlike the `Navigator` methods, the ones of `NavigationNotifier` do not return a `Future`. The main reason is that the [Metrics Web presentation layer architecture](#https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) declares the interactions between pages and the UI logic to be in a presenter (`ChangeNotifier`, in our case) and performed using `View Models`. Thus, the following statements hold:
+The `NavigationNotifier` provides several navigation methods that are similar to methods the `Navigator` widget provides. But unlike the `Navigator` methods, the ones of `NavigationNotifier` do not return a `Future`. The main reason is that the [Metrics Web presentation layer architecture](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/02_presentation_layer_architecture.md) declares the interactions between pages and the UI logic to be in a presenter (`ChangeNotifier`, in our case) and performed using `View Models`. Thus, the following statements hold:
 - using the `MetricsPage` data directly in the UI (for example, in a page widget) or adding such logic to the widget itself - breaks the principle of separation between the presentation layer components and complexifies testing;
 - implementing the data flow (using `View Model`s) between pages/widgets using the result param of the `.pop()` method - breaks the principle of separation between the presentation layer components and complexifies testing.
 
 According to the above, we **do not** pass parameters using internal navigation and **do not** implement similar logic for the new navigation system within the Metrics Web Application.
+
+To be sure that the application will work correctly, we should ensure that all of its components, such as `Feature Config` or `Local Config` initialized before the user gets access to the application. Thus, the application must show the `Loading Page` when the initialization is in progress. Once the initialization process finishes, the application should redirect the user to the route user tried to open.
+
+Consider the following sequence diagram that will describe this process in more details:
+
+![Not Initialized App Navigation Sequence Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/navigation/diagrams/not_initialized_app_navigation_sequence_diagram.puml)
 
 ### Metrics Page Factory
 

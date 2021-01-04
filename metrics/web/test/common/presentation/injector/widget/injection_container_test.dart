@@ -4,6 +4,7 @@ import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/state/projects_notifier.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
@@ -147,6 +148,20 @@ void main() {
 
         expect(
           () => Provider.of<DebugMenuNotifier>(context, listen: false),
+          returnsNormally,
+        );
+      },
+    );
+
+    testWidgets(
+      "injects a NavigationNotifier",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        expect(
+          () => Provider.of<NavigationNotifier>(context, listen: false),
           returnsNormally,
         );
       },
@@ -313,6 +328,27 @@ void main() {
 
         expect(
           () => debugMenuNotifier.notifyListeners(),
+          MatcherUtil.throwsFlutterError,
+        );
+      },
+    );
+
+    testWidgets(
+      "disposes a NavigationNotifier on dispose",
+      (tester) async {
+        await tester.pumpWidget(InjectionContainerTestbed());
+
+        final context = InjectionContainerTestbed.childKey.currentContext;
+
+        final navigationNotifier = Provider.of<NavigationNotifier>(
+          context,
+          listen: false,
+        );
+
+        await changePage(tester);
+
+        expect(
+          () => navigationNotifier.notifyListeners(),
           MatcherUtil.throwsFlutterError,
         );
       },
