@@ -1,37 +1,37 @@
 @startuml metrics_logger_initialize_sequence_diagram
-    skinparam ParticipantPadding 20
-    skinparam BoxPadding 10
 
-    actor Bob
-    
-    participant MetricsApp << (C,#ADD1B2) >>
-    participant WebContextProvider << (C,#ADD1B2) >>
-    participant MetricsLogger << (C,#ADD1B2) >>
-    participant CoolLoggerWriter << (C,#ADD1B2) >>
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
 
-    Bob -> MetricsApp : enters the application
-    activate MetricsApp
+actor Bob
 
-    MetricsApp -> WebContextProvider : get contexts
-    activate WebContextProvider
-    return contexts
+participant MetricsApp << (C,#ADD1B2) >>
+participant MetricsLogger << (C,#ADD1B2) >>
+participant CoolLoggerWriter << (C,#ADD1B2) >>
 
+Bob -> MetricsApp : enters the application
+activate MetricsApp
+
+MetricsApp -> CoolLoggerWriter : create new writer
+activate CoolLoggerWriter
+return loggerWriter
+
+opt collect default contexts
     MetricsApp -> MetricsApp : collect contextsMap
+end
 
-    MetricsApp -> CoolLoggerWriter : create new writer
-    activate CoolLoggerWriter
-    return loggerWriter
-
-    MetricsApp -> MetricsLogger : initilize(loggerWriter, contextsMap)
-    activate MetricsLogger
+MetricsApp -> MetricsLogger : initilize(loggerWriter, contextsMap)
+activate MetricsLogger
+opt if contextsMap is specified
     loop for each entry in contextsMap
         MetricsLogger -> CoolLoggerWriter : setContext(entry.key, entry.value)
         activate CoolLoggerWriter
         return void
     end
+end
 
-    MetricsLogger -> MetricsLogger : save loggerWriter
-    return void
+MetricsLogger -> MetricsLogger : save loggerWriter
+return void
 
-    return application UI
+return application UI
 @enduml

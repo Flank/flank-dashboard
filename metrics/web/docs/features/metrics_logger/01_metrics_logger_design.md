@@ -42,29 +42,25 @@ The next table lists the definitions used in the scope of Metrics Logger integra
 
 The `LoggerWriter` is an interface that provides methods for writing captured errors and their context. The writer is used to report captured errors to the logs output and save them. Generally speaking, the writer is a bridge between the [Metrics Logger](#metricslogger) within the application and logs output the concrete writer uses.
 
-### WebContextProvider
-
-The `WebContextProvider` is a class that provides methods for receiving contexts related to the application web environment (such as browser, operation system, etc.) The context provider collects the information about the environment. This information then can be used as contexts for the errors the [Metrics Logger](#metricslogger) captures.
-
 ### MetricsLogger
 
-The `MetricsLogger` is a main part of the logger integration. The application uses `MetricsLogger` to log errors and their contexts. The logger then uses the [`LoggerWriter`](#loggerwriter) to report these errors. This class provides only static methods to simplify the logging process. However, it must be initialized with the writer using the `initilize` method before logging errors.
+The `MetricsLogger` is a main part of the logger integration. The application uses `MetricsLogger` to log errors and their contexts. The logger then uses the [`LoggerWriter`](#loggerwriter) to report these errors. This class provides only static methods to simplify the logging process. However, it must be initialized with the writer using the `initialize` method before logging errors.
 
 The following class diagram demonstrates the structure of the logger integration and the relationships of classes this integration requires.
 
-![Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_class_diagram.puml)
+![Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_design_update/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_class_diagram.puml)
 
 ### Making Things Work
 
-The main idea of the `Metrics Logger` integration is to initilize it with the `LoggerWriter` implementation you want to use to report errors. Also, you can initialize the logger with default contexts. Collect the desired contexts that `WebContextProvider` provides or your custom contexts into one map and pass it as the parameter of the initiliaze method.
+The main idea of the `Metrics Logger` integration is to initialize it with the `LoggerWriter` implementation you want to use to report errors. Also, you can initialize the logger with default contexts. Collect the desired contexts into one map and pass it as the parameter of the initialize method.
 
-The following sequence diagram describes the process of `Metrics Logger` innitializing with the `CoolLoggerWriter` implementation:
+The following sequence diagram describes the process of `Metrics Logger` initializing with the `CoolLoggerWriter` implementation:
 
-![Metrics Logger init sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_initialize_sequence_diagram.puml)
+![Metrics Logger init sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_design_update/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_initialize_sequence_diagram.puml)
 
 And the following sequence diagram describes the logging process:
 
-![Metrics Logger log sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_log_error_sequence_diagram.puml)
+![Metrics Logger log sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_design_update/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_log_error_sequence_diagram.puml)
 
 To know more about the concrete writer integration, consider the [Sentry Integration](#sentry-integration) section.
 
@@ -171,11 +167,26 @@ await Sentry.init((options) => options
 
 About how to automate DSN and release binding, consider the [Sentry Options Binding](#sentry-options-binding) section.
 
+### Processing Sentry Events
+
+Sentry provides an API for processing their events before send it to the remote. This is called `event processor` and acts as a middleware for all events. Processor consumes the event to process and returns the event to send. This allows managing data for events (removing redundant information, adding request headers, etc.) and filtering events.
+
+To set custom event processor, one should use the optional `eventProcessor` argument of the static `init` method. This argument consumes instance of the implementor of the `SentryEventProcessor` callable class. The `init` method then passes the given processor to the Sentry options as follows:
+
+```dart
+await Sentry.init((options) {
+  // DSN and release initialization
+  options.addEventProcessor(eventProcessor);
+});
+```
+
+_**Note**: If the event processor results with `null` for the given event, this event won't be sent to Sentry._
+
 ### Creating Sentry Writer
 
-The `SentryLoggerWriter` is the implementation of the `LoggerWriter` that uses the [Sentry SDK](https://pub.dev/packages/sentry). This writer reports the captured errors to the Sentry.io together with the given contexts.
+The `SentryWriter` is the implementation of the `LoggerWriter` that uses the [Sentry SDK](https://pub.dev/packages/sentry). This writer reports the captured errors to the Sentry.io together with the given contexts.
 
-The main idea is to use the [`Sentry.captureException`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/captureException.html) and [`Sentry.configureScope`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/configureScope.html) methods within the `SentryLoggerWriter.writeError` and `SentryLoggerWriter.setContext` respectively. For example, the following code sends the error to Sentry:
+The main idea is to use the [`Sentry.captureException`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/captureException.html) and [`Sentry.configureScope`](https://pub.dev/documentation/sentry/latest/sentry/Sentry/configureScope.html) methods within the `SentryWriter.writeError` and `SentryWriter.setContext` respectively. For example, the following code sends the error to Sentry:
 
 ```dart
 await Sentry.captureException(
@@ -208,9 +219,9 @@ Sentry.configureScope((scope) => scope.setContexts(Browser.type, browser));
 
 _**Note**: Using the above classes to set the contexts with the same key is required. For example, Sentry fails setting a context by key `browser` if the given value is not of the `Browser` type._
 
-The following class diagram demonstreates the complete structure of the Metrics Logger that uses the `SentryLoggerWriter`:
+The following class diagram demonstrates the complete structure of the Metrics Logger that uses the `SentryWriter`:
 
-![Complete Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/master/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_sentry_class_diagram.puml)
+![Complete Metrics Logger class diagram](http://www.plantuml.com/plantuml/proxy?cache=no&fmt=svg&src=https://github.com/platform-platform/monorepo/raw/sentry_design_update/metrics/web/docs/features/metrics_logger/diagrams/metrics_logger_sentry_class_diagram.puml)
 
 ### Sentry Options Binding
 
@@ -232,7 +243,7 @@ Let's focus on how to bind your `DSN` to the Sentry SDK. The main idea is to use
 flutter build web --dart-define=SENTRY_DSN=$SENTRY_DSN
 ```
 
-Then, within the application, you can access the variable value using the [`String.fromEnviroment`](https://api.dart.dev/stable/2.10.4/dart-core/String/String.fromEnvironment.html) method:
+Then, within the application, you can access the variable value using the [`String.fromEnvironment`](https://api.dart.dev/stable/2.10.4/dart-core/String/String.fromEnvironment.html) method:
 
 ```dart
 const sentryDsn = String.fromEnvironment('SENTRY_DSN');
@@ -260,7 +271,7 @@ The best practice to set up the release is to set up the environment variable du
 flutter build web --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE
 ```
 
-Then within the application, you can access the variable value using the [`String.fromEnviroment`](https://api.dart.dev/stable/2.10.4/dart-core/String/String.fromEnvironment.html) method:
+Then within the application, you can access the variable value using the [`String.fromEnvironment`](https://api.dart.dev/stable/2.10.4/dart-core/String/String.fromEnvironment.html) method:
 
 ```dart
 const release = const String.fromEnvironment('SENTRY_RELEASE');

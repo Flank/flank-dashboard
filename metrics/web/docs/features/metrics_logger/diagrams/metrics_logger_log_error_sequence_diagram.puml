@@ -1,30 +1,31 @@
 @startuml metrics_logger_log_error_sequence_diagram
-    skinparam ParticipantPadding 20
-    skinparam BoxPadding 10
-    
-    participant CoolClass << (C,#ADD1B2) >>
-    participant MetricsLogger << (C,#ADD1B2) >>
-    participant CoolLoggerWriter << (C,#ADD1B2) >>
-    database "Logs Output" as Logs
 
-    opt setting additional context
-        CoolClass -> MetricsLogger : setContext(key, context)
-        activate MetricsLogger
-        MetricsLogger -> CoolLoggerWriter : setContext(key, context)
-        activate CoolLoggerWriter
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
 
-        return void 
-        return void
-    end
+participant CoolClass << (C,#ADD1B2) >>
+participant MetricsLogger << (C,#ADD1B2) >>
+participant CoolLoggerWriter << (C,#ADD1B2) >>
+database "Logs Output" as Logs
 
-    CoolClass -> MetricsLogger : logError(error, stackTrace)
+opt setting additional context
+    CoolClass -> MetricsLogger : setContext(key, context)
     activate MetricsLogger
-    
-    MetricsLogger -> CoolLoggerWriter : writeError(error, stackTrace)
+    MetricsLogger -> CoolLoggerWriter : setContext(key, context)
     activate CoolLoggerWriter
 
-    CoolLoggerWriter -> Logs : report **error** with **stackTrace** \nand **context**
-
-    return void 
     return void
+    return void
+end
+
+CoolClass -> MetricsLogger : logError(error, stackTrace)
+activate MetricsLogger
+
+MetricsLogger -> CoolLoggerWriter : writeError(error, stackTrace)
+activate CoolLoggerWriter
+
+CoolLoggerWriter -> Logs : report **error** with **stackTrace** \nand **context**
+
+return void
+return void
 @enduml
