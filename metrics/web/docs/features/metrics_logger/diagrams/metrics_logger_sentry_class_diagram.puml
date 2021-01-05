@@ -3,28 +3,36 @@
 package metrics {
   class MetricsApp {}
 
-  class LoggerWriter {
-    + writeError(Object error, [StackTrace stackTrace]) : FutureOr<void>
-    + setContext(String key, dynamic context) : FutureOr<void>
-  }
+  package metrics_logger {
+    package writers {
+      interface LoggerWriter {
+        + writeError(Object error, [StackTrace stackTrace]) : FutureOr<void>
+        + setContext(String key, dynamic context) : FutureOr<void>
+      }
+    }
 
-  class SentryWriter implements LoggerWriter {
-    + static init(String dsn, String release) : SentryWriter
-    + writeError(Object error, [StackTrace stackTrace]) : Future<void>
-    + setContext(String key, dynamic context) : Future<void>
-  }
+    package sentry as sentry_logger {
+      package writers as sentry_writers {
+        class SentryWriter implements LoggerWriter {
+          + //static// init(String dsn, String release, {SentryEventProcessor eventProcessor}) : SentryWriter
+          + writeError(Object error, [StackTrace stackTrace]) : Future<void>
+          + setContext(String key, dynamic context) : void
+        }
+      }
 
-  class MetricsLogger {
-    - _loggerWriter : LoggerWriter
-    + static initialize(LoggerWriter loggerWriter,  Map<String, dynamic> contexts) : Future<void>
-    + static logError(Object error, [StackTrace stackTrace]) : Future<void>
-    + static setContext(String key, dynamic context) : Future<void>
-  }
+      package event_processors {
+        interface SentryEventProcessor {
+          + call(SentryEvent event, {dynamic hint}) : FutureOr<SentryEvent>
+        }
+      }
+    }
 
-  class WebContextProvider {
-    + getBrowserContext() : Map<String, dynamic>
-    + getDeviceContext() : Map<String, dynamic>
-    + getOsContext() : Map<String, dynamic>
+    class MetricsLogger {
+      - //static// _loggerWriter : LoggerWriter
+      + //static// initialize(LoggerWriter loggerWriter,  Map<String, dynamic> contexts) : Future<void>
+      + //static// logError(Object error, [StackTrace stackTrace]) : Future<void>
+      + //static// setContext(String key, dynamic context) : Future<void>
+    }
   }
 }
 
@@ -32,9 +40,9 @@ package sentry {
   class Sentry {}
 }
 
-MetricsApp --> WebContextProvider : uses
 MetricsApp --> MetricsLogger : uses
 MetricsLogger --> LoggerWriter : uses
-SentryWriter --> Sentry : uses
+SentryWriter -right-> Sentry : uses
+SentryWriter --> SentryEventProcessor : uses
 
 @enduml
