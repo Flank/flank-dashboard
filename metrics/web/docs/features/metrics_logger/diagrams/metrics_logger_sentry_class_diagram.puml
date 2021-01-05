@@ -9,17 +9,21 @@ package metrics {
         + writeError(Object error, [StackTrace stackTrace]) : FutureOr<void>
         + setContext(String key, dynamic context) : FutureOr<void>
       }
-
-      class SentryWriter implements LoggerWriter {
-        + //static// init(String dsn, String release, {SentryEventProcessor eventProcessor}) : SentryWriter
-        + writeError(Object error, [StackTrace stackTrace]) : Future<void>
-        + setContext(String key, dynamic context) : void
-      }
     }
 
-    package event_processors {
-      interface SentryEventProcessor {
-        + call(SentryEvent event, {dynamic hint}) : FutureOr<SentryEvent>
+    package sentry as sentry_logger {
+      package writers as sentry_writers {
+        class SentryWriter implements LoggerWriter {
+          + //static// init(String dsn, String release, {SentryEventProcessor eventProcessor}) : SentryWriter
+          + writeError(Object error, [StackTrace stackTrace]) : Future<void>
+          + setContext(String key, dynamic context) : void
+        }
+      }
+
+      package event_processors {
+        interface SentryEventProcessor {
+          + call(SentryEvent event, {dynamic hint}) : FutureOr<SentryEvent>
+        }
       }
     }
 
