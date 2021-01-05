@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:metrics/metrics_logger/sentry/event_processors/sentry_event_processor.dart';
 import 'package:metrics/metrics_logger/writers/logger_writer.dart';
 import 'package:sentry/sentry.dart';
 
@@ -12,13 +13,24 @@ class SentryWriter implements LoggerWriter {
   /// Initializes [Sentry] with the given [dsn] and [release] values
   /// using [Sentry.init] method.
   ///
+  /// If the given [eventProcessor] is not `null`,
+  /// adds it to the Sentry event processors using
+  /// the [SentryOptions.addEventProcessor] method.
+  ///
   /// Returns a new instance of the [SentryWriter].
-  static Future<SentryWriter> init(String dsn, String release) async {
-    await Sentry.init(
-      (options) => options
-        ..dsn = dsn
-        ..release = release,
-    );
+  static Future<SentryWriter> init(
+    String dsn,
+    String release, {
+    SentryEventProcessor eventProcessor,
+  }) async {
+    await Sentry.init((options) {
+      options.dsn = dsn;
+      options.release = release;
+
+      if (eventProcessor != null) {
+        options.addEventProcessor(eventProcessor);
+      }
+    });
 
     return const SentryWriter._();
   }

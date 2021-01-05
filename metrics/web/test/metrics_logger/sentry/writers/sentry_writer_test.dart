@@ -1,4 +1,5 @@
-import 'package:metrics/metrics_logger/writers/sentry_writer.dart';
+import 'package:metrics/metrics_logger/sentry/event_processors/sentry_event_processor.dart';
+import 'package:metrics/metrics_logger/sentry/writers/sentry_writer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sentry/sentry.dart';
 import 'package:test/test.dart';
@@ -11,10 +12,14 @@ void main() {
     const testRelease = "testRelease";
 
     final sentryClientMock = _SentryClientMock();
+
     SentryWriter writer;
 
     setUp(() async {
-      writer = await SentryWriter.init(testDsn, testRelease);
+      writer = await SentryWriter.init(
+        testDsn,
+        testRelease,
+      );
       Sentry.bindClient(sentryClientMock);
     });
 
@@ -30,6 +35,19 @@ void main() {
 
         expect(writer, isNotNull);
         expect(Sentry.isEnabled, isTrue);
+      },
+    );
+
+    test(
+      ".init() initializes Sentry if the given event processor is null",
+      () async {
+        final future = SentryWriter.init(
+          testDsn,
+          testRelease,
+          eventProcessor: null,
+        );
+
+        expect(future, completes);
       },
     );
 
@@ -135,7 +153,34 @@ void main() {
         )).called(1);
       },
     );
+
+    test(
+      ".writeError() calls the given event processor if it is not null",
+      () async {
+        final eventProcessor = _SentryEventProcessorMock();
+        final error = Error();
+
+        final writer = await SentryWriter.init(
+          testDsn,
+          testRelease,
+          eventProcessor: eventProcessor,
+        );
+        await writer.writeError(error);
+
+        final sentryEventMatcher =
+            predicate<SentryEvent>((event) => event.throwable == error);
+
+        verify(
+          eventProcessor.call(
+            argThat(sentryEventMatcher),
+            hint: anyNamed('hint'),
+          ),
+        ).called(1);
+      },
+    );
   });
 }
 
 class _SentryClientMock extends Mock implements SentryClient {}
+
+class _SentryEventProcessorMock extends Mock implements SentryEventProcessor {}
