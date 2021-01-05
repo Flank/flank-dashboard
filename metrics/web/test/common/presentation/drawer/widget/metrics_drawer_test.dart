@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../test_utils/auth_notifier_mock.dart';
-import '../../../../test_utils/signed_in_auth_notifier_stub.dart';
 import '../../../../test_utils/test_injection_container.dart';
 import '../../../../test_utils/theme_notifier_mock.dart';
 
@@ -59,20 +55,6 @@ void main() {
         verify(authNotifier.signOut()).called(equals(1));
       },
     );
-
-    testWidgets(
-      "after a user taps on 'Log out' - application navigates back to the login screen",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(MetricsDrawerTestbed(
-          authNotifier: SignedInAuthNotifierStub(),
-        ));
-
-        await tester.tap(find.text(CommonStrings.logOut));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(LoginPage), findsOneWidget);
-      },
-    );
   });
 }
 
@@ -106,11 +88,6 @@ class MetricsDrawerTestbed extends StatelessWidget {
           return MaterialApp(
             home: Scaffold(
               body: MetricsDrawer(),
-            ),
-            onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-              settings: settings,
-              isLoggedIn:
-                  Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
           );
         },

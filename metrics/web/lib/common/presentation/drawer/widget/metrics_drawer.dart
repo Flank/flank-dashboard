@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,11 @@ class MetricsDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navigationNotifier = Provider.of<NavigationNotifier>(
+      context,
+      listen: false,
+    );
+
     return Drawer(
       child: Column(
         children: <Widget>[
@@ -33,10 +39,7 @@ class MetricsDrawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text(CommonStrings.projectGroups),
-            onTap: () => Navigator.popAndPushNamed(
-              context,
-              MetricsRoutes.projectGroups.path,
-            ),
+            onTap: () => navigationNotifier.push(MetricsRoutes.projectGroups),
           ),
           ListTile(
             title: const Text(CommonStrings.logOut),
@@ -52,7 +55,5 @@ class MetricsDrawer extends StatelessWidget {
     final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
     await authNotifier.signOut();
-    await Navigator.pushNamedAndRemoveUntil(
-        context, MetricsRoutes.login.path, (Route<dynamic> route) => false);
   }
 }

@@ -25,7 +25,7 @@ void main() {
     final isLoginPageName = equals(MetricsRoutes.login.path);
     final isDashboardPageName = equals(MetricsRoutes.dashboard.path);
     final isProjectGroupsPageName = equals(MetricsRoutes.projectGroups.path);
-    final isLoadingPageName = isNull;
+    final isLoadingPageName = equals(MetricsRoutes.loading.path);
 
     test(
       "throws an AssertionError if the given page factory is null",
@@ -340,13 +340,13 @@ void main() {
       ".pushReplacement() replaces the current page with the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
-        notifier.push(MetricsRoutes.login);
+        notifier.push(MetricsRoutes.loading);
 
-        notifier.pushReplacement(MetricsRoutes.loading);
+        notifier.pushReplacement(MetricsRoutes.login);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isLoadingPageName);
+        expect(currentPage.name, isLoginPageName);
       },
     );
 
@@ -491,16 +491,16 @@ void main() {
       ".pushAndRemoveUntil() pushes the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
-        notifier.push(MetricsRoutes.login);
+        notifier.push(MetricsRoutes.loading);
 
         notifier.pushAndRemoveUntil(
-          MetricsRoutes.loading,
+          MetricsRoutes.login,
           (page) => true,
         );
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isLoadingPageName);
+        expect(currentPage.name, isLoginPageName);
       },
     );
 
@@ -564,11 +564,11 @@ void main() {
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
 
-        notifier.handleInitialRoutePath(MetricsRoutes.loading);
+        notifier.handleInitialRoutePath(MetricsRoutes.login);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isLoadingPageName);
+        expect(currentPage.name, isLoginPageName);
       },
     );
 
@@ -629,11 +629,11 @@ void main() {
       () {
         notifier.handleAuthenticationUpdates(isLoggedIn: false);
 
-        notifier.handleNewRoutePath(MetricsRoutes.loading);
+        notifier.handleNewRoutePath(MetricsRoutes.login);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, isLoadingPageName);
+        expect(currentPage.name, isLoginPageName);
       },
     );
 

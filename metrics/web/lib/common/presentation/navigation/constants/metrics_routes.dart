@@ -6,6 +6,7 @@ class MetricsRoutes {
   /// A [RouteConfiguration] for the loading page.
   static const RouteConfiguration loading = RouteConfiguration(
     name: RouteName.loading,
+    path: '/',
     authorizationRequired: false,
   );
 

@@ -6,6 +6,7 @@ import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
@@ -25,6 +26,10 @@ class MetricsUserMenu extends StatelessWidget {
     const itemPadding = EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0);
     final userMenuTheme = MetricsTheme.of(context).userMenuTheme;
     final userMenuTextStyle = userMenuTheme.contentTextStyle;
+    final navigationNotifier = Provider.of<NavigationNotifier>(
+      context,
+      listen: false,
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -83,9 +88,8 @@ class MetricsUserMenu extends StatelessWidget {
               Padding(
                 padding: itemPadding,
                 child: TappableArea(
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    MetricsRoutes.projectGroups.path,
+                  onTap: () => navigationNotifier.push(
+                    MetricsRoutes.projectGroups,
                   ),
                   builder: (context, isHovered, child) => child,
                   child: Text(
@@ -103,12 +107,9 @@ class MetricsUserMenu extends StatelessWidget {
                     return Padding(
                       padding: itemPadding,
                       child: TappableArea(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            MetricsRoutes.debugMenu.path,
-                          );
-                        },
+                        onTap: () => navigationNotifier.push(
+                          MetricsRoutes.debugMenu,
+                        ),
                         builder: (context, isHovered, child) => child,
                         child: Text(
                           CommonStrings.debugMenu,
@@ -152,10 +153,5 @@ class MetricsUserMenu extends StatelessWidget {
 
     await authNotifier.signOut();
     await analyticsNotifier.resetUser();
-    await Navigator.pushNamedAndRemoveUntil(
-      context,
-      MetricsRoutes.login.path,
-      (Route<dynamic> route) => false,
-    );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_route.dart';
 
 /// A class that represents a Metrics application page.
-class MetricsPage<T> extends Page {
+class MetricsPage<T> extends Page<T> {
   /// A [Widget] to display as a content of this page.
   final Widget child;
 
@@ -39,5 +39,19 @@ class MetricsPage<T> extends Page {
       maintainState: maintainState,
       fullscreenDialog: fullscreenDialog,
     );
+  }
+
+  @override
+  bool canUpdate(Page other) {
+    bool canUpdate = true;
+
+    if (other is MetricsPage) {
+      canUpdate = other.name == name &&
+          other.child == child &&
+          other.fullscreenDialog == fullscreenDialog &&
+          other.maintainState == maintainState;
+    }
+
+    return canUpdate && super.canUpdate(other);
   }
 }

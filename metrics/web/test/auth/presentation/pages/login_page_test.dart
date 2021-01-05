@@ -7,19 +7,19 @@ import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
-import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
-import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-import 'package:provider/provider.dart';
 
 import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/auth_notifier_stub.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
+import '../../../test_utils/navigation_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
@@ -155,11 +155,14 @@ void main() {
     );
 
     testWidgets(
-      "navigates to the dashboard page if the login was successful",
+      "closes and navigates to the dashboard page if the login was successful",
       (WidgetTester tester) async {
+        final navigationNotifier = NavigationNotifierMock();
+
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_LoginPageTestbed(
             authNotifier: AuthNotifierStub(),
+            navigationNotifier: navigationNotifier,
           ));
         });
 
@@ -177,7 +180,8 @@ void main() {
           return tester.pumpAndSettle();
         });
 
-        expect(find.byType(DashboardPage), findsOneWidget);
+        verify(navigationNotifier.pushReplacement(MetricsRoutes.dashboard))
+            .called(equals(1));
       },
     );
   });
@@ -197,6 +201,9 @@ class _LoginPageTestbed extends StatelessWidget {
   /// A [ProjectMetricsNotifier] used in tests.
   final ProjectMetricsNotifier metricsNotifier;
 
+  /// A [NavigationNotifier] used in tests.
+  final NavigationNotifier navigationNotifier;
+
   /// Creates the [_LoginPageTestbed] with the given [authNotifier] and [metricsNotifier].
   ///
   /// The [metricsThemeData] defaults to an empty [MetricsThemeData] instance.
@@ -205,6 +212,7 @@ class _LoginPageTestbed extends StatelessWidget {
     this.authNotifier,
     this.metricsNotifier,
     this.loginKey,
+    this.navigationNotifier,
   });
 
   @override
@@ -212,15 +220,11 @@ class _LoginPageTestbed extends StatelessWidget {
     return TestInjectionContainer(
       authNotifier: authNotifier,
       metricsNotifier: metricsNotifier,
+      navigationNotifier: navigationNotifier,
       child: Builder(
         builder: (context) {
           return MetricsThemedTestbed(
             metricsThemeData: metricsThemeData,
-            onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-              settings: settings,
-              isLoggedIn:
-                  Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
-            ),
             body: LoginPage(key: loginKey),
           );
         },

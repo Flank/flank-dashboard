@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
-import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/user_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 import 'package:metrics/common/presentation/widgets/metrics_user_menu.dart';
-import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
 import 'package:metrics/feature_config/presentation/view_models/debug_menu_feature_config_view_model.dart';
-import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-import 'package:provider/provider.dart';
 
 import '../../../test_utils/analytics_notifier_mock.dart';
 import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/feature_config_notifier_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
-import '../../../test_utils/signed_in_auth_notifier_stub.dart';
+import '../../../test_utils/navigation_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
 import '../../../test_utils/theme_notifier_mock.dart';
 
@@ -280,38 +277,23 @@ void main() {
     );
 
     testWidgets(
-      "after a user taps on 'Log out' - application navigates back to the login screen",
-      (WidgetTester tester) async {
-        await tester.pumpWidget(_MetricsUserMenuTestbed(
-          authNotifier: SignedInAuthNotifierStub(),
-        ));
-
-        await tester.tap(find.text(CommonStrings.logOut));
-        await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
-        });
-
-        expect(find.byType(LoginPage), findsOneWidget);
-      },
-    );
-
-    testWidgets(
       "after a user taps on 'Project groups' - application navigates to the project group screen",
       (WidgetTester tester) async {
         final authNotifier = AuthNotifierMock();
+        final navigationNotifier = NavigationNotifierMock();
 
         when(authNotifier.isLoggedIn).thenReturn(true);
 
         await tester.pumpWidget(_MetricsUserMenuTestbed(
           authNotifier: authNotifier,
+          navigationNotifier: navigationNotifier,
         ));
 
         await tester.tap(find.text(CommonStrings.projectGroups));
-        await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
-        });
+        await mockNetworkImagesFor(() => tester.pumpAndSettle());
 
-        expect(find.byType(ProjectGroupPage), findsOneWidget);
+        verify(navigationNotifier.push(MetricsRoutes.projectGroups))
+            .called(equals(1));
       },
     );
 
@@ -320,6 +302,7 @@ void main() {
       (WidgetTester tester) async {
         final featureConfigNotifier = FeatureConfigNotifierMock();
         final authNotifier = AuthNotifierMock();
+        final navigationNotifier = NavigationNotifierMock();
 
         when(authNotifier.isLoggedIn).thenReturn(true);
         when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
@@ -329,14 +312,14 @@ void main() {
         await tester.pumpWidget(_MetricsUserMenuTestbed(
           featureConfigNotifier: featureConfigNotifier,
           authNotifier: authNotifier,
+          navigationNotifier: navigationNotifier,
         ));
 
         await tester.tap(find.text(CommonStrings.debugMenu));
-        await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
-        });
+        await mockNetworkImagesFor(() => tester.pumpAndSettle());
 
-        expect(find.byType(DebugMenuPage), findsOneWidget);
+        verify(navigationNotifier.push(MetricsRoutes.debugMenu))
+            .called(equals(1));
       },
     );
   });
@@ -359,6 +342,9 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
   /// A [FeatureConfigNotifier] to use in tests.
   final FeatureConfigNotifier featureConfigNotifier;
 
+  /// A [NavigationNotifier] used in tests.
+  final NavigationNotifier navigationNotifier;
+
   /// Creates the [_MetricsUserMenuTestbed] with the given [theme].
   ///
   /// The [theme] defaults to an empty [MetricsThemeData] instance.
@@ -369,6 +355,7 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
     this.authNotifier,
     this.analyticsNotifier,
     this.featureConfigNotifier,
+    this.navigationNotifier,
   }) : super(key: key);
 
   @override
@@ -378,16 +365,12 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
       authNotifier: authNotifier,
       analyticsNotifier: analyticsNotifier,
       featureConfigNotifier: featureConfigNotifier,
+      navigationNotifier: navigationNotifier,
       child: Builder(
         builder: (context) {
           return MetricsThemedTestbed(
             metricsThemeData: theme,
             body: const MetricsUserMenu(),
-            onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-              settings: settings,
-              isLoggedIn:
-                  Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
-            ),
           );
         },
       ),
