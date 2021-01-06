@@ -163,7 +163,7 @@ Once the Google sign-in option is enabled, you should populate the Authorized Ja
 
 _**Note:** The Google sing-in option requires configuring the allowed email domains. Consider the [Validating Email Domains](#validating-email-domains) section to know more about allowed email domains._
 
-### Configuring Google Sign-in allowed domains
+### Google Sign-in allowed domains configuration
 
 The application validates users' email domains when they sign in with Google. These domains are stored within the `Cloud Firestore` database. To configure allowed email domains, consider the following steps:
 
