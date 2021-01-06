@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -28,9 +29,19 @@ class _PlatformBrightnessObserverState extends State<PlatformBrightnessObserver>
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updatePlatformBrightness();
-    });
+
+    final isLoggedIn = Provider.of<AuthNotifier>(
+      context,
+      listen: false,
+    ).isLoggedIn;
+
+    final canUpdatePlatformBrightness = isLoggedIn == null || !isLoggedIn;
+
+    if (canUpdatePlatformBrightness) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _updatePlatformBrightness();
+      });
+    }
 
     super.initState();
   }

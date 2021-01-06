@@ -7,6 +7,7 @@ import 'package:metrics/auth/presentation/strings/auth_strings.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/login_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -21,6 +22,7 @@ import '../../../test_utils/auth_notifier_stub.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/navigation_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
+import '../../../test_utils/theme_notifier_mock.dart';
 
 void main() {
   group("LoginPage", () {
@@ -184,6 +186,29 @@ void main() {
             .called(equals(1));
       },
     );
+
+    testWidgets(
+      "does not set the application theme based on the platform brightness once opened if a user is logged in",
+      (tester) async {
+        final authNotifier = AuthNotifierMock();
+        final themeNotifier = ThemeNotifierMock();
+
+        when(themeNotifier.isDark).thenReturn(true);
+        when(authNotifier.isLoading).thenReturn(false);
+        when(authNotifier.isLoggedIn).thenReturn(true);
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _LoginPageTestbed(
+              authNotifier: authNotifier,
+              themeNotifier: themeNotifier,
+            ),
+          );
+        });
+
+        verifyNever(themeNotifier.setTheme(any));
+      },
+    );
   });
 }
 
@@ -204,6 +229,9 @@ class _LoginPageTestbed extends StatelessWidget {
   /// A [NavigationNotifier] used in tests.
   final NavigationNotifier navigationNotifier;
 
+  /// A [ThemeNotifier] used in tests.
+  final ThemeNotifier themeNotifier;
+
   /// Creates a new instance of the [_LoginPageTestbed] with the given parameters.
   ///
   /// The [metricsThemeData] defaults to an empty [MetricsThemeData] instance.
@@ -213,6 +241,7 @@ class _LoginPageTestbed extends StatelessWidget {
     this.metricsNotifier,
     this.loginKey,
     this.navigationNotifier,
+    this.themeNotifier,
   });
 
   @override
@@ -221,6 +250,7 @@ class _LoginPageTestbed extends StatelessWidget {
       authNotifier: authNotifier,
       metricsNotifier: metricsNotifier,
       navigationNotifier: navigationNotifier,
+      themeNotifier: themeNotifier,
       child: Builder(
         builder: (context) {
           return MetricsThemedTestbed(

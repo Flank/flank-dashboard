@@ -62,6 +62,10 @@ class _LoadingPageState extends State<LoadingPage>
     _subscribeToAuthUpdates();
     _subscribeToFeatureConfigUpdates();
     _subscribeToDebugMenuNotifierUpdates();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _authNotifierListener();
+    });
   }
 
   @override
@@ -135,7 +139,7 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Updates the [_isLoggedIn] value depending on the [AuthNotifier] state.
   void _authNotifierListener() {
-    _isLoggedIn = _authNotifier.isLoggedIn;
+    _isLoggedIn = _authNotifier?.isLoggedIn;
 
     _initializeApp();
   }

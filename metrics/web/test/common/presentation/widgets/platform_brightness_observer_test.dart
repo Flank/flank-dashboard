@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
 import 'package:mockito/mockito.dart';
 
+import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/binding_util.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -50,6 +52,26 @@ void main() {
     );
 
     testWidgets(
+      "does not set the application theme based on the platform brightness once opened if a user is logged in",
+      (tester) async {
+        final themeNotifier = ThemeNotifierMock();
+        final authNotifier = AuthNotifierMock();
+        final currentBrightness = tester.binding.window.platformBrightness;
+
+        when(authNotifier.isLoggedIn).thenReturn(true);
+
+        await tester.pumpWidget(
+          _PlatformBrightnessObserverTestbed(
+            themeNotifier: themeNotifier,
+            authNotifier: authNotifier,
+          ),
+        );
+
+        verifyNever(themeNotifier.setTheme(currentBrightness));
+      },
+    );
+
+    testWidgets(
       "updates the application theme based on the platform brightness once brightness changed",
       (tester) async {
         const brightness = Brightness.dark;
@@ -74,6 +96,9 @@ class _PlatformBrightnessObserverTestbed extends StatelessWidget {
   /// A [ThemeNotifier] used in tests.
   final ThemeNotifier themeNotifier;
 
+  /// A [AuthNotifier] used in tests.
+  final AuthNotifier authNotifier;
+
   /// A child widget of the [PlatformBrightnessObserver].
   final Widget child;
 
@@ -83,6 +108,7 @@ class _PlatformBrightnessObserverTestbed extends StatelessWidget {
   const _PlatformBrightnessObserverTestbed({
     Key key,
     this.themeNotifier,
+    this.authNotifier,
     this.child = const SizedBox(),
   }) : super(key: key);
 
@@ -90,6 +116,7 @@ class _PlatformBrightnessObserverTestbed extends StatelessWidget {
   Widget build(BuildContext context) {
     return TestInjectionContainer(
       themeNotifier: themeNotifier,
+      authNotifier: authNotifier,
       child: MetricsThemedTestbed(
         body: PlatformBrightnessObserver(
           child: child,

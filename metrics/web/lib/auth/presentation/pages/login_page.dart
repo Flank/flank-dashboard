@@ -31,8 +31,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+
     _authNotifier.addListener(_loggedInListener);
     _authNotifier.addListener(_loggedInErrorListener);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loggedInListener();
+    });
 
     super.initState();
   }

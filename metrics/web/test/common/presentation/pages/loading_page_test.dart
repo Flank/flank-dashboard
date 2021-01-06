@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
@@ -14,6 +15,7 @@ import '../../../test_utils/debug_menu_notifier_mock.dart';
 import '../../../test_utils/feature_config_notifier_mock.dart';
 import '../../../test_utils/navigation_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
+import '../../../test_utils/theme_notifier_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -323,6 +325,24 @@ void main() {
         expect(find.byType(PlatformBrightnessObserver), findsOneWidget);
       },
     );
+
+    testWidgets(
+      "does not set the application theme based on the platform brightness once opened if a user is logged in",
+      (tester) async {
+        final themeNotifier = ThemeNotifierMock();
+
+        when(authNotifier.isLoggedIn).thenReturn(true);
+
+        await tester.pumpWidget(
+          _LoadingPageTestbed(
+            authNotifier: authNotifier,
+            themeNotifier: themeNotifier,
+          ),
+        );
+
+        verifyNever(themeNotifier.setTheme(any));
+      },
+    );
   });
 }
 
@@ -340,6 +360,9 @@ class _LoadingPageTestbed extends StatelessWidget {
   /// A [NavigationNotifier] used in tests.
   final NavigationNotifier navigationNotifier;
 
+  /// A [ThemeNotifier] used in tests.
+  final ThemeNotifier themeNotifier;
+
   /// Creates the loading page testbed with the given parameters.
   ///
   /// If the given [navigatorObserver] is `null`,
@@ -349,6 +372,7 @@ class _LoadingPageTestbed extends StatelessWidget {
     this.featureConfigNotifier,
     this.debugMenuNotifier,
     this.navigationNotifier,
+    this.themeNotifier,
   });
 
   @override
@@ -358,6 +382,7 @@ class _LoadingPageTestbed extends StatelessWidget {
       featureConfigNotifier: featureConfigNotifier,
       debugMenuNotifier: debugMenuNotifier,
       navigationNotifier: navigationNotifier,
+      themeNotifier: themeNotifier,
       child: Builder(
         builder: (context) {
           return const MaterialApp(
