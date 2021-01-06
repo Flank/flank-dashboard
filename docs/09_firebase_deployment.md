@@ -128,7 +128,7 @@ To enable the email and password sign-in option, consider the following steps:
 4. Enable the `Email/Password` sign-in method using the toggle in the opened menu.
 5. Press the `Save` button.
 
-The email and password sign-in option is controlled by the remote `Feature Config` stored in the Firestore. The `isPasswordSignInOptionEnabled` configuration stands for the auth form availability on the Login Page of the application. If the `isPasswordSignInOptionEnabled` is `false` then users are not allowed to log in using the email and password sign-in method and no appropriate authentication form appears on the UI. To know more about the `Feature Config` consider the [Feature Config](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) design document.
+The email and password sign-in option is controlled by the remote `Feature Config` stored in the Firestore. The `isPasswordSignInOptionEnabled` configuration stands for the email and password auth form availability on the Login Page of the application. If the `isPasswordSignInOptionEnabled` is `false` then users are not allowed to log in using the email and password sign-in method and no appropriate authentication form appears on the UI. To know more about the `Feature Config` consider the [Feature Config](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) design document.
 
 To enable the email and password authentication form, consider the following steps:
 
@@ -203,29 +203,25 @@ Once you've installed Flutter you can build the application to deploy it then to
 1. Open the terminal and navigate to the `metrics/web` project folder.
 2. Run the `flutter build web --release` to build the release version of the application. 
 
-The built application is located under the `build/web` folder. By default, Flutter builds a version that uses the HTML renderer that lacks performance on the desktop. Instead, one can use the Skia renderer that significally improves performance on the desktop but breaks the application on mobile. The solution is to use auto renderer that automatically chooses which renderer to use. To enable auto renderer it is required to set the `FLUTTER_WEB_AUTO_DETECT` flag to `true` using the `--dart-define` argument of the `flutter build` command. Consider the following example: 
+The built application is located under the `build/web` folder. By default, Flutter builds a version that uses the HTML renderer that lacks performance on the desktop. Instead, one can use the Skia renderer that significantly improves performance on the desktop but breaks the application on mobile. The solution is to use auto renderer that automatically chooses which renderer to use. To enable auto renderer it is required to set the `FLUTTER_WEB_AUTO_DETECT` flag to `true` using the `--dart-define` argument of the `flutter build` command. Consider the following example: 
 
 ```bash
 flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true
 ```
 
-The Metrics Web Application uses Sentry to report errors occured during the app execution. Sentry requires additional configurations related to application building. Thus, it requires binding DSN and release options Sentry uses to report errors. To know more about the Sentry options itself and how to bind them consider the [Metrics Logger](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md) document and [Sentry Integration](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#sentry-integration) section. The following example demonstrates passing Sentry options to the `flutter build` command:
+#### Building with Sentry support
 
-```bash
-flutter build web --release --dart-define=SENTRY_DSN=<YOUR_SENTRY_DSN> --dart-define=SENTRY_RELEASE=<YOUR_SENTRY_RELEASE>
-```
+The Metrics Web Application uses Sentry to report errors occurred during the app execution. Sentry requires additional configurations related to the application building. Thus, it requires binding DSN and release options Sentry uses to report errors. To know more about the Sentry options itself and how to bind them consider the [Metrics Logger](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md) document and [Sentry Integration](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#sentry-integration) section.
 
-Also, Sentry uses [source maps](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#updating-source-maps) generated during the build to make errors more readable and clear. To ensure `flutter build` command generates source maps it is required to pass the `--source-maps` flag as follows:
+Also, Sentry uses source maps generated during the build to make errors more readable and clear. To ensure `flutter build` command generates source maps it is required to pass the `--source-maps` flag.
 
-```bash
-flutter build web --release --source-maps
-```
-
-So, the full command to build the Metrics Web Application looks like the following one:
+The following example demonstrates building the application with Sentry support:
 
 ```bash
 flutter build web --release --source-maps --dart-define=FLUTTER_WEB_AUTO_DETECT=true --dart-define=SENTRY_DSN=<YOUR_SENTRY_DSN> --dart-define=SENTRY_RELEASE=<YOUR_SENTRY_RELEASE>
 ```
+
+Then, using Sentry CLI one should update source maps as described in the [Updating Source Maps](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#updating-source-maps) section of the Metrics Logger document.
 
 Once you've build the application, you can proceed to deploying to the Firebase Hosting.
 
@@ -239,7 +235,7 @@ You can deploy the built application to the Firebase Hosting using the `firebase
 4. Give an alias to your project.
 5. Run the `firebase deploy --only hosting` command to deploy the application to the Firebase Hosting.
 
-When the deployment proccess is finished, the application is accessible by the `Hosting URL` printed to the console.
+When the deployment process is finished, the application is accessible by the `Hosting URL` printed to the console.
 
 ## Configuring Firestore database
 
@@ -271,7 +267,7 @@ Once you've finished creating test data, you should deactivate the `seedData` cl
 1. Go to the `metrics/firebase/functions/index.js` file and change the `inactive` constant back to `true`.
 2. Redeploy this function, using the `firebase deploy --only functions` command.
 
-### Validating Email Domains
+### Configuring Google Sign-in allowed domains
 
 The application validates users' email domains when they sign in with Google. If user signs in using the email and password method then no domain validation happens. To validate domains the application uses the `validateEmailDomain` cloud function deployed previously. First, you should enable this function for all users. Consider the following steps: 
 
