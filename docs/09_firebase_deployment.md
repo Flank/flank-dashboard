@@ -80,15 +80,14 @@ When your Firestore database is up, you need to add a Web application to your Fi
 to be able to connect your web application with the Firestore database:
 
 1. In the [Firebase Console](https://console.firebase.google.com/), open your project and tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
-2. Scroll down and find `There are no apps in your project` text,
- and tap on the `</>` icon to add a new Web application to your Firebase project.
+2. Scroll down and find `There are no apps in your project` text, and tap on the `</>` icon to add a new Web application to your Firebase project.
 3. Enter the app nickname and make sure that `Also set up Firebase Hosting for this app` is checked.
 4. Select from the dropdown menu, or create a new site for your application and tap the `Register app` to proceed.
 5. Skip the `Configure Firebase SDK` step. We will return to Firebase SDK configuration a bit later in [Firebase SDK configuration](#Firebase-SDK-configuration).
 6. Tap on the `Next` button and follow instructions to install the Firebase CLI.
 7. Skip the `Deploy to Firebase Hosting` and tap on the `Continue to console` to finish configuring your Firebase Web application.
- The deployment process described more detailed in
-  [Building and deploying the application to the Firebase Hosting](#Building-and-deploying-the-application-to-the-Firebase-Hosting) section.
+ 
+The deployment process described more detailed in the [Building and deploying the application to the Firebase Hosting](#Building-and-deploying-the-application-to-the-Firebase-Hosting) section.
 
 Finally, your Firebase project configured and it's time to configure the Firebase SDK in your Flutter for the Web application.
 
@@ -101,44 +100,87 @@ and go to the project setting (tap on the setting gear icon near the `Project Ov
 2. Scroll down and find your Firebase Web Application.
 3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
 4. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 3:
-    ```
-        var firebaseConfig = {
-          apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
-          authDomain: "metrics-d9c67.firebaseapp.com",
-          databaseURL: "https://metrics-d9c67.firebaseio.com",
-          projectId: "metrics-d9c67",
-          storageBucket: "metrics-d9c67.appspot.com",
-          messagingSenderId: "650500796855",
-          appId: "1:650500796855:web:65a4615a28f3d88e8bb832",
-          measurementId: "G-3DB4JFLKHQ"
-        };
-    ```
+```
+  var firebaseConfig = {
+    apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
+    authDomain: "metrics-d9c67.firebaseapp.com",
+    databaseURL: "https://metrics-d9c67.firebaseio.com",
+    projectId: "metrics-d9c67",
+    storageBucket: "metrics-d9c67.appspot.com",
+    messagingSenderId: "650500796855",
+    appId: "1:650500796855:web:65a4615a28f3d88e8bb832",
+    measurementId: "G-3DB4JFLKHQ"
+  };
+```
 
 Finally, you have a configured Flutter application that works with your Firebase instance.
 It's time to deploy your Flutter application to the Firebase Hosting!
 
+## Firebase Email and Password Sign-In configuration
+
+The email and password sign-in option allows authorizing to the application using the email and password a user has been created with. About how to create a new user with email and password consider the [Creating a new Firebase User](#creating-a-new-firebase-user) section. _Please note, that adding a new user requires the email and password sign-in option to be enabled!_
+
+To enable the email and password sign-in option, consider the following steps:
+
+1. Open the [Firebase console](https://console.firebase.google.com/) and choose your project.
+2. Navigate to `Authentication` -> `Sign-in method`.
+3. Press the `Email/Password` item in the `Sign-in providers` table.
+4. Enable the `Email/Password` sign-in method using the toggle in the opened menu.
+5. Press the `Save` button.
+
+The email and password sign-in option is controlled by the remote `Feature Config` stored in the Firestore. The `isPasswordSignInOptionEnabled` configuration stands for the email and password auth form availability on the Login Page of the application. If the `isPasswordSignInOptionEnabled` is `false` then users are not allowed to log in using the email and password sign-in method and no appropriate authentication form appears on the UI. To know more about the `Feature Config` consider the [Feature Config](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/feature_config/01_feature_config_design.md) design document.
+
+To enable the email and password authentication form, consider the following steps:
+
+1. Open the [Firebase console](https://console.firebase.google.com/) and choose your project.
+2. Navigate to `Cloud Firestore` -> `Data`.
+3. Open the `feature_config` collection (or create one by pressing the `Start collection` button).
+4. Open the `feature_config` document (or create one by pressing the `Add document` button).
+5. Find the `isPasswordSignInOptionEnabled` field (or create one by pressing the `Add field` button).
+6. Ensure the `isPasswordSignInOptionEnabled` value is `true`.
+7. Press the `Update` button to save the field value.
+
+When both the email and password sign-in option and appropriate feature config is enabled, users can use their credentials to sign in to the application.
+
 ## Firebase Google Sign-In configuration
 
-To allow users sign-in using Google, please follow the next steps:
+The Google sign-in option allows authorizing to the application using Google.
+To enable the Google sign-in option, consider the following steps:
 
-1. Open the [Firebase console](https://console.firebase.google.com/), choose your project
+1. Open the [Firebase console](https://console.firebase.google.com/) and choose your project.
 2. Navigate to `Authentication` -> `Sign-in method`.
-3. Enable `Google`.
-4. Expand `Web SDK Configuration` and copy `Web client ID`, then press `Save`.
-5. Open `web/index.html` and replace `content` of `meta` tag with `name = "google-signin-client_id"` with the value from clipboard.
+3. Press the `Google` item in the `Sign-in providers` table.
+4. Enable the `Email/Password` sign-in method using the toggle in the opened menu.
+5. Expand `Web SDK Configuration` panel in the opened menu and copy `Web client ID`, and press `Save` to save configurations.
+6. Open `web/index.html` and replace `content` of `meta` tag with `name="google-signin-client_id"` with the value from the clipboard.
 
-Once you've done, you should add an allowed URLs to the Authorized JavaScript origins to be able to use the Google Sign-in from these origins. So, to do that, you should: 
+Once the Google sign-in option is enabled, you should populate the Authorized JavaScript origins with your URLs so you can use the Google sign-in within applications hosted by these URLs. Consider the following steps:
 
 1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
 2. Open the side menu and go to the `APIs & Services` section.
 3. Go to the `Credentials` section, find the `Web client` in `OAuth 2.0 Client IDs` section and open it.
 4. Then you should find the `Authorized JavaScript origins` section. That is the place where you can add any URL origins that will have access to the google sign.
 
+_**Note:** The Google sing-in option requires configuring the allowed email domains. Consider the [Validating Email Domains](#validating-email-domains) section to know more about allowed email domains._
+
+### Google Sign-in allowed domains configuration
+
+The application validates users' email domains when they sign in with Google. These domains are stored within the `Cloud Firestore` database. To configure allowed email domains, consider the following steps:
+
+1. Browse to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
+2. Open the `Cloud Firestore` section on the left panel.
+3. Press the `Start collection` button, enter the `allowed_email_domains` as a collection ID, and press the `Next` button.
+4. After you tapped the `Next` button, you'll be asked to add the first document to your collection. This is the point where we start adding the allowed user email domains for the application. For example, if we want to allow the `gmail.com` domain, we should create an empty document with the `gmail.com` document ID.
+
+To add more allowed email domains you should add a new document for each email domain with the domain itself as a document ID.
+
+_**Note:** It is required for the allowed email domains collection to be not empty. Empty collection means that no email domains are allowed and the Google sign-in will fail with any domain._
+
 ## API Key Restrictions
 
 To enable API key restrictions, follow the next steps:
 
-First, let's restrict the browser key.
+First, let's restrict the browser key:
 
 1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
 2. Open the side menu and go to the `APIs & Services` section.
@@ -163,24 +205,50 @@ After that, update the CI Integration configurations to use the previously creat
 ## Building and deploying the application to the Firebase Hosting
 
 ### Preparing your environment
-Before deploying metrics application, make sure you have the correct Flutter version installed,
- by running the `flutter --version` command. You should have `v1.24.0-10.2.pre` installed.
-If the version is different you should run the `flutter version 1.24.0-10.2.pre` command.
+Before deploying metrics application, make sure you have the correct Flutter version installed, by running the `flutter --version` command. You should have `v1.24.0-10.2.pre` installed. If the version is different you should run the `flutter version 1.24.0-10.2.pre` command.
 
 Also, you should enable flutter web support by running the `flutter config --enable-web` command.
 
-### Building and deploying Flutter application
+### Building Flutter application
 
-1. Open the terminal and navigate to the metrics project folder.
-2. Run `firebase login` command and follow the instructions to log in to the Firebase CLI with your Google account.
- Use the same account that you used to create your Firebase project (or the one that has access to it).
-3. After you have logged in, run the `firebase use --add` command, and select the project id of the project, created in previous steps.
+Once you've installed Flutter you can build the application to deploy it then to the Firebase Hosting as described in the next section. To build Metrics Web Application consider the following steps: 
+
+1. Open the terminal and navigate to the `metrics/web` project folder.
+2. Run the `flutter build web --release` to build the release version of the application. 
+
+The built application is located under the `build/web` folder. By default, Flutter builds a version that uses the HTML renderer that lacks performance on the desktop. Instead, one can use the Skia renderer that significantly improves performance on the desktop but breaks the application on mobile. The solution is to use auto renderer that automatically chooses which renderer to use. To enable auto renderer it is required to set the `FLUTTER_WEB_AUTO_DETECT` flag to `true` using the `--dart-define` argument of the `flutter build` command. Consider the following example: 
+
+```bash
+flutter build web --release --dart-define=FLUTTER_WEB_AUTO_DETECT=true
+```
+
+#### Building with Sentry support
+
+The Metrics Web Application uses Sentry to report errors occurred during the app execution. Sentry requires additional configurations related to the application building. Thus, it requires binding DSN and release options Sentry uses to report errors. To know more about the Sentry options itself and how to bind them consider the [Metrics Logger](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md) document and [Sentry Integration](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#sentry-integration) section.
+
+Also, Sentry uses source maps generated during the build to make errors more readable and clear. To ensure `flutter build` command generates source maps it is required to pass the `--source-maps` flag.
+
+The following example demonstrates building the application with Sentry support:
+
+```bash
+flutter build web --release --source-maps --dart-define=FLUTTER_WEB_AUTO_DETECT=true --dart-define=SENTRY_DSN=<YOUR_SENTRY_DSN> --dart-define=SENTRY_RELEASE=<YOUR_SENTRY_RELEASE>
+```
+
+Then, using Sentry CLI one should update source maps as described in the [Updating Source Maps](https://github.com/platform-platform/monorepo/blob/master/metrics/web/docs/features/metrics_logger/01_metrics_logger_design.md#updating-source-maps) section of the Metrics Logger document.
+
+Once you've build the application, you can proceed to deploying to the Firebase Hosting.
+
+### Deploying Flutter application
+
+You can deploy the built application to the Firebase Hosting using the `firebase` CLI. Consider the following steps:
+
+1. Open the terminal and navigate to the `metrics` project folder.
+2. Run `firebase login` command and follow the instructions to log in to the Firebase CLI with your Google account. Use the same account that you used to create your Firebase project (or the one that has access to it).
+3. Run the `firebase use --add` command and select the ID of the project created in previous steps.
 4. Give an alias to your project.
-5. Run the `flutter build web` command from the root of the metrics project to build the release version of the application.
- It is recommended to add `--dart-define=FLUTTER_WEB_USE_SKIA=true` parameter to build the application with the `SKIA` renderer.
-6. Run the `firebase deploy --only hosting` command to deploy an application to the Firebase Hosting.
+5. Run the `firebase deploy --only hosting` command to deploy the application to the Firebase Hosting.
 
-After the deployment process finished, your application will be accessible using the `Hosting URL`, printed to console.
+When the deployment process is finished, the application is accessible by the `Hosting URL` printed to the console.
 
 ## Configuring Firestore database
 
@@ -212,9 +280,7 @@ Once you've finished creating test data, you should deactivate the `seedData` cl
 1. Go to the `metrics/firebase/functions/index.js` file and change the `inactive` constant back to `true`.
 2. Redeploy this function, using the `firebase deploy --only functions` command.
 
-Also, to allow users to sign in with Google, you should enable the `validateEmailDomain` function for all users and configure the allowed user email domains within `Cloud Firestore`. 
-
-To allow any user call the `validateEmailDomain` function deployed previously, you should follow the next steps: 
+To validate user's email domain when they sign in with Google, the application uses the `validateEmailDomain` cloud function deployed previously. If user signs in using the email and password method then no domain validation happens. To enable this validation, you should enable the `validateEmailDomain` for all users. Consider the following steps: 
 
 1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
 2. Open the side menu and go to the `Cloud Functions` section.
@@ -223,15 +289,6 @@ To allow any user call the `validateEmailDomain` function deployed previously, y
 5. In the info panel, select the `PERMISSIONS` tab and click an `ADD MEMBER` button.
 6. In the opened menu, type `allUsers` in the `New members` field and select a `Cloud Functions` -> `Cloud Functions Invoker` role.
 7. Save the changes.
-
-Once you've finished with these steps, and the `validateEmailDomain` function available for all users, consider the following steps to configure allowed email domains: 
-
-1. Go to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
-2. Open the `Cloud Firestore` section on the left panel.
-3. Tap on the `Start collection` button, enter the `allowed_email_domains` as a collection ID, and tap the `Next` button.
-4. After you tapped the `Next` button, you'll be asked to add a first document to your collection. This is the point where we start adding the allowed user email domains for our application. For example, we want to allow the `gmail.com` domain, so we should create an empty document with the `gmail.com` document ID.
-
-To add more allowed email domains you should add a new document for each email domain with the domain itself as a document ID.
 
 ## Creating a new Firebase User
 
