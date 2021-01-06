@@ -291,8 +291,9 @@ void main() {
 
         await tester.tap(find.text(CommonStrings.projectGroups));
 
-        verify(navigationNotifier.push(MetricsRoutes.projectGroups))
-            .called(equals(1));
+        verify(navigationNotifier.push(
+          MetricsRoutes.projectGroups,
+        )).called(equals(1));
       },
     );
 
@@ -316,8 +317,9 @@ void main() {
 
         await tester.tap(find.text(CommonStrings.debugMenu));
 
-        verify(navigationNotifier.push(MetricsRoutes.debugMenu))
-            .called(equals(1));
+        verify(navigationNotifier.push(
+          MetricsRoutes.debugMenu,
+        )).called(equals(1));
       },
     );
   });

@@ -96,8 +96,9 @@ void main() {
 
         await tester.tap(find.byTooltip(CommonStrings.navigateBack));
 
-        verify(navigationNotifier.push(MetricsRoutes.dashboard))
-            .called(equals(1));
+        verify(navigationNotifier.push(
+          MetricsRoutes.dashboard,
+        )).called(equals(1));
       },
     );
 

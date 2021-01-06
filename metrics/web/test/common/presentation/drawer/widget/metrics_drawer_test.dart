@@ -72,8 +72,9 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        verify(navigationNotifier.push(MetricsRoutes.projectGroups))
-            .called(equals(1));
+        verify(navigationNotifier.push(
+          MetricsRoutes.projectGroups,
+        )).called(equals(1));
       },
     );
   });
