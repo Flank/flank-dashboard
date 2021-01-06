@@ -29,19 +29,9 @@ class _PlatformBrightnessObserverState extends State<PlatformBrightnessObserver>
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-
-    final isLoggedIn = Provider.of<AuthNotifier>(
-      context,
-      listen: false,
-    ).isLoggedIn;
-
-    final canUpdatePlatformBrightness = isLoggedIn == null || !isLoggedIn;
-
-    if (canUpdatePlatformBrightness) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _updatePlatformBrightness();
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updatePlatformBrightness();
+    });
 
     super.initState();
   }
@@ -52,8 +42,14 @@ class _PlatformBrightnessObserverState extends State<PlatformBrightnessObserver>
     super.didChangePlatformBrightness();
   }
 
-  /// Changes the theme according to the operating system's brightness.
+  /// Changes the theme according to the operating system's brightness if user
+  /// is not logged in.
   void _updatePlatformBrightness() {
+    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    final isLoggedIn = authNotifier.isLoggedIn;
+
+    if (isLoggedIn != null && isLoggedIn) return;
+
     final brightness = WidgetsBinding.instance.window.platformBrightness;
     final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
 

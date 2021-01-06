@@ -85,7 +85,6 @@ class _MetricsAppState extends State<MetricsApp> {
             context,
             listen: false,
           );
-
           final analyticsNotifier = Provider.of<AnalyticsNotifier>(
             context,
             listen: false,

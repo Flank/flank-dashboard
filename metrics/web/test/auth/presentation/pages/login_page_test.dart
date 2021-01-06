@@ -22,7 +22,6 @@ import '../../../test_utils/auth_notifier_stub.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/navigation_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
-import '../../../test_utils/theme_notifier_mock.dart';
 
 void main() {
   group("LoginPage", () {
@@ -182,18 +181,18 @@ void main() {
           return tester.pumpAndSettle();
         });
 
-        verify(navigationNotifier.pushReplacement(MetricsRoutes.dashboard))
-            .called(equals(1));
+        verify(navigationNotifier.pushReplacement(
+          MetricsRoutes.dashboard,
+        )).called(equals(1));
       },
     );
 
     testWidgets(
-      "does not set the application theme based on the platform brightness once opened if a user is logged in",
+      "closes and navigates to the dashboard page on open if the user is logged in",
       (tester) async {
         final authNotifier = AuthNotifierMock();
-        final themeNotifier = ThemeNotifierMock();
+        final navigationNotifier = NavigationNotifierMock();
 
-        when(themeNotifier.isDark).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
         when(authNotifier.isLoggedIn).thenReturn(true);
 
@@ -201,12 +200,14 @@ void main() {
           return tester.pumpWidget(
             _LoginPageTestbed(
               authNotifier: authNotifier,
-              themeNotifier: themeNotifier,
+              navigationNotifier: navigationNotifier,
             ),
           );
         });
 
-        verifyNever(themeNotifier.setTheme(any));
+        verify(navigationNotifier.pushReplacement(
+          MetricsRoutes.dashboard,
+        )).called(equals(1));
       },
     );
   });

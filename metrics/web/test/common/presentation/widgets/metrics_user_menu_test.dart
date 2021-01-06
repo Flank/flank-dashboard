@@ -290,7 +290,6 @@ void main() {
         ));
 
         await tester.tap(find.text(CommonStrings.projectGroups));
-        await tester.pumpAndSettle();
 
         verify(navigationNotifier.push(MetricsRoutes.projectGroups))
             .called(equals(1));
@@ -316,7 +315,6 @@ void main() {
         ));
 
         await tester.tap(find.text(CommonStrings.debugMenu));
-        await tester.pumpAndSettle();
 
         verify(navigationNotifier.push(MetricsRoutes.debugMenu))
             .called(equals(1));

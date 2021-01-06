@@ -15,7 +15,6 @@ import '../../../test_utils/debug_menu_notifier_mock.dart';
 import '../../../test_utils/feature_config_notifier_mock.dart';
 import '../../../test_utils/navigation_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
-import '../../../test_utils/theme_notifier_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 
@@ -31,6 +30,12 @@ void main() {
       authNotifier = AuthNotifierMock();
       featureConfigNotifier = FeatureConfigNotifierMock();
       debugMenuNotifier = DebugMenuNotifierMock();
+    });
+
+    tearDown(() {
+      reset(authNotifier);
+      reset(featureConfigNotifier);
+      reset(debugMenuNotifier);
     });
 
     testWidgets(
@@ -137,8 +142,8 @@ void main() {
         debugMenuNotifier.notifyListeners();
 
         verify(navigationNotifier.handleAppInitialized(
-                isAppInitialized: anyNamed('isAppInitialized')))
-            .called(equals(1));
+          isAppInitialized: anyNamed('isAppInitialized'),
+        )).called(equals(1));
       },
     );
 
@@ -234,8 +239,8 @@ void main() {
 
         when(authNotifier.isLoading).thenReturn(false);
         when(debugMenuNotifier.isLoading).thenReturn(false);
-        when(debugMenuNotifier.isInitialized).thenReturn(true);
         when(featureConfigNotifier.isLoading).thenReturn(false);
+        when(debugMenuNotifier.isInitialized).thenReturn(true);
         when(featureConfigNotifier.isInitialized).thenReturn(true);
 
         authNotifier.notifyListeners();
@@ -267,11 +272,11 @@ void main() {
 
         when(featureConfigNotifier.isInitialized).thenReturn(false);
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
         when(debugMenuNotifier.isLoading).thenReturn(false);
-        when(debugMenuNotifier.isInitialized).thenReturn(true);
         when(featureConfigNotifier.isLoading).thenReturn(false);
+        when(debugMenuNotifier.isInitialized).thenReturn(true);
+        when(authNotifier.isLoggedIn).thenReturn(true);
 
         authNotifier.notifyListeners();
         featureConfigNotifier.notifyListeners();
@@ -302,10 +307,10 @@ void main() {
 
         when(debugMenuNotifier.isInitialized).thenReturn(false);
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
         when(authNotifier.isLoading).thenReturn(false);
-        when(debugMenuNotifier.isLoading).thenReturn(true);
+        when(debugMenuNotifier.isLoading).thenReturn(false);
         when(featureConfigNotifier.isLoading).thenReturn(false);
+        when(authNotifier.isLoggedIn).thenReturn(true);
         when(featureConfigNotifier.isInitialized).thenReturn(true);
 
         authNotifier.notifyListeners();
@@ -327,20 +332,41 @@ void main() {
     );
 
     testWidgets(
-      "does not set the application theme based on the platform brightness once opened if a user is logged in",
+      "delegates to the navigation notifier on opened if the application is initialized",
       (tester) async {
-        final themeNotifier = ThemeNotifierMock();
+        final navigationNotifier = NavigationNotifierMock();
 
-        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(featureConfigNotifier.debugMenuFeatureConfigViewModel).thenReturn(
+          debugMenuViewModel,
+        );
+
+        when(authNotifier.isLoggedIn).thenReturn(false);
+        when(debugMenuNotifier.isInitialized).thenReturn(true);
+        when(featureConfigNotifier.isInitialized).thenReturn(true);
+        when(authNotifier.isLoading).thenReturn(false);
+        when(debugMenuNotifier.isLoading).thenReturn(false);
+        when(featureConfigNotifier.isLoading).thenReturn(false);
+
+        when(featureConfigNotifier.initializeConfig()).thenAnswer((_) async {
+          return featureConfigNotifier.notifyListeners();
+        });
+
+        when(debugMenuNotifier.initializeLocalConfig()).thenAnswer((_) async {
+          return debugMenuNotifier.notifyListeners();
+        });
 
         await tester.pumpWidget(
           _LoadingPageTestbed(
+            navigationNotifier: navigationNotifier,
             authNotifier: authNotifier,
-            themeNotifier: themeNotifier,
+            featureConfigNotifier: featureConfigNotifier,
+            debugMenuNotifier: debugMenuNotifier,
           ),
         );
 
-        verifyNever(themeNotifier.setTheme(any));
+        verify(navigationNotifier.handleAppInitialized(
+          isAppInitialized: anyNamed('isAppInitialized'),
+        )).called(equals(1));
       },
     );
   });

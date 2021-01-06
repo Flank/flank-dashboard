@@ -52,10 +52,9 @@ class NavigationNotifier extends ChangeNotifier {
   void handleAuthenticationUpdates({
     bool isLoggedIn,
   }) {
-    final currentPageName = currentConfiguration?.name;
-
     if (_isUserLoggedIn == isLoggedIn) return;
 
+    final currentPageName = currentConfiguration?.name;
     _isUserLoggedIn = isLoggedIn ?? false;
 
     if (!_isUserLoggedIn && currentPageName != MetricsRoutes.login.name) {
@@ -161,7 +160,7 @@ class NavigationNotifier extends ChangeNotifier {
     );
   }
 
-  /// Adds a new page to the [pages] using the given [configuration].
+  /// Adds a new page created from the given [configuration] to the [pages].
   void _addNewPage(RouteConfiguration configuration) {
     final newConfiguration = _processConfiguration(configuration);
 

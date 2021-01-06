@@ -47,8 +47,8 @@ class _LoadingPageState extends State<LoadingPage>
   /// Indicates whether a local config is initialized or not.
   bool _isLocalConfigInitialized = false;
 
-  /// Indicates whether the application is finished loading.
-  bool get _isLoaded =>
+  /// Indicates whether the application is finished initializing.
+  bool get _isInitialized =>
       _isLoggedIn != null &&
       _isFeatureConfigInitialized &&
       _isLocalConfigInitialized;
@@ -58,6 +58,8 @@ class _LoadingPageState extends State<LoadingPage>
     super.initState();
 
     _initAnimation();
+
+    _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
     _subscribeToAuthUpdates();
     _subscribeToFeatureConfigUpdates();
@@ -107,8 +109,6 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Subscribes to authentication updates.
   void _subscribeToAuthUpdates() {
-    _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-
     _authNotifier.addListener(_authNotifierListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -139,9 +139,9 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Updates the [_isLoggedIn] value depending on the [AuthNotifier] state.
   void _authNotifierListener() {
-    _isLoggedIn = _authNotifier?.isLoggedIn;
+    _isLoggedIn = _authNotifier.isLoggedIn;
 
-    _initializeApp();
+    _handleIsInitializedChanged();
   }
 
   /// Updates the [_isFeatureConfigInitialized] value depending
@@ -156,7 +156,7 @@ class _LoadingPageState extends State<LoadingPage>
       _initializeLocalConfig();
     }
 
-    _initializeApp();
+    _handleIsInitializedChanged();
   }
 
   /// Initializes the [LocalConfig] using the [DebugMenuNotifier].
@@ -181,13 +181,12 @@ class _LoadingPageState extends State<LoadingPage>
     _isLocalConfigInitialized =
         _debugMenuNotifier.isInitialized && !_debugMenuNotifier.isLoading;
 
-    _initializeApp();
+    _handleIsInitializedChanged();
   }
 
-  /// Try to update the application's initialization state
-  /// depending on the [_isLoaded] value.
-  void _initializeApp() {
-    if (!_isLoaded) return;
+  /// Handles the application initialization state changes.
+  void _handleIsInitializedChanged() {
+    if (!_isInitialized) return;
 
     final notifier = Provider.of<NavigationNotifier>(context, listen: false);
     notifier.handleAppInitialized(isAppInitialized: true);

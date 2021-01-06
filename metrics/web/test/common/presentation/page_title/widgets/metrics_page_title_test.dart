@@ -95,7 +95,6 @@ void main() {
         });
 
         await tester.tap(find.byTooltip(CommonStrings.navigateBack));
-        await tester.pumpAndSettle();
 
         verify(navigationNotifier.push(MetricsRoutes.dashboard))
             .called(equals(1));
@@ -149,10 +148,10 @@ class _MetricsPageTitleTestbed extends StatelessWidget {
   /// A title to display.
   final String title;
 
-  /// A [MetricsThemeData] used in this testbed.
+  /// A [MetricsThemeData] used in tests.
   final MetricsThemeData theme;
 
-  /// A [NavigationNotifier] used in this testbed.
+  /// A [NavigationNotifier] used in tests.
   final NavigationNotifier navigationNotifier;
 
   /// Creates the [_MetricsPageTitleTestbed] with the given parameters.

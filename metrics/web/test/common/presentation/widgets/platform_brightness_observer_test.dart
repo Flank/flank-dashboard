@@ -56,7 +56,6 @@ void main() {
       (tester) async {
         final themeNotifier = ThemeNotifierMock();
         final authNotifier = AuthNotifierMock();
-        final currentBrightness = tester.binding.window.platformBrightness;
 
         when(authNotifier.isLoggedIn).thenReturn(true);
 
@@ -67,7 +66,7 @@ void main() {
           ),
         );
 
-        verifyNever(themeNotifier.setTheme(currentBrightness));
+        verifyNever(themeNotifier.setTheme(any));
       },
     );
 
@@ -96,7 +95,7 @@ class _PlatformBrightnessObserverTestbed extends StatelessWidget {
   /// A [ThemeNotifier] used in tests.
   final ThemeNotifier themeNotifier;
 
-  /// A [AuthNotifier] used in tests.
+  /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
 
   /// A child widget of the [PlatformBrightnessObserver].
