@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
@@ -16,12 +19,44 @@ import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
 import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart';
+import 'package:metrics/metrics_logger/metrics_logger.dart';
+import 'package:metrics/metrics_logger/sentry/event_processors/user_agent_event_processor.dart';
+import 'package:metrics/metrics_logger/sentry/writers/sentry_writer.dart';
+import 'package:metrics/metrics_logger/writers/console_writer.dart';
+import 'package:metrics/metrics_logger/writers/logger_writer.dart';
 import 'package:metrics/util/favicon.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_html/html.dart';
 
-void main() {
+Future<void> main() async {
   Favicon().setup();
-  runApp(MetricsApp());
+
+  LoggerWriter writer;
+
+  if (kReleaseMode) {
+    final userAgent = window?.navigator?.userAgent;
+    final eventProcessor = UserAgentEventProcessor(userAgent);
+    writer = await SentryWriter.init(
+      const String.fromEnvironment('SENTRY_DSN'),
+      const String.fromEnvironment('SENTRY_RELEASE'),
+      eventProcessor: eventProcessor,
+    );
+  } else {
+    writer = ConsoleWriter();
+  }
+
+  await MetricsLogger.initialize(writer);
+
+  runZonedGuarded(() {
+    WidgetsFlutterBinding.ensureInitialized();
+    FlutterError.onError = (details, {bool forceReport = false}) {
+      Zone.current.handleUncaughtError(details.exception, details.stack);
+    };
+
+    runApp(MetricsApp());
+  }, (Object error, StackTrace stackTrace) async {
+    await MetricsLogger.logError(error, stackTrace);
+  });
 }
 
 /// The root widget of the application.

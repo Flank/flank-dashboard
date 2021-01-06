@@ -8,6 +8,7 @@ class DebugMenuStrings {
   static const String skia = 'SKIA';
   static const String html = 'HTML';
   static const String fpsMonitor = 'FPS monitor';
+  static const String throwException = 'Throw Exception';
 
   static String getCurrentRenderer(String renderer) =>
       'Current renderer: $renderer';
