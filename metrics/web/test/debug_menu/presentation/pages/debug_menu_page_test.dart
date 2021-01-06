@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/theme_data/debug_menu_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_text/style/metrics_text_style.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
@@ -117,6 +118,25 @@ void main() {
         });
 
         expect(find.byType(DebugMenuRendererDisplay), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "throws the exception when the throw exception button is pressed",
+      (WidgetTester tester) async {
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            const _DebugMenuPageTestbed(),
+          );
+        });
+
+        final finder = find.widgetWithText(
+          MetricsNegativeButton,
+          DebugMenuStrings.throwException,
+        );
+        await tester.tap(finder);
+
+        expect(tester.takeException(), isNotNull);
       },
     );
 

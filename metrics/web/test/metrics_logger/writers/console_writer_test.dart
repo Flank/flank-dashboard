@@ -69,7 +69,7 @@ void main() {
     );
 
     test(
-      ".writeError() applies the contexts set to the error",
+      ".writeError() prints the contexts set with the error",
       () async {
         const firstContext = MapEntry('first_key', 'first_value');
         const secondContext = MapEntry('second_key', 'second_value');
