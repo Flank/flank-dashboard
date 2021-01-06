@@ -85,6 +85,7 @@ class _MetricsAppState extends State<MetricsApp> {
             context,
             listen: false,
           );
+
           final analyticsNotifier = Provider.of<AnalyticsNotifier>(
             context,
             listen: false,
@@ -94,23 +95,27 @@ class _MetricsAppState extends State<MetricsApp> {
             analyticsNotifier: analyticsNotifier,
           );
 
+          final routerDelegate = MetricsRouterDelegate(
+            navigationNotifier,
+            navigatorObservers: [
+              _toastRouteObserver,
+              _userMenuRouteObserver,
+              analyticsObserver,
+            ],
+          );
+
+          final routeInformationParser = MetricsRouteInformationParser(
+            RouteConfigurationFactory(),
+          );
+
           return MetricsFPSMonitor(
             child: MetricsThemeBuilder(
               builder: (context, themeNotifier) {
                 final isDark = themeNotifier?.isDark ?? true;
 
                 return MaterialApp.router(
-                  routeInformationParser: MetricsRouteInformationParser(
-                    RouteConfigurationFactory(),
-                  ),
-                  routerDelegate: MetricsRouterDelegate(
-                    navigationNotifier,
-                    navigatorObservers: [
-                      _toastRouteObserver,
-                      _userMenuRouteObserver,
-                      analyticsObserver,
-                    ],
-                  ),
+                  routeInformationParser: routeInformationParser,
+                  routerDelegate: routerDelegate,
                   title: CommonStrings.metrics,
                   debugShowCheckedModeBanner: false,
                   builder: (context, child) {
