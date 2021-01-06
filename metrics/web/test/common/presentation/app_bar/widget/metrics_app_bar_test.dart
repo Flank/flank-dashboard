@@ -118,7 +118,7 @@ class _MetricsAppBarTestbed extends StatelessWidget {
   /// A [NavigationNotifier] used in tests.
   final NavigationNotifier navigationNotifier;
 
-  /// Creates the [_MetricsAppBarTestbed].
+  /// Creates the [_MetricsAppBarTestbed] with the given [navigationNotifier].
   const _MetricsAppBarTestbed({
     Key key,
     this.navigationNotifier,

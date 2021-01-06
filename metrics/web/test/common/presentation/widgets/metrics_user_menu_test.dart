@@ -290,7 +290,7 @@ void main() {
         ));
 
         await tester.tap(find.text(CommonStrings.projectGroups));
-        await mockNetworkImagesFor(() => tester.pumpAndSettle());
+        await tester.pumpAndSettle();
 
         verify(navigationNotifier.push(MetricsRoutes.projectGroups))
             .called(equals(1));
@@ -316,7 +316,7 @@ void main() {
         ));
 
         await tester.tap(find.text(CommonStrings.debugMenu));
-        await mockNetworkImagesFor(() => tester.pumpAndSettle());
+        await tester.pumpAndSettle();
 
         verify(navigationNotifier.push(MetricsRoutes.debugMenu))
             .called(equals(1));
@@ -345,7 +345,7 @@ class _MetricsUserMenuTestbed extends StatelessWidget {
   /// A [NavigationNotifier] used in tests.
   final NavigationNotifier navigationNotifier;
 
-  /// Creates the [_MetricsUserMenuTestbed] with the given [theme].
+  /// Creates the [_MetricsUserMenuTestbed] with the given parameters.
   ///
   /// The [theme] defaults to an empty [MetricsThemeData] instance.
   const _MetricsUserMenuTestbed({

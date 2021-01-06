@@ -204,7 +204,7 @@ class _LoginPageTestbed extends StatelessWidget {
   /// A [NavigationNotifier] used in tests.
   final NavigationNotifier navigationNotifier;
 
-  /// Creates the [_LoginPageTestbed] with the given [authNotifier] and [metricsNotifier].
+  /// Creates a new instance of the [_LoginPageTestbed] with the given parameters.
   ///
   /// The [metricsThemeData] defaults to an empty [MetricsThemeData] instance.
   const _LoginPageTestbed({

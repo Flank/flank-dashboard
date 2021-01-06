@@ -152,9 +152,10 @@ class _MetricsPageTitleTestbed extends StatelessWidget {
   /// A [MetricsThemeData] used in this testbed.
   final MetricsThemeData theme;
 
+  /// A [NavigationNotifier] used in this testbed.
   final NavigationNotifier navigationNotifier;
 
-  /// Creates the [_MetricsPageTitleTestbed] with the given [title]
+  /// Creates the [_MetricsPageTitleTestbed] with the given parameters.
   ///
   /// The [title] defaults to `title`.
   /// The [theme] defaults to [MetricsThemeData].
