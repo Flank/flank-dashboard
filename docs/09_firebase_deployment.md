@@ -163,6 +163,19 @@ Once the Google sign-in option is enabled, you should populate the Authorized Ja
 
 _**Note:** The Google sing-in option requires configuring the allowed email domains. Consider the [Validating Email Domains](#validating-email-domains) section to know more about allowed email domains._
 
+### Configuring Google Sign-in allowed domains
+
+The application validates users' email domains when they sign in with Google. These domains are stored within the `Cloud Firestore` database. To configure allowed email domains, consider the following steps:
+
+1. Browse to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
+2. Open the `Cloud Firestore` section on the left panel.
+3. Press the `Start collection` button, enter the `allowed_email_domains` as a collection ID, and press the `Next` button.
+4. After you tapped the `Next` button, you'll be asked to add the first document to your collection. This is the point where we start adding the allowed user email domains for the application. For example, if we want to allow the `gmail.com` domain, we should create an empty document with the `gmail.com` document ID.
+
+To add more allowed email domains you should add a new document for each email domain with the domain itself as a document ID.
+
+_**Note:** It is required for the allowed email domains collection to be not empty. Empty collection means that no email domains are allowed and the Google sign-in will fail with any domain._
+
 ## API Key Restrictions
 
 To enable API key restrictions, follow the next steps:
@@ -267,9 +280,7 @@ Once you've finished creating test data, you should deactivate the `seedData` cl
 1. Go to the `metrics/firebase/functions/index.js` file and change the `inactive` constant back to `true`.
 2. Redeploy this function, using the `firebase deploy --only functions` command.
 
-### Configuring Google Sign-in allowed domains
-
-The application validates users' email domains when they sign in with Google. If user signs in using the email and password method then no domain validation happens. To validate domains the application uses the `validateEmailDomain` cloud function deployed previously. First, you should enable this function for all users. Consider the following steps: 
+To validate user's email domain when they sign in with Google, the application uses the `validateEmailDomain` cloud function deployed previously. If user signs in using the email and password method then no domain validation happens. To enable this validation, you should enable the `validateEmailDomain` for all users. Consider the following steps: 
 
 1. Open the [Google Cloud Platform](https://console.cloud.google.com/home/dashboard) and select your project in the top left corner.
 2. Open the side menu and go to the `Cloud Functions` section.
@@ -278,17 +289,6 @@ The application validates users' email domains when they sign in with Google. If
 5. In the info panel, select the `PERMISSIONS` tab and click an `ADD MEMBER` button.
 6. In the opened menu, type `allUsers` in the `New members` field and select a `Cloud Functions` -> `Cloud Functions Invoker` role.
 7. Save the changes.
-
-Once you've enabled the `validateEmailDomain` to all users, its time to add allowed email domains for the application. These domains are stored within the `Cloud Firestore` database. To configure allowed email domains, consider the following steps:
-
-1. Browse to the [Firebase Console](https://console.firebase.google.com/) and select the project, created in previous steps.
-2. Open the `Cloud Firestore` section on the left panel.
-3. Press the `Start collection` button, enter the `allowed_email_domains` as a collection ID, and press the `Next` button.
-4. After you tapped the `Next` button, you'll be asked to add the first document to your collection. This is the point where we start adding the allowed user email domains for the application. For example, if we want to allow the `gmail.com` domain, we should create an empty document with the `gmail.com` document ID.
-
-To add more allowed email domains you should add a new document for each email domain with the domain itself as a document ID.
-
-_**Note:** It is required for the allowed email domains collection to be not empty. Empty collection means that no email domains are allowed and the Google sign-in will fail with any domain._
 
 ## Creating a new Firebase User
 
