@@ -54,8 +54,8 @@ Future<void> main() async {
     };
 
     runApp(MetricsApp());
-  }, (Object error, StackTrace stackTrace) {
-    MetricsLogger.logError(error, stackTrace);
+  }, (Object error, StackTrace stackTrace) async {
+    await MetricsLogger.logError(error, stackTrace);
   });
 }
 
