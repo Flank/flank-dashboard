@@ -134,6 +134,7 @@ void main() {
         notifier.handleInitialRoutePath(MetricsRoutes.projectGroups);
 
         notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAppInitialized(isAppInitialized: true);
 
         final currentPage = notifier.pages.last;
 
