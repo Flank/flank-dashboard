@@ -51,6 +51,10 @@ class MetricsPageFactory {
         );
     }
 
-    return MetricsPage(child: DashboardPage(), name: routePath);
+    return MetricsPage(
+      child: DashboardPage(),
+      name: routePath,
+      maintainState: false,
+    );
   }
 }
