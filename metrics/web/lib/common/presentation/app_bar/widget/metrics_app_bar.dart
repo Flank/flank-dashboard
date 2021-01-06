@@ -43,6 +43,7 @@ class MetricsAppBar extends StatelessWidget {
     );
   }
 
+  /// Navigates to the [MetricsRoutes.dashboard] page.
   void _navigateHome(BuildContext context) {
     final navigationNotifier = Provider.of<NavigationNotifier>(
       context,
