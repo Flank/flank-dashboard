@@ -134,11 +134,27 @@ void main() {
         notifier.handleInitialRoutePath(MetricsRoutes.projectGroups);
 
         notifier.handleAppInitialized(isAppInitialized: true);
-        notifier.handleAppInitialized(isAppInitialized: true);
 
         final currentPage = notifier.pages.last;
 
         expect(currentPage.name, isDashboardPageName);
+      },
+    );
+
+    test(
+      ".handleAppInitialized() clears pages before redirect",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        notifier.handleInitialRoutePath(MetricsRoutes.loading);
+        notifier.push(MetricsRoutes.dashboard);
+
+        notifier.handleAppInitialized(isAppInitialized: true);
+
+        final pages = notifier.pages;
+
+        expect(pages, hasLength(equals(1)));
       },
     );
 

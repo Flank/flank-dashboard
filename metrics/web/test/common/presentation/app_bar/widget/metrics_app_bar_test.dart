@@ -63,8 +63,10 @@ void main() {
           return tester.pumpAndSettle();
         });
 
-        verify(navigationNotifier.push(MetricsRoutes.dashboard))
-            .called(equals(1));
+        verify(navigationNotifier.pushAndRemoveUntil(
+          MetricsRoutes.dashboard,
+          any,
+        )).called(equals(1));
       },
     );
 

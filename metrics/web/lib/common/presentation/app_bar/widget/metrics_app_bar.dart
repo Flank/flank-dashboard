@@ -50,6 +50,9 @@ class MetricsAppBar extends StatelessWidget {
       listen: false,
     );
 
-    navigationNotifier.push(MetricsRoutes.dashboard);
+    navigationNotifier.pushAndRemoveUntil(
+      MetricsRoutes.dashboard,
+      (page) => page.name == Navigator.defaultRouteName,
+    );
   }
 }

@@ -146,6 +146,7 @@ class NavigationNotifier extends ChangeNotifier {
       _redirectRoute = MetricsRoutes.dashboard;
     }
 
+    _pages.clear();
     push(_redirectRoute);
     _redirectRoute = null;
   }
