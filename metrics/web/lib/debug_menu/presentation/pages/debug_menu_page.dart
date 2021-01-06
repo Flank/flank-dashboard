@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/scaffold/widget/metrics_scaffold.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
@@ -60,9 +61,18 @@ class DebugMenuPage extends StatelessWidget {
                 rendererDisplayViewModel: rendererDisplayViewModel,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: DebugMenuFpsMonitorToggle(
                   fpsMonitorViewModel: fpsMonitorViewModel,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: MetricsNegativeButton(
+                  label: DebugMenuStrings.throwException,
+                  onPressed: () {
+                    throw Exception('Test Exception from Debug Menu');
+                  },
                 ),
               ),
             ],
