@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:metrics/analytics/presentation/state/analytics_notifier.dart';
-import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/injector/widget/injection_container.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/color_config.dart';
 import 'package:metrics/common/presentation/metrics_theme/config/dimensions_config.dart';
@@ -12,10 +11,13 @@ import 'package:metrics/common/presentation/metrics_theme/config/text_style_conf
 import 'package:metrics/common/presentation/metrics_theme/model/dark_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
+import 'package:metrics/common/presentation/navigation/metrics_route_information_parser.dart';
+import 'package:metrics/common/presentation/navigation/metrics_router_delegate.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration_factory.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/routes/observers/firebase_analytics_route_observer.dart';
 import 'package:metrics/common/presentation/routes/observers/overlay_entry_route_observer.dart';
 import 'package:metrics/common/presentation/routes/observers/toast_route_observer.dart';
-import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/metrics_fps_monitor.dart';
 import 'package:metrics/common/presentation/widgets/metrics_scroll_behavior.dart';
@@ -77,18 +79,42 @@ class _MetricsAppState extends State<MetricsApp> {
   @override
   Widget build(BuildContext context) {
     return InjectionContainer(
-      child: MetricsFPSMonitor(
-        child: MetricsThemeBuilder(
-          builder: (context, themeNotifier) {
-            final isDark = themeNotifier?.isDark ?? true;
+      child: Builder(
+        builder: (context) {
+          final navigationNotifier = Provider.of<NavigationNotifier>(
+            context,
+            listen: false,
+          );
+          final analyticsNotifier = Provider.of<AnalyticsNotifier>(
+            context,
+            listen: false,
+          );
 
-            return Consumer<AnalyticsNotifier>(
-              builder: (context, analyticsNotifier, _) {
-                final _analyticsObserver = FirebaseAnalyticsRouteObserver(
-                  analyticsNotifier: analyticsNotifier,
-                );
+          final analyticsObserver = FirebaseAnalyticsRouteObserver(
+            analyticsNotifier: analyticsNotifier,
+          );
 
-                return MaterialApp(
+          final routerDelegate = MetricsRouterDelegate(
+            navigationNotifier,
+            navigatorObservers: [
+              _toastRouteObserver,
+              _userMenuRouteObserver,
+              analyticsObserver,
+            ],
+          );
+
+          final routeInformationParser = MetricsRouteInformationParser(
+            RouteConfigurationFactory(),
+          );
+
+          return MetricsFPSMonitor(
+            child: MetricsThemeBuilder(
+              builder: (context, themeNotifier) {
+                final isDark = themeNotifier?.isDark ?? true;
+
+                return MaterialApp.router(
+                  routeInformationParser: routeInformationParser,
+                  routerDelegate: routerDelegate,
                   title: CommonStrings.metrics,
                   debugShowCheckedModeBanner: false,
                   builder: (context, child) {
@@ -97,36 +123,6 @@ class _MetricsAppState extends State<MetricsApp> {
                       child: child,
                     );
                   },
-                  initialRoute: '/',
-                  onGenerateInitialRoutes: (String initialRoute) {
-                    final isLoggedIn = Provider.of<AuthNotifier>(
-                      context,
-                      listen: false,
-                    ).isLoggedIn;
-
-                    return [
-                      RouteGenerator.generateRoute(
-                        settings: RouteSettings(name: initialRoute),
-                        isLoggedIn: isLoggedIn,
-                      ),
-                    ];
-                  },
-                  onGenerateRoute: (settings) {
-                    final isLoggedIn = Provider.of<AuthNotifier>(
-                      context,
-                      listen: false,
-                    ).isLoggedIn;
-
-                    return RouteGenerator.generateRoute(
-                      settings: settings,
-                      isLoggedIn: isLoggedIn,
-                    );
-                  },
-                  navigatorObservers: [
-                    _toastRouteObserver,
-                    _userMenuRouteObserver,
-                    _analyticsObserver,
-                  ],
                   themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
                   theme: ThemeData(
                     fontFamily: TextStyleConfig.defaultFontFamily,
@@ -187,9 +183,9 @@ class _MetricsAppState extends State<MetricsApp> {
                   ),
                 );
               },
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

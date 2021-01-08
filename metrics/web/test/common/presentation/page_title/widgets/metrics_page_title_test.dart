@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_theme_data.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/page_title/theme/page_title_theme_data.dart';
 import 'package:metrics/common/presentation/page_title/widgets/metrics_page_title.dart';
-import 'package:metrics/base/presentation/widgets/tappable_area.dart';
-import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
-import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
+import '../../../../test_utils/navigation_notifier_mock.dart';
 import '../../../../test_utils/test_injection_container.dart';
 
 void main() {
@@ -82,39 +84,21 @@ void main() {
     });
 
     testWidgets(
-      "navigates back to the previous screen",
+      "navigates to the dashboard page on tap on the back button",
       (WidgetTester tester) async {
-        final initialPage = _NavigationTestbed();
-        final initialPageFinder = find.byWidget(initialPage);
+        final navigationNotifier = NavigationNotifierMock();
 
-        await tester.pumpWidget(initialPage);
-
-        await tester.tap(initialPageFinder);
         await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
-        });
-
-        expect(find.byType(MetricsPageTitle), findsOneWidget);
-
-        await tester.tap(find.byTooltip(CommonStrings.navigateBack));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(MetricsPageTitle), findsNothing);
-        expect(initialPageFinder, findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      "navigates to the dashboard page if there is no previous page",
-      (WidgetTester tester) async {
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(const _MetricsPageTitleTestbed());
+          return tester.pumpWidget(_MetricsPageTitleTestbed(
+            navigationNotifier: navigationNotifier,
+          ));
         });
 
         await tester.tap(find.byTooltip(CommonStrings.navigateBack));
-        await tester.pumpAndSettle();
 
-        expect(find.byType(DashboardPage), findsOneWidget);
+        verify(navigationNotifier.push(
+          MetricsRoutes.dashboard,
+        )).called(equals(1));
       },
     );
 
@@ -160,41 +144,18 @@ void main() {
   });
 }
 
-/// A testbed widget, used to test the navigation
-/// to the [MetricsPageTitle] widget.
-class _NavigationTestbed extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Builder(
-        builder: (context) {
-          return GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Scaffold(
-                  body: MetricsPageTitle(
-                    title: "title",
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
 /// A testbed widget, used to test the [MetricsPageTitle] widget.
 class _MetricsPageTitleTestbed extends StatelessWidget {
   /// A title to display.
   final String title;
 
-  /// A [MetricsThemeData] used in this testbed.
+  /// A [MetricsThemeData] used in tests.
   final MetricsThemeData theme;
 
-  /// Creates the [_MetricsPageTitleTestbed] with the given [title]
+  /// A [NavigationNotifier] used in tests.
+  final NavigationNotifier navigationNotifier;
+
+  /// Creates the [_MetricsPageTitleTestbed] with the given parameters.
   ///
   /// The [title] defaults to `title`.
   /// The [theme] defaults to [MetricsThemeData].
@@ -202,17 +163,15 @@ class _MetricsPageTitleTestbed extends StatelessWidget {
     Key key,
     this.title = 'title',
     this.theme = const MetricsThemeData(),
+    this.navigationNotifier,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TestInjectionContainer(
+      navigationNotifier: navigationNotifier,
       child: MetricsThemedTestbed(
         metricsThemeData: theme,
-        onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-          settings: settings,
-          isLoggedIn: true,
-        ),
         body: MetricsPageTitle(
           title: title,
         ),

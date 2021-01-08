@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 
@@ -6,6 +7,7 @@ class MetricsRoutes {
   /// A [RouteConfiguration] for the loading page.
   static const RouteConfiguration loading = RouteConfiguration(
     name: RouteName.loading,
+    path: Navigator.defaultRouteName,
     authorizationRequired: false,
   );
 

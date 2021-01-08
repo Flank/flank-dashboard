@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
-import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
-import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
 import 'package:metrics/debug_menu/domain/entities/local_config.dart';
@@ -12,18 +11,8 @@ import 'package:provider/provider.dart';
 
 /// A page that shows until the authentication status is unknown.
 class LoadingPage extends StatefulWidget {
-  /// A route name to push when loading is completed and
-  /// the current user is logged in.
-  final String routeName;
-
   /// Creates a new instance of the [LoadingPage].
-  ///
-  /// If the given [routeName] is `null`, the [RouteName.dashboard] is used.
-  const LoadingPage({
-    Key key,
-    String routeName,
-  })  : routeName = routeName ?? "/${RouteName.dashboard}",
-        super(key: key);
+  const LoadingPage({Key key}) : super(key: key);
 
   @override
   _LoadingPageState createState() => _LoadingPageState();
@@ -58,8 +47,8 @@ class _LoadingPageState extends State<LoadingPage>
   /// Indicates whether a local config is initialized or not.
   bool _isLocalConfigInitialized = false;
 
-  /// Indicates whether the application is finished loading.
-  bool get _isLoaded =>
+  /// Indicates whether the application is finished initializing.
+  bool get _isInitialized =>
       _isLoggedIn != null &&
       _isFeatureConfigInitialized &&
       _isLocalConfigInitialized;
@@ -70,9 +59,15 @@ class _LoadingPageState extends State<LoadingPage>
 
     _initAnimation();
 
+    _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+
     _subscribeToAuthUpdates();
     _subscribeToFeatureConfigUpdates();
     _subscribeToDebugMenuNotifierUpdates();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _authNotifierListener();
+    });
   }
 
   @override
@@ -114,8 +109,6 @@ class _LoadingPageState extends State<LoadingPage>
 
   /// Subscribes to authentication updates.
   void _subscribeToAuthUpdates() {
-    _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-
     _authNotifier.addListener(_authNotifierListener);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -148,7 +141,7 @@ class _LoadingPageState extends State<LoadingPage>
   void _authNotifierListener() {
     _isLoggedIn = _authNotifier.isLoggedIn;
 
-    _navigateIfLoaded();
+    _handleIsInitializedChanged();
   }
 
   /// Updates the [_isFeatureConfigInitialized] value depending
@@ -163,7 +156,7 @@ class _LoadingPageState extends State<LoadingPage>
       _initializeLocalConfig();
     }
 
-    _navigateIfLoaded();
+    _handleIsInitializedChanged();
   }
 
   /// Initializes the [LocalConfig] using the [DebugMenuNotifier].
@@ -188,31 +181,15 @@ class _LoadingPageState extends State<LoadingPage>
     _isLocalConfigInitialized =
         _debugMenuNotifier.isInitialized && !_debugMenuNotifier.isLoading;
 
-    _navigateIfLoaded();
+    _handleIsInitializedChanged();
   }
 
-  /// Navigates depending on the [_isLoaded] state.
-  ///
-  /// If [_isLoggedIn], navigates to the [LoadingPage.routeName].
-  /// Otherwise, navigates to the [MetricsRoutes.login].
-  void _navigateIfLoaded() {
-    if (!_isLoaded) return;
+  /// Handles the application initialization state changes.
+  void _handleIsInitializedChanged() {
+    if (!_isInitialized) return;
 
-    if (_isLoggedIn) {
-      _navigateTo(widget.routeName);
-    } else {
-      _navigateTo(MetricsRoutes.login.path);
-    }
-  }
-
-  /// Navigates to [routeName] and removes all underlying routes.
-  void _navigateTo(String routeName) {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      routeName,
-      (_) => false,
-    );
-    _authNotifier.removeListener(_authNotifierListener);
+    final notifier = Provider.of<NavigationNotifier>(context, listen: false);
+    notifier.handleAppInitialized(isAppInitialized: true);
   }
 
   @override

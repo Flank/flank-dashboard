@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/drawer/widget/metrics_drawer.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
-import 'package:metrics/common/presentation/routes/route_generator.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../test_utils/auth_notifier_mock.dart';
-import '../../../../test_utils/signed_in_auth_notifier_stub.dart';
+import '../../../../test_utils/navigation_notifier_mock.dart';
 import '../../../../test_utils/test_injection_container.dart';
 import '../../../../test_utils/theme_notifier_mock.dart';
 
@@ -61,16 +60,21 @@ void main() {
     );
 
     testWidgets(
-      "after a user taps on 'Log out' - application navigates back to the login screen",
-      (WidgetTester tester) async {
+      "navigates to the project group page on tap on the project groups list item",
+      (tester) async {
+        final navigationNotifier = NavigationNotifierMock();
+
         await tester.pumpWidget(MetricsDrawerTestbed(
-          authNotifier: SignedInAuthNotifierStub(),
+          navigationNotifier: navigationNotifier,
         ));
 
-        await tester.tap(find.text(CommonStrings.logOut));
+        await tester.tap(find.text(CommonStrings.projectGroups));
+
         await tester.pumpAndSettle();
 
-        expect(find.byType(LoginPage), findsOneWidget);
+        verify(navigationNotifier.push(
+          MetricsRoutes.projectGroups,
+        )).called(equals(1));
       },
     );
   });
@@ -87,12 +91,16 @@ class MetricsDrawerTestbed extends StatelessWidget {
   /// An [AuthNotifier] used in tests.
   final AuthNotifier authNotifier;
 
+  /// A [NavigationNotifier] used in tests.
+  final NavigationNotifier navigationNotifier;
+
   /// Creates a [MetricsDrawerTestbed].
   const MetricsDrawerTestbed({
     Key key,
     this.themeNotifier,
     this.metricsNotifier,
     this.authNotifier,
+    this.navigationNotifier,
   }) : super(key: key);
 
   @override
@@ -101,16 +109,12 @@ class MetricsDrawerTestbed extends StatelessWidget {
       themeNotifier: themeNotifier,
       metricsNotifier: metricsNotifier,
       authNotifier: authNotifier,
+      navigationNotifier: navigationNotifier,
       child: Builder(
         builder: (context) {
           return MaterialApp(
             home: Scaffold(
               body: MetricsDrawer(),
-            ),
-            onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-              settings: settings,
-              isLoggedIn:
-                  Provider.of<AuthNotifier>(context, listen: false).isLoggedIn,
             ),
           );
         },

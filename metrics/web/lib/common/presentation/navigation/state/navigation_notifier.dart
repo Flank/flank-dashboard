@@ -52,9 +52,12 @@ class NavigationNotifier extends ChangeNotifier {
   void handleAuthenticationUpdates({
     bool isLoggedIn,
   }) {
+    if (_isUserLoggedIn == isLoggedIn) return;
+
+    final currentPageName = currentConfiguration?.name;
     _isUserLoggedIn = isLoggedIn ?? false;
 
-    if (!_isUserLoggedIn) {
+    if (!_isUserLoggedIn && currentPageName != MetricsRoutes.login.name) {
       _pages.clear();
 
       push(MetricsRoutes.login);
@@ -93,14 +96,7 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Pushes the route created from the given [configuration].
   void push(RouteConfiguration configuration) {
-    final newConfiguration = _processConfiguration(configuration);
-
-    _currentConfiguration = newConfiguration;
-
-    final newPage = _pageFactory.create(_currentConfiguration);
-
-    _pages.add(newPage);
-
+    _addNewPage(configuration);
     notifyListeners();
   }
 
@@ -132,7 +128,7 @@ class NavigationNotifier extends ChangeNotifier {
 
   /// Handles the initial route.
   void handleInitialRoutePath(RouteConfiguration configuration) {
-    push(configuration);
+    _addNewPage(configuration);
   }
 
   /// Handles the new route.
@@ -143,12 +139,13 @@ class NavigationNotifier extends ChangeNotifier {
   /// Redirects to the redirect route and clears it.
   ///
   /// If the redirect route is [MetricsRoutes.loading] or `null`,
-  /// redirects to the [MetricsRoutes.loading].
+  /// redirects to the [MetricsRoutes.dashboard].
   void _redirect() {
     if (_redirectRoute == null || _redirectRoute == MetricsRoutes.loading) {
       _redirectRoute = MetricsRoutes.dashboard;
     }
 
+    _pages.clear();
     push(_redirectRoute);
     _redirectRoute = null;
   }
@@ -161,6 +158,17 @@ class NavigationNotifier extends ChangeNotifier {
       (route) => route.name.value == name,
       orElse: () => MetricsRoutes.dashboard,
     );
+  }
+
+  /// Adds a new page created from the given [configuration] to the [pages].
+  void _addNewPage(RouteConfiguration configuration) {
+    final newConfiguration = _processConfiguration(configuration);
+
+    _currentConfiguration = newConfiguration;
+
+    final newPage = _pageFactory.create(_currentConfiguration);
+
+    _pages.add(newPage);
   }
 
   /// Processes the given [configuration] depending on [_isAppInitialized] state,

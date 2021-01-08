@@ -6,7 +6,6 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/app_bar/widget/metrics_app_bar.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme_builder.dart';
-import 'package:metrics/common/presentation/routes/route_generator.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:metrics/dashboard/presentation/state/project_metrics_notifier.dart';
@@ -15,7 +14,6 @@ import 'package:metrics/dashboard/presentation/widgets/project_groups_dropdown_m
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_search_input.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-import 'package:provider/provider.dart';
 
 import '../../../test_utils/project_metrics_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
@@ -134,10 +132,6 @@ class _DashboardTestbed extends StatelessWidget {
       authNotifier: authNotifier,
       child: Builder(builder: (context) {
         return MaterialApp(
-          onGenerateRoute: (settings) => RouteGenerator.generateRoute(
-              settings: settings,
-              isLoggedIn:
-                  Provider.of<AuthNotifier>(context, listen: false).isLoggedIn),
           home: MetricsThemeBuilder(
             builder: (_, __) {
               return DashboardPage();

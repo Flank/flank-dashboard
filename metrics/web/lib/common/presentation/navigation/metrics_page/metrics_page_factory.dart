@@ -20,17 +20,35 @@ class MetricsPageFactory {
 
     switch (routeName) {
       case RouteName.loading:
-        return MetricsPage(child: LoadingPage(), name: routePath);
+        return MetricsPage(
+          child: const LoadingPage(),
+          name: routePath,
+        );
       case RouteName.login:
-        return MetricsPage(child: const LoginPage(), name: routePath);
+        return MetricsPage(
+          child: const LoginPage(),
+          name: routePath,
+        );
       case RouteName.dashboard:
-        return MetricsPage(child: DashboardPage(), name: routePath);
+        return MetricsPage(
+          child: DashboardPage(),
+          name: routePath,
+        );
       case RouteName.projectGroups:
-        return MetricsPage(child: ProjectGroupPage(), name: routePath);
+        return MetricsPage(
+          child: ProjectGroupPage(),
+          name: routePath,
+        );
       case RouteName.debugMenu:
-        return MetricsPage(child: const DebugMenuPage(), name: routePath);
+        return MetricsPage(
+          child: const DebugMenuPage(),
+          name: routePath,
+        );
     }
 
-    return MetricsPage(child: DashboardPage(), name: routePath);
+    return MetricsPage(
+      child: DashboardPage(),
+      name: routePath,
+    );
   }
 }

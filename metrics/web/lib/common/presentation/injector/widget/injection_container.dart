@@ -132,6 +132,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// The [ChangeNotifier] of the theme type.
   ThemeNotifier _themeNotifier;
 
+  /// The [ChangeNotifier] that manages navigation.
+  NavigationNotifier _navigationNotifier;
+
   @override
   void initState() {
     super.initState();
@@ -200,6 +203,8 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
     _themeNotifier = ThemeNotifier(brightness: platformBrightness);
 
+    _navigationNotifier = NavigationNotifier(MetricsPageFactory());
+
     _authNotifier.addListener(_authNotifierListener);
     _themeNotifier.addListener(_themeNotifierListener);
   }
@@ -208,6 +213,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: _navigationNotifier),
         ChangeNotifierProvider(
           create: (_) => FeatureConfigNotifier(_fetchFeatureConfigUseCase),
         ),
@@ -219,11 +225,6 @@ class _InjectionContainerState extends State<InjectionContainer> {
             _readLocalConfigUseCase,
             _updateLocalConfigUseCase,
             _closeLocalConfigStorageUseCase,
-          ),
-        ),
-        ChangeNotifierProvider<NavigationNotifier>(
-          create: (_) => NavigationNotifier(
-            MetricsPageFactory(),
           ),
         ),
         ChangeNotifierProxyProvider<AuthNotifier, AnalyticsNotifier>(
@@ -302,7 +303,9 @@ class _InjectionContainerState extends State<InjectionContainer> {
   /// Listens to [AuthNotifier]'s updates.
   void _authNotifierListener() {
     final updatedUserProfile = _authNotifier.userProfileModel;
+    final isLoggedIn = _authNotifier.isLoggedIn;
 
+    _navigationNotifier.handleAuthenticationUpdates(isLoggedIn: isLoggedIn);
     _themeNotifier.changeTheme(updatedUserProfile?.selectedTheme);
   }
 
@@ -337,6 +340,7 @@ class _InjectionContainerState extends State<InjectionContainer> {
     _themeNotifier.removeListener(_themeNotifierListener);
     _authNotifier.dispose();
     _themeNotifier.dispose();
+    _navigationNotifier.dispose();
     super.dispose();
   }
 }

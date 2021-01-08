@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -41,8 +42,14 @@ class _PlatformBrightnessObserverState extends State<PlatformBrightnessObserver>
     super.didChangePlatformBrightness();
   }
 
-  /// Changes the theme according to the operating system's brightness.
+  /// Changes the theme according to the operating system's brightness if user
+  /// is not logged in.
   void _updatePlatformBrightness() {
+    final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    final isLoggedIn = authNotifier.isLoggedIn;
+
+    if (isLoggedIn != null && isLoggedIn) return;
+
     final brightness = WidgetsBinding.instance.window.platformBrightness;
     final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
 

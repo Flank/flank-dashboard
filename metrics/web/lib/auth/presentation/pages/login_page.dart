@@ -3,6 +3,7 @@ import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/auth/presentation/widgets/auth_form.dart';
 import 'package:metrics/common/presentation/metrics_theme/widgets/metrics_theme.dart';
 import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/toast/widgets/negative_toast.dart';
 import 'package:metrics/common/presentation/toast/widgets/toast.dart';
@@ -30,8 +31,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+
     _authNotifier.addListener(_loggedInListener);
     _authNotifier.addListener(_loggedInErrorListener);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loggedInListener();
+    });
 
     super.initState();
   }
@@ -41,12 +47,12 @@ class _LoginPageState extends State<LoginPage> {
     final isLoggedIn = _authNotifier.isLoggedIn;
 
     if (isLoggedIn != null && isLoggedIn) {
-      Navigator.pushNamedAndRemoveUntil(
+      final navigationNotifier = Provider.of<NavigationNotifier>(
         context,
-        MetricsRoutes.dashboard.path,
-        (Route<dynamic> route) => false,
+        listen: false,
       );
-      _authNotifier.removeListener(_loggedInListener);
+
+      navigationNotifier.pushReplacement(MetricsRoutes.dashboard);
     }
   }
 
