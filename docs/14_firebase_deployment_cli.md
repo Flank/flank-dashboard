@@ -91,7 +91,7 @@ It's time to deploy your Flutter application to the Firebase Hosting!
 
 ### Preparing your environment 
 Before deploying metrics application, make sure you have the correct Flutter version installed,
- by running the  command. You should have `v1.24.0-10.2.pre` installed. 
+ by running the command. You should have `v1.24.0-10.2.pre` installed. 
 
 ```
 flutter --version
@@ -100,7 +100,7 @@ flutter --version
 If the version is different you should run the command.
 
 ```
-flutter version 1.24.0-10.2.pre
+cd $(which flutter | xargs dirname) && git checkout 1.24.0-10.2.pre
 ```
 
 Also, you should enable flutter web support by running the command below.
