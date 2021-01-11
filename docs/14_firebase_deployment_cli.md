@@ -102,7 +102,7 @@ If the version is different you should run the command.
 ```
 cd $(which flutter | xargs dirname) && git checkout 1.24.0-10.2.pre
 ```
-_**Note:** The above script works only on UNIX systems.
+_**Note:** The above script works only on UNIX systems._
 
 Also, you should enable flutter web support by running the command below.
 
