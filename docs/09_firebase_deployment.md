@@ -205,21 +205,22 @@ After that, update the CI Integration configurations to use the previously creat
 ## Building and deploying the application to the Firebase Hosting
 
 ### Preparing your environment
-Before deploying metrics application, make sure you have the correct Flutter version installed,
-by running the command. You should have `v1.24.0-10.2.pre` installed.
+Before building and deploying Metrics application, make sure you have the correct Flutter version installed.
+The required version of Flutter is `v1.24.0-10.2.pre`.
+The following command prints the current Flutter version on your machine:
 
 ```
 flutter --version
 ```
 
-If the version is different you should run the command.
+If current version differs from the required one you can change it by running the following commands:
 
 ```
 cd $(which flutter | xargs dirname) && git checkout 1.24.0-10.2.pre
 ```
-_**Note:** The above script works only on UNIX systems._
+_**Note:** The above commands works correctly on Unix based operating systems (verified: macOS and Ubuntu)! Before using, consider rewriting it according to your operating system._
 
-Also, you should enable flutter web support by running the command below.
+Also, you should enable Flutter Web support by running the command below:
 
 ```
 flutter config --enable-web
