@@ -24,6 +24,7 @@ After the above steps are complete, use the following commands to ensure proper 
 cd $(which flutter | xargs dirname) && git checkout 1.24.0-10.2.pre
 flutter config --enable-web
 ```
+_**Note:** The above script works only on UNIX systems._
 
 That is, your machine is ready to run the Metrics Web Application! :champagne:
 
