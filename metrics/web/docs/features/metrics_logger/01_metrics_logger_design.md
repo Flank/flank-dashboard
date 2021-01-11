@@ -131,7 +131,7 @@ The following example is a complete example of setting up Dart & Flutter uncaugh
 Future<void> main() async {
   // MetricsLogger initialization goes here
 
-  runZoneGuarded(
+  runZonedGuarded(
     () {
       WidgetsFlutterBinding.ensureInitialized();  
 
