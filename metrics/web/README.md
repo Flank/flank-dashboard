@@ -21,10 +21,10 @@ Please use the [official documentation](https://flutter.dev/docs/get-started/ins
 
 After the above steps are complete, use the following commands to ensure proper Flutter version installed and web is enabled:
 ```shell script
-flutter version 1.24.0-10.2.pre
-flutter upgrade
+cd $(which flutter | xargs dirname) && git checkout 1.24.0-10.2.pre
 flutter config --enable-web
 ```
+_**Note:** The above commands works correctly on Unix based operating systems (verified: macOS and Ubuntu)! Before using, consider rewriting it according to your operating system._
 
 That is, your machine is ready to run the Metrics Web Application! :champagne:
 
