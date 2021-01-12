@@ -68,15 +68,53 @@ firebase apps:sdkconfig WEB $APP_ID
 
 ## Firebase SDK configuration
 
-By default, the Flutter already configured for a Web application by using the `auto-generated` Firebase configuration (So, after you deploy to Firebase, your app automatically pulls the Firebase configuration object from the Firebase project to which you've deployed).
+By default, the Metrics Web Application is configured by using the `auto-generated` Firebase configuration (So, after you deploy to Firebase, your app automatically pulls the Firebase configuration object from the Firebase project to which you've deployed).
 
 If you okay with the defaults, you can skip this configuration step.
 
 But if you want to configure a connection to the Firebase `manually`, follow the next steps:
-1. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 9:
+
+1. Go to the `web/index.html` file in the application directory and replace the following piece of code:
 
 ```
-var firebaseConfig = {
+  <script src="/__/firebase/init.js"></script>
+```
+
+with the:
+
+```
+// Your web app's Firebase configuration, copied one in the step 9.
+const firebaseConfig = {...};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+```
+
+The full example of how the Firebase configuration looks like in the `index.html`:
+
+ - the `auto-generated` Firebase configuration
+
+```
+// Firebase SDKs
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-functions.js"></script>
+
+<script src="/__/firebase/init.js"></script>
+```
+
+ - `manual` configuration
+
+```
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-functions.js"></script>
+
+const firebaseConfig = {
   apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
   authDomain: "metrics-d9c67.firebaseapp.com",
   databaseURL: "https://metrics-d9c67.firebaseio.com",
@@ -86,6 +124,9 @@ var firebaseConfig = {
   appId: "1:650500796855:web:65a4615a28f3d88e8bb832",
   measurementId: "G-3DB4JFLKHQ"
 };
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 ```
 
 Finally, you have a configured Flutter application that works with your Firebase instance.
