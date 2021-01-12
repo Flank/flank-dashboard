@@ -1,0 +1,50 @@
+@startuml deploy_sequence
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant Terminal
+
+box CLI
+participant DeployCommand
+participant FirebaseCommand
+participant FlutterCommand
+participant GCloudCommand
+endbox
+
+Bob -> Terminal : enters 'build/metrics deploy'
+
+activate Terminal
+Terminal -> DeployCommand : run()
+
+activate DeployCommand
+
+DeployCommand -> GCloudCommand : login()
+DeployCommand -> GCloudCommand : addProject()
+activate GCloudCommand
+GCloudCommand --> DeployCommand : project ID
+deactivate GCloudCommand
+
+DeployCommand -> FirebaseCommand : login()
+activate FirebaseCommand
+FirebaseCommand --> DeployCommand : firebase token
+deactivate FirebaseCommand
+
+DeployCommand -> FirebaseCommand : addFirebase(projectID, firebaseToken)
+DeployCommand -> GCloudCommand : addProjectApp(region, projectID)
+DeployCommand -> GCloudCommand : createDatabase(region, projectID)
+DeployCommand -> FirebaseCommand : createWebApp(projectID, firebaseToken)
+
+activate FirebaseCommand
+FirebaseCommand --> DeployCommand : app ID
+deactivate FirebaseCommand
+
+DeployCommand -> DeployCommand : _buildAndDeploy(appID, projectID, firebaseToken, repoURL, srcPath)
+DeployCommand -> DeployCommand : cleanup(srcPath)
+DeployCommand --> Terminal : terminate()
+deactivate DeployCommand
+
+Terminal --> Bob : deployment completed
+deactivate Terminal
+@enduml

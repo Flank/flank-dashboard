@@ -1,0 +1,48 @@
+@startuml doctor_sequence
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+actor Bob
+
+participant Terminal
+
+box CLI
+participant DoctorCommand
+participant FirebaseCommand
+participant FlutterCommand
+participant GCloudCommand
+participant GitCommand
+endbox
+
+Bob -> Terminal : enters 'build/metrics doctor'
+
+activate Terminal
+Terminal -> DoctorCommand : run()
+
+activate DoctorCommand
+
+DoctorCommand -> FirebaseCommand : version()
+activate FirebaseCommand
+FirebaseCommand --> Terminal : prints Firebase version
+deactivate FirebaseCommand
+
+DoctorCommand -> FlutterCommand : version()
+activate FlutterCommand
+FlutterCommand --> Terminal : prints Flutter version
+deactivate FlutterCommand
+
+DoctorCommand -> GCloudCommand : version()
+activate GCloudCommand
+GCloudCommand --> Terminal : prints GCloud version
+deactivate GCloudCommand
+
+DoctorCommand -> GitCommand : version()
+activate GitCommand
+GitCommand --> Terminal : prints Git version
+deactivate GitCommand
+
+deactivate DoctorCommand
+
+Terminal --> Bob : shows tool versions
+deactivate Terminal
+@enduml
