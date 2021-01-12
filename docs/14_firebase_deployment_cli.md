@@ -68,11 +68,11 @@ firebase apps:sdkconfig WEB $APP_ID
 
 ## Firebase SDK configuration
 
-By default, the Metrics Web Application is configured by using the `auto-generated` Firebase configuration (So, after you deploy to Firebase, your app automatically pulls the Firebase configuration object from the Firebase project to which you've deployed).
+By default, the Metrics Web Application is configured by using the `auto-generated` Firebase configuration. It means that after you deploy the Metrics application to the Firebase, your app automatically pulls the Firebase configuration object from the Firebase project to which you've deployed.
 
 If you okay with the defaults, you can skip this configuration step.
 
-But if you want to configure a connection to the Firebase `manually`, follow the next steps:
+If you want to configure a connection to the Firebase `manually`, follow the next steps:
 
 1. Go to the `web/index.html` file in the application directory and replace the following piece of code:
 
@@ -90,7 +90,7 @@ const firebaseConfig = {...};
 firebase.initializeApp(firebaseConfig);
 ```
 
-The full example of how the Firebase configuration looks like in the `index.html`:
+The full example of how the Firebase configuration in the `index.html` looks like :
 
  - the `auto-generated` Firebase configuration
 
@@ -98,9 +98,7 @@ The full example of how the Firebase configuration looks like in the `index.html
 // Firebase SDKs
 <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-functions.js"></script>
+...
 
 <script src="/__/firebase/init.js"></script>
 ```
@@ -110,9 +108,7 @@ The full example of how the Firebase configuration looks like in the `index.html
 ```
 <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-functions.js"></script>
+...
 
 const firebaseConfig = {
   apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
