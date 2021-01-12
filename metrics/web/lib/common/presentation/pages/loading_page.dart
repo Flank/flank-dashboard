@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
+import 'package:metrics/common/presentation/navigation/constants/metrics_routes.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';
 import 'package:metrics/common/presentation/widgets/platform_brightness_observer.dart';
@@ -189,7 +190,15 @@ class _LoadingPageState extends State<LoadingPage>
     if (!_isInitialized) return;
 
     final notifier = Provider.of<NavigationNotifier>(context, listen: false);
-    notifier.handleAppInitialized(isAppInitialized: true);
+
+    Router.neglect(context, () {
+      notifier.handleAppInitialized(isAppInitialized: true);
+
+      notifier.replaceBrowserState(
+        path:
+            '${MetricsRoutes.baseUrlPath}${notifier.currentConfiguration.path}',
+      );
+    });
   }
 
   @override

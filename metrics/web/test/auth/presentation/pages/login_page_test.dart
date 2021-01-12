@@ -21,6 +21,7 @@ import '../../../test_utils/auth_notifier_mock.dart';
 import '../../../test_utils/auth_notifier_stub.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/navigation_notifier_mock.dart';
+import '../../../test_utils/router_delegate_stub.dart';
 import '../../../test_utils/test_injection_container.dart';
 
 void main() {
@@ -160,6 +161,10 @@ void main() {
       (WidgetTester tester) async {
         final navigationNotifier = NavigationNotifierMock();
 
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          MetricsRoutes.dashboard,
+        );
+
         await mockNetworkImagesFor(() {
           return tester.pumpWidget(_LoginPageTestbed(
             authNotifier: AuthNotifierStub(),
@@ -188,10 +193,56 @@ void main() {
     );
 
     testWidgets(
+      "closes and navigates to the dashboard page if the login was successful",
+      (WidgetTester tester) async {
+        final navigationNotifier = NavigationNotifierMock();
+        final configuration = MetricsRoutes.dashboard;
+
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          configuration,
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(_LoginPageTestbed(
+            authNotifier: AuthNotifierStub(),
+            navigationNotifier: navigationNotifier,
+          ));
+        });
+
+        await tester.enterText(
+          find.widgetWithText(TextFormField, AuthStrings.email),
+          'test@email.com',
+        );
+        await tester.enterText(
+          find.widgetWithText(TextFormField, AuthStrings.password),
+          'testPassword',
+        );
+        await tester.tap(find.widgetWithText(RaisedButton, AuthStrings.signIn));
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpAndSettle();
+        });
+
+        verify(navigationNotifier.replaceBrowserState(
+          data: anyNamed('data'),
+          title: anyNamed('title'),
+          path: argThat(
+            equals('${MetricsRoutes.baseUrlPath}${configuration.path}'),
+            named: 'path',
+          ),
+        )).called(equals(1));
+      },
+    );
+
+    testWidgets(
       "closes and navigates to the dashboard page on open if the user is logged in",
       (tester) async {
         final authNotifier = AuthNotifierMock();
         final navigationNotifier = NavigationNotifierMock();
+
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          MetricsRoutes.dashboard,
+        );
 
         when(authNotifier.isLoading).thenReturn(false);
         when(authNotifier.isLoggedIn).thenReturn(true);
@@ -207,6 +258,39 @@ void main() {
 
         verify(navigationNotifier.pushReplacement(
           MetricsRoutes.dashboard,
+        )).called(equals(1));
+      },
+    );
+
+    testWidgets(
+      "replaces the browser url path with the current configuration path on open if the user is logged in",
+      (tester) async {
+        final authNotifier = AuthNotifierMock();
+        final navigationNotifier = NavigationNotifierMock();
+        final configuration = MetricsRoutes.dashboard;
+
+        when(authNotifier.isLoading).thenReturn(false);
+        when(authNotifier.isLoggedIn).thenReturn(true);
+        when(navigationNotifier.currentConfiguration).thenReturn(
+          configuration,
+        );
+
+        await mockNetworkImagesFor(() {
+          return tester.pumpWidget(
+            _LoginPageTestbed(
+              authNotifier: authNotifier,
+              navigationNotifier: navigationNotifier,
+            ),
+          );
+        });
+
+        verify(navigationNotifier.replaceBrowserState(
+          data: anyNamed('data'),
+          title: anyNamed('title'),
+          path: argThat(
+            equals('${MetricsRoutes.baseUrlPath}${configuration.path}'),
+            named: 'path',
+          ),
         )).called(equals(1));
       },
     );
@@ -256,7 +340,11 @@ class _LoginPageTestbed extends StatelessWidget {
         builder: (context) {
           return MetricsThemedTestbed(
             metricsThemeData: metricsThemeData,
-            body: LoginPage(key: loginKey),
+            body: Router(
+              routerDelegate: RouterDelegateStub(
+                body: LoginPage(key: loginKey),
+              ),
+            ),
           );
         },
       ),

@@ -25,4 +25,22 @@ class RouteConfiguration extends Equatable {
     this.path,
   })  : assert(name != null),
         assert(authorizationRequired != null);
+
+  /// Creates the new instance of the [RouteConfiguration]
+  /// based on the current instance.
+  ///
+  /// If any of the passed parameters are `null`, or parameter isn't specified,
+  /// the value will be copied from the current instance.
+  RouteConfiguration copyWith({
+    RouteName name,
+    bool authorizationRequired,
+    String path,
+  }) {
+    return RouteConfiguration(
+      name: name ?? this.name,
+      authorizationRequired:
+          authorizationRequired ?? this.authorizationRequired,
+      path: path ?? this.path,
+    );
+  }
 }

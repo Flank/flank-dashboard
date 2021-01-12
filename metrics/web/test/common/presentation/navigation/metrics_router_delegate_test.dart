@@ -8,6 +8,7 @@ import 'package:metrics/common/presentation/navigation/state/navigation_notifier
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../test_utils/history_mock.dart';
 import '../../../test_utils/matcher_util.dart';
 import '../../../test_utils/route_configuration_stub.dart';
 
@@ -16,6 +17,7 @@ void main() {
     const configuration = RouteConfigurationStub(name: RouteName.dashboard);
 
     final navigationNotifierMock = _NavigationNotifierMock();
+    final history = HistoryMock();
     final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifierMock);
     final pages = UnmodifiableListView<MetricsPage>([]);
 
@@ -63,7 +65,10 @@ void main() {
     test(
       ".navigatorKey provides the global object key with a value equals to the given navigator notifier",
       () {
-        final navigationNotifier = NavigationNotifier(MetricsPageFactory());
+        final navigationNotifier = NavigationNotifier(
+          MetricsPageFactory(),
+          history,
+        );
         final routerDelegate = MetricsRouterDelegate(navigationNotifier);
 
         final expectedKey = GlobalObjectKey<NavigatorState>(navigationNotifier);
@@ -77,7 +82,10 @@ void main() {
       "notifies listeners once the given navigation notifier notifies listeners",
       () {
         final metricsPageFactory = MetricsPageFactory();
-        final navigationNotifier = NavigationNotifier(metricsPageFactory);
+        final navigationNotifier = NavigationNotifier(
+          metricsPageFactory,
+          history,
+        );
         final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifier);
 
         bool isCalled = false;

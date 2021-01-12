@@ -52,7 +52,13 @@ class _LoginPageState extends State<LoginPage> {
         listen: false,
       );
 
-      navigationNotifier.pushReplacement(MetricsRoutes.dashboard);
+      Router.neglect(context, () {
+        navigationNotifier.pushReplacement(MetricsRoutes.dashboard);
+
+        navigationNotifier.replaceBrowserState(
+          path: '${MetricsRoutes.baseUrlPath}${navigationNotifier.currentConfiguration.path}',
+        );
+      });
     }
   }
 

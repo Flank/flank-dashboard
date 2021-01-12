@@ -22,6 +22,7 @@ import 'package:metrics/dashboard/presentation/widgets/stability_circle_percenta
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
+import 'package:universal_html/html.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:metrics/platform/stub/metrics_config/metrics_config_factory.dart'
@@ -68,6 +69,24 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  group("LoadingPage", () {
+    testWidgets(
+      "is replaced once the loading finished",
+      (tester) async {
+        await tester.pumpWidget(MetricsApp());
+
+        final expectedPagesLength = window.history.length;
+
+        await tester.pumpAndSettle();
+
+        final actualPagesLength = window.history.length;
+        //
+        expect(find.byType(AuthForm), findsOneWidget);
+        expect(actualPagesLength, equals(expectedPagesLength));
+      },
+    );
+  });
+
   group("LoginPage", () {
     testWidgets(
       "shows an authentication form",
@@ -100,15 +119,29 @@ void main() {
           metricsConfig: metricsConfig,
         ));
 
-        await (WidgetTester tester) async {
-          await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
-          await tester.pumpAndSettle();
-        }(tester);
+        await tester.tap(find.byTooltip(CommonStrings.openUserMenu));
+        await tester.pumpAndSettle();
 
         await tester.tap(find.text(CommonStrings.logOut));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         expect(find.byType(AuthForm), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      "is replaced once the used logged in",
+      (tester) async {
+        await tester.pumpAndSettleWidget(MetricsApp());
+
+        final expectedPagesLength = window.history.length;
+
+        await login(tester);
+
+        final actualPagesLength = window.history.length;
+
+        expect(find.byType(DashboardPage), findsOneWidget);
+        expect(actualPagesLength, equals(expectedPagesLength));
       },
     );
   });
@@ -120,8 +153,6 @@ void main() {
         await tester.pumpAndSettleWidget(MetricsApp(
           metricsConfig: metricsConfig,
         ));
-
-        await login(tester);
 
         expect(find.byType(ProjectMetricsTile), findsWidgets);
       },

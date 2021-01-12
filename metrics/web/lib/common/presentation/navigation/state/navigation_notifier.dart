@@ -4,6 +4,7 @@ import 'package:metrics/common/presentation/navigation/constants/metrics_routes.
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
+import 'package:universal_html/html.dart';
 
 /// A signature for the function that tests the given [MetricsPage] for certain
 /// conditions.
@@ -11,6 +12,9 @@ typedef MetricsPagePredicate = bool Function(MetricsPage);
 
 /// A [ChangeNotifier] that manages navigation.
 class NavigationNotifier extends ChangeNotifier {
+  /// A [History] used to interact with the browser history.
+  final History _history;
+
   /// A [MetricsPageFactory] that provides an ability to create a [MetricsPage]
   /// from [RouteConfiguration].
   final MetricsPageFactory _pageFactory;
@@ -43,7 +47,10 @@ class NavigationNotifier extends ChangeNotifier {
   /// Throws an [AssertionError] if the given [MetricsPageFactory] is `null`.
   NavigationNotifier(
     this._pageFactory,
-  ) : assert(_pageFactory != null);
+    History history,
+  )   : assert(_pageFactory != null),
+        assert(history != null),
+        _history = history;
 
   /// Handles the authentication update represented by the given [isLoggedIn].
   ///
@@ -126,6 +133,22 @@ class NavigationNotifier extends ChangeNotifier {
     push(configuration);
   }
 
+  /// Replaces the current browser state with the given parameters.
+  ///
+  /// The [data] represents the data associated with the history entry with
+  /// which the current entry will be replaced.
+  /// Most browsers currently ignore the [title] parameter, although they may
+  /// use it in the future. Defaults to `metrics`.
+  /// The [path] parameter represents the path component of the [Uri] of the
+  /// history entry used to replace the current one.
+  void replaceBrowserState({
+    dynamic data,
+    String title = 'metrics',
+    String path,
+  }) {
+    _history.replaceState(data, title, path);
+  }
+
   /// Handles the initial route.
   void handleInitialRoutePath(RouteConfiguration configuration) {
     _addNewPage(configuration);
@@ -188,7 +211,7 @@ class NavigationNotifier extends ChangeNotifier {
     if (!_isAppInitialized) {
       _redirectRoute = configuration;
 
-      return MetricsRoutes.loading;
+      return MetricsRoutes.loading.copyWith(path: configuration.path);
     }
 
     final authorizationRequired = configuration.authorizationRequired;

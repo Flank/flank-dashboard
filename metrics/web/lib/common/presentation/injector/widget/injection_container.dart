@@ -41,6 +41,7 @@ import 'package:metrics/project_groups/domain/usecases/receive_project_group_upd
 import 'package:metrics/project_groups/domain/usecases/update_project_group_usecase.dart';
 import 'package:metrics/project_groups/presentation/state/project_groups_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_html/html.dart';
 
 /// Creates the [ChangeNotifier]s and injects them, using the [MultiProvider] widget.
 class InjectionContainer extends StatefulWidget {
@@ -217,7 +218,10 @@ class _InjectionContainerState extends State<InjectionContainer> {
 
     _themeNotifier = ThemeNotifier(brightness: platformBrightness);
 
-    _navigationNotifier = NavigationNotifier(MetricsPageFactory());
+    _navigationNotifier = NavigationNotifier(
+      MetricsPageFactory(),
+      window.history,
+    );
 
     _authNotifier.addListener(_authNotifierListener);
     _themeNotifier.addListener(_themeNotifierListener);

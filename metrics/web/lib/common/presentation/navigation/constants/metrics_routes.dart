@@ -4,6 +4,9 @@ import 'package:metrics/common/presentation/navigation/route_configuration/route
 
 /// A class that holds the [RouteConfiguration]s for Metrics application routes.
 class MetricsRoutes {
+  /// A base path of the flutter application.
+  static const String baseUrlPath = '/#';
+
   /// A [RouteConfiguration] for the loading page.
   static const RouteConfiguration loading = RouteConfiguration(
     name: RouteName.loading,
