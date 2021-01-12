@@ -60,7 +60,7 @@ gcloud alpha firestore databases create --region=europe-west --project $PROJECT_
 firebase apps:create --project $PROJECT_ID
 ```
 
-9. Export firebase config APP_ID will be displayed as output of previouse command.
+9. Export firebase config APP_ID will be displayed as output of previous command.
 
 ```
 firebase apps:sdkconfig WEB $APP_ID
@@ -73,14 +73,17 @@ To configure the Flutter for Web application to use recently created Firestore D
  - use the `auto-generated` Firebase configuration:
  1. Go to the `web/index.html` file in the application directory.
  2. Add the following script below the previously loaded Firebase SDKs:
+ 
   ```
   <script src="/__/firebase/init.js"></script>
   ```
+
   With this setup option, after you deploy to Firebase, your app automatically pulls the Firebase configuration object from the Firebase project to which you've deployed.
 
  - `manually` define a Firebase configuration:
-1. Go to the web/index.html file in the application directory and replace the following piece of code with the copied one in step 9:
-``` 
+1. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 9:
+
+```
 var firebaseConfig = {
   apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
   authDomain: "metrics-d9c67.firebaseapp.com",
