@@ -118,9 +118,9 @@ const firebaseConfig = {...};
 firebase.initializeApp(firebaseConfig);
 ```
 
-The full example of how the Firebase configuration in the `index.html` looks like :
+The full example of how the Firebase configuration in the `index.html` looks like:
 
- - the `auto-generated` Firebase configuration
+  ### `auto-generated` Firebase configuration
 ```
 // Firebase SDKs
 <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
@@ -130,7 +130,7 @@ The full example of how the Firebase configuration in the `index.html` looks lik
 <script src="/__/firebase/init.js"></script>
 ```
 
- - `manual` configuration
+ ### `manual` configuration
 ```
 <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-analytics.js"></script>

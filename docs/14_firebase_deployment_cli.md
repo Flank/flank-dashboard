@@ -90,7 +90,7 @@ const firebaseConfig = {...};
 firebase.initializeApp(firebaseConfig);
 ```
 
-The full example of how the Firebase configuration in the `index.html` looks like :
+The full example of how the Firebase configuration in the `index.html` looks like:
 
  - the `auto-generated` Firebase configuration
 
