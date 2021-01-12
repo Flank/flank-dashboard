@@ -108,10 +108,9 @@ To configure the Flutter for Web application to use recently created Firestore D
 and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
 2. Scroll down and find your Firebase Web Application.
 3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
-4. Go to the web/index.html file in the application directory and replace the following piece of code with the copied one in step 3:
-  - If you want to use the `auto-generated` Firebase configuration add the following script below the previously loaded Firebase SDKs:
+4. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 3:
 ```
- var firebaseConfig = {
+  var firebaseConfig = {
     apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
     authDomain: "metrics-d9c67.firebaseapp.com",
     databaseURL: "https://metrics-d9c67.firebaseio.com",
