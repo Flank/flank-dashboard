@@ -389,6 +389,7 @@ class SyncCommandStub extends SyncCommand {
 
   @override
   dynamic getArgumentValue(String name) {
+    if (name == 'verbose') return false;
     return 'config.yaml';
   }
 
