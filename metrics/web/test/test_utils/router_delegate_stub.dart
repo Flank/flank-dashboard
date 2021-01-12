@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A stub implementation of the [RouterDelegate].
+/// A stub implementation of the [RouterDelegate] used in tests.
 class RouterDelegateStub extends RouterDelegate with ChangeNotifier {
   /// A [Widget] to display.
   final Widget body;

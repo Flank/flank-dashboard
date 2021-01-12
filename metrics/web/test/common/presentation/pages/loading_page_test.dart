@@ -426,7 +426,7 @@ void main() {
     );
 
     testWidgets(
-      "delegates to the navigation notifier on opened if the application is initialized",
+      "replaces the browser url path on opened if the application is initialized",
       (tester) async {
         final navigationNotifier = NavigationNotifierMock();
         final configuration = MetricsRoutes.dashboard;

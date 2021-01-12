@@ -757,7 +757,7 @@ void main() {
     );
 
     test(
-      ".replaceBrowserState() delegates to the history class",
+      ".replaceBrowserState() delegates to the history",
       () {
         const data = 'data';
         const title = 'title';

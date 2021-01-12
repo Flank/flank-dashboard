@@ -193,7 +193,7 @@ void main() {
     );
 
     testWidgets(
-      "closes and navigates to the dashboard page if the login was successful",
+      "replaces the browser url path with the current configuration path if the login was successful",
       (WidgetTester tester) async {
         final navigationNotifier = NavigationNotifierMock();
         final configuration = MetricsRoutes.dashboard;

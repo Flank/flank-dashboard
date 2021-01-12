@@ -80,7 +80,7 @@ void main() {
         await tester.pumpAndSettle();
 
         final actualPagesLength = window.history.length;
-        //
+
         expect(find.byType(AuthForm), findsOneWidget);
         expect(actualPagesLength, equals(expectedPagesLength));
       },
@@ -130,7 +130,7 @@ void main() {
     );
 
     testWidgets(
-      "is replaced once the used logged in",
+      "is replaced after user logs in",
       (tester) async {
         await tester.pumpAndSettleWidget(MetricsApp());
 
