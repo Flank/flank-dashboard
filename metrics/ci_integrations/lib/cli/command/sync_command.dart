@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:args/command_runner.dart';
 import 'package:ci_integration/cli/command/ci_integration_command.dart';
 import 'package:ci_integration/cli/config/model/raw_integration_config.dart';
@@ -46,10 +45,16 @@ class SyncCommand extends CiIntegrationCommand<void> {
       help: 'A path to the YAML configuration file.',
       valueHelp: 'config.yaml',
     );
+    argParser.addFlag(
+      'verbose',
+      help: "The verbose mode prints all the outputs to the stdout.",
+      abbr: 'v',
+    );
   }
 
   @override
   Future<void> run() async {
+    final isVerbose = getArgumentValue('verbose') as bool;
     final configFilePath = getArgumentValue('config-file') as String;
     final file = getConfigFile(configFilePath);
 
@@ -57,6 +62,8 @@ class SyncCommand extends CiIntegrationCommand<void> {
       SourceClient sourceClient;
       DestinationClient destinationClient;
       try {
+        if (isVerbose) logger.printMessage('Parsing config file...');
+
         final rawConfig = parseConfigFileContent(file);
 
         final sourceParty = getParty(
@@ -77,6 +84,8 @@ class SyncCommand extends CiIntegrationCommand<void> {
           destinationParty,
         );
 
+        if (isVerbose) logger.printMessage('Creating clients...');
+
         sourceClient = await createClient(
           sourceConfig,
           sourceParty,
@@ -90,6 +99,8 @@ class SyncCommand extends CiIntegrationCommand<void> {
           sourceProjectId: sourceConfig.sourceProjectId,
           destinationProjectId: destinationConfig.destinationProjectId,
         );
+
+        if (isVerbose) logger.printMessage('Running sync...');
 
         await sync(syncConfig, sourceClient, destinationClient);
       } catch (e) {

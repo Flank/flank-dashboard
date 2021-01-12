@@ -148,6 +148,12 @@ For example:
 ci_integrations sync --config-file="path/to/config_file.yaml"
 ```
 
+To simplify troubleshooting when using the CI Integrations tool you should run the tool in a verbose mode that gives more context of what it's doing:
+
+```bash
+ci_integrations sync --config-file="path/to/config_file.yaml --verbose"
+```
+
 #### Automate CI Integrations
 
 Obviously, it is not very handy to manually run the CI Integrations tool every time you have a new build. You should wait for a new build to finish, then check your configuration file is up-to-date, run a sync command with this configuration file, and then wait for a sync process to complete. 

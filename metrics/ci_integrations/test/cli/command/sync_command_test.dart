@@ -85,6 +85,12 @@ void main() {
         expect(options, contains('config-file'));
       });
 
+      test("has the 'verbose' flag", () {
+        final argParser = syncCommand.argParser;
+        final options = argParser.options;
+        expect(options, contains('verbose'));
+      });
+
       test("has the command name equal to 'sync'", () {
         final name = syncCommand.name;
 
