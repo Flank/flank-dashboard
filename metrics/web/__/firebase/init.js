@@ -1,4 +1,5 @@
 if (typeof firebase === 'undefined') throw new Error('hosting/init-error: Firebase SDK not detected. You must include it before /__/firebase/init.js');
+
 firebase.initializeApp({
     apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
     authDomain: "metrics-d9c67.firebaseapp.com",

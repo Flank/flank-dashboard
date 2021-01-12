@@ -93,19 +93,11 @@ Finally, your Firebase project configured and it's time to configure the Firebas
 
 ## Firebase SDK configuration
 
-To configure the Flutter for Web application to use recently created Firestore Database you have two options:
+By default, the Flutter already configured for a Web application by using the `auto-generated` Firebase configuration (So, after you deploy to Firebase, your app automatically pulls the Firebase configuration object from the Firebase project to which you've deployed).
 
- - use the `auto-generated` Firebase configuration:
- 1. Go to the `web/index.html` file in the application directory.
- 2. Add the following script below the previously loaded Firebase SDKs:
- 
-  ```
-  <script src="/__/firebase/init.js"></script>
-  ```
+If you okay with the defaults, you can skip this configuration step.
 
-  With this setup option, after you deploy to Firebase, your app automatically pulls the Firebase configuration object from the Firebase project to which you've deployed.
-
- - `manually` define a Firebase configuration:
+But if you want to configure a connection to the Firebase `manually`, follow the next steps:
 1. Open the [Firebase console](https://console.firebase.google.com/), choose your project
 and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
 2. Scroll down and find your Firebase Web Application.
