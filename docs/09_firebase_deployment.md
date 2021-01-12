@@ -99,18 +99,25 @@ To configure the Flutter for Web application to use recently created Firestore D
 and go to the project setting (tap on the setting gear icon near the `Project Overview` on top of the left panel and select `Project settings`.
 2. Scroll down and find your Firebase Web Application.
 3. Go to `Firebase SDK snippet` of your application, select `Config` and copy the generated code.
-4. Go to the `web/index.html` file in the application directory and replace the following piece of code with the copied one in step 3:
+4. Go to the `web/index.html` file in the application directory.
+5. You have two options for how to set up the configuration:
+  
+  - If you want to use the `auto-generated` Firebase configuration add the following script below the previously loaded Firebase SDKs:
+  ```
+  <script src="/__/firebase/init.js"></script>
+  ```
+  With this setup option, after you deploy to Firebase, your app automatically pulls the Firebase configuration object from the Firebase project to which you've deployed.
+  
+  - If you want to `manually` define a configuration, replace the `init.js` script with the following:
+
 ```
-  var firebaseConfig = {
-    apiKey: "AIzaSyCkM-7WEAb9GGCjKQNChi5MD2pqrcRanzo",
-    authDomain: "metrics-d9c67.firebaseapp.com",
-    databaseURL: "https://metrics-d9c67.firebaseio.com",
-    projectId: "metrics-d9c67",
-    storageBucket: "metrics-d9c67.appspot.com",
-    messagingSenderId: "650500796855",
-    appId: "1:650500796855:web:65a4615a28f3d88e8bb832",
-    measurementId: "G-3DB4JFLKHQ"
-  };
+// Firebase project configuration, copied one in step 3
+const firebaseConfig = {
+  // ...
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 ```
 
 Finally, you have a configured Flutter application that works with your Firebase instance.
