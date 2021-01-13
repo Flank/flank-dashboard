@@ -4,12 +4,11 @@ import 'package:test/test.dart';
 
 import '../test_utils/test_data/buildkite_config_test_data.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   final config = BuildkiteConfigTestData.sourceConfig;
-  final clientFactory = BuildkiteSourceClientFactory();
+  const clientFactory = BuildkiteSourceClientFactory();
 
   group("BuildkiteSourceClientFactory", () {
     test(".create() throws an ArgumentError if the given config is null", () {

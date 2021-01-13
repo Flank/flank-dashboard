@@ -1,5 +1,3 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:metrics/dashboard/presentation/view_models/project_group_dropdown_item_view_model.dart';
 import 'package:test/test.dart';
 
@@ -14,7 +12,7 @@ void main() {
       "successfully creates an instance on a valid input",
       () {
         expect(
-          () => ProjectGroupDropdownItemViewModel(id: id, name: name),
+          () => const ProjectGroupDropdownItemViewModel(id: id, name: name),
           returnsNormally,
         );
       },
@@ -33,12 +31,12 @@ void main() {
     test(
       "equals to another ProjectGroupDropdownItemViewModel instance with the same value",
       () {
-        final firstViewModel = ProjectGroupDropdownItemViewModel(
+        const firstViewModel = ProjectGroupDropdownItemViewModel(
           id: id,
           name: name,
         );
 
-        final secondViewModel = ProjectGroupDropdownItemViewModel(
+        const secondViewModel = ProjectGroupDropdownItemViewModel(
           id: id,
           name: name,
         );

@@ -2,12 +2,9 @@ import 'package:ci_integration/client/github_actions/mappers/github_action_statu
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("GithubActionStatusMapper", () {
-    final mapper = GithubActionStatusMapper();
+    const mapper = GithubActionStatusMapper();
 
     test(
       ".map() maps the queued run status to the GithubActionStatus.queued",

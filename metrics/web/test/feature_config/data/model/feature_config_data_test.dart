@@ -1,8 +1,6 @@
 import 'package:metrics/feature_config/data/model/feature_config_data.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("FeatureConfigData", () {
     const isPasswordSignInOptionEnabled = true;
@@ -25,7 +23,7 @@ void main() {
     test(
       ".fromJson() creates an instance from the given json",
       () {
-        final expectedConfig = FeatureConfigData(
+        const expectedConfig = FeatureConfigData(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
         );
@@ -39,7 +37,7 @@ void main() {
     test(
       ".toJson() converts an instance to the json encodable map",
       () {
-        final config = FeatureConfigData(
+        const config = FeatureConfigData(
           isPasswordSignInOptionEnabled: isPasswordSignInOptionEnabled,
           isDebugMenuEnabled: isDebugMenuEnabled,
         );

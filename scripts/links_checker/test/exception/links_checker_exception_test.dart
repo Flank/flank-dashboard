@@ -1,7 +1,7 @@
 import 'package:links_checker/exception/links_checker_exception.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file:
 
 void main() {
   group("LinksCheckerException", () {
@@ -9,7 +9,7 @@ void main() {
       ".toString() returns the error message with the given errors descriptions",
       () {
         const errorDescriptions = ['error1', 'error2'];
-        final linksCheckerException = LinksCheckerException(errorDescriptions);
+        const linksCheckerException = LinksCheckerException(errorDescriptions);
 
         final errorsList = errorDescriptions.join('\n');
         final expectedMessage =
@@ -22,7 +22,7 @@ void main() {
     test(
       ".toString() returns an empty string if the given error descriptions are null",
       () {
-        final linksCheckerException = LinksCheckerException(null);
+        const linksCheckerException = LinksCheckerException(null);
 
         expect(linksCheckerException.toString(), isEmpty);
       },

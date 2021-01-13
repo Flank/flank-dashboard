@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/delete_dialog_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("DeleteDialogThemeData", () {
     test(
@@ -38,7 +35,7 @@ void main() {
       const titleTextStyle = defaultTextStyle;
       const contentTextStyle = defaultTextStyle;
 
-      final themeData = DeleteDialogThemeData(
+      const themeData = DeleteDialogThemeData(
         backgroundColor: backgroundColor,
         closeIconColor: closeIconColor,
         titleTextStyle: titleTextStyle,

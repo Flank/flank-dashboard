@@ -2,12 +2,9 @@ import 'package:ci_integration/client/github_actions/mappers/github_action_concl
 import 'package:ci_integration/client/github_actions/models/github_action_conclusion.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("GithubActionConclusionMapper", () {
-    final mapper = GithubActionConclusionMapper();
+    const mapper = GithubActionConclusionMapper();
 
     test(
       ".map() maps the success run conclusion to the GithubActionConclusion.success",

@@ -14,7 +14,7 @@ import '../../../test_utils/debug_menu_notifier_mock.dart';
 import '../../../test_utils/metrics_themed_testbed.dart';
 import '../../../test_utils/test_injection_container.dart';
 
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("DebugMenuFpsMonitorToggle", () {
@@ -42,7 +42,7 @@ void main() {
       "displays the fps monitor text",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          _DebugMenuFpsMonitorToggleTestbed(),
+          const _DebugMenuFpsMonitorToggleTestbed(),
         );
 
         expect(find.text(DebugMenuStrings.fpsMonitor), findsOneWidget);
@@ -53,7 +53,7 @@ void main() {
       "displays the toggle widget",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          _DebugMenuFpsMonitorToggleTestbed(),
+          const _DebugMenuFpsMonitorToggleTestbed(),
         );
 
         expect(toggleFinder, findsOneWidget);
@@ -64,7 +64,8 @@ void main() {
       "applies the section content text style from the metrics theme",
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          _DebugMenuFpsMonitorToggleTestbed(metricsThemeData: metricsThemeData),
+          const _DebugMenuFpsMonitorToggleTestbed(
+              metricsThemeData: metricsThemeData),
         );
 
         final content = tester.widget<Text>(
@@ -84,7 +85,7 @@ void main() {
         );
 
         await tester.pumpWidget(
-          _DebugMenuFpsMonitorToggleTestbed(
+          const _DebugMenuFpsMonitorToggleTestbed(
             fpsMonitorViewModel: fpsMonitorViewModel,
           ),
         );
@@ -104,7 +105,7 @@ void main() {
         );
 
         await tester.pumpWidget(
-          _DebugMenuFpsMonitorToggleTestbed(
+          const _DebugMenuFpsMonitorToggleTestbed(
             fpsMonitorViewModel: fpsMonitorViewModel,
           ),
         );

@@ -4,17 +4,17 @@ import 'package:test/test.dart';
 import 'package:metrics/metrics_logger/sentry/event_processors/user_agent_event_processor.dart';
 import 'package:sentry/sentry.dart';
 
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("UserAgentEventProcessor", () {
     const userAgent = 'test-user-agent';
-    final processor = UserAgentEventProcessor(userAgent);
+    const processor = UserAgentEventProcessor(userAgent);
 
     test(
       "creates an instance with the given user agent",
       () {
-        final processor = UserAgentEventProcessor(userAgent);
+        const processor = UserAgentEventProcessor(userAgent);
 
         expect(processor.userAgent, equals(userAgent));
       },

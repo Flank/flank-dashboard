@@ -1,11 +1,9 @@
 import 'package:ci_integration/cli/config/parser/raw_integration_config_parser.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("RawIntegrationConfigParser", () {
-    final configParser = RawIntegrationConfigParser();
+    const configParser = RawIntegrationConfigParser();
 
     const sourceProjectId = 'sourceProjectId';
     const sourceConfig = "source:\n"

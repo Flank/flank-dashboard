@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("MetricsButtonStyle", () {
     test(
@@ -33,7 +30,7 @@ void main() {
       const elevation = 1.0;
       const labelStyle = TextStyle();
 
-      final style = MetricsButtonStyle(
+      const style = MetricsButtonStyle(
         color: color,
         hoverColor: hoverColor,
         labelStyle: labelStyle,

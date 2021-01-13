@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file:
 
 void main() {
   group("ToggleThemeData", () {
@@ -13,7 +12,7 @@ void main() {
       const inactiveColor = Colors.orange;
       const inactiveHoverColor = Colors.deepOrange;
 
-      final themeData = ToggleThemeData(
+      const themeData = ToggleThemeData(
         activeColor: activeColor,
         inactiveColor: inactiveColor,
         activeHoverColor: activeHoverColor,

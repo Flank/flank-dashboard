@@ -4,31 +4,28 @@ import 'package:metrics/common/presentation/metrics_theme/model/add_project_grou
 import 'package:metrics/common/presentation/metrics_theme/model/add_project_group_card/theme_data/add_project_group_card_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("AddProjectGroupThemeData", () {
     test(
       "creates a theme with the default attention level if it is not specified",
       () {
-        final themeData = AddProjectGroupCardThemeData();
+        const themeData = AddProjectGroupCardThemeData();
 
         expect(themeData.attentionLevel, isNotNull);
       },
     );
 
     test("creates an instance with the given attention level", () {
-      final addProjectGroupCardStyle = AddProjectGroupCardStyle(
+      const addProjectGroupCardStyle = AddProjectGroupCardStyle(
         backgroundColor: Colors.green,
       );
 
-      final attentionLevel = AddProjectGroupCardAttentionLevel(
+      const attentionLevel = AddProjectGroupCardAttentionLevel(
         positive: addProjectGroupCardStyle,
         inactive: addProjectGroupCardStyle,
       );
 
-      final themeData = AddProjectGroupCardThemeData(
+      const themeData = AddProjectGroupCardThemeData(
         attentionLevel: attentionLevel,
       );
 

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/theme_data/metrics_table_header_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("MetricsTableHeaderThemeData", () {
@@ -17,8 +16,8 @@ void main() {
     );
 
     test("creates a theme with the given text style", () {
-      final textStyle = TextStyle(color: Colors.red);
-      final themeData = MetricsTableHeaderThemeData(textStyle: textStyle);
+      const textStyle = TextStyle(color: Colors.red);
+      const themeData = MetricsTableHeaderThemeData(textStyle: textStyle);
 
       expect(themeData.textStyle, equals(textStyle));
     });

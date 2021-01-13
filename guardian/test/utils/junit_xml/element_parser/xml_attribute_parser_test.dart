@@ -1,11 +1,9 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:guardian/utils/junit_xml/junit_xml.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('XmlAttributeValueParser', () {
-    final parser = IntAttributeValueParser();
+    const parser = IntAttributeValueParser();
 
     test("canParse() returns true if the value can be parsed", () {
       const value = '123';

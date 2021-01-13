@@ -1,5 +1,4 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file:
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';
@@ -34,7 +33,10 @@ void main() {
     );
 
     test("has an averageBuildDuration of 0 if no duration is provided", () {
-      expect(PerformanceMetric().averageBuildDuration, equals(Duration.zero));
+      expect(
+        const PerformanceMetric().averageBuildDuration,
+        equals(Duration.zero),
+      );
     });
 
     test(

@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("CirclePercentageStyle", () {
     test("creates an instance with the given values", () {
@@ -13,7 +10,7 @@ void main() {
       const strokeColor = Colors.green;
       const backgroundColor = Colors.black;
 
-      final style = CirclePercentageStyle(
+      const style = CirclePercentageStyle(
         valueStyle: valueStyle,
         valueColor: valueColor,
         strokeColor: strokeColor,

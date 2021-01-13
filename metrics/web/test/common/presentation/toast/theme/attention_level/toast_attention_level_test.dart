@@ -3,8 +3,7 @@ import 'package:metrics/common/presentation/toast/theme/attention_level/toast_at
 import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("ToastAttentionLevel", () {
@@ -30,7 +29,7 @@ void main() {
       const positive = ToastStyle(backgroundColor: Colors.red);
       const negative = ToastStyle(backgroundColor: Colors.black);
 
-      final attentionLevel = ToastAttentionLevel(
+      const attentionLevel = ToastAttentionLevel(
         positive: positive,
         negative: negative,
       );

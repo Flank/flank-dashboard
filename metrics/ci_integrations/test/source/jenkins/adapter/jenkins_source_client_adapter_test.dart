@@ -11,8 +11,7 @@ import 'package:metrics_core/metrics_core.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file:   avoid_redundant_argument_values
 
 void main() {
   group("JenkinsSourceClientAdapter", () {
@@ -261,11 +260,11 @@ void main() {
     test(
       ".fetchBuilds() maps fetched builds startedAt date to the DateTime.now() if the timestamp is null",
       () async {
-        final jenkinsBuild = JenkinsBuild(
+        const jenkinsBuild = JenkinsBuild(
           number: 2,
           timestamp: null,
           building: false,
-          artifacts: const [defaultArtifact],
+          artifacts: [defaultArtifact],
         );
 
         responses.addBuilds([jenkinsBuild]);
@@ -282,11 +281,11 @@ void main() {
     test(
       ".fetchBuilds() maps fetched builds duration to the Duration.zero if the duration is null",
       () async {
-        final jenkinsBuild = JenkinsBuild(
+        const jenkinsBuild = JenkinsBuild(
           number: 2,
           duration: null,
           building: false,
-          artifacts: const [defaultArtifact],
+          artifacts: [defaultArtifact],
         );
 
         responses.addBuilds([jenkinsBuild]);
@@ -303,11 +302,11 @@ void main() {
     test(
       ".fetchBuilds() maps fetched url to the empty string if the url is null",
       () async {
-        final jenkinsBuild = JenkinsBuild(
+        const jenkinsBuild = JenkinsBuild(
           number: 2,
           url: null,
           building: false,
-          artifacts: const [defaultArtifact],
+          artifacts: [defaultArtifact],
         );
 
         responses.addBuilds([jenkinsBuild]);
@@ -586,11 +585,11 @@ void main() {
       () async {
         const build = BuildData(buildNumber: 1);
 
-        final jenkinsBuild = JenkinsBuild(
+        const jenkinsBuild = JenkinsBuild(
           number: 2,
           timestamp: null,
           building: false,
-          artifacts: const [defaultArtifact],
+          artifacts: [defaultArtifact],
         );
 
         responses.addBuilds([jenkinsBuild]);
@@ -609,11 +608,11 @@ void main() {
       () async {
         const build = BuildData(buildNumber: 1);
 
-        final jenkinsBuild = JenkinsBuild(
+        const jenkinsBuild = JenkinsBuild(
           number: 2,
           duration: null,
           building: false,
-          artifacts: const [defaultArtifact],
+          artifacts: [defaultArtifact],
         );
 
         responses.addBuilds([jenkinsBuild]);
@@ -632,11 +631,11 @@ void main() {
       () async {
         const build = BuildData(buildNumber: 1);
 
-        final jenkinsBuild = JenkinsBuild(
+        const jenkinsBuild = JenkinsBuild(
           number: 2,
           url: null,
           building: false,
-          artifacts: const [defaultArtifact],
+          artifacts: [defaultArtifact],
         );
 
         responses.addBuilds([jenkinsBuild]);

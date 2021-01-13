@@ -15,9 +15,6 @@ import '../../../../test_utils/navigation_notifier_mock.dart';
 import '../../../../test_utils/test_injection_container.dart';
 import '../../../../test_utils/theme_notifier_mock.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("MetricsDrawer", () {
     testWidgets(
@@ -112,7 +109,7 @@ class MetricsDrawerTestbed extends StatelessWidget {
       navigationNotifier: navigationNotifier,
       child: Builder(
         builder: (context) {
-          return MaterialApp(
+          return const MaterialApp(
             home: Scaffold(
               body: MetricsDrawer(),
             ),

@@ -1,5 +1,4 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file:
 import 'package:metrics/dashboard/domain/entities/metrics/build_result.dart';
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';

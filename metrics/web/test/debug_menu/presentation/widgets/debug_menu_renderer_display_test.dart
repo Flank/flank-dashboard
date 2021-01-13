@@ -9,7 +9,7 @@ import 'package:metrics/debug_menu/strings/debug_menu_strings.dart';
 
 import '../../../test_utils/metrics_themed_testbed.dart';
 
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("DebugMenuRendererDisplay", () {
@@ -42,7 +42,7 @@ void main() {
         final expectedText = DebugMenuStrings.getCurrentRenderer(renderer);
 
         await tester.pumpWidget(
-          _DebugMenuRendererDisplayTestbed(
+          const _DebugMenuRendererDisplayTestbed(
             metricsThemeData: metricsTheme,
             rendererDisplayViewModel: rendererDisplayViewModel,
           ),
@@ -60,13 +60,13 @@ void main() {
       "displays the renderer text from the given view model",
       (WidgetTester tester) async {
         const renderer = DebugMenuStrings.skia;
-        final rendererViewModel = RendererDisplayViewModel(
+        const rendererViewModel = RendererDisplayViewModel(
           currentRenderer: renderer,
         );
         final expectedText = DebugMenuStrings.getCurrentRenderer(renderer);
 
         await tester.pumpWidget(
-          _DebugMenuRendererDisplayTestbed(
+          const _DebugMenuRendererDisplayTestbed(
             rendererDisplayViewModel: rendererViewModel,
           ),
         );

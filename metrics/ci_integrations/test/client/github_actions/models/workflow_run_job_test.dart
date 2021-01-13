@@ -3,9 +3,6 @@ import 'package:ci_integration/client/github_actions/models/github_action_status
 import 'package:ci_integration/client/github_actions/models/workflow_run_job.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
-
 void main() {
   group("WorkflowRunJob", () {
     const id = 1;

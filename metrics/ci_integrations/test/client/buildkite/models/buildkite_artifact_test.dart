@@ -1,9 +1,6 @@
 import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("BuildkiteArtifact", () {
     const id = "1";
@@ -18,7 +15,7 @@ void main() {
       'mime_type': mimeType
     };
 
-    final expectedArtifact = BuildkiteArtifact(
+    const expectedArtifact = BuildkiteArtifact(
       id: id,
       filename: filename,
       downloadUrl: downloadUrl,
@@ -26,7 +23,7 @@ void main() {
     );
 
     test("creates an instance with the given values", () {
-      final artifact = BuildkiteArtifact(
+      const artifact = BuildkiteArtifact(
         id: id,
         filename: filename,
         downloadUrl: downloadUrl,

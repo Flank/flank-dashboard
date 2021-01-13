@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file:
 
 void main() {
   group("UserProfileModel", () {
@@ -19,7 +19,7 @@ void main() {
     });
 
     test("creates an instance with the given parameters", () {
-      final userProfileModel = UserProfileModel(
+      const userProfileModel = UserProfileModel(
         id: id,
         selectedTheme: selectedTheme,
       );
@@ -31,12 +31,12 @@ void main() {
     test(
       "equals to another user profile model with the same parameters",
       () {
-        final firstUserProfileModel = UserProfileModel(
+        const firstUserProfileModel = UserProfileModel(
           id: id,
           selectedTheme: selectedTheme,
         );
 
-        final secondUserProfileModel = UserProfileModel(
+        const secondUserProfileModel = UserProfileModel(
           id: id,
           selectedTheme: selectedTheme,
         );
@@ -51,7 +51,7 @@ void main() {
     test(
       ".merge() returns the same instance if the given user profile model is null",
       () {
-        final firstUserProfileModel = UserProfileModel(
+        const firstUserProfileModel = UserProfileModel(
           id: id,
           selectedTheme: selectedTheme,
         );
@@ -67,12 +67,12 @@ void main() {
       () {
         const selectedTheme = ThemeType.light;
 
-        final firstUserProfileModel = UserProfileModel(
+        const firstUserProfileModel = UserProfileModel(
           id: id,
           selectedTheme: ThemeType.dark,
         );
 
-        final secondUserProfileModel = UserProfileModel(
+        const secondUserProfileModel = UserProfileModel(
           id: id,
           selectedTheme: selectedTheme,
         );
@@ -92,7 +92,7 @@ void main() {
     test(
       ".copyWith() creates a new instance with the same fields if called without params",
       () {
-        final firstUserProfileModel = UserProfileModel(
+        const firstUserProfileModel = UserProfileModel(
           id: id,
           selectedTheme: selectedTheme,
         );
@@ -108,7 +108,7 @@ void main() {
       () {
         const selectedTheme = ThemeType.light;
 
-        final firstUserProfileModel = UserProfileModel(
+        const firstUserProfileModel = UserProfileModel(
           id: id,
           selectedTheme: selectedTheme,
         );

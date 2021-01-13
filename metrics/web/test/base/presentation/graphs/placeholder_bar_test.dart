@@ -4,8 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file:   avoid_redundant_argument_values
 
 void main() {
   group("PlaceholderBar", () {
@@ -15,7 +14,7 @@ void main() {
     testWidgets(
       "throws an AssertionError if the given width is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(width: null));
+        await tester.pumpWidget(const _PlaceholderBarTestbed(width: null));
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -24,7 +23,7 @@ void main() {
     testWidgets(
       "throws an AssertionError if the given width is negative",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(width: -2.0));
+        await tester.pumpWidget(const _PlaceholderBarTestbed(width: -2.0));
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -33,7 +32,7 @@ void main() {
     testWidgets(
       "throws an AssertionError if the given height is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(height: null));
+        await tester.pumpWidget(const _PlaceholderBarTestbed(height: null));
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -42,7 +41,7 @@ void main() {
     testWidgets(
       "throws an AssertionError if the given height is negative",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(height: -2.0));
+        await tester.pumpWidget(const _PlaceholderBarTestbed(height: -2.0));
 
         expect(tester.takeException(), isAssertionError);
       },
@@ -51,7 +50,7 @@ void main() {
     testWidgets(
       "applies the grey color if color is not specified",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed());
+        await tester.pumpWidget(const _PlaceholderBarTestbed());
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 
@@ -62,7 +61,7 @@ void main() {
     testWidgets(
       "applies the grey color if the given color is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(color: null));
+        await tester.pumpWidget(const _PlaceholderBarTestbed(color: null));
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 
@@ -73,7 +72,7 @@ void main() {
     testWidgets(
       "displays the ColoredBar",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(width: _width));
+        await tester.pumpWidget(const _PlaceholderBarTestbed(width: _width));
 
         expect(find.byType(ColoredBar), findsOneWidget);
       },
@@ -82,7 +81,7 @@ void main() {
     testWidgets(
       "delegates the given color to the ColoredBar",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(
+        await tester.pumpWidget(const _PlaceholderBarTestbed(
           color: color,
         ));
 
@@ -95,7 +94,7 @@ void main() {
     testWidgets(
       "displays the colored bar with the borders of the given color and default width",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(color: color));
+        await tester.pumpWidget(const _PlaceholderBarTestbed(color: color));
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 
@@ -109,7 +108,7 @@ void main() {
     testWidgets(
       "delegates width to the ColoredBar widget",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_PlaceholderBarTestbed(width: _width));
+        await tester.pumpWidget(const _PlaceholderBarTestbed(width: _width));
 
         final coloredBar = tester.widget<ColoredBar>(find.byType(ColoredBar));
 

@@ -4,15 +4,14 @@ import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_in
 import 'package:metrics/common/presentation/graph_indicator/theme/theme_data/graph_indicator_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("GraphIndicatorThemeData", () {
     test(
       "creates a theme with default attention level if the given attention level is null",
       () {
-        final theme = GraphIndicatorThemeData(
+        const theme = GraphIndicatorThemeData(
           attentionLevel: null,
         );
 
@@ -27,7 +26,7 @@ void main() {
         ),
       );
 
-      final theme = GraphIndicatorThemeData(
+      const theme = GraphIndicatorThemeData(
         attentionLevel: attentionLevel,
       );
 

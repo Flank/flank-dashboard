@@ -12,9 +12,6 @@ import '../../../test_utils/dimensions_util.dart';
 import '../../../test_utils/project_metrics_notifier_mock.dart';
 import '../../../test_utils/test_injection_container.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("MetricsTableHeader", () {
     setUpAll(() {
@@ -74,7 +71,7 @@ class _DashboardTableHeaderTestbed extends StatelessWidget {
     return MaterialApp(
       home: TestInjectionContainer(
         metricsNotifier: metricsNotifier,
-        child: MetricsTableHeader(),
+        child: const MetricsTableHeader(),
       ),
     );
   }

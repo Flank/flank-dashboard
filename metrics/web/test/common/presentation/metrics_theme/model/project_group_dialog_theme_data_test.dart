@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/project_group_dialog_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("ProjectGroupDialogThemeData", () {
     test(
@@ -46,7 +43,7 @@ void main() {
       const checkedProjectTextStyle = defaultTextStyle;
       const counterTextStyle = defaultTextStyle;
 
-      final themeData = ProjectGroupDialogThemeData(
+      const themeData = ProjectGroupDialogThemeData(
         primaryColor: primaryColor,
         backgroundColor: backgroundColor,
         barrierColor: barrierColor,

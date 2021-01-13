@@ -1,5 +1,3 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:metrics/project_groups/presentation/view_models/delete_project_group_dialog_view_model.dart';
 import 'package:test/test.dart';
 
@@ -12,7 +10,7 @@ void main() {
 
     test("successfully creates an instance on a valid input", () {
       expect(
-        () => DeleteProjectGroupDialogViewModel(id: id, name: name),
+        () => const DeleteProjectGroupDialogViewModel(id: id, name: name),
         returnsNormally,
       );
     });
