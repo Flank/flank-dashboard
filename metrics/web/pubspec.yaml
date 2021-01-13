@@ -41,6 +41,7 @@ dependencies:
       ref: master
   google_sign_in: ^4.5.3
   hive: ^1.4.4+1
+  js: ^0.6.2
   meta: ^1.1.8
   metrics_core:
     path: ../core

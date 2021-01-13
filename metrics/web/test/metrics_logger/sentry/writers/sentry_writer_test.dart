@@ -10,16 +10,14 @@ void main() {
   group("SentryWriter", () {
     const testDsn = "testDsn";
     const testRelease = "testRelease";
+    const testEnvironment = "testEnvironment";
 
     final sentryClientMock = _SentryClientMock();
 
     SentryWriter writer;
 
     setUp(() async {
-      writer = await SentryWriter.init(
-        testDsn,
-        testRelease,
-      );
+      writer = await SentryWriter.init(testDsn, testRelease, testEnvironment);
       Sentry.bindClient(sentryClientMock);
     });
 
@@ -29,9 +27,13 @@ void main() {
     });
 
     test(
-      ".init() initializes Sentry with the given DSN and release",
+      ".init() initializes Sentry with the given DSN, release and environment values",
       () async {
-        final writer = await SentryWriter.init(testDsn, testRelease);
+        final writer = await SentryWriter.init(
+          testDsn,
+          testRelease,
+          testEnvironment,
+        );
 
         expect(writer, isNotNull);
         expect(Sentry.isEnabled, isTrue);
@@ -44,6 +46,7 @@ void main() {
         final future = SentryWriter.init(
           testDsn,
           testRelease,
+          testEnvironment,
           eventProcessor: null,
         );
 
@@ -163,6 +166,7 @@ void main() {
         final writer = await SentryWriter.init(
           testDsn,
           testRelease,
+          testEnvironment,
           eventProcessor: eventProcessor,
         );
         await writer.writeError(error);

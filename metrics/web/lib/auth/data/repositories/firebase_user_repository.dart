@@ -20,10 +20,39 @@ import 'package:metrics/common/domain/entities/persistent_store_exception.dart';
 
 /// Provides methods for interaction with the [FirebaseAuth].
 class FirebaseUserRepository implements UserRepository {
-  final Firestore _firestore = Firestore.instance;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn.standard(scopes: ['email']);
-  final CloudFunctions _cloudFunctions = CloudFunctions.instance;
+  /// A [Firestore] instance that is used to interact with Firestore within
+  /// this repository.
+  final Firestore _firestore;
+
+  /// A [FirebaseAuth] instance that is used for authentication
+  /// with Firebase Authentication.
+  final FirebaseAuth _firebaseAuth;
+
+  /// A [GoogleSignIn] instance that is used for authentication using Google.
+  final GoogleSignIn _googleSignIn;
+
+  /// A [CloudFunctions] instance that is used to call Firebase Cloud Functions
+  /// within this repository.
+  final CloudFunctions _cloudFunctions;
+
+  /// Creates a new instance of the [FirebaseUserRepository].
+  ///
+  /// If the given [firestore] is `null`, the [Firestore.instance] is used.
+  /// If the given [firebaseAuth] is `null`, the [FirebaseAuth.instance] is used.
+  /// If the given [googleSignIn] is `null`,
+  /// the [GoogleSignIn.standard] with `email` scope is used.
+  /// If the given [cloudFunctions] is `null`,
+  /// the [CloudFunctions.instance] is used.
+  FirebaseUserRepository({
+    Firestore firestore,
+    FirebaseAuth firebaseAuth,
+    GoogleSignIn googleSignIn,
+    CloudFunctions cloudFunctions,
+  })  : _firestore = firestore ?? Firestore.instance,
+        _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+        _googleSignIn =
+            googleSignIn ?? GoogleSignIn.standard(scopes: ['email']),
+        _cloudFunctions = cloudFunctions ?? CloudFunctions.instance;
 
   @override
   Stream<User> authenticationStream() {

@@ -10,8 +10,7 @@ class SentryWriter implements LoggerWriter {
   /// Creates an instance of the [SentryWriter].
   const SentryWriter._();
 
-  /// Initializes [Sentry] with the given [dsn] and [release] values
-  /// using [Sentry.init] method.
+  /// Initializes [Sentry] with the given values using [Sentry.init] method.
   ///
   /// If the given [eventProcessor] is not `null`,
   /// adds it to the Sentry event processors using
@@ -20,12 +19,14 @@ class SentryWriter implements LoggerWriter {
   /// Returns a new instance of the [SentryWriter].
   static Future<SentryWriter> init(
     String dsn,
-    String release, {
+    String release,
+    String environment, {
     SentryEventProcessor eventProcessor,
   }) async {
     await Sentry.init((options) {
       options.dsn = dsn;
       options.release = release;
+      options.environment = environment;
 
       if (eventProcessor != null) {
         options.addEventProcessor(eventProcessor);

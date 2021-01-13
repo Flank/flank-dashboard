@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:metrics/analytics/data/repositories/firebase_analytics_repository.dart';
 import 'package:metrics/analytics/domain/usecases/log_login_use_case.dart';
 import 'package:metrics/analytics/domain/usecases/log_page_view_use_case.dart';
@@ -15,6 +16,7 @@ import 'package:metrics/auth/domain/usecases/update_user_profile_usecase.dart';
 import 'package:metrics/auth/presentation/models/user_profile_model.dart';
 import 'package:metrics/auth/presentation/state/auth_notifier.dart';
 import 'package:metrics/common/data/repositories/firestore_project_repository.dart';
+import 'package:metrics/common/domain/entities/metrics_config.dart';
 import 'package:metrics/common/domain/usecases/receive_project_updates.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
@@ -45,13 +47,20 @@ class InjectionContainer extends StatefulWidget {
   /// A child widget to display.
   final Widget child;
 
+  /// A [MetricsConfig] instance that is used to initialize components
+  /// this container injects.
+  final MetricsConfig metricsConfig;
+
   /// Creates the [InjectionContainer].
   ///
   /// The [child] must not be null.
   const InjectionContainer({
     Key key,
     @required this.child,
-  }) : super(key: key);
+    @required this.metricsConfig,
+  })  : assert(child != null),
+        assert(metricsConfig != null),
+        super(key: key);
 
   @override
   _InjectionContainerState createState() => _InjectionContainerState();
@@ -138,8 +147,13 @@ class _InjectionContainerState extends State<InjectionContainer> {
   @override
   void initState() {
     super.initState();
+    final googleSignIn = GoogleSignIn(
+      scopes: ['email'],
+      clientId: widget.metricsConfig?.googleSignInClientId,
+    );
+
     final _metricsRepository = FirestoreMetricsRepository();
-    final _userRepository = FirebaseUserRepository();
+    final _userRepository = FirebaseUserRepository(googleSignIn: googleSignIn);
     final _projectGroupRepository = FirestoreProjectGroupsRepository();
     final _projectRepository = FirestoreProjectRepository();
     final _featureConfigRepository = FirestoreFeatureConfigRepository();
