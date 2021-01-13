@@ -6,7 +6,7 @@ Describe the security aspects of Metrics Web, CI Integrations, and Coverage Conv
 # References
 > Link to supporting documentation, GitHub tickets, etc.
 
-- [CI Integrations user guide](https://github.com/platform-platform/monorepo/blob/e73fd04cb67047a27802a88d60f3a5d3f1aeaa38/metrics/ci_integrations/docs/02_ci_integration_user_guide.md)
+- [CI Integrations user guide](https://github.com/platform-platform/monorepo/blob/master/metrics/ci_integrations/docs/02_ci_integration_user_guide.md)
 - [Coverage converter](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md)
 - [Privacy and Security in Firebase](https://firebase.google.com/support/privacy)
 
@@ -225,7 +225,7 @@ The tests also cover invalid data input cases if the rule requires additional da
 
 ### Key protection
 
-Metrics Web Application uses [`Firebase Key Restrictions`](https://github.com/platform-platform/monorepo/blob/e73fd04cb67047a27802a88d60f3a5d3f1aeaa38/docs/09_firebase_deployment.md#api-key-restrictions) to restrict the services available using the Metrics Firebase project key (also known as `Browser Key`) and restricts the origins this key can be used from.
+Metrics Web Application uses [`Firebase Key Restrictions`](https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md#api-key-restrictions) to restrict the services available using the Metrics Firebase project key (also known as `Browser Key`) and restricts the origins this key can be used from.
 
 Currently, the 3 APIs are enabled for the `browser key`:
 - `Identity Toolkit API`.
