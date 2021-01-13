@@ -7,7 +7,7 @@ Describe the security aspects of Metrics Web, CI Integrations, and Coverage Conv
 > Link to supporting documentation, GitHub tickets, etc.
 
 - [CI Integrations user guide](https://github.com/platform-platform/monorepo/blob/e73fd04cb67047a27802a88d60f3a5d3f1aeaa38/metrics/ci_integrations/docs/02_ci_integration_user_guide.md)
-- [Coverage converter](../metrics/coverage_converter/docs/01_coverage_converter_design.md)
+- [Coverage converter](https://github.com/platform-platform/monorepo/blob/master/metrics/coverage_converter/docs/01_coverage_converter_design.md)
 - [Privacy and Security in Firebase](https://firebase.google.com/support/privacy)
 
 # Motivation
@@ -27,7 +27,7 @@ This document aims the following goals:
 # Non-Goals
 > Identify what's not in scope.
 
-This document does not describe the implementation any of the Metrics project parts.
+This document does not describe the implementation of the Metrics project parts.
 
 # Table of Contents
 
@@ -52,7 +52,7 @@ The `Google` sign in option provides the user's email, OAuth2 access token, and 
 
 Firebase saves the information about users including the email, sign-in provider, creation date, last sign in and the user's UID, and is available in the [`Firebase Console`](https://console.firebase.google.com/).
 
-`Firebase Authentication` persists the user's authentication state by default using `localstorage`. The same strategy is used in Metrics Web Application. Consider the following links to learn more about the authentication state persistence: [`FlutterFire` documentation](https://firebase.flutter.dev/docs/auth/usage#persisting-authentication-state) and [`Firebase` documentation](https://firebase.google.com/docs/auth/web/auth-state-persistence).
+`Firebase Authentication` persists the user's authentication state by default using the `localstorage`. The same strategy is used in Metrics Web Application. Consider the following links to learn more about the authentication state persistence: [`FlutterFire` documentation](https://firebase.flutter.dev/docs/auth/usage#persisting-authentication-state) and [`Firebase` documentation](https://firebase.google.com/docs/auth/web/auth-state-persistence).
 
 ## Database
 
@@ -74,7 +74,7 @@ Each document stores a valid email domain as a name and does not contain any fie
 
 ### The `build` collection
 
-The `build` collection contains build data for all projects.
+The `build` collection contains build data for all projects within the Metrics Web Application.
 
 #### Documents
 
