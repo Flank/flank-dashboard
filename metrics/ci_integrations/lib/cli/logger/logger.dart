@@ -3,25 +3,42 @@ import 'dart:io';
 /// A class providing methods for logging messages and errors for the CLI tool.
 class Logger {
   /// The [IOSink] used to log errors.
-  final IOSink errorSink;
+  static IOSink _errorSink = stderr;
 
   /// The [IOSink] used to log messages.
-  final IOSink messageSink;
+  static IOSink _messageSink = stdout;
 
-  /// Creates this logger instance.
+  /// Determine whether to pring out logs to the [_messageSink].
+  static bool _verbose = false;
+
+  /// Configure this logger with the given [errorSink], [messageSink]
+  /// and the [verbose] value.
   ///
-  /// Both [errorSink] and [messageSink] are optional.
-  /// If the [errorSink] is not given, the default [stderr] is used.
-  /// If the [messageSink] is not given, the default [stdout] is used.
-  Logger({
+  /// If the given [errorSink] is `null`, the [stderr] is used.
+  /// If the given [messageSink] is `null`, the [stdout] is used.
+  /// If the given [verbose] is `null`, the `false` is used.
+  static void setup({
     IOSink errorSink,
     IOSink messageSink,
-  })  : errorSink = errorSink ?? stderr,
-        messageSink = messageSink ?? stdout;
+    bool verbose,
+  }) {
+    _errorSink = errorSink ?? stderr;
+    _messageSink = messageSink ?? stdout;
+    _verbose = verbose ?? false;
+  }
 
   /// Prints the given [error] to the [errorSink].
-  void printError(Object error) => errorSink.writeln(error);
+  static void printError(Object error) {
+    _errorSink.writeln(error);
+  }
 
   /// Prints the given [message] to the [messageSink].
-  void printMessage(Object message) => messageSink.writeln(message);
+  static void printMessage(Object message) {
+    _messageSink.writeln(message);
+  }
+
+  /// Prints the given [message] to the [messageSink] if the verbose is `true`.
+  static void printLog(Object message) {
+    if (_verbose) _messageSink.writeln(message);
+  }
 }

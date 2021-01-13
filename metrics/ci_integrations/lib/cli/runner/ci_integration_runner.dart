@@ -4,17 +4,28 @@ import 'package:ci_integration/cli/logger/logger.dart';
 
 /// A [CommandRunner] for the CI integrations CLI.
 class CiIntegrationsRunner extends CommandRunner<void> {
-  /// The [Logger] this runner and its commands should use for messages
-  /// and errors.
-  final Logger logger;
-
   /// Creates an instance of command runner and registers sub-commands available.
   ///
   /// Throws an [ArgumentError] if the given [logger] is `null`.
-  CiIntegrationsRunner(this.logger)
+  CiIntegrationsRunner()
       : super('ci_integrations', 'Metrics CI integrations CLI.') {
-    ArgumentError.checkNotNull(logger, 'logger');
+    argParser.addFlag(
+      'verbose',
+      abbr: 'v',
+      negatable: false,
+      help: 'Noisy logging, including all shell commands executed.',
+    );
 
-    addCommand(SyncCommand(logger));
+    addCommand(SyncCommand());
+  }
+
+  @override
+  Future run(Iterable<String> args) {
+    final result = argParser.parse(args);
+    final verbose = result['verbose'] as bool;
+
+    Logger.setup(verbose: verbose);
+
+    return super.run(args);
   }
 }

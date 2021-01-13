@@ -32,15 +32,13 @@ class SyncCommand extends CiIntegrationCommand<void> {
   @override
   String get name => 'sync';
 
-  /// Creates an instance of this command with the given [logger].
+  /// Creates an instance of this command.
   ///
   /// If the [supportedParties] is `null` the
   /// default [SupportedIntegrationParties] instance is created.
-  SyncCommand(
-    Logger logger, {
+  SyncCommand({
     SupportedIntegrationParties supportedParties,
-  })  : supportedParties = supportedParties ?? SupportedIntegrationParties(),
-        super(logger) {
+  }) : supportedParties = supportedParties ?? SupportedIntegrationParties() {
     argParser.addOption(
       'config-file',
       help: 'A path to the YAML configuration file.',
@@ -179,7 +177,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
     final result = await ciIntegration.sync(syncConfig);
 
     if (result.isSuccess) {
-      logger.printMessage(result.message);
+      Logger.printMessage(result.message);
     } else {
       throw SyncError(message: result.message);
     }
