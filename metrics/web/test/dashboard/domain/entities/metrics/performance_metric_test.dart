@@ -1,4 +1,3 @@
-// ignore_for_file:
 import 'package:metrics/dashboard/domain/entities/collections/date_time_set.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/build_performance.dart';
 import 'package:metrics/dashboard/domain/entities/metrics/performance_metric.dart';

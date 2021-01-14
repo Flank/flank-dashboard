@@ -6,8 +6,6 @@ import 'package:test/test.dart';
 
 import '../test_utils/test_data/jenkins_config_test_data.dart';
 
-// ignore_for_file:
-
 void main() {
   group("JenkinsSourceClientFactory", () {
     const jenkinsSourceParty = JenkinsSourceClientFactory();

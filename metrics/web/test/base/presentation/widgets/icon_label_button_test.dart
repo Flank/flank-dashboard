@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
-// ignore_for_file:   avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("IconLabelButton", () {

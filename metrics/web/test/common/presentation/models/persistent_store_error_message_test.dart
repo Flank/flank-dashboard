@@ -1,4 +1,3 @@
-// ignore_for_file:
 import 'package:metrics/common/domain/entities/persistent_store_error_code.dart';
 import 'package:metrics/common/presentation/models/persistent_store_error_message.dart';
 import 'package:metrics/common/presentation/strings/common_strings.dart';

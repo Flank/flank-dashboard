@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/graphs/colored_bar.dart';
 import 'package:metrics/base/presentation/graphs/placeholder_bar.dart';
 
-// ignore_for_file:   avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("PlaceholderBar", () {

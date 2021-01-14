@@ -2,8 +2,6 @@ import 'package:args/args.dart';
 import 'package:links_checker/arguments/parser/links_checker_arguments_parser.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file:
-
 void main() {
   group("LinksCheckerArgumentsParser", () {
     test(

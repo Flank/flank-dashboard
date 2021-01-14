@@ -1,8 +1,6 @@
 import 'package:links_checker/exception/links_checker_exception.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file:
-
 void main() {
   group("LinksCheckerException", () {
     test(

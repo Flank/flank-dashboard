@@ -2,7 +2,7 @@ import 'package:metrics/auth/domain/entities/auth_error_code.dart';
 import 'package:metrics/auth/domain/entities/authentication_exception.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file:   avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("AuthenticationException", () {

@@ -4,8 +4,6 @@ import 'package:metrics/common/presentation/button/theme/attention_level/metrics
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_negative_button.dart';
 
-// ignore_for_file:
-
 void main() {
   group("MetricsNegativeButton", () {
     test(

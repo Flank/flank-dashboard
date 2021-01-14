@@ -4,8 +4,6 @@ import 'package:test/test.dart';
 
 import '../../../test_utils/matcher_util.dart';
 
-// ignore_for_file:
-
 void main() {
   group("UserProfileModel", () {
     const id = 'id';

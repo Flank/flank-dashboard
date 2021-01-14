@@ -1,4 +1,3 @@
-// ignore_for_file:
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 

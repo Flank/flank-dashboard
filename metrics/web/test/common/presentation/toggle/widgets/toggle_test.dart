@@ -9,7 +9,7 @@ import 'package:metrics/common/presentation/toggle/widgets/toggle.dart';
 
 import '../../../../test_utils/metrics_themed_testbed.dart';
 
-// ignore_for_file:   avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("Toggle", () {

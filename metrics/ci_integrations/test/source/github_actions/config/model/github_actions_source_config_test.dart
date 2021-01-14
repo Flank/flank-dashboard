@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 import '../../test_utils/test_data/github_actions_config_test_data.dart';
 
-// ignore_for_file:   avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("GithubActionsSourceConfig", () {

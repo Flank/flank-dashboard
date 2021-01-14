@@ -3,7 +3,7 @@ import 'package:metrics/auth/domain/entities/theme_type.dart';
 import 'package:metrics/common/presentation/metrics_theme/state/theme_notifier.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file:   avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("ThemeNotifier", () {

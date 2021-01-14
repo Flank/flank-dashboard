@@ -2,8 +2,6 @@ import 'package:metrics/dashboard/presentation/widgets/strategy/project_build_st
 import 'package:metrics_core/metrics_core.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file:
-
 void main() {
   group("ProjectBuildStatusImageStrategy", () {
     const successfulImage = "icons/successful_status.svg";

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/toggle/theme/theme_data/toggle_theme_data.dart';
 import 'package:test/test.dart';
 
-// ignore_for_file:
-
 void main() {
   group("ToggleThemeData", () {
     test("creates an instance with the given values", () {
