@@ -4,6 +4,7 @@ import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/github_actions/constants/github_actions_constants.dart';
 import 'package:ci_integration/client/github_actions/mappers/github_action_status_mapper.dart';
 import 'package:ci_integration/client/github_actions/models/github_action_status.dart';
@@ -181,6 +182,10 @@ class GithubActionsClient {
     int page,
     int perPage,
   ) {
+    Logger.printLog(
+      'Github Actions: fetching workflow runs from the url: $url',
+    );
+
     return _handleResponse<WorkflowRunsPage>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
@@ -292,6 +297,8 @@ class GithubActionsClient {
     int page,
     int perPage,
   ) {
+    Logger.printLog('Github Actions: fetching run jobs from the url: $url');
+
     return _handleResponse(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
@@ -375,6 +382,10 @@ class GithubActionsClient {
     int page,
     int perPage,
   ) {
+    Logger.printLog(
+      'Github Actions: fetching run artifacts from the url: $url',
+    );
+
     return _handleResponse<WorkflowRunArtifactsPage>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json, Map<String, String> headers) {
@@ -406,6 +417,9 @@ class GithubActionsClient {
     String url,
   ) async {
     try {
+      Logger.printLog(
+        'Github Actions: downloading run artifact from the url: $url',
+      );
       final response = await _client.get(url, headers: headers);
 
       if (response.statusCode == HttpStatus.ok) {

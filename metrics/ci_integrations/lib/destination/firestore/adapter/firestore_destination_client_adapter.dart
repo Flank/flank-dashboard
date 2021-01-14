@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/firestore/firestore.dart';
 import 'package:ci_integration/data/deserializer/build_data_deserializer.dart';
 import 'package:ci_integration/integration/interface/destination/client/destination_client.dart';
@@ -24,14 +25,20 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
     try {
       final project =
           await _firestore.collection('projects').document(projectId).get();
+      Logger.printLog(
+        'Firestore: getting a project with the project id #$projectId...',
+      );
       final collection = _firestore.collection('build');
 
+      Logger.printLog('Firestore: adding builds...');
       for (final build in builds) {
         final documentId = '${project.id}_${build.buildNumber}';
         final map = build.copyWith(projectId: project.id).toJson();
         await collection.document(documentId).create(map);
+        Logger.printLog('Firestore: added build #$documentId');
       }
     } on GrpcError catch (e) {
+      Logger.printLog('Firestore: Error: ${e.message}');
       if (e.code == StatusCode.notFound) return;
       rethrow;
     }
@@ -39,13 +46,15 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
 
   @override
   Future<BuildData> fetchLastBuild(String projectId) async {
+    Logger.printLog(
+      'Firestore: fetching last builds for the project id #$projectId...',
+    );
     final documents = await _firestore
         .collection('build')
         .where('projectId', isEqualTo: projectId)
         .orderBy('startedAt', descending: true)
         .limit(1)
         .getDocuments();
-
     if (documents.isEmpty) return null;
 
     final document = documents.first;

@@ -55,8 +55,10 @@ class SyncCommand extends CiIntegrationCommand<void> {
       SourceClient sourceClient;
       DestinationClient destinationClient;
       try {
+        Logger.printLog('Parsing the given config file..');
         final rawConfig = parseConfigFileContent(file);
 
+        Logger.printLog('Creating integrating parties...');
         final sourceParty = getParty(
           rawConfig.sourceConfigMap,
           supportedParties.sourceParties,
@@ -66,6 +68,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
           supportedParties.destinationParties,
         );
 
+        Logger.printLog('Creating source and destination configs...');
         final sourceConfig = parseConfig(
           rawConfig.sourceConfigMap,
           sourceParty,
@@ -75,6 +78,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
           destinationParty,
         );
 
+        Logger.printLog('Creating integrating clients...');
         sourceClient = await createClient(
           sourceConfig,
           sourceParty,
@@ -89,6 +93,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
           destinationProjectId: destinationConfig.destinationProjectId,
         );
 
+        Logger.printLog('Syncing...');
         await sync(syncConfig, sourceClient, destinationClient);
       } catch (e) {
         throw SyncError(

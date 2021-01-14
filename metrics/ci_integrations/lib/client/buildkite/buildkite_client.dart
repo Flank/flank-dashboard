@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/buildkite/constants/buildkite_constants.dart';
 import 'package:ci_integration/client/buildkite/mappers/buildkite_build_state_mapper.dart';
 import 'package:ci_integration/client/buildkite/models/buildkite_artifact.dart';
@@ -151,6 +152,8 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
+    Logger.printLog('Buildkite: fetching builds from the url: $url');
+
     return _handleResponse<BuildkiteBuildsPage>(
       _client.get(url, headers: headers),
       (json, Map<String, String> headers) {
@@ -220,6 +223,8 @@ class BuildkiteClient {
     int page,
     int perPage,
   ) {
+    Logger.printLog('Buildkite: fetching artifacts from the url: $url');
+
     return _handleResponse<BuildkiteArtifactsPage>(
       _client.get(url, headers: headers),
       (json, Map<String, String> headers) {
@@ -253,6 +258,7 @@ class BuildkiteClient {
       ..followRedirects = false;
 
     try {
+      Logger.printLog('Buildkite: downloading artifact from the url: $url');
       final redirect = await _client.send(request);
 
       if (redirect.statusCode != HttpStatus.found) {

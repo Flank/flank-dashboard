@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/client/jenkins/constants/tree_query.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build.dart';
 import 'package:ci_integration/client/jenkins/model/jenkins_build_artifact.dart';
@@ -157,6 +158,7 @@ class JenkinsClient {
       path: '$path/api/json',
       treeQuery: TreeQuery.job,
     );
+    Logger.printLog('Jenkins: fetching job from the url: $fullUrl');
 
     return _handleResponse<JenkinsJob>(
       _client.get(fullUrl, headers: headers),
@@ -206,6 +208,8 @@ class JenkinsClient {
   /// Both [fetchJobs] and [fetchJobsByUrl] delegate fetching jobs to this
   /// method.
   Future<InteractionResult<List<JenkinsJob>>> _fetchJobs(String url) {
+    Logger.printLog('Jenkins: fetching jobs from the url: $url');
+
     return _handleResponse<List<JenkinsJob>>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) {
@@ -258,6 +262,8 @@ class JenkinsClient {
   /// Both [fetchBuilds] and [fetchBuildsByUrl] delegate fetching builds to this
   /// method.
   Future<InteractionResult<JenkinsBuildingJob>> _fetchBuilds(String url) {
+    Logger.printLog('Jenkins: fetching builds from the url: $url');
+
     return _handleResponse<JenkinsBuildingJob>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) {
@@ -283,6 +289,8 @@ class JenkinsClient {
       buildUrl,
       treeQuery: 'artifacts[${TreeQuery.artifacts}]${limits.toQuery()}',
     );
+
+    Logger.printLog('Jenkins: fetching artifacts from the url: $url');
 
     return _handleResponse<List<JenkinsBuildArtifact>>(
       _client.get(url, headers: headers),
@@ -322,6 +330,8 @@ class JenkinsClient {
   /// Both [fetchArtifactByRelativePath] and [fetchArtifact] methods delegate
   /// fetching the artifact's content to this method.
   Future<InteractionResult<Map<String, dynamic>>> _fetchArtifact(String url) {
+    Logger.printLog('Jenkins: fetching artifact from the url: $url');
+
     return _handleResponse<Map<String, dynamic>>(
       _client.get(url, headers: headers),
       (Map<String, dynamic> json) => InteractionResult.success(result: json),
