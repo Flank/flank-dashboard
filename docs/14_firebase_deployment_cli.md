@@ -5,7 +5,7 @@
 
 Before you start, you should have the following installed:
 
-1. [Flutter](https://flutter.dev/docs/get-started/install) v1.24.0-10.2.pre.
+1. [Flutter](https://flutter.dev/docs/get-started/install) v1.25.0-8.2.pre.
 2. [npm](https://www.npmjs.com/get-npm).
 3. [Google Cloud SDK ](https://cloud.google.com/sdk/docs)
 4. [Firebase CLI](https://firebase.google.com/docs/cli)
@@ -132,7 +132,7 @@ It's time to deploy your Flutter application to the Firebase Hosting!
 
 ### Preparing your environment 
 Before building and deploying Metrics application, make sure you have the correct Flutter version installed. 
-The required version of Flutter is `v1.24.0-10.2.pre`. 
+The required version of Flutter is `v1.25.0-8.2.pre`. 
 The following command prints the current Flutter version on your machine:
 
 ```
@@ -142,7 +142,7 @@ flutter --version
 If current version differs from the required one you can change it by running the following commands:
 
 ```
-cd $(which flutter | xargs dirname) && git checkout 1.24.0-10.2.pre
+cd $(which flutter | xargs dirname) && git checkout 1.25.0-8.2.pre
 ```
 _**Note:** The above commands works correctly on Unix based operating systems (verified: macOS and Ubuntu)! Before using, consider rewriting it according to your operating system._
 
