@@ -186,50 +186,8 @@ void main() {
           return tester.pumpAndSettle();
         });
 
-        verify(navigationNotifier.pushReplacement(
+        verify(navigationNotifier.pushStateReplacement(
           MetricsRoutes.dashboard,
-        )).called(equals(1));
-      },
-    );
-
-    testWidgets(
-      "replaces the browser url path with the current configuration path if the login was successful",
-      (WidgetTester tester) async {
-        final navigationNotifier = NavigationNotifierMock();
-        final configuration = MetricsRoutes.dashboard;
-
-        when(navigationNotifier.currentConfiguration).thenReturn(
-          configuration,
-        );
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(_LoginPageTestbed(
-            authNotifier: AuthNotifierStub(),
-            navigationNotifier: navigationNotifier,
-          ));
-        });
-
-        await tester.enterText(
-          find.widgetWithText(TextFormField, AuthStrings.email),
-          'test@email.com',
-        );
-        await tester.enterText(
-          find.widgetWithText(TextFormField, AuthStrings.password),
-          'testPassword',
-        );
-        await tester.tap(find.widgetWithText(RaisedButton, AuthStrings.signIn));
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpAndSettle();
-        });
-
-        verify(navigationNotifier.replaceState(
-          data: anyNamed('data'),
-          title: anyNamed('title'),
-          path: argThat(
-            equals('${MetricsRoutes.baseUrlPath}${configuration.path}'),
-            named: 'path',
-          ),
         )).called(equals(1));
       },
     );
@@ -256,41 +214,8 @@ void main() {
           );
         });
 
-        verify(navigationNotifier.pushReplacement(
+        verify(navigationNotifier.pushStateReplacement(
           MetricsRoutes.dashboard,
-        )).called(equals(1));
-      },
-    );
-
-    testWidgets(
-      "replaces the browser url path with the current configuration path on open if the user is logged in",
-      (tester) async {
-        final authNotifier = AuthNotifierMock();
-        final navigationNotifier = NavigationNotifierMock();
-        final configuration = MetricsRoutes.dashboard;
-
-        when(authNotifier.isLoading).thenReturn(false);
-        when(authNotifier.isLoggedIn).thenReturn(true);
-        when(navigationNotifier.currentConfiguration).thenReturn(
-          configuration,
-        );
-
-        await mockNetworkImagesFor(() {
-          return tester.pumpWidget(
-            _LoginPageTestbed(
-              authNotifier: authNotifier,
-              navigationNotifier: navigationNotifier,
-            ),
-          );
-        });
-
-        verify(navigationNotifier.replaceState(
-          data: anyNamed('data'),
-          title: anyNamed('title'),
-          path: argThat(
-            equals('${MetricsRoutes.baseUrlPath}${configuration.path}'),
-            named: 'path',
-          ),
         )).called(equals(1));
       },
     );

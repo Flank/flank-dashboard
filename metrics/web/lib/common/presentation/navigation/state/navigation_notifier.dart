@@ -115,6 +115,15 @@ class NavigationNotifier extends ChangeNotifier {
     push(configuration);
   }
 
+  /// Replaces the current navigation state with the given parameters.
+  void replaceState({
+    dynamic data,
+    String title = 'metrics',
+    String path,
+  }) {
+    _navigationState.replaceState(data, title, path);
+  }
+
   /// Removes all underlying pages until the [predicate] returns `true`
   /// or the stack of pages is empty and pushes the route created from the given
   /// [configuration].
@@ -133,13 +142,16 @@ class NavigationNotifier extends ChangeNotifier {
     push(configuration);
   }
 
-  /// Replaces the current navigation state with the given parameters.
-  void replaceState({
-    dynamic data,
-    String title = 'metrics',
-    String path,
-  }) {
-    _navigationState.replaceState(data, title, path);
+  /// Replaces the current route with the route created from the given
+  /// [configuration] and replaces the current state path with
+  /// the path of the pushed route configuration.
+  void pushStateReplacement(RouteConfiguration configuration) {
+    if (_pages.isNotEmpty) _pages.removeLast();
+
+    push(configuration);
+    replaceState(
+      path: '${MetricsRoutes.baseUrlPath}${_currentConfiguration.path}',
+    );
   }
 
   /// Handles the initial route.

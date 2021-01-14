@@ -425,6 +425,137 @@ void main() {
     );
 
     test(
+      ".pushStateReplacement() pushes the loading page if the app is not initialized",
+      () {
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.pushStateReplacement(MetricsRoutes.dashboard);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.child, isA<LoadingPage>());
+      },
+    );
+
+    test(
+      ".pushStateReplacement() pushes the loading page with the given route path as a name if the app is not initialized",
+      () {
+        final configuration = MetricsRoutes.dashboard;
+        notifier.handleAppInitialized(isAppInitialized: false);
+
+        notifier.pushStateReplacement(configuration);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, equals(configuration.path));
+      },
+    );
+
+    test(
+      ".pushStateReplacement() replaces the current page if pages are not empty",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(MetricsRoutes.dashboard);
+
+        final expectedLength = notifier.pages.length;
+
+        notifier.pushStateReplacement(MetricsRoutes.projectGroups);
+
+        final actualLength = notifier.pages.length;
+
+        expect(actualLength, equals(expectedLength));
+      },
+    );
+
+    test(
+      ".pushStateReplacement() adds the new page if pages are empty",
+      () {
+        final notifier = NavigationNotifier(pageFactory, navigationState);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        final expectedLength = notifier.pages.length + 1;
+
+        notifier.pushStateReplacement(MetricsRoutes.projectGroups);
+
+        final actualLength = notifier.pages.length;
+
+        expect(actualLength, equals(expectedLength));
+      },
+    );
+
+    test(
+      ".pushStateReplacement() replaces the current page with the given one if the user is logged in and the app is initialized",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(MetricsRoutes.dashboard);
+
+        notifier.pushStateReplacement(MetricsRoutes.projectGroups);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isProjectGroupsPageName);
+      },
+    );
+
+    test(
+      ".pushStateReplacement() replaces the current page with the login page if the user is not logged in, the given page requires authorization, and the app is initialized",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.loading);
+
+        notifier.pushStateReplacement(MetricsRoutes.projectGroups);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoginPageName);
+      },
+    );
+
+    test(
+      ".pushStateReplacement() replaces the current page with the given page if the user is not logged in, the given page does not require authorization, and the app is initialized",
+      () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.loading);
+
+        notifier.pushStateReplacement(MetricsRoutes.login);
+
+        final currentPage = notifier.pages.last;
+
+        expect(currentPage.name, isLoginPageName);
+      },
+    );
+
+    test(
+      ".pushStateReplacement() updates the current configuration",
+      () {
+        const expectedConfiguration = MetricsRoutes.loading;
+        notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.login);
+
+        notifier.pushStateReplacement(expectedConfiguration);
+
+        expect(notifier.currentConfiguration, equals(expectedConfiguration));
+      },
+    );
+
+    test(
+      ".pushStateReplacement() replaces the navigation state path with the pushed route configuration path",
+      () {
+        const expectedConfiguration = MetricsRoutes.loading;
+        notifier.handleAuthenticationUpdates(isLoggedIn: false);
+        notifier.push(MetricsRoutes.login);
+
+        notifier.pushStateReplacement(expectedConfiguration);
+
+        verify(navigationState.replaceState(
+          any,
+          any,
+          '${MetricsRoutes.baseUrlPath}${notifier.currentConfiguration.path}',
+        ));
+      },
+    );
+
+    test(
       ".pushAndRemoveUntil() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(isAppInitialized: false);
