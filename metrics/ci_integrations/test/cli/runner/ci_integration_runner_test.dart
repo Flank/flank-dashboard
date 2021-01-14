@@ -1,19 +1,10 @@
 import 'package:ci_integration/cli/command/sync_command.dart';
-import 'package:ci_integration/cli/logger/logger.dart';
 import 'package:ci_integration/cli/runner/ci_integration_runner.dart';
 import 'package:test/test.dart';
 
 void main() {
   group("CiIntegrationsRunner", () {
-    final Logger logger = Logger();
-    final CiIntegrationsRunner runner = CiIntegrationsRunner(logger);
-
-    test(
-      "throws an ArgumentError if the given logger is null",
-      () {
-        expect(() => CiIntegrationsRunner(null), throwsArgumentError);
-      },
-    );
+    final CiIntegrationsRunner runner = CiIntegrationsRunner();
 
     test(
       "has an executable name equals to the 'ci_integrations'",
@@ -34,14 +25,23 @@ void main() {
     );
 
     test(
-      "registers SyncCommand on create",
+      "registers a sync command on create",
       () {
-        final SyncCommand syncCommand = SyncCommand(logger);
+        final SyncCommand syncCommand = SyncCommand();
         final syncCommandName = syncCommand.name;
 
         final commands = runner.argParser.commands;
 
         expect(commands, contains(syncCommandName));
+      },
+    );
+
+    test(
+      "registers a verbose option on create",
+      () {
+        final options = runner.argParser.options;
+
+        expect(options, contains('verbose'));
       },
     );
   });

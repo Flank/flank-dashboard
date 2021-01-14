@@ -10,39 +10,19 @@ void main() {
   group("Logger", () {
     final errorSink = IOSinkStub();
     final messageSink = IOSinkStub();
-
-    test(
-      "creates Logger with default stderr if no error sink is given",
-      () {
-        final logger = Logger(messageSink: messageSink);
-        final errorSink = logger.errorSink;
-
-        expect(errorSink, equals(stderr));
-      },
-    );
-
-    test(
-      "creates Logger with default stdout if no message sink is given",
-      () {
-        final logger = Logger(errorSink: errorSink);
-        final messageSink = logger.messageSink;
-
-        expect(messageSink, equals(stdout));
-      },
+    final unimplementedSink = IOSinkStub(
+      writelnCallback: (_) => throw UnimplementedError(),
     );
 
     test(".printError() prints the given error to the error sink", () {
-      final unimplementedMessageSink = IOSinkStub(
-        writelnCallback: (_) => throw UnimplementedError(),
-      );
-      final logger = Logger(
+      Logger.setup(
         errorSink: errorSink,
-        messageSink: unimplementedMessageSink,
+        messageSink: unimplementedSink,
       );
       const expected = 'error';
 
       expect(
-        () => logger.printError(expected),
+        () => Logger.printError(expected),
         prints(equalsIgnoringWhitespace(expected)),
       );
     });
@@ -50,18 +30,49 @@ void main() {
     test(
       ".printMessage() prints the given message to the message sink",
       () {
-        final unimplementedErrorSink = IOSinkStub(
-          writelnCallback: (_) => throw UnimplementedError(),
-        );
-        final logger = Logger(
-          errorSink: unimplementedErrorSink,
+        Logger.setup(
+          errorSink: unimplementedSink,
           messageSink: messageSink,
         );
         const expected = 'message';
 
         expect(
-          () => logger.printMessage(expected),
+          () => Logger.printMessage(expected),
           prints(equalsIgnoringWhitespace(expected)),
+        );
+      },
+    );
+
+    test(
+      ".printLog() prints the given message to the message sink if the verbose is true",
+      () {
+        Logger.setup(
+          errorSink: unimplementedSink,
+          messageSink: messageSink,
+          verbose: true,
+        );
+        const expected = 'log';
+
+        expect(
+          () => Logger.printLog(expected),
+          prints(equalsIgnoringWhitespace(expected)),
+        );
+      },
+    );
+
+    test(
+      ".printLog() does not print the given message to the message sink if the verbose is false",
+      () {
+        Logger.setup(
+          errorSink: unimplementedSink,
+          messageSink: messageSink,
+          verbose: false,
+        );
+        const expected = 'log';
+
+        expect(
+          () => Logger.printLog(expected),
+          prints(equalsIgnoringWhitespace('')),
         );
       },
     );
