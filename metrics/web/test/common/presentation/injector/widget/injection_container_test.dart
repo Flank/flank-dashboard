@@ -15,7 +15,6 @@ import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../test_utils/matcher_util.dart';
-import '../../../../test_utils/metrics_config_mock.dart';
 import '../../../../test_utils/metrics_config_stub.dart';
 
 void main() {
@@ -54,7 +53,7 @@ void main() {
     testWidgets(
       "uses the metrics config google client id injecting notifiers",
       (tester) async {
-        final configMock = MetricsConfigMock();
+        final configMock = _MetricsConfigMock();
 
         await tester.pumpWidget(InjectionContainerTestbed(
           metricsConfig: configMock,
@@ -458,3 +457,5 @@ class InjectionContainerTestbed extends StatelessWidget {
     );
   }
 }
+
+class _MetricsConfigMock extends Mock implements MetricsConfig {}
