@@ -45,4 +45,5 @@ deactivate DoctorCommand
 
 Terminal --> Bob : shows tool versions
 deactivate Terminal
+
 @enduml

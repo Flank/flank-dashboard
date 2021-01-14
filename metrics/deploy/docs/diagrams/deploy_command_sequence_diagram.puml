@@ -1,35 +1,30 @@
-@startuml deploy_sequence
+@startuml deploy_command_sequence_diagram
+
 skinparam ParticipantPadding 20
 skinparam BoxPadding 10
 
 actor Bob
 
-participant Terminal
-
-box CLI
+box "Deploy Tool"
+participant CLI
 participant DeployCommand
 participant FirebaseCommand
 participant FlutterCommand
 participant GCloudCommand
-endbox
+end box
 
-Bob -> Terminal : enters 'build/metrics deploy'
+Bob -> CLI ++ : run deploy command
+CLI -> DeployCommand ++ : run()
 
-activate Terminal
-Terminal -> DeployCommand : run()
+DeployCommand -> GCloudCommand ++: login()
+GCloudCommand -> CLI -- : execute login on gcloud
+CLI -> Bob -- : requires gcloud login info
+Bob -> CLI ++ : enters gcloud login info
+DeployCommand -> GCloudCommand ++ : addProject()
+return project ID
 
-activate DeployCommand
-
-DeployCommand -> GCloudCommand : login()
-DeployCommand -> GCloudCommand : addProject()
-activate GCloudCommand
-GCloudCommand --> DeployCommand : project ID
-deactivate GCloudCommand
-
-DeployCommand -> FirebaseCommand : login()
-activate FirebaseCommand
+DeployCommand -> FirebaseCommand ++ : login()
 FirebaseCommand --> DeployCommand : firebase token
-deactivate FirebaseCommand
 
 DeployCommand -> FirebaseCommand : addFirebase(projectID, firebaseToken)
 DeployCommand -> GCloudCommand : addProjectApp(region, projectID)
@@ -47,4 +42,5 @@ deactivate DeployCommand
 
 Terminal --> Bob : deployment completed
 deactivate Terminal
+
 @enduml

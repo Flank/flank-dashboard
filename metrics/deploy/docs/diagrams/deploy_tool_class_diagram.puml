@@ -1,0 +1,84 @@
+@startuml deploy_tool_class_diagram
+package cli {
+
+    package flutter {
+        class FlutterCommand {
+            + version(): Future<void>
+        }
+    }
+
+    package firebase {
+        class FirebaseCommand {
+            + login(): Future<String>
+            + addFirebase(String projectID, String firebaseToken): Future<void>
+            + createWebApp(String projectID, String firebaseToken): Future<String>
+            + downloadSDKConfig(String appID, String configPath, String projectID, String firebaseToken): Future<void>
+            + version(): Future<void>
+        }
+    }
+
+    package gcloud {
+        class GCloudCommand {
+            - _chars : String
+            - _rnd : Random
+            + projectID : String
+            - _getRandomString(int length): String
+            + login(): Future<void>
+            + addProject(): Future<String>
+            + addProjectApp(String region, String projectID): Future<void>
+            + createDatabase(String region, String projectID): Future<void>
+            + cleanup(String srcPath): Future<void>
+            + version(): Future<void>
+        }
+    }
+
+    package git {
+        class GitCommand {
+            + clone(String repoURL, String srcPath): Future<void>
+            + version(): Future<void>
+        }
+    }
+}
+
+package args {
+    class Command {}
+}
+
+package deploy {
+    class DeployCommand extends Command {
+        + name : String
+        + description : String
+        - _firebase : FirebaseCommand
+        - _gcloud : GCloudCommand
+        - _git : GitCommand
+        - {static} _repoURL : String
+        - {static} _srcPath : String
+        + run(): Future<void>
+        + cleanup(): Future<void>
+        - login(): Future<String>
+        - _selectRegion(): Future<String>
+        - _buildAndDeploy(): Future<void>
+    }
+}
+
+package doctor {
+    class DoctorCommand extends Command {
+        + name : String
+        + description : String
+        - _firebase : FirebaseCommand
+        - _gcloud : GCloudCommand
+        - _git : GitCommand
+        - _flutter : FlutterCommand
+        + run(): Future<void>
+    }
+}
+
+DeployCommand --> FirebaseCommand : uses
+DeployCommand --> GCloudCommand : uses
+DeployCommand --> GitCommand : uses
+FirebaseCommand <-- DoctorCommand : uses
+GCloudCommand <-- DoctorCommand : uses
+GitCommand <-- DoctorCommand : uses
+FlutterCommand <-- DoctorCommand : uses
+
+@enduml
