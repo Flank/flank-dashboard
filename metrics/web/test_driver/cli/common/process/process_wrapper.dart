@@ -12,11 +12,15 @@ abstract class ProcessWrapper implements Process {
   final Process _process;
   final StreamController<List<int>> _stderrController = StreamController();
   final StreamController<List<int>> _stdoutController = StreamController();
+  final StreamController<int> _exitCodeController = StreamController();
+
   Stream<List<int>> _stderrBroadcast;
   Stream<List<int>> _stdoutBroadcast;
+  Stream<int> _exitCodeBroadcast;
 
   StreamSubscription _stdoutSubscription;
   StreamSubscription _stderrSubscription;
+  StreamSubscription _exitCodeSubscription;
 
   /// Creates the [ProcessWrapper] that delegates to the [_process].
   ProcessWrapper(this._process) {
@@ -25,6 +29,9 @@ abstract class ProcessWrapper implements Process {
 
     _stderrSubscription = _process.stderr.listen(_stderrController.add);
     _stderrBroadcast = _stderrController.stream.asBroadcastStream();
+
+    _exitCodeSubscription = exitCode.asStream().listen(_exitCodeController.add);
+    _exitCodeBroadcast = _exitCodeController.stream.asBroadcastStream();
   }
 
   @override
@@ -44,6 +51,8 @@ abstract class ProcessWrapper implements Process {
   /// The broadcast stream of the process errors.
   Stream<List<int>> get stderrBroadcast => _stderrBroadcast;
 
+  Stream<int> get exitCodeBroadcast => _exitCodeBroadcast;
+
   @override
   IOSink get stdin => _process.stdin;
 
@@ -58,7 +67,10 @@ abstract class ProcessWrapper implements Process {
   void dispose() {
     _stdoutSubscription?.cancel();
     _stderrSubscription?.cancel();
-    _stderrController.close();
-    _stdoutController.close();
+    _exitCodeSubscription?.cancel();
+
+    _stderrController?.close();
+    _stdoutController?.close();
+    _exitCodeController?.close();
   }
 }

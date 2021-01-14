@@ -25,6 +25,12 @@ class ProcessManager {
       workingDir: workingDir,
     );
 
+    process.exitCodeBroadcast.listen((exitCode) {
+      if (exitCode != 0) {
+        processErrorHandler?.call(process);
+      }
+    });
+
     _startedProcesses.add(process);
 
     if (logFileName != null) {
