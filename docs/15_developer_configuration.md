@@ -39,7 +39,7 @@ Latest Google Chrome browser.
 
 ## Flutter version
 
-The Metrics Application is developing and testing on the Flutter `beta` channel and `1.24.0-10.2.pre` version.
+The Metrics Application is developing and testing on the Flutter `beta` channel and `1.25.0-8.2.pre` version.
 
 Notice that if you are running the Flutter web application for the first time, you should execute the following command to enable the web support: 
 
