@@ -187,7 +187,7 @@ void main() {
         featureConfigNotifier.notifyListeners();
         debugMenuNotifier.notifyListeners();
 
-        verify(navigationNotifier.replaceBrowserState(
+        verify(navigationNotifier.replaceState(
           data: anyNamed('data'),
           title: anyNamed('title'),
           path: argThat(
@@ -463,7 +463,7 @@ void main() {
           ),
         );
 
-        verify(navigationNotifier.replaceBrowserState(
+        verify(navigationNotifier.replaceState(
           data: anyNamed('data'),
           title: anyNamed('title'),
           path: argThat(

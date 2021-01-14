@@ -55,8 +55,9 @@ class _LoginPageState extends State<LoginPage> {
       Router.neglect(context, () {
         navigationNotifier.pushReplacement(MetricsRoutes.dashboard);
 
-        navigationNotifier.replaceBrowserState(
-          path: '${MetricsRoutes.baseUrlPath}${navigationNotifier.currentConfiguration.path}',
+        navigationNotifier.replaceState(
+          path:
+              '${MetricsRoutes.baseUrlPath}${navigationNotifier.currentConfiguration.path}',
         );
       });
     }

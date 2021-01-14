@@ -4,7 +4,7 @@ import 'package:metrics/common/presentation/navigation/constants/metrics_routes.
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
-import 'package:universal_html/html.dart';
+import 'package:metrics/common/presentation/navigation/state/navigation_state.dart';
 
 /// A signature for the function that tests the given [MetricsPage] for certain
 /// conditions.
@@ -12,8 +12,8 @@ typedef MetricsPagePredicate = bool Function(MetricsPage);
 
 /// A [ChangeNotifier] that manages navigation.
 class NavigationNotifier extends ChangeNotifier {
-  /// A [History] used to interact with the browser history.
-  final History _history;
+  /// A [NavigationState] used to interact with the current navigation state.
+  final NavigationState _navigationState;
 
   /// A [MetricsPageFactory] that provides an ability to create a [MetricsPage]
   /// from [RouteConfiguration].
@@ -47,10 +47,10 @@ class NavigationNotifier extends ChangeNotifier {
   /// Throws an [AssertionError] if the given [MetricsPageFactory] is `null`.
   NavigationNotifier(
     this._pageFactory,
-    History history,
+    NavigationState navigationState,
   )   : assert(_pageFactory != null),
-        assert(history != null),
-        _history = history;
+        assert(navigationState != null),
+        _navigationState = navigationState;
 
   /// Handles the authentication update represented by the given [isLoggedIn].
   ///
@@ -133,20 +133,13 @@ class NavigationNotifier extends ChangeNotifier {
     push(configuration);
   }
 
-  /// Replaces the current browser state with the given parameters.
-  ///
-  /// The [data] represents the data associated with the history entry with
-  /// which the current entry will be replaced.
-  /// Most browsers currently ignore the [title] parameter, although they may
-  /// use it in the future. Defaults to `metrics`.
-  /// The [path] parameter represents the path component of the [Uri] of the
-  /// history entry used to replace the current one.
-  void replaceBrowserState({
+  /// Replaces the current navigation state with the given parameters.
+  void replaceState({
     dynamic data,
     String title = 'metrics',
     String path,
   }) {
-    _history.replaceState(data, title, path);
+    _navigationState.replaceState(data, title, path);
   }
 
   /// Handles the initial route.

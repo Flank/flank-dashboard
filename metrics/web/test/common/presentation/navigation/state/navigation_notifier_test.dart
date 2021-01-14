@@ -7,12 +7,12 @@ import 'package:metrics/common/presentation/navigation/state/navigation_notifier
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../test_utils/history_mock.dart';
+import '../../../../test_utils/navigation_state_mock.dart';
 
 void main() {
   group("NavigationNotifier", () {
     final pageFactory = MetricsPageFactory();
-    final history = HistoryMock();
+    final navigationState = NavigationStateMock();
 
     NavigationNotifier notifier;
 
@@ -23,7 +23,7 @@ void main() {
     }
 
     setUp(() {
-      notifier = NavigationNotifier(pageFactory, history);
+      notifier = NavigationNotifier(pageFactory, navigationState);
       prepareNotifier();
     });
 
@@ -36,14 +36,14 @@ void main() {
       "throws an AssertionError if the given page factory is null",
       () {
         expect(
-          () => NavigationNotifier(null, history),
+          () => NavigationNotifier(null, navigationState),
           throwsAssertionError,
         );
       },
     );
 
     test(
-      "throws an AssertionError if the given history is null",
+      "throws an AssertionError if the given navigation state is null",
       () {
         expect(
           () => NavigationNotifier(pageFactory, null),
@@ -56,7 +56,7 @@ void main() {
       "creates an instance with the given parameters",
       () {
         expect(
-          () => NavigationNotifier(pageFactory, history),
+          () => NavigationNotifier(pageFactory, navigationState),
           returnsNormally,
         );
       },
@@ -356,7 +356,7 @@ void main() {
     test(
       ".pushReplacement() adds the new page if pages are empty",
       () {
-        final notifier = NavigationNotifier(pageFactory, history);
+        final notifier = NavigationNotifier(pageFactory, navigationState);
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
         final expectedLength = notifier.pages.length + 1;
@@ -757,15 +757,16 @@ void main() {
     );
 
     test(
-      ".replaceBrowserState() delegates to the history",
+      ".replaceState() delegates to the navigation state",
       () {
         const data = 'data';
         const title = 'title';
         const path = '/test';
 
-        notifier.replaceBrowserState(data: data, title: title, path: path);
+        notifier.replaceState(data: data, title: title, path: path);
 
-        verify(history.replaceState(data, title, path)).called(equals(1));
+        verify(navigationState.replaceState(data, title, path))
+            .called(equals(1));
       },
     );
   });

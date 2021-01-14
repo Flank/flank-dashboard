@@ -8,8 +8,8 @@ import 'package:metrics/common/presentation/navigation/state/navigation_notifier
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../test_utils/history_mock.dart';
 import '../../../test_utils/matcher_util.dart';
+import '../../../test_utils/navigation_state_mock.dart';
 import '../../../test_utils/route_configuration_stub.dart';
 
 void main() {
@@ -17,7 +17,7 @@ void main() {
     const configuration = RouteConfigurationStub(name: RouteName.dashboard);
 
     final navigationNotifierMock = _NavigationNotifierMock();
-    final history = HistoryMock();
+    final navigationState = NavigationStateMock();
     final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifierMock);
     final pages = UnmodifiableListView<MetricsPage>([]);
 
@@ -67,7 +67,7 @@ void main() {
       () {
         final navigationNotifier = NavigationNotifier(
           MetricsPageFactory(),
-          history,
+          navigationState,
         );
         final routerDelegate = MetricsRouterDelegate(navigationNotifier);
 
@@ -84,7 +84,7 @@ void main() {
         final metricsPageFactory = MetricsPageFactory();
         final navigationNotifier = NavigationNotifier(
           metricsPageFactory,
-          history,
+          navigationState,
         );
         final metricsRouterDelegate = MetricsRouterDelegate(navigationNotifier);
 

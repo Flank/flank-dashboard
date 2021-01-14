@@ -194,7 +194,7 @@ class _LoadingPageState extends State<LoadingPage>
     Router.neglect(context, () {
       notifier.handleAppInitialized(isAppInitialized: true);
 
-      notifier.replaceBrowserState(
+      notifier.replaceState(
         path:
             '${MetricsRoutes.baseUrlPath}${notifier.currentConfiguration.path}',
       );

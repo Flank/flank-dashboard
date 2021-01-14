@@ -1,0 +1,27 @@
+import 'package:metrics/platform/web/browser_navigation_state.dart';
+import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
+
+import '../../test_utils/history_mock.dart';
+import '../../test_utils/matcher_util.dart';
+
+void main() {
+  group("BrowserNavigationState", () {
+    test("throws an AssertionError if the given history is null", () {
+      expect(BrowserNavigationState(null), MatcherUtil.throwsAssertionError);
+    });
+
+    test(".replaceState() delegates to the given history", () {
+      const data = 'data';
+      const title = 'metrics';
+      const path = '/test';
+
+      final history = HistoryMock();
+      final navigationState = BrowserNavigationState(history);
+
+      navigationState.replaceState(data, title, path);
+
+      verify(history.replaceState(data, title, path)).called(equals(1));
+    });
+  });
+}
