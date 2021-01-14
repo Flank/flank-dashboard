@@ -3,13 +3,13 @@ import 'dart:io';
 
 import 'package:meta/meta.dart';
 
-/// Base class for [Process] wrappers.
+/// A base class for [Process] wrappers.
 ///
-/// Providers the [stderrBroadcast] and [stdinBroadcast] streams to allow multi subscriptions.
+/// Provides the [stdoutBroadcast] and [stderrBroadcast] streams to allow multi subscriptions.
 /// We need to wrap the [Process] because it contains external static methods to start/run
 /// the processes, that are not inheriting in Dart.
 abstract class ProcessWrapper implements Process {
-  /// A [Process] of this wrapper.
+  /// An original [Process], wrapped by this class.
   final Process _process;
 
   /// A [StreamController] of the process errors.
@@ -22,10 +22,10 @@ abstract class ProcessWrapper implements Process {
   final StreamController<int> _exitCodeController =
       StreamController.broadcast();
 
-  /// A [Stream] of the process errors.
+  /// A broadcast [Stream] of the process errors.
   Stream<List<int>> _stderrBroadcast;
 
-  /// A [Stream] of the process output.
+  /// A broadcast [Stream] of the process output.
   Stream<List<int>> _stdoutBroadcast;
 
   /// A [StreamSubscription] of the process errors.
@@ -55,13 +55,13 @@ abstract class ProcessWrapper implements Process {
   /// Provides the broadcast [Stream] of the process errors.
   Stream<List<int>> get stderrBroadcast => _stderrBroadcast;
 
-  ///  Provides the broadcast [Stream] of the process output.
+  /// Provides the broadcast [Stream] of the process output.
   Stream<List<int>> get stdoutBroadcast => _stdoutBroadcast;
 
   /// Provides the broadcast [Stream] of the process exit code.
   Stream<int> get exitCodeBroadcast => _exitCodeController.stream;
 
-  /// Creates an instance of the [ProcessWrapper] with the given [Process].
+  /// Creates a new instance of the [ProcessWrapper] with the given [Process].
   ProcessWrapper(this._process) {
     _stdoutSubscription = _process.stdout.listen(_stdoutController.add);
     _stdoutBroadcast = _stdoutController.stream.asBroadcastStream();
