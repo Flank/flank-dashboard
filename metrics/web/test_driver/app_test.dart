@@ -19,14 +19,13 @@ import 'package:metrics/dashboard/presentation/widgets/project_build_status.dart
 import 'package:metrics/dashboard/presentation/widgets/project_metrics_tile.dart';
 import 'package:metrics/dashboard/presentation/widgets/projects_search_input.dart';
 import 'package:metrics/dashboard/presentation/widgets/stability_circle_percentage.dart';
+import 'package:metrics/platform/stub/metrics_config/metrics_config_factory.dart'
+    if (dart.library.html) 'package:metrics/platform/web/metrics_config/metrics_config_factory.dart';
 import 'package:metrics/project_groups/presentation/strings/project_groups_strings.dart';
 import 'package:metrics/project_groups/presentation/widgets/add_project_group_card.dart';
 import 'package:metrics/project_groups/presentation/widgets/project_group_card.dart';
 import 'package:universal_html/html.dart';
 import 'package:uuid/uuid.dart';
-
-import 'package:metrics/platform/stub/metrics_config/metrics_config_factory.dart'
-    if (dart.library.html) 'package:metrics/platform/web/metrics_config/metrics_config_factory.dart';
 
 import 'arguments/model/user_credentials.dart';
 import 'test_utils/hover_widget.dart';
@@ -73,7 +72,9 @@ void main() {
     testWidgets(
       "is replaced once the loading finished",
       (tester) async {
-        await tester.pumpWidget(MetricsApp());
+        await tester.pumpWidget(MetricsApp(
+          metricsConfig: metricsConfig,
+        ));
 
         final expectedPagesLength = window.history.length;
 
@@ -132,7 +133,9 @@ void main() {
     testWidgets(
       "is replaced after user logs in",
       (tester) async {
-        await tester.pumpAndSettleWidget(MetricsApp());
+        await tester.pumpAndSettleWidget(MetricsApp(
+          metricsConfig: metricsConfig,
+        ));
 
         final expectedPagesLength = window.history.length;
 
