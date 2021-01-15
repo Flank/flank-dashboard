@@ -34,7 +34,7 @@ class SyncCommand extends CiIntegrationCommand<void> {
 
   /// Creates an instance of this command.
   ///
-  /// If the [supportedParties] is `null` the
+  /// If the [supportedParties] is `null`, the
   /// default [SupportedIntegrationParties] instance is created.
   SyncCommand({
     SupportedIntegrationParties supportedParties,
@@ -55,10 +55,10 @@ class SyncCommand extends CiIntegrationCommand<void> {
       SourceClient sourceClient;
       DestinationClient destinationClient;
       try {
-        Logger.printLog('Parsing the given config file..');
+        Logger.printLog('Parsing the given config file...');
         final rawConfig = parseConfigFileContent(file);
 
-        Logger.printLog('Creating integrating parties...');
+        Logger.printLog('Creating integration parties...');
         final sourceParty = getParty(
           rawConfig.sourceConfigMap,
           supportedParties.sourceParties,
@@ -68,21 +68,23 @@ class SyncCommand extends CiIntegrationCommand<void> {
           supportedParties.destinationParties,
         );
 
-        Logger.printLog('Creating source and destination configs...');
+        Logger.printLog('Creating source config...');
         final sourceConfig = parseConfig(
           rawConfig.sourceConfigMap,
           sourceParty,
         );
+        Logger.printLog('Creating destination config...');
         final destinationConfig = parseConfig(
           rawConfig.destinationConfigMap,
           destinationParty,
         );
 
-        Logger.printLog('Creating integrating clients...');
+        Logger.printLog('Creating integration source client...');
         sourceClient = await createClient(
           sourceConfig,
           sourceParty,
         );
+        Logger.printLog('Creating integration destination client...');
         destinationClient = await createClient(
           destinationConfig,
           destinationParty,

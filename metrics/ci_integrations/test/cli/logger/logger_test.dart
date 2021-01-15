@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ci_integration/cli/logger/logger.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -13,6 +14,20 @@ void main() {
     final unimplementedSink = IOSinkStub(
       writelnCallback: (_) => throw UnimplementedError(),
     );
+
+    test('.setup() configure the logger with the given error sink', () {
+      final errorSink = IOSinkMock();
+      Logger.setup(errorSink: errorSink);
+      Logger.printError('error');
+      verify(errorSink.writeln(any)).called(1);
+    });
+
+    test('.setup() configure the logger with the given message sink', () {
+      final messageSink = IOSinkMock();
+      Logger.setup(messageSink: messageSink);
+      Logger.printMessage('message');
+      verify(messageSink.writeln(any)).called(1);
+    });
 
     test(".printError() prints the given error to the error sink", () {
       Logger.setup(
@@ -78,6 +93,8 @@ void main() {
     );
   });
 }
+
+class IOSinkMock extends Mock implements IOSink {}
 
 /// A stub class for the [IOSink] providing a test implementation.
 class IOSinkStub implements IOSink {

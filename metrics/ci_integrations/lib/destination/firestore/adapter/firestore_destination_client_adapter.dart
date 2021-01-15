@@ -26,7 +26,7 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
       final project =
           await _firestore.collection('projects').document(projectId).get();
       Logger.printLog(
-        'Firestore: getting a project with the project id #$projectId...',
+        'Firestore: getting a project with the project id #$projectId',
       );
       final collection = _firestore.collection('build');
 
@@ -47,7 +47,7 @@ class FirestoreDestinationClientAdapter implements DestinationClient {
   @override
   Future<BuildData> fetchLastBuild(String projectId) async {
     Logger.printLog(
-      'Firestore: fetching last builds for the project id #$projectId...',
+      'Firestore: fetching last builds for the project id #$projectId',
     );
     final documents = await _firestore
         .collection('build')

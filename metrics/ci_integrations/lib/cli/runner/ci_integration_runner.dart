@@ -5,8 +5,6 @@ import 'package:ci_integration/cli/logger/logger.dart';
 /// A [CommandRunner] for the CI integrations CLI.
 class CiIntegrationsRunner extends CommandRunner<void> {
   /// Creates an instance of command runner and registers sub-commands available.
-  ///
-  /// Throws an [ArgumentError] if the given [logger] is `null`.
   CiIntegrationsRunner()
       : super('ci_integrations', 'Metrics CI integrations CLI.') {
     argParser.addFlag(
