@@ -118,7 +118,7 @@ jobs:
 
       - name: Prepare metrics config for dev skia environment
         env:
-          SENTRY_RELEASE: ${{ SENTRY_RELEASE_AUTORENDERER }}
+          SENTRY_RELEASE: $SENTRY_RELEASE_AUTORENDERER
         run: |
           export SENTRY_ENVIRONMENT="development-skia"
           : > build/web/metrics_config.js
