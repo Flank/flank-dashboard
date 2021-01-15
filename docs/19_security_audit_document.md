@@ -1,7 +1,7 @@
 # Security Audit Document
 > Summary of the proposed change
 
-Describe the security aspects of Metrics Web, CI Integrations, and Coverage Converter parts.
+Describe the security aspects of the Metrics Web Application, CI Integrations tool, and Coverage Converter tool. Examine the data these applications use and store in the Metrics Database. Explore authorization processes of the applications and their usage if any.
 
 # References
 > Link to supporting documentation, GitHub tickets, etc.
@@ -13,21 +13,22 @@ Describe the security aspects of Metrics Web, CI Integrations, and Coverage Conv
 # Motivation
 > What problem is this project solving?
 
-This document describes the security aspects of the Metrics project parts.
+This document describes the security aspects of the Metrics project applications.
 
 # Goals
 > Identify success metrics and measurable goals.
 
-This document aims the following goals: 
-
-- Explain the security aspects of the Metrics Web App application.
-- Explain the security aspects of the CI Integrations.
-- Explain the security aspects of the Coverage Converter.
+- Examine the auth mechanisms used by the Metrics applications.
+- Examine the security of data, and the data itself, stored and used by the Metrics applications.
+- Examine other security aspects of the Metrics applications.
 
 # Non-Goals
 > Identify what's not in scope.
 
-This document does not describe the implementation of the Metrics project parts.
+The implementation notes of any parts of the Metrics applications are out of the scope for this document. Consider the documentation for each of these applications to know more about their implementation and structure:
+- [Web Application docs](https://github.com/platform-platform/monorepo/tree/master/metrics/web/docs)
+- [CI Integration docs](https://github.com/platform-platform/monorepo/tree/master/metrics/ci_integrations/docs)
+- [Coverage Converter docs](https://github.com/platform-platform/monorepo/tree/master/metrics/coverage_converter/docs)
 
 # Table of Contents
 
@@ -38,49 +39,45 @@ This document does not describe the implementation of the Metrics project parts.
 # Metrics Web Application
 > Describe the security aspects of the Metrics Web Application.
 
-Metrics Web Application uses Firebase services. Consider the following documentation that describes the [`Privacy and Security of Firebase services`](https://firebase.google.com/support/privacy).
+The Metrics Web Application widely uses Firebase services (such as Firestore Database, Authentication, Cloud Functions, Analytics, and Hosting). Consider the following documentation that describes the [`Privacy and Security of Firebase services`](https://firebase.google.com/support/privacy).
 
 ## Authentication
 
-Metrics Web Application uses the `Email and Password` and the `Google` sign-in options.
+The Metrics Web Application uses Firebase Authentication with `Email and Password` and `Google` sign-in methods. Both methods are implemented using the third-party packages from the `pub.dev` published officially by the Firebase and Flutter teams.
 
-The `Email and Password` sign in option uses the [`firebase_auth`](https://pub.dev/packages/firebase_auth) package that is a part of [`FlutterFire`](https://firebase.flutter.dev/). `FlutterFire` is a set of official Firebase plugins for Flutter.
+The main part of the Firebase Authentication integration is using the [`firebase_auth`](https://pub.dev/packages/firebase_auth) package. Consider the following statements about the authentication methods available: 
+- The `Email and Password` method directly uses the [`firebase_auth`](https://pub.dev/packages/firebase_auth) package and signs in a user with the given email and password.
+- The `Google Sign-In` method uses [google_sign_in](https://pub.dev/packages/google_sign_in) package to perform sign in and then pass the obtained credentials (the user's email, OAuth2 access token, and OpenID Connect ID token) to the to the [Firebase `Social Authentication` (3-rd party authentication method)](https://firebase.flutter.dev/docs/auth/social). At the moment, the `Google Sign-In` method is performed with the `email` scope.
 
-The `Google` sign in option uses the [google_sign_in](https://pub.dev/packages/google_sign_in) package made by the Flutter Team.
+Firebase saves the information about users such as the email, sign-in provider, creation date, last sign in, and the user's ID. This information is available in the [`Firebase Console`](https://console.firebase.google.com/) on the `Firebase Authentication` page under the `Users` tab.
 
-The `Google` sign in option provides the user's email, OAuth2 access token, and OpenID Connect ID token, which then are passed to the [Firebase `Social Authentication` (3-rd party authentication method)](https://firebase.flutter.dev/docs/auth/social).
+To keep users signed-in, `Firebase Authentication` persists the user's authentication state using the `local storage` by default. The Metrics Web Application does not override the default behavior. Both [`FlutterFire` documentation](https://firebase.flutter.dev/docs/auth/usage#persisting-authentication-state) and [`Firebase` documentation](https://firebase.google.com/docs/auth/web/auth-state-persistence) provide more information about the authentication state persistence.
 
-Firebase saves the information about users including the email, sign-in provider, creation date, last sign in and the user's UID, and is available in the [`Firebase Console`](https://console.firebase.google.com/).
-
-`Firebase Authentication` persists the user's authentication state by default using the `localstorage`. The same strategy is used in Metrics Web Application. Consider the following links to learn more about the authentication state persistence: [`FlutterFire` documentation](https://firebase.flutter.dev/docs/auth/usage#persisting-authentication-state) and [`Firebase` documentation](https://firebase.google.com/docs/auth/web/auth-state-persistence).
+_Note: Metrics does not duplicate the user's authentication data to the third-party databases! All authentication-related data is managed by the Firebase Authentication and is passed to it using official packages._
 
 ## Database
 
 Metrics Web Application uses the `Firebase Cloud Firestore` as a database.
 
-Consider the following [document that describes the  data model used in `Firebase Cloud Firestore`](https://firebase.google.com/docs/firestore/data-model).
+Consider the following [document that describes the data model used in `Firebase Cloud Firestore`](https://firebase.google.com/docs/firestore/data-model).
+
+The application uses the `Firebase Cloud Firestore Security Rules` to protect the data stored in the `Cloud Firestore`. The `Security Rules` describe conditions that should be met to access or modify the data these rules are protecting. If the CRUD request does not satisfy the appropriate set of conditions, this request is refused as having insufficient permissions.
 
 ### The `allowed_email_domains` collection
 
-The `allowed_email_domains` collection contains the allowed email domains for the `Google` sign in option.
+The `allowed_email_domains` collection contains the allowed email domains for the `Google Sign-In` method. The single document of this collection stands for the email domain that is allowed and may be used to authorize a user.
 
-#### Documents
+The documents of this collection do not have any fields. Instead, the ID of the document represents a single email domain. This prevents duplicates of email domains and simplifies validating as documents aren't to be fetched.
 
-Each document represents a single valid email domain.
+Here is a table of security rules applied to the `allowed_email_domains` collection.
 
-#### Document structure
-
-Each document stores a valid email domain as a name and does not contain any fields.
+| Operation       | Security Rules |
+|-----------------|----------------|
+| `read`, `write` | `Prohibited`   |
 
 ### The `build` collection
 
-The `build` collection contains build data for all projects within the Metrics Web Application.
-
-#### Documents
-
-Each document represents a single build for a specific project.
-
-#### Document structure
+The `build` collection contains build data for all projects within the Metrics Web Application. The single document of this collection stands for a single build for a specific project.
 
 Consider the following table that describes the fields of a document within the `build` collection:
 
@@ -95,89 +92,7 @@ Consider the following table that describes the fields of a document within the 
 |`url`         | A URL of the source control revision used to run the build. |
 |`workflowName`| A name of the workflow executed this build.                 |
 
-### The `feature_config` collection
-
-The `feature_config` collection contains the configuration values to enable or disable the application features.
-
-#### Documents
-
-This collection contains a single `feature_config` document.
-
-#### Document structure
-
-Consider the following table that describes the fields of the `feature_config` document:
-
-| Field                           | Description                                                           |
-|---------------------------------|-----------------------------------------------------------------------|
-| `isDebugMenuEnabled`            | Indicates whether the `Debug Menu` feature is enabled.                |
-| `isPasswordSignInOptionEnabled` | Indicates whether the `Email and Password` sing in option is enabled. |
-
-### The `project_groups` collection
-
-The `project_groups` collection contains project group data including the name of the project group and project IDs that belong to this project group.
-
-#### Documents
-
-Each document contains data of a specific project group.
-
-#### Document structure
-
-| Field        | Description                                               |
-|--------------|-----------------------------------------------------------|
-| `name`       | A name of this project group.                             |
-| `projectIds` | A list of project IDs that belong to this project group.  |
-
-### The `projects` collection
-
-The `projects` collection contains project data.
-
-#### Documents
-
-Each document contains data on a specific project.
-
-#### Document structure
-
-| Field  | Description             |
-|--------|-------------------------|
-| `name` | A name of this project. |
-
-### The `user_profiles` collection
-
-The `user_profiles` collection contains user profiles` data including the selected theme.
-
-#### Documents
-
-Each document contains data associated with a specific user profile.
-
-#### Document structure
-
-| Field           | Description                                  |
-|-----------------|----------------------------------------------|
-| `selectedTheme` | A theme selected by the specific user.       |
-
-### Security rules and tests
-
-The application uses the `Firebase Cloud Firestore Security Rules` to protect the database. The `Security Rules` describe certain conditions needed to access or modify the database. The `Firebase Security Rules` provide the main protection for the data used in the project.
-
-Consider the following subsections that describe the security rules for the `Firebase Cloud Firestore` collections:
-
-#### [`project_groups`](#the-project_groups-collection) collection security rules:
-
-| Operation         | Security Rules                         |
-|-------------------|----------------------------------------|
-| `read`, `delete`  | `Authorization`                        | 
-| `create`, `update`| `Authorization`, `isProjectGroupValid` | 
-
-
-#### [`projects`](#the-projects-collection) collection security rules:
-
-| Operation          | Security Rules                    |
-|--------------------|-----------------------------------|
-| `read`             | `Authorization`                   |
-| `create`, `update` | `Authorization`, `isProjectValid` |
-| `delete`           | `Prohibited`                      |
-
-#### [`build`](#the-build-collection) collection security rules:
+Here is a table of security rules applied to the `build` collection.
 
 | Operation          | Security Rules                  |
 |--------------------|---------------------------------|
@@ -185,7 +100,60 @@ Consider the following subsections that describe the security rules for the `Fir
 | `create`, `update` | `Authorization`, `isBuildValid` |
 | `delete`           | `Prohibited`                    |
 
-#### [`user_profiles`](#the-user_profiles-collection) collection security rules:
+### The `feature_config` collection
+
+The `feature_config` collection contains the configuration values to enable or disable the application features. This collection contains a single `feature_config` document containing all configurations for the whole application.
+
+Consider the following table that describes the fields of the `feature_config` document:
+
+| Field                           | Description                                                           |
+|---------------------------------|-----------------------------------------------------------------------|
+| `isDebugMenuEnabled`            | Indicates whether the `Debug Menu` feature is enabled.                |
+| `isPasswordSignInOptionEnabled` | Indicates whether the `Email and Password` sign in option is enabled. |
+
+Here is a table of security rules applied to the `feature_config` collection.
+
+| Operation | Security Rules |
+|-----------|----------------|
+| `read`    | `Allowed`      |
+| `write`   | `Prohibited`   |
+
+### The `project_groups` collection
+
+The `project_groups` collection contains project group data. The single document of this collection contains data of a specific project group.
+
+Consider the following table that describes the fields of the `project_groups` document:
+
+| Field        | Description                                               |
+|--------------|-----------------------------------------------------------|
+| `name`       | A name of this project group.                             |
+| `projectIds` | A list of project IDs that belong to this project group.  |
+
+Here is a table of security rules applied to the `project_groups` collection.
+
+| Operation         | Security Rules                         |
+|-------------------|----------------------------------------|
+| `read`, `delete`  | `Authorization`                        | 
+| `create`, `update`| `Authorization`, `isProjectGroupValid` | 
+
+### The `projects` collection
+
+The `projects` collection defines projects within the Metrics Web Application. The single document stands for one project and contains the project's name.
+
+Here is a table of security rules applied to the `projects` collection.
+
+| Operation          | Security Rules                    |
+|--------------------|-----------------------------------|
+| `read`             | `Authorization`                   |
+| `create`, `update` | `Authorization`, `isProjectValid` |
+| `delete`           | `Prohibited`                      |
+
+
+### The `user_profiles` collection
+
+The `user_profiles` collection contains user profiles' data including the selected theme. The single document of this collection holds the data of the specific user.
+
+Here is a table of security rules applied to the `user_profiles` collection.
 
 | Operation | Security Rules                                           |
 |-----------|----------------------------------------------------------|
@@ -194,20 +162,9 @@ Consider the following subsections that describe the security rules for the `Fir
 | `list`    | `Prohibited`                                             |
 | `delete`  | `Prohibited`                                             |
 
-#### [`feature_config`](#the-feature_config-collection) collection security rules:
+### Security Rules Testing
 
-| Operation | Security Rules |
-|-----------|----------------|
-| `read`    | `Allowed`      |
-| `write`   | `Prohibited`   |
-
-#### [`allowed_email_domains`](#the-allowed_email_domains-collection) collection security rules:
-
-| Operation       | Security Rules |
-|-----------------|----------------|
-| `read`, `write` | `Prohibited`   |
-
-These rules are covered with tests which are located in the [`metrics/firebase/test/firestore/security_rules`](https://github.com/platform-platform/monorepo/tree/master/metrics/firebase/test/firestore/rules) folder.
+To prove the Security Rules work in the expected way, they are covered with tests. Consider [`metrics/firebase/test/firestore/security_rules`](https://github.com/platform-platform/monorepo/tree/master/metrics/firebase/test/firestore/rules) to examine the tests.
 
 Each rule is tested imitating any possible type of user. Consider the following types of users used under tests:
 
@@ -223,7 +180,7 @@ Each rule is tested imitating any possible type of user. Consider the following 
 
 The tests also cover invalid data input cases if the rule requires additional data validation.
 
-### Key protection
+### Firebase Key Protection
 
 Metrics Web Application uses [`Firebase Key Restrictions`](https://github.com/platform-platform/monorepo/blob/master/docs/09_firebase_deployment.md#api-key-restrictions) to restrict the services available using the Metrics Firebase project key (also known as `Browser Key`) and restricts the origins this key can be used from.
 
@@ -268,8 +225,6 @@ The CI Integrations tool processes and transfers build data to the Cloud Firesto
 
 # Coverage converter
 
-The Coverage Converter allows converting coverage data from specific coverage tool output format into Metrics coverage format.
+The Coverage Converter allows converting coverage data from specific coverage tool output format into Metrics Coverage format.
 
-## Data stored
-
-The Coverage Converter converts coverage reports of different formats into Metrics coverage format and does not store any data. 
+The Coverage Converter does not send anything to the third-parties or to the databases, it just converts the given data to the Metrics Coverage format. However, please note, that the result is stored as a build artifact in the CI and then used by the CI Integrations tool to report coverage.
