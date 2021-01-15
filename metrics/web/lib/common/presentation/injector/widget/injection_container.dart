@@ -34,7 +34,7 @@ import 'package:metrics/debug_menu/presentation/state/debug_menu_notifier.dart';
 import 'package:metrics/feature_config/data/repositories/firestore_feature_config_repository.dart';
 import 'package:metrics/feature_config/domain/usecases/fetch_feature_config_usecase.dart';
 import 'package:metrics/feature_config/presentation/state/feature_config_notifier.dart';
-import 'package:metrics/platform/web/browser_navigation_state.dart';
+import 'package:metrics/platform/web/browser_navigation_state/browser_navigation_state.dart';
 import 'package:metrics/project_groups/data/repositories/firestore_project_group_repository.dart';
 import 'package:metrics/project_groups/domain/usecases/add_project_group_usecase.dart';
 import 'package:metrics/project_groups/domain/usecases/delete_project_group_usecase.dart';

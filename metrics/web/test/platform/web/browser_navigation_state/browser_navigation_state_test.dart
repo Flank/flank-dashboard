@@ -1,9 +1,9 @@
-import 'package:metrics/platform/web/browser_navigation_state.dart';
+import 'package:metrics/platform/web/browser_navigation_state/browser_navigation_state.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../test_utils/history_mock.dart';
-import '../../test_utils/matcher_util.dart';
+import '../../../test_utils/history_mock.dart';
+import '../../../test_utils/matcher_util.dart';
 
 void main() {
   group("BrowserNavigationState", () {

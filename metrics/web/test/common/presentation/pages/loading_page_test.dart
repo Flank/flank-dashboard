@@ -154,7 +154,7 @@ void main() {
     );
 
     testWidgets(
-      "replaces the browser url path once the application finishes initialization",
+      "replaces the navigation state path once the application finishes initialization",
       (tester) async {
         final navigationNotifier = NavigationNotifierMock();
         final configuration = MetricsRoutes.dashboard;
@@ -426,7 +426,7 @@ void main() {
     );
 
     testWidgets(
-      "replaces the browser url path on opened if the application is initialized",
+      "replaces the navigation state path on opened if the application is initialized",
       (tester) async {
         final navigationNotifier = NavigationNotifierMock();
         final configuration = MetricsRoutes.dashboard;
