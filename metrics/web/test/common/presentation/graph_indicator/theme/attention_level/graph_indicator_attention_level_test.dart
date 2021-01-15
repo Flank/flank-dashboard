@@ -3,8 +3,7 @@ import 'package:metrics/common/presentation/graph_indicator/theme/attention_leve
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("GraphIndicatorAttentionLevel", () {
@@ -38,7 +37,7 @@ void main() {
       const positive = GraphIndicatorStyle(innerColor: Colors.blue);
       const neutral = GraphIndicatorStyle(innerColor: Colors.yellow);
       const negative = GraphIndicatorStyle(innerColor: Colors.red);
-      final attentionLevel = GraphIndicatorAttentionLevel(
+      const attentionLevel = GraphIndicatorAttentionLevel(
         positive: positive,
         neutral: neutral,
         negative: negative,

@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/dropdown/theme/theme_data/dropdown_item_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("DropdownItemThemeData", () {
     test("creates an instance with the given values", () {
@@ -13,7 +10,7 @@ void main() {
       const hoverColor = Colors.orange;
       const hoverTextStyle = TextStyle(color: Colors.yellow);
 
-      final themeData = DropdownItemThemeData(
+      const themeData = DropdownItemThemeData(
         backgroundColor: backgroundColor,
         textStyle: textStyle,
         hoverColor: hoverColor,

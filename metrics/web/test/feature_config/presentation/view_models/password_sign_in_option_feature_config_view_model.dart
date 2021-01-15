@@ -3,7 +3,7 @@ import 'package:metrics/feature_config/presentation/view_models/password_sign_in
 
 import '../../../test_utils/matcher_util.dart';
 
-// ignore_for_file: avoid_redundant_argument_values, prefer_const_constructors
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("PasswordSignInOptionFeatureConfigViewModel", () {
@@ -22,7 +22,7 @@ void main() {
       () {
         const isEnabled = true;
 
-        final viewModel =
+        const viewModel =
             PasswordSignInOptionFeatureConfigViewModel(isEnabled: isEnabled);
 
         expect(viewModel.isEnabled, equals(isEnabled));

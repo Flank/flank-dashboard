@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dropdown_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("DropdownThemeData", () {
     test(
       "creates an instance with the default opened button border color if given color is null",
       () {
-        final themeData = DropdownThemeData(
+        const themeData = DropdownThemeData(
           openedButtonBorderColor: null,
         );
 
@@ -21,7 +20,7 @@ void main() {
     test(
       "creates an instance with the default closed button border color if given color is null",
       () {
-        final themeData = DropdownThemeData(
+        const themeData = DropdownThemeData(
           closedButtonBorderColor: null,
         );
 
@@ -32,7 +31,7 @@ void main() {
     test(
       "creates an instance with the default hover border color if given color is null",
       () {
-        final themeData = DropdownThemeData(
+        const themeData = DropdownThemeData(
           hoverBorderColor: null,
         );
 
@@ -43,7 +42,7 @@ void main() {
     test(
       "creates an instance with the default shadow color if the given one is null",
       () {
-        final themeData = DropdownThemeData(
+        const themeData = DropdownThemeData(
           shadowColor: null,
         );
 
@@ -61,7 +60,7 @@ void main() {
       const shadowColor = Colors.black;
       const iconColor = Colors.yellow;
 
-      final themeData = DropdownThemeData(
+      const themeData = DropdownThemeData(
         backgroundColor: backgroundColor,
         textStyle: textStyle,
         openedButtonBackgroundColor: openedButtonBackgroundColor,

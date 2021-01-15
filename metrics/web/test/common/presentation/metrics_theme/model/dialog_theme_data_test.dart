@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/dialog_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("DialogThemeData", () {
     test(
@@ -42,7 +39,7 @@ void main() {
       const titleTextStyle = defaultTextStyle;
       const errorTextStyle = defaultTextStyle;
 
-      final themeData = DialogThemeData(
+      const themeData = DialogThemeData(
         primaryColor: primaryColor,
         accentColor: accentColor,
         backgroundColor: backgroundColor,

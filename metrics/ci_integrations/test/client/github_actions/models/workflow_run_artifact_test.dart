@@ -1,9 +1,6 @@
 import 'package:ci_integration/client/github_actions/models/workflow_run_artifact.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
-
 void main() {
   group("WorkflowRunArtifact", () {
     const id = 1;
@@ -16,7 +13,7 @@ void main() {
       'archive_download_url': downloadUrl,
     };
 
-    final artifact = WorkflowRunArtifact(
+    const artifact = WorkflowRunArtifact(
       id: id,
       name: name,
       downloadUrl: downloadUrl,

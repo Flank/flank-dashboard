@@ -3,9 +3,6 @@ import 'package:metrics/common/presentation/metrics_theme/model/project_build_st
 import 'package:metrics/common/presentation/metrics_theme/model/project_build_status/style/project_build_status_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("ProjectBuildStatusAttentionLevel", () {
     test(
@@ -24,7 +21,7 @@ void main() {
       const negative = ProjectBuildStatusStyle(backgroundColor: Colors.blue);
       const unknown = ProjectBuildStatusStyle(backgroundColor: Colors.red);
 
-      final attentionLevel = ProjectBuildStatusAttentionLevel(
+      const attentionLevel = ProjectBuildStatusAttentionLevel(
         positive: positive,
         negative: negative,
         unknown: unknown,

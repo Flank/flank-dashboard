@@ -4,15 +4,12 @@ import 'package:metrics/common/presentation/button/theme/attention_level/metrics
 import 'package:metrics/common/presentation/button/theme/style/metrics_button_style.dart';
 import 'package:metrics/common/presentation/button/widgets/metrics_positive_button.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("MetricsPositiveButton", () {
     test(
       ".selectStyle() returns a positive style of the given attention level",
       () {
-        final button = MetricsPositiveButton(label: 'Label');
+        const button = MetricsPositiveButton(label: 'Label');
         const metricsButtonAttentionLevel = MetricsButtonAttentionLevel(
           positive: MetricsButtonStyle(color: Colors.green),
           neutral: MetricsButtonStyle(color: Colors.yellow),

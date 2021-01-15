@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/colored_bar/theme/style/metrics_colored_bar_style.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("MetricsColoredBarStyle", () {
     test(
@@ -20,7 +17,7 @@ void main() {
     test("creates an instance with the given values", () {
       const color = Colors.red;
       const hoverColor = Colors.grey;
-      final style = MetricsColoredBarStyle(
+      const style = MetricsColoredBarStyle(
         color: color,
         hoverColor: hoverColor,
       );

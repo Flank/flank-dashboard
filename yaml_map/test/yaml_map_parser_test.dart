@@ -1,11 +1,9 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:test/test.dart';
 import 'package:yaml_map/yaml_map.dart';
 
 void main() {
   group('YamlMapParser', () {
-    final parser = YamlMapParser();
+    const parser = YamlMapParser();
 
     test(
       "parse() throws an ArgumentError if the given input is not a dictionary",

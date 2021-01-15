@@ -4,9 +4,6 @@ import 'package:metrics/common/presentation/graph_indicator/theme/attention_leve
 import 'package:metrics/common/presentation/graph_indicator/theme/style/graph_indicator_style.dart';
 import 'package:metrics/common/presentation/graph_indicator/widgets/neutral_graph_indicator.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("NeutralGraphIndicator", () {
     test(
@@ -16,7 +13,7 @@ void main() {
           neutral: GraphIndicatorStyle(innerColor: Colors.green),
         );
 
-        final indicator = NeutralGraphIndicator();
+        const indicator = NeutralGraphIndicator();
         final style = indicator.selectStyle(graphIndicatorAttentionLevel);
 
         expect(style, equals(graphIndicatorAttentionLevel.neutral));

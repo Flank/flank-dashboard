@@ -3,7 +3,7 @@ import 'package:metrics/feature_config/presentation/view_models/debug_menu_featu
 
 import '../../../test_utils/matcher_util.dart';
 
-// ignore_for_file: avoid_redundant_argument_values, prefer_const_constructors
+// ignore_for_file: avoid_redundant_argument_values,
 
 void main() {
   group("DebugMenuFeatureConfigViewModel", () {
@@ -22,7 +22,7 @@ void main() {
       () {
         const isEnabled = false;
 
-        final viewModel = DebugMenuFeatureConfigViewModel(
+        const viewModel = DebugMenuFeatureConfigViewModel(
           isEnabled: isEnabled,
         );
 

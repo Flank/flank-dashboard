@@ -6,11 +6,9 @@ import 'package:test/test.dart';
 
 import '../test_utils/test_data/jenkins_config_test_data.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("JenkinsSourceClientFactory", () {
-    final jenkinsSourceParty = JenkinsSourceClientFactory();
+    const jenkinsSourceParty = JenkinsSourceClientFactory();
     final jenkinsConfig = JenkinsConfigTestData.jenkinsSourceConfig;
 
     JenkinsClient createClient(JenkinsSourceConfig jenkinsConfig) {

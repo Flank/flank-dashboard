@@ -4,8 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/base/presentation/widgets/icon_label_button.dart';
 import 'package:metrics/base/presentation/widgets/tappable_area.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("IconLabelButton", () {
@@ -40,7 +39,7 @@ void main() {
     testWidgets(
       "throws an AssertionError if the given label builder is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_IconLabelButtonTestbed(
+        await tester.pumpWidget(const _IconLabelButtonTestbed(
           labelBuilder: null,
         ));
 
@@ -51,7 +50,7 @@ void main() {
     testWidgets(
       "throws an AssertionError if the given icon builder is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_IconLabelButtonTestbed(
+        await tester.pumpWidget(const _IconLabelButtonTestbed(
           iconBuilder: null,
         ));
 
@@ -62,7 +61,7 @@ void main() {
     testWidgets(
       "throws an AssertionError if the given icon padding is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_IconLabelButtonTestbed(
+        await tester.pumpWidget(const _IconLabelButtonTestbed(
           iconPadding: null,
         ));
 
@@ -73,7 +72,7 @@ void main() {
     testWidgets(
       "throws an AssertionError if the given content padding is null",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_IconLabelButtonTestbed(
+        await tester.pumpWidget(const _IconLabelButtonTestbed(
           contentPadding: null,
         ));
 
@@ -102,7 +101,7 @@ void main() {
     testWidgets(
       "applies the default content padding if it's not specified",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_IconLabelButtonTestbed());
+        await tester.pumpWidget(const _IconLabelButtonTestbed());
 
         final contentPadding = tester.widget<Padding>(
           find.descendant(
@@ -168,7 +167,7 @@ void main() {
     );
 
     testWidgets("applies the given icon padding", (WidgetTester tester) async {
-      final expectedIconPadding = EdgeInsets.all(4.0);
+      const expectedIconPadding = EdgeInsets.all(4.0);
 
       await tester.pumpWidget(_IconLabelButtonTestbed(
         iconPadding: expectedIconPadding,
@@ -189,9 +188,9 @@ void main() {
     testWidgets(
       "applies the given content padding",
       (WidgetTester tester) async {
-        final expectedContentPadding = EdgeInsets.all(4.0);
+        const expectedContentPadding = EdgeInsets.all(4.0);
 
-        await tester.pumpWidget(_IconLabelButtonTestbed(
+        await tester.pumpWidget(const _IconLabelButtonTestbed(
           contentPadding: expectedContentPadding,
         ));
 
@@ -226,7 +225,7 @@ void main() {
     testWidgets(
       "applies tappable area to the row of the label and icon",
       (WidgetTester tester) async {
-        await tester.pumpWidget(_IconLabelButtonTestbed());
+        await tester.pumpWidget(const _IconLabelButtonTestbed());
 
         final iconFinder = find.ancestor(
           of: find.byType(Row),
@@ -284,11 +283,11 @@ class _IconLabelButtonTestbed extends StatelessWidget {
 
   /// A default icon builder for this testbed.
   static Widget _defaultIconBuilder(BuildContext context, bool isHovered) {
-    return Icon(Icons.add);
+    return const Icon(Icons.add);
   }
 
   /// A default label builder for this testbed.
   static Widget _defaultLabelBuilder(BuildContext context, bool isHovered) {
-    return Text("hover");
+    return const Text("hover");
   }
 }

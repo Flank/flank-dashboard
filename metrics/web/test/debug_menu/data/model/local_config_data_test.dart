@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/debug_menu/data/model/local_config_data.dart';
 
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("LocalConfigData", () {
     const isFpsMonitorEnabled = false;
@@ -11,12 +9,12 @@ void main() {
       'isFpsMonitorEnabled': isFpsMonitorEnabled,
     };
 
-    final config = LocalConfigData(isFpsMonitorEnabled: isFpsMonitorEnabled);
+    const config = LocalConfigData(isFpsMonitorEnabled: isFpsMonitorEnabled);
 
     test(
       "creates an instance with the given is fps monitor enabled",
       () {
-        final config = LocalConfigData(
+        const config = LocalConfigData(
           isFpsMonitorEnabled: isFpsMonitorEnabled,
         );
 

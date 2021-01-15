@@ -1,15 +1,12 @@
 import 'package:metrics/common/presentation/metrics_theme/model/light_metrics_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("LightMetricsThemeData", () {
     test(
       "creates a variation theme",
       () {
-        final lightMetricsThemeData = LightMetricsThemeData();
+        const lightMetricsThemeData = LightMetricsThemeData();
 
         expect(lightMetricsThemeData.metricsWidgetTheme, isNotNull);
         expect(lightMetricsThemeData.metricsColoredBarTheme, isNotNull);

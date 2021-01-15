@@ -5,15 +5,14 @@ import 'package:metrics/common/presentation/metrics_theme/model/metrics_table/th
 import 'package:metrics/common/presentation/metrics_theme/model/shimmer_placeholder/theme_data/shimmer_placeholder_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("ProjectMetricsTableThemeData", () {
     test(
       "creates an instance with the default metrics table header theme if the given parameter is null",
       () {
-        final themeData = ProjectMetricsTableThemeData(
+        const themeData = ProjectMetricsTableThemeData(
           metricsTableHeaderTheme: null,
         );
 
@@ -24,7 +23,7 @@ void main() {
     test(
       "creates an instance with the default metrics table header placeholder theme if the given parameter is null",
       () {
-        final themeData = ProjectMetricsTableThemeData(
+        const themeData = ProjectMetricsTableThemeData(
           metricsTableHeaderPlaceholderTheme: null,
         );
 
@@ -35,7 +34,7 @@ void main() {
     test(
       "creates an instance with the default project metrics tile theme if the given parameter is null",
       () {
-        final themeData = ProjectMetricsTableThemeData(
+        const themeData = ProjectMetricsTableThemeData(
           projectMetricsTileTheme: null,
         );
 
@@ -46,7 +45,7 @@ void main() {
     test(
       "creates an instance with the default project metrics tile placeholder theme if the given parameter is null",
       () {
-        final themeData = ProjectMetricsTableThemeData(
+        const themeData = ProjectMetricsTableThemeData(
           projectMetricsTilePlaceholderTheme: null,
         );
 
@@ -55,25 +54,25 @@ void main() {
     );
 
     test("creates an instance with the given values", () {
-      final headerTheme = MetricsTableHeaderThemeData(
+      const headerTheme = MetricsTableHeaderThemeData(
         textStyle: TextStyle(color: Colors.red),
       );
 
-      final headerPlaceholderTheme = ShimmerPlaceholderThemeData(
+      const headerPlaceholderTheme = ShimmerPlaceholderThemeData(
         backgroundColor: Colors.red,
       );
 
-      final tileTheme = ProjectMetricsTileThemeData(
+      const tileTheme = ProjectMetricsTileThemeData(
         textStyle: TextStyle(color: Colors.blue),
         borderColor: Colors.black,
         backgroundColor: Colors.green,
       );
 
-      final tilePlaceholderTheme = ShimmerPlaceholderThemeData(
+      const tilePlaceholderTheme = ShimmerPlaceholderThemeData(
         backgroundColor: Colors.green,
       );
 
-      final themeData = ProjectMetricsTableThemeData(
+      const themeData = ProjectMetricsTableThemeData(
         metricsTableHeaderTheme: headerTheme,
         metricsTableHeaderPlaceholderTheme: headerPlaceholderTheme,
         projectMetricsTileTheme: tileTheme,

@@ -2,12 +2,9 @@ import 'package:ci_integration/client/buildkite/mappers/buildkite_build_state_ma
 import 'package:ci_integration/client/buildkite/models/buildkite_build_state.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("BuildkiteBuildStateMapper", () {
-    final mapper = BuildkiteBuildStateMapper();
+    const mapper = BuildkiteBuildStateMapper();
 
     test(
       ".map() maps the running build state to the BuildkiteBuildState.running",

@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/tooltip_popup/theme/theme_data/tooltip_popup_theme_data.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("TooltipPopupThemeData", () {
     test(
       "creates an instance with the default background color if it is not specified",
       () {
-        final themeData = TooltipPopupThemeData();
+        const themeData = TooltipPopupThemeData();
 
         expect(themeData.backgroundColor, isNotNull);
       },
@@ -19,7 +18,7 @@ void main() {
     test(
       "creates an instance with the default background color if the given color is null",
       () {
-        final themeData = TooltipPopupThemeData(backgroundColor: null);
+        const themeData = TooltipPopupThemeData(backgroundColor: null);
 
         expect(themeData.backgroundColor, isNotNull);
       },
@@ -28,7 +27,7 @@ void main() {
     test(
       "creates an instance with the default shadow color if it is not specified",
       () {
-        final themeData = TooltipPopupThemeData();
+        const themeData = TooltipPopupThemeData();
 
         expect(themeData.shadowColor, isNotNull);
       },
@@ -37,7 +36,7 @@ void main() {
     test(
       "creates an instance with the default shadow color if the given color is null",
       () {
-        final themeData = TooltipPopupThemeData(shadowColor: null);
+        const themeData = TooltipPopupThemeData(shadowColor: null);
 
         expect(themeData.shadowColor, isNotNull);
       },
@@ -48,7 +47,7 @@ void main() {
       const shadowColor = Colors.black;
       const textStyle = TextStyle(color: Colors.blue);
 
-      final themeData = TooltipPopupThemeData(
+      const themeData = TooltipPopupThemeData(
         backgroundColor: backGroundColor,
         shadowColor: shadowColor,
         textStyle: textStyle,

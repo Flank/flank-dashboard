@@ -1,5 +1,3 @@
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/attention_level/circle_percentage_attention_level.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/circle_percentage/style/circle_percentage_style.dart';
@@ -10,7 +8,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("MetricsValueStyleStrategy", () {
-    final circlePercentageTheme = CirclePercentageThemeData(
+    const circlePercentageTheme = CirclePercentageThemeData(
       attentionLevel: CirclePercentageAttentionLevel(
         positive: CirclePercentageStyle(valueColor: Colors.green),
         neutral: CirclePercentageStyle(valueColor: Colors.yellow),
@@ -19,11 +17,11 @@ void main() {
       ),
     );
 
-    final theme = MetricsThemeData(
+    const theme = MetricsThemeData(
       circlePercentageTheme: circlePercentageTheme,
     );
 
-    final styleStrategy = MetricsValueStyleStrategy();
+    const styleStrategy = MetricsValueStyleStrategy();
 
     test(
       "returns the negative circle style if the given value is in bounds from 0.01 to 0.5",

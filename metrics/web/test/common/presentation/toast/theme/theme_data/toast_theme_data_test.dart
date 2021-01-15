@@ -4,15 +4,14 @@ import 'package:metrics/common/presentation/toast/theme/style/toast_style.dart';
 import 'package:metrics/common/presentation/toast/theme/theme_data/toast_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("ToastThemeData", () {
     test(
       "creates a theme with the default attention level if the given attention level is null",
       () {
-        final theme = ToastThemeData(toastAttentionLevel: null);
+        const theme = ToastThemeData(toastAttentionLevel: null);
 
         expect(theme.attentionLevel, isNotNull);
       },
@@ -25,7 +24,7 @@ void main() {
         ),
       );
 
-      final theme = ToastThemeData(
+      const theme = ToastThemeData(
         toastAttentionLevel: attentionLevel,
       );
 

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/debug_menu/presentation/view_models/local_config_fps_monitor_view_model.dart';
 
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("LocalConfigFpsMonitorViewModel", () {
@@ -20,7 +20,7 @@ void main() {
       () {
         const isEnabled = false;
 
-        final viewModel = LocalConfigFpsMonitorViewModel(isEnabled: isEnabled);
+        const viewModel = LocalConfigFpsMonitorViewModel(isEnabled: isEnabled);
 
         expect(viewModel.isEnabled, equals(isEnabled));
       },

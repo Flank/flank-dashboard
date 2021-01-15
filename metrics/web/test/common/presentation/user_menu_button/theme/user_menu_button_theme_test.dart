@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/user_menu_button/theme/user_menu_button_theme_data.dart';
 import 'package:test/test.dart';
 
-// https://github.com/platform-platform/monorepo/issues/140
-// ignore_for_file: prefer_const_constructors
-
 void main() {
   group("UserMenuButtonThemeData", () {
     test(
       "creates a theme with the default colors for the user menu button if the parameters are not specified",
       () {
-        final themeData = UserMenuButtonThemeData();
+        const themeData = UserMenuButtonThemeData();
 
         expect(themeData.hoverColor, isNotNull);
         expect(themeData.color, isNotNull);
@@ -21,7 +18,7 @@ void main() {
       const hoverColor = Colors.yellow;
       const color = Colors.red;
 
-      final themeData = UserMenuButtonThemeData(
+      const themeData = UserMenuButtonThemeData(
         hoverColor: hoverColor,
         color: color,
       );

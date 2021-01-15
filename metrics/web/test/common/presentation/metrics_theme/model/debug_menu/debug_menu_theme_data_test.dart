@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metrics/common/presentation/metrics_theme/model/debug_menu/theme_data/debug_menu_theme_data.dart';
 
-// ignore_for_file: prefer_const_constructors, avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values
 
 void main() {
   group("DebugMenuThemeData", () {
     test(
       "creates an instance with the default section header text style if the given one is null",
       () {
-        final themeData = DebugMenuThemeData(sectionHeaderTextStyle: null);
+        const themeData = DebugMenuThemeData(sectionHeaderTextStyle: null);
 
         expect(themeData.sectionHeaderTextStyle, isNotNull);
       },
@@ -18,7 +18,7 @@ void main() {
     test(
       "creates an instance with the default section content text style if the given one is null",
       () {
-        final themeData = DebugMenuThemeData(sectionContentTextStyle: null);
+        const themeData = DebugMenuThemeData(sectionContentTextStyle: null);
 
         expect(themeData.sectionContentTextStyle, isNotNull);
       },
@@ -27,7 +27,7 @@ void main() {
     test(
       "creates an instance with the default section divider color if the given one is null",
       () {
-        final themeData = DebugMenuThemeData(sectionDividerColor: null);
+        const themeData = DebugMenuThemeData(sectionDividerColor: null);
 
         expect(themeData.sectionDividerColor, isNotNull);
       },
@@ -40,7 +40,7 @@ void main() {
         const sectionContentTextStyle = TextStyle(color: Colors.green);
         const sectionDividerColor = Colors.blue;
 
-        final themeData = DebugMenuThemeData(
+        const themeData = DebugMenuThemeData(
           sectionHeaderTextStyle: sectionHeaderTextStyle,
           sectionContentTextStyle: sectionContentTextStyle,
           sectionDividerColor: sectionDividerColor,
