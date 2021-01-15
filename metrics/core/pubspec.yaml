@@ -5,9 +5,9 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
-  meta: ^1.1.8
-  equatable: ^1.1.1
   email_validator: ^1.0.4
+  equatable: ^1.1.1
+  meta: ^1.1.8
 
 dev_dependencies:
   lint: ^1.1.1
